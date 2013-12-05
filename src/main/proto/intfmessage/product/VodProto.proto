@@ -1,0 +1,32 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/TimeProto.proto";
+import "intfmessage/product/VideoInfoProto.proto";
+
+message Vod {
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Time runningTime = 1;		//Play시간
+
+	message Chapter{
+		optional string unit = 1;		//회차
+		optional string text = 2;		//회차의 수
+	}
+	optional Chapter chapter = 2;
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.VideoInfo videoInfo = 3;		// 화질별 video 정보
+
+	message VodExplain { //vod 정보
+		optional string saleDateInfo = 1;		//BP가 직접 등록하는 방송일/개봉년도 정보
+		optional string text = 2;		//날짜
+	}
+	optional VodExplain vodExplain = 4;
+}
+
+
+
+

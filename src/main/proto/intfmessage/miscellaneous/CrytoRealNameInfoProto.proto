@@ -1,0 +1,24 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo";
+
+/*
+ * 암호화된 실명인증 정보
+ */
+message CrytoRealNameInfo {
+
+	/*
+	 * 실명인증 정보 암호화 방법 (암호화 알고리즘/{key index})
+	 * > AES-128/{key index} : AES-128/{key index}
+	 * > SHA-Digest/{key index} : SHA-Digest/{key index}
+	 */
+	required string type = 1;
+
+	/*
+	 * 암호화 된 실명인증 정보(콤마로 구분)
+	 * who:{legalAgent(법정대리인)|self(본인)},name:{본인이름 또는 법정대리인이름},selfBirth:{본인 생년월인},resident:{local|foreign},carrier:{skt|kt|lgt}
+	 * ,msisdn:{본인 휴대폰번호|법정대리인 휴대폰번호},gender:{본인 성별,법정대리인 성별},legalAgentEmail:{법정대리인 이메일 정보},legalAgentBirth:{법정대리인 생년월일}
+	 * ,legalAgentAuthType:{phone:ipin},legalAgentAuthCI:{법정대리인 인증 CI값(IPIN 인증인 경우)}
+	 */
+	required string authInfo = 2;
+}

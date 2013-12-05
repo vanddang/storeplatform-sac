@@ -1,0 +1,86 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo";
+
+/*
+ * SMS 실명인증 정보
+ */
+message RealNameInfo {
+
+	/*
+	 * 인증주체
+	 * > legalAgent : 법정대리인(14세 미만)
+	 * > self : 본인
+	 */
+	required string who = 2;
+
+	/*
+	 * 이름
+	 * > who=legalAgent 인 경우 법정대리인 이름
+	 * > who=self 인 경우 본인 이름
+	 */
+	required string name = 3; //이름 (14세 미만일 경우 법정 대리인의 이름)
+
+	/*
+	 * 본인 생년월일
+	 */
+	required string selfBirth = 4;
+
+	/*
+	 * 국적
+	 * > local : 내국인
+	 * > foreign : 외국인
+	 */
+	 required string resident = 5;
+
+	/*
+	 * 이통사
+	 * > skt : SKT
+	 * > kt : KT
+	 * > lgt : LGT
+	 */
+	 required string carrier = 6;
+
+	 /*
+	  * 전화번호
+	 * > who=legalAgent 인 경우 법정대리인 휴대폰번호
+	 * > who=self 인 경우 본인 휴대폰번호
+	 * > 01012345678
+	 */
+	 required string msisdn = 7;
+
+	 /*
+	  * 성별
+	  * > who=legalAgent 인 경우 법정대리인 성별
+	  * > who=self 인 경우 본인 성별
+	  * > male : 남성
+	  * > female : 여성
+	  */
+	required string gender = 8;
+
+	/*
+	 * 법정대리인 이메일 정보
+	 * 인증주체(who)가  법정대리인(legalAgent)일 경우에만 유효함
+	 * 14세 미만일 경우 필수항목
+	 */
+	optional string legalAgentEmail = 9;
+
+	/*
+	 * 법정대리인 생년월일
+	 * 인증주체(who)가  법정대리인(legalAgent)일 경우에만 유효함
+	 * 14세 미만일 경우 필수항목
+	 */
+	optional string legalAgentBirth = 10;
+
+	/*
+	 * 법정대리인 인증 타입(휴대폰인증/IPIN인증)
+	 * > phone : 휴대폰 가입
+	 * > ipin : IPIN인증
+	 */
+	optional string legalAgentAuthType = 11;
+
+	/*
+	 * 법정대리인 인증 CI값(IPIN 인증인 경우)
+	 */
+	optional string legalAgentAuthCI = 12;
+}

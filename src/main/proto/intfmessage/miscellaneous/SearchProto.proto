@@ -1,0 +1,52 @@
+/*
+ * 작성자 : 김다슬
+ * 작성일 : 2013-09-16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo";
+
+import "intfmessage/common/CountProto.proto";
+import "intfmessage/common/DateProto.proto";
+
+/*
+ * 검색 정보
+ */
+message Search {
+
+	message SearchCount {
+			optional string totalCount = 1;		//전체 검색 개수
+			optional string appCount = 2;		//Appliation 검색 개수
+			optional string contentsCount = 3;	//Contents 검색 개수
+			optional string themeCount = 4;		//테마 카테고리 검색 개수
+			optional string gameCount = 5;		//게임 카테고리 검색 개수
+			optional string broadcastCount = 6;	//방송 카테고리 검색 개수
+			optional string movieCount = 7;		//영화 카테고리 검색 개수
+			optional string cartoonCount = 8;		//만화 카테고리 검색 개수
+			optional string ebookCount = 9;		//ebook 카테고리 검색 개수
+			optional string musicCount = 10;		//음악 카테고리 검색 개수
+			optional string shoppingStoreCount = 11;		//쇼핑 카테고리 검색 개수
+			optional string webtoonNovelCount = 12;		//소설 카테고리 검색 개수
+	}
+
+	required SearchCount searchCount = 1;		//카테고리별 검색개수
+
+	message SearchKeyword{		//검색결과 정보 structure
+		/*
+		 * 검색어 구분
+		 * > popular : 인기 검색어
+		 * > related : 연관 검색어
+		 * > recommand : 제안 검색어 (연관검색어, 검색결과가 없을 경우, 제안 검색어 정의)
+		 */
+		optional string name = 1;
+		optional string type = 2;		//검색결과 반환 타입 (list)
+		optional string text = 3;		//검색결과
+	}
+	optional SearchKeyword serchKeyword = 2;	//검색결과 정보
+	/*
+	 * 인기검색어 업데이트 시간
+	 *  > date/update
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date update = 3;
+
+}

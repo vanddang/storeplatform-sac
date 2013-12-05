@@ -1,0 +1,39 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/DateProto.proto";
+
+message Contributor {
+
+	/*
+	 * 가수, 저자, 판매자, 브랜드 ID
+	 * Identifier "type"을 아래와 같이 지정
+	 * > individual : 판매회원의 개발자ID
+	 * > privateOperator : 개인사업자의 개발자ID
+	 * > corporation : 법인사업자의 개발자ID
+	 * > foreigner : 외국인 개발자ID
+	 * > brand : 브랜드ID
+	 */
+	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;
+	optional string name = 2;			//제작자 또는 저자 이름
+	optional string brand = 3;			//브랜드 이름
+	optional string painter = 4;		//그림작가
+	optional string translator = 5;		//번역자
+	optional string company = 6;		//일반적인 회사
+	optional string publisher = 7;		//출판사, 앨범 발매회사
+	optional string agency = 8;			//소속사
+	optional string channel = 9;  		//방송 채널
+	optional string director = 10; 		//감독
+	optional string artist = 11; 		//출연자
+	optional string album = 12; 		//앨범명
+	optional string country =13; 		//국가명
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 14;  // 이미지url
+	/*
+	 * 앨범 출시 일 등 날짜를 기입할 경우 사용한다.
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 15;
+}

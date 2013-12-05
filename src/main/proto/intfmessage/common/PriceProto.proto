@@ -1,0 +1,25 @@
+/*
+ * 작성자명 : 백승현
+ * 작성일 : 2013.09.15
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message Price {
+
+	optional string name = 1;		//price.text가 여러 개를 정의하는 경우 세부 규격에서 정의하여 사용
+	/*
+	 * 가격단위 (정의되지 않은 경우 default로 처리한다.)
+	 * > KRW : 대한민국 - 원 (default)
+	 * > USD : 미국 - 달러
+	 * > JPY : 일본 - 엔
+	 * > CNY : 중화인민공화국 - 런민비 (위안)
+	 * > POINT : point
+	 */
+	optional string unit = 2;
+	optional string fixedPrice = 3;		//정가
+	optional string discountRate = 4;	//할인률 (%생략)
+	optional string discountPrice = 5;	//할인가
+	required int32 text = 6;	//가격
+}

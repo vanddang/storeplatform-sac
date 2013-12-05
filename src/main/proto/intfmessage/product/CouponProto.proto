@@ -1,0 +1,116 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/PriceProto.proto";
+import "intfmessage/common/UrlProto.proto";
+import "intfmessage/user/PointProto.proto";
+import "intfmessage/user/AutoPayProto.proto";
+import "intfmessage/product/SelectOptionProto.proto";
+
+message Coupon {
+
+	optional string identifier = 1;	//쿠폰 ID
+ 	 /*
+	 * 타입
+	 * > coupon: 쿠폰
+	 * > freepass: 정액권
+	 * > shoppingStore: Tstore 쇼핑 발급 쿠폰
+	 * > shoppingStore/special: Tstore 쇼핑 발급 쿠폰 특가 상품 쿠폰
+	 */
+	optional string type = 2;
+
+ 	 /*
+	 * 상태
+	 * > use: 사용
+	 * > notUse: 미사용
+	 * > cancel: 취소/환불
+	 * > expired: 기간만료
+	 */
+	optional string status = 3;
+
+ 	 /*
+	 * show
+	 * > yes|no
+	 */
+	optional string show = 4 [default = "yes"];
+
+	/*
+	 * kind
+	 * > couponAll: 쿠폰전체대상
+	 * > couponLimited: 쿠폰한정판
+	 * > couponBuyer: 쿠폰구매자전체
+	 * > couponId: ID
+	 * > couponMisisdn: 휴대폰번호
+	 * > broadcastFreepass: 방송자동결제
+	 * > movieFreepass: 영화자동결제
+	 * > seriesFreepass: 시리즈 1회결제
+	 * > giftCoupon: 상품권
+	 * > directCoupon: 교환권
+	 * > shippingCoupon: 배송상품
+	 * > rentalFreepass/ebook: 이북/코믹 전권 대여
+	 * > seriesFreepass/ebook: 이북/코믹 전권 소장
+	 */
+	optional string kind = 5;
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Url url = 6;			//배송지 입력 URL
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 7; 		//가격
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 8;			//유효기간(시작/만료일자)
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 9;		//쿠폰명/정액권명
+
+	/*
+	 * 자동결제 지원 여부
+	 * > status
+	 */
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.AutoPay autopay = 10;
+ 	 /*
+	 * 쿠폰 소개 제목
+	 * T store 회원만을 위한 방송 패스
+	 */
+	optional string couponGuide = 11;					//쿠폰 소개 제목(T store 회원만을 위한 방송 패스)
+	optional string couponGuideExplain = 12;			//쿠폰 소개 내용
+
+	repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 13;		//썸네일 또는 배너 이미지
+	 /*
+	 * type=”freepass”이고 해당 정액권이 T맴버십 할인을 지원할 경우 정의된다.
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Point point = 15;
+
+	/*
+	 * selectOption
+	 * > T스토어 쇼핑상품(type:shoppingStore)인 경우 사용
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOption selectOption = 16;
+
+	/*
+	 * 쿠폰 사용처
+	 * > type
+	 */
+	message Coverage {
+		/*
+		 * type
+		 * > self
+		 * > others
+		 */
+		required string type = 1;
+	}
+	optional Coverage coverage = 17;
+
+	message EpisodeCoupon {
+		required string identifier = 1;		//실제 coupon id
+		/*
+		 * 쿠폰상태
+		 * use : 사용
+		 * notUse : 사용안함
+		 * cancel : 취소
+		 * expired : 유효기간만료
+		 */
+		required string status = 2;
+	}
+
+	repeated EpisodeCoupon episodeCouponList = 18;
+}

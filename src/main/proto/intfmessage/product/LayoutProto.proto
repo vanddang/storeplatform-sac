@@ -1,0 +1,40 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/CategoryProto.proto";
+import "intfmessage/product/BannerProto.proto";
+
+message Layout{
+	required string name = 1;		//베너이름
+
+	/*
+	 * Banner Message
+	 *
+	 * > type
+	 * > position
+	 */
+	repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Banner bannerList = 2;
+
+	/*
+	 * 제목(text)
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 3;
+
+	/*
+	 * layout resource 정보
+	 *
+	 * > url : Resource URL
+	 * > type : Resource 타입
+	 * > size : 파일 사이즈
+	 * > mediaType : Contents의 MimeType
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 4;
+    /*
+     * > Code : category 코드
+     * > name : category 명
+     */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Category category 	= 5;
+}

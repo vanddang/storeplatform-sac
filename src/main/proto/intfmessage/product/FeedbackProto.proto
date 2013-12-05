@@ -1,0 +1,103 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/CountProto.proto";
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/UrlProto.proto";
+import "intfmessage/product/DistributorProto.proto";
+
+message Feedback {
+
+	/*
+	 * 사용후기ID
+	 * > feedback : 사용후기ID
+	 */
+	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;
+
+	/*
+ 	 * > seller : 판매자일 경우
+	 * > mine : 자신이 등록한 댓글 일 경우
+	 * > seller|mine : 모두 해당될때
+	 *  > 그 외에는 whose를 넣지 않는다
+ 	 */
+	optional string whose = 2;
+
+	/*
+ 	 * 추천구분
+ 	 * > yes : 내가 추천한 feedback인 경우
+	 * > no : 내가 추천하지 않은 feedback인 경우
+ 	 */
+	optional string recommend = 3;
+
+	/*
+	 * 추천구분
+	 * Count type
+	 * recommend : 추천수
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Count count = 4;
+
+	optional double score = 5;		//평점
+
+	optional string feedbackNickname = 6;		//별명
+
+	/*
+	 * distributor message
+	 *
+	 * > company
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Distributor distributor = 7; //
+
+	/*
+	 * title Message
+	 * > text
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 8;
+
+	optional string feedBackExplain = 9;		//Feedback내용
+
+	/*
+	 * Date Message
+	 * > type (date/reg)
+	 * > text
+	 */
+	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 10;  		//등록일
+
+	message Badge{
+		/*
+		 * Facebook과 연동한 댓글인 경우 표기
+		 * > facebook
+		 */
+		optional string name = 1;
+
+	}
+
+	optional Badge badge = 11;		//Badge Message
+
+	message Reply{
+		/*
+		 * Date Message
+		 *  > type (date/reg)
+		 *  > text
+		 */
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 1;
+
+		/*
+		 * Title Message
+		 *  > text
+		 */
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 2;
+
+		optional string replayContent = 3;		//댓글내용
+		optional string replyName = 4;		//댓글 작성자이름
+	}
+
+	optional Reply reply = 12;		//reply Message
+
+	/*
+	 * Base URL
+	 */
+	optional string base = 13;
+}

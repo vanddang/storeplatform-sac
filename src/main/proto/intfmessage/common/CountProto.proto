@@ -1,0 +1,17 @@
+/*
+ * 작성자명 : 백승현
+ * 작성일 : 2013.09.15
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message Count {
+	/*
+	 * 개수에 대한 타입
+	 * > subscription : 정기구독 수
+	 * > channelTotal : 채널에 속해 있는 전체 책 권수
+	 */
+	optional string type = 1;
+	required int32 text = 2; //개수 (일반적인 총개수를 표현할때 이용)
+}

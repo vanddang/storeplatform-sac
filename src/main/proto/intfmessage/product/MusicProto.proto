@@ -1,0 +1,45 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/user/BellProto.proto";
+
+message Music {
+
+	message Identifier {
+		/*
+		 * 다운로드 ID 타입
+		 * > melon : Melon 서비스
+		 */
+		required string type = 1;
+		required string identifier = 2;		//다운로드 ID
+	}
+	required Identifier download = 1;		//Download
+
+	/*
+	 * 제공 음질 및 사이즈 정보 제공
+	 * > 음악의 경우 type을 audio/mp3-192, audio/mp3-128로 구분한다.
+	 * > 파일 size 정보
+	 * > Remote 정보
+	 */
+	repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 2;
+
+	//서비스 정보
+	message Services{
+
+		/*
+		 * 지원가능 서비스
+		 * > bell,ring : bell,ring을 지원하는 경우(","로 구분)
+		 */
+		optional string support = 1;
+
+		/*
+		 * 지원불가능 서비스
+		 * mp3 : mp3을 지원하지 않는 경우(","로 구분)
+		 */
+		optional string restrict = 2;
+	}
+	optional Services services = 3;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Bell bell = 4;		// 컬러링/벨소리 부가 정보
+}

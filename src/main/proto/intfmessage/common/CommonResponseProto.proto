@@ -1,0 +1,24 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+import "intfmessage/miscellaneous/AnnouncementProto.proto";
+
+message CommonResponse {
+
+	required string resultCd = 1;		//결과코드
+	required string resultMsg = 2;		//결과 메세지
+	optional string baseUrl	= 3;		//Base URL
+	optional string range = 4 [default = "1-10/100"];		//범위
+
+	/*
+	 * 긴급공지
+	 *
+	 * > type : 공지사항 유형
+	 * > title : 공지사항 제목
+	 * > date : 등록일
+	 * > announcementExplain: 공지사항 설명
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo.Announcement announcement = 5;
+
+}

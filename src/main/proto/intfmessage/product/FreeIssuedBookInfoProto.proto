@@ -1,0 +1,30 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/SourceProto.proto";
+
+message FreeIssuedBookInfo {
+	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1; 		// 무료 발행호 상품 ID
+	optional string scid = 2; 		//무료 발행호 Subn Content ID
+	optional string version = 3; 		//무료 발행호 버전
+	/*
+	 * 무료 발행호 상태
+	 * > payment : 구매
+	 * > nonPayment : 비구매
+	 * > noProduct : 상품 미등록
+	 */
+	optional string status = 4;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 5;		//무료 발행호 상품명
+	optional string freeIssuedBookExplain = 6;		//무료 발행호 설명
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 7;		//예상 정기구독 시작 ~ 종료일
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 8;		//무료 발행호 이미지
+
+}

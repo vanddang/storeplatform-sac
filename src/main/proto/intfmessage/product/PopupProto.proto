@@ -1,0 +1,25 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/PriceProto.proto";
+import "intfmessage/product/SelectOptionProto.proto";
+
+message Popup {
+	required string id = 1; // 이벤트 ID
+	/*
+	 * dimmed : 반투명
+	 * fillscreen : 전체화면
+	 */
+	optional string layout = 2;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 3; 		//선택옵션 제목
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 4; 		//선택옵션 가격
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOption selectOption = 5; 		// child option
+
+}
+

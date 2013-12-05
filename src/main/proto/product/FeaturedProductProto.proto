@@ -1,0 +1,20 @@
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+import "intfmessage/common/CommonResponseProto.proto";
+import "intfmessage/product/ProductProto.proto";
+
+message FeaturedProductList {
+
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonRes = 1;    // 공통 Response
+
+    /*
+     * Featured 상품 List 종류
+     * > BestApp
+     * - 추천, 유료, 무료, 인기, 인기신규, 신규출시, 매출
+     * > BestConents
+     */
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product productList = 2;
+}
+

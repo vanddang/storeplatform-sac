@@ -1,0 +1,97 @@
+/*
+ * 작성자 : 김다슬
+ * 작성일 : 2013-09-16
+ */
+
+package com.skplanet.storeplatform.sac.client.intfmessage.device.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.device.vo";
+
+import "intfmessage/common/DateProto.proto";
+
+/*
+ * 단말 정보
+ */
+message Device {
+	optional string lang = 1; 		//Device내 사용된 Language 정보 ([LANG}에 정의된 language Tag값을 갖음
+	optional string base = 2; 		//Device내 사용된 Base URI 정보
+	required string identifier = 3;	// 단말 식별자 - {제조사/모델명}test
+	/**
+	 * 단말 타입
+	 * > OMD단말 : type="omd"
+	 * > 미지원단말 : identifier="android_standard" type="restrict"
+	 * */
+	required string type = 4;
+
+	 /**
+	  * 미지원단말은 아래 정의 안함
+	  */
+	optional string manufacturer = 5;	//단말 제조사 정보
+	optional string model = 6;			//단말 모델명
+	optional string platform = 7;		//단말 OS 플랫폼
+	optional string modelExplain = 8;	//단말 모델 설명
+
+	//단말에서 지원가능한 서비스 정보
+	message Services {
+
+		/*
+		 * 지원가능 (","로 구분)
+		 * > ebook,comic,hdVod,shoppingStore,magazine,music,aom,drm,view,tmembership
+		 * > ebook,코믹,고화질 동영상,쇼핑/쿠폰(New Shopping),잡지,음악,AOM,DRM,T멤버십
+		 */
+		optional string support = 1;
+
+		/*
+		 * 지원불가 (","로 구분)
+		 * > ebook,comic,hdVod,shoppingStore,magazine,music,aom,drm,view,tmembership
+		 * > ebook,코믹,고화질 동영상,쇼핑/쿠폰(New Shopping),잡지,음악,AOM,DRM,T멤버십 지원여부
+		 */
+		optional string restrict = 2;
+
+	}
+	optional Services services = 9;		//지원가능한 SK Planet 서비스 정보
+
+	message SupportedHardware {			//단말에서 지원가능한 하드웨어 정보 structure
+		optional string resolution = 1;	//해상도(720*1280)
+		optional string dpi =2;			//DPI
+
+		/*
+		 * 지원가능 (","로 구분)
+		 * > hdmi,hdcp,lte,dolby
+		 * > HDMI,HDCP,LTE,돌비
+		 */
+		optional string support = 3;
+
+		/*
+		 * 지원불가 (","로 구분)
+		 * > hdmi,hdcp,lte,dolby
+		 * > HDMI,HDCP,LTE,돌비
+		 */
+		optional string restrict = 4;
+
+	}
+	optional SupportedHardware supportedHardware = 10;		//단말에서 지원가능한 하드웨어 정보
+
+	message BindingInfo {
+		optional string versionCode = 1;	//단말 OS Platform에 대한 Version 정보
+
+		/*
+		 * 이동통신사 정보
+		 * > {MCC/MNC}
+		 * > 예) 450/05
+		 */
+		optional string carrier = 2;	//단말에 대한 가입 이동통신사 정보
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 14;		//해당 단말기 등록 일시
+
+		/*
+		 * 대표단말 여부 정보 (default no)
+		 * > yes : 대표단말 지정함
+		 * > no : 대표단말 지정 안함
+		 */
+		optional string mark = 3 [default="no"];
+	}
+
+	optional BindingInfo bindingInfo = 11;		//Binding Information
+
+	optional string msisdn = 16;				// 휴대폰번호
+}

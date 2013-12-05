@@ -1,0 +1,37 @@
+/*
+ * 작성자명 : 백승현
+ * 작성일 : 2013.09.15
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message Time {
+	/*
+	 * 시간에 대한 단위
+	 * > sec:초단위(Default)
+	 * > min: 분
+	 * > hour: 시간
+	 * > day: 일단위
+	 * > month: 월
+	 * > year: 년
+	 */
+	optional string unit = 1;
+	/*
+	 * 날짜타입
+	 * > relative : (Default : 상대시간)
+	 */
+	optional string type = 2;
+
+	/*
+	 * time에 대한 정의(time이 중복으로 설정될 경우 정의 필요)
+	 * duration : 정기구독기간
+	 * additional : 추가 기간
+	 */
+	optional string name = 3;
+
+	/*
+	 * 24시간은 86400으로 표기 가능
+	 */
+	required string text = 4;
+}

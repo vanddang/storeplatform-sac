@@ -1,0 +1,112 @@
+/*
+ * 작성자명 : 백승현
+ * 작성일 : 2013.09.15
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/PriceProto.proto";
+
+message Rights {
+	/*
+	 * 이용권한
+	 * > freepass : 자유이용권 지원
+	 * > domestic : 국내만 지원
+	 * > feedback : 사용후기 가능
+	 */
+	optional string allow = 1;
+	/*
+	 * 이용금지 권한
+	 * multiAccess > 여러 개의 단말에서 이용 금지
+	 * access : 이 단말에서 사용 금지
+	optional string deny = 2;
+	 */
+	/*
+	 * 이용등급
+	 * > 0 : 전체이용가
+	 * > 1 : 12세 이용가
+	 * > 2 : 15세 이용가
+	 * > 4 : 청소년사용불가
+	 */
+	required string grade = 3;
+
+	/*
+	 * 미리 보기 정보를 정의한다.
+	 * source의 type="video/x-freeview-lq" (미리보기 저화질)
+	 * source의 type="video/x-freeview-hq" (미리보기 고화질)
+	 */
+	message Preview {
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 1;
+	}
+
+	optional Preview preview = 4;		//미리보기 정보를 정의
+
+	message Play {
+
+		required string identifier = 1;	//상품의 에피소드 ID
+
+		/*
+		 * Product의 support와 동일
+		 * "play"와 "store" 두 개의 상품으로 나눠질 경우 각각 상품의 지원하는 항목을 정의하기 위해 사용
+		 */
+		optional string support = 2;
+
+		/*
+		 * Rights 가격과 다를 경우 정의한다.
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 3;
+		/*
+		 * Rights 이용기간과 다운로드 이용기간이 다를 경우만 정의한다.
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 4;
+		/*
+		 * 이용기간의 UI 표시
+		 */
+		optional string durationUsagePeriodUI = 5;
+		/*
+		 * 네트워크 제한 구분
+		 * > ota : 무선망
+		 */
+		optional string networkRestrict = 6;
+
+	}
+
+	optional Play play = 5; 	//스트리밍을 지원할 경우 정의한다.
+
+	message Store {
+
+		required string identifier = 1;	//상품의 에피소드 ID
+
+		/*
+		 * Product의 support와 동일
+		 * "play"와 "store" 두 개의 상품으로 나눠질 경우 각각 상품의 지원하는 항목을 정의하기 위해 사용
+		 */
+		optional string support = 2;
+		/*
+		 * Rights 가격과 다를 경우 정의한다.
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 3;
+		/*
+		 * Rights 이용기간과 다운로드 이용기간이 다를 경우만 정의한다.
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 4;
+		/*
+		 * 이용기간의 UI 표시
+		 */
+		optional string durationUsagePeriodUI = 5;
+		/*
+		 * 네트워크 제한 구분
+		 * > ota : 무선망
+		 */
+		optional string networkRestrict = 6;
+	}
+
+	optional Store store = 6; 	//다운로드를 지원할 경우 정의한다.
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 7;		//사용가능 시작/만료 일자
+	optional string additionalUsagePeriod = 8;			//전시를 목적으로 이용 기간을 표기할 경우 사용한다
+	optional string durationUsagePeriodView = 9;		//전시를 목적으로 추가 이용 기간을 표기할 경우 사용한다.
+	optional string subscription = 10;		//정기구독정보
+}

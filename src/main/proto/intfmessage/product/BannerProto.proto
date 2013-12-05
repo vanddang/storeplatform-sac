@@ -1,0 +1,101 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/UrlProto.proto";
+import "intfmessage/product/MusicProto.proto";
+
+message Banner {
+		/*
+	 	 * Banner를 클릭했을때 이동하는 base URL (Web URL or WebView을 연동할 경우는 정의되지 않는다.)
+	 	 * > http://<<BASE>>/product : 상품타입
+		 * > http://<<BASE>>/product/category/themeZone : 추천리스트
+		 * > http://<<BASE>>/product/category/brandShop 브랜드샵
+         * > http://<<BASE>>/miscellaneous/category/brandShop : 특정브랜드샵
+	 	 */
+		optional string base = 1;
+		/*
+	 	 * 베너 크기 유형
+	 	 * > A
+	 	 * > B
+	 	 * > C
+	 	 * > D
+	 	 */
+		optional string sizeType = 2;
+		/*
+	 	 * 베너 등록 방식
+	 	 * > product : 상품
+		 * > externalUrl : 외부 URL
+		 * > category : 카테고리 연결
+		 * > themeZone : 운영자 임의 추천 리스트 연결
+		 * > brandShopCategory : 브랜드샵 목록 연결
+		 * > brandShop : 특정 브랜드샵 연결
+		 * > url : 내부 URL
+		 * > themeRecommend  : 상황 별 추천
+	 	 */
+		optional string type = 3;
+
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 4;		//베너�ID
+		/*
+	 	 * 베너 명(type에 따라서 달라짐)
+	 	 * > product : 상품명
+		 * > category : 카테고리 명
+         * > themeZone : 운영자 임의추천 명
+         * > brandShopCategory : 카테고리 명
+         * > brandShop : 브랜드 샵 명
+         * > themeRecommend : 상황 별 추천 명
+         *
+         *  > text
+	 	 */
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 5;		//title Message
+
+		/*
+		 * 카테고리
+		 * > all: 전체(main)
+		 * > game: 게임
+		 * > fun: fun
+		 * > living: 생활/위치
+		 * > languageEducation: 어학/교육
+		 * > movie: 영화
+		 * > broadcast: TV방송
+		 * > music: 음악
+		 * > cartoon: 만화
+		 * > ebook: 이북
+		 * > shoppingCoupon: 쇼핑/쿠폰
+		 * > shoppingStore: T store shopping (기존 shoppingCoupon과 구분을 위해 새로 정의된 category)
+		 * > meta_cls_cd 를 표현하기 위해 정의된다
+		*/
+		optional string category = 6;
+
+		message BannerExplain {
+			optional string id = 1;		//type이 추천리스트,브랜드샵,상황별추천일 경우
+			optional string url = 2;	//type이 내부연결일 경우
+		}
+		optional BannerExplain bannerExplain = 7;		//bannerExplain Message
+
+		/*
+		 * type
+		 * > browser : Browser을 통해서 연동하는 경우에 사용
+		 * > webView : WebView를 이용할 경우에 사용
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Url url = 8;
+
+		repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 9;			//source Message;
+
+		optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Music music = 10;		//music 상품일 경우 미리듣기 정보
+
+		/*
+		 * 미리 보기 정보를 정의한다.
+		 * source의 type="video/x-freeview-lq" (미리보기 저화질)
+		 * source의 type="video/x-freeview-hq" (미리보기 고화질)
+		 */
+		message Preview {
+			optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 1;
+		}
+
+		optional Preview preview = 11;		//VOD 상품일 경우 미리보기 정보
+
+}

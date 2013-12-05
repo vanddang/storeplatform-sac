@@ -1,0 +1,58 @@
+/*
+ * 작성자 : 김다슬
+ * 작성일 : 2013-09-16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo";
+
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/UrlProto.proto";
+import "intfmessage/common/SourceProto.proto";
+
+/*
+ * intimate 메시지 정보
+ */
+message IntimateMessage {
+	optional string identifier = 1;		//Intimate ID
+	/*
+	 * 메시지 타입
+	 * > personal : 개인
+	 * > seasonal : 한정
+	 * > general : 일반
+	 * > deviceChanged : 기변 (personal message type이지만 별도 구분자를 이용한다.)
+	 * > unknown : GNB 영역에 내부적인 메시지를 표기 시 사용
+	 */
+	required string type = 2;
+
+	/*
+	 * 메인 메시지
+	 * > color : 메시지 색상
+	 * > text : 메시지 내용
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 3;
+
+	/*
+	 * 서브 메시지
+	 * > color : 메시지 색상
+	 * > text : 메시지 내용
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title subTitle = 4;
+
+	/*
+	 * 메시지 타입은 아래 url, themeRecommId, appCodi, purchaseHistory가 노출된다.
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Url url = 5;	//URL직접 입력
+	optional string themeRecommId = 6;				//상황별 추천 - {THEME_RECOMM_ID}
+	optional string appCodi = 7;					//앱코디 DA타입
+	optional string purchaseHistory = 8;			//구매 내역
+
+	/*
+	 * 이미지 정보
+	 * > url : Source의 URL
+	 * > type : gnb/bg (배경 이미지) | gnb/icon (BI 이미지)
+	 * > mediaType : Contents의 Mime Type
+	 */
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 9;
+
+}

@@ -1,0 +1,12 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message AppDebug {
+	optional string packageName=1;		//패키지명
+	optional string versionCode=2;		//패키지 버전 코드
+}

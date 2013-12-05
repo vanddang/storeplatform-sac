@@ -1,0 +1,23 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message Distributor {
+	required string identifier = 1;		//배포자 ID
+	/*
+	 * 배포자 타입
+	 * > individual: 개인 (US000401)
+	 * > privateOperator: 개인사업자 (US000402)
+	 * > corporation: 법인사업자 (US000403)
+	 * > foreigner: 해외 개발자
+	 */
+	required string type = 2;
+	optional string name = 3;		//이름 또는 회사명(SK Planet)
+	optional string nickName = 4;	//닉네임 또는 회사명 별칭(SK 플래닛)
+	optional string tel = 5;		//전화번호
+	optional string email = 6;		//이메일
+	optional string country = 7;	//국가명
+	optional string address = 8;	//주소
+	optional string regNo = 9;		//판매자 등록 번호
+	optional string company = 10;		//판매처
+}

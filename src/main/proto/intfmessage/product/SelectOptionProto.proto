@@ -1,0 +1,24 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/PriceProto.proto";
+
+message SelectOption {
+	required string id = 1; 		// 선택 옵션 ID
+	required string index = 2; 		// 선택옵션 번호
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 3; 		//선택옵션 제목
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 4; 		//선택옵션 가격
+	message SubSelectOption{
+		required string subId = 1; 		// 두번째 콤보에 들어갈 옵션 ID
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title subTitle = 2; 		//두번째 콤보에 들어갈 제목
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price subPrice = 3; 		//두번째 콤보에 들어갈 가격
+	}
+	repeated SubSelectOption subSelectOptionList = 5; 		// child option
+}
+

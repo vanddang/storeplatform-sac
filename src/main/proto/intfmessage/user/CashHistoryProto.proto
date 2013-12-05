@@ -1,0 +1,18 @@
+/*
+ * 작성자명 : 이태희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.user.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.user.vo";
+
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/PriceProto.proto";
+
+message CashHistory {
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 1;		//등록날짜
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 2;		//금액
+
+	optional string operationType = 3;						//처리유형
+}

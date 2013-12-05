@@ -1,0 +1,21 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/DateProto.proto";
+
+ message History{
+
+	message Update {
+
+		/*
+		 * Date Message
+		 *
+		 * > type
+		 * > text
+		 */
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 1;		//업데이트 변경 날짜
+		required string updateExplain = 2;		//업데이트 변경 내용
+	}
+	repeated Update update = 2;		//Update Message
+ }

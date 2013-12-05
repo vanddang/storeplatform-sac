@@ -1,0 +1,12 @@
+/*
+ * 작성자명 : 고윤홍
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message Event{
+	required string eventId = 1;		//이벤트 ID
+	optional string eventExplain = 2;   //이벤트 설명
+}

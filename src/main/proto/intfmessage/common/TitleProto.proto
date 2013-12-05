@@ -1,0 +1,18 @@
+/*
+ * 작성자명 : 백승현
+ * 작성일 : 2013.09.15
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message Title {
+	/*
+	 * 폰트 색상을 정의 (RGB 8:8:8 형태이며 Alpha channel은 사용하지 않는다.)
+	 * ffffff : 흰색
+	 */
+	optional string color = 1;
+	optional string prefix = 2;		//제목 앞에 붙는 추가 노출 문구
+	optional string postfix = 3;	//제목 뒤에 붙는 추가 노출 문구. 예) 열혈강호 59권
+	required string text = 4;		//제목
+}

@@ -1,0 +1,66 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/PriceProto.proto";
+import "intfmessage/common/CategoryProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/product/RightsProto.proto";
+import "intfmessage/product/PromotionProto.proto";
+import "intfmessage/product/AppProto.proto";
+import "intfmessage/product/MusicProto.proto";
+import "intfmessage/product/VodProto.proto";
+import "intfmessage/product/AccrualProto.proto";
+import "intfmessage/product/DistributorProto.proto";
+import "intfmessage/product/VideoInfoProto.proto";
+import "intfmessage/product/BookProto.proto";
+import "intfmessage/product/ContributorProto.proto";
+
+message Component {
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;		//상품 ID
+		optional string id=2;//identifier 추가 기술
+		optional string support=3;//지원 매체
+		optional string lang=4;//지원 언어
+		optional string status = 5;
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title 	= 6;  // title Message(상품명)
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 7;			//가격정보
+	    /*
+	     * > Code : 대분류, 소분류 카테고리코드
+	     * > name : shoppingStore
+	     * > type(option) : 대분류 카테고리시 topClass
+	     * > categoryExplian : 카테고리 설명
+	     */
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Category categoryList 	= 8;
+		/*
+		 * 패킷과금 타입
+		 * > paid : 일반 과금상품(PD000601)
+		 * > library : 라이브러리(PD000602)
+		 * > vm : VM(PD000603)
+		 * > free : 일반 비과금상품(PD000604)
+		 * > paid-rss : RSS 과금상품(PD000605)
+		 * > free-rss : RSS 비과금상품(PD000606)
+		 */
+	    optional string packetFee = 9;
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 10; // resource 정보
+	    /*
+	     * > short : 한 줄 설명
+	     * > long : 상세 설명
+	     */
+	    optional string requestType = 11;
+	    optional string tableOfContents = 12; //목차정보(ebook일 경우)
+	    optional string aboutWriter = 13; //작가소개(ebook일 경우)
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Accrual accrual = 14; // Accrual
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Rights rights = 15; // 권한 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.App app = 16; // 앱 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Music music 	= 17; // 음악 부가 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Vod vod = 18; // VOD 부가 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.VideoInfo videoInfo = 19; //VOD일경우 VOD 부가정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Book book = 20; //ebook,Comic일 경우 부가정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Promotion promotion = 21; //이벤트 상품 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Contributor contributor = 22; // Contributor message
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Distributor distributor = 23; // distributor message
+	    optional string base = 24;		// 기본URL
+}

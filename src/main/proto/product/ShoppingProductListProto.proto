@@ -1,0 +1,29 @@
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+import "intfmessage/common/CommonResponseProto.proto";
+import "intfmessage/product/ProductProto.proto";
+
+message ShoppingProductList {
+
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonRes = 1;    // 공통 Response
+
+    /*
+     *  상품정보
+     * > 필수 정의 항목
+     * > identifier : 상품 ID
+     * > category :  상품 카테고리
+     * > title : 상품명
+     * > contributor  : 제작자 정보
+     * > productExplain : 상품 설명
+     * > source : 상품 이미지 정보
+     * > rights : 권한 정보
+     * > accrual : 누적 정보
+     * > price  : 가격정보
+     * > Option 항목
+     * > salesOption : 판매 옵션( 배송 상품일 경우 적용)
+     */
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product productList = 2;
+}
+

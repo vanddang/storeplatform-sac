@@ -1,0 +1,41 @@
+/*
+ * 작성자 : 김다슬
+ * 작성일 : 2013-09-16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo";
+
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/UrlProto.proto";
+
+/*
+ * 푸쉬 메시지 정보
+ */
+ message PushMessage {
+	required string identifier = 1;			//푸쉬 메시지 ID
+	/*
+	 * 메시지 제목
+	 * > text
+	 */
+ 	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 2;
+ 	/*
+ 	 * 관련 이미지URL 정보
+ 	 * > url : Source의 URL
+ 	 * > mediaType : Contents의 Mime Type
+ 	 */
+ 	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 3;
+ 	/*
+ 	 * 상품 상세로 이동 시
+ 	 * > SKT_TStoreClient_Android_연동규격서_20120920.doc 참고
+ 	 * > 예) PRODUCT_VIEW/0000017866/0
+ 	 */
+ 	optional string intentMessage = 4;
+ 	/*
+ 	 * 모바일 Web URL
+ 	 * > text
+ 	 */
+ 	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Url url = 5;
+ 	optional string pushMessageExplain = 6;		//일반 메시지
+ }

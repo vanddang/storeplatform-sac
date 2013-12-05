@@ -1,0 +1,29 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.miscellaneous.vo";
+
+message SmsAuth {
+
+	/*
+	 * SMS 인증번호 요청 결과 암호화 방법 (암호화 알고리즘/{key index})
+	 * > AES-128/{key index} : AES-128/{key index}
+	 * > SHA-Digest/{key index} : SHA-Digest/{key index}
+	 */
+	optional string encryptionType = 2;
+
+	/*
+	 * SMS 인증번호 요청 결과("|"으로 구분한 암호화 된 문자열)
+	 * > signature : Signature
+	 * > signData : sign data
+	 * > serviceNo : SKT일 경우 관리번호
+	 * > modelType : SKT일 경우 휴대폰 제조사/단말Type	 *
+	 * > {signature}|{signData}|{serviceNo}|{modelType}
+	 */
+	optional string smsAuth = 3;
+
+	optional string smsAuthNo = 4;			// SMS 인증번호
+
+	optional string key = 5;				// 고유식별키(kmcSmsAuth)
+
+	optional string checkParam1 = 6;		// 확인용 파라메타1
+}

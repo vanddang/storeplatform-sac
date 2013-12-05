@@ -1,0 +1,34 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/PriceProto.proto";
+import "intfmessage/common/TimeProto.proto";
+import "intfmessage/product/FreeIssuedBookInfoProto.proto";
+
+message Subscription {
+	/*
+	 * 기간 타입
+	 * > monthly  : 월간
+	 * > weekly  : 주간
+	 * > biweekly  : 격주간
+	 */
+	optional string durationType = 1;
+
+	message SubscriptionFee {		// 구독료 정보
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 1;		// 가격
+		/*
+		 * 구독 기간
+		 * duration  : 정기 구독기간
+		 * additional : 추가 기간
+		 */
+		repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Time time = 2;
+	}
+	optional SubscriptionFee subscriptionFee = 2;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.FreeIssuedBookInfo freeIssuedBookInfo = 3;		//무료 발행호 정보
+
+}

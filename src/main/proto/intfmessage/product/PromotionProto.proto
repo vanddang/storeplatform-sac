@@ -1,0 +1,68 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/PriceProto.proto";
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/UrlProto.proto";
+
+message Promotion {
+		/*
+		 * 이벤트명
+		 * > clover: 네잎 클로버
+		 * > offering: 결제완료 오퍼링
+		 * > search: 검색어 입력 창에 노출되는 문구
+		 */
+		required string name = 1;
+		optional string identifier = 2;		//오퍼링ID
+		/*
+		 * 본인/타인 구분
+		 * > self:본인
+		 * > others:타인
+		 */
+		optional string receiver = 3;
+		/*
+		 * 프로모션 타입
+		 * > free:무료
+		 * > discount:할인
+		 * > tcash:T store 캐쉬
+		 */
+		optional string type = 4;
+		/*
+		 * 오퍼링 분류
+		 * > product:상품
+		 * > tcash:T store 캐쉬
+		 */
+		optional string offering = 5;
+		/* 오퍼링 적용구분
+		 * “APP”, “음악”, “ebook단품”, “VOD단품”인 경우 필요
+		 * “VOD”,”이북”,”코믹 시리즈”인 경우 불필요
+		 */
+		optional string ref = 6;
+
+		/*
+		 * Promotion 제목
+		 * Title name이 ”search”일 경우 검색어 입력 창에 문구가 정의된다.
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 7;
+
+		optional string offeringExplain = 8;	//오퍼링내용
+		optional string guideEvent = 9;			//이벤트 안내
+		optional string guideUsage = 10;		//이용안내
+		optional string promotionExplain = 11;	//promotion 설명
+		optional string usagePeriod = 12;		//이용기간
+		optional string releaseDate = 13;		//종료일자
+		optional string giveaway = 14;		//경품
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 15; // promotion resource 정보
+		/*
+		 * offering이 "tcash" 일 경우 제공되는 T store 캐쉬를 정의하기 위해 사용
+		 */
+		//optional common.Price price = 12;
+		/*
+		 * Promotion URL
+		 * externalUrl : 외부URL
+		 */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Url	url	= 16;		//externalUrl
+}

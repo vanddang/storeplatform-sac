@@ -1,0 +1,32 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message SalesOption {
+	/*
+	 * 상품권 종류
+	 * > giftcard : 상품권
+	 * > exchange : 교환권
+	 * > delivery : 배송상품
+	 */
+	optional string type = 1;
+	/*
+	 * 상품 상태
+	 * > soldout : 매진상품
+	 */
+	optional string satus = 2;
+	optional string btob = 3; 				//B2B 상품 여부(Y/N)
+	optional string maxMonthlySale = 4; 	//월간 최대 판매가능 수량
+	optional string maxDailySale = 5; 		//일간 최대 판매가능 수량
+	optional string maxMonthlyBuy = 6; 		//1인 월간 최대 구매가능 수량
+	optional string maxDailyBuy = 7; 		//1인 일간 최대 구매가능 수량
+	optional string maxOnceBuy = 8; 		//1회 최대 구매가능 수량
+	optional string placeUsage = 9; 		//사용장소
+	optional string restrictUsage = 10; 	//사용제한
+	optional string principleUsage = 11; 	//유의사항
+	optional string refundUsage = 12; 		//구매취소/환불
+}

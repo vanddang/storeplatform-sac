@@ -1,0 +1,21 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message StoreToken {
+	/*
+	 * eToken의 암호화 방식과 사용된 Key Index
+	 */
+	required string crypto = 1;
+
+	/*
+	 * 암호화된 eToken 정보(콤마로 구분}
+	 * > msisdn:{전화번호}
+	 * > imei:{IMEI}
+	 * > uuid:{UUID}
+	 * > mbrno:{회원번호}
+	 * > birth:{생년월일}
+	 * > did:{단말 모델명}
+	 */
+	required string eToken = 2;
+}

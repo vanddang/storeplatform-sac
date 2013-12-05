@@ -1,0 +1,123 @@
+/*
+ * 작성자명 : 김성겸
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.user.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.user.vo";
+
+import "intfmessage/common/CountProto.proto";
+import "intfmessage/common/PasswordProto.proto";
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/user/BellProto.proto";
+
+message Billing{
+
+	optional int32 amount = 1;   		// 결제금액
+
+	optional string receiver = 2;   	// “선물하기”일 경우만 존재한다.
+
+	optional string period = 3;     	// “정기구독”일 경우만 존재한다.
+
+	optional string purchasePath = 4;  	// 구매 경로  (쇼핑/쿠폰 상품을 결제할 경우 purchasePath=shoppingCoupon 으로 설정)
+
+	message PaymentCategory {
+		/*
+		 * 구매 / 선물 구분
+		 * > billing : 구매
+		 * > gift : 선물
+		 */
+		required string name = 1;
+
+		/*
+		 * 구매 / 선물내용
+		 * > app-multimedia : (APP/멀티미디어)
+		 * > ring-bell : (컬러링/벨소리)
+		 * > shopping-coupon : (쇼핑/쿠폰)
+		 * > subscription : (정기구독)
+		 * > freepass : (정액제)
+		 */
+		required string text = 2;
+	}
+
+	required PaymentCategory paymentCategory = 5;
+
+	message Payment{
+
+		optional string amount = 1;   // 금액
+
+		/*
+		 *  결제 타입
+		 * > OR000602 : 핸드폰 결제
+		 * > OR000603 : OCB 결제
+		 * > OR000604 : 도토리 결제
+		 * > OR000605 : SKT후불 결제
+		 * > OR000606 : 전액쿠폰 결제
+		 * > OR000607 : 캐쉬 결제
+		 * > OR000610 : 문화상품권 결제
+		 * > OR000612 : 정액권 결제
+		 * > OR000613 : 시리즈 패스 결제
+		 * > OR000696 : 1+1 이벤트 결제
+		 * > OR000699 : 무료상품 결제
+		 * > tmembership : T Membership 결제
+		 * > creditCard : 신용카드 결제
+		 * > paypin : Paypin 결제
+		 */
+		optional string type = 2;
+
+		/*
+		 * 주민번호 또는 생년월일+성별
+		 * type이 tmembership일 경우 생년월일+성별
+		 * 다른경우는 필요시 주민번호
+		 */
+		optional string socialNo = 3;
+
+		/*
+		 * 거래 KEY
+		 * 다날결제: SMS 승인번호 요청 시 발생되는 키
+		 * 신용카드: P_NOTI에서 사용한 구매일시 16자리
+		 */
+		optional string tradeKey = 4;
+
+		optional string smsAuthNo = 5; 		// SMS 승인번호
+
+		optional string cardNo  = 6; 			// 카드 번호
+
+		optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Password password = 7;   //비밀번호
+
+		/*
+		 * Type에 따른 ID
+		 * > 네이트/싸이월드 ID
+		 * > 폰 ID
+		 * > 컬쳐랜드 ID
+		 * > 정액권 상품 ID
+		 * > Series 패스 상품 ID
+		 */
+		repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 8;
+
+		/*
+		 * 도토리 회원 구분
+		 * > N : 네이트 유무선연동 회원
+		 * > C : 싸이월드 유무선연동 회원
+		 * > 01 : 네이트 통합 ID 회원
+		 * > 02 : 싸이월드 통합 ID 회원
+		 */
+		optional string  dotoriMemberType = 9;
+
+		message Cultureland {
+			required string customerKey = 1;		//고객KEY
+			required string authNo = 2;				//인증번호
+			required string paymentAuthType = 3;	//결제인증구분
+		}
+		optional Cultureland cultureland = 10;  	//문화상품권 결제확인
+	}
+
+	repeated Payment paymentList = 6;   	// 결제진행결제
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Bell bell = 7; 	// 컬러링/벨소리 정보를 정의하는데 사용한다.
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Count count = 8;   //쇼핑.쿠폰 상품 수량
+}
+
+
+

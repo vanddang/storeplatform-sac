@@ -1,0 +1,31 @@
+package prototype;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+// Input message
+message reqProductCategory {
+    required string reqApiType = 1;         //API타입
+    required string reqPurchaseYn = 2;      //기구매체크여부
+    required string reqTopCategoryNo = 3;   //탑카테고리번호
+    required string reqCategoryNo = 4;      //카테고리번호
+    optional string reqStartDate = 5;       //시작일
+    optional string reqEndDate = 6;         //종료일
+    optional string reqMbrNo = 7;           //사용자번호
+    optional string reqIdMdnFlag = 8;       //ID/MDN Flag
+    optional string reqDeviceModelCd = 9;   //단말코드번호
+}
+
+// Default message
+message ProductCategory {
+    optional string prodId = 1;             //상품ID
+    optional string prodNm = 2;             //상품명
+    optional string topCategoryNo = 3;      //탑카테고리번호
+    optional string topCategoryNm = 4;      //탑카테고리명
+    optional string categoryNo = 5;         //카테고리번호
+    optional string categoryNm = 6;         //카테고리명
+}
+
+// List message
+message ProductCategoryList {
+    repeated ProductCategory productCategory = 1;
+}

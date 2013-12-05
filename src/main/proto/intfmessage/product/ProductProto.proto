@@ -1,0 +1,98 @@
+/*
+ * 작성자명 : 이석희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/DateProto.proto";
+import "intfmessage/common/PriceProto.proto";
+import "intfmessage/common/CategoryProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/TitleProto.proto";
+import "intfmessage/common/IdentifierProto.proto";
+import "intfmessage/product/RightsProto.proto";
+import "intfmessage/product/PromotionProto.proto";
+import "intfmessage/product/AppProto.proto";
+import "intfmessage/product/MusicProto.proto";
+import "intfmessage/product/VodProto.proto";
+import "intfmessage/product/AccrualProto.proto";
+import "intfmessage/product/DistributorProto.proto";
+import "intfmessage/product/VideoInfoProto.proto";
+import "intfmessage/product/BookProto.proto";
+import "intfmessage/product/ContributorProto.proto";
+import "intfmessage/product/SalesOptionProto.proto";
+import "intfmessage/product/CouponProto.proto";
+import "intfmessage/product/EventProto.proto";
+import "intfmessage/product/SelectOptionProto.proto";
+import "intfmessage/product/HistoryProto.proto";
+import "intfmessage/user/PurchaseProto.proto";
+import "intfmessage/user/PointProto.proto";
+
+message Product {
+
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;		//상품 ID
+		optional string id=2;		//identifier 추가 기술
+		optional string support=3;		//지원 매체
+		optional string lang=4;		//지원 언어
+		/*
+		 * 신규상품/마감상품 설정
+		 * > new : 신규상품
+		 * > closing : 마감임박
+		 */
+		optional string status = 5;
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 6;		// title Message(상품명)
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Price price = 7;			//가격정보
+	    /*
+	     * > Code : 대분류, 소분류 카테고리코드
+	     * > name : shoppingStore
+	     * > type(option) : 대분류 카테고리시 topClass
+	     * > categoryExplian : 카테고리 설명
+	     */
+	    repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Category categoryList 	= 8;
+	    /*
+		 * 패킷과금 타입
+		 * > paid : 일반 과금상품(PD000601)
+		 * > library : 라이브러리(PD000602)
+		 * > vm : VM(PD000603)
+		 * > free : 일반 비과금상품(PD000604)
+		 * > paid-rss : RSS 과금상품(PD000605)
+		 * > free-rss : RSS 비과금상품(PD000606)
+		 */
+	    optional string packetFee = 9;			//패킷 과금 비과금 표현
+	    repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 10; // resource 정보
+	    /*
+	     * > short : 한 줄 설명
+	     * > long : 상세 설명
+	     */
+	    optional string requestType = 11;
+	    optional string productExplain = 12; //상품설명
+	    optional string tableOfContents = 13; //목차정보(ebook일 경우)
+	    optional string aboutWriter = 14; 	//작가소개(ebook일 경우)
+	    optional string recommendedReason = 15; 	//앱 추천사유 (앱코디 리스트인 경우)
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Accrual accrual = 16; // Accrual
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Rights rights = 17; // 권한 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.App app = 18; //앱 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Music music = 19; // 음악 부가 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Vod vod = 20; // VOD 부가 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.VideoInfo videoInfo = 21; //VOD일경우 VOD 부가정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Book book = 22; //ebook,Comic일 경우 부가정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Promotion promotion = 23; //이벤트 상품 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Contributor contributorList =24; // 제작자 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Distributor distributor = 25; // 제작사 또는 개발사 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SalesOption salesOption = 26; // 판매 option
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Purchase purchase = 27; // 구매 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Coupon coupon = 28; // 쿠폰 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 29;  // 날짜 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Event event = 30;  // 이벤트 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOption selectOption = 31;  // 상품 선택 옵션 정보
+	    optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Point point = 32;		// point 정보
+	    /*
+	     * Restrict 유형
+	     * > ota : 네트워크 제한
+	     * > sales : 판매 중지
+	     */
+	    optional string restrictType = 33;
+		optional string latestIssue = 34;		//ebook의 최신호 정보
+}

@@ -1,0 +1,17 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message CommonRequest {
+	required string menuId = 1;
+
+	optional string range = 2 [default = "1-10"];			//리스트 범위
+	/*
+	 * 응답 내용 전체/요약 구분
+	 * > shortList : 요약된 List 정보
+	 * > longList : 전체 List 정보
+	 * > short : 요약된 상세 정보
+	 * > long : 전체 상세 정보
+	 */
+	required string resFormType = 3 [default = "shortList"];
+}

@@ -1,0 +1,20 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message VideoInfo {
+	optional string scid = 1;			//Sub Contents ID
+ 	 /*
+	 * 타입
+	 * > normal: normal
+	 * > sd: sd
+	 * > hd: hd
+	 */
+	optional string type = 2;			//타입
+	optional string pixel = 3;			//픽셀수
+	optional string pictureSize = 4;	//화면비
+	optional string source = 5;			//파일정보
+	optional string version = 6;		//버전
+	optional string btvcid = 7;			//BTV CID
+	optional string size = 8;			//파일사이즈
+}

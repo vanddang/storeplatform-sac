@@ -1,0 +1,37 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/CountProto.proto";
+
+message Book {
+	 /*
+	 * 타입(연재물일 경우만 정의한다.
+	 * > serial: 연재물
+	 */
+	optional string type = 1;
+	optional string updateCycle = 2;	//업데이트 주기
+	optional string totalPages = 3;		//전체 페이지수
+	optional string bookVersion = 4;	//버전
+	optional string scid = 5;			//Sub Contents ID
+	optional int32 size = 6;			//용량 (byte 단위)
+	message Chapter {
+		optional string unit = 1;		//회차 정보
+	}
+	optional Chapter chapter = 7;
+	optional string saleDate = 8;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Count subscriptionCount = 9;	//정기 구독수
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Count channelCount = 10;		//채널에 속해 있는 전체 책 권수
+	/*
+	 * 상태
+	 * > continue
+	 */
+	optional string status = 11;
+
+	/*
+	 * 지원
+	 * >play
+	 * >store
+	 */
+	optional string support = 12;
+}

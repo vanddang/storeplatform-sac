@@ -1,0 +1,14 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+import "intfmessage/common/SourceProto.proto";
+
+message Category {
+	optional string code = 1;				//category type에 따른 코드명
+	required string name = 2;				//category code에 따른 설명
+	optional string type = 3;				//category 타입
+	optional string text = 4;				//category 설명 -> NEW ADD
+	optional int32 count = 5;				//카테고리 상품수
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 6;		//Category의 graphic resource가 있을 경우 정의
+}
