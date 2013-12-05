@@ -14,9 +14,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.external.gw.common.vo.ExMessage;
 import com.skplanet.external.gw.uaps.client.sci.UAPSSCI;
@@ -34,8 +35,10 @@ import com.skplanet.external.gw.uaps.client.vo.ExUserInfo;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration({ "classpath*:/spring/context-*.xml", "classpath*:/integration/context-*.xml" })
-public class UAPSTest extends AbstractTransactionalJUnit4SpringContextTests {
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@TransactionConfiguration
+@Transactional
+public class UAPSTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UAPSTest.class);
 

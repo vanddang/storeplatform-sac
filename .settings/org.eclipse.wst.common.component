@@ -20,6 +20,21 @@
         <dependent-module archiveName="storeplatform-sac-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-sac-client/storeplatform-sac-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="storeplatform-prototype-rpc-sc-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-rpc-sc-client/storeplatform-prototype-rpc-sc-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="storeplatform-prototype-lpc-sc-sci-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-lpc-sc-sci/storeplatform-prototype-lpc-sc-sci">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="storeplatform-prototype-sc-domain-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-sc-domain/storeplatform-prototype-sc-domain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="storeplatform-prototype-sc-conf-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-sc-conf/storeplatform-prototype-sc-conf">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="storeplatform-prototype-lpc-sc-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-lpc-sc-client/storeplatform-prototype-lpc-sc-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="external-component-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/external-component-client/external-component-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>

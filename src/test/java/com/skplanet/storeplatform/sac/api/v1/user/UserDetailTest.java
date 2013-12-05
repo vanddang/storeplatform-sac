@@ -26,11 +26,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.framework.test.CompleteCallback;
@@ -50,8 +51,10 @@ import com.skplanet.storeplatform.sc.client.vo.UserSearchVO;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration({ "classpath*:/spring/context-*.xml", "classpath*:/integration/context-*.xml" })
-public class UserDetailTest extends AbstractTransactionalJUnit4SpringContextTests {
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@TransactionConfiguration
+@Transactional
+public class UserDetailTest {
 
 	@Autowired
 	private WebApplicationContext wac;
