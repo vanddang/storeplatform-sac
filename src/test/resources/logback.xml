@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</layout>
+	</appender>
+
+    <logger name="org.springframework" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
+     <logger name="com.skplanet" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="jdbc.sqlonly" additivity="false"> 
+        <level value="DEBUG" /> 
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
+    <logger name="jdbc.resultsettable" additivity="false">
+        <level value="DEBUG" /> 
+        <appender-ref ref="CONSOLE" />
+    </logger>
+</configuration>

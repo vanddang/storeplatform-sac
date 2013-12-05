@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.skplanet</groupId>
+		<artifactId>storeplatform-parent</artifactId> 
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../storeplatform-parent</relativePath>
+	</parent>
+	<artifactId>storeplatform-sac</artifactId>
+	<packaging>war</packaging>
+	<name>Store Platform System - Store API Center</name>
+	<description>Store Platform System</description>
+    <repositories>
+         <repository>
+              <id>team-store-groups</id>
+              <name>Store Dev Groups</name>
+              <url>http://mvn.skplanet.com/content/repositories/team-store-groups</url>
+         </repository>
+    </repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>dtrott</id>
+			<url>http://maven.davidtrott.com/repository</url>
+		</pluginRepository>
+	</pluginRepositories>		
+	
+	<build>  
+		<plugins> 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<warSourceDirectory>webapp</warSourceDirectory>
+				</configuration>
+			</plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration> 
+                    <excludes>
+                        <exclude>**/api/**</exclude> 
+                        <exclude>**/integration/**</exclude> 
+                    </excludes>  
+                </configuration>
+            </plugin>       			
+		</plugins>
+	</build>
+	
+	<dependencies>
+		<!-- StorePlatform Projects -->
+		<dependency>
+			<groupId>com.skplanet</groupId>
+			<artifactId>storeplatform-framework</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.skplanet</groupId>
+			<artifactId>storeplatform-test</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.skplanet</groupId>
+			<artifactId>storeplatform-prototype-sc-client</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.skplanet</groupId>
+			<artifactId>storeplatform-sac-domain</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+        <dependency>
+            <groupId>com.skplanet</groupId>
+            <artifactId>external-component-client</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+		<!-- JDBC Lib -->
+		<!-- NOTE : 프로젝트별로 DBMS가 틀릴 수 있다는 가정하에 JDBC 라이브러리 업무프로젝트레벨에서 선언하여 사용하도록함 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.26</version>
+		</dependency>
+		<!-- Web Libs -->
+		<!-- NOTE : 원래 톰캣에서 제공하는 라이브러러들은 scope를 provided 로 하는 것이 정석이나 mvcMock를 
+			사용하기 때문에 scope를 test로 변경함 -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-extras</artifactId>
+			<version>3.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>jcl-over-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+</project>

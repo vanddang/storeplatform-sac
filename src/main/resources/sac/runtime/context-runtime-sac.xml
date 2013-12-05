@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-http="http://www.springframework.org/schema/integration/http"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc                 http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/integration/http    http://www.springframework.org/schema/integration/http/spring-integration-http-2.2.xsd 
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
+        http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd ">
+     
+    <int:channel id="defaultPreProcessChannel" />
+    
+    <int:chain id="defaultPreProcessChain" input-channel="defaultPreProcessChannel" output-channel="messageRouteChannel" >
+        <!-- =================================================================================================================================== -->
+        <!-- Header 유효성체크 -->
+        <!-- =================================================================================================================================== -->
+        <int:header-enricher> 
+            <int:header name="headerVO" overwrite="true" ref="com.skplanet.storeplatform.sac.runtime.flow.service.ValidationServiceImpl" method="checkHeader" />   
+        </int:header-enricher>             
+        <!-- =================================================================================================================================== -->
+        <!-- 인터페이스 인증 확인 -->
+        <!-- =================================================================================================================================== -->
+        <int:filter discard-channel="httpErrorChannel"  ref="com.skplanet.storeplatform.sac.runtime.flow.service.AuthServiceImpl" method="authentication"/>          
+        <!-- =================================================================================================================================== -->
+        <!-- 테넌트 권한 확인 -->
+        <!-- =================================================================================================================================== -->    
+        <int:filter discard-channel="httpErrorChannel"  ref="com.skplanet.storeplatform.sac.runtime.flow.service.AuthServiceImpl" method="authorization"/>  
+    </int:chain> 
+</beans>

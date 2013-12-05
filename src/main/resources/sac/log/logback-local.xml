@@ -1,0 +1,62 @@
+<included>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %m%n</pattern>
+        </layout>
+    </appender>
+    
+    <appender name="ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>C:\\storeplatform\\log\\logFile.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>logFile.%d{yyyy-MM-dd}.log</FileNamePattern>            
+        </rollingPolicy> 
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %m%n</Pattern>
+        </layout>
+    </appender>
+    
+    <appender name="RUNTIME-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level | %X{x-tx-id} | %X{tenantId} | %X{ipAddress} | %msg%n</pattern>
+        </layout>
+    </appender> 
+    
+    <logger name="com.skplanet.storeplatform.framework.integration.filter" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="RUNTIME-CONSOLE" />
+    </logger>
+    <logger name="org.springframework" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="com.skplanet" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
+    <logger name="jdbc.sqlonly" additivity="false"> 
+        <level value="DEBUG" /> 
+        <appender-ref ref="CONSOLE" />
+    </logger>    
+    <logger name="jdbc.resultsettable" additivity="false">
+        <level value="DEBUG" /> 
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
+    <!-- 기본jdbc 로그 사용 안함 -->
+    <logger name="jdbc.resultset" additivity="false">
+        <level value="OFF" /> 
+    </logger>
+    <logger name="jdbc.audit" additivity="false">
+        <level value="OFF" /> 
+    </logger>
+    <logger name="jdbc.sqltiming" additivity="false">
+        <level value="OFF" /> 
+    </logger>
+    
+    <root>
+        <level value="DEBUG" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+</included>

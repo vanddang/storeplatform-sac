@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="sac/log/logback-${spring.profiles.active}.xml" /> 
+    
+    <include resource="member-sci/log/logback-${spring.profiles.active}.xml"/>  
+     
+</configuration>

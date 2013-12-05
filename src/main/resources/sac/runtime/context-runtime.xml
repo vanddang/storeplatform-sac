@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-http="http://www.springframework.org/schema/integration/http"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc                 http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/integration/http    http://www.springframework.org/schema/integration/http/spring-integration-http-2.2.xsd 
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
+        http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd ">
+   
+    <import resource="classpath*:/runtime/context-runtime.xml" />
+    
+    <context:component-scan  base-package="com.skplanet.storeplatform.framework.integration" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
+        
+    <bean class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
+       <property name="inboundHeaderNames" value="x-tx-id, x-store-auth-info, HTTP_REQUEST_HEADERS" />
+       <!-- 
+       <property name="outboundHeaderNames" value="" />
+       <property name="excludedOutboundStandardRequestHeaderNames" value="" />
+       <property name="excludedInboundStandardResponseHeaderNames" value="" />
+       <property name="userDefinedHeaderPrefix" value="" />
+        -->
+    </bean> 
+</beans>
