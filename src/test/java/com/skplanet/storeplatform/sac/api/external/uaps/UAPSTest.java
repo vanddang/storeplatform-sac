@@ -19,11 +19,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.external.gw.common.vo.ExMessage;
-import com.skplanet.external.gw.uaps.client.sci.UAPSSCI;
-import com.skplanet.external.gw.uaps.client.vo.ExOpmdInfo;
-import com.skplanet.external.gw.uaps.client.vo.ExUafmapInfo;
-import com.skplanet.external.gw.uaps.client.vo.ExUserInfo;
+import com.skplanet.storeplatform.external.common.client.vo.ExMessage;
+import com.skplanet.storeplatform.external.uaps.client.sci.UAPSSCI;
+import com.skplanet.storeplatform.external.uaps.client.vo.ExOpmdInfo;
+import com.skplanet.storeplatform.external.uaps.client.vo.ExUafmapInfo;
+import com.skplanet.storeplatform.external.uaps.client.vo.ExUserInfo;
 
 /**
  * 
