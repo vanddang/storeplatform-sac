@@ -9,18 +9,20 @@ package com.skplanet.storeplatform.sac.client.user.vo;
  */
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
+import "user/BaseInfoProto.proto";
 import "user/AgreementInfoProto.proto";
 import "user/RealNameInfoProto.proto";
 
 /**
+ * 요청
  * 모바일 전용 회원 가입 (MDN 회원 가입)
  */
-message JoinMdnRequest {
+message UserJoinMdnRequest {
 
 	/**
-	 * 단말 MDN
+	 * 기본 정보
 	 */
-	required string mdn = 1;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.BaseInfo baseInfoList = 1;
 
 	/**
 	 * 약관동의 정보 리스트
@@ -31,5 +33,17 @@ message JoinMdnRequest {
 	 * 법정대리인 정보
 	 */
 	optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 3;
+
+	/**
+	 * 법정대리인 내/외국인 구분
+	 * > local
+	 * > foreign
+	 */
+	optional string parentResident = 4;
+
+	/**
+	 * 법정대리인 생년월일
+	 */
+	optional string parentBirth = 5;
 
 }

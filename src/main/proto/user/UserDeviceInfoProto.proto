@@ -94,6 +94,6 @@ message UserDeviceInfo {
 	/**
 	 * 사용자 단말 부가 정보 리스트
 	 */
-	repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceExtraInfo userDeviceExtraInfoList = 15;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceExtraInfo userDeviceExtraInfoList = 16;
 
 }
