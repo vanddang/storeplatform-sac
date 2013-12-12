@@ -1,5 +1,5 @@
 //syntax = "proto2";
-package prototype;
+package com.skplanet.storeplatform.proto.user;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
@@ -50,26 +50,26 @@ message SellerInfo {
 	optional string sellerEmail          = 12;	/*	판매자 이메일(Sub계정 사용)		*/
 	optional string isRecvEmail          = 13;	/*	이메일수신 여부	*/
 	optional string sellerName           = 14;	/*	판매자 이름(Sub계정 사용)	*/
-	optional string sellerNickName       = 15;	/*	노출 이름	*/  
-	optional string sellerSex            = 16;	/*	판매자 성별	*/   
-	optional string sellerBirthDay       = 17;	/*	판매자 생년월일	*/  
-	optional string sellerSSNumber       = 18;	/*	주민등록번호	*/  
-	optional string sellerZip            = 19;	/*	우편번호	*/  
-	optional string sellerAddress        = 20;	/*	거주지 주소	*/  
-	optional string sellerDetailAddress  = 21;	/*	거주지 상세주소	*/  
-	optional string sellerCity           = 22;	/*	(외국인)도시	*/  
-	optional string sellerState          = 23;	/*	(외국인)주	*/  
-	optional string sellerCountry        = 24;	/*	국가코드	*/  
+	optional string sellerNickName       = 15;	/*	노출 이름	*/
+	optional string sellerSex            = 16;	/*	판매자 성별	*/
+	optional string sellerBirthDay       = 17;	/*	판매자 생년월일	*/
+	optional string sellerSSNumber       = 18;	/*	주민등록번호	*/
+	optional string sellerZip            = 19;	/*	우편번호	*/
+	optional string sellerAddress        = 20;	/*	거주지 주소	*/
+	optional string sellerDetailAddress  = 21;	/*	거주지 상세주소	*/
+	optional string sellerCity           = 22;	/*	(외국인)도시	*/
+	optional string sellerState          = 23;	/*	(외국인)주	*/
+	optional string sellerCountry        = 24;	/*	국가코드	*/
 	optional string sellerLanguage       = 25;	/*	언어코드
 													- 한국어
-													- 영어	*/  
-	optional string isForeign            = 26;	/*	식별코드	*/  
-	optional string customerPhoneCountry = 27;	/*	고객 응대 전화번호 국가코드	*/  
-	optional string customerPhone        = 28;	/*	고객 응대 전화번호	*/  
-	optional string customerEmail        = 29;	/*	고객 응대 이메일	*/  
-	optional string isSubSeller          = 30;	/*	서브계정 여부	(Sub계정 사용)	*/  
-	optional string memo                 = 31;	/*	메모	(Sub계정 사용)	*/  
+													- 영어	*/
+	optional string isForeign            = 26;	/*	식별코드	*/
+	optional string customerPhoneCountry = 27;	/*	고객 응대 전화번호 국가코드	*/
+	optional string customerPhone        = 28;	/*	고객 응대 전화번호	*/
+	optional string customerEmail        = 29;	/*	고객 응대 이메일	*/
+	optional string isSubSeller          = 30;	/*	서브계정 여부	(Sub계정 사용)	*/
+	optional string memo                 = 31;	/*	메모	(Sub계정 사용)	*/
 
-	optional com.skplanet.storeplatform.sac.client.user.vo.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
-	optional com.skplanet.storeplatform.sac.client.user.vo.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/  	
+	optional com.skplanet.storeplatform.proto.user.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
+	optional com.skplanet.storeplatform.proto.user.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/
 }

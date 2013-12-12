@@ -1,12 +1,12 @@
 //syntax = "proto2";
-package prototype;
+package com.skplanet.storeplatform.proto.user;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
 /*	판매자 부가 정보	*/
 message SellerExtraInfo {
 
-	optional string extraProfileCode = 1;	/*	부가 정보 코드	*/	
+	optional string extraProfileCode = 1;	/*	부가 정보 코드	*/
 	optional string extraProfileValue = 2;	/*	부가 정보 값	*/
 	
 }

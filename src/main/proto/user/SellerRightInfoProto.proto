@@ -1,5 +1,5 @@
 //syntax = "proto2";
-package prototype;
+package com.skplanet.storeplatform.proto.user;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 

@@ -1,5 +1,5 @@
 //syntax = "proto2";
-package prototype;
+package com.skplanet.storeplatform.proto.user;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
@@ -44,6 +44,6 @@ message SellerAccountInfo {
 	optional string bankAccount         = 34;   /*	 계좌번호                 */
 	optional string bankAcctName        = 35;   /*	 예금자명                 */
 	
-	optional com.skplanet.storeplatform.sac.client.user.vo.SellerExtraDocumentInfo sellerExtraDocumentInfo        = 36;   /*	 판매자 부가 서류 정보                 */
+	optional com.skplanet.storeplatform.proto.user.SellerExtraDocumentInfo sellerExtraDocumentInfo        = 36;   /*	 판매자 부가 서류 정보                 */
 
 }
