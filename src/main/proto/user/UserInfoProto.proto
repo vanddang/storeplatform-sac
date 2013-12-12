@@ -2,12 +2,12 @@
  * 작성자명 : tlaeowls
  * 작 성 일 : 2013.12.12
  */
-package com.skplanet.storeplatform.proto.user;
+package com.skplanet.storeplatform.sac.client.user.vo;
 
 /**
  * java 파일로 생성시, 사용될 java의 패키지명
  */
-option java_package = "com.skplanet.storeplatform.proto.user";
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
 import "user/UserDeviceInfoProto.proto";
 import "user/UserExtraInfoProto.proto";
@@ -194,16 +194,16 @@ message UserInfo {
 	/**
 	 * 사용자 단말 정보 리스트
 	 */
-	repeated com.skplanet.storeplatform.proto.user.UserDeviceInfo userDeviceInfoList = 29;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceInfo userDeviceInfoList = 29;
 
 	/**
 	 * 사용자 부가 정보 리스트
 	 */
-	repeated com.skplanet.storeplatform.proto.user.UserExtraInfo userExtraInfoList = 30;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.UserExtraInfo userExtraInfoList = 30;
 
 	/**
 	 * 실명 인증 정보
 	 */
-	optional com.skplanet.storeplatform.proto.user.RealNameInfo realNameInfo = 31;
+	optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 31;
 
 }
