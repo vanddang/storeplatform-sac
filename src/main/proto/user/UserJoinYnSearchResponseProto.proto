@@ -1,0 +1,18 @@
+package com.skplanet.storeplatform.proto.user;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/UserInfoProto.proto";
+import "user/RealNameInfoProto.proto";
+
+message UserDeviceConfirmRequestProto {
+    optional com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 1;
+    optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 2;
+
+    repeated string resultCode   = 3;
+    repeated string resultMassage   = 4;
+    optional string under14   = 5;
+    optional string agencyYn   = 6;
+    optional string prodAdultYn   = 7;
+    optional string under19   = 8;
+}
