@@ -87,6 +87,11 @@ message UserDeviceInfo {
 	optional string joinId = 14;
 
 	/**
+	 * 휴대폰번호
+	 */
+	optional string userPhone = 15;
+
+	/**
 	 * 사용자 단말 부가 정보 리스트
 	 */
 	repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceExtraInfo userDeviceExtraInfoList = 15;
