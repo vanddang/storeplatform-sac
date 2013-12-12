@@ -1,0 +1,94 @@
+/**
+ * 작성자명 : tlaeowls
+ * 작 성 일 : 2013.12.12
+ */
+package com.skplanet.storeplatform.proto.user;
+
+/**
+ * java 파일로 생성시, 사용될 java의 패키지명
+ */
+option java_package = "com.skplanet.storeplatform.proto.user";
+
+import "user/UserDeviceExtraInfoProto.proto";
+
+/**
+ * 사용자 단말 정보
+ */
+message UserDeviceInfo {
+
+	/**
+	 * 기기 Key
+	 */
+	optional string deviceKey = 1;
+
+	/**
+	 * 기기 ID
+	 */
+	optional string deviceID = 2;
+
+	/**
+	 * 기기 타입 코드
+	 */
+	optional string deviceType = 3;
+
+	/**
+	 * 기기 모델 번호
+	 */
+	optional string deviceModelNo = 4;
+
+	/**
+	 * skt 사용자 관리 번호
+	 */
+	optional string imMngNum = 5;
+
+	/**
+	 * 통신사
+	 */
+	optional string deviceTelecom = 6;
+
+	/**
+	 * 기기 별명
+	 */
+	optional string deviceNickName = 7;
+
+	/**
+	 * 대표기기 여부
+	 */
+	optional string isPrimary = 8;
+
+	/**
+	 * 인증 여부
+	 */
+	optional string isAuthenticated = 9;
+
+	/**
+	 * 인증 일시
+	 */
+	optional string authenticationDate = 10;
+
+	/**
+	 * SMS 수신 여부
+	 */
+	optional string isRecvSMS = 11;
+
+	/**
+	 * 기기 고유 아이디
+	 */
+	optional string imei = 12;
+
+	/**
+	 * 기기 계정
+	 */
+	optional string deviceAccount = 13;
+
+	/**
+	 * 가입 채널 코드
+	 */
+	optional string joinId = 14;
+
+	/**
+	 * 사용자 단말 부가 정보 리스트
+	 */
+	repeated com.skplanet.storeplatform.proto.user.UserDeviceExtraInfo userDeviceExtraInfoList = 15;
+
+}
