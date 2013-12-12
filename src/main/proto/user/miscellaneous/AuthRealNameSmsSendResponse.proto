@@ -31,13 +31,10 @@ message AuthRealNameSmsSendResponse {
      * > 30009 : 한국모바일인증 선불 휴대폰번호
      * > 39204 : 한국모바일인증 본인인증 사용권한 없음
      * > 39205 : 한국모바일인증 SMS인증 사용권한 없음
-     * > 39207 : 한국모바일인증 일 3회 인증 실패
-     * > 39988 : 한국모바일인증 SMS 3회 재전송 실패
-     * > 39989 : 한국모바일인증 인증번호재전송 실패
-     * > 39998 : 한국모바일인증 인증번호 5회 오류횟수 초과
-     * > 39999 : 한국모바일인증 인증번호 불일치 (실패)
      */
     required string result = 2;
-
-
+    required string key = 3;        // 고유식별키
+    required string checkParam1 = 4;        // 확인용 파라미터1
+    required string checkParam2 = 5;        // 확인용 파라미터2
+    required string checkParam2 = 6;        // 확인용 파라미터3
 }
