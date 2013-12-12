@@ -1,0 +1,36 @@
+//syntax = "proto2";
+package prototype;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+/*	판매자 탈퇴 정보	*/
+message SellerSecedeInfo {
+
+	optional string secedeReasonCode = 1;	/*	탈퇴 사유 코드- ID 변경
+												- 장기간 부재 (군입대, 유학)
+												- 시스템 장애
+												- 개인정보 보안문제
+												- 컨텐츠 부족
+												- 미방문
+												- 서비스 이용 불편
+												- 기타
+												- ID 변경
+												- 판매 성과 부진
+												- 정산에 대한 불신
+												- 장기간 부재 (군입대, 유학)
+												- 마켓 변경
+												- 시스템 장애
+												- 개인정보 보안문제
+												- 기타
+												- Change ID
+												- Move the other App. Store
+												- Sluggish sales
+												- Dissatisfaction with settlement
+												- Burden of annual fee
+												- Delay App. Review
+												- Long absence
+												- System Error
+												- ETC		*/
+	optional string secedeReasonMessage = 2;	/*	탈퇴 사유 설명		*/
+
+}

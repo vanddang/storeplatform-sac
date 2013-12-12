@@ -1,0 +1,12 @@
+//syntax = "proto2";
+package prototype;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+/*	보안질문 정보	*/
+message PWReminderVO {
+
+	optional string pwReminderQ = 1;	/*	질문		*/
+	optional string pwReminderA = 2;	/*	답변		*/
+
+}
