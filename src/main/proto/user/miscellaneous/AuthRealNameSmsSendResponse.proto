@@ -1,0 +1,34 @@
+/*
+ * 작성자 : 김다슬
+ * 작성일 : 2013.12.12
+ * 기능명 : 3.3.1. 실명 인증용 휴대폰 인증 SMS 발송 Response
+ */
+package com.skplanet.storeplatform.sac.client.user.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.miscellaneous.vo";
+
+message AuthRealNameSmsSendResponse {
+    /*
+     * 인증 목적
+     * > authRealName : 실명인증
+     * > regDevice : 휴대기기 등록
+     * > basic : 일반적인 SMS 인증
+     * > join : 신규가입 시 SMS 인증
+     */
+    required string purposel = 1;
+
+    /*
+     * 본인인증 결과값
+     * > Y : 인증 성공
+     * > N : 인증 실패
+     * > F : 인증 실패 (일 3회 인증 실패)
+     * > E : 오류
+     */
+    required string result = 2;
+
+    /*
+     * 결과 코드
+     * > 결과 코드 정의표 참조
+     */
+    required string resultCode = 3;
+}
