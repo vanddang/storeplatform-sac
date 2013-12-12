@@ -1,5 +1,5 @@
 //syntax = "proto2";
-package com.skplanet.storeplatform.proto.user;
+package com.skplanet.storeplatform.sac.client.user.vo;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
@@ -70,6 +70,6 @@ message SellerInfo {
 	optional string isSubSeller          = 30;	/*	서브계정 여부	(Sub계정 사용)	*/
 	optional string memo                 = 31;	/*	메모	(Sub계정 사용)	*/
 
-	optional com.skplanet.storeplatform.proto.user.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
-	optional com.skplanet.storeplatform.proto.user.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/
+	optional com.skplanet.storeplatform.sac.client.user.vo.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
+	optional com.skplanet.storeplatform.sac.client.user.vo.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/
 }
