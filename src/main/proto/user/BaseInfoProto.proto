@@ -32,5 +32,7 @@ message BaseInfo {
 //	optional string requestedUrl = 15;
 	optional string ua = 16;
 	optional string phoneModelCd = 17;
+	optional string uuid = 18;
+	optional string embededYn = 19;
 
 }
