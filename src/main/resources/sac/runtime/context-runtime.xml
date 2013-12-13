@@ -21,6 +21,7 @@
         
     <bean class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
        <property name="inboundHeaderNames" value="x-tx-id, x-store-auth-info, HTTP_REQUEST_HEADERS" />
+       <property name="outboundHeaderNames" value="x-exception-class, x-exception-entity-class, x-exception-mapper-class, HTTP_RESPONSE_HEADERS" /> 
        <!-- 
        <property name="outboundHeaderNames" value="" />
        <property name="excludedOutboundStandardRequestHeaderNames" value="" />
