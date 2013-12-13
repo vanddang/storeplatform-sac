@@ -69,6 +69,8 @@ message SellerInfo {
 	optional string customerEmail        = 29;	/*	고객 응대 이메일	*/
 	optional string isSubSeller          = 30;	/*	서브계정 여부	*/
 
+	optional string releaseLock			 = 34;  /*  계정 잠금 해제 요청 여부 Y/N*/
+
 	repeated com.skplanet.storeplatform.sac.client.user.vo.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
 	repeated com.skplanet.storeplatform.sac.client.user.vo.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/
 }
