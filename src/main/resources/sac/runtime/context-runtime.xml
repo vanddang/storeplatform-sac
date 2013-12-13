@@ -29,4 +29,8 @@
        <property name="userDefinedHeaderPrefix" value="" />
         -->
     </bean> 
+    
+    
+    <!-- 아키텍처 위반 사항 체크하는 클래스, Protobuf DTO와 맵핑되는 VO간의 불일치를 잡아낸다. -->
+    <bean class="com.skplanet.storeplatform.framework.core.helper.ArchitectureDefectChecker" />
 </beans>
