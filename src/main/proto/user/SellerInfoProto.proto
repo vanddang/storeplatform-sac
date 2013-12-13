@@ -9,7 +9,7 @@ import "user/SellerRightInfoProto.proto";
 /* 판매자 기본 정보 */
 message SellerInfo {
 
-	optional string sellerKey			 = 1;	/*	판매자 key (Sub계정 사용) */
+	optional string sellerKey			 = 1;	/*	판매자 key */
 	optional string sellerClass          = 2;	/*	판매자 구분코드
 													- 개인
 													- 개인사업자
@@ -34,8 +34,8 @@ message SellerInfo {
 													- 탈퇴신청
 													- 탈퇴완료
 													- 승인대기	*/
-	optional string sellerID             = 6;	/*	판매자 ID(Sub계정 사용)	*/
-	optional string sellerPW             = 7;	/*	판매자 PW(Sub계정 사용)	*/
+	optional string sellerID             = 6;	/*	판매자 ID	*/
+	optional string sellerPW             = 7;	/*	판매자 PW	*/
 	optional string sellerTelecom        = 8;	/*	이동통신사
 													- SKT
 													- KT
@@ -47,9 +47,9 @@ message SellerInfo {
 	optional string sellerPhoneCountry   = 9;	/*	휴대폰번호 국가코드	*/
 	optional string sellerPhone          = 10;	/*	휴대폰번호	*/
 	optional string isRecvSMS            = 11;	/*	수신 여부		*/
-	optional string sellerEmail          = 12;	/*	판매자 이메일(Sub계정 사용)		*/
+	optional string sellerEmail          = 12;	/*	판매자 이메일		*/
 	optional string isRecvEmail          = 13;	/*	이메일수신 여부	*/
-	optional string sellerName           = 14;	/*	판매자 이름(Sub계정 사용)	*/
+	optional string sellerName           = 14;	/*	판매자 이름	*/
 	optional string sellerNickName       = 15;	/*	노출 이름	*/
 	optional string sellerSex            = 16;	/*	판매자 성별	*/
 	optional string sellerBirthDay       = 17;	/*	판매자 생년월일	*/
@@ -67,9 +67,8 @@ message SellerInfo {
 	optional string customerPhoneCountry = 27;	/*	고객 응대 전화번호 국가코드	*/
 	optional string customerPhone        = 28;	/*	고객 응대 전화번호	*/
 	optional string customerEmail        = 29;	/*	고객 응대 이메일	*/
-	optional string isSubSeller          = 30;	/*	서브계정 여부	(Sub계정 사용)	*/
-	optional string memo                 = 31;	/*	메모	(Sub계정 사용)	*/
+	optional string isSubSeller          = 30;	/*	서브계정 여부	*/
 
-	optional com.skplanet.storeplatform.sac.client.user.vo.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
-	optional com.skplanet.storeplatform.sac.client.user.vo.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/
+	repeated com.skplanet.storeplatform.sac.client.user.vo.SellerExtraInfo sellerExtraInfo = 32;	/*	판매자 부가정보	*/
+	repeated com.skplanet.storeplatform.sac.client.user.vo.SellerRightInfo sellerRightInfo = 33;	/*	판매자 권한정보	*/
 }
