@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.proto.user;
+package com.skplanet.storeplatform.sac.client.user.vo;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
