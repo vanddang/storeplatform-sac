@@ -2,7 +2,7 @@
 <html>
 <body>
 <% InitialContext initialContext = new InitialContext();
-   Object obj=initialContext.lookup("java:comp/env/jdbc/storeplatformDB");
+   Object obj=initialContext.lookup("java:comp/env/jdbc/SPSACDB");
    out.print("<b>"+obj+"</b>");
  %>
 </body>
