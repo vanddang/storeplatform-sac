@@ -106,4 +106,11 @@ message RealNameInfo {
 	 */
 	optional string userBirthDay = 14;
 
+	   /**
+     * 법정대리인 내/외국인 구분
+     * > local
+     * > foreign
+     */
+    optional string resident = 15;
+
 }
