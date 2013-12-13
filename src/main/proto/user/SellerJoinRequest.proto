@@ -18,7 +18,7 @@ message SellerJoinRequest {
 	/*
 	 * 약관 동의 정보
 	 */
-	required com.skplanet.storeplatform.sac.client.user.vo.AgreementInfo agreementInfo = 2;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.AgreementInfo agreementInfoList = 2;
 	/*
 	 * 실명 인증 정보
 	 */
@@ -26,7 +26,7 @@ message SellerJoinRequest {
 	/*
 	 * 보안 질문 정보
 	 */
-	required com.skplanet.storeplatform.sac.client.user.vo.PWReminderVO pwReminder = 4;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.PWReminderVO pwReminderList = 4;
 	/*
 	 * 판매자 정산정보
 	 */
