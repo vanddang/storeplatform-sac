@@ -36,5 +36,5 @@ message AuthRealNameSmsSendResponse {
     required string key = 3;        // 고유식별키(kcmSmsAuth)
     required string checkParam1 = 4;        // 확인용 파라미터1
     required string checkParam2 = 5;        // 확인용 파라미터2
-    required string checkParam2 = 6;        // 확인용 파라미터3
+    required string checkParam3 = 6;        // 확인용 파라미터3
 }
