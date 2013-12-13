@@ -9,7 +9,7 @@ import "user/PWReminderProto.proto";
 import "user/SellerAccountInfoProto.proto";
 
 /*	판매자 가입 요청	*/
-message SellerJoinRequest {
+message SellerJoinRequest{
 
 	/*
 	 * 판매자 기본정보
