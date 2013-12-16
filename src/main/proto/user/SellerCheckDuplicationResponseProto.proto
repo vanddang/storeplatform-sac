@@ -1,0 +1,24 @@
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+
+/*	판매자 ID/이메일 중복 체크	*/
+message SellerCheckDuplicationResponse{
+	/**
+	 * 결과 코드
+	 */
+	required string resultCode = 1;
+
+	/**
+	 * 결과 메시지
+	 */
+	required string resultMessage = 2;
+
+	/*
+	 * 존재 여부
+	 */
+	required string isRegistered = 3;
+
+
+}

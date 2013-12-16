@@ -1,0 +1,15 @@
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/SellerInfoProto.proto";
+
+/*	판매자 정산 정보 조회	*/
+message SellerSearchAccountRequest{
+
+	/*
+	 * 판매자 기본정보
+	 */
+	required com.skplanet.storeplatform.sac.client.user.vo.SellerInfo sellerInfo = 1;
+
+}
