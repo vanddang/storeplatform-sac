@@ -11,7 +11,6 @@ message Announcement {
 	required string identifier = 1;							// 공지사항 ID
 	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Title title = 2;		// 공지사항 제목
 
-
 	/*
 	 * 등록일
 	 * > type : date/reg
@@ -28,25 +27,16 @@ message Announcement {
  	 * > 외부연동 URL
  	 */
  	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Url url = 7;
-	optional string giveaway = 8;										// 경품
-
-	/*
-	 * 이벤트 기간
-	 * > type : duration/eventPeriod
-	 * > text : 시작일/종료일
-	 * ex)20130501T000000+0900/20130530T000000+0900
-	 */
-	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date eventDate = 9;
 	/*
 	 * 레이아웃
 	 * > dimmed : 숨김처리
 	 * > fullScreen : 전체화면
 	 */
-	optional string layout = 10;
+	optional string layout = 8;
 
 	/*
 	 * 공지사항 유형
 	 * > urgency : 긴급공지
 	 */
-	optional string type = 11;
+	optional string type = 9;
 }

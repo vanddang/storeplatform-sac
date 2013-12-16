@@ -7,7 +7,6 @@ import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/SourceProto.proto";
 import "intfmessage/common/PriceProto.proto";
 import "intfmessage/common/UrlProto.proto";
-import "intfmessage/user/PointProto.proto";
 import "intfmessage/user/AutoPayProto.proto";
 import "intfmessage/product/SelectOptionProto.proto";
 
@@ -75,16 +74,12 @@ message Coupon {
 	optional string couponGuideExplain = 12;			//쿠폰 소개 내용
 
 	repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 13;		//썸네일 또는 배너 이미지
-	 /*
-	 * type=”freepass”이고 해당 정액권이 T맴버십 할인을 지원할 경우 정의된다.
-	 */
-	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Point point = 15;
 
 	/*
 	 * selectOption
 	 * > T스토어 쇼핑상품(type:shoppingStore)인 경우 사용
 	 */
-	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOption selectOption = 16;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOption selectOption = 14;
 
 	/*
 	 * 쿠폰 사용처
@@ -98,7 +93,7 @@ message Coupon {
 		 */
 		required string type = 1;
 	}
-	optional Coverage coverage = 17;
+	optional Coverage coverage = 15;
 
 	message EpisodeCoupon {
 		required string identifier = 1;		//실제 coupon id
@@ -112,5 +107,5 @@ message Coupon {
 		required string status = 2;
 	}
 
-	repeated EpisodeCoupon episodeCouponList = 18;
+	repeated EpisodeCoupon episodeCouponList = 16;
 }

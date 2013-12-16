@@ -28,7 +28,6 @@ import "intfmessage/product/EventProto.proto";
 import "intfmessage/product/SelectOptionProto.proto";
 import "intfmessage/product/HistoryProto.proto";
 import "intfmessage/user/PurchaseProto.proto";
-import "intfmessage/user/PointProto.proto";
 
 message Product {
 
@@ -87,12 +86,11 @@ message Product {
 	    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 29;  // 날짜 정보
 	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Event event = 30;  // 이벤트 정보
 	    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOption selectOption = 31;  // 상품 선택 옵션 정보
-	    optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Point point = 32;		// point 정보
 	    /*
 	     * Restrict 유형
 	     * > ota : 네트워크 제한
 	     * > sales : 판매 중지
 	     */
-	    optional string restrictType = 33;
-		optional string latestIssue = 34;		//ebook의 최신호 정보
+	    optional string restrictType = 32;
+		optional string latestIssue = 33;		//ebook의 최신호 정보
 }
