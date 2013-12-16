@@ -1,0 +1,31 @@
+/*
+ * 작성자 : 김다슬
+ * 작성일 : 2013.12.12
+ * 기능명 : 3.3.1. 실명 인증용 휴대폰 인증 SMS 발송 Request
+ */
+package com.skplanet.storeplatform.sac.client.user.miscellaneous.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.miscellaneous.vo";
+
+import "user/RealNameInfoProto.proto";
+
+message AuthRealNameSmsSendRequest {
+    /*
+     * isOwn : 실명인증 대상
+     *  > leqalAgent : 법정대리인 (14세 미만 회원)
+     *  > self : 본인
+     * realNameDate : 실명인증 일시
+     *
+     * 아래 파라미터는 실명인증 대상(isOwn)에 따른 법정대리인 or 본인 정보
+     * userTelecom : 통신사 정보
+     *  > skt : SKT
+     *  > kt : KT
+     *  > lg : LGT
+     * userPhone : 휴대폰번호
+     * userName : 사용자 이름
+     * userSex : 성별
+     * userBirthDay : 생년월일
+     * resident : 내/외국인 정보
+     */
+    required com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 1;
+}
