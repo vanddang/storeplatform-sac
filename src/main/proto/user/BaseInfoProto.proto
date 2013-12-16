@@ -17,7 +17,7 @@ message BaseInfo {
 
 	optional string mdnCorp = 1;
 	optional string joinChnlCd = 2;
-//	optional string ipAddr = 3;
+	optional string ipAddr = 3;
 	optional string httpResolution = 4;
 //	optional string clientPkgVer = 5;
 	optional string osVerOrg = 6;
