@@ -5,11 +5,10 @@ option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.
 import "intfmessage/miscellaneous/AnnouncementProto.proto";
 
 message CommonResponse {
-
 	required string resultCd = 1;      //결과코드
 	required string resultMsg = 2;     //결과 메세지
 	optional string baseUrl	= 3;       //Base URL
-	optional int32 totalCount = 4;     //
+	optional int32 totalCount = 4;     //총 건수
 
 	/*
 	 * 긴급공지
