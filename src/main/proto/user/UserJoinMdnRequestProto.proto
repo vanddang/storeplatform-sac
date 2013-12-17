@@ -17,7 +17,7 @@ import "user/RealNameInfoProto.proto";
  * 요청
  * 모바일 전용 회원 가입 (MDN 회원 가입)
  */
-message UserJoinMdnRequestProto {
+message UserJoinMdnRequest{
 
 	/**
 	 * 기본 정보

@@ -5,7 +5,7 @@ option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 import "user/UserInfoProto.proto";
 import "user/RealNameInfoProto.proto";
 
-message UserDeviceConfirmRequestProto {
+message UserJoinYnSearchResponse {
     optional com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 1;
     optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 2;
 

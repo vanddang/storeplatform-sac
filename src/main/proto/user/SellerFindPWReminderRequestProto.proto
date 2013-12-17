@@ -6,7 +6,7 @@ import "user/SellerInfoProto.proto";
 import "user/PWReminderProto.proto";
 
 /*	판매자 PW 찾기	*/
-message SellerFindPWRequest{
+message SellerFindPWReminderRequest{
 
 	/*
 	 * 판매자 기본정보
