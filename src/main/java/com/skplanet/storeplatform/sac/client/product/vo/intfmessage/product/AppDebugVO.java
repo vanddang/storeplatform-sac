@@ -16,11 +16,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AppDebugProto;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message AppDebug Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(AppDebugProto.AppDebug.class)
 public class AppDebugVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

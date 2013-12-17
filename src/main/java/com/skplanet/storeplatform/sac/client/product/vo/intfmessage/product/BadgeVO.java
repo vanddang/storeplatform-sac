@@ -9,17 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
+import java.io.Serializable;
+
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.FeedbackProto;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Feedback.Badge Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(FeedbackProto.Feedback.Badge.class)
-public class BadgeVO {
+public class BadgeVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Facebook과 연동한 댓글인 경우 표기 > facebook

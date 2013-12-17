@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.ChapterProto;
 
 /**
- * Interface Message Vod.Chapter Value Object.
+ * Interface Message Chapter Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */

@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AccrualProto;
+import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CouponProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.DateVO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.PriceVO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.SourceVO;
@@ -22,12 +22,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.UrlVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Coupon Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
-@ProtobufMapping(AccrualProto.Accrual.class)
+@ProtobufMapping(CouponProto.Coupon.class)
 public class CouponVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**

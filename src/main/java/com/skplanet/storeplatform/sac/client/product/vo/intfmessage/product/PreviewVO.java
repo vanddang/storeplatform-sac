@@ -17,11 +17,10 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.PreviewProto
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.SourceVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Preview Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(PreviewProto.Preview.class)
 public class PreviewVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

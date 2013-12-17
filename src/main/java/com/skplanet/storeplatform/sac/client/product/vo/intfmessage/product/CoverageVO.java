@@ -16,11 +16,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CouponProto;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Coupon.Coverage Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(CouponProto.Coupon.Coverage.class)
 public class CoverageVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

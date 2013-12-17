@@ -20,11 +20,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.TitleVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Feedback Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(FeedbackProto.Feedback.class)
 public class FeedbackVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

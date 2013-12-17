@@ -21,11 +21,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.TitleVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Component Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(ComponentProto.Component.class)
 public class ComponentVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

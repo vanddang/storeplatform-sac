@@ -17,11 +17,10 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AutoPayProto
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.DateVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message AutoPay Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(AutoPayProto.AutoPay.class)
 public class AutoPayVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

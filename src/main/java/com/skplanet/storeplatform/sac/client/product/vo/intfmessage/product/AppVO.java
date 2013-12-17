@@ -17,11 +17,10 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AppProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.DateVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message App Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(AppProto.App.class)
 public class AppVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -16,11 +16,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo.HistoryProto;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message History.Update Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(HistoryProto.History.Update.class)
 public class UpdateVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;

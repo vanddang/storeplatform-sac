@@ -18,11 +18,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.DateV
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.TitleVO;
 
 /**
- * Interface Message Identifier Value Object.
+ * Interface Message Feedback.Reply Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(FeedbackProto.Feedback.Reply.class)
 public class ReplyVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
