@@ -15,7 +15,7 @@ import java.util.List;
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.SourceProto.Source;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AccrualProto;
+import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.MusicProto;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.ServiceProto.Service;
 import com.skplanet.storeplatform.sac.client.intfmessage.user.vo.BellProto.Bell;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.IdentifierVO;
@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @SuppressWarnings("serial")
-@ProtobufMapping(AccrualProto.Accrual.class)
+@ProtobufMapping(MusicProto.Music.class)
 public class MusicVO extends CommonVO implements Serializable {
 	private IdentifierVO identifier;
 	/**
