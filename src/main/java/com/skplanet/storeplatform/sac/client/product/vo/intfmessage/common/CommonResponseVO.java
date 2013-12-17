@@ -24,26 +24,8 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonRespons
 public class CommonResponseVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String resultCd; // 결과코드
-	private String resultMsg; // 결과메세지
 	private String baseUrl; // Base URL
 	private int totalCount; // 총 건수
-
-	public String getResultCd() {
-		return this.resultCd;
-	}
-
-	public void setResultCd(String resultCd) {
-		this.resultCd = resultCd;
-	}
-
-	public String getResultMsg() {
-		return this.resultMsg;
-	}
-
-	public void setResultMsg(String resultMsg) {
-		this.resultMsg = resultMsg;
-	}
 
 	public String getBaseUrl() {
 		return this.baseUrl;
