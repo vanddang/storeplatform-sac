@@ -1,0 +1,13 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+import "intfmessage/common/SourceProto.proto";
+
+message Menu {
+    optional string id = 1;     //전시 메뉴ID type에 따른 ID
+    optional string name = 2;   //전시 메뉴ID에 따른 설명
+    optional string type = 3;   //전시 메뉴 타입
+    optional int32 count = 4;   //전시 메뉴 상품수
+    optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 5;     //전시 메뉴의 graphic resource가 있을 경우 정의
+}
