@@ -1,0 +1,41 @@
+/*
+ * 작성자명 : 김성겸
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/SourceProto.proto";
+
+message Bell {
+	/*
+	 * colorRing or bell
+	 * > colorRing : 컬러링
+	 * > bell : 벨소리
+	 */
+	optional string name = 1;
+
+	/*
+	 * 품질
+	 * > normal : 컬러링 일반(40초), 벨소리 일반 (40초)
+	 * > long : 컬러링 롱 (60초), 벨소리 고음질 (60초)
+	 */
+	optional string quality = 2;
+
+	/*
+	 *  컬러링, 벨소리 타입
+	 * > default : Default (벨소리 구매 시 유효)
+	 * > basic : 기본 컬러링
+	 * > caller : 발신자 컬러링
+	 * > time : 시간대 컬러링
+	 * > grou : 그룹별 컬러링
+	 */
+	optional string type = 3;
+
+	optional string rnPid = 4; 			// rnPid ex) Z3000Z2000 Z3000Z4000 Z3000Z1000
+
+	optional string rsIsuAmtAdd = 5; 		// rsIsuAmtAdd   ex) “+0100A” or “-0100A”
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 6; 	// Image URL
+}
