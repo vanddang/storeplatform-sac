@@ -24,10 +24,17 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.SourceProto;
 public class SourceVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/*
+	 * Contents의 MimeType (image/png : PNG 이미지, image/jpeg : JPG 이미지)
+	 */
 	private String mediaType;
-	private String size;
+	private String size; // 파일 사이즈
+	/*
+	 * Resource 타입 (product : 상품, thumbnail : 썸네일, movie : 동영상, screenshot : 스크린샷, screenshot/large : 스크린샷(큰사이즈), music
+	 * : 음악, barcode : 바코드이미지, 음악의 경우 audio/mp3-192, audio/mp3-128로 구분한다.)
+	 */
 	private String type;
-	private String url;
+	private String url; // Resource URL
 
 	public String getMediaType() {
 		return this.mediaType;

@@ -24,10 +24,10 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.TitleProto;
 public class TitleVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String color;
-	private String prefix;
-	private String postfix;
-	private String text;
+	private String color; // 폰트 색상을 정의 (RGB 8:8:8 형태이며 Alpha channel은 사용하지 않는다.)
+	private String prefix; // 제목 앞에 붙는 추가 노출 문구
+	private String postfix; // 제목 뒤에 붙는 추가 노출 문구. 예) 열혈강호 59권
+	private String text; // 제목
 
 	public String getColor() {
 		return this.color;

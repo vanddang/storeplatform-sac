@@ -24,11 +24,11 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuProto;
 public class MenuVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String id;
-	private String name;
-	private String type;
-	private String count;
-	private SourceVO source;
+	private String id; // 전시 메뉴ID type에 따른 ID
+	private String name; // 전시 메뉴ID에 따른 설명
+	private String type; // 전시 메뉴 타입
+	private String count; // 전시 메뉴 상품수
+	private SourceVO source; // 전시 메뉴의 graphic resource가 있을 경우 정의
 
 	public String getId() {
 		return this.id;
