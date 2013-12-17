@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
 
 option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
 
+import "intfmessage/common/IdentifierProto.proto";
 import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/PriceProto.proto";
 import "intfmessage/common/DateProto.proto";
@@ -16,7 +17,7 @@ message Promotion {
 		 * > search: 검색어 입력 창에 노출되는 문구
 		 */
 		required string name = 1;
-		optional string identifier = 2;		//오퍼링ID
+		required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 2; //오퍼링ID
 		/*
 		 * 본인/타인 구분
 		 * > self:본인
