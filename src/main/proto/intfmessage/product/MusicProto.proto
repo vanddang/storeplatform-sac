@@ -2,25 +2,23 @@ package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
 
 option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
 
-import "intfmessage/common/SourceProto.proto";
 import "intfmessage/common/IdentifierProto.proto";
-import "intfmessage/user/BellProto.proto";
+import "intfmessage/common/SourceProto.proto";
+import "intfmessage/product/BellProto.proto";
 import "intfmessage/product/ServiceProto.proto";
 
 message Music {
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;    //다운로드 ID
 
-	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;        //상품 ID
+    /*
+     * 제공 음질 및 사이즈 정보 제공
+     * > 음악의 경우 type을 audio/mp3-192, audio/mp3-128로 구분한다.
+     * > 파일 size 정보
+     * > Remote 정보
+     */
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 2;
 
-	/*
-	 * 제공 음질 및 사이즈 정보 제공
-	 * > 음악의 경우 type을 audio/mp3-192, audio/mp3-128로 구분한다.
-	 * > 파일 size 정보
-	 * > Remote 정보
-	 */
-	repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 2;
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 3;
 
-
-	repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 3;
-
-	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Bell bell = 4;		// 컬러링/벨소리 부가 정보
+    optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Bell bell = 4;        // 컬러링/벨소리 부가 정보
 }
