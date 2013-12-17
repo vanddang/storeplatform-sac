@@ -7,7 +7,6 @@ import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/SourceProto.proto";
 import "intfmessage/common/UrlProto.proto";
 import "intfmessage/product/MusicProto.proto";
-import "intfmessage/product/BannerExplainProto.proto";
 import "intfmessage/product/PreviewProto.proto";
 
 message Banner {
@@ -72,7 +71,11 @@ message Banner {
 		*/
 		optional string category = 6;
 
-		optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.BannerExplain bannerExplain = 7;		//bannerExplain Message
+		message BannerExplain {
+            optional string id = 1;     //type이 추천리스트,브랜드샵,상황별추천일 경우
+            optional string url = 2;    //type이 내부연결일 경우
+        }
+        optional BannerExplain bannerExplain = 7;       //bannerExplain Message
 
 		/*
 		 * type

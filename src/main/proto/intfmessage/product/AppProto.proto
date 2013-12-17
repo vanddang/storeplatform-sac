@@ -19,19 +19,19 @@ message App {
 	optional string size=6;		//용량 (byte단위)
 	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date=7;		//상품 등록일자
 	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AppDebug appDebug=8;		//Debug 정보
-	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.History history=9;		//update history
+	optional com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo.History history = 9;     //update history
 	message Install { // 사용자 설정정보
-		/*
-		 * > Installer를 호출한 package name 정의
-		 * > Installer가 없을 경우 정의 하지 않음
-		 */
-		optional string caller=1;
-		/*
-		 * >사용자 설정 상태
-		 * > auto : 자동 upgrade 사용
-		 */
-		optional string upgrade=2;
-	}
-	optional Install install=10;
+        /*
+         * > Installer를 호출한 package name 정의
+         * > Installer가 없을 경우 정의 하지 않음
+         */
+        optional string caller=1;
+        /*
+         * >사용자 설정 상태
+         * > auto : 자동 upgrade 사용
+         */
+        optional string upgrade=2;
+    }
+    optional Install install=10;
 
 }
