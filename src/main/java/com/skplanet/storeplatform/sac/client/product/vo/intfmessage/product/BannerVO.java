@@ -14,11 +14,10 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.SourceProto.Source;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.BannerExplainProto.BannerExplain;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.BannerProto;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.PreviewProto.Preview;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.IdentifierVO;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.SourceVO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.TitleVO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.UrlVO;
 
@@ -63,14 +62,14 @@ public class BannerVO extends CommonVO implements Serializable {
 	 */
 	private String category;
 
-	private BannerExplain bannerExplain; // bannerExplain Message
+	private BannerExplainVO bannerExplain; // bannerExplain Message
 
 	/*
 	 * type > browser : Browser을 통해서 연동하는 경우에 사용 > webView : WebView를 이용할 경우에 사용
 	 */
 	private UrlVO url;
 
-	private List<Source> sourceList;
+	private List<SourceVO> sourceList;
 
 	private MusicVO music; // music 상품일 경우 미리듣기 정보
 
@@ -127,11 +126,11 @@ public class BannerVO extends CommonVO implements Serializable {
 		this.category = category;
 	}
 
-	public BannerExplain getBannerExplain() {
+	public BannerExplainVO getBannerExplain() {
 		return this.bannerExplain;
 	}
 
-	public void setBannerExplain(BannerExplain bannerExplain) {
+	public void setBannerExplain(BannerExplainVO bannerExplain) {
 		this.bannerExplain = bannerExplain;
 	}
 
@@ -143,11 +142,11 @@ public class BannerVO extends CommonVO implements Serializable {
 		this.url = url;
 	}
 
-	public List<Source> getSourceList() {
+	public List<SourceVO> getSourceList() {
 		return this.sourceList;
 	}
 
-	public void setSourceList(List<Source> sourceList) {
+	public void setSourceList(List<SourceVO> sourceList) {
 		this.sourceList = sourceList;
 	}
 
@@ -166,5 +165,4 @@ public class BannerVO extends CommonVO implements Serializable {
 	public void setPreview(Preview preview) {
 		this.preview = preview;
 	}
-
 }
