@@ -107,8 +107,7 @@
 										<include name="**/*.proto" />
 									</fileset>
 								</path>
-								<pathconvert pathsep=" " property="proto.files"
-									refid="proto.path" />
+								<pathconvert pathsep=" " property="proto.files" refid="proto.path" />
 								<exec executable="${protobuf.compiler}" failonerror="true">
 									<arg value="--java_out=target/generated-sources/protoc" />
 									<arg value="-I${project.basedir}/src/main/proto" />
@@ -125,7 +124,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.3</version>
+				<version>1.8</version>
 				<executions>
 					<execution>
 						<id>add-source</id>
