@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.UrlVO
 @SuppressWarnings("serial")
 @ProtobufMapping(BannerProto.Banner.class)
 public class BannerVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/*
 	 * Banner를 클릭했을때 이동하는 base URL (Web URL or WebView을 연동할 경우는 정의되지 않는다.) > http://<<BASE>>/product : 상품타입 >
 	 * http://<<BASE>>/product/category/themeZone : 추천리스트 > http://<<BASE>>/product/category/brandShop 브랜드샵 >

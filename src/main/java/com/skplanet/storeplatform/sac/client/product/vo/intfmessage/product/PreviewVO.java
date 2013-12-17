@@ -24,6 +24,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 @SuppressWarnings("serial")
 @ProtobufMapping(PreviewProto.Preview.class)
 public class PreviewVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private SourceVO source;
 
 	public SourceVO getSource() {

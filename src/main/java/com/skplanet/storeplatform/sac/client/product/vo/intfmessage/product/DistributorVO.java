@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.DistributorP
 @SuppressWarnings("serial")
 @ProtobufMapping(DistributorProto.Distributor.class)
 public class DistributorVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 배포자 ID
 	 */

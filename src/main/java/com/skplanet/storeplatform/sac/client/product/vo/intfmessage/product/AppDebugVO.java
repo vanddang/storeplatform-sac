@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AppDebugProt
 @SuppressWarnings("serial")
 @ProtobufMapping(AppDebugProto.AppDebug.class)
 public class AppDebugVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 패키지명
 	 */

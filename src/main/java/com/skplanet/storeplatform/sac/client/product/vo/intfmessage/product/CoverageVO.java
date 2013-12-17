@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CouponProto;
 @SuppressWarnings("serial")
 @ProtobufMapping(CouponProto.Coupon.Coverage.class)
 public class CoverageVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/*
 	 * type > self > others
 	 */

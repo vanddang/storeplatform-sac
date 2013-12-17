@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.EventProto;
 @SuppressWarnings("serial")
 @ProtobufMapping(EventProto.Event.class)
 public class EventVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 이벤트 ID
 	 */

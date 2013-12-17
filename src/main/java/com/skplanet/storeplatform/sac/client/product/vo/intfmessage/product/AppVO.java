@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.DateV
 @SuppressWarnings("serial")
 @ProtobufMapping(AppProto.App.class)
 public class AppVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Applicaton ID
 	 */

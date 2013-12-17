@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 @SuppressWarnings("serial")
 @ProtobufMapping(FeedbackProto.Feedback.Reply.class)
 public class ReplyVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Date Message > type (date/reg) > text
 	 */

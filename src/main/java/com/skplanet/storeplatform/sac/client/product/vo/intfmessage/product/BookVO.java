@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Count
 @SuppressWarnings("serial")
 @ProtobufMapping(BookProto.Book.class)
 public class BookVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 타입(연재물일 경우만 정의한다. > serial: 연재물
 	 */

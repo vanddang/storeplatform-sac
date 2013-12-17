@@ -23,6 +23,19 @@ import com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo.HistoryProto
 @SuppressWarnings("serial")
 @ProtobufMapping(HistoryProto.History.class)
 public class HistoryVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private UpdateVO update;
+
+	public UpdateVO getUpdate() {
+		return this.update;
+	}
+
+	public void setUpdate(UpdateVO update) {
+		this.update = update;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 }

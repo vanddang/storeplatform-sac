@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.BannerProto;
 @SuppressWarnings("serial")
 @ProtobufMapping(BannerProto.Banner.BannerExplain.class)
 public class BannerExplainVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * type이 추천리스트,브랜드샵,상황별추천일 경우
 	 */

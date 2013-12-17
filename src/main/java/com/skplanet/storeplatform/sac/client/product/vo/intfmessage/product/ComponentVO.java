@@ -28,6 +28,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 @SuppressWarnings("serial")
 @ProtobufMapping(ComponentProto.Component.class)
 public class ComponentVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 상품 ID
 	 */

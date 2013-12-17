@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AppProto;
 @SuppressWarnings("serial")
 @ProtobufMapping(AppProto.App.Install.class)
 public class InstallVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/*
 	 * > Installer를 호출한 package name 정의 > Installer가 없을 경우 정의 하지 않음
 	 */

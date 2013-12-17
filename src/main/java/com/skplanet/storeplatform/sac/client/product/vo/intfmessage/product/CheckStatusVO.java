@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CheckStatusP
 @SuppressWarnings("serial")
 @ProtobufMapping(CheckStatusProto.CheckStatus.class)
 public class CheckStatusVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 
 	 */

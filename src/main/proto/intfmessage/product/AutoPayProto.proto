@@ -1,0 +1,28 @@
+/*
+ * 작성자명 : 이태희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/DateProto.proto";
+
+message AutoPay {
+	/*
+	 * 상품결제타입
+	 * > normal : 일반결제
+	 * > auto : 자동결제
+	 */
+	required string type = 1;
+
+	/*
+	 * 자동결제여부
+	 * > enabled : 자동결제
+	 * > reservedCancellation : 해지예약
+	 * > disabled : 해지완료
+	 */
+	optional string status = 2;
+
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Date date = 3;		//다음자동결제일 또는 해지일시
+}

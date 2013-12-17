@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 @SuppressWarnings("serial")
 @ProtobufMapping(ContributorProto.Contributor.class)
 public class ContributorVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 가수, 저자, 판매자, 브랜드 ID Identifier "type"을 아래와 같이 지정 > individual : 판매회원의 개발자ID > privateOperator : 개인사업자의 개발자ID >
 	 * corporation : 법인사업자의 개발자ID > foreigner : 외국인 개발자ID > brand : 브랜드ID

@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CouponProto;
 @SuppressWarnings("serial")
 @ProtobufMapping(CouponProto.Coupon.EpisodeCoupon.class)
 public class EpisodeCouponVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 실제 coupon id
 	 */

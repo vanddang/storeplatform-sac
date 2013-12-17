@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.FeedbackProt
 @SuppressWarnings("serial")
 @ProtobufMapping(FeedbackProto.Feedback.Badge.class)
 public class BadgeVO {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Facebook과 연동한 댓글인 경우 표기 > facebook
 	 */

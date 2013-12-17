@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AccrualProto
 @SuppressWarnings("serial")
 @ProtobufMapping(AccrualProto.Accrual.class)
 public class AccrualVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 	/**
 	 * 참여자수
 	 */
