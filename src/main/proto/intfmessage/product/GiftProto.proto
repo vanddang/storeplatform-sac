@@ -1,0 +1,21 @@
+/*
+ * 작성자명 : 이태희
+ * 작성일 : 2013.09.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message Gift {
+	/*
+	 * 선물수신상태
+	 *
+	 * received : 선물 수신이 완료됐을 경우
+	 * sending : 수신자가 “수신 확인” 전까지의 상태
+	 */
+	required string status = 1;
+
+	optional string sender = 2;		//발신자 전화번호
+
+	optional string receiver = 3;	//수신자 전화번호
+}

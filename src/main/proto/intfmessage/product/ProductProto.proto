@@ -27,7 +27,7 @@ import "intfmessage/product/CouponProto.proto";
 import "intfmessage/product/EventProto.proto";
 import "intfmessage/product/SelectOptionProto.proto";
 import "intfmessage/product/HistoryProto.proto";
-import "intfmessage/user/PurchaseProto.proto";
+import "intfmessage/product/PurchaseProto.proto";
 
 message Product {
 
