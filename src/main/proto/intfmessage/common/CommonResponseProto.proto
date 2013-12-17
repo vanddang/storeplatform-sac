@@ -6,10 +6,10 @@ import "intfmessage/miscellaneous/AnnouncementProto.proto";
 
 message CommonResponse {
 
-	required string resultCd = 1;		//결과코드
-	required string resultMsg = 2;		//결과 메세지
-	optional string baseUrl	= 3;		//Base URL
-	optional string range = 4 [default = "1-10/100"];		//범위
+	required string resultCd = 1;      //결과코드
+	required string resultMsg = 2;     //결과 메세지
+	optional string baseUrl	= 3;       //Base URL
+	optional int32 totalCount = 4;     //
 
 	/*
 	 * 긴급공지
