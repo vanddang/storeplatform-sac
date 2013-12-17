@@ -1,0 +1,13 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message CheckStatus {
+	optional string productId = 1;		//상품Id
+
+	/*
+	 * 상품 선물 발신 여부 조회인 경우 Y : 가능 N : 불가능
+	 * 상품 추천 가능 여부 조회인 경우 Y : 가능 N : 불가능
+	 */
+	optional string status = 2;	//상품 상태
+}
