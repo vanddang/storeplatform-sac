@@ -17,12 +17,12 @@ import "user/RealNameInfoProto.proto";
  * 요청
  * 모바일 전용 회원 가입 (MDN 회원 가입)
  */
-message UserJoinMdnRequest{
+message UserJoinMdnRequest {
 
 	/**
 	 * 기본 정보
 	 */
-	repeated com.skplanet.storeplatform.sac.client.user.vo.BaseInfo baseInfoList = 1;
+	required com.skplanet.storeplatform.sac.client.user.vo.BaseInfo baseInfo = 1;
 
 	/**
 	 * 약관동의 정보 리스트
@@ -35,15 +35,9 @@ message UserJoinMdnRequest{
 	optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 3;
 
 	/**
-	 * 법정대리인 내/외국인 구분
-	 * > local
-	 * > foreign
+	 * 본인의 생년월일 (14세 미만 가입일 경우)
+	 * 14세 미만이면 필수값
 	 */
-	optional string parentResident = 4;
-
-	/**
-	 * 법정대리인 생년월일
-	 */
-	optional string parentBirth = 5;
+	optional string birth = 5;
 
 }
