@@ -4,7 +4,7 @@ option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product
 
 import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/SourceProto.proto";
-import "intfmessage/common/CategoryProto.proto";
+import "intfmessage/common/MenuProto.proto";
 import "intfmessage/product/BannerProto.proto";
 
 message Layout{
@@ -32,9 +32,10 @@ message Layout{
 	 * > mediaType : Contents의 MimeType
 	 */
 	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 4;
+
     /*
-     * > Code : category 코드
-     * > name : category 명
+     * > id : 메뉴 ID
+     * > name : 메뉴명
      */
-	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Category category 	= 5;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Menu menu = 5;
 }
