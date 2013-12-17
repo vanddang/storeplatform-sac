@@ -7,7 +7,7 @@ import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/SourceProto.proto";
 import "intfmessage/common/PriceProto.proto";
 import "intfmessage/common/UrlProto.proto";
-import "intfmessage/user/AutoPayProto.proto";
+import "intfmessage/product/AutoPayProto.proto";
 import "intfmessage/product/SelectOptionProto.proto";
 
 message Coupon {
@@ -65,7 +65,7 @@ message Coupon {
 	 * > status
 	 */
 
-	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.AutoPay autopay = 10;
+	optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AutoPay autopay = 10;
  	 /*
 	 * 쿠폰 소개 제목
 	 * T store 회원만을 위한 방송 패스
