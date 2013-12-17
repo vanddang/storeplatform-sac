@@ -20,9 +20,9 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.IdentifierPro
  * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
-@SuppressWarnings("serial")
 @ProtobufMapping(IdentifierProto.Identifier.class)
 public class IdentifierVO extends CommonVO implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private String type;
 	private String text;

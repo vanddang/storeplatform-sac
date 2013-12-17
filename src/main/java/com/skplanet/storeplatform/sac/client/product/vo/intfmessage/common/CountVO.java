@@ -13,38 +13,19 @@ import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuProto;
+import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CountProto;
 
 /**
- * Interface Message Menu Value Object.
+ * Interface Message Count Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(MenuProto.Menu.class)
-public class MenuVO extends CommonVO implements Serializable {
+@ProtobufMapping(CountProto.Count.class)
+public class CountVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String id;
-	private String name;
-	private String type;
-	private String count;
-	private SourceVO source;
-
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	private String type; // 개수에 대한 타입 (subscription : 정기구독 수, channelTotal : 채널에 속해 있는 전체 책 권수)
+	private String text; // 개수 (일반적인 총개수를 표현할때 이용)
 
 	public String getType() {
 		return this.type;
@@ -54,19 +35,11 @@ public class MenuVO extends CommonVO implements Serializable {
 		this.type = type;
 	}
 
-	public String getCount() {
-		return this.count;
+	public String getText() {
+		return this.text;
 	}
 
-	public void setCount(String count) {
-		this.count = count;
-	}
-
-	public SourceVO getSource() {
-		return this.source;
-	}
-
-	public void setSource(SourceVO source) {
-		this.source = source;
+	public void setText(String text) {
+		this.text = text;
 	}
 }
