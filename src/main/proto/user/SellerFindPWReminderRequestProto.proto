@@ -15,6 +15,6 @@ message SellerFindPWReminderRequest{
 	/*
 	 * 보안 질문 정보
 	 */
-	repeated com.skplanet.storeplatform.sac.client.user.vo.PWReminderVO pwReminderList = 2;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.PWReminderInfo pwReminderList = 2;
 
 }

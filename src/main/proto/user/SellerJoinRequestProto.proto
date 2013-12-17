@@ -26,7 +26,7 @@ message SellerJoinRequest{
 	/*
 	 * 보안 질문 정보
 	 */
-	repeated com.skplanet.storeplatform.sac.client.user.vo.PWReminderVO pwReminderList = 4;
+	repeated com.skplanet.storeplatform.sac.client.user.vo.PWReminderInfo pwReminderList = 4;
 	/*
 	 * 판매자 정산정보
 	 */
