@@ -4,6 +4,7 @@ option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product
 
 import "intfmessage/common/SourceProto.proto";
 import "intfmessage/user/BellProto.proto";
+import "intfmessage/product/ServiceProto.proto";
 
 message Music {
 
@@ -25,21 +26,8 @@ message Music {
 	 */
 	repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source sourceList = 2;
 
-	//서비스 정보
-	message Services{
 
-		/*
-		 * 지원가능 서비스
-		 * > bell,ring : bell,ring을 지원하는 경우(","로 구분)
-		 */
-		optional string support = 1;
+	repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 3;
 
-		/*
-		 * 지원불가능 서비스
-		 * mp3 : mp3을 지원하지 않는 경우(","로 구분)
-		 */
-		optional string restrict = 2;
-	}
-	optional Services services = 3;
 	optional com.skplanet.storeplatform.sac.client.intfmessage.user.vo.Bell bell = 4;		// 컬러링/벨소리 부가 정보
 }
