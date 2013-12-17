@@ -7,9 +7,10 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo;
+package com.skplanet.storeplatform.sac.client.product.vo.category;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
+import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
 
 /**
  * 일반/특정 상품 카테고리 리스트 조회 Input Value Object.
@@ -17,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(ProductCategoryProto.reqProductCategory.class)
-public class ProductCategoryReqVO {
+public class ProductCategoryRequestVO {
 	private String reqApiType; // API타입
 
 	private String reqPurchaseYn; // 기구매체크여부
