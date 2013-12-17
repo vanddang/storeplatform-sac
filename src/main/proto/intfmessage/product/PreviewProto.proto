@@ -1,0 +1,13 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+import "intfmessage/common/SourceProto.proto";
+/*
+ * 미리 보기 정보를 정의한다.
+ * source의 type="video/x-freeview-lq" (미리보기 저화질)
+ * source의 type="video/x-freeview-hq" (미리보기 고화질)
+ */
+message Preview {
+	optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 1;
+}

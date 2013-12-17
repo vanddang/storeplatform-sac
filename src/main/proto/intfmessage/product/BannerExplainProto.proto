@@ -1,0 +1,8 @@
+package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
+
+message BannerExplain {
+	optional string id = 1;        //type이 추천리스트,브랜드샵,상황별추천일 경우
+    optional string url = 2;    //type이 내부연결일 경우
+}

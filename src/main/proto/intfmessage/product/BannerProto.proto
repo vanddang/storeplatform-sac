@@ -7,6 +7,8 @@ import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/SourceProto.proto";
 import "intfmessage/common/UrlProto.proto";
 import "intfmessage/product/MusicProto.proto";
+import "intfmessage/product/BannerExplainProto.proto";
+import "intfmessage/product/PreviewProto.proto";
 
 message Banner {
 		/*
@@ -70,11 +72,7 @@ message Banner {
 		*/
 		optional string category = 6;
 
-		message BannerExplain {
-			optional string id = 1;		//type이 추천리스트,브랜드샵,상황별추천일 경우
-			optional string url = 2;	//type이 내부연결일 경우
-		}
-		optional BannerExplain bannerExplain = 7;		//bannerExplain Message
+		optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.BannerExplain bannerExplain = 7;		//bannerExplain Message
 
 		/*
 		 * type
@@ -87,15 +85,11 @@ message Banner {
 
 		optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Music music = 10;		//music 상품일 경우 미리듣기 정보
 
-		/*
-		 * 미리 보기 정보를 정의한다.
-		 * source의 type="video/x-freeview-lq" (미리보기 저화질)
-		 * source의 type="video/x-freeview-hq" (미리보기 고화질)
-		 */
-		message Preview {
-			optional com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Source source = 1;
-		}
-
-		optional Preview preview = 11;		//VOD 상품일 경우 미리보기 정보
+        /*
+         * 미리 보기 정보를 정의한다.
+         * source의 type="video/x-freeview-lq" (미리보기 저화질)
+         * source의 type="video/x-freeview-hq" (미리보기 고화질)
+         */
+		optional com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Preview preview = 11;		//VOD 상품일 경우 미리보기 정보
 
 }

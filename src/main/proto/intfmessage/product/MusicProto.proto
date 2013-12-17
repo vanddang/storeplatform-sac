@@ -3,20 +3,13 @@ package com.skplanet.storeplatform.sac.client.intfmessage.product.vo;
 option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
 
 import "intfmessage/common/SourceProto.proto";
+import "intfmessage/common/IdentifierProto.proto";
 import "intfmessage/user/BellProto.proto";
 import "intfmessage/product/ServiceProto.proto";
 
 message Music {
 
-	message Identifier {
-		/*
-		 * 다운로드 ID 타입
-		 * > melon : Melon 서비스
-		 */
-		required string type = 1;
-		required string identifier = 2;		//다운로드 ID
-	}
-	required Identifier download = 1;		//Download
+	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Identifier identifier = 1;        //상품 ID
 
 	/*
 	 * 제공 음질 및 사이즈 정보 제공
