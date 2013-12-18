@@ -1,0 +1,9 @@
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+import "intfmessage/product/CheckStatusProto.proto";
+
+message CheckSendGiftStatusList{
+   repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CheckStatus checkStatusList = 1;
+}

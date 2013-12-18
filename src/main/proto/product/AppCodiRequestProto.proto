@@ -1,0 +1,11 @@
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+message AppCodiRequest {
+   required string memberNo = 1;    // 회원 번호
+    required string msisdn = 2;  // 전화번호
+    required string imageSizeCd = 3;    // 이미지 사이즈 코드
+    optional int32 offset = 4 [default = 1]; // 시작점 ROW
+    optional int32 count = 5 [default = 20]; // 페이지당 노출될 ROW 개수
+}
