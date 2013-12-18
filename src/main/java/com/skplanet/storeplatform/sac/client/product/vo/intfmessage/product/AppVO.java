@@ -64,4 +64,85 @@ public class AppVO extends CommonVO implements Serializable {
 	 * Install 정보
 	 */
 	private InstallVO install;
+
+	public String getAid() {
+		return this.aid;
+	}
+
+	public void setAid(String aid) {
+		this.aid = aid;
+	}
+
+	public String getSupportedOs() {
+		return this.supportedOs;
+	}
+
+	public void setSupportedOs(String supportedOs) {
+		this.supportedOs = supportedOs;
+	}
+
+	public String getPackageName() {
+		return this.packageName;
+	}
+
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
+	}
+
+	public String getVersionCode() {
+		return this.versionCode;
+	}
+
+	public void setVersionCode(String versionCode) {
+		this.versionCode = versionCode;
+	}
+
+	public String getVersion() {
+		return this.version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getSize() {
+		return this.size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	public DateVO getDate() {
+		return this.date;
+	}
+
+	public void setDate(DateVO date) {
+		this.date = date;
+	}
+
+	public AppDebugVO getAppDebug() {
+		return this.appDebug;
+	}
+
+	public void setAppDebug(AppDebugVO appDebug) {
+		this.appDebug = appDebug;
+	}
+
+	public HistoryVO getHistory() {
+		return this.history;
+	}
+
+	public void setHistory(HistoryVO history) {
+		this.history = history;
+	}
+
+	public InstallVO getInstall() {
+		return this.install;
+	}
+
+	public void setInstall(InstallVO install) {
+		this.install = install;
+	}
+
 }
