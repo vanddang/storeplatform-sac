@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.category;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.ProductVO;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
  * 일반/특정 상품 카테고리 리스트 조회 Default Value Object.
@@ -20,13 +20,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  */
 @ProtobufMapping(ProductCategoryProto.ProductCategory.class)
 public class ProductCategoryVO {
-	private ProductVO product;
+	private Product product;
 
-	public ProductVO getProduct() {
+	public Product getProduct() {
 		return this.product;
 	}
 
-	public void setProduct(ProductVO product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
 }
