@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo.HistoryProto;
+import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.HistoryProto;
 
 /**
  * Interface Message History.Update Value Object.

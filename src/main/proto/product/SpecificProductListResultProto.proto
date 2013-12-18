@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo;
 
-option java_package = "com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo";
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product.vo";
 import "intfmessage/common/CommonResponseProto.proto";
 import "intfmessage/product/ProductProto.proto";
 

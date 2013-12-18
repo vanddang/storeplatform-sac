@@ -15,14 +15,13 @@ import java.util.List;
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.clinet.intfmessage.product.vo.SpecificProductListResultProto.SpecificProductListResult;
 
 /**
  * Interface Message SpecificProductList Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@ProtobufMapping(SpecificProductListResult.class)
+@ProtobufMapping(SpecificProductList.class)
 public class SpecificProductList extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
