@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Acl">
+    
+    
+    <!-- 인터페이스 URL 인증 filter에서 사용 -->    
+    <select id="isUrl" parameterType="map" resultType="int">
+    	 SELECT
+			 	 count(interface_id) 
+		   FROM  tbl_sac_interface 
+		  WHERE  url = #{url} 
+		    AND  status_cd = #{statusCd}
+
+    </select>
+    
+    <!-- 인증키 인증  -->
+    <select id="searchAclAuthKey" parameterType="string" resultType="AclAuthKeyVO">
+	     	  SELECT 
+	                  C.tenant_id,
+	                  B.system_id,
+					  B.authKey_use_yn,                    
+					  A.authKey,
+	                  A.authKey_cd,
+			   		  A.issu_dt,
+	                  A.expr_dt,
+	                  C.status_cd as ten_status_cd,
+	                  B.status_cd as sys_status_cd,
+			   		  A.status_cd as ath_status_cd
+	  	    	FROM  tbl_sac_authKey A
+	 LEFT OUTER JOIN  tbl_sac_system B
+	              ON  A.system_id = B.system_id
+	 LEFT OUTER JOIN  tbl_sac_tenant C
+		     	  ON  B.tenant_id = C.tenant_id
+		   	   WHERE  A.authKey = #{authKey}
+    
+    </select>
+    
+
+    <!-- 인증키 인증  -->
+    <select id="searchAclAuth" parameterType="map" resultType="AclAuthVO">
+
+			SELECT 
+					A.system_id,
+					A.interface_id,
+					A.status_cd
+			  FROM  tbl_sac_auth A
+		INNER JOIN  tbl_sac_interface B
+		        ON  A.interface_id = B.interface_id
+		     WHERE  A.system_id = #{systemId}
+		       AND  B.url = #{url}
+
+    </select>    
+    
+</mapper>

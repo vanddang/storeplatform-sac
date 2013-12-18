@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-http="http://www.springframework.org/schema/integration/http"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc                 http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd "> 
+
+    <bean class="com.skplanet.storeplatform.framework.core.proxy.ComponentIntfInvokerCreaterConfigurer"> 
+        <property name="providerConfigPath"  value="conf/provider.properties" /> 
+        <property name="restTemplate" ref="restTemplate" />
+        <property name="consumerConfigReader">
+            <bean class="com.skplanet.storeplatform.framework.core.proxy.PropertyConsumerConfigReader">
+                <property name="properties" ref="propertiesForSac"/> 
+            </bean>
+        </property>
+    </bean>
+    
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"> 
+        <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
+        <property name="errorHandler">
+            <bean class="com.skplanet.storeplatform.framework.core.proxy.WebApplicationResponseErrorHandler">
+                  <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
+            </bean> 
+        </property>
+    </bean>  
+    
+    <util:list id="messageConvertersForComponentIfInvoker" value-type="org.springframework.http.converter.HttpMessageConverter">
+        <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+        <bean class="com.skplanet.storeplatform.framework.web.converter.BypassMappingJacksonHttpMessageConverter"/> 
+        <bean class="com.skplanet.storeplatform.framework.web.converter.ProtobufHttpMessageConverter"/> 
+    </util:list> 
+</beans>

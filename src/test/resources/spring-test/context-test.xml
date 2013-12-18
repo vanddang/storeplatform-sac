@@ -12,8 +12,9 @@
                            http://www.springframework.org/schema/tx/spring-tx-3.2.xsd                           
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util.xsd"> 
-                           
-    <import resource="classpath:sac-domain/spring/context-*.xml"/> 
+                            
+    
+    <import resource="classpath:sac/spring/context-*.xml"/> 
     <import resource="classpath:sac/runtime/context-*.xml"/> 
     
 </beans>

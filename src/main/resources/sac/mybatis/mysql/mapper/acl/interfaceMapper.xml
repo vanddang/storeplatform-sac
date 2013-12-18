@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Interface">
+    
+    <select id="searchDetail" parameterType="map" resultType="InterfaceVO">
+		 SELECT 
+			    interface_id,
+			    type,
+			    url, 
+			    version,
+			    name,
+			    description,
+			    bypass_yn,
+			    status_cd
+		   FROM tbl_sac_interface
+		  <where>
+		     <if test="url != null">url = #{url}</if>
+		     <if test="interfaceId != null">interface_id = #{interfaceId}</if>
+		  </where>
+    </select>
+    
+    <select id="searchBypassChannelName" parameterType="map" resultType="string">
+			 SELECT 
+			        C.name
+			   FROM tbl_sac_route A
+		 INNER JOIN tbl_sac_bypass B
+			     ON A.bypass_id = B.bypass_id
+	LEFT OUTER JOIN tbl_sac_channel C
+			     ON B.channel_id = C.channel_id
+			  WHERE A.interface_id = #{interfaceId}
+    </select>
+    
+    <select id="searchServiceChannelName" parameterType="map" resultType="string">
+		     SELECT C.name
+		       FROM tbl_sac_route A
+		 INNER JOIN tbl_sac_service B
+		         ON A.service_id = B.service_id
+    LEFT OUTER JOIN tbl_sac_channel C
+		         ON B.channel_id = C.channel_id
+		      WHERE A.interface_id = #{interfaceId}
+    </select>
+    
+    <select id="searchBypassUrl" parameterType="map" resultType="map">
+		   SELECT 
+		          "bypass" as bypass,
+		          C.protocol, 
+		          C.domain, 
+		          C.port,
+		          B.path
+		     FROM tbl_sac_route A
+	   INNER JOIN tbl_sac_bypass B 
+		       ON A.bypass_id = B.bypass_id
+	   INNER JOIN tbl_sac_component C
+		       ON B.component_id = C.component_id
+		    WHERE A.interface_id = #{interfaceId}
+    </select>
+
+    <select id="searchServiceMethod" parameterType="map" resultType="map">
+		SELECT 
+		       "service" as service,
+		       B.pkg_nm, 
+		       B.class_nm, 
+		       B.mtd_nm 
+		  FROM tbl_sac_route A
+    INNER JOIN tbl_sac_service B
+            ON A.service_id = B.service_id
+		 WHERE A.interface_id = #{interfaceId}
+    </select>    
+       
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+    "HTTP://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <!-- Definition of myBatis Configuration -->
+    <settings>
+        <!-- 설정에서 각 mapper 에 설정된 캐시를 전역적으로 사용할지 말지에 대한 여부 -->
+        <setting name="cacheEnabled" value="true" />
+        <!-- 생성키에 대한 JDBC 지원을 허용 -->
+        <setting name="useGeneratedKeys" value="true" />
+        <!-- REUSE 실행자는 PreparedStatement 를 재사용한다. -->
+        <setting name="defaultExecutorType" value="REUSE" />
+        <setting name="safeResultHandlerEnabled" value="false" />
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!--
+    <typeHandlers>
+        <typeHandler javaType="String" jdbcType="INTEGER" handler="com.skplanet.icms.commons.mybatis.BlankIntegerTypeHandler" />
+    </typeHandlers>
+    -->
+
+    <!-- Definition of MAPPER Alias -->
+    <typeAliases> 
+        <typeAlias alias="AclAuthKeyVO"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO" />
+        <typeAlias alias="AclAuthVO"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO" />
+        <typeAlias alias="InterfaceVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceVO" />
+        <typeAlias alias="ServiceVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceVO" />
+        <typeAlias alias="BypassVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO" />
+        
+        <typeAlias alias="ProductCategoryRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO" />
+        <typeAlias alias="ProductCategoryMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCategoryMapperVO" />
+    </typeAliases>
+</configuration>
