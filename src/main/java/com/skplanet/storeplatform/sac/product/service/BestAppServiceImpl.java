@@ -17,13 +17,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppRequestVO;
 import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppResponseVO;
 import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppVO;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -47,20 +48,20 @@ public class BestAppServiceImpl implements BestAppService {
 	 * .storeplatform.sac.client.product.vo.BestAppRequestVO)
 	 */
 	@Override
-	public BestAppResponseVO searchBestAppList(BestAppRequestVO bestAppRequestVO) {
+	public BestAppResponseVO searchBestAppList(String listId, String imageSizeCd, String drm, String prodGradeCd,
+			String menuId, String offset, String count) {
 		BestAppResponseVO responseVO = null;
 
-		// List<ProductCategoryMapperVO> resultList = this.commonDAO.queryForList("ProductCategory.selectCategoryList",
-
-		// Response VO를 만들기위한 생성자
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 
 		BestAppVO bestAppVO = null;
 		List<BestAppVO> listVO = new ArrayList<BestAppVO>();
+		CommonResponse commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(10);
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 1; i <= 2; i++) {
 			Product product = new Product();
 			Identifier identifier = new Identifier();
 			App app = new App();
@@ -68,6 +69,7 @@ public class BestAppServiceImpl implements BestAppService {
 			Rights rights = new Rights();
 			Source source = new Source();
 			Price price = new Price();
+			Title title = new Title();
 
 			// 상품ID
 			identifier = new Identifier();
@@ -77,12 +79,12 @@ public class BestAppServiceImpl implements BestAppService {
 			/*
 			 * Menu(메뉴정보) Id, Name, Type
 			 */
-			Menu topMenu = new Menu();
-			topMenu.setId("dummyMenuId0");
-			topMenu.setName("dummyMenuName0");
-			topMenu.setType("dummyMenuType0");
-			menuList.add(topMenu);
 			Menu menu = new Menu();
+			menu.setId("dummyMenuId0");
+			menu.setName("dummyMenuName0");
+			menu.setType("dummyMenuType0");
+			menuList.add(menu);
+			menu = new Menu();
 			menu.setId("dummyMenuId1");
 			menu.setName("dummyMenuName1");
 			menu.setType("dummyMenuType1");
@@ -108,6 +110,8 @@ public class BestAppServiceImpl implements BestAppService {
 			 */
 			rights.setGrade("1");
 
+			title.setText("베스트 앱_" + i);
+
 			/*
 			 * source mediaType, size, type, url
 			 */
@@ -120,7 +124,7 @@ public class BestAppServiceImpl implements BestAppService {
 			/*
 			 * Price text
 			 */
-			price.setText("0");
+			price.setText(0);
 
 			product = new Product();
 			product.setIdentifier(identifier);
@@ -129,8 +133,9 @@ public class BestAppServiceImpl implements BestAppService {
 			product.setApp(app);
 			product.setAccrual(accrual);
 			product.setRights(rights);
-			product.setProductExplain("베스트 앱_" + i);
+			product.setTitle(title);
 			product.setSourceList(sourceList);
+			product.setProductExplain("앱 설명_" + i);
 			product.setPrice(price);
 
 			bestAppVO = new BestAppVO();
@@ -139,7 +144,9 @@ public class BestAppServiceImpl implements BestAppService {
 
 		}
 		responseVO = new BestAppResponseVO();
+		responseVO.setCommonResponse(commonResponse);
 		responseVO.setBestAppList(listVO);
+
 		return responseVO;
 	}
 }

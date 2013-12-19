@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.product.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.best.BestContentsResponseVO;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -8,16 +8,16 @@ import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppResponseVO;
  * Updated on : 2013. 12. 18. Updated by : 이석희, SK 플래닛.
  */
 
-public interface BestAppService {
+public interface BestContentsService {
 	/**
 	 * <pre>
 	 * BEST 앱 리스트 조회
 	 * </pre>
 	 * 
-	 * @param BestAppRequestVO
+	 * @param BestContentsRequestVO
 	 *            BEST 앱 상품 리스트 요청 Value Object
 	 * @return BEST 앱 상품 리스트
 	 */
-	BestAppResponseVO searchBestAppList(String listId, String imageSizeCd, String drm, String prodGradeCd,
-			String menuId, String offset, String count);
+	BestContentsResponseVO searchBestContentsList(String listId, String imageSizeCd, String fiteredBy, String b2bprod,
+			String hdv, String drm, String prodGradeCd, String offset, String count);
 }
