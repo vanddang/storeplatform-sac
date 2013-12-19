@@ -60,8 +60,8 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 	 * @throws JsonGenerationException
 	 */
 	@Override
-	public SpecificProductList getSpecificProductList(String list, String imageSizeCd)
-			throws JsonGenerationException, JsonMappingException, IOException {
+	public SpecificProductList getSpecificProductList(String list, String imageSizeCd) throws JsonGenerationException,
+			JsonMappingException, IOException {
 		String[] prodArr = StringUtils.split(list, "+");
 
 		this.log.debug("prodArr : {}", prodArr);
@@ -114,7 +114,7 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 				appVO.setPackageName("packageName");
 				appVO.setVersionCode("versionCode");
 				appVO.setVersion("version");
-				priceVO.setText("0");
+				priceVO.setText(0);
 				productVO.setPrice(priceVO);
 				accrualVO.setVoterCount("count" + i);
 				accrualVO.setDownloadCount("downloadCount" + i);
@@ -128,7 +128,7 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 			else if (i == 1) {
 				Price priceVO = new Price();
 				Accrual accrualVO = new Accrual();
-				priceVO.setText("0");
+				priceVO.setText(0);
 				productVO.setPrice(priceVO);
 				productVO.setProductExplain("productExplain");
 
@@ -161,7 +161,7 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 				priceVO.setFixedPrice("fixedPrice");
 				priceVO.setDiscountRate("discountRate");
 				priceVO.setDiscountPrice("discountPrice");
-				priceVO.setText("text");
+				priceVO.setText(0);
 				contributorVO.setIdentifier(priceIdentifierVO);
 				accrualVO.setDownloadCount("downloadCount" + i);
 				// 배송 상품일 경우
