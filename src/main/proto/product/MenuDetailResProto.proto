@@ -1,0 +1,39 @@
+/*
+ * Interface URL : /product/menu/menuDetail
+ * 작성자 : 윤주영
+ * 작성일 : 2013-12-16
+ */
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+import "intfmessage/common/CommonResponseProto.proto";
+import "intfmessage/common/MenuDetailProto.proto";
+
+message MenuDetailResult {
+
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonResponse = 1; // 공통 response
+
+    message Menu{
+
+        /*
+         * 세부 카테고리별 상품 정보
+         * > menuId : 카테고리 코드 -  {대분류} or {대분류}/{중분류} or {대분류}/{중분류}/{소분류}
+         * > menuDescription : 메뉴를 UI로 표현하기 위한 문자열
+         */
+        required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuDetail menu = 1;
+
+        message DetailMenu{
+            /*
+             * 3depth가 있을경우 세부 카테고리별 상품 정보
+             * > menuId : 카테고리 코드 -  {대분류} or {대분류}/{중분류} or {대분류}/{중분류}/{소분류}
+             * > menuDescription : 메뉴를 UI로 표현하기 위한 문자열
+             */
+            required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuDetail menu = 1;
+        }
+        repeated DetailMenu detailMenuList = 2;       //3depth가 있을경우 세부 카테고리별 상품 정보
+    }
+
+	required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuDetail menu = 2;
+
+}

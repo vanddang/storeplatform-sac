@@ -1,0 +1,18 @@
+/*
+ * Interface URL : /product/menu/listMenu
+ * 작성자 : 윤주영
+ * 작성일 : 2013-12-09
+ */
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+import "intfmessage/common/CommonResponseProto.proto";
+import "intfmessage/common/MenuListProto.proto";
+
+message MenuListResult {
+
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonResponse = 1; // 공통 response
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuList menuList = 2; //메뉴 목록
+
+}
