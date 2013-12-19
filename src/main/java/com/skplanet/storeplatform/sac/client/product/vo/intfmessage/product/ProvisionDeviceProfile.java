@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.ProvisionDeviceProfileRe
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 
 /**
- * Interface Message Accrual Value Object.
+ * Interface Message ProvisionDeviceProfileResult Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
