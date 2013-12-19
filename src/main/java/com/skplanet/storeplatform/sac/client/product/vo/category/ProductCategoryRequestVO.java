@@ -13,237 +13,89 @@ import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
 
 /**
- * 일반/특정 상품 카테고리 리스트 조회 Input Value Object.
+ * 일반 상품 카테고리 리스트 조회 Input Value Object.
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(ProductCategoryProto.reqProductCategory.class)
 public class ProductCategoryRequestVO {
-	private String reqApiType; // API타입
+	private String tenantId; // 테넌트ID
 
-	private String reqPurchaseYn; // 기구매체크여부
+	private String menuId; // 메뉴ID
 
-	private String reqTopCategoryNo; // 탑카테고리번호
+	private String systemId; // 시스템ID
 
-	private String reqCategoryNo; // 카테고리번호
+	private String imageCd; // 이미지코드
 
-	private String reqStartDate; // 시작일
+	private String orderedBy; // 정렬순서
 
-	private String reqEndDate; // 종료일
+	private String prodGradeCd; // 상품등급코드
 
-	private String reqMbrNo; // 사용자번호
+	private int offset; // offset
 
-	private String reqIdMdnFlag; // ID/MDN Flag
+	private int count; // count
 
-	private String reqDeviceModelCd; // 단말코드번호
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqApiType() {
-		return this.reqApiType;
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqApiType
-	 *            reqApiType
-	 */
-	public void setReqApiType(String reqApiType) {
-		this.reqApiType = reqApiType;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqPurchaseYn() {
-		return this.reqPurchaseYn;
+	public String getMenuId() {
+		return this.menuId;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqPurchaseYn
-	 *            reqPurchaseYn
-	 */
-	public void setReqPurchaseYn(String reqPurchaseYn) {
-		this.reqPurchaseYn = reqPurchaseYn;
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqTopCategoryNo() {
-		return this.reqTopCategoryNo;
+	public String getSystemId() {
+		return this.systemId;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqTopCategoryNo
-	 *            reqTopCategoryNo
-	 */
-	public void setReqTopCategoryNo(String reqTopCategoryNo) {
-		this.reqTopCategoryNo = reqTopCategoryNo;
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqCategoryNo() {
-		return this.reqCategoryNo;
+	public String getImageCd() {
+		return this.imageCd;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqCategoryNo
-	 *            reqCategoryNo
-	 */
-	public void setReqCategoryNo(String reqCategoryNo) {
-		this.reqCategoryNo = reqCategoryNo;
+	public void setImageCd(String imageCd) {
+		this.imageCd = imageCd;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqStartDate() {
-		return this.reqStartDate;
+	public String getOrderedBy() {
+		return this.orderedBy;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqStartDate
-	 *            reqStartDate
-	 */
-	public void setReqStartDate(String reqStartDate) {
-		this.reqStartDate = reqStartDate;
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqEndDate() {
-		return this.reqEndDate;
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqEndDate
-	 *            reqEndDate
-	 */
-	public void setReqEndDate(String reqEndDate) {
-		this.reqEndDate = reqEndDate;
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqMbrNo() {
-		return this.reqMbrNo;
+	public int getOffset() {
+		return this.offset;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqMbrNo
-	 *            reqMbrNo
-	 */
-	public void setReqMbrNo(String reqMbrNo) {
-		this.reqMbrNo = reqMbrNo;
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqIdMdnFlag() {
-		return this.reqIdMdnFlag;
+	public int getCount() {
+		return this.count;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqIdMdnFlag
-	 *            reqIdMdnFlag
-	 */
-	public void setReqIdMdnFlag(String reqIdMdnFlag) {
-		this.reqIdMdnFlag = reqIdMdnFlag;
-	}
-
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getReqDeviceModelCd() {
-		return this.reqDeviceModelCd;
-	}
-
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param reqDeviceModelCd
-	 *            reqDeviceModelCd
-	 */
-	public void setReqDeviceModelCd(String reqDeviceModelCd) {
-		this.reqDeviceModelCd = reqDeviceModelCd;
+	public void setCount(int count) {
+		this.count = count;
 	}
 }

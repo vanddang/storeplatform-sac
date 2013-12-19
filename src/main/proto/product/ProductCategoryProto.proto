@@ -5,15 +5,14 @@ import "intfmessage/product/ProductProto.proto";
 
 // Request message
 message reqProductCategory {
-    required string reqApiType = 1;         //API타입
-    required string reqPurchaseYn = 2;      //기구매체크여부
-    required string reqTopCategoryNo = 3;   //탑카테고리번호
-    required string reqCategoryNo = 4;      //카테고리번호
-    optional string reqStartDate = 5;       //시작일
-    optional string reqEndDate = 6;         //종료일
-    optional string reqMbrNo = 7;           //사용자번호
-    optional string reqIdMdnFlag = 8;       //ID/MDN Flag
-    optional string reqDeviceModelCd = 9;   //단말코드번호
+    required string tenantId = 1;       //테넌트ID
+    required string menuId = 2;         //메뉴ID
+    required string systemId = 3;       //시스템ID
+    required string imageCd = 4;        //이미지코드
+    optional string orderedBy = 5;      //정렬순서
+    optional string prodGradeCd = 6;    //상품등급코드
+    optional int32 offset = 7;          //offset
+    optional int32 count = 8;           //count
 }
 
 // Default message

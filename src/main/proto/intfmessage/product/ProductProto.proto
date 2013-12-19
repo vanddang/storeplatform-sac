@@ -8,7 +8,7 @@ option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.product
 
 import "intfmessage/common/DateProto.proto";
 import "intfmessage/common/PriceProto.proto";
-import "intfmessage/common/CategoryProto.proto";
+import "intfmessage/common/MenuProto.proto";
 import "intfmessage/common/SourceProto.proto";
 import "intfmessage/common/TitleProto.proto";
 import "intfmessage/common/IdentifierProto.proto";
@@ -49,7 +49,7 @@ message Product {
          * > type(option) : 대분류 카테고리시 topClass
          * > categoryExplian : 카테고리 설명
          */
-        repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Category categoryList  = 8;
+        repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.Menu menuList = 8;
         /*
          * 패킷과금 타입
          * > paid : 일반 과금상품(PD000601)

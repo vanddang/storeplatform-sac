@@ -32,7 +32,7 @@ public class Price extends CommonVO implements Serializable {
 	private String fixedPrice;// 정가
 	private String discountRate;// 할인률 (%생략)
 	private String discountPrice;// 할인가
-	private String text;// 가격
+	private int text;// 가격
 
 	public String getName() {
 		return this.name;
@@ -74,11 +74,11 @@ public class Price extends CommonVO implements Serializable {
 		this.discountPrice = discountPrice;
 	}
 
-	public String getText() {
+	public int getText() {
 		return this.text;
 	}
 
-	public void setText(String text) {
+	public void setText(int text) {
 		this.text = text;
 	}
 }
