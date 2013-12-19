@@ -8,6 +8,7 @@ package com.skplanet.storeplatform.sac.client.intfmessage.device.vo;
 option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.device.vo";
 
 import "intfmessage/common/DateProto.proto";
+import "intfmessage/product/ServiceProto.proto";
 
 /*
  * 단말 정보
@@ -31,25 +32,12 @@ message Device {
 	optional string platform = 7;		//단말 OS 플랫폼
 	optional string modelExplain = 8;	//단말 모델 설명
 
-	//단말에서 지원가능한 서비스 정보
-	message Services {
-
-		/*
-		 * 지원가능 (","로 구분)
-		 * > ebook,comic,hdVod,shoppingStore,magazine,music,aom,drm,view,tmembership
-		 * > ebook,코믹,고화질 동영상,쇼핑/쿠폰(New Shopping),잡지,음악,AOM,DRM,T멤버십
-		 */
-		optional string support = 1;
-
-		/*
-		 * 지원불가 (","로 구분)
-		 * > ebook,comic,hdVod,shoppingStore,magazine,music,aom,drm,view,tmembership
-		 * > ebook,코믹,고화질 동영상,쇼핑/쿠폰(New Shopping),잡지,음악,AOM,DRM,T멤버십 지원여부
-		 */
-		optional string restrict = 2;
-
-	}
-	optional Services services = 9;		//지원가능한 SK Planet 서비스 정보
+    /*
+     * 단말에서 지원가능한 SK Planet 서비스 정보
+     * support(지원가능)/restrict(지원불가)
+     * ebook,comic,hdVod,shoppingStore,magazine,music,aom,drm,view,tmembership
+     */
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 9;
 
 	message SupportedHardware {			//단말에서 지원가능한 하드웨어 정보 structure
 		optional string resolution = 1;	//해상도(720*1280)
@@ -68,8 +56,8 @@ message Device {
 		 * > HDMI,HDCP,LTE,돌비
 		 */
 		optional string restrict = 4;
-
 	}
+
 	optional SupportedHardware supportedHardware = 10;		//단말에서 지원가능한 하드웨어 정보
 
 	message BindingInfo {

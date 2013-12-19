@@ -13,43 +13,35 @@ import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.EventProto;
+import com.skplanet.storeplatform.sac.client.product.vo.ProvisionDeviceProfileResultProto;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 
 /**
- * Interface Message Event Value Object.
+ * Interface Message Accrual Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@ProtobufMapping(EventProto.Event.class)
-public class Event extends CommonVO implements Serializable {
+@ProtobufMapping(ProvisionDeviceProfileResultProto.ProvisionDeviceProfileResult.class)
+public class ProvisionDeviceProfile extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 이벤트 ID
-	 */
-	private String eventId;
-	/**
-	 * 이벤트 설명
-	 */
-	private String eventExplain;
 
-	public String getEventId() {
-		return this.eventId;
+	private CommonResponse commonRes;
+	private Device device;
+
+	public CommonResponse getCommonRes() {
+		return this.commonRes;
 	}
 
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
+	public void setCommonRes(CommonResponse commonRes) {
+		this.commonRes = commonRes;
 	}
 
-	public String getEventExplain() {
-		return this.eventExplain;
+	public Device getDevice() {
+		return this.device;
 	}
 
-	public void setEventExplain(String eventExplain) {
-		this.eventExplain = eventExplain;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setDevice(Device device) {
+		this.device = device;
 	}
 
 }
