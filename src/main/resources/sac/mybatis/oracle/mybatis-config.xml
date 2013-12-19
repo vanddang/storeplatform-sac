@@ -33,5 +33,7 @@
         
         <typeAlias alias="ProductCategoryRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO" />
         <typeAlias alias="ProductCategoryMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCategoryMapperVO" />
+        <typeAlias alias="MenuRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO" />
+        <typeAlias alias="MenuDetailMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO" />
     </typeAliases>
 </configuration>
