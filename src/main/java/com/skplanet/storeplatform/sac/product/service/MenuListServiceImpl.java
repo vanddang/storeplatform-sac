@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetail;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailResponseVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuListResponseVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO;
 import com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO;
@@ -47,9 +48,8 @@ public class MenuListServiceImpl implements MenuListService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.biz.product.service.ProductCategoryService#searchProductCategoryList(com.skplanet
-	 * .storeplatform.sac.client.product.vo.ProductCategoryReqVO)
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenuList(String tenantId, String
+	 * systemId, String menuId)
 	 */
 	@Override
 	public MenuListResponseVO searchMenuList(String tenantId, String systemId, String menuId)
@@ -134,4 +134,85 @@ public class MenuListServiceImpl implements MenuListService {
 		}
 		return responseVO;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenu(String tenantId, String
+	 * systemId, String menuId)
+	 */
+	@Override
+	public MenuDetailResponseVO searchMenu(String tenantId, String systemId, String menuId)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+
+		int totalCount = 0;
+		MenuDetailResponseVO responseVO = null;
+		MenuRequestVO requestVO = new MenuRequestVO();
+		CommonResponse commonResponse = null;
+
+		if (null == menuId || "".equals(menuId)) {
+			throw new Exception("menuId 는 필수 파라메터 입니다.");
+		}
+		if (null == tenantId || "".equals(tenantId)) {
+			throw new Exception("tenantId 는 필수 파라메터 입니다.");
+		}
+		if (null == systemId || "".equals(systemId)) {
+			throw new Exception("systemId 는 필수 파라메터 입니다.");
+		}
+
+		requestVO.setSystemId(systemId);
+		requestVO.setTenantId(tenantId);
+
+		MenuDetailMapperVO mapperVO = this.commonDAO.queryForObject("Menu.selectMenu", requestVO,
+				MenuDetailMapperVO.class);
+
+		MenuDetail menu = null;
+		if (null != mapperVO) {
+
+			menu = new MenuDetail();
+
+			totalCount = mapperVO.getTotalCount();
+
+			menu.setBodyFileName(mapperVO.getBodyFileName());
+			menu.setBodyFilePath(mapperVO.getBodyFilePath());
+			menu.setBodyFileSize(mapperVO.getBodyFileSize());
+			menu.setExpoOrd(mapperVO.getExpoOrd());
+			menu.setInfrMenuYn(mapperVO.getInfrMenuYn());
+			menu.setLnbFileName(mapperVO.getLnbFileName());
+			menu.setLnbFilePath(mapperVO.getLnbFilePath());
+			menu.setLnbFileSize(mapperVO.getLnbFileSize());
+			menu.setMainOffFileName(mapperVO.getMainOffFileName());
+			menu.setMainOffFilePath(mapperVO.getMainOffFilePath());
+			menu.setMainOnFileName(mapperVO.getMainOnFileName());
+			menu.setMenuDepth(mapperVO.getMenuDepth());
+			menu.setMenuDesc(mapperVO.getMenuDesc());
+			menu.setMenuEngName(mapperVO.getMenuEngName());
+			menu.setMenuId(mapperVO.getMenuId());
+			menu.setMenuName(mapperVO.getMenuName());
+			menu.setRankFileName(mapperVO.getRankFileName());
+			menu.setRankFilePath(mapperVO.getRankFilePath());
+			menu.setSearchFileName(mapperVO.getSearchFileName());
+			menu.setSearchFilePath(mapperVO.getSearchFilePath());
+			menu.setSystemId(mapperVO.getSystemId());
+			menu.setTargetUrl(mapperVO.getTargetUrl());
+			menu.setTenantId(mapperVO.getTenantId());
+			menu.setUpMenuId(mapperVO.getUpMenuId());
+			menu.setUseYn(mapperVO.getUseYn());
+		}
+
+		responseVO = new MenuDetailResponseVO();
+		commonResponse = new CommonResponse();
+		responseVO.setMenu(menu);
+		commonResponse.setTotalCount(totalCount);
+		responseVO.setCommonRes(commonResponse);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+		String json = objectMapper.writeValueAsString(responseVO);
+
+		this.log.debug("test json : {}", json);
+
+		return responseVO;
+	}
+
 }
