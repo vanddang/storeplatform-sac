@@ -1,0 +1,37 @@
+/*
+ * 작성자명 : 윤주영
+ * 작성일 : 2013.12.16
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+message MenuDetail {
+    required string tenantId        = 1;             // tenant id
+    required string menuId          = 2;             // menu id
+    required string systemId        = 3;             // system id
+    optional string menuName        = 4;             // menu name
+    optional string menuEngName     = 5;             // menu English name
+    optional string menuDesc        = 6;             // menu description
+    optional string menuDepth       = 7;             // menu depth
+    optional string infrMenuYn      = 8;
+    optional string upMenuId        = 9;
+    optional string expoOrd         = 10;
+    optional string targetUrl       = 11;
+    optional string searchFilePath  = 12;
+    optional string searchFileName  = 13;
+    optional string lnbFilePath     = 14;
+    optional string lnbFileName     = 15;
+    optional string lnbFileSize     = 16;
+    optional string bodyFilePath    = 17;
+    optional string bodyFileName    = 18;
+    optional string bodyFileSize    = 19;
+    optional string mainOnFilePath  = 20;
+    optional string mainOnFileName  = 21;
+    optional string mainOffFilePath = 22;
+    optional string mainOffFileName = 23;
+    optional string rankFilePath    = 24;
+    optional string rankFileName    = 25;
+    optional string useYn           = 26;
+
+}
