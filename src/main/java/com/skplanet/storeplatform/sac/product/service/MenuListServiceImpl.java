@@ -129,7 +129,7 @@ public class MenuListServiceImpl implements MenuListService {
 			String json = objectMapper.writeValueAsString(responseVO);
 
 			this.log.debug("test json : {}", json);
-			System.out.println(json);
+			// System.out.println(json);
 
 		}
 		return responseVO;
