@@ -41,4 +41,14 @@
 			    <if test="menuId != null">MENU_ID = #{menuId}</if>
                 AND USE_YN = 'Y'
  	</select>
+ 	
+    <!-- Menu 리스트 조회-->
+    <select id="selectMenu" parameterType="MenuRequestVO" resultType="MenuDetailMapperVO">
+        SELECT *
+          FROM TB_DP_MENU
+         WHERE TENANT_ID = #{tenantId}
+           AND SYSTEM_ID = #{systemId}
+           AND MENU_ID = #{menuId}
+           AND USE_YN = 'Y'
+    </select> 	
 </mapper>
