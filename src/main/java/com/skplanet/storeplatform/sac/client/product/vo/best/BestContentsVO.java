@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.sac.client.product.vo.BestAppProto;
+import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -21,8 +21,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(BestAppProto.BestApp.class)
-public class BestAppVO {
+@ProtobufMapping(ProductCategoryProto.ProductCategory.class)
+public class BestContentsVO {
 
 	private Product product;
 

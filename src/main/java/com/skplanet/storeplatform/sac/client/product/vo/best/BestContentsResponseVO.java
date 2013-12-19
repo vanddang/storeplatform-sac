@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.sac.client.product.vo.BestAppProto;
+import com.skplanet.storeplatform.sac.client.product.vo.BestContentsProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 
 /**
@@ -24,10 +24,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(BestAppProto.resBestApp.class)
-public class BestAppResponseVO {
+@ProtobufMapping(BestContentsProto.resBestContents.class)
+public class BestContentsResponseVO {
 	private CommonResponse commonResponse;
-	private List<BestAppVO> bestAppList;
+	private List<BestContentsVO> bestContentsList;
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
@@ -37,12 +37,12 @@ public class BestAppResponseVO {
 		this.commonResponse = commonResponse;
 	}
 
-	public List<BestAppVO> getBestAppList() {
-		return this.bestAppList;
+	public List<BestContentsVO> getBestContentsList() {
+		return this.bestContentsList;
 	}
 
-	public void setBestAppList(List<BestAppVO> bestAppList) {
-		this.bestAppList = bestAppList;
+	public void setBestContentsList(List<BestContentsVO> BestContentsList) {
+		this.bestContentsList = BestContentsList;
 	}
 
 	@Override
