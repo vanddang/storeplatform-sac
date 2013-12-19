@@ -1,0 +1,15 @@
+/*
+ * 작성자명 : 윤주영
+ * 작성일 : 2013.12.09
+ */
+package com.skplanet.storeplatform.sac.client.intfmessage.common.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.intfmessage.common.vo";
+
+import "intfmessage/common/MenuDetailProto.proto";
+
+message MenuList {
+
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.common.vo.MenuDetail menu = 1;  // menu detail list
+
+}
