@@ -88,8 +88,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 				totalCount = mapperVO.getTotalCount();
 
+				category.setSize(mapperVO.getBodyFileSize());
+				category.setText(mapperVO.getMenuDesc());
+				// category.setMenuEngName(mapperVO.getMenuEngName());
+				category.setCode(mapperVO.getMenuId());
+				category.setName(mapperVO.getMenuName());
 				/*
-				 * category.setSize(Integer.valueOf(mapperVO.getBodyFileSize()).intValue());
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());
 				 * category.setLnbFilePath(mapperVO.getLnbFilePath());
@@ -97,14 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
 				 * category.setMainOffFileName(mapperVO.getMainOffFileName());
 				 * category.setMainOffFilePath(mapperVO.getMainOffFilePath());
 				 * category.setMainOnFileName(mapperVO.getMainOnFileName());
-				 */
-				// category.setMenuDepth(mapperVO.getMenuDepth());
-				category.setText(mapperVO.getMenuDesc());
-				// category.setMenuEngName(mapperVO.getMenuEngName());
-				category.setCode(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuName());
-				/*
-				 * category.setRankFileName(mapperVO.getRankFileName());
+				 * category.setMenuDepth(mapperVO.getMenuDepth()); category.setRankFileName(mapperVO.getRankFileName());
 				 * category.setRankFilePath(mapperVO.getRankFilePath());
 				 * category.setSearchFileName(mapperVO.getSearchFileName());
 				 * category.setSearchFilePath(mapperVO.getSearchFilePath());
@@ -112,6 +109,7 @@ public class CategoryServiceImpl implements CategoryService {
 				 * category.setTenantId(mapperVO.getTenantId()); category.setUpMenuId(mapperVO.getUpMenuId());
 				 * category.setUseYn(mapperVO.getUseYn());
 				 */
+
 				listVO.add(category);
 			}
 
@@ -176,8 +174,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 				totalCount = mapperVO.getTotalCount();
 
+				category.setSize(mapperVO.getBodyFileSize());
+				category.setText(mapperVO.getMenuDesc());
+				// category.setMenuEngName(mapperVO.getMenuEngName());
+				category.setCode(mapperVO.getMenuId());
+				category.setName(mapperVO.getMenuName());
 				/*
-				 * category.setSize(Integer.valueOf(mapperVO.getBodyFileSize()).intValue());
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());
 				 * category.setLnbFilePath(mapperVO.getLnbFilePath());
@@ -185,14 +187,7 @@ public class CategoryServiceImpl implements CategoryService {
 				 * category.setMainOffFileName(mapperVO.getMainOffFileName());
 				 * category.setMainOffFilePath(mapperVO.getMainOffFilePath());
 				 * category.setMainOnFileName(mapperVO.getMainOnFileName());
-				 */
-				// category.setMenuDepth(mapperVO.getMenuDepth());
-				category.setText(mapperVO.getMenuDesc());
-				// category.setMenuEngName(mapperVO.getMenuEngName());
-				category.setCode(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuName());
-				/*
-				 * category.setRankFileName(mapperVO.getRankFileName());
+				 * category.setMenuDepth(mapperVO.getMenuDepth()); category.setRankFileName(mapperVO.getRankFileName());
 				 * category.setRankFilePath(mapperVO.getRankFilePath());
 				 * category.setSearchFileName(mapperVO.getSearchFileName());
 				 * category.setSearchFilePath(mapperVO.getSearchFilePath());
@@ -200,6 +195,7 @@ public class CategoryServiceImpl implements CategoryService {
 				 * category.setTenantId(mapperVO.getTenantId()); category.setUpMenuId(mapperVO.getUpMenuId());
 				 * category.setUseYn(mapperVO.getUseYn());
 				 */
+
 				listVO.add(category);
 			}
 
