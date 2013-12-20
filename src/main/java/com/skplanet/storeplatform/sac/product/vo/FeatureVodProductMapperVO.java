@@ -14,27 +14,28 @@ package com.skplanet.storeplatform.sac.product.vo;
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-public class ProductCategoryMapperVO {
+public class FeatureVodProductMapperVO {
 	private int totalCount;
 	private String upMenuId;
 	private String menuId;
 	private String menuNm;
+	private String metaClsfCd;
 	private String prodId;
-	private String prodNm;
-	private String aid;
 	private String prodBaseDesc;
-	private String prodAmt;
 	private String prodGrdCd;
-	private String drmYn;
-	private String partParentClsfCd;
-	private String prodVer;
-	private String apkPkgNm;
-	private String apkVer;
-	private String apkFileSize;
-	private String prchsCnt;
+	private String artist1Nm;
+	private String artist2Nm;
+	private String issueDay;
+	private String chnlCompNm;
+	private String agencyNm;
+	private String hdvYn;
+	private String dolbySprtYn;
+	private String prchsQty;
+	private String imgFilePath;
 	private String avgEvluScore;
 	private String paticpersCnt;
-	private String imgFilePath;
+	private String prodAmt;
+	private String prodNm;
 	private String upMenuNm;
 
 	public int getTotalCount() {
@@ -69,28 +70,20 @@ public class ProductCategoryMapperVO {
 		this.menuNm = menuNm;
 	}
 
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
+	}
+
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
+	}
+
 	public String getProdId() {
 		return this.prodId;
 	}
 
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
-	}
-
-	public String getProdNm() {
-		return this.prodNm;
-	}
-
-	public void setProdNm(String prodNm) {
-		this.prodNm = prodNm;
-	}
-
-	public String getAid() {
-		return this.aid;
-	}
-
-	public void setAid(String aid) {
-		this.aid = aid;
 	}
 
 	public String getProdBaseDesc() {
@@ -101,14 +94,6 @@ public class ProductCategoryMapperVO {
 		this.prodBaseDesc = prodBaseDesc;
 	}
 
-	public String getProdAmt() {
-		return this.prodAmt;
-	}
-
-	public void setProdAmt(String prodAmt) {
-		this.prodAmt = prodAmt;
-	}
-
 	public String getProdGrdCd() {
 		return this.prodGrdCd;
 	}
@@ -117,60 +102,76 @@ public class ProductCategoryMapperVO {
 		this.prodGrdCd = prodGrdCd;
 	}
 
-	public String getDrmYn() {
-		return this.drmYn;
+	public String getArtist1Nm() {
+		return this.artist1Nm;
 	}
 
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
+	public void setArtist1Nm(String artist1Nm) {
+		this.artist1Nm = artist1Nm;
 	}
 
-	public String getPartParentClsfCd() {
-		return this.partParentClsfCd;
+	public String getArtist2Nm() {
+		return this.artist2Nm;
 	}
 
-	public void setPartParentClsfCd(String partParentClsfCd) {
-		this.partParentClsfCd = partParentClsfCd;
+	public void setArtist2Nm(String artist2Nm) {
+		this.artist2Nm = artist2Nm;
 	}
 
-	public String getProdVer() {
-		return this.prodVer;
+	public String getIssueDay() {
+		return this.issueDay;
 	}
 
-	public void setProdVer(String prodVer) {
-		this.prodVer = prodVer;
+	public void setIssueDay(String issueDay) {
+		this.issueDay = issueDay;
 	}
 
-	public String getApkPkgNm() {
-		return this.apkPkgNm;
+	public String getChnlCompNm() {
+		return this.chnlCompNm;
 	}
 
-	public void setApkPkgNm(String apkPkgNm) {
-		this.apkPkgNm = apkPkgNm;
+	public void setChnlCompNm(String chnlCompNm) {
+		this.chnlCompNm = chnlCompNm;
 	}
 
-	public String getApkVer() {
-		return this.apkVer;
+	public String getAgencyNm() {
+		return this.agencyNm;
 	}
 
-	public void setApkVer(String apkVer) {
-		this.apkVer = apkVer;
+	public void setAgencyNm(String agencyNm) {
+		this.agencyNm = agencyNm;
 	}
 
-	public String getApkFileSize() {
-		return this.apkFileSize;
+	public String getHdvYn() {
+		return this.hdvYn;
 	}
 
-	public void setApkFileSize(String apkFileSize) {
-		this.apkFileSize = apkFileSize;
+	public void setHdvYn(String hdvYn) {
+		this.hdvYn = hdvYn;
 	}
 
-	public String getPrchsCnt() {
-		return this.prchsCnt;
+	public String getDolbySprtYn() {
+		return this.dolbySprtYn;
 	}
 
-	public void setPrchsCnt(String prchsCnt) {
-		this.prchsCnt = prchsCnt;
+	public void setDolbySprtYn(String dolbySprtYn) {
+		this.dolbySprtYn = dolbySprtYn;
+	}
+
+	public String getPrchsQty() {
+		return this.prchsQty;
+	}
+
+	public void setPrchsQty(String prchsQty) {
+		this.prchsQty = prchsQty;
+	}
+
+	public String getImgFilePath() {
+		return this.imgFilePath;
+	}
+
+	public void setImgFilePath(String imgFilePath) {
+		this.imgFilePath = imgFilePath;
 	}
 
 	public String getAvgEvluScore() {
@@ -189,12 +190,20 @@ public class ProductCategoryMapperVO {
 		this.paticpersCnt = paticpersCnt;
 	}
 
-	public String getImgFilePath() {
-		return this.imgFilePath;
+	public String getProdAmt() {
+		return this.prodAmt;
 	}
 
-	public void setImgFilePath(String imgFilePath) {
-		this.imgFilePath = imgFilePath;
+	public void setProdAmt(String prodAmt) {
+		this.prodAmt = prodAmt;
+	}
+
+	public String getProdNm() {
+		return this.prodNm;
+	}
+
+	public void setProdNm(String prodNm) {
+		this.prodNm = prodNm;
 	}
 
 	public String getUpMenuNm() {
