@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetail;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailResponseVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuListResponseVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO;
@@ -79,13 +79,13 @@ public class MenuListServiceImpl implements MenuListService {
 			MenuDetailMapperVO mapperVO = new MenuDetailMapperVO();
 
 			// Response VO를 만들기위한 생성자
-			MenuDetail menu = null;
-			List<MenuDetail> listVO = new ArrayList<MenuDetail>();
+			MenuDetailVO menu = null;
+			List<MenuDetailVO> listVO = new ArrayList<MenuDetailVO>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				mapperVO = resultList.get(i);
 
-				menu = new MenuDetail();
+				menu = new MenuDetailVO();
 
 				totalCount = mapperVO.getTotalCount();
 
@@ -167,10 +167,10 @@ public class MenuListServiceImpl implements MenuListService {
 		MenuDetailMapperVO mapperVO = this.commonDAO.queryForObject("Menu.selectMenu", requestVO,
 				MenuDetailMapperVO.class);
 
-		MenuDetail menu = null;
+		MenuDetailVO menu = null;
 		if (null != mapperVO) {
 
-			menu = new MenuDetail();
+			menu = new MenuDetailVO();
 
 			totalCount = mapperVO.getTotalCount();
 
