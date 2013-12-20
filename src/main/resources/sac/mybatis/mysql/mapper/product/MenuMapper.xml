@@ -37,7 +37,7 @@
                 UPD_DT               
                FROM TB_DP_MENU
               WHERE TENANT_ID = #{tenantId}
-                <if test="menuId != null">MENU_ID = #{menuId}</if>
+                <if test="menuId != null">AND MENU_ID = #{menuId}</if>
                 AND SYSTEM_ID = #{systemId}
                 AND USE_YN = 'Y'
     </select>
