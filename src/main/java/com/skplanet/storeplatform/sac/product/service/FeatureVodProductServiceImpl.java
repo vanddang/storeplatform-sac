@@ -17,18 +17,20 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO;
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequestVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductVO;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.product.vo.ProductCategoryMapperVO;
+import com.skplanet.storeplatform.sac.product.vo.FeatureVodProductMapperVO;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -36,7 +38,7 @@ import com.skplanet.storeplatform.sac.product.vo.ProductCategoryMapperVO;
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
 @Service
-public class ProductCategoryServiceImpl implements ProductCategoryService {
+public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -45,23 +47,25 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.skplanet.storeplatform.sac.product.service.ProductCategoryService#searchCategoryProductList(com.skplanet.
-	 * storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO)
+	 * com.skplanet.storeplatform.sac.product.service.FeatureVodProductService#searchFeatureVodProductList(com.skplanet
+	 * .storeplatform.sac.client.product.vo.feature.FeatureVodProductRequestVO)
 	 */
 	@Override
-	public ProductCategoryResponseVO searchCategoryProductList(ProductCategoryRequestVO requestVO) {
-		ProductCategoryResponseVO responseVO = null;
+	public FeatureVodProductResponseVO searchFeatureVodProductList(FeatureVodProductRequestVO requestVO) {
+		FeatureVodProductResponseVO responseVO = null;
 
-		List<ProductCategoryMapperVO> resultList = this.commonDAO.queryForList("ProductCategory.selectCategoryList",
-				requestVO, ProductCategoryMapperVO.class);
+		List<FeatureVodProductMapperVO> resultList = this.commonDAO.queryForList(
+				"FeatureVodProduct.selectAdminNewProductList", requestVO, FeatureVodProductMapperVO.class);
 
 		if (resultList != null) {
-			ProductCategoryMapperVO mapperVO = new ProductCategoryMapperVO();
+			FeatureVodProductMapperVO mapperVO = new FeatureVodProductMapperVO();
 
 			// Response VO를 만들기위한 생성자
 			Identifier identifier = new Identifier();
 			Menu menu = new Menu();
-			App app = new App();
+			Contributor contributor = new Contributor();
+			Date date = new Date();
+			Accrual accrual = new Accrual();
 			Rights rights = new Rights();
 			Title title = new Title();
 			Source source = new Source();
@@ -71,18 +75,18 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 			List<Menu> menuList = new ArrayList<Menu>();
 			List<Source> sourceList = new ArrayList<Source>();
 
-			ProductCategoryVO productCategoryVO = new ProductCategoryVO();
-			List<ProductCategoryVO> listVO = new ArrayList<ProductCategoryVO>();
+			FeatureVodProductVO featureVodProductVO = new FeatureVodProductVO();
+			List<FeatureVodProductVO> listVO = new ArrayList<FeatureVodProductVO>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				mapperVO = resultList.get(i);
 
 				// 상품 정보 (상품ID)
-				identifier.setType("episode");
+				identifier.setType("channel");
 				identifier.setText(mapperVO.getProdId());
 
 				// 상품 정보 (지원구분)
-				product.setSupport(mapperVO.getDrmYn() + "|" + mapperVO.getPartParentClsfCd());
+				product.setSupport(mapperVO.getHdvYn());
 
 				// 메뉴 정보
 				menu.setType("topClass");
@@ -95,11 +99,22 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 				menu.setName(mapperVO.getMenuNm());
 				menuList.add(menu);
 
-				// 어플리케이션 정보
-				app.setAid(mapperVO.getAid());
-				app.setPackageName(mapperVO.getApkPkgNm());
-				app.setVersionCode(mapperVO.getApkVer());
-				app.setVersion(mapperVO.getProdVer());
+				menu = new Menu();
+				menu.setType("metaClass");
+				menu.setId(mapperVO.getMetaClsfCd());
+				menuList.add(menu);
+
+				// 저자 정보
+				contributor.setDirector(mapperVO.getArtist1Nm());
+				contributor.setArtist(mapperVO.getArtist2Nm());
+				date.setType("발매일");
+				date.setText(mapperVO.getIssueDay());
+				contributor.setDate(date);
+
+				// 평점 정보
+				accrual.setVoterCount(mapperVO.getPaticpersCnt());
+				accrual.setDownloadCount(mapperVO.getPrchsQty());
+				accrual.setScore(Double.parseDouble(mapperVO.getAvgEvluScore()));
 
 				// 이용권한 정보
 				rights.setGrade(mapperVO.getProdGrdCd());
@@ -108,7 +123,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 				title.setText(mapperVO.getProdNm());
 
 				// 이미지 정보
-				source.setType("thumbnail");
 				source.setUrl(mapperVO.getImgFilePath());
 				sourceList.add(source);
 
@@ -121,31 +135,33 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 				// 데이터 매핑
 				product.setIdentifier(identifier);
 				product.setMenuList(menuList);
-				product.setApp(app);
 				product.setRights(rights);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
 				product.setPrice(price);
 
-				productCategoryVO.setProduct(product);
-				listVO.add(i, productCategoryVO);
+				featureVodProductVO.setProduct(product);
+				listVO.add(i, featureVodProductVO);
 
 				identifier = new Identifier();
 				menu = new Menu();
-				menuList = new ArrayList<Menu>();
-				app = new App();
+				contributor = new Contributor();
+				date = new Date();
+				accrual = new Accrual();
 				rights = new Rights();
 				title = new Title();
 				source = new Source();
-				sourceList = new ArrayList<Source>();
 				price = new Price();
-
 				product = new Product();
-				productCategoryVO = new ProductCategoryVO();
+
+				menuList = new ArrayList<Menu>();
+				sourceList = new ArrayList<Source>();
+
+				featureVodProductVO = new FeatureVodProductVO();
 			}
 
-			responseVO = new ProductCategoryResponseVO();
-			responseVO.setProductCategoryList(listVO);
+			responseVO = new FeatureVodProductResponseVO();
+			responseVO.setFeatureVodProductList(listVO);
 		}
 		return responseVO;
 	}

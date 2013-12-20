@@ -11,12 +11,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategory
 public interface ProductCategoryService {
 	/**
 	 * <pre>
-	 * 일반/특정 상품 카테고리 리스트 조회.
+	 * 일반 카테고리 상품 리스트 조회.
 	 * </pre>
 	 * 
 	 * @param productCategoryReqVO
-	 *            일반/특정 상품 카테고리 Value Object
-	 * @return 일반/특정 상품 카테고리 리스트
+	 *            Request VO
+	 * @return 일반 카테고리 상품 리스트
 	 */
 	ProductCategoryResponseVO searchCategoryProductList(ProductCategoryRequestVO requestVO);
 }
