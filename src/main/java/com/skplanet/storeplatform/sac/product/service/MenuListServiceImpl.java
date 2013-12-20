@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.product.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -25,8 +26,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuListResponseVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO;
 import com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO;
@@ -76,14 +77,14 @@ public class MenuListServiceImpl implements MenuListService {
 		List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("Menu.selectMenuList", requestVO,
 				MenuDetailMapperVO.class);
 		if (resultList != null) {
-			MenuDetailMapperVO mapperVO = new MenuDetailMapperVO();
 
 			// Response VO를 만들기위한 생성자
 			MenuDetailVO menu = null;
 			List<MenuDetailVO> listVO = new ArrayList<MenuDetailVO>();
 
-			for (int i = 0; i < resultList.size(); i++) {
-				mapperVO = resultList.get(i);
+			Iterator<MenuDetailMapperVO> iterator = resultList.iterator();
+			while (iterator.hasNext()) {
+				MenuDetailMapperVO mapperVO = iterator.next();
 
 				menu = new MenuDetailVO();
 

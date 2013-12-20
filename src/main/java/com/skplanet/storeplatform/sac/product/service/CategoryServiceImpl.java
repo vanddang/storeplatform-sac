@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.product.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -76,15 +77,15 @@ public class CategoryServiceImpl implements CategoryService {
 		List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("category.getTopCategory", requestVO,
 				MenuDetailMapperVO.class);
 		if (resultList != null) {
-			MenuDetailMapperVO mapperVO = new MenuDetailMapperVO();
 
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
 			List<Menu> listVO = new ArrayList<Menu>();
 
-			for (int i = 0; i < resultList.size(); i++) {
-				mapperVO = resultList.get(i);
+			Iterator<MenuDetailMapperVO> iterator = resultList.iterator();
+			while (iterator.hasNext()) {
+				MenuDetailMapperVO mapperVO = iterator.next();
 
 				category = new Menu();
 				source = new Source();
@@ -92,7 +93,6 @@ public class CategoryServiceImpl implements CategoryService {
 				totalCount = mapperVO.getTotalCount();
 
 				source.setSize(mapperVO.getBodyFileSize());
-				category.setText(mapperVO.getMenuDesc());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuName());
@@ -166,15 +166,15 @@ public class CategoryServiceImpl implements CategoryService {
 		List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("category.getTopCategory", requestVO,
 				MenuDetailMapperVO.class);
 		if (resultList != null) {
-			MenuDetailMapperVO mapperVO = new MenuDetailMapperVO();
 
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
 			List<Menu> listVO = new ArrayList<Menu>();
 
-			for (int i = 0; i < resultList.size(); i++) {
-				mapperVO = resultList.get(i);
+			Iterator<MenuDetailMapperVO> iterator = resultList.iterator();
+			while (iterator.hasNext()) {
+				MenuDetailMapperVO mapperVO = iterator.next();
 
 				category = new Menu();
 				source = new Source();
@@ -182,7 +182,6 @@ public class CategoryServiceImpl implements CategoryService {
 				totalCount = mapperVO.getTotalCount();
 
 				category.getSource().setSize(mapperVO.getBodyFileSize());
-				category.setText(mapperVO.getMenuDesc());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuName());
