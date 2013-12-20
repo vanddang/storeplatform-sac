@@ -27,7 +27,7 @@ public class MenuDetailResponseVO extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 11123123125L;
 
 	private CommonResponse commonRes;
-	private MenuDetail menu;
+	private MenuDetailVO menu;
 
 	public CommonResponse getCommonRes() {
 		return this.commonRes;
@@ -37,11 +37,11 @@ public class MenuDetailResponseVO extends CommonVO implements Serializable {
 		this.commonRes = commonRes;
 	}
 
-	public MenuDetail getMenu() {
+	public MenuDetailVO getMenu() {
 		return this.menu;
 	}
 
-	public void setMenu(MenuDetail menu) {
+	public void setMenu(MenuDetailVO menu) {
 		this.menu = menu;
 	}
 }
