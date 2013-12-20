@@ -1,0 +1,27 @@
+package prototype;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+import "intfmessage/product/ProductProto.proto";
+
+// Default message
+message FeatureVodProduct {
+    required com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product product = 2;
+}
+
+// Request message
+message RequestFeatureVodProduct {
+    required string tenantId = 1;       //테넌트ID
+    required string menuId = 2;         //메뉴ID
+    required string systemId = 3;       //시스템ID
+    required string listId = 4;         //리스트ID
+    required string imageCd = 5;        //이미지코드
+    optional string orderedBy = 6;      //정렬순서
+    optional string prodGradeCd = 7;    //상품등급코드
+    optional int32 offset = 8;          //offset
+    optional int32 count = 9;           //count
+}
+
+// Response message
+message ResponseFeatureVodProduct {
+    repeated FeatureVodProduct featureVodProductList = 1;
+}

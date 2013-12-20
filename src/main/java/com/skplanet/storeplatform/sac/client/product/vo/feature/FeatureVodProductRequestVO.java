@@ -7,23 +7,25 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo.category;
+package com.skplanet.storeplatform.sac.client.product.vo.feature;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
+import com.skplanet.storeplatform.sac.client.product.vo.FeatureVodProductProto;
 
 /**
  * 일반 상품 카테고리 리스트 조회 Input Value Object.
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(ProductCategoryProto.RequestProductCategory.class)
-public class ProductCategoryRequestVO {
+@ProtobufMapping(FeatureVodProductProto.RequestFeatureVodProduct.class)
+public class FeatureVodProductRequestVO {
 	private String tenantId; // 테넌트ID
 
 	private String menuId; // 메뉴ID
 
 	private String systemId; // 시스템ID
+
+	private String listId; // 리스트ID
 
 	private String imageCd; // 이미지코드
 
@@ -57,6 +59,14 @@ public class ProductCategoryRequestVO {
 
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
+	}
+
+	public String getListId() {
+		return this.listId;
+	}
+
+	public void setListId(String listId) {
+		this.listId = listId;
 	}
 
 	public String getImageCd() {

@@ -3,8 +3,13 @@ package prototype;
 option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
 import "intfmessage/product/ProductProto.proto";
 
+// Default message
+message ProductCategory {
+    required com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product product = 2;
+}
+
 // Request message
-message reqProductCategory {
+message RequestProductCategory {
     required string tenantId = 1;       //테넌트ID
     required string menuId = 2;         //메뉴ID
     required string systemId = 3;       //시스템ID
@@ -15,12 +20,7 @@ message reqProductCategory {
     optional int32 count = 8;           //count
 }
 
-// Default message
-message ProductCategory {
-    required com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product product = 2;
-}
-
 // Response message
-message resProductCategory {
+message ResponseProductCategory {
     repeated ProductCategory productCategoryList = 1;
 }
