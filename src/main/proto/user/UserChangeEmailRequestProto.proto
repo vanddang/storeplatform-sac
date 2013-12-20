@@ -1,0 +1,51 @@
+/**
+ * 작성자명 : tlaeowls
+ * 작 성 일 : 2013.12.17
+ */
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+/**
+ * java 파일로 생성시, 사용될 java의 패키지명
+ */
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/UserInfoProto.proto";
+
+/**
+ * 요청
+ * 이메일 주소 변경
+ */
+message UserChangeEmailRequest {
+
+    /**
+     * 사용자 정보
+     */
+	repeated com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 1;
+
+	/**
+	 * 통합 서비스 관리 번호
+	 */
+	optional string imSvcNo = 2;
+
+	/**
+	 * OLD 이메일
+	 */
+	repeated string oldEmail = 3;
+
+	/**
+	 * NEW 이메일
+	 */
+	repeated string newEmail = 4;
+
+	repeated string spId = 5;
+	optional string spAuthKey = 6;
+	optional string keyType = 7;
+	optional string userTn = 8;
+	optional string userTnType = 9;
+	optional string isUserTnAuth = 10;
+	optional string isUserTnOwn = 11;
+	optional string userTnNationCd = 12;
+	optional string isEmailAuth = 13;
+	repeated string mbrNo = 14;
+
+}

@@ -1,0 +1,52 @@
+/**
+ * 작성자명 : tlaeowls
+ * 작 성 일 : 2013.12.16
+ */
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+/**
+ * java 파일로 생성시, 사용될 java의 패키지명
+ */
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/UserInfoProto.proto";
+
+/**
+ * 요청
+ * 비밀번호 수정
+ */
+message UserChangePwRequest {
+
+    /**
+     * 사용자 정보
+     */
+	required com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 1;
+
+    /**
+     * IDP 인증키
+     */
+    required string userAuthKey = 2;
+
+    /**
+     * OLD 패스워드
+     */
+    required string oldPassword = 3;
+
+    /**
+     * NEW 패스워드
+     */
+    required string newPassword = 4;
+
+    /**
+     * 가입시 발행된 User Key
+     */
+    optional string mbrNo = 5;
+
+    /**
+     * 비밀번호 유형 코드
+     *  > 1 : 정상
+     *  > 2 : 임시
+     */
+    optional string userPasswdType = 6;
+
+}

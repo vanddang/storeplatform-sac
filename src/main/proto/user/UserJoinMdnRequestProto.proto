@@ -9,30 +9,11 @@ package com.skplanet.storeplatform.sac.client.user.vo;
  */
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
-import "user/BaseInfoProto.proto";
-import "user/AgreementInfoProto.proto";
-import "user/RealNameInfoProto.proto";
-
 /**
  * 요청
  * 모바일 전용 회원 가입 (MDN 회원 가입)
  */
 message UserJoinMdnRequest {
-
-	/**
-	 * 기본 정보
-	 */
-	required com.skplanet.storeplatform.sac.client.user.vo.BaseInfo baseInfo = 1;
-
-	/**
-	 * 약관동의 정보 리스트
-	 */
-	repeated com.skplanet.storeplatform.sac.client.user.vo.AgreementInfo agreementInfoList = 2;
-
-	/**
-	 * 법정대리인 정보
-	 */
-	optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 3;
 
 	/**
 	 * 본인의 생년월일 (14세 미만 가입일 경우)

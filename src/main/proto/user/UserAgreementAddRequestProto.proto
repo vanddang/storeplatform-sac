@@ -1,0 +1,37 @@
+/**
+ * 작성자명 : tlaeowls
+ * 작 성 일 : 2013.12.16
+ */
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+/**
+ * java 파일로 생성시, 사용될 java의 패키지명
+ */
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/BaseInfoProto.proto";
+import "user/UserInfoProto.proto";
+import "user/AgreementInfoProto.proto";
+
+/**
+ * 요청
+ * Store 약관 동의 등록
+ */
+message UserAgreementAddRequest {
+
+    /**
+     * 기본 정보
+     */
+    required com.skplanet.storeplatform.sac.client.user.vo.BaseInfo baseInfo = 1;
+
+    /**
+     * 사용자 정보
+     */
+    required com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 2;
+
+    /**
+     * 약관동의 정보
+     */
+    required com.skplanet.storeplatform.sac.client.user.vo.AgreementInfo agreementInfo = 3;
+
+}
