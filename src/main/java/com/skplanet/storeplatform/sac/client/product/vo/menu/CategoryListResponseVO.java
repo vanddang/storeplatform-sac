@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 
 /**
  * 카테고리 리스트 조회 List Value Object.
@@ -27,7 +28,7 @@ public class CategoryListResponseVO extends CommonVO implements Serializable {
 
 	private CommonResponse commonRes;
 
-	private List<CategoryVO> categoryList;
+	private List<Menu> categoryList;
 
 	public CommonResponse getCommonRes() {
 		return this.commonRes;
@@ -37,11 +38,11 @@ public class CategoryListResponseVO extends CommonVO implements Serializable {
 		this.commonRes = commonRes;
 	}
 
-	public List<CategoryVO> getCategoryList() {
+	public List<Menu> getCategoryList() {
 		return this.categoryList;
 	}
 
-	public void setCategoryList(List<CategoryVO> categoryList) {
+	public void setCategoryList(List<Menu> categoryList) {
 		this.categoryList = categoryList;
 	}
 }
