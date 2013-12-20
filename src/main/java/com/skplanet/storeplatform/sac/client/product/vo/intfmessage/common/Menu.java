@@ -26,7 +26,6 @@ public class Menu extends CommonVO implements Serializable {
 
 	private String id; // 전시 메뉴ID type에 따른 ID
 	private String name; // 전시 메뉴ID에 따른 이름
-	private String text; // 전시 메뉴ID에 따른 description
 	private String type; // 전시 메뉴 타입
 	private String count; // 전시 메뉴 상품수
 	private Source source; // 전시 메뉴의 graphic resource가 있을 경우 정의
@@ -45,14 +44,6 @@ public class Menu extends CommonVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getText() {
-		return this.text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
 	}
 
 	public String getType() {
