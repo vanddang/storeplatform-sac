@@ -3,8 +3,8 @@ package com.skplanet.storeplatform.sac.client.user.vo;
 
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
-/*	판매자 탈퇴 정보	*/
-message SellerSecedeInfo {
+/*	판매자 탈퇴 처리 */
+message SellerSecedeResonInfo {
 
 	optional string secedeReasonCode = 1;	/*	탈퇴 사유 코드- ID 변경
 												- 장기간 부재 (군입대, 유학)
@@ -33,4 +33,33 @@ message SellerSecedeInfo {
 												- ETC		*/
 	optional string secedeReasonMessage = 2;	/*	탈퇴 사유 설명		*/
 
+
+}
+
+/*판매자 회원 탈퇴 요청 */
+message SellerSecedeRequest {
+
+}
+
+/*판매자 회원 탈퇴 응답 */
+message SellerSecedeResponse {
+	/**
+	 * 결과 코드
+	 */
+	required string resultCode = 1;
+
+	/**
+	 * 결과 메시지
+	 */
+	required string resultMessage = 2;
+}
+
+/*판매자 회원 탈퇴사유 목록 조회 요청 */
+message SellerSecedeResonListRequest {
+
+}
+
+/*판매자 회원 탈퇴사유 목록 조회 응답 */
+message SellerSecedeResonListResponse {
+	repeated SellerSecedeResonInfo sellerSecedeResonList = 1;
 }
