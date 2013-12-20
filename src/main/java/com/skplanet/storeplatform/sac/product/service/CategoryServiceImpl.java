@@ -25,8 +25,9 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryListResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryVO;
 import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO;
 import com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO;
 
@@ -78,20 +79,22 @@ public class CategoryServiceImpl implements CategoryService {
 			MenuDetailMapperVO mapperVO = new MenuDetailMapperVO();
 
 			// Response VO를 만들기위한 생성자
-			CategoryVO category = null;
-			List<CategoryVO> listVO = new ArrayList<CategoryVO>();
+			Menu category = null;
+			Source source = null;
+			List<Menu> listVO = new ArrayList<Menu>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				mapperVO = resultList.get(i);
 
-				category = new CategoryVO();
+				category = new Menu();
+				source = new Source();
 
 				totalCount = mapperVO.getTotalCount();
 
-				category.setSize(mapperVO.getBodyFileSize());
+				source.setSize(mapperVO.getBodyFileSize());
 				category.setText(mapperVO.getMenuDesc());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
-				category.setCode(mapperVO.getMenuId());
+				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuName());
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
@@ -109,6 +112,8 @@ public class CategoryServiceImpl implements CategoryService {
 				 * category.setTenantId(mapperVO.getTenantId()); category.setUpMenuId(mapperVO.getUpMenuId());
 				 * category.setUseYn(mapperVO.getUseYn());
 				 */
+
+				category.setSource(source);
 
 				listVO.add(category);
 			}
@@ -164,20 +169,22 @@ public class CategoryServiceImpl implements CategoryService {
 			MenuDetailMapperVO mapperVO = new MenuDetailMapperVO();
 
 			// Response VO를 만들기위한 생성자
-			CategoryVO category = null;
-			List<CategoryVO> listVO = new ArrayList<CategoryVO>();
+			Menu category = null;
+			Source source = null;
+			List<Menu> listVO = new ArrayList<Menu>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				mapperVO = resultList.get(i);
 
-				category = new CategoryVO();
+				category = new Menu();
+				source = new Source();
 
 				totalCount = mapperVO.getTotalCount();
 
-				category.setSize(mapperVO.getBodyFileSize());
+				category.getSource().setSize(mapperVO.getBodyFileSize());
 				category.setText(mapperVO.getMenuDesc());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
-				category.setCode(mapperVO.getMenuId());
+				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuName());
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
@@ -195,6 +202,7 @@ public class CategoryServiceImpl implements CategoryService {
 				 * category.setTenantId(mapperVO.getTenantId()); category.setUpMenuId(mapperVO.getUpMenuId());
 				 * category.setUseYn(mapperVO.getUseYn());
 				 */
+				category.setSource(source);
 
 				listVO.add(category);
 			}
