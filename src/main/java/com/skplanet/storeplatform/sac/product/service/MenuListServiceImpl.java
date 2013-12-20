@@ -103,9 +103,9 @@ public class MenuListServiceImpl implements MenuListService {
 				menu.setMainOnFileName(mapperVO.getMainOnFileName());
 				menu.setMenuDepth(mapperVO.getMenuDepth());
 				menu.setMenuDesc(mapperVO.getMenuDesc());
-				menu.setMenuEngName(mapperVO.getMenuEngName());
+				menu.setMenuEngName(mapperVO.getMenuEngNm());
 				menu.setMenuId(mapperVO.getMenuId());
-				menu.setMenuName(mapperVO.getMenuName());
+				menu.setMenuName(mapperVO.getMenuNm());
 				menu.setRankFileName(mapperVO.getRankFileName());
 				menu.setRankFilePath(mapperVO.getRankFilePath());
 				menu.setSearchFileName(mapperVO.getSearchFileName());
@@ -188,9 +188,9 @@ public class MenuListServiceImpl implements MenuListService {
 			menu.setMainOnFileName(mapperVO.getMainOnFileName());
 			menu.setMenuDepth(mapperVO.getMenuDepth());
 			menu.setMenuDesc(mapperVO.getMenuDesc());
-			menu.setMenuEngName(mapperVO.getMenuEngName());
+			menu.setMenuEngName(mapperVO.getMenuEngNm());
 			menu.setMenuId(mapperVO.getMenuId());
-			menu.setMenuName(mapperVO.getMenuName());
+			menu.setMenuName(mapperVO.getMenuNm());
 			menu.setRankFileName(mapperVO.getRankFileName());
 			menu.setRankFilePath(mapperVO.getRankFilePath());
 			menu.setSearchFileName(mapperVO.getSearchFileName());

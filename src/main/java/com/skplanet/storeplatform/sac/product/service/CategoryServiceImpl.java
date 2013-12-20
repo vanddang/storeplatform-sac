@@ -95,7 +95,7 @@ public class CategoryServiceImpl implements CategoryService {
 				source.setSize(mapperVO.getBodyFileSize());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuName());
+				category.setName(mapperVO.getMenuNm());
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());
@@ -184,7 +184,7 @@ public class CategoryServiceImpl implements CategoryService {
 				category.getSource().setSize(mapperVO.getBodyFileSize());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
-				category.setName(mapperVO.getMenuName());
+				category.setName(mapperVO.getMenuNm());
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());

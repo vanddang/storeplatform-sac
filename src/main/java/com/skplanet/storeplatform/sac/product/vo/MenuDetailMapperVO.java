@@ -21,8 +21,8 @@ public class MenuDetailMapperVO {
 	private String tenantId = ""; // tenant id
 	private String menuId = ""; // menu id
 	private String systemId = ""; // system id
-	private String menuName = ""; // menu name
-	private String menuEngName = ""; // menu English name
+	private String menuNm = ""; // menu name
+	private String menuEngNm = ""; // menu English name
 	private String menuDesc = ""; // menu description
 	private String menuDepth = ""; // menu depth
 	private String infrMenuYn = "";
@@ -77,20 +77,20 @@ public class MenuDetailMapperVO {
 		this.systemId = systemId;
 	}
 
-	public String getMenuName() {
-		return this.menuName;
+	public String getMenuNm() {
+		return this.menuNm;
 	}
 
-	public void setMenuName(String menuName) {
-		this.menuName = menuName;
+	public void setMenuNm(String menuNm) {
+		this.menuNm = menuNm;
 	}
 
-	public String getMenuEngName() {
-		return this.menuEngName;
+	public String getMenuEngNm() {
+		return this.menuEngNm;
 	}
 
-	public void setMenuEngName(String menuEngName) {
-		this.menuEngName = menuEngName;
+	public void setMenuEngNm(String menuEngNm) {
+		this.menuEngNm = this.menuEngNm;
 	}
 
 	public String getMenuDesc() {
