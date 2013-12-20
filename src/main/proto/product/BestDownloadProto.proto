@@ -1,0 +1,31 @@
+package com.skplanet.storeplatform.sac.client.product.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
+import "intfmessage/common/CommonResponseProto.proto";
+import "intfmessage/product/ProductProto.proto";
+
+// Request message
+message reqBestDownload {
+    required string listId = 1;         // 리스트 Id
+    required string imageSizeCd = 2;    // 이미지 사이즈 코드
+    optional string menuId = 3;         // 메뉴Id
+    optional string b2bprod = 4;        // B2B 상품구분
+    optional string hdv = 5;            // HDV 지원구분
+    optional string drm = 6;            // drm 지원구분
+    optional string prodGradeCd = 7;    // 상품등급코드
+    optional string offset = 8;         // 시작점 ROW
+    optional string count = 9;          // 페이지당 노출 ROW 수
+}
+
+// Default message
+message BestDownload {
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonRes = 1;    // 공통 Response
+    required com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product productList = 2;
+}
+
+// Response message
+message resBestDownload{
+    repeated BestDownload bestDownloadList = 1;
+}
+
