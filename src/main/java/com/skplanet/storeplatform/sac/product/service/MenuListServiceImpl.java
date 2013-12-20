@@ -160,6 +160,7 @@ public class MenuListServiceImpl implements MenuListService {
 			throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
+		requestVO.setMenuId(menuId);
 		requestVO.setSystemId(systemId);
 		requestVO.setTenantId(tenantId);
 
