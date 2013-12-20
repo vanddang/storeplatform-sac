@@ -24,5 +24,5 @@ public interface UserJoinService {
 
 	UserJoinMdnResponseVO joinIdPw(UserJoinMdnRequestVO value);
 
-	SellerSecedeResonListResponseVO sellerSecedeResonList();
+	SellerSecedeResonListResponseVO sellerSecedeResonList(UserJoinMdnRequestVO value);
 }

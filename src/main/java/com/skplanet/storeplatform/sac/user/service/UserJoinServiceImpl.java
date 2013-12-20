@@ -31,8 +31,7 @@ import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnResponseVO;
 @Transactional
 public class UserJoinServiceImpl implements UserJoinService {
 
-	private final Logger logger = LoggerFactory
-			.getLogger(UserJoinServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(UserJoinServiceImpl.class);
 
 	// @Autowired
 	// private IDPSCI idpSCI;
@@ -40,9 +39,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.user.service.UserJoinService#joinMdn(java
-	 * .lang.String)
+	 * @see com.skplanet.storeplatform.sac.user.service.UserJoinService#joinMdn(java .lang.String)
 	 */
 	@Override
 	public UserJoinMdnResponseVO joinMdn(UserJoinMdnRequestVO reqVo) {
@@ -66,7 +63,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public SellerSecedeResonListResponseVO sellerSecedeResonList() {
+	public SellerSecedeResonListResponseVO sellerSecedeResonList(UserJoinMdnRequestVO value) {
 
 		SellerSecedeResonListResponseVO responseVO = new SellerSecedeResonListResponseVO();
 
