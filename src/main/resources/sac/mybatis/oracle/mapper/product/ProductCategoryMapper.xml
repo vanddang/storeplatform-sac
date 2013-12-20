@@ -8,6 +8,7 @@
 		              , ROW_NUMBER() OVER(ORDER BY NVL(jc.prchs_cnt, 0)) AS RNUM       /* 다운로드 순 */
 		              , ja.up_menu_id                                    /* 상위 메뉴ID */
 		              , ja.menu_id                                       /* 메뉴ID */
+                      , ja.menu_nm                                       /* 메뉴명 */
 		              , ja.prod_id                                       /* 상품ID */
 		              , ja.prod_nm                                       /* 상품명 */
 		              , ja.aid                                           /* 어플리케이션ID */
@@ -29,7 +30,7 @@
 		                  WHERE tenant_id = ja.tenant_id
 		                    AND menu_id = ja.up_menu_id
 		                    AND system_id = ja.system_id
-		                    AND ROWNUM = 1) AS up_menu_nm
+		                    AND ROWNUM = 1) AS up_menu_nm                /* 상위메뉴명 */      
 		          FROM (SELECT ia.*
 		                      , (SELECT sub_contents_id
 		                           FROM TB_DP_SPRT_DEVICE
@@ -72,9 +73,9 @@
 		                           AND  a.tenant_id = g.tenant_id
 		                           AND  g.prod_id = h.prod_id
 		                           AND  g.tenant_id = h.tenant_id
-		                           AND  a.tenant_id = 'S01'            /* Input 테넌트ID */
-		                           AND  a.menu_id = 'MN01004'          /* MN01004 : 게임>RPG */
-		                           AND  a.system_id = 'S009'           /* Input 시스템ID */
+		                           AND  a.tenant_id = #{tenantId}      /* Input 테넌트ID */
+		                           AND  a.menu_id = #{menuId}          /* MN01004 : 게임>RPG */
+		                           AND  a.system_id = #{systemId}      /* Input 시스템ID */
 		                           AND  a.use_yn = 'Y'                 /* Y : 사용(시용여부) */
 		                           AND  b.use_yn = 'Y'                 /* Y : 사용(시용여부) */
 		                           AND  c.base_yn = 'Y'                /* Y : 기본(기본여부) */
@@ -94,8 +95,8 @@
 		           AND  ja.prod_id = jc.prod_id(+)
 		           AND  ja.tenant_id = jc.tenant_id(+)
 		           AND  ja.prod_id = jd.prod_id
-		           AND  jd.img_cd = 'DP000101'
+		           AND  jd.img_cd = #{imageCd}
 		       ) ka
-		 WHERE RNUM BETWEEN 1 AND 50
+		 WHERE RNUM BETWEEN #{offset} AND #{count}
  	</select>
 </mapper>
