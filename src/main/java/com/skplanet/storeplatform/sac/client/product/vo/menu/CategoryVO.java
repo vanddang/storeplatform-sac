@@ -25,23 +25,51 @@ public class CategoryVO {
 	private String text = "";
 
 	/*
-	 * private final int productCount = 0; // 카테고리 상품수
-	 * 
-	 * 
-	 * Contents의 MimeType > image/png : PNG 이미지 > image/jpeg : JPG 이미지
-	 * 
-	 * private final String contentsMediaType = ""; private final int fileSize = 0; // 파일 사이즈
-	 * 
-	 * 
-	 * Resource 타입 > product : 상품 > thumbnail : 썸네일 > movie : 동영상 > screenshot : 스크린샷 > screenshot/large : 스크린샷(큰사이즈) >
-	 * music : 음악 > barcode : 바코드이미지 > 음악의 경우 audio/mp3-192, audio/mp3-128로 구분한다.
-	 * 
-	 * private String resourceType = ""; private final String resouceUrl = ""; // Resource URL
-	 * 
-	 * public String getResourceType() { return this.resourceType; }
-	 * 
-	 * public void setResourceType(String resourceType) { this.resourceType = resourceType; }
+	 * Contents의 MimeType (image/png : PNG 이미지, image/jpeg : JPG 이미지)
 	 */
+	private String mediaType;
+
+	private String size; // 파일 사이즈
+	/*
+	 * Resource 타입 (product : 상품, thumbnail : 썸네일, movie : 동영상, screenshot : 스크린샷, screenshot/large : 스크린샷(큰사이즈), music
+	 * : 음악, barcode : 바코드이미지, 음악의 경우 audio/mp3-192, audio/mp3-128로 구분한다.)
+	 */
+	private String sourceType;
+
+	private String url; // Resource URL
+
+	public String getMediaType() {
+		return this.mediaType;
+	}
+
+	public void setMediaType(String mediaType) {
+		this.mediaType = mediaType;
+	}
+
+	public String getSize() {
+		return this.size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	public String getSourceType() {
+		return this.sourceType;
+	}
+
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+
+	public String getUrl() {
+		return this.url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public String getCode() {
 		return this.code;
 	}
