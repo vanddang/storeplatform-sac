@@ -11,11 +11,9 @@ package com.skplanet.storeplatform.sac.user.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.idp.client.sci.IDPSCI;
 import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnRequestVO;
 import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnResponseVO;
 
@@ -30,8 +28,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	private final Logger logger = LoggerFactory.getLogger(UserJoinServiceImpl.class);
 
-	@Autowired
-	private IDPSCI idpSCI;
+	// @Autowired
+	// private IDPSCI idpSCI;
 
 	/*
 	 * (non-Javadoc)
@@ -47,7 +45,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		res.setResultMessage("연동 성공");
 		res.setUserKey("1111111111");
 
-		this.logger.debug(this.idpSCI.alredyJoinCheckByEmail("tlaeo00@naver.com").entrySet().toString());
+		// this.logger.debug(this.idpSCI.alredyJoinCheckByEmail("tlaeo00@naver.com").entrySet().toString());
 
 		return res;
 	}
