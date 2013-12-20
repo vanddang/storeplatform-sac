@@ -4,7 +4,7 @@
     <!-- Menu 리스트 조회-->
     <select id="selectMenuList" parameterType="MenuRequestVO" resultType="MenuDetailMapperVO">
         SELECT 
-                SELECT  COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
+                COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
                 TENANT_ID  ,
                 MENU_ID    ,           
                 SYSTEM_ID  ,          
