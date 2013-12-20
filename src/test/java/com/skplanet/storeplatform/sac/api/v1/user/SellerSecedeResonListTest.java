@@ -89,42 +89,34 @@ public class SellerSecedeResonListTest {
 	public void shouldObtainUserDetail() throws Exception {
 		final int userId = 10001;
 
-		new TestCaseTemplate(this.mockMvc)
-				.url("/member/seller/secedeResonList/v1")
-				.httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info",
-						"authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		new TestCaseTemplate(this.mockMvc).url("/user/seller/secedeResonList/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						return null;
 
 					}
-				})
-				.success(SellerSecedeResonListResponseVO.class,
-						new SuccessCallback() {
-							@Override
-							public void success(Object result,
-									HttpStatus httpStatus, RunMode runMode) {
-								SellerSecedeResonListResponseVO resultVO = (SellerSecedeResonListResponseVO) result;
-
-								// assertThat(resultVO.getSellerSecedeResonList(),
-								// is("));
-
-							}
-						}, HttpStatus.OK, HttpStatus.ACCEPTED)
-				.complete(new CompleteCallback() {
+				}).success(SellerSecedeResonListResponseVO.class, new SuccessCallback() {
 					@Override
-					public void complete(HttpServletRequest request,
-							HttpServletResponse response) {
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SellerSecedeResonListResponseVO resultVO = (SellerSecedeResonListResponseVO) result;
+						System.out.println(resultVO.getSellerSecedeResonList().get(0).getSecedeReasonCode());
+						System.out.println(resultVO.getSellerSecedeResonList().get(0).getSecedeReasonMessage());
+						// assertThat(resultVO.getSellerSecedeResonList(),
+						// is("));
+
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).complete(new CompleteCallback() {
+					@Override
+					public void complete(HttpServletRequest request, HttpServletResponse response) {
 						// JUnit Assert 작성
 					}
 				}).error(new ErrorCallback() {
 					@Override
-					public void error(Exception ex, HttpServletRequest request,
-							HttpServletResponse response) {
+					public void error(Exception ex, HttpServletRequest request, HttpServletResponse response) {
 						// JUnit Assert 작성
 					}
-				}).run(RunMode.JSON);
+				}).run(RunMode.PROTOBUF);
 	}
 }
