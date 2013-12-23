@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequestVO;
-import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequest;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.product.vo.FeatureVodProductMapperVO;
+import com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO;
 
 /**
  * FeatureVodProductService Service 인터페이스(CoreStoreBusiness) 구현체
@@ -51,14 +51,14 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 	 * .storeplatform.sac.client.product.vo.feature.FeatureVodProductRequestVO)
 	 */
 	@Override
-	public FeatureVodProductResponseVO searchFeatureVodProductList(FeatureVodProductRequestVO requestVO) {
-		FeatureVodProductResponseVO responseVO = null;
+	public FeatureVodProductResponse searchFeatureVodProductList(FeatureVodProductRequest requestVO) {
+		FeatureVodProductResponse responseVO = null;
 
-		List<FeatureVodProductMapperVO> resultList = this.commonDAO.queryForList(
-				"FeatureVodProduct.selectAdminNewProductList", requestVO, FeatureVodProductMapperVO.class);
+		List<FeatureVodProductDTO> resultList = this.commonDAO.queryForList(
+				"FeatureVodProduct.selectAdminNewProductList", requestVO, FeatureVodProductDTO.class);
 
 		if (resultList != null) {
-			FeatureVodProductMapperVO mapperVO = new FeatureVodProductMapperVO();
+			FeatureVodProductDTO productDto = new FeatureVodProductDTO();
 
 			// Response VO를 만들기위한 생성자
 			Identifier identifier = new Identifier();
@@ -74,63 +74,61 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 
 			List<Menu> menuList = new ArrayList<Menu>();
 			List<Source> sourceList = new ArrayList<Source>();
-
-			FeatureVodProductVO featureVodProductVO = new FeatureVodProductVO();
-			List<FeatureVodProductVO> listVO = new ArrayList<FeatureVodProductVO>();
+			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < resultList.size(); i++) {
-				mapperVO = resultList.get(i);
+				productDto = resultList.get(i);
 
 				// 상품 정보 (상품ID)
 				identifier.setType("channel");
-				identifier.setText(mapperVO.getProdId());
+				identifier.setText(productDto.getProdId());
 
 				// 상품 정보 (지원구분)
-				product.setSupport(mapperVO.getHdvYn());
+				product.setSupport(productDto.getHdvYn());
 
 				// 메뉴 정보
 				menu.setType("topClass");
-				menu.setId(mapperVO.getUpMenuId());
-				menu.setName(mapperVO.getUpMenuNm());
+				menu.setId(productDto.getUpMenuId());
+				menu.setName(productDto.getUpMenuNm());
 				menuList.add(menu);
 
 				menu = new Menu();
-				menu.setId(mapperVO.getMenuId());
-				menu.setName(mapperVO.getMenuNm());
+				menu.setId(productDto.getMenuId());
+				menu.setName(productDto.getMenuNm());
 				menuList.add(menu);
 
 				menu = new Menu();
 				menu.setType("metaClass");
-				menu.setId(mapperVO.getMetaClsfCd());
+				menu.setId(productDto.getMetaClsfCd());
 				menuList.add(menu);
 
 				// 저자 정보
-				contributor.setDirector(mapperVO.getArtist1Nm());
-				contributor.setArtist(mapperVO.getArtist2Nm());
+				contributor.setDirector(productDto.getArtist1Nm());
+				contributor.setArtist(productDto.getArtist2Nm());
 				date.setType("발매일");
-				date.setText(mapperVO.getIssueDay());
+				date.setText(productDto.getIssueDay());
 				contributor.setDate(date);
 
 				// 평점 정보
-				accrual.setVoterCount(mapperVO.getPaticpersCnt());
-				accrual.setDownloadCount(mapperVO.getPrchsQty());
-				accrual.setScore(Double.parseDouble(mapperVO.getAvgEvluScore()));
+				accrual.setVoterCount(productDto.getPaticpersCnt());
+				accrual.setDownloadCount(productDto.getPrchsQty());
+				accrual.setScore(Double.parseDouble(productDto.getAvgEvluScore()));
 
 				// 이용권한 정보
-				rights.setGrade(mapperVO.getProdGrdCd());
+				rights.setGrade(productDto.getProdGrdCd());
 
 				// 상품 정보 (상품명)
-				title.setText(mapperVO.getProdNm());
+				title.setText(productDto.getProdNm());
 
 				// 이미지 정보
-				source.setUrl(mapperVO.getImgFilePath());
+				source.setUrl(productDto.getImgFilePath());
 				sourceList.add(source);
 
 				// 상품 정보 (상품설명)
-				product.setProductExplain(mapperVO.getProdBaseDesc());
+				product.setProductExplain(productDto.getProdBaseDesc());
 
 				// 상품 정보 (상품가격)
-				price.setText(Integer.parseInt(mapperVO.getProdAmt()));
+				price.setText(Integer.parseInt(productDto.getProdAmt()));
 
 				// 데이터 매핑
 				product.setIdentifier(identifier);
@@ -139,9 +137,7 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 				product.setTitle(title);
 				product.setSourceList(sourceList);
 				product.setPrice(price);
-
-				featureVodProductVO.setProduct(product);
-				listVO.add(i, featureVodProductVO);
+				productList.add(i, product);
 
 				identifier = new Identifier();
 				menu = new Menu();
@@ -156,12 +152,14 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 
 				menuList = new ArrayList<Menu>();
 				sourceList = new ArrayList<Source>();
-
-				featureVodProductVO = new FeatureVodProductVO();
 			}
 
-			responseVO = new FeatureVodProductResponseVO();
-			responseVO.setFeatureVodProductList(listVO);
+			responseVO = new FeatureVodProductResponse();
+			responseVO.setProductList(productList);
+
+			CommonResponse commonResponse = new CommonResponse();
+			commonResponse.setTotalCount(productDto.getTotalCount());
+			responseVO.setCommonResponse(commonResponse);
 		}
 		return responseVO;
 	}

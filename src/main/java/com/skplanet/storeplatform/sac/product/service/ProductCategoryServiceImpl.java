@@ -128,14 +128,15 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
 				identifier = new Identifier();
 				menu = new Menu();
-				menuList = new ArrayList<Menu>();
 				app = new App();
 				rights = new Rights();
 				title = new Title();
 				source = new Source();
-				sourceList = new ArrayList<Source>();
 				price = new Price();
 				product = new Product();
+
+				menuList = new ArrayList<Menu>();
+				sourceList = new ArrayList<Source>();
 			}
 
 			responseVO = new ProductCategoryResponse();

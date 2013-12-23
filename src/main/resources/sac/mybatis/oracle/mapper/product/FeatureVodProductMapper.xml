@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FeatureVodProduct">
 	<!-- 운영자 신규 상품 (영화, 방송)-->
-    <select id="selectAdminNewProductList" parameterType="FeatureVodProductRequestVO" resultType="FeatureVodProductMapperVO">
+    <select id="selectAdminNewProductList" parameterType="FeatureVodProductRequest" resultType="FeatureVodProductDTO">
 		SELECT COUNT(prod_id) OVER() AS total_count
 		     , tb.*
 		  FROM (SELECT  ROW_NUMBER() OVER(ORDER BY ja.prchs_qty) AS rnum
