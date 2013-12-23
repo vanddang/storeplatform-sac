@@ -28,6 +28,7 @@ public class ProductCategoryResponse extends CommonVO {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;
+
 	private List<Product> productList;
 
 	public CommonResponse getCommonResponse() {
