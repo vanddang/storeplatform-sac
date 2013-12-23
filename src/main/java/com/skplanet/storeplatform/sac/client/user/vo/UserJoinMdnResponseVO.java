@@ -11,6 +11,9 @@ package com.skplanet.storeplatform.sac.client.user.vo;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 
 /**
@@ -60,5 +63,10 @@ public class UserJoinMdnResponseVO implements Serializable {
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }
