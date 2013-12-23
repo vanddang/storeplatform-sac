@@ -8,9 +8,8 @@
 				CD_NM AS secedeReasonMessage
 		  FROM TB_CM_CD
 		 WHERE GRP_CD_ID = 'US0018'
-		 AND LANG_CD = 'ko'
 		 <if test="langCd != null">
-		 	AND LANG_CD = #langCd#
+		 	AND LANG_CD = #{langCd}
 		 </if>
 		 AND USE_YN = 'Y'
 		 ORDER BY CD_ID

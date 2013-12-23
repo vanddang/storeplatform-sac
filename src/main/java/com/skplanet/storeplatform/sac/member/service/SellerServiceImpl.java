@@ -29,13 +29,15 @@ public class SellerServiceImpl implements SellerService {
 
 	@Override
 	public SellerSecedeResonListResponseVO getSellerSecedeResonList(
-			SellerSecedeResonListRequestVO sellerSecedeResonListRequestVO) {
+			SellerSecedeResonListRequestVO requestVO) {
 
 		SellerSecedeResonListResponseVO responseVO = new SellerSecedeResonListResponseVO();
 
+		this.log.info(":::::::::::: langCd : " + requestVO.getLangCd());
+		requestVO.setLangCd("en");
+
 		List<SellerSecedeResonVO> sellerSecedeResonList = (List<SellerSecedeResonVO>) this.commonDAO
-				.queryForList("seller.getSellerSecedeResonList",
-						sellerSecedeResonListRequestVO);
+				.queryForList("seller.getSellerSecedeResonList", requestVO);
 
 		responseVO.setResultCode("100");
 		responseVO.setResultMessage("성공");

@@ -80,14 +80,13 @@ public class SellerSecedeResonListTest {
 	}
 
 	/**
-	 * 회원 상세 단위테스트.
+	 * 판매자 탈퇴사유 리스트 조회 단위테스트.
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
 	@Test
-	public void shouldObtainUserDetail() throws Exception {
-		final int userId = 10001;
+	public void shouldObtainSellerSecedeResonList() throws Exception {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url("/seller/secedeResonList/v1")
@@ -97,8 +96,12 @@ public class SellerSecedeResonListTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
+						/*
+						 * SellerSecedeResonListRequestVO reqVO = new
+						 * SellerSecedeResonListRequestVO();
+						 * reqVO.setLangCd("en"); return reqVO;
+						 */
 						return null;
-
 					}
 				})
 				.success(SellerSecedeResonListResponseVO.class,
