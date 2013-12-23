@@ -1,15 +1,11 @@
 package prototype;
 
 option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+import "intfmessage/common/CommonResponseProto.proto";
 import "intfmessage/product/ProductProto.proto";
 
-// Default message
-message FeatureVodProduct {
-    required com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product product = 2;
-}
-
-// Request message
-message RequestFeatureVodProduct {
+// Feature 상품 (영화, 방송) 카테고리 조회 Request message
+message FeatureVodProductRequest {
     required string tenantId = 1;       //테넌트ID
     required string menuId = 2;         //메뉴ID
     required string systemId = 3;       //시스템ID
@@ -21,7 +17,8 @@ message RequestFeatureVodProduct {
     optional int32 count = 9;           //count
 }
 
-// Response message
-message ResponseFeatureVodProduct {
-    repeated FeatureVodProduct featureVodProductList = 1;
+// Feature 상품 (영화, 방송) 카테고리 조회 Response message
+message FeatureVodProductResponse {
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonResponse = 1;
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product productList = 2;
 }

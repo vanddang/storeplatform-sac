@@ -10,15 +10,18 @@
 package com.skplanet.storeplatform.sac.client.product.vo.feature;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.product.vo.FeatureVodProductProto;
 
 /**
- * 일반 상품 카테고리 리스트 조회 Input Value Object.
+ * Feature 상품 (영화, 방송) 카테고리 조회 Request Value Object.
  * 
- * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
+ * Updated on : 2013. 12. 23. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(FeatureVodProductProto.RequestFeatureVodProduct.class)
-public class FeatureVodProductRequestVO {
+@ProtobufMapping(FeatureVodProductProto.FeatureVodProductRequest.class)
+public class FeatureVodProductRequest extends CommonVO {
+	private static final long serialVersionUID = 1L;
+
 	private String tenantId; // 테넌트ID
 
 	private String menuId; // 메뉴ID
