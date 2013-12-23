@@ -1,0 +1,9 @@
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/UserInfoProto.proto";
+
+message UserDeviceRepInfoRequest {
+    required com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 1;
+}

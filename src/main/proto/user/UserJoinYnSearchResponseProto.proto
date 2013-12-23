@@ -6,11 +6,12 @@ import "user/UserInfoProto.proto";
 import "user/RealNameInfoProto.proto";
 
 message UserJoinYnSearchResponse {
-    optional com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 1;
-    optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 2;
+    required string resultCode = 1;
+    required string resultMessage = 2;
 
-    repeated string resultCode   = 3;
-    repeated string resultMassage   = 4;
+    optional com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 3;
+    optional com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 4;
+
     optional string under14   = 5;
     optional string agencyYn   = 6;
     optional string prodAdultYn   = 7;

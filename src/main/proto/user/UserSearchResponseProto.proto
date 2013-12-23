@@ -1,0 +1,23 @@
+package com.skplanet.storeplatform.sac.client.user.vo;
+
+option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
+
+import "user/RealNameInfoProto.proto";
+import "user/UserDeviceInfoProto.proto";
+import "user/UserDeviceExtraInfoProto.proto";
+import "user/UserInfoProto.proto";
+import "user/UserExtraInfoProto.proto";
+import "user/UserSecedeInfoProto.proto";
+import "user/AgreementInfoProto.proto";
+message UserSearchResponse {
+    required string resultCode = 1;
+    required string resultMessage = 2;
+
+    repeated com.skplanet.storeplatform.sac.client.user.vo.RealNameInfo realNameInfo = 3;
+    repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceInfo userDeviceInfo = 4;
+    repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceExtraInfo userDeviceExtraInfo = 5;
+    repeated com.skplanet.storeplatform.sac.client.user.vo.UserInfo userInfo = 6;
+    repeated com.skplanet.storeplatform.sac.client.user.vo.UserExtraInfo userExtraInfo = 7;
+    repeated com.skplanet.storeplatform.sac.client.user.vo.UserSecedeInfo userSecedeInfo = 8;
+    repeated com.skplanet.storeplatform.sac.client.user.vo.AgreementInfo agreementInfo = 9;
+}
