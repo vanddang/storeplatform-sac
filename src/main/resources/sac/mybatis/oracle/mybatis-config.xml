@@ -31,8 +31,8 @@
         <typeAlias alias="ServiceVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceVO" />
         <typeAlias alias="BypassVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO" />
         
-        <typeAlias alias="ProductCategoryRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO" />
-        <typeAlias alias="ProductCategoryMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCategoryMapperVO" />
+        <typeAlias alias="ProductCategoryRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequest" />
+        <typeAlias alias="ProductCategoryDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCategoryDTO" />
         <typeAlias alias="FeatureVodProductRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequestVO" />
         <typeAlias alias="FeatureVodProductMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductMapperVO" />
         <typeAlias alias="MenuRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO" />
