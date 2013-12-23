@@ -5,7 +5,9 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryListResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryDetailListResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryListResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest;
 
 /**
  * Category Service 인터페이스(CoreStoreBusiness)
@@ -23,8 +25,8 @@ public interface CategoryService {
 	 *            tenantId, String systemId, String menuId Menu Request Value Object
 	 * @return Menu 리스트
 	 */
-	public CategoryListResponseVO searchTopCategoryList(String tenantId, String systemId, String menuId)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public CategoryListResponse searchTopCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception;
 
 	/**
 	 * <pre>
@@ -35,6 +37,6 @@ public interface CategoryService {
 	 *            tenantId, String systemId, String menuId Menu Request Value Object
 	 * @return Menu 상세
 	 */
-	public CategoryListResponseVO searchDetailCategoryList(String tenantId, String systemId, String menuId)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public CategoryDetailListResponse searchDetailCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception;
 }

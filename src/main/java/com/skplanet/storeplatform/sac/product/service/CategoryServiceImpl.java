@@ -28,9 +28,11 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryListResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO;
-import com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryDetail;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryDetailListResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.CategoryListResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.product.vo.MenuDetailDTO;
 
 /**
  * Category Service 인터페이스(CoreStoreBusiness) 구현체
@@ -53,12 +55,20 @@ public class CategoryServiceImpl implements CategoryService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public CategoryListResponseVO searchTopCategoryList(String tenantId, String systemId, String menuId)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public CategoryListResponse searchTopCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
-		CategoryListResponseVO responseVO = null;
-		MenuRequestVO requestVO = new MenuRequestVO();
+
+		String tenantId = "";
+		String systemId = "";
+		String menuId = "";
+
+		tenantId = requestVO.getTenantId();
+		systemId = requestVO.getSystemId();
+		menuId = requestVO.getMenuId();
+
+		CategoryListResponse responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -67,15 +77,8 @@ public class CategoryServiceImpl implements CategoryService {
 		if (null == systemId || "".equals(systemId)) {
 			throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
-
-		if (null != menuId && !"".equals(menuId)) {
-			requestVO.setMenuId(menuId);
-		}
-		requestVO.setSystemId(systemId);
-		requestVO.setTenantId(tenantId);
-
-		List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("category.getTopCategory", requestVO,
-				MenuDetailMapperVO.class);
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("category.getTopCategory", requestVO,
+				MenuDetailDTO.class);
 		if (resultList != null) {
 
 			// Response VO를 만들기위한 생성자
@@ -83,9 +86,9 @@ public class CategoryServiceImpl implements CategoryService {
 			Source source = null;
 			List<Menu> listVO = new ArrayList<Menu>();
 
-			Iterator<MenuDetailMapperVO> iterator = resultList.iterator();
+			Iterator<MenuDetailDTO> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MenuDetailMapperVO mapperVO = iterator.next();
+				MenuDetailDTO mapperVO = iterator.next();
 
 				category = new Menu();
 				source = new Source();
@@ -118,7 +121,7 @@ public class CategoryServiceImpl implements CategoryService {
 				listVO.add(category);
 			}
 
-			responseVO = new CategoryListResponseVO();
+			responseVO = new CategoryListResponse();
 			commonResponse = new CommonResponse();
 			responseVO.setCategoryList(listVO);
 			commonResponse.setTotalCount(totalCount);
@@ -142,12 +145,20 @@ public class CategoryServiceImpl implements CategoryService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public CategoryListResponseVO searchDetailCategoryList(String tenantId, String systemId, String menuId)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public CategoryDetailListResponse searchDetailCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
-		CategoryListResponseVO responseVO = null;
-		MenuRequestVO requestVO = new MenuRequestVO();
+
+		String tenantId = "";
+		String systemId = "";
+		String menuId = "";
+
+		tenantId = requestVO.getTenantId();
+		systemId = requestVO.getSystemId();
+		menuId = requestVO.getMenuId();
+
+		CategoryDetailListResponse responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -156,35 +167,46 @@ public class CategoryServiceImpl implements CategoryService {
 		if (null == systemId || "".equals(systemId)) {
 			throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
-
-		if (null != menuId && !"".equals(menuId)) {
-			requestVO.setMenuId(menuId);
+		if (null == menuId || "".equals(menuId)) {
+			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
-		requestVO.setSystemId(systemId);
-		requestVO.setTenantId(tenantId);
 
-		List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("category.getTopCategory", requestVO,
-				MenuDetailMapperVO.class);
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("category.getDetailCategory", requestVO,
+				MenuDetailDTO.class);
 		if (resultList != null) {
 
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
 			List<Menu> listVO = new ArrayList<Menu>();
+			List<CategoryDetail> detailListVO = new ArrayList<CategoryDetail>();
 
-			Iterator<MenuDetailMapperVO> iterator = resultList.iterator();
+			boolean tg = false;
+			int count = 0;
+
+			CategoryDetail categoryDetail = new CategoryDetail();
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+
+			Iterator<MenuDetailDTO> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MenuDetailMapperVO mapperVO = iterator.next();
+				MenuDetailDTO mapperVO = iterator.next();
+
+				String mapperJson = objectMapper.writeValueAsString(mapperVO);
+				this.log.debug(mapperJson);
 
 				category = new Menu();
 				source = new Source();
 
 				totalCount = mapperVO.getTotalCount();
+				this.log.debug("totalCount : " + totalCount);
 
-				category.getSource().setSize(mapperVO.getBodyFileSize());
+				source.setSize(mapperVO.getBodyFileSize());
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
+
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());
@@ -203,20 +225,59 @@ public class CategoryServiceImpl implements CategoryService {
 				 */
 				category.setSource(source);
 
-				listVO.add(category);
+				if (mapperVO.getMenuId().indexOf("MN13") > -1) { // ebook -> 3depth
+					this.log.debug("ebook !!");
+
+					if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
+						this.log.debug("ebook 2 depth!!");
+						if (tg == false && count > 0) {
+							categoryDetail.setSubCategoryList(listVO);
+							detailListVO.add(categoryDetail);
+
+							categoryDetail = new CategoryDetail();
+							listVO = new ArrayList<Menu>();
+
+							tg = true;
+						}
+						categoryDetail.setCategory(category);
+						count++;
+					} else { // 3 depth
+						this.log.debug("ebook 3 depth!!");
+						listVO.add(category);
+					}
+
+					if (tg == true && count > 0) {
+						tg = false;
+						// count = 0;
+					}
+				} else { // 2depth
+					listVO.add(category);
+
+					count++;
+
+					if (count >= totalCount) {
+						categoryDetail.setSubCategoryList(listVO);
+						detailListVO.add(categoryDetail);
+					}
+				}
+				String categoryDetailJson = objectMapper.writeValueAsString(categoryDetail);
+
+				this.log.debug("categoryDetail json : {}", categoryDetailJson);
 			}
 
-			responseVO = new CategoryListResponseVO();
+			responseVO = new CategoryDetailListResponse();
 			commonResponse = new CommonResponse();
-			responseVO.setCategoryList(listVO);
+			responseVO.setCategoryList(detailListVO); // set category detail list
 			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonRes(commonResponse);
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-			String json = objectMapper.writeValueAsString(responseVO);
+			/*
+			 * ObjectMapper objectMapper = new ObjectMapper();
+			 * objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+			 */
+			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
 
-			this.log.debug("test json : {}", json);
+			this.log.debug("CategoryDetailList json : {}", CategoryDetailList);
 			// System.out.println(json);
 
 		}
