@@ -1,0 +1,188 @@
+/*****************************************************************************
+ * SKT TStore Project ::: PARTNER Site :::: Shopping Coupon interface
+ *****************************************************************************
+ * 1.클래스 개요 :
+ * 2.작   성  자 : Kim Hyung Sik
+ * 3.작 성 일 자 : 2013. 12. 29.
+ * <pre>
+ * 4.수 정 일 자 :
+ *      . <날짜> : <수정 내용> (성명)
+ *      . 2013. 12. 29.  : 최초 생성 (jade)
+ * @author Kim Hyung Sik
+ * </pre>
+ * @version 1.0
+ *****************************************************************************/
+
+package com.skplanet.storeplatform.sac.api.conts;
+
+import com.skplanet.storeplatform.sac.api.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
+
+public class CouponConstants {
+
+	// 쇼핑쿠폰 전문
+	public static final String IF_SYSTEM_COUPON_XML_CP = "1003"; // 쇼핑쿠폰 상품 추가/수정 전문코드
+
+	// 쇼핑쿠폰 PARAMETER_ID
+	public static final String IF_SYSTEM_COUPON_PARAM_BD = "1101"; // 브랜드 parameter
+	public static final String IF_SYSTEM_COUPON_PARAM_CT = "1102"; // 카달로그 parameter
+	public static final String IF_SYSTEM_COUPON_PARAM_CP = "1103"; // 상품 추가/수정 parameter
+	public static final String IF_SYSTEM_COUPON_PARAM_ST = "1104"; // 상품 갱신 parameter
+	public static final String IF_SYSTEM_COUPON_PARAM_LS = "1105"; // 특가상품 목록 조회 parameter
+	public static final String IF_SYSTEM_COUPON_PARAM_DT = "1106"; // 특가상품 상세 조회 parameter
+	public static final String IF_SYSTEM_COUPON_PARAM_AT = "1107"; // 쿠폰상태목록 변경 미전시-> 전시
+
+	// 쇼핑쿠폰 RESPONSE_ID
+	public static final String IF_SYSTEM_COUPON_RESPONSE_BD = "1201"; // 브랜드 response
+	public static final String IF_SYSTEM_COUPON_RESPONSE_CT = "1202"; // 카달로그 response
+	public static final String IF_SYSTEM_COUPON_RESPONSE_CP = "1203"; // 상품 추가/수정 response
+	public static final String IF_SYSTEM_COUPON_RESPONSE_ST = "1204"; // 상품 갱신 response
+	public static final String IF_SYSTEM_COUPON_RESPONSE_LS = "1205"; // 특가상품 목록 조회 response
+	public static final String IF_SYSTEM_COUPON_RESPONSE_DT = "1206"; // 특가상품 상세 조회 response
+	public static final String IF_SYSTEM_COUPON_RESPONSE_AT = "1207"; // 쿠폰상태목록 변경 미전시-> 전시
+
+	// COUPON ERROR_CODE
+	public static final String COUPON_IF_ERROR_CODE_OK = "0000"; // 정상
+	public static final String COUPON_IF_ERROR_CODE_MISS = "1001"; // 필수정보 누락 [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_TYPE = "1002"; // Parameter 타입 오류
+	public static final String COUPON_IF_ERROR_CODE_SERVICE_STOP = "9000"; // Tstore 전시처리 오류(관리자 문의요망)
+	public static final String COUPON_IF_ERROR_CODE_QUESTION = "9999"; // 알수없는 오류
+
+	public static final String COUPON_IF_ERROR_CODE_COUPONCODE = "3001"; // 잘못된 쿠폰ID
+	public static final String COUPON_IF_ERROR_CODE_POIID = "3002"; // 잘못된 POI ID
+
+	public static final String COUPON_IF_ERROR_CODE_DUP_TXID = "4000"; // 중복 TX_ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_NOT_CATID = "4001"; // 미존재 카테고리 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_NOT_BRID = "4002"; // 미존재 브랜드 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_NOT_COUPONID = "4003"; // 미존재 쿠폰 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_NOT_ITEMID = "4004"; // 미존재 Item ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_NOT_BPID = "4005"; // 미등록 BP ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_DUP_BRID = "4006"; // 중복 브랜드 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_DUP_COUPONID = "4007"; // 중복 쿠폰 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_DUP_ITEMID = "4008"; // 중복 Item ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_NOT_CATALOGID = "4009"; // 미등록 카탈로그 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_DUP_CATALOGID = "4010"; // 중복 카탈로그 ID [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_FILEACESS_ERR = "4011"; // 파일 Access 오류
+	public static final String COUPON_IF_ERROR_CODE_IMGTYPE_ERR = "4012"; // 이미지 타입 오류
+	public static final String COUPON_IF_ERROR_CODE_IMGCRE_ERR = "4013"; // 이미지 생성 오류
+	public static final String COUPON_IF_ERROR_CODE_IMGSIZE_ERR = "4014"; // 이미지 사이즈 오류
+	public static final String COUPON_IF_ERROR_CODE_NOT_SPECIAL = "4015"; // 특가상품 없음
+
+	public static final String COUPON_IF_ERROR_CODE_DATA_ERR = "4021"; // Data 오류 [xxxx]
+	public static final String COUPON_IF_ERROR_CODE_DB_ERR = "4031"; // DB 장애 오류 [xxxx]
+
+	public static final String COUPON_IF_ERROR_CODE_DB_ETC = "4091"; // 기타 error MSG 직접입력 (쇼핑쿠폰 ERROR 메세지 전송과
+																	 // TBL_BP_COUPON_HIST ERROR_MSG 저장내역이 동일)
+
+	// COUPON IF TX_STATUS
+	public static final String COUPON_IF_TX_STATUS_SUCCESS = "01"; // 정상
+	public static final String COUPON_IF_TX_STATUS_ERROR = "02"; // ERROR
+
+	// 공통코드
+	public static final int COUPON_CONTENT_DEFAULT_REVISION = 1; // START REVISION 값
+	public static final String COUPON_CONTENT_TP_CHA = "PD002501"; // 채널타입
+	public static final String COUPON_CONTENT_TP_EPI = "PD002502"; // 에피소드타입
+
+	// 전시코드
+	public static final String COUPON_TOP_CAT_CD = "DP000528"; // 쇼핑 TOP
+	public static final String COUPON_SALE_CHNL_CD = "DP006101"; // 판매채널 : T store
+
+	// 상품 유형
+	public static final String COUPON_SALE_TYPE_VOUCHER_TICKET = "1"; // 상품권
+	public static final String COUPON_SALE_TYPE_COUPON_TICKET = "2"; // 교환권
+	public static final String COUPON_SALE_TYPE_SHIPPING_PROD = "3"; // 배송상품
+
+	// 브랜드,카탈로그 Path
+	public static final String Brand_Catalog_Path = "COUPON"; // 브랜드, 카탈로그 path
+
+	// 브랜드, 카탈로그 REPOSITORY_TYPE
+	public static final String TYPE_FOR_REPOSITORY_PATH = "PD011801"; // M/M
+
+	// 브랜드, 카탈로그 REPOSITORY_PCD
+	public static final String PCD_FOR_REPOSITORY_PATH = "PD011906"; // 쇼핑쿠폰
+
+	// 브랜드 IMG_CLS
+	public static final String BRAND_IMG_260x170 = "DP0001A4";
+	public static final String BRAND_IMG_177x177 = "DP0001B9";
+	public static final String BRAND_IMG_114x114 = "DP0001B8";
+	// public static final String BRAND_IMG_82x82 = "DP000199";
+	public static final String BRAND_IMG_29x29 = "DP0001B5";
+	public static final String BRAND_IMG_56x56 = "DP0001B6";
+	// 2013.06.24 이미지 추가
+	public static final String BRAND_IMG_27x27 = "DP0001B7";
+	public static final String BRAND_IMG_25x25 = "DP0001B2";
+
+	// 카탈로그 대표이미지 IMG_CLS
+	public static final String CATALOG_TOP_IMG_60x60 = "DP000165";
+	public static final String CATALOG_TOP_IMG_120x120 = "DP000167";
+	public static final String CATALOG_TOP_IMG_130x130 = "DP000191";
+	public static final String CATALOG_TOP_IMG_40x40 = "DP000164";
+	public static final String CATALOG_TOP_IMG_80x80 = "DP000166";
+	public static final String CATALOG_TOP_IMG_110x110 = "DP0001A0";
+	public static final String CATALOG_TOP_IMG_180x180 = "DP000168";
+	public static final String CATALOG_TOP_IMG_182x182 = "DP0001A3";
+	public static final String CATALOG_TOP_IMG_31x30 = "DP0001B3";
+
+	// 카탈로그 상세이미지 IMG_CLS
+	public static final String CATALOG_DTL_IMG_684x = "DP0001B0"; // 가변길이 684x 세로 최대 1170
+	public static final String CATALOG_DTL_IMG_684xY = "DP0001B4"; // 카칼로그 상세이미지 684xY
+
+	// 카탈로그 셀러TAG
+	public static final String TAG_TYPE_FOR_COUPON_TAG = "DP004507"; // 셀러TAG 태그타입(쇼핑용)
+
+	/**
+	 * 4091 error code 가 아닌 경우에는 아리와 같은 메세지로 쇼핑쿠폰에 전송함.
+	 * 
+	 * @param code
+	 * @param errorMsg
+	 * @return
+	 */
+	public static String getCouponErrorMsg(String code, String errorMsg) {
+		return (code == null) ? "null" : (code.equals(COUPON_IF_ERROR_CODE_OK)) ? "정상" : (code
+				.equals(COUPON_IF_ERROR_CODE_DUP_TXID)) ? "중복 TX_ID" : (code.equals(COUPON_IF_ERROR_CODE_MISS)) ? "필수정보 누락" : (code
+				.equals(COUPON_IF_ERROR_CODE_TYPE)) ? "Parameter 타입 오류" : (code
+				.equals(COUPON_IF_ERROR_CODE_SERVICE_STOP)) ? "Tstore 전시처리 오류(관리자 문의요망)" : (code
+				.equals(COUPON_IF_ERROR_CODE_QUESTION)) ? "알수없는 오류" : (code.equals(COUPON_IF_ERROR_CODE_COUPONCODE)) ? "잘못된 쿠폰ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_POIID)) ? "잘못된 POI ID" : (code.equals(COUPON_IF_ERROR_CODE_NOT_CATID)) ? "미존재 카테고리 ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_NOT_BRID)) ? "미존재 브랜드 ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_NOT_COUPONID)) ? "미존재 쿠폰 ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_NOT_ITEMID)) ? "미존재 Item ID" : (code.equals(COUPON_IF_ERROR_CODE_NOT_BPID)) ? "미등록 BP ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_DUP_BRID)) ? "중복 브랜드 ID" : (code.equals(COUPON_IF_ERROR_CODE_DUP_COUPONID)) ? "중복 쿠폰 ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_DUP_ITEMID)) ? "중복 Item ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_NOT_CATALOGID)) ? "미등록 카탈로그 ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_DUP_CATALOGID)) ? "중복 카탈로그 ID" : (code
+				.equals(COUPON_IF_ERROR_CODE_FILEACESS_ERR)) ? "파일 Access 오류" : (code
+				.equals(COUPON_IF_ERROR_CODE_IMGTYPE_ERR)) ? "이미지 타입 오류" : (code
+				.equals(COUPON_IF_ERROR_CODE_IMGCRE_ERR)) ? "이미지 생성 오류" : (code
+				.equals(COUPON_IF_ERROR_CODE_IMGSIZE_ERR)) ? "이미지 사이즈 오류" : (code.equals(COUPON_IF_ERROR_CODE_DATA_ERR)) ? "Data 오류" : (code
+				.equals(COUPON_IF_ERROR_CODE_DB_ERR)) ? "DB 장애 오류" : (code.equals(COUPON_IF_ERROR_CODE_NOT_SPECIAL)) ? "특가상품 없음" : (code
+				.equals(COUPON_IF_ERROR_CODE_DB_ETC)) ? errorMsg : code;
+	}
+
+	public static String getCouponParamId(String txType) {
+		if (txType == null)
+			return null;
+
+		switch (TX_TYPE_CODE.get(txType)) {
+
+		case BD:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_BD;
+		case CT:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_CT;
+		case CP:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_CP;
+		case ST:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_ST;
+		case LS:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_LS;
+		case DT:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_DT;
+		case AT:
+			return CouponConstants.IF_SYSTEM_COUPON_PARAM_AT;
+		default:
+			return null;
+
+		}
+
+	}
+
+}
