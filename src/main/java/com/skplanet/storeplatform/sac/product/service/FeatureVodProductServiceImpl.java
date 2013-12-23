@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.product.vo.FeatureVodProductMapperVO;
 
 /**
- * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
+ * FeatureVodProductService Service 인터페이스(CoreStoreBusiness) 구현체
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */

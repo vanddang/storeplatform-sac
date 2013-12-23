@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.product.vo;
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-public class ProductCategoryMapperVO {
+public class ProductCategoryDTO {
 	private int totalCount;
 	private String upMenuId;
 	private String menuId;

@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.product.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO;
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequest;
+import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryResponse;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -18,5 +18,5 @@ public interface ProductCategoryService {
 	 *            Request VO
 	 * @return 일반 카테고리 상품 리스트
 	 */
-	ProductCategoryResponseVO searchCategoryProductList(ProductCategoryRequestVO requestVO);
+	ProductCategoryResponse searchCategoryProductList(ProductCategoryRequest requestVO);
 }

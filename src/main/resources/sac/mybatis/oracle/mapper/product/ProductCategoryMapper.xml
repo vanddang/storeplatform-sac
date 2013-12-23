@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProductCategory">
 	<!-- 일반 카테고리 상품 리스트 조회-->
-    <select id="selectCategoryList" parameterType="ProductCategoryRequestVO" resultType="ProductCategoryMapperVO">
+    <select id="selectCategoryList" parameterType="ProductCategoryRequest" resultType="ProductCategoryDTO">
 		SELECT *
 		  FROM (SELECT  COUNT(ja.prod_id) OVER() AS total_count
 		              , ROW_NUMBER() OVER(ORDER BY NVL(jc.prchs_cnt, 0)) AS RNUM       /* 다운로드 순 */

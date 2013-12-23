@@ -4,7 +4,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProduc
 import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductResponseVO;
 
 /**
- * ProductCategory Service 인터페이스(CoreStoreBusiness)
+ * FeatureVodProduct Service 인터페이스(CoreStoreBusiness)
  * 
  * Updated on : 2013. 12. 19. Updated by : 이태희, SK 플래닛.
  */
@@ -14,7 +14,7 @@ public interface FeatureVodProductService {
 	 * Feature 상품(영화, 방송) 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param productCategoryReqVO
+	 * @param FeatureVodProductRequestVO
 	 *            Request VO
 	 * @return Feature 상품(영화, 방송) 리스트 조회
 	 */
