@@ -26,6 +26,10 @@ public class UserAuthRealNameServiceImpl implements UserAuthRealNameService {
 		System.out.println(request.toString());
 		res.setResultCode("1001");
 		res.setResultMessage("연동 성공");
+		res.setKmcSmsAuth("kmcSmsAuth");
+		res.setCheckParam1("checkParam1");
+		res.setCheckParam2("checkParam2");
+		res.setCheckParam3("checkParam3");
 
 		return res;
 	}
