@@ -35,8 +35,8 @@
         <typeAlias alias="ProductCategoryDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCategoryDTO" />
         <typeAlias alias="FeatureVodProductRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequest" />
         <typeAlias alias="FeatureVodProductDTO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO" />
-        <typeAlias alias="MenuRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO" />
-        <typeAlias alias="MenuDetailMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO" />
+        <typeAlias alias="MenuRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest" />
+        <typeAlias alias="MenuDetailDTO"  type="com.skplanet.storeplatform.sac.product.vo.MenuDetailDTO" />
         														 
         <typeAlias alias="SellerSecedeResonListRequestVO"  type="com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListRequestVO" />
         <typeAlias alias="SellerSecedeResonVO"  type="com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonVO" />
