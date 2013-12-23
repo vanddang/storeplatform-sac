@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.AccrualProto;
+import com.skplanet.storeplatform.sac.client.intfmessage.device.vo.DeviceProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 
 /**
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@ProtobufMapping(AccrualProto.Accrual.class)
+@ProtobufMapping(DeviceProto.Device.BindingInfo.class)
 public class BindingInfo extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
