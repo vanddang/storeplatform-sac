@@ -10,15 +10,18 @@
 package com.skplanet.storeplatform.sac.client.product.vo.category;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
 import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
 
 /**
- * 일반 상품 카테고리 리스트 조회 Input Value Object.
+ * 일반 카테고리 상품 조회 Request Value Object.
  * 
- * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
+ * Updated on : 2013. 12. 23. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(ProductCategoryProto.RequestProductCategory.class)
-public class ProductCategoryRequestVO {
+@ProtobufMapping(ProductCategoryProto.ProductCategoryRequest.class)
+public class ProductCategoryRequest extends CommonVO {
+	private static final long serialVersionUID = 1L;
+
 	private String tenantId; // 테넌트ID
 
 	private String menuId; // 메뉴ID
