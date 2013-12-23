@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.product.vo;
 
 /**
- * 일반 카테고리 상품 조회 Value Object.
+ * 일반 카테고리 상품 조회 DTO Value Object.
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
