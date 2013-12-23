@@ -61,7 +61,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.skplanet</groupId>
-			<artifactId>storeplatform-prototype-lpc-sc-sci</artifactId>
+			<artifactId>storeplatform-prototype-lpc-sc</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
         <dependency>
