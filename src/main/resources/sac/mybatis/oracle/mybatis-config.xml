@@ -37,5 +37,8 @@
         <typeAlias alias="FeatureVodProductMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductMapperVO" />
         <typeAlias alias="MenuRequestVO"  type="com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequestVO" />
         <typeAlias alias="MenuDetailMapperVO"  type="com.skplanet.storeplatform.sac.product.vo.MenuDetailMapperVO" />
+        														 
+        <typeAlias alias="SellerSecedeResonListRequestVO"  type="com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListRequestVO" />
+        <typeAlias alias="SellerSecedeResonVO"  type="com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonVO" />
     </typeAliases>
 </configuration>
