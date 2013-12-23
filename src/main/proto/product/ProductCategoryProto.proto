@@ -1,6 +1,7 @@
 package prototype;
 
 option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+
 import "intfmessage/common/CommonResponseProto.proto";
 import "intfmessage/product/ProductProto.proto";
 
