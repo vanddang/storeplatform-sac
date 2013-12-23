@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.user.service;
 
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListResponseVO;
 import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnRequestVO;
 import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnResponseVO;
 
@@ -24,5 +23,4 @@ public interface UserJoinService {
 
 	UserJoinMdnResponseVO joinIdPw(UserJoinMdnRequestVO value);
 
-	SellerSecedeResonListResponseVO sellerSecedeResonList(UserJoinMdnRequestVO value);
 }

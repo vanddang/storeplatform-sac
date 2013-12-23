@@ -9,16 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListResponseVO;
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonVO;
 import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnRequestVO;
 import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnResponseVO;
 
@@ -31,7 +26,8 @@ import com.skplanet.storeplatform.sac.client.user.vo.UserJoinMdnResponseVO;
 @Transactional
 public class UserJoinServiceImpl implements UserJoinService {
 
-	private final Logger logger = LoggerFactory.getLogger(UserJoinServiceImpl.class);
+	private final Logger logger = LoggerFactory
+			.getLogger(UserJoinServiceImpl.class);
 
 	// @Autowired
 	// private IDPSCI idpSCI;
@@ -39,7 +35,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.user.service.UserJoinService#joinMdn(java .lang.String)
+	 * @see
+	 * com.skplanet.storeplatform.sac.user.service.UserJoinService#joinMdn(java
+	 * .lang.String)
 	 */
 	@Override
 	public UserJoinMdnResponseVO joinMdn(UserJoinMdnRequestVO reqVo) {
@@ -60,24 +58,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		UserJoinMdnResponseVO res = new UserJoinMdnResponseVO();
 		this.logger.debug(reqVo.toString());
 		return res;
-	}
-
-	@Override
-	public SellerSecedeResonListResponseVO sellerSecedeResonList(UserJoinMdnRequestVO value) {
-
-		SellerSecedeResonListResponseVO responseVO = new SellerSecedeResonListResponseVO();
-
-		List<SellerSecedeResonVO> sellerSecedeResonList = new ArrayList<SellerSecedeResonVO>();
-
-		SellerSecedeResonVO resonVO = new SellerSecedeResonVO();
-		resonVO.setSecedeReasonCode("11111");
-		resonVO.setSecedeReasonMessage("테스트입니다");
-
-		sellerSecedeResonList.add(resonVO);
-
-		responseVO.setSellerSecedeResonList(sellerSecedeResonList);
-
-		return responseVO;
 	}
 
 }
