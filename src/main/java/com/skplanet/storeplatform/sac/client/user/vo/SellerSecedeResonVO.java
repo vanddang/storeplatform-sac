@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.user.vo;
 
+import java.io.Serializable;
+
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 
 /**
@@ -8,7 +10,12 @@ import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
  * Updated on : 2013-12-20 Updated by : 반범진, 지티소프트.
  */
 @ProtobufMapping(SellerSecedeInfoProto.SellerSecedeResonInfo.class)
-public class SellerSecedeResonVO {
+public class SellerSecedeResonVO implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private String secedeReasonCode;
 
