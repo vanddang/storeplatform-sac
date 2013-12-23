@@ -18,5 +18,5 @@ public interface ProductCategoryService {
 	 *            Request VO
 	 * @return 일반 카테고리 상품 리스트
 	 */
-	ProductCategoryResponse searchCategoryProductList(ProductCategoryRequest requestVO);
+	ProductCategoryResponse searchCategoryProductList(ProductCategoryRequest request);
 }
