@@ -3,10 +3,9 @@ package com.skplanet.storeplatform.sac.client.user.vo;
 option java_package = "com.skplanet.storeplatform.sac.client.user.vo";
 
 import "user/UserDeviceInfoProto.proto";
-
-message UserDeviceConfirmResponse {
+message UserDeviceDeleteResponse {
     optional string resultCode   = 1;
     optional string resultMassage   = 2;
 
-    repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceInfo userDeviceInfo = 3;
+     repeated com.skplanet.storeplatform.sac.client.user.vo.UserDeviceInfo userDeviceInfo = 3;
 }
