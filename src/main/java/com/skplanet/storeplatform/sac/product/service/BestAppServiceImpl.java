@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
+ * Updated on : 2013. 12. 19. Updated by : 이석희, SK 플래닛.
  */
 @Service
 public class BestAppServiceImpl implements BestAppService {

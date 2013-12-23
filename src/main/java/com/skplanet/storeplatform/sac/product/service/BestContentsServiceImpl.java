@@ -23,6 +23,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 
+/**
+ * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
+ * 
+ * Updated on : 2013. 12. 19. Updated by : 이석희, SK 플래닛.
+ */
 @Service
 public class BestContentsServiceImpl implements BestContentsService {
 	@Autowired

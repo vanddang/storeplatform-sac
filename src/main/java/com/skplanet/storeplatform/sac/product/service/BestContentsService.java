@@ -11,12 +11,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.best.BestContentsRespons
 public interface BestContentsService {
 	/**
 	 * <pre>
-	 * BEST 앱 리스트 조회
+	 * BEST 컨텐츠 리스트 조회
 	 * </pre>
 	 * 
 	 * @param BestContentsRequestVO
-	 *            BEST 앱 상품 리스트 요청 Value Object
-	 * @return BEST 앱 상품 리스트
+	 *            BEST 컨텐츠 상품 리스트 요청 Value Object
+	 * @return BEST 컨텐츠 상품 리스트
 	 */
 	BestContentsResponseVO searchBestContentsList(String listId, String imageSizeCd, String fiteredBy, String b2bprod,
 			String hdv, String drm, String prodGradeCd, String offset, String count);
