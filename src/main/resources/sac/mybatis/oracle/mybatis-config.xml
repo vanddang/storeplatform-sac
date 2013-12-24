@@ -42,5 +42,8 @@
         														 
         <typeAlias alias="SellerSecedeResonListRequestVO"  type="com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListRequestVO" />
         <typeAlias alias="SellerSecedeResonVO"  type="com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonVO" />
+        <typeAlias alias="WebtoonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest" />
+        <typeAlias alias="WebtoonDTO"  type="com.skplanet.storeplatform.sac.product.vo.WebtoonDTO" />
+        
     </typeAliases>
 </configuration>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Webtoon">
+    <!-- 웹툰 상품 리스트 조회-->
+    <select id="selectWebtoonList" parameterType="WebtoonRequest" resultType="WebtoonDTO">
+        SELECT *
+          FROM (                        
+                     SELECT 
+                          COUNT(c.prod_id) OVER() AS totalCount
+                          , ROW_NUMBER() OVER(ORDER BY NVL(to_char(c.UPD_DT), 0)) AS RNUM   
+                          , a.MENU_ID
+                          ,c.prod_id as prodId
+                          ,f.PROD_BASE_DESC
+                          ,f.PROD_NM
+                          ,NVL(to_char(c.UPD_DT,'yyyymmdd') || to_char(c.UPD_DT,'HH24MISS'), 0) AS sortLeasteDate
+                          ,'0' as prodAmt
+                    FROM  TB_DP_MENU               A
+                        , TB_DP_CATEGORY_MENU_MAPG B
+                        , TB_DP_PROD_CATEGORY_MAPG C
+                        , TB_DP_PROD               D
+                        , TB_DP_MULTIMDA_PROD      E
+                        , TB_DP_PROD_DESC          F
+                        , TB_DP_TENANT_PROD        G
+                        , TB_DP_TENANT_PROD_STATS  H
+                        , TB_DP_TENANT_PROD_PRICE  I
+                        , TB_DP_PROD_RSHP J
+                   WHERE  A.TENANT_ID = B.TENANT_ID
+                     AND  A.MENU_ID = B.MENU_ID
+                     AND  A.SYSTEM_ID = B.SYSTEM_ID
+                     AND  B.CATEGORY_NO = C.CATEGORY_NO
+                     AND  C.PROD_ID = D.PROD_ID
+                     AND  D.PROD_ID = E.PROD_ID
+                     AND  E.PROD_ID = F.PROD_ID
+                     AND  F.PROD_ID = G.PROD_ID
+                     AND  A.TENANT_ID = G.TENANT_ID
+                     AND  G.PROD_ID = H.PROD_ID
+                     AND  G.TENANT_ID = H.TENANT_ID
+                     AND  G.PROD_ID = I.PROD_ID
+                     AND  G.TENANT_ID = I.TENANT_ID   
+                     AND  G.PROD_ID = J.PART_PROD_ID                                 
+                     AND  A.TENANT_ID = 'S01'            /* INPUT 테넌트ID */
+                     AND  A.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
+                     AND  A.SYSTEM_ID = 'S009'           /* INPUT 시스템ID */
+                     AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                     AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                     AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+                     AND  C.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                     AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+                     AND  F.LANG_CD = 'ko'               /* ko : 한국어 */
+                     AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                     AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                     AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
+                     AND E.SERIALLY_WKDY LIKE '%' || 'SUN' || '%' 
+               ) ka
+         WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>
+</mapper>
