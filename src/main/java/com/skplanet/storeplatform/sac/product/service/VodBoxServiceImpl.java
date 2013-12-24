@@ -186,7 +186,7 @@ public class VodBoxServiceImpl implements VodBoxService {
 				product.setIdentifier(identifier);
 				product.setMenuList(menuList);
 				product.setTitle(title);
-				product.setContributorList(contributor);
+				product.setContributor(contributor);
 
 				productList.add(product);
 

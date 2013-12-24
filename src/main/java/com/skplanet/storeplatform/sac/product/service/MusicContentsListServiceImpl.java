@@ -177,7 +177,7 @@ public class MusicContentsListServiceImpl implements MusicContentsListService {
 				product.setAccrual(accrual);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				product.setContributorList(contributor);
+				product.setContributor(contributor);
 				product.setMusic(music);
 
 				productList.add(product);
