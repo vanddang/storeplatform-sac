@@ -95,7 +95,7 @@
 		           AND  ja.prod_id = jc.prod_id(+)
 		           AND  ja.tenant_id = jc.tenant_id(+)
 		           AND  ja.prod_id = jd.prod_id
-		           AND  jd.img_cd = #{imageCd}
+		           AND  jd.img_cd = #{imageSizeCd}
 		       ) ka
 		 WHERE RNUM BETWEEN #{offset} AND #{count}
  	</select>

@@ -15,10 +15,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequest;
 import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -36,24 +38,30 @@ import com.skplanet.storeplatform.sac.product.vo.ProductCategoryDTO;
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
 @Service
+@Transactional
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private ProductCommonService productCommonService;
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.product.service.ProductCategoryService#searchCategoryProductList(com.skplanet.
-	 * storeplatform.sac.client.product.vo.category.ProductCategoryRequestVO)
+	 * storeplatform.sac.client.product.vo.category.ProductCategoryRequest)
 	 */
 	@Override
-	public ProductCategoryResponse searchCategoryProductList(ProductCategoryRequest requestVO) {
+	public ProductCategoryResponse searchCategoryProductList(ProductCategoryRequest request) {
+		ProductCommonResponse res = this.productCommonService.searchMenuInfo(request);
+
 		ProductCategoryResponse responseVO = null;
 
 		List<ProductCategoryDTO> resultList = this.commonDAO.queryForList("ProductCategory.selectCategoryList",
-				requestVO, ProductCategoryDTO.class);
+				request, ProductCategoryDTO.class);
 
 		if (resultList != null) {
 			ProductCategoryDTO productDto = new ProductCategoryDTO();
