@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -54,6 +55,7 @@ public class BestAppServiceImpl implements BestAppService {
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
+		List<Support> supportList = new ArrayList<Support>();
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
@@ -67,11 +69,16 @@ public class BestAppServiceImpl implements BestAppService {
 			Source source = new Source();
 			Price price = new Price();
 			Title title = new Title();
+			Support support = new Support();
 
 			// 상품ID
 			identifier = new Identifier();
 			identifier.setType("product" + i);
 			identifier.setText("H090101222_" + i);
+
+			support.setType("Y");
+			support.setText("iab");
+			supportList.add(support);
 
 			/*
 			 * Menu(메뉴정보) Id, Name, Type
@@ -125,7 +132,8 @@ public class BestAppServiceImpl implements BestAppService {
 
 			product = new Product();
 			product.setIdentifier(identifier);
-			product.setSupport("y|iab");
+			// product.setSupport("y|iab");
+			product.setSupportList(supportList);
 			product.setMenuList(menuList);
 			product.setApp(app);
 			product.setAccrual(accrual);

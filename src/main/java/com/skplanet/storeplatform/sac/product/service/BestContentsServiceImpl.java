@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -47,6 +48,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
+		List<Support> supportList = new ArrayList<Support>();
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
@@ -62,11 +64,16 @@ public class BestContentsServiceImpl implements BestContentsService {
 				Title title = new Title();
 				Source source = new Source();
 				Price price = new Price();
+				Support support = new Support();
 
 				// 상품ID
 				identifier = new Identifier();
 				identifier.setType("product" + i);
 				identifier.setText("H090101222_" + i);
+
+				support.setType("hd");
+				support.setText("hd");
+				supportList.add(support);
 
 				/*
 				 * Menu(메뉴정보) Id, Name, Type
@@ -140,7 +147,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 				product = new Product();
 				product.setIdentifier(identifier);
-				product.setSupport("hd");
+				product.setSupportList(supportList);
+				// product.setSupport("hd");
 				product.setMenuList(menuList);
 				product.setContributorList(contributor);
 				product.setAccrual(accrual);
