@@ -10,12 +10,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonResp
 public interface ProductCommonService {
 	/**
 	 * <pre>
-	 * 일반 카테고리 상품 리스트 조회.
+	 * 메뉴 정보 조회.
 	 * </pre>
 	 * 
-	 * @param productCategoryReqVO
-	 *            Request VO
-	 * @return 일반 카테고리 상품 리스트
+	 * @param Object
+	 *            업무별 VO
+	 * @return 메뉴 정보
 	 */
 	ProductCommonResponse searchMenuInfo(Object ob);
 }
