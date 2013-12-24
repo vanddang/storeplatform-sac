@@ -22,28 +22,56 @@ import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
 public class ProductCategoryRequest extends CommonVO {
 	private static final long serialVersionUID = 1L;
 
-	private String tenantId; // 테넌트ID
+	private String prodCharge; // 상품 유/무료 구분
+
+	private String prodGradeCd; // 상품등급코드
+
+	private String drm; // DRM 지원 구분
+
+	private String imageSizeCd; // 이미지코드
 
 	private String menuId; // 메뉴ID
 
-	private String systemId; // 시스템ID
-
-	private String imageCd; // 이미지코드
-
 	private String orderedBy; // 정렬순서
-
-	private String prodGradeCd; // 상품등급코드
 
 	private int offset; // offset
 
 	private int count; // count
 
-	public String getTenantId() {
-		return this.tenantId;
+	private String tenantId; // 테넌트ID
+
+	private String systemId; // 시스템ID
+
+	public String getProdCharge() {
+		return this.prodCharge;
 	}
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+	public void setProdCharge(String prodCharge) {
+		this.prodCharge = prodCharge;
+	}
+
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
+	}
+
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
+	}
+
+	public String getDrm() {
+		return this.drm;
+	}
+
+	public void setDrm(String drm) {
+		this.drm = drm;
+	}
+
+	public String getImageSizeCd() {
+		return this.imageSizeCd;
+	}
+
+	public void setImageSizeCd(String imageSizeCd) {
+		this.imageSizeCd = imageSizeCd;
 	}
 
 	public String getMenuId() {
@@ -54,36 +82,12 @@ public class ProductCategoryRequest extends CommonVO {
 		this.menuId = menuId;
 	}
 
-	public String getSystemId() {
-		return this.systemId;
-	}
-
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
-	}
-
-	public String getImageCd() {
-		return this.imageCd;
-	}
-
-	public void setImageCd(String imageCd) {
-		this.imageCd = imageCd;
-	}
-
 	public String getOrderedBy() {
 		return this.orderedBy;
 	}
 
 	public void setOrderedBy(String orderedBy) {
 		this.orderedBy = orderedBy;
-	}
-
-	public String getProdGradeCd() {
-		return this.prodGradeCd;
-	}
-
-	public void setProdGradeCd(String prodGradeCd) {
-		this.prodGradeCd = prodGradeCd;
 	}
 
 	public int getOffset() {
@@ -100,5 +104,21 @@ public class ProductCategoryRequest extends CommonVO {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 }
