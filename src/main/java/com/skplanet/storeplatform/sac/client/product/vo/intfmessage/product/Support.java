@@ -22,7 +22,7 @@ public class Support extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/*
-	 * drm : DRM 지원여부, inApp : inApp 부모 상품 구분
+	 * 지원구분 (drm : DRM 지원여부, inApp : inApp 부모 상품 구분)
 	 */
 	private String type;
 
