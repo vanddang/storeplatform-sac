@@ -127,7 +127,7 @@ public class Product extends CommonVO implements Serializable {
 	/**
 	 * 제작자 정보
 	 */
-	private Contributor contributorList;
+	private Contributor contributor;
 	/**
 	 * 제작사 또는 개발사 정보
 	 */
@@ -349,12 +349,12 @@ public class Product extends CommonVO implements Serializable {
 		this.promotion = promotion;
 	}
 
-	public Contributor getContributorList() {
-		return this.contributorList;
+	public Contributor getContributor() {
+		return this.contributor;
 	}
 
-	public void setContributorList(Contributor contributorList) {
-		this.contributorList = contributorList;
+	public void setContributor(Contributor contributor) {
+		this.contributor = contributor;
 	}
 
 	public Distributor getDistributor() {
