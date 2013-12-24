@@ -31,10 +31,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Bell;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.related.AuthorProductListResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.related.RelatedProductListResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.related.RelatedProductRequest;
 
 /**
@@ -43,7 +45,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.related.RelatedProductRe
  * Updated on : 2013. 12. 24. Updated by : 윤주영, SK 플래닛.
  */
 @Service
-public class AuthorProductListServiceImpl implements AuthorProductListService {
+public class ArtistProductListServiceImpl implements ArtistProductListService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -58,12 +60,12 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 	 * RelatedProductRequest requestVO)
 	 */
 	@Override
-	public AuthorProductListResponse searchAuthorProductList(RelatedProductRequest requestVO)
+	public RelatedProductListResponse searchArtistProductList(RelatedProductRequest requestVO)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 5;
 
-		AuthorProductListResponse responseVO = null;
+		RelatedProductListResponse responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (true) {
@@ -72,10 +74,7 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 			List<Product> productList = new ArrayList<Product>();
 			List<Menu> menuList = new ArrayList<Menu>();
 			List<Source> sourceList = new ArrayList<Source>();
-			Contributor contributor = new Contributor();
-
-			contributor.setName("김진명");
-			contributor.setPublisher("시공사");
+			List<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service> serviceList = new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service>();
 
 			for (int i = 1; i <= totalCount; i++) {
 				Product product = new Product();
@@ -87,6 +86,10 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 				Source source = new Source();
 				Accrual accrual = new Accrual();
 				Rights rights = new Rights();
+				Contributor contributor = new Contributor();
+
+				Music music = new Music();
+				com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
 
 				// 상품ID
 				identifier = new Identifier();
@@ -109,7 +112,7 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 				/*
 				 * TITLE
 				 */
-				title.setText("특정 작가 상품 리스트");
+				title.setText("특정 아티스트별(곡) 상품 리스트");
 
 				price.setText(1000000);
 
@@ -131,6 +134,22 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 				accrual.setDownloadCount("100");
 				accrual.setScore(3.3 * i);
 
+				contributor.setName("소녀시대");
+				contributor.setAlbum("다시 만난 세계");
+
+				/*
+				 * music
+				 */
+				service.setName("mp3");
+				service.setType("support");
+				serviceList.add(service);
+				music.setServiceList(serviceList);
+
+				Bell bell = new Bell();
+				bell.setName("천상의 소리");
+				bell.setType("mp3");
+				music.setBell(bell);
+
 				product = new Product();
 				product.setIdentifier(identifier);
 				product.setMenuList(menuList);
@@ -138,18 +157,17 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 				product.setTitle(title);
 				product.setRights(rights);
 				product.setSourceList(sourceList);
-				product.setProductExplain("특정작가(김진명) 상품 리스트");
+				product.setProductExplain("특정 아티스트별(소녀시대) 상품 리스트");
 
 				productList.add(product);
 
 			}
 
-			responseVO = new AuthorProductListResponse();
+			responseVO = new RelatedProductListResponse();
 			commonResponse = new CommonResponse();
 			responseVO.setProductList(productList);
 			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonRes(commonResponse);
-			responseVO.setContributor(contributor);
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
