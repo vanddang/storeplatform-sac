@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
@@ -73,7 +74,7 @@ public class Book extends CommonVO implements Serializable {
 	/**
 	 * 지원 >play >store
 	 */
-	private String support;
+	private List<Support> supportList;
 
 	public String getType() {
 		return this.type;
@@ -163,12 +164,11 @@ public class Book extends CommonVO implements Serializable {
 		this.status = status;
 	}
 
-	public String getSupport() {
-		return this.support;
+	public List<Support> getSupportList() {
+		return this.supportList;
 	}
 
-	public void setSupport(String support) {
-		this.support = support;
+	public void setSupportList(List<Support> supportList) {
+		this.supportList = supportList;
 	}
-
 }
