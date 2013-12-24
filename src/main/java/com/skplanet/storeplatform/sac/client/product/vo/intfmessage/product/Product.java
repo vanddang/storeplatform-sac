@@ -42,7 +42,7 @@ public class Product extends CommonVO implements Serializable {
 	/**
 	 * 지원 매체
 	 */
-	private String support;
+	private List<Support> supportList;
 	/**
 	 * 지원 언어
 	 */
@@ -181,12 +181,12 @@ public class Product extends CommonVO implements Serializable {
 		this.id = id;
 	}
 
-	public String getSupport() {
-		return this.support;
+	public List<Support> getSupportList() {
+		return this.supportList;
 	}
 
-	public void setSupport(String support) {
-		this.support = support;
+	public void setSupportList(List<Support> supportList) {
+		this.supportList = supportList;
 	}
 
 	public String getLang() {
