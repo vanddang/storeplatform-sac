@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestContentsResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestContentsVO;
+import com.skplanet.storeplatform.sac.client.product.vo.best.BestContentsRequest;
+import com.skplanet.storeplatform.sac.client.product.vo.best.BestContentsResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Sale
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2013. 12. 19. Updated by : 이석희, SK 플래닛.
+ * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 @Service
 public class BestContentsServiceImpl implements BestContentsService {
@@ -41,24 +41,17 @@ public class BestContentsServiceImpl implements BestContentsService {
 	 * .storeplatform.sac.client.product.vo.BestContentsRequestVO)
 	 */
 	@Override
-	public BestContentsResponseVO searchBestContentsList(String listId, String imageSizeCd, String fiteredBy,
-			String b2bprod, String hdv, String drm, String prodGradeCd, String offset, String count) {
-		BestContentsResponseVO responseVO = null;
+	public BestContentsResponse searchBestContentsList(BestContentsRequest bestContentsRequest) {
+		BestContentsResponse response = new BestContentsResponse();
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		BestContentsVO BestContentsVO = null;
-		List<BestContentsVO> listVO = new ArrayList<BestContentsVO>();
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
 
-		System.out.println("##################################");
-		System.out.println("fiteredBy	:	" + fiteredBy);
-		System.out.println("##################################");
-
-		if (!"shopping".equals(fiteredBy)) {
+		if (!"shopping".equals(bestContentsRequest.getFiteredBy())) {
 
 			for (int i = 1; i <= 1; i++) {
 				Product product = new Product();
@@ -98,21 +91,23 @@ public class BestContentsServiceImpl implements BestContentsService {
 				// fiteredBy = comic
 				// fiteredBy = ebook+comic
 
-				if ("movie".equals(fiteredBy) || "movie+broadcast".equals(fiteredBy)) {
+				if ("movie".equals(bestContentsRequest.getFiteredBy())
+						|| "movie+broadcast".equals(bestContentsRequest.getFiteredBy())) {
 					contributor.setDirector("임상윤_" + i);
 					contributor.setArtist("소지섭, 이미연_" + i);
 					Date date = new Date();
 					date.setText("2012");
 					contributor.setDate(date);
-				} else if ("broadcast".equals(fiteredBy)) {
+				} else if ("broadcast".equals(bestContentsRequest.getFiteredBy())) {
 					contributor.setArtist("유재석" + i);
-				} else if ("ebook".equals(fiteredBy)) {
+				} else if ("ebook".equals(bestContentsRequest.getFiteredBy())) {
 					contributor.setName("살아 있는 것은 다 행복하라" + i);
 					contributor.setPublisher("조화로운삶");
 					Date date = new Date();
 					date.setText("2013");
 					contributor.setDate(date);
-				} else if ("comic".equals(fiteredBy) || "ebook+comic".equals(fiteredBy)) {
+				} else if ("comic".equals(bestContentsRequest.getFiteredBy())
+						|| "ebook+comic".equals(bestContentsRequest.getFiteredBy())) {
 					contributor.setName("열혈강호" + i);
 					contributor.setPainter("양재현");
 					contributor.setPublisher("대원씨아이");
@@ -155,9 +150,11 @@ public class BestContentsServiceImpl implements BestContentsService {
 				product.setProductExplain("겉으론 평범한 금속 제조 회사지만" + i);
 				product.setPrice(price);
 
-				BestContentsVO = new BestContentsVO();
-				BestContentsVO.setProduct(product);
-				listVO.add(BestContentsVO);
+				// BestContentsVO = new BestContentsVO();
+				// BestContentsVO.setProduct(product);
+				// listVO.add(BestContentsVO);
+
+				productList.add(product);
 
 			}
 		} else {
@@ -245,16 +242,13 @@ public class BestContentsServiceImpl implements BestContentsService {
 					product.setSalesOption(salesOption);
 				}
 
-				BestContentsVO = new BestContentsVO();
-				BestContentsVO.setProduct(product);
-				listVO.add(BestContentsVO);
+				productList.add(product);
 
 			}
 		}
-		responseVO = new BestContentsResponseVO();
-		responseVO.setCommonResponse(commonResponse);
-		responseVO.setBestContentsList(listVO);
+		response.setCommonResponse(commonResponse);
+		response.setProductList(productList);
 
-		return responseVO;
+		return response;
 	}
 }

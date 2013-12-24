@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestDownloadResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestDownloadVO;
+import com.skplanet.storeplatform.sac.client.product.vo.best.BestDownloadResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -35,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
  * 
  * Updated on : 2013. 12. 20. Updated by : 이석희, SK 플래닛.
  */
+
 @Service
 public class BestDownloadServiceImpl implements BestDownloadService {
 	@Autowired
@@ -48,16 +48,14 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 	 * .storeplatform.sac.client.product.vo.BestDownloadRequestVO)
 	 */
 	@Override
-	public BestDownloadResponseVO searchBestDownloadList(String listId, String imageSizeCd, String menuId,
+	public BestDownloadResponse searchBestDownloadList(String listId, String imageSizeCd, String menuId,
 			String b2bprod, String hdv, String drm, String prodGradeCd, String offset, String count) {
-		BestDownloadResponseVO responseVO = null;
+		BestDownloadResponse response = new BestDownloadResponse();
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		BestDownloadVO bestDownloadVO = null;
-		List<BestDownloadVO> listVO = new ArrayList<BestDownloadVO>();
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
 
@@ -138,15 +136,12 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 			product.setProductExplain("상품 설명_" + i);
 			product.setPrice(price);
 
-			bestDownloadVO = new BestDownloadVO();
-			bestDownloadVO.setProduct(product);
-			listVO.add(bestDownloadVO);
+			productList.add(product);
 
 		}
-		responseVO = new BestDownloadResponseVO();
-		responseVO.setCommonResponse(commonResponse);
-		responseVO.setBestDownloadList(listVO);
+		response.setCommonResponse(commonResponse);
+		response.setProductList(productList);
 
-		return responseVO;
+		return response;
 	}
 }

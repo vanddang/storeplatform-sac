@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppResponseVO;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppVO;
+import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppRequest;
+import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -48,20 +48,17 @@ public class BestAppServiceImpl implements BestAppService {
 	 * .storeplatform.sac.client.product.vo.BestAppRequestVO)
 	 */
 	@Override
-	public BestAppResponseVO searchBestAppList(String listId, String imageSizeCd, String drm, String prodGradeCd,
-			String menuId, String offset, String count) {
-		BestAppResponseVO responseVO = null;
+	public BestAppResponse searchBestAppList(BestAppRequest bestAppRequest) {
+		BestAppResponse response = new BestAppResponse();
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		BestAppVO bestAppVO = null;
-		List<BestAppVO> listVO = new ArrayList<BestAppVO>();
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
 
-		for (int i = 1; i <= 2; i++) {
+		for (int i = 1; i <= 1; i++) {
 			Product product = new Product();
 			Identifier identifier = new Identifier();
 			App app = new App();
@@ -138,15 +135,12 @@ public class BestAppServiceImpl implements BestAppService {
 			product.setProductExplain("앱 설명_" + i);
 			product.setPrice(price);
 
-			bestAppVO = new BestAppVO();
-			bestAppVO.setProduct(product);
-			listVO.add(bestAppVO);
+			productList.add(product);
 
 		}
-		responseVO = new BestAppResponseVO();
-		responseVO.setCommonResponse(commonResponse);
-		responseVO.setBestAppList(listVO);
+		response.setCommonResponse(commonResponse);
+		response.setProductList(productList);
 
-		return responseVO;
+		return response;
 	}
 }
