@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.RightsProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 
 /**
  * Interface Message Rights.Store Value Object.
@@ -33,6 +34,7 @@ public class Store extends CommonVO implements Serializable {
 	private Date date; // Rights 이용기간과 다운로드 이용기간이 다를 경우만 정의한다.
 	private String durationUsagePeriodUI; // 이용기간의 UI 표시
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
+	private Source source; // store의 source
 
 	public Identifier getIdentifier() {
 		return this.identifier;
@@ -80,5 +82,13 @@ public class Store extends CommonVO implements Serializable {
 
 	public void setNetworkRestrict(String networkRestrict) {
 		this.networkRestrict = networkRestrict;
+	}
+
+	public Source getSource() {
+		return this.source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
 	}
 }
