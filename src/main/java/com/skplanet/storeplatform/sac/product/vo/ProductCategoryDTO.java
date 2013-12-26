@@ -17,8 +17,12 @@ package com.skplanet.storeplatform.sac.product.vo;
 public class ProductCategoryDTO {
 	private int totalCount;
 	private String upMenuId;
+	private String upMenuNm;
 	private String menuId;
 	private String menuNm;
+	private String downMenuId;
+	private String downMenuNm;
+	private String metaClsfCd;
 	private String prodId;
 	private String prodNm;
 	private String aid;
@@ -35,7 +39,6 @@ public class ProductCategoryDTO {
 	private String avgEvluScore;
 	private String paticpersCnt;
 	private String imgFilePath;
-	private String upMenuNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -53,6 +56,14 @@ public class ProductCategoryDTO {
 		this.upMenuId = upMenuId;
 	}
 
+	public String getUpMenuNm() {
+		return this.upMenuNm;
+	}
+
+	public void setUpMenuNm(String upMenuNm) {
+		this.upMenuNm = upMenuNm;
+	}
+
 	public String getMenuId() {
 		return this.menuId;
 	}
@@ -67,6 +78,30 @@ public class ProductCategoryDTO {
 
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
+	}
+
+	public String getDownMenuId() {
+		return this.downMenuId;
+	}
+
+	public void setDownMenuId(String downMenuId) {
+		this.downMenuId = downMenuId;
+	}
+
+	public String getDownMenuNm() {
+		return this.downMenuNm;
+	}
+
+	public void setDownMenuNm(String downMenuNm) {
+		this.downMenuNm = downMenuNm;
+	}
+
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
+	}
+
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
 	}
 
 	public String getProdId() {
@@ -195,13 +230,5 @@ public class ProductCategoryDTO {
 
 	public void setImgFilePath(String imgFilePath) {
 		this.imgFilePath = imgFilePath;
-	}
-
-	public String getUpMenuNm() {
-		return this.upMenuNm;
-	}
-
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
 	}
 }
