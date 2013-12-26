@@ -152,7 +152,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -277,7 +277,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -402,7 +402,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -542,7 +542,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			// product.setAccrual(acc);
 			// product.setRights(rights);
-			// product.setContributorList(contributor);
+			// product.setContributor(contributor);
 			// product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -667,7 +667,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -792,7 +792,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			// product.setAccrual(acc);
 			// product.setRights(rights);
-			// product.setContributorList(contributor);
+			// product.setContributor(contributor);
 			// product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -917,7 +917,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -1042,7 +1042,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			// product.setAccrual(acc);
 			// product.setRights(rights);
-			// product.setContributorList(contributor);
+			// product.setContributor(contributor);
 			// product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -1167,7 +1167,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -1292,7 +1292,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -1417,7 +1417,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
@@ -1542,7 +1542,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product.setSourceList(sourceList);
 			product.setAccrual(acc);
 			product.setRights(rights);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setSalesOption(saleoption);
 
 			productList.add(i, product);
