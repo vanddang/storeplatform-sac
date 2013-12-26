@@ -177,10 +177,13 @@ public class WebtoonServiceImpl implements WebtoonService {
 			JsonMappingException, IOException, Exception {
 
 		WebtoonResponse responseVO = null;
+		req.setOffset(1);
+		req.setCount(20);
 		req.setTenantId("S01");
 		req.setSystemId("S009");
 		req.setWeekDayCd("DP010101");
 		req.setImageCd("DP000196");
+		req.setListId("DP000196");
 
 		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
