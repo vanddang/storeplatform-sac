@@ -179,13 +179,13 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 				List<Service> serviceList = new ArrayList<Service>();
 				Contributor contributorVO = new Contributor();
 				Music musicVO = new Music();
-				Service serviceVO = new Service();
+				Service serviceInfo = new Service();
 				Accrual accrualVO = new Accrual();
 				contributorVO.setName("name");
 				contributorVO.setAlbum("album");
-				serviceVO.setName("name");
-				serviceVO.setType("type");
-				serviceList.add(serviceVO);
+				serviceInfo.setName("name");
+				serviceInfo.setType("type");
+				serviceList.add(serviceInfo);
 				musicVO.setServiceList(serviceList);
 				accrualVO.setChangeRank("changeRank");
 				productVO.setContributor(contributorVO);

@@ -56,7 +56,7 @@
 		    WHERE A.interface_id = #{interfaceId}
     </select>
 
-    <select id="searchServiceMethod" parameterType="map" resultType="ServiceVO">
+    <select id="searchServiceMethod" parameterType="map" resultType="ServiceInfo">
 		SELECT 
 		       'service' as service,
 		       B.pkg_nm, 

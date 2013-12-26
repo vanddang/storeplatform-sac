@@ -28,7 +28,7 @@
         <typeAlias alias="AclAuthKeyVO"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO" />
         <typeAlias alias="AclAuthVO"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO" />
         <typeAlias alias="InterfaceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo" />
-        <typeAlias alias="ServiceVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceVO" />
+        <typeAlias alias="ServiceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
         <typeAlias alias="BypassVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO" />
         
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />

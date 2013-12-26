@@ -43,14 +43,14 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
 
-		ServiceInfo serviceVO = this.interfaceService.searchServiceMethod(params);
+		ServiceInfo serviceInfo = this.interfaceService.searchServiceMethod(params);
 
-		if (serviceVO == null)
+		if (serviceInfo == null)
 			throw new RuntimeException("service not found");
 
-		String pkgNm = serviceVO.getPkgNm();
-		String classNm = serviceVO.getClassNm();
-		String mtdNm = serviceVO.getMethodNm();
+		String pkgNm = serviceInfo.getPkgNm();
+		String classNm = serviceInfo.getClassNm();
+		String mtdNm = serviceInfo.getMethodNm();
 		String serviceNm = new StringBuilder().append(pkgNm).append(".").append(classNm).toString();
 		InvocationMethod invocationMethodVO = new InvocationMethod(serviceNm, mtdNm);
 

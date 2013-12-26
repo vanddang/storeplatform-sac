@@ -31,7 +31,7 @@ public interface InterfaceService {
 	 * 
 	 * @param params
 	 *            params
-	 * @return InterfaceVO
+	 * @return InterfaceInfo
 	 */
 	public InterfaceInfo searchDetail(Map<String, String> params);
 
@@ -69,7 +69,7 @@ public interface InterfaceService {
 	 * 
 	 * @param params
 	 *            params
-	 * @return ServiceVO
+	 * @return ServiceInfo
 	 */
 	public ServiceInfo searchServiceMethod(Map<String, String> params);
 }
