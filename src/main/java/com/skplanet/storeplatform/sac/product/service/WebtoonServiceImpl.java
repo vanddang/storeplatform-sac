@@ -91,7 +91,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 		Price price = new Price();
 		Product product = new Product();
 		Contributor contributor = new Contributor();
-		Accrual acc = new Accrual();
+		Accrual accrual = new Accrual();
 		Date date = new Date();
 
 		List<Menu> menuList = new ArrayList<Menu>();
@@ -113,7 +113,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// contributor
 			contributor.setName("장한나");
 
-			acc.setScore(4.5);
+			accrual.setScore(4.5);
 
 			// 상품 정보 (상품명)
 			title.setText("강철강");
@@ -133,9 +133,9 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// 데이터 매핑
 			product.setIdentifier(identifier);
 			product.setContributor(contributor);
-			product.setAccrual(acc);
+			product.setAccrual(accrual);
 			product.setTitle(title);
-			// product.setRights(rights);
+			product.setRights(rights);
 			product.setSourceList(sourceList);
 			product.setPrice(price);
 			product.setDate(date);
@@ -202,7 +202,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 		Price price = new Price();
 		Product product = new Product();
 		Contributor contributor = new Contributor();
-		Accrual acc = new Accrual();
+		Accrual accrual = new Accrual();
 		Date date = new Date();
 
 		List<Menu> menuList = new ArrayList<Menu>();
@@ -224,7 +224,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// contributor
 			contributor.setName("장한나");
 
-			acc.setScore(4.5);
+			accrual.setScore(4.5);
 
 			// 상품 정보 (상품명)
 			title.setText("강철강");
@@ -243,9 +243,9 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// 데이터 매핑
 			product.setIdentifier(identifier);
 			product.setContributor(contributor);
-			product.setAccrual(acc);
+			product.setAccrual(accrual);
 			product.setTitle(title);
-			// product.setRights(rights);
+			product.setRights(rights);
 			product.setSourceList(sourceList);
 			product.setPrice(price);
 			product.setDate(date);
