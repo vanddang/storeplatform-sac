@@ -28,7 +28,7 @@ public class Date extends CommonVO implements Serializable {
 	 * 날짜타입 (date/reg : 등록일, date/saleReg : 판매등록 날짜, date/purchase : 구매날짜, date/update : 변경날짜, duration/usagePeriod :
 	 * 이용기간, uint/usagePeriod : 이용기간, date/auth : 인증 날짜, duration/salePeriod : 판매기간, date/access : 접속일자, date/cancel :
 	 * 해지일자 (자동결제 상품에서 사용), date/update : 인기검색어 업데이트 시간, duration/eventPeriod : 이벤트 기간, date/broadcast : 방송날짜)
-	 * date/duration : 특정기간, chart/duration : 음원순위기간)
+	 * date/duration : 특정기간, chart/duration : 음원순위기간, date/publish : 출판일)
 	 */
 	private String type;
 	/*

@@ -22,54 +22,50 @@ import com.skplanet.storeplatform.sac.client.product.vo.FeatureVodProductProto;
 public class FeatureVodProductRequest extends CommonVO {
 	private static final long serialVersionUID = 1L;
 
-	private String tenantId; // 테넌트ID
+	private String prodGradeCd; // 상품등급코드
 
-	private String menuId; // 메뉴ID
+	private String drm; // DRM 지원 구분
 
-	private String systemId; // 시스템ID
-
-	private String listId; // 리스트ID
+	private String hdv; // HDV 지원 구분
 
 	private String imageCd; // 이미지코드
 
+	private String menuId; // 메뉴ID
+
+	private String listId; // 리스트ID
+
 	private String orderedBy; // 정렬순서
 
-	private String prodGradeCd; // 상품등급코드
+	private String tenantId; // 테넌트ID
+
+	private String systemId; // 시스템ID
 
 	private int offset; // offset
 
 	private int count; // count
 
-	public String getTenantId() {
-		return this.tenantId;
+	public String getProdGradeCd() {
+		return this.prodGradeCd;
 	}
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+	public void setProdGradeCd(String prodGradeCd) {
+		this.prodGradeCd = prodGradeCd;
 	}
 
-	public String getMenuId() {
-		return this.menuId;
+	public String getDrm() {
+		return this.drm;
 	}
 
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
+	public void setDrm(String drm) {
+		this.drm = drm;
 	}
 
-	public String getSystemId() {
-		return this.systemId;
+	public String getHdv() {
+		return this.hdv;
 	}
 
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
-	}
-
-	public String getListId() {
-		return this.listId;
-	}
-
-	public void setListId(String listId) {
-		this.listId = listId;
+	public void setHdv(String hdv) {
+		this.hdv = hdv;
 	}
 
 	public String getImageCd() {
@@ -80,6 +76,22 @@ public class FeatureVodProductRequest extends CommonVO {
 		this.imageCd = imageCd;
 	}
 
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
+
+	public String getListId() {
+		return this.listId;
+	}
+
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
+
 	public String getOrderedBy() {
 		return this.orderedBy;
 	}
@@ -88,12 +100,20 @@ public class FeatureVodProductRequest extends CommonVO {
 		this.orderedBy = orderedBy;
 	}
 
-	public String getProdGradeCd() {
-		return this.prodGradeCd;
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
-	public void setProdGradeCd(String prodGradeCd) {
-		this.prodGradeCd = prodGradeCd;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 	public int getOffset() {

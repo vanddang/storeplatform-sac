@@ -9,16 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.category;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.product.vo.ProductCategoryProto;
 
 /**
  * 일반 카테고리 상품 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(ProductCategoryProto.ProductCategoryRequest.class)
 public class ProductCategoryRequest extends CommonVO {
 	private static final long serialVersionUID = 1L;
 
@@ -34,9 +31,9 @@ public class ProductCategoryRequest extends CommonVO {
 
 	private String orderedBy; // 정렬순서
 
-	private int offset; // offset
+	private String offset; // offset
 
-	private int count; // count
+	private String count; // count
 
 	private String tenantId; // 테넌트ID
 
@@ -90,19 +87,19 @@ public class ProductCategoryRequest extends CommonVO {
 		this.orderedBy = orderedBy;
 	}
 
-	public int getOffset() {
+	public String getOffset() {
 		return this.offset;
 	}
 
-	public void setOffset(int offset) {
+	public void setOffset(String offset) {
 		this.offset = offset;
 	}
 
-	public int getCount() {
+	public String getCount() {
 		return this.count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(String count) {
 		this.count = count;
 	}
 
