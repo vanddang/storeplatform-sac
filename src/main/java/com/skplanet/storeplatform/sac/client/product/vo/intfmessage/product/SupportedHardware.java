@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
@@ -32,15 +33,8 @@ public class SupportedHardware extends CommonVO implements Serializable {
 	 * DPI
 	 */
 	private String dpi;
-	/**
-	 * 지원가능 (","로 구분) > hdmi,hdcp,lte,dolby > HDMI,HDCP,LTE,돌비
-	 */
-	private String support;
 
-	/**
-	 * 지원불가 (","로 구분) > hdmi,hdcp,lte,dolby > HDMI,HDCP,LTE,돌비
-	 */
-	private String restrict;
+	private List<Service> serviceList;
 
 	public String getResolution() {
 		return this.resolution;
@@ -58,20 +52,12 @@ public class SupportedHardware extends CommonVO implements Serializable {
 		this.dpi = dpi;
 	}
 
-	public String getSupport() {
-		return this.support;
+	public List<Service> getServiceList() {
+		return this.serviceList;
 	}
 
-	public void setSupport(String support) {
-		this.support = support;
-	}
-
-	public String getRestrict() {
-		return this.restrict;
-	}
-
-	public void setRestrict(String restrict) {
-		this.restrict = restrict;
+	public void setServiceList(List<Service> serviceList) {
+		this.serviceList = serviceList;
 	}
 
 }

@@ -14,54 +14,39 @@ import "intfmessage/product/ServiceProto.proto";
  * 단말 정보
  */
 message Device {
-	optional string lang = 1; 		//Device내 사용된 Language 정보 ([LANG}에 정의된 language Tag값을 갖음
-	optional string base = 2; 		//Device내 사용된 Base URI 정보
-	required string identifier = 3;	// 단말 식별자 - {제조사/모델명}test
+	required string identifier = 1;	// 단말 식별자 - {제조사/모델명}test
 	/**
 	 * 단말 타입
 	 * > OMD단말 : type="omd"
 	 * > 미지원단말 : identifier="android_standard" type="restrict"
 	 * */
-	required string type = 4;
+	required string type = 2;
 
 	 /**
 	  * 미지원단말은 아래 정의 안함
 	  */
-	optional string manufacturer = 5;	//단말 제조사 정보
-	optional string model = 6;			//단말 모델명
-	optional string platform = 7;		//단말 OS 플랫폼
-	optional string modelExplain = 8;	//단말 모델 설명
+	optional string manufacturer = 3;	//단말 제조사 정보
+	optional string model = 4;			//단말 모델명
+	optional string platform = 5;		//단말 OS 플랫폼
+	optional string modelExplain = 6;	//단말 모델 설명
 
     /*
      * 단말에서 지원가능한 SK Planet 서비스 정보
      * support(지원가능)/restrict(지원불가)
      * ebook,comic,hdVod,shoppingStore,magazine,music,aom,drm,view,tmembership
      */
-    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 9;
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 7;
 
 	message SupportedHardware {			//단말에서 지원가능한 하드웨어 정보 structure
 		optional string resolution = 1;	//해상도(720*1280)
 		optional string dpi =2;			//DPI
-
-		/*
-		 * 지원가능 (","로 구분)
-		 * > hdmi,hdcp,lte,dolby
-		 * > HDMI,HDCP,LTE,돌비
-		 */
-		optional string support = 3;
-
-		/*
-		 * 지원불가 (","로 구분)
-		 * > hdmi,hdcp,lte,dolby
-		 * > HDMI,HDCP,LTE,돌비
-		 */
-		optional string restrict = 4;
+		repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Service serviceList = 3;
 	}
 
-	optional SupportedHardware supportedHardware = 10;		//단말에서 지원가능한 하드웨어 정보
+	optional SupportedHardware supportedHardware = 8;		//단말에서 지원가능한 하드웨어 정보
 
 	message BindingInfo {
-		optional string versionCode = 1;	//단말 OS Platform에 대한 Version 정보
+		optional string versionCode = 9;	//단말 OS Platform에 대한 Version 정보
 
 		/*
 		 * 이동통신사 정보
@@ -79,7 +64,7 @@ message Device {
 		optional string mark = 3 [default="no"];
 	}
 
-	optional BindingInfo bindingInfo = 11;		//Binding Information
+	optional BindingInfo bindingInfo = 9;		//Binding Information
 
-	optional string msisdn = 16;				// 휴대폰번호
+	optional string msisdn = 10;				// 휴대폰번호
 }

@@ -24,8 +24,21 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonRespons
 public class CommonResponse extends CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private String lang; // Language
 	private String baseUrl; // Base URL
 	private int totalCount; // 총 건수
+
+	public String getLang() {
+		return this.lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	public String getBaseUrl() {
 		return this.baseUrl;

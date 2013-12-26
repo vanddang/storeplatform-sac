@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
@@ -66,7 +67,8 @@ public class Device extends CommonVO implements Serializable {
 	/**
 	 * 단말에서 지원가능한 하드웨어 정보
 	 */
-	private SupportedHardware supportedHardware;
+	// private SupportedHardware supportedHardware;
+	private Map<String, Object> supportedHardware;
 
 	/**
 	 * Binding Information
@@ -77,6 +79,8 @@ public class Device extends CommonVO implements Serializable {
 	 * 휴대폰번호
 	 */
 	private String msisdn;
+
+	private Map<String, Object> services;
 
 	public String getLang() {
 		return this.lang;
@@ -150,11 +154,11 @@ public class Device extends CommonVO implements Serializable {
 		this.serviceList = serviceList;
 	}
 
-	public SupportedHardware getSupportedHardware() {
+	public Map<String, Object> getSupportedHardware() {
 		return this.supportedHardware;
 	}
 
-	public void setSupportedHardware(SupportedHardware supportedHardware) {
+	public void setSupportedHardware(Map<String, Object> supportedHardware) {
 		this.supportedHardware = supportedHardware;
 	}
 
@@ -172,6 +176,14 @@ public class Device extends CommonVO implements Serializable {
 
 	public void setMsisdn(String msisdn) {
 		this.msisdn = msisdn;
+	}
+
+	public Map<String, Object> getServices() {
+		return this.services;
+	}
+
+	public void setServices(Map<String, Object> services) {
+		this.services = services;
 	}
 
 }
