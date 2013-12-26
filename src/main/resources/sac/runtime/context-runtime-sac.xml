@@ -22,7 +22,7 @@
         <!-- Header 유효성체크 -->
         <!-- =================================================================================================================================== -->
         <int:header-enricher> 
-            <int:header name="headerVO" overwrite="true" ref="com.skplanet.storeplatform.sac.runtime.flow.service.ValidationServiceImpl" method="checkHeader" />   
+            <int:header name="headerInfo" overwrite="true" ref="com.skplanet.storeplatform.sac.runtime.flow.service.ValidationServiceImpl" method="checkHeader" />   
         </int:header-enricher>             
         <!-- =================================================================================================================================== -->
         <!-- 인터페이스 인증 확인 -->

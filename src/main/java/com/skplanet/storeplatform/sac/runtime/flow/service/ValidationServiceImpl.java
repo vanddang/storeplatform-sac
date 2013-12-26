@@ -28,7 +28,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
 import com.skplanet.storeplatform.sac.runtime.acl.service.AclService;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.ValidException;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.code.ValidErrorCode;
-import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderVO;
+import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
 
 /**
  * 
@@ -54,10 +54,10 @@ public class ValidationServiceImpl implements ValidationService {
 	 * @see com.skplanet.storeplatform.sac.integration.v2.flow.service.ValidationService#checkHeader(java.util.Map)
 	 */
 	@Override
-	public HeaderVO checkHeader(@Headers Map<String, Object> headerMap) {
+	public HeaderInfo checkHeader(@Headers Map<String, Object> headerMap) {
 
 		if (!this.aclYn)
-			return new HeaderVO();
+			return new HeaderInfo();
 
 		this.logger.info("메서드 실행 (checkHeader : " + headerMap + ")");
 		// 헤더 분석
@@ -81,11 +81,11 @@ public class ValidationServiceImpl implements ValidationService {
 			throw new ValidException(ErrorMessageBuilder.create().code(ValidErrorCode.NULL_ARGUMENT.name())
 					.arguments("ist", "null").build());
 		}
-		HeaderVO headerVO = new HeaderVO();
-		headerVO.setAuthKey(authKey);
-		headerVO.setIst(ist);
-		headerVO.setPath(UriComponentsBuilder.fromHttpUrl(requestUrl).build().getPath());
-		return headerVO;
+		HeaderInfo headerInfo = new HeaderInfo();
+		headerInfo.setAuthKey(authKey);
+		headerInfo.setIst(ist);
+		headerInfo.setPath(UriComponentsBuilder.fromHttpUrl(requestUrl).build().getPath());
+		return headerInfo;
 	}
 
 	/**

@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.flow.service;
 
-import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderVO;
+import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
 
 /**
  * 
@@ -25,11 +25,11 @@ public interface AuthService {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param headerVO
-	 *            headerVO
+	 * @param headerInfo
+	 *            headerInfo
 	 * @return boolean
 	 */
-	public boolean authentication(HeaderVO headerVO);
+	public boolean authentication(HeaderInfo headerInfo);
 
 	/**
 	 * 
@@ -37,10 +37,10 @@ public interface AuthService {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param headerVO
-	 *            headerVO
+	 * @param headerInfo
+	 *            headerInfo
 	 * @return boolean
 	 */
-	public boolean authorization(HeaderVO headerVO);
+	public boolean authorization(HeaderInfo headerInfo);
 
 }

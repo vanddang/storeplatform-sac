@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.runtime.flow.service;
 
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderVO;
+import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
 
 /**
  * 
@@ -29,7 +29,7 @@ public interface ValidationService {
 	 * 
 	 * @param headerMap
 	 *            headerMap
-	 * @return HeaderVO
+	 * @return HeaderInfo
 	 */
-	public HeaderVO checkHeader(Map<String, Object> headerMap);
+	public HeaderInfo checkHeader(Map<String, Object> headerMap);
 }

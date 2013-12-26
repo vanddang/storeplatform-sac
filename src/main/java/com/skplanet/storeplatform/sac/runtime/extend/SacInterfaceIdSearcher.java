@@ -32,11 +32,11 @@ public class SacInterfaceIdSearcher implements InterfaceIdSearcher {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("url", path);
 
-		InterfaceInfo interfaceVO = this.interfaceService.searchDetail(params);
+		InterfaceInfo interfaceInfo = this.interfaceService.searchDetail(params);
 
-		if (interfaceVO == null)
+		if (interfaceInfo == null)
 			throw new RuntimeException("interfaceId not found");
 
-		return interfaceVO.getInterfaceId();
+		return interfaceInfo.getInterfaceId();
 	}
 }

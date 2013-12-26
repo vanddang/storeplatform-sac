@@ -15,7 +15,7 @@ package com.skplanet.storeplatform.sac.runtime.flow.vo;
  * 
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
-public class HeaderVO {
+public class HeaderInfo {
 	private String authKey;
 	private String systemId;
 	private String ist;

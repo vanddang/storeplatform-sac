@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.AclException;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.code.AclErrorCode;
-import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderVO;
+import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
 
 /**
  * 
@@ -51,23 +51,23 @@ public class AuthServiceImpl implements AuthService {
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.runtime.flow.service.AuthService#authentication(com.skplanet.storeplatform.sac
-	 * .runtime.flow.vo.HeaderVO)
+	 * .runtime.flow.vo.HeaderInfo)
 	 */
 	@Override
-	public boolean authentication(@Header("headerVO") HeaderVO headerVO) {
+	public boolean authentication(@Header("headerInfo") HeaderInfo headerInfo) {
 
 		if (!this.aclYn)
 			return true;
 
-		this.logger.info("메서드 실행 (authentication : " + headerVO + ")");
+		this.logger.info("메서드 실행 (authentication : " + headerInfo + ")");
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("authKey", headerVO.getAuthKey());
+		params.put("authKey", headerInfo.getAuthKey());
 		AclAuthKeyVO aclAuthKeyVO = this.aclService.searchAclAuthKey(params);
 		if (aclAuthKeyVO == null) {
 			throw new AclException(ErrorMessageBuilder.create().code(AclErrorCode.NULL_ARGUMENT.name())
 					.arguments("authKeyVO", "null").build());
 		}
-		headerVO.setSystemId(aclAuthKeyVO.getSystemId());
+		headerInfo.setSystemId(aclAuthKeyVO.getSystemId());
 		return true;
 	}
 
@@ -76,18 +76,18 @@ public class AuthServiceImpl implements AuthService {
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.runtime.flow.service.AuthService#authorization(com.skplanet.storeplatform.sac.
-	 * runtime.flow.vo.HeaderVO)
+	 * runtime.flow.vo.HeaderInfo)
 	 */
 	@Override
-	public boolean authorization(@Header("headerVO") HeaderVO headerVO) {
+	public boolean authorization(@Header("headerInfo") HeaderInfo headerInfo) {
 
 		if (!this.aclYn)
 			return true;
 
-		this.logger.info("메서드 실행 (authorization : " + headerVO + ")");
+		this.logger.info("메서드 실행 (authorization : " + headerInfo + ")");
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("systemId", headerVO.getSystemId());
-		params.put("url", headerVO.getPath());
+		params.put("systemId", headerInfo.getSystemId());
+		params.put("url", headerInfo.getPath());
 		AclAuthVO aclAuthVO = this.aclService.searchAclAuth(params);
 		if (aclAuthVO == null) {
 			throw new AclException(ErrorMessageBuilder.create().code(AclErrorCode.NULL_ARGUMENT.name())

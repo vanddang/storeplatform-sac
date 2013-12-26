@@ -36,9 +36,9 @@ public class SacServiceActivatorChannelSearcher implements ServiceActivatorChann
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
-		InterfaceInfo interfaceVO = this.interfaceService.searchDetail(params);
+		InterfaceInfo interfaceInfo = this.interfaceService.searchDetail(params);
 
-		String channelName = this.interfaceService.searchChannelName(interfaceVO.getBypassYn(), params);
+		String channelName = this.interfaceService.searchChannelName(interfaceInfo.getBypassYn(), params);
 
 		if (StringUtils.isEmpty(channelName))
 			throw new RuntimeException("channelName not found");
