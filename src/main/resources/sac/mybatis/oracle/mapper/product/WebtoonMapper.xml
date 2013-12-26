@@ -20,7 +20,7 @@
                       ,PROD_AMT as prodAmt                                /* 가격   */
                       ,PART_CNT as partCnt                                /* 부분개수 */
                       ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
-                      ,CASE WHEN (SYSDATE - UPD_DT) <= 3 THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
+                      ,CASE WHEN (SYSDATE - UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
                       ,UPD_DT as updDt                                    /* 수정일 */
                       ,CHAPTER as chapter                                 /* 챕터 */
                       ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
@@ -154,7 +154,7 @@
                      ,PROD_AMT as prodAmt                                /* 가격   */
                      ,PART_CNT as partCnt                                /* 부분개수 */
                      ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
-                     ,CASE WHEN (SYSDATE - UPD_DT) <= 3 THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
+                     ,CASE WHEN (SYSDATE - UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
                      ,UPD_DT as updDt                                    /* 수정일 */
                      ,CHAPTER as chapter                                 /* 챕터 */
                      ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
