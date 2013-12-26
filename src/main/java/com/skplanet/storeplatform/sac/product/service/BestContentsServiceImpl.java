@@ -150,7 +150,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 				product.setSupportList(supportList);
 				// product.setSupport("hd");
 				product.setMenuList(menuList);
-				product.setContributorList(contributor);
+				product.setContributor(contributor);
 				product.setAccrual(accrual);
 				product.setRights(rights);
 				product.setTitle(title);
@@ -239,7 +239,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 				product.setIdentifier(identifier);
 				product.setMenuList(menuList);
 				product.setTitle(title);
-				product.setContributorList(contributor);
+				product.setContributor(contributor);
 				product.setProductExplain("2012년 상반기 슈크림을 시~원하게 쏩니다.");
 				product.setSourceList(sourceList);
 				product.setRights(rights);
