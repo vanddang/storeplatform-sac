@@ -145,7 +145,7 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 
 				productVO.setPrice(priceVO);
 				productVO.setAccrual(accrualVO);
-				productVO.setContributorList(contributorVO);
+				productVO.setContributor(contributorVO);
 				// TV
 				// eBook
 				// 만화
@@ -169,7 +169,7 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 				salesOptionVO.setType("type");
 
 				productVO.setPrice(priceVO);
-				productVO.setContributorList(contributorVO);
+				productVO.setContributor(contributorVO);
 				productVO.setIdentifier(priceIdentifierVO);
 				productVO.setAccrual(accrualVO);
 				productVO.setSalesOption(salesOptionVO);
@@ -188,7 +188,7 @@ public class SpecificProductListServiceImpl implements SpecificProductListServic
 				serviceList.add(serviceVO);
 				musicVO.setServiceList(serviceList);
 				accrualVO.setChangeRank("changeRank");
-				productVO.setContributorList(contributorVO);
+				productVO.setContributor(contributorVO);
 				productVO.setMusic(musicVO);
 				productVO.setAccrual(accrualVO);
 			}

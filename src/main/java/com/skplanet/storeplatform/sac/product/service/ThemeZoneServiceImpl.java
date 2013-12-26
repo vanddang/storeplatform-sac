@@ -143,7 +143,7 @@ public class ThemeZoneServiceImpl implements ThemeZoneService {
 				product.setSourceList(sourceList);
 				product.setPrice(price);
 				product.setRights(rights);
-				product.setContributorList(contributor);
+				product.setContributor(contributor);
 
 				productList.add(product);
 
