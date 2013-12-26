@@ -34,7 +34,6 @@
     <util:list id="messageConvertersForComponentIfInvoker" value-type="org.springframework.http.converter.HttpMessageConverter">
         <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
         <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
-        <bean class="com.skplanet.storeplatform.framework.web.converter.BypassMappingJacksonHttpMessageConverter"/> 
-        <bean class="com.skplanet.storeplatform.framework.web.converter.ProtobufHttpMessageConverter"/> 
+        <bean class="com.skplanet.storeplatform.framework.web.converter.BypassMappingJacksonHttpMessageConverter"/>
     </util:list> 
 </beans>
