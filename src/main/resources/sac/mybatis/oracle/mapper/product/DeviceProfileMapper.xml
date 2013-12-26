@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DeviceProfile">
+	<!-- 특정 단말 정보 조회-->
+	<resultMap id="deviceProfileMap" type="DeviceProfileDTO" autoMapping="true">
+       <association property="servicesMap" javaType="java.util.HashMap">
+             <result column="EBOOK_SPRT_YN" property="ebook" />
+             <result column="COMIC_SPRT_YN" property="comic" />
+             <result column="HDV_SPRT_YN" property="hdVod" />
+             <result column="SCL_SHPG_SPRT_YN" property="shoppingStore" />
+             <result column="MAGAZINE_SPRT_YN" property="magazine" />
+             <result column="MUSIC_SPRT_YN" property="music" />
+             <result column="AOM_SPRT_YN" property="aom" />
+             <result column="STRM_SPRT_YN" property="drm" />
+             <result column="STRM_SPRT_YN" property="view" />
+        </association>
+        <association property="supportedHardwareMap" javaType="java.util.HashMap">
+             <result column="LCD_SIZE_NM" property="resolution" />
+             <result column="HDMI_SPRT_YN" property="hdmi" />
+             <result column="HDCP_SPRT_YN" property="hdcp" />
+             <result column="NETWORK_TYPE" property="lte"/>
+             <result column="DOLBY_SPRT_YN" property="dolby" />
+        </association>
+    </resultMap>
+    <select id="selectDeviceProfile" parameterType="DeviceProfileRequest" resultMap="deviceProfileMap">
+		SELECT DEVICE_MODEL_CD                                                                     /* 모델 코드 */
+		      , (SELECT CD_NM
+		           FROM TB_CM_CD
+		          WHERE CD_ID = MNFT_COMP_CD)
+		          AS MAKE_COMP_NM
+		      ,MODEL_NM                                                                             /* 모델 명 */
+		      ,UA_CD                                                                                /* UA 코드 */
+		      ,DECODE (EBOOK_SPRT_YN, 'Y', 'support', 'restrict') AS EBOOK_SPRT_YN                  /*이북 지원 여부 */
+		      ,DECODE (COMIC_SPRT_YN, 'Y', 'support', 'restrict') AS COMIC_SPRT_YN                  /*코믹 지원 여부 */
+		      ,DECODE (HDV_SPRT_YN, 'PD005201', 'support', 'restrict') AS HDV_SPRT_YN               /*HDV 지원 여부 */
+		      ,DECODE (SCL_SHPG_SPRT_YN, 'Y', 'support', 'restrict')
+		          AS SCL_SHPG_SPRT_YN                                                               /*소셜_쇼핑_지원_여부 */
+		      ,DECODE (MAGAZINE_SPRT_YN, 'Y', 'support', 'restrict')
+		          AS MAGAZINE_SPRT_YN                                                               /*잡지_지원_여부 */
+		      ,DECODE (MUSIC_SPRT_YN, 'Y', 'support', 'restrict') AS MUSIC_SPRT_YN                  /*뮤직_지원_여부 */
+		      ,DECODE (AOM_SPRT_YN, 'Y', 'support', 'restrict') AS AOM_SPRT_YN                      /*AOM_지원_여부 */
+		      ,DECODE (SKT_DRM_SPRT_YN, 'Y', 'support', 'restrict')
+		          AS SKT_DRM_SPRT_YN                                                                /*SKT_DRM_지원_여부 */
+		      ,DECODE (STRM_SPRT_YN, 'Y', 'support', 'restrict') AS STRM_SPRT_YN                    /*바로보기_지원_여부 */
+		      ,DECODE (HDCP_SPRT_YN, 'Y', 'support', 'restrict') AS HDCP_SPRT_YN                    /*HDCP_지원_여부 */
+		      ,DECODE (HDMI_SPRT_YN, 'Y', 'support', 'restrict') AS HDMI_SPRT_YN                          /*HDMI_지원_여부 */
+		      ,DECODE (NETWORK_TYPE, 'LTE','support', 'restrict') AS NETWORK_TYPE                       /*네트워크_타입 */
+		      ,DECODE (GIFT_SPRT_YN, 'Y', 'support', 'restrict') AS GIFT_SPRT_YN                    /*선물_지원_여부 */
+		      ,DECODE (DOLBY_SPRT_YN, 'Y', 'support', 'restrict') AS DOLBY_SPRT_YN                  /*DOLBY_지원_여부 */
+		      ,VM_TYPE_CD
+		      , (SELECT CD_NM
+		           FROM TB_CM_CD
+		          WHERE CD_ID = VM_TYPE_CD)
+		          AS VM_TYPE_NM                                                                     /*VM_타입_코드 */
+		      , (SELECT REPLACE (SUBSTR (CD_NM, 1, INSTR (CD_NM, '(') - 1), 'X', '*')
+		           FROM TB_CM_CD
+		          WHERE CD_ID = LCD_SIZE_CD)
+		          AS LCD_SIZE_NM                                                                    /*LCD_크기_명 */
+		      ,CMNT_COMP_CD                                                                         /*통신회사 코드 */
+		      ,REP_DEVICE_YN                                                                        /*대표_기기_여부 */
+		  FROM TB_CM_DEVICE
+		 WHERE USE_YN = 'Y'
+		 <!-- 
+		  <if test="uaCd != null">
+		   AND REP_YN = 'Y'
+           AND UA_CD = #uaCd#
+		  </if>
+		   -->
+		  <if test="model != null">
+		   AND DEVICE_MODEL_CD = #{model}
+		  </if>
+ 	</select>
+</mapper>

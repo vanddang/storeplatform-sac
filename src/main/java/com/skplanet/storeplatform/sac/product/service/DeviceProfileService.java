@@ -9,7 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.product.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.ProvisionDeviceProfile;
+import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileRequest;
+import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileResponse;
 
 /**
  * 특정 단말 정보 조회(CoreStoreBusiness)
@@ -29,5 +30,5 @@ public interface DeviceProfileService {
 	 *            모델명
 	 * @return
 	 */
-	public ProvisionDeviceProfile searchDeviceProfile(String manufacturer, String model);
+	public DeviceProfileResponse searchDeviceProfile(DeviceProfileRequest requestVO);
 }
