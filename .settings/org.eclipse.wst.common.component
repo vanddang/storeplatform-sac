@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="storeplatform-sac">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/webapp" tag="defaultRootSource"/>
@@ -17,13 +16,13 @@
         <dependent-module archiveName="storeplatform-prototype-rpc-sc-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-rpc-sc-client/storeplatform-prototype-rpc-sc-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="storeplatform-prototype-lpc-sc-sci-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-lpc-sc-sci/storeplatform-prototype-lpc-sc-sci">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="storeplatform-prototype-sc-domain-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-sc-domain/storeplatform-prototype-sc-domain">
+        <dependent-module archiveName="storeplatform-prototype-lpc-sc-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-lpc-sc/storeplatform-prototype-lpc-sc">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="storeplatform-prototype-lpc-sc-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/storeplatform-prototype-lpc-sc-client/storeplatform-prototype-lpc-sc-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="external-component-client-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/external-component-client/external-component-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="storeplatform-sac"/>
