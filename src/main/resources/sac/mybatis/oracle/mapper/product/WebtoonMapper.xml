@@ -234,7 +234,7 @@
                                         AND  C1.PROD_ID = G1.PROD_ID
                                         AND  C1.PROD_ID = J1.PROD_ID 
                                         AND  A1.TENANT_ID = #{tenantId}      /* INPUT 테넌트ID */
-                                        AND  A1.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
+                                        AND  A1.UP_MENU_ID ='MN26'           /* MN26 : 웹툰 */
                                         AND  A1.SYSTEM_ID = #{systemId}      /* INPUT 시스템ID */
                                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -291,8 +291,6 @@
                         AND  F.LANG_CD = 'ko'               /* ko : 한국어 */
                         AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                        AND  D.PROD_CHRG_YN ='N'            /* N 인경우 무료 */
-                        AND  L.EXPO_YN = 'Y'                  /* Y : 노출(노출여부) */
                         AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
                         <if test="prodCharge != null">
                          AND  D.PROD_CHRG_YN =#{prodCharge}        /* N 인경우 무료 */
