@@ -27,9 +27,8 @@ public class WebtoonRequest extends CommonVO {
 	private String prodGradeCd; // 상품등급코드
 	private String drm; // DRM 지원 구분
 	private String weekDayCd; // 요일별 구분 코드
-	private String orderedBy; // 정렬순서
-	private int offset; // offset
-	private int count; // count
+	private int offset = 1; // offset
+	private int count = 20; // count
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -93,14 +92,6 @@ public class WebtoonRequest extends CommonVO {
 
 	public void setWeekDayCd(String weekDayCd) {
 		this.weekDayCd = weekDayCd;
-	}
-
-	public String getOrderedBy() {
-		return this.orderedBy;
-	}
-
-	public void setOrderedBy(String orderedBy) {
-		this.orderedBy = orderedBy;
 	}
 
 	public int getOffset() {
