@@ -137,9 +137,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 				this.logger.debug("일반 카테고리 상품이 아님");
 				this.logger.debug("--------------------------------------------------------------------------");
 			}
-
 		} else {
+			this.logger.debug("--------------------------------------------------------------------------");
 			this.logger.debug("메뉴 정보 조회 오류 발생");
+			this.logger.debug("--------------------------------------------------------------------------");
 		}
 
 		return response;
