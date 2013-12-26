@@ -45,5 +45,8 @@
         <typeAlias alias="WebtoonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest" />
         <typeAlias alias="WebtoonDTO"  type="com.skplanet.storeplatform.sac.product.vo.WebtoonDTO" />
         
+         <!-- 특정 단말 조회 -->
+        <typeAlias alias="DeviceProfileRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileRequest" />
+        <typeAlias alias="DeviceProfileDTO"  type="com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileDTO" />
     </typeAliases>
 </configuration>
