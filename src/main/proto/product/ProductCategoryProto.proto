@@ -6,14 +6,16 @@ import "intfmessage/product/ProductProto.proto";
 
 // 일반 카테고리 상품 조회 Request message
 message ProductCategoryRequest {
-    required string tenantId = 1;       //테넌트ID
-    required string menuId = 2;         //메뉴ID
-    required string systemId = 3;       //시스템ID
-    required string imageCd = 4;        //이미지코드
-    optional string orderedBy = 5;      //정렬순서
-    optional string prodGradeCd = 6;    //상품등급코드
-    optional int32 offset = 7;          //offset
-    optional int32 count = 8;           //count
+    optional string prodCharge = 1;     // 상품 유/무료 구분
+    optional string prodGradeCd = 2;    // 상품등급코드
+    optional string drm = 3;            // 테넌트ID
+    required string imageSizeCd = 4;    // 이미지코드
+    required string menuId = 5;         // 메뉴ID
+    optional string orderedBy = 6;      // 정렬순서
+    optional int32 offset = 7;          // offset
+    optional int32 count = 8;           // count
+    required string tenantId = 9;       // 테넌트ID
+    required string systemId = 10;      // 시스템ID
 }
 
 // 일반 카테고리 상품 조회 Response message
