@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.runtime.cache.vo;
 
-public class ServiceVO {
+public class ServiceInfo {
 	private String pkgNm;
 	private String classNm;
 	private String methodNm;

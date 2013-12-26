@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sc.client.vo.PurchaseVO;
+import com.skplanet.storeplatform.sc.client.vo.Purchase;
 
 /**
  * 구매 상세 테스트
@@ -80,16 +80,16 @@ public class PurchaseDetailTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						PurchaseVO purchaseVO = new PurchaseVO();
+						Purchase purchaseVO = new Purchase();
 						purchaseVO.setId(10001);
 						purchaseVO.setPid("A123456789");
 
 						return purchaseVO;
 					}
-				}).success(PurchaseVO.class, new SuccessCallback() {
+				}).success(Purchase.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						PurchaseVO purchaseVO = (PurchaseVO) result;
+						Purchase purchaseVO = (Purchase) result;
 
 						assertThat(purchaseVO, notNullValue());
 					}

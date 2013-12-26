@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.integration.router.ServiceActivatorChannelSearcher;
 import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 
 /**
  * 서비스 액티베이터 채널 조회자 클래스
@@ -36,7 +36,7 @@ public class SacServiceActivatorChannelSearcher implements ServiceActivatorChann
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
-		InterfaceVO interfaceVO = this.interfaceService.searchDetail(params);
+		InterfaceInfo interfaceVO = this.interfaceService.searchDetail(params);
 
 		String channelName = this.interfaceService.searchChannelName(interfaceVO.getBypassYn(), params);
 

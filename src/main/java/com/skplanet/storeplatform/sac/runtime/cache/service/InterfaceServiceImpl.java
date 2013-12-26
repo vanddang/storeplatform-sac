@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceVO;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
 
 /**
  * 
@@ -42,8 +42,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 	 * @see com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService#searchDetail(java.util.Map)
 	 */
 	@Override
-	public InterfaceVO searchDetail(Map<String, String> params) {
-		return this.commonDAO.queryForObject("Interface.searchDetail", params, InterfaceVO.class);
+	public InterfaceInfo searchDetail(Map<String, String> params) {
+		return this.commonDAO.queryForObject("Interface.searchDetail", params, InterfaceInfo.class);
 	}
 
 	/*
@@ -82,8 +82,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 	 * @see com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService#searchServiceMethod(java.util.Map)
 	 */
 	@Override
-	public ServiceVO searchServiceMethod(Map<String, String> params) {
-		return this.commonDAO.queryForObject("Interface.searchServiceMethod", params, ServiceVO.class);
+	public ServiceInfo searchServiceMethod(Map<String, String> params) {
+		return this.commonDAO.queryForObject("Interface.searchServiceMethod", params, ServiceInfo.class);
 	}
 
 }

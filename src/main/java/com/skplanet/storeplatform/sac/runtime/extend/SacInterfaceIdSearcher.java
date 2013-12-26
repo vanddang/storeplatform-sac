@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.skplanet.storeplatform.framework.integration.serviceactivator.InterfaceIdSearcher;
 import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
 import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 
 /**
  * 인터페이스ID를 조회하는 클래스
@@ -32,7 +32,7 @@ public class SacInterfaceIdSearcher implements InterfaceIdSearcher {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("url", path);
 
-		InterfaceVO interfaceVO = this.interfaceService.searchDetail(params);
+		InterfaceInfo interfaceVO = this.interfaceService.searchDetail(params);
 
 		if (interfaceVO == null)
 			throw new RuntimeException("interfaceId not found");

@@ -40,7 +40,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sc.client.vo.UserSearchVO;
+import com.skplanet.storeplatform.sc.client.vo.UserSearch;
 
 /**
  * 회원 상세 테스트
@@ -97,7 +97,7 @@ public class UserDetailTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						UserSearchVO userVO = new UserSearchVO();
+						UserSearch userVO = new UserSearch();
 
 						userVO.setId(userId);
 						userVO.setName("name");
@@ -106,10 +106,10 @@ public class UserDetailTest {
 
 						return userVO;
 					}
-				}).success(UserSearchVO.class, new SuccessCallback() {
+				}).success(UserSearch.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						UserSearchVO resultVO = (UserSearchVO) result;
+						UserSearch resultVO = (UserSearch) result;
 
 						assertThat(resultVO.getId(), is(userId));
 						assertThat(resultVO.getName(), is("Name_1"));

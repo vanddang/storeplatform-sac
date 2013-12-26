@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sc.client.vo.PaymentVO;
+import com.skplanet.storeplatform.sc.client.vo.Payment;
 
 /**
  * 결제 상세 테스트
@@ -80,15 +80,15 @@ public class PaymentDetailTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						PaymentVO paymentVO = new PaymentVO();
+						Payment paymentVO = new Payment();
 						paymentVO.setIdentifier("1001");
 
 						return paymentVO;
 					}
-				}).success(PaymentVO.class, new SuccessCallback() {
+				}).success(Payment.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						PaymentVO paymentVO = (PaymentVO) result;
+						Payment paymentVO = (Payment) result;
 
 						assertThat(paymentVO, notNullValue());
 					}

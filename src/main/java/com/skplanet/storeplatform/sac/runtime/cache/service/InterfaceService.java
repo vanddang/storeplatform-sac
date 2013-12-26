@@ -12,8 +12,8 @@ package com.skplanet.storeplatform.sac.runtime.cache.service;
 import java.util.Map;
 
 import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceVO;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
 
 /**
  * 
@@ -33,7 +33,7 @@ public interface InterfaceService {
 	 *            params
 	 * @return InterfaceVO
 	 */
-	public InterfaceVO searchDetail(Map<String, String> params);
+	public InterfaceInfo searchDetail(Map<String, String> params);
 
 	/**
 	 * 
@@ -71,5 +71,5 @@ public interface InterfaceService {
 	 *            params
 	 * @return ServiceVO
 	 */
-	public ServiceVO searchServiceMethod(Map<String, String> params);
+	public ServiceInfo searchServiceMethod(Map<String, String> params);
 }

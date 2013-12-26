@@ -33,7 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sc.client.vo.UserSearchListVO;
+import com.skplanet.storeplatform.sc.client.vo.UserSearchList;
 
 /**
  * 회원 목록 테스트
@@ -76,10 +76,10 @@ public class UserListTest {
 	public void shouldObtainUserList() throws Exception {
 		new TestCaseTemplate(this.mockMvc).url("/bypass/user/search/1").httpMethod(HttpMethod.GET)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.success(UserSearchListVO.class, new SuccessCallback() {
+				.success(UserSearchList.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						UserSearchListVO userListVO = (UserSearchListVO) result;
+						UserSearchList userListVO = (UserSearchList) result;
 
 						assertThat(userListVO.getUserSearch(), notNullValue());
 					}

@@ -16,9 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethodSearcher;
-import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethodVO;
+import com.skplanet.storeplatform.framework.integration.serviceactivator.InvocationMethod;
 import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
 
 /**
  * 실행메소드정보를 가져오는 구현클래스
@@ -39,11 +39,11 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 	 * )
 	 */
 	@Override
-	public InvocationMethodVO search(String interfaceId) {
+	public InvocationMethod search(String interfaceId) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
 
-		ServiceVO serviceVO = this.interfaceService.searchServiceMethod(params);
+		ServiceInfo serviceVO = this.interfaceService.searchServiceMethod(params);
 
 		if (serviceVO == null)
 			throw new RuntimeException("service not found");
@@ -52,7 +52,7 @@ public class SacInvocationMethodSearcher implements InvocationMethodSearcher {
 		String classNm = serviceVO.getClassNm();
 		String mtdNm = serviceVO.getMethodNm();
 		String serviceNm = new StringBuilder().append(pkgNm).append(".").append(classNm).toString();
-		InvocationMethodVO invocationMethodVO = new InvocationMethodVO(serviceNm, mtdNm);
+		InvocationMethod invocationMethodVO = new InvocationMethod(serviceNm, mtdNm);
 
 		return invocationMethodVO;
 	}
