@@ -2,56 +2,278 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Webtoon">
     <!-- 웹툰 상품 리스트 조회-->
-    <select id="selectWebtoonList" parameterType="WebtoonRequest" resultType="WebtoonDTO">
+    <select id="getWebtoonList" parameterType="WebtoonRequest" resultType="WebtoonDTO">
+        /* WebtoonMapper.xml.getWebtoonList, sac: kim Hyung Sik , 2013-12-26 */
         SELECT *
           FROM (                        
-                     SELECT 
-                          COUNT(c.prod_id) OVER() AS totalCount
-                          , ROW_NUMBER() OVER(ORDER BY NVL(to_char(c.UPD_DT), 0)) AS RNUM   
-                          , a.MENU_ID
-                          ,c.prod_id as prodId
-                          ,f.PROD_BASE_DESC
-                          ,f.PROD_NM
-                          ,NVL(to_char(c.UPD_DT,'yyyymmdd') || to_char(c.UPD_DT,'HH24MISS'), 0) AS sortLeasteDate
-                          ,'0' as prodAmt
-                    FROM  TB_DP_MENU               A
-                        , TB_DP_CATEGORY_MENU_MAPG B
-                        , TB_DP_PROD_CATEGORY_MAPG C
-                        , TB_DP_PROD               D
-                        , TB_DP_MULTIMDA_PROD      E
-                        , TB_DP_PROD_DESC          F
-                        , TB_DP_TENANT_PROD        G
-                        , TB_DP_TENANT_PROD_STATS  H
-                        , TB_DP_TENANT_PROD_PRICE  I
-                        , TB_DP_PROD_RSHP J
-                   WHERE  A.TENANT_ID = B.TENANT_ID
-                     AND  A.MENU_ID = B.MENU_ID
-                     AND  A.SYSTEM_ID = B.SYSTEM_ID
-                     AND  B.CATEGORY_NO = C.CATEGORY_NO
-                     AND  C.PROD_ID = D.PROD_ID
-                     AND  D.PROD_ID = E.PROD_ID
-                     AND  E.PROD_ID = F.PROD_ID
-                     AND  F.PROD_ID = G.PROD_ID
-                     AND  A.TENANT_ID = G.TENANT_ID
-                     AND  G.PROD_ID = H.PROD_ID
-                     AND  G.TENANT_ID = H.TENANT_ID
-                     AND  G.PROD_ID = I.PROD_ID
-                     AND  G.TENANT_ID = I.TENANT_ID   
-                     AND  G.PROD_ID = J.PART_PROD_ID                                 
-                     AND  A.TENANT_ID = 'S01'            /* INPUT 테넌트ID */
-                     AND  A.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
-                     AND  A.SYSTEM_ID = 'S009'           /* INPUT 시스템ID */
-                     AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                     AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                     AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-                     AND  C.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                     AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
-                     AND  F.LANG_CD = 'ko'               /* ko : 한국어 */
-                     AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                     AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-                     AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                     AND E.SERIALLY_WKDY LIKE '%' || 'SUN' || '%' 
+                SELECT  
+                       ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
+                      ,COUNT(PROD_ID) OVER() AS totalCount
+                      ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
+                      ,MENU_ID as menuId                                  /* 메뉴ID */
+                      ,MENU_NM as menuNm                                  /* 메뉴명 */
+                      ,CHANNEL_ID as channelId                            /* 채널ID */
+                      ,PROD_ID as prodId                                  /* 상품ID */
+                      ,PROD_NM as prodNm                                  /* 상품명 */   
+                      ,PROD_GRD_CD as prodGrdCd                           /* 상품등급코드 */   
+                      ,AVG_SCORE as avgScore                              /* 평점   */
+                      ,PROD_AMT as prodAmt                                /* 가격   */
+                      ,PART_CNT as partCnt                                /* 부분개수 */
+                      ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
+                      ,CASE WHEN (SYSDATE - UPD_DT) <= 3 THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
+                      ,UPD_DT as updDt                                    /* 수정일 */
+                      ,CHAPTER as chapter                                 /* 챕터 */
+                      ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
+                      ,ARTIST2_NM as artist2Nm                            /* 아티스트2 */
+                      ,ARTIST3_NM as artist3Nm                            /* 아티스트3 */
+                      ,FILE_POS as filePos                                /* 파일경로 */
+                 FROM (
+                        SELECT  
+                               A.UP_MENU_ID
+                              ,A.MENU_ID
+                              ,A.MENU_NM 
+                              ,J.PROD_ID AS CHANNEL_ID
+                              ,C.PROD_ID 
+                              ,F.PROD_ALIAS
+                              ,D.PROD_GRD_CD
+                              ,F.PROD_NM
+                              ,TO_CHAR(NVL(H.AVG_EVLU_SCORE,0), '0.0') AS AVG_SCORE 
+                              ,NVL(H.PATICPERS_CNT,0) AS PART_CNT 
+                              ,SERIALLY_WKDY
+                              ,D.UPD_DT
+                              ,E.CHAPTER
+                              ,I.PROD_AMT
+                              ,F.ARTIST1_NM
+                              ,F.ARTIST2_NM
+                              ,F.ARTIST3_NM
+                              ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD='DP000196' AND PROD_ID =C.PROD_ID AND ROWNUM=1) FILE_POS
+                        FROM  TB_DP_MENU               A
+                            , TB_DP_CATEGORY_MENU_MAPG B
+                            , TB_DP_PROD_CATEGORY_MAPG C
+                            , TB_DP_PROD               D
+                            , TB_DP_MULTIMDA_PROD      E
+                            , TB_DP_PROD_DESC          F
+                            , TB_DP_TENANT_PROD        G
+                            , TB_DP_TENANT_PROD_STATS  H
+                            , TB_DP_TENANT_PROD_PRICE  I
+                            , TB_DP_PROD_RSHP J
+                            ,(
+                               SELECT PROD_ID,PART_PROD_ID FROM (   
+                                       SELECT 
+                                              ROW_NUMBER() OVER(PARTITION BY J1.PROD_ID ORDER BY D1.UPD_DT DESC) AS NO
+                                              ,J1.PROD_ID
+                                              ,J1.PART_PROD_ID
+                                        FROM 
+                                              TB_DP_MENU               A1
+                                            , TB_DP_CATEGORY_MENU_MAPG B1
+                                            , TB_DP_PROD_CATEGORY_MAPG C1
+                                            , TB_DP_PROD               D1
+                                            , TB_DP_MULTIMDA_PROD      E1
+                                            , TB_DP_PROD_DESC          F1
+                                            , TB_DP_TENANT_PROD        G1
+                                            , TB_DP_PROD_RSHP          J1
+                                       WHERE  A1.TENANT_ID = B1.TENANT_ID
+                                         AND  A1.MENU_ID = B1.MENU_ID
+                                         AND  A1.SYSTEM_ID = B1.SYSTEM_ID
+                                         AND  B1.CATEGORY_NO = C1.CATEGORY_NO
+                                         AND  C1.PROD_ID = D1.PROD_ID
+                                         AND  D1.PROD_ID = E1.PROD_ID
+                                         AND  F1.PROD_ID = G1.PROD_ID
+                                         AND  A1.TENANT_ID = G1.TENANT_ID
+                                         AND  C1.PROD_ID = G1.PROD_ID
+                                         AND  C1.PROD_ID = J1.PROD_ID 
+                                         AND  A1.TENANT_ID = #tenantId#              /* INPUT 테넌트ID */
+                                         AND  A1.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
+                                         AND  A1.SYSTEM_ID = 'S009'           /* INPUT 시스템ID */
+                                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                                         AND  C1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+                                         AND  C1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                                         AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+                                         AND  F1.LANG_CD = 'ko'               /* ko : 한국어 */
+                                         AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                                         AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                                         AND  D1.PROD_CHRG_YN ='N'            /* N 인경우 무료 */
+                                         AND  D1.PROD_GRD_CD ='PD004401'      /* PD004401:전체이용가,PD004402:12세이용가,PD004403:15세이용가,PD004404:청소년이용불가 */
+                                       --  AND  D1.DRM_YN ='Y'                  /* DRM 지원 구분 Y : 지원, N : 미지원*/ 
+                               )WHERE NO =1                                          
+                             ) K
+                       WHERE  A.TENANT_ID = B.TENANT_ID
+                         AND  A.MENU_ID = B.MENU_ID
+                         AND  A.SYSTEM_ID = B.SYSTEM_ID
+                         AND  B.CATEGORY_NO = C.CATEGORY_NO
+                         AND  C.PROD_ID = D.PROD_ID
+                         AND  D.PROD_ID = E.PROD_ID
+                         AND  E.PROD_ID = F.PROD_ID
+                         AND  F.PROD_ID = G.PROD_ID
+                         AND  A.TENANT_ID = G.TENANT_ID
+                         AND  G.PROD_ID = H.PROD_ID
+                         AND  G.TENANT_ID = H.TENANT_ID
+                         AND  G.PROD_ID = I.PROD_ID
+                         AND  G.TENANT_ID = I.TENANT_ID   
+                         AND  G.PROD_ID = J.PART_PROD_ID   
+                         AND  G.PROD_ID = K.PART_PROD_ID(+)
+                         AND  K.PART_PROD_ID IS NOT NULL
+                         AND  A.TENANT_ID = #{tenantId}#       /* INPUT 테넌트ID */
+                         AND  A.SYSTEM_ID = #{systemId}#     /* INPUT 시스템ID */
+                         AND  A.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
+                         AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                         AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                         AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+                         AND  C.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                         AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+                         AND  F.LANG_CD = 'ko'               /* ko : 한국어 */
+                         AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                         AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                         AND  D.PROD_CHRG_YN ='N'            /* N 인경우 무료 */
+                         AND  D.PROD_GRD_CD ='PD004401'      /* PD004401:전체이용가,PD004402:12세이용가,PD004403:15세이용가,PD004404:청소년이용불가 */
+                        -- AND  D.DRM_YN ='Y'                  /* DRM 지원 구분 Y : 지원, N : 미지원*/ 
+                         AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
+                         AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd}# )|| '%' 
+                   )
                ) ka
          WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>
+    
+    <!-- 운영자 웹툰 상품 리스트 조회-->
+    <select id="getAdminWebtoonList" parameterType="WebtoonRequest" resultType="WebtoonDTO">
+        /* WebtoonMapper.xml.getAdminWebtoonList, sac: kim Hyung Sik , 2013-12-26 */
+        SELECT *
+          FROM (                        
+               SELECT  
+                      ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
+                     ,COUNT(PROD_ID) OVER() AS totalCount
+                     ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
+                     ,MENU_ID as menuId                                  /* 메뉴ID */
+                     ,MENU_NM as menuNm                                  /* 메뉴명 */
+                     ,CHANNEL_ID as channelId                            /* 채널ID */
+                     ,PROD_ID as prodId                                  /* 상품ID */
+                     ,PROD_NM as prodNm                                  /* 상품명 */   
+                     ,PROD_GRD_CD as prodGrdCd                           /* 상품등급코드 */   
+                     ,AVG_SCORE as avgScore                              /* 평점   */
+                     ,PROD_AMT as prodAmt                                /* 가격   */
+                     ,PART_CNT as partCnt                                /* 부분개수 */
+                     ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
+                     ,CASE WHEN (SYSDATE - UPD_DT) <= 3 THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
+                     ,UPD_DT as updDt                                    /* 수정일 */
+                     ,CHAPTER as chapter                                 /* 챕터 */
+                     ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
+                     ,ARTIST2_NM as artist2Nm                            /* 아티스트2 */
+                     ,ARTIST3_NM as artist3Nm                            /* 아티스트3 */
+                     ,FILE_POS as filePos                                /* 파일경로 */
+                FROM (
+                       SELECT  
+                              A.UP_MENU_ID
+                             ,A.MENU_ID
+                             ,A.MENU_NM 
+                             ,J.PROD_ID AS CHANNEL_ID
+                             ,C.PROD_ID 
+                             ,F.PROD_ALIAS
+                             ,D.PROD_GRD_CD
+                             ,F.PROD_NM
+                             ,TO_CHAR(NVL(H.AVG_EVLU_SCORE,0), '0.0') AS AVG_SCORE 
+                             ,NVL(H.PATICPERS_CNT,0) AS PART_CNT 
+                             ,SERIALLY_WKDY
+                             ,D.UPD_DT
+                             ,E.CHAPTER
+                             ,I.PROD_AMT                             
+                             ,F.ARTIST1_NM
+                             ,F.ARTIST2_NM
+                             ,F.ARTIST3_NM
+                             ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD='DP000196' AND PROD_ID =C.PROD_ID AND ROWNUM=1) FILE_POS
+                       FROM  TB_DP_MENU               A
+                           , TB_DP_CATEGORY_MENU_MAPG B
+                           , TB_DP_PROD_CATEGORY_MAPG C
+                           , TB_DP_PROD               D
+                           , TB_DP_MULTIMDA_PROD      E
+                           , TB_DP_PROD_DESC          F
+                           , TB_DP_TENANT_PROD        G
+                           , TB_DP_TENANT_PROD_STATS  H
+                           , TB_DP_TENANT_PROD_PRICE  I
+                           , TB_DP_PROD_RSHP J
+                           ,(
+                              SELECT PROD_ID,PART_PROD_ID FROM (   
+                                      SELECT 
+                                             ROW_NUMBER() OVER(PARTITION BY J1.PROD_ID ORDER BY D1.UPD_DT DESC) AS NO
+                                             ,J1.PROD_ID
+                                             ,J1.PART_PROD_ID
+                                       FROM 
+                                             TB_DP_MENU               A1
+                                           , TB_DP_CATEGORY_MENU_MAPG B1
+                                           , TB_DP_PROD_CATEGORY_MAPG C1
+                                           , TB_DP_PROD               D1
+                                           , TB_DP_MULTIMDA_PROD      E1
+                                           , TB_DP_PROD_DESC          F1
+                                           , TB_DP_TENANT_PROD        G1
+                                           , TB_DP_PROD_RSHP          J1
+                                      WHERE  A1.TENANT_ID = B1.TENANT_ID
+                                        AND  A1.MENU_ID = B1.MENU_ID
+                                        AND  A1.SYSTEM_ID = B1.SYSTEM_ID
+                                        AND  B1.CATEGORY_NO = C1.CATEGORY_NO
+                                        AND  C1.PROD_ID = D1.PROD_ID
+                                        AND  D1.PROD_ID = E1.PROD_ID
+                                        AND  F1.PROD_ID = G1.PROD_ID
+                                        AND  A1.TENANT_ID = G1.TENANT_ID
+                                        AND  C1.PROD_ID = G1.PROD_ID
+                                        AND  C1.PROD_ID = J1.PROD_ID 
+                                        AND  A1.TENANT_ID = #tenantId#              /* INPUT 테넌트ID */
+                                        AND  A1.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
+                                        AND  A1.SYSTEM_ID = 'S009'           /* INPUT 시스템ID */
+                                        AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                                        AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                                        AND  C1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+                                        AND  C1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                                        AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+                                        AND  F1.LANG_CD = 'ko'               /* ko : 한국어 */
+                                        AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                                        AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                                        AND  D1.PROD_CHRG_YN ='N'            /* N 인경우 무료 */
+                                        AND  D1.PROD_GRD_CD ='PD004401'      /* PD004401:전체이용가,PD004402:12세이용가,PD004403:15세이용가,PD004404:청소년이용불가 */
+                                      --  AND  D1.DRM_YN ='Y'                  /* DRM 지원 구분 Y : 지원, N : 미지원*/ 
+                              )WHERE NO =1                                          
+                            ) K
+                            ,TB_DP_LIST_PROD L
+                            ,TB_DP_LIST M
+                      WHERE  A.TENANT_ID = B.TENANT_ID
+                        AND  A.MENU_ID = B.MENU_ID
+                        AND  A.SYSTEM_ID = B.SYSTEM_ID
+                        AND  B.CATEGORY_NO = C.CATEGORY_NO
+                        AND  C.PROD_ID = D.PROD_ID
+                        AND  D.PROD_ID = E.PROD_ID
+                        AND  E.PROD_ID = F.PROD_ID
+                        AND  F.PROD_ID = G.PROD_ID
+                        AND  A.TENANT_ID = G.TENANT_ID
+                        AND  G.PROD_ID = H.PROD_ID
+                        AND  G.TENANT_ID = H.TENANT_ID
+                        AND  G.PROD_ID = I.PROD_ID
+                        AND  G.TENANT_ID = I.TENANT_ID   
+                        AND  G.PROD_ID = J.PART_PROD_ID   
+                        AND  C.PROD_ID = L.PROD_ID
+                        AND  A.TENANT_ID = L.TENANT_ID
+                        AND  M.TENANT_ID = L.TENANT_ID
+                        AND  M.LIST_ID = L.LIST_ID
+                        AND  L.LIST_ID = #{listId}            /* ADM000000001 : 운영자 추천 웹툰 */
+                        AND  G.PROD_ID = K.PART_PROD_ID(+)
+                        AND  K.PART_PROD_ID IS NOT NULL
+                        AND  A.TENANT_ID = #{tenantId}#       /* INPUT 테넌트ID */
+                        AND  A.SYSTEM_ID = #{systemId}#     /* INPUT 시스템ID */
+                        AND  A.MENU_ID = 'MN26001'          /* MN26001 : 웹툰>코믹 */
+                        AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                        AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                        AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+                        AND  C.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                        AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+                        AND  F.LANG_CD = 'ko'               /* ko : 한국어 */
+                        AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                        AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                        AND  D.PROD_CHRG_YN ='N'            /* N 인경우 무료 */
+                        AND  L.EXPO_YN = 'Y'                  /* Y : 노출(노출여부) */
+                        AND  D.PROD_GRD_CD ='PD004401'      /* PD004401:전체이용가,PD004402:12세이용가,PD004403:15세이용가,PD004404:청소년이용불가 */
+                       -- AND  D.DRM_YN ='Y'                  /* DRM 지원 구분 Y : 지원, N : 미지원*/ 
+                        AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
+                        AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd}# )|| '%'  
+                  )
+               ) ka
+         WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>    
 </mapper>
