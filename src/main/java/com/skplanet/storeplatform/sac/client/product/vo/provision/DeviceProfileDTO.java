@@ -11,9 +11,9 @@ package com.skplanet.storeplatform.sac.client.product.vo.provision;
 
 import java.util.Map;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class DeviceProfileDTO extends CommonVO {
+public class DeviceProfileDTO extends CommonInfo {
 	private String deviceModelCd;
 	private String makeCompNm;
 	private String modelNm;

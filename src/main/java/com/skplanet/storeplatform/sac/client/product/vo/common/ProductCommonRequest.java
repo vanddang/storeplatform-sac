@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.client.product.vo.common;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class ProductCommonRequest extends CommonVO {
+public class ProductCommonRequest extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String menuId; // 메뉴ID
 

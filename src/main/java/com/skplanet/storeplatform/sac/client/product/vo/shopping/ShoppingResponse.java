@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.shopping;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 11. 28. Updated by : 김형식, SK 플래닛.
  */
-public class ShoppingResponse extends CommonVO {
+public class ShoppingResponse extends CommonInfo {
 	/**
 	 * 
 	 */

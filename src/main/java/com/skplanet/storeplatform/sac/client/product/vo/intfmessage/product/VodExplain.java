@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.VodProto;
 
 /**
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.VodProto;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(VodProto.Vod.VodExplain.class)
-public class VodExplain extends CommonVO implements Serializable {
+public class VodExplain extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String saleDateInfo; // BP가 직접 등록하는 방송일/개봉년도 정보

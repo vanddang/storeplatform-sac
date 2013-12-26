@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.ResearchProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 
@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(ResearchProto.Research.class)
-public class Research extends CommonVO implements Serializable {
+public class Research extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String name; // boxOffice : 영화 집계

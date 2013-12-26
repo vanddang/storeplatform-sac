@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.GiftProto;
 
 /**
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.GiftProto;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(GiftProto.Gift.class)
-public class Gift extends CommonVO implements Serializable {
+public class Gift extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/*

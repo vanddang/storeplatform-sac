@@ -11,14 +11,14 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Interface Message Support Value Object.
  * 
  * Updated on : 2013. 12. 24. Updated by : 이태희, SK 플래닛.
  */
-public class Support extends CommonVO implements Serializable {
+public class Support extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/*

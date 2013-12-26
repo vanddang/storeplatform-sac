@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.RightsProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 
@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(RightsProto.Rights.class)
-public class Rights extends CommonVO implements Serializable {
+public class Rights extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String allow; // 이용권한 (freepass : 자유이용권 지원, domestic : 국내만 지원, feedback : 사용후기 가능)

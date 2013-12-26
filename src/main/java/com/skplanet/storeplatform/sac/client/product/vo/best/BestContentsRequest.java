@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.best;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * BEST 컨텐츠 상품 조회 List Value Object.
@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 // @ProtobufMapping(BestAppProto.reqBestApp.class)
-public class BestContentsRequest extends CommonVO {
+public class BestContentsRequest extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String listId; // 리스트 Id

@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.BookProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Count;
 
@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Count
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @ProtobufMapping(BookProto.Book.class)
-public class Book extends CommonVO implements Serializable {
+public class Book extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 타입(연재물일 경우만 정의한다. > serial: 연재물

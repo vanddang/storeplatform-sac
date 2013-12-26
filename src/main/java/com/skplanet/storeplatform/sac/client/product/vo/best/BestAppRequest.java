@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.best;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.BestAppProto;
 
 /**
@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.BestAppProto;
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 @ProtobufMapping(BestAppProto.reqBestApp.class)
-public class BestAppRequest extends CommonVO {
+public class BestAppRequest extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String listId; // 리스트 Id

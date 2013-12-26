@@ -11,14 +11,14 @@ package com.skplanet.storeplatform.sac.client.product.vo.vod;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Vod 보관함 조회 Input Value Object.
  * 
  * Updated on : 2013. 12. 24. Updated by : 윤주영, SK 플래닛.
  */
-public class VodBoxRequest extends CommonVO implements Serializable {
+public class VodBoxRequest extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123143L;
 

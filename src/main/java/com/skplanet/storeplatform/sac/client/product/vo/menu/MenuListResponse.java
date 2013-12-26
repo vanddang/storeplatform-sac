@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.MenuListResProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 
@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
 @ProtobufMapping(MenuListResProto.MenuListResult.class)
-public class MenuListResponse extends CommonVO implements Serializable {
+public class MenuListResponse extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123126L;
 

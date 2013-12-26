@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.FreeIssuedBookInfoProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(FreeIssuedBookInfoProto.FreeIssuedBookInfo.class)
-public class FreeIssuedBookInfo extends CommonVO implements Serializable {
+public class FreeIssuedBookInfo extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Identifier identifier; // 무료 발행호 상품 ID

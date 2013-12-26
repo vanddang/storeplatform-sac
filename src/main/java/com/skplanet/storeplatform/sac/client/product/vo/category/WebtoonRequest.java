@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.category;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 웹툰 request Input Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 김형식, SK 플래닛.
  */
-public class WebtoonRequest extends CommonVO {
+public class WebtoonRequest extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // 테넌트ID

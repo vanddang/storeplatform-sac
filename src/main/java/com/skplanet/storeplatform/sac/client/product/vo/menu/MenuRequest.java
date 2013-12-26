@@ -11,14 +11,14 @@ package com.skplanet.storeplatform.sac.client.product.vo.menu;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 일반 상품 카테고리 리스트 조회 Input Value Object.
  * 
  * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
  */
-public class MenuRequest extends CommonVO implements Serializable {
+public class MenuRequest extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123129L;
 

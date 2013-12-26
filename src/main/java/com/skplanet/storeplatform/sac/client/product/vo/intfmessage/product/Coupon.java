@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.CouponProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -27,7 +27,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @ProtobufMapping(CouponProto.Coupon.class)
-public class Coupon extends CommonVO implements Serializable {
+public class Coupon extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 쿠폰 ID

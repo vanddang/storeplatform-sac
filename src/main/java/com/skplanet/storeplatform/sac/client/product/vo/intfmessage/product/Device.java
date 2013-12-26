@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.device.vo.DeviceProto;
 
 /**
@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.device.vo.DeviceProto;
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @ProtobufMapping(DeviceProto.Device.class)
-public class Device extends CommonVO implements Serializable {
+public class Device extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Device내 사용된 Language 정보 ([LANG}에 정의된 language Tag값을 갖음

@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.TitleProto;
 
 /**
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.TitleProto;
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(TitleProto.Title.class)
-public class Title extends CommonVO implements Serializable {
+public class Title extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String color; // 폰트 색상을 정의 (RGB 8:8:8 형태이며 Alpha channel은 사용하지 않는다.)

@@ -13,7 +13,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.menu;
 import java.io.Serializable;
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 
@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
  * 
  * Updated on : 2013. 12. 20. Updated by : 윤주영, SK 플래닛.
  */
-public class CategoryListResponse extends CommonVO implements Serializable {
+public class CategoryListResponse extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123128L;
 

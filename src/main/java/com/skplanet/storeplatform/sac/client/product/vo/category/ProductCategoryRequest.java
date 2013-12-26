@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.category;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 일반 카테고리 상품 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 이태희, SK 플래닛.
  */
-public class ProductCategoryRequest extends CommonVO {
+public class ProductCategoryRequest extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prodCharge; // 상품 유/무료 구분

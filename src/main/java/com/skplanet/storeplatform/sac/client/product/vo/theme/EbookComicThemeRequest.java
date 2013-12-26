@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.theme;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 일반/특정 상품 카테고리 리스트 조회 Input Value Object.
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-public class EbookComicThemeRequest extends CommonVO {
+public class EbookComicThemeRequest extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String listId; // 리스트 Id

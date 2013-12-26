@@ -1,8 +1,8 @@
 package com.skplanet.storeplatform.sac.client.product.vo.common;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class ProductCommonResponse extends CommonVO {
+public class ProductCommonResponse extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String errorCode; // 에러코드

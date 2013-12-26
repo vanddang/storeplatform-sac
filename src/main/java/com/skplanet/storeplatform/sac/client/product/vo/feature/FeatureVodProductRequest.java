@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.feature;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.FeatureVodProductProto;
 
 /**
@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.FeatureVodProductProto;
  * Updated on : 2013. 12. 23. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(FeatureVodProductProto.FeatureVodProductRequest.class)
-public class FeatureVodProductRequest extends CommonVO {
+public class FeatureVodProductRequest extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prodGradeCd; // 상품등급코드

@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.theme;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 일반/특정 상품 카테고리 리스트 조회 Input Value Object.
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-public class BrandShopThemeRequest extends CommonVO {
+public class BrandShopThemeRequest extends CommonInfo {
 
 	private String menuId; // 메뉴Id
 	private String brandshopId; // 테마존 Id

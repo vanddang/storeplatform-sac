@@ -15,7 +15,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 // @ProtobufMapping(BestContentsProto.resBestContents.class)
-public class BestContentsResponse extends CommonVO {
+public class BestContentsResponse extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;

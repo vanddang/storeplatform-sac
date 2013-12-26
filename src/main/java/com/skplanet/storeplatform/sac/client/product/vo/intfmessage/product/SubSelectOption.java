@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 
 import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SelectOptionProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @ProtobufMapping(SelectOptionProto.SelectOption.SubSelectOption.class)
-public class SubSelectOption extends CommonVO implements Serializable {
+public class SubSelectOption extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String subId; // 두번째 콤보에 들어갈 옵션 ID

@@ -13,13 +13,13 @@ package com.skplanet.storeplatform.sac.client.product.vo.menu;
 import java.io.Serializable;
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 
 /**
  * 카테고리 조회 Value Object. 최대 중-세 카테고리 정보 표현 Updated on : 2013. 12. 20. Updated by : 윤주영, SK 플래닛.
  */
-public class CategoryDetail extends CommonVO implements Serializable {
+public class CategoryDetail extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123127L;
 
