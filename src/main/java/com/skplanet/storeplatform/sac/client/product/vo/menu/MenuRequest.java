@@ -28,6 +28,8 @@ public class MenuRequest extends CommonVO implements Serializable {
 
 	private String systemId; // 시스템ID
 
+	private String imageSizeCd; // 이미지 사이즈 코드
+
 	public String getTenantId() {
 		return this.tenantId;
 	}
@@ -51,4 +53,13 @@ public class MenuRequest extends CommonVO implements Serializable {
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
 	}
+
+	public String getImageSizeCd() {
+		return this.imageSizeCd;
+	}
+
+	public void setImageSizeCd(String imageSizeCd) {
+		this.imageSizeCd = imageSizeCd;
+	}
+
 }
