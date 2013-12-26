@@ -113,7 +113,6 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// contributor
 			contributor.setName("장한나");
 
-			acc.setDownloadCount("3432");
 			acc.setScore(4.5);
 
 			// 상품 정보 (상품명)
@@ -129,10 +128,11 @@ public class WebtoonServiceImpl implements WebtoonService {
 
 			// 상품 정보 (상품가격)
 			price.setText(Integer.parseInt("0"));
+			date.setType("date");
 			date.setText("20130820190000");
 			// 데이터 매핑
 			product.setIdentifier(identifier);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setAccrual(acc);
 			product.setTitle(title);
 			// product.setRights(rights);
@@ -224,7 +224,6 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// contributor
 			contributor.setName("장한나");
 
-			acc.setDownloadCount("3432");
 			acc.setScore(4.5);
 
 			// 상품 정보 (상품명)
@@ -243,7 +242,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			date.setText("20130820190000");
 			// 데이터 매핑
 			product.setIdentifier(identifier);
-			product.setContributorList(contributor);
+			product.setContributor(contributor);
 			product.setAccrual(acc);
 			product.setTitle(title);
 			// product.setRights(rights);
