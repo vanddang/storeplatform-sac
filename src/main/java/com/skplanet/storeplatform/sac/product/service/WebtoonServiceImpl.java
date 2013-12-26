@@ -63,11 +63,13 @@ public class WebtoonServiceImpl implements WebtoonService {
 	public WebtoonResponse getWebtoonList(WebtoonRequest req) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception {
 
-		int totalCount = 0;
 		WebtoonResponse responseVO = null;
-		WebtoonRequest requestVO = new WebtoonRequest();
-		requestVO.setOffset(1);
-		requestVO.setCount(20);
+		req.setOffset(1);
+		req.setCount(20);
+		req.setTenantId("S01");
+		req.setSystemId("S009");
+		req.setWeekDayCd("SUN");
+
 		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
@@ -75,9 +77,8 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.selectWebtoonList", requestVO,
-		// WebtoonDTO.class);
-		List<WebtoonDTO> resultList = null;
+		List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req, WebtoonDTO.class);
+		// List<WebtoonDTO> resultList = null;
 
 		// if (resultList != null) {
 		WebtoonDTO webtoonDto = new WebtoonDTO();
@@ -174,11 +175,11 @@ public class WebtoonServiceImpl implements WebtoonService {
 	public WebtoonResponse getAdminWebtoonList(WebtoonRequest req) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
-		int totalCount = 0;
 		WebtoonResponse responseVO = null;
-		WebtoonRequest requestVO = new WebtoonRequest();
-		requestVO.setOffset(1);
-		requestVO.setCount(20);
+		req.setTenantId("S01");
+		req.setSystemId("S009");
+		req.setWeekDayCd("SUN");
+
 		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
@@ -186,9 +187,7 @@ public class WebtoonServiceImpl implements WebtoonService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.selectWebtoonList", requestVO,
-		// WebtoonDTO.class);
-		List<WebtoonDTO> resultList = null;
+		List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req, WebtoonDTO.class);
 
 		// if (resultList != null) {
 		WebtoonDTO webtoonDto = new WebtoonDTO();

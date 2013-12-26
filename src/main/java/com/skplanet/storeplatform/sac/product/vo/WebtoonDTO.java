@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.product.vo;
 
 /**
- * 메뉴 조회 Default Value Object.
+ * 웹툰 DTO Default Value Object.
  * 
  * Updated on : 2013. 12. 22. Updated by : 김형식, SK 플래닛.
  */
@@ -20,23 +20,21 @@ public class WebtoonDTO {
 	private String upMenuId;
 	private String menuId;
 	private String menuNm;
+	private String channelId;
 	private String prodId;
 	private String prodNm;
-	private String aid;
-	private String prodBaseDesc;
-	private String prodAmt;
 	private String prodGrdCd;
-	private String drmYn;
-	private String partParentClsfCd;
-	private String prodVer;
-	private String apkPkgNm;
-	private String apkVer;
-	private String apkFileSize;
-	private String prchsCnt;
-	private String avgEvluScore;
-	private String paticpersCnt;
-	private String imgFilePath;
-	private String upMenuNm;
+	private String avgScore;
+	private String prodAmt;
+	private String partCnt;
+	private String seriallyWkdy;
+	private String iconYn;
+	private String updDt;
+	private String chapter;
+	private String artist1Nm;
+	private String artist2Nm;
+	private String artist3Nm;
+	private String filePos;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -70,6 +68,14 @@ public class WebtoonDTO {
 		this.menuNm = menuNm;
 	}
 
+	public String getChannelId() {
+		return this.channelId;
+	}
+
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+
 	public String getProdId() {
 		return this.prodId;
 	}
@@ -86,20 +92,20 @@ public class WebtoonDTO {
 		this.prodNm = prodNm;
 	}
 
-	public String getAid() {
-		return this.aid;
+	public String getProdGrdCd() {
+		return this.prodGrdCd;
 	}
 
-	public void setAid(String aid) {
-		this.aid = aid;
+	public void setProdGrdCd(String prodGrdCd) {
+		this.prodGrdCd = prodGrdCd;
 	}
 
-	public String getProdBaseDesc() {
-		return this.prodBaseDesc;
+	public String getAvgScore() {
+		return this.avgScore;
 	}
 
-	public void setProdBaseDesc(String prodBaseDesc) {
-		this.prodBaseDesc = prodBaseDesc;
+	public void setAvgScore(String avgScore) {
+		this.avgScore = avgScore;
 	}
 
 	public String getProdAmt() {
@@ -110,99 +116,75 @@ public class WebtoonDTO {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getProdGrdCd() {
-		return this.prodGrdCd;
+	public String getPartCnt() {
+		return this.partCnt;
 	}
 
-	public void setProdGrdCd(String prodGrdCd) {
-		this.prodGrdCd = prodGrdCd;
+	public void setPartCnt(String partCnt) {
+		this.partCnt = partCnt;
 	}
 
-	public String getDrmYn() {
-		return this.drmYn;
+	public String getSeriallyWkdy() {
+		return this.seriallyWkdy;
 	}
 
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
+	public void setSeriallyWkdy(String seriallyWkdy) {
+		this.seriallyWkdy = seriallyWkdy;
 	}
 
-	public String getPartParentClsfCd() {
-		return this.partParentClsfCd;
+	public String getIconYn() {
+		return this.iconYn;
 	}
 
-	public void setPartParentClsfCd(String partParentClsfCd) {
-		this.partParentClsfCd = partParentClsfCd;
+	public void setIconYn(String iconYn) {
+		this.iconYn = iconYn;
 	}
 
-	public String getProdVer() {
-		return this.prodVer;
+	public String getUpdDt() {
+		return this.updDt;
 	}
 
-	public void setProdVer(String prodVer) {
-		this.prodVer = prodVer;
+	public void setUpdDt(String updDt) {
+		this.updDt = updDt;
 	}
 
-	public String getApkPkgNm() {
-		return this.apkPkgNm;
+	public String getChapter() {
+		return this.chapter;
 	}
 
-	public void setApkPkgNm(String apkPkgNm) {
-		this.apkPkgNm = apkPkgNm;
+	public void setChapter(String chapter) {
+		this.chapter = chapter;
 	}
 
-	public String getApkVer() {
-		return this.apkVer;
+	public String getArtist1Nm() {
+		return this.artist1Nm;
 	}
 
-	public void setApkVer(String apkVer) {
-		this.apkVer = apkVer;
+	public void setArtist1Nm(String artist1Nm) {
+		this.artist1Nm = artist1Nm;
 	}
 
-	public String getApkFileSize() {
-		return this.apkFileSize;
+	public String getArtist2Nm() {
+		return this.artist2Nm;
 	}
 
-	public void setApkFileSize(String apkFileSize) {
-		this.apkFileSize = apkFileSize;
+	public void setArtist2Nm(String artist2Nm) {
+		this.artist2Nm = artist2Nm;
 	}
 
-	public String getPrchsCnt() {
-		return this.prchsCnt;
+	public String getArtist3Nm() {
+		return this.artist3Nm;
 	}
 
-	public void setPrchsCnt(String prchsCnt) {
-		this.prchsCnt = prchsCnt;
+	public void setArtist3Nm(String artist3Nm) {
+		this.artist3Nm = artist3Nm;
 	}
 
-	public String getAvgEvluScore() {
-		return this.avgEvluScore;
+	public String getFilePos() {
+		return this.filePos;
 	}
 
-	public void setAvgEvluScore(String avgEvluScore) {
-		this.avgEvluScore = avgEvluScore;
-	}
-
-	public String getPaticpersCnt() {
-		return this.paticpersCnt;
-	}
-
-	public void setPaticpersCnt(String paticpersCnt) {
-		this.paticpersCnt = paticpersCnt;
-	}
-
-	public String getImgFilePath() {
-		return this.imgFilePath;
-	}
-
-	public void setImgFilePath(String imgFilePath) {
-		this.imgFilePath = imgFilePath;
-	}
-
-	public String getUpMenuNm() {
-		return this.upMenuNm;
-	}
-
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
+	public void setFilePos(String filePos) {
+		this.filePos = filePos;
 	}
 }
