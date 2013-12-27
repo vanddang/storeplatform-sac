@@ -9,16 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.client.product.vo.best;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.BestAppProto;
 
 /**
  * BEST 다운로드 상품 조회 List Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
-@ProtobufMapping(BestAppProto.reqBestApp.class)
 public class BestDownloadRequest extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
