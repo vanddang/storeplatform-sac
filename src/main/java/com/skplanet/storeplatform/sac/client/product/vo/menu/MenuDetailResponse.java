@@ -11,9 +11,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.menu;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.MenuDetailResProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 
 /**
@@ -21,7 +19,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * 
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
-@ProtobufMapping(MenuDetailResProto.MenuDetailResult.class)
 public class MenuDetailResponse extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123125L;
