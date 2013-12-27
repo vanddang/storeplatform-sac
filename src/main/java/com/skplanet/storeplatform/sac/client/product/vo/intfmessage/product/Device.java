@@ -13,16 +13,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.intfmessage.device.vo.DeviceProto;
 
 /**
  * Interface Message Device Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@ProtobufMapping(DeviceProto.Device.class)
 public class Device extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**

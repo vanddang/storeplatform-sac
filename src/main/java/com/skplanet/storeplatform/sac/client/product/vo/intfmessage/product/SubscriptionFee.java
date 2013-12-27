@@ -12,9 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SubscriptionProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 
@@ -23,7 +21,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
  * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(SubscriptionProto.Subscription.SubscriptionFee.class)
 public class SubscriptionFee extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 

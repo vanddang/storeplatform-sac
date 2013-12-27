@@ -11,16 +11,13 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.FeedbackProto;
 
 /**
  * Interface Message Feedback.Badge Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@ProtobufMapping(FeedbackProto.Feedback.Badge.class)
 public class Badge extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**

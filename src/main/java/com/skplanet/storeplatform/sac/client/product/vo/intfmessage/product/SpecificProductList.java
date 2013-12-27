@@ -12,9 +12,7 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.intfmessage.product.vo.SpecificProductListResultProto;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 
 /**
@@ -22,7 +20,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
-@ProtobufMapping(SpecificProductListResultProto.SpecificProductListResult.class)
 public class SpecificProductList extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 

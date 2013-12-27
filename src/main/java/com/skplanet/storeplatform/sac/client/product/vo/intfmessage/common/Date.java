@@ -11,16 +11,13 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.intfmessage.common.vo.DateProto;
 
 /**
  * Interface Message Date Value Object.
  * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
-@ProtobufMapping(DateProto.Date.class)
 public class Date extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
