@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.RecommendProductRequestP
  * 
  * Updated on : 2013. 12. 26. Updated by : 서영배, GTSOFT.
  */
-@ProtobufMapping(RecommendProductRequestProto.RecommendProductRequest.class)
+//@ProtobufMapping(RecommendProductRequestProto.RecommendProductRequest.class)
 public class RecommendProductRequest {
 
 	private static final long serialVersionUID = 1L;

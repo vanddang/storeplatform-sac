@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * 
  * Updated on : 2013. 12. 20. Updated by : 서영배, GTSOFT.
  */
-@ProtobufMapping(FeaturedProductProto.FeaturedProductList.class)
+//@ProtobufMapping(FeaturedProductProto.FeaturedProductList.class)
 public class RecommendResponseVO {
 	private CommonResponse commonResponse;
 	private List<RecommendProductVO> featureProductList;
