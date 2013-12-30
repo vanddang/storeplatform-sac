@@ -14,17 +14,41 @@
         
     <beans profile="local"> 
         <util:properties id="propertiesForSac" location="classpath:sac/properties/app.local.properties" /> 
+        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:conf/external.local.properties</value></list>
+            </property>
+        </bean>
     </beans>
 
     <beans profile="dev">
        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.dev.properties" /> 
+       <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:conf/external.dev.properties</value></list>
+            </property>
+        </bean>
     </beans>
 
     <beans profile="stag">   
         <util:properties id="propertiesForSac" location="classpath:sac/properties/app.stag.properties" /> 
+        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:conf/external.stag.properties</value></list>
+            </property>
+        </bean>
     </beans>
 
     <beans profile="real">
        <util:properties id="propertiesForSac" location="classpath:sac/properties/app.local.properties" /> 
+       <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+            <property name="fileEncoding" value="UTF-8" />
+            <property name="locations" >
+                <list merge="true"><value>classpath:conf/external.real.properties</value></list>
+            </property>
+        </bean>
     </beans> 
 </beans>
