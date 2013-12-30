@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Ident
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
@@ -66,7 +67,7 @@ public class VodBoxServiceImpl implements VodBoxService {
 	public VodBoxListResponse searchVodBoxList(VodBoxRequest requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
-		int totalCount = 5;
+		int totalCount = 1;
 
 		String filteredBy; // 차트 구분 코드
 		String imageSizeCd; // 이미지 사이즈 코드
@@ -100,97 +101,99 @@ public class VodBoxServiceImpl implements VodBoxService {
 			List<Product> productList = new ArrayList<Product>();
 			List<Menu> menuList = new ArrayList<Menu>();
 
-			for (int i = 1; i <= 5; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				Title title = new Title();
-				Menu menu = new Menu();
-				Rights rights = new Rights();
-				Preview preview = new Preview();
-				Source source = new Source();
-				Store store = new Store();
-				Price price = new Price();
+			// for (int i = 1; i <= 5; i++) {
+			Product product = new Product();
+			Identifier identifier = new Identifier();
+			Title title = new Title();
+			Menu menu = new Menu();
+			Rights rights = new Rights();
+			Preview preview = new Preview();
+			Source source = new Source();
+			Store store = new Store();
+			Price price = new Price();
 
-				Vod vod = new Vod();
-				VideoInfo videoInfo = new VideoInfo();
-				VodExplain vodExplain = new VodExplain();
+			Vod vod = new Vod();
+			Time runningTime = new Time();
+			VideoInfo videoInfo = new VideoInfo();
+			VodExplain vodExplain = new VodExplain();
 
-				Contributor contributor = new Contributor();
-				Date date = new Date();
+			Contributor contributor = new Contributor();
+			Date date = new Date();
 
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H900067185_" + i);
+			// 상품ID
+			identifier = new Identifier();
+			identifier.setType("btv");
+			identifier.setText("0001143511");
 
-				/*
-				 * TITLE
-				 */
-				title.setText("VOD 보관함");
+			/*
+			 * TITLE
+			 */
+			title.setText("구가의 서");
 
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				menu.setId("MenuId11" + i);
-				menu.setName("dummyMenuName11" + i);
-				menu.setType("dummyMenuType11" + i);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId111" + i);
-				menu.setName("dummyMenuName111" + i);
-				menu.setType("dummyMenuType111" + i);
-				menuList.add(menu);
+			/*
+			 * Menu(메뉴정보) Id, Name, Type
+			 */
+			menu.setId("MN000518");
+			menu.setName("방송");
+			menu.setType("topCategory");
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId("MN18001");
+			menu.setName("드라마");
+			menuList.add(menu);
 
-				rights.setGrade("1");
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType("media_" + i);
-				source.setSize("1024_" + i);
-				source.setType("thumbNail");
-				source.setUrl("http://./4_182_261_130x186.PNG");
+			rights.setGrade("1");
+			/*
+			 * source mediaType, size, type, url
+			 */
+			source.setMediaType("video/mp4");
+			source.setType("video/x-freeview-lq");
+			source.setUrl("http://../preview.mp4");
 
-				preview.setSource(source);
+			preview.setSource(source);
 
-				rights.setPreview(preview);
+			rights.setPreview(preview);
 
-				price.setText(0);
-				store.setPrice(price);
+			price.setText(700);
+			store.setPrice(price);
 
-				/*
-				 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
-				 */
-				contributor.setName("소녀시대");
-				contributor.setAlbum("The Great Escape" + i);
+			/*
+			 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
+			 */
+			contributor.setName("이승기,수지,이성재,조성하,유연석");
+			contributor.setChannel("MBC");
+			contributor.setArtist("이승기,수지,이성재,조성하,유연석");
+			contributor.setAlbum("");
 
-				/*
-				 * vod runningTime, videoInfo, vodExplain
-				 */
-				videoInfo.setType("PD002502");
-				videoInfo.setPixel("1090");
-				videoInfo.setPictureSize("2098");
-				videoInfo.setVersion(i + ".0");
-				videoInfo.setBtvcid("");
-				videoInfo.setSize("1024");
-				vod.setVideoInfo(videoInfo);
+			/*
+			 * vod runningTime, videoInfo, vodExplain
+			 */
+			runningTime.setUnit("16");
+			runningTime.setText("63");
 
-				date.setText("20131124");
-				date.setType("YYYYMMDD");
+			videoInfo.setScid("0002663073");
+			videoInfo.setType("normal");
+			videoInfo.setPixel("576x324");
+			videoInfo.setPictureSize("16:9");
+			videoInfo.setVersion("1");
+			videoInfo.setBtvcid("2222222222");
+			videoInfo.setSize("307990233");
 
-				vodExplain.setSaleDateInfo("20110331");
-				vodExplain.setText("이 vod로 말할 거 같으면... 어쩌구 저쩌구...");
-				vod.setVodExplain(vodExplain);
+			vod.setVideoInfo(videoInfo);
+			vod.setRunningTime(runningTime);
 
-				product = new Product();
-				product.setProductExplain("VOD 보관함 설명");
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setContributor(contributor);
+			date.setText("20130123152110");
 
-				productList.add(product);
+			product = new Product();
+			product.setProductExplain("무형도관에…");
+			product.setIdentifier(identifier);
+			product.setMenuList(menuList);
+			product.setTitle(title);
+			product.setContributor(contributor);
 
-			}
+			productList.add(product);
+
+			// }
 
 			responseVO = new VodBoxListResponse();
 			commonResponse = new CommonResponse();
