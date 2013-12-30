@@ -19,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.integration.serviceactivator.BypassUrlSearcher;
 import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo;
 
 /**
  * 바이패스 URL를 조회하는 구현클래스
@@ -43,7 +43,7 @@ public class SacBypassUrlSearcher implements BypassUrlSearcher {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("interfaceId", interfaceId);
 
-		BypassVO bypassVO = this.interfaceService.searchBypassUrl(params);
+		BypassInfo bypassVO = this.interfaceService.searchBypassUrl(params);
 
 		if (bypassVO == null)
 			throw new RuntimeException("bypass not found");

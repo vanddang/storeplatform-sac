@@ -17,11 +17,9 @@ import org.springframework.stereotype.Component;
 import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchase;
 import com.skplanet.storeplatform.sc.client.sci.PaymentSCI;
 import com.skplanet.storeplatform.sc.client.sci.PurchaseSCI;
-import com.skplanet.storeplatform.sc.client.sci.UserCareerSCI;
 import com.skplanet.storeplatform.sc.client.sci.UserSCI;
 import com.skplanet.storeplatform.sc.client.vo.Payment;
 import com.skplanet.storeplatform.sc.client.vo.Purchase;
-import com.skplanet.storeplatform.sc.client.vo.UserCareerSearch;
 import com.skplanet.storeplatform.sc.client.vo.UserSearch;
 
 /**
@@ -41,9 +39,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private PaymentSCI paymentSCI;
-
-	@Autowired
-	private UserCareerSCI userCareerSCI;
 
 	/**
 	 * MyPage 구매/결제 이력 상세 조회.
@@ -89,31 +84,6 @@ public class MemberServiceImpl implements MemberService {
 		resultVO.setPurchaseId(myPagePurchaseVO.getPurchaseId());
 
 		return resultVO;
-	}
-
-	@Override
-	public UserCareerSearch searchUserCareerSearchVO(String id, String userId, String careerId) {
-
-		return this.userCareerSCI.searchUser(id, userId, careerId);
-
-	}
-
-	@Override
-	public void createUser(UserCareerSearch userCareerSearchVO) {
-
-		this.userCareerSCI.createUser(userCareerSearchVO);
-
-	}
-
-	@Override
-	public void searchUserCareerSearchVOGetParam(String id, String name, String description) {
-		this.logger.info("id : {}, name : {}, description : {}", id, name, description);
-	}
-
-	@Override
-	public void searchUserCareerSearchVOGetObject(UserCareerSearch uerCareerSearchVO) {
-		this.logger.info("uerCareerSearchVO : {}", uerCareerSearchVO);
-
 	}
 
 }

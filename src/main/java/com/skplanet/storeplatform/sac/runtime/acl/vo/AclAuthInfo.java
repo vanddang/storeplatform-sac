@@ -18,7 +18,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 
  * Updated on : 2013. 11. 26. Updated by : 김현일, 인크로스.
  */
-public class AclAuthVO {
+public class AclAuthInfo {
 	private String systemId;
 	private String interfaceId;
 	private String statusCd;

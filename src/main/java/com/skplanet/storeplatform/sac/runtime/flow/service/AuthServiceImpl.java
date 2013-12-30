@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
 import com.skplanet.storeplatform.sac.runtime.acl.service.AclService;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.AclException;
 import com.skplanet.storeplatform.sac.runtime.flow.exception.code.AclErrorCode;
 import com.skplanet.storeplatform.sac.runtime.flow.vo.HeaderInfo;
@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
 		this.logger.info("메서드 실행 (authentication : " + headerInfo + ")");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("authKey", headerInfo.getAuthKey());
-		AclAuthKeyVO aclAuthKeyVO = this.aclService.searchAclAuthKey(params);
+		AclAuthKeyInfo aclAuthKeyVO = this.aclService.searchAclAuthKey(params);
 		if (aclAuthKeyVO == null) {
 			throw new AclException(ErrorMessageBuilder.create().code(AclErrorCode.NULL_ARGUMENT.name())
 					.arguments("authKeyVO", "null").build());
@@ -88,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("systemId", headerInfo.getSystemId());
 		params.put("url", headerInfo.getPath());
-		AclAuthVO aclAuthVO = this.aclService.searchAclAuth(params);
+		AclAuthInfo aclAuthVO = this.aclService.searchAclAuth(params);
 		if (aclAuthVO == null) {
 			throw new AclException(ErrorMessageBuilder.create().code(AclErrorCode.NULL_ARGUMENT.name())
 					.arguments("authVO", "null").build());

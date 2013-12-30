@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.member.service;
 
 import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchase;
-import com.skplanet.storeplatform.sc.client.vo.UserCareerSearch;
 
 /**
  * Member Service 인터페이스(CoreStoreBusiness)
@@ -28,11 +27,4 @@ public interface MemberService {
 	 */
 	MyPagePurchase searchMypagePurchase(MyPagePurchase myPagePurchase);
 
-	UserCareerSearch searchUserCareerSearchVO(String id, String userId, String careerId);
-
-	void createUser(UserCareerSearch userCareerSearchVO);
-
-	void searchUserCareerSearchVOGetParam(String id, String userId, String careerId);
-
-	void searchUserCareerSearchVOGetObject(UserCareerSearch uerCareerSearchVO);
 }

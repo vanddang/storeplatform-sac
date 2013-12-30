@@ -11,8 +11,8 @@ package com.skplanet.storeplatform.sac.runtime.acl.service;
 
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
 
 /**
  * 
@@ -32,7 +32,7 @@ public interface AclService {
 	 *            params
 	 * @return AclAuthKeyVO
 	 */
-	public AclAuthKeyVO searchAclAuthKey(Map<String, String> params);
+	public AclAuthKeyInfo searchAclAuthKey(Map<String, String> params);
 
 	/**
 	 * 
@@ -44,6 +44,6 @@ public interface AclService {
 	 *            params
 	 * @return AclAuthVO
 	 */
-	public AclAuthVO searchAclAuth(Map<String, String> params);
+	public AclAuthInfo searchAclAuth(Map<String, String> params);
 
 }

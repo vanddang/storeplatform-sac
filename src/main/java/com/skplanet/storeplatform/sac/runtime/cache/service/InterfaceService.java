@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.runtime.cache.service;
 
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
 
@@ -59,7 +59,7 @@ public interface InterfaceService {
 	 *            params
 	 * @return BypassVO
 	 */
-	public BypassVO searchBypassUrl(Map<String, String> params);
+	public BypassInfo searchBypassUrl(Map<String, String> params);
 
 	/**
 	 * 

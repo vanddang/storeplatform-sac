@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO;
-import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo;
 
 /**
  * 
@@ -40,8 +40,8 @@ public class AclServiceImpl implements AclService {
 	 * @see com.skplanet.storeplatform.sac.integration.v2.acl.service.AclService#searchAclAuthKey(java.util.Map)
 	 */
 	@Override
-	public AclAuthKeyVO searchAclAuthKey(Map<String, String> params) {
-		return this.commonDAO.queryForObject("Acl.searchAclAuthKey", params, AclAuthKeyVO.class);
+	public AclAuthKeyInfo searchAclAuthKey(Map<String, String> params) {
+		return this.commonDAO.queryForObject("Acl.searchAclAuthKey", params, AclAuthKeyInfo.class);
 	}
 
 	/*
@@ -50,7 +50,7 @@ public class AclServiceImpl implements AclService {
 	 * @see com.skplanet.storeplatform.sac.integration.v2.acl.service.AclService#searchAclAuth(java.util.Map)
 	 */
 	@Override
-	public AclAuthVO searchAclAuth(Map<String, String> params) {
-		return this.commonDAO.queryForObject("Acl.searchAclAuth", params, AclAuthVO.class);
+	public AclAuthInfo searchAclAuth(Map<String, String> params) {
+		return this.commonDAO.queryForObject("Acl.searchAclAuth", params, AclAuthInfo.class);
 	}
 }

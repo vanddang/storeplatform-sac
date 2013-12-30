@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 
  * Updated on : 2013. 11. 28. Updated by : 김현일, 인크로스.
  */
-public class AclAuthKeyVO {
+public class AclAuthKeyInfo {
 	private String tenantId;
 	private String systemId;
 	private String authKeyUseYn;

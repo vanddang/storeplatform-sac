@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.runtime.cache.vo;
 
-public class BypassVO {
+public class BypassInfo {
 	private String protocolNm;
 	private String domain;
 	private String port;

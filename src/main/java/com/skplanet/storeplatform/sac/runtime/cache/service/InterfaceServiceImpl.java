@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO;
+import com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 import com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo;
 
@@ -72,8 +72,8 @@ public class InterfaceServiceImpl implements InterfaceService {
 	 * @see com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService#searchBypassUrl(java.util.Map)
 	 */
 	@Override
-	public BypassVO searchBypassUrl(Map<String, String> params) {
-		return this.commonDAO.queryForObject("Interface.searchBypassUrl", params, BypassVO.class);
+	public BypassInfo searchBypassUrl(Map<String, String> params) {
+		return this.commonDAO.queryForObject("Interface.searchBypassUrl", params, BypassInfo.class);
 	}
 
 	/*
