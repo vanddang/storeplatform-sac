@@ -63,7 +63,7 @@ public class MusicContentsListServiceImpl implements MusicContentsListService {
 	public MusicContentsListResponse searchMusicContentsList(MusicContentsRequest requestVO)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 5;
+		int totalCount = 1;
 
 		String filteredBy; // 차트 구분 코드
 		String imageSizeCd; // 이미지 사이즈 코드
@@ -107,82 +107,90 @@ public class MusicContentsListServiceImpl implements MusicContentsListService {
 			List<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service> serviceList = new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service>();
 			Music music = new Music();
 
-			for (int i = 1; i <= 5; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				App app = new App();
-				Accrual accrual = new Accrual();
-				Rights rights = new Rights();
-				Source source = new Source();
-				Price price = new Price();
-				Title title = new Title();
-				Contributor contributor = new Contributor();
-				com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
+			// for (int i = 1; i <= 5; i++) {
+			Product product = new Product();
+			Identifier identifier = new Identifier();
+			App app = new App();
+			Accrual accrual = new Accrual();
+			Rights rights = new Rights();
+			Source source = new Source();
+			Price price = new Price();
+			Title title = new Title();
+			Contributor contributor = new Contributor();
+			com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
 
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H90005275_" + i);
+			// 상품ID
+			identifier = new Identifier();
+			identifier.setType("H001557945");
+			identifier.setText("episode:H001557946");
 
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				Menu menu = new Menu();
-				menu.setId("MenuId0" + i);
-				menu.setName("dummyMenuName0" + i);
-				menu.setType("dummyMenuType0" + i);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId1" + i);
-				menu.setName("dummyMenuName1" + i);
-				menu.setType("dummyMenuType1" + i);
-				menuList.add(menu);
+			/*
+			 * Menu(메뉴정보) Id, Name, Type
+			 */
+			Menu menu = new Menu();
+			menu.setId("MN05");
+			menu.setName("뮤직");
+			menu.setType("topClass");
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId("MN05001");
+			menu.setName("뮤직>가요");
+			menu.setType("");
+			menuList.add(menu);
 
-				/*
-				 * TITLE
-				 */
-				title.setText("음원 컨텐츠");
+			/*
+			 * TITLE
+			 */
+			title.setText("금요일에 만나요 (Feat. 장이정 Of HISTORY)");
 
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType("media_" + i);
-				source.setSize("1024_" + i);
-				source.setType("thumbNail");
-				source.setUrl("http://./4_182_261_130x186.PNG");
-				sourceList.add(source);
+			/*
+			 * source mediaType, size, type, url
+			 */
+			source.setMediaType("image/png");
+			source.setSize("128");
+			source.setType("thumbNail");
+			source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PMUSIC/201312/29/0002074441/10/0003894669/10/10_0002074441_200_200_1701_200x200_R130x130.PNG");
+			sourceList.add(source);
 
-				/*
-				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
-				 */
-				accrual.setChangeRank("0");
+			/*
+			 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
+			 */
+			accrual.setChangeRank("1");
 
-				/*
-				 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
-				 */
-				contributor.setName("소녀시대");
-				contributor.setAlbum("The Great Escape" + i);
+			/*
+			 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
+			 */
+			contributor.setName("아이유");
+			contributor.setAlbum("Modern Times - Epilogue");
 
-				/*
-				 * music
-				 */
-				service.setName("mp3");
-				service.setType("support");
-				serviceList.add(service);
-				music.setServiceList(serviceList);
+			/*
+			 * music
+			 */
+			service.setName("mp3");
+			service.setType("support");
+			serviceList.add(service);
 
-				product = new Product();
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setAccrual(accrual);
-				product.setTitle(title);
-				product.setSourceList(sourceList);
-				product.setContributor(contributor);
-				product.setMusic(music);
+			service.setName("bell");
+			service.setType("support");
+			serviceList.add(service);
 
-				productList.add(product);
+			service.setName("ring");
+			service.setType("support");
+			serviceList.add(service);
+			music.setServiceList(serviceList);
 
-			}
+			product = new Product();
+			product.setIdentifier(identifier);
+			product.setMenuList(menuList);
+			product.setAccrual(accrual);
+			product.setTitle(title);
+			product.setSourceList(sourceList);
+			product.setContributor(contributor);
+			product.setMusic(music);
+
+			productList.add(product);
+
+			// }
 
 			responseVO = new MusicContentsListResponse();
 			commonResponse = new CommonResponse();
