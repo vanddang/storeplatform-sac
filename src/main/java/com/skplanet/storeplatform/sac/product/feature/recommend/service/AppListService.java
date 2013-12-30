@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.product.feature.recommend.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductRequest;
 
 /**
@@ -27,6 +27,6 @@ public interface AppListService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	RecommendResponseVO searchAppList(RecommendProductRequest requestVO);
+	RecommendProductResponse searchAppList(RecommendProductRequest requestVO);
 
 }

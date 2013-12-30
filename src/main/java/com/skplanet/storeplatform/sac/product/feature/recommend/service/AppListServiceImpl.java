@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductVO;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductRequest;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -56,11 +56,11 @@ public class AppListServiceImpl implements AppListService {
 	 * @see com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public RecommendResponseVO searchAppList(RecommendProductRequest requestVO) {
+	public RecommendProductResponse searchAppList(RecommendProductRequest requestVO) {
 		// TODO Auto-generated method stub
 		//공통 응답 변수 선언
 		int totalCount = 0;
-		RecommendResponseVO responseVO = null;
+		RecommendProductResponse responseVO = null;
 		CommonResponse commonResponse = null;
 
 		//List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("Feature.selectTotalRecommendList", requestVO,
@@ -73,8 +73,8 @@ public class AppListServiceImpl implements AppListService {
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 
-		RecommendProductVO featureProductVO = null;
-		List<RecommendProductVO> listVO = new ArrayList<RecommendProductVO>();
+		//RecommendProductVO featureProductVO = null;
+		List<Product> listVO = new ArrayList<Product>();
 
 		for (int i = 0; i < 5; i++) {
 			Product product = new Product();
@@ -163,12 +163,12 @@ public class AppListServiceImpl implements AppListService {
 			product.setSourceList(sourceList);
 			product.setPrice(price);
 
-			featureProductVO = new RecommendProductVO();
-			featureProductVO.setProduct(product);
-			listVO.add(featureProductVO);
+			//featureProductVO = new RecommendProductVO();
+			//featureProductVO.setProduct(product);
+			listVO.add(product);
 
 		}
-		responseVO = new RecommendResponseVO();
+		responseVO = new RecommendProductResponse();
 		responseVO.setFeatureProductList(listVO);
 		return responseVO;
 	}

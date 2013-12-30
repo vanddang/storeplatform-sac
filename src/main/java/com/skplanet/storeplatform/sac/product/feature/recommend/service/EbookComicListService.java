@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.product.feature.recommend.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendResponseVO;
+import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductRequest;
 
 /**
@@ -28,5 +28,5 @@ public interface EbookComicListService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	RecommendResponseVO searchEbookComicList(RecommendProductRequest requestVO);
+	RecommendProductResponse searchEbookComicList(RecommendProductRequest requestVO);
 }
