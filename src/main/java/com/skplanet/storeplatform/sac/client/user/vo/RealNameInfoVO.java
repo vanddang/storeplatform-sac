@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.client.user.vo;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-
-@ProtobufMapping(RealNameInfoProto.RealNameInfo.class)
 public class RealNameInfoVO {
 
 	private String isRealName;
