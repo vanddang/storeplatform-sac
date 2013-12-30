@@ -23,6 +23,7 @@ public class WebtoonRequest extends CommonInfo {
 	private String systemId; // 시스템ID
 	private String imageCd; // 이미지코드
 	private String menuId; // 메뉴아이디
+	private String listId; // 리스트아이디
 	private String prodCharge; // 유료/무료 구분
 	private String prodGradeCd; // 상품등급코드
 	private String drm; // DRM 지원 구분
@@ -60,6 +61,14 @@ public class WebtoonRequest extends CommonInfo {
 
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	public String getListId() {
+		return listId;
+	}
+
+	public void setListId(String listId) {
+		this.listId = listId;
 	}
 
 	public String getProdCharge() {
