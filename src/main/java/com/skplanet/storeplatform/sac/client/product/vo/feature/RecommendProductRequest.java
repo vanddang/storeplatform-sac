@@ -1,15 +1,10 @@
 package com.skplanet.storeplatform.sac.client.product.vo.feature;
 
-import com.skplanet.storeplatform.framework.core.annotation.ProtobufMapping;
-import com.skplanet.storeplatform.framework.core.common.vo.CommonVO;
-import com.skplanet.storeplatform.sac.client.product.vo.RecommendProductRequestProto;
-
 /**
  * 추천 상품 (앱,멀티미디어) 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 26. Updated by : 서영배, GTSOFT.
  */
-//@ProtobufMapping(RecommendProductRequestProto.RecommendProductRequest.class)
 public class RecommendProductRequest {
 
 	private static final long serialVersionUID = 1L;
