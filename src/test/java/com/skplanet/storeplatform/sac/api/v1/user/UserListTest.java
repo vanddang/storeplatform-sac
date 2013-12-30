@@ -83,7 +83,16 @@ public class UserListTest {
 
 						assertThat(userListVO.getUserSearch(), notNullValue());
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.PROTOBUF, RunMode.JSON);
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		// new TestCaseTemplate(this.mockMvc).url("/bypass/user/search/1").httpMethod(HttpMethod.GET)
+		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .success(UserSearchList.class, new SuccessCallback() {
+		// @Override
+		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+		// UserSearchList userListVO = (UserSearchList) result;
+		//
+		// assertThat(userListVO.getUserSearch(), notNullValue());
+		// }
+		// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.PROTOBUF, RunMode.JSON);
 	}
-
 }

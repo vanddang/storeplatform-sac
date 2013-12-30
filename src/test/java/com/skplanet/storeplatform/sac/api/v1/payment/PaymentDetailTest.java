@@ -92,6 +92,24 @@ public class PaymentDetailTest {
 
 						assertThat(paymentVO, notNullValue());
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		// new TestCaseTemplate(this.mockMvc).url("/bypass/payment/detail/1").httpMethod(HttpMethod.POST)
+		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .requestBody(new RequestBodySetter() {
+		// @Override
+		// public Object requestBody() {
+		// Payment paymentVO = new Payment();
+		// paymentVO.setIdentifier("1001");
+		//
+		// return paymentVO;
+		// }
+		// }).success(Payment.class, new SuccessCallback() {
+		// @Override
+		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+		// Payment paymentVO = (Payment) result;
+		//
+		// assertThat(paymentVO, notNullValue());
+		// }
+		// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
 	}
 }

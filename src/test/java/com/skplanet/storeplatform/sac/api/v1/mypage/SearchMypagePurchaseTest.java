@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchaseVO;
+import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchase;
 
 /**
  * 마이페이지 구매 테스트
@@ -56,6 +56,8 @@ public class SearchMypagePurchaseTest {
 
 	private MockMvc mockMvc;
 
+	// private IdGenerator idgen;
+
 	/**
 	 * 
 	 * <pre>
@@ -65,6 +67,8 @@ public class SearchMypagePurchaseTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// this.idgen = IdGeneratorFactory.getDefaultInstance();
+
 	}
 
 	/**
@@ -75,13 +79,12 @@ public class SearchMypagePurchaseTest {
 	 */
 	@Test
 	public void shouldObtainMyPagePurchase() throws Exception {
-
 		new TestCaseTemplate(this.mockMvc).url("/entity/user/mypage/purchase/1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						MyPagePurchaseVO myPagePurchaseVO = new MyPagePurchaseVO();
+						MyPagePurchase myPagePurchaseVO = new MyPagePurchase();
 						myPagePurchaseVO.setPayId("999999999999");
 						myPagePurchaseVO.setId(Integer.MAX_VALUE);
 						myPagePurchaseVO.setPid("A123456789");
@@ -90,18 +93,42 @@ public class SearchMypagePurchaseTest {
 
 						return myPagePurchaseVO;
 					}
-				}).success(MyPagePurchaseVO.class, new SuccessCallback() {
+				}).success(MyPagePurchase.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						MyPagePurchaseVO myPagePurchaseVO = (MyPagePurchaseVO) result;
+						MyPagePurchase myPagePurchaseVO = (MyPagePurchase) result;
 
 						assertThat(myPagePurchaseVO.getPurchaseId(), notNullValue());
 						assertThat(myPagePurchaseVO.getId(), is(Integer.MAX_VALUE));
 						assertThat(myPagePurchaseVO.getNum(), is(Double.MAX_VALUE));
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED)
-				// .run(RunMode.JSON);
-				.run(RunMode.PROTOBUF);
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		// new TestCaseTemplate(this.mockMvc).url("/entity/user/mypage/purchase/1").httpMethod(HttpMethod.POST)
+		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .requestBody(new RequestBodySetter() {
+		// @Override
+		// public Object requestBody() {
+		// MyPagePurchase myPagePurchaseVO = new MyPagePurchase();
+		// myPagePurchaseVO.setPayId("999999999999");
+		// myPagePurchaseVO.setId(Integer.MAX_VALUE);
+		// myPagePurchaseVO.setPid("A123456789");
+		// myPagePurchaseVO.setNum(Double.MAX_VALUE);
+		// myPagePurchaseVO.setPurchaseId("111");
+		//
+		// return myPagePurchaseVO;
+		// }
+		// }).success(MyPagePurchase.class, new SuccessCallback() {
+		// @Override
+		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+		// MyPagePurchase myPagePurchaseVO = (MyPagePurchase) result;
+		//
+		// assertThat(myPagePurchaseVO.getPurchaseId(), notNullValue());
+		// assertThat(myPagePurchaseVO.getId(), is(Integer.MAX_VALUE));
+		// assertThat(myPagePurchaseVO.getNum(), is(Double.MAX_VALUE));
+		// }
+		// }, HttpStatus.OK, HttpStatus.ACCEPTED)
+		// // .run(RunMode.JSON);
+		// .run(RunMode.PROTOBUF);
 
 	}
 }

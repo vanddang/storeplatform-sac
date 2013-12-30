@@ -93,6 +93,25 @@ public class PurchaseDetailTest {
 
 						assertThat(purchaseVO, notNullValue());
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		// new TestCaseTemplate(this.mockMvc).url("/bypass/purchase/detail/1").httpMethod(HttpMethod.POST)
+		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .requestBody(new RequestBodySetter() {
+		// @Override
+		// public Object requestBody() {
+		// Purchase purchaseVO = new Purchase();
+		// purchaseVO.setId(10001);
+		// purchaseVO.setPid("A123456789");
+		//
+		// return purchaseVO;
+		// }
+		// }).success(Purchase.class, new SuccessCallback() {
+		// @Override
+		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+		// Purchase purchaseVO = (Purchase) result;
+		//
+		// assertThat(purchaseVO, notNullValue());
+		// }
+		// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
 	}
 }

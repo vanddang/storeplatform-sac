@@ -34,8 +34,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sc.client.vo.PaymentList;
 import com.skplanet.storeplatform.sc.client.vo.Payment;
+import com.skplanet.storeplatform.sc.client.vo.PaymentList;
 
 /**
  * 결제 목록 테스트
@@ -92,6 +92,23 @@ public class PaymentListTest {
 						PaymentList paymentListVO = (PaymentList) result;
 						assertThat(paymentListVO.getPayment(), notNullValue());
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+		// new TestCaseTemplate(this.mockMvc).url("/bypass/payment/search/1").httpMethod(HttpMethod.POST)
+		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .requestBody(new RequestBodySetter() {
+		// @Override
+		// public Object requestBody() {
+		// Payment paymentVO = new Payment();
+		// paymentVO.setIdentifier("1234");
+		//
+		// return paymentVO;
+		// }
+		// }).success(PaymentList.class, new SuccessCallback() {
+		// @Override
+		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+		// PaymentList paymentListVO = (PaymentList) result;
+		// assertThat(paymentListVO.getPayment(), notNullValue());
+		// }
+		// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
 	}
 }

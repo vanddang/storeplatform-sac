@@ -126,6 +126,43 @@ public class UserDetailTest {
 					public void error(Exception ex, HttpServletRequest request, HttpServletResponse response) {
 						// JUnit Assert 작성
 					}
-				}).run(RunMode.JSON, RunMode.PROTOBUF);
+				}).run(RunMode.JSON);
+		// final int userId = 10001;
+		//
+		// new TestCaseTemplate(this.mockMvc).url("/bypass/user/detail/1").httpMethod(HttpMethod.POST)
+		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .requestBody(new RequestBodySetter() {
+		// @Override
+		// public Object requestBody() {
+		// UserSearch userVO = new UserSearch();
+		//
+		// userVO.setId(userId);
+		// userVO.setName("name");
+		// userVO.setEmail("email");
+		// userVO.setRealName("realname");
+		//
+		// return userVO;
+		// }
+		// }).success(UserSearch.class, new SuccessCallback() {
+		// @Override
+		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+		// UserSearch resultVO = (UserSearch) result;
+		//
+		// assertThat(resultVO.getId(), is(userId));
+		// assertThat(resultVO.getName(), is("Name_1"));
+		// assertThat(resultVO.getEmail(), is("10001@sk.com"));
+		// assertThat(resultVO.getRealName(), is("Real Name_1"));
+		// }
+		// }, HttpStatus.OK, HttpStatus.ACCEPTED).complete(new CompleteCallback() {
+		// @Override
+		// public void complete(HttpServletRequest request, HttpServletResponse response) {
+		// // JUnit Assert 작성
+		// }
+		// }).error(new ErrorCallback() {
+		// @Override
+		// public void error(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+		// // JUnit Assert 작성
+		// }
+		// }).run(RunMode.JSON, RunMode.PROTOBUF);
 	}
 }
