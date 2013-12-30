@@ -9,7 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.service;
 
-import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchaseVO;
+import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchase;
+import com.skplanet.storeplatform.sc.client.vo.UserCareerSearch;
 
 /**
  * Member Service 인터페이스(CoreStoreBusiness)
@@ -25,6 +26,13 @@ public interface MemberService {
 	 *            마이페이지 구매/결제 내역
 	 * @return 마이페이지 구매/결제 내역
 	 */
-	MyPagePurchaseVO searchMypagePurchase(MyPagePurchaseVO myPagePurchaseVO);
+	MyPagePurchase searchMypagePurchase(MyPagePurchase myPagePurchase);
 
+	UserCareerSearch searchUserCareerSearchVO(String id, String userId, String careerId);
+
+	void createUser(UserCareerSearch userCareerSearchVO);
+
+	void searchUserCareerSearchVOGetParam(String id, String userId, String careerId);
+
+	void searchUserCareerSearchVOGetObject(UserCareerSearch uerCareerSearchVO);
 }
