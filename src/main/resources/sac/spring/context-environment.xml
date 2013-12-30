@@ -17,7 +17,7 @@
         <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
-                <list merge="true"><value>classpath:conf/external.local.properties</value></list>
+                <list merge="true"><value>classpath:sac/conf/external.local.properties</value></list>
             </property>
         </bean>
     </beans>
@@ -27,7 +27,7 @@
        <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
-                <list merge="true"><value>classpath:conf/external.dev.properties</value></list>
+                <list merge="true"><value>classpath:sac/conf/external.dev.properties</value></list>
             </property>
         </bean>
     </beans>
@@ -37,7 +37,7 @@
         <bean id="config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
             <property name="fileEncoding" value="UTF-8" />
             <property name="locations" >
-                <list merge="true"><value>classpath:conf/external.stag.properties</value></list>
+                <list merge="true"><value>classpath:sac/conf/external.stag.properties</value></list>
             </property>
         </bean>
     </beans>
