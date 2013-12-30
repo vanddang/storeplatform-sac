@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductVO;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.RecommendProductRequest;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
