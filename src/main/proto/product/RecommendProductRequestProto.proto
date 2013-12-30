@@ -1,0 +1,26 @@
+package prototype;
+
+option java_package = "com.skplanet.storeplatform.sac.client.product.vo";
+import "intfmessage/common/CommonResponseProto.proto";
+import "intfmessage/product/ProductProto.proto";
+
+// 추천 상품 (앱,멀티미디어) 조회 Request message
+message RecommendProductRequest {
+
+	required string listId = 1;         //리스트ID
+	required string drm = 2;         //drm여부
+	required string prodCharge = 3;         //유무료구분
+	required string prodGradeCd = 4;         //상품등급
+	required string hdv = 5;         //hdv
+    required string menuId = 6;         //메뉴ID
+    required string imageSideCd = 7;        //이미지코드
+    optional int32 offset = 8;          //offset
+    optional int32 count = 9;           //count
+    optional string filteredBy = 10;        //필터 조건
+}
+
+// 추천 상품 (앱,멀티미디어) 조회 Response message
+message RecommendProductResponse {
+    required com.skplanet.storeplatform.sac.client.intfmessage.common.vo.CommonResponse commonResponse = 1;
+    repeated com.skplanet.storeplatform.sac.client.intfmessage.product.vo.Product productList = 2;
+}
