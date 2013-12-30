@@ -21,4 +21,6 @@ public class TestConstants {
 
 	public static final String MEDIA_TYPE_APP_XPROTOBUF = "application/x-protobuf; charset=UTF-8";
 
+	public static final String MEDIA_TYPE_APP_JSON = "application/json; charset=UTF-8";
+
 }
