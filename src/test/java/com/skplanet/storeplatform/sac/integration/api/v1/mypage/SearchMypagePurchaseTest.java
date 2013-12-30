@@ -9,22 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.integration.api.v1.mypage;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.protobuf.AbstractMessage.Builder;
-import com.skplanet.storeplatform.framework.test.integration.ProtobufRequestBodySetter;
-import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokor;
-import com.skplanet.storeplatform.framework.test.integration.SuccessCallback;
-import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchaseProto;
-import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchaseProto.MyPagePurchase;
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
+import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorForJson;
+import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
+import com.skplanet.storeplatform.sac.client.user.vo.MyPagePurchase;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 
 /**
@@ -58,32 +56,60 @@ public class SearchMypagePurchaseTest {
 	 */
 	@Test
 	public void shouldObtainMypagePruchase() throws Exception {
-		StorePlatformAPIinvokor.create().url(TestConstants.SAC_URL + "/entity/user/mypage/purchase/1")
-				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_XPROTOBUF)
-				.contentType(TestConstants.MEDIA_TYPE_APP_XPROTOBUF)
+		StorePlatformAPIinvokorForJson.create().url(TestConstants.SAC_URL + "/entity/user/mypage/purchase/1")
+				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
+				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.requestBody(new ProtobufRequestBodySetter() {
+				.requestBody(new RequestBodySetter() {
 					@Override
-					public Builder body() {
-						return MyPagePurchaseProto.MyPagePurchase.newBuilder().setId(10001).setPid("A123456789");
+					public Object requestBody() {
+						MyPagePurchase myPagePurchase = new MyPagePurchase();
+						myPagePurchase.setId(10001);
+						myPagePurchase.setPid("A123456789");
+
+						return myPagePurchase;
 					}
-				}).success(new SuccessCallback() {
+				}).success(MyPagePurchase.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
 					};
 
 					@Override
-					public void success(byte[] result) throws Exception {
-						MyPagePurchase myPagePurchase = MyPagePurchaseProto.MyPagePurchase.newBuilder()
-								.mergeFrom(result).build();
+					public void success(Object result) throws Exception {
+						MyPagePurchase myPagePurchaseVO = (MyPagePurchase) result;
 
-						assertThat(myPagePurchase, notNullValue());
-
-						SearchMypagePurchaseTest.this.LOGGER.info("\r\n - result  : "
-								+ StringUtils.toString(result, "UTF-8"));
+						assertThat(myPagePurchaseVO.getPurchaseId(), notNullValue());
+						assertThat(myPagePurchaseVO.getId(), is(10001));
+						assertThat(myPagePurchaseVO.getPid(), is("A123456789"));
 					}
 				}).run();
-	}
 
+		// StorePlatformAPIinvokorForJson.create().url(TestConstants.SAC_URL + "/entity/user/mypage/purchase/1")
+		// .method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
+		// .contentType(TestConstants.MEDIA_TYPE_APP_JSON)
+		// .addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// public Object requestBody() {
+		// MyPagePurchase myPagePurchase = new MyPagePurchase();
+		// myPagePurchase.setId(10001);
+		// myPagePurchase.setPid("A123456789");
+		//
+		// return myPagePurchase;
+		// }
+		// }).success(MyPagePurchase.class, new SuccessCallbackForJson() {
+		// @Override
+		// public boolean isSuccess(int status) {
+		// return 200 <= status && status < 300;
+		// };
+		//
+		// @Override
+		// public void success(Object result) throws Exception {
+		// MyPagePurchase myPagePurchaseVO = (MyPagePurchase) result;
+		//
+		// assertThat(myPagePurchaseVO.getPurchaseId(), notNullValue());
+		// assertThat(myPagePurchaseVO.getId(), is(10001));
+		// assertThat(myPagePurchaseVO.getPid(), is("A123456789"));
+		// }
+		// }).run();
+	}
 }

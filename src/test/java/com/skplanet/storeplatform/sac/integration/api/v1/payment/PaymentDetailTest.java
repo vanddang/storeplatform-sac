@@ -12,20 +12,17 @@ package com.skplanet.storeplatform.sac.integration.api.v1.payment;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.protobuf.AbstractMessage.Builder;
-import com.skplanet.storeplatform.framework.test.integration.ProtobufRequestBodySetter;
-import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokor;
-import com.skplanet.storeplatform.framework.test.integration.SuccessCallback;
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
+import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorForJson;
+import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
-import com.skplanet.storeplatform.sc.client.payment.PaymentProto;
-import com.skplanet.storeplatform.sc.client.payment.PaymentProto.Payment;
+import com.skplanet.storeplatform.sc.client.vo.Payment;
 
 /**
  * 
@@ -58,29 +55,55 @@ public class PaymentDetailTest {
 	 */
 	@Test
 	public void shouldObtainPaymentDetail() throws Exception {
-		StorePlatformAPIinvokor.create().url(TestConstants.SAC_URL + "/bypass/payment/detail/1").method(HttpPost.class)
-				.accepts(TestConstants.MEDIA_TYPE_APP_XPROTOBUF).contentType(TestConstants.MEDIA_TYPE_APP_XPROTOBUF)
+		StorePlatformAPIinvokorForJson.create().url(TestConstants.SAC_URL + "/bypass/payment/detail/1")
+				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
+				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.requestBody(new ProtobufRequestBodySetter() {
+				.requestBody(new RequestBodySetter() {
+					@SuppressWarnings("rawtypes")
 					@Override
-					public Builder body() {
-						return PaymentProto.Payment.newBuilder().setIdentifier("10001");
+					public Object requestBody() {
+						Payment payment = new Payment();
+						payment.setIdentifier("10001");
+						return payment;
 					}
-				}).success(new SuccessCallback() {
+				}).success(Payment.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
 					};
 
 					@Override
-					public void success(byte[] result) throws Exception {
-						Payment payment = PaymentProto.Payment.newBuilder().mergeFrom(result).build();
+					public void success(Object result) throws Exception {
+						Payment payment = (Payment) result;
 
 						assertThat(payment, notNullValue());
-
-						PaymentDetailTest.this.LOGGER.info("\r\n - result  : " + StringUtils.toString(result, "UTF-8"));
 					}
 				}).run();
+		// StorePlatformAPIinvokor.create().url(TestConstants.SAC_URL +
+		// "/bypass/payment/detail/1").method(HttpPost.class)
+		// .accepts(TestConstants.MEDIA_TYPE_APP_XPROTOBUF).contentType(TestConstants.MEDIA_TYPE_APP_XPROTOBUF)
+		// .addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .requestBody(new ProtobufRequestBodySetter() {
+		// @Override
+		// public Builder body() {
+		// return PaymentProto.Payment.newBuilder().setIdentifier("10001");
+		// }
+		// }).success(new SuccessCallback() {
+		// @Override
+		// public boolean isSuccess(int status) {
+		// return 200 <= status && status < 300;
+		// };
+		//
+		// @Override
+		// public void success(byte[] result) throws Exception {
+		// Payment payment = PaymentProto.Payment.newBuilder().mergeFrom(result).build();
+		//
+		// assertThat(payment, notNullValue());
+		//
+		// PaymentDetailTest.this.LOGGER.info("\r\n - result  : " + StringUtils.toString(result, "UTF-8"));
+		// }
+		// }).run();
 	}
 
 }
