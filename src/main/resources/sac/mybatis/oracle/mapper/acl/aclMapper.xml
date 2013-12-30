@@ -14,7 +14,7 @@
     </select>
     
     <!-- 인증키 인증  -->
-    <select id="searchAclAuthKey" parameterType="string" resultType="AclAuthKeyVO">
+    <select id="searchAclAuthKey" parameterType="string" resultType="AclAuthKeyInfo">
 	     	  SELECT 
 	                  C.tenant_id,
 	                  B.system_id,
@@ -37,7 +37,7 @@
     
 
     <!-- 인증키 인증  -->
-    <select id="searchAclAuth" parameterType="map" resultType="AclAuthVO">
+    <select id="searchAclAuth" parameterType="map" resultType="AclAuthInfo">
 
 			SELECT 
 					A.system_id,

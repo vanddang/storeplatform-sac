@@ -25,11 +25,11 @@
 
     <!-- Definition of MAPPER Alias -->
     <typeAliases> 
-        <typeAlias alias="AclAuthKeyVO"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyVO" />
-        <typeAlias alias="AclAuthVO"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthVO" />
+        <typeAlias alias="AclAuthKeyInfo"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo" />
+        <typeAlias alias="AclAuthInfo"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo" />
         <typeAlias alias="InterfaceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo" />
         <typeAlias alias="ServiceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
-        <typeAlias alias="BypassVO"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassVO" />
+        <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
         
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
         <typeAlias alias="ProductCommonDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCommonDTO" />

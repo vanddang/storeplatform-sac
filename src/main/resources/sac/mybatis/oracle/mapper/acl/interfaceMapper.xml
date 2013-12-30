@@ -40,7 +40,7 @@
 		      WHERE A.interface_id = #{interfaceId}
     </select>
     
-    <select id="searchBypassUrl" parameterType="map" resultType="BypassVO">
+    <select id="searchBypassUrl" parameterType="map" resultType="BypassInfo">
 		   SELECT 
 		          'bypass' as bypass,
 		          C.protocol_cd,
