@@ -86,19 +86,17 @@
 			<version>5.1.26</version>
 		</dependency>
 		<!-- Web Libs -->
-		<!-- NOTE : 원래 톰캣에서 제공하는 라이브러러들은 scope를 provided 로 하는 것이 정석이나 mvcMock를 
-			사용하기 때문에 scope를 test로 변경함 -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2</version>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>taglibs</groupId>
