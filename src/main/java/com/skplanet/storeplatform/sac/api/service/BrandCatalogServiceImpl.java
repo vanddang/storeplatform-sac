@@ -1,0 +1,386 @@
+package com.skplanet.storeplatform.sac.api.service;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
+import com.skplanet.storeplatform.sac.api.except.CouponException;
+import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest;
+import com.skplanet.storeplatform.sac.product.vo.WebtoonDTO;
+
+public class BrandCatalogServiceImpl {
+
+	private final static Logger log = Logger.getLogger(BrandCatalogServiceImpl.class);
+	private final String errorCode = "";
+	private final String message = "";
+	CouponConstants couponcontants = new CouponConstants();
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
+
+	/**
+	 * 카테고리가 있는지 조회
+	 * 
+	 * @param dpBrandInfo
+	 * @throws DaoException
+	 */
+
+	public int selectCountBrandCategory(String dpCatNo) throws CouponException {
+		Integer cnt = null;
+		cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_TBL_DP_CAT", dpCatNo);
+		return cnt.intValue();
+	}
+
+	/**
+	 * 브랜드가 있는지 조회
+	 * 
+	 * @param dpBrandInfo
+	 * @throws DaoException
+	 */
+
+	public int selectBrandCountCudType(String brandId) throws CouponException {
+		int cnt = 0;
+		try {
+			WebtoonRequest req = new WebtoonRequest();
+			req.setOffset(1);
+			req.setCount(20);
+			req.setTenantId("S01");
+			req.setSystemId("S009");
+			req.setWeekDayCd("DP010101");
+			req.setImageCd("DP000196");
+
+			System.out.println("+++++++++++++++++++++++++LO11119999++++++++++++++++++++");
+			List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req, WebtoonDTO.class);
+			// cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
+			// System.out.println("+++++++++++++++++++++++++LO22229999++++++++++++++++++++");
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+		return cnt;
+	}
+
+	//
+	// /**
+	// * 카탈로그가 있는지 조회
+	// *
+	// * @param dpBrandInfo
+	// * @throws DaoException
+	// */
+	//
+	// public int selectCatalogCountCudType(String catalogId) throws CouponException {
+	// Integer cnt = null;
+	// try {
+	// cnt = (Integer) queryForObject("BrandCatalog.SELECT_CATALOG_COUNT_CUDTYPE", catalogId);
+	// } catch (DaoException e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID, "카탈로그의 catalogId 조회 실패", null);
+	// } catch (Exception e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+	// }
+	// return cnt.intValue();
+	// }
+	//
+	/**
+	 * brand 정보 넣기
+	 * 
+	 * @param dpBrandInfo
+	 * @throws DaoException
+	 */
+
+	public void insertBrandInfo(DpBrandInfo dpBrandInfo) throws CouponException {
+
+		try {
+
+			// CUD가 C로 왔을경우 해당 BRAND_ID로 등록된 브랜드가 없을 때
+			if (this.selectBrandCountCudType(dpBrandInfo.getBrandId()) < 1) {
+				// if (this.selectCountBrandCategory(dpBrandInfo.getDpCatNo()) > 0) {
+				// this.commonDAO.insert("BrandCatalog.INSERT_TBL_DP_BRAND_INFO", dpBrandInfo);
+				// } else {
+				// throw new CouponException(this.couponcontants.COUPON_IF_ERROR_CODE_NOT_CATID,
+				// "등록된 CATEGORY가 아닙니다. Category_Id = " + dpBrandInfo.getDpCatNo(), null);
+				// }
+			} else {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_BRID,
+						"해당 brand_id로 등록한 brand가 있습니다.", null);
+			}
+
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+	}
+
+	//
+	/**
+	 * brand 정보 수정
+	 * 
+	 * @param dpBrandInfo
+	 * @throws DaoException
+	 */
+
+	public void updateBrandInfo(DpBrandInfo dpBrandInfo) throws CouponException {
+
+		try {
+
+			if (this.selectBrandCountCudType(dpBrandInfo.getBrandId()) > 0) {
+				if (this.selectCountBrandCategory(dpBrandInfo.getDpCatNo()) > 0) {
+					this.commonDAO.update("BrandCatalog.UPDATE_TBL_DP_BRAND_INFO", dpBrandInfo);
+				} else {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
+							"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpBrandInfo.getDpCatNo(), null);
+				}
+			} else {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
+						"해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + dpBrandInfo.getBrandId(), null);
+			}
+
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+	}
+
+	//
+	// /**
+	// * Catalog 정보 넣기
+	// *
+	// * @param dpCatalogInfo
+	// * @throws DaoException
+	// */
+	//
+	// public void insertCatalogInfo(DpCatalogInfo dpCatalogInfo) throws CouponException {
+	//
+	// try {
+	//
+	// // CUD가 C로 왔을경우 해당 CATALOG_ID로 등록된 브랜드가 없을 때
+	// if (this.selectCatalogCountCudType(dpCatalogInfo.getCatalogId()) < 1) {
+	// // if(selectBrandCountCudType(dpCatalogInfo.getBrandId()) > 0){
+	// if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
+	//
+	// insert("BrandCatalog.INSERT_TBL_DP_CATALOG_INFO", dpCatalogInfo);
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
+	// "등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
+	// }
+	//
+	// // }else{
+	// // throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
+	// // "해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + dpCatalogInfo.getBrandId(), null);
+	// // }
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_CATALOGID,
+	// "해당 catalog_id로 등록한 catalog가 있습니다. CATALOG_ID = " + dpCatalogInfo.getCatalogId(), null);
+	// }
+	//
+	// } catch (DaoException e) {
+	// throw this.e;
+	// }
+	// }
+	//
+	// /**
+	// * Catalog 정보 수정
+	// *
+	// * @param dpCatalogInfo
+	// * @throws DaoException
+	// */
+	//
+	// public void updateCatalogInfo(DpCatalogInfo dpCatalogInfo) throws CouponException {
+	//
+	// try {
+	//
+	// if (this.selectCatalogCountCudType(dpCatalogInfo.getCatalogId()) > 0) {
+	// if (this.selectBrandCountCudType(dpCatalogInfo.getBrandId()) > 0) {
+	// if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
+	//
+	// update("BrandCatalog.UPDATE_TBL_DP_CATALOG_INFO", dpCatalogInfo);
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
+	// "등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
+	// }
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
+	// "해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + dpCatalogInfo.getBrandId(), null);
+	// }
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_CATALOGID,
+	// "해당 catalog_id로 등록한 catalog가 있습니다. CATALOG_ID = " + dpCatalogInfo.getCatalogId(), null);
+	// }
+	//
+	// } catch (CouponException e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
+	// "해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + dpCatalogInfo.getBrandId(), null);
+	// }
+	// }
+	//
+	// /**
+	// * Catalog Tag 넣기
+	// *
+	// * @param dpCatalogInfo
+	// * @throws DaoException
+	// */
+	//
+	// public void insertTblTagInfo(DpCatalogTagInfo tagInfo) throws CouponException {
+	//
+	// try {
+	//
+	// update("BrandCatalog.INSERT_TBL_TAG_INFO", tagInfo);
+	//
+	// } catch (DaoException e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, "전시 태그 정보 INSERT 실패", null);
+	// }
+	// }
+	//
+	// /**
+	// * TBL_TAG_INFO를 삭제 한다.
+	// */
+	// public void deleteTblTagInfo(String cId) throws CouponException {
+	//
+	// try {
+	// log.info("prodId = " + cId);
+	// delete("BrandCatalog.DELETE_TBL_TAG_INFO", cId);
+	// } catch (DaoException e) {
+	// log.error("updateChannelToTblDpProdImg", e);
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, "TBL_TAG_INFO 삭제 실패", null);
+	// } catch (Exception e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+	// }
+	// }
+	//
+	// /**
+	// * 전시 상품 이미지 테이블에 추가 한다.
+	// *
+	// * @param brandCatalogProdImgInfo
+	// * 전시 상품 이미지 정보
+	// */
+	// public void insertTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo) throws CouponException {
+	// try {
+	// // if ( selectCountTblDpProdImg(brandCatalogProdImgInfo) < 1 )
+	// insert("BrandCatalog.INSERT_BRAND_CATALOG_TBL_DP_PROD_IMG", brandCatalogProdImgInfo);
+	// // else
+	// // updateTblDpProdImg(brandCatalogProdImgInfo);
+	// } catch (DaoException e) {
+	// log.error("insertChannelToTblDpProdImg", e);
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, "전시 상품 이미지 INSERT 실패", null);
+	// } catch (Exception e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+	// }
+	// }
+	//
+	// /**
+	// * 전시 상품 이미지 테이블에 삭제 한다.
+	// *
+	// * @param dpProdImgInfo
+	// * 전시 상품 이미지 정보
+	// */
+	// public void deleteDpProdImg(String prodId) throws CouponException {
+	//
+	// try {
+	// log.info("prodId = " + prodId);
+	// delete("BrandCatalog.DELETE_BRAND_CATALOG_TBL_DP_PROD_IMG", prodId);
+	// } catch (DaoException e) {
+	// log.error("updateChannelToTblDpProdImg", e);
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, "전시 상품 이미지 삭제 실패", null);
+	// } catch (Exception e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+	// }
+	// }
+	//
+	// /**
+	// * 전시 상품 이미지 테이블에서 값이 존재하는지 카운트.
+	// *
+	// * @param brandCatalogProdImgInfo
+	// * 전시 상품 정보
+	// */
+	// public int selectCountTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo) throws CouponException {
+	// Integer cnt = null;
+	// try {
+	// cnt = (Integer) queryForObject("BrandCatalog.SELECT_COUNT_TBL_DP_PROD_IMG", brandCatalogProdImgInfo);
+	// } catch (DaoException e) {
+	// log.error("selectCountTblDpProdImg", e);
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, "전시 상품 이미지 테이블 카운트 실패", null);
+	// } catch (Exception e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+	// }
+	// return cnt.intValue();
+	// }
+	//
+	// /**
+	// * 전시 상품 이미지 테이블에 수정 한다.
+	// *
+	// * @param dpProdImgInfo
+	// * 전시 상품 이미지 정보
+	// */
+	// public void updateTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo) throws CouponException {
+	// try {
+	// update("BrandCatalog.UPDATE_TBL_DP_PROD_IMG", brandCatalogProdImgInfo);
+	// } catch (DaoException e) {
+	// log.error("updateChannelToTblDpProdImg", e);
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, "전시 상품 이미지 수정 실패", null);
+	// } catch (Exception e) {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+	// }
+	// }
+	//
+	// /**
+	// * 브랜드 Brand_Id SELECT
+	// */
+	// public String getCreateBrandId(String brandId) throws CouponException {
+	//
+	// try {
+	// if (this.selectBrandCountCudType(brandId) > 0) {
+	//
+	// return (String) queryForObject("BrandCatalog.SELECT_BRAND_ID", brandId);
+	//
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
+	// "해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + brandId, null);
+	// }
+	//
+	// } catch (DaoException e) {
+	// throw e;
+	// }
+	// }
+	//
+	// /**
+	// * 카탈로그 Catalog_Id SELECT
+	// */
+	// public String getCreateCatalogId(String catalogId) throws CouponException {
+	//
+	// try {
+	// if (this.selectCatalogCountCudType(catalogId) > 0) {
+	//
+	// return (String) queryForObject("BrandCatalog.SELECT_CATALOG_ID", catalogId);
+	//
+	// } else {
+	// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID,
+	// "해당 catalog_id로 등록한 catalog가 없습니다. CATALOG_ID = " + catalogId, null);
+	// }
+	//
+	// } catch (DaoException e) {
+	// throw e;
+	// }
+	// }
+	//
+	// /**
+	// * 브랜드 카탈로그 REPOSITORY_PATH SELECT
+	// */
+	// public String getLabelForQuery(Object[] params) {
+	// HashMap<String, Object> paramMap = new HashMap<String, Object>();
+	//
+	// try {
+	// if (params != null) {
+	// for (int i = 0; i < params.length; i++) {
+	// paramMap.put("PARAM" + i, params[i]);
+	// }
+	// }
+	// return (String) queryForObject("BrandCatalog.SELECT_REPOSITORY_PATH", paramMap);
+	// } catch (DaoException de) {
+	// log.error("■■■■■    getLabelForQuery() ■■■■■");
+	// log.error(de.getMessage());
+	// throw new InfraException("getLabelForQuery()", "select Fail", de);
+	// }
+	// }
+
+}

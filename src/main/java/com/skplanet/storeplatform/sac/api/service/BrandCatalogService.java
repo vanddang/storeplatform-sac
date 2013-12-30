@@ -12,9 +12,12 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
+import com.skplanet.storeplatform.sac.api.dao.BrandCatalogDao;
+import com.skplanet.storeplatform.sac.api.dao.BrandCatalogDaoImpl;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.ImageUtil;
@@ -27,15 +30,16 @@ public class BrandCatalogService {
 
 	private final static Logger log = Logger.getLogger(BrandCatalogService.class);
 
-	private final String errorCode = "";
-	private final String message = "";
+	private String errorCode = "";
+	private String message = "";
 	BrandCatalogProdImgInfo brandCatalogProdImgInfo = new BrandCatalogProdImgInfo();
 	private final ArrayList<DpCatalogTagInfo> tagList = new ArrayList<DpCatalogTagInfo>(); // TBL_DP_TAG_INFO 정보
 	CouponConstants couponcontants = new CouponConstants();
+	private BrandCatalogDao dao = null;
 
-	/**
-	 * 생성자
-	 */
+	public BrandCatalogService() {
+		this.dao = new BrandCatalogDaoImpl();
+	}
 
 	/**
 	 * 브랜드 정보를 추가한다.
@@ -48,7 +52,7 @@ public class BrandCatalogService {
 
 		String BrandImgPath = null;
 		String DecodeBrandImgPath = null;
-		System.out.println("+++++++++++++++++++++++++LO44444++++++++++++++++++++");
+
 		try {
 
 			// System.out.println("dpBrandInfo.getBrandId() = " + dpBrandInfo.getBrandId());
@@ -71,20 +75,22 @@ public class BrandCatalogService {
 				System.out.println("+++++++++++++++++++++++++LO66666++++++++++++++++++++");
 				// 브랜드ID 생성
 				// IDGeneratorService idGen = new IDGeneratorService();
+				// String brandId = (String) this.commonDAO.queryForObject("", String.class);
+				String brandId = "BR00009999";
 				// String brandID = idGen.generateId("TBL_DP_TSP_BRAND_INFO.BRAND_ID");
 
-				// if (StringUtils.isBlank(brandID)) {
-				// this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
-				// this.message = "[COUPON_CONTENT_ID]를 생성하지 못했습니다.";
-				// return false;
-				// }
+				if (StringUtils.isBlank(brandId)) {
+					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
+					this.message = "[COUPON_CONTENT_ID]를 생성하지 못했습니다.";
+					return false;
+				}
 
-				// dpBrandInfo.setCreateBrandId(brandID);
-				// System.out.println("dpBrandInfo.getCreateBrandId() = " + dpBrandInfo.getCreateBrandId());
+				dpBrandInfo.setCreateBrandId(brandId);
+				System.out.println("dpBrandInfo.getCreateBrandId() = " + dpBrandInfo.getCreateBrandId());
 				System.out.println("+++++++++++++++++++++++++LO77777++++++++++++++++++++");
 				// 신규등록일시 TBL_DP_TSP_BRAND_INFO테이블 INSERT
-				// this.dao.insertBrandInfo(dpBrandInfo);
-
+				this.dao.insertBrandInfo(dpBrandInfo);
+				System.out.println("+++++++++++++++++++++++++LO8888++++++++++++++++++++");
 			} else if ("U".equalsIgnoreCase(dpBrandInfo.getCudType())) {
 				System.out.println("***** BrandCatalogService.updateBrandInfo *****");
 

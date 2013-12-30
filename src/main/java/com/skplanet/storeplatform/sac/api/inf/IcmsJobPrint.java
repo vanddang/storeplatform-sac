@@ -17,7 +17,9 @@ package com.skplanet.storeplatform.sac.api.inf;
 
 import org.apache.log4j.Logger;
 
+import com.google.protobuf.ServiceException;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
+import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 
 public class IcmsJobPrint {
 
@@ -53,40 +55,38 @@ public class IcmsJobPrint {
 		return true;
 	}
 
-	// public static boolean printCatalog(DpCatalogInfo info,String title) throws Exception {
-	//
-	// StringBuffer debugMsg = new StringBuffer();
-	//
-	// try {
-	//
-	//
-	// debugMsg.append("################################### CATALOG INFO ["+ title
-	// +"] CATALOG INFO #################################### \n");
-	// debugMsg.append("catalogId = " + info.getCatalogId() + " \n");
-	// debugMsg.append("dpCatNo = " + info.getDpCatNo() + " \n");
-	// debugMsg.append("brandId = " + info.getBrandId() + " \n");
-	// debugMsg.append("catalogDesc = " + info.getCatalogDesc() + " \n");
-	// debugMsg.append("catalogNm = " + info.getCatalogNm() + " \n");
-	// debugMsg.append("topImgPath = " + info.getTopImgPath() + " \n");
-	// debugMsg.append("dtlImgPath = " + info.getDtlImgPath() + " \n");
-	//
-	//
-	// debugMsg.append("txType = " + info.getTxType() + " \n");
-	// debugMsg.append("cudType = " + info.getCudType() + " \n");
-	// debugMsg.append("################################### CATALOG INFO ["+ title
-	// +"] CATALOG INFO #################################### \n");
-	//
-	// log.debug(debugMsg.toString());
-	// debugMsg.setLength(0);
-	// debugMsg = null;
-	//
-	// }catch (Exception e) {
-	// log.error("■■■■■printCatalog()■■■■■ : " + e.getMessage());
-	// log.debug(e);
-	// throw new ServiceException("printCatalog  Fail", e);
-	// }
-	//
-	// return true;
-	// }
+	public static boolean printCatalog(DpCatalogInfo info, String title) throws Exception {
+
+		StringBuffer debugMsg = new StringBuffer();
+
+		try {
+
+			debugMsg.append("################################### CATALOG INFO [" + title
+					+ "] CATALOG INFO #################################### \n");
+			debugMsg.append("catalogId = " + info.getCatalogId() + " \n");
+			debugMsg.append("dpCatNo = " + info.getDpCatNo() + " \n");
+			debugMsg.append("brandId = " + info.getBrandId() + " \n");
+			debugMsg.append("catalogDesc = " + info.getCatalogDesc() + " \n");
+			debugMsg.append("catalogNm = " + info.getCatalogNm() + " \n");
+			debugMsg.append("topImgPath = " + info.getTopImgPath() + " \n");
+			debugMsg.append("dtlImgPath = " + info.getDtlImgPath() + " \n");
+
+			debugMsg.append("txType = " + info.getTxType() + " \n");
+			debugMsg.append("cudType = " + info.getCudType() + " \n");
+			debugMsg.append("################################### CATALOG INFO [" + title
+					+ "] CATALOG INFO #################################### \n");
+
+			log.debug(debugMsg.toString());
+			debugMsg.setLength(0);
+			debugMsg = null;
+
+		} catch (Exception e) {
+			log.error("■■■■■printCatalog()■■■■■ : " + e.getMessage());
+			log.debug(e);
+			throw new ServiceException("printCatalog  Fail", e);
+		}
+
+		return true;
+	}
 
 }
