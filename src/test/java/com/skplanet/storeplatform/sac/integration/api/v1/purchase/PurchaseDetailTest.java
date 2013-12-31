@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
-import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorForJson;
+import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 import com.skplanet.storeplatform.sc.client.vo.Purchase;
@@ -55,7 +55,7 @@ public class PurchaseDetailTest {
 	 */
 	@Test
 	public void shouldObtainPurchaseDetail() throws Exception {
-		StorePlatformAPIinvokorForJson.create().url(TestConstants.SAC_URL + "/bypass/purchase/detail/1")
+		StorePlatformAPIinvokorNew.create().url(TestConstants.SAC_URL + "/bypass/purchase/detail/1")
 				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
 				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
