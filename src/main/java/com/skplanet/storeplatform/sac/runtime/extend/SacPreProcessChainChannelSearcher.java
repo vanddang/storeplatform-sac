@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.runtime.extend;
 
-import org.springframework.stereotype.Component;
-
 import com.skplanet.storeplatform.framework.integration.router.PreProcessChainChannelSearcher;
 
 /**
@@ -10,7 +8,7 @@ import com.skplanet.storeplatform.framework.integration.router.PreProcessChainCh
  * 
  * Updated on : 2013. 11. 28. Updated by : 김현일, 인크로스.
  */
-@Component
+// @Component
 public class SacPreProcessChainChannelSearcher implements PreProcessChainChannelSearcher {
 
 	@Override

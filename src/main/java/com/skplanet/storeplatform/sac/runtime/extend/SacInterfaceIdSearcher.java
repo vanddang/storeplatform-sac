@@ -1,17 +1,10 @@
 package com.skplanet.storeplatform.sac.runtime.extend;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.integration.MessageHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.framework.integration.serviceactivator.InterfaceIdSearcher;
-import com.skplanet.storeplatform.sac.runtime.acl.constant.AclConstant;
-import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 
 /**
  * 인터페이스ID를 조회하는 클래스
@@ -21,22 +14,19 @@ import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 @Component
 public class SacInterfaceIdSearcher implements InterfaceIdSearcher {
 
-	@Autowired
-	private InterfaceService interfaceService;
+	private final String defaultInterfaceId = "I02000001";
 
 	@Override
 	public String search(MessageHeaders headers) {
 
-		String url = (String) headers.get(AclConstant.HEADER_HTTP_REQUEST_URL);
-		String path = UriComponentsBuilder.fromHttpUrl(url).build().getPath();
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("url", path);
+		String interfaceId = (String) headers.get("x-sac-interface-id");
 
-		InterfaceInfo interfaceInfo = this.interfaceService.searchDetail(params);
+		if (StringUtils.isEmpty(interfaceId))
+			return this.defaultInterfaceId;
 
-		if (interfaceInfo == null)
-			throw new RuntimeException("interfaceId not found");
+		if (interfaceId.length() != 9)
+			throw new RuntimeException("인터페이스 ID Length 오류.");
 
-		return interfaceInfo.getInterfaceId();
+		return interfaceId;
 	}
 }

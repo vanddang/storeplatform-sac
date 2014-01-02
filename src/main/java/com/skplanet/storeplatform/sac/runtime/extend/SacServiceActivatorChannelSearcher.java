@@ -9,16 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.integration.router.ServiceActivatorChannelSearcher;
-import com.skplanet.storeplatform.sac.runtime.cache.service.InterfaceService;
-import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 
 /**
  * 서비스 액티베이터 채널 조회자 클래스
@@ -28,23 +21,8 @@ import com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo;
 @Component
 public class SacServiceActivatorChannelSearcher implements ServiceActivatorChannelSearcher {
 
-	@Autowired
-	private InterfaceService interfaceService;
-
 	@Override
 	public String search(String interfaceId) {
-
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("interfaceId", interfaceId);
-		InterfaceInfo interfaceInfo = this.interfaceService.searchDetail(params);
-
-		String channelName = this.interfaceService.searchChannelName(interfaceInfo.getBypassYn(), params);
-
-		if (StringUtils.isEmpty(channelName))
-			throw new RuntimeException("channelName not found");
-
-		return channelName;
-
+		return "bypassChannel";
 	}
-
 }
