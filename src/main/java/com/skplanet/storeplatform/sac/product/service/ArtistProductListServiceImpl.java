@@ -27,11 +27,9 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Bell;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -63,7 +61,7 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 	public RelatedProductListResponse searchArtistProductList(RelatedProductRequest requestVO)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 5;
+		int totalCount = 1;
 
 		RelatedProductListResponse responseVO = null;
 		CommonResponse commonResponse = null;
@@ -81,7 +79,6 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 
 				Identifier identifier = new Identifier();
 				Title title = new Title();
-				Price price = new Price();
 				Menu menu = new Menu();
 				Source source = new Source();
 				Accrual accrual = new Accrual();
@@ -93,49 +90,43 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H90005501_" + i);
+				identifier.setType("H001557945");
+				identifier.setText("episode:H001557946");
 
 				/*
 				 * Menu(메뉴정보) Id, Name, Type
 				 */
-				menu.setId("MenuId10" + i);
-				menu.setName("dummyMenuName10" + i);
-				menu.setType("dummyMenuType10" + i);
+				menu.setId("MN05");
+				menu.setName("뮤직");
+				menu.setType("topClass");
 				menuList.add(menu);
 				menu = new Menu();
-				menu.setId("dummyMenuId101" + i);
-				menu.setName("dummyMenuName101" + i);
-				menu.setType("dummyMenuType101" + i);
+				menu.setId("MN05001");
+				menu.setName("뮤직>가요");
+				menu.setType("");
 				menuList.add(menu);
 
 				/*
 				 * TITLE
 				 */
-				title.setText("특정 아티스트별(곡) 상품 리스트");
-
-				price.setText(1000000);
+				title.setText("금요일에 만나요 (Feat. 장이정 Of HISTORY)");
 
 				/*
 				 * source mediaType, size, type, url
 				 */
-				for (int j = 1; j < 4; j++) {
-					source.setMediaType("media_" + (i + j));
-					source.setSize("1024_" + (i + j));
-					source.setType("thumbNail");
-					source.setUrl("http://./4_182_261_130x186.PNG");
-					sourceList.add(source);
-				}
+				source.setMediaType("image/png");
+				source.setSize("128");
+				source.setType("thumbNail");
+				source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PMUSIC/201312/29/0002074441/10/0003894669/10/10_0002074441_200_200_1701_200x200_R130x130.PNG");
+				sourceList.add(source);
 
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setVoterCount("100");
-				accrual.setDownloadCount("100");
-				accrual.setScore(3.3 * i);
+				accrual.setChangeRank("1");
 
-				contributor.setName("소녀시대");
-				contributor.setAlbum("다시 만난 세계");
+				contributor.setName("아이유");
+				contributor.setAlbum("Modern Times - Epilogue");
 
 				/*
 				 * music
@@ -143,12 +134,13 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 				service.setName("mp3");
 				service.setType("support");
 				serviceList.add(service);
+				service.setName("bell");
+				service.setType("support");
+				serviceList.add(service);
+				service.setName("ring");
+				service.setType("support");
+				serviceList.add(service);
 				music.setServiceList(serviceList);
-
-				Bell bell = new Bell();
-				bell.setName("천상의 소리");
-				bell.setType("mp3");
-				music.setBell(bell);
 
 				product = new Product();
 				product.setIdentifier(identifier);
@@ -157,7 +149,8 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 				product.setTitle(title);
 				product.setRights(rights);
 				product.setSourceList(sourceList);
-				product.setProductExplain("특정 아티스트별(소녀시대) 상품 리스트");
+				product.setContributor(contributor);
+				product.setMusic(music);
 
 				productList.add(product);
 

@@ -61,7 +61,7 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 	public AuthorProductListResponse searchAuthorProductList(RelatedProductRequest requestVO)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 5;
+		int totalCount = 1;
 
 		AuthorProductListResponse responseVO = null;
 		CommonResponse commonResponse = null;
@@ -74,8 +74,8 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 			List<Source> sourceList = new ArrayList<Source>();
 			Contributor contributor = new Contributor();
 
-			contributor.setName("김진명");
-			contributor.setPublisher("시공사");
+			contributor.setName("야설록");
+			contributor.setPublisher("미스터블루");
 
 			for (int i = 1; i <= totalCount; i++) {
 				Product product = new Product();
@@ -90,55 +90,56 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H90005501_" + i);
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				menu.setId("MenuId10" + i);
-				menu.setName("dummyMenuName10" + i);
-				menu.setType("dummyMenuType10" + i);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId101" + i);
-				menu.setName("dummyMenuName101" + i);
-				menu.setType("dummyMenuType101" + i);
-				menuList.add(menu);
+				identifier.setText("H900066271");
 
 				/*
 				 * TITLE
 				 */
-				title.setText("특정 작가 상품 리스트");
+				title.setText("[야설록] 칠십이파검 1회");
 
-				price.setText(1000000);
+				price.setText(0);
+
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
+				menu.setId("DP14");
+				menu.setName("Comic");
+				menu.setType("topCategory");
+				menuList.add(menu);
+				menu = new Menu();
+				menu.setId("DP14001");
+				menu.setName("Comic>무협");
+				menu.setType("");
+				menuList.add(menu);
 
 				/*
 				 * source mediaType, size, type, url
 				 */
-				for (int j = 1; j < 4; j++) {
-					source.setMediaType("media_" + (i + j));
-					source.setSize("1024_" + (i + j));
-					source.setType("thumbNail");
-					source.setUrl("http://./4_182_261_130x186.PNG");
-					sourceList.add(source);
-				}
+				source.setUrl("/data/SMILE_DATA/PCOMICS/201211/12/0000109537/1/0000119388/1/1009089888_vol_dvc_cont_img_medium_214x214.jpg");
+				sourceList.add(source);
 
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setVoterCount("100");
-				accrual.setDownloadCount("100");
-				accrual.setScore(3.3 * i);
+				accrual.setVoterCount("1");
+				accrual.setDownloadCount("3");
+				accrual.setScore(4.0);
+
+				rights.setGrade("1");
 
 				product = new Product();
 				product.setIdentifier(identifier);
 				product.setMenuList(menuList);
 				product.setAccrual(accrual);
 				product.setTitle(title);
+				product.setPrice(price);
 				product.setRights(rights);
 				product.setSourceList(sourceList);
-				product.setProductExplain("특정작가(김진명) 상품 리스트");
+				product.setProductExplain("[1권 무료]\n"
+						+ "사천 제일포쾌 은오리 이군악! 당대 최고 비도 곽영! 철검장 후계자의 자리를 놓고,\n"
+						+ "사제와 겨뤄야 했던 군악, 의를 위해 현실의 안락을 버리고 무림을 떠나 포쾌를 자처했으나...사제였던 철검장주의 돌연한 죽음에 그는 다시 무림으로 돌아오게 되니...\n"
+						+ "군악 앞에 나타나는 기연의 연속들...\n" + "청성파의 감춰진 최고 무학, 칠십이파검의 정수를 깨달으며, 파헤쳐 나가는 진실들...\n"
+						+ "은호리 이군악과 그의 벗 곽영,잊지 못할 마음 속의 설지의 젊은 무림 이야기...");
 
 				productList.add(product);
 

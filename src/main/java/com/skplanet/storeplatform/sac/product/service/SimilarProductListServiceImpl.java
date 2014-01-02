@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.related.RelatedProductListResponse;
@@ -60,7 +61,7 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 	public RelatedProductListResponse searchSimilarProductList(RelatedProductRequest requestVO)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 5;
+		int totalCount = 1;
 
 		RelatedProductListResponse responseVO = null;
 		CommonResponse commonResponse = null;
@@ -82,51 +83,62 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 				Source source = new Source();
 				Accrual accrual = new Accrual();
 				Rights rights = new Rights();
+				App app = new App();
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H90005275_" + i);
+				identifier.setText("0000254239");
+
+				// App
+				app.setAid("OA00254239");
+				app.setPackageName("net.hwado.paid.PDFGenerator");
+				app.setSize("1280765");
+				app.setVersionCode("1");
+				app.setVersion("1.0");
 
 				/*
 				 * Menu(메뉴정보) Id, Name, Type
 				 */
-				menu.setId("MenuId0" + i);
-				menu.setName("dummyMenuName0" + i);
-				menu.setType("dummyMenuType0" + i);
+				menu.setId("MN000504");
+				menu.setName("생활/위치");
+				menu.setType("topClass");
 				menuList.add(menu);
 				menu = new Menu();
-				menu.setId("dummyMenuId1" + i);
-				menu.setName("dummyMenuName1" + i);
-				menu.setType("dummyMenuType1" + i);
+				menu.setId("MN04003");
+				menu.setName("유틸리티");
+				menu.setType("");
 				menuList.add(menu);
 
 				/*
 				 * TITLE
 				 */
-				title.setText("유사상품 리스트");
+				title.setText("PDF 생성기");
 
-				price.setText(1000000);
+				price.setText(1000);
 
 				/*
 				 * source mediaType, size, type, url
 				 */
-				for (int j = 1; j < 4; j++) {
-					source.setMediaType("media_" + (i + j));
-					source.setSize("1024_" + (i + j));
-					source.setType("thumbNail");
-					source.setUrl("http://./4_182_261_130x186.PNG");
-					sourceList.add(source);
-				}
+				source.setMediaType("image/png");
+				source.setSize("0");
+				source.setType("thumbNail");
+				source.setUrl("http://wap.tstore.co.kr/images/IF1423022570420091207142717/0000254239/thumbnail/0000254239_130_130_0_91.PNG");
+				sourceList.add(source);
 
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setVoterCount("100");
-				accrual.setScore(i);
+				accrual.setDownloadCount("246");
+				accrual.setVoterCount("2");
+				accrual.setScore(3);
+
+				rights.setGrade("0");
 
 				product = new Product();
+				product.setProductExplain("PDF 생성기,PDF Generator,HWADO,hwado,www.hwado.net,HWADOTECH");
 				product.setIdentifier(identifier);
+				product.setPrice(price);
+				product.setApp(app);
 				product.setMenuList(menuList);
 				product.setAccrual(accrual);
 				product.setTitle(title);

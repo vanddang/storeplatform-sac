@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.related.RelatedProductListResponse;
@@ -82,59 +83,66 @@ public class SellerProductListServiceImpl implements SellerProductListService {
 				Source source = new Source();
 				Accrual accrual = new Accrual();
 				Rights rights = new Rights();
+				App app = new App();
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("seller_prod_" + i);
-				identifier.setText("H90005333_" + i);
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				menu.setId("MenuId99" + i);
-				menu.setName("dummyMenuName99" + i);
-				menu.setType("dummyMenuType99" + i);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId999" + i);
-				menu.setName("dummyMenuName999" + i);
-				menu.setType("dummyMenuType999" + i);
-				menuList.add(menu);
+				identifier.setText("0000001215");
 
 				/*
 				 * TITLE
 				 */
-				title.setText("특정 판매자 상품 리스트");
+				title.setText("코나미팝픈뮤직 [Widget]");
 
-				price.setText(20000000);
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
+				menu.setId("DP01");
+				menu.setName("게임");
+				menu.setType("topClass");
+				menuList.add(menu);
+				menu = new Menu();
+				menu.setId("DP01006");
+				menu.setName("게임>스포츠");
+				menu.setType("");
+				menuList.add(menu);
+
+				price.setText(0);
+
+				// App
+				app.setAid("OW00001215");
+				app.setPackageName("");
+				app.setSize("");
+				app.setVersionCode("");
+				app.setVersion("1.0");
 
 				/*
 				 * source mediaType, size, type, url
 				 */
-				for (int j = 1; j < 4; j++) {
-					source.setMediaType("media_" + (i + j));
-					source.setSize("1024_" + (i + j));
-					source.setType("thumbNail");
-					source.setUrl("http://./4_182_261_130x186.PNG");
-					sourceList.add(source);
-				}
+				source.setMediaType("image/png");
+				source.setType("thumbNail");
+				source.setUrl("/data/img/IF102158916220090711142108/0000001215/desc/0000001215_DP000107.gif");
+				sourceList.add(source);
 
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setVoterCount("10");
-				accrual.setScore(i);
+				accrual.setDownloadCount("38694");
+				accrual.setVoterCount("120");
+				accrual.setScore(4.6);
 
-				rights.setGrade("1");
+				rights.setGrade("0");
 
 				product = new Product();
 				product.setIdentifier(identifier);
+				product.setProductExplain("팝픈뮤직은 코나미 대표원조리듬게임의 모바일버전입니다.");
+				product.setPrice(price);
+				product.setApp(app);
 				product.setMenuList(menuList);
 				product.setAccrual(accrual);
 				product.setTitle(title);
 				product.setRights(rights);
 				product.setSourceList(sourceList);
-
 				productList.add(product);
 
 			}

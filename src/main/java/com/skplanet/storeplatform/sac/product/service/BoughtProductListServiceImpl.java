@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.related.RelatedProductListResponse;
@@ -60,7 +61,7 @@ public class BoughtProductListServiceImpl implements BoughtProductListService {
 	public RelatedProductListResponse searchBoughtProductList(RelatedProductRequest requestVO)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 5;
+		int totalCount = 1;
 
 		RelatedProductListResponse responseVO = null;
 		CommonResponse commonResponse = null;
@@ -82,53 +83,61 @@ public class BoughtProductListServiceImpl implements BoughtProductListService {
 				Source source = new Source();
 				Accrual accrual = new Accrual();
 				Rights rights = new Rights();
+				App app = new App();
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("bought_prod_" + i);
-				identifier.setText("H90005277_" + i);
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				menu.setId("MenuId77" + i);
-				menu.setName("dummyMenuName77" + i);
-				menu.setType("dummyMenuType77" + i);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId777" + i);
-				menu.setName("dummyMenuName777" + i);
-				menu.setType("dummyMenuType777" + i);
-				menuList.add(menu);
+				identifier.setText("0000299542");
 
 				/*
 				 * TITLE
 				 */
-				title.setText("함께 구매한 상품 리스트");
+				title.setText("[필수어플]스마트주소록");
 
-				price.setText(10000000);
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
+				menu.setId("MN000504");
+				menu.setName("생활/위치");
+				menu.setType("topClass");
+				menuList.add(menu);
+				menu = new Menu();
+				menu.setId("MN04003");
+				menu.setName("유틸리티");
+				menu.setType("");
+				menuList.add(menu);
+
+				price.setText(0);
+
+				// App
+				app.setAid("OA00299542");
+				app.setPackageName("com.skmnc.smartaddr");
+				app.setSize("4092866");
+				app.setVersionCode("14");
+				app.setVersion("1.8");
 
 				/*
 				 * source mediaType, size, type, url
 				 */
-				for (int j = 1; j < 4; j++) {
-					source.setMediaType("media_" + (i + j));
-					source.setSize("1024_" + (i + j));
-					source.setType("thumbNail");
-					source.setUrl("http://./4_182_261_130x186.PNG");
-					sourceList.add(source);
-				}
+				source.setMediaType("image/png");
+				source.setType("thumbNail");
+				source.setUrl("http://wap.tstore.co.kr/android6/201208/14/IF142815912220090812130133/0000299542/img/thumbnail/0000299542_130_130_0_91.PNG");
+				sourceList.add(source);
 
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setVoterCount("10");
-				accrual.setScore(i);
+				accrual.setDownloadCount("38694");
+				accrual.setVoterCount("120");
+				accrual.setScore(4.6);
 
-				rights.setGrade("1");
+				rights.setGrade("0");
 
 				product = new Product();
 				product.setIdentifier(identifier);
+				product.setProductExplain("스마트다이얼과 연동되는 스마트주소록 입니다");
+				product.setPrice(price);
+				product.setApp(app);
 				product.setMenuList(menuList);
 				product.setAccrual(accrual);
 				product.setTitle(title);
