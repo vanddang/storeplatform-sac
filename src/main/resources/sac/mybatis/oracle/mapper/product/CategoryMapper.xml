@@ -10,7 +10,7 @@
 		       MENU_NM,
 		       MENU_DESC,
 		       BODY_FILE_SIZE
-		  FROM TB_DP_MENU_1230
+		  FROM TB_DP_TENANT_MENU
          WHERE TENANT_ID = #{tenantId}
          <if test="menuId != null">AND MENU_ID = #{menuId}</if>
            AND SYSTEM_ID = #{systemId}
@@ -36,7 +36,7 @@
                     BODY_FILE_SIZE,
                     MENU_DEPTH,
                     EXPO_ORD
-              FROM TB_DP_MENU_1230
+              FROM TB_DP_TENANT_MENU
              WHERE TENANT_ID = #{tenantId}
                AND SYSTEM_ID = #{systemId}
              START WITH UP_MENU_ID = #{menuId}
