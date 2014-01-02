@@ -1,16 +1,13 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import java.io.Serializable;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * [REQUEST] 모바일 전용 회원 가입
  * 
  * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
  */
-public class CreateByMdnReq implements Serializable {
+public class CreateByMdnReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,10 +32,5 @@ public class CreateByMdnReq implements Serializable {
 	// parentMdn
 	// parentResident
 	// parentBirth
-
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-	}
 
 }
