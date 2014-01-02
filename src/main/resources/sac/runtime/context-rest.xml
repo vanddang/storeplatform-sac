@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+    <!-- component scan - Controller -->
+    <context:component-scan
+        base-package="com.skplanet.storeplatform" use-default-filters="false" 
+        name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+  
+        
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
+    
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" conversion-service="conversionService"    >  
+        <mvc:argument-resolvers>
+            <bean class="com.skplanet.storeplatform.framework.web.bind.LocaleHandlerWebArgumentResolver">
+                <constructor-arg ref="localeResolver" />
+            </bean>
+        </mvc:argument-resolvers> 
+        <mvc:message-converters register-defaults="false" >
+            <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                <property name="supportedMediaTypes" value="application/json; charset=UTF-8" />
+                <property name="prettyPrint" value="true" />
+            </bean>
+            <bean class="com.skplanet.storeplatform.framework.web.converter.ProtobufHttpMessageConverter">
+                  <property name="supportedMediaTypes" value="application/x-protobuf; charset=UTF-8" />
+            </bean>  
+        </mvc:message-converters> 
+    </mvc:annotation-driven>   
+     
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="false" />
+        <property name="favorParameter" value="false" />
+        <property name="ignoreAcceptHeader" value="false" />
+        <property name="mediaTypes">
+            <value>
+                htm=text/html; charset=UTF-8
+                html=text/html; charset=UTF-8
+                ajax=text/html; charset=UTF-8
+                json=application/json; charset=UTF-8
+                jsonp=application/javascript; charset=UTF-8
+                xml=application/xml; charset=UTF-8
+                *=*/*; charset=UTF-8
+            </value>
+        </property>
+    </bean>        
+        
+  
+    
+    <!-- view resolver -->
+    <bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+        <property name="order" value="1"/>
+    </bean> 
+    <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="order" value="3"/>
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    
+    <!-- locale resolver -->
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />    
+        
+    <bean class="com.skplanet.storeplatform.framework.web.bind.GlobalControllerExceptionHandler" />
+    
+    <bean class="com.skplanet.storeplatform.framework.web.bind.LoggingExceptionResolver" />
+    
+    <!-- ExceptionResolver -->
+    <bean class="com.skplanet.storeplatform.framework.web.bind.StorePlatformExceptionHandlerExceptionResolver" >
+        <property name="order" value="-2" />
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                    <property name="supportedMediaTypes" value="application/json; charset=UTF-8" />
+                    <property name="prettyPrint" value="true" />
+                </bean>
+                <bean class="com.skplanet.storeplatform.framework.web.converter.ProtobufHttpMessageConverter">
+                      <property name="supportedMediaTypes" value="application/x-protobuf; charset=UTF-8" />
+                </bean>   
+            </list>
+        </property>
+    </bean>     
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="order" value="-1" /> 
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">/error/500</prop>
+            </props>
+        </property>
+         <property name="defaultErrorView" value="/error/500" />
+    </bean> 
+
+</beans>

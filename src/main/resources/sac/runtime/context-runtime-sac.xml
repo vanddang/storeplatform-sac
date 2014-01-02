@@ -17,6 +17,9 @@
      
     <int:channel id="defaultPreProcessChannel" />
     
+    <!-- SAC Spring Controller 지원으로 인하여 ACL 로직이 변경될 예정이므로 현재(2014.01.02)는 바로 messageRoutChannel로 보냄(SWA 최현식과장) -->
+    <int:bridge input-channel="defaultPreProcessChannel" output-channel="messageRouteChannel"/>
+    
     <int:chain id="defaultPreProcessChain" input-channel="defaultPreProcessChannel" output-channel="messageRouteChannel" >
         <!-- =================================================================================================================================== -->
         <!-- Header 유효성체크 -->
