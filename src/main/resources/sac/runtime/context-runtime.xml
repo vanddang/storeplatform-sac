@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:int="http://www.springframework.org/schema/integration"
-    xmlns:int-http="http://www.springframework.org/schema/integration/http"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
         http://www.springframework.org/schema/mvc                 http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
         http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -14,22 +14,24 @@
         http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
         http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
         http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd ">
-   
-    <import resource="classpath*:/runtime/context-runtime.xml" />
-    
-    <context:component-scan  base-package="com.skplanet.storeplatform.framework.integration" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
-        
-    <bean class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
-       <property name="inboundHeaderNames" value="x-tx-id, x-store-auth-info, HTTP_REQUEST_HEADERS" /> 
-       <!-- 
-       <property name="outboundHeaderNames" value="" />
-       <property name="excludedOutboundStandardRequestHeaderNames" value="" />
-       <property name="excludedInboundStandardResponseHeaderNames" value="" />
-       <property name="userDefinedHeaderPrefix" value="" />
-        -->
-    </bean> 
-    
-    
-    <!-- 아키텍처 위반 사항 체크하는 클래스, Protobuf DTO와 맵핑되는 VO간의 불일치를 잡아낸다. -->
-    <bean class="com.skplanet.storeplatform.framework.core.helper.ArchitectureDefectChecker" />
+
+	<import resource="classpath*:/runtime/context-runtime.xml" />
+
+	<context:component-scan
+		base-package="com.skplanet.storeplatform.framework.integration"
+		name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
+
+	<bean
+		class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
+		<property name="inboundHeaderNames"
+			value="x-sac-guid, x-sac-auth-tenant-key, x-sac-auth-signature, x-sac-auth-timestamp, x-sac-auth-nonce, x-sac-interface_id, x-sac-device-info, x-sac-network-info, HTTP_REQUEST_HEADERS" />
+		<!-- <property name="outboundHeaderNames" value="" /> <property name="excludedOutboundStandardRequestHeaderNames" 
+			value="" /> <property name="excludedInboundStandardResponseHeaderNames" value="" 
+			/> <property name="userDefinedHeaderPrefix" value="" /> -->
+	</bean>
+
+
+	<!-- 아키텍처 위반 사항 체크하는 클래스, Protobuf DTO와 맵핑되는 VO간의 불일치를 잡아낸다. -->
+	<bean
+		class="com.skplanet.storeplatform.framework.core.helper.ArchitectureDefectChecker" />
 </beans>
