@@ -8,7 +8,8 @@
 		<relativePath>../storeplatform-parent</relativePath>
 	</parent>
 	<artifactId>storeplatform-sac-client</artifactId>
-	<packaging>jar</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 	<name>Store Platform System - Store API Center Client</name>
 	<description>Store Platform System</description>
 	<repositories>
