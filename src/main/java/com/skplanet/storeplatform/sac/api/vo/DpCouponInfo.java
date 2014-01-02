@@ -1,19 +1,14 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.vo;
 
-/*****************************************************************************
- * SKT TStore Project ::: Refactoring SAC
- ***************************************************************************** 
- * 1.클래스 개요 : 2.작 성 자 : Kim Hyung Sik 3.작 성 일 자 : 2013. 12. 28.
- * 
- * <pre>
- * 4.수 정 일 자 :
- *      . <날짜> : <수정 내용> (성명)
- *      . 2013. 12. 28..  : 최초 생성 (Kim Hyung Sik)
- * @author Kim Hyung Sik
- * </pre>
- * 
- * @version 1.0
- *****************************************************************************/
 public class DpCouponInfo {
 
 	String couponCode = ""; // 상품코드

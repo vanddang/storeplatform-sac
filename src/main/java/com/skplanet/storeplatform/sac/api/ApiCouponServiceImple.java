@@ -20,11 +20,6 @@ import com.skplanet.storeplatform.sac.api.action.CallShoppin;
 import com.skplanet.storeplatform.sac.api.vo.CouponParameterInfo;
 import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
 
-/**
- * 웹툰 상품 조회 인터페이스(CoreStoreBusiness)
- * 
- * Updated on : 2013-12-19 Updated by : 김형식, gtsoft.
- */
 @Component
 public class ApiCouponServiceImple implements ApiCouponService {
 	@Autowired
@@ -32,13 +27,6 @@ public class ApiCouponServiceImple implements ApiCouponService {
 	private CommonDAO commonDAO;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.biz.product.service.ProductCategoryService#searchProductCategoryList(com.skplanet
-	 * .storeplatform.sac.client.product.vo.ProductCategoryReqVO)
-	 */
 	@Override
 	public CouponResponseInfo doLoadBalance(CouponParameterInfo couponParameterInfo) {
 		CouponResponseInfo responseVO = null;

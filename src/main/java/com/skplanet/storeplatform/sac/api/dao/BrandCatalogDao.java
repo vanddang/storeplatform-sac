@@ -1,13 +1,17 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.dao;
 
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 
-/**
- * 웹툰 Service 인터페이스(CoreStoreBusiness)
- * 
- * Updated on : 2013. 12. 23. Updated by : 김형식, SK 플래닛.
- */
 public interface BrandCatalogDao {
 
 	/**

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.action;
 
 import java.io.ByteArrayInputStream;
@@ -31,7 +40,9 @@ import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.service.BrandCatalogService;
+import com.skplanet.storeplatform.sac.api.service.CouponContentService;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
 import com.skplanet.storeplatform.sac.api.vo.CouponParameterInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
@@ -47,7 +58,7 @@ public class CallShoppin {
 	private String PARAMETER_STR;
 	public DpBrandInfo brandInfo;
 	public DpCatalogInfo catalogInfo;
-
+	private CouponContainer containers;
 	private final HttpServletResponse response;
 	private final StopWatch watch;
 
@@ -116,10 +127,10 @@ public class CallShoppin {
 
 					result = this.doValidParameterCT(couponParameterInfo); // 기본적인 validation 확인 및 parameter 정보 setting
 					IcmsJobPrint.printCatalog(this.catalogInfo, "카달로그");
-
-					// this.setBrandCategory(couponParameterInfo);
-					// bcs = new BrandCatalogService();
-					// success = bcs.insertCatalogInfo(this.catalogInfo);
+					if (result) {
+						bcs = new BrandCatalogService();
+						success = bcs.insertCatalogInfo(this.catalogInfo);
+					}
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -134,18 +145,11 @@ public class CallShoppin {
 					// XML 전문 Parsing
 					result = this.parserXML(couponParameterInfo);
 					if (result) {
-						success = true;
-						// 상품 추가/수정 작업을 호출한다.
-						// CouponContentService ccs = new CouponContentService();
-						// success = ccs.processForCouponCSP(this.containers[1]);
-					} else {
-						success = false;
+						CouponContentService ccs = new CouponContentService();
+						success = ccs.processForCouponCSP(this.containers, couponParameterInfo.getTxType());
 					}
 
-					if (success) {
-						// SenderCuponAdapter sca = new SenderCuponAdapter();
-						// success = sca.executeDeployCuponsByTx(this.containers[1].getContentInfo().getTxId());
-					}
+					System.out.println("+++++++success:::+++++" + success);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -171,8 +175,8 @@ public class CallShoppin {
 					}
 					break;
 				case AT:
-					// CouponContentService pcs2 = new CouponContentService();
-					// success = pcs2.processForCouponStatus(couponParameterInfo);
+					CouponContentService pcs2 = new CouponContentService();
+					success = pcs2.processForCouponStatus(couponParameterInfo);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -275,22 +279,17 @@ public class CallShoppin {
 			this.brandInfo.setBrandImgPath(couponParameterInfo.getBrandImage());
 			this.brandInfo.setCudType(couponParameterInfo.getCudType());
 			this.brandInfo.setTxType(couponParameterInfo.getTxType());
-			this.brandInfo.setCreateBrandId("BR00000456");
 
 			if (this.brandInfo.getDpCatNo().equals("") || this.brandInfo.getDpCatNo() == null) {
 				result = false;
 				sb.append("브랜드 카탈로그는 null을가질수 없습니다.");
-			} else if (this.brandInfo.getDpCatNo().length() > 50) {
-				result = false;
-				sb.append("브랜드 카탈로그는 length 50을 가질수 없습니다.");
 			}
 			if (this.brandInfo.getBrandNm().equals("") || this.brandInfo.getBrandNm() == null) {
 				result = false;
 				sb.append("브랜드명은 null을가질수 없습니다.");
-			}
-			if (this.brandInfo.getBrandId().equals("") || this.brandInfo.getBrandId() == null) {
+			} else if (this.brandInfo.getBrandNm().length() > 50) {
 				result = false;
-				sb.append("브랜드 ID 은 null을가질수 없습니다.");
+				sb.append("브랜드명은 length 50을 가질수 없습니다.");
 			}
 			if (this.brandInfo.getBrandImgPath().equals("") || this.brandInfo.getBrandImgPath() == null) {
 				result = false;
@@ -318,6 +317,7 @@ public class CallShoppin {
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
 		try {
+			this.catalogInfo.setCudType(couponParameterInfo.getCudType());
 			this.catalogInfo.setCatalogId(couponParameterInfo.getCatalogCode());
 			this.catalogInfo.setDpCatNo(couponParameterInfo.getCatalogCategory());
 			this.catalogInfo.setBrandId(couponParameterInfo.getBrandCode());
@@ -328,24 +328,44 @@ public class CallShoppin {
 			this.catalogInfo.setIntroText(couponParameterInfo.getIntro_text());
 			this.catalogInfo.setCatalogTag(couponParameterInfo.getTag());
 
-			if (this.catalogInfo.getDpCatNo().equals("") || this.catalogInfo.getDpCatNo() == null) {
-				result = false;
-				sb.append("카탈로그명은 null을가질수 없습니다.");
-			}
 			if (this.catalogInfo.getCatalogNm().equals("") || this.catalogInfo.getCatalogNm() == null) {
 				result = false;
 				sb.append("카탈로그명은 null을가질수 없습니다.");
-			} else if (this.catalogInfo.getCatalogNm().length() > 50) {
+			} else if (this.catalogInfo.getCatalogNm().length() > 100) {
 				result = false;
 				sb.append("카탈로그명은 length 100을 가질수 없습니다.");
 			}
-			if (this.catalogInfo.getCatalogId().equals("") || this.catalogInfo.getCatalogId() == null) {
+			if (this.catalogInfo.getDpCatNo().equals("") || this.catalogInfo.getDpCatNo() == null) {
 				result = false;
-				sb.append("브랜드 ID 은 null을가질수 없습니다.");
+				sb.append("카탈로그 카테고리은 null을가질수 없습니다.");
 			}
-			if (this.brandInfo.getBrandImgPath().equals("") || this.brandInfo.getBrandImgPath() == null) {
+
+			if (this.catalogInfo.getCatalogDesc().equals("") || this.catalogInfo.getCatalogDesc() == null) {
 				result = false;
-				sb.append("브랜드 이미지 은 null을가질수 없습니다.");
+				sb.append("카탈로그 상세설명은 null을가질수 없습니다.");
+			} else if (this.catalogInfo.getCatalogDesc().length() > 4000) {
+				result = false;
+				sb.append("카탈로그 상세설명은 length 4000 가질수 없습니다.");
+			}
+
+			if (this.catalogInfo.getTopImgPath().equals("") || this.catalogInfo.getTopImgPath() == null) {
+				result = false;
+				sb.append("카탈로그 탑이미지 은 null을가질수 없습니다.");
+			}
+			if (this.catalogInfo.getDtlImgPath().equals("") || this.catalogInfo.getDtlImgPath() == null) {
+				result = false;
+				sb.append("카탈로그 탑이미지 은 null을가질수 없습니다.");
+			}
+			if (this.catalogInfo.getBrandId().equals("") || this.catalogInfo.getBrandId() == null) {
+				result = false;
+				sb.append("카탈로그 브랜드코드 은 null을가질수 없습니다.");
+			}
+			if (this.catalogInfo.getIntroText().equals("") || this.catalogInfo.getIntroText() == null) {
+				result = false;
+				sb.append("카탈로그 한줄소개는 null을가질수 없습니다.");
+			} else if (this.catalogInfo.getCatalogNm().length() > 150) {
+				result = false;
+				sb.append("카탈로그 한줄소개는 length 150을 가질수 없습니다.");
 			}
 
 			if (!result) {
@@ -513,9 +533,7 @@ public class CallShoppin {
 							else
 								sContext = StringUtil.replaceAllTags(sContext, "");
 						}
-
 						hashMap.put(nodeName, sContext);
-
 					}
 				}
 
@@ -552,9 +570,7 @@ public class CallShoppin {
 
 			}
 			contentLists[0].add(hashMap);
-
-			DpCouponInfo couponInfo = new DpCouponInfo();
-			; // 쿠폰 정보
+			DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
 			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
 
 			for (int i = 0; i < 1; i++) { // 쿠폰 정보 Add
@@ -562,14 +578,14 @@ public class CallShoppin {
 				for (Map<String, String> map : mapList) {
 					for (Map.Entry<String, String> entry : map.entrySet()) {
 						if (!this.invoke(couponInfo, "set" + entry.getKey().substring(0, 1).toUpperCase()
-								+ entry.getKey().substring(1), new Object[] { entry.getValue() })) { // couponInfo VO에 값
-																									 // 셋팅
+								+ entry.getKey().substring(1), new Object[] { entry.getValue() })) { //
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "매핑 실패 ["
 									+ entry.getKey() + ":" + entry.getValue() + "]이 형식이 잘못 됐습니다.", "");
 						}
 					}
 				}
 			}
+
 			int kk = 0;
 
 			for (int i = 1; i < list.size(); i++) { // 아이템 정보 List Add
@@ -589,16 +605,7 @@ public class CallShoppin {
 					kk++;
 				}
 			}
-			for (int i = 0; i < itemInfoList.size(); i++) {
-				System.out.println("+++++++++itemInfoList." + i + "getItemCode()+++++++"
-						+ itemInfoList.get(i).getItemCode());
-				System.out.println("+++++++++itemInfoList." + i + "getItemName()+++++++"
-						+ itemInfoList.get(i).getItemName());
-				System.out.println("+++++++++itemInfoList." + i + "getItemStatus()+++++++"
-						+ itemInfoList.get(i).getItemStatus());
-			}
 
-			String message = "";
 			if (!this.doValidateCouponInfo(couponInfo)) {
 				result = false;
 			}
@@ -608,13 +615,11 @@ public class CallShoppin {
 				}
 				break;
 			}
+			this.containers = new CouponContainer();
+			this.containers.setDpCouponInfo(couponInfo);
+			this.containers.setDpItemInfo(itemInfoList);
 			this.log.info("<<<<< MetaDefXMLParser.makeContentXMLMap >>>>> END");
 
-			System.out.println("+++++++++couponInfo.getCouponCode()+++++++" + couponInfo.getCouponCode());
-			System.out.println("+++++++++couponInfo.getCouponName()+++++++" + couponInfo.getCouponName());
-			System.out.println("+++++++++couponInfo.getBpId()+++++++" + couponInfo.getBpId());
-			System.out.println("+++++++++couponInfo.getTag()+++++++" + couponInfo.getTag());
-			System.out.println("+++++++++couponInfo.getCoupnStatus()+++++++" + couponInfo.getCoupnStatus());
 			return result;
 		} catch (CouponException e) {
 			this.log.error("파싱처리중 예외 발생", e);
@@ -681,70 +686,92 @@ public class CallShoppin {
 	 * @return boolean
 	 */
 	public boolean doValidateCouponInfo(DpCouponInfo couponInfo) {
-		boolean result = false;
+		boolean result = true;
 		String message = "";
+
 		try {
 			if (couponInfo.getCouponName().length() > 100) {
 				message = "유효성 검사 실패 [couponName : 쿠폰명:" + couponInfo.getCouponName() + "]";
+				result = false;
 			}
 			if (couponInfo.getIssueSDate() != "") {
 				if (couponInfo.getIssueSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueSDate())) {
 					message = "유효성 검사 실패 [issueSDate : 발급시작일시:" + couponInfo.getIssueSDate() + "]";
+					result = false;
 				}
 			}
 			if (couponInfo.getIssueEDate() != "") {
 				if (couponInfo.getIssueEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueEDate())) {
 					message = "유효성 검사 실패 [issueEDate : 발급종료일시:" + couponInfo.getIssueEDate() + "]";
+					result = false;
 				}
 			}
 			if (couponInfo.getValidSDate() != "") {
-				if (couponInfo.getValidSDate() == "" || couponInfo.getValidSDate().length() > 14
-						|| !StringUtils.isNumeric(couponInfo.getValidSDate())) {
+				if (couponInfo.getValidSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidSDate())) {
 					message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]";
+					result = false;
 				}
+			} else {
+				message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]";
+				result = false;
 			}
+
 			if (couponInfo.getValidEDate() != "") {
 				if (couponInfo.getValidEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidEDate())) {
 					message = "유효성 검사 실패 [validEDate : 유효종료일시:" + couponInfo.getValidEDate() + "]";
+					result = false;
 				}
 			}
 			if (couponInfo.getValidUntil() != "") {
 				if (!StringUtils.isNumeric(couponInfo.getValidUntil())) {
 					message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]";
+					result = false;
 				}
+			} else {
+				message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]";
+				result = false;
 			}
 			if (couponInfo.getDescription().length() > 250) {
 				message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]";
+				result = false;
 			}
 			if (couponInfo.getDirection().length() > 4000) {
 				message = "유효성 검사 실패 [direction : 사용장소:" + couponInfo.getDirection() + "]";
+				result = false;
 			}
 			if (couponInfo.getUseCondition().length() > 4000) {
 				message = "유효성 검사 실패 [useCondition : 사용제한:" + couponInfo.getUseCondition() + "]";
+				result = false;
 			}
 			if (couponInfo.getAddtionalInfo().length() > 1000) {
 				message = "유효성 검사 실패 [addtionalInfo : 주의사항:" + couponInfo.getAddtionalInfo() + "]";
+				result = false;
 			}
 			if (couponInfo.getRefundCondition().length() > 4000) {
 				message = "유효성 검사 실패 [refundCondition : 구매취소(환불) 조건:" + couponInfo.getRefundCondition() + "]";
+				result = false;
 			}
 			if (!couponInfo.getStoreSaleType().equals("1") && !couponInfo.getStoreSaleType().equals("2")
 					&& !couponInfo.getStoreSaleType().equals("3")) {
 				message = "유효성 검사 실패 [storeSaleType : 상품유형:" + couponInfo.getStoreSaleType() + "]";
+				result = false;
 			}
 			if (!couponInfo.getStoreb2bFlag().equals("Y") && !couponInfo.getStoreb2bFlag().equals("N")) {
 				message = "유효성 검사 실패 [storeb2bFlag : B2B상품여부:" + couponInfo.getStoreb2bFlag() + "]";
+				result = false;
 			}
 			if (couponInfo.getAccountingRate() != "") {
 				if (!StringUtils.isNumeric(couponInfo.getAccountingRate())) {
 					message = "유효성 검사 실패 [accountingRate : 정산율 번호:" + couponInfo.getAccountingRate() + "]";
+					result = false;
 				}
 			}
 			if (!result) {
 				this.setERR_MESSAGE(message);
 				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+			} else {
+				result = true;
 			}
-			result = true;
 		} catch (Exception e) {
 			this.log.error("유효성 검사 실패", e);
 			message = e.getMessage() + "\n";
@@ -765,86 +792,102 @@ public class CallShoppin {
 	 * @return boolean
 	 */
 	public boolean doValidateItemInfo(DpItemInfo itemInfo) {
-		boolean result = false;
+		boolean result = true;
 		String message = "";
 		try {
 			if (itemInfo.getItemName().length() > 100) {
 				message = "유효성 검사 실패 [itemName : 단품명 :" + itemInfo.getItemName() + "]";
+				result = false;
 			}
 			if (itemInfo.getOrgPrice() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getOrgPrice())) {
 					message = "유효성 검사 실패 [orgPrice : 정상가격 :" + itemInfo.getOrgPrice() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getSalePrice() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getSalePrice())) {
 					message = "유효성 검사 실패 [salePrice : 할인가격 :" + itemInfo.getSalePrice() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getItemPrice() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getItemPrice())) {
 					message = "유효성 검사 실패 [itemPrice : 단품가격 :" + itemInfo.getItemPrice() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getDcRate() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getDcRate())) {
 					message = "유효성 검사 실패 [dcRate : 할인율 :" + itemInfo.getDcRate() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getMaxCount() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCount())) {
 					message = "유효성 검사 실패 [maxCount : 판매개수 :" + itemInfo.getMaxCount() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getMaxCountMonthly() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountMonthly())) {
 					message = "유효성 검사 실패 [maxCountMonthly : 월간 상품 최대 판매 수량 :" + itemInfo.getMaxCountMonthly() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getMaxCountDaily() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountDaily())) {
 					message = "유효성 검사 실패 [maxCountDaily : 일간 상품 최대 판매 수량 :" + itemInfo.getMaxCountDaily() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getMaxCountMonthlyUser() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountMonthlyUser())) {
 					message = "유효성 검사 실패 [maxCountMonthlyUser : 1인 당월 최대 구매 수량 :" + itemInfo.getMaxCountMonthlyUser()
 							+ "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getMaxCountDailyUser() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountDailyUser())) {
 					message = "유효성 검사 실패 [maxCountDailyUser : 1인 당일 최대 구매 수량 :" + itemInfo.getMaxCountDailyUser() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getBuyMaxLimit() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getBuyMaxLimit())) {
 					message = "유효성 검사 실패 [buyMaxLimit : 최대결제수량 :" + itemInfo.getBuyMaxLimit() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getItemValue1() == "") {
 				message = "유효성 검사 실패 [itemValue1 : 옵션1 :" + itemInfo.getItemValue1() + "]";
+				result = false;
 			}
 			if (itemInfo.getItemValue2() == "") {
 				message = "유효성 검사 실패 [itemValue2 : 옵션2 :" + itemInfo.getItemValue2() + "]";
+				result = false;
 			}
 			if (itemInfo.getBpManageId() != "") {
 				if (itemInfo.getBpManageId() == "" || itemInfo.getBpManageId().length() > 32) {
 					message = "유효성 검사 실패 [bpManageId : BP관리ID :" + itemInfo.getBpManageId() + "]";
+					result = false;
 				}
 			}
 			if (itemInfo.getShippingUrl() == "") {
 				message = "유효성 검사 실패 [shippingUrl : 배송지 정보 입력 URL :" + itemInfo.getShippingUrl() + "]";
+				result = false;
 			}
 			if (!itemInfo.getCudType().equals("C") && !itemInfo.getCudType().equals("U")) {
 				message = "유효성 검사 실패 [cudType : 추가수정플래그 :" + itemInfo.getCudType() + "]";
+				result = false;
 			}
 			if (!result) {
 				this.setERR_MESSAGE(message);
 				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+			} else {
+				result = true;
 			}
-			result = true;
-
 		} catch (Exception e) {
 			this.log.error("유효성 검사 실패", e);
 			message = e.getMessage() + "\n";

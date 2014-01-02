@@ -1,12 +1,11 @@
 /*
- * COPYRIGHT(c) SK telecom 2009
- * This software is the proprietary information of SK telecom.
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
  *
- * Revision History
- * Author             Date        Description
- * --------         ----------    ---------------
- *                  2009. 4. 28.      Description
- *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.util;
 

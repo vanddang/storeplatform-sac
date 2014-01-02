@@ -1,13 +1,16 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.util;
 
 import org.apache.log4j.Logger;
 
-/**
- * CMS 기본 코드
- * 
- * @author Sung.HJ. 2009/05/15
- * 
- */
 public class BasicCodes {
 	private static Logger log = Logger.getLogger(BasicCodes.class);
 	private static BasicCodes instance = null;

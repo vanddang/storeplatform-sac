@@ -1,18 +1,12 @@
-/*****************************************************************************
- * SKT TStore Project ::: PARTNER Site :::: Shopping Coupon interface
- *****************************************************************************
- * 1.클래스 개요 : 쿠폰 시스템에서 넘어오는 파라메터 정보
- * 2.작   성  자 : Sun-taek Lim
- * 3.작 성 일 자 : 2013. 4. 2.
- * <pre>
- * 4.수 정 일 자 :
- *      . <날짜> : <수정 내용> (성명)
- *      . 2013. 4. 2.  : 최초 생성 (Sun-taek Lim)
- * @author Sun-taek Lim
- * </pre>
- * @version 1.0
- *****************************************************************************/
-
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.vo;
 
 import java.io.Serializable;

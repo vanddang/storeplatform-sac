@@ -1,35 +1,29 @@
-/*****************************************************************************
- * SKT TStore Project ::: PARTNER Site :::: BackGround Job
- *****************************************************************************
- * 1.클래스 개요 :
- * 2.작   성  자 : Kang Hyun Gu
- * 3.작 성 일 자 : 2013. 4. 08.
- * <pre>
- * 4.수 정 일 자 :
- *      . <날짜> : <수정 내용> (성명)
- *      . 2013. 4. 08.  : 최초 생성 (Kang Hyun Gu)
- * @author Kang Hyun Gu
- * </pre>
- * @version 1.0
- *****************************************************************************/
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 
 package com.skplanet.storeplatform.sac.api.vo;
-
 
 public class DpCatalogInfo extends BrandCatalogProdImgInfo {
 
 	// TBL_DP_CATALOG_INFO
-	private String catalogId; // TBL_DP_CATALOG_INFO.CATALOG_ID
-	private String dpCatNo; // TBL_DP_CATALOG_INFO.DP_CAT_NO
-	private String brandId; // TBL_DP_CATALOG_INFO.BRAND_ID
-	private String catalogDesc; // TBL_DP_CATALOG_INFO.CATALOG_DESC
-	private String catalogNm; // TBL_DP_CATALOG_INFO.CATALOG_NM
+	private String catalogId; // INSERT_TB_DP_SHPG_CATALOG.CATALOG_ID
+	private String dpCatNo; // INSERT_TB_DP_SHPG_CATALOG.DP_CAT_NO
+	private String brandId; // INSERT_TB_DP_SHPG_CATALOG.BRAND_ID
+	private String catalogDesc; // INSERT_TB_DP_SHPG_CATALOG_DESC.CATALOG_DESC
+	private String catalogNm; // INSERT_TB_DP_SHPG_CATALOG_DESC.CATALOG_NM
 	// private String catalogStatCd;
 	private String topImgPath; // TBL_DP_CATALOG_INFO.TOP_IMG_PATH
 	private String dtlImgPath; // TBL_DP_CATALOG_INFO.DTL_IMG_PATH
 	private String txType; // 상품구분 브랜드 : bd, 카탈로그 : ct
 	private String cudType; // CUD
-	private String introText; // 한줄설명
+	private String introText; // 한줄설명 INSERT_TB_DP_SHPG_CATALOG_DESC.
 	private String createCatalogId; // 카탈로그ID 생성
 	private String createBrandId; // 카탈로그ID 생성
 	private String catalogTag; // 카탈로그태그

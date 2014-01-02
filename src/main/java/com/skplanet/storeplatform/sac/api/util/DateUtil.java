@@ -1,19 +1,12 @@
-/******************************************************************************
- * CONSERT
- ******************************************************************************
- * 1.클래스   명 : DateUtil.java
- * 2.클래스 개요 : 날짜와 관련된 다양한 유틸리티 클래스
- * 3.관련 테이블 : 관련 테이블 없음
- * 4.관련 클래스 : 관련 클래스 없음
- * 5.관련 페이지 : 관련 페이지 없음
- * 6.작   성  자 : 이재우
- * 7.작 성 일 자 : 2003. 12. 23.
- * 8.수 정 일 자 :
- *      . <날짜> ; <수정 내용> (<개발자명>)
- *      . <날짜> ; <수정 내용> (<개발자명>)
- * @author 이재우
- * @version 1.0 12/12/03
- ******************************************************************************/
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 
 package com.skplanet.storeplatform.sac.api.util;
 

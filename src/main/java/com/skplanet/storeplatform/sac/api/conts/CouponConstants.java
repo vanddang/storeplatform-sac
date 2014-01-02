@@ -1,18 +1,12 @@
-/*****************************************************************************
- * SKT TStore Project ::: PARTNER Site :::: Shopping Coupon interface
- *****************************************************************************
- * 1.클래스 개요 :
- * 2.작   성  자 : Kim Hyung Sik
- * 3.작 성 일 자 : 2013. 12. 29.
- * <pre>
- * 4.수 정 일 자 :
- *      . <날짜> : <수정 내용> (성명)
- *      . 2013. 12. 29.  : 최초 생성 (jade)
- * @author Kim Hyung Sik
- * </pre>
- * @version 1.0
- *****************************************************************************/
-
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.conts;
 
 import com.skplanet.storeplatform.sac.api.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
@@ -128,6 +122,56 @@ public class CouponConstants {
 
 	// 카탈로그 셀러TAG
 	public static final String TAG_TYPE_FOR_COUPON_TAG = "DP004507"; // 셀러TAG 태그타입(쇼핑용)
+
+	/**
+	 * 상품 CUD 타입 정의
+	 */
+	public static final String CONTENT_CUD_TYPE_CREATE = "C";
+	public static final String CONTENT_CUD_TYPE_UPDATE = "U";
+	public static final String CONTENT_CUD_TYPE_DELETE = "D";
+
+	/**
+	 * 상품 정보 타입 정의
+	 */
+	public final static String PAY_CODE_TIME = "PD00292"; // 과금유형(기간정액제)
+	public final static String PAY_CODE_GIFTCARD = "DP006301"; // 상품권
+	public final static String PAY_CODE_CUPON = "DP006302"; // 교환권
+	public final static String PAY_CODE_DELIVER = "DP006303"; // 배송상품
+	public final static String OPT_NUMBER_FOR_CHANNEL = "1"; // 옵션 전시순서(채널용)
+	public final static String OPT_NUMBER_FOR_EPISODE = "2"; // 옵션 전시순서(에피소드용)
+
+	public final static String CUPON_SVC_GRP_CD = "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
+	public final static String CHNL_TP_CD_CUPON = "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
+
+	/** 연령제한 기본값 - 전체이용가 */
+	public static final String AGE_RESTRICTIONS_DEFAULT_COMMON_CODE = "PD004401";
+	public static final String AGE_RESTRICTIONS_19RESTRICT = "PD004404";
+
+	/** 상품 전시 상태 **/
+	public static final String DP_STATUS_PREPARE_SERVICE = "PD000402"; // 판매대기
+	public static final String DP_STATUS_IN_SERVICE = "PD000403"; // 판매중
+	public static final String DP_STATUS_STOP_SERVICE = "PD000404"; // 판매중지
+	public static final String DP_STATUS_FIN_SERVICE = "PD000407"; // 일시정지
+	public static final String DP_STATUS_FORBID_SERVICE = "PD000405"; // 판매금지(다운로드 불가)
+	public static final String DP_STATUS_FORBID_SERVICE_DL_AVIL = "PD000409"; // 판매금지(다운로드 허용)
+
+	/** 상품 사용기간 단위 **/
+	public static final String USE_PERIOD_UNIT_NONE = "PD00310"; // 무제한 -> 다운로드
+	public static final String USE_PERIOD_UNIT_TIME = "PD00311";
+	public static final String USE_PERIOD_UNIT_DAY = "PD00312"; // 기간제(일) -> 바로보기
+	public static final String USE_PERIOD_UNIT_MONTH = "PD00313";
+	public static final String USE_PERIOD_UNIT_YEAR = "PD00314";
+	public static final String USE_PERIOD_UNIT_CURRENT_DAY = "PD00315";
+	public static final String USE_PERIOD_UNIT_CURRENT_MONTH = "PD00316";
+	public static final String USE_PERIOD_UNIT_CURRENT_YEAR = "PD00317";
+	public static final String USE_PERIOD_UNIT_MINUTE = "PD00318"; // 분
+	public static final String USE_PERIOD_UNIT_SELECT = "PD00319"; // 기간선택
+
+	public static final String CATEGORY_ID_CUPON_SERIES_CONTENT = "CT28"; // 쇼핑쿠폰 부모 카테고리ID
+	public static final String UPDATE_TYPE_CD_DESC = "D";
+
+	public static final String LANG_CD_KO = "ko"; // ko 한글 코드값
+	public static final String TENANT_ID = "S01"; // S01 값
 
 	/**
 	 * 4091 error code 가 아닌 경우에는 아리와 같은 메세지로 쇼핑쿠폰에 전송함.

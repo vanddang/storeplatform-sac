@@ -1,5 +1,15 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.service;
 
+import java.awt.Image;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +20,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -59,12 +71,8 @@ public class BrandCatalogService {
 			// System.out.println("+++++++++++++++++++++++++LO555555++++++++++++++++++++" +
 
 			BrandImgPath = dpBrandInfo.getBrandImgPath();
-			System.out.println("+++++++++++++++++++++++++LO555555123123++++++++++++++++++++" + BrandImgPath);
 			DecodeBrandImgPath = URLDecoder.decode(BrandImgPath, "utf-8");
-			System.out.println("+++++++++++++++++++++++++LO55555533333++++++++++++++++++++" + BrandImgPath);
 			dpBrandInfo.setBrandImgPath(DecodeBrandImgPath);
-			System.out.println("+++++++++++++++++++++++++LO555555555544++++++++++++++++++++"
-					+ dpBrandInfo.getBrandImgPath());
 
 			// 트랜잭션 시작
 			// this.daoMgr.startTransaction();
@@ -94,8 +102,8 @@ public class BrandCatalogService {
 			} else if ("U".equalsIgnoreCase(dpBrandInfo.getCudType())) {
 				System.out.println("***** BrandCatalogService.updateBrandInfo *****");
 
-				// String brandID = this.getCreateBrandId(dpBrandInfo.getBrandId());
-				// dpBrandInfo.setCreateBrandId(brandID);
+				String brandID = this.getCreateBrandId(dpBrandInfo.getBrandId());
+				dpBrandInfo.setCreateBrandId(brandID);
 
 				// // 수정일시 TBL_DP_TSP_BRAND_INFO테이블 UPDATE
 				// this.dao.updateBrandInfo(dpBrandInfo);
@@ -176,7 +184,7 @@ public class BrandCatalogService {
 
 			// 카탈로그 이미지 처리
 			if (dpBrandInfo == null) {
-
+				System.out.println("dpCatalogInfo.getCreateCatalogId() : " + dpCatalogInfo.getCreateCatalogId());
 				// 다운로드할 파일 리스트
 				fileList.add(dpCatalogInfo.getTopImgPath());
 				fileList.add(dpCatalogInfo.getDtlImgPath());
@@ -360,12 +368,114 @@ public class BrandCatalogService {
 	}
 
 	/**
+	 * 카탈로그 정보를 추가한다.
+	 * 
+	 * @param dpBrandInfo
+	 * @throws CouponException
+	 * @throws UnsupportedEncodingException
+	 */
+	public boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo) throws CouponException, UnsupportedEncodingException {
+		log.info("***** BrandCatalogService.insertBrandInfo *****");
+
+		String TopImgPath = null;
+		String DtlImgPath = null;
+		String DecodeTopImgPath = null;
+		String DecodeTopDtlImgPath = null;
+
+		try {
+
+			log.info("dpCatalogInfo.getCatalogId() = " + dpCatalogInfo.getCatalogId());
+
+			TopImgPath = dpCatalogInfo.getTopImgPath();
+			DtlImgPath = dpCatalogInfo.getDtlImgPath();
+
+			DecodeTopImgPath = URLDecoder.decode(TopImgPath, "utf-8");
+			DecodeTopDtlImgPath = URLDecoder.decode(DtlImgPath, "utf-8");
+
+			dpCatalogInfo.setTopImgPath(DecodeTopImgPath);
+			dpCatalogInfo.setDtlImgPath(DecodeTopDtlImgPath);
+
+			// 트랜잭션 시작
+			// this.daoMgr.startTransaction();
+			System.out.println("dpCatalogInfo.getCreateCatalogId()111 : " + dpCatalogInfo.getCreateCatalogId());
+			// CUD_TYPE에 따라 INSERT/UPDATE
+			if ("C".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
+
+				log.info("***** BrandCatalogService.insertCatalogInfo *****");
+
+				// 카탈로그 ID 생성
+				// IDGeneratorService idGen = new IDGeneratorService();
+				// String catalogID = idGen.generateId("TBL_DP_TSP_CATALOG.CATALOG_ID");
+				String catalogID = "CT00009999";
+				if (StringUtils.isBlank(catalogID)) {
+					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
+					this.message = "[COUPON_catalogId]를 생성하지 못했습니다.";
+					return false;
+				}
+
+				dpCatalogInfo.setCreateCatalogId(catalogID);
+				log.info("dpCatalogInfo.getCreateCatalogId() = " + dpCatalogInfo.getCreateCatalogId());
+				System.out.println("dpCatalogInfo.getCreateCatalogId()111 : " + dpCatalogInfo.getCreateCatalogId());
+
+				String brandId = this.getCreateBrandId(dpCatalogInfo.getBrandId());
+				brandId = "BR00009999";
+				if (StringUtils.isBlank(brandId)) {
+					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
+					this.message = "[COUPON_brandId]를 가져오지 못했습니다.";
+					return false;
+				}
+				log.info("brandId = " + brandId);
+				dpCatalogInfo.setCreateBrandId(brandId);
+
+				// this.dao.insertCatalogInfo(dpCatalogInfo);
+				log.info("BrandCatalogService CUD_TYPE에 따라 INSERT/UPDATE 끝");
+			} else if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
+				log.info("***** BrandCatalogService.updateBrandInfo *****");
+
+				String catalogID = this.getCreateCatalogId(dpCatalogInfo.getCatalogId());
+				dpCatalogInfo.setCreateCatalogId(catalogID);
+
+				String brandId = this.getCreateBrandId(dpCatalogInfo.getBrandId());
+				dpCatalogInfo.setCreateBrandId(brandId);
+
+				// this.dao.updateCatalogInfo(dpCatalogInfo);
+
+				// 수정일시 TBL_DP_PROD_IMG 테이블 삭제
+				// this.dao.deleteDpProdImg(catalogID);
+
+				// 수정일시 TBL_TAG_INFO 데이터 삭제
+				// this.dao.deleteTblTagInfo(catalogID);
+
+			}
+
+			// 이미지 가져옴
+			log.info("이미지 처리 시작");
+			this.inputBrandFile(null, dpCatalogInfo);
+
+			// 이미지 리사이즈 처리
+			this.catalogImgResize(dpCatalogInfo);
+
+			// 카탈로그 태그정보 처리
+			this.catalogTagList(dpCatalogInfo);
+
+			// 트랜잭션 끝
+			// this.daoMgr.commitTransaction();
+
+		} catch (CouponException e) {
+			throw new CouponException(e.getErrCode(), e.getMessage(), null);
+		} finally {
+			// this.daoMgr.endTransaction();
+		}
+
+		return true;
+	}
+
+	/**
 	 * 브랜드 이미지파일 리사이즈 처리
 	 * 
 	 * @return
 	 */
 	public boolean brandImgResize(DpBrandInfo dpBrandInfo) throws CouponException {
-		System.out.println("+++++++++++++++++++++++++LOG88888++++++++++++++++++++");
 		// 파일명 끝에 추가할 명칭
 		String[] DERIVED_FILE_NAME_FOR_DERIVED = { "_260x170", "_177x177", "_114x114", "_29x29", "_56x56", "_27x27",
 				"_25x25" };
@@ -392,7 +502,6 @@ public class BrandCatalogService {
 		int seq = 1;
 
 		try {
-
 			brandImgPath = dpBrandInfo.getBrandImgPath();
 			uploadDir = brandImgPath.substring(0, brandImgPath.lastIndexOf(File.separator) + 1);
 			srcFileName = brandImgPath.substring(brandImgPath.lastIndexOf(File.separator)).replace(File.separator, "");
@@ -432,6 +541,261 @@ public class BrandCatalogService {
 
 		}
 		return true;
+	}
+
+	/**
+	 * 카탈로그 이미지파일 리사이즈 처리
+	 * 
+	 * @return
+	 */
+	public boolean catalogImgResize(DpCatalogInfo dpCatalogInfo) throws CouponException {
+
+		// 파일명 끝에 추가할 명칭
+		String[] DERIVED_FILE_NAME_FOR_DERIVED_TOP = { "_60x60", "_120x120", "_130x130", "_40x40", "_80x80",
+				"_110x110", "_180x180", "_182x182", "_31x30" };
+		String[] DERIVED_FILE_NAME_FOR_DERIVED_DTL = { "_684x" };
+
+		// TBL_DP_PROD_IMG.IMG_CLS 설정
+		String[] IMG_CLS_CODE_TOP = { this.couponcontants.CATALOG_TOP_IMG_60x60,
+				this.couponcontants.CATALOG_TOP_IMG_120x120, this.couponcontants.CATALOG_TOP_IMG_130x130,
+				this.couponcontants.CATALOG_TOP_IMG_40x40, this.couponcontants.CATALOG_TOP_IMG_80x80,
+				this.couponcontants.CATALOG_TOP_IMG_110x110, this.couponcontants.CATALOG_TOP_IMG_180x180,
+				this.couponcontants.CATALOG_TOP_IMG_182x182, this.couponcontants.CATALOG_TOP_IMG_31x30 };
+
+		String[] IMG_CLS_CODE_DTL = { this.couponcontants.CATALOG_DTL_IMG_684x };
+
+		// String IMAGE_TYPE = "PNG";
+
+		String targetFileName = null;
+		String brandImgPath = null;
+		String uploadDir = null;
+		String srcFileName = null;
+		String tmpFileName = null;
+		String fileExt = null;
+		String targetFileName1 = null;
+		String brandImgPath1 = null;
+		String uploadDir1 = null;
+		String srcFileName1 = null;
+		String tmpFileName1 = null;
+		String fileExt1 = null;
+
+		try {
+
+			// 카탈로그 대표이미지 변수
+			brandImgPath = dpCatalogInfo.getTopImgPath(); // 이미지경로 + 이미지NAME
+			log.info("brandImgPath : " + brandImgPath);
+			uploadDir = brandImgPath.substring(0, brandImgPath.lastIndexOf(File.separator) + 1); // 이미지 경로
+			log.info("uploadDir : " + uploadDir);
+			srcFileName = brandImgPath.substring(brandImgPath.lastIndexOf(File.separator)).replace(File.separator, ""); // 이미지NAME
+			tmpFileName = srcFileName.substring(0, srcFileName.lastIndexOf(".")); // 파일명
+			fileExt = srcFileName.substring(srcFileName.lastIndexOf(".") + 1); // 확장자
+
+			// 카탈로그 상세이미지 변수
+			brandImgPath1 = dpCatalogInfo.getDtlImgPath(); // 이미지경로 + 이미지NAME
+			uploadDir1 = brandImgPath1.substring(0, brandImgPath1.lastIndexOf(File.separator) + 1); // 이미지 경로
+			srcFileName1 = brandImgPath1.substring(brandImgPath1.lastIndexOf(File.separator)).replace(File.separator,
+					""); // 이미지NAME
+			tmpFileName1 = srcFileName1.substring(0, srcFileName1.lastIndexOf(".")); // 파일명
+			fileExt1 = srcFileName1.substring(srcFileName1.lastIndexOf(".") + 1); // 확장자
+
+			Image img = new ImageIcon(uploadDir1 + srcFileName1).getImage(); // 이미지 사이즈를 구하기 위해 이미지를 가져옴.
+
+			int oWidth = img.getWidth(null); // 이미지 가로사이즈
+			int oHeight = img.getHeight(null); // 이미지 세로사이즈
+
+			int nHeightSize = oHeight * 684 / oWidth;
+
+			// 파일 생성 크기
+			int[][] IMAGE_SIZE_FOR_DERIVED_TOP = { { 60, 60 }, { 120, 120 }, { 130, 130 }, { 40, 40 }, { 80, 80 },
+					{ 110, 110 }, { 180, 180 }, { 182, 182 }, { 31, 30 } };
+			int[][] IMAGE_SIZE_FOR_DERIVED_DTL = { { 684, nHeightSize } };
+
+			// 카탈로그 대표이미지 리사이즈
+			for (int i = 0; i < DERIVED_FILE_NAME_FOR_DERIVED_TOP.length; i++) {
+
+				targetFileName = tmpFileName + DERIVED_FILE_NAME_FOR_DERIVED_TOP[i] + "." + fileExt;
+
+				int width = IMAGE_SIZE_FOR_DERIVED_TOP[i][0];
+				int height = IMAGE_SIZE_FOR_DERIVED_TOP[i][1];
+				int seq = 1;
+
+				// 이미지 리사이즈 처리
+				File srcFile = new File(uploadDir + srcFileName);
+				File destFile = new File(uploadDir + targetFileName);
+				String out_file = uploadDir + targetFileName;
+
+				// 이미지 리사이즈
+				ImageUtil.setImgScale(srcFile, out_file, width, height, uploadDir);
+				// 이미지 리사이즈
+				if (!ImageUtil.setImgScale(srcFile, out_file, width, height, uploadDir)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
+				}
+				log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName + "을 생성 하였습니다.");
+
+				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
+				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE_TOP[i]);
+				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
+				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
+				this.brandCatalogProdImgInfo.setSeq(seq);
+
+				// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
+				// dao.insertTblDpProdImg(brandCatalogProdImgInfo);
+			}
+
+			// 카탈로그 상세이미지 리사이즈
+			for (int i = 0; i < DERIVED_FILE_NAME_FOR_DERIVED_DTL.length; i++) {
+
+				targetFileName1 = tmpFileName1 + DERIVED_FILE_NAME_FOR_DERIVED_DTL[i] + "." + fileExt1;
+
+				int width = IMAGE_SIZE_FOR_DERIVED_DTL[i][0];
+				int height = IMAGE_SIZE_FOR_DERIVED_DTL[i][1];
+				int seq = 1;
+
+				// 이미지 리사이즈 처리
+				File srcFile1 = new File(uploadDir1 + srcFileName1);
+				String cutOut_file = uploadDir1 + targetFileName1;
+
+				// 이미지 리사이즈
+				if (!ImageUtil.setImgScale(srcFile1, cutOut_file, width, height, uploadDir)) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ", null);
+				}
+				ImageUtil.setImgScale(srcFile1, cutOut_file, width, height, uploadDir1);
+
+				log.info("■■■■■BrandImgResize■■■■■ : " + targetFileName1 + "을 생성 하였습니다.");
+
+				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
+				this.brandCatalogProdImgInfo.setImgCls(this.couponcontants.CATALOG_DTL_IMG_684xY);
+				this.brandCatalogProdImgInfo.setFilePos(uploadDir1);
+				this.brandCatalogProdImgInfo.setFileNm(targetFileName1);
+				this.brandCatalogProdImgInfo.setSeq(seq);
+
+				// 카탈로그이미지 2013.06.24 이미지 추가684xY
+				// dao.insertTblDpProdImg(brandCatalogProdImgInfo);
+
+				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE_DTL[i]);
+
+				// 이미지 세로길이가 1170보다 클경우
+				if (nHeightSize > 1170) {
+					log.info("■■■■■이미지 세로길이가 1170보다 클경우■■■■■");
+					int cY = 0; // 이미지 컷처리 시작지
+
+					nHeightSize = 1170;
+
+					// 이미지를 1170사이즈까지 잘라서 저장
+					for (seq = 1; nHeightSize < height; seq++) {
+
+						String ResizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+						// 이미지 리사이즈
+						if (!ImageUtil.setImgScale(srcFile1, cutOut_file, width, height, uploadDir)) {
+							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "이미지 생성 오류 ",
+									null);
+						}
+						ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + ResizetargetFileName1, 0, cY,
+								width, 1170);
+						this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
+						// log.info("■■■■■BrandImgResize■■■■■ : " + ResizetargetFileName1 + "을 생성 하였습니다.");
+
+						cY = nHeightSize;
+						nHeightSize = nHeightSize + 1170;
+
+						this.brandCatalogProdImgInfo.setSeq(seq);
+						this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
+
+						// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
+						// dao.insertTblDpProdImg(brandCatalogProdImgInfo);
+
+						// 이미지 마지막 1170보다 작은 이미지 생성및 DB처리
+						if (height <= nHeightSize) {
+							log.info("■■■■■이미지 마지막 1170보다 작은 이미지 생성■■■■■");
+							seq = seq + 1;
+
+							ResizetargetFileName1 = tmpFileName1 + "_684xy" + seq + "." + fileExt1;
+							log.info("ResizetargetFileName1" + ResizetargetFileName1);
+
+							ImageUtil.cutImage2(uploadDir1 + targetFileName1, uploadDir1 + ResizetargetFileName1, 0,
+									cY, width, height - cY);
+							this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
+							// log.info("■■■■■BrandImgResize■■■■■ : " + ResizetargetFileName1 + "을 생성 하였습니다.");
+
+							this.brandCatalogProdImgInfo.setSeq(seq);
+							this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
+
+							// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
+							// dao.insertTblDpProdImg(brandCatalogProdImgInfo);
+
+						}
+					}
+				} else {
+					log.info("■■■■■이미지 세로길이가 1170보다 작을경우■■■■■");
+
+					// 이미지 세로의 길이가 1170보다 작을경우 INSERT
+					// dao.insertTblDpProdImg(brandCatalogProdImgInfo);
+
+				}
+			}
+
+		} catch (CouponException e) {
+			// resize 오류 Catch 및 CouponException 처리 2013.08.07 임선택
+			log.error("<brandImgResize> brandResize : ", e);
+			throw new CouponException(this.couponcontants.COUPON_IF_ERROR_CODE_IMGCRE_ERR, "카탈로그 이미지 Resize 실패", null);
+		}
+
+		return true;
+	}
+
+	/**
+	 * TBL_TAG_INFO 정보를 설정
+	 * 
+	 * @return boolean
+	 */
+	public boolean catalogTagList(DpCatalogInfo dpCatalogInfo) throws CouponException {
+
+		try {
+
+			if (StringUtils.isNotBlank(dpCatalogInfo.getCatalogTag())) {
+				String[] tags = dpCatalogInfo.getCatalogTag().split(",");
+
+				for (String tagNm : tags) {
+					DpCatalogTagInfo tagInfo = new DpCatalogTagInfo();
+
+					tagInfo.setCId(dpCatalogInfo.getCreateCatalogId());
+					tagInfo.setTagType(this.couponcontants.TAG_TYPE_FOR_COUPON_TAG);
+					tagInfo.setTagNm(tagNm);
+
+					this.tagList.add(tagInfo);
+				}
+			}
+
+			for (int i = 0; i < this.tagList.size(); i++) {
+				// this.dao.insertTblTagInfo((DpCatalogTagInfo) this.tagList.get(i));
+			}
+
+		} catch (Exception e) {
+			// throw new CouponException(e.getErrCode(), e.getError_data().getERROR_MSG(), null);
+		}
+		return true;
+	}
+
+	/**
+	 * 해당 쿼리에 해당하는 BRAND_ID를 리턴한다.
+	 * 
+	 * @return
+	 */
+	public String getCreateBrandId(String brandId) throws CouponException {
+		log.info("<<<BrandCatalogService>>> getBrandId...");
+		return null;
+		// return dao.getCreateBrandId(brandId);
+	}
+
+	/**
+	 * 해당 쿼리에 해당하는 CATALOG_ID를 리턴한다.
+	 * 
+	 * @return
+	 */
+	public String getCreateCatalogId(String catalogId) throws CouponException {
+		log.info("<<<BrandCatalogService>>> getCreateCatalogId...");
+		return null;
+		// return dao.getCreateCatalogId(catalogId);
 	}
 
 }
