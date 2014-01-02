@@ -35,7 +35,7 @@
                 REG_DT               ,
                 UPD_ID               ,
                 UPD_DT               
-               FROM TB_DP_MENU
+               FROM TB_DP_TENANT_MENU
               WHERE TENANT_ID = #{tenantId}
                 <if test="menuId != null">AND MENU_ID = #{menuId}</if>
                 AND SYSTEM_ID = #{systemId}
@@ -74,7 +74,7 @@
                REG_DT               ,
                UPD_ID               ,
                UPD_DT 
-          FROM TB_DP_MENU
+          FROM TB_DP_TENANT_MENU
          WHERE TENANT_ID = #{tenantId}
            AND MENU_ID = #{menuId}
            AND SYSTEM_ID = #{systemId}
