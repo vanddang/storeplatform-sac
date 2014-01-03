@@ -1,6 +1,9 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 
 /**
  * [REQUEST] 모바일 전용 회원 가입
@@ -19,9 +22,7 @@ public class CreateByMdnReq extends CommonInfo {
 
 	private String deviceModelNo;
 
-	/**
-	 * TODO agreementList 객체화 extraAgreementID, extraAgreementVersion, isExtraAgreement
-	 */
+	private List<AgreementInfo> agreementList;
 
 	private String ownBirth;
 
@@ -73,6 +74,14 @@ public class CreateByMdnReq extends CommonInfo {
 
 	public void setDeviceModelNo(String deviceModelNo) {
 		this.deviceModelNo = deviceModelNo;
+	}
+
+	public List<AgreementInfo> getAgreementList() {
+		return this.agreementList;
+	}
+
+	public void setAgreementList(List<AgreementInfo> agreementList) {
+		this.agreementList = agreementList;
 	}
 
 	public String getOwnBirth() {
