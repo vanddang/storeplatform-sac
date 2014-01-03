@@ -20,7 +20,6 @@
 		         WHERE  use_yn = 'Y'
 		           AND  tenant_id = #{tenantId}
 		           AND  menu_id = #{menuId}
-		           AND  system_id = #{systemId}
 		       ) ia
  	</select>
 </mapper>
