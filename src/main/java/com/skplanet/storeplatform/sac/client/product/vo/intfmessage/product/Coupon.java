@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
@@ -29,12 +30,7 @@ public class Coupon extends CommonInfo implements Serializable {
 	/**
 	 * 쿠폰 ID
 	 */
-	private String identifier;
-	/**
-	 * 타입 > coupon: 쿠폰 > freepass: 정액권 > shoppingStore: Tstore 쇼핑 발급 쿠폰 > shoppingStore/special: Tstore 쇼핑 발급 쿠폰 특가 상품
-	 * 쿠폰
-	 */
-	private String type;
+	private Identifier identifier;
 	/**
 	 * 상태 > use: 사용 > notUse: 미사용 > cancel: 취소/환불 > expired: 기간만료
 	 */
@@ -49,6 +45,10 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * 교환권 > shippingCoupon: 배송상품 > rentalFreepass/ebook: 이북/코믹 전권 대여 > seriesFreepass/ebook: 이북/코믹 전권 소장
 	 */
 	private String kind;
+	/**
+	 * 쿠폰설명
+	 */
+	private String couponExplain;
 
 	/**
 	 * 배송지 입력 URL
@@ -71,14 +71,6 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * 자동결제 지원 여부 > status
 	 */
 	private AutoPay autopay;
-	/**
-	 * 쿠폰 소개 제목(T store 회원만을 위한 방송 패스)
-	 */
-	private String couponGuide;
-	/**
-	 * 쿠폰 소개 내용
-	 */
-	private String couponGuideExplain;
 
 	/**
 	 * 썸네일 또는 배너 이미지
@@ -96,22 +88,14 @@ public class Coupon extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 */
-	List<EpisodeCoupon> episodeCouponList;
+	private List<EpisodeCoupon> episodeCouponList;
 
-	public String getIdentifier() {
+	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
-	public void setIdentifier(String identifier) {
+	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
-	}
-
-	public String getType() {
-		return this.type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getStatus() {
@@ -136,6 +120,14 @@ public class Coupon extends CommonInfo implements Serializable {
 
 	public void setKind(String kind) {
 		this.kind = kind;
+	}
+
+	public String getCouponExplain() {
+		return this.couponExplain;
+	}
+
+	public void setCouponExplain(String couponExplain) {
+		this.couponExplain = couponExplain;
 	}
 
 	public Url getUrl() {
@@ -170,6 +162,14 @@ public class Coupon extends CommonInfo implements Serializable {
 		this.title = title;
 	}
 
+	public AutoPay getAutopay() {
+		return this.autopay;
+	}
+
+	public void setAutopay(AutoPay autopay) {
+		this.autopay = autopay;
+	}
+
 	public List<Source> getSourceList() {
 		return this.sourceList;
 	}
@@ -200,21 +200,5 @@ public class Coupon extends CommonInfo implements Serializable {
 
 	public void setEpisodeCouponList(List<EpisodeCoupon> episodeCouponList) {
 		this.episodeCouponList = episodeCouponList;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public AutoPay getAutopay() {
-		return this.autopay;
-	}
-
-	public String getCouponGuide() {
-		return this.couponGuide;
-	}
-
-	public String getCouponGuideExplain() {
-		return this.couponGuideExplain;
 	}
 }
