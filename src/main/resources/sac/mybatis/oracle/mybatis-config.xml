@@ -45,9 +45,13 @@
         
         <typeAlias alias="MenuRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest" />
         <typeAlias alias="MenuDetailDTO"  type="com.skplanet.storeplatform.sac.product.vo.MenuDetailDTO" />
-        													
-        <typeAlias alias="WebtoonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest" />
-        <typeAlias alias="WebtoonDTO"  type="com.skplanet.storeplatform.sac.product.vo.WebtoonDTO" />
+        			
+        <!-- 일반카테고리 웹툰 상품 조회 -->        													
+        <typeAlias alias="CategoryWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq" />
+        <typeAlias alias="CategoryWebtoonDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoonDTO" />
+        <!-- 운영자 추천 상품 조회 -->   
+        <typeAlias alias="RecommendWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq" />
+        <typeAlias alias="RecommendWebtoonDTO"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoonDTO" />       
         
          <!-- 특정 단말 조회 -->
         <typeAlias alias="DeviceProfileRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileRequest" />
