@@ -17,28 +17,25 @@ package com.skplanet.storeplatform.sac.display.category.vo;
 public class CategoryAppDTO {
 	private int totalCount;
 	private String upMenuId;
-	private String upMenuNm;
 	private String menuId;
 	private String menuNm;
-	private String downMenuId;
-	private String downMenuNm;
-	private String metaClsfCd;
 	private String prodId;
-	private String prodNm;
 	private String aid;
+	private String prodNm;
 	private String prodBaseDesc;
 	private String prodAmt;
 	private String prodGrdCd;
-	private String drmYn;
 	private String partParentClsfCd;
+	private String drmYn;
 	private String prodVer;
 	private String apkPkgNm;
 	private String apkVer;
 	private String apkFileSize;
+	private String imgPath;
+	private String paticpersCnt;
 	private String prchsCnt;
 	private String avgEvluScore;
-	private String paticpersCnt;
-	private String imgFilePath;
+	private String upMenuNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -54,14 +51,6 @@ public class CategoryAppDTO {
 
 	public void setUpMenuId(String upMenuId) {
 		this.upMenuId = upMenuId;
-	}
-
-	public String getUpMenuNm() {
-		return this.upMenuNm;
-	}
-
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
 	}
 
 	public String getMenuId() {
@@ -80,30 +69,6 @@ public class CategoryAppDTO {
 		this.menuNm = menuNm;
 	}
 
-	public String getDownMenuId() {
-		return this.downMenuId;
-	}
-
-	public void setDownMenuId(String downMenuId) {
-		this.downMenuId = downMenuId;
-	}
-
-	public String getDownMenuNm() {
-		return this.downMenuNm;
-	}
-
-	public void setDownMenuNm(String downMenuNm) {
-		this.downMenuNm = downMenuNm;
-	}
-
-	public String getMetaClsfCd() {
-		return this.metaClsfCd;
-	}
-
-	public void setMetaClsfCd(String metaClsfCd) {
-		this.metaClsfCd = metaClsfCd;
-	}
-
 	public String getProdId() {
 		return this.prodId;
 	}
@@ -112,20 +77,20 @@ public class CategoryAppDTO {
 		this.prodId = prodId;
 	}
 
-	public String getProdNm() {
-		return this.prodNm;
-	}
-
-	public void setProdNm(String prodNm) {
-		this.prodNm = prodNm;
-	}
-
 	public String getAid() {
 		return this.aid;
 	}
 
 	public void setAid(String aid) {
 		this.aid = aid;
+	}
+
+	public String getProdNm() {
+		return this.prodNm;
+	}
+
+	public void setProdNm(String prodNm) {
+		this.prodNm = prodNm;
 	}
 
 	public String getProdBaseDesc() {
@@ -152,20 +117,20 @@ public class CategoryAppDTO {
 		this.prodGrdCd = prodGrdCd;
 	}
 
-	public String getDrmYn() {
-		return this.drmYn;
-	}
-
-	public void setDrmYn(String drmYn) {
-		this.drmYn = drmYn;
-	}
-
 	public String getPartParentClsfCd() {
 		return this.partParentClsfCd;
 	}
 
 	public void setPartParentClsfCd(String partParentClsfCd) {
 		this.partParentClsfCd = partParentClsfCd;
+	}
+
+	public String getDrmYn() {
+		return this.drmYn;
+	}
+
+	public void setDrmYn(String drmYn) {
+		this.drmYn = drmYn;
 	}
 
 	public String getProdVer() {
@@ -200,6 +165,22 @@ public class CategoryAppDTO {
 		this.apkFileSize = apkFileSize;
 	}
 
+	public String getImgPath() {
+		return this.imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public String getPaticpersCnt() {
+		return this.paticpersCnt;
+	}
+
+	public void setPaticpersCnt(String paticpersCnt) {
+		this.paticpersCnt = paticpersCnt;
+	}
+
 	public String getPrchsCnt() {
 		return this.prchsCnt;
 	}
@@ -216,19 +197,11 @@ public class CategoryAppDTO {
 		this.avgEvluScore = avgEvluScore;
 	}
 
-	public String getPaticpersCnt() {
-		return this.paticpersCnt;
+	public String getUpMenuNm() {
+		return this.upMenuNm;
 	}
 
-	public void setPaticpersCnt(String paticpersCnt) {
-		this.paticpersCnt = paticpersCnt;
-	}
-
-	public String getImgFilePath() {
-		return this.imgFilePath;
-	}
-
-	public void setImgFilePath(String imgFilePath) {
-		this.imgFilePath = imgFilePath;
+	public void setUpMenuNm(String upMenuNm) {
+		this.upMenuNm = upMenuNm;
 	}
 }

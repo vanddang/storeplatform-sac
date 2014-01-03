@@ -23,9 +23,11 @@
 		      , KC.FILE_PATH AS IMG_PATH
 		      , NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT
 		      , NVL(KA.PRCHS_CNT, 0) AS PRCHS_CNT
+		      <![CDATA[
 		      , NVL((CASE WHEN (KA.AVG_EVLU_SCORE > 0 AND KA.AVG_EVLU_SCORE < 1) THEN 1
 		                  WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
 		                  ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+		      ]]>
 		      , (SELECT MENU_NM
 		           FROM TB_DP_MENU_DESC
 		          WHERE MENU_ID = KA.UP_MENU_ID
@@ -83,11 +85,17 @@
 		                           AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
 		                           AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
 		                           AND  A.MENU_ID = #{menuId}           /* 메뉴ID */
-		                           AND  D.PROD_CHRG_YN = #{prodCharge}  /* 상품유료여부 */
-		                           AND  D.PROD_GRD_CD = #{prodGradeCd}    /* 상품이용등급 */
-		                           AND  D.DRM_YN = #{drm}             /* DRM 지원 여부 */
 		                           AND  G.TENANT_ID = #{tenantId}       /* 테넌트ID */
 		                           AND  I.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+                                 <if test="prodCharge != null">
+		                           AND  D.PROD_CHRG_YN = #{prodCharge}  /* 상품유료여부 */
+                                 </if>
+                                 <if test="prodGradeCd != null">
+		                           AND  D.PROD_GRD_CD = #{prodGradeCd}  /* 상품이용등급 */
+                                 </if>
+                                 <if test="drm != null">
+		                           AND  D.DRM_YN = #{drm}               /* DRM 지원 여부 */
+                                 </if>
 		                       )                        IA
 		                      , TB_DP_TENANT_PROD_STATS IB
 		                 WHERE  IA.TENANT_ID = IB.TENANT_ID(+)
@@ -104,4 +112,3 @@
 		   AND  KC.IMG_CD = #{imageCd}
     </select>
 </mapper>
-
