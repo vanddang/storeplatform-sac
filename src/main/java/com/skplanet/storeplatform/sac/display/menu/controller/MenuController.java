@@ -44,12 +44,12 @@ public class MenuController {
 	public MenuListResponse searchMenu(@RequestParam String tenantId, @RequestParam String systemId,
 			@RequestParam String menuId) throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		this.logger.debug("MenuController.searchMenuList start !!");
+		this.logger.debug("MenuController.searchMenu start !!");
 
 		MenuRequest requestVO = new MenuRequest();
 		requestVO.setTenantId(tenantId);
 		requestVO.setSystemId(systemId);
-		requestVO.setSystemId(menuId);
+		requestVO.setMenuId(menuId);
 
 		return this.menuListService.searchMenuList(requestVO);
 	}
