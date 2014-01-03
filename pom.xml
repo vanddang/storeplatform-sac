@@ -62,20 +62,30 @@
 			<groupId>com.skplanet</groupId>
 			<artifactId>storeplatform-sac-client</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.skplanet</groupId>
-			<artifactId>storeplatform-prototype-rpc-sc-client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.skplanet</groupId>
-			<artifactId>storeplatform-prototype-lpc-sc</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
+		</dependency>		
         <dependency>
             <groupId>com.skplanet</groupId>
             <artifactId>external-component-client</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.skplanet</groupId>
+            <artifactId>storecomponent-member</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.skplanet</groupId>
+            <artifactId>storecomponent-purchase</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.skplanet</groupId>
+            <artifactId>storeplatform-prototype-rpc-sc-client</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.skplanet</groupId>
+            <artifactId>storeplatform-prototype-lpc-sc</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 		<!-- JDBC Lib -->
