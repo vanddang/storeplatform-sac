@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.api.service.CouponContentService;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
 import com.skplanet.storeplatform.sac.api.vo.CouponParameterInfo;
+import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCouponInfo;
@@ -61,6 +62,8 @@ public class CallShoppin {
 	private CouponContainer containers;
 	private final HttpServletResponse response;
 	private final StopWatch watch;
+	List<CouponResponseInfo> couponList = null;
+	CouponResponseInfo couponInfo = null;
 
 	public CallShoppin() {
 		this.brandInfo = new DpBrandInfo();
@@ -186,6 +189,29 @@ public class CallShoppin {
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 						map.put("ERROR_MSG", this.getERR_MESSAGE());
 					}
+					break;
+				case LS:
+					// parserParaMeter(couponParameterInfo);
+					// brand 작업을 호출한다.
+					CouponContentService pcs3 = new CouponContentService();
+					String[] couponCodes = couponParameterInfo.getCouponCode().split(",");
+					this.couponList = pcs3.getSpecialProductList(couponCodes);
+					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					map.put("ERROR_MSG", this.getERR_MESSAGE());
+					break;
+				case DT:
+					CouponContentService pcs4 = new CouponContentService();
+					this.couponInfo = pcs4.getSpecialProductDetail(couponParameterInfo.getCouponCode());
+
+					if (this.couponInfo.getRCode().equals("")) {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
+						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
+					} else {
+						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
+						map.put("ERROR_CODE", this.couponInfo.getRCode());
+					}
+
 					break;
 				default:
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
@@ -439,6 +465,38 @@ public class CallShoppin {
 					xmlSb.append("</rData>");
 					map.put("COMMON_CODE", couponParameterInfo.getCouponCode());
 				case AT:
+					break;
+				case LS:
+					xmlSb.append("<rData>");
+					xmlSb.append("<eventList><![CDATA[");
+					String seperator_comma = "";
+					int j = 0;
+					if (this.couponList != null) {
+						for (CouponResponseInfo couponInfo : this.couponList) {
+							if (j > 0)
+								seperator_comma = ",";
+							xmlSb.append(seperator_comma + couponInfo.getCouponCode() + ":" + couponInfo.getSpecialYN());
+							j++;
+						}
+					}
+					xmlSb.append("]]></eventList>");
+					xmlSb.append("</rData>");
+					break;
+				case DT:
+					xmlSb.append("<rData>");
+					if (this.couponInfo == null)
+						this.couponInfo = new CouponResponseInfo();
+					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponParameterInfo.getCouponCode(), "")
+							+ "]]></couponCode>");
+					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventName(), "")
+							+ "]]></eventName>");
+					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventStartDate(), "")
+							+ "]]></eventStartDate>");
+					xmlSb.append("<eventEndDate><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventEndDate(), "")
+							+ "]]></eventEndDate>");
+					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventDcRate(), "")
+							+ "]]></eventDcRate>");
+					xmlSb.append("</rData>");
 					break;
 				default:
 					xmlSb.append("");

@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
 import com.skplanet.storeplatform.sac.api.vo.CouponParameterInfo;
+import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCouponInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpItemInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
@@ -764,4 +765,30 @@ public class CouponContentService {
 		return dpStatusCode;
 	}// End getDPStatusCode
 
+	public List<CouponResponseInfo> getSpecialProductList(String[] couponCodes) throws CouponException {
+		log.info("<<<<< CouponContentService >>>>> getSpecialProductList...");
+		List<CouponResponseInfo> list = null;
+		// try {
+		// list = couponMetaDefDAO.getSpecialProductList(couponCodes);
+		// list= null
+		// } catch (CouponException e) {
+		// log.error(e);
+		// throw e;
+		//
+		// }
+		return list;
+	}
+
+	public CouponResponseInfo getSpecialProductDetail(String couponCode) throws CouponException {
+		log.info("<<<<< CouponContentService >>>>> getSpecialProductDetail...");
+		CouponResponseInfo info = null;
+		// try {
+		// // info = couponMetaDefDAO.getSpecialProductDetail(couponCode);
+		// } catch (CouponException e) {
+		// log.error(e);
+		// throw e;
+		//
+		// }
+		return info;
+	}
 }
