@@ -49,7 +49,7 @@
         <!-- 일반카테고리 웹툰 상품 조회 -->        													
         <typeAlias alias="CategoryWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq" />
         <typeAlias alias="CategoryWebtoonDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoonDTO" />
-        <!-- 운영자 추천 상품 조회 -->   
+        <!-- 운영자 추천 웹툰 상품 조회 -->   
         <typeAlias alias="RecommendWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq" />
         <typeAlias alias="RecommendWebtoonDTO"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoonDTO" />       
         
