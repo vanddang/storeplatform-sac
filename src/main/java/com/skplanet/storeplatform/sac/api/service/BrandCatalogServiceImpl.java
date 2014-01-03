@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.api.service;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +21,6 @@ import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest;
-import com.skplanet.storeplatform.sac.product.vo.WebtoonDTO;
 
 public class BrandCatalogServiceImpl {
 
@@ -67,7 +64,8 @@ public class BrandCatalogServiceImpl {
 			req.setImageCd("DP000196");
 
 			System.out.println("+++++++++++++++++++++++++LO11119999++++++++++++++++++++");
-			List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req, WebtoonDTO.class);
+			// List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
+			// WebtoonDTO.class);
 			// cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
 			// System.out.println("+++++++++++++++++++++++++LO22229999++++++++++++++++++++");
 		} catch (Exception e) {

@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.api.dao;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest;
-import com.skplanet.storeplatform.sac.product.vo.WebtoonDTO;
 
 @Service
 public class BrandCatalogDaoImpl implements BrandCatalogDao {
@@ -67,7 +64,8 @@ public class BrandCatalogDaoImpl implements BrandCatalogDao {
 			// WebtoonService service = new WebtoonServiceImpl();
 			// service.getAdminWebtoonList(req);
 			System.out.println("+++++++++++++++++++++++++brandId++++++++++++++++++++" + brandId);
-			List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req, WebtoonDTO.class);
+			// List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
+			// WebtoonDTO.class);
 			// cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
 			System.out.println("+++++++++++++++++++++++++LO22229999++++++++++++++++++++");
 		} catch (Exception e) {
