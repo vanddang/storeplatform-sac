@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuListResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
 import com.skplanet.storeplatform.sac.display.menu.service.MenuListService;
 
 @Controller

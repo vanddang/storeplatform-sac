@@ -25,11 +25,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetail;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetail;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuListResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest;
 import com.skplanet.storeplatform.sac.product.vo.MenuDetailDTO;
 
 /**

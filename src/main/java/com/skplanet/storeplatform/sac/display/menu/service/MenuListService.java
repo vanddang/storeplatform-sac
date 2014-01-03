@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuDetailResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuListResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
 
 /**
  * MenuList Service 인터페이스(CoreStoreBusiness)
