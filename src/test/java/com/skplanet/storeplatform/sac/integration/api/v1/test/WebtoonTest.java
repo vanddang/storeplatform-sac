@@ -13,10 +13,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.product.service.WebtoonService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.product.service.WebtoonService;
 public class WebtoonTest {
 
 	@Autowired
-	private WebtoonService WebtoonService;
+	private CategoryWebtoonService WebtoonService;
 
 	/**
 	 * 회원 목록 테스트.
@@ -38,9 +38,9 @@ public class WebtoonTest {
 	 */
 	@Test
 	public void shouldOptianUserCareer() throws JsonGenerationException, JsonMappingException, IOException, Exception {
-		WebtoonRequest WebtoonReqVO = new WebtoonRequest();
+		CategoryWebtoonReq WebtoonReqVO = new CategoryWebtoonReq();
 		System.out.println("++++dfsdfsd++");
-		WebtoonResponse voRes = this.WebtoonService.getWebtoonList(WebtoonReqVO);
+		CategoryWebtoonRes voRes = this.WebtoonService.getWebtoonList(WebtoonReqVO);
 		// System.out.println("++++++" + voRes.getWebtoonList().size());
 		for (Product vo : voRes.getProductList()) {
 			// System.out.println("++++++" + vo.getProduct().getSupport());
