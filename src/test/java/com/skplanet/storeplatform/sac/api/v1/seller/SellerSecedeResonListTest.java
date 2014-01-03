@@ -37,11 +37,11 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListResponseVO;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerSecedeResonListResponseVO;
 
 /**
  * 판매자 탈퇴사유 리스트 조회 테스트
- * 
+ *
  * Updated on : 2013-12-23 Updated by : 반범진, 지티소프트.
  */
 @ActiveProfiles(value = "local")
@@ -59,7 +59,7 @@ public class SellerSecedeResonListTest {
 	private MockMvc mockMvc;
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * method 설명.
 	 * </pre>
@@ -70,7 +70,7 @@ public class SellerSecedeResonListTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * method 설명.
 	 * </pre>
@@ -81,7 +81,7 @@ public class SellerSecedeResonListTest {
 
 	/**
 	 * 판매자 탈퇴사유 리스트 조회 단위테스트.
-	 * 
+	 *
 	 * @throws Exception
 	 *             Exception
 	 */
