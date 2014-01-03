@@ -15,6 +15,6 @@
                             
     
     <import resource="classpath:sac/spring/context-*.xml"/> 
-    <import resource="classpath:sac/runtime/context-*.xml"/> 
+    <import resource="classpath:sac/runtime/context-run*.xml"/> 
     
 </beans>
