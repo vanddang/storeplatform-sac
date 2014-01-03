@@ -19,13 +19,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategoryAppReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	private String prodCharge; // 상품 유/무료 구분
+	private String prodCharge; // 상품 유무료 구분
 
 	private String prodGradeCd; // 상품등급코드
 
 	private String drm; // DRM 지원 구분
 
-	private String imageSizeCd; // 이미지코드
+	private String imageCd; // 이미지코드
 
 	private String menuId; // 메뉴ID
 
@@ -37,7 +37,7 @@ public class CategoryAppReq extends CommonInfo {
 
 	private String tenantId; // 테넌트ID
 
-	private String systemId; // 시스템ID
+	private String deviceModelCd; // 단말 모델 코드
 
 	public String getProdCharge() {
 		return this.prodCharge;
@@ -63,12 +63,12 @@ public class CategoryAppReq extends CommonInfo {
 		this.drm = drm;
 	}
 
-	public String getImageSizeCd() {
-		return this.imageSizeCd;
+	public String getImageCd() {
+		return this.imageCd;
 	}
 
-	public void setImageSizeCd(String imageSizeCd) {
-		this.imageSizeCd = imageSizeCd;
+	public void setImageCd(String imageCd) {
+		this.imageCd = imageCd;
 	}
 
 	public String getMenuId() {
@@ -111,11 +111,11 @@ public class CategoryAppReq extends CommonInfo {
 		this.tenantId = tenantId;
 	}
 
-	public String getSystemId() {
-		return this.systemId;
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
 	}
 
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 }
