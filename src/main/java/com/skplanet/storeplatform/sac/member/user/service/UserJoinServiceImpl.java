@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 
@@ -32,24 +34,36 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private UAPSSCI uapsSCI;
 
 	@Override
-	public CreateByMdnRes createByMdn(CreateByMdnReq req) {
-
-		logger.info("####################################################");
-		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
-		logger.info("####################################################");
-
-		logger.info("Request {}", req.toString());
+	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) {
 
 		/**
-		 * 1. 모번호 조회 - 989로 시작하는 MDN이면 실행
+		 * TODO (UAPS 연동) 모번호 조회 - 989로 시작하는 MDN이면 실행
 		 */
-		this.uapsSCI.getOpmdInfo("98922223333");
+		// this.uapsSCI.getOpmdInfo("98922223333");
+
+		/**
+		 * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
+		 */
+		for (AgreementInfo info : req.getAgreementList()) {
+
+			logger.info(info.getExtraAgreementId());
+			logger.info(info.getExtraAgreementVersion());
+			logger.info(info.getIsExtraAgreement());
+
+		}
+
+		/**
+		 * TODO (IDP 연동) 무선회원 가입
+		 */
+
+		/**
+		 * TODO IDP 회원 기가입 상태인 경우
+		 */
 
 		CreateByMdnRes result = new CreateByMdnRes();
 		result.setUserKey("12321423543464567457");
 
-		return null;
+		return result;
 
 	}
-
 }
