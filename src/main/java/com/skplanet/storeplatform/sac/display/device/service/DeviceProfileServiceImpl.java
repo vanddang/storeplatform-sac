@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.device.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
-import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileDTO;
-import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileResponse;
+import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO;
 
 /**
  * DeviceProfileService Service 인터페이스(CoreStoreBusiness) 구현체
@@ -42,11 +42,11 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 	 * java.lang.String)
 	 */
 	@Override
-	public DeviceProfileResponse searchDeviceProfile(DeviceProfileRequest requestVO) {
+	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO) {
 		// TODO Auto-generated method stub
 
 		CommonResponse commonRes = new CommonResponse();
-		DeviceProfileResponse deviceProfileResponse = new DeviceProfileResponse();
+		DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
 		DeviceProfileDTO deviceProfileDTO = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile",
 				requestVO, DeviceProfileDTO.class);
 

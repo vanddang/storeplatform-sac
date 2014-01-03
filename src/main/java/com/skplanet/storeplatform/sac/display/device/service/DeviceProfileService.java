@@ -7,10 +7,10 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.device.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 
 /**
  * 특정 단말 정보 조회(CoreStoreBusiness)
@@ -30,5 +30,5 @@ public interface DeviceProfileService {
 	 *            모델명
 	 * @return
 	 */
-	public DeviceProfileResponse searchDeviceProfile(DeviceProfileRequest requestVO);
+	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO);
 }
