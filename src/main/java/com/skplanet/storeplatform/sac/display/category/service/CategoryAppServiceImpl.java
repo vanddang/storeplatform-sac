@@ -32,7 +32,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		CategoryAppRes categoryAppRes = new CategoryAppRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		List<CategoryAppDTO> appList = this.commonDAO.queryForList("ProductCategory.selectCategoryList", req,
+		List<CategoryAppDTO> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
 				CategoryAppDTO.class);
 
 		if (appList != null) {

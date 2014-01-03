@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequest;
 import com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -29,12 +30,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO;
 
 /**
@@ -50,6 +51,9 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	@Autowired
+	private ProductCommonService productCommonService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -59,38 +63,58 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 	 */
 	@Override
 	public FeatureVodProductResponse searchFeatureVodProductList(FeatureVodProductRequest request) {
+		String productClass = null;
 		String listId = request.getListId();
-		// 메뉴 정보 조회
-		// ProductCommonResponse menuInfo = this.productCommonService.searchMenuInfo(request);
-
-		List<FeatureVodProductDTO> productList = null;
 		FeatureVodProductResponse response = null;
 
-		if ("ADM000000008".equals(listId)) {
+		// 메뉴 정보 조회
+		ProductCommonResponse menuInfo = this.productCommonService.searchMenuInfo(request);
+
+		if ("00".equals(menuInfo.getErrorCode())) {
+			if ("MN17".equals(productClass)) {
+				// 영화
+				productClass = "movie";
+			} else if ("MN18".equals(productClass)) {
+				// 방송
+				productClass = "tv";
+			}
+
 			this.logger.debug("--------------------------------------------------------------------------");
-			this.logger.debug("Feature VOD 운영자 추천 상품");
+			this.logger.debug("### searchFeatureVodProductList productClass : {}", productClass);
 			this.logger.debug("--------------------------------------------------------------------------");
 
-			productList = this.commonDAO.queryForList("FeatureVodProduct.selectAdminNewProductList", request,
-					FeatureVodProductDTO.class);
+			List<FeatureVodProductDTO> productList = null;
 
-			// Response 생성
-			response = this.generateResponse(listId, productList);
-		} else if ("ADM000000003".equals(listId)) {
-			this.logger.debug("--------------------------------------------------------------------------");
-			this.logger.debug("Feature VOD 운영자 신규 상품");
-			this.logger.debug("--------------------------------------------------------------------------");
+			if ("ADM000000008".equals(listId)) {
+				this.logger.debug("--------------------------------------------------------------------------");
+				this.logger.debug("Feature VOD 운영자 추천 상품");
+				this.logger.debug("--------------------------------------------------------------------------");
 
+				productList = this.commonDAO.queryForList("FeatureVodProduct.selectAdminNewProductList", request,
+						FeatureVodProductDTO.class);
+
+				// Response 생성
+				response = this.generateResponse(productClass, productList);
+			} else if ("ADM000000003".equals(listId)) {
+				this.logger.debug("--------------------------------------------------------------------------");
+				this.logger.debug("Feature VOD 운영자 신규 상품");
+				this.logger.debug("--------------------------------------------------------------------------");
+
+			} else {
+				this.logger.debug("--------------------------------------------------------------------------");
+				this.logger.debug("Feature VOD 카테고리 상품 아님");
+				this.logger.debug("--------------------------------------------------------------------------");
+			}
 		} else {
 			this.logger.debug("--------------------------------------------------------------------------");
-			this.logger.debug("Feature VOD 카테고리 상품 아님");
+			this.logger.debug("메뉴 정보 조회 오류 발생");
 			this.logger.debug("--------------------------------------------------------------------------");
 		}
 
 		return response;
 	}
 
-	private FeatureVodProductResponse generateResponse(String listId, List<FeatureVodProductDTO> resultList) {
+	private FeatureVodProductResponse generateResponse(String productClass, List<FeatureVodProductDTO> resultList) {
 		FeatureVodProductResponse response = new FeatureVodProductResponse();
 
 		if (resultList != null) {
@@ -103,11 +127,11 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 			Source source = null;
 			Price price = null;
 
-			App app = null;
 			Support support = null;
 			Contributor contributor = null;
 			Date date = null;
-			Book book = null;
+			Vod vod = null;
+			VideoInfo videoInfo = null;
 
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
@@ -122,6 +146,7 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
 				identifier.setText(productDto.getProdId());
+				identifier.setType("channel");
 
 				// 메뉴 정보
 				menu = new Menu();
@@ -165,65 +190,45 @@ public class FeatureVodProductServiceImpl implements FeatureVodProductService {
 				price = new Price();
 				price.setText(Integer.parseInt(productDto.getProdAmt()));
 
-				// 어플리케이션 상품
-				if ("ADM000000008".equals(listId)) {
-					// 상품 타입 (에피소드상품)
-					identifier.setType("episode");
-
+				// 영화 상품
+				if ("movie".equals(productClass)) {
 					// 상품 지원 구분 정보
 					support = new Support();
 					supportList = new ArrayList<Support>();
-					support.setType("drm");
-					// support.setText(productDto.getDrmYn());
-					supportList.add(support);
-
-					support = new Support();
-					support.setType("inApp");
-					// support.setText(productDto.getPartParentClsfCd());
+					support.setType("hdv");
+					support.setText(productDto.getHdvYn());
 					supportList.add(support);
 					product.setSupportList(supportList);
-					product.setApp(app);
-				} else if ("ebook".equals(listId)) {
-					// 상품 타입 (채널상품)
-					identifier.setType("channel");
 
 					// 메타클래스 정보
 					menu = new Menu();
 					menu.setType("metaClass");
-					menu.setId("CT20");
+					menu.setId("CT13");
 					menuList.add(menu);
 
 					// 저작권자 정보
 					contributor = new Contributor();
-					contributor.setName("홍길동");
-					contributor.setCompany("티스토어");
+					contributor.setDirector("홍길동");
+					contributor.setArtist("임창정, 최다니엘, 오달수");
 
 					date = new Date();
 					date.setType("date/publish");
-					date.setText("20131224");
+					date.setText("2013");
 					contributor.setDate(date);
 					product.setContributor(contributor);
+				} else if ("tv".equals(productClass)) {
+					vod = new Vod();
+					videoInfo = new VideoInfo();
+					videoInfo.setType("hd");
+					vod.setVideoInfo(videoInfo);
+					product.setVod(vod);
 
-					// 도서 정보
-					book = new Book();
-					book.setTotalPages("30");
-					book.setStatus("continue");
+					date = new Date();
+					date.setType("date/broadcast");
+					date.setText("20121016T220000+0900");
+					product.setDate(date);
 
-					// 상품 지원 구분 정보
-					support = new Support();
-					supportList = new ArrayList<Support>();
-					support.setType("play");
-					support.setText("Y");
-					supportList.add(support);
-
-					support = new Support();
-					support.setType("store");
-					support.setText("Y");
-					supportList.add(support);
-					book.setSupportList(supportList);
-					product.setBook(book);
-
-					product.setLatestIssue("에스콰이어 9월호");
+					// MBC, KBS, SBS 방송사 정보가 product에 필요함
 				}
 
 				// 데이터 매핑
