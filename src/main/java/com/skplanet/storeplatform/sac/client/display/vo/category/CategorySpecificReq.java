@@ -1,8 +1,8 @@
-package com.skplanet.storeplatform.sac.client.product.vo.category;
+package com.skplanet.storeplatform.sac.client.display.vo.category;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class SpecificProductRequest extends CommonInfo {
+public class CategorySpecificReq extends CommonInfo {
 	private String list;
 
 	public String getList() {

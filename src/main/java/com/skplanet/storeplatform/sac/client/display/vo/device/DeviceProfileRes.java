@@ -1,10 +1,10 @@
-package com.skplanet.storeplatform.sac.client.product.vo.provision;
+package com.skplanet.storeplatform.sac.client.display.vo.device;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 
-public class DeviceProfileResponse extends CommonInfo {
+public class DeviceProfileRes extends CommonInfo {
 	private CommonResponse commonRes;
 	private Device device;
 

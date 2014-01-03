@@ -1,8 +1,8 @@
-package com.skplanet.storeplatform.sac.client.product.vo.provision;
+package com.skplanet.storeplatform.sac.client.display.vo.device;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class DeviceProfileRequest extends CommonInfo {
+public class DeviceProfileReq extends CommonInfo {
 	/**
 	 * 제조사명
 	 */
