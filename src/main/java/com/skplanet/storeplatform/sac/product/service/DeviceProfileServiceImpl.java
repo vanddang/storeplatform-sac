@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.product.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.provision.DeviceProfileR
  */
 @Component
 public class DeviceProfileServiceImpl implements DeviceProfileService {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -65,6 +69,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 
 			device.setServices(deviceProfileDTO.getServicesMap());
 			device.setSupportedHardware(deviceProfileDTO.getSupportedHardwareMap());
+			device.setModelExplain(deviceProfileDTO.getModelNm());
 			// TODO osm1021 DPI 넣어주는 처리가 필요
 		} else { // 미지원단말
 			device.setIdentifier("android_standard");

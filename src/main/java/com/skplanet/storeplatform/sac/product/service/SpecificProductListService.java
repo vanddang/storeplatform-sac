@@ -14,7 +14,8 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SpecificProductList;
+import com.skplanet.storeplatform.sac.client.product.vo.category.SpecificProductRequest;
+import com.skplanet.storeplatform.sac.client.product.vo.category.SpecificProductResponse;
 
 /**
  * 특정 상품 조회 인터페이스(CoreStoreBusiness)
@@ -34,6 +35,5 @@ public interface SpecificProductListService {
 	 * @throws JsonMappingException
 	 * @throws JsonGenerationException
 	 */
-	public SpecificProductList getSpecificProductList(String list, String imageSizeCd)
-			throws JsonGenerationException, JsonMappingException, IOException;
+	public SpecificProductResponse getSpecificProductList(SpecificProductRequest request);
 }
