@@ -57,7 +57,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 
 		/**
-		 * TODO IDP 회원 기가입 상태인 경우
+		 * TODO IDP 회원 기가입 상태인 경우 (IDP 연동) 무선회원 해지
+		 */
+
+		/**
+		 * TODO (SC 연동) 회원 정보 등록
+		 */
+
+		/**
+		 * TODO (SC 연동) 휴대기기 정보 등록
 		 */
 
 		CreateByMdnRes result = new CreateByMdnRes();
