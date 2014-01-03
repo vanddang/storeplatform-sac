@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListRequestVO;
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonListResponseVO;
-import com.skplanet.storeplatform.sac.client.user.vo.SellerSecedeResonVO;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerSecedeResonListRequestVO;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerSecedeResonListResponseVO;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerSecedeResonVO;
 
 /**
  * Seller Service 인터페이스 구현체
- * 
+ *
  * Updated on : 2013-12-23 Updated by : 반범진, 지티소프트.
  */
 @Component
