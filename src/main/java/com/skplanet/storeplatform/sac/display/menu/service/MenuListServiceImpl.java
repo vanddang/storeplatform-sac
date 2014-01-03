@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.product.vo.MenuDetailDTO;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
 
 /**
  * MenuList Service 인터페이스(CoreStoreBusiness) 구현체
