@@ -56,7 +56,7 @@
                             , TB_DP_TENANT_PROD        G
                             , TB_DP_TENANT_PROD_STATS  H
                             , TB_DP_TENANT_PROD_PRICE  I
-                            , TB_DP_PROD_RSHP J
+                            , TB_DP_PROD_RSHP          J
                             ,(
                                SELECT PROD_ID,PART_PROD_ID FROM (   
                                        SELECT 
@@ -125,7 +125,7 @@
                         <if test="menuId != null">
                         AND A.MENU_ID = #{menuId}           /* MN26001 : 웹툰>코믹,MN26002:순정,MN26003:드라마,MN26004:스릴러,MN26005:판타지,MN26006:액션 */
                         </if>                            
-
+                         AND  A.UP_MENU_ID ='MN26'           /* MN26 : 웹툰 */
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
@@ -207,7 +207,7 @@
                            , TB_DP_TENANT_PROD        G
                            , TB_DP_TENANT_PROD_STATS  H
                            , TB_DP_TENANT_PROD_PRICE  I
-                           , TB_DP_PROD_RSHP J
+                           , TB_DP_PROD_RSHP          J
                            ,(
                               SELECT PROD_ID,PART_PROD_ID FROM (   
                                       SELECT 
@@ -254,9 +254,9 @@
                                          AND  D1.DRM_YN =#{drm}                      /* DRM 지원 구분 Y : 지원, N : 미지원*/
                                        </if>        
                               )WHERE NO =1                                          
-                            ) K
+                            )                K
                             ,TB_DP_LIST_PROD L
-                            ,TB_DP_LIST M
+                            ,TB_DP_LIST      M
                       WHERE  A.TENANT_ID = B.TENANT_ID
                         AND  A.MENU_ID = B.MENU_ID
                         AND  A.SYSTEM_ID = B.SYSTEM_ID
@@ -275,14 +275,15 @@
                         AND  A.TENANT_ID = L.TENANT_ID
                         AND  M.TENANT_ID = L.TENANT_ID
                         AND  M.LIST_ID = L.LIST_ID
-                        AND  L.LIST_ID = #{listId}            /* ADM000000001 : 운영자 추천 웹툰 */
+                        AND  L.LIST_ID = #{listId}            /* ADM000000001(?) : 운영자 추천 웹툰(?) */
                         AND  G.PROD_ID = K.PART_PROD_ID(+)
                         AND  K.PART_PROD_ID IS NOT NULL
                         AND  A.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                         AND  A.SYSTEM_ID = #{systemId}     /* INPUT 시스템ID */
                         <if test="menuId != null">
                         AND A.MENU_ID = #{menuId}           /* MN26001 : 웹툰>코믹,MN26002:순정,MN26003:드라마,MN26004:스릴러,MN26005:판타지,MN26006:액션 */
-                        </if>                                   
+                        </if>                
+                        AND  A.UP_MENU_ID ='MN26'           /* MN26 : 웹툰 */                   
                         AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                         AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                         AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
