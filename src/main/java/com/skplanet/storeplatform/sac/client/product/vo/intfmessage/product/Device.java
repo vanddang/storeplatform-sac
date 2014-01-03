@@ -22,14 +22,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class Device extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * Device내 사용된 Language 정보 ([LANG}에 정의된 language Tag값을 갖음
-	 */
-	private String lang;
-	/**
-	 * Device내 사용된 Base URI 정보
-	 */
-	private String base;
+
 	/**
 	 * 단말 식별자 - {제조사/모델명}test
 	 */
@@ -78,22 +71,6 @@ public class Device extends CommonInfo implements Serializable {
 	private String msisdn;
 
 	private Map<String, Object> services;
-
-	public String getLang() {
-		return this.lang;
-	}
-
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-
-	public String getBase() {
-		return this.base;
-	}
-
-	public void setBase(String base) {
-		this.base = base;
-	}
 
 	public String getIdentifier() {
 		return this.identifier;

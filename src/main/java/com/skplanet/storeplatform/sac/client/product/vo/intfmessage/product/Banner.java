@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
@@ -72,6 +73,8 @@ public class Banner extends CommonInfo implements Serializable {
 	 * 미리 보기 정보를 정의한다. source의 type="video/x-freeview-lq" (미리보기 저화질) source의 type="video/x-freeview-hq" (미리보기 고화질)
 	 */
 	private Preview preview; // VOD 상품일 경우 미리보기 정보
+
+	private List<Menu> menuList;
 
 	public String getBase() {
 		return this.base;
@@ -160,4 +163,13 @@ public class Banner extends CommonInfo implements Serializable {
 	public void setPreview(Preview preview) {
 		this.preview = preview;
 	}
+
+	public List<Menu> getMenuList() {
+		return this.menuList;
+	}
+
+	public void setMenuList(List<Menu> menuList) {
+		this.menuList = menuList;
+	}
+
 }
