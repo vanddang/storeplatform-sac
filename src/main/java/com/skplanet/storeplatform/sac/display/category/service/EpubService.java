@@ -1,5 +1,5 @@
 package com.skplanet.storeplatform.sac.display.category.service;
 
-public class CategoryVodBoxService {
+public class EpubService {
 
 }
