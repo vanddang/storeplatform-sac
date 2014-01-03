@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.feature.best.BestAppReq;
-import com.skplanet.storeplatform.sac.client.display.feature.best.BestAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;

@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
-import com.skplanet.storeplatform.sac.client.display.feature.best.BestAppReq;
-import com.skplanet.storeplatform.sac.client.display.feature.best.BestAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
