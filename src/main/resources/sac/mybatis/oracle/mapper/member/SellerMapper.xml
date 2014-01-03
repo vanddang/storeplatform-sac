@@ -3,17 +3,17 @@
 <mapper namespace="seller">
 
     <!-- 판매자 탈퇴사유 리스트 조회 -->
-    <select id="getSellerSecedeResonList" parameterType="SellerSecedeResonListRequestVO" resultType="SellerSecedeResonVO">
+<!--     <select id="getSellerSecedeResonList" parameterType="SellerSecedeResonListRequestVO" resultType="SellerSecedeResonVO">
 		SELECT CD_ID AS secedeReasonCode,
 				CD_NM AS secedeReasonMessage
 		  FROM TB_CM_CD
-		 WHERE GRP_CD_ID = 'US0018'
+		 WHERE GRP_CD_ID = 'US0104'
 		 <if test="langCd != null">
 		 	AND LANG_CD = #{langCd}
 		 </if>
 		 AND USE_YN = 'Y'
-		 ORDER BY CD_ID
+		 ORDER BY LANG_CD desc, CD_ID
     </select>
-
+ -->
 </mapper>
 
