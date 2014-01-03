@@ -35,7 +35,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.product.vo.WebtoonDTO;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -79,11 +78,11 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
-		// WebtoonDTO.class);
+		// List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
+		// RecommendWebtoonDTO.class);
 
 		// if (resultList != null) {
-		WebtoonDTO webtoonDto = new WebtoonDTO();
+		// RecommendWebtoonDTO RecommendWebtoonDTO = new RecommendWebtoonDTO();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -102,7 +101,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// webtoonDto = resultList.get(i);
+			// RecommendWebtoonDTO = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("episode");
 			identifier.setText("H090124341");

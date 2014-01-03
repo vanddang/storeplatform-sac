@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.product.vo.WebtoonDTO;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -82,7 +82,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		// List<WebtoonDTO> resultList = null;
 
 		// if (resultList != null) {
-		WebtoonDTO webtoonDto = new WebtoonDTO();
+		// WebtoonDTO webtoonDto = new WebtoonDTO();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
