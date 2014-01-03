@@ -15,7 +15,7 @@ public interface CategoryWebtoonService {
 	 * 일반 카테고리 웹툰 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param RecommendWebtoonReq
+	 * @param CategoryWebtoonReq
 	 * @return CategoryWebtoonRes 리스트
 	 */
 	public CategoryWebtoonRes getWebtoonList(CategoryWebtoonReq req) throws JsonGenerationException,
