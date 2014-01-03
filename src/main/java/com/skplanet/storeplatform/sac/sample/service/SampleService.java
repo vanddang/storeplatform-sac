@@ -7,11 +7,18 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.other.interpark.service;
+package com.skplanet.storeplatform.sac.sample.service;
 
-import org.springframework.stereotype.Service;
+import com.skplanet.storeplatform.external.client.sample.vo.Sample;
 
-@Service
-public class InterparkServiceImpl {
+/**
+*
+* 샘플 Service (비즈니스 로직 구현)
+*
+* Updated on : 2014. 1. 2. Updated by : 서대영, SK Planet.
+*/
+public interface SampleService {
+
+	Sample getDetail(Sample sample);
 
 }
