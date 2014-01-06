@@ -6,29 +6,21 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [REQUEST] 대표 단말 설정 기능을 제공한다.
+ * [REQUEST] 회원 탈퇴 기능을 제공한다.
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class ModifyRepresentationDeviceReq extends CommonInfo {
+public class WithdrawReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 사용자 권한 Key */
-	private String userAuthKey;
-	/* 기기 ID(Mdn, uuId, macAddress) */
+	/* 기기 ID(mdn, uuId) */
 	private String deviceId;
-	/* 기기 Key */
-	private String deviceKey;
-
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
-	}
+	/* 사용자 아이디 */
+	private String userId;
+	/* IDP 인증 Key */
+	private String userAuthKey;
 
 	public String getDeviceId() {
 		return this.deviceId;
@@ -38,12 +30,20 @@ public class ModifyRepresentationDeviceReq extends CommonInfo {
 		this.deviceId = deviceId;
 	}
 
-	public String getDeviceKey() {
-		return this.deviceKey;
+	public String getUserId() {
+		return this.userId;
 	}
 
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUserAuthKey() {
+		return this.userAuthKey;
+	}
+
+	public void setUserAuthKey(String userAuthKey) {
+		this.userAuthKey = userAuthKey;
 	}
 
 	public static long getSerialversionuid() {

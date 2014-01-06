@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [RESPONSE] 대표 단말 설정 기능을 제공한다.
+ * [REQUEST] 대표 단말 설정 기능을 제공한다.
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */

@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [RESPONSE] ID 찾기
+ * [REQUEST] ID 찾기
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */

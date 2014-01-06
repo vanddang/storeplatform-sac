@@ -1,18 +1,13 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 사용자 부가정보
+ * 휴대기기 부가정보
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-
-@JsonSerialize(include = Inclusion.NON_NULL)
-public class UserExtraInfo extends CommonInfo {
+public class AddExtraInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,8 +15,6 @@ public class UserExtraInfo extends CommonInfo {
 	 * 부가정보 코드
 	 */
 	private String extraProfile;
-
-	private String extraProfileCode;
 
 	/**
 	 * 부가정보 값
@@ -42,14 +35,6 @@ public class UserExtraInfo extends CommonInfo {
 
 	public void setExtraProfileValue(String extraProfileValue) {
 		this.extraProfileValue = extraProfileValue;
-	}
-
-	public String getExtraProfileCode() {
-		return this.extraProfileCode;
-	}
-
-	public void setExtraProfileCode(String extraProfileCode) {
-		this.extraProfileCode = extraProfileCode;
 	}
 
 }
