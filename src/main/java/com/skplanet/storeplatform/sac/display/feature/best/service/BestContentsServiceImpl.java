@@ -70,8 +70,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 				identifier.setType("channelId");
 				identifier.setText("H001540562");
 
-				support.setType("");
-				support.setText("hd");
+				support.setType("hd");
+				support.setText("Y");
 				supportList.add(support);
 
 				/*

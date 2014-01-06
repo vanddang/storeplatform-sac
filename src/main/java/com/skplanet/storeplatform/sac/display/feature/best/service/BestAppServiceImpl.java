@@ -76,8 +76,8 @@ public class BestAppServiceImpl implements BestAppService {
 			identifier.setType("episodeId");
 			identifier.setText("0000643818");
 
-			support.setType("Y");
-			support.setText("iab");
+			support.setType("iab");
+			support.setText("PD012301");
 			supportList.add(support);
 
 			/*

@@ -77,8 +77,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 			identifier.setType("episodeId");
 			identifier.setText("0000643818");
 
-			support.setType("Y");
-			support.setText("iab");
+			support.setType("PD012301");
+			support.setText("PD012301");
 			supportList.add(support);
 
 			/*
