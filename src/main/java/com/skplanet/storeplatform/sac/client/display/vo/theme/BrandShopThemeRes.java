@@ -8,7 +8,7 @@ lose such Confidential Information and
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo.theme;
+package com.skplanet.storeplatform.sac.client.display.vo.theme;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
-public class BrandShopThemeResponse extends CommonInfo {
+public class BrandShopThemeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;
 	private Layout layout;

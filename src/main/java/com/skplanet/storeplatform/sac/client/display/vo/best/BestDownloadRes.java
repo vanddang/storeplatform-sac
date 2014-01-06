@@ -8,7 +8,7 @@ lose such Confidential Information and
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo.best;
+package com.skplanet.storeplatform.sac.client.display.vo.best;
 
 import java.util.List;
 
@@ -20,12 +20,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * BEST 앱 상품 조회 List Value Object.
+ * BEST 다운로드 상품 조회 List Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
-// @ProtobufMapping(BestAppProto.resBestApp.class)
-public class BestAppResponse extends CommonInfo {
+public class BestDownloadRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;

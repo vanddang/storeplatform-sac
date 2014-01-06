@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo.theme;
+package com.skplanet.storeplatform.sac.client.display.vo.theme;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -16,11 +16,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-public class BrandShopThemeRequest extends CommonInfo {
+public class EbookComicThemeReq extends CommonInfo {
 
-	private String menuId; // 메뉴Id
-	private String brandshopId; // 테마존 Id
-	private String orderedBy; // 이미지 사이즈 코드
+	private static final long serialVersionUID = 1L;
+	private String listId; // 리스트 Id
+	private String filteredBy; // 상품유형 구분
+	private String imageSizeCd; // 이미지 사이즈 코드
 	private String offset; // 시작점 ROW
 	private String count; // 페이지당 노출 ROW 수
 
@@ -32,8 +33,8 @@ public class BrandShopThemeRequest extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getMenuId() {
-		return this.menuId;
+	public String getListId() {
+		return this.listId;
 	}
 
 	/**
@@ -42,36 +43,11 @@ public class BrandShopThemeRequest extends CommonInfo {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param menuId
-	 *            menuId
+	 * @param listId
+	 *            listId
 	 */
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getBrandshopId() {
-		return this.brandshopId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param brandshopId
-	 *            brandshopId
-	 */
-	public void setBrandshopId(String brandshopId) {
-		this.brandshopId = brandshopId;
+	public void setListId(String listId) {
+		this.listId = listId;
 	}
 
 	/**
@@ -82,8 +58,8 @@ public class BrandShopThemeRequest extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getOrderedBy() {
-		return this.orderedBy;
+	public String getImageSizeCd() {
+		return this.imageSizeCd;
 	}
 
 	/**
@@ -92,11 +68,36 @@ public class BrandShopThemeRequest extends CommonInfo {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param orderedBy
-	 *            orderedBy
+	 * @param imageSizeCd
+	 *            imageSizeCd
 	 */
-	public void setOrderedBy(String orderedBy) {
-		this.orderedBy = orderedBy;
+	public void setImageSizeCd(String imageSizeCd) {
+		this.imageSizeCd = imageSizeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getFilteredBy() {
+		return this.filteredBy;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param filteredBy
+	 *            filteredBy
+	 */
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
 	}
 
 	/**

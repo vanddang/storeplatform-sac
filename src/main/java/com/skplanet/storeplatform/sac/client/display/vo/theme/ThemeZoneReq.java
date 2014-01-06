@@ -7,23 +7,21 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo.best;
+package com.skplanet.storeplatform.sac.client.display.vo.theme;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * BEST 앱 상품 조회 List Value Object.
+ * 일반/특정 상품 카테고리 리스트 조회 Input Value Object.
  * 
- * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
+ * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
  */
-public class BestAppRequest extends CommonInfo {
+public class ThemeZoneReq extends CommonInfo {
 
-	private static final long serialVersionUID = 1L;
 	private String listId; // 리스트 Id
+	private String menuId; // 메뉴Id
+	private String themezoneId; // 테마존 Id
 	private String imageSizeCd; // 이미지 사이즈 코드
-	private String drm; // drm 지원구분
-	private String prodGradeCd; // 상품등급코드
-	private String menuId; // 메뉴 Id
 	private String offset; // 시작점 ROW
 	private String count; // 페이지당 노출 ROW 수
 
@@ -60,81 +58,6 @@ public class BestAppRequest extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getImageSizeCd() {
-		return this.imageSizeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param imageSizeCd
-	 *            imageSizeCd
-	 */
-	public void setImageSizeCd(String imageSizeCd) {
-		this.imageSizeCd = imageSizeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getDrm() {
-		return this.drm;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param drm
-	 *            drm
-	 */
-	public void setDrm(String drm) {
-		this.drm = drm;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getProdGradeCd() {
-		return this.prodGradeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param prodGradeCd
-	 *            prodGradeCd
-	 */
-	public void setProdGradeCd(String prodGradeCd) {
-		this.prodGradeCd = prodGradeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
 	public String getMenuId() {
 		return this.menuId;
 	}
@@ -150,6 +73,56 @@ public class BestAppRequest extends CommonInfo {
 	 */
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getThemezoneId() {
+		return this.themezoneId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param themezoneId
+	 *            themezoneId
+	 */
+	public void setThemezoneId(String themezoneId) {
+		this.themezoneId = themezoneId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getImageSizeCd() {
+		return this.imageSizeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param imageSizeCd
+	 *            imageSizeCd
+	 */
+	public void setImageSizeCd(String imageSizeCd) {
+		this.imageSizeCd = imageSizeCd;
 	}
 
 	/**
