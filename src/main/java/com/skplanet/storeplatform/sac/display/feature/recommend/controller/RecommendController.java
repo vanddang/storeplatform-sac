@@ -11,12 +11,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
-import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminServiceImpl;
 
 @Controller
 @RequestMapping("/display/feature/recommand")
 public class RecommendController {
-	private transient Logger logger = LoggerFactory.getLogger(ProductCommonServiceImpl.class);
+	private transient Logger logger = LoggerFactory.getLogger(RecommendController.class);
 
 	@Autowired
 	private RecommendWebtoonService recommendWebtoonService;
@@ -29,5 +32,17 @@ public class RecommendController {
 		this.logger.debug("----------------------------------------------------------------");
 		return this.recommendWebtoonService.searchWebtoonList(req);
 
+	}
+	
+	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
+		
+		logger.info(requestVO.toString());
+
+		RecommendAdminService service = new RecommendAdminServiceImpl();
+		RecommendAdminRes responseVO;
+		responseVO = service.searchAdminList(requestVO);
+		return responseVO;
 	}
 }
