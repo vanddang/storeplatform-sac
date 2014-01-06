@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
@@ -165,6 +168,53 @@ public class DummyDataController {
 
 		CreateRealNameRes res = new CreateRealNameRes();
 		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createOcbInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateOcbInformationRes createOcbInformation() {
+
+		logger.info("#########################################");
+		logger.info("##### 5.1.28. 회원 OCB 정보 등록/수정 #####");
+		logger.info("#########################################");
+
+		CreateOcbInformationRes res = new CreateOcbInformationRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/removeOcbInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public RemoveOcbInformationRes removeOcbInformation() {
+
+		logger.info("####################################");
+		logger.info("##### 5.1.29. 회원 OCB 정보 삭제 #####");
+		logger.info("####################################");
+
+		RemoveOcbInformationRes res = new RemoveOcbInformationRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/getOcbInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public GetOcbInformationRes getOcbInformation() {
+
+		logger.info("####################################");
+		logger.info("##### 5.1.30. 회원 OCB 정보 조회 #####");
+		logger.info("####################################");
+
+		GetOcbInformationRes res = new GetOcbInformationRes();
+		res.setUserKey("IW102158844420091030165015");
+		res.setOcbAuthMtdCd("OR003401");
+		res.setUseYn("Y");
+		res.setOcbNo("1f7df530b17a0ac38d817d87a5f994855565bae540877207012e46c2eb9af4db");
+		res.setUseStartDt("20130106");
+		res.setUseEndDt("20130106");
 
 		return res;
 	}
