@@ -15,7 +15,7 @@ package com.skplanet.storeplatform.sac.client.common.vo;
  * 
  * Updated on : 2014. 1. 2. Updated by : 김현일, 인크로스
  */
-public class Device {
+public class CmDevice {
 	private String deviceModelCd;
 	private String modelNm;
 	private String engModelNm;

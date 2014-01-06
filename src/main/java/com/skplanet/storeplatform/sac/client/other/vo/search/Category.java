@@ -14,21 +14,24 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+@JsonSerialize(include = Inclusion.NON_EMPTY)
 public class Category extends CommonInfo {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@JsonSerialize(include = Inclusion.NON_EMPTY)
 	private String categoryCd;
-	@JsonSerialize(include = Inclusion.NON_EMPTY)
 	private String categoryNm;
-	@JsonSerialize(include = Inclusion.NON_EMPTY)
-	private String categoryCnt;
-	@JsonSerialize(include = Inclusion.NON_EMPTY)
+	private int categoryCnt;
 	private String categoryDesc;
+
+	public Category() {
+	}
+
+	public Category(String categoryCd) {
+		this.categoryCd = categoryCd;
+	}
 
 	public String getCategoryCd() {
 		return this.categoryCd;
@@ -46,11 +49,11 @@ public class Category extends CommonInfo {
 		this.categoryNm = categoryNm;
 	}
 
-	public String getCategoryCnt() {
+	public int getCategoryCnt() {
 		return this.categoryCnt;
 	}
 
-	public void setCategoryCnt(String categoryCnt) {
+	public void setCategoryCnt(int categoryCnt) {
 		this.categoryCnt = categoryCnt;
 	}
 

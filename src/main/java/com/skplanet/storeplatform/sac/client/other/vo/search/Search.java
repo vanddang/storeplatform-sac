@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.search;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 public class Search extends CommonInfo {
@@ -18,9 +16,9 @@ public class Search extends CommonInfo {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Category> topCategory;
-	private List<Category> dpCategory;
-	private List<Category> metaClsf;
+	private Category topCategory;
+	private Category dpCategory;
+	private Category metaClsf;
 	private String prodId;
 	private String prodNm;
 	private String prodDesc;
@@ -28,6 +26,7 @@ public class Search extends CommonInfo {
 	private String prodNetAmt;
 	private String prodType;
 	private String prodAmt;
+	private String prodGrdCd;
 	private String dcRate;
 	private String aid;
 	private String appVerCd;
@@ -56,27 +55,27 @@ public class Search extends CommonInfo {
 	private String offset;
 	private String count;
 
-	public List<Category> getTopCategory() {
+	public Category getTopCategory() {
 		return this.topCategory;
 	}
 
-	public void setTopCategory(List<Category> topCategory) {
+	public void setTopCategory(Category topCategory) {
 		this.topCategory = topCategory;
 	}
 
-	public List<Category> getDpCategory() {
+	public Category getDpCategory() {
 		return this.dpCategory;
 	}
 
-	public void setDpCategory(List<Category> dpCategory) {
+	public void setDpCategory(Category dpCategory) {
 		this.dpCategory = dpCategory;
 	}
 
-	public List<Category> getMetaClsf() {
+	public Category getMetaClsf() {
 		return this.metaClsf;
 	}
 
-	public void setMetaClsf(List<Category> metaClsf) {
+	public void setMetaClsf(Category metaClsf) {
 		this.metaClsf = metaClsf;
 	}
 
@@ -134,6 +133,14 @@ public class Search extends CommonInfo {
 
 	public void setProdAmt(String prodAmt) {
 		this.prodAmt = prodAmt;
+	}
+
+	public String getProdGrdCd() {
+		return this.prodGrdCd;
+	}
+
+	public void setProdGrdCd(String prodGrdCd) {
+		this.prodGrdCd = prodGrdCd;
 	}
 
 	public String getDcRate() {
