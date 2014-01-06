@@ -9,19 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.member.user.dummy;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
@@ -41,7 +45,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(@RequestHeader Map<String, Object> headers) {
+	public CreateByMdnRes createByMdn() {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
@@ -55,13 +59,111 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(@RequestHeader Map<String, Object> headers) {
+	public CreateByAgreementRes createByAgreement() {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
 		logger.info("####################################################");
 
 		CreateByAgreementRes res = new CreateByAgreementRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createBySimple/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateBySimpleRes createBySimple() {
+
+		logger.info("#############################################");
+		logger.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
+		logger.info("#############################################");
+
+		CreateBySimpleRes res = new CreateBySimpleRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/modify/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyRes modify() {
+
+		logger.info("#################################");
+		logger.info("##### 5.1.13. 회원 정보 수정 #####");
+		logger.info("#################################");
+
+		ModifyRes res = new ModifyRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyPasswordRes modifyPassword() {
+
+		logger.info("################################");
+		logger.info("##### 5.1.14. 비밀번호 수정 #####");
+		logger.info("################################");
+
+		ModifyPasswordRes res = new ModifyPasswordRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyEmailRes modifyEmail() {
+
+		logger.info("##################################");
+		logger.info("##### 5.1.15. 이메일 주소 수정 #####");
+		logger.info("##################################");
+
+		ModifyEmailRes res = new ModifyEmailRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createTermsAgreement/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateTermsAgreementRes createTermsAgreement() {
+
+		logger.info("######################################");
+		logger.info("##### 5.1.16. Store 약관 동의 등록 #####");
+		logger.info("######################################");
+
+		CreateTermsAgreementRes res = new CreateTermsAgreementRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/modifyTermsAgreement/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyTermsAgreementRes modifyTermsAgreement() {
+
+		logger.info("######################################");
+		logger.info("##### 5.1.17. Store 약관 동의 수정 #####");
+		logger.info("######################################");
+
+		ModifyTermsAgreementRes res = new ModifyTermsAgreementRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createRealName/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateRealNameRes createRealName() {
+
+		logger.info("#####################################");
+		logger.info("##### 5.1.18. 실명 인증 정보 등록 #####");
+		logger.info("#####################################");
+
+		CreateRealNameRes res = new CreateRealNameRes();
 		res.setUserKey("IW102158844420091030165015");
 
 		return res;
