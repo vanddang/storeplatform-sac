@@ -178,7 +178,7 @@ public class CategoryServiceImpl implements CategoryService {
 				MenuDetailDTO.class);
 		if (resultList != null) {
 
-			threeDepth = this.check3DetphMenu(menuId);
+			threeDepth = this.check3DepthMenu(requestVO);
 
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
@@ -237,12 +237,10 @@ public class CategoryServiceImpl implements CategoryService {
 				category.setSource(source);
 
 				if (threeDepth) { // => 3 DEPTH MENU
-					this.log.debug("ebook !!");
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
 						responseVO.setCategory(category);
 					} else {
 						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
-							this.log.debug("ebook 2 depth!!");
 							if (tg == false && count > 0) {
 								categoryDetail.setSubCategoryList(listVO);
 								detailListVO.add(categoryDetail);
@@ -255,7 +253,6 @@ public class CategoryServiceImpl implements CategoryService {
 							categoryDetail.setCategory(category);
 							count++;
 						} else { // 3 depth
-							this.log.debug("ebook 3 depth!!");
 							listVO.add(category);
 						}
 
@@ -282,9 +279,6 @@ public class CategoryServiceImpl implements CategoryService {
 						}
 					}
 				}
-				String categoryDetailJson = objectMapper.writeValueAsString(categoryDetail);
-
-				this.log.debug("categoryDetail json : {}", categoryDetailJson);
 			}
 
 			commonResponse = new CommonResponse();
@@ -294,10 +288,6 @@ public class CategoryServiceImpl implements CategoryService {
 			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonRes(commonResponse);
 
-			/*
-			 * ObjectMapper objectMapper = new ObjectMapper();
-			 * objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-			 */
 			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
 
 			this.log.debug("CategoryDetailList json : {}", CategoryDetailList);
@@ -307,11 +297,21 @@ public class CategoryServiceImpl implements CategoryService {
 		return responseVO;
 	}
 
-	private boolean check3DetphMenu(String menuId) {
+	private boolean check3DepthMenu(MenuReq requestVO) {
 		boolean result = false;
 
-		if (menuId.indexOf("DP13") > -1 || menuId.indexOf("DP23") > -1 || menuId.indexOf("DP16") > -1) {
-			result = true;
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getTopMenu3Detph", requestVO,
+				MenuDetailDTO.class);
+		if (resultList != null) {
+			Iterator<MenuDetailDTO> iterator = resultList.iterator();
+			while (iterator.hasNext()) {
+				MenuDetailDTO mapperVO = iterator.next();
+
+				if (mapperVO.getMenuId().equals(requestVO.getMenuId()) && mapperVO.getMenuDepth().equals("1")) {
+					result = true;
+					break;
+				}
+			}
 		}
 
 		return result;

@@ -129,4 +129,29 @@
                  EXPO_ORD
         ORDER BY MENU_ID, MENU_DEPTH, EXPO_ORD
     </select>
+    
+    
+    <!-- 3depth 이상 메뉴 조회 -->
+    <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailDTO">
+	SELECT MENU_ID, 
+	       UP_MENU_ID, 
+	       MENU_DEPTH 
+	  FROM TB_DP_TENANT_MENU
+	 WHERE MENU_ID IN (
+	    SELECT DISTINCT UP_MENU_ID
+	      FROM TB_DP_TENANT_MENU
+	     WHERE MENU_ID IN (
+	        SELECT UP_MENU_ID
+	        FROM TB_DP_TENANT_MENU 
+	        WHERE MENU_DEPTH = 3
+            AND TENANT_ID = #{tenantId}
+            AND SYSTEM_ID = #{systemId}
+	        AND USE_YN = 'Y'
+	    )
+	 )
+     AND TENANT_ID = #{tenantId}
+     AND SYSTEM_ID = #{systemId}
+	 AND USE_YN = 'Y' 
+    </select>
+	    
 </mapper>
