@@ -2,8 +2,6 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -21,10 +19,10 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 기기 ID (mdn, uuid)
 	 */
-	@NotNull(message = "아놔짬뽕나...")
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceId;
 
-	@NotEmpty(message = "아놔 짬뽕나...")
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceTelecom;
 
 	private String joinId;
