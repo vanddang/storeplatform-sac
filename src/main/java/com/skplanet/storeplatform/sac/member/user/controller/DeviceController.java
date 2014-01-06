@@ -29,6 +29,12 @@ public class DeviceController {
 	@Autowired
 	private DeviceService deviceService;
 
+	/**
+	 * 휴대기기 목록조회
+	 * 
+	 * @param ListDeviceReq
+	 * @return ListDeviceRes
+	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListDeviceRes listDevice(ListDeviceReq req) {
@@ -39,6 +45,12 @@ public class DeviceController {
 		return res;
 	}
 
+	/**
+	 * 휴대기기 등록
+	 * 
+	 * @param CreateDeviceReq
+	 * @return CreateDeviceRes
+	 */
 	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateDeviceRes createDevice(CreateDeviceReq req) {

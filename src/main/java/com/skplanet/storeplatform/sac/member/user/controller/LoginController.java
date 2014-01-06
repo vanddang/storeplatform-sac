@@ -28,6 +28,12 @@ public class LoginController {
 	@Autowired
 	private LoginService loginService;
 
+	/**
+	 * 모바일 전용 회원 인증 (MDN 인증)
+	 * 
+	 * @param AuthorizeByMdnReq
+	 * @return AuthorizeByMdnRes
+	 */
 	/* @RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.GET) */
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(AuthorizeByMdnReq req) {
@@ -37,6 +43,12 @@ public class LoginController {
 		return res;
 	}
 
+	/**
+	 * ID 기반 회원 인증 (One ID, IDP 회원)
+	 * 
+	 * @param AuthorizeByIdReq
+	 * @return AuthorizeByIdRes
+	 */
 	/* @RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST) */
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(AuthorizeByIdReq req) {
