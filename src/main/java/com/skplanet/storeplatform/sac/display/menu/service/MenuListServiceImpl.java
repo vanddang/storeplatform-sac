@@ -70,10 +70,12 @@ public class MenuListServiceImpl implements MenuListService {
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
-			throw new Exception("tenantId 는 필수 파라메터 입니다.");
+			requestVO.setTenantId("S01");
+			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
 		if (null == systemId || "".equals(systemId)) {
-			throw new Exception("systemId 는 필수 파라메터 입니다.");
+			requestVO.setSystemId("test01");
+			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
 		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.selectMenuList", requestVO,
@@ -165,10 +167,12 @@ public class MenuListServiceImpl implements MenuListService {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 		if (null == tenantId || "".equals(tenantId)) {
-			throw new Exception("tenantId 는 필수 파라메터 입니다.");
+			requestVO.setTenantId("S01");
+			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
 		if (null == systemId || "".equals(systemId)) {
-			throw new Exception("systemId 는 필수 파라메터 입니다.");
+			requestVO.setSystemId("test01");
+			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
 		MenuDetailDTO mapperVO = this.commonDAO.queryForObject("Menu.selectMenu", requestVO, MenuDetailDTO.class);

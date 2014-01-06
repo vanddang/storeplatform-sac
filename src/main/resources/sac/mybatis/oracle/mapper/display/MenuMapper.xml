@@ -82,24 +82,26 @@
     </select>
 
     <!-- 대분류 카테고리정보 조회 -->
-    <select id="getTopCategory" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="getTopCategoryList" parameterType="MenuRequest" resultType="MenuDetailDTO">
         SELECT 
-               COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
-               MENU_ID,
-               MENU_NM,
-               MENU_DESC,
-               BODY_FILE_SIZE
-          FROM TB_DP_TENANT_MENU
-         WHERE TENANT_ID = #{tenantId}
-         <if test="menuId != null">AND MENU_ID = #{menuId}</if>
-           AND SYSTEM_ID = #{systemId}
-           AND MENU_DEPTH = 1
-           AND USE_YN = 'Y'
-         ORDER BY EXPO_ORD
+               COUNT(M.MENU_ID) OVER() AS TOTAL_COUNT,
+               M.MENU_ID,
+               T.MENU_NM,
+               T.MENU_DESC,
+               T.BODY_FILE_SIZE
+          FROM TB_DP_TENANT_MENU T,
+               TB_DP_MENU M
+         WHERE M.MENU_ID = T.MENU_ID
+           AND T.TENANT_ID = #{tenantId}
+           AND T.SYSTEM_ID = #{systemId}
+           AND M.MENU_DEPTH = 1
+           AND M.USE_YN = 'Y'
+           AND T.USE_YN = 'Y'
+         ORDER BY T.EXPO_ORD
     </select>
 
     <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
-    <select id="getDetailCategory" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuDetailDTO">
         SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
                MENU_ID,
                MENU_NM,
@@ -133,25 +135,32 @@
     
     <!-- 3depth 이상 메뉴 조회 -->
     <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailDTO">
-	SELECT MENU_ID, 
-	       UP_MENU_ID, 
-	       MENU_DEPTH 
-	  FROM TB_DP_TENANT_MENU
-	 WHERE MENU_ID IN (
-	    SELECT DISTINCT UP_MENU_ID
-	      FROM TB_DP_TENANT_MENU
-	     WHERE MENU_ID IN (
-	        SELECT UP_MENU_ID
-	        FROM TB_DP_TENANT_MENU 
-	        WHERE MENU_DEPTH = 3
-            AND TENANT_ID = #{tenantId}
-            AND SYSTEM_ID = #{systemId}
-	        AND USE_YN = 'Y'
-	    )
-	 )
-     AND TENANT_ID = #{tenantId}
-     AND SYSTEM_ID = #{systemId}
-	 AND USE_YN = 'Y' 
+		SELECT M.MENU_ID
+		  FROM TB_DP_TENANT_MENU M,
+		      (
+		        SELECT DISTINCT UP_MENU_ID
+		          FROM TB_DP_TENANT_MENU
+		         WHERE MENU_ID IN (
+		            SELECT UP_MENU_ID
+		            FROM TB_DP_TENANT_MENU 
+		            WHERE MENU_DEPTH = 3
+		            AND TENANT_ID = #{tenantId}
+		            AND SYSTEM_ID = #{systemId}
+		            AND USE_YN = 'Y'
+		            )
+		       )S, 
+		       (SELECT MENU_ID 
+		          FROM TB_DP_MENU 
+		         WHERE MENU_ID = #{menuId}
+		           AND USE_YN = 'Y') D
+		 WHERE M.MENU_ID = S.UP_MENU_ID
+		   AND D.MENU_ID = M.MENU_ID
+		   AND M.TENANT_ID = #{tenantId}
+		   AND M.MENU_ID = #{menuId}
+		   AND M.SYSTEM_ID = #{systemId}
+		   AND M.MENU_DEPTH = 1
+		   AND M.USE_YN = 'Y'
+		   AND ROWNUM = 1
     </select>
 	    
 </mapper>

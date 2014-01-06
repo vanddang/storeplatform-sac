@@ -64,22 +64,22 @@ public class CategoryServiceImpl implements CategoryService {
 
 		String tenantId = "";
 		String systemId = "";
-		String menuId = "";
 
 		tenantId = requestVO.getTenantId();
 		systemId = requestVO.getSystemId();
-		menuId = requestVO.getMenuId();
 
 		CategoryListRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
-			throw new Exception("tenantId 는 필수 파라메터 입니다.");
+			requestVO.setTenantId("S01");
+			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
 		if (null == systemId || "".equals(systemId)) {
-			throw new Exception("systemId 는 필수 파라메터 입니다.");
+			requestVO.setSystemId("test01");
+			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getTopCategory", requestVO,
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getTopCategoryList", requestVO,
 				MenuDetailDTO.class);
 		if (resultList != null) {
 
@@ -165,16 +165,18 @@ public class CategoryServiceImpl implements CategoryService {
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
-			throw new Exception("tenantId 는 필수 파라메터 입니다.");
+			requestVO.setTenantId("S01");
+			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
 		if (null == systemId || "".equals(systemId)) {
-			throw new Exception("systemId 는 필수 파라메터 입니다.");
+			requestVO.setSystemId("test01");
+			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 		if (null == menuId || "".equals(menuId)) {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getDetailCategory", requestVO,
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getDetailCategoryList", requestVO,
 				MenuDetailDTO.class);
 		if (resultList != null) {
 
@@ -300,18 +302,10 @@ public class CategoryServiceImpl implements CategoryService {
 	private boolean check3DepthMenu(MenuReq requestVO) {
 		boolean result = false;
 
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getTopMenu3Detph", requestVO,
-				MenuDetailDTO.class);
-		if (resultList != null) {
-			Iterator<MenuDetailDTO> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				MenuDetailDTO mapperVO = iterator.next();
+		MenuDetailDTO mapperVO = this.commonDAO.queryForObject("Menu.getTopMenu3Detph", requestVO, MenuDetailDTO.class);
 
-				if (mapperVO.getMenuId().equals(requestVO.getMenuId()) && mapperVO.getMenuDepth().equals("1")) {
-					result = true;
-					break;
-				}
-			}
+		if (mapperVO != null && mapperVO.getMenuId().equals(requestVO.getMenuId())) {
+			result = true;
 		}
 
 		return result;
