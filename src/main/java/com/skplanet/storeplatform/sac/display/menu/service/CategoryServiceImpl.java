@@ -26,7 +26,9 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail2ListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail3ListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -145,10 +147,11 @@ public class CategoryServiceImpl implements CategoryService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
+	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
+		boolean threeDepth = false;
 
 		String tenantId = "";
 		String systemId = "";
@@ -158,7 +161,7 @@ public class CategoryServiceImpl implements CategoryService {
 		systemId = requestVO.getSystemId();
 		menuId = requestVO.getMenuId();
 
-		CategoryDetailListRes responseVO = null;
+		CategoryDetailRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -175,6 +178,8 @@ public class CategoryServiceImpl implements CategoryService {
 				MenuDetailDTO.class);
 		if (resultList != null) {
 
+			threeDepth = this.check3DetphMenu(menuId);
+
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
@@ -188,6 +193,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+
+			if (threeDepth) {
+				responseVO = new CategoryDetail3ListRes();
+			} else {
+				responseVO = new CategoryDetail2ListRes();
+			}
 
 			Iterator<MenuDetailDTO> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
@@ -225,11 +236,10 @@ public class CategoryServiceImpl implements CategoryService {
 				 */
 				category.setSource(source);
 
-				if (mapperVO.getMenuId().indexOf("MN13") > -1) { // ebook -> 3depth
+				if (threeDepth) { // => 3 DEPTH MENU
 					this.log.debug("ebook !!");
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						categoryDetail.setCategory(category);
-						detailListVO.add(categoryDetail);
+						responseVO.setCategory(category);
 					} else {
 						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
 							this.log.debug("ebook 2 depth!!");
@@ -256,7 +266,8 @@ public class CategoryServiceImpl implements CategoryService {
 					}
 				} else { // 2depth
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						categoryDetail.setCategory(category);
+						// categoryDetail.setCategory(category);
+						responseVO.setCategory(category);
 						count++;
 					} else {
 						listVO.add(category);
@@ -264,8 +275,10 @@ public class CategoryServiceImpl implements CategoryService {
 						count++;
 
 						if (count >= totalCount) {
-							categoryDetail.setSubCategoryList(listVO);
-							detailListVO.add(categoryDetail);
+							/*
+							 * categoryDetail.setSubCategoryList(listVO); detailListVO.add(categoryDetail);
+							 */
+							responseVO.setCategoryList(listVO);
 						}
 					}
 				}
@@ -274,9 +287,10 @@ public class CategoryServiceImpl implements CategoryService {
 				this.log.debug("categoryDetail json : {}", categoryDetailJson);
 			}
 
-			responseVO = new CategoryDetailListRes();
 			commonResponse = new CommonResponse();
-			responseVO.setCategoryList(detailListVO); // set category detail list
+			if (threeDepth) {
+				responseVO.setCategoryList(detailListVO); // set category detail list = 3 DEPTH MENU
+			}
 			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonRes(commonResponse);
 
@@ -291,6 +305,16 @@ public class CategoryServiceImpl implements CategoryService {
 
 		}
 		return responseVO;
+	}
+
+	private boolean check3DetphMenu(String menuId) {
+		boolean result = false;
+
+		if (menuId.indexOf("DP13") > -1 || menuId.indexOf("DP23") > -1 || menuId.indexOf("DP16") > -1) {
+			result = true;
+		}
+
+		return result;
 	}
 
 }
