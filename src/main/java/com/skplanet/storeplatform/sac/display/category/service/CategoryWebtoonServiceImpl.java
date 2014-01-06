@@ -9,12 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -60,8 +56,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	 * @return CategoryWebtoonRes 리스트
 	 */
 	@Override
-	public CategoryWebtoonRes getWebtoonList(CategoryWebtoonReq req) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req) {
 
 		CategoryWebtoonRes responseVO = null;
 		req.setOffset(1);
@@ -141,6 +136,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			date.setText("20130820190000");
 			// 데이터 매핑
 			product.setIdentifier(identifier);
+			product.setMenuList(menuList);
 			product.setContributor(contributor);
 			product.setAccrual(accrual);
 			product.setTitle(title);

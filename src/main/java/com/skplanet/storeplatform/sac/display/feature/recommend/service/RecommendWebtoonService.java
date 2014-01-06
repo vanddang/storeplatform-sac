@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
 
@@ -18,7 +13,6 @@ public interface RecommendWebtoonService {
 	 * @param RecommendWebtoonReq
 	 * @return RecommendWebtoonRes 리스트
 	 */
-	public RecommendWebtoonRes getAdminWebtoonList(RecommendWebtoonReq req) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req);
 
 }

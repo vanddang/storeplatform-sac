@@ -9,12 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +55,9 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	 * @param RecommendWebtoonReq
 	 * @return RecommendWebtoonRes 리스트
 	 */
+
 	@Override
-	public RecommendWebtoonRes getAdminWebtoonList(RecommendWebtoonReq req) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req) {
 
 		RecommendWebtoonRes responseVO = null;
 		req.setOffset(1);
@@ -127,6 +124,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			title.setText("강철강");
 
 			// 이미지 정보
+			source.setMediaType("image/jpeg");
 			source.setType("thumbnail");
 			source.setUrl("inst_thumbnail_20111216154840.jpg");
 			sourceList.add(source);
@@ -139,6 +137,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			date.setText("20130820190000");
 			// 데이터 매핑
 			product.setIdentifier(identifier);
+			product.setMenuList(menuList);
 			product.setContributor(contributor);
 			product.setAccrual(accrual);
 			product.setTitle(title);

@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
 @Controller
@@ -21,6 +24,9 @@ public class CategoryController {
 	@Autowired
 	private CategoryAppService categoryAppService;
 
+	@Autowired
+	private CategoryWebtoonService categoryWebtoonService;
+
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategoryAppRes searchCategoryAppList(CategoryAppReq req) {
@@ -29,5 +35,15 @@ public class CategoryController {
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.categoryAppService.searchCategoryAppList(req);
+	}
+
+	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchWebtoonList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.categoryWebtoonService.searchWebtoonList(req);
+
 	}
 }
