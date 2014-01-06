@@ -118,7 +118,7 @@
               FROM TB_DP_TENANT_MENU
              WHERE TENANT_ID = #{tenantId}
                AND SYSTEM_ID = #{systemId}
-             START WITH UP_MENU_ID = #{menuId}
+             START WITH MENU_ID = #{menuId}
              CONNECT BY PRIOR MENU_ID = UP_MENU_ID
             )
         GROUP BY MENU_ID,

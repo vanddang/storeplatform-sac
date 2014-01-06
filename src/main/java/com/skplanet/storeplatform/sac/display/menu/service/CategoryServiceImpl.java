@@ -227,37 +227,46 @@ public class CategoryServiceImpl implements CategoryService {
 
 				if (mapperVO.getMenuId().indexOf("MN13") > -1) { // ebook -> 3depth
 					this.log.debug("ebook !!");
-
-					if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
-						this.log.debug("ebook 2 depth!!");
-						if (tg == false && count > 0) {
-							categoryDetail.setSubCategoryList(listVO);
-							detailListVO.add(categoryDetail);
-
-							categoryDetail = new CategoryDetail();
-							listVO = new ArrayList<Menu>();
-
-							tg = true;
-						}
+					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
 						categoryDetail.setCategory(category);
-						count++;
-					} else { // 3 depth
-						this.log.debug("ebook 3 depth!!");
-						listVO.add(category);
-					}
+						detailListVO.add(categoryDetail);
+					} else {
+						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
+							this.log.debug("ebook 2 depth!!");
+							if (tg == false && count > 0) {
+								categoryDetail.setSubCategoryList(listVO);
+								detailListVO.add(categoryDetail);
 
-					if (tg == true && count > 0) {
-						tg = false;
-						// count = 0;
+								categoryDetail = new CategoryDetail();
+								listVO = new ArrayList<Menu>();
+
+								tg = true;
+							}
+							categoryDetail.setCategory(category);
+							count++;
+						} else { // 3 depth
+							this.log.debug("ebook 3 depth!!");
+							listVO.add(category);
+						}
+
+						if (tg == true && count > 0) {
+							tg = false;
+							// count = 0;
+						}
 					}
 				} else { // 2depth
-					listVO.add(category);
+					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
+						categoryDetail.setCategory(category);
+						count++;
+					} else {
+						listVO.add(category);
 
-					count++;
+						count++;
 
-					if (count >= totalCount) {
-						categoryDetail.setSubCategoryList(listVO);
-						detailListVO.add(categoryDetail);
+						if (count >= totalCount) {
+							categoryDetail.setSubCategoryList(listVO);
+							detailListVO.add(categoryDetail);
+						}
 					}
 				}
 				String categoryDetailJson = objectMapper.writeValueAsString(categoryDetail);
