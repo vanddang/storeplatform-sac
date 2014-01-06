@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
+import com.skplanet.storeplatform.sac.member.user.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
 /**
@@ -36,7 +39,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
  */
 @RequestMapping(value = "/member/user")
 @Controller
-public class UserJoinController {
+public class UserJoinController extends ParameterExceptionHandling {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
@@ -48,17 +51,12 @@ public class UserJoinController {
 
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(@RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) {
-
+	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) {
 		logger.info("####################################################");
 		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		logger.info("####################################################");
 
 		logger.info("Request : {}", req.toString());
-
-		/**
-		 * TODO 필수 파라미터 체크
-		 */
 
 		/**
 		 * Header 정보 세팅
@@ -103,4 +101,5 @@ public class UserJoinController {
 
 		return res;
 	}
+
 }

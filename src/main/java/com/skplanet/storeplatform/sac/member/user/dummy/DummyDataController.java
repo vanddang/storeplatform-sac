@@ -185,6 +185,34 @@ public class DummyDataController {
 		return res;
 	}
 
+	@RequestMapping(value = "/modifyTermsAgreement/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyTermsAgreementRes modifyTermsAgreement() {
+
+		logger.info("######################################");
+		logger.info("##### 5.1.17. Store 약관 동의 수정 #####");
+		logger.info("######################################");
+
+		ModifyTermsAgreementRes res = new ModifyTermsAgreementRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createRealName/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateRealNameRes createRealName() {
+
+		logger.info("#####################################");
+		logger.info("##### 5.1.18. 실명 인증 정보 등록 #####");
+		logger.info("#####################################");
+
+		CreateRealNameRes res = new CreateRealNameRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListDeviceRes listDevice() {
@@ -241,34 +269,6 @@ public class DummyDataController {
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId("01011112222");
 		res.setDeviceKey("01011112222");
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
-
-	@RequestMapping(value = "/modifyTermsAgreement/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ModifyTermsAgreementRes modifyTermsAgreement() {
-
-		logger.info("######################################");
-		logger.info("##### 5.1.17. Store 약관 동의 수정 #####");
-		logger.info("######################################");
-
-		ModifyTermsAgreementRes res = new ModifyTermsAgreementRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
-
-	@RequestMapping(value = "/createRealName/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateRealNameRes createRealName() {
-
-		logger.info("#####################################");
-		logger.info("##### 5.1.18. 실명 인증 정보 등록 #####");
-		logger.info("#####################################");
-
-		CreateRealNameRes res = new CreateRealNameRes();
 		res.setUserKey("IW102158844420091030165015");
 
 		return res;
