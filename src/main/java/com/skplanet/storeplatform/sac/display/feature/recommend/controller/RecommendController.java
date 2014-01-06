@@ -13,7 +13,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.Recomm
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
-import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminServiceImpl;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
 @Controller
@@ -23,6 +22,8 @@ public class RecommendController {
 
 	@Autowired
 	private RecommendWebtoonService recommendWebtoonService;
+	@Autowired
+	private RecommendAdminService recommendAdminService;
 
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -38,11 +39,9 @@ public class RecommendController {
 	@ResponseBody
 	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
 
-		this.logger.info(requestVO.toString());
-
-		RecommendAdminService service = new RecommendAdminServiceImpl();
+		//this.logger.info(requestVO.toString());
 		RecommendAdminRes responseVO;
-		responseVO = service.searchAdminList(requestVO);
+		responseVO = recommendAdminService.searchAdminList(requestVO);
 		return responseVO;
 	}
 }
