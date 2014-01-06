@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 
 /**
@@ -24,9 +23,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
  * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
  */
 @Component
-public class HeaderInfo extends CommonInfo {
-
-	private static final long serialVersionUID = 1L;
+public class HeaderInfo {
 
 	private static final Logger logger = LoggerFactory.getLogger(HeaderInfo.class);
 
