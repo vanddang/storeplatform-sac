@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoonDTO;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -63,108 +64,106 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		req.setOffset(1);
 		req.setCount(20);
 		req.setTenantId("S01");
-		req.setSystemId("S009");
+		req.setListId("ADM000000016");
 		req.setWeekDayCd("DP010101");
 		req.setImageCd("DP000196");
-		req.setListId("DP000196");
-
-		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
+		req.setMenuId("DP26");
+		if (req.getMenuId().length() == 4) {
+			req.setUpMenuId(req.getMenuId());
+			req.setMenuId(null);
 		}
 
-		// List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
-		// RecommendWebtoonDTO.class);
+		List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
+				RecommendWebtoonDTO.class);
 
-		// if (resultList != null) {
-		// RecommendWebtoonDTO RecommendWebtoonDTO = new RecommendWebtoonDTO();
+		if (resultList != null) {
+			RecommendWebtoonDTO webtoonDto = new RecommendWebtoonDTO();
 
-		// Response VO를 만들기위한 생성자
-		Identifier identifier = new Identifier();
-		Menu menu = new Menu();
-		Rights rights = new Rights();
-		Title title = new Title();
-		Source source = new Source();
-		Price price = new Price();
-		Product product = new Product();
-		Contributor contributor = new Contributor();
-		Accrual accrual = new Accrual();
-		Date date = new Date();
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			Identifier identifier = null;
+			Menu menu = null;
+			Rights rights = null;
+			Title title = null;
+			Source source = null;
+			Price price = null;
+			Contributor contributor = null;
+			Accrual accrual = null;
+			Date date = null;
 
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-		List<Product> productList = new ArrayList<Product>();
+			List<Menu> menuList = null;
+			List<Source> sourceList = null;
+			List<Product> productList = new ArrayList<Product>();
 
-		for (int i = 0; i < 1; i++) {
-			// RecommendWebtoonDTO = resultList.get(i);
-			// 상품 정보 (상품ID)
-			identifier.setType("episode");
-			identifier.setText("H090124341");
+			for (int i = 0; i < resultList.size(); i++) {
+				webtoonDto = resultList.get(i);
+				product = new Product();
 
-			// 메뉴 정보
-			menu.setType("topClass");
-			menu.setId("MN26");
-			menu.setName("웹툰");
-			menuList.add(menu);
+				// 상품 정보 (상품ID)
+				identifier = new Identifier();
+				identifier.setType("episode");
+				identifier.setText(webtoonDto.getProdId());
+				product.setIdentifier(identifier);
 
-			menu = new Menu();
-			menu.setType("menuId");
-			menu.setId("MN26004");
-			menu.setName("웹툰/스릴러");
-			menuList.add(menu);
+				// 메뉴 정보
+				menuList = new ArrayList<Menu>();
+				menu = new Menu();
+				menu.setType("topClass");
+				menu.setId(webtoonDto.getUpMenuId());
+				menu.setName(webtoonDto.getUpMenuName());
+				menuList.add(menu);
 
-			// contributor
-			contributor.setName("장한나");
+				menu = new Menu();
+				menu.setType("menuId");
+				menu.setId(webtoonDto.getMenuId());
+				menu.setName(webtoonDto.getMenuNm());
+				menuList.add(menu);
 
-			accrual.setScore(4.5);
+				// contributor
+				contributor = new Contributor();
+				contributor.setName(webtoonDto.getArtist1Nm());
 
-			// 상품 정보 (상품명)
-			title.setText("강철강");
+				accrual = new Accrual();
+				accrual.setScore(Double.parseDouble(webtoonDto.getAvgScore()));
 
-			// 이미지 정보
-			source.setMediaType("image/jpeg");
-			source.setType("thumbnail");
-			source.setUrl("inst_thumbnail_20111216154840.jpg");
-			sourceList.add(source);
+				// 상품 정보 (상품명)
+				title = new Title();
+				title.setPrefix(webtoonDto.getIconYn());
+				title.setText(webtoonDto.getProdNm());
 
-			// 이용권한 정보
-			rights.setGrade("PD004401");
+				// 이미지 정보
+				sourceList = new ArrayList<Source>();
+				source = new Source();
+				source.setType("thumbnail");
+				source.setUrl(webtoonDto.getFilePos());
+				sourceList.add(source);
 
-			// 상품 정보 (상품가격)
-			price.setText(Integer.parseInt("0"));
-			date.setText("20130820190000");
-			// 데이터 매핑
-			product.setIdentifier(identifier);
-			product.setMenuList(menuList);
-			product.setContributor(contributor);
-			product.setAccrual(accrual);
-			product.setTitle(title);
-			product.setRights(rights);
-			product.setSourceList(sourceList);
-			product.setPrice(price);
-			product.setDate(date);
+				// 업데이트 날짜
+				date = new Date();
+				date.setType("date");
+				date.setText(webtoonDto.getUpdDt());
 
-			productList.add(i, product);
-			identifier = new Identifier();
-			menu = new Menu();
-			menuList = new ArrayList<Menu>();
-			rights = new Rights();
-			title = new Title();
-			source = new Source();
-			sourceList = new ArrayList<Source>();
-			price = new Price();
-			product = new Product();
+				// 데이터 매핑
+				product.setIdentifier(identifier);
+				product.setMenuList(menuList);
+				product.setContributor(contributor);
+				product.setAccrual(accrual);
+				product.setTitle(title);
+				product.setRights(rights);
+				product.setSourceList(sourceList);
+				product.setPrice(price);
+				product.setDate(date);
+
+				productList.add(i, product);
+			}
+
+			responseVO = new RecommendWebtoonRes();
+			responseVO.setProductList(productList);
+
+			CommonResponse commonResponse = new CommonResponse();
+			commonResponse.setTotalCount(20);
+			responseVO.setCommonResponse(commonResponse);
 		}
-
-		responseVO = new RecommendWebtoonRes();
-		responseVO.setProductList(productList);
-
-		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(20);
-		responseVO.setCommonResponse(commonResponse);
-		// }
 		return responseVO;
 	}
 

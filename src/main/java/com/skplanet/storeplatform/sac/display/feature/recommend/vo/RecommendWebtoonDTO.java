@@ -18,6 +18,7 @@ public class RecommendWebtoonDTO {
 
 	private int totalCount;
 	private String upMenuId;
+	private String upMenuName;
 	private String menuId;
 	private String menuNm;
 	private String channelId;
@@ -50,6 +51,14 @@ public class RecommendWebtoonDTO {
 
 	public void setUpMenuId(String upMenuId) {
 		this.upMenuId = upMenuId;
+	}
+
+	public String getUpMenuName() {
+		return this.upMenuName;
+	}
+
+	public void setUpMenuName(String upMenuName) {
+		this.upMenuName = upMenuName;
 	}
 
 	public String getMenuId() {

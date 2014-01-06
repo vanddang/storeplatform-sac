@@ -17,6 +17,7 @@ package com.skplanet.storeplatform.sac.display.category.vo;
 public class CategoryWebtoonDTO {
 
 	private int totalCount;
+	private String upMenuName;
 	private String upMenuId;
 	private String menuId;
 	private String menuNm;
@@ -42,6 +43,14 @@ public class CategoryWebtoonDTO {
 
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	public String getUpMenuName() {
+		return this.upMenuName;
+	}
+
+	public void setUpMenuName(String upMenuName) {
+		this.upMenuName = upMenuName;
 	}
 
 	public String getUpMenuId() {
