@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
  */
-public class MenuRequest extends CommonInfo implements Serializable {
+public class MenuReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123129L;
 

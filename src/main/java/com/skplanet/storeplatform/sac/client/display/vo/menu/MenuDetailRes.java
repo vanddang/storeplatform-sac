@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * 
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
-public class MenuDetailResponse extends CommonInfo implements Serializable {
+public class MenuDetailRes extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123125L;
 

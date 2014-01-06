@@ -6,7 +6,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner;
 
-public class BannerListResponse extends CommonInfo {
+public class BannerListRes extends CommonInfo {
 	private CommonResponse commonRes;
 	private List<Banner> bannerList;
 

@@ -7,25 +7,27 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.display.vo.menu;
+package com.skplanet.storeplatform.sac.client.display.vo.vod;
 
 import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * Interface Message Menu List Value Object.
+ * Interface Message VodBox List Value Object.
  * 
- * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
+ * Updated on : 2013. 12. 24 Updated by : 윤주영, SK 플래닛.
  */
-public class MenuListResponse extends CommonInfo implements Serializable {
+public class VodBoxListRes extends CommonInfo implements Serializable {
 
-	private static final long serialVersionUID = 11123123126L;
+	private static final long serialVersionUID = 11123123142L;
 
 	private CommonResponse commonRes;
-	private List<MenuDetail> menuList;
+
+	private List<Product> productList;
 
 	public CommonResponse getCommonRes() {
 		return this.commonRes;
@@ -35,11 +37,12 @@ public class MenuListResponse extends CommonInfo implements Serializable {
 		this.commonRes = commonRes;
 	}
 
-	public List<MenuDetail> getMenuList() {
-		return this.menuList;
+	public List<Product> getProductList() {
+		return this.productList;
 	}
 
-	public void setMenuList(List<MenuDetail> menuList) {
-		this.menuList = menuList;
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
+
 }
