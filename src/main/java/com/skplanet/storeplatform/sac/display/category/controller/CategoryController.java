@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
@@ -23,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxReq;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
+import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
@@ -36,6 +39,9 @@ public class CategoryController {
 
 	@Autowired
 	private CategoryAppService categoryAppService;
+
+	@Autowired
+	private CategoryEbookComicService categoryEbookComicService;
 
 	@Autowired
 	private CategoryWebtoonService categoryWebtoonService;
@@ -59,12 +65,30 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryAppRes searchCategoryAppList(CategoryAppReq req) {
+	public CategoryAppRes searchAppList(CategoryAppReq req) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchCategoryAppList Controller started!!");
+		this.logger.debug("searchAppList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.categoryAppService.searchCategoryAppList(req);
+		return this.categoryAppService.searchAppList(req);
+	}
+
+	/**
+	 * <pre>
+	 * 일반 카테고리 ebook/만화 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchEbookComicList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.categoryEbookComicService.searchEbookComicList(req);
 	}
 
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)

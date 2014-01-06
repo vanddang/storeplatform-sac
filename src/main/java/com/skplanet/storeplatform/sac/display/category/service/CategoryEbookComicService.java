@@ -9,23 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicRes;
 
 /**
- * CategoryApp Service 인터페이스(CoreStoreBusiness)
+ * CategoryEbookComic Service 인터페이스(CoreStoreBusiness)
  * 
- * Updated on : 2014. 01. 03. Updated by : 이태희, SK 플래닛.
+ * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public interface CategoryAppService {
+public interface CategoryEbookComicService {
 	/**
 	 * 
 	 * <pre>
-	 * 일반 카테고리 앱 상품 조회.
+	 * 일반 카테고리 ebook/만화 상품 조회.
 	 * </pre>
 	 * 
 	 * @param CategoryAppReq
 	 * @return CategoryAppRes
 	 */
-	CategoryAppRes searchAppList(CategoryAppReq req);
+	CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req);
 }

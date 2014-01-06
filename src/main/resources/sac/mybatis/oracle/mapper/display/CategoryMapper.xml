@@ -87,21 +87,18 @@
 		                           AND  A.MENU_ID = #{menuId}           /* 메뉴ID */
 		                           AND  G.TENANT_ID = #{tenantId}       /* 테넌트ID */
 		                           AND  I.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
-                                 <if test="prodCharge != null">
+                                 <if test='prodCharge != "A"'>
 		                           AND  D.PROD_CHRG_YN = #{prodCharge}  /* 상품유료여부 */
                                  </if>
-                                 <if test="prodGradeCd != null">
+                                 <if test='prodGradeCd != null'>
 		                           AND  D.PROD_GRD_CD = #{prodGradeCd}  /* 상품이용등급 */
-                                 </if>
-                                 <if test="drm != null">
-		                           AND  D.DRM_YN = #{drm}               /* DRM 지원 여부 */
                                  </if>
 		                       )                        IA
 		                      , TB_DP_TENANT_PROD_STATS IB
 		                 WHERE  IA.TENANT_ID = IB.TENANT_ID(+)
 		                   AND  IA.PROD_ID = IB.PROD_ID(+)
 		               ) JA
-		         WHERE JA.RNUM BETWEEN 1 AND 50
+		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}
 		       )                   KA
 		      , TB_DP_SUB_CONTENTS KB
 		      , TB_DP_PROD_IMG     KC

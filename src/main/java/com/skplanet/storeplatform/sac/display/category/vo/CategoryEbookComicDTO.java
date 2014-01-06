@@ -10,11 +10,11 @@
 package com.skplanet.storeplatform.sac.display.category.vo;
 
 /**
- * 일반 카테고리 앱 상품 조회 DTO Value Object.
+ * 일반 카테고리 ebook/만화 상품 조회 DTO Value Object.
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class CategoryAppDTO {
+public class CategoryEbookComicDTO {
 	private int totalCount;
 	private String upMenuId;
 	private String menuId;

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.category.service;
 
 import java.util.ArrayList;
@@ -27,6 +36,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryAppDTO;
 import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
+/**
+ * CategoryApp Service 인터페이스(CoreStoreBusiness) 구현체
+ * 
+ * Updated on : 2013. 11. 28. Updated by : 이태희, SK 플래닛.
+ */
 @Service
 @Transactional
 public class CategoryAppServiceImpl implements CategoryAppService {
@@ -36,14 +50,26 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.category.service.CategoryAppService#searchCategoryAppList(com.skplanet
+	 * .storeplatform.sac.client.display.vo.category.CategoryAppReq)
+	 */
 	@Override
-	public CategoryAppRes searchCategoryAppList(CategoryAppReq req) {
+	public CategoryAppRes searchAppList(CategoryAppReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchCategoryAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
 		CategoryAppRes categoryAppRes = new CategoryAppRes();
 		CommonResponse commonResponse = new CommonResponse();
+
+		// 헤더값 세팅
+		req.setDeviceModelCd("SHV-E210S");
+		req.setTenantId("S01");
+		req.setImageCd("DP000101");
 
 		// 일반 카테고리 앱 상품 조회
 		List<CategoryAppDTO> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
@@ -52,32 +78,44 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		if (appList != null) {
 			CategoryAppDTO categoryAppDTO = null;
 
-			Product product = null;
 			Identifier identifier = null;
+			Support support = null;
 			Menu menu = null;
+			App app = null;
 			Accrual accrual = null;
 			Rights rights = null;
 			Title title = null;
 			Source source = null;
 			Price price = null;
-			App app = null;
-			Support support = null;
+			Product product = null;
 
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
-			List<Product> productList = new ArrayList<Product>();
 			List<Support> supportList = new ArrayList<Support>();
+			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < appList.size(); i++) {
-				categoryAppDTO = appList.get(i);
-
 				product = new Product();
+				categoryAppDTO = appList.get(i);
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
 				identifier.setType("episode");
 				identifier.setText(categoryAppDTO.getProdId());
 				product.setIdentifier(identifier);
+
+				// 상품 지원 정보
+				support = new Support();
+				supportList = new ArrayList<Support>();
+				support.setType("drm");
+				support.setText(categoryAppDTO.getDrmYn());
+				supportList.add(support);
+
+				support = new Support();
+				support.setType("inApp");
+				support.setText(categoryAppDTO.getPartParentClsfCd());
+				supportList.add(support);
+				product.setSupportList(supportList);
 
 				// 메뉴 정보
 				menu = new Menu();
@@ -93,11 +131,20 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				menuList.add(menu);
 				product.setMenuList(menuList);
 
+				// 어플리케이션 정보
+				app = new App();
+				app.setAid(categoryAppDTO.getAid());
+				app.setPackageName(categoryAppDTO.getApkPkgNm());
+				app.setSize(categoryAppDTO.getApkFileSize());
+				app.setVersion(categoryAppDTO.getProdVer());
+				app.setVersionCode(categoryAppDTO.getApkVer());
+				product.setApp(app);
+
 				// 평점 정보
 				accrual = new Accrual();
-				accrual.setVoterCount("1820");
-				accrual.setDownloadCount("30");
-				accrual.setScore(4.5);
+				accrual.setDownloadCount(categoryAppDTO.getPrchsCnt());
+				accrual.setScore(categoryAppDTO.getAvgEvluScore());
+				accrual.setVoterCount(categoryAppDTO.getPaticpersCnt());
 				product.setAccrual(accrual);
 
 				// 이용권한 정보
@@ -114,6 +161,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				source = new Source();
 				sourceList = new ArrayList<Source>();
 				source.setType("thumbnail");
+				source.setMediaType("image/png");
 				source.setUrl(categoryAppDTO.getImgPath());
 				sourceList.add(source);
 				product.setSourceList(sourceList);
@@ -125,27 +173,6 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				price = new Price();
 				price.setText(Integer.parseInt(categoryAppDTO.getProdAmt()));
 				product.setPrice(price);
-
-				// 상품 지원 구분 정보
-				support = new Support();
-				supportList = new ArrayList<Support>();
-				support.setType("drm");
-				support.setText(categoryAppDTO.getDrmYn());
-				supportList.add(support);
-
-				support = new Support();
-				support.setType("inApp");
-				support.setText(categoryAppDTO.getPartParentClsfCd());
-				supportList.add(support);
-				product.setSupportList(supportList);
-
-				// 어플리케이션 정보
-				app = new App();
-				app.setAid(categoryAppDTO.getAid());
-				app.setPackageName(categoryAppDTO.getApkPkgNm());
-				app.setVersionCode(categoryAppDTO.getApkVer());
-				app.setVersion(categoryAppDTO.getProdVer());
-				product.setApp(app);
 
 				// 데이터 매핑
 				productList.add(i, product);
