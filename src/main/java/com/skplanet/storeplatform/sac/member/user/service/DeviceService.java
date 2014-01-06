@@ -34,7 +34,8 @@ public interface DeviceService {
 	public String preRegMemberDeviceRegist(String mdn);
 
 	/**
-	 * 기기정보 수정 처리
+	 * 기기정보 수정 처리 autoUpdate, gmailAddr, osVer, scVer, phoneModelCd, uacd, imei,
+	 * rootingYn
 	 * 
 	 * @return String
 	 */
