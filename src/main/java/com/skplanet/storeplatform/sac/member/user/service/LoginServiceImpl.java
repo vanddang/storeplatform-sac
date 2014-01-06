@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
@@ -15,6 +16,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
  */
 @Service
 public class LoginServiceImpl implements LoginService {
+
+	@Autowired
+	private UAPSSCI uapsSci;
 
 	@Autowired
 	private DeviceService deviceService;
