@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
 		if (null == systemId || "".equals(systemId)) {
 			throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("category.getTopCategory", requestVO,
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getTopCategory", requestVO,
 				MenuDetailDTO.class);
 		if (resultList != null) {
 
@@ -171,7 +171,7 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("category.getDetailCategory", requestVO,
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getDetailCategory", requestVO,
 				MenuDetailDTO.class);
 		if (resultList != null) {
 
