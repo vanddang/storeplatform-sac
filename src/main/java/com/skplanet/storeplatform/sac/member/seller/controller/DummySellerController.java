@@ -1,0 +1,645 @@
+package com.skplanet.storeplatform.sac.member.seller.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.skplanet.storeplatform.sac.client.member.vo.seller.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ExtraDocument;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifySubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.PwReminderList;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RealNameInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RightInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SecedeReson;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerAccountInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerId;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerRight;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SubSeller;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
+
+/**
+ * 판매자 서비스 Controller
+ * 
+ * Updated on : 2014. 1. 2. Updated by : 한서구, 부르칸.
+ */
+@RequestMapping(value = "/member/seller")
+@Controller
+public class DummySellerController {
+
+	private static final Logger logger = LoggerFactory.getLogger(DummySellerController.class);
+
+	/**
+	 * <pre>
+	 * 판매자 회원 가입
+	 * </pre>
+	 */
+	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
+	public CreateRes create(HttpServletResponse response) throws Exception {
+
+		CreateRes responseVO = new CreateRes();
+		SellerInfo sellerInfo = new SellerInfo();
+
+		sellerInfo.setSellerId("user1");
+		sellerInfo.setSellerKey("IF1023599819420120111013407");
+		sellerInfo.setSellerMainStatus("US010704");
+		sellerInfo.setSellerSubStatus("US010301");
+		responseVO.setSellerInfo(sellerInfo);
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 ID/이메일 중복 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.POST)
+	public DuplicateByIdEmailRes duplicateByIdEmail(HttpServletResponse response) throws Exception {
+
+		DuplicateByIdEmailRes responseVO = new DuplicateByIdEmailRes();
+		responseVO.setIsRegistered("Y");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증
+	 * </pre>
+	 */
+	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
+	public AuthorizeRes authorize(HttpServletResponse response) throws Exception {
+
+		AuthorizeRes responseVO = new AuthorizeRes();
+		SellerInfo sellerInfo = new SellerInfo();
+
+		sellerInfo.setSellerKey("IF1023599819420120111013407");
+		sellerInfo.setSellerClass("US010101");
+		sellerInfo.setSellerMainStatus("US010704");
+		sellerInfo.setSellerSubStatus("US010301");
+		responseVO.setSellerInfo(sellerInfo);
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 ID찾기
+	 * </pre>
+	 */
+	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
+	public SearchIdRes searchId(HttpServletResponse response) throws Exception {
+
+		SearchIdRes responseVO = new SearchIdRes();
+		SellerId sellerIdList = null;
+
+		List<SellerId> myList = new ArrayList<SellerId>();
+		for (int i = 0; i < 1; i++) {
+			sellerIdList = new SellerId();
+			sellerIdList.setSellerId("user1");
+			myList.add(sellerIdList);
+		}
+		responseVO.setSllerIdList(myList);
+		responseVO.setSellerName("abc@google.com");
+		responseVO.setSellerEmail("홍길동");
+		responseVO.setRegDate("20131226000000");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 Password찾기
+	 * </pre>
+	 */
+	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
+	public SearchPasswordRes searchPassword(HttpServletResponse response) throws Exception {
+
+		SearchPasswordRes responseVO = new SearchPasswordRes();
+
+		responseVO.setNewPassword("1234");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 확인
+	 * </pre>
+	 */
+	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(HttpServletResponse response)
+			throws Exception {
+
+		CheckPasswordReminderQuestionRes responseVO = new CheckPasswordReminderQuestionRes();
+
+		responseVO.setIsCorrect("Y");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(HttpServletResponse response) throws Exception {
+
+		ListPasswordReminderQuestionRes responseVO = new ListPasswordReminderQuestionRes();
+		PwReminderList pwReminderList = null;
+
+		List<PwReminderList> myList = new ArrayList<PwReminderList>();
+		for (int i = 0; i < 1; i++) {
+			pwReminderList = new PwReminderList();
+			pwReminderList.setPwReminderCode("");
+			pwReminderList.setPwReminderQ("");
+			myList.add(pwReminderList);
+		}
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 기본 정보 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.POST)
+	public DetailInformationRes detailInformation(HttpServletResponse response) throws Exception {
+
+		DetailInformationRes responseVO = new DetailInformationRes();
+		SellerInfo sellerInfo = new SellerInfo();
+		sellerInfo.setSellerKey("IF1023599819420120111013407");
+		sellerInfo.setSellerClass("US010101");
+		sellerInfo.setSellerCategory("US011301");
+		sellerInfo.setSellerMainStatus("US010704");
+		sellerInfo.setSellerSubStatus("US010301");
+		sellerInfo.setSellerId("user1");
+		sellerInfo.setSellerPw("1234");
+		sellerInfo.setSellerTelecom("SKT");
+		sellerInfo.setSellerPhoneCountry("82");
+		sellerInfo.setSellerPhone("01011112222");
+		sellerInfo.setIsRecvSms("Y");
+		sellerInfo.setSellerEmail("abc@gmail.com");
+		sellerInfo.setIsRecvEmail("Y");
+		sellerInfo.setSellerName("홍길동");
+		sellerInfo.setSellerNickName("Best Seller");
+		sellerInfo.setSellerSex("M");
+		sellerInfo.setSellerBirthDay("19801105");
+		sellerInfo.setSellerSSNumber("130101-1111111");
+		sellerInfo.setSellerZip("135070");
+		sellerInfo.setSellerAddress("삼평동 680");
+		sellerInfo.setSellerDetailAddress("H스퀘어 S동 4층");
+		sellerInfo.setSellerCity("123123");
+		sellerInfo.setSellerState("");
+		sellerInfo.setSellerCountry("USA");
+		sellerInfo.setSellerLanguage("ko");
+		sellerInfo.setIsForeign("Y");
+		sellerInfo.setCustomerPhoneCountry("82");
+		sellerInfo.setCustomerPhone("01011112222");
+		sellerInfo.setCustomerEmail("abc@gmail.com");
+		responseVO.setSellerInfo(sellerInfo);
+
+		RealNameInfo realNameInfo = new RealNameInfo();
+		realNameInfo.setIsParent("Y");
+		realNameInfo.setParentDate("20131226000000");
+		realNameInfo.setParentType("");
+		realNameInfo.setParentName("홍길동");
+		realNameInfo.setParentBirthDay("20131226000000");
+		realNameInfo.setParentEmail("abc@gmail.com");
+		realNameInfo.setParentMDN("01011112222");
+		realNameInfo.setParentTelecom("US001201");
+		realNameInfo.setParentRealNameDate("20131226000000");
+		realNameInfo
+				.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+		realNameInfo.setParentRealNameMethod("101");
+		realNameInfo.setParentRealNameSystemId("W");
+		realNameInfo.setIsRealName("Y");
+		realNameInfo.setRealNameDate("20131226000000");
+		realNameInfo
+				.setSellerCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+		realNameInfo.setSellerDI("skpone000012902JAyEAPgMkfp3WL1 caEThzSSWjsOXQCfONIbAJgSFvitpjcQ=");
+		realNameInfo.setRealNameMethod("101");
+		realNameInfo.setRealNameSystemId("W");
+		responseVO.setRealNameInfo(realNameInfo);
+
+		responseVO.setRegDate("20131226000000");
+		responseVO.setApproveDate("20131226000000");
+		responseVO.setPwRegDate("20131226000000");
+
+		RightInfo rightInfoList = null;
+		List<RightInfo> myList = new ArrayList<RightInfo>();
+		for (int i = 0; i < 1; i++) {
+			rightInfoList = new RightInfo();
+			rightInfoList.setRightProfile("");
+			rightInfoList.setRightProfileValue("");
+			myList.add(rightInfoList);
+		}
+		responseVO.setRightInfoList(myList);
+
+		Agreement agreementList = null;
+		List<Agreement> myList2 = new ArrayList<Agreement>();
+		for (int i = 0; i < 1; i++) {
+			agreementList = new Agreement();
+			agreementList.setExtraAgreementId("US010601");
+			agreementList.setIsExtraAgreement("Y");
+			myList2.add(agreementList);
+		}
+		responseVO.setAgreementList(myList2);
+
+		responseVO.setFlurryInfo("");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 정산 정보 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.POST)
+	public DetailAccountInformationRes detailAccountInformation(HttpServletResponse response) throws Exception {
+
+		DetailAccountInformationRes responseVO = new DetailAccountInformationRes();
+		SellerInfo sellerInfo = new SellerInfo();
+		sellerInfo.setSellerKey("IF1023599819420120111013407");
+		sellerInfo.setSellerClass("US010101");
+		sellerInfo.setSellerCategory("US011301");
+		sellerInfo.setSellerMainStatus("US010704");
+		sellerInfo.setSellerSubStatus("US010301");
+		sellerInfo.setSellerId("user1");
+		sellerInfo.setSellerZip("135070");
+		sellerInfo.setSellerAddress("삼평동 680");
+		sellerInfo.setSellerDetailAddress("H스퀘어 S동 4층");
+		responseVO.setSellerInfo(sellerInfo);
+
+		SellerAccountInfo sellerAccountInfo = new SellerAccountInfo();
+		sellerAccountInfo.setSellerBizCorpNumber("incross");
+		sellerAccountInfo.setSellerBizType("종목");
+		sellerAccountInfo.setSellerBizCategory("업태");
+		sellerAccountInfo.setRepPhoneArea("82");
+		sellerAccountInfo.setRepPhone("070-1111-2222");
+		sellerAccountInfo.setRepFaxArea("82");
+		sellerAccountInfo.setRepFax("070-1111-3333");
+		sellerAccountInfo.setRepEmail("abc@email.com");
+		sellerAccountInfo.setBpRate("");
+		sellerAccountInfo.setVendorCode("");
+		sellerAccountInfo.setIsBizRegistered("Y");
+		sellerAccountInfo.setBizRegNumber("1201-1212-1222");
+		sellerAccountInfo.setBizUnregReason("US000606");
+		sellerAccountInfo.setIsBizTaxable("Y");
+		sellerAccountInfo.setBizGrade("");
+		sellerAccountInfo.setIsDeductible("Y");
+		sellerAccountInfo.setMarketCode("US001201");
+		sellerAccountInfo.setMarketStatus("");
+		sellerAccountInfo.setBankCode("OR000221");
+		sellerAccountInfo.setBankName("신한은행");
+		sellerAccountInfo.setIsAccountReal("Y");
+		sellerAccountInfo.setAccountRealDate("20131216000000");
+		sellerAccountInfo.setBankBranch("");
+		sellerAccountInfo.setBankBranchCode("");
+		sellerAccountInfo.setSwiftCode("123");
+		sellerAccountInfo.setAbaCode("");
+		sellerAccountInfo.setIbanCode("");
+		sellerAccountInfo.setTpinCode("");
+		sellerAccountInfo.setBankAccount("360ea2f64f770192c02e09e390480715");
+		sellerAccountInfo.setBankAcctName("홍길동");
+		responseVO.setSellerAccountInfo(sellerAccountInfo);
+
+		ExtraDocument extraDocumentList = null;
+		List<ExtraDocument> myList = new ArrayList<ExtraDocument>();
+		for (int i = 0; i < 1; i++) {
+			extraDocumentList = new ExtraDocument();
+			extraDocumentList.setDocumentCode("US001903");
+			extraDocumentList.setDocumentPath("/data/mem/IF1023139253020100810165321/20100827101614376_US001903.png");
+			extraDocumentList.setDocumentName("구매내역2.png");
+			extraDocumentList.setDocumentSize("34803");
+			myList.add(extraDocumentList);
+		}
+		responseVO.setExtraDocumentList(myList);
+
+		responseVO.setRegDate("20131226000000");
+		responseVO.setAppoveDate("20131226000000");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 기본 정보 수정
+	 * </pre>
+	 */
+	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
+	public ModifyInformationRes modifyInformation(HttpServletResponse response) throws Exception {
+
+		ModifyInformationRes responseVO = new ModifyInformationRes();
+
+		responseVO.setSellerId("IF1023599819420120111013407");
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 정산 정보 수정
+	 * </pre>
+	 */
+	@RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
+	public ModifyAccountInformationRes modifyAccountInformation(HttpServletResponse response) throws Exception {
+
+		ModifyAccountInformationRes responseVO = new ModifyAccountInformationRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 이메일 수정
+	 * </pre>
+	 */
+	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
+	public ModifyEmailRes modifyEmail(HttpServletResponse response) throws Exception {
+
+		ModifyEmailRes responseVO = new ModifyEmailRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 Password 수정
+	 * </pre>
+	 */
+	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
+	public ModifyPasswordRes modifyPassword(HttpServletResponse response) throws Exception {
+
+		ModifyPasswordRes responseVO = new ModifyPasswordRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 계정 승인
+	 * </pre>
+	 */
+	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
+	public ConfirmRes confirm(HttpServletResponse response) throws Exception {
+
+		ConfirmRes responseVO = new ConfirmRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 전환 신청
+	 * </pre>
+	 */
+	@RequestMapping(value = "/conversionClass/v1", method = RequestMethod.POST)
+	public ConversionClassRes conversionClass(HttpServletResponse response) throws Exception {
+
+		ConversionClassRes responseVO = new ConversionClassRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 계정 잠금
+	 * </pre>
+	 */
+	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
+	public LockAccountRes lockAccount(HttpServletResponse response) throws Exception {
+
+		LockAccountRes responseVO = new LockAccountRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 실명 인증 정보 수정
+	 * </pre>
+	 */
+	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
+	public ModifyRealNameRes modifyRealName(HttpServletResponse response) throws Exception {
+
+		ModifyRealNameRes responseVO = new ModifyRealNameRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 등록
+	 * </pre>
+	 */
+	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
+	public CreateSubsellerRes createSubseller(HttpServletResponse response) throws Exception {
+
+		CreateSubsellerRes responseVO = new CreateSubsellerRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 수정
+	 * </pre>
+	 */
+	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
+	public ModifySubsellerRes modifySubseller(HttpServletResponse response) throws Exception {
+
+		ModifySubsellerRes responseVO = new ModifySubsellerRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 삭제
+	 * </pre>
+	 */
+	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
+	public RemoveSubsellerRes removeSubseller(HttpServletResponse response) throws Exception {
+
+		RemoveSubsellerRes responseVO = new RemoveSubsellerRes();
+		responseVO.setRemoveCnt(1);
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 목록 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.POST)
+	public ListSubsellerRes listSubseller(HttpServletResponse response) throws Exception {
+
+		ListSubsellerRes responseVO = new ListSubsellerRes();
+		responseVO.setMasSellerKey("IF1023511101420120615164319");
+		responseVO.setSubSellerListSize(1);
+
+		SubSeller subSellerList = null;
+		List<SubSeller> myList = new ArrayList<SubSeller>();
+
+		SellerRight sellerRightList = null;
+		List<SellerRight> myList2 = new ArrayList<SellerRight>();
+
+		for (int i = 0; i < 1; i++) {
+			subSellerList = new SubSeller();
+			subSellerList.setSellerKey("IF1023511101420120615162000");
+			subSellerList.setSellerId("signtest_subid01");
+			subSellerList.setSellerPw("123qwe");
+			subSellerList.setSellerEmail("signtest_subid01@yopmail.com");
+			subSellerList.setSellerPhoneCountry("102");
+			subSellerList.setSellerPhone("0101231234");
+			subSellerList.setSellerMemo("signtest의 서브계정01 메모");
+			subSellerList.setLastLoginDttm("201312101006");
+
+			for (int ii = 0; ii < 1; ii++) {
+				sellerRightList = new SellerRight();
+				sellerRightList.setRightProfile("DE0101");
+				sellerRightList.setRightProfileValue("상품현황");
+				myList2.add(sellerRightList);
+			}
+			subSellerList.setSellerRightList(myList2);
+
+			myList.add(subSellerList);
+
+		}
+		responseVO.setSubSellerList(myList);
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 상세 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.POST)
+	public DetailSubsellerRes detailSubseller(HttpServletResponse response) throws Exception {
+
+		DetailSubsellerRes responseVO = new DetailSubsellerRes();
+		responseVO.setMasSellerKey("IF1023511101420120615164319");
+		responseVO.setSellerKey("IF1023511101420120615162000");
+		responseVO.setSellerId("signtest_subid01");
+		responseVO.setSellerPw("123qwe");
+		responseVO.setSellerEmail("signtest_subid01@yopmail.com");
+		responseVO.setSellerPhoneCountry("112");
+		responseVO.setSellerPhone("0101231234");
+		responseVO.setSellerMemo("signtest의 서브계정01 메모");
+		responseVO.setLastLoginDttm("201312301006");
+
+		SellerRight sellerRightList = null;
+		List<SellerRight> myList = new ArrayList<SellerRight>();
+		for (int ii = 0; ii < 1; ii++) {
+			sellerRightList = new SellerRight();
+			sellerRightList.setRightProfile("DE0101");
+			sellerRightList.setRightProfileValue("상품현황");
+			myList.add(sellerRightList);
+		}
+
+		responseVO.setSellerRightList(myList);
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 서브계정 ID 중복 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.POST)
+	public DuplicateBySubsellerIdRes duplicateBySubsellerId(HttpServletResponse response) throws Exception {
+
+		DuplicateBySubsellerIdRes responseVO = new DuplicateBySubsellerIdRes();
+		responseVO.setDuplicateYn("Y");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 탈퇴
+	 * </pre>
+	 */
+	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
+	public WithdrawRes withdraw(HttpServletResponse response) throws Exception {
+
+		WithdrawRes responseVO = new WithdrawRes();
+		responseVO.setSellerKey("User1");
+
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 탈퇴사유 목록 조회
+	 * </pre>
+	 */
+	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.POST)
+	public ListWithdrawalReasonRes listWithdrawalReason(HttpServletResponse response) throws Exception {
+
+		ListWithdrawalReasonRes responseVO = new ListWithdrawalReasonRes();
+
+		SecedeReson secedeResonList = null;
+		List<SecedeReson> myList = new ArrayList<SecedeReson>();
+		for (int i = 0; i < 1; i++) {
+			secedeResonList = new SecedeReson();
+			secedeResonList.setSecedeReasonCd("US010401");
+			secedeResonList.setSecedeReasonDes("ID 변경");
+			myList.add(secedeResonList);
+		}
+
+		responseVO.setSecedeResonList(myList);
+
+		return responseVO;
+	}
+
+}
