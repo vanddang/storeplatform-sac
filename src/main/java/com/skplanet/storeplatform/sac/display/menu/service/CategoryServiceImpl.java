@@ -101,6 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
+				category.setType("topCategory");
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());
@@ -240,6 +241,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				if (threeDepth) { // => 3 DEPTH MENU
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
+						category.setType("topCategory");
 						responseVO.setCategory(category);
 					} else {
 						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
@@ -265,7 +267,7 @@ public class CategoryServiceImpl implements CategoryService {
 					}
 				} else { // 2depth
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						// categoryDetail.setCategory(category);
+						category.setType("topCategory");
 						responseVO.setCategory(category);
 						count++;
 					} else {
