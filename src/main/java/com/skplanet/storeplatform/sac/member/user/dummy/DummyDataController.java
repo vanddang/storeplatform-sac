@@ -11,11 +11,13 @@ package com.skplanet.storeplatform.sac.member.user.dummy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
@@ -48,8 +51,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -315,6 +317,28 @@ public class DummyDataController {
 		res.setOcbNo("1f7df530b17a0ac38d817d87a5f994855565bae540877207012e46c2eb9af4db");
 		res.setUseStartDt("20130106");
 		res.setUseEndDt("20130106");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ExistRes exist(@RequestHeader Map<String, Object> headers) {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
+		logger.info("####################################################");
+
+		ExistRes res = new ExistRes();
+		res.setUserKey("IW102158844420091030165015");
+		res.setTstoreYn("Y");
+		res.setUserType("US011501");
+		res.setUserId("hkd");
+		res.setIsRealName("N");
+		res.setUnder14(null);
+		res.setAgencyYn(null);
+		res.setUnder19(null);
+		res.setUserEmail("hkd@aaaa.com");
 
 		return res;
 	}
