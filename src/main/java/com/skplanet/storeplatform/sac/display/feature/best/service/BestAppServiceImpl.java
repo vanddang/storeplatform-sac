@@ -73,8 +73,8 @@ public class BestAppServiceImpl implements BestAppService {
 
 			// 상품ID
 			identifier = new Identifier();
-			identifier.setType("product" + i);
-			identifier.setText("H090101222_" + i);
+			identifier.setType("episodeId");
+			identifier.setText("0000643818");
 
 			support.setType("Y");
 			support.setText("iab");
@@ -84,45 +84,42 @@ public class BestAppServiceImpl implements BestAppService {
 			 * Menu(메뉴정보) Id, Name, Type
 			 */
 			Menu menu = new Menu();
-			menu.setId("dummyMenuId0");
-			menu.setName("dummyMenuName0");
-			menu.setType("dummyMenuType0");
+			menu.setId("DP000501");
+			menu.setName("게임");
+			menu.setType("topClass");
 			menuList.add(menu);
 			menu = new Menu();
-			menu.setId("dummyMenuId1");
-			menu.setName("dummyMenuName1");
-			menu.setType("dummyMenuType1");
+			menu.setId("DP01004");
+			menu.setName("RPG");
 			menuList.add(menu);
 
 			/*
 			 * App aid, packagename, versioncode, version
 			 */
-			app.setAid("A090101222_" + i);
-			app.setPackageName("app dummy package" + i);
-			app.setVersionCode("dummy version Code" + i);
+			app.setAid("OA00643818");
+			app.setPackageName("proj.syjt.tstore");
+			app.setVersionCode("11000");
 			app.setVersion("1.1");
 
 			/*
 			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 			 */
-			accrual.setVoterCount("1234");
-			accrual.setDownloadCount("800");
-			accrual.setScore(3.3);
+			accrual.setVoterCount("14305");
+			accrual.setDownloadCount("513434");
+			accrual.setScore(4.8);
 
 			/*
 			 * Rights grade
 			 */
-			rights.setGrade("1");
+			rights.setGrade("0");
 
-			title.setText("베스트 앱_" + i);
+			title.setText("워밸리 온라인");
 
 			/*
 			 * source mediaType, size, type, url
 			 */
-			source.setMediaType("media_" + i);
-			source.setSize("1024_" + i);
-			source.setType("thumbNail");
-			source.setUrl("http://www.naver.com");
+			source.setType("thumbnail");
+			source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 			sourceList.add(source);
 
 			/*
@@ -140,7 +137,7 @@ public class BestAppServiceImpl implements BestAppService {
 			product.setRights(rights);
 			product.setTitle(title);
 			product.setSourceList(sourceList);
-			product.setProductExplain("앱 설명_" + i);
+			product.setProductExplain("★이벤트★세상에 없던 모바일 MMORPG!");
 			product.setPrice(price);
 
 			productList.add(product);

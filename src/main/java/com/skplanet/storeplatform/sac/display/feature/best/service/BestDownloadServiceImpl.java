@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -34,10 +34,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
  * 
- * Updated on : 2013. 12. 19. Updated by : 이석희, SK 플래닛.
+ * Updated on : 2013. 12. 20. Updated by : 이석희, SK 플래닛.
  */
+
 @Service
-public class BestAppServiceImpl implements BestAppService {
+public class BestDownloadServiceImpl implements BestDownloadService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -45,12 +46,12 @@ public class BestAppServiceImpl implements BestAppService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.BestAppService#BestAppService(com.skplanet
-	 * .storeplatform.sac.client.product.vo.BestAppReqVO)
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.BestDownloadService#BestDownloadService(com.skplanet
+	 * .storeplatform.sac.client.product.vo.BestDownloadRequestVO)
 	 */
 	@Override
-	public BestAppRes searchBestAppList(BestAppReq bestAppReq) {
-		BestAppRes response = new BestAppRes();
+	public BestDownloadRes searchBestDownloadList(BestDownloadReq bestDownloadReq) {
+		BestDownloadRes response = new BestDownloadRes();
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
@@ -73,7 +74,7 @@ public class BestAppServiceImpl implements BestAppService {
 
 			// 상품ID
 			identifier = new Identifier();
-			identifier.setType("");
+			identifier.setType("episodeId");
 			identifier.setText("0000643818");
 
 			support.setType("Y");
@@ -85,16 +86,16 @@ public class BestAppServiceImpl implements BestAppService {
 			 */
 			Menu menu = new Menu();
 			menu.setId("DP000501");
-			menu.setName("game");
+			menu.setName("게임");
 			menu.setType("topClass");
 			menuList.add(menu);
 			menu = new Menu();
 			menu.setId("DP01004");
-			menu.setName("game/rpg");
+			menu.setName("RPG");
 			menuList.add(menu);
 
 			/*
-			 * App aid, packagename, versioncode, version
+			 * App aid, packagename, versioncode, version 상품이 앱일 경우 데이터 존재 앱이 아닐 경우 없음
 			 */
 			app.setAid("OA00643818");
 			app.setPackageName("proj.syjt.tstore");
@@ -118,7 +119,7 @@ public class BestAppServiceImpl implements BestAppService {
 			/*
 			 * source mediaType, size, type, url
 			 */
-			source.setType("thumbnail");
+
 			source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 			sourceList.add(source);
 

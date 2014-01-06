@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.feature.theme.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +63,8 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H090101222_" + i);
+				identifier.setType("channelId");
+				identifier.setText("2443");
 
 				title.setText("추리, 심리, 미스터리 모음 테마 이북 모음전");
 

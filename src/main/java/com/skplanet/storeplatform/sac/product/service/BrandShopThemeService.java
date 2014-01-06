@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.product.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.theme.BrandShopThemeRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.theme.BrandShopThemeResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.BrandShopThemeReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.BrandShopThemeRes;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -19,5 +19,5 @@ public interface BrandShopThemeService {
 	 *            Ebook/코믹 테마 상품 리스트 요청 Value Object
 	 * @return Ebook/코믹 테마 상품 리스트
 	 */
-	BrandShopThemeResponse searchBrandShopThemeList(BrandShopThemeRequest brandShopThemeRequest);
+	BrandShopThemeRes searchBrandShopThemeList(BrandShopThemeReq brandShopThemeReq);
 }

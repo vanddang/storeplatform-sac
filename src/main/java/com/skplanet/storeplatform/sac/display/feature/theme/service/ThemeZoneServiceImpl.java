@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.feature.theme.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeReq;
-import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeRes;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -32,7 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  */
 
 @Service
-public class EbookComicThemeServiceImpl implements EbookComicThemeService {
+public class ThemeZoneServiceImpl implements ThemeZoneService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -45,82 +51,106 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 	 * .storeplatform.sac.client.product.vo.EbookComicThemeRequestVO)
 	 */
 	@Override
-	public EbookComicThemeRes searchEbookComicThemeList(EbookComicThemeReq ebookComicThemeRequest) {
-		EbookComicThemeRes response = new EbookComicThemeRes();
+	public ThemeZoneRes searchThemeZoneList(ThemeZoneReq themeZoneRequest) {
+		ThemeZoneRes response = new ThemeZoneRes();
 
 		List<Product> productList = new ArrayList<Product>();
+		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
+
+		Product product = new Product();
+		Identifier identifier = new Identifier();
+		Title title = new Title();
+		Layout layout = new Layout();
+		Price price = new Price();
+		Rights rights = new Rights();
+		Contributor contributor = new Contributor();
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
-
-		if ("ebook".equals(ebookComicThemeRequest.getFilteredBy())) {
+		if ("".equals(themeZoneRequest.getThemezoneId()) || themeZoneRequest.getThemezoneId() == null) {
 			for (int i = 1; i <= 1; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				Source source = new Source();
-				Title title = new Title();
 
 				// 상품ID
 				identifier = new Identifier();
 				identifier.setType("product" + i);
-				identifier.setText("H090101222_" + i);
+				identifier.setText(" ");
 
-				title.setText("추리, 심리, 미스터리 모음 테마 이북 모음전");
-
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType("image/jpeg");
-				source.setSize("128");
-				source.setType("thmubnail");
-				source.setUrl("http://<<BASE>>/image/bb.jpg");
-				sourceList.add(source);
+				title.setText("EA 스포츠");
 
 				product = new Product();
 				product.setIdentifier(identifier);
 				product.setTitle(title);
-				product.setSourceList(sourceList);
-				product.setProductExplain("치열한 두뇌싸움을 좋아하는 분들에게 Tstore가 추천");
-
 				productList.add(product);
 
 			}
 
 		} else {
 			for (int i = 1; i <= 1; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
+
+				title.setText("테마제목");
+
 				Source source = new Source();
-				Title title = new Title();
+				source.setUrl("http://<<BASE>>/image/bb.jpg");
+				source.setType("thmubnail");
+				source.setSize("128");
+				source.setMediaType("image/jpeg");
+
+				Menu menu = new Menu();
+				menu.setId("dummyMenuId0");
+				menu.setName("카테고리명(메뉴명)");
+
+				layout.setTitle(title);
+				layout.setSource(source);
+				layout.setMenu(menu);
 
 				// 상품ID
 				identifier = new Identifier();
 				identifier.setType("product" + i);
 				identifier.setText("H090101222_" + i);
 
-				title.setText("로맨스, 유머 모음 테마 코믹 모음전");
+				title = new Title();
+				title.setText("식민행성");
+
+				menu = new Menu();
+				menu.setId("dummyMenuId0");
+				menu.setName("game/simulation");
+				menuList.add(menu);
 
 				/*
 				 * source mediaType, size, type, url
 				 */
-				source.setMediaType("image/jpeg");
-				source.setSize("128");
-				source.setType("thmubnail");
+				source = new Source();
 				source.setUrl("http://<<BASE>>/image/bb.jpg");
+				source.setType("thmubnail");
+				source.setSize("128");
+				source.setMediaType("image/jpeg");
 				sourceList.add(source);
+
+				contributor.setName("");
+				contributor.setCompany("");
+				Date date = new Date();
+				date.setText("");
+				contributor.setDate(date);
+
+				price.setText(1000);
+				rights.setGrade("0");
 
 				product = new Product();
 				product.setIdentifier(identifier);
 				product.setTitle(title);
+				product.setMenuList(menuList);
 				product.setSourceList(sourceList);
-				product.setProductExplain("재미와 로맨스를 원하시는 분들에게 Tstore가 추천");
+				product.setPrice(price);
+				product.setRights(rights);
+				product.setContributor(contributor);
 
 				productList.add(product);
 
 			}
 		}
 		response.setCommonResponse(commonResponse);
+		response.setLayout(layout);
 		response.setProductList(productList);
 		return response;
 	}

@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.product.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.best.BestAppResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -19,5 +19,5 @@ public interface BestAppService {
 	 *            BEST 앱 상품 리스트 요청 Value Object
 	 * @return BEST 앱 상품 리스트
 	 */
-	BestAppResponse searchBestAppList(BestAppRequest bestAppRequest);
+	BestAppRes searchBestAppList(BestAppReq bestAppReq);
 }

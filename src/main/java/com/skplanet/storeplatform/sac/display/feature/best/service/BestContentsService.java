@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsRes;
@@ -19,5 +19,5 @@ public interface BestContentsService {
 	 *            BEST 컨텐츠 상품 리스트 요청 Value Object
 	 * @return BEST 컨텐츠 상품 리스트
 	 */
-	BestContentsRes searchBestContentsList(BestContentsReq bestContentsRequest);
+	BestContentsRes searchBestContentsList(BestContentsReq bestContentsReq);
 }

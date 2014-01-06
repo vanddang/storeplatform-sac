@@ -10,11 +10,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
 import com.skplanet.storeplatform.sac.display.feature.best.service.BestAppService;
+import com.skplanet.storeplatform.sac.display.feature.best.service.BestContentsService;
+import com.skplanet.storeplatform.sac.display.feature.best.service.BestDownloadService;
 
 /**
  * 
- * Calss 설명(BEST 관련)
+ * Calss 설명(BEST 앱, BEST 컨텐츠, BEST 다운로드 관련)
  * 
  * Updated on : 2014. 1. 3. Updated by : 이석희, 인크로스
  */
@@ -26,10 +32,28 @@ public class BestController {
 	@Autowired
 	private BestAppService bestAppService;
 
+	@Autowired
+	private BestContentsService bestContentsService;
+
+	@Autowired
+	private BestDownloadService bestDownloadService;
+
 	@RequestMapping(value = "/display/feature/best/bestAppList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestAppRes bestAppList(BestAppReq bestAppReq) {
 		return this.bestAppService.searchBestAppList(bestAppReq);
+	}
+
+	@RequestMapping(value = "/display/feature/best/bestContentsList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public BestContentsRes bestContentsList(BestContentsReq bestContentsReq) {
+		return this.bestContentsService.searchBestContentsList(bestContentsReq);
+	}
+
+	@RequestMapping(value = "/display/feature/best/bestDownloadList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public BestDownloadRes bestDownloadList(BestDownloadReq bestDownloadReq) {
+		return this.bestDownloadService.searchBestDownloadList(bestDownloadReq);
 	}
 
 }

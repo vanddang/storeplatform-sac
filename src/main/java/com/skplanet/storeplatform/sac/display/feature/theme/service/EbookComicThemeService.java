@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.feature.theme.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeReq;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeRes;

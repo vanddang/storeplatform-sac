@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.product.service;
+package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 
 /**
@@ -68,10 +67,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H090101222_" + i);
+				identifier.setType("channelId");
+				identifier.setText("H001540562");
 
-				support.setType("hd");
+				support.setType("");
 				support.setText("hd");
 				supportList.add(support);
 
@@ -79,14 +78,13 @@ public class BestContentsServiceImpl implements BestContentsService {
 				 * Menu(메뉴정보) Id, Name, Type
 				 */
 				Menu menu = new Menu();
-				menu.setId("dummyMenuId1");
-				menu.setName("dummyMenuName1");
-				menu.setType("dummyMenuType1");
+				menu.setId("DP000517");
+				menu.setName("영화");
+				menu.setType("topClass");
 				menuList.add(menu);
 				menu = new Menu();
-				menu.setId("dummyMenuId2");
-				menu.setName("dummyMenuName2");
-				menu.setType("dummyMenuType2");
+				menu.setId("DP17002");
+				menu.setName("액션");
 				menuList.add(menu);
 				menu = new Menu();
 				menu.setId("CT13");
@@ -100,50 +98,50 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 				if ("movie".equals(bestContentsRequest.getFiteredBy())
 						|| "movie+broadcast".equals(bestContentsRequest.getFiteredBy())) {
-					contributor.setDirector("임상윤_" + i);
-					contributor.setArtist("소지섭, 이미연_" + i);
+					contributor.setDirector("곽경택");
+					contributor.setArtist("유오성,주진모,김우빈,박아인,강한나,한수아");
 					Date date = new Date();
-					date.setText("2012");
+					date.setText("20131114");
 					contributor.setDate(date);
 				} else if ("broadcast".equals(bestContentsRequest.getFiteredBy())) {
-					contributor.setArtist("유재석" + i);
+					contributor.setArtist("유재석,지석진,김종국,하하,개리,이광수");
 				} else if ("ebook".equals(bestContentsRequest.getFiteredBy())) {
-					contributor.setName("살아 있는 것은 다 행복하라" + i);
-					contributor.setPublisher("조화로운삶");
+					contributor.setName("정현웅");
+					contributor.setPublisher("L&amp;B BOOKS");
 					Date date = new Date();
-					date.setText("2013");
+					date.setText("20130322");
 					contributor.setDate(date);
 				} else if ("comic".equals(bestContentsRequest.getFiteredBy())
 						|| "ebook+comic".equals(bestContentsRequest.getFiteredBy())) {
-					contributor.setName("열혈강호" + i);
-					contributor.setPainter("양재현");
-					contributor.setPublisher("대원씨아이");
+					contributor.setName("황성");
+					contributor.setPainter("황성");
+					contributor.setPublisher("미스터블루");
 				}
 
 				/*
 				 * Accrual - voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 				 */
-				accrual.setVoterCount("1234");
-				accrual.setDownloadCount("800");
-				accrual.setScore(3.3);
+				accrual.setVoterCount("51");
+				accrual.setDownloadCount("5932");
+				accrual.setScore(3.8);
 
 				/*
 				 * Rights - grade
 				 */
-				rights.setGrade("1");
+				rights.setGrade("4");
 
-				title.setText("회사원_" + i);
+				title.setText("[20%할인]친구 2");
 
 				/*
 				 * source mediaType - url
 				 */
-				source.setUrl("http://./4_182_261_130x186.PNG");
+				source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PVOD/201401/02/0002057676/3/0003876930/3/RT1_02000024893_1_0921_182x261_130x186.PNG");
 				sourceList.add(source);
 
 				/*
 				 * Price text
 				 */
-				price.setText(0);
+				price.setText(3200);
 
 				product = new Product();
 				product.setIdentifier(identifier);
@@ -155,7 +153,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 				product.setRights(rights);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				product.setProductExplain("겉으론 평범한 금속 제조 회사지만" + i);
+				product.setProductExplain("니 내랑 부산 접수할래? ...");
 				product.setPrice(price);
 
 				// BestContentsVO = new BestContentsVO();
@@ -165,94 +163,94 @@ public class BestContentsServiceImpl implements BestContentsService {
 				productList.add(product);
 
 			}
-		} else {
-
-			for (int i = 1; i <= 1; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				Contributor contributor = new Contributor();
-				Accrual accrual = new Accrual();
-				Rights rights = new Rights();
-				Title title = new Title();
-				Source source = new Source();
-				Price price = new Price();
-				SalesOption salesOption = new SalesOption();
-
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H090101222_" + i);
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				Menu menu = new Menu();
-				menu.setName("recommand");
-				menu.setType("recommandShopping");
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId1");
-				menu.setName("dummyMenuName1");
-				menu.setType("dummyMenuType1");
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("dummyMenuId2");
-				menu.setName("dummyMenuName2");
-				menu.setType("dummyMenuType2");
-				menuList.add(menu);
-
-				title.setText("뜨레쥬르가 쏜다!");
-
-				identifier = new Identifier();
-				identifier.setType("BRAND");
-				identifier.setText("B123455");
-				contributor.setIdentifier(identifier);
-				contributor.setBrand("뚜레주르");
-
-				/*
-				 * source mediaType - url, type, size, meidaType
-				 */
-				source.setUrl("http://../image.jpg");
-				source.setType("thmubnail"); // 하드코딩
-				source.setSize("128");
-				source.setMediaType("image/jpeg");
-				sourceList.add(source);
-
-				Date date = new Date();
-				date.setType("duration/usagePeriod");
-				date.setText("20121202T125122+0900/20131202T235959+0900");
-				rights.setDate(date);
-
-				/*
-				 * Accrual - DownloadCount (다운로드 수)
-				 */
-				accrual.setDownloadCount("800");
-
-				/*
-				 * Price - fixedPrice(정가), discountRate(할인률), text(가격)
-				 */
-				price.setFixedPrice("5000");
-				price.setDiscountRate("50");
-				price.setText(2500);
-
-				product = new Product();
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setTitle(title);
-				product.setContributor(contributor);
-				product.setProductExplain("2012년 상반기 슈크림을 시~원하게 쏩니다.");
-				product.setSourceList(sourceList);
-				product.setRights(rights);
-				product.setAccrual(accrual);
-				product.setPrice(price);
-				if ("배송상품 일 경우".equals("배송상품 조회 데이터")) {
-					salesOption.setType("delivery");
-					product.setSalesOption(salesOption);
-				}
-
-				productList.add(product);
-
-			}
+			// } else {
+			//
+			// for (int i = 1; i <= 1; i++) {
+			// Product product = new Product();
+			// Identifier identifier = new Identifier();
+			// Contributor contributor = new Contributor();
+			// Accrual accrual = new Accrual();
+			// Rights rights = new Rights();
+			// Title title = new Title();
+			// Source source = new Source();
+			// Price price = new Price();
+			// SalesOption salesOption = new SalesOption();
+			//
+			// // 상품ID
+			// identifier = new Identifier();
+			// identifier.setType("product" + i);
+			// identifier.setText("H090101222_" + i);
+			//
+			// /*
+			// * Menu(메뉴정보) Id, Name, Type
+			// */
+			// Menu menu = new Menu();
+			// menu.setName("recommand");
+			// menu.setType("recommandShopping");
+			// menuList.add(menu);
+			// menu = new Menu();
+			// menu.setId("dummyMenuId1");
+			// menu.setName("dummyMenuName1");
+			// menu.setType("dummyMenuType1");
+			// menuList.add(menu);
+			// menu = new Menu();
+			// menu.setId("dummyMenuId2");
+			// menu.setName("dummyMenuName2");
+			// menu.setType("dummyMenuType2");
+			// menuList.add(menu);
+			//
+			// title.setText("뜨레쥬르가 쏜다!");
+			//
+			// identifier = new Identifier();
+			// identifier.setType("BRAND");
+			// identifier.setText("B123455");
+			// contributor.setIdentifier(identifier);
+			// contributor.setBrand("뚜레주르");
+			//
+			// /*
+			// * source mediaType - url, type, size, meidaType
+			// */
+			// source.setUrl("http://../image.jpg");
+			// source.setType("thmubnail"); // 하드코딩
+			// source.setSize("128");
+			// source.setMediaType("image/jpeg");
+			// sourceList.add(source);
+			//
+			// Date date = new Date();
+			// date.setType("duration/usagePeriod");
+			// date.setText("20121202T125122+0900/20131202T235959+0900");
+			// rights.setDate(date);
+			//
+			// /*
+			// * Accrual - DownloadCount (다운로드 수)
+			// */
+			// accrual.setDownloadCount("800");
+			//
+			// /*
+			// * Price - fixedPrice(정가), discountRate(할인률), text(가격)
+			// */
+			// price.setFixedPrice("5000");
+			// price.setDiscountRate("50");
+			// price.setText(2500);
+			//
+			// product = new Product();
+			// product.setIdentifier(identifier);
+			// product.setMenuList(menuList);
+			// product.setTitle(title);
+			// product.setContributor(contributor);
+			// product.setProductExplain("2012년 상반기 슈크림을 시~원하게 쏩니다.");
+			// product.setSourceList(sourceList);
+			// product.setRights(rights);
+			// product.setAccrual(accrual);
+			// product.setPrice(price);
+			// if ("배송상품 일 경우".equals("배송상품 조회 데이터")) {
+			// salesOption.setType("delivery");
+			// product.setSalesOption(salesOption);
+			// }
+			//
+			// productList.add(product);
+			//
+			// }
 		}
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);
