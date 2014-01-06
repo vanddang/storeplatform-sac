@@ -2,13 +2,16 @@ package com.skplanet.storeplatform.sac.member.seller.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CmsReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CmsRes;
+import com.skplanet.storeplatform.sac.common.util.HttpUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -100,18 +103,36 @@ public class SellerJoinServiceImpl implements SellerJoinService {
 
 		System.out.println(sb.toString());
 
-		StringBuffer resStr = new StringBuffer();
-		resStr.append("<?xml version='1.0' encoding='euc-kr' ?>");
-		resStr.append("<RESULT>");
-		resStr.append("<RES_DTTM >00</RES_DTTM>");
-		resStr.append("<RES_CD>00</RES_CD>");
-		resStr.append("<RES_MSG>정상</RES_MSG>");
-		resStr.append("</RESULT>");
+		// Test CMS
+		String xmlReq = "";
+
+		// Header 생성
+		Map<String, String> headerMap = new HashedMap();
+		headerMap.put("Content-Type", "text/xml; charset=utf-8");
+		headerMap.put("Host", "");
+		headerMap.put("Content-Length", xmlReq.getBytes().length + "");
+		headerMap.put("Connection", "close");
+
+		HttpUtil httpUtil = new HttpUtil();
+
+		// HttpClient Exceute
+		String resStr = httpUtil.httpExecutePost("http://220.103.237.139/icms-admin/intf/partner/receiveContent",
+				xmlReq, headerMap, "text/xml", "UTF-8");
+
+		// StringBuffer resStr = new StringBuffer();
+		// resStr.append("<?xml version='1.0' encoding='euc-kr' ?>");
+		// resStr.append("<RESULT>");
+		// resStr.append("<RES_DTTM >00</RES_DTTM>");
+		// resStr.append("<RES_CD>00</RES_CD>");
+		// resStr.append("<RES_MSG>정상</RES_MSG>");
+		// resStr.append("</RESULT>");
+
 		try {
-			CmsRes res = SellerJoinServiceImpl.resultFromXml(resStr.toString());
+			// Response XML To Object
+			CmsRes res = SellerJoinServiceImpl.resultFromXml(resStr);
+			// Debug
 			System.out.println(res.getRES_CD());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
