@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 
@@ -22,7 +24,7 @@ public interface UserJoinService {
 
 	/**
 	 * <pre>
-	 * 모바일 전용 회원 가입
+	 * 모바일 전용 회원 가입 (MDN 회원 가입)
 	 * </pre>
 	 * 
 	 * @param headerVo
@@ -30,5 +32,16 @@ public interface UserJoinService {
 	 * @return
 	 */
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req);
+
+	/**
+	 * <pre>
+	 * ID 회원 약관 동의 가입 (One ID 회원)
+	 * </pre>
+	 * 
+	 * @param headerVo
+	 * @param req
+	 * @return
+	 */
+	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req);
 
 }

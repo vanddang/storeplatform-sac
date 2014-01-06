@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 
@@ -74,4 +76,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		return result;
 
 	}
+
+	@Override
+	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) {
+
+		CreateByAgreementRes result = new CreateByAgreementRes();
+		result.setUserKey("12321423543464567457");
+
+		return result;
+	}
+
 }
