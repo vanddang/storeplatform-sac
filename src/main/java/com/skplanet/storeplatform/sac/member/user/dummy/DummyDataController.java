@@ -15,15 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
@@ -44,7 +41,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes dummyData1(@RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) {
+	public CreateByMdnRes createByMdn(@RequestHeader Map<String, Object> headers) {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
@@ -58,7 +55,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes dummyData2(@RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) {
+	public CreateByAgreementRes createByAgreement(@RequestHeader Map<String, Object> headers) {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
