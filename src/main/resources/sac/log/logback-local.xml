@@ -17,7 +17,7 @@
     
     <appender name="RUNTIME-CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level | %X{x-tx-id} | %X{tenantId} | %X{ipAddress} | %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level | %X{x-guid} | %X{tenantId} | %X{ipAddress} | %msg%n</pattern>
         </layout>
     </appender> 
     
