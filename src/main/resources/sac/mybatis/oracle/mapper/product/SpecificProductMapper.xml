@@ -21,7 +21,11 @@
       ,B.AID                                                    /* 어플리케이션ID */
       ,B.PROD_BASE_DESC                                            /* 상품 설명 */
       ,B.PROD_AMT                                                  /* 상품 가격 */
-      ,B.PROD_GRD_CD                                            /* 상품 등급 코드 */
+      ,DECODE( B.PROD_GRD_CD
+                     , 'PD004401', 0
+                     , 'PD004402', 1
+                     , 'PD004403', 2
+                     , 'PD004404', 4 ) AS PROD_GRD_CD              /* 상품 등급 코드 */
       ,B.DRM_YN                                                   /* DRM 구분 */
       ,B.PART_PARENT_CLSF_CD                             /* INAPPBILLING 구분 */
       ,B.VER_MAJOR || '.' || B.VER_MINOR AS PROD_VER               /* 상품 버젼 */

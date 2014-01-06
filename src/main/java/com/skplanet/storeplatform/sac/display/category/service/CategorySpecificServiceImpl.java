@@ -78,42 +78,53 @@ public class CategorySpecificServiceImpl implements CategorySpecificService {
 						.queryForObject("SpecificProduct.selectApp", paramMap, CategorySpecificDTO.class);
 
 				Product product = new Product();
-				Identifier identifierVO = new Identifier();
-				Rights rightsVO = new Rights();
-				Title titleVO = new Title();
+				Identifier identifier = new Identifier();
+				Rights rights = new Rights();
+				Title title = new Title();
 				List<Source> sourceList = new ArrayList<Source>();
 				Source source = new Source();
+				App app = new App();
+				Price price = new Price();
+				Accrual accrual = new Accrual();
 
-				identifierVO.setText(prodId);
-				titleVO.setText(retDto.getProdNm());
+				// Identifier 설정
+				identifier.setText(prodId);
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 
-				App appVO = new App();
-				Price priceVO = new Price();
-				Accrual accrualVO = new Accrual();
-				appVO.setAid(retDto.getAid());
-				appVO.setPackageName(retDto.getApkPkgNm());
-				appVO.setVersionCode(retDto.getApkVer());
-				appVO.setVersion(retDto.getProdVer());
+				// Title 설정
+				title.setText(retDto.getProdNm());
 
-				priceVO.setText(retDto.getProdAmt());
-				product.setPrice(priceVO);
-				accrualVO.setVoterCount(retDto.getPaticpersCnt());
-				accrualVO.setDownloadCount(retDto.getPrchsCnt());
-				accrualVO.setScore(retDto.getAvgEvluScore());
+				// APP 설정
+				app.setAid(retDto.getAid());
+				app.setPackageName(retDto.getApkPkgNm());
+				app.setVersionCode(retDto.getApkVer());
+				app.setVersion(retDto.getProdVer());
+
+				// Price 설정
+				price.setText(retDto.getProdAmt());
+
+				accrual.setVoterCount(retDto.getPaticpersCnt());
+				accrual.setDownloadCount(retDto.getPrchsCnt());
+				accrual.setScore(retDto.getAvgEvluScore());
 
 				source.setMediaType(DisplayCommonUtil.getMimeType(retDto.getImgFilePath()));
 				source.setUrl(retDto.getImgFilePath());
+				// TODO osm1021 type이 thumnail 강제값인지 확인
 				source.setType("thumbnail");
 				sourceList.add(source);
 
-				product.setApp(appVO);
-				product.setAccrual(accrualVO);
-				product.setProductExplain(retDto.getProdBaseDesc());
+				rights.setGrade(retDto.getProdGrdCd());
 
-				product.setIdentifier(identifierVO);
+				product.setIdentifier(identifier);
+				product.setApp(app);
+				product.setAccrual(accrual);
+				product.setProductExplain(retDto.getProdBaseDesc());
+				product.setPrice(price);
+
+				// TODO osm1021 menuList 처리 추가 필요
 				// productVO.setMenuList(menuList);
-				product.setRights(rightsVO);
-				product.setTitle(titleVO);
+				product.setRights(rights);
+				product.setTitle(title);
 				product.setSourceList(sourceList);
 				productList.add(product);
 			}

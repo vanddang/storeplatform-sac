@@ -13,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
@@ -27,7 +28,8 @@ import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO;
  * 
  * Updated on : 2013-12-18 Updated by : 오승민, Incross
  */
-@Component
+@Service
+@Transactional
 public class DeviceProfileServiceImpl implements DeviceProfileService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
