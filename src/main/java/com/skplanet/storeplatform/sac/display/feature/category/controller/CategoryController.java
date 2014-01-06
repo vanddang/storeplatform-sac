@@ -17,11 +17,11 @@ import  com.skplanet.storeplatform.sac.display.feature.category.service.*;
 public class CategoryController {
 	private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
-	@RequestMapping(value = "/app/list/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryAppRes searchAppList(@RequestBody CategoryAppReq requestVO) {
-		System.out.println("test");
-		logger.info(requestVO.toString());
+	public CategoryAppRes searchAppList(CategoryAppReq requestVO) {
+		//System.out.println("test");
+		//logger.info(requestVO.toString());
 
 		CategoryAppService service = new CategoryAppServiceImpl();
 		CategoryAppRes responseVO;
@@ -29,11 +29,11 @@ public class CategoryController {
 		return responseVO;
 	}
 	
-	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryEpubRes searchEpubList(@RequestBody CategoryEpubReq requestVO) {
+	public CategoryEpubRes searchEpubList(CategoryEpubReq requestVO) {
 		
-		logger.info(requestVO.toString());
+		//logger.info(requestVO.toString());
 
 		CategoryEpubService service = new CategoryEpubServiceImpl();
 		CategoryEpubRes responseVO;
