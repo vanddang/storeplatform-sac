@@ -134,7 +134,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			menuList.add(menu);
 			menu = new Menu();
 			menu.setId("MN05001");
-			menu.setName("뮤직>가요");
+			menu.setName("가요");
 			menu.setType("");
 			menuList.add(menu);
 
