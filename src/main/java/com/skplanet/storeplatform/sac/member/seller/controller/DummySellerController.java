@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.seller.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
@@ -65,6 +66,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public CreateRes create(HttpServletResponse response) throws Exception {
 
 		CreateRes responseVO = new CreateRes();
@@ -84,7 +86,8 @@ public class DummySellerController {
 	 * 판매자회원 ID/이메일 중복 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public DuplicateByIdEmailRes duplicateByIdEmail(HttpServletResponse response) throws Exception {
 
 		DuplicateByIdEmailRes responseVO = new DuplicateByIdEmailRes();
@@ -98,7 +101,8 @@ public class DummySellerController {
 	 * 판매자 회원 인증
 	 * </pre>
 	 */
-	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/authorize/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public AuthorizeRes authorize(HttpServletResponse response) throws Exception {
 
 		AuthorizeRes responseVO = new AuthorizeRes();
@@ -118,7 +122,8 @@ public class DummySellerController {
 	 * 판매자회원 ID찾기
 	 * </pre>
 	 */
-	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public SearchIdRes searchId(HttpServletResponse response) throws Exception {
 
 		SearchIdRes responseVO = new SearchIdRes();
@@ -143,7 +148,8 @@ public class DummySellerController {
 	 * 판매자회원 Password찾기
 	 * </pre>
 	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public SearchPasswordRes searchPassword(HttpServletResponse response) throws Exception {
 
 		SearchPasswordRes responseVO = new SearchPasswordRes();
@@ -159,6 +165,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(HttpServletResponse response)
 			throws Exception {
 
@@ -174,7 +181,8 @@ public class DummySellerController {
 	 * Password 보안 질문 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(HttpServletResponse response) throws Exception {
 
 		ListPasswordReminderQuestionRes responseVO = new ListPasswordReminderQuestionRes();
@@ -196,7 +204,8 @@ public class DummySellerController {
 	 * 판매자회원 기본 정보 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public DetailInformationRes detailInformation(HttpServletResponse response) throws Exception {
 
 		DetailInformationRes responseVO = new DetailInformationRes();
@@ -289,7 +298,8 @@ public class DummySellerController {
 	 * 판매자회원 정산 정보 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(HttpServletResponse response) throws Exception {
 
 		DetailAccountInformationRes responseVO = new DetailAccountInformationRes();
@@ -362,6 +372,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ModifyInformationRes modifyInformation(HttpServletResponse response) throws Exception {
 
 		ModifyInformationRes responseVO = new ModifyInformationRes();
@@ -378,6 +389,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ModifyAccountInformationRes modifyAccountInformation(HttpServletResponse response) throws Exception {
 
 		ModifyAccountInformationRes responseVO = new ModifyAccountInformationRes();
@@ -392,6 +404,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ModifyEmailRes modifyEmail(HttpServletResponse response) throws Exception {
 
 		ModifyEmailRes responseVO = new ModifyEmailRes();
@@ -406,6 +419,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ModifyPasswordRes modifyPassword(HttpServletResponse response) throws Exception {
 
 		ModifyPasswordRes responseVO = new ModifyPasswordRes();
@@ -420,6 +434,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ConfirmRes confirm(HttpServletResponse response) throws Exception {
 
 		ConfirmRes responseVO = new ConfirmRes();
@@ -434,6 +449,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/conversionClass/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ConversionClassRes conversionClass(HttpServletResponse response) throws Exception {
 
 		ConversionClassRes responseVO = new ConversionClassRes();
@@ -448,6 +464,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public LockAccountRes lockAccount(HttpServletResponse response) throws Exception {
 
 		LockAccountRes responseVO = new LockAccountRes();
@@ -462,6 +479,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ModifyRealNameRes modifyRealName(HttpServletResponse response) throws Exception {
 
 		ModifyRealNameRes responseVO = new ModifyRealNameRes();
@@ -476,6 +494,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public CreateSubsellerRes createSubseller(HttpServletResponse response) throws Exception {
 
 		CreateSubsellerRes responseVO = new CreateSubsellerRes();
@@ -490,6 +509,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public ModifySubsellerRes modifySubseller(HttpServletResponse response) throws Exception {
 
 		ModifySubsellerRes responseVO = new ModifySubsellerRes();
@@ -504,6 +524,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public RemoveSubsellerRes removeSubseller(HttpServletResponse response) throws Exception {
 
 		RemoveSubsellerRes responseVO = new RemoveSubsellerRes();
@@ -517,7 +538,8 @@ public class DummySellerController {
 	 * 서브계정 목록 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public ListSubsellerRes listSubseller(HttpServletResponse response) throws Exception {
 
 		ListSubsellerRes responseVO = new ListSubsellerRes();
@@ -562,7 +584,8 @@ public class DummySellerController {
 	 * 서브계정 상세 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public DetailSubsellerRes detailSubseller(HttpServletResponse response) throws Exception {
 
 		DetailSubsellerRes responseVO = new DetailSubsellerRes();
@@ -595,7 +618,8 @@ public class DummySellerController {
 	 * 서브계정 ID 중복 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public DuplicateBySubsellerIdRes duplicateBySubsellerId(HttpServletResponse response) throws Exception {
 
 		DuplicateBySubsellerIdRes responseVO = new DuplicateBySubsellerIdRes();
@@ -610,6 +634,7 @@ public class DummySellerController {
 	 * </pre>
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public WithdrawRes withdraw(HttpServletResponse response) throws Exception {
 
 		WithdrawRes responseVO = new WithdrawRes();
@@ -623,7 +648,8 @@ public class DummySellerController {
 	 * 판매자 탈퇴사유 목록 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public ListWithdrawalReasonRes listWithdrawalReason(HttpServletResponse response) throws Exception {
 
 		ListWithdrawalReasonRes responseVO = new ListWithdrawalReasonRes();
