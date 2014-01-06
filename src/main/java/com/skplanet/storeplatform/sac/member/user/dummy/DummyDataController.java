@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
@@ -46,33 +44,33 @@ public class DummyDataController {
 	@Autowired
 	private HeaderInfo headerInfo;
 
-	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateByMdnRes createByMdn() {
-
-		logger.info("####################################################");
-		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
-		logger.info("####################################################");
-
-		CreateByMdnRes res = new CreateByMdnRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
-
-	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateByAgreementRes createByAgreement() {
-
-		logger.info("####################################################");
-		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
-		logger.info("####################################################");
-
-		CreateByAgreementRes res = new CreateByAgreementRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// @RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateByMdnRes createByMdn() {
+	//
+	// logger.info("####################################################");
+	// logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
+	// logger.info("####################################################");
+	//
+	// CreateByMdnRes res = new CreateByMdnRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
+	//
+	// @RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateByAgreementRes createByAgreement() {
+	//
+	// logger.info("####################################################");
+	// logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
+	// logger.info("####################################################");
+	//
+	// CreateByAgreementRes res = new CreateByAgreementRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	@RequestMapping(value = "/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
