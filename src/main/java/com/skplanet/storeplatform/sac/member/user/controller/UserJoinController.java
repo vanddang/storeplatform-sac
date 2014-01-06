@@ -75,7 +75,7 @@ public class UserJoinController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(@RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) {
+	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
