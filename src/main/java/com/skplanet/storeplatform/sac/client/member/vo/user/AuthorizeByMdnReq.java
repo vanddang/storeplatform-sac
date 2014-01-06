@@ -1,0 +1,131 @@
+package com.skplanet.storeplatform.sac.client.member.vo.user;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+/**
+ * [REQUEST] 모바일 전용 회원 인증(MDN 인증)
+ * 
+ * Updated on : 2014. 1. 3. Updated by : 반범진. 지티소프트.
+ */
+public class AuthorizeByMdnReq extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 기기 ID (mdn, uuid)
+	 */
+	private String deviceId;
+
+	/**
+	 * 기기 고유 번호
+	 */
+	private String imei;
+
+	/**
+	 * 루팅 여부(Y/N)
+	 */
+	private String rooting;
+
+	/**
+	 * Gmail 주소
+	 */
+	private String gmailAddr;
+
+	/**
+	 * Gmail 주소
+	 */
+	private String deviceModelNo;
+
+	/**
+	 * 자동 업데이트 여부(Y/N)
+	 */
+	private String isAutoUpdate;
+
+	/**
+	 * 이동 통신사
+	 */
+	private String deviceTelecom;
+
+	/**
+	 * 삽클 버전
+	 */
+	private String scVer;
+
+	/**
+	 * 오리지널 OS 버전
+	 */
+	private String osVerOrg;
+
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	public String getImei() {
+		return this.imei;
+	}
+
+	public void setImei(String imei) {
+		this.imei = imei;
+	}
+
+	public String getRooting() {
+		return this.rooting;
+	}
+
+	public void setRooting(String rooting) {
+		this.rooting = rooting;
+	}
+
+	public String getGmailAddr() {
+		return this.gmailAddr;
+	}
+
+	public void setGmailAddr(String gmailAddr) {
+		this.gmailAddr = gmailAddr;
+	}
+
+	public String getDeviceModelNo() {
+		return this.deviceModelNo;
+	}
+
+	public void setDeviceModelNo(String deviceModelNo) {
+		this.deviceModelNo = deviceModelNo;
+	}
+
+	public String getIsAutoUpdate() {
+		return this.isAutoUpdate;
+	}
+
+	public void setIsAutoUpdate(String isAutoUpdate) {
+		this.isAutoUpdate = isAutoUpdate;
+	}
+
+	public String getDeviceTelecom() {
+		return this.deviceTelecom;
+	}
+
+	public void setDeviceTelecom(String deviceTelecom) {
+		this.deviceTelecom = deviceTelecom;
+	}
+
+	public String getScVer() {
+		return this.scVer;
+	}
+
+	public void setScVer(String scVer) {
+		this.scVer = scVer;
+	}
+
+	public String getOsVerOrg() {
+		return this.osVerOrg;
+	}
+
+	public void setOsVerOrg(String osVerOrg) {
+		this.osVerOrg = osVerOrg;
+	}
+
+}
