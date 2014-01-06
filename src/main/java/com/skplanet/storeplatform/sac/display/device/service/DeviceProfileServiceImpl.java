@@ -63,7 +63,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 			device.setIdentifier(sb.toString());
 			// OMD 여부
 			device.setModel(deviceProfileDTO.getDeviceModelCd());
-			device.setType("US001204".equals(sComp) ? "omd" : "");
+			device.setType("US001204".equals(sComp) ? "omd" : "normal");
 			device.setManufacturer(deviceProfileDTO.getMakeCompNm());
 			device.setPlatform(deviceProfileDTO.getVmTypeNm());
 
