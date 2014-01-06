@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 import java.io.Serializable;
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -24,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Banner extends CommonInfo implements Serializable {
 	/*
 	 * Banner를 클릭했을때 이동하는 base URL (Web URL or WebView을 연동할 경우는 정의되지 않는다.) > http://<<BASE>>/product : 상품타입 >

@@ -13,6 +13,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,6 +22,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Device extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 

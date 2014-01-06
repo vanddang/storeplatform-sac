@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -21,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
  * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Contributor extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
