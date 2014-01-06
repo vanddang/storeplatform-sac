@@ -103,10 +103,20 @@ public class DeviceInfo extends CommonInfo {
 	 */
 	private String svcMgmtNum;
 
+	/*
+	 * SKT 사용자 관리 번호
+	 */
+	private String imMngNom;
+
 	/**
 	 * 사용자 단말 부가 정보 리스트
 	 */
 	private List<DeviceExtraInfo> deviceExtraInfoList;
+
+	/**
+	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
+	 */
+	private List<DeviceExtraInfo> userDeviceExtraInfo;
 
 	public String getDeviceKey() {
 		return this.deviceKey;
@@ -258,6 +268,22 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getImMngNom() {
+		return this.imMngNom;
+	}
+
+	public void setImMngNom(String imMngNom) {
+		this.imMngNom = imMngNom;
+	}
+
+	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
+		return userDeviceExtraInfo;
+	}
+
+	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
+		this.userDeviceExtraInfo = userDeviceExtraInfo;
 	}
 
 }
