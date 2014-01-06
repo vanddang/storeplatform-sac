@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -28,8 +30,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.theme.ThemeZoneRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.theme.ThemeZoneResponse;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -51,8 +51,8 @@ public class ThemeZoneServiceImpl implements ThemeZoneService {
 	 * .storeplatform.sac.client.product.vo.EbookComicThemeRequestVO)
 	 */
 	@Override
-	public ThemeZoneResponse searchThemeZoneList(ThemeZoneRequest themeZoneRequest) {
-		ThemeZoneResponse response = new ThemeZoneResponse();
+	public ThemeZoneRes searchThemeZoneList(ThemeZoneReq themeZoneRequest) {
+		ThemeZoneRes response = new ThemeZoneRes();
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();

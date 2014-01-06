@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.product.service;
 
-import com.skplanet.storeplatform.sac.client.product.vo.theme.ThemeZoneRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.theme.ThemeZoneResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneReq;
+import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneRes;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -19,5 +19,5 @@ public interface ThemeZoneService {
 	 *            Ebook/코믹 테마 상품 리스트 요청 Value Object
 	 * @return Ebook/코믹 테마 상품 리스트
 	 */
-	ThemeZoneResponse searchThemeZoneList(ThemeZoneRequest themeZoneRequest);
+	ThemeZoneRes searchThemeZoneList(ThemeZoneReq themeZoneReq);
 }
