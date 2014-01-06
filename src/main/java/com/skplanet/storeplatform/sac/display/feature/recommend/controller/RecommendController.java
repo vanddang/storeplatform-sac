@@ -34,7 +34,7 @@ public class RecommendController {
 
 	}
 	
-	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
 		
