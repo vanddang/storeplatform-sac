@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 
 /**
  * MenuList Service 인터페이스(CoreStoreBusiness)
@@ -25,7 +25,7 @@ public interface MenuListService {
 	 *            tenantId, String systemId, String menuId Menu Request Value Object
 	 * @return Menu 리스트
 	 */
-	public MenuListResponse searchMenuList(MenuRequest reqeustVO) throws JsonGenerationException, JsonMappingException,
+	public MenuListRes searchMenuList(MenuReq reqeustVO) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception;
 
 	/**
@@ -37,6 +37,6 @@ public interface MenuListService {
 	 *            tenantId, String systemId, String menuId Menu Request Value Object
 	 * @return Menu 상세
 	 */
-	public MenuDetailResponse searchMenu(MenuRequest reqeustVO) throws JsonGenerationException, JsonMappingException,
+	public MenuDetailRes searchMenu(MenuReq reqeustVO) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception;
 }

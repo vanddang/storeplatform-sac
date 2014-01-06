@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetail;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
 
@@ -53,7 +53,7 @@ public class MenuListServiceImpl implements MenuListService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public MenuListResponse searchMenuList(MenuRequest requestVO) throws JsonGenerationException, JsonMappingException,
+	public MenuListRes searchMenuList(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception {
 
 		int totalCount = 0;
@@ -66,7 +66,7 @@ public class MenuListServiceImpl implements MenuListService {
 		systemId = requestVO.getSystemId();
 		menuId = requestVO.getMenuId();
 
-		MenuListResponse responseVO = null;
+		MenuListRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -121,7 +121,7 @@ public class MenuListServiceImpl implements MenuListService {
 				listVO.add(menu);
 			}
 
-			responseVO = new MenuListResponse();
+			responseVO = new MenuListRes();
 			commonResponse = new CommonResponse();
 			responseVO.setMenuList(listVO);
 			commonResponse.setTotalCount(totalCount);
@@ -145,7 +145,7 @@ public class MenuListServiceImpl implements MenuListService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public MenuDetailResponse searchMenu(MenuRequest requestVO) throws JsonGenerationException, JsonMappingException,
+	public MenuDetailRes searchMenu(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception {
 
 		int totalCount = 0;
@@ -158,7 +158,7 @@ public class MenuListServiceImpl implements MenuListService {
 		systemId = requestVO.getSystemId();
 		menuId = requestVO.getMenuId();
 
-		MenuDetailResponse responseVO = null;
+		MenuDetailRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == menuId || "".equals(menuId)) {
@@ -207,7 +207,7 @@ public class MenuListServiceImpl implements MenuListService {
 			menu.setUseYn(mapperVO.getUseYn());
 		}
 
-		responseVO = new MenuDetailResponse();
+		responseVO = new MenuDetailRes();
 		commonResponse = new CommonResponse();
 		responseVO.setMenu(menu);
 		commonResponse.setTotalCount(totalCount);

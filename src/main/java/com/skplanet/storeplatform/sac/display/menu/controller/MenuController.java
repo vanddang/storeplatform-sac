@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.display.menu.service.CategoryService;
 import com.skplanet.storeplatform.sac.display.menu.service.MenuListService;
 
@@ -32,7 +32,7 @@ public class MenuController {
 
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListResponse searchMenuList(MenuRequest requestVO) throws JsonGenerationException, JsonMappingException,
+	public MenuListRes searchMenuList(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception {
 
 		this.logger.debug("MenuController.searchMenuList start !!");
@@ -42,7 +42,7 @@ public class MenuController {
 
 	@RequestMapping(value = "/specific/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListResponse searchMenu(MenuRequest requestVO) throws JsonGenerationException, JsonMappingException,
+	public MenuListRes searchMenu(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
 			IOException, Exception {
 
 		this.logger.debug("MenuController.searchMenu start !!");
@@ -52,7 +52,7 @@ public class MenuController {
 
 	@RequestMapping(value = "/category/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryListResponse searchTopCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchTopCategoryList start !!");
@@ -62,7 +62,7 @@ public class MenuController {
 
 	@RequestMapping(value = "/category/subCategory/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryDetailListResponse searchDetailCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchDetailCategoryList start !!");

@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuRequest;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public CategoryListResponse searchTopCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
 		systemId = requestVO.getSystemId();
 		menuId = requestVO.getMenuId();
 
-		CategoryListResponse responseVO = null;
+		CategoryListRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -121,7 +121,7 @@ public class CategoryServiceImpl implements CategoryService {
 				listVO.add(category);
 			}
 
-			responseVO = new CategoryListResponse();
+			responseVO = new CategoryListRes();
 			commonResponse = new CommonResponse();
 			responseVO.setCategoryList(listVO);
 			commonResponse.setTotalCount(totalCount);
@@ -145,7 +145,7 @@ public class CategoryServiceImpl implements CategoryService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public CategoryDetailListResponse searchDetailCategoryList(MenuRequest requestVO) throws JsonGenerationException,
+	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
@@ -158,7 +158,7 @@ public class CategoryServiceImpl implements CategoryService {
 		systemId = requestVO.getSystemId();
 		menuId = requestVO.getMenuId();
 
-		CategoryDetailListResponse responseVO = null;
+		CategoryDetailListRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -265,7 +265,7 @@ public class CategoryServiceImpl implements CategoryService {
 				this.log.debug("categoryDetail json : {}", categoryDetailJson);
 			}
 
-			responseVO = new CategoryDetailListResponse();
+			responseVO = new CategoryDetailListRes();
 			commonResponse = new CommonResponse();
 			responseVO.setCategoryList(detailListVO); // set category detail list
 			commonResponse.setTotalCount(totalCount);
