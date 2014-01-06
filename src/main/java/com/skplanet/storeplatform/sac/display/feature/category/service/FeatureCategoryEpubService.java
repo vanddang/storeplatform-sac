@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.category.Categor
  * 
  * Updated on : 2013. 12. 19. Updated by : 서영배, GTSOFT.
  */
-public interface CategoryEpubService {
+public interface FeatureCategoryEpubService {
 
 	/**
 	 * <pre>

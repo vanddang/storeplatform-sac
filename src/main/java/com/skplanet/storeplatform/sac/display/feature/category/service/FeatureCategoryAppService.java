@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.category.Categor
  * 
  * Updated on : 2013. 12. 19. Updated by : 서영배, GTSOFT.
  */
-public interface CategoryAppService {
+public interface FeatureCategoryAppService {
 	/**
 	 * <pre>
 	 * 운영자 추천 전체 카테고리 상품 리스트 조회

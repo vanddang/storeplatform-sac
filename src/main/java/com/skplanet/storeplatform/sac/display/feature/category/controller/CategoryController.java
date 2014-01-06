@@ -12,8 +12,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.category.Categor
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubRes;
-import com.skplanet.storeplatform.sac.display.feature.category.service.CategoryAppService;
-import com.skplanet.storeplatform.sac.display.feature.category.service.CategoryEpubService;
+import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryAppService;
+import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
 
 @Controller
 @RequestMapping("/display/feature/category")
@@ -21,9 +21,9 @@ public class CategoryController {
 	private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
 	@Autowired
-	private CategoryAppService categoryAppService;
+	private FeatureCategoryAppService categoryAppService;
 	@Autowired
-	private CategoryEpubService categoryEpubService;
+	private FeatureCategoryEpubService categoryEpubService;
 	
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody

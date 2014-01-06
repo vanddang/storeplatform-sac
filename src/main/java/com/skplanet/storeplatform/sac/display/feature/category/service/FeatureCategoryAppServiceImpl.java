@@ -45,7 +45,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
  */
 @org.springframework.stereotype.Service
 @Transactional
-public class CategoryAppServiceImpl implements CategoryAppService {
+public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService {
 
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

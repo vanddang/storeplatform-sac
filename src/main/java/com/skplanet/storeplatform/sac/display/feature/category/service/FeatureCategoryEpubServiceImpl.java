@@ -45,7 +45,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
  */
 @org.springframework.stereotype.Service
 @Transactional
-public class CategoryEpubServiceImpl implements CategoryEpubService {
+public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
