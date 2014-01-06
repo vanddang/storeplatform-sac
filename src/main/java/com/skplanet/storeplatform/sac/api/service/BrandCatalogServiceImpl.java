@@ -1,17 +1,11 @@
-/*
- * Copyright (c) 2013 SK planet.
- * All right reserved.
- *
- * This software is the confidential and proprietary information of SK planet.
- * You shall not disclose such Confidential Information and
- * shall use it only in accordance with the terms of the license agreement
- * you entered into with SK planet.
- */
 package com.skplanet.storeplatform.sac.api.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
@@ -20,14 +14,13 @@ import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.category.WebtoonRequest;
 
-public class BrandCatalogServiceImpl {
-
-	private final static Logger log = Logger.getLogger(BrandCatalogServiceImpl.class);
+@Service
+@Transactional
+public class BrandCatalogServiceImpl implements BrandCatalogService {
 	private final String errorCode = "";
 	private final String message = "";
-	CouponConstants couponcontants = new CouponConstants();
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -55,21 +48,10 @@ public class BrandCatalogServiceImpl {
 	public int selectBrandCountCudType(String brandId) throws CouponException {
 		int cnt = 0;
 		try {
-			WebtoonRequest req = new WebtoonRequest();
-			req.setOffset(1);
-			req.setCount(20);
-			req.setTenantId("S01");
-			req.setSystemId("S009");
-			req.setWeekDayCd("DP010101");
-			req.setImageCd("DP000196");
-
-			System.out.println("+++++++++++++++++++++++++LO11119999++++++++++++++++++++");
-			// List<WebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
-			// WebtoonDTO.class);
-			// cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
-			// System.out.println("+++++++++++++++++++++++++LO22229999++++++++++++++++++++");
+			cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
+			this.log.info("cnt:::" + cnt);
 		} catch (Exception e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 		}
 		return cnt;
 	}
@@ -98,6 +80,8 @@ public class BrandCatalogServiceImpl {
 	 * @throws CouponException
 	 */
 
+	// @Autowired
+	@Override
 	public void insertBrandInfo(DpBrandInfo dpBrandInfo) throws CouponException {
 
 		try {
@@ -154,6 +138,7 @@ public class BrandCatalogServiceImpl {
 	 * @throws CouponException
 	 */
 
+	@Override
 	public void insertCatalogInfo(DpCatalogInfo dpCatalogInfo) throws CouponException {
 
 		try {
@@ -235,7 +220,7 @@ public class BrandCatalogServiceImpl {
 	public void deleteTblTagInfo(String prodId) throws CouponException {
 
 		try {
-			log.info("prodId = " + prodId);
+			this.log.info("prodId = " + prodId);
 			this.commonDAO.delete("BrandCatalog.DELETE_TBL_TAG_INFO", prodId);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -264,7 +249,7 @@ public class BrandCatalogServiceImpl {
 	 */
 	public void deleteDpProdImg(String prodId) throws CouponException {
 		try {
-			log.info("prodId = " + prodId);
+			this.log.info("prodId = " + prodId);
 			this.commonDAO.delete("BrandCatalog.DELETE_BRAND_CATALOG_TB_DP_PROD_IMG", prodId);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -310,6 +295,7 @@ public class BrandCatalogServiceImpl {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
 	}
+
 	//
 	// /**
 	// * 브랜드 카탈로그 REPOSITORY_PATH SELECT
@@ -330,5 +316,11 @@ public class BrandCatalogServiceImpl {
 	// throw new InfraException("getLabelForQuery()", "select Fail", de);
 	// }
 	// }
+	/**
+	 * 브랜드가 있는지 조회
+	 * 
+	 * @param dpBrandInfo
+	 * @throws DaoException
+	 */
 
 }
