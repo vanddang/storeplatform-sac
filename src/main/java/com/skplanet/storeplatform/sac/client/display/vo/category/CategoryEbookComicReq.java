@@ -16,16 +16,16 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class CategoryAppReq extends CommonInfo {
+public class CategoryEbookComicReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
-
-	private String prodCharge; // 상품 유무료 구분
 
 	private String prodGradeCd; // 상품등급코드
 
+	private String topMenuId; // 탑메뉴ID
+
 	private String menuId; // 메뉴ID
 
-	private String orderedBy; // 상품정렬순서
+	private String filterdBy; // 조회유형
 
 	private Integer offset; // 시작점 ROW
 
@@ -35,15 +35,7 @@ public class CategoryAppReq extends CommonInfo {
 
 	private String tenantId; // 테넌트ID
 
-	private String imageCd; // 이미지 코드
-
-	public String getProdCharge() {
-		return this.prodCharge;
-	}
-
-	public void setProdCharge(String prodCharge) {
-		this.prodCharge = prodCharge;
-	}
+	private String imageCd; // 이미짖 코드
 
 	public String getProdGradeCd() {
 		return this.prodGradeCd;
@@ -51,6 +43,14 @@ public class CategoryAppReq extends CommonInfo {
 
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	public String getMenuId() {
@@ -61,12 +61,12 @@ public class CategoryAppReq extends CommonInfo {
 		this.menuId = menuId;
 	}
 
-	public String getOrderedBy() {
-		return this.orderedBy;
+	public String getFilterdBy() {
+		return this.filterdBy;
 	}
 
-	public void setOrderedBy(String orderedBy) {
-		this.orderedBy = orderedBy;
+	public void setFilterdBy(String filterdBy) {
+		this.filterdBy = filterdBy;
 	}
 
 	public Integer getOffset() {
