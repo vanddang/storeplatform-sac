@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
@@ -31,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
@@ -39,6 +43,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
@@ -352,4 +358,156 @@ public class DummyDataController {
 
 		return res;
 	}
+
+	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SearchIdRes searchId(@RequestHeader Map<String, Object> headers) {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
+		logger.info("####################################################");
+
+		SearchIdRes res = new SearchIdRes();
+		res.setUserId("hkd");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SearchPasswordRes searchPassword(@RequestHeader Map<String, Object> headers) {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
+		logger.info("####################################################");
+
+		SearchPasswordRes res = new SearchPasswordRes();
+		res.setUserPw("");
+		res.setSendMean("01");
+		res.setSendInfo("seoguman@nate.com");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DetailRes detail() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.9. ID/MDN를 기반으로 사용자 회원 정보 조회 기능을 제공한다. #####");
+		logger.info("####################################################");
+
+		DetailRes res = new DetailRes();
+
+		try {
+			/*
+			 * 휴대기기 부가정보 리스트
+			 */
+			List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+			deviceExtraInfo.setExtraProfile("US011404");
+			deviceExtraInfo.setExtraProfileValue("LGFL");
+			deviceExtraInfoList.add(deviceExtraInfo);
+
+			/*
+			 * 휴대기기 정보 리스트
+			 */
+			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+			DeviceInfo deviceInfo = new DeviceInfo();
+
+			deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+			deviceInfo.setDeviceKey("");
+			deviceInfo.setDeviceId("01011112222");
+			deviceInfo.setDeviceType("");
+			deviceInfo.setDeviceModelNo("LG-SH810");
+			deviceInfo.setImMngNom("");
+			deviceInfo.setDeviceTelecom("SKT");
+			deviceInfo.setDeviceNickName("LG-SH810");
+			deviceInfo.setIsPrimary("Y");
+			deviceInfo.setIsAuthenticated("Y");
+			deviceInfo.setAuthenticationDate("20140106");
+			deviceInfo.setIsRecvSms("N");
+			deviceInfo.setImei("358362045580844");
+			deviceInfo.setDeviceAccount("hkd@aaaa.com");
+			deviceInfo.setJoinId("US002903");
+
+			deviceInfoList.add(deviceInfo);
+
+			/*
+			 * 사용자 부가정보 리스트
+			 */
+			List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
+			UserExtraInfo userExtraInfo = new UserExtraInfo();
+			userExtraInfo.setExtraProfile("US010901");
+			userExtraInfo.setExtraProfileValue("100000003899");
+			userExtraInfoList.add(userExtraInfo);
+
+			/*
+			 * 사용자 정보 리스트
+			 */
+			List<UserInfo> userInfoList = new ArrayList<UserInfo>();
+			UserInfo userInfo = new UserInfo();
+			userInfo.setUserExtraInfo(userExtraInfoList);
+			userInfo.setUserKey("IW102158844420091030165015");
+			userInfo.setUserType("US011501");
+			userInfo.setUserMainStatus("US010701");
+			userInfo.setUserSubStatus("US010201");
+			userInfo.setImSvcNo("100001111241");
+			userInfo.setIsImChanged("Y");
+			userInfo.setImRegDat("20121126");
+			userInfo.setUserId("hkd");
+			userInfo.setUserTelecom("SKT");
+			userInfo.setUserPhoneCountry("82");
+			userInfo.setUserPhone("01011112222");
+			userInfo.setIsRecvSMS("N");
+			userInfo.setUserEmail("hkd@aaaa.com");
+			userInfo.setIsRecvEmail("N");
+			userInfo.setIsRestricted("Y");
+			userInfo.setRestrictStartDate("20130726");
+			userInfo.setRestrictEndDate("20130801");
+			userInfo.setRestrictId("PD00542");
+			userInfo.setRestrictCount("6");
+			userInfo.setRestrictRegisterDate("2013-12-26");
+			userInfo.setRestrictOwner("admin");
+			userInfo.setUserName("홍길동");
+			userInfo.setUserSex("M");
+			userInfo.setUserBirthDay("19700407");
+			userInfo.setUserZip("157030");
+			userInfo.setUserAddress("서울 강서구 등촌동");
+			userInfo.setUserDetailAddress("999-9");
+			userInfo.setUserCity("");
+			userInfo.setUserState("");
+			userInfo.setUserCountry("");
+			userInfo.setUserLanguage("ko");
+			userInfo.setIsParent("N");
+			userInfo.setIsRealName("N");
+			userInfo.setImSiteCode("");
+			userInfo.setUserDeviceInfo("");
+			userInfo.setRealNameInfo("");
+
+			userInfoList.add(userInfo);
+
+			/*
+			 * 약관동의 리스트
+			 */
+			List<AgreementInfo> agreementInfoList = new ArrayList<AgreementInfo>();
+			AgreementInfo agreementInfo = new AgreementInfo();
+			agreementInfo.setExtraAgreementId("US010601");
+			agreementInfo.setExtraAgreementVersion("");
+			agreementInfo.setIsExtraAgreement("Y");
+
+			agreementInfoList.add(agreementInfo);
+
+			res.setIsRealName("1234");
+			res.setDeviceInfoList(deviceInfoList);
+			res.setUserInfo(userInfoList);
+			res.setAgreementList(agreementInfoList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return res;
+
+	}
+
 }
