@@ -230,7 +230,7 @@ public class DummyDataController {
 		return res;
 	}
 
-	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateDeviceRes createDevice() {
 
