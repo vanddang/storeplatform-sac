@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
-import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminServiceImpl;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
 @Controller
-@RequestMapping("/display/feature/recommand")
+@RequestMapping("/display/feature/recommend")
 public class RecommendController {
 	private transient Logger logger = LoggerFactory.getLogger(RecommendController.class);
 
@@ -33,12 +33,12 @@ public class RecommendController {
 		return this.recommendWebtoonService.searchWebtoonList(req);
 
 	}
-	
+
 	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
-		
-		logger.info(requestVO.toString());
+
+		this.logger.info(requestVO.toString());
 
 		RecommendAdminService service = new RecommendAdminServiceImpl();
 		RecommendAdminRes responseVO;
