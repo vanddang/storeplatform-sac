@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
@@ -30,18 +31,20 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 
 /**
  * 
  * 
  * Updated on : 2013. 12. 19. Updated by : 서영배, GTSOFT.
  */
+@org.springframework.stereotype.Service
+@Transactional
 public class RecommendAdminServiceImpl implements RecommendAdminService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -93,7 +96,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			// 상품ID
 			identifier = new Identifier();
 			//identifier.setType("product" + i);
-			identifier.setText("H090101222_" + i);
+			identifier.setText("H900101222" + i);
 			
 			title = new Title();
 			title.setText("Test용 더미 데이터");

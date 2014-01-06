@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppReq;
@@ -42,6 +43,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
  * 
  * Updated on : 2013. 12. 24. Updated by : 서영배, GTSOFT.
  */
+@org.springframework.stereotype.Service
+@Transactional
 public class CategoryAppServiceImpl implements CategoryAppService {
 
 	
