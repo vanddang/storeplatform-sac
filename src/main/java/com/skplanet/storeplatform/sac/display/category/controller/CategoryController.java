@@ -49,6 +49,14 @@ public class CategoryController {
 	@Autowired
 	private CategorySpecificService categorySpecificService;
 
+	/**
+	 * <pre>
+	 * 일반 카테고리 앱 상품 조회.
+	 * </pre>
+	 * 
+	 * @param CategoryAppReq
+	 * @return CategoryAppRes
+	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategoryAppRes searchCategoryAppList(CategoryAppReq req) {
