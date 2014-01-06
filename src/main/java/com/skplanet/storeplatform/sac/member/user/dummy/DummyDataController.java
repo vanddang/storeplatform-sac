@@ -11,13 +11,11 @@ package com.skplanet.storeplatform.sac.member.user.dummy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,22 +27,32 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetSupportAomRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveAddtionalInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
@@ -57,8 +65,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -339,7 +346,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ExistRes exist(@RequestHeader Map<String, Object> headers) {
+	public ExistRes exist() {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
@@ -361,7 +368,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchIdRes searchId(@RequestHeader Map<String, Object> headers) {
+	public SearchIdRes searchId() {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
@@ -375,7 +382,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchPasswordRes searchPassword(@RequestHeader Map<String, Object> headers) {
+	public SearchPasswordRes searchPassword() {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
@@ -420,7 +427,7 @@ public class DummyDataController {
 			deviceInfo.setDeviceId("01011112222");
 			deviceInfo.setDeviceType("");
 			deviceInfo.setDeviceModelNo("LG-SH810");
-			deviceInfo.setImMngNom("");
+			deviceInfo.setImMngNum("");
 			deviceInfo.setDeviceTelecom("SKT");
 			deviceInfo.setDeviceNickName("LG-SH810");
 			deviceInfo.setIsPrimary("Y");
@@ -508,6 +515,198 @@ public class DummyDataController {
 
 		return res;
 
+	}
+
+	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListTermsAgreementRes listTermsAgreement() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.10. Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다. #####");
+		logger.info("####################################################");
+
+		ListTermsAgreementRes res = new ListTermsAgreementRes();
+		List<AgreementInfo> agreementInfoList = new ArrayList<AgreementInfo>();
+		AgreementInfo agreementInfo = new AgreementInfo();
+		agreementInfo.setExtraAgreementId("US010601");
+		agreementInfo.setExtraAgreementVersion("");
+		agreementInfo.setIsExtraAgreement("Y");
+
+		agreementInfoList.add(agreementInfo);
+
+		res.setAgreementList(agreementInfoList);
+
+		return res;
+	}
+
+	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public GetSupportAomRes getSupportAom() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.3.8. 단말 AOM 지원 여부 확인. #####");
+		logger.info("####################################################");
+
+		GetSupportAomRes res = new GetSupportAomRes();
+		res.setIsAomSupport("Y");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public GetProvisioningHistoryRes getProvisioningHistory() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.3.14.	회원 프로비저닝 이력 조회. #####");
+		logger.info("####################################################");
+
+		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
+		res.setMbrNo("");
+		res.setOldMbrNo("");
+		res.setRegDate("20131226154512");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public RemoveDeviceRes removeDevice() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.19.	휴대기기 삭제. #####");
+		logger.info("####################################################");
+
+		RemoveDeviceRes res = new RemoveDeviceRes();
+		res.setDeviceKey("01011112222");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ModifyRepresentationDeviceRes modifyRepresentationDevice() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.20.	대표 단말 설정. #####");
+		logger.info("####################################################");
+
+		ModifyRepresentationDeviceRes res = new ModifyRepresentationDeviceRes();
+		res.setDeviceKey("01011112222");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DetailRepresentationDeviceRes detailRepresentationDevice() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.21.	대표 단말 정보 조회. #####");
+		logger.info("####################################################");
+
+		DetailRepresentationDeviceRes res = new DetailRepresentationDeviceRes();
+
+		// 휴대기기 부가정보
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile("US011404");
+		deviceExtraInfo.setExtraProfileValue("LGFL");
+
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		// 휴대기기정보
+		List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+		deviceInfo.setDeviceKey("01011112222");
+		deviceInfo.setDeviceId("01011112222");
+		deviceInfo.setDeviceType("");
+		deviceInfo.setDeviceModelNo("LG-SH810");
+		deviceInfo.setImMngNum("");
+		deviceInfo.setDeviceTelecom("SKT");
+		deviceInfo.setDeviceNickName("LG-SH810(임시)");
+		deviceInfo.setIsPrimary("Y");
+		deviceInfo.setIsAuthenticated("Y");
+		deviceInfo.setAuthenticationDate("2013-12-26");
+		deviceInfo.setIsRecvSms("N");
+		deviceInfo.setImei("358362045580844");
+		deviceInfo.setDeviceAccount("hkd@aaaa.com");
+		deviceInfo.setJoinId("US002903");
+
+		deviceInfoList.add(deviceInfo);
+
+		res.setUserDeviceInfo(deviceInfoList);
+
+		return res;
+	}
+
+	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public WithdrawRes withdraw() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.22.	회원 탈퇴. #####");
+		logger.info("####################################################");
+
+		WithdrawRes res = new WithdrawRes();
+
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createAddtionalInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CreateAddtionalInformationRes createAddtionalInformation() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.25.	회원 부가 정보 등록/수정. #####");
+		logger.info("####################################################");
+
+		CreateAddtionalInformationRes res = new CreateAddtionalInformationRes();
+
+		res.setUserKey("IF1023511101420120615164319");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/removeAddtionalInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public RemoveAddtionalInformationRes removeAddtionalInformation() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.26.	회원 부가 정보 삭제. #####");
+		logger.info("####################################################");
+
+		RemoveAddtionalInformationRes res = new RemoveAddtionalInformationRes();
+
+		res.setUserKey("IF1023511101420120615164319");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/listAddtionalInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListAddtionalInformationRes listAddtionalInformation() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.27.	회원 부가 정보 조회. #####");
+		logger.info("####################################################");
+
+		ListAddtionalInformationRes res = new ListAddtionalInformationRes();
+
+		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
+		UserExtraInfo userExtraInfo = new UserExtraInfo();
+		userExtraInfo.setExtraProfileCode("US010903");
+		userExtraInfo.setExtraProfileValue("100000003899");
+
+		userExtraInfoList.add(userExtraInfo);
+
+		res.setUserKey("IF1023511101420120615164319");
+		res.setAddInfoList(userExtraInfoList);
+
+		return res;
 	}
 
 }
