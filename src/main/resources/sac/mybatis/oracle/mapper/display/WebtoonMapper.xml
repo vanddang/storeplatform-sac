@@ -31,9 +31,9 @@
                         SELECT  
                                A.UP_MENU_ID
                               ,A.MENU_ID
-                              ,A.MENU_NM 
+                              ,C.MENU_NM 
                               ,J.PROD_ID AS CHANNEL_ID
-                              ,C.PROD_ID 
+                              ,D.PROD_ID 
                               ,F.PROD_ALIAS
                               ,D.PROD_GRD_CD
                               ,F.PROD_NM
@@ -46,10 +46,10 @@
                               ,F.ARTIST1_NM
                               ,F.ARTIST2_NM
                               ,F.ARTIST3_NM
-                              ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =C.PROD_ID AND ROWNUM=1) FILE_POS
+                              ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND ROWNUM=1) FILE_POS
                         FROM  TB_DP_MENU               A
-                            , TB_DP_CATEGORY_MENU_MAPG B
-                            , TB_DP_PROD_CATEGORY_MAPG C
+                            , TB_DP_MENU_PROD_MAPG     B
+                            , TB_DP_MENU_DESC          C
                             , TB_DP_PROD               D
                             , TB_DP_MULTIMDA_PROD      E
                             , TB_DP_PROD_DESC          F
@@ -65,86 +65,64 @@
                                               ,J1.PART_PROD_ID
                                         FROM 
                                               TB_DP_MENU               A1
-                                            , TB_DP_CATEGORY_MENU_MAPG B1
-                                            , TB_DP_PROD_CATEGORY_MAPG C1
+                                            , TB_DP_MENU_PROD_MAPG     B1
+                                            , TB_DP_MENU_DESC          C1
                                             , TB_DP_PROD               D1
                                             , TB_DP_MULTIMDA_PROD      E1
                                             , TB_DP_PROD_DESC          F1
                                             , TB_DP_TENANT_PROD        G1
                                             , TB_DP_PROD_RSHP          J1
-                                       WHERE  A1.TENANT_ID = B1.TENANT_ID
-                                         AND  A1.MENU_ID = B1.MENU_ID
-                                         AND  A1.SYSTEM_ID = B1.SYSTEM_ID
-                                         AND  B1.CATEGORY_NO = C1.CATEGORY_NO
-                                         AND  C1.PROD_ID = D1.PROD_ID
-                                         AND  D1.PROD_ID = E1.PROD_ID
-                                         AND  F1.PROD_ID = G1.PROD_ID
-                                         AND  A1.TENANT_ID = G1.TENANT_ID
-                                         AND  C1.PROD_ID = G1.PROD_ID
-                                         AND  C1.PROD_ID = J1.PROD_ID 
-                                         AND  A1.TENANT_ID = #{tenantId}              /* INPUT 테넌트ID */
-                                         AND  A1.UP_MENU_ID ='MN26'           /* MN26 : 웹툰 */
-                                         AND  A1.SYSTEM_ID = #{systemId}      /* INPUT 시스템ID */
-                                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                                         AND  C1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-                                         AND  C1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                                         AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
-                                         AND  F1.LANG_CD = 'ko'               /* ko : 한국어 */
-                                         AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
-                                         AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-				                         <if test="prodCharge != null">
-				                         AND  D1.PROD_CHRG_YN =#{prodCharge}        /* N 인경우 무료 */
-				                         </if>
-				                        <if test="prodGradeCd != null">
-				                         AND  D1.PROD_GRD_CD =#{prodGradeCd}         /* PD004401:전체이용가,PD004402:12세이용가,PD004403:15세이용가,PD004404:청소년이용불가 */
-				                        </if>
-				                        <if test="drm != null">
-				                         AND  D1.DRM_YN =#{drm}                      /* DRM 지원 구분 Y : 지원, N : 미지원*/
-				                       </if>            
+                                       WHERE  1=1
+				                         AND  A1.MENU_ID = B1.MENU_ID
+				                         AND  A1.MENU_ID = C1.MENU_ID
+				                         AND  B1.PROD_ID = D1.PROD_ID
+				                         AND  D1.PROD_ID = E1.PROD_ID
+				                         AND  D1.PROD_ID = F1.PROD_ID
+				                         AND  D1.PROD_ID = G1.PROD_ID
+				                         AND  D1.PROD_ID = J1.PART_PROD_ID   
+				                         AND  G1.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
+				                         AND  A1.UP_MENU_ID ='DP26'           /* MN26 : 웹툰 */
+				                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+				                         AND  B1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+				                         AND  C1.LANG_CD = 'ko'               /* ko : 한국어 */
+				                         AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+				                         AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+				                         AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+				                         <if test="weekDayCd != null">
+				                         AND  E1.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
+				                        </if>  
                                )WHERE NO =1                                          
                              ) K
-                       WHERE  A.TENANT_ID = B.TENANT_ID
+                       WHERE  1=1
                          AND  A.MENU_ID = B.MENU_ID
-                         AND  A.SYSTEM_ID = B.SYSTEM_ID
-                         AND  B.CATEGORY_NO = C.CATEGORY_NO
-                         AND  C.PROD_ID = D.PROD_ID
+                         AND  A.MENU_ID = C.MENU_ID
+                         AND  B.PROD_ID = D.PROD_ID
                          AND  D.PROD_ID = E.PROD_ID
-                         AND  E.PROD_ID = F.PROD_ID
-                         AND  F.PROD_ID = G.PROD_ID
-                         AND  A.TENANT_ID = G.TENANT_ID
+                         AND  D.PROD_ID = F.PROD_ID
+                         AND  D.PROD_ID = G.PROD_ID
                          AND  G.PROD_ID = H.PROD_ID
-                         AND  G.TENANT_ID = H.TENANT_ID
                          AND  G.PROD_ID = I.PROD_ID
                          AND  G.TENANT_ID = I.TENANT_ID   
-                         AND  G.PROD_ID = J.PART_PROD_ID   
-                         AND  G.PROD_ID = K.PART_PROD_ID(+)
+                         AND  D.PROD_ID = J.PART_PROD_ID   
+                         AND  D.PROD_ID = K.PART_PROD_ID(+)
                          AND  K.PART_PROD_ID IS NOT NULL
-                         AND  A.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
-                         AND  A.SYSTEM_ID = #{systemId}     /* INPUT 시스템ID */
+                         AND  G.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                         <if test="menuId != null">
-                        AND A.MENU_ID = #{menuId}           /* MN26001 : 웹툰>코믹,MN26002:순정,MN26003:드라마,MN26004:스릴러,MN26005:판타지,MN26006:액션 */
+                         AND A.MENU_ID = #{menuId}           /* MN26001 : 웹툰>코믹,MN26002:순정,MN26003:드라마,MN26004:스릴러,MN26005:판타지,MN26006:액션 */
                         </if>                            
-                         AND  A.UP_MENU_ID ='MN26'           /* MN26 : 웹툰 */
+                         AND  A.UP_MENU_ID ='DP26'           /* MN26 : 웹툰 */
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
-                         AND  C.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-                         AND  C.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                         AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
+                         AND  B.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
+                         AND  C.LANG_CD = 'ko'               /* ko : 한국어 */
                          AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
-                         AND  F.LANG_CD = 'ko'               /* ko : 한국어 */
                          AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                          AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                          AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                        <if test="prodCharge != null">
-                         AND  D.PROD_CHRG_YN =#{prodCharge}        /* N 인경우 무료 */
-                        </if>
-                        <if test="prodGradeCd != null">
-                         AND  D.PROD_GRD_CD =#{prodGradeCd}         /* PD004401:전체이용가,PD004402:12세이용가,PD004403:15세이용가,PD004404:청소년이용불가 */
-                        </if>
-                        <if test="drm != null">
-                         AND  D.DRM_YN =#{drm}                      /* DRM 지원 구분 Y : 지원, N : 미지원*/
-                        </if>            
-                        <if test="weekDayCd != null">
+                         <if test="weekDayCd != null">
                          AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
                         </if>     
                    )
