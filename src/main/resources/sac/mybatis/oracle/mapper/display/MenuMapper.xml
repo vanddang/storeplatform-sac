@@ -133,7 +133,7 @@
     </select>
     
     
-    <!-- 3depth 이상 메뉴 조회 -->
+    <!-- 3depth 메뉴 조회 -->
     <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailDTO">
 		SELECT M.MENU_ID
 		  FROM TB_DP_TENANT_MENU M,
