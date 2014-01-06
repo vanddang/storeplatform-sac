@@ -69,4 +69,15 @@ public class DisplayConstants {
 	 */
 	public static final String DP_TSOTRE_SHOPPING_TYPE_SVC_TYPE_CD = "DP001117";
 
+	public static final String DP_CATALOG_IDENTIFIER_CD = "catalog";
+	public static final String DP_CHANNEL_IDENTIFIER_CD = "channel";
+	public static final String DP_CONTENT_IDENTIFIER_CD = "content";
+	public static final String DP_EPISODE_IDENTIFIER_CD = "episode";
+	public static final String DP_ARTIST_IDENTIFIER_CD = "artist";
+	public static final String DP_INDIVIDUAL_IDENTIFIER_CD = "individual";
+	public static final String DP_PRIVATEOPERATOR_IDENTIFIER_CD = "privateOperator";
+	public static final String DP_CORPORATION_IDENTIFIER_CD = "corporation";
+	public static final String DP_FOREIGNER_IDENTIFIER_CD = "foreigner";
+	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
+
 }
