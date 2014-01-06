@@ -3,11 +3,11 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [RESPONSE] 모바일 전용 회원 가입 (MDN 회원 가입)
+ * [RESPONSE] ID 회원 약관 동의 가입 (One ID 회원)
  * 
  * Updated on : 2014. 1. 3. Updated by : 심대진, 다모아 솔루션.
  */
-public class CreateByMdnRes extends CommonInfo {
+public class CreateByAgreementRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

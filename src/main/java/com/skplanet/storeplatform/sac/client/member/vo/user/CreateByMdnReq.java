@@ -6,9 +6,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 
 /**
- * [REQUEST] 모바일 전용 회원 가입
+ * [REQUEST] 모바일 전용 회원 가입 (MDN 회원 가입)
  * 
- * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
+ * Updated on : 2014. 1. 3. Updated by : 심대진, 다모아 솔루션.
  */
 public class CreateByMdnReq extends CommonInfo {
 
