@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 
@@ -10,6 +13,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 반범진. 지티소프트.
  */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class ListDeviceRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
