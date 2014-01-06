@@ -10,33 +10,35 @@ lose such Confidential Information and
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 
 /**
  * 카테고리 조회 Value Object. 최대 중-세 카테고리 정보 표현 Updated on : 2013. 12. 20. Updated by : 윤주영, SK 플래닛.
  */
-public class CategoryDetail {
+public interface CategoryDetailRes extends Serializable {
 
-	private Menu category;
+	public static final long serialVersionUID = 11123123111L;
 
-	private List<Menu> subCategoryList;
+	public CommonResponse commonRes = new CommonResponse();
 
-	public Menu getCategory() {
-		return this.category;
-	}
+	public Menu category = new Menu();
 
-	public void setCategory(Menu category) {
-		this.category = category;
-	}
+	public List categoryList = new ArrayList();
 
-	public List<Menu> getSubCategoryList() {
-		return this.subCategoryList;
-	}
+	public CommonResponse getCommonRes();
 
-	public void setSubCategoryList(List<Menu> subCategoryList) {
-		this.subCategoryList = subCategoryList;
-	}
+	public void setCommonRes(CommonResponse commonRes);
 
+	public Menu getCategory();
+
+	public void setCategory(Menu category);
+
+	public List getCategoryList();
+
+	public void setCategoryList(List categoryList);
 }
