@@ -22,6 +22,7 @@ public class RecommendWebtoonReq extends CommonInfo {
 	private String tenantId; // 테넌트ID
 	private String systemId; // 시스템ID
 	private String imageCd; // 이미지코드
+	private String upMenuId; // 상위 메뉴아이디
 	private String menuId; // 메뉴아이디
 	private String listId; // 리스트아이디
 	private String prodCharge; // 유료/무료 구분
@@ -63,8 +64,16 @@ public class RecommendWebtoonReq extends CommonInfo {
 		this.menuId = menuId;
 	}
 
+	public String getUpMenuId() {
+		return this.upMenuId;
+	}
+
+	public void setUpMenuId(String upMenuId) {
+		this.upMenuId = upMenuId;
+	}
+
 	public String getListId() {
-		return listId;
+		return this.listId;
 	}
 
 	public void setListId(String listId) {
