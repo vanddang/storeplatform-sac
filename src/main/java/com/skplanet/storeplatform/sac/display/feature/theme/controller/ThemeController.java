@@ -38,19 +38,19 @@ public class ThemeController {
 	@Autowired
 	private BrandShopThemeService brandShopThemeService;
 
-	@RequestMapping(value = "/display/feature/best/bestAppList/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/display/feature/theme/ebookComicThemeList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public EbookComicThemeRes ebookComicThemeList(EbookComicThemeReq ebookComicThemeReq) {
 		return this.ebookComicThemeService.searchEbookComicThemeList(ebookComicThemeReq);
 	}
 
-	@RequestMapping(value = "/display/feature/best/bestContentsList/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/display/feature/theme/ThemeZoneList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ThemeZoneRes ThemeZoneList(ThemeZoneReq themeZoneReq) {
 		return this.themeZoneService.searchThemeZoneList(themeZoneReq);
 	}
 
-	@RequestMapping(value = "/display/feature/best/bestDownloadList/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/display/feature/theme/brandShopThemeList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BrandShopThemeRes brandShopThemeList(BrandShopThemeReq brandShopThemeReq) {
 		return this.brandShopThemeService.searchBrandShopThemeList(brandShopThemeReq);

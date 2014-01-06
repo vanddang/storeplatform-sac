@@ -121,7 +121,7 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 			}
 		}
 		response.setCommonResponse(commonResponse);
-		response.setProductList(productList);
+		// response.setProductList(productList);
 		return response;
 	}
 }
