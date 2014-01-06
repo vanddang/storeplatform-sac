@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
@@ -51,7 +53,8 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -116,7 +119,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById() {
+	public AuthorizeByIdRes authorizeById(@RequestBody AuthorizeByIdReq req) {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
@@ -223,37 +226,46 @@ public class DummyDataController {
 
 		ListDeviceRes res = new ListDeviceRes();
 
-		/*
-		 * 휴대기기정보 리스트
-		 */
-		List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+		try {
 
-		/*
-		 * 휴대기기 부가정보 리스트
-		 */
-		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile("US011404");
-		deviceExtraInfo.setExtraProfileValue("LGFL");
+			/*
+			 * 휴대기기 부가정보 리스트
+			 */
+			List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+			deviceExtraInfo.setExtraProfile("US011404");
+			deviceExtraInfo.setExtraProfileValue("LGFL");
 
-		deviceExtraInfoList.add(deviceExtraInfo);
+			deviceExtraInfoList.add(deviceExtraInfo);
 
-		deviceInfoList.get(0).setDeviceExtraInfoList(deviceExtraInfoList);
-		deviceInfoList.get(0).setDeviceKey("");
-		deviceInfoList.get(0).setDeviceId("01011112222");
-		deviceInfoList.get(0).setDeviceType("");
-		deviceInfoList.get(0).setDeviceModelNo("LG-SH810");
-		deviceInfoList.get(0).setDeviceTelecom("SKT");
-		deviceInfoList.get(0).setSvcMgmtNum("");
-		deviceInfoList.get(0).setDeviceNickName("LG-SH810");
-		deviceInfoList.get(0).setIsPrimary("Y");
-		deviceInfoList.get(0).setIsAuthenticated("Y");
-		deviceInfoList.get(0).setAuthenticationDate("20140106");
-		deviceInfoList.get(0).setOsVer("1.0");
-		deviceInfoList.get(0).setMakeComp("SAMSUNG");
-		deviceInfoList.get(0).setUserId("hkd");
+			/*
+			 * 휴대기기정보 리스트
+			 */
+			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+			DeviceInfo deviceInfo = new DeviceInfo();
 
-		res.setDeviceInfoList(deviceInfoList);
+			deviceInfo.setDeviceExtraInfoList(deviceExtraInfoList);
+			deviceInfo.setDeviceKey("");
+			deviceInfo.setDeviceId("01011112222");
+			deviceInfo.setDeviceType("");
+			deviceInfo.setDeviceModelNo("LG-SH810");
+			deviceInfo.setDeviceTelecom("SKT");
+			deviceInfo.setSvcMgmtNum("");
+			deviceInfo.setDeviceNickName("LG-SH810");
+			deviceInfo.setIsPrimary("Y");
+			deviceInfo.setIsAuthenticated("Y");
+			deviceInfo.setAuthenticationDate("20140106");
+			deviceInfo.setOsVer("1.0");
+			deviceInfo.setMakeComp("SAMSUNG");
+			deviceInfo.setUserId("hkd");
+
+			deviceInfoList.add(deviceInfo);
+
+			res.setDeviceInfoList(deviceInfoList);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return res;
 	}
