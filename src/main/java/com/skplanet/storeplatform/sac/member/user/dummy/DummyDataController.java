@@ -37,7 +37,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
  * 
  * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
  */
-@RequestMapping(value = "/member/user/dummy")
+@RequestMapping(value = "/member/user")
 @Controller
 public class DummyDataController {
 
