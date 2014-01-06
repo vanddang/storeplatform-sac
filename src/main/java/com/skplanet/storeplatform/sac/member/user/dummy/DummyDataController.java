@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
@@ -119,7 +117,7 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById(@RequestBody AuthorizeByIdReq req) {
+	public AuthorizeByIdRes authorizeById() {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
