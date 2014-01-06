@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -22,33 +25,80 @@ public class CreateByMdnReq extends CommonInfo {
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceId;
 
+	/**
+	 * 이동 통신사
+	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceTelecom;
 
+	/**
+	 * 가입 채널 코드
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String joinId;
 
+	/**
+	 * 기기 모델 번호
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceModelNo;
 
+	/**
+	 * 약관동의 정보
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private List<AgreementInfo> agreementList;
 
+	/**
+	 * 본인 생년월일
+	 */
+	@Pattern(regexp = "^([0-9]{4})([0-9]{2})([0-9]{2})", message = "유효한 생년월일이 아닙니다.")
 	private String ownBirth;
 
+	/**
+	 * 법정대리인 관계 코드
+	 */
 	private String parentType;
 
+	/**
+	 * 법정대리인 인증타입
+	 */
 	private String realNameMethod;
 
+	/**
+	 * 법정대리인 이름
+	 */
 	private String parentName;
 
+	/**
+	 * 법정대리인 CI
+	 */
 	private String parentCI;
 
+	/**
+	 * 법정대리인 이메일
+	 */
+	@Email(message = "유효한 Email 주소가 아닙니다.")
 	private String parentEmail;
 
+	/**
+	 * 법정대리인 통신사 정보
+	 */
 	private String parentTelecom;
 
+	/**
+	 * 법정대리인 휴대폰 번호
+	 */
 	private String parentMdn;
 
+	/**
+	 * 법정대리인 내/외국인 구분
+	 */
 	private String parentResident;
 
+	/**
+	 * 법정대리인 생년월일
+	 */
 	private String parentBirth;
 
 	public String getDeviceId() {

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -14,16 +16,19 @@ public class AgreementInfo extends CommonInfo {
 	/**
 	 * 약관 동의 코드
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String extraAgreementId;
 
 	/**
 	 * 약관 버전
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String extraAgreementVersion;
 
 	/**
 	 * 약관 동의 여부
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String isExtraAgreement;
 
 	public String getExtraAgreementId() {
