@@ -25,11 +25,15 @@
 
     <!-- Definition of MAPPER Alias -->
     <typeAliases> 
+        <!-- ACL 관련 조회-->
         <typeAlias alias="AclAuthKeyInfo"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo" />
         <typeAlias alias="AclAuthInfo"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo" />
         <typeAlias alias="InterfaceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo" />
         <typeAlias alias="ServiceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
         <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
+        
+        <!-- 공통 관련 조회 -->
+        <typeAlias alias="CmDevice"      type="com.skplanet.storeplatform.sac.client.common.vo.CmDevice" />
         
         <!-- 전시 상품 공통 -->
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
