@@ -17,7 +17,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.sac.client.common.vo.CmCategory;
+import com.skplanet.storeplatform.sac.common.vo.Category;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -26,26 +26,26 @@ public class CategoryServiceImpl implements CategoryService {
 	private CommonService commonService;
 
 	@Override
-	public String getCmCategoryEngNm(String category) {
+	public String getCategoryEngNm(String category) {
 
-		CmCategory cmCategory = this.commonService.getCmCategory().get(category);
+		Category cmCategory = this.commonService.getCategory().get(category);
 
 		return cmCategory.getCatEngNm();
 	}
 
 	@Override
-	public String getCmCategoryCd(String category) {
-		CmCategory cmCategory = this.commonService.getCmCategory().get(category);
+	public String getCategoryCd(String category) {
+		Category cmCategory = this.commonService.getCategory().get(category);
 
 		return cmCategory.getCatCd();
 	}
 
 	@Override
-	public List<CmCategory> getCmCategoryList() {
+	public List<Category> getCategoryList() {
 
-		Iterator<Entry<String, CmCategory>> iterator = this.commonService.getCmCategory().entrySet().iterator();
+		Iterator<Entry<String, Category>> iterator = this.commonService.getCategory().entrySet().iterator();
 
-		List<CmCategory> categoryList = new ArrayList<CmCategory>();
+		List<Category> categoryList = new ArrayList<Category>();
 
 		while (iterator.hasNext()) {
 			categoryList.add(iterator.next().getValue());

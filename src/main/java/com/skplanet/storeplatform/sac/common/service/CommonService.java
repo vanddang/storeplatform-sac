@@ -11,12 +11,12 @@ package com.skplanet.storeplatform.sac.common.service;
 
 import java.util.Map;
 
-import com.skplanet.storeplatform.sac.client.common.vo.CmCategory;
-import com.skplanet.storeplatform.sac.client.common.vo.CmDevice;
+import com.skplanet.storeplatform.sac.common.vo.Category;
+import com.skplanet.storeplatform.sac.common.vo.Device;
 
 public interface CommonService {
 
-	public CmDevice getCmDevice(String deviceModelCd);
+	public Device getDevice(String deviceModelCd);
 
-	public Map<String, CmCategory> getCmCategory();
+	public Map<String, Category> getCategory();
 }

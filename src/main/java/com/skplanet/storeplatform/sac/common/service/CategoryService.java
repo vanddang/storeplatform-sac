@@ -11,14 +11,14 @@ package com.skplanet.storeplatform.sac.common.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.client.common.vo.CmCategory;
+import com.skplanet.storeplatform.sac.common.vo.Category;
 
 public interface CategoryService {
 
-	public String getCmCategoryEngNm(String topCatCd);
+	public String getCategoryEngNm(String topCatCd);
 
-	public String getCmCategoryCd(String category);
+	public String getCategoryCd(String category);
 
-	public List<CmCategory> getCmCategoryList();
+	public List<Category> getCategoryList();
 
 }
