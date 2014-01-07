@@ -25,6 +25,17 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	private CommonDAO commonDAO;
 
 	/**
+	 * brandId seq 가져오기
+	 * 
+	 */
+	@Override
+	public String searchCreateBrandId() {
+		String createBrandId = "";
+		createBrandId = (String) this.commonDAO.queryForObject("BrandCatalog.ID_GEN_SELECT_BRAND_ID", "");
+		return createBrandId;
+	}
+
+	/**
 	 * 카테고리가 있는지 조회
 	 * 
 	 * @param dpBrandInfo
@@ -132,6 +143,17 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
+	}
+
+	/**
+	 * ㅊatalogId seq 가져오기
+	 * 
+	 */
+	@Override
+	public String searchCreateCatalogId() {
+		String createCatalogId = "";
+		createCatalogId = (String) this.commonDAO.queryForObject("BrandCatalog.ID_GEN_SELECT_CATALOG_ID", "");
+		return createCatalogId;
 	}
 
 	/**

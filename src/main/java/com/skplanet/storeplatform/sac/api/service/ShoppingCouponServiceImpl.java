@@ -59,23 +59,17 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			// CUD_TYPE에 따라 INSERT/UPDATE
 			if ("C".equalsIgnoreCase(dpBrandInfo.getCudType())) {
 				// 브랜드ID 생성
-				// IDGeneratorService idGen = new IDGeneratorService();
-				// String brandId = (String) this.commonDAO.queryForObject("", String.class);
-				String brandId = "BR00009999";
-				// String brandID = idGen.generateId("TBL_DP_TSP_BRAND_INFO.BRAND_ID");
+				String brandId = this.brandCatalogService.searchCreateBrandId();
 
 				if (StringUtils.isBlank(brandId)) {
 					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
 					this.message = "[COUPON_CONTENT_ID]를 생성하지 못했습니다.";
 					return false;
 				}
-
 				dpBrandInfo.setCreateBrandId(brandId);
-				System.out.println("dpBrandInfo.getCreateBrandId() = " + dpBrandInfo.getCreateBrandId());
 				// 신규등록일시 TBL_DP_TSP_BRAND_INFO테이블 INSERT
 				this.brandCatalogService.insertBrandInfo(dpBrandInfo);
 			} else if ("U".equalsIgnoreCase(dpBrandInfo.getCudType())) {
-				System.out.println("***** BrandCatalogService.updateBrandInfo *****");
 
 				String brandID = this.getCreateBrandId(dpBrandInfo.getBrandId());
 				dpBrandInfo.setCreateBrandId(brandID);
@@ -357,16 +351,12 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			dpCatalogInfo.setTopImgPath(DecodeTopImgPath);
 			dpCatalogInfo.setDtlImgPath(DecodeTopDtlImgPath);
 
-			System.out.println("dpCatalogInfo.getCreateCatalogId()111 : " + dpCatalogInfo.getCreateCatalogId());
 			// CUD_TYPE에 따라 INSERT/UPDATE
 			if ("C".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
 
-				this.log.info("***** BrandCatalogService.insertCatalogInfo *****");
-
 				// 카탈로그 ID 생성
-				// IDGeneratorService idGen = new IDGeneratorService();
-				// String catalogID = idGen.generateId("TBL_DP_TSP_CATALOG.CATALOG_ID");
-				String catalogID = "CT00009999";
+				String catalogID = this.brandCatalogService.searchCreateCatalogId();
+
 				if (StringUtils.isBlank(catalogID)) {
 					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
 					this.message = "[COUPON_catalogId]를 생성하지 못했습니다.";
@@ -374,9 +364,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				}
 
 				dpCatalogInfo.setCreateCatalogId(catalogID);
-				this.log.info("dpCatalogInfo.getCreateCatalogId() = " + dpCatalogInfo.getCreateCatalogId());
-				System.out.println("dpCatalogInfo.getCreateCatalogId()111 : " + dpCatalogInfo.getCreateCatalogId());
-
 				String brandId = this.getCreateBrandId(dpCatalogInfo.getBrandId());
 				if (StringUtils.isBlank(brandId)) {
 					this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC;
@@ -387,7 +374,6 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				dpCatalogInfo.setCreateBrandId(brandId);
 
 				this.brandCatalogService.insertCatalogInfo(dpCatalogInfo);
-				this.log.info("BrandCatalogService CUD_TYPE에 따라 INSERT/UPDATE 끝");
 			} else if ("U".equalsIgnoreCase(dpCatalogInfo.getCudType())) {
 				this.log.info("***** BrandCatalogService.updateBrandInfo *****");
 

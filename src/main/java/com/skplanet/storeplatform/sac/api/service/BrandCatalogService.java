@@ -6,6 +6,17 @@ import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 
 public interface BrandCatalogService {
+
+	/**
+	 * <pre>
+	 * 브랜드 정보(brandId) SEQ 가져오기
+	 * </pre>
+	 * 
+	 * @
+	 * 
+	 */
+	public String searchCreateBrandId();
+
 	/**
 	 * <pre>
 	 * 브랜드 정보 입력
@@ -47,6 +58,16 @@ public interface BrandCatalogService {
 	 */
 
 	public void insertTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo);
+
+	/**
+	 * <pre>
+	 * 브랜드 정보(catalogId) SEQ 가져오기
+	 * </pre>
+	 * 
+	 * @
+	 * 
+	 */
+	public String searchCreateCatalogId();
 
 	/**
 	 * <pre>
