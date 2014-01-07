@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Common">
+
+    <!--브랜드, 카탈로그 카테고리 조회-->
+    <select id="getBatchStandardDate" parameterType="com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest" resultType="String">
+       /* CommonMapper.xml, getBatchStandardDate, SAC : 정희원 , 2014-01-07 */
+        SELECT
+          to_char(STD_DT, 'yyyyMMddHH24mmss')
+        FROM TB_DP_BATCH_COMPT
+        WHERE TENANT_ID=#{tenantId}
+          AND BATCH_ID=#{batchId}
+    </select>
+
+</mapper>
