@@ -16,12 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -34,7 +34,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private static final Logger logger = LoggerFactory.getLogger(UserJoinServiceImpl.class);
 
 	@Autowired
-	private UAPSSCI uapsSCI;
+	private MemberCommonComponent mcc;
 
 	// @Autowired
 	// private UserSCI userSCI;
@@ -45,7 +45,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * TODO (UAPS 연동) 모번호 조회 - 989로 시작하는 MDN이면 실행
 		 */
-		this.uapsSCI.getOpmdInfo("98922223333");
+		String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+		logger.info("### opmdMdn : " + opmdMdn);
 
 		// /**
 		// * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
