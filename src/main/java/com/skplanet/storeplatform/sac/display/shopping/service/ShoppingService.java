@@ -23,8 +23,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getFeatureProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getFeatureProductList(ShoppingReq req);
 
 	/**
 	 * <pre>

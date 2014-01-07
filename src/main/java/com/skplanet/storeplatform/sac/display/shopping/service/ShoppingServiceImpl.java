@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.display.shopping.vo.ShoppingDTO;
 
 /**
  * ShoppingList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -60,118 +61,118 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getFeatureProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception {
+	public ShoppingRes getFeatureProductList(ShoppingReq req) {
 
-		int totalCount = 0;
 		ShoppingRes responseVO = null;
-		ShoppingReq requestVO = new ShoppingReq();
-		requestVO.setOffset(1);
-		requestVO.setCount(20);
-		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
+		req.setOffset(1);
+		req.setCount(20);
+		req.setListId("ADM000000014");
+		req.setTenantId("S01");
+
+		Integer totalCount = 0;
+		List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.getFeatureProductList", req,
+				ShoppingDTO.class);
+
+		if (resultList != null) {
+			ShoppingDTO ShoppingDto = new ShoppingDTO();
+
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			Identifier identifier = null;
+			Menu menu = null;
+			Rights rights = null;
+			Title title = null;
+			Source source = null;
+			Accrual accural = null;
+			Price price = null;
+			Contributor contributor = null;
+			Accrual accrual = null;
+			Date date = null;
+			SalesOption saleoption = null;
+
+			List<Menu> menuList = null;
+			List<Source> sourceList = null;
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < resultList.size(); i++) {
+				ShoppingDto = resultList.get(i);
+
+				// 상품 정보 (상품ID)
+				product = new Product();
+				identifier = new Identifier();
+				identifier.setType("catagoryId");
+				identifier.setText(ShoppingDto.getCatagoryId());
+
+				// 메뉴 정보
+				menuList = new ArrayList<Menu>();
+				menu = new Menu();
+				menu.setType("menuId");
+				menu.setId(ShoppingDto.getMenuId());
+				menu.setName(ShoppingDto.getMenuName());
+				menuList.add(menu);
+
+				// 상품 정보 (상품명)
+				title = new Title();
+				title.setText(ShoppingDto.getCatagoryName());
+
+				// 상품 정보 (상품가격)
+				price = new Price();
+				price.setFixedPrice(ShoppingDto.getProdNetAmt());
+				price.setDiscountRate(ShoppingDto.getDcRate());
+				price.setText(Integer.parseInt(ShoppingDto.getDcAmt()));
+
+				// 이미지 정보
+				sourceList = new ArrayList<Source>();
+				source = new Source();
+				source.setType("thumbnail");
+				source.setUrl("inst_thumbnail_20111216154840.jpg");
+				sourceList.add(source);
+
+				// 다운로드 수
+				accrual = new Accrual();
+				accrual.setDownloadCount("6229");
+
+				// 이용권한 정보
+				rights = new Rights();
+				date = new Date();
+				date.setText("20130820190000/20131231235959");
+				rights.setGrade("PD004401");
+				rights.setDate(date);
+
+				// contributor
+				contributor = new Contributor();
+				identifier = new Identifier();
+				identifier.setType("brandId");
+				identifier.setText("세븐일레븐 바이더웨이");
+				contributor.setIdentifier(identifier);
+
+				// saleoption
+				saleoption = new SalesOption();
+				if (ShoppingDto.getDlvProdYn().equals("Y")) {
+					saleoption.setType("delivery");
+				}
+
+				// 데이터 매핑
+				product.setIdentifier(identifier);
+				product.setMenuList(menuList);
+				product.setTitle(title);
+				product.setPrice(price);
+				product.setSourceList(sourceList);
+				product.setAccrual(accrual);
+				product.setRights(rights);
+				product.setContributor(contributor);
+				product.setSalesOption(saleoption);
+				totalCount = ShoppingDto.getTotalCount();
+				productList.add(i, product);
+			}
+
+			responseVO = new ShoppingRes();
+			responseVO.setProductList(productList);
+
+			CommonResponse commonResponse = new CommonResponse();
+			commonResponse.setTotalCount(totalCount);
+			responseVO.setCommonResponse(commonResponse);
 		}
-		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
-		}
-
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
-
-		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
-
-		// Response VO를 만들기위한 생성자
-		Identifier identifier = new Identifier();
-		Identifier identifier1 = new Identifier();
-		Menu menu = new Menu();
-		Rights rights = new Rights();
-		Title title = new Title();
-		Source source = new Source();
-		Price price = new Price();
-		Product product = new Product();
-		Contributor contributor = new Contributor();
-		Accrual acc = new Accrual();
-		Date date = new Date();
-		SalesOption saleoption = new SalesOption();
-
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-		List<Product> productList = new ArrayList<Product>();
-
-		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
-			// 상품 정보 (상품ID)
-			identifier.setType("product");
-			identifier.setText("S900000960");
-
-			// 메뉴 정보
-			menu.setType("menuId");
-			menu.setId("MN28009");
-			menu.setName("편의점/마트");
-			menuList.add(menu);
-
-			// 상품 정보 (상품명)
-			title.setText("쇼핑 추천/인기 상품 리스트 조회");
-			// 상품 정보 (상품가격)
-
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setText(Integer.parseInt("1000"));
-
-			// 이미지 정보
-			source.setType("thumbnail");
-			source.setUrl("inst_thumbnail_20111216154840.jpg");
-			sourceList.add(source);
-			// contributor
-
-			acc.setDownloadCount("6229");
-
-			// 이용권한 정보
-			date.setText("20130820190000/20131231235959");
-			rights.setGrade("PD004401");
-			rights.setDate(date);
-
-			// contributor
-			identifier1.setType("brand");
-			identifier1.setText("세븐일레븐 바이더웨이");
-			contributor.setIdentifier(identifier1);
-
-			// saleoption
-			saleoption.setType("delivery");
-
-			// 데이터 매핑
-			product.setIdentifier(identifier);
-			product.setMenuList(menuList);
-			product.setTitle(title);
-			product.setPrice(price);
-			// product.setRights(rights);
-			product.setSourceList(sourceList);
-			product.setAccrual(acc);
-			product.setRights(rights);
-			product.setContributor(contributor);
-			product.setSalesOption(saleoption);
-
-			productList.add(i, product);
-			identifier = new Identifier();
-			menu = new Menu();
-			menuList = new ArrayList<Menu>();
-			rights = new Rights();
-			title = new Title();
-			source = new Source();
-			sourceList = new ArrayList<Source>();
-			price = new Price();
-			product = new Product();
-		}
-
-		responseVO = new ShoppingRes();
-		responseVO.setProductList(productList);
-
-		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(20);
-		responseVO.setCommonResponse(commonResponse);
-		// }
 		return responseVO;
 	}
 
