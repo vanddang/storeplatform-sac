@@ -16,9 +16,9 @@ public class Search extends CommonInfo {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Category topCategory;
-	private Category dpCategory;
-	private Category metaClsf;
+	private SearchCategory topCategory;
+	private SearchCategory dpCategory;
+	private SearchCategory metaClsf;
 	private String prodId;
 	private String prodNm;
 	private String prodDesc;
@@ -52,30 +52,31 @@ public class Search extends CommonInfo {
 	private String googleYN;
 	private String tag;
 	private String inAppBilling;
-	private String offset;
-	private String count;
 
-	public Category getTopCategory() {
+	// private String offset;
+	// private String count;
+
+	public SearchCategory getTopCategory() {
 		return this.topCategory;
 	}
 
-	public void setTopCategory(Category topCategory) {
+	public void setTopCategory(SearchCategory topCategory) {
 		this.topCategory = topCategory;
 	}
 
-	public Category getDpCategory() {
+	public SearchCategory getDpCategory() {
 		return this.dpCategory;
 	}
 
-	public void setDpCategory(Category dpCategory) {
+	public void setDpCategory(SearchCategory dpCategory) {
 		this.dpCategory = dpCategory;
 	}
 
-	public Category getMetaClsf() {
+	public SearchCategory getMetaClsf() {
 		return this.metaClsf;
 	}
 
-	public void setMetaClsf(Category metaClsf) {
+	public void setMetaClsf(SearchCategory metaClsf) {
 		this.metaClsf = metaClsf;
 	}
 
@@ -341,21 +342,5 @@ public class Search extends CommonInfo {
 
 	public void setInAppBilling(String inAppBilling) {
 		this.inAppBilling = inAppBilling;
-	}
-
-	public String getOffset() {
-		return this.offset;
-	}
-
-	public void setOffset(String offset) {
-		this.offset = offset;
-	}
-
-	public String getCount() {
-		return this.count;
-	}
-
-	public void setCount(String count) {
-		this.count = count;
 	}
 }

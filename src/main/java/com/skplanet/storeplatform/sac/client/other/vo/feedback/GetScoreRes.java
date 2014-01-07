@@ -9,6 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
-public class ParticipationRes {
+public class GetScoreRes {
 
 }

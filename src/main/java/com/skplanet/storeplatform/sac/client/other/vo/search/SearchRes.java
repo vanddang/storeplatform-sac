@@ -18,17 +18,18 @@ public class SearchRes extends CommonInfo {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private List<Category> categoryList;
+	private List<SearchCategory> categoryList;
 	private String relKeywd;
 	private String autoTransKeywd;
 	private String orgKeywd;
+	private int totalCount;
 	private List<Search> productList;
 
-	public List<Category> getCategoryList() {
+	public List<SearchCategory> getCategoryList() {
 		return this.categoryList;
 	}
 
-	public void setCategoryList(List<Category> categoryList) {
+	public void setCategoryList(List<SearchCategory> categoryList) {
 		this.categoryList = categoryList;
 	}
 
@@ -50,6 +51,14 @@ public class SearchRes extends CommonInfo {
 
 	public String getOrgKeywd() {
 		return this.orgKeywd;
+	}
+
+	public int getTotalCount() {
+		return this.totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 
 	public void setOrgKeywd(String orgKeywd) {
