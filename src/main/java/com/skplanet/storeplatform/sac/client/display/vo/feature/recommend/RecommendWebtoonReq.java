@@ -25,9 +25,6 @@ public class RecommendWebtoonReq extends CommonInfo {
 	private String upMenuId; // 상위 메뉴아이디
 	private String menuId; // 메뉴아이디
 	private String listId; // 리스트아이디
-	private String prodCharge; // 유료/무료 구분
-	private String prodGradeCd; // 상품등급코드
-	private String drm; // DRM 지원 구분
 	private String weekDayCd; // 요일별 구분 코드
 	private int offset = 1; // offset
 	private int count = 20; // count
@@ -78,30 +75,6 @@ public class RecommendWebtoonReq extends CommonInfo {
 
 	public void setListId(String listId) {
 		this.listId = listId;
-	}
-
-	public String getProdCharge() {
-		return this.prodCharge;
-	}
-
-	public void setProdCharge(String prodCharge) {
-		this.prodCharge = prodCharge;
-	}
-
-	public String getProdGradeCd() {
-		return this.prodGradeCd;
-	}
-
-	public void setProdGradeCd(String prodGradeCd) {
-		this.prodGradeCd = prodGradeCd;
-	}
-
-	public String getDrm() {
-		return this.drm;
-	}
-
-	public void setDrm(String drm) {
-		this.drm = drm;
 	}
 
 	public String getWeekDayCd() {
