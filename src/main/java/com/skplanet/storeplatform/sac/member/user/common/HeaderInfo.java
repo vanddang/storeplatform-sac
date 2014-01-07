@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.member.user.common;
 
 import java.util.Map;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,22 +37,22 @@ public class HeaderInfo {
 		/**
 		 * Standard Header
 		 */
-		headerVo.setAccept((String) headers.get("accept"));
-		headerVo.setAcceptLanguage((String) headers.get("accept-language"));
-		headerVo.setContentLength((String) headers.get("content-length"));
-		headerVo.setContentType((String) headers.get("content-type"));
+		headerVo.setAccept(ObjectUtils.toString(headers.get("accept")));
+		headerVo.setAcceptLanguage(ObjectUtils.toString(headers.get("accept-language")));
+		headerVo.setContentLength(ObjectUtils.toString(headers.get("content-length")));
+		headerVo.setContentType(ObjectUtils.toString(headers.get("content-type")));
 
 		/**
 		 * Custom Header
 		 */
-		headerVo.setxSacAuthTenantKey((String) headers.get("x-sac-auth-tenant-key"));
-		headerVo.setxSacAuthSignature((String) headers.get("x-sac-auth-signature"));
-		headerVo.setxSacAuthTimestamp((String) headers.get("x-sac-auth-timestamp"));
-		headerVo.setxSacAuthNonce((String) headers.get("x-sac-auth-nonce"));
-		headerVo.setxSacInterfaceId((String) headers.get("x-sac-interface_id"));
-		headerVo.setxSacGuid((String) headers.get("x-sac-guid"));
-		headerVo.setxSacDeviceInfo((String) headers.get("x-sac-device-info"));
-		headerVo.setxSacNetworkInfo((String) headers.get("x-sac-network-info"));
+		headerVo.setxSacAuthTenantKey(ObjectUtils.toString(headers.get("x-sac-auth-tenant-key")));
+		headerVo.setxSacAuthSignature(ObjectUtils.toString(headers.get("x-sac-auth-signature")));
+		headerVo.setxSacAuthTimestamp(ObjectUtils.toString(headers.get("x-sac-auth-timestamp")));
+		headerVo.setxSacAuthNonce(ObjectUtils.toString(headers.get("x-sac-auth-nonce")));
+		headerVo.setxSacInterfaceId(ObjectUtils.toString(headers.get("x-sac-interface_id")));
+		headerVo.setxSacGuid(ObjectUtils.toString(headers.get("x-sac-guid")));
+		headerVo.setxSacDeviceInfo(ObjectUtils.toString(headers.get("x-sac-device-info")));
+		headerVo.setxSacNetworkInfo(ObjectUtils.toString(headers.get("x-sac-network-info")));
 
 		return headerVo;
 	}
