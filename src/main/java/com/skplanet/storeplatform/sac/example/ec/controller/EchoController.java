@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sc.client.vo.UserCareerSearch;
-
 @Controller
 @RequestMapping("/test")
 public class EchoController {
