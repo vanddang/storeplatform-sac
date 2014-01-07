@@ -72,6 +72,10 @@
         <typeAlias alias="FeatureCategoryEpubReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubReq" />
         <typeAlias alias="FeatureCategoryEpubDTO"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryEpubDTO" />
         
+        <!-- feature vod 카테고리 상품 조회 -->
+        <typeAlias alias="FeatureCategoryVodReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq" />
+        <typeAlias alias="FeatureCategoryVodDTO"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVodDTO" />
+        
         <!-- 운영자 추천 전체 조회 -->
         <typeAlias alias="FeatureRecommendAdminReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq" />
         <typeAlias alias="FeatureRecommendAdminDTO"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO" />

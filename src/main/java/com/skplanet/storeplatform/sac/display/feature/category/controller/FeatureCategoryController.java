@@ -43,6 +43,7 @@ public class FeatureCategoryController {
 	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.featureCategoryVodService.searchVodList(req);

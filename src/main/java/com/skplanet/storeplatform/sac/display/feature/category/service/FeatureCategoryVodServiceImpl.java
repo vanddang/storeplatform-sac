@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVodDTO;
 
 @Service
 @Transactional
@@ -35,6 +38,38 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
+
+		// 기준일시 받아오는 Method 호출되어야 함
+		req.setStdDt("20130101000000");
+
+		// 헤더값 세팅
+		req.setDeviceModelCd("SHV-E210S");
+		req.setTenantId("S01");
+		req.setImageCd("DP000101");
+
+		List<FeatureCategoryVodDTO> vodList = null;
+
+		if ("DP17".equals(req.getTopMenuId())) {
+			if ("recommend".equals(req.getFilterdby())) {
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("영화 추천 상품 조회");
+				this.logger.debug("----------------------------------------------------------------");
+			} else if ("movie1000".equals(req.getFilterdby())) {
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("영화 1000원관");
+				this.logger.debug("----------------------------------------------------------------");
+			}
+
+			vodList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
+					FeatureCategoryVodDTO.class);
+
+			this.logger.debug("size : " + vodList.size());
+		} else if ("DP18".equals(req.getTopMenuId())) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("searchVodList Service started!!");
+			this.logger.debug("----------------------------------------------------------------");
+
+		}
 
 		return null;
 	}

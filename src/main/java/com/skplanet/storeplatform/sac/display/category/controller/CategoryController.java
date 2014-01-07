@@ -76,6 +76,7 @@ public class CategoryController {
 	public CategoryAppRes searchAppList(CategoryAppReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.categoryAppService.searchAppList(req);
@@ -94,6 +95,7 @@ public class CategoryController {
 	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchEbookComicList Controller started!!");
+		this.logger.debug("Input Parameters {}", req.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.categoryEbookComicService.searchEbookComicList(req);
