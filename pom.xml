@@ -31,7 +31,8 @@
                 <configuration> 
                     <excludes>
                         <exclude>**/api/**</exclude> 
-                        <exclude>**/integration/**</exclude> 
+                        <exclude>**/integration/**</exclude>
+                        <exclude>**/sac/**</exclude>
                     </excludes>  
                 </configuration>
             </plugin>
