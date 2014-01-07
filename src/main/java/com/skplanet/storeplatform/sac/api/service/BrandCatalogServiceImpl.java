@@ -18,8 +18,7 @@ import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 @Service
 @Transactional
 public class BrandCatalogServiceImpl implements BrandCatalogService {
-	private final String errorCode = "";
-	private final String message = "";
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	@Qualifier("sac")
@@ -32,7 +31,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @throws CouponException
 	 */
 
-	public int selectCountBrandCategory(String dpCatNo) throws CouponException {
+	public int selectCountBrandCategory(String dpCatNo) {
 		Integer cnt = null;
 		cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_TBL_DP_MENU", dpCatNo);
 		return cnt.intValue();
@@ -45,7 +44,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @throws CouponException
 	 */
 
-	public int selectBrandCountCudType(String brandId) throws CouponException {
+	public int selectBrandCountCudType(String brandId) {
 		int cnt = 0;
 		try {
 			cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
@@ -63,7 +62,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @throws CouponException
 	 */
 
-	public int selectCatalogCountCudType(String catalogId) throws CouponException {
+	public int selectCatalogCountCudType(String catalogId) {
 		Integer cnt = null;
 		try {
 			cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_CATALOG_COUNT_CUDTYPE", catalogId);
@@ -82,7 +81,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 
 	// @Autowired
 	@Override
-	public void insertBrandInfo(DpBrandInfo dpBrandInfo) throws CouponException {
+	public void insertBrandInfo(DpBrandInfo dpBrandInfo) {
 
 		try {
 
@@ -98,7 +97,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_BRID,
 						"해당 brand_id로 등록한 brand가 있습니다.", null);
 			}
-
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -112,7 +112,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @throws CouponException
 	 */
 
-	public void updateBrandInfo(DpBrandInfo dpBrandInfo) throws CouponException {
+	@Override
+	public void updateBrandInfo(DpBrandInfo dpBrandInfo) {
 
 		try {
 			if (this.selectBrandCountCudType(dpBrandInfo.getBrandId()) > 0) {
@@ -123,9 +124,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 							"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpBrandInfo.getDpCatNo(), null);
 				}
 			} else {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 						"해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + dpBrandInfo.getBrandId(), null);
 			}
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -139,16 +142,15 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 */
 
 	@Override
-	public void insertCatalogInfo(DpCatalogInfo dpCatalogInfo) throws CouponException {
+	public void insertCatalogInfo(DpCatalogInfo dpCatalogInfo) {
 
 		try {
 			// CUD가 C로 왔을경우 해당 CATALOG_ID로 등록된 브랜드가 없을 때
 			if (this.selectCatalogCountCudType(dpCatalogInfo.getCatalogId()) < 1) {
-				// if(selectBrandCountCudType(dpCatalogInfo.getBrandId()) > 0){
 				if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
 					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG", dpCatalogInfo);
 					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG_DESC", dpCatalogInfo);
-					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG", dpCatalogInfo);
+					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_MENU_CATALOG_MAPG", dpCatalogInfo);
 				} else {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 							"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
@@ -157,6 +159,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_CATALOGID,
 						"해당 catalog_id로 등록한 catalog가 있습니다. CATALOG_ID = " + dpCatalogInfo.getCatalogId(), null);
 			}
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -169,14 +173,15 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @throws CouponException
 	 */
 
-	public void updateCatalogInfo(DpCatalogInfo dpCatalogInfo) throws CouponException {
+	@Override
+	public void updateCatalogInfo(DpCatalogInfo dpCatalogInfo) {
 		try {
 			if (this.selectCatalogCountCudType(dpCatalogInfo.getCatalogId()) > 0) {
 				if (this.selectBrandCountCudType(dpCatalogInfo.getBrandId()) > 0) {
 					if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
 						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_CATALOG", dpCatalogInfo);
 						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_CATALOG_DESC", dpCatalogInfo);
-						this.commonDAO.update("BrandCatalog.INSERT_TB_DP_CATEGORY_MENU_MAPG", dpCatalogInfo);
+						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_MENU_CATALOG_MAPG", dpCatalogInfo);
 					} else {
 						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 								"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
@@ -189,10 +194,10 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_CATALOGID,
 						"해당 catalog_id로 등록한 catalog가 있습니다. CATALOG_ID = " + dpCatalogInfo.getCatalogId(), null);
 			}
-
 		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
-					"해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + dpCatalogInfo.getBrandId(), null);
+			throw e;
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
 	}
 
@@ -203,7 +208,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @throws CouponException
 	 */
 
-	public void insertTblTagInfo(DpCatalogTagInfo tagInfo) throws CouponException {
+	@Override
+	public void insertTblTagInfo(DpCatalogTagInfo tagInfo) {
 
 		try {
 
@@ -217,7 +223,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	/**
 	 * TBL_TAG_INFO를 삭제 한다.
 	 */
-	public void deleteTblTagInfo(String prodId) throws CouponException {
+	@Override
+	public void deleteTblTagInfo(String prodId) {
 
 		try {
 			this.log.info("prodId = " + prodId);
@@ -233,7 +240,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @param brandCatalogProdImgInfo
 	 *            전시 상품 이미지 정보
 	 */
-	public void insertTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo) throws CouponException {
+	@Override
+	public void insertTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo) {
 		try {
 			this.commonDAO.insert("BrandCatalog.INSERT_BRAND_CATALOG_TB_DP_PROD_IMG", brandCatalogProdImgInfo);
 		} catch (Exception e) {
@@ -247,7 +255,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * @param dpProdImgInfo
 	 *            전시 상품 이미지 정보
 	 */
-	public void deleteDpProdImg(String prodId) throws CouponException {
+	@Override
+	public void deleteDpProdImg(String prodId) {
 		try {
 			this.log.info("prodId = " + prodId);
 			this.commonDAO.delete("BrandCatalog.DELETE_BRAND_CATALOG_TB_DP_PROD_IMG", prodId);
@@ -259,7 +268,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	/**
 	 * 브랜드 Brand_Id SELECT
 	 */
-	public String getCreateBrandId(String brandId) throws CouponException {
+	@Override
+	public String getCreateBrandId(String brandId) {
 
 		try {
 			if (this.selectBrandCountCudType(brandId) > 0) {
@@ -279,7 +289,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	/**
 	 * 카탈로그 Catalog_Id SELECT
 	 */
-	public String getCreateCatalogId(String catalogId) throws CouponException {
+	@Override
+	public String getCreateCatalogId(String catalogId) {
 
 		try {
 			if (this.selectCatalogCountCudType(catalogId) > 0) {
@@ -316,11 +327,5 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	// throw new InfraException("getLabelForQuery()", "select Fail", de);
 	// }
 	// }
-	/**
-	 * 브랜드가 있는지 조회
-	 * 
-	 * @param dpBrandInfo
-	 * @throws DaoException
-	 */
 
 }
