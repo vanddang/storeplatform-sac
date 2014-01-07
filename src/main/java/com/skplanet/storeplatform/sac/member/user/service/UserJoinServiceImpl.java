@@ -45,17 +45,21 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * TODO (UAPS 연동) 모번호 조회 - 989로 시작하는 MDN이면 실행
 		 */
-		// this.uapsSCI.getOpmdInfo("98922223333");
+		this.uapsSCI.getOpmdInfo("98922223333");
 
-		/**
-		 * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
-		 */
-		// SearchManagementListRequest sciReq = new SearchManagementListRequest();
-		// sciReq.setUserKey("123142134");
-		// this.userSCI.searchManagementList(sciReq);
-		// for (AgreementInfo info : req.getAgreementList()) {
+		// /**
+		// * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
+		// */
+		// SearchAgreementListRequest sciReq = new SearchAgreementListRequest();
+		// sciReq.setUserKey("12345");
+		// SearchAgreementListResponse sciRes = this.userSCI.searchAgreementList(sciReq);
 		//
-		// logger.info(info.getExtraAgreementId());
+		// logger.info("######" + sciRes.getCommonResponse().getResultCode());
+		// logger.info("######" + sciRes.getCommonResponse().getResultMessage());
+		//
+		// for (MbrClauseAgree info : sciRes.getMbrClauseAgreeList()) {
+		//
+		// logger.info(info.getExtraAgreementID());
 		// logger.info(info.getExtraAgreementVersion());
 		// logger.info(info.getIsExtraAgreement());
 		//

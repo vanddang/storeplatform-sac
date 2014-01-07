@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,7 +51,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformation
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
-import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -66,9 +64,6 @@ public class DummyDataController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UserJoinController.class);
-
-	@Autowired
-	private HeaderInfo headerInfo;
 
 	// @RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	// @ResponseBody

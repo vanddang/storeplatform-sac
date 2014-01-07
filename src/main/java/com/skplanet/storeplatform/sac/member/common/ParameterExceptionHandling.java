@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.member.user.common;
+package com.skplanet.storeplatform.sac.member.common;
 
 import java.util.HashMap;
 import java.util.List;

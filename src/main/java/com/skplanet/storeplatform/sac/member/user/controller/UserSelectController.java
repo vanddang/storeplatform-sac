@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
-import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
-import com.skplanet.storeplatform.sac.member.user.common.ParameterExceptionHandling;
+import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
+import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserSelectService;
 
 /**

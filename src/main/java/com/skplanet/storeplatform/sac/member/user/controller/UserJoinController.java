@@ -28,8 +28,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.member.user.common.HeaderInfo;
-import com.skplanet.storeplatform.sac.member.user.common.ParameterExceptionHandling;
+import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
+import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
 /**
