@@ -188,11 +188,11 @@ public class DummySellerController {
 		List<PwReminder> myList = new ArrayList<PwReminder>();
 		for (int i = 0; i < 1; i++) {
 			pwReminderList = new PwReminder();
-			pwReminderList.setPwReminderCode("");
-			pwReminderList.setPwReminderQ("");
+			pwReminderList.setPwReminderCode("TA01");
+			pwReminderList.setPwReminderQ("test");
 			myList.add(pwReminderList);
 		}
-
+		responseVO.setPwReminderList(myList);
 		return responseVO;
 	}
 
