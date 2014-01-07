@@ -12,13 +12,13 @@ public class ListPasswordReminderQuestionRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<PwReminderList> pwReminderList;
+	List<PwReminder> pwReminderList;
 
-	public List<PwReminderList> getPwReminderList() {
+	public List<PwReminder> getPwReminderList() {
 		return this.pwReminderList;
 	}
 
-	public void setPwReminderList(List<PwReminderList> pwReminderList) {
+	public void setPwReminderList(List<PwReminder> pwReminderList) {
 		this.pwReminderList = pwReminderList;
 	}
 
