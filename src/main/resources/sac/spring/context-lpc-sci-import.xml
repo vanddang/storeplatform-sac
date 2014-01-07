@@ -23,6 +23,6 @@
                            http://www.springframework.org/schema/task
                            http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
-    <import resource="classpath*:member-sci/spring/context-common.xml" />  
+    <import resource="classpath*:member/spring/context-common.xml" />  
     
 </beans>
