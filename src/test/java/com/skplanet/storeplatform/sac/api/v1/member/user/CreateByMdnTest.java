@@ -9,61 +9,93 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
-import org.apache.http.client.methods.HttpPost;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
-import com.skplanet.storeplatform.framework.test.StoreplatformMediaType;
-import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
-import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class CreateByMdnTest {
 
+	@Autowired
+	private WebApplicationContext wac;
+
+	private MockMvc mvc;
+
+	@Before
+	public void before() {
+		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+	}
+
 	/**
 	 * <pre>
-	 * 모바일 전용 회원 가입
+	 * method 설명.
 	 * </pre>
+	 * 
+	 * @throws Exception
 	 */
 	@Test
-	public void shouldCreateByMdn() {
+	public void testDetail() throws Exception {
 
-		StorePlatformAPIinvokorNew.create().url("http://localhost:8080/storeplatform-sac/internal/member/user/createByMdn/v1")
-				.method(HttpPost.class)
-				.accepts(StoreplatformMediaType.MEDIA_TYPE_APP_JSON)
-				.contentType(StoreplatformMediaType.MEDIA_TYPE_APP_JSON)
-				.addHeader("x-store-auth-info", "ist=N; tenantId=KOR001")
-				.requestBody(new RequestBodySetter() {
+		CreateByMdnReq reqJson = new CreateByMdnReq();
+		reqJson.setDeviceId("01090556567");
+		reqJson.setDeviceTelecom("US001201");
+		reqJson.setJoinId("US002903");
+		reqJson.setDeviceModelNo("LG-SH810");
+		reqJson.setOwnBirth("20020409");
+		reqJson.setParentType("");
+		reqJson.setRealNameMethod("US011101");
+		reqJson.setParentName("부모이름");
+		reqJson.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+		reqJson.setParentEmail("hkd@aaaa.com");
+		reqJson.setParentTelecom("US001201");
+		reqJson.setParentMdn("01088889999");
+		reqJson.setParentResident("local");
+		reqJson.setParentBirth("19700407");
 
-					@Override
-					public Object requestBody() {
-						CreateByMdnReq req = new CreateByMdnReq();
-						req.setDeviceId("12123123");
-						return req;
-					}
-				})
-				.success(CreateByMdnRes.class, new SuccessCallbackForJson() {
+		// 동의 정보
 
-					@Override
-					public void success(Object result) throws Exception {
-						CreateByMdnRes res = (CreateByMdnRes) result;
-					}
+		AgreementInfo agreementInfo = new AgreementInfo();
+		agreementInfo.setExtraAgreementId("asdasdasd");
+		agreementInfo.setExtraAgreementVersion("0.1");
+		agreementInfo.setIsExtraAgreement("Y");
 
-					@Override
-					public boolean isSuccess(int status) {
-						return 200 <= status && status < 300;
-					}
-				})
-				.run();
+		List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+		agreementList.add(agreementInfo);
+		reqJson.setAgreementList(agreementList);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String json = mapper.writeValueAsString(reqJson);
+		System.out.println(json);
+
+		this.mvc.perform(post("/member/user/createByMdn/v1").content(json).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+				.andDo(print())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(status().isOk());
 
 	}
+
 }
