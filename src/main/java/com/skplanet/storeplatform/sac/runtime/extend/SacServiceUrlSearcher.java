@@ -71,6 +71,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 			} else {
 				to.path("/" + this.servletPath + from.getPath());
 			}
+			to.query(from.getQuery());
 		}
 		return to.build().toUriString();
 	}
