@@ -2,17 +2,11 @@ package com.skplanet.storeplatform.sac.integration.api.v1.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryRequest;
-import com.skplanet.storeplatform.sac.client.product.vo.category.ProductCategoryResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.product.service.ProductCategoryService;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,21 +15,21 @@ import com.skplanet.storeplatform.sac.product.service.ProductCategoryService;
 @Transactional
 public class ProductCatgoryTest {
 
-	@Autowired
-	private ProductCategoryService productCategoryService;
+	// @Autowired
+	// private ProductCategoryService productCategoryService;
 
 	/**
 	 * 회원 목록 테스트.
 	 */
 	@Test
 	public void shouldOptianUserCareer() {
-		ProductCategoryRequest productCategoryReqVO = new ProductCategoryRequest();
-		ProductCategoryResponse voRes = this.productCategoryService.searchCategoryProductList(productCategoryReqVO);
-		// System.out.println("++++++" + voRes.getProductCategoryList().size());
-		for (Product vo : voRes.getProductList()) {
-			// System.out.println("++++++" + vo.getProduct().getSupport());
-			System.out.println("++++++" + vo.getIdentifier().getText());
-			System.out.println("++++++" + vo.getIdentifier().getType());
-		}
+		// ProductCategoryRequest productCategoryReqVO = new ProductCategoryRequest();
+		// ProductCategoryResponse voRes = this.productCategoryService.searchCategoryProductList(productCategoryReqVO);
+		// // System.out.println("++++++" + voRes.getProductCategoryList().size());
+		// for (Product vo : voRes.getProductList()) {
+		// // System.out.println("++++++" + vo.getProduct().getSupport());
+		// System.out.println("++++++" + vo.getIdentifier().getText());
+		// System.out.println("++++++" + vo.getIdentifier().getType());
+		// }
 	}
 }
