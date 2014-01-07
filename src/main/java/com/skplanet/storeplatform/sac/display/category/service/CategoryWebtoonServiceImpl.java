@@ -61,12 +61,6 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req) {
 
 		CategoryWebtoonRes responseVO = null;
-		req.setOffset(1);
-		req.setCount(20);
-		req.setTenantId("S01");
-		req.setWeekDayCd("DP010101");
-		req.setImageCd("DP000196");
-		req.setMenuId("DP26");
 		if (req.getMenuId().length() == 4) {
 			req.setUpMenuId(req.getMenuId());
 			req.setMenuId(null);
