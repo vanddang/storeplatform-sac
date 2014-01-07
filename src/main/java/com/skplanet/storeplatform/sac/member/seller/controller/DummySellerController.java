@@ -229,7 +229,7 @@ public class DummySellerController {
 		sellerInfo.setSellerAddress("삼평동 680");
 		sellerInfo.setSellerDetailAddress("H스퀘어 S동 4층");
 		sellerInfo.setSellerCity("123123");
-		sellerInfo.setSellerState("");
+		sellerInfo.setSellerState("LA");
 		sellerInfo.setSellerCountry("USA");
 		sellerInfo.setSellerLanguage("ko");
 		sellerInfo.setIsForeign("Y");
@@ -241,7 +241,7 @@ public class DummySellerController {
 		RealNameInfo realNameInfo = new RealNameInfo();
 		realNameInfo.setIsParent("Y");
 		realNameInfo.setParentDate("20131226000000");
-		realNameInfo.setParentType("");
+		realNameInfo.setParentType("A01");
 		realNameInfo.setParentName("홍길동");
 		realNameInfo.setParentBirthDay("20131226000000");
 		realNameInfo.setParentEmail("abc@gmail.com");
@@ -269,8 +269,8 @@ public class DummySellerController {
 		List<RightInfo> myList = new ArrayList<RightInfo>();
 		for (int i = 0; i < 1; i++) {
 			rightInfoList = new RightInfo();
-			rightInfoList.setRightProfile("");
-			rightInfoList.setRightProfileValue("");
+			rightInfoList.setRightProfile("A01");
+			rightInfoList.setRightProfileValue("ABC");
 			myList.add(rightInfoList);
 		}
 		responseVO.setRightInfoList(myList);
@@ -285,7 +285,7 @@ public class DummySellerController {
 		}
 		responseVO.setAgreementList(myList2);
 
-		responseVO.setFlurryInfo("");
+		responseVO.setFlurryInfo("@@");
 
 		return responseVO;
 	}
@@ -321,26 +321,26 @@ public class DummySellerController {
 		sellerAccountInfo.setRepFaxArea("82");
 		sellerAccountInfo.setRepFax("070-1111-3333");
 		sellerAccountInfo.setRepEmail("abc@email.com");
-		sellerAccountInfo.setBpRate("");
-		sellerAccountInfo.setVendorCode("");
+		sellerAccountInfo.setBpRate("ABC");
+		sellerAccountInfo.setVendorCode("A01");
 		sellerAccountInfo.setIsBizRegistered("Y");
 		sellerAccountInfo.setBizRegNumber("1201-1212-1222");
 		sellerAccountInfo.setBizUnregReason("US000606");
 		sellerAccountInfo.setIsBizTaxable("Y");
-		sellerAccountInfo.setBizGrade("");
+		sellerAccountInfo.setBizGrade("A01");
 		sellerAccountInfo.setIsDeductible("Y");
 		sellerAccountInfo.setMarketCode("US001201");
-		sellerAccountInfo.setMarketStatus("");
+		sellerAccountInfo.setMarketStatus("A01");
 		sellerAccountInfo.setBankCode("OR000221");
 		sellerAccountInfo.setBankName("신한은행");
 		sellerAccountInfo.setIsAccountReal("Y");
 		sellerAccountInfo.setAccountRealDate("20131216000000");
-		sellerAccountInfo.setBankBranch("");
-		sellerAccountInfo.setBankBranchCode("");
+		sellerAccountInfo.setBankBranch("테헤란로");
+		sellerAccountInfo.setBankBranchCode("A01");
 		sellerAccountInfo.setSwiftCode("123");
-		sellerAccountInfo.setAbaCode("");
-		sellerAccountInfo.setIbanCode("");
-		sellerAccountInfo.setTpinCode("");
+		sellerAccountInfo.setAbaCode("A01");
+		sellerAccountInfo.setIbanCode("A01");
+		sellerAccountInfo.setTpinCode("A01");
 		sellerAccountInfo.setBankAccount("360ea2f64f770192c02e09e390480715");
 		sellerAccountInfo.setBankAcctName("홍길동");
 		responseVO.setSellerAccountInfo(sellerAccountInfo);
