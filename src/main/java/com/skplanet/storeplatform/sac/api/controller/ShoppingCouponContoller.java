@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.api.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
-import com.skplanet.storeplatform.sac.api.service.CouponContentService;
+import com.skplanet.storeplatform.sac.api.service.CouponProcessService;
 import com.skplanet.storeplatform.sac.api.service.ShoppingCouponService;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
@@ -64,6 +63,9 @@ public class ShoppingCouponContoller {
 
 	@Autowired
 	private ShoppingCouponService shoppingCouponService;
+
+	@Autowired
+	private CouponProcessService couponProcessService;
 
 	public ShoppingCouponContoller() {
 		this.brandInfo = new DpBrandInfo();
@@ -158,11 +160,9 @@ public class ShoppingCouponContoller {
 					// XML 전문 Parsing
 					result = this.parserXML(couponParameterInfo);
 					if (result) {
-						CouponContentService ccs = new CouponContentService();
-						success = ccs.processForCouponCSP(this.containers, couponParameterInfo.getTxType());
+						success = this.insertCouponInfo(this.containers, couponParameterInfo.getTxType());
 					}
 
-					System.out.println("+++++++success:::+++++" + success);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -175,8 +175,7 @@ public class ShoppingCouponContoller {
 
 					break;
 				case ST:
-					// CouponContentService pcs = new CouponContentService();
-					// success = pcs.processForCouponStatus(couponParameterInfo);
+					success = this.processForCouponStatus(couponParameterInfo);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -188,8 +187,7 @@ public class ShoppingCouponContoller {
 					}
 					break;
 				case AT:
-					CouponContentService pcs2 = new CouponContentService();
-					success = pcs2.processForCouponStatus(couponParameterInfo);
+					// success = processForCouponStatus(couponParameterInfo);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -202,18 +200,15 @@ public class ShoppingCouponContoller {
 					break;
 				case LS:
 					// 특가 상품 목록 조회 작업을 호출한다.
-					CouponContentService pcs3 = new CouponContentService();
 					String[] couponCodes = couponParameterInfo.getCouponCode().split(",");
-					this.couponList = pcs3.getSpecialProductList(couponCodes);
+					this.couponList = this.getSpecialProductList(couponCodes);
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 					map.put("ERROR_MSG", this.getERR_MESSAGE());
 					break;
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
-					CouponContentService pcs4 = new CouponContentService();
-					this.couponInfo = pcs4.getSpecialProductDetail(couponParameterInfo.getCouponCode());
-
+					this.couponInfo = this.getSpecialProductDetail(couponParameterInfo.getCouponCode());
 					if (this.couponInfo.getRCode().equals("")) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -269,8 +264,9 @@ public class ShoppingCouponContoller {
 	/**
 	 * 브랜드 정보를 추가한다.
 	 * 
-	 * @param dpBrandInfo
-	 * @throws UnsupportedEncodingException
+	 * @param DpBrandInfo
+	 *            dpBrandInfo
+	 * @throws
 	 */
 	public boolean insertBrandInfo(DpBrandInfo dpBrandInfo) {
 		boolean result = this.shoppingCouponService.insertBrandInfo(dpBrandInfo);
@@ -279,13 +275,66 @@ public class ShoppingCouponContoller {
 	}
 
 	/**
-	 * 브랜드 정보를 추가한다.
+	 * 카탈로그 정보를 추가한다.
 	 * 
-	 * @param dpBrandInfo
-	 * @throws UnsupportedEncodingException
+	 * @param DpCatalogInfo
+	 *            dpCatalogInfo
+	 * @throws
 	 */
 	public boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo) {
 		boolean result = this.shoppingCouponService.insertCatalogInfo(dpCatalogInfo);
+		return result;
+
+	}
+
+	/**
+	 * 쿠폰 정보를 추가한다.
+	 * 
+	 * @param CouponContainer
+	 *            containers, String txType
+	 * @throws
+	 */
+	public boolean insertCouponInfo(CouponContainer containers, String txType) {
+		boolean result = this.couponProcessService.insertCouponInfo(containers, txType);
+		return result;
+
+	}
+
+	/**
+	 * 상품 상태 변경한다.
+	 * 
+	 * @param CouponParameterInfo
+	 *            couponParameterInfo
+	 * @throws
+	 */
+	public boolean processForCouponStatus(CouponParameterInfo couponParameterInfo) {
+		boolean result = this.couponProcessService.processForCouponStatus(couponParameterInfo);
+		return result;
+
+	}
+
+	/**
+	 * 특가 상품 목록 조회 한다.
+	 * 
+	 * @param String
+	 *            [] couponCodes
+	 * @response List<CouponResponseInfo>
+	 */
+	public List<CouponResponseInfo> getSpecialProductList(String[] couponCodes) {
+		List<CouponResponseInfo> result = this.couponProcessService.getSpecialProductList(couponCodes);
+		return result;
+
+	}
+
+	/**
+	 * 특가 상품 상세 조회 한다.
+	 * 
+	 * @param String
+	 *            couponCode
+	 * @response CouponResponseInfo
+	 */
+	public CouponResponseInfo getSpecialProductDetail(String couponCode) {
+		CouponResponseInfo result = this.couponProcessService.getSpecialProductDetail(couponCode);
 		return result;
 
 	}
