@@ -12,18 +12,22 @@ package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 일반 카테고리 앱 상품 조회 Request Value Object.
+ * Feature VOD 카테고리 상품 조회 Request Value Object.
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
 public class FeatureCategoryVodReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	private String prodCharge; // 상품 유무료 구분
-
 	private String prodGradeCd; // 상품등급코드
 
+	private String topMenuId; // 탑메뉴ID
+
 	private String menuId; // 메뉴ID
+
+	private String listId; // 리스트ID
+
+	private String filterdby; // 조회유형
 
 	private String orderedBy; // 상품정렬순서
 
@@ -31,19 +35,13 @@ public class FeatureCategoryVodReq extends CommonInfo {
 
 	private Integer count; // 페이지당 노출될 ROW 개수
 
+	private String stdDt; // 기준일시
+
 	private String deviceModelCd; // 단말 모델 코드
 
 	private String tenantId; // 테넌트ID
 
 	private String imageCd; // 이미지 코드
-
-	public String getProdCharge() {
-		return this.prodCharge;
-	}
-
-	public void setProdCharge(String prodCharge) {
-		this.prodCharge = prodCharge;
-	}
 
 	public String getProdGradeCd() {
 		return this.prodGradeCd;
@@ -53,12 +51,36 @@ public class FeatureCategoryVodReq extends CommonInfo {
 		this.prodGradeCd = prodGradeCd;
 	}
 
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
+	}
+
 	public String getMenuId() {
 		return this.menuId;
 	}
 
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	public String getListId() {
+		return this.listId;
+	}
+
+	public void setListId(String listId) {
+		this.listId = listId;
+	}
+
+	public String getFilterdby() {
+		return this.filterdby;
+	}
+
+	public void setFilterdby(String filterdby) {
+		this.filterdby = filterdby;
 	}
 
 	public String getOrderedBy() {
@@ -83,6 +105,14 @@ public class FeatureCategoryVodReq extends CommonInfo {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 	public String getDeviceModelCd() {
