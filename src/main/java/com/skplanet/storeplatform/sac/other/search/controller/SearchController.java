@@ -20,6 +20,12 @@ import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 import com.skplanet.storeplatform.sac.other.search.service.SearchService;
 
+/**
+ * 
+ * 통합검색/카테고리검색 기능을 제공하는 Controller
+ * 
+ * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스
+ */
 @Controller
 @RequestMapping(value = "/other/search")
 public class SearchController {
@@ -29,9 +35,22 @@ public class SearchController {
 	@Autowired
 	private SearchService searchService;
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색 결과를 제공한다.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @return SearchRes
+	 */
 	@RequestMapping(value = "/v1")
 	@ResponseBody
 	public SearchRes search(SearchReq searchReq) {
+		LOGGER.debug("####################################################");
+		LOGGER.debug("#######  2.통합검색                              ########");
+		LOGGER.debug("####################################################");
 		return this.searchService.search(searchReq);
 	}
 }

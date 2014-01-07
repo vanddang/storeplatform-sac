@@ -19,11 +19,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.FeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.FeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ParticipationRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ScoreRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListParticipationRes;
 import com.skplanet.storeplatform.sac.other.feedback.service.FeedbackService;
 
+/**
+ * 
+ * 사용후기 Controller
+ * 
+ * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스
+ */
 @Controller
 @RequestMapping("/other/feedback")
 public class FeedbackController {
@@ -63,13 +70,13 @@ public class FeedbackController {
 
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public List<FeedbackRes> list(FeedbackReq feedbackReq) {
+	public List<ListFeedbackRes> list(FeedbackReq feedbackReq) {
 		return null;
 	}
 
 	@RequestMapping(value = "/listMyFeedback/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> listMyFeedback(FeedbackReq feedbackReq) {
+	public List<ListMyFeedbackRes> listMyFeedback(FeedbackReq feedbackReq) {
 		return null;
 
 	}
@@ -94,13 +101,13 @@ public class FeedbackController {
 
 	@RequestMapping(value = "/getScore/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ScoreRes getScore(FeedbackReq feedbackReq) {
+	public GetScoreRes getScore(FeedbackReq feedbackReq) {
 		return null;
 	}
 
 	@RequestMapping(value = "/listParticipation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public List<ParticipationRes> listParticipation(FeedbackReq feedbackReq) {
+	public List<ListParticipationRes> listParticipation(FeedbackReq feedbackReq) {
 		return null;
 	}
 }

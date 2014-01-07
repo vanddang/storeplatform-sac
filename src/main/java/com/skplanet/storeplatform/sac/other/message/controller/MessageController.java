@@ -23,14 +23,11 @@ import com.skplanet.storeplatform.external.client.message.vo.AomReq;
 import com.skplanet.storeplatform.external.client.message.vo.EmailReq;
 import com.skplanet.storeplatform.external.client.message.vo.MmsReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsReq;
-import com.skplanet.storeplatform.sac.other.message.service.AomService;
-import com.skplanet.storeplatform.sac.other.message.service.EmailService;
-import com.skplanet.storeplatform.sac.other.message.service.MmsService;
-import com.skplanet.storeplatform.sac.other.message.service.SmsService;
+import com.skplanet.storeplatform.sac.other.message.service.MessageService;
 
 /**
  * 
- * Calss 설명(E/C Bypass 예정)
+ * Message Controller 기능
  * 
  * Updated on : 2014. 1. 2. Updated by : 김현일, 인크로스
  */
@@ -41,38 +38,82 @@ public class MessageController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessageController.class);
 
 	@Autowired
-	private SmsService smsService;
+	private MessageService messageService;
 
-	@Autowired
-	private MmsService mmsService;
-
-	@Autowired
-	private AomService aomService;
-
-	@Autowired
-	private EmailService emailService;
-
+	/**
+	 * 
+	 * <pre>
+	 * SMS 전송.
+	 * </pre>
+	 * 
+	 * @param smsReq
+	 *            smsReq
+	 * @return Map
+	 */
 	@RequestMapping(value = "/sms/send/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> smsSend(SmsReq smsReq) {
-		return this.smsService.send(smsReq);
+		LOGGER.debug("####################################################");
+		LOGGER.debug("#######  8.SMS전송                              ########");
+		LOGGER.debug("####################################################");
+		return this.messageService.smsSend(smsReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * MMS 전송.
+	 * </pre>
+	 * 
+	 * @param mmsReq
+	 *            mmsReq
+	 * @return Map
+	 */
 	@RequestMapping(value = "/mms/send/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> mmsSend(MmsReq mmsReq) {
-		return this.mmsService.send(mmsReq);
+		LOGGER.debug("####################################################");
+		LOGGER.debug("#######  9.MMS전송                              ########");
+		LOGGER.debug("####################################################");
+		return this.messageService.mmsSend(mmsReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * AOM 전송.
+	 * </pre>
+	 * 
+	 * @param aomReq
+	 *            aomReq
+	 * @return Map
+	 */
 	@RequestMapping(value = "/aom/send/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, String> aomSend(AomReq aomReq) {
-		return this.aomService.send(aomReq);
+		LOGGER.debug("####################################################");
+		LOGGER.debug("#######  10.AOM전송                             ########");
+		LOGGER.debug("####################################################");
+		return this.messageService.aomSend(aomReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * EMAIL 전송.
+	 * </pre>
+	 * 
+	 * @param emailReq
+	 *            emailReq
+	 * @return Map
+	 */
 	@RequestMapping(value = "/email/send/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public Map<String, String> emailSend(EmailReq emailReq) {
-		return this.emailService.send(emailReq);
+		LOGGER.debug("####################################################");
+		LOGGER.debug("#######  11.Email전송                           ########");
+		LOGGER.debug("####################################################");
+		return this.messageService.emailSend(emailReq);
 	}
 
 }

@@ -15,9 +15,23 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 
+/**
+ * 
+ * 검색 서비스 Class 구현체
+ * 
+ * Updated on : 2014. 1. 6. Updated by : 김현일, 인크로스
+ */
 @Profile(value = { "stag", "real" })
 @Service
 public class SearchServiceImpl implements SearchService {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.other.search.service.SearchService#search(com.skplanet.storeplatform.sac.client
+	 * .other.vo.search.SearchReq)
+	 */
 	@Override
 	public SearchRes search(SearchReq searchReq) {
 		// TODO Auto-generated method stub

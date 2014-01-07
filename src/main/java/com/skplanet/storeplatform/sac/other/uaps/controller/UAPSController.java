@@ -32,14 +32,34 @@ public class UAPSController {
 	@Autowired
 	private UAPSService uapsService;
 
-	@RequestMapping(value = "/getOpmd", method = RequestMethod.GET)
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param opmdMdn
+	 * @return
+	 */
+	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public OpmdRes getOpmd(String opmdMdn) {
 		return this.uapsService.getOpmd(opmdMdn);
 	}
 
-	@RequestMapping(value = "/getOpmdChild", method = RequestMethod.GET)
-	public OpmdChildRes getOpmdChild(String deviceId, int type) {
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping(value = "/getOpmdChild/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OpmdChildRes getOpmdChild(String deviceId, String type) {
 		return this.uapsService.getOpmdChild(deviceId, type);
 	}
 

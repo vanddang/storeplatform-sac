@@ -12,9 +12,34 @@ package com.skplanet.storeplatform.sac.other.uaps.service;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 
+/**
+ * 
+ * Calss 설명
+ * 
+ * Updated on : 2014. 1. 7. Updated by : 홍길동, SK 플래닛.
+ */
 public interface UAPSService {
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param opmdMdn
+	 * @return
+	 */
 	public OpmdRes getOpmd(String opmdMdn);
 
-	public OpmdChildRes getOpmdChild(String deviceId, int type);
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 * @param type
+	 * @return
+	 */
+	public OpmdChildRes getOpmdChild(String deviceId, String type);
 }

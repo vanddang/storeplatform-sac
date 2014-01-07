@@ -16,8 +16,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.FeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ParticipationRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ScoreRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListParticipationRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreRes;
 
 @Profile("stage, real")
 @Service
@@ -82,15 +82,27 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	@Override
-	public ScoreRes getScore(FeedbackReq feedbackReq) {
+	public GetScoreRes getScore(FeedbackReq feedbackReq) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<ParticipationRes> listParticipation(FeedbackReq feedbackReq) {
+	public List<ListParticipationRes> listParticipation(FeedbackReq feedbackReq) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int changeUserId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int changeUserKey() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
