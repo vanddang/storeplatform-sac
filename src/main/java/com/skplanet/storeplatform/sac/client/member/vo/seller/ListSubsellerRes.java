@@ -9,6 +9,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
 
+/**
+ * 사용자 부가정보
+ * 
+ * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
+ */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ListSubsellerRes extends CommonInfo {
 

@@ -11,6 +11,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.RealNameInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.RightInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
 
+/**
+ * 사용자 부가정보
+ * 
+ * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
+ */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class DetailInformationRes extends CommonInfo {
 
