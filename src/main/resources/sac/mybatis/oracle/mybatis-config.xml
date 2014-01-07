@@ -33,7 +33,7 @@
         <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
         
         <!-- 공통 관련 조회 -->
-        <typeAlias alias="CmDevice"      type="com.skplanet.storeplatform.sac.client.common.vo.CmDevice" />
+        <typeAlias alias="CmDevice"      type="com.skplanet.storeplatform.sac.common.vo.Device" />
         
         <!-- 전시 상품 공통 -->
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
