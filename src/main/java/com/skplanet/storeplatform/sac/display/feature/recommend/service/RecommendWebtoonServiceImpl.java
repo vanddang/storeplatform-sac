@@ -65,7 +65,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			req.setUpMenuId(req.getMenuId());
 			req.setMenuId(null);
 		}
-
+		Integer totalCount = 0;
 		List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
 				RecommendWebtoonDTO.class);
 
@@ -96,7 +96,6 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				identifier = new Identifier();
 				identifier.setType("episode");
 				identifier.setText(webtoonDto.getProdId());
-				product.setIdentifier(identifier);
 
 				// 메뉴 정보
 				menuList = new ArrayList<Menu>();
@@ -147,6 +146,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				product.setPrice(price);
 				product.setDate(date);
 
+				totalCount = webtoonDto.getTotalCount();
 				productList.add(i, product);
 			}
 
@@ -154,7 +154,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			responseVO.setProductList(productList);
 
 			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
+			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonResponse(commonResponse);
 		}
 		return responseVO;

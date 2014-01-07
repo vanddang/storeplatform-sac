@@ -65,7 +65,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			req.setUpMenuId(req.getMenuId());
 			req.setMenuId(null);
 		}
-
+		Integer totalCount = 0;
 		List<CategoryWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
 				CategoryWebtoonDTO.class);
 
@@ -96,7 +96,6 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				identifier = new Identifier();
 				identifier.setType("episode");
 				identifier.setText(webtoonDto.getProdId());
-				product.setIdentifier(identifier);
 
 				// 메뉴 정보
 				menuList = new ArrayList<Menu>();
@@ -146,7 +145,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				product.setSourceList(sourceList);
 				product.setPrice(price);
 				product.setDate(date);
-
+				totalCount = webtoonDto.getTotalCount();
 				productList.add(i, product);
 			}
 
@@ -154,7 +153,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			responseVO.setProductList(productList);
 
 			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(20);
+			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonResponse(commonResponse);
 		}
 		return responseVO;
