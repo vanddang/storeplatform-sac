@@ -6,12 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 </head>
 <body >
-	<form name='af' action='/product/api/couponInterface/v1' method=get>
+	<form name='af' action='/internal/shopping/api/couponInterface.do' method=get>
 		TX TYPE : <select name='txType' >
 					<option value="bd">브랜드상품(bd)</option>
 					<option value="ct">카탈로그상품(ct)</option>
 					<option value="cp">상품추가/수정(cp)</option>
 					<option value="st">상품 상태 변경(st)</option>
+					<option value="ls">특가 상품 목록 조회(ls)</option>
+					<option value="dt">특가 상품 상세 조회(dt)</option>
 				</select>
 		CUD TYPE : <input type="text" name='cudType'  size=20 value ="C"><br>
 		TX_ID <input type="text" name='txId'  size=22 value ="<%= DateUtil.getToday("yyyyMMddHHmmss") %>00000000"><br>
@@ -47,6 +49,12 @@
 				</select>
 
 			</tr>
+            <tr>
+                <td>couponCode <input type="text" name='couponCode'  size=20 value ="1234"></td>
+                <td></td>
+                <td></td>
+
+            </tr>			
 		</table>
 
 		<textarea name='rData' cols=130 rows=30>
