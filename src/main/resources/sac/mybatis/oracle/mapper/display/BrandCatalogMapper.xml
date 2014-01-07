@@ -7,8 +7,8 @@
        /* BrandCatalogMapper.xml, SELECT_COUNT_TBL_DP_MENU, SAC : 김형식 , 2013-12-30 */
         SELECT 
          COUNT(*) CNT
-        FROM TB_DP_MENU
-        WHERE TENANT_ID ='S01'
+        FROM TB_DP_MENU A
+        WHERE 1=1
         AND USE_YN ='Y'
         AND MENU_ID=#{dpCatNo}
     </select>
@@ -27,7 +27,7 @@
       /* BrandCatalogMapper.xml, INSERT_TB_DP_SHPG_BRAND, SAC : 김형식 , 2013-12-30 */
          INSERT INTO TB_DP_SHPG_BRAND(
 	         BRAND_ID
-	        ,CATEGORY_NO
+	        ,MENU_ID
 	        ,BRAND_NM
 	        ,ORG_BRAND_ID
 	        ,REG_ID
@@ -39,8 +39,6 @@
             ,#{dpCatNo}
             ,#{brandNm}
             ,#{brandId}
-            ,#{createBrandId}
-            ,#{createBrandId}
             ,'admin'
             ,SYSDATE
             ,'admin'
@@ -55,7 +53,7 @@
             TB_DP_SHPG_BRAND
         SET 
             BRAND_NM  = #{brandNm}
-          , DP_CAT_NO = #{dpCatNo}
+          , MENU_ID = #{dpCatNo}
           , UPD_DT    = SYSDATE
         WHERE ORG_BRAND_ID = #{brandId}
     </update>    
@@ -66,7 +64,7 @@
         SELECT 
              COUNT(*) CNT
         FROM TB_DP_SHPG_CATALOG
-        WHERE ORG_CATALOG_ID = #catalogId#
+        WHERE ORG_CATALOG_ID = #{catalogId}
     </select>
    
     <!-- CATALOG 등록시와 BRAND수정시 생성한 BRAND_ID를 조회해감 -->
@@ -138,26 +136,22 @@
     </insert>   
     
     <!--카탈로그_카테고리 매핑 테이블에 INSERT-->
-    <insert id="INSERT_TB_DP_CATEGORY_MENU_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+    <insert id="INSERT_TB_DP_MENU_CATALOG_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
         /* BrandCatalogMapper.xml, INSERT_TB_DP_CATEGORY_MENU_MAPG, SAC : 김형식 , 2013-12-30 */
-        INSERT INTO TB_DP_CATEGORY_MENU_MAPG(
-	         TENANT_ID
-	        ,MENU_ID
-	        ,SYSTEM_ID
-	        ,MAPG_SEQ
-	        ,CATEGORY_NO
+        INSERT INTO TB_DP_MENU_CATALOG_MAPG(
+   	         MENU_ID
+	        ,CATALOG_ID
+	        ,BASE_YN
 	        ,USE_YN
-	        ,REG_ID
+            ,REG_ID	        
 	        ,REG_DT
 	        ,UPD_ID
 	        ,UPD_DT
         )
         VALUES(
-             'S01'
-            ,#{menuId}
-            ,'S009'
-            ,1
-            ,#{dpCatNo}
+             #{dpCatNo}
+            ,#{catalogId}
+            ,'Y'
             ,'Y'
             ,'admin'
             ,SYSDATE
@@ -170,11 +164,11 @@
     <update id="UPDATE_TB_DP_SHPG_CATALOG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
        /* BrandCatalogMapper.xml, UPDATE_TB_DP_SHPG_CATALOG, SAC : 김형식 , 2013-12-30 */
         UPDATE 
-            TBL_DP_TSP_CATALOG
+            TB_DP_SHPG_CATALOG
         SET 
             BRAND_ID  = #{createBrandId}
           , UPD_DT    = SYSDATE
-        WHERE ORG_CATALOG_ID = #{catalogId}
+        WHERE CATALOG_ID = #{createCatalogId}
     </update>
            
     <!--카탈로그 상세 테이블에 UPDATE-->
@@ -183,22 +177,22 @@
         UPDATE 
             TB_DP_SHPG_CATALOG_DESC
         SET 
-            CATEGORY_NO  = #{catalogNm}
+            CATALOG_NM  = #{catalogNm}
           , CATALOG_DESC = #{introText}
           , CATALOG_DTL_DESC = #{catalogDesc}
           , UPD_DT    = SYSDATE
-        WHERE ORG_CATALOG_ID = #{catalogId}
+        WHERE CATALOG_ID = #{createCatalogId}
     </update>       
            
     <!--카탈로그_카테고리 매핑 테이블에 UPDATE-->
-    <update id="UPDATE_TB_DP_CATEGORY_MENU_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+    <update id="UPDATE_TB_DP_MENU_CATALOG_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
        /* BrandCatalogMapper.xml, UPDATE_TB_DP_CATEGORY_MENU_MAPG, SAC : 김형식 , 2013-12-30 */
         UPDATE 
-            TB_DP_CATEGORY_MENU_MAPG
+            TB_DP_MENU_CATALOG_MAPG
         SET 
-            CATALOG_NM  = #{dpCatNo}
+            MENU_ID  = #{dpCatNo}
           , UPD_DT    = SYSDATE
-        WHERE ORG_CATALOG_ID = #{catalogId}
+        WHERE CATALOG_ID = #{createCatalogId}
     </update>             
    
     <!--브랜드 카탈로그 이미지 테이블-->
@@ -218,9 +212,9 @@
         )
           VALUES(
              #{prodId}
-            ,#{imgCd}
-            ,#{expoOrd}
-            ,#{filePath}
+            ,#{imgCls}
+            ,#{seq}
+            ,#{filePos}
             ,#{fileNm}
             ,#{fileSize}
             ,'admin'
@@ -234,8 +228,41 @@
     <delete id="DELETE_BRAND_CATALOG_TB_DP_PROD_IMG" parameterType="string">
         /* BrandCatalogMapper.xml, DELETE_BRAND_CATALOG_TB_DP_PROD_IMG, SAC : 김형식 , 2013-12-30 */
         DELETE
-        FROM TBL_DP_PROD_IMG
+        FROM TB_DP_PROD_IMG
         WHERE PROD_ID = #{prodId}
+    </delete>   
+   
+    <!--카탈로그 관련 태그 테이블에 INSERT-->
+    <insert id="INSERT_TBL_TAG_INFO" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+       /* BrandCatalogMapper.xml, INSERT_TBL_TAG_INFO, SAC : 김형식 , 2013-12-30 */
+        INSERT INTO TB_DP_PROD_IMG(
+            TBL_TAG_INFO(
+                 TAG_INFO_SEQ
+                ,CID
+                ,TAG_TYPE
+                ,TAG_NM
+                ,INS_DTTM
+                ,INS_BY
+                ,UPD_DTTM
+                ,UPD_BY
+            )
+            VALUES(
+	            ,'admin'
+	            ,SYSDATE
+	            ,'admin'
+	            ,SYSDATE 
+	            ,'admin'
+	            ,SYSDATE
+	            ,'admin'
+	            ,SYSDATE 
+            )
+    </insert>      
+    
+    <!-- TAG 정보 입력 전에 기존의 TAG 정보를 모두 삭제 -->
+    <delete id="DELETE_TBL_TAG_INFO" parameterType="string">
+        /* BrandCatalogMapper.xml, INSERT_TBL_TAG_INFO, SAC : 김형식 , 2013-12-30 */
+        DELETE FROM TBL_TAG_INFO
+        WHERE CID = 'admin'
     </delete>   
    
     
