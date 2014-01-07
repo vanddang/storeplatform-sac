@@ -47,7 +47,7 @@ public class SearchServiceTest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldSearch() {
+	public void shouldObtainSearch() {
 		SearchReq searchReq = new SearchReq();
 		// searchReq.setCategory("ALL");
 		searchReq.setKeywd("pc매니저");
