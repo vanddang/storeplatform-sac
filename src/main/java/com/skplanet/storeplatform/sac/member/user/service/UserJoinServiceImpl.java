@@ -9,13 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.util.Hashtable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
@@ -35,6 +36,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private UAPSSCI uapsSCI;
 
+	// @Autowired
+	// private UserSCI userSCI;
+
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) {
 
@@ -46,17 +50,28 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
 		 */
-		for (AgreementInfo info : req.getAgreementList()) {
-
-			logger.info(info.getExtraAgreementId());
-			logger.info(info.getExtraAgreementVersion());
-			logger.info(info.getIsExtraAgreement());
-
-		}
+		// SearchManagementListRequest sciReq = new SearchManagementListRequest();
+		// sciReq.setUserKey("123142134");
+		// this.userSCI.searchManagementList(sciReq);
+		// for (AgreementInfo info : req.getAgreementList()) {
+		//
+		// logger.info(info.getExtraAgreementId());
+		// logger.info(info.getExtraAgreementVersion());
+		// logger.info(info.getIsExtraAgreement());
+		//
+		// }
 
 		/**
 		 * TODO (IDP 연동) 무선회원 가입
 		 */
+		Hashtable<String, Object> param = new Hashtable<String, Object>();
+		param.put("cmd", "joinForWap");
+		param.put("user_mdn", "01011112222");
+		param.put("mdn_corp", "SKT");
+		param.put("sp_auth_key", "getSpAuthKey()");
+		param.put("sp_id", "OMP10000");
+		param.put("resp_type", "2");
+		param.put("resp_flow", "resp");
 
 		/**
 		 * TODO IDP 회원 기가입 상태인 경우 (IDP 연동) 무선회원 해지
