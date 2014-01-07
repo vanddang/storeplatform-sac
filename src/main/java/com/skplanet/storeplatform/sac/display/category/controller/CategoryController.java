@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.category.controller;
 
 import java.io.IOException;
@@ -30,12 +39,11 @@ import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicCont
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
-import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
 @Controller
 @RequestMapping("/display/category")
 public class CategoryController {
-	private transient Logger logger = LoggerFactory.getLogger(ProductCommonServiceImpl.class);
+	private transient Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
 	@Autowired
 	private CategoryAppService categoryAppService;
