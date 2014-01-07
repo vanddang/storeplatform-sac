@@ -19,24 +19,24 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.framework.core.util.DateUtil;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryEpubDTO;
 
 /**
  * 
@@ -64,112 +64,133 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		CategoryEpubRes responseVO = null;
 		CommonResponse commonResponse = null;
 
-		//List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("Feature.selectTotalRecommendList", requestVO,
-		//		MenuDetailMapperVO.class);
-
-		// List<ProductCategoryMapperVO> resultList = this.commonDAO.queryForList("ProductCategory.selectCategoryList",
-
-		// Response VO를 만들기위한 생성자
-		List<Product> productList = new ArrayList<Product>();
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-
-		//RecommendProductVO featureProductVO = null;
+		List<CategoryEpubDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy",requestVO, CategoryEpubDTO.class);
 		List<Product> listVO = new ArrayList<Product>();
-
-		for (int i = 0; i < 5; i++) {
-			Product product = new Product();
-			Identifier identifier = new Identifier();
-			Title title = new Title();
-			App app = new App();
-			Book book = new Book();
-			Music music = new Music();
-			Vod vod = new Vod();
-			VideoInfo videoInfo = new VideoInfo();
-			Accrual accrual = new Accrual();
-			Rights rights = new Rights();
-			Source source = new Source();
-			Price price = new Price();
-			Support support = new Support();
-			List<Support> supportList = new ArrayList<Support>();
-
+		
+		CategoryEpubDTO categoryEpubDTO;
+		Product product;
+		Identifier identifier;
+		Title title;
+		Book book;
+		Accrual accrual;
+		Rights rights;
+		Source source;
+		Price price;
+		Support support;
+		Menu menu;
+		Contributor contributor;
+		
+		// Response VO를 만들기위한 생성자
+		List<Menu> menuList;
+		List<Source> sourceList;
+		List<Support> supportList;
+		
+		for (int i = 0 ; resultList != null && i < resultList.size(); i++ ) {
+			
+			categoryEpubDTO = resultList.get(i);
+			product = new Product();
+			identifier = new Identifier();
+			title = new Title();
+			book = new Book();
+			accrual = new Accrual();
+			rights = new Rights();
+			source = new Source();
+			price = new Price();
+			support = new Support();
+			contributor = new Contributor();
+			
 			// 상품ID
 			identifier = new Identifier();
-			//identifier.setType("product" + i);
-			identifier.setText("H090101222_" + i);
 			
-			title = new Title();
-			title.setText("Test용 더미 데이터");
-
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-			Menu topMenu = new Menu();
-			topMenu.setId("dummyMenuId0");
-			topMenu.setName("dummyMenuName0");
-			topMenu.setType("dummyMenuType0");
-			menuList.add(topMenu);
-			Menu menu = new Menu();
-			menu.setId("dummyMenuId1");
-			menu.setName("dummyMenuName1");
-			menu.setType("dummyMenuType1");
+			// Response VO를 만들기위한 생성자
+			menuList = new ArrayList<Menu>();
+			sourceList = new ArrayList<Source>();
+			supportList = new ArrayList<Support>();
+			
+			identifier.setType("channel");
+			identifier.setText(categoryEpubDTO.getProdId());
+			title.setText(categoryEpubDTO.getProdNm());
+			
+			menu = new Menu();
+			menu.setId(categoryEpubDTO.getTopMenuId());
+			menu.setName(categoryEpubDTO.getTopMenuNm());
+			menu.setType("topClass");
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(categoryEpubDTO.getMenuId());
+			menu.setName(categoryEpubDTO.getMenuNm());
+			//menu.setType("");
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(categoryEpubDTO.getMetaClsfCd());
+			menu.setName("ebook/series");
+			menu.setType("metaClass");
 			menuList.add(menu);
 
+			if ( "CT20".equals(categoryEpubDTO.getMetaClsfCd()) )
+					book.setType("serial");
+			book.setTotalPages(categoryEpubDTO.getBookPageCnt());
+			if ( "CT20".equals(categoryEpubDTO.getMetaClsfCd()) )
+				if ( "Y".equals(categoryEpubDTO.getCaptionYn()) )
+					book.setStatus("completed");
+				else
+					book.setStatus("continue");
+			log.debug("setStatus");
+
+			if ( Integer.parseInt(categoryEpubDTO.getStrmEpsdCnt()) > 0 )
+				support.setText("play");
+			support.setText(StringUtil.nvl(support.getText(), "") + "|");
+			if ( Integer.parseInt(categoryEpubDTO.getEpsdCnt()) > 0 )
+				support.setText(support.getText() + "store");
+			log.debug("setText");
+			supportList.add(support);
+			book.setSupportList(supportList);
+			product.setBook(book);
+			log.debug("setBook");
+			contributor.setName(categoryEpubDTO.getArtist1Nm());
+			contributor.setCompany(categoryEpubDTO.getChnlCompNm());
+			Date date = new Date();
+			date.setText(categoryEpubDTO.getIssueDay());
+			contributor.setDate(date);
+			log.debug("setCompany");
 			
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-				book.setType("");
-				book.setTotalPages("100");
-				book.setStatus("");
-				support.setText("");
-				supportList.add(support);
-				book.setSupportList(supportList);
-				product.setBook(book);
 
-			/*
-			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-			 */
-			accrual.setVoterCount("1234");
-			accrual.setDownloadCount("800");
+			accrual.setVoterCount(categoryEpubDTO.getPrchsCnt());
+			accrual.setDownloadCount(categoryEpubDTO.getDwldCnt());
 			accrual.setScore(3.3);
-
+			log.debug("accrual");
 			/*
 			 * Rights grade
 			 */
-			rights.setGrade("1");
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-			source.setMediaType("media_" + i);
-			source.setSize("1024_" + i);
+			rights.setGrade(categoryEpubDTO.getProdGrdCd());
+			
+			source.setMediaType("image/jpeg");
+			source.setSize(categoryEpubDTO.getFileSize());
 			source.setType("thumbNail");
-			source.setUrl("http://www.naver.com");
+			source.setUrl(categoryEpubDTO.getFilePath());
 			sourceList.add(source);
-
+			log.debug("sourceList");
 			/*
 			 * Price text
 			 */
-			price.setText(0);
-
-			product = new Product();
+			price.setText(Integer.parseInt(categoryEpubDTO.getProdAmt()));
+			price.setFixedPrice(categoryEpubDTO.getProdNetAmt());
+			log.debug("price");
+			//product = new Product();
 			product.setIdentifier(identifier);
 			product.setTitle(title);
-			support.setText("y|iab");
-			supportList.clear();
-			supportList.add(support);
-			product.setSupportList(supportList);
+			//support.setText(categoryEpubDTO.getDrmYn() + "|" + categoryEpubDTO.getPartParentClsfCd());
+			//supportList.add(support);
+			//product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
 			product.setAccrual(accrual);
 			product.setRights(rights);
-			product.setProductExplain("베스트 앱_" + i);
+			product.setProductExplain(categoryEpubDTO.getProdBaseDesc());
 			product.setSourceList(sourceList);
 			product.setPrice(price);
+			product.setContributor(contributor);
 
-			//featureProductVO = new RecommendProductVO();
-			//featureProductVO.setProduct(product);
 			listVO.add(product);
 
 		}

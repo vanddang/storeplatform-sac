@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -37,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Serv
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO;
 
 /**
  * 
@@ -64,14 +66,109 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		RecommendAdminRes responseVO = null;
 		CommonResponse commonResponse = null;
 
-		//List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("Feature.selectTotalRecommendList", requestVO,
-		//		MenuDetailMapperVO.class);
-
-		// List<ProductCategoryMapperVO> resultList = this.commonDAO.queryForList("ProductCategory.selectCategoryList",
-
-		//RecommendProductVO featureProductVO = null;
+		List<RecommendAdminDTO> resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminListDummy",requestVO, RecommendAdminDTO.class);
 		List<Product> listVO = new ArrayList<Product>();
+		
+		RecommendAdminDTO recommendAdminDTO;
+		Product product;
+		Identifier identifier;
+		Title title;
+		App app;
+		Accrual accrual;
+		Rights rights;
+		Source source;
+		Price price;
+		Support support;
+		Menu menu;
+		
+		// Response VO를 만들기위한 생성자
+		List<Product> productList = new ArrayList<Product>();
+		List<Menu> menuList;
+		List<Source> sourceList;
+		List<Support> supportList;
+		
+		for (int i = 0 ; resultList != null && i < resultList.size(); i++ ) {
+			
+			recommendAdminDTO = resultList.get(i);
+			product = new Product();
+			identifier = new Identifier();
+			title = new Title();
+			app = new App();
+			accrual = new Accrual();
+			rights = new Rights();
+			source = new Source();
+			price = new Price();
+			support = new Support();
+			
+			// 상품ID
+			identifier = new Identifier();
+			
+			// Response VO를 만들기위한 생성자
+			menuList = new ArrayList<Menu>();
+			sourceList = new ArrayList<Source>();
+			supportList = new ArrayList<Support>();
 
+			identifier.setType("episode");
+			identifier.setText(recommendAdminDTO.getProdId());
+			title.setText(recommendAdminDTO.getProdNm());
+			
+			menu = new Menu();
+			menu.setId(recommendAdminDTO.getTopMenuId());
+			menu.setName(recommendAdminDTO.getTopMenuNm());
+			menu.setType("topClass");
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(recommendAdminDTO.getMenuId());
+			menu.setName(recommendAdminDTO.getMenuNm());
+			//menu.setType("");
+			menuList.add(menu);
+			
+			app.setAid(recommendAdminDTO.getAid());
+			app.setPackageName(recommendAdminDTO.getApkPkgNm());
+			app.setVersionCode(recommendAdminDTO.getApkVer());
+			app.setVersion(recommendAdminDTO.getProdVer());
+			product.setApp(app);
+			
+			accrual.setVoterCount(recommendAdminDTO.getPrchsCnt());
+			accrual.setDownloadCount(recommendAdminDTO.getDwldCnt());
+			accrual.setScore(3.3);
+
+			/*
+			 * Rights grade
+			 */
+			rights.setGrade(recommendAdminDTO.getProdGrdCd());
+			
+			//source.setMediaType("");
+			source.setSize(recommendAdminDTO.getFileSize());
+			source.setType("thumbNail");
+			source.setUrl(recommendAdminDTO.getFilePath());
+			sourceList.add(source);
+
+			/*
+			 * Price text
+			 */
+			price.setText(Integer.parseInt(recommendAdminDTO.getProdAmt()));
+
+			product.setIdentifier(identifier);
+			product.setTitle(title);
+			support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" + StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
+			supportList.add(support);
+			product.setSupportList(supportList);
+			product.setMenuList(menuList);
+
+			product.setAccrual(accrual);
+			product.setRights(rights);
+			product.setProductExplain(recommendAdminDTO.getProdBaseDesc());
+			product.setSourceList(sourceList);
+			product.setPrice(price);
+
+			//featureProductVO = new RecommendProductVO();
+			//featureProductVO.setProduct(product);
+			listVO.add(product);
+		}
+		//RecommendProductVO featureProductVO = null;
+		
+/*
 		for (int i = 0; i < 5; i++) {
 			Product product = new Product();
 			Identifier identifier = new Identifier();
@@ -100,11 +197,11 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			
 			title = new Title();
 			title.setText("Test용 더미 데이터");
-
+*/
 			/*
 			 * Menu(메뉴정보) Id, Name, Type
 			 */
-			Menu topMenu = new Menu();
+/*			Menu topMenu = new Menu();
 			topMenu.setId("dummyMenuId0");
 			topMenu.setName("dummyMenuName0");
 			topMenu.setType("dummyMenuType0");
@@ -115,21 +212,21 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			menu.setType("dummyMenuType1");
 			menuList.add(menu);
 
-			if (i == 0){
+			if (i == 0){*/
 			/*
 			 * App aid, packagename, versioncode, version
 			 */
-				app.setAid("A090101222_" + i);
+/*				app.setAid("A090101222_" + i);
 				app.setPackageName("app dummy package" + i);
 				app.setVersionCode("dummy version Code" + i);
 				app.setVersion("1.1");
 				product.setApp(app);
 			}
-			else if (i == 1) {
+			else if (i == 1) {*/
 			/*
 			 * App aid, packagename, versioncode, version
 			 */
-				book.setType("");
+/*				book.setType("");
 				book.setTotalPages("100");
 				book.setStatus("");
 				support.setText("");
@@ -152,32 +249,32 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 				vod.setVideoInfo(videoInfo);
 				product.setVod(vod);
 			}
-
+*/
 			/*
 			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 			 */
-			accrual.setVoterCount("1234");
-			accrual.setDownloadCount("800");
-			accrual.setScore(3.3);
+//			accrual.setVoterCount("1234");
+//			accrual.setDownloadCount("800");
+//			accrual.setScore(3.3);
 
 			/*
 			 * Rights grade
 			 */
-			rights.setGrade("1");
+//			rights.setGrade("1");
 
 			/*
 			 * source mediaType, size, type, url
 			 */
-			source.setMediaType("media_" + i);
-			source.setSize("1024_" + i);
-			source.setType("thumbNail");
-			source.setUrl("http://www.naver.com");
-			sourceList.add(source);
+//			source.setMediaType("media_" + i);
+//			source.setSize("1024_" + i);
+//			source.setType("thumbNail");
+//			source.setUrl("http://www.naver.com");
+//			sourceList.add(source);
 
 			/*
 			 * Price text
 			 */
-			price.setText(0);
+/*			price.setText(0);
 
 			product = new Product();
 			product.setIdentifier(identifier);
@@ -198,7 +295,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			//featureProductVO.setProduct(product);
 			listVO.add(product);
 
-		}
+		}*/
 		responseVO = new RecommendAdminRes();
 		responseVO.setFeatureProductList(listVO);
 		return responseVO;

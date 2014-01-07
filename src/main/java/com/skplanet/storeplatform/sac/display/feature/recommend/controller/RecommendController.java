@@ -40,6 +40,8 @@ public class RecommendController {
 	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
 
 		//this.logger.info(requestVO.toString());
+		if ( requestVO.getCount() == 0 )
+			requestVO.setCount(10);
 		RecommendAdminRes responseVO;
 		responseVO = recommendAdminService.searchAdminList(requestVO);
 		return responseVO;

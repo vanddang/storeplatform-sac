@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -37,6 +39,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Serv
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryAppDTO;
+import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO;
 
 /**
  * 
@@ -65,111 +69,105 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		CategoryAppRes responseVO = null;
 		CommonResponse commonResponse = null;
 
-		//List<MenuDetailMapperVO> resultList = this.commonDAO.queryForList("Feature.selectTotalRecommendList", requestVO,
-		//		MenuDetailMapperVO.class);
-
-		// List<ProductCategoryMapperVO> resultList = this.commonDAO.queryForList("ProductCategory.selectCategoryList",
-
+		List<CategoryAppDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryAppListDummy",requestVO, CategoryAppDTO.class);
+		List<Product> listVO = new ArrayList<Product>();
+		
+		CategoryAppDTO categoryAppDTO;
+		Product product;
+		Identifier identifier;
+		Title title;
+		App app;
+		Accrual accrual;
+		Rights rights;
+		Source source;
+		Price price;
+		Support support;
+		Menu menu;
+		
 		// Response VO를 만들기위한 생성자
 		List<Product> productList = new ArrayList<Product>();
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-
-		//RecommendProductVO featureProductVO = null;
-		List<Product> listVO = new ArrayList<Product>();
-
-		for (int i = 0; i < 5; i++) {
-			Product product = new Product();
-			Identifier identifier = new Identifier();
-			Title title = new Title();
-			App app = new App();
-			Book book = new Book();
-			Music music = new Music();
-			Vod vod = new Vod();
-			VideoInfo videoInfo = new VideoInfo();
-			Accrual accrual = new Accrual();
-			Rights rights = new Rights();
-			Source source = new Source();
-			Price price = new Price();
-			Support support = new Support();
-			List<Support> supportList = new ArrayList<Support>();
-
+		List<Menu> menuList;
+		List<Source> sourceList;
+		List<Support> supportList;
+		
+		for (int i = 0 ; resultList != null && i < resultList.size(); i++ ) {
+			
+			categoryAppDTO = resultList.get(i);
+			product = new Product();
+			identifier = new Identifier();
+			title = new Title();
+			app = new App();
+			accrual = new Accrual();
+			rights = new Rights();
+			source = new Source();
+			price = new Price();
+			support = new Support();
+			
 			// 상품ID
 			identifier = new Identifier();
-			//identifier.setType("product" + i);
-			identifier.setText("H090101222_" + i);
 			
-			title = new Title();
-			title.setText("Test용 더미 데이터");
+			// Response VO를 만들기위한 생성자
+			menuList = new ArrayList<Menu>();
+			sourceList = new ArrayList<Source>();
+			supportList = new ArrayList<Support>();
 
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-			Menu topMenu = new Menu();
-			topMenu.setId("dummyMenuId0");
-			topMenu.setName("dummyMenuName0");
-			topMenu.setType("dummyMenuType0");
-			menuList.add(topMenu);
-			Menu menu = new Menu();
-			menu.setId("dummyMenuId1");
-			menu.setName("dummyMenuName1");
-			menu.setType("dummyMenuType1");
+			identifier.setType("episode");
+			identifier.setText(categoryAppDTO.getProdId());
+			title.setText(categoryAppDTO.getProdNm());
+			
+			menu = new Menu();
+			menu.setId(categoryAppDTO.getTopMenuId());
+			menu.setName(categoryAppDTO.getTopMenuNm());
+			menu.setType("topClass");
 			menuList.add(menu);
-
+			menu = new Menu();
+			menu.setId(categoryAppDTO.getMenuId());
+			menu.setName(categoryAppDTO.getMenuNm());
+			//menu.setType("");
+			menuList.add(menu);
 			
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-				app.setAid("A090101222_" + i);
-				app.setPackageName("app dummy package" + i);
-				app.setVersionCode("dummy version Code" + i);
-				app.setVersion("1.1");
-				product.setApp(app);
-			/*
-			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-			 */
-			accrual.setVoterCount("1234");
-			accrual.setDownloadCount("800");
+			app.setAid(categoryAppDTO.getAid());
+			app.setPackageName(categoryAppDTO.getApkPkgNm());
+			app.setVersionCode(categoryAppDTO.getApkVer());
+			app.setVersion(categoryAppDTO.getProdVer());
+			product.setApp(app);
+			
+			accrual.setVoterCount(categoryAppDTO.getPrchsCnt());
+			accrual.setDownloadCount(categoryAppDTO.getDwldCnt());
 			accrual.setScore(3.3);
 
 			/*
 			 * Rights grade
 			 */
-			rights.setGrade("1");
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-			source.setMediaType("media_" + i);
-			source.setSize("1024_" + i);
+			rights.setGrade(categoryAppDTO.getProdGrdCd());
+			
+			//source.setMediaType("");
+			source.setSize(categoryAppDTO.getFileSize());
 			source.setType("thumbNail");
-			source.setUrl("http://www.naver.com");
+			source.setUrl(categoryAppDTO.getFilePath());
 			sourceList.add(source);
 
 			/*
 			 * Price text
 			 */
-			price.setText(0);
+			price.setText(Integer.parseInt(categoryAppDTO.getProdAmt()));
 
-			product = new Product();
 			product.setIdentifier(identifier);
 			product.setTitle(title);
-			support.setText("y|iab");
+			support.setText(StringUtil.nvl(categoryAppDTO.getDrmYn(), "") + "|" + StringUtil.nvl(categoryAppDTO.getPartParentClsfCd(), ""));
 			supportList.add(support);
 			product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
 			product.setAccrual(accrual);
 			product.setRights(rights);
-			product.setProductExplain("베스트 앱_" + i);
+			product.setProductExplain(categoryAppDTO.getProdBaseDesc());
 			product.setSourceList(sourceList);
 			product.setPrice(price);
 
-			//featureProductVO = new RecommendProductVO();
-			//featureProductVO.setProduct(product);
 			listVO.add(product);
-
 		}
+
 		responseVO = new CategoryAppRes();
 		responseVO.setFeatureProductList(listVO);
 		return responseVO;

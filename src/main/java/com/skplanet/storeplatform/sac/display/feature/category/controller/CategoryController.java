@@ -29,6 +29,8 @@ public class CategoryController {
 	@ResponseBody
 	public CategoryAppRes searchAppList(CategoryAppReq requestVO) {
 
+		if ( requestVO.getCount() == 0 )
+			requestVO.setCount(10);
 		CategoryAppRes responseVO;
 		responseVO = categoryAppService.searchAppList(requestVO);
 		return responseVO;
@@ -38,6 +40,8 @@ public class CategoryController {
 	@ResponseBody
 	public CategoryEpubRes searchEpubList(CategoryEpubReq requestVO) {
 
+		if ( requestVO.getCount() == 0 )
+			requestVO.setCount(10);
 		CategoryEpubRes responseVO;
 		responseVO = categoryEpubService.searchEpubList(requestVO);
 		return responseVO;
