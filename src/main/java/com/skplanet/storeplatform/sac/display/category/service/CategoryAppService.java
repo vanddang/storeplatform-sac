@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
  */
 public interface CategoryAppService {
 	/**
-	 * 
 	 * <pre>
 	 * 일반 카테고리 앱 상품 조회.
 	 * </pre>

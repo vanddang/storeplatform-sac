@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryAppDTO;
-import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
 /**
  * CategoryApp Service 인터페이스(CoreStoreBusiness) 구현체
@@ -44,7 +43,7 @@ import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 @Service
 @Transactional
 public class CategoryAppServiceImpl implements CategoryAppService {
-	private transient Logger logger = LoggerFactory.getLogger(ProductCommonServiceImpl.class);
+	private transient Logger logger = LoggerFactory.getLogger(CategoryAppServiceImpl.class);
 
 	@Autowired
 	@Qualifier("sac")
@@ -60,7 +59,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 	@Override
 	public CategoryAppRes searchAppList(CategoryAppReq req) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchCategoryAppList Service started!!");
+		this.logger.debug("searchAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
 		CategoryAppRes categoryAppRes = new CategoryAppRes();

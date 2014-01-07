@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FeatureCategory">
+    <!-- Feature VOD 카테고리 상품 조회 -->
+    <select id="selectFeatureMovieList" parameterType="CategoryAppReq" resultType="CategoryAppDTO">
+		SELECT  /* CategoryMapper.XML, selectCategoryAppList, tae hee Lee, 2014-01-03 */
+		        KA.TOTAL_COUNT
+		      , KA.UP_MENU_ID
+		      , KA.MENU_ID
+		      , KA.MENU_NM
+		      , KA.PROD_ID
+		      , KA.AID
+		      , KA.PROD_NM
+		      , KA.PROD_BASE_DESC
+		      , KA.PROD_AMT
+		      , KA.PROD_GRD_CD
+		      , KA.PART_PARENT_CLSF_CD
+		      , KA.DRM_YN
+		      , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
+		      , KB.APK_PKG_NM
+		      , KB.APK_VER
+		      , KB.FILE_SIZE AS APK_FILE_SIZE
+		      , KC.FILE_PATH AS IMG_PATH
+		      , NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT
+		      , NVL(KA.PRCHS_CNT, 0) AS PRCHS_CNT
+		      <![CDATA[
+		      , NVL((CASE WHEN (KA.AVG_EVLU_SCORE > 0 AND KA.AVG_EVLU_SCORE < 1) THEN 1
+		                  WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
+		                  ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+		      ]]>
+		      , (SELECT MENU_NM
+		           FROM TB_DP_MENU_DESC
+		          WHERE MENU_ID = KA.UP_MENU_ID
+		            AND LANG_CD = 'ko') AS UP_MENU_NM
+		  FROM (SELECT JA.*, COUNT(JA.PROD_ID) OVER() AS TOTAL_COUNT
+		          FROM (SELECT ROW_NUMBER() OVER(ORDER BY NVL(IB.PRCHS_CNT, 0) DESC, IA.REG_DT DESC) AS RNUM
+		                     , IA.*
+		                     , IB.PRCHS_CNT
+		                     , IB.AVG_EVLU_SCORE
+		                     , IB.PATICPERS_CNT
+		                  FROM (SELECT  A.MENU_ID
+		                              , A.UP_MENU_ID
+		                              , A.TOP_MENU_ID
+		                              , B.PROD_ID
+		                              , C.MENU_NM
+		                              , C.MENU_DESC
+		                              , D.PROD_CHRG_YN
+		                              , D.PROD_GRD_CD
+		                              , D.DRM_YN
+		                              , D.REG_DT
+		                              , E.AID
+		                              , E.VER_MAJOR
+		                              , E.VER_MINOR
+		                              , E.PART_PARENT_CLSF_CD
+		                              , F.PROD_NM
+		                              , F.PROD_BASE_DESC
+		                              , G.TENANT_ID
+		                              , H.PROD_AMT
+		                              , I.SUB_CONTENTS_ID
+		                          FROM  TB_DP_MENU              A
+		                              , TB_DP_MENU_PROD_MAPG    B
+		                              , TB_DP_MENU_DESC         C
+		                              , TB_DP_PROD              D
+		                              , TB_DP_APP_PROD          E
+		                              , TB_DP_PROD_DESC         F
+		                              , TB_DP_TENANT_PROD       G
+		                              , TB_DP_TENANT_PROD_PRICE H
+		                              , TB_DP_SPRT_DEVICE       I
+		                         WHERE  A.MENU_ID = B.MENU_ID
+		                           AND  A.MENU_ID = C.MENU_ID
+		                           AND  B.PROD_ID = D.PROD_ID
+		                           AND  B.PROD_ID = E.PROD_ID
+		                           AND  B.PROD_ID = F.PROD_ID
+		                           AND  B.PROD_ID = G.PROD_ID
+		                           AND  G.TENANT_ID = H.TENANT_ID
+		                           AND  G.PROD_ID = H.PROD_ID
+		                           AND  B.PROD_ID = I.PROD_ID
+		                           AND  A.USE_YN = 'Y'                  /* Y : 사용 (사용여부) */
+		                           AND  B.BASE_YN = 'Y'                 /* Y : 기본 (기본여부) */
+		                           AND  B.USE_YN = 'Y'                  /* Y : 사용 (사용여부) */
+		                           AND  C.LANG_CD = 'ko'                /* ko : 한국어 */
+		                           AND  D.SVC_GRP_CD = 'DP000201'       /* DP000201 : 애플리캐이션 */
+		                           AND  F.LANG_CD = 'ko'                /* ko : 한국어 */
+		                           AND  G.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
+		                           AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
+		                           AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+		                           AND  A.MENU_ID = #{menuId}           /* 메뉴ID */
+		                           AND  G.TENANT_ID = #{tenantId}       /* 테넌트ID */
+		                           AND  I.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
+                                 <if test='prodCharge != "A"'>
+		                           AND  D.PROD_CHRG_YN = #{prodCharge}  /* 상품유료여부 */
+                                 </if>
+                                 <if test='prodGradeCd != null'>
+		                           AND  D.PROD_GRD_CD = #{prodGradeCd}  /* 상품이용등급 */
+                                 </if>
+		                       )                        IA
+		                      , TB_DP_TENANT_PROD_STATS IB
+		                 WHERE  IA.TENANT_ID = IB.TENANT_ID(+)
+		                   AND  IA.PROD_ID = IB.PROD_ID(+)
+		               ) JA
+		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}
+		       )                   KA
+		      , TB_DP_SUB_CONTENTS KB
+		      , TB_DP_PROD_IMG     KC
+		 WHERE  KA.PROD_ID = KB.PROD_ID
+		   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
+		   AND  KA.PROD_ID = KC.PROD_ID
+		   AND  KC.EXPO_ORD = '1'
+		   AND  KC.IMG_CD = #{imageCd}
+    </select>
+</mapper>
