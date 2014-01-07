@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 사용자 부가정보
+ * 탈퇴 사유 목록 조회 탈퇴사유 리스트
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */

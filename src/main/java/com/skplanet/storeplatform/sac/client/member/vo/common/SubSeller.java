@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 사용자 부가정보
+ * 서브계정 목록 조회 서브계정 정보 리스트
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
