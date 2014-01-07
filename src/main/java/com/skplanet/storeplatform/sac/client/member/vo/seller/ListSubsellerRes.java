@@ -6,6 +6,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
 
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ListSubsellerRes extends CommonInfo {
