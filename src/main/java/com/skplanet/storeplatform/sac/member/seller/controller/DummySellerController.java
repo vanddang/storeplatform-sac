@@ -10,7 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.seller.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraDocument;
+import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
+import com.skplanet.storeplatform.sac.client.member.vo.common.RealNameInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.RightInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccountInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerId;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
@@ -22,7 +32,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ExtraDocument;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
@@ -33,18 +42,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifySubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.PwReminder;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.RealNameInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.RightInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SecedeReson;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerAccountInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerId;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SellerRight;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SubSeller;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 
 /**
