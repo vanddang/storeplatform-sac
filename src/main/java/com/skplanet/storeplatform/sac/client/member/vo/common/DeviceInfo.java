@@ -18,7 +18,7 @@ public class DeviceInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 단말이 붙어있는 아이디
+	 * 사용자 Id
 	 */
 	private String userId;
 
@@ -73,6 +73,11 @@ public class DeviceInfo extends CommonInfo {
 	private String isRecvSms;
 
 	/**
+	 * 휴대기기 사용 여부
+	 */
+	private String isUsed;
+
+	/**
 	 * 기기고유 ID
 	 */
 	private String imei;
@@ -103,12 +108,27 @@ public class DeviceInfo extends CommonInfo {
 	private String uacd;
 
 	/**
-	 * SKT 단말 사용자 관리 번호
+	 * SKT 휴대기기 통합 관리 번호
 	 */
-	private String svcMgmtNum;
+	private String imMngNom;
 
-	/*
-	 * SKT 사용자 관리 번호
+	/**
+	 * 수정 일시
+	 */
+	private String updateDate;
+
+	/**
+	 * 시작 일시
+	 */
+	private String startDate;
+
+	/**
+	 * 종료 일시
+	 */
+	private String endDate;
+
+	/**
+	 * SKT 통합회원관리번호
 	 */
 	private String imMngNum;
 
@@ -258,28 +278,12 @@ public class DeviceInfo extends CommonInfo {
 		this.uacd = uacd;
 	}
 
-	public String getSvcMgmtNum() {
-		return this.svcMgmtNum;
+	public String getImMngNom() {
+		return this.imMngNom;
 	}
 
-	public void setSvcMgmtNum(String svcMgmtNum) {
-		this.svcMgmtNum = svcMgmtNum;
-	}
-
-	public String getUserId() {
-		return this.userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getImMngNum() {
-		return this.imMngNum;
-	}
-
-	public void setImMngNum(String imMngNum) {
-		this.imMngNum = imMngNum;
+	public void setImMngNom(String imMngNom) {
+		this.imMngNom = imMngNom;
 	}
 
 	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
@@ -288,6 +292,54 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
 		this.userDeviceExtraInfo = userDeviceExtraInfo;
+	}
+
+	public String getIsUsed() {
+		return this.isUsed;
+	}
+
+	public String getImMngNum() {
+		return this.imMngNum;
+	}
+
+	public void setIsUsed(String isUsed) {
+		this.isUsed = isUsed;
+	}
+
+	public void setImMngNum(String imMngNum) {
+		this.imMngNum = imMngNum;
+	}
+
+	public String getUpdateDate() {
+		return this.updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getStartDate() {
+		return this.startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return this.endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 }
