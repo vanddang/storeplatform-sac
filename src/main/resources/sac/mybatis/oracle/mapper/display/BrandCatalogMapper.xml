@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BrandCatalog">
-
+    
+    <!--브랜드ID SEQ 만들기-->
+    <select id="ID_GEN_SELECT_BRAND_ID" resultType="String">
+       /* BrandCatalogMapper.xml, ID_GEN_SELECT_BRAND_ID, SAC : 김형식 , 2013-12-30 */
+        SELECT 
+         'BR000'||(MAX(SUBSTR(BRAND_ID,3,8))+1)
+        FROM TB_DP_SHPG_BRAND A
+        WHERE BRAND_ID LIKE 'BR%'
+    </select>
+    
     <!--브랜드, 카탈로그 카테고리 조회-->
     <select id="SELECT_COUNT_TBL_DP_MENU" parameterType="String" resultType="int">
        /* BrandCatalogMapper.xml, SELECT_COUNT_TBL_DP_MENU, SAC : 김형식 , 2013-12-30 */
@@ -57,6 +66,15 @@
           , UPD_DT    = SYSDATE
         WHERE ORG_BRAND_ID = #{brandId}
     </update>    
+
+    <!--카탈로그 ID SEQ 만들기-->
+    <select id="ID_GEN_SELECT_CATALOG_ID" resultType="String">
+       /* BrandCatalogMapper.xml, ID_GEN_SELECT_CATALOG_ID, SAC : 김형식 , 2013-12-30 */
+        SELECT 
+          'CT000'||(MAX(SUBSTR(CATALOG_ID,3,8))+1)
+        FROM TB_DP_SHPG_CATALOG A
+        WHERE CATALOG_ID LIKE 'CT%'  
+    </select>    
     
     <!--카탈로그ID 조회-->
     <select id="SELECT_CATALOG_COUNT_CUDTYPE" parameterType="String" resultType="int">
@@ -150,7 +168,7 @@
         )
         VALUES(
              #{dpCatNo}
-            ,#{catalogId}
+            ,#{createCatalogId}
             ,'Y'
             ,'Y'
             ,'admin'
