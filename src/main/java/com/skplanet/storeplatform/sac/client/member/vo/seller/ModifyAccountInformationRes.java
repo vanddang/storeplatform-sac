@@ -1,6 +1,14 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-public class ModifyAccountInformationRes {
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+@JsonSerialize(include = Inclusion.NON_NULL)
+public class ModifyAccountInformationRes extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
 
 	private String sellerKey;
 
