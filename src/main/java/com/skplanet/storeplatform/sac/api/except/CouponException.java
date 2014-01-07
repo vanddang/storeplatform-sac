@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.api.except;
 
 import com.skplanet.storeplatform.sac.api.vo.ERROR_DATA;
 
-public class CouponException extends Exception {
+public class CouponException extends RuntimeException {
 	private ERROR_DATA error_data;
 	private String request_time;
 	private String err_value;
