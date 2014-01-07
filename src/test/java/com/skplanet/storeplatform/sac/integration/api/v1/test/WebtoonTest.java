@@ -14,8 +14,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
 @ActiveProfiles(value = "local")
@@ -40,12 +38,12 @@ public class WebtoonTest {
 	public void shouldOptianUserCareer() throws JsonGenerationException, JsonMappingException, IOException, Exception {
 		CategoryWebtoonReq WebtoonReqVO = new CategoryWebtoonReq();
 		System.out.println("++++dfsdfsd++");
-		CategoryWebtoonRes voRes = this.WebtoonService.getWebtoonList(WebtoonReqVO);
+		// CategoryWebtoonRes voRes = this.WebtoonService.getWebtoonList(WebtoonReqVO);
 		// System.out.println("++++++" + voRes.getWebtoonList().size());
-		for (Product vo : voRes.getProductList()) {
-			// System.out.println("++++++" + vo.getProduct().getSupport());
-			System.out.println("++++++" + vo.getIdentifier().getText());
-			System.out.println("++++++" + vo.getIdentifier().getType());
-		}
+		// for (Product vo : voRes.getProductList()) {
+		// // System.out.println("++++++" + vo.getProduct().getSupport());
+		// System.out.println("++++++" + vo.getIdentifier().getText());
+		// System.out.println("++++++" + vo.getIdentifier().getType());
+		// }
 	}
 }
