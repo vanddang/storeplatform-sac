@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 /**
- * 사용자 부가정보
+ * Password 보안 질문 조회
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
