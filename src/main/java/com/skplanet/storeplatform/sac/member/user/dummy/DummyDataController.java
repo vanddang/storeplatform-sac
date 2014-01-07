@@ -65,7 +65,8 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -261,7 +262,7 @@ public class DummyDataController {
 			deviceInfo.setDeviceType("");
 			deviceInfo.setDeviceModelNo("LG-SH810");
 			deviceInfo.setDeviceTelecom("SKT");
-			deviceInfo.setSvcMgmtNum("");
+			deviceInfo.setImMngNom("");
 			deviceInfo.setDeviceNickName("LG-SH810");
 			deviceInfo.setIsPrimary("Y");
 			deviceInfo.setIsAuthenticated("Y");
