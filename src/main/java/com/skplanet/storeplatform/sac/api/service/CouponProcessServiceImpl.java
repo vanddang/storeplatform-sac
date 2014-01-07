@@ -27,7 +27,7 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 @Service
 @Transactional
 public class CouponProcessServiceImpl implements CouponProcessService {
-	private final static Logger log = Logger.getLogger(CouponContentService.class);
+	private final static Logger log = Logger.getLogger(CouponProcessServiceImpl.class);
 	private final boolean result = true;
 	private String errorCode = "";
 	private String message = "";
