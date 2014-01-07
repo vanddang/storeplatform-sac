@@ -21,13 +21,12 @@ public class ShoppingReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // 테넌트ID
 	private String systemId; // 시스템ID
+	private String listId; // 리스트아이디
 	private String imageCd; // 이미지코드
 	private String menuId; // 메뉴아이디
 	private String prodCharge; // 유료/무료 구분
 	private String prodGradeCd; // 상품등급코드
-	private String drm; // DRM 지원 구분
 	private String b2bProd; // B2B 상품 구분
-	private String weekDayCd; // 요일별 구분 코드
 	private String orderedBy; // 정렬순서
 	private int offset; // offset
 	private int count; // count
@@ -46,6 +45,14 @@ public class ShoppingReq extends CommonInfo {
 
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
+	}
+
+	public String getListId() {
+		return this.listId;
+	}
+
+	public void setListId(String listId) {
+		this.listId = listId;
 	}
 
 	public String getImageCd() {
@@ -80,28 +87,12 @@ public class ShoppingReq extends CommonInfo {
 		this.prodGradeCd = prodGradeCd;
 	}
 
-	public String getDrm() {
-		return this.drm;
-	}
-
-	public void setDrm(String drm) {
-		this.drm = drm;
-	}
-
 	public String getB2bProd() {
 		return this.b2bProd;
 	}
 
 	public void setB2bProd(String b2bProd) {
 		this.b2bProd = b2bProd;
-	}
-
-	public String getWeekDayCd() {
-		return this.weekDayCd;
-	}
-
-	public void setWeekDayCd(String weekDayCd) {
-		this.weekDayCd = weekDayCd;
 	}
 
 	public String getOrderedBy() {
