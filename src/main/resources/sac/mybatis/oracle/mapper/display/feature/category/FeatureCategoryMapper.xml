@@ -87,7 +87,6 @@
 		                             , TB_DP_PROD_DESC         F
 		                             , TB_DP_TENANT_PROD       G
 		                             , TB_DP_TENANT_PROD_PRICE H
-		                             <!--, TB_DP_SPRT_DEVICE       I-->
 		                         WHERE A.MENU_ID = B.MENU_ID
 		                           AND A.MENU_ID = C.MENU_ID
 		                           AND A.PROD_ID = D.PROD_ID
@@ -97,7 +96,6 @@
 		                           AND A.TENANT_ID = G.TENANT_ID
 		                           AND A.PROD_ID = H.PROD_ID
 		                           AND A.TENANT_ID = H.TENANT_ID
-		                           <!--AND A.PROD_ID = I.PROD_ID-->
 		                           AND B.USE_YN = 'Y'                   /* Y : 사용 (사용여부) */
 		                           AND C.LANG_CD = 'ko'                 /* ko : 한국어 */
 		                           AND D.SVC_GRP_CD = 'DP000203'        /* DP000201 : 멀티미디어 */
@@ -107,10 +105,10 @@
 		                           AND G.EXPO_YN = 'Y'                  /* Y : 노출 (노출여부) */
 		                           AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                    AND B.UP_MENU_ID = #{topMenuId}
+                                   AND A.PROD_ID NOT IN (SELECT PROD_ID FROM TB_DP_SPRT_DEVICE WHERE PROD_ID = A.PROD_ID AND DEVICE_MODEL_CD = 'SHV-E210S')
                                  <if test='prodGradeCd != null'>
                                    AND D.PROD_GRD_CD = #{prodGradeCd}  /* 상품이용등급 */
                                  </if>
-		                           <!--AND I.DEVICE_MODEL_CD = 'SHV-E210S'-->
 		                       ) IA
 		               ) JA
 		         WHERE JA.RNUM BETWEEN #{offset} AND #{count}
