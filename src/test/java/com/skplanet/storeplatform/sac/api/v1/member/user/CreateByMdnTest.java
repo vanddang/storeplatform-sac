@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
+import com.skplanet.storeplatform.framework.test.StoreplatformMediaType;
 import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
@@ -38,8 +39,8 @@ public class CreateByMdnTest {
 
 		StorePlatformAPIinvokorNew.create().url("http://localhost:8080/storeplatform-sac/internal/member/user/createByMdn/v1")
 				.method(HttpPost.class)
-				.accepts(TestConstants.MEDIA_TYPE_APP_JSON)
-				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
+				.accepts(StoreplatformMediaType.MEDIA_TYPE_APP_JSON)
+				.contentType(StoreplatformMediaType.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "ist=N; tenantId=KOR001")
 				.requestBody(new RequestBodySetter() {
 
