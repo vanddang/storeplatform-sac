@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.member.user.sci.UserSCIController;
+import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
@@ -42,7 +42,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private MemberCommonComponent mcc;
 
 	@Autowired
-	private UserSCIController userSCI;
+	private UserSCI userSCI;
 
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
@@ -54,23 +54,28 @@ public class UserJoinServiceImpl implements UserJoinService {
 		logger.info("### opmdMdn : " + opmdMdn);
 
 		/**
-		 * 약관 목록 조회 TODO ((( 테넌트ID 하드코딩을 변경해야 한다. )))
-		 * 
+		 * 약관 목록 조회 TODO ((( 테넌트ID 하드코딩을 변경해야 한다. ))) DB 약관목록과 비교하여 상의 할경우 익셉션을 발생시킨다.
 		 */
 		List<ClauseDTO> clauseDTO = this.mcc.getMandAgreeList("S01");
 		StringBuffer dbAgreeInfo = new StringBuffer();
 		for (ClauseDTO dto : clauseDTO) {
-			logger.info("UseYn : {} ", dto.getUseYn());
-			logger.info("getMandAgreeYn : {} ", dto.getMandAgreeYn());
-			logger.info("getClauseItemCd : {} ", dto.getClauseItemCd());
 			dbAgreeInfo.append(dto.getClauseItemCd());
 		}
 
+		/**
+		 * TODO 리스트 Sort 해야함
+		 */
 		StringBuffer reqAgreeInfo = new StringBuffer();
 		for (AgreementInfo info : req.getAgreementList()) {
 			if (StringUtils.equals(info.getIsExtraAgreement(), "Y")) {
-				reqAgreeInfo.append("");
+				reqAgreeInfo.append(info.getExtraAgreementId());
 			}
+		}
+
+		logger.info("## dbAgreeInfo  : {}", dbAgreeInfo);
+		logger.info("## reqAgreeInfo : {}", reqAgreeInfo);
+		if (!StringUtils.equals(dbAgreeInfo.toString(), reqAgreeInfo.toString())) {
+			throw new RuntimeException("필수 약관 미동의");
 		}
 
 		/**

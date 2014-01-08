@@ -31,11 +31,8 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sc.client.vo.Purchase;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -95,42 +92,22 @@ public class CreateByMdnTest {
 						agreement2.setExtraAgreementId("US010608");
 						agreement2.setExtraAgreementVersion("0.1");
 						agreement2.setIsExtraAgreement("Y");
-						// AgreementInfo agreement3 = new AgreementInfo();
-						// agreement3.setExtraAgreementId("US010609");
-						// agreement3.setExtraAgreementVersion("0.1");
-						// agreement3.setIsExtraAgreement("N");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
 
 						agreementList.add(agreement1);
 						agreementList.add(agreement2);
-						// agreementList.add(agreement3);
+						agreementList.add(agreement3);
 						reqJson.setAgreementList(agreementList);
 
 						return reqJson;
 					}
-				}).success(Purchase.class, new SuccessCallback() {
+				}).success(CreateByMdnRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByMdnRes res = (CreateByMdnRes) result;
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	@Test
-	public void lockAccount() {
-
-		new TestCaseTemplate(this.mvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						LockAccountReq req = new LockAccountReq();
-						req.setSellerId("test_jun");
-						return req;
-					}
-				}).success(LockAccountRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						LockAccountRes res = (LockAccountRes) result;
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
