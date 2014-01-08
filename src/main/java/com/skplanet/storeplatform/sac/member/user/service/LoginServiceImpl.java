@@ -100,6 +100,10 @@ public class LoginServiceImpl implements LoginService {
 
 			/* 변동성 회원 처리 */
 
+			/* 1. 무선회원 가입 */
+
+			/* 2. 회원정보 수정 */
+
 		}
 
 		/* 무선회원 인증 */
@@ -113,6 +117,9 @@ public class LoginServiceImpl implements LoginService {
 
 			IDPTxRes idpTxRes = this.idpSCI.send(idpTxReq);
 			if (idpTxRes.getResultCode() != (00000)) {
+				/* 로그인 실패이력 저장 */
+				this.logInSCComponent(deviceId, null, "N",
+						userStateCd.equals("US011503") ? "Y" : "N");
 				throw new Exception(idpTxRes.getResultCode() + "");
 			}
 		} else {
@@ -123,10 +130,9 @@ public class LoginServiceImpl implements LoginService {
 		DeviceInfo deviceInfo = new DeviceInfo();
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
-		/* 로그인 */
-		LogInUserRequest loginReq = new LogInUserRequest();
-		loginReq.setUserID(deviceId);
-		LogInUserResponse loginRes = this.userSCI.logInUser(loginReq);
+		/* 로그인 성공이력 저장 */
+		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y",
+				userStateCd.equals("US011503") ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -197,14 +203,9 @@ public class LoginServiceImpl implements LoginService {
 		DeviceInfo deviceInfo = new DeviceInfo();
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
-		/* 로그인 */
-		LogInUserRequest loginReq = new LogInUserRequest();
-		loginReq.setUserID(userId);
-		loginReq.setUserPW(userPw);
-		if (userStateCd.equals("US011503"))
-			loginReq.setIsOneID("Y");
-
-		LogInUserResponse loginRes = this.userSCI.logInUser(loginReq);
+		/* 로그인 성공이력 저장 */
+		LogInUserResponse loginRes = this.logInSCComponent(userId, userPw, "Y",
+				userStateCd.equals("US011503") ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -215,6 +216,25 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		return res;
+	}
+
+	/**
+	 * SC콤포넌트 로그인 이력저장
+	 * 
+	 * @param key
+	 * @param isSuccess
+	 * @param isOneId
+	 * @return
+	 */
+	public LogInUserResponse logInSCComponent(String userId, String userPw,
+			String isSuccess, String isOneId) {
+		LogInUserRequest loginReq = new LogInUserRequest();
+		loginReq.setUserID(userId);
+		if (userPw != null)
+			loginReq.setUserPW(userPw);
+		loginReq.setIsSuccess(isSuccess);
+		loginReq.setIsOneID(isOneId);
+		return this.userSCI.logInUser(loginReq);
 	}
 
 }

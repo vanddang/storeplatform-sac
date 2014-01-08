@@ -3,6 +3,8 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
  * 휴대기기 관련 인터페이스 구현체
@@ -29,6 +32,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
  */
 @Service
 public class DeviceServiceImpl implements DeviceService {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	@Autowired
 	private IDPSCI idpSCI; // IDP 연동 인터페이스
@@ -93,7 +99,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Override
 	public String mergeDeviceInfo(DeviceInfo req) throws Exception {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
