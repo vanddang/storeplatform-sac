@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.api.v1.other.search.sci;
+package com.skplanet.storeplatform.sac.api.v1.other.search.repository;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -20,9 +20,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.client.search.sci.SearchSCI;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchReq;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchRes;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
+import com.skplanet.storeplatform.sac.other.search.repository.SearchRepository;
 
 /**
  * 
@@ -35,10 +35,10 @@ import com.skplanet.storeplatform.external.client.search.vo.EcSearchRes;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @TransactionConfiguration
 @Transactional
-public class SearchSCITest {
+public class SearchRepositoryTest {
 
 	@Autowired
-	private SearchSCI searchSCI;
+	private SearchRepository searchRepository;
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class SearchSCITest {
 	 */
 	@Test
 	public void shouldSearch() {
-		EcSearchReq ecSearchReq = new EcSearchReq();
+		TstoreSearchReq ecSearchReq = new TstoreSearchReq();
 		ecSearchReq.setQ("pc매니저");
 		ecSearchReq.setCategory("ALL");
 		ecSearchReq.setMeta17("I,M,V,H,B,E,C,J,A,D");
@@ -59,7 +59,7 @@ public class SearchSCITest {
 		ecSearchReq.setAdult("Y");
 		ecSearchReq.setRel("Y");
 		ecSearchReq.setUvKey("38a942103867f40b7f421c9b3c3b4443");
-		EcSearchRes ecSearchRes = this.searchSCI.search(ecSearchReq);
+		TstoreSearchRes ecSearchRes = this.searchRepository.search(ecSearchReq);
 		assertNotNull(ecSearchRes);
 	}
 }
