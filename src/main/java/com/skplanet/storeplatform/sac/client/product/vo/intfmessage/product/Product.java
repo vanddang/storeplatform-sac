@@ -164,6 +164,10 @@ public class Product extends CommonInfo implements Serializable {
 	 * ebook의 최신호 정보
 	 */
 	private String latestIssue;
+    /**
+     * 물리 파일 경로
+     */
+    private String physicalPath;
 
 	public Identifier getIdentifier() {
 		return this.identifier;
@@ -428,4 +432,12 @@ public class Product extends CommonInfo implements Serializable {
 	public void setLatestIssue(String latestIssue) {
 		this.latestIssue = latestIssue;
 	}
+
+    public String getPhysicalPath() {
+        return physicalPath;
+    }
+
+    public void setPhysicalPath(String physicalPath) {
+        this.physicalPath = physicalPath;
+    }
 }

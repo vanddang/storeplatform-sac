@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -23,18 +24,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class History extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Update update;
+	private List<Update> update;
 
-	public Update getUpdate() {
-		return this.update;
-	}
+    public List<Update> getUpdate() {
+        return update;
+    }
 
-	public void setUpdate(Update update) {
-		this.update = update;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
+    public void setUpdate(List<Update> update) {
+        this.update = update;
+    }
 }
