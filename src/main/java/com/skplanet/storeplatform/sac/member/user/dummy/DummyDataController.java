@@ -24,7 +24,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
@@ -62,7 +61,8 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	// @RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	// @ResponseBody
@@ -122,20 +122,21 @@ public class DummyDataController {
 		return res;
 	}
 
-	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public AuthorizeByIdRes authorizeById() {
-
-		logger.info("####################################################");
-		logger.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
-		logger.info("####################################################");
-
-		AuthorizeByIdRes res = new AuthorizeByIdRes();
-		res.setUserKey("IW102158844420091030165015");
-		res.setUserAuthKey("1234567890");
-
-		return res;
-	}
+	/*
+	 * @RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public AuthorizeByIdRes authorizeById() {
+	 * 
+	 * logger.info("####################################################");
+	 * logger.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
+	 * logger.info("####################################################");
+	 * 
+	 * AuthorizeByIdRes res = new AuthorizeByIdRes();
+	 * res.setUserKey("IW102158844420091030165015");
+	 * res.setUserAuthKey("1234567890");
+	 * 
+	 * return res; }
+	 */
 
 	@RequestMapping(value = "/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
