@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.api.v1.other.uaps.sci;
+package com.skplanet.storeplatform.sac.api.v1.other.uaps.repository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
+import com.skplanet.storeplatform.sac.other.uaps.repository.UAPSRepository;
 
 /**
  * 
@@ -31,14 +31,14 @@ import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @TransactionConfiguration
 @Transactional
-public class UapsSCITest {
+public class UapsRepositoryTest {
 
 	@Autowired
-	private UAPSSCI uapsSCI;
+	private UAPSRepository uapsRepository;
 
 	private final String pCustId = "";
 	private final String pReqParam = "";
-	private final int pType = 0;
+	private final String pType = "";
 
 	/**
 	 * 
@@ -48,8 +48,8 @@ public class UapsSCITest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldAuthorizeInfo() {
-		this.uapsSCI.getAuthorizeInfo(this.pCustId, this.pReqParam, this.pType);
+	public void shouldAuthorize() {
+		this.uapsRepository.getAuthorize(this.pCustId, this.pReqParam, this.pType);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class UapsSCITest {
 	 */
 	@Test
 	public void shouldOpmd() {
-		this.uapsSCI.getOpmdInfo(this.pReqParam);
+		this.uapsRepository.getOpmd(this.pReqParam);
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class UapsSCITest {
 	 */
 	@Test
 	public void shouldOpmdChild() {
-		this.uapsSCI.getOpmdChildInfo(this.pReqParam, this.pType);
+		this.uapsRepository.getOpmdChild(this.pReqParam, this.pType);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class UapsSCITest {
 	 */
 	@Test
 	public void shouldOpmdMapping() {
-		this.uapsSCI.getMappingInfo(this.pReqParam, this.pType);
+		this.uapsRepository.getMapping(this.pReqParam, this.pType);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class UapsSCITest {
 	 */
 	@Test
 	public void shouldDevice() {
-		this.uapsSCI.getDeviceInfo(this.pReqParam, this.pType);
+		this.uapsRepository.getDevice(this.pReqParam, this.pType);
 	}
 
 	/**
@@ -120,6 +120,6 @@ public class UapsSCITest {
 	 */
 	@Test
 	public void shouldLimitSvc() {
-		this.uapsSCI.getLimitSvcInfo(this.pReqParam, this.pType);
+		this.uapsRepository.getLimitSvc(this.pReqParam, this.pType);
 	}
 }
