@@ -19,15 +19,6 @@ import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
  * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스
  */
 public interface SearchService {
-	/**
-	 * 
-	 * <pre>
-	 * 검색 E/C연동 데이터를 가공한다.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @return SearchRes
-	 */
+
 	public SearchRes search(SearchReq searchReq);
 }

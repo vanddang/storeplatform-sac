@@ -12,11 +12,11 @@ package com.skplanet.storeplatform.sac.other.search.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.search.sci.SearchSCI;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchReq;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchRes;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 
 /**
  * 
@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.external.client.search.vo.EcSearchRes;
  * 
  * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스
  */
-@Service
+@Component
 public class SearchRepositoryImpl implements SearchRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchRepositoryImpl.class);
@@ -32,17 +32,8 @@ public class SearchRepositoryImpl implements SearchRepository {
 	@Autowired
 	private SearchSCI searchSCI;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.search.repository.SearchRepository#search(com.skplanet.storeplatform.external
-	 * .client.search.vo.EcSearchReq)
-	 */
 	@Override
-	public EcSearchRes search(EcSearchReq ecSearchReq) {
-
-		LOGGER.debug("SearchSCI E/C 연동");
+	public TstoreSearchRes search(TstoreSearchReq ecSearchReq) {
 		return this.searchSCI.search(ecSearchReq);
 	}
 }

@@ -25,13 +25,6 @@ import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 @Service
 public class SearchServiceImpl implements SearchService {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.search.service.SearchService#search(com.skplanet.storeplatform.sac.client
-	 * .other.vo.search.SearchReq)
-	 */
 	@Override
 	public SearchRes search(SearchReq searchReq) {
 		// TODO Auto-generated method stub

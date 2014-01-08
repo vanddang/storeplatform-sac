@@ -48,9 +48,6 @@ public class SearchController {
 	@RequestMapping(value = "/v1")
 	@ResponseBody
 	public SearchRes search(SearchReq searchReq) {
-		LOGGER.debug("####################################################");
-		LOGGER.debug("#######  2.통합검색                              ########");
-		LOGGER.debug("####################################################");
 		return this.searchService.search(searchReq);
 	}
 }

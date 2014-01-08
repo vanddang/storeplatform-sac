@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.search.repository;
 
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchReq;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchRes;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 
 /**
  * 
@@ -27,7 +27,7 @@ public interface SearchRepository {
 	 * 
 	 * @param ecSearchReq
 	 *            ecSearchReq
-	 * @return EcSearchRes
+	 * @return TstoreSearchRes
 	 */
-	public EcSearchRes search(EcSearchReq ecSearchReq);
+	public TstoreSearchRes search(TstoreSearchReq ecSearchReq);
 }

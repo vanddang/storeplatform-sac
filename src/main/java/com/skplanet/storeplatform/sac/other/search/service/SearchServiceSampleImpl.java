@@ -25,17 +25,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.skplanet.storeplatform.external.client.search.vo.Doc;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchReq;
-import com.skplanet.storeplatform.external.client.search.vo.EcSearchRes;
 import com.skplanet.storeplatform.external.client.search.vo.Group;
 import com.skplanet.storeplatform.external.client.search.vo.Header;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 import com.skplanet.storeplatform.framework.core.util.DateUtil;
-import com.skplanet.storeplatform.sac.client.other.vo.search.SearchCategory;
 import com.skplanet.storeplatform.sac.client.other.vo.search.Search;
+import com.skplanet.storeplatform.sac.client.other.vo.search.SearchCategory;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 import com.skplanet.storeplatform.sac.common.service.CategoryService;
@@ -52,6 +53,7 @@ import com.skplanet.storeplatform.sac.other.search.repository.SearchRepository;
  */
 @Profile(value = { "dev", "local" })
 @Service
+@Transactional
 public class SearchServiceSampleImpl implements SearchService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
@@ -68,19 +70,19 @@ public class SearchServiceSampleImpl implements SearchService {
 	/**
 	 * 요청 정렬관련 Map
 	 */
-	@SuppressWarnings("serial")
-	private final Map<String, String> orderMap = new HashMap<String, String>() {
-		{
-			// 최신
-			this.put("recent", "L");
-			// 평점
-			this.put("score", "G");
-			// 정확도
-			this.put("accuracy", "R");
-			// 인기순(다운로드)
-			this.put("popular", "D");
-		}
-	};
+	private final Map<String, String> orderMap;
+
+	public SearchServiceSampleImpl() {
+		this.orderMap = new HashMap<String, String>();
+		// 최신
+		this.orderMap.put("recent", "L");
+		// 평점
+		this.orderMap.put("score", "G");
+		// 정확도
+		this.orderMap.put("accuracy", "R");
+		// 인기순(다운로드)
+		this.orderMap.put("popular", "D");
+	}
 
 	/**
 	 * webtoonUrl 셋팅
@@ -108,7 +110,7 @@ public class SearchServiceSampleImpl implements SearchService {
 			LOGGER.warn("device is null");
 			throw new RuntimeException("device is null");
 		}
-		EcSearchReq ecSearchReq = new EcSearchReq();
+		TstoreSearchReq ecSearchReq = new TstoreSearchReq();
 
 		// 카테고리 셋팅
 		this.setCategory(searchReq, ecSearchReq);
@@ -137,11 +139,11 @@ public class SearchServiceSampleImpl implements SearchService {
 
 		LOGGER.debug("exSearchReq : {}", ecSearchReq);
 
-		EcSearchRes ecSearchRes = this.searchRepository.search(ecSearchReq);
+		TstoreSearchRes tstoreSearchRes = this.searchRepository.search(ecSearchReq);
 
-		LOGGER.debug("exSearchRes : {}", ecSearchRes);
+		LOGGER.debug("exSearchRes : {}", tstoreSearchRes);
 		// 데이터 가공
-		return this.getResultData(searchReq, ecSearchReq, ecSearchRes);
+		return this.getResultData(searchReq, ecSearchReq, tstoreSearchRes);
 	}
 
 	/**
@@ -155,15 +157,20 @@ public class SearchServiceSampleImpl implements SearchService {
 	 * @param exSearchReq
 	 *            exSearchReq
 	 */
-	private void setCategory(SearchReq searchReq, EcSearchReq exSearchReq) {
+	private void setCategory(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 카테고리가 비어있거나, ALL이면 skip(통합검색)
-		if (StringUtils.isBlank(searchReq.getCategory()) || StringUtils.equals(searchReq.getCategory(), "ALL"))
+		if (StringUtils.isBlank(searchReq.getCategory()) || StringUtils.equals(searchReq.getCategory(), "all"))
 			return;
 		// 그외 카테고리가 있는경우는 카테고리 검색임으로 아래와 같이 셋팅을한다.
 		// 카테고리, offset, count를 설정한다.
-		exSearchReq.setCategory(StringUtils.trimToEmpty(searchReq.getCategory()));
-		exSearchReq.setOffset(searchReq.getOffset());
-		exSearchReq.setCount(searchReq.getCount());
+		// String topCatCd = "";
+		if (StringUtils.equals(searchReq.getCategory(), "app")) {
+			tstoreSearchReq.setCategory("DP000503,DP000504,DP000508");
+		} else {
+			tstoreSearchReq.setCategory(this.categoryService.getCategoryCd(searchReq.getCategory()));
+		}
+		tstoreSearchReq.setOffset(searchReq.getOffset());
+		tstoreSearchReq.setCount(searchReq.getCount());
 	}
 
 	/**
@@ -177,7 +184,7 @@ public class SearchServiceSampleImpl implements SearchService {
 	 * @param exSearchReq
 	 *            exSearchReq
 	 */
-	private void setDateFromTo(SearchReq searchReq, EcSearchReq exSearchReq) {
+	private void setDateFromTo(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 
 		// DateType이 존재하지 않으면 skip.
 		String dtType = searchReq.getDtType();
@@ -194,8 +201,8 @@ public class SearchServiceSampleImpl implements SearchService {
 		} else if (dtType.equals("Y")) {
 			from = DateUtil.addYears(to, -1);
 		}
-		exSearchReq.setDateFrom(DateFormatUtils.format(from, "yyyyMMdd"));
-		exSearchReq.setDateTo(DateFormatUtils.format(to, "yyyyMMdd"));
+		tstoreSearchReq.setDateFrom(DateFormatUtils.format(from, "yyyyMMdd"));
+		tstoreSearchReq.setDateTo(DateFormatUtils.format(to, "yyyyMMdd"));
 	}
 
 	/**
@@ -207,14 +214,14 @@ public class SearchServiceSampleImpl implements SearchService {
 	 * @param searchReq
 	 * @param exSearchReq
 	 */
-	private void setAdult(SearchReq searchReq, EcSearchReq exSearchReq) {
+	private void setAdult(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 미실명인증 - A(전체노출)
 		// 실명인증(성인) - Y(성인컨텐츠포함)
 		// 실명인증(미성인) - N(성인컨텐츠미포함)
 		if (StringUtils.isBlank(searchReq.getAdultYN()))
-			exSearchReq.setAdult("A");
+			tstoreSearchReq.setAdult("A");
 		else
-			exSearchReq.setAdult(searchReq.getAdultYN());
+			tstoreSearchReq.setAdult(searchReq.getAdultYN());
 	}
 
 	/**
@@ -228,13 +235,13 @@ public class SearchServiceSampleImpl implements SearchService {
 	 * @param exSearchReq
 	 *            exSearchReq
 	 */
-	public void setOrder(SearchReq searchReq, EcSearchReq exSearchReq) {
+	public void setOrder(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 정렬기준이 없으면 무조건 최신
 		if (!this.orderMap.containsKey(searchReq.getOrderedBy())) {
-			exSearchReq.setOrder(this.orderMap.get("recent"));
+			tstoreSearchReq.setOrder(this.orderMap.get("recent"));
 		} else {
 			// 그외는 OrderMap에서 조회를 한다.
-			exSearchReq.setOrder(this.orderMap.get(searchReq.getOrderedBy()));
+			tstoreSearchReq.setOrder(this.orderMap.get(searchReq.getOrderedBy()));
 		}
 	}
 
@@ -251,19 +258,18 @@ public class SearchServiceSampleImpl implements SearchService {
 	 * @param exSearchReq
 	 *            exSearchReq
 	 */
-	private void setMeta(Device device, SearchReq searchReq, EcSearchReq exSearchReq) {
+	private void setMeta(Device device, SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// TB_CM_DEVICE의 UA_CD를 조회한다.
-		exSearchReq.setMeta13(device.getUaCd());
+		tstoreSearchReq.setMeta13(device.getUaCd());
 		List<String> listMeta17 = new ArrayList<String>();
 		String category = StringUtils.trimToEmpty(searchReq.getCategory());
 
 		// 카테고리가 app(DP000503,DP000504,DP000508)
-		if (StringUtils.equals(category, "DP000503,DP000504,DP000508")
-				|| StringUtils.equals(StringUtils.defaultIfEmpty(category, ""), "")) {
+		if (StringUtils.equals(searchReq.getCategory(), "app") || StringUtils.equals(searchReq.getCategory(), "all")) {
 			listMeta17.add("I");
 		}
 		// 그외 카테고리는 Device 정보에서 필요한 메타값을 셋팅
-		if (!StringUtils.equals(category, "DP000503,DP000504,DP000508")) {
+		if (!StringUtils.equals(searchReq.getCategory(), "app")) {
 			listMeta17.add("B");
 			// 고화질 지원여부
 			if (StringUtils.equals(device.getSdVideoSprtYn(), "Y")) {
@@ -304,21 +310,21 @@ public class SearchServiceSampleImpl implements SearchService {
 					listMeta17.add("S");
 				}
 			}
-			exSearchReq.setMeta17(StringUtils.join(listMeta17, ","));
+			tstoreSearchReq.setMeta17(StringUtils.join(listMeta17, ","));
 		}
 
 		// DRM 적용 여부 ( Y:DRM 적용/N:DRM 미적용/A:전체 )
 		String drmSprtYn = ObjectUtils.toString(device.getVideoDrmSprtYn(), "PD005200");
 		if (StringUtils.equals(drmSprtYn, "PD005200")) {
-			exSearchReq.setMeta26("N");
+			tstoreSearchReq.setMeta26("N");
 		}
 		// 연관검색어 - 자체처리용이므로 TISP 연동시 제거
 		if (StringUtils.equals(searchReq.getRelSearchYN(), "Y")) {
-			exSearchReq.setRel("Y");
+			tstoreSearchReq.setRel("Y");
 		}
 		// HDCP, HDMI 조건 추가
 		if (StringUtils.equals(device.getHdmiSprtYn(), "Y") && StringUtils.equals(device.getHdcpSprtYn(), "Y")) {
-			exSearchReq.setMeta47("Y");
+			tstoreSearchReq.setMeta47("Y");
 		}
 	}
 
@@ -336,27 +342,33 @@ public class SearchServiceSampleImpl implements SearchService {
 	 *            exSearchRes
 	 * @return
 	 */
-	private SearchRes getResultData(SearchReq searchReq, EcSearchReq ecSearchReq, EcSearchRes exSearchRes) {
+	private SearchRes getResultData(SearchReq searchReq, TstoreSearchReq tstoreSearchReq,
+			TstoreSearchRes tstoreSearchRes) {
 
-		if (exSearchRes == null || exSearchRes.getResponse() == null || exSearchRes.getResponse().getHeader() == null
-				|| exSearchRes.getResponse().getHeader().getTotalCount() <= 0) {
+		if (tstoreSearchRes == null || tstoreSearchRes.getResponse() == null
+				|| tstoreSearchRes.getResponse().getHeader() == null
+				|| tstoreSearchRes.getResponse().getHeader().getTotalCount() <= 0) {
 			// 추천상품리턴..
 			return this.getResultRecomData(searchReq);
 		}
 		// 무조건 데이터가 있는 경우임.
-		Header header = exSearchRes.getResponse().getHeader();
-		List<Group> groups = exSearchRes.getResponse().getGroups();
+		Header header = tstoreSearchRes.getResponse().getHeader();
+		List<Group> groups = tstoreSearchRes.getResponse().getGroups();
 		// List<Doc> docs = exSearchRes.getResponse().getDocs();
 		// List<String> categories = exSearchRes.getResponse().getCategories();
 		SearchRes searchRes = new SearchRes();
 		List<SearchCategory> categoryList = new ArrayList<SearchCategory>();
-		if (StringUtils.isEmpty(ecSearchReq.getCategory())) {
+		if (StringUtils.isEmpty(tstoreSearchReq.getCategory())) {
 			if (header.getGroupCount() > 0) {
 				List<Doc> docList = new ArrayList<Doc>();
 				for (Group group : groups) {
 					if (group.getDoclist().getNumFound() > 0) {
 						SearchCategory category = new SearchCategory();
-						category.setCategoryCd(group.getGroupValue());
+						if (StringUtils.equals(group.getGroupValue(), "DP000503,DP000504,DP000508")) {
+							category.setCategoryNm("app");
+						} else {
+							category.setCategoryNm(this.categoryService.getCategoryEngNm(group.getGroupValue()));
+						}
 						category.setCategoryCnt(group.getDoclist().getNumFound());
 						categoryList.add(category);
 						docList.addAll(group.getDoclist().getDocs());
@@ -368,11 +380,15 @@ public class SearchServiceSampleImpl implements SearchService {
 		} else {
 			if (header.getTotalCount() > 0) {
 				SearchCategory category = new SearchCategory();
-				category.setCategoryCd(ecSearchReq.getCategory());
+				if (StringUtils.equals(tstoreSearchReq.getCategory(), "DP000503,DP000504,DP000508")) {
+					category.setCategoryNm("app");
+				} else {
+					category.setCategoryNm(this.categoryService.getCategoryEngNm(searchReq.getCategory()));
+				}
 				category.setCategoryCnt(header.getTotalCount());
 				categoryList.add(category);
 				searchRes.setCategoryList(categoryList);
-				searchRes.setProductList(this.getProductList(searchReq, exSearchRes.getResponse().getDocs()));
+				searchRes.setProductList(this.getProductList(searchReq, tstoreSearchRes.getResponse().getDocs()));
 				searchRes.setTotalCount(header.getTotalCount());
 			}
 		}
@@ -536,14 +552,17 @@ public class SearchServiceSampleImpl implements SearchService {
 				search.setProdGrdCd("4");
 			}
 			// TOP_CAT_CD
-			search.setTopCategory(new SearchCategory(topCatCd));
+			search.setTopCategory(new SearchCategory(topCatCd, this.categoryService.getCategoryEngNm(topCatCd),
+					this.categoryService.getCategoryDesc(topCatCd)));
 			// 카테고리 정보
 			if (StringUtils.isNotEmpty(doc.getMeta39())) {
-				search.setDpCategory(new SearchCategory(doc.getMeta39()));
+				search.setDpCategory(new SearchCategory(doc.getMeta39(), this.categoryService.getCategoryEngNm(doc
+						.getMeta39()), this.categoryService.getCategoryDesc(doc.getMeta39())));
 			}
 			// META_CLS_CD
 			if (StringUtils.isNotEmpty(doc.getMeta27())) {
-				search.setMetaClsf(new SearchCategory(doc.getMeta27()));
+				search.setMetaClsf(new SearchCategory(doc.getMeta27(), this.categoryService.getCategoryEngNm(doc
+						.getMeta27()), this.categoryService.getCategoryDesc(doc.getMeta27())));
 			}
 
 			// Tag 가공(Seller Tag 3개 + kewyd Tag 4개)
