@@ -28,5 +28,14 @@
 		/*AND A.MAND_AGREE_YN = 'Y'*/
 		ORDER BY B.CLAUSE_ITEM_CD
     </select>
+
+    <!-- 폰 정보 조회 -->
+    <select id="getPhoneInfo" parameterType="CmDevice" resultType="CmDevice">
+		SELECT /* MemberCommonMapper.xml, getPhoneInfo, SAC : 심대진 , 2014-01-08 */
+            *
+        FROM TB_CM_DEVICE
+        WHERE REP_DEVICE_YN = 'Y'
+        AND DEVICE_MODEL_CD = #{deviceModelCd}
+    </select>
     
 </mapper>

@@ -70,7 +70,7 @@ public class CreateByMdnTest {
 						reqJson.setDeviceId("01090556567");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
-						reqJson.setDeviceModelNo("LG-SH810");
+						reqJson.setDeviceModelNo("SHW-M190S");
 						reqJson.setOwnBirth("20020409");
 						reqJson.setParentType("");
 						reqJson.setRealNameMethod("US011101");
