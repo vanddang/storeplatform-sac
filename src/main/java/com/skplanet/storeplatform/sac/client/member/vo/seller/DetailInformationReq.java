@@ -1,9 +1,12 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.KeySearch;
 
 /**
  * 판매자회원 기본 정보 조회
@@ -15,23 +18,14 @@ public class DetailInformationReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String sellerKey;
-	private String aid;
+	List<KeySearch> keySearchList;
 
-	public String getSellerKey() {
-		return this.sellerKey;
+	public List<KeySearch> getKeySearchList() {
+		return this.keySearchList;
 	}
 
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
-
-	public String getAid() {
-		return this.aid;
-	}
-
-	public void setAid(String aid) {
-		this.aid = aid;
+	public void setKeySearchList(List<KeySearch> keySearchList) {
+		this.keySearchList = keySearchList;
 	}
 
 }

@@ -6,10 +6,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.RealNameInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.RightInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrPwd;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
  * 판매자회원 기본 정보 조회
@@ -20,82 +22,75 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
 public class DetailInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-	SellerInfo sellerInfo;
 
-	public SellerInfo getSellerInfo() {
-		return this.sellerInfo;
+	List<ExtraRight> extraRight;
+
+	MbrAuth mbrAuth;
+
+	List<MbrClauseAgree> mbrClauseAgree;
+
+	MbrLglAgent mbrLglAgent;
+
+	MbrPwd mbrPwd;
+
+	private String sellerKey;
+
+	SellerMbr sellerMbr;
+
+	public List<ExtraRight> getExtraRight() {
+		return this.extraRight;
 	}
 
-	public void setSellerInfo(SellerInfo sellerInfo) {
-		this.sellerInfo = sellerInfo;
+	public void setExtraRight(List<ExtraRight> extraRight) {
+		this.extraRight = extraRight;
 	}
 
-	RealNameInfo realNameInfo;
-
-	public RealNameInfo getRealNameInfo() {
-		return this.realNameInfo;
+	public MbrAuth getMbrAuth() {
+		return this.mbrAuth;
 	}
 
-	public void setRealNameInfo(RealNameInfo realNameInfo) {
-		this.realNameInfo = realNameInfo;
+	public void setMbrAuth(MbrAuth mbrAuth) {
+		this.mbrAuth = mbrAuth;
 	}
 
-	private String regDate;
-	private String approveDate;
-	private String pwRegDate;
-
-	public String getRegDate() {
-		return this.regDate;
+	public List<MbrClauseAgree> getMbrClauseAgree() {
+		return this.mbrClauseAgree;
 	}
 
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	public void setMbrClauseAgree(List<MbrClauseAgree> mbrClauseAgree) {
+		this.mbrClauseAgree = mbrClauseAgree;
 	}
 
-	public String getApproveDate() {
-		return this.approveDate;
+	public MbrLglAgent getMbrLglAgent() {
+		return this.mbrLglAgent;
 	}
 
-	public void setApproveDate(String approveDate) {
-		this.approveDate = approveDate;
+	public void setMbrLglAgent(MbrLglAgent mbrLglAgent) {
+		this.mbrLglAgent = mbrLglAgent;
 	}
 
-	public String getPwRegDate() {
-		return this.pwRegDate;
+	public MbrPwd getMbrPwd() {
+		return this.mbrPwd;
 	}
 
-	public void setPwRegDate(String pwRegDate) {
-		this.pwRegDate = pwRegDate;
+	public void setMbrPwd(MbrPwd mbrPwd) {
+		this.mbrPwd = mbrPwd;
 	}
 
-	List<RightInfo> rightInfoList;
-
-	public List<RightInfo> getRightInfoList() {
-		return this.rightInfoList;
+	public String getSellerKey() {
+		return this.sellerKey;
 	}
 
-	public void setRightInfoList(List<RightInfo> rightInfoList) {
-		this.rightInfoList = rightInfoList;
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
 	}
 
-	List<Agreement> agreementList;
-
-	public List<Agreement> getAgreementList() {
-		return this.agreementList;
+	public SellerMbr getSellerMbr() {
+		return this.sellerMbr;
 	}
 
-	public void setAgreementList(List<Agreement> agreementList) {
-		this.agreementList = agreementList;
-	}
-
-	private String flurryInfo;
-
-	public String getFlurryInfo() {
-		return this.flurryInfo;
-	}
-
-	public void setFlurryInfo(String flurryInfo) {
-		this.flurryInfo = flurryInfo;
+	public void setSellerMbr(SellerMbr sellerMbr) {
+		this.sellerMbr = sellerMbr;
 	}
 
 }
