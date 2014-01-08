@@ -62,7 +62,7 @@ public class LockAccountTest {
 	public void lockAccount() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+		// .addHeaders("", "")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
