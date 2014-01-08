@@ -19,6 +19,8 @@ public interface CategoryService {
 
 	public String getCategoryCd(String category);
 
+	public String getCategoryDesc(String category);
+
 	public List<Category> getCategoryList();
 
 }

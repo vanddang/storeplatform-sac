@@ -30,6 +30,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 		Category cmCategory = this.commonService.getCategory().get(category);
 
+		if (cmCategory == null)
+			return "";
+
 		return cmCategory.getCatEngNm();
 	}
 
@@ -37,7 +40,19 @@ public class CategoryServiceImpl implements CategoryService {
 	public String getCategoryCd(String category) {
 		Category cmCategory = this.commonService.getCategory().get(category);
 
+		if (cmCategory == null)
+			return "";
+
 		return cmCategory.getCatCd();
+	}
+
+	@Override
+	public String getCategoryDesc(String category) {
+		Category cmCategory = this.commonService.getCategory().get(category);
+
+		if (cmCategory == null)
+			return "";
+		return cmCategory.getCatDesc();
 	}
 
 	@Override
