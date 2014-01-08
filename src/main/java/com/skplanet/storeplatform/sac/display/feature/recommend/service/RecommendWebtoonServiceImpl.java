@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoonDTO;
 
 /**
@@ -47,6 +48,8 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * <pre>
@@ -65,6 +68,13 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			req.setUpMenuId(req.getMenuId());
 			req.setMenuId(null);
 		}
+		String stdDt = "";
+		stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
+		if (stdDt == null) {
+			stdDt = "20130101000000";
+		}
+		req.setStdDt(stdDt);
+
 		Integer totalCount = 0;
 		List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
 				RecommendWebtoonDTO.class);
@@ -159,5 +169,4 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		}
 		return responseVO;
 	}
-
 }
