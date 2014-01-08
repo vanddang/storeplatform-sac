@@ -29,8 +29,10 @@ public class SearchCategory extends CommonInfo {
 	public SearchCategory() {
 	}
 
-	public SearchCategory(String categoryCd) {
+	public SearchCategory(String categoryCd, String categoryNm, String categoryDesc) {
 		this.categoryCd = categoryCd;
+		this.categoryNm = categoryNm;
+		this.categoryDesc = categoryDesc;
 	}
 
 	public String getCategoryCd() {
