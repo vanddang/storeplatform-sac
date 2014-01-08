@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraDocument;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
-import com.skplanet.storeplatform.sac.client.member.vo.common.RealNameInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.RightInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccountInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerId;
@@ -32,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassRes
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -52,6 +50,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
+import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
@@ -67,6 +66,9 @@ public class DummySellerController {
 
 	@Autowired
 	private SellerService sellerService;
+
+	@Autowired
+	private SellerSearchService sellerSearchService;
 
 	/**
 	 * <pre>
@@ -214,93 +216,11 @@ public class DummySellerController {
 	 * 판매자회원 기본 정보 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailInformationRes detailInformation() throws Exception {
+	public DetailInformationRes detailInformation(@RequestBody DetailInformationReq req) throws Exception {
 
-		DetailInformationRes responseVO = new DetailInformationRes();
-		SellerInfo sellerInfo = new SellerInfo();
-		sellerInfo.setSellerKey("IF1023599819420120111013407");
-		sellerInfo.setSellerClass("US010101");
-		sellerInfo.setSellerCategory("US011301");
-		sellerInfo.setSellerMainStatus("US010704");
-		sellerInfo.setSellerSubStatus("US010301");
-		sellerInfo.setSellerId("user1");
-		sellerInfo.setSellerPw("1234");
-		sellerInfo.setSellerTelecom("SKT");
-		sellerInfo.setSellerPhoneCountry("82");
-		sellerInfo.setSellerPhone("01011112222");
-		sellerInfo.setIsRecvSms("Y");
-		sellerInfo.setSellerEmail("abc@gmail.com");
-		sellerInfo.setIsRecvEmail("Y");
-		sellerInfo.setSellerName("홍길동");
-		sellerInfo.setSellerNickName("Best Seller");
-		sellerInfo.setSellerSex("M");
-		sellerInfo.setSellerBirthDay("19801105");
-		sellerInfo.setSellerSSNumber("130101-1111111");
-		sellerInfo.setSellerZip("135070");
-		sellerInfo.setSellerAddress("삼평동 680");
-		sellerInfo.setSellerDetailAddress("H스퀘어 S동 4층");
-		sellerInfo.setSellerCity("123123");
-		sellerInfo.setSellerState("LA");
-		sellerInfo.setSellerCountry("USA");
-		sellerInfo.setSellerLanguage("ko");
-		sellerInfo.setIsForeign("Y");
-		sellerInfo.setCustomerPhoneCountry("82");
-		sellerInfo.setCustomerPhone("01011112222");
-		sellerInfo.setCustomerEmail("abc@gmail.com");
-		responseVO.setSellerInfo(sellerInfo);
-
-		RealNameInfo realNameInfo = new RealNameInfo();
-		realNameInfo.setIsParent("Y");
-		realNameInfo.setParentDate("20131226000000");
-		realNameInfo.setParentType("A01");
-		realNameInfo.setParentName("홍길동");
-		realNameInfo.setParentBirthDay("20131226000000");
-		realNameInfo.setParentEmail("abc@gmail.com");
-		realNameInfo.setParentMDN("01011112222");
-		realNameInfo.setParentTelecom("US001201");
-		realNameInfo.setParentRealNameDate("20131226000000");
-		realNameInfo
-				.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-		realNameInfo.setParentRealNameMethod("101");
-		realNameInfo.setParentRealNameSystemId("W");
-		realNameInfo.setIsRealName("Y");
-		realNameInfo.setRealNameDate("20131226000000");
-		realNameInfo
-				.setSellerCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-		realNameInfo.setSellerDI("skpone000012902JAyEAPgMkfp3WL1 caEThzSSWjsOXQCfONIbAJgSFvitpjcQ=");
-		realNameInfo.setRealNameMethod("101");
-		realNameInfo.setRealNameSystemId("W");
-		responseVO.setRealNameInfo(realNameInfo);
-
-		responseVO.setRegDate("20131226000000");
-		responseVO.setApproveDate("20131226000000");
-		responseVO.setPwRegDate("20131226000000");
-
-		RightInfo rightInfoList = null;
-		List<RightInfo> myList = new ArrayList<RightInfo>();
-		for (int i = 0; i < 1; i++) {
-			rightInfoList = new RightInfo();
-			rightInfoList.setRightProfile("A01");
-			rightInfoList.setRightProfileValue("ABC");
-			myList.add(rightInfoList);
-		}
-		responseVO.setRightInfoList(myList);
-
-		Agreement agreementList = null;
-		List<Agreement> myList2 = new ArrayList<Agreement>();
-		for (int i = 0; i < 1; i++) {
-			agreementList = new Agreement();
-			agreementList.setExtraAgreementId("US010601");
-			agreementList.setIsExtraAgreement("Y");
-			myList2.add(agreementList);
-		}
-		responseVO.setAgreementList(myList2);
-
-		responseVO.setFlurryInfo("@@");
-
-		return responseVO;
+		return this.sellerSearchService.detailInformation(req);
 	}
 
 	/**
