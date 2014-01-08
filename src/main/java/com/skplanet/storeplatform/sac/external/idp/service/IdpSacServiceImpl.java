@@ -44,7 +44,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	@Autowired
 	private IDPSCI idpSCI;
 
-	private static IDPSender idpSender = null;
+	private static IDPSender idpSender = new IDPSender();
 
 	private static IDPReceiver idpReceiver = null;
 	private static IDPReceiverM receivData = null;
@@ -56,8 +56,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #alredyJoinCheckByEmail(java.lang .String)
 	 */
 	@Override
@@ -71,8 +70,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #alredyJoinCheckBySn(java.lang.String )
 	 */
 	@Override
@@ -84,8 +82,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #alredyJoinCheck(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -107,9 +104,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #checkDupID(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #checkDupID(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM checkDupID(String id) throws Exception {
@@ -128,8 +123,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #realNameAuthForNative(java.lang. String, java.lang.String)
 	 */
 	@Override
@@ -141,8 +135,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #realNameAuthForForeign(java.lang .String, java.lang.String)
 	 */
 	@Override
@@ -154,9 +147,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #realNameAuth(java.lang.String, java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #realNameAuth(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM realNameAuth(String personType, String name, String ssn)
@@ -188,8 +180,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #sendMobileAuthCode(java.lang.String)
 	 */
 	@Override
@@ -200,8 +191,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #sendMobileAuthCode(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -213,8 +203,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #sendMobileAuthCode(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -241,10 +230,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #mobileAuth(java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #mobileAuth(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM mobileAuth(String mdn, String authCode,
@@ -266,9 +253,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #warterMarkImageUrl()
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #warterMarkImageUrl()
 	 */
 	@Override
 	public IDPReceiverM warterMarkImageUrl() throws Exception {
@@ -285,8 +270,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #warterMarkAuth(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -308,9 +292,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #authNateId(java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authNateId(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM authNateId(String nateId, String natePwd)
@@ -330,9 +313,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #authPwd(java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authPwd(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM authPwd(String id, String pwd) throws Exception {
@@ -351,10 +333,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #authMdn(java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authMdn(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM authMdn(String user_mdn, String user_code,
@@ -376,8 +356,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #getEmailAuthLink(java.lang.String)
 	 */
 	@Override
@@ -396,8 +375,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #getEmailAuthLink(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -418,10 +396,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyEmail4JoinWait(java.lang.String , java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #modifyEmail4JoinWait(java.lang.String , java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM modifyEmail4JoinWait(String preEmail, String email,
@@ -444,8 +420,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #modifyAuthInfo(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -467,10 +442,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyEmailAuthInfo(java.lang.String , java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #modifyEmailAuthInfo(java.lang.String , java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM modifyEmailAuthInfo(String sp_auth_key,
@@ -496,10 +469,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyPasswordAuthInfo(java.lang .String, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #modifyPasswordAuthInfo(java.lang .String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM modifyPasswordAuthInfo(String user_auth_key,
@@ -523,8 +494,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #makePhoneAuthKey(java.lang.String)
 	 */
 	@Override
@@ -535,8 +505,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #makeSnAuthKey(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -550,9 +519,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #joinMember(java.util.Map)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #joinMember(java.util.Map)
 	 */
 	@Override
 	public IDPReceiverM joinMember(Map<String, Object> param) throws Exception {
@@ -637,8 +604,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #userAuthForId(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -661,8 +627,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #userAuthForId(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -684,9 +649,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #userLogoutForSSO()
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #userLogoutForSSO()
 	 */
 	@Override
 	public IDPReceiverM userLogoutForSSO() throws Exception {
@@ -708,8 +671,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #searchUserCommonInfoByUserKey(java .lang.String, java.lang.String)
 	 */
 	@Override
@@ -723,8 +685,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #searchUserCommonInfoByID(java.lang .String, java.lang.String)
 	 */
 	@Override
@@ -738,8 +699,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #searchUserCommonInfoByEmail(java .lang.String, java.lang.String)
 	 */
 	@Override
@@ -753,10 +713,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserCommonInfo(java.lang.String , java.lang.String,
-	 * java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #searchUserCommonInfo(java.lang.String , java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM searchUserCommonInfo(String userAuthKey,
@@ -778,8 +736,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #searchUserCommonInfo4SPServer(java .lang.String, java.lang.String)
 	 */
 	@Override
@@ -800,10 +757,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserIDByEmail(java.lang.String , java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #searchUserIDByEmail(java.lang.String , java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM searchUserIDByEmail(String email, String userCode,
@@ -816,8 +771,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #searchUserIDBySN(java.lang.String)
 	 */
 	@Override
@@ -830,10 +784,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserIDByUserKey(java.lang. String, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #searchUserIDByUserKey(java.lang. String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM searchUserIDByUserKey(String userKey, String userCode,
@@ -846,10 +798,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserID(java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #searchUserID(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM searchUserID(String queryKeyType, String queryKeyValue,
@@ -884,9 +834,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserID(java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #searchUserID(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM searchUserID(String queryKeyType, String queryKeyValue)
@@ -908,8 +857,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #findPwdByEmail(java.lang.String)
 	 */
 	@Override
@@ -920,9 +868,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findPwdByID(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwdByID(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM findPwdByID(String userID) throws Exception {
@@ -932,10 +878,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findPwdByID(java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwdByID(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM findPwdByID(String userID, String userCode,
@@ -947,8 +891,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #findPwdByUserKey(java.lang.String)
 	 */
 	@Override
@@ -959,9 +902,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findPwd(java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwd(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM findPwd(String queryKeyType, String queryKeyValue)
@@ -972,10 +914,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findPwd(java.lang.String, java.lang.String, java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwd(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM findPwd(String queryKeyType, String queryKeyValue,
@@ -1011,8 +951,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #secedeUserByID(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1025,8 +964,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #secedeUserByUserKey(java.lang.String , java.lang.String)
 	 */
 	@Override
@@ -1039,9 +977,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeUser(java.lang.String, java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #secedeUser(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType,
@@ -1068,8 +1005,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #aleadyJoinCheck4Mdn(java.lang.String )
 	 */
 	@Override
@@ -1089,9 +1025,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #authForWap(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authForWap(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM authForWap(String mdn) throws Exception {
@@ -1110,9 +1044,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #join4Wap(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #join4Wap(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM join4Wap(String mdn) throws Exception {
@@ -1132,8 +1064,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #secedeUser4Wap(java.lang.String)
 	 */
 	@Override
@@ -1157,8 +1088,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #joinSupService(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1170,8 +1100,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #joinSupService(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1196,8 +1125,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #secedeSupService(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1209,8 +1137,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #secedeSupService(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1235,8 +1162,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #tmapServiceAvalibleCheck(java.lang .String)
 	 */
 	@Override
@@ -1256,8 +1182,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #tmapServiceCheck(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1281,10 +1206,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendIDP(com.skplanet.storeplatform
-	 * .sac.external.idptemp.model.IDPSenderM)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #sendIDP(com.skplanet.storeplatform .sac.external.idptemp.model.IDPSenderM)
 	 */
 	public IDPReceiverM sendIDP(IDPSenderM sendData) throws Exception {
 
@@ -1292,8 +1215,9 @@ public class IdpSacServiceImpl implements IdpSacService {
 		// StopWatch stopWatch = new StopWatch();
 
 		// stopWatch.start();
-
+		System.out.println("######################1111");
 		Hashtable param = this.idpSender.makeSendParam(sendData);
+		System.out.println("######################2222");
 
 		// TO-BE 기능을 위한 로직 추가
 		IDPTxReq req = new IDPTxReq();
@@ -1322,10 +1246,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendTempIDP(com.skplanet.storeplatform
-	 * .sac.external.idptemp.model.IDPSenderM)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #sendTempIDP(com.skplanet.storeplatform .sac.external.idptemp.model.IDPSenderM)
 	 */
 	public IDPReceiverM sendTempIDP(IDPSenderM sendData) throws Exception {
 
@@ -1361,10 +1283,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendIDPHttps(com.skplanet.storeplatform
-	 * .sac.external.idptemp.model.IDPSenderM)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * #sendIDPHttps(com.skplanet.storeplatform .sac.external.idptemp.model.IDPSenderM)
 	 */
 	@Override
 	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
@@ -1402,9 +1322,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendHttp(java.lang.String, java.util.Hashtable)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #sendHttp(java.lang.String,
+	 * java.util.Hashtable)
 	 */
 	public String sendHttp(String url, Hashtable param) throws Exception {
 
@@ -1423,9 +1342,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendHttps(java.lang.String, java.util.Hashtable)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #sendHttps(java.lang.String,
+	 * java.util.Hashtable)
 	 */
 	public String sendHttps(String url, Hashtable param) throws Exception {
 
@@ -1473,9 +1391,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyProfile(java.util.Map)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #modifyProfile(java.util.Map)
 	 */
 	@Override
 	public IDPReceiverM modifyProfile(Map<String, Object> param)
@@ -1550,11 +1466,9 @@ public class IdpSacServiceImpl implements IdpSacService {
 		}
 
 		/*
-		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) &&
-		 * !"".equals(user_id)) { try { sn_auth_key = makeSnAuthKey(user_name,
-		 * user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch
-		 * (Exception e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } } else { is_rname_auth = "N"; } }
+		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) && !"".equals(user_id)) { try { sn_auth_key =
+		 * makeSnAuthKey(user_name, user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch (Exception e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } } else { is_rname_auth = "N"; } }
 		 */
 
 		// sendData.setSp_id(Constants.OMP_IDP_SP_ID);
@@ -1634,8 +1548,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #otherChannelIdAuth(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1657,8 +1570,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #otherChannelList(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1680,8 +1592,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #otherChannelRegist(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -1704,9 +1615,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findModelId(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findModelId(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM findModelId(String mdn) throws Exception {
@@ -1726,9 +1635,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #mobileSend(java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #mobileSend(java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM mobileSend(String user_mdn, String comment)
@@ -1749,9 +1657,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #idpSmsSend(java.lang.String, java.lang.String, java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #idpSmsSend(java.lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM idpSmsSend(String receiverMdn, String msg,
@@ -1766,8 +1673,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #joinSupServiceRequest(java.lang. String, java.lang.String)
 	 */
 	@Override
@@ -1790,8 +1696,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
 	 * #secedeSupServiceRequest(java.lang .String, java.lang.String)
 	 */
 	@Override
@@ -1814,9 +1719,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findBill(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findBill(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM findBill(String mdn) throws Exception {
@@ -1836,9 +1739,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #createToken(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #createToken(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM createToken(String user_id) throws Exception {
@@ -1855,9 +1756,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #mappingToken(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #mappingToken(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM mappingToken(String user_id) throws Exception {
@@ -1877,9 +1776,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchToken(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #searchToken(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM searchToken(String user_id) throws Exception {
@@ -1896,9 +1793,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #deleteToken(java.lang.String)
+	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #deleteToken(java.lang.String)
 	 */
 	@Override
 	public IDPReceiverM deleteToken(String user_id) throws Exception {

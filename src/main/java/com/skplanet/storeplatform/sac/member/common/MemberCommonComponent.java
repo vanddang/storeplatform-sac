@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
 /**
@@ -83,10 +84,19 @@ public class MemberCommonComponent {
 		return (List<ClauseDTO>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
 	}
 
-	// public void getPhoneInfo() {
-	//
-	// this.commonDAO.queryForObject("", "");
-	//
-	// }
+	/**
+	 * <pre>
+	 * 폰 정보 조회
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 * @return
+	 * @throws Exception
+	 */
+	public Device getPhoneInfo(String deviceModelCd) throws Exception {
+		Device dto = new Device();
+		dto.setDeviceModelCd(deviceModelCd);
+		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
+	}
 
 }
