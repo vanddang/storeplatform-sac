@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccountInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerId;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
@@ -220,7 +221,39 @@ public class DummySellerController {
 	@ResponseBody
 	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
 
-		return this.sellerSearchService.detailInformation(req);
+		DetailInformationRes responseVO = new DetailInformationRes();
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setSellerKey("IF1023599819420120111013407");
+		sellerMbr.setSellerClass("US010101");
+		sellerMbr.setSellerCategory("US011301");
+		sellerMbr.setSellerMainStatus("US010704");
+		sellerMbr.setSellerSubStatus("US010301");
+		sellerMbr.setSellerTelecom("SKT");
+		sellerMbr.setSellerPhoneCountry("82");
+		sellerMbr.setSellerPhone("01011112222");
+		sellerMbr.setSellerEmail("abc@gmail.com");
+		sellerMbr.setIsRecvEmail("Y");
+		sellerMbr.setSellerName("홍길동");
+		sellerMbr.setSellerNickName("Best Seller");
+		sellerMbr.setSellerSex("M");
+		sellerMbr.setSellerBirthDay("19801105");
+		sellerMbr.setSellerSSNumber("130101-1111111");
+		sellerMbr.setSellerZip("135070");
+		sellerMbr.setSellerAddress("삼평동 680");
+		sellerMbr.setSellerDetailAddress("H스퀘어 S동 4층");
+		sellerMbr.setSellerCity("123123");
+		sellerMbr.setSellerState("LA");
+		sellerMbr.setSellerCountry("USA");
+		sellerMbr.setSellerLanguage("ko");
+		sellerMbr.setIsForeign("Y");
+		sellerMbr.setCustomerPhoneCountry("82");
+		sellerMbr.setCustomerPhone("01011112222");
+		sellerMbr.setCustomerEmail("abc@gmail.com");
+		responseVO.setSellerMbr(sellerMbr);
+		responseVO.setSellerKey("IF1023599819420120111013407");
+
+		return responseVO;
+
 	}
 
 	/**
