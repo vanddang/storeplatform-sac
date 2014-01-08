@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,13 +32,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInfor
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailRes;
@@ -103,11 +100,8 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DuplicateByIdEmailRes duplicateByIdEmail(@RequestBody DuplicateByIdEmailReq req) throws Exception {
-
-		DuplicateByIdEmailRes responseVO = new DuplicateByIdEmailRes("Y");
-
-		return responseVO;
+	public DuplicateByIdEmailRes duplicateByIdEmail() throws Exception {
+		return new DuplicateByIdEmailRes("Y");
 	}
 
 	/**
@@ -428,8 +422,8 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public LockAccountRes lockAccount(@RequestBody LockAccountReq req) throws Exception {
-		return this.sellerService.lockAccount(req);
+	public LockAccountRes lockAccount() throws Exception {
+		return new LockAccountRes("Y");
 	}
 
 	/**
