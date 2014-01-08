@@ -54,7 +54,7 @@ public class UserSelectController extends ParameterExceptionHandling {
 		/**
 		 * 회원기본정보 조회 Biz
 		 */
-		req.setUserKey("IW1024258669020110627132822");
+		// req.setUserKey("IW1024258669020110627132822");
 		ExistRes res = this.svc.exist(req);
 
 		logger.info("Response : {}", res.toString());
