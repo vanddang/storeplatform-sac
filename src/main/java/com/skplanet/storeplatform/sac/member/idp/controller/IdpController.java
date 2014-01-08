@@ -52,7 +52,7 @@ public class IdpController {
 			String cmd = provisioningReq.getCmd();
 			boolean isIm = (cmd.indexOf("RX") == 0);
 			Method method = this.service.getClass().getMethod(isIm ? "rX" + cmd.substring(2) : cmd, HashMap.class);
-
+			// TODO : Reflection에 대한 성능 이슈 있으니 사용할지 한번더 고려 해보기 - 임재호 2014.1.8
 			if (isIm) {
 				provisioningRes.setImResult((ImResult) method.invoke(this.service, provisioningReq.getReqParam()));
 			} else {

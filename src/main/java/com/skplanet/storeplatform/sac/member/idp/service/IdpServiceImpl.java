@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
  * Updated on : 2014. 1. 8. Updated by : 임재호, 인크로스.
  */
 @Service
-public class IdpServiceImple implements IdpService {
+public class IdpServiceImpl implements IdpService {
 	/**
 	 * 
 	 * <pre>
