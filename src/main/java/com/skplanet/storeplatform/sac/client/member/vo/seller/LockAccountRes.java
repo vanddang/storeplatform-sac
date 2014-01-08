@@ -15,6 +15,10 @@ public class LockAccountRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	public LockAccountRes() {
+		super();
+	}
+
 	public LockAccountRes(String sellerKey) {
 		super();
 		this.sellerKey = sellerKey;
