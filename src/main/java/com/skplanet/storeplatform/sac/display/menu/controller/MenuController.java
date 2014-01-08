@@ -69,4 +69,25 @@ public class MenuController {
 
 		return this.categoryService.searchDetailCategoryList(requestVO);
 	}
+
+	@RequestMapping(value = "/category/top/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryListRes searchTopMenuList(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
+			IOException, Exception {
+
+		this.logger.debug("MenuController.searchTopMenuList start !!");
+
+		return this.categoryService.searchTopCategoryList(requestVO);
+	}
+
+	@RequestMapping(value = "/category/sub/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategoryDetailRes searchDetailMenuList(MenuReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
+
+		this.logger.debug("MenuController.searchSubCategoryList start !!");
+
+		return this.categoryService.searchSubCategoryList(requestVO);
+	}
+
 }

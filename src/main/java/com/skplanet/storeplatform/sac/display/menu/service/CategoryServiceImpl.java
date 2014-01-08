@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategoryDTO;
 import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
 
 /**
@@ -101,7 +102,7 @@ public class CategoryServiceImpl implements CategoryService {
 				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
-				category.setType("topCategory");
+				category.setType("topClass");
 				/*
 				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
 				 * category.setLnbFileName(mapperVO.getLnbFileName());
@@ -157,6 +158,7 @@ public class CategoryServiceImpl implements CategoryService {
 		String tenantId = "";
 		String systemId = "";
 		String menuId = "";
+		String statementId = "";
 
 		tenantId = requestVO.getTenantId();
 		systemId = requestVO.getSystemId();
@@ -177,8 +179,9 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getDetailCategoryList", requestVO,
-				MenuDetailDTO.class);
+		statementId = "Menu.getDetailCategoryList";
+
+		List<MenuDetailDTO> resultList = this.commonDAO.queryForList(statementId, requestVO, MenuDetailDTO.class);
 		if (resultList != null) {
 
 			threeDepth = this.check3DepthMenu(requestVO);
@@ -191,6 +194,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 			boolean tg = false;
 			int count = 0;
+			int idx = 1;
 
 			CategoryDetail categoryDetail = new CategoryDetail();
 
@@ -217,31 +221,14 @@ public class CategoryServiceImpl implements CategoryService {
 				this.log.debug("totalCount : " + totalCount);
 
 				source.setSize(mapperVO.getBodyFileSize());
-				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
 
-				/*
-				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
-				 * category.setLnbFileName(mapperVO.getLnbFileName());
-				 * category.setLnbFilePath(mapperVO.getLnbFilePath());
-				 * category.setLnbFileSize(mapperVO.getLnbFileSize());
-				 * category.setMainOffFileName(mapperVO.getMainOffFileName());
-				 * category.setMainOffFilePath(mapperVO.getMainOffFilePath());
-				 * category.setMainOnFileName(mapperVO.getMainOnFileName());
-				 * category.setMenuDepth(mapperVO.getMenuDepth()); category.setRankFileName(mapperVO.getRankFileName());
-				 * category.setRankFilePath(mapperVO.getRankFilePath());
-				 * category.setSearchFileName(mapperVO.getSearchFileName());
-				 * category.setSearchFilePath(mapperVO.getSearchFilePath());
-				 * category.setSystemId(mapperVO.getSystemId()); category.setTargetUrl(mapperVO.getTargetUrl());
-				 * category.setTenantId(mapperVO.getTenantId()); category.setUpMenuId(mapperVO.getUpMenuId());
-				 * category.setUseYn(mapperVO.getUseYn());
-				 */
 				category.setSource(source);
 
 				if (threeDepth) { // => 3 DEPTH MENU
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType("topCategory");
+						category.setType("topClass");
 						responseVO.setCategory(category);
 					} else {
 						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
@@ -254,8 +241,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 								tg = true;
 							}
+
 							categoryDetail.setCategory(category);
 							count++;
+
+							if (idx == totalCount && tg == false) {
+								categoryDetail.setSubCategoryList(listVO);
+								detailListVO.add(categoryDetail);
+							}
 						} else { // 3 depth
 							listVO.add(category);
 						}
@@ -264,10 +257,16 @@ public class CategoryServiceImpl implements CategoryService {
 							tg = false;
 							// count = 0;
 						}
+
+						if (idx == totalCount && tg == false) {
+							categoryDetail.setSubCategoryList(listVO);
+							detailListVO.add(categoryDetail);
+						}
 					}
+					idx++;
 				} else { // 2depth
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType("topCategory");
+						category.setType("topClass");
 						responseVO.setCategory(category);
 						count++;
 					} else {
@@ -284,6 +283,176 @@ public class CategoryServiceImpl implements CategoryService {
 					}
 				}
 			}
+
+			commonResponse = new CommonResponse();
+			if (threeDepth) {
+				responseVO.setCategoryList(detailListVO); // set category detail list = 3 DEPTH MENU
+			}
+			commonResponse.setTotalCount(totalCount);
+			responseVO.setCommonRes(commonResponse);
+
+			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
+
+			this.log.debug("CategoryDetailList json : {}", CategoryDetailList);
+			// System.out.println(json);
+
+		}
+		return responseVO;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenu(String tenantId, String
+	 * systemId, String menuId)
+	 */
+	@Override
+	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
+
+		int totalCount = 0;
+		boolean threeDepth = false;
+
+		String tenantId = "";
+		String systemId = "";
+		String menuId = "";
+		String deviceCd = "";
+		String langCd = "";
+		String statementId = "";
+
+		tenantId = requestVO.getTenantId();
+		systemId = requestVO.getSystemId();
+		menuId = requestVO.getMenuId();
+		langCd = requestVO.getLangCd();
+		deviceCd = requestVO.getDeviceModelCd();
+
+		CategoryDetailRes responseVO = null;
+		CommonResponse commonResponse = null;
+
+		if (null == tenantId || "".equals(tenantId)) {
+			requestVO.setTenantId("S01");
+		}
+		if (null == systemId || "".equals(systemId)) {
+			requestVO.setSystemId("test01");
+		}
+		if (null == deviceCd || "".equals(deviceCd)) {
+			requestVO.setDeviceModelCd("SHW-M250S");
+		}
+		if (null == langCd || "".equals(langCd)) {
+			requestVO.setLangCd("ko");
+		}
+
+		if (null == menuId || "".equals(menuId)) {
+			throw new Exception("menuId 는 필수 파라메터 입니다.");
+		}
+
+		if ("DP16".equals(menuId)) { // 음악
+			statementId = "MenuCategory.getMusicDetailCategoryList";
+		} else {
+			statementId = "MenuCategory.getDetailCategoryList";
+		}
+		List<MenuCategoryDTO> resultList = this.commonDAO.queryForList(statementId, requestVO, MenuCategoryDTO.class);
+		if (resultList != null) {
+
+			threeDepth = this.check3DepthMenu(requestVO);
+
+			// Response VO를 만들기위한 생성자
+			Menu category = null;
+			Source source = null;
+			List<Menu> listVO = new ArrayList<Menu>();
+			List<CategoryDetail> detailListVO = new ArrayList<CategoryDetail>();
+
+			boolean tg = false;
+			int count = 0;
+			int idx = 1;
+
+			CategoryDetail categoryDetail = new CategoryDetail();
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+
+			if (threeDepth) {
+				responseVO = new CategoryDetail3ListRes();
+			} else {
+				responseVO = new CategoryDetail2ListRes();
+			}
+
+			Iterator<MenuCategoryDTO> iterator = resultList.iterator();
+			while (iterator.hasNext()) {
+				MenuCategoryDTO mapperVO = iterator.next();
+
+				String mapperJson = objectMapper.writeValueAsString(mapperVO);
+				this.log.debug(mapperJson);
+
+				category = new Menu();
+				source = new Source();
+
+				totalCount = mapperVO.getTotalCount();
+
+				source.setSize(Integer.toString(mapperVO.getFileSize()));
+				source.setUrl(mapperVO.getFilePos());
+				category.setId(mapperVO.getMenuId());
+				category.setName(mapperVO.getMenuNm());
+				category.setCount(Integer.toString(mapperVO.getMenuProdCnt()));
+				category.setSource(source);
+
+				if (threeDepth) { // => 3 DEPTH MENU
+					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
+						category.setType("topClass");
+						responseVO.setCategory(category);
+					} else {
+						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
+							if (tg == false && count > 0) {
+								categoryDetail.setSubCategoryList(listVO);
+								detailListVO.add(categoryDetail);
+
+								categoryDetail = new CategoryDetail();
+								listVO = new ArrayList<Menu>();
+
+								tg = true;
+							}
+							categoryDetail.setCategory(category);
+							count++;
+
+							if (idx == totalCount && tg == false) {
+								categoryDetail.setSubCategoryList(listVO);
+								detailListVO.add(categoryDetail);
+							}
+						} else { // 3 depth
+							listVO.add(category);
+						}
+
+						if (tg == true && count > 0) {
+							tg = false;
+							// count = 0;
+						}
+
+						if (idx == totalCount && tg == false) {
+							categoryDetail.setSubCategoryList(listVO);
+							detailListVO.add(categoryDetail);
+						}
+					}
+					idx++;
+
+				} else { // 2depth
+					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
+						category.setType("topClass");
+						responseVO.setCategory(category);
+						count++;
+					} else {
+						listVO.add(category);
+
+						count++;
+
+						if (count >= totalCount) {
+							/*
+							 * categoryDetail.setSubCategoryList(listVO); detailListVO.add(categoryDetail);
+							 */
+							responseVO.setCategoryList(listVO);
+						}
+					}
+				}
+			} // end of while
 
 			commonResponse = new CommonResponse();
 			if (threeDepth) {

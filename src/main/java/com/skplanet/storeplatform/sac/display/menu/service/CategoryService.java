@@ -18,11 +18,11 @@ public interface CategoryService {
 
 	/**
 	 * <pre>
-	 * Menu 리스트 조회.
+	 * 대분류 전시 Menu 조회.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            tenantId, String systemId, String menuId Menu Request Value Object
+	 * @param MenuReq
+	 *            requestVO
 	 * @return Menu 리스트
 	 */
 	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
@@ -30,13 +30,25 @@ public interface CategoryService {
 
 	/**
 	 * <pre>
-	 * Menu 상세 조회.
+	 * 세분류 전시 메뉴 조회.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            tenantId, String systemId, String menuId Menu Request Value Object
+	 * @param MenuReq
+	 *            requestVO
 	 * @return Menu 상세
 	 */
 	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception;
+
+	/**
+	 * <pre>
+	 * 세분류 전시 메뉴 조회.
+	 * </pre>
+	 * 
+	 * @param MenuReq
+	 *            requestVO
+	 * @return Menu 상세
+	 */
+	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO) throws JsonGenerationException,
 			JsonMappingException, IOException, Exception;
 }
