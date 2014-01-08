@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MenuCategory">
+
+    <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
+    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+        SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
+             , MENU_ID
+             , MENU_NM
+             , MENU_DESC
+             , INFR_MENU_YN
+             , FILE_SIZE
+             , MENU_DEPTH
+        FROM
+            (
+             SELECT MENU_ID
+                  , MENU_NM
+                  , MENU_DESC
+                  , MENU_DEPTH
+                  , INFR_MENU_YN
+                  , BODY_FILE_SIZE AS FILE_SIZE
+                  , CONCAT( BODY_FILE_PATH, BODY_FILE_NM ) AS FILE_POS
+                  , EXPO_ORD
+              FROM TB_DP_TENANT_MENU
+             WHERE TENANT_ID = #{tenantId}
+               AND SYSTEM_ID = #{systemId}
+             START WITH MENU_ID = #{menuId}
+             CONNECT BY PRIOR MENU_ID = UP_MENU_ID
+            )
+        GROUP BY MENU_ID
+             , MENU_NM
+             , MENU_DESC
+             , INFR_MENU_YN
+             , FILE_SIZE
+             , MENU_DEPTH
+             , EXPO_ORD
+        ORDER BY MENU_ID, MENU_DEPTH, EXPO_ORD
+    </select>
+    
+    <!-- Music 상세 카테고리 조회-->
+    <select id="getMusicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+        /* MenuCategoryMapper.xml, getMusicDetailCategoryList, JuYoungYun, 2014-01-08 */
+        SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
+             , MENU_ID
+             , DECODE(MENU_ID,'DP16002','TOP 뮤직',MENU_NM) AS MENU_NM
+             , MENU_DESC
+             , INFR_MENU_YN
+             , DECODE(MENU_ID,'DP16003001','2',MENU_DEPTH) AS MENU_DEPTH
+             , FILE_POS
+             , FILE_SIZE
+             , NVL(CAT_PROD_CNT, 0) AS MENU_PROD_CNT
+          FROM
+             (
+              SELECT C.MENU_ID
+                   , C.MENU_NM
+                   , C.MENU_DESC
+                   , C.INFR_MENU_YN
+                   , C.UP_MENU_ID
+                   , C.EXPO_ORD
+                   , C.MENU_DEPTH
+                   , C.FILE_POS
+                   , C.FILE_SIZE
+                   , DECODE( C.INFR_MENU_YN
+                           , 'Y'
+                           , SUM( P.CAT_PROD_CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
+                           , P.CAT_PROD_CNT ) AS CAT_PROD_CNT
+                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
+                                             ORDER BY C.MENU_DEPTH
+                                                    , C.EXPO_ORD
+                                                    , C.MENU_NM ) AS CAT_PRIOR
+                    FROM        
+                   ( 
+                    SELECT M.MENU_ID
+                         , D.MENU_NM
+                         , D.MENU_DESC
+                         , TM.EXPO_ORD
+                         , M.MENU_DEPTH
+                         , M.UP_MENU_ID
+                         , M.INFR_MENU_YN
+                         , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
+                         , TM.BODY_FILE_SIZE AS FILE_SIZE
+                      FROM TB_DP_MENU M
+                          ,TB_DP_MENU_DESC D
+                          ,TB_DP_TENANT_MENU TM
+                     WHERE M.MENU_ID = D.MENU_ID
+                       AND TM.MENU_ID = M.MENU_ID
+                       AND TM.TENANT_ID = #{tenantId}
+                       AND TM.SYSTEM_ID = #{systemId}
+                       AND M.MENU_ID LIKE #{menuId}||'%'
+                       /* AND M.MENU_DEPTH >= 1 */
+                       AND M.USE_YN = 'Y'
+                       AND D.LANG_CD = #{langCd}
+                       AND TM.USE_YN = 'Y'
+                    ) C
+                    ,
+                   (
+                    SELECT  COUNT(*) AS CAT_PROD_CNT
+                         , C.MENU_ID 
+                     FROM TB_DP_MULTIMDA_PROD_0108_01 MP
+                        , TB_DP_PROD P
+                        , TB_DP_PROD_RSHP SP                      
+                        , TB_DP_TENANT_PROD TP
+                        , TB_DP_MENU_PROD_MAPG CP
+                        , TB_DP_MENU C
+                        , TB_DP_SPRT_DEVICE SH
+                        , TB_CM_DEVICE PHI    
+                        , TB_DP_CHART_PROD_MAPG MCP
+                        , TB_DP_MUSIC_CHART MCI
+                    WHERE MP.PROD_ID = P.PROD_ID
+                      AND TP.PROD_ID = P.PROD_ID
+                      AND CP.PROD_ID = P.PROD_ID
+                      AND C.MENU_ID = CP.MENU_ID
+                      AND (SP.PART_PROD_ID = P.PROD_ID OR SP.PROD_ID = P.PROD_ID)
+                      AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
+                      AND SH.PROD_ID = P.PROD_ID
+                      AND PHI.DEVICE_MODEL_CD = #{deviceModelCd}
+                      AND TP.PROD_STATUS_CD = 'PD000403'
+                      AND (C.TOP_MENU_ID = #{menuId} OR C.MENU_ID = #{menuId})
+                      AND PHI.USE_YN = 'Y'
+                      AND C.USE_YN = 'Y'
+                      AND PHI.MUSIC_SPRT_YN = 'Y'  
+                      AND MCP.PROD_ID = P.PROD_ID
+                      AND MCI.MUSIC_ID = MCP.MUSIC_ID
+                      AND MCI.CHART_GENRE_CD = CP.MENU_ID
+                      AND MCP.PROD_ID = CP.PROD_ID
+                      AND MP.CONTENTS_TYPE_CD IN ('PD002501', 'PD002502')
+                      AND MP.META_CLSF_CD = 'CT25' 
+                      AND MCI.CHART_CLSF_CD = 'DP004905'
+                      AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
+                                                FROM TB_DP_BATCH_COMPT
+                                               WHERE TENANT_ID = 'S01'
+                                                 AND BATCH_ID = 'MELON_DP004905')
+                    GROUP BY C.MENU_ID  
+                    UNION ALL
+                    SELECT
+                          NVL( COUNT(*), 0 ) AS CAT_PROD_CNT
+                        , 'DP16003001' AS MENU_ID
+                     FROM TB_DP_MULTIMDA_PROD_0108_01 MP
+                        , TB_DP_PROD P
+                        , TB_DP_PROD_RSHP SP                      
+                        , TB_DP_TENANT_PROD TP
+                        , TB_DP_MENU_PROD_MAPG CP
+                        , TB_DP_MENU C
+                        , TB_DP_SPRT_DEVICE SH
+                        , TB_CM_DEVICE PHI    
+                        , TB_DP_CHART_PROD_MAPG MCP
+                        , TB_DP_MUSIC_CHART MCI
+                    WHERE MP.PROD_ID = P.PROD_ID
+                      AND TP.PROD_ID = P.PROD_ID
+                      AND CP.PROD_ID = P.PROD_ID
+                      AND C.MENU_ID = CP.MENU_ID
+                      AND (SP.PART_PROD_ID = P.PROD_ID OR SP.PROD_ID = P.PROD_ID)
+                      AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
+                      AND SH.PROD_ID = P.PROD_ID
+                      AND PHI.DEVICE_MODEL_CD = #{deviceModelCd}
+                      AND TP.PROD_STATUS_CD = 'PD000403'
+                      AND (C.TOP_MENU_ID = #{menuId} OR C.MENU_ID = #{menuId})
+                      AND PHI.USE_YN = 'Y'
+                      AND C.USE_YN = 'Y'
+                      AND PHI.MUSIC_SPRT_YN = 'Y'  
+                      AND MCP.PROD_ID = P.PROD_ID
+                      AND MCI.MUSIC_ID = MCP.MUSIC_ID
+                      AND MCP.PROD_ID = CP.PROD_ID
+                      AND MP.CONTENTS_TYPE_CD IN ('PD002501', 'PD002502')
+                      AND MP.META_CLSF_CD = 'CT25' 
+                      AND MCI.CHART_CLSF_CD = 'DP004904'
+                      AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
+                                                FROM TB_DP_BATCH_COMPT
+                                               WHERE TENANT_ID = 'S01'
+                                                 AND BATCH_ID = 'MELON_DP004904')
+                    GROUP BY C.MENU_ID
+                   ) P
+                   WHERE C.MENU_ID = P.MENU_ID(+)
+              )
+              WHERE MENU_ID not like 'DP16001%' 
+                AND MENU_ID <![CDATA[<>]]> 'DP16003'
+              ORDER BY CAT_PRIOR
+    </select>
+    
+	    
+</mapper>
