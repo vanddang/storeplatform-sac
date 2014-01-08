@@ -6,7 +6,7 @@
     <select id="getBatchStandardDate" parameterType="com.skplanet.storeplatform.sac.display.common.vo.BatchStandardDateRequest" resultType="String">
        /* CommonMapper.xml, getBatchStandardDate, SAC : 정희원 , 2014-01-07 */
         SELECT
-          to_char(STD_DT, 'yyyyMMddHH24mmss')
+          to_char(STD_DT, 'yyyyMMddHH24miss')
         FROM TB_DP_BATCH_COMPT
         WHERE TENANT_ID=#{tenantId}
           AND BATCH_ID=#{batchId}
