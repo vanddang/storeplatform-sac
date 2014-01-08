@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
- * 판매자
+ * 판매자 회원 등록/수정/탈퇴 기능
  * 
  * Updated on : 2014. 1. 7. Updated by : 김경복, 부르칸.
  */
@@ -55,4 +55,9 @@ public class SellerController {
 		logger.info("LockAccountReq : {}", req);
 		return this.sellerService.lockAccount(req);
 	}
+	// /seller/authorize/v1
+	// public @ResponseBody AuthorizeRes authorize(){
+
+	// }
+
 }

@@ -62,7 +62,6 @@ public class LockAccountTest {
 	public void lockAccount() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
-		// .addHeaders("", "")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

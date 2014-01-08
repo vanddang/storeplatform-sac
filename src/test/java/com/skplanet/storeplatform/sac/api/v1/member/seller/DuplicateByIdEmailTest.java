@@ -21,11 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 
 @ActiveProfiles(value = "local")
@@ -59,17 +57,8 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateByIdEmail() {
-		new TestCaseTemplate(this.mockMvc).url("/member/seller/duplicateByIdEmail/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DuplicateByIdEmailReq req = new DuplicateByIdEmailReq();
-						req.setKeyType("");
-						req.setKeyString("test_jun");
-						logger.info("{}", req.toString());
-						return req;
-					}
-				}).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/seller/duplicateByIdEmail/v1?keyType=id&keyString=test_jun")
+				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
