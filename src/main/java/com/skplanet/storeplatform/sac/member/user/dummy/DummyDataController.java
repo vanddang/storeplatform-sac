@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetSupportAomRes;
@@ -339,27 +338,27 @@ public class DummyDataController {
 		return res;
 	}
 
-	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public ExistRes exist() {
-
-		logger.info("####################################################");
-		logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
-		logger.info("####################################################");
-
-		ExistRes res = new ExistRes();
-		res.setUserKey("IW102158844420091030165015");
-		res.setTstoreYn("Y");
-		res.setUserType("US011501");
-		res.setUserId("hkd");
-		res.setIsRealName("N");
-		res.setUnder14(null);
-		res.setAgencyYn(null);
-		res.setUnder19(null);
-		res.setUserEmail("hkd@aaaa.com");
-
-		return res;
-	}
+	// @RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public ExistRes exist() {
+	//
+	// logger.info("####################################################");
+	// logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
+	// logger.info("####################################################");
+	//
+	// ExistRes res = new ExistRes();
+	// res.setUserKey("IW102158844420091030165015");
+	// res.setTstoreYn("Y");
+	// res.setUserType("US011501");
+	// res.setUserId("hkd");
+	// res.setIsRealName("N");
+	// res.setUnder14(null);
+	// res.setAgencyYn(null);
+	// res.setUnder19(null);
+	// res.setUserEmail("hkd@aaaa.com");
+	//
+	// return res;
+	// }
 
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody

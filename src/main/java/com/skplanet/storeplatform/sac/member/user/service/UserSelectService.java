@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 
@@ -29,6 +28,6 @@ public interface UserSelectService {
 	 * @param req
 	 * @return
 	 */
-	public ExistRes exist(HeaderVo headerVo, ExistReq req);
+	public ExistRes exist(ExistReq req);
 
 }
