@@ -51,7 +51,7 @@ public class UserJoinController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) {
+	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) throws Exception {
 		logger.info("####################################################");
 		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		logger.info("####################################################");
@@ -75,7 +75,7 @@ public class UserJoinController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) {
+	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) throws Exception {
 
 		logger.info("####################################################");
 		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");

@@ -40,13 +40,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 	// private UserSCI userSCI;
 
 	@Override
-	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) {
+	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
 
 		/**
 		 * TODO (UAPS 연동) 모번호 조회 - 989로 시작하는 MDN이면 실행
 		 */
-		String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-		logger.info("### opmdMdn : " + opmdMdn);
+		// String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+		// logger.info("### opmdMdn : " + opmdMdn);
 
 		// /**
 		// * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
@@ -98,7 +98,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) {
+	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) throws Exception {
 
 		CreateByAgreementRes result = new CreateByAgreementRes();
 		result.setUserKey("12321423543464567457");

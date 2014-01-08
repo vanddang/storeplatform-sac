@@ -52,13 +52,13 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * 모바일 전용 회원 가입 (MDN 회원 가입)
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void testDetail() throws Exception {
+	public void createByMdn() throws Exception {
 
 		CreateByMdnReq reqJson = new CreateByMdnReq();
 		reqJson.setDeviceId("01090556567");
@@ -69,7 +69,7 @@ public class CreateByMdnTest {
 		reqJson.setParentType("");
 		reqJson.setRealNameMethod("US011101");
 		reqJson.setParentName("부모이름");
-		reqJson.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrL Kv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+		reqJson.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 		reqJson.setParentEmail("hkd@aaaa.com");
 		reqJson.setParentTelecom("US001201");
 		reqJson.setParentMdn("01088889999");
@@ -77,7 +77,6 @@ public class CreateByMdnTest {
 		reqJson.setParentBirth("19700407");
 
 		// 동의 정보
-
 		AgreementInfo agreementInfo = new AgreementInfo();
 		agreementInfo.setExtraAgreementId("asdasdasd");
 		agreementInfo.setExtraAgreementVersion("0.1");

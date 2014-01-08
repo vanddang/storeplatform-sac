@@ -30,8 +30,9 @@ public interface UserJoinService {
 	 * @param headerVo
 	 * @param req
 	 * @return
+	 * @throws Exception
 	 */
-	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req);
+	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception;
 
 	/**
 	 * <pre>
@@ -41,7 +42,8 @@ public interface UserJoinService {
 	 * @param headerVo
 	 * @param req
 	 * @return
+	 * @throws Exception
 	 */
-	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req);
+	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) throws Exception;
 
 }
