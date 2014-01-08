@@ -8,7 +8,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.skplanet.storeplatform.sac.external.idp.vo.IDPSenderM;
 
@@ -22,8 +21,8 @@ public class IDPSender {
 	private static final Logger logger = LoggerFactory.getLogger(IDPSender.class);
 
 	// property get
-	@Value("#{config['idp.sp_key']}")
-	String IDP_SP_KEY;
+	// @Value("#{config['idp.sp_key']}")
+	String IDP_SP_KEY = "6b0cc48e477f066b7ef353a4f9e8b756";
 
 	/* IDP 요청 URL */
 	public static final String IDP_REQ_URL_JOIN = "/web/Join.api"; // omp.dev.idp.requrl.join
@@ -477,7 +476,7 @@ public class IDPSender {
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("sp_id=");
-		// sb.append(IDPManager.IDP_REQ_OMP_SERVICE_ID); // TODO
+		sb.append(IDPManager.IDP_REQ_OMP_SERVICE_ID); // TODO
 		sb.append("|");
 		sb.append("time=");
 		sb.append(time);
