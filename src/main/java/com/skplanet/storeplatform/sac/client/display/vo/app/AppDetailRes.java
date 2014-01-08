@@ -4,6 +4,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * 앱 상품 상세 Response
  * Updated on : 2014. 01. 06. Updated by : 정희원, SK 플래닛.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AppDetailRes extends CommonInfo implements Serializable {
 
     private CommonResponse commonResponse;
