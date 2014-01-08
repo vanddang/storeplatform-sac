@@ -20,10 +20,10 @@ import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse;
-import com.skplanet.storeplatform.sac.client.purchase.vo.GiftConfirmReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.GiftConfirmRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.GiftReceiveReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.GiftReceiveRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
 
 @Controller
