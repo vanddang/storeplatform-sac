@@ -40,32 +40,45 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	@Autowired
 	private IDPSCI idpSCI;
 
-	// private static ImIDPManager instance = null;
-
-	private static ImIDPReceiver idpReceiver = null;
-	private static ImIDPSender imidpSender = null;
-	private static ImIDPReceiverM receivData = null;
+	private static ImIDPReceiver idpReceiver = new ImIDPReceiver();
+	private static ImIDPSender imidpSender = new ImIDPSender();
+	private static ImIDPReceiverM receivData = new ImIDPReceiverM();
 
 	/** OMP 서비스 도메인 */
-	public static String OMP_SERVICE_DOMAIN = "";
+	public static String OMP_SERVICE_DOMAIN = "https://www.skplanetoneid.com";
 	/** OMP 서비스 URL */
-	public static String OMP_SERVICE_URL = "";
+	public static String OMP_SERVICE_URL = "omp.dev.service.url";
 	/** OMP 서비스 URL (HTTPS) */
-	public static String OMP_SERVICE_URL_HTTPS = "";
+	public static String OMP_SERVICE_URL_HTTPS = "omp.dev.service.url.https";
 	/** OMP 서비스 URL IP */
-	public static String OMP_SERVICE_URL_IP = "";
+	public static String OMP_SERVICE_URL_IP = "omp.dev.service.url.ip";
 
 	/** IDP 요청 도메인 (HTTP) */
-	public static String IDP_REQUEST_URL = "";
+	public static String IDP_REQUEST_URL = "omp.imidp.request.url";
 	/** IDP 요청 도메인 (HTTPS) */
-	public static String IDP_REQUEST_URL_HTTPS = ""; //
+	public static String IDP_REQUEST_URL_HTTPS = "omp.imidp.request.url.https";
 
 	/** IDP에 등록한 OMP Association Key */
-	public static String IDP_REQ_OMP_ASSOC_KEY = "";
+	public static String IDP_REQ_OMP_ASSOC_KEY = "omp.idp.request.assockey";
 	/** IDP로 부터 발급된 Service ID */
-	public static String IDP_REQ_OMP_SERVICE_ID = "";
+	public static String IDP_REQ_OMP_SERVICE_ID = "omp.idp.request.serviceid";
 
-	public static String IDP_OPERATION_MODE = "";
+	public static String IDP_OPERATION_MODE = "omp.idp.request.operation";
+
+	/* One ID 2.0 Portal Inbound Url Information */
+	public static String ONEID_PORTAL_DOMAIN = "https://www.skplanetoneid.com";// domain
+	public static String ONEID_PORTAL_JOIN = "omp.oneid.portal.join";// 가입
+	public static String ONEID_PORTAL_TRANS_JOIN = "omp.oneid.portal.transJoin";// 바꾸기 (기존회원을 one id portal로 전환
+	public static String ONEID_PORTAL_TRANS_JOIN_POINT = "omp.oneid.portal.transJoinPoint";// 포인트 가입 처리 바꾸기
+	public static String ONEID_PORTAL_AGREE = "omp.oneid.portal.agree";// 서비스 이용동의
+	public static String ONEID_PORTAL_AGREE_POINT = "omp.oneid.portal.agreePoint";// 서비스 이용동의
+	public static String ONEID_PORTAL_DELETE = "omp.oneid.portal.delete"; // One ID 탈퇴
+	public static String ONEID_PORTAL_UNLOCKUSER = "omp.oneid.portal.unlockUser";// 아이디 잠금 해지
+	public static String ONEID_PORTAL_SEARCHID = "omp.oneid.portal.searchIdForm";//
+	public static String ONEID_PORTAL_SEARCHPASSWORD = "omp.oneid.portal.searchPasswordForm";//
+	public static String ONEID_PORTAL_GUIDE = "omp.oneid.portal.guide";//
+
+	/* One ID 2.0 */
 
 	/**
 	 * 2.1.1 신규가입요청
