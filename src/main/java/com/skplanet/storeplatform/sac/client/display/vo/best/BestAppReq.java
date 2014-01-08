@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class BestAppReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+	private String stdDt; // 배치완료 기준일시
 	private String listId; // 리스트 Id
 	private String imageSizeCd; // 이미지 사이즈 코드
 	private String drm; // drm 지원구분
@@ -26,6 +27,31 @@ public class BestAppReq extends CommonInfo {
 	private String menuId; // 메뉴 Id
 	private String offset; // 시작점 ROW
 	private String count; // 페이지당 노출 ROW 수
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param stdDt
+	 *            stdDt
+	 */
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
+	}
 
 	/**
 	 * 
