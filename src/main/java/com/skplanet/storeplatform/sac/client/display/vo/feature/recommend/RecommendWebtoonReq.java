@@ -26,6 +26,7 @@ public class RecommendWebtoonReq extends CommonInfo {
 	private String menuId; // 메뉴아이디
 	private String listId; // 리스트아이디
 	private String weekDayCd; // 요일별 구분 코드
+	private String stdDt;
 	private int offset = 1; // offset
 	private int count = 20; // count
 
@@ -83,6 +84,14 @@ public class RecommendWebtoonReq extends CommonInfo {
 
 	public void setWeekDayCd(String weekDayCd) {
 		this.weekDayCd = weekDayCd;
+	}
+
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 	public int getOffset() {

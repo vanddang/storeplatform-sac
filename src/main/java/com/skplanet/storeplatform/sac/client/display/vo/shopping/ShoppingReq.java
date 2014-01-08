@@ -28,6 +28,7 @@ public class ShoppingReq extends CommonInfo {
 	private String prodGradeCd; // 상품등급코드
 	private String b2bProd; // B2B 상품 구분
 	private String orderedBy; // 정렬순서
+	private String stdDt; // 기준일자
 	private int offset; // offset
 	private int count; // count
 
@@ -101,6 +102,14 @@ public class ShoppingReq extends CommonInfo {
 
 	public void setOrderedBy(String orderedBy) {
 		this.orderedBy = orderedBy;
+	}
+
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 	public int getOffset() {
