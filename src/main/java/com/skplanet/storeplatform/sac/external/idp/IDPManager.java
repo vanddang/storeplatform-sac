@@ -19,51 +19,23 @@ import com.skplanet.storeplatform.sac.external.idp.constant.IDPManagerConstants;
 public class IDPManager implements IDPManagerConstants {
 
 	/** OMP 서비스 도메인 */
-	public static String OMP_SERVICE_DOMAIN = "";
+	public static String OMP_SERVICE_DOMAIN = "www.omp.com";
 	/** OMP 서비스 URL */
-	public static String OMP_SERVICE_URL = "";
+	public static String OMP_SERVICE_URL = "omp.dev.service.url";
 	/** OMP 서비스 URL (HTTPS) */
-	public static String OMP_SERVICE_URL_HTTPS = "";
+	public static String OMP_SERVICE_URL_HTTPS = "omp.dev.service.url.https";
 	/** OMP 서비스 URL IP */
-	public static String OMP_SERVICE_URL_IP = "";
+	public static String OMP_SERVICE_URL_IP = "omp.dev.service.url.ip";
 
 	/** IDP 요청 도메인 (HTTP) */
-	public static String IDP_REQUEST_URL = "";
+	public static String IDP_REQUEST_URL = "http://idp.innoace.com";
 	/** IDP 요청 도메인 (HTTPS) */
-	public static String IDP_REQUEST_URL_HTTPS = ""; //
-
-	public static String IDP_REQUEST_SERVER_URL = "";
-	public static String IDP_REQUEST_SERVER_URL_HTTPS = "";
+	public static String IDP_REQUEST_URL_HTTPS = "https://idp.innoace.com"; //
 
 	/** IDP에 등록한 OMP Association Key */
-	public static String IDP_REQ_OMP_ASSOC_KEY = "";
+	public static String IDP_REQ_OMP_ASSOC_KEY = "6b0cc48e477f066b7ef353a4f9e8b756";
 	/** IDP로 부터 발급된 Service ID */
-	public static String IDP_REQ_OMP_SERVICE_ID = "";
+	public static String IDP_REQ_OMP_SERVICE_ID = "OMP10000";
 	/** IDP 인증 후 서비스 리턴 URL */
-	// 로그인, SSO 인증
-	public static String IDP_REDT_URL_USER_AUTH = "";
-	/** IDP SSO 로그아웃 처리 후 리턴 URL */
-	// 로그 아웃
-	public static String IDP_REDT_URL_USER_LOGOUT = "";
-	// 회원가입
-	public static String IDP_REDT_URL_USER_REGIST_AUTH = "";
-	// 회원정보 변경
-	public static String IDP_REDT_URL_USER_MODIFY_PROFILE_AUTH = "";
-	// 이메일 변경
-	public static String IDP_REDT_URL_USER_MODIFY_EMAIL_AUTH = "";
-	// 패스워드 변경
-	public static String IDP_REDT_URL_USER_MODIFY_PWD_AUTH = "";
-
-	/*
-	 * IDP 통합 회원 고도화 추가
-	 */
-	// 타채널 아이디 인증
-	public static String IDP_REDT_URL_OTHER_CHANNEL_ID_AUTH = "";
-	// 타채널 가입 리스트 조회
-	public static String IDP_REDT_URL_OTHER_CHANNEL_LIST = "";
-
-	// -------------------------------------------------
-	// 기본 API
-	// -------------------------------------------------
 
 }
