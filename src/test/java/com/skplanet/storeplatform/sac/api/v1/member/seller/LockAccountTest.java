@@ -59,7 +59,7 @@ public class LockAccountTest {
 	 * </pre>
 	 */
 	@Test
-	public void Create() {
+	public void lockAccount() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -68,7 +68,7 @@ public class LockAccountTest {
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
 						req.setSellerId("test_jun");
-						logger.debug("{}", req.toString());
+						logger.info("{}", req.toString());
 						return req;
 					}
 				}).success(LockAccountRes.class, new SuccessCallback() {
@@ -76,7 +76,7 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountRes res = (LockAccountRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.debug("{}", res.toString());
+						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
