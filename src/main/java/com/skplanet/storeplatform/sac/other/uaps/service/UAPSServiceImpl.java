@@ -12,44 +12,28 @@ package com.skplanet.storeplatform.sac.other.uaps.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.sac.other.uaps.repository.UAPSRepository;
 
-/**
- * 
- * Calss 설명
- * 
- * Updated on : 2014. 1. 7. Updated by : 홍길동, SK 플래닛.
- */
 @Profile(value = { "stag", "real" })
 @Service
+@Transactional
 public class UAPSServiceImpl implements UAPSService {
 
 	@Autowired
-	private UAPSSCI uapsSCI;
+	private UAPSRepository uapsRepository;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.other.uaps.service.UAPSService#getOpmd(java.lang.String)
-	 */
 	@Override
 	public OpmdRes getOpmd(String opmdMdn) {
-		return this.uapsSCI.getOpmdInfo(opmdMdn);
+		return this.uapsRepository.getOpmd(opmdMdn);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.other.uaps.service.UAPSService#getOpmdChild(java.lang.String,
-	 * java.lang.String)
-	 */
 	@Override
 	public OpmdChildRes getOpmdChild(String deviceId, String type) {
-		// return this.uapsSCI.getOpmdChildInfo(deviceId, type);
-		return null;
+		return this.uapsRepository.getOpmdChild(deviceId, type);
 	}
 
 }

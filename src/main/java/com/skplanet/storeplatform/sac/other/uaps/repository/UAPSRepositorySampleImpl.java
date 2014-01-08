@@ -7,21 +7,22 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.other.uaps.service;
+package com.skplanet.storeplatform.sac.other.uaps.repository;
 
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.external.client.uaps.vo.LimitSvcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UafmapRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 
 @Profile(value = { "dev", "local" })
-@Service
-@Transactional
-public class UAPSServiceSampleImpl implements UAPSService {
+@Component
+public class UAPSRepositorySampleImpl implements UAPSRepository {
 
 	@Override
 	public OpmdRes getOpmd(String opmdMdn) {
@@ -39,4 +40,29 @@ public class UAPSServiceSampleImpl implements UAPSService {
 		opmdChildRes.setOpmdMdnList(Arrays.asList(new String[] { "98765432101", "98765432102", "98765432103" }));
 		return opmdChildRes;
 	}
+
+	@Override
+	public UserRes getMapping(String deviceId, String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserRes getAuthorize(String custId, String deviceId, String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UafmapRes getDevice(String deviceId, String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LimitSvcRes getLimitSvc(String deviceId, String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

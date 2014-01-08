@@ -13,18 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.sac.other.uaps.service.UAPSService;
 
-/**
- * 
- * Calss 설명 (E/C로 Bypass예정)
- * 
- * Updated on : 2014. 1. 2. Updated by : 김현일, 인크로스
- */
 @Controller
 @RequestMapping(value = "/other/uaps")
 public class UAPSController {
@@ -32,35 +27,15 @@ public class UAPSController {
 	@Autowired
 	private UAPSService uapsService;
 
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param opmdMdn
-	 * @return
-	 */
 	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OpmdRes getOpmd(String opmdMdn) {
+	public OpmdRes getOpmd(@RequestParam String opmdMdn) {
 		return this.uapsService.getOpmd(opmdMdn);
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param deviceId
-	 * @param type
-	 * @return
-	 */
 	@RequestMapping(value = "/getOpmdChild/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OpmdChildRes getOpmdChild(String deviceId, String type) {
+	public OpmdChildRes getOpmdChild(@RequestParam String deviceId, @RequestParam String type) {
 		return this.uapsService.getOpmdChild(deviceId, type);
 	}
-
 }
