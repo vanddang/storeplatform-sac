@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.io.Serializable;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -7,7 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 반범진. 지티소프트.
  */
-public class AuthorizeByIdReq extends CommonInfo {
+public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

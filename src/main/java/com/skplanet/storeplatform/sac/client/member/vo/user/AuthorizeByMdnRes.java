@@ -25,6 +25,11 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	 */
 	private String userAuthKey;
 
+	/**
+	 * 회원상태
+	 */
+	private String userStatus;
+
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -39,6 +44,14 @@ public class AuthorizeByMdnRes extends CommonInfo {
 
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
+	}
+
+	public String getUserStatus() {
+		return this.userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
 	}
 
 }

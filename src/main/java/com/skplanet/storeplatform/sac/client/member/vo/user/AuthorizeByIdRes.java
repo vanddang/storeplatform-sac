@@ -25,6 +25,21 @@ public class AuthorizeByIdRes extends CommonInfo {
 	 */
 	private String userAuthKey;
 
+	/**
+	 * 회원상태
+	 */
+	private String userStatus;
+
+	/**
+	 * 가입사이트 코드(mbrStatus Temporary 일때만 유효)
+	 */
+	private String joinSiteCd;
+
+	/**
+	 * 가입사이트 코드 값(mbrStatus Temporary 일때만 유효)
+	 */
+	private String joinSiteNm;
+
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -39,6 +54,30 @@ public class AuthorizeByIdRes extends CommonInfo {
 
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
+	}
+
+	public String getUserStatus() {
+		return this.userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public String getJoinSiteCd() {
+		return this.joinSiteCd;
+	}
+
+	public void setJoinSiteCd(String joinSiteCd) {
+		this.joinSiteCd = joinSiteCd;
+	}
+
+	public String getJoinSiteNm() {
+		return this.joinSiteNm;
+	}
+
+	public void setJoinSiteNm(String joinSiteNm) {
+		this.joinSiteNm = joinSiteNm;
 	}
 
 }
