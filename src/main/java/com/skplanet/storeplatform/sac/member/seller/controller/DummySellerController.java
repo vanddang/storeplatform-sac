@@ -2,10 +2,14 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsell
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailRes;
@@ -46,6 +51,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
+import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
  * 판매자 서비스 Controller
@@ -58,6 +64,9 @@ public class DummySellerController {
 
 	private static final Logger logger = LoggerFactory.getLogger(DummySellerController.class);
 
+	@Autowired
+	private SellerService sellerService;
+
 	/**
 	 * <pre>
 	 * 판매자 회원 가입
@@ -65,7 +74,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateRes create() throws Exception {
+	public CreateRes create(@RequestHeader Map<String, Object> headers) {
+
+		this.sellerService.createSeller();
 
 		CreateRes responseVO = new CreateRes();
 		SellerInfo sellerInfo = new SellerInfo();
@@ -75,6 +86,8 @@ public class DummySellerController {
 		sellerInfo.setSellerMainStatus("US010704");
 		sellerInfo.setSellerSubStatus("US010301");
 		responseVO.setSellerInfo(sellerInfo);
+
+		logger.debug("response : , {}" + responseVO.toString());
 
 		return responseVO;
 	}
@@ -462,12 +475,11 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public LockAccountRes lockAccount() throws Exception {
+	public LockAccountRes lockAccount(@RequestBody LockAccountReq req) throws Exception {
 
-		LockAccountRes responseVO = new LockAccountRes();
-		responseVO.setSellerKey("User1");
+		req.setSellerId(req.getSellerId());
 
-		return responseVO;
+		return this.sellerService.updateStatusSeller(req);
 	}
 
 	/**
