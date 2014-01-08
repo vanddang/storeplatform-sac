@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.member.idp.service;
 
 import java.util.HashMap;
 
+import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
+
 /**
  * IDP에서 전달되는 Provisioning 및 Rx 처리를 위한 인터페이스
  * 
@@ -17,8 +19,21 @@ public interface IdpService {
 	 * 
 	 * @param map
 	 *            Request로 받은 Parameter Map
-	 * @return HashMap
+	 * @return One ID Rx 처리 결과
 	 */
-	public HashMap RXCreateUserIDP(HashMap map);
+	public ImResult rXCreateUserIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회선 변경 정보 Provisioning (무선, 통합 회원)
+	 * - CMD : changeMobileNumber
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String changeMobileNumber(HashMap map);
 
 }

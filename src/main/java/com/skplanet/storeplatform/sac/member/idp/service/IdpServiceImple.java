@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
+
 /**
  * IDP에서 전달되는 Provisioning 및 Rx 처리를 위한 인터페이스
  * 
@@ -20,11 +22,38 @@ public class IdpServiceImple implements IdpService {
 	 * 
 	 * @param map
 	 *            Request로 받은 Parameter Map
-	 * @return HashMap
+	 * @return One ID Rx 처리 결과
 	 */
 	@Override
-	public HashMap RXCreateUserIDP(HashMap map) {
-		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
-		return null;
+	public ImResult rXCreateUserIDP(HashMap map) {
+		System.out.println("rXCreateUserIDP ------- ");
+		ImResult imResult = new ImResult();
+		imResult.setResult("setResult");
+		imResult.setResultText("setResultText");
+		imResult.setImIntSvcNo("setImIntSvcNo");
+		imResult.setCancelEtc("setCancelEtc");
+		imResult.setCancelRetUrl("setCancelRetUrl");
+		imResult.setCmd("setCmd");
+		imResult.setIsCancelAble("setIsCancelAble");
+		imResult.setTermRsnCd("setTermRsnCd");
+		imResult.setUserId("setUserId");
+		return imResult;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 회선 변경 정보 Provisioning (무선, 통합 회원)
+	 * - CMD : changeMobileNumber
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	@Override
+	public String changeMobileNumber(HashMap map) {
+		System.out.println("changeMobileNumber ------- ");
+		return "0000";
 	}
 }
