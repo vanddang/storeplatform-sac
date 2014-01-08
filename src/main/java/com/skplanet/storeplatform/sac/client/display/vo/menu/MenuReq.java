@@ -28,6 +28,10 @@ public class MenuReq extends CommonInfo implements Serializable {
 
 	private String systemId; // 시스템ID
 
+	private String deviceModelCd; // device model code
+
+	private String langCd; // language code
+
 	public String getTenantId() {
 		return this.tenantId;
 	}
@@ -52,4 +56,19 @@ public class MenuReq extends CommonInfo implements Serializable {
 		this.systemId = systemId;
 	}
 
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
 }
