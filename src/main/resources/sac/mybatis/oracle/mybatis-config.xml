@@ -84,5 +84,8 @@
         <typeAlias alias="ShoppingReq"  type="com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq" />
         <typeAlias alias="ShoppingDTO"  type="com.skplanet.storeplatform.sac.display.shopping.vo.ShoppingDTO" />
         
+        <!-- BEST 앱 상품 조회 -->
+        <typeAlias alias="BestAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq" />
+        <typeAlias alias="BestAppDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO" />                
     </typeAliases>
 </configuration>
