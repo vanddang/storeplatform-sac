@@ -42,20 +42,22 @@ public class UserSelectController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ExistRes exist(ExistReq req) {
+	public ExistRes exist(ExistReq req) throws Exception {
 		logger.info("####################################################");
 		logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
 		logger.info("####################################################");
 
-		/**
-		 * 파라미터 유효성 체크 todo
-		 */
+		ExistRes res = new ExistRes();
 
 		/**
 		 * 회원기본정보 조회 Biz
 		 */
-		// req.setUserKey("IW1024258669020110627132822");
-		ExistRes res = this.svc.exist(req);
+		if (req.getDeviceId() != null || req.getDeviceKey() != null || req.getUserId() != null
+				|| req.getUserKey() != null) {
+			res = this.svc.exist(req);
+		} else {
+			throw new RuntimeException("입력된 파라미터가 없습니다.");
+		}
 
 		logger.info("Response : {}", res.toString());
 

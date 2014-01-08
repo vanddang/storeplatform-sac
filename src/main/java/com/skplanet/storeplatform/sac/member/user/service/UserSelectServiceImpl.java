@@ -20,8 +20,6 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
@@ -41,18 +39,33 @@ public class UserSelectServiceImpl implements UserSelectService {
 	private UserSCI userSCI;
 
 	@Override
-	public ExistRes exist(ExistReq req) {
+	public ExistRes exist(ExistReq req) throws Exception {
+		ExistRes result = new ExistRes();
+		SearchUserResponse schRes = new SearchUserResponse();
 
 		/**
 		 * TODO 회원기본정보 조회
 		 */
 		SearchUserRequest schReq = new SearchUserRequest();
-		CheckDuplicationRequest chkReq = new CheckDuplicationRequest();
 
 		List<KeySearch> keySchList = new ArrayList<KeySearch>();
 		KeySearch keySch = new KeySearch();
-		keySch.setKeyType("user_key");
-		keySch.setKeyString(req.getUserKey());
+		if (req.getUserKey() != null) {
+			keySch.setKeyType("user_key");
+			keySch.setKeyString(req.getUserKey());
+		} else if (req.getUserId() != null) {
+			keySch.setKeyType("user_id");
+			keySch.setKeyString(req.getUserId());
+		} else if (req.getDeviceId() != null) {
+			keySch.setKeyType("device_id");
+			keySch.setKeyString(req.getDeviceId());
+		} else if (req.getDeviceKey() != null) {
+			keySch.setKeyType("device_key");
+			keySch.setKeyString(req.getDeviceKey());
+		} else {
+			keySch.setKeyType("user_key");
+			keySch.setKeyString(req.getUserKey());
+		}
 		keySchList.add(keySch);
 
 		schReq.setKeySearchList(keySchList);
@@ -62,52 +75,37 @@ public class UserSelectServiceImpl implements UserSelectService {
 		commonRequest.setTenantID("T01");
 		schReq.setCommonRequest(commonRequest);
 
-		SearchUserResponse schRes = this.userSCI.searchUser(schReq);
-
-		/**
-		 * TODO ID 또는 이메일 존재하는지 확인 : Tstore 회원판별용 (협의필요)
-		 */
-		List<KeySearch> keySchListDupl = new ArrayList<KeySearch>();
-		KeySearch keySchDupl = new KeySearch();
-		keySchDupl.setKeyType("user_id");
-		keySchDupl.setKeyString(schRes.getUserMbr().getUserID());
-		keySchListDupl.add(keySchDupl);
-
-		chkReq.setCommonRequest(commonRequest);
-		chkReq.setKeySearchList(keySchListDupl);
-
-		CheckDuplicationResponse chkRes = this.userSCI.checkDuplication(chkReq);
+		schRes = this.userSCI.searchUser(schReq);
 
 		logger.info("######" + schRes.getCommonResponse().getResultCode());
 		logger.info("######" + schRes.getCommonResponse().getResultMessage());
 
-		logger.info("###### Tstore ID/EMail 체크 : " + chkRes.getIsRegistered());
-		logger.info("###### 유저 아이디 : " + schRes.getUserMbr().getUserID());
-		logger.info("###### 유저 키 : " + schRes.getUserMbr().getUserKey());
-		logger.info("###### 유저 이름 : " + schRes.getUserMbr().getUserName());
-		logger.info("###### 통신사 : " + schRes.getUserMbr().getUserTelecom());
-		logger.info("###### 유저 타입 : " + schRes.getUserMbr().getUserType());
-		logger.info("###### 유저 이메일 : " + schRes.getUserMbr().getUserEmail());
-		logger.info("###### 실명인증여부 : " + schRes.getMbrAuth().getIsRealName());
-		logger.info("###### 법정대리인동의여부 : " + schRes.getMbrLglAgent().getIsParent());
-		logger.info("###### 14세 미만 여부 : ");
-		logger.info("###### 19세 미만 여부 : ");
-		logger.info("###### 상품 19금 여부 : ");
+		/**
+		 * SC Method Call Success
+		 */
+		if ("0000".equals(schRes.getCommonResponse().getResultCode())) {
 
-		ExistRes result = new ExistRes();
-		result.setUserKey(schRes.getUserMbr().getUserKey());
-		result.setTstoreYn(chkRes.getIsRegistered());
-		result.setUserType(schRes.getUserMbr().getUserType());
-		result.setUserId(schRes.getUserMbr().getUserID());
-		result.setIsRealName(schRes.getMbrAuth().getIsRealName());
-		result.setUnder14(null);
-		result.setAgencyYn(schRes.getMbrLglAgent().getIsParent());
-		result.setUnder19(null);
-		result.setProdAdultYn(null);
-		result.setUserEmail(schRes.getUserMbr().getUserEmail());
+			if (schRes.getUserMbr() != null) {
+				result.setTstoreYn("Y");
+				result.setUserKey(schRes.getUserMbr().getUserKey());
+				result.setUserType(schRes.getUserMbr().getUserType());
+				result.setUserId(schRes.getUserMbr().getUserID());
+				result.setIsRealName(schRes.getUserMbr().getIsRealName());
+				result.setAgencyYn(schRes.getUserMbr().getIsParent());
+				result.setUserEmail(schRes.getUserMbr().getUserEmail());
+			} else {
+				result.setTstoreYn("N");
+			}
+
+		}
+		/**
+		 * SC Method Call Error
+		 */
+		else {
+			throw new RuntimeException("SC 호출에러 Code : " + schRes.getCommonResponse().getResultCode());
+		}
 
 		return result;
-
 	}
 
 }

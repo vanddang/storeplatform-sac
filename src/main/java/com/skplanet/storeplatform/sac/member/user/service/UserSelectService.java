@@ -27,7 +27,8 @@ public interface UserSelectService {
 	 * @param headerVo
 	 * @param req
 	 * @return
+	 * @throws Exception
 	 */
-	public ExistRes exist(ExistReq req);
+	public ExistRes exist(ExistReq req) throws Exception;
 
 }
