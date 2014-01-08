@@ -15,6 +15,11 @@ public class DuplicateByIdEmailRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	public DuplicateByIdEmailRes(String isRegistered) {
+		super();
+		this.isRegistered = isRegistered;
+	}
+
 	private String isRegistered;
 
 	public String getIsRegistered() {
