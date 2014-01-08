@@ -10,5 +10,6 @@ public interface SellerService {
 	public CreateRes createSeller();
 
 	/** 판매자 회원 계정 잠금 */
-	public LockAccountRes updateStatusSeller(LockAccountReq request);
+	public LockAccountRes lockAccount(LockAccountReq req);
+
 }

@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
@@ -87,7 +88,7 @@ public class DummySellerController {
 		sellerInfo.setSellerSubStatus("US010301");
 		responseVO.setSellerInfo(sellerInfo);
 
-		logger.debug("response : , {}" + responseVO.toString());
+		logger.debug("response : {}" + responseVO.toString());
 
 		return responseVO;
 	}
@@ -99,10 +100,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DuplicateByIdEmailRes duplicateByIdEmail() throws Exception {
+	public DuplicateByIdEmailRes duplicateByIdEmail(@RequestBody DuplicateByIdEmailReq req) throws Exception {
 
-		DuplicateByIdEmailRes responseVO = new DuplicateByIdEmailRes();
-		responseVO.setIsRegistered("Y");
+		DuplicateByIdEmailRes responseVO = new DuplicateByIdEmailRes("Y");
 
 		return responseVO;
 	}
@@ -476,10 +476,7 @@ public class DummySellerController {
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public LockAccountRes lockAccount(@RequestBody LockAccountReq req) throws Exception {
-
-		req.setSellerId(req.getSellerId());
-
-		return this.sellerService.updateStatusSeller(req);
+		return this.sellerService.lockAccount(req);
 	}
 
 	/**

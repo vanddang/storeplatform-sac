@@ -26,16 +26,23 @@ public class SellerController {
 	@Autowired
 	SellerService sellerService;
 
+	/**
+	 * <pre>
+	 * 5.2.1. 판매자 회원 가입
+	 * </pre>
+	 * 
+	 * @return
+	 */
 	// @RequestMapping(value="" , method = RequestMethod.POST)
 	public @ResponseBody
 	CreateRes createSeller() {
-		logger.debug("createSeller , {}");
+		// req Debug
 		return null;
 	}
 
 	/**
 	 * <pre>
-	 * 판매자회원 계정 잠금
+	 * 5.2.16. 판매자회원 계정 잠금
 	 * </pre>
 	 * 
 	 * @return LockAccountRes
@@ -43,7 +50,9 @@ public class SellerController {
 	 */
 	// @RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	LockAccountRes lockAccount(@RequestBody LockAccountReq lockAccountReq) {
-		return this.sellerService.updateStatusSeller(lockAccountReq);
+	LockAccountRes lockAccount(@RequestBody LockAccountReq req) {
+		// req Debug
+		logger.info("LockAccountReq : {}", req);
+		return this.sellerService.lockAccount(req);
 	}
 }
