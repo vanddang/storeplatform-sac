@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForR
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */
 @Controller
-@RequestMapping(value = "/member/miscellaneous/dummy")
+@RequestMapping(value = "/member/miscellaneous")
 public class DummyDataController {
 	private static final Logger logger = LoggerFactory.getLogger(DummyDataController.class);
 
@@ -191,7 +191,6 @@ public class DummyDataController {
 
 		GetUaCodeRes response = new GetUaCodeRes();
 		response.setUaCd("");
-
 		return response;
 	}
 
