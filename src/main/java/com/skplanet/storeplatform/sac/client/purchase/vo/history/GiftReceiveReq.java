@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.purchase.vo;
+package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 

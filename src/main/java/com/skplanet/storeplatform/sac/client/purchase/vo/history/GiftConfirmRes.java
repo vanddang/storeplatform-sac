@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.client.purchase.vo;
+package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 
