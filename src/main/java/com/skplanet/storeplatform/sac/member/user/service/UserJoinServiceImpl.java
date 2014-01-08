@@ -10,18 +10,23 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.Hashtable;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.member.user.sci.UserSCIController;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -36,35 +41,37 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private MemberCommonComponent mcc;
 
-	// @Autowired
-	// private UserSCI userSCI;
+	@Autowired
+	private UserSCIController userSCI;
 
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
 
 		/**
-		 * TODO (UAPS 연동) 모번호 조회 - 989로 시작하는 MDN이면 실행
+		 * 모번호 조회 (989 일 경우만)
 		 */
-		// String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-		// logger.info("### opmdMdn : " + opmdMdn);
+		String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+		logger.info("### opmdMdn : " + opmdMdn);
 
-		// /**
-		// * TODO (SC 연동) 약관 목록 조회 및 동의 여부 체크 / 실패시 에러처리
-		// */
-		// SearchAgreementListRequest sciReq = new SearchAgreementListRequest();
-		// sciReq.setUserKey("12345");
-		// SearchAgreementListResponse sciRes = this.userSCI.searchAgreementList(sciReq);
-		//
-		// logger.info("######" + sciRes.getCommonResponse().getResultCode());
-		// logger.info("######" + sciRes.getCommonResponse().getResultMessage());
-		//
-		// for (MbrClauseAgree info : sciRes.getMbrClauseAgreeList()) {
-		//
-		// logger.info(info.getExtraAgreementID());
-		// logger.info(info.getExtraAgreementVersion());
-		// logger.info(info.getIsExtraAgreement());
-		//
-		// }
+		/**
+		 * 약관 목록 조회 TODO ((( 테넌트ID 하드코딩을 변경해야 한다. )))
+		 * 
+		 */
+		List<ClauseDTO> clauseDTO = this.mcc.getMandAgreeList("S01");
+		StringBuffer dbAgreeInfo = new StringBuffer();
+		for (ClauseDTO dto : clauseDTO) {
+			logger.info("UseYn : {} ", dto.getUseYn());
+			logger.info("getMandAgreeYn : {} ", dto.getMandAgreeYn());
+			logger.info("getClauseItemCd : {} ", dto.getClauseItemCd());
+			dbAgreeInfo.append(dto.getClauseItemCd());
+		}
+
+		StringBuffer reqAgreeInfo = new StringBuffer();
+		for (AgreementInfo info : req.getAgreementList()) {
+			if (StringUtils.equals(info.getIsExtraAgreement(), "Y")) {
+				reqAgreeInfo.append("");
+			}
+		}
 
 		/**
 		 * TODO (IDP 연동) 무선회원 가입

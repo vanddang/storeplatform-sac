@@ -29,7 +29,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
-import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
 /**
@@ -39,7 +38,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
  */
 @RequestMapping(value = "/member/user")
 @Controller
-public class UserJoinController extends ParameterExceptionHandling {
+public class UserJoinController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 

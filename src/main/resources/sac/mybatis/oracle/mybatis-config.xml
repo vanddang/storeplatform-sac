@@ -34,6 +34,7 @@
         
         <!-- 공통 관련 조회 -->
         <typeAlias alias="CmDevice"      type="com.skplanet.storeplatform.sac.common.vo.Device" />
+        <typeAlias alias="ClauseDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO" />
         
         <!-- 전시 상품 공통 -->
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
