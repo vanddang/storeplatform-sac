@@ -632,7 +632,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	}
 
 	// -------------------------------------------------
-	// 비 실명 회원 인증 API (redirect)
+	// 무선 회원 인증 API (redirect)
 	// -------------------------------------------------
 	/*
 	 * (non-Javadoc)
