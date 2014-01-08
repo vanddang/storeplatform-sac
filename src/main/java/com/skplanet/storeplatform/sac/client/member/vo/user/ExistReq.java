@@ -12,6 +12,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ExistReq extends CommonInfo {
+	private static final long serialVersionUID = 1L;
+
 	/* 사용자ID, Value : hkd */
 	private String userId;
 	/* 기기 ID(MDN, UUID, MacAddress), Value : 01011112222 */
@@ -51,6 +53,10 @@ public class ExistReq extends CommonInfo {
 
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }
