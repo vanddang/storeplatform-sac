@@ -26,7 +26,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.external.idp.service.IdpSacService;
-import com.skplanet.storeplatform.sac.external.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
@@ -95,11 +94,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("resp_type", "2");
 		param.put("resp_flow", "resp");
 		// IDPReceiverM idpReceiverM = this.idpService.join4Wap(req.getDeviceId());
-		IDPReceiverM idpReceiverM = new IDPReceiverM();
-		idpReceiverM.getResponseHeader().getResult();
-		if (StringUtils.equals(idpReceiverM.getResponseHeader().getResult(), "1000")) {
-
-		}
+		// IDPReceiverM idpReceiverM = new IDPReceiverM();
+		// idpReceiverM.getResponseHeader().getResult();
+		// if (StringUtils.equals(idpReceiverM.getResponseHeader().getResult(), "1000")) {
+		//
+		// }
 
 		/**
 		 * TODO IDP 회원 기가입 상태인 경우 (IDP 연동) 무선회원 해지
