@@ -15,16 +15,27 @@ public class SellerInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 ID */
 	private String sellerId;
+	/** 판매자 key */
 	private String sellerKey;
+	/**  */
 	private String sellerClass;
+	/** 판매자 Main 상태코드 */
 	private String sellerMainStatus;
+	/** 판매자 Sub 상태코드 */
 	private String sellerSubStatus;
+	/** 판매자 분류코드 */
 	private String sellerCategory;
+	/** 우편번호 */
 	private String sellerZip;
+	/** 주소 */
 	private String sellerAddress;
+	/** 상세주소 */
 	private String sellerDetailAddress;
+	/** 판매자 pw */
 	private String sellerPw;
+	/** 전화번호 */
 	private String sellerTelecom;
 	private String sellerPhoneCountry;
 	private String sellerPhone;
