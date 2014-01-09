@@ -121,8 +121,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* SC회원 콤포넌트 휴대기기 정보에 정의 되지 않은 필드들 */
 		String gmailAddr = StringUtil.nvl(req.getGmailAddr(), ""); // gmailAddr
 		String rooting = StringUtil.nvl(req.getRooting(), ""); // rooting 여부
-		String osVer = req.getOsVer() == null ? StringUtil.nvl(
-				req.getOsVerOrg(), "") : StringUtil.nvl(req.getOsVer(), ""); // OS버젼,OS오리지날버젼
+		String osVer = req.getOsVer() == null ? StringUtil.nvl(req.getOsVerOrg(), "") : StringUtil.nvl(req.getOsVer(), ""); // OS버젼,OS오리지날버젼
 		String scVer = StringUtil.nvl(req.getScVer(), ""); // SC버젼
 		String uacd = StringUtil.nvl(req.getUacd(), ""); // uacd
 		String dotoriAuthDate = StringUtil.nvl(req.getDotoriAuthDate(), ""); // 도토리인증일
@@ -138,8 +137,7 @@ public class DeviceServiceImpl implements DeviceService {
 		keySearchList.add(key);
 		schDeviceReq.setKeySearchList(keySearchList);
 
-		SearchDeviceResponse schDeviceRes = this.deviceSCI
-				.searchDevice(schDeviceReq);
+		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
 		UserMbrDevice userMbrDevicd = schDeviceRes.getUserMbrDevice();
 
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
