@@ -58,7 +58,7 @@ public class LockAccountTest {
 	 * 판매자 계정잠금
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void lockAccount() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
@@ -67,17 +67,41 @@ public class LockAccountTest {
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
 						req.setSellerId("test_jun");
-						logger.info("{}", req.toString());
+						logger.info("request param : {}", req.toString());
 						return req;
 					}
 				}).success(LockAccountRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountRes res = (LockAccountRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("{}", res.toString());
+						assertThat(res.getSellerId(), notNullValue());
+						logger.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
+
+	@Test
+	public void lockAccountEmpty() {
+
+		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						LockAccountReq req = new LockAccountReq();
+						req.setSellerId("");
+						logger.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(LockAccountRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						LockAccountRes res = (LockAccountRes) result;
+						assertThat(res.getSellerId(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 }

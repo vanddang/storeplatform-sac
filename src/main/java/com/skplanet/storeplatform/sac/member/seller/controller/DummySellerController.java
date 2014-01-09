@@ -211,7 +211,7 @@ public class DummySellerController {
 	 * 판매자회원 기본 정보 조회
 	 * </pre>
 	 */
-	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
 
@@ -423,7 +423,7 @@ public class DummySellerController {
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public LockAccountRes lockAccount() throws Exception {
-		return new LockAccountRes("Y");
+		return new LockAccountRes("user1");
 	}
 
 	/**
