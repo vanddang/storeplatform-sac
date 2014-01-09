@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
@@ -32,9 +31,6 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.service.Miscellaneous
 public class MemberCommonComponent {
 
 	private static final Logger logger = LoggerFactory.getLogger(MemberCommonComponent.class);
-
-	@Autowired
-	private UAPSSCI uapsSCI;
 
 	@Autowired
 	private MemberCommonRepository repository;
