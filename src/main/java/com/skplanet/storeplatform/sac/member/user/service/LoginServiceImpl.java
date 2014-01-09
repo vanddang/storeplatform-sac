@@ -8,9 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.sci.IDPSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPTxReq;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPTxRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -41,9 +38,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private UAPSSCI uapsSCI; // UAPS 연동 인터페이스
-
-	@Autowired
-	private IDPSCI idpSCI; // IDP 연동 인터페이스
 
 	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
@@ -97,37 +91,30 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
 		if (userStateCd.equals("US011501")) {
-
-			/* 변동성 회원 처리 */
-
-			/* 1. 무선회원 가입 */
-
-			/* 2. 회원정보 수정 */
-
+			this.volatileMemberPoc(deviceId);
 		}
 
 		/* 무선회원 인증 */
 		if (userStateCd.equals("US011501") || userStateCd.equals("US011502")) {
-			// authForWap
-			IDPTxReq idpTxReq = new IDPTxReq();
-			idpTxReq.setHttpMethod("POST");
-			idpTxReq.setHttpProtocal("HTTPS");
-			idpTxReq.setReqUrl("");
-			idpTxReq.setReqParamHtable(null);
-
-			IDPTxRes idpTxRes = this.idpSCI.send(idpTxReq);
-			if (idpTxRes.getResultCode() != (00000)) {
-				/* 로그인 실패이력 저장 */
-				this.logInSCComponent(deviceId, null, "N",
-						userStateCd.equals("US011503") ? "Y" : "N");
-				throw new Exception(idpTxRes.getResultCode() + "");
-			}
-		} else {
-
+			/*
+			 * IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
+			 * if (idpReceiver.getResponseHeader().getResult() != "00000") { 로그인
+			 * 실패이력 저장 this.logInSCComponent(deviceId, null, "N",
+			 * userStateCd.equals("US011503") ? "Y" : "N"); throw new
+			 * Exception(idpReceiver.getResponseHeader().getResult()); }
+			 */
 		}
 
 		/* 단말정보 조회 및 merge */
 		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setDeviceId(deviceId);
+		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+		deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
+		deviceInfo.setImei(req.getImei());
+		deviceInfo.setRooting(req.getRooting());
+		deviceInfo.setGmailAddr(req.getGmailAddr());
+		deviceInfo.setScVer(req.getScVer());
+		deviceInfo.setOsVerOrg(req.getOsVerOrg());
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
@@ -216,6 +203,17 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		return res;
+	}
+
+	/**
+	 * 변동성 회원 처리
+	 * 
+	 * @param deviceId
+	 */
+	public void volatileMemberPoc(String deviceId) {
+		/* 1. 무선회원 가입 */
+
+		/* 2. 회원정보 수정 */
 	}
 
 	/**

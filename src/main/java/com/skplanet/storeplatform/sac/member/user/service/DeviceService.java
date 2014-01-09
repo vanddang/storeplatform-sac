@@ -46,12 +46,12 @@ public interface DeviceService {
 	public String preRegMemberDeviceRegist(String mdn) throws Exception;
 
 	/**
-	 * 기기정보 수정 처리 gmailAddr, osVerOrg, scVer, deviceModelNo, uaCd, imei, rooting
+	 * 기기정보 수정 처리
 	 * 
 	 * @param req
 	 * @return
 	 * @throws Exception
 	 */
-	public String mergeDeviceInfo(DeviceInfo req) throws Exception;
+	public void mergeDeviceInfo(DeviceInfo req) throws Exception;
 
 }
