@@ -11,17 +11,17 @@ package com.skplanet.storeplatform.sac.member.common;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
-import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
+import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -39,29 +39,25 @@ public class MemberCommonComponent {
 	@Autowired
 	private MemberCommonRepository repository;
 
+	@Autowired
+	private MiscellaneousService miscellaneousService;
+
 	/**
 	 * <pre>
-	 * 모번호 조회 (989로 시작하는 MDN이면 실행한다.)
+	 * 모번호 조회
+	 * 989로 시작하는 MSISDN이 들어오면 모번호를 조회해서 반환하고, 
+	 * 989로 시작하지 않는경우 파라미터로 받은 MSISDN을 그대로 반환.
 	 * </pre>
 	 * 
-	 * @param mdn
+	 * @param msisdn
 	 * @return
 	 * @throws Exception
 	 */
-	public String getOpmdMdnInfo(String mdn) throws Exception {
+	public String getOpmdMdnInfo(String msisdn) throws Exception { // 2014. 01. 09. 김다슬, 인크로스. 수정
+		GetOpmdReq req = new GetOpmdReq();
+		req.setMsisdn(msisdn);
 
-		if (StringUtils.substring(mdn, 0, 3).equals("989")) {
-			logger.info("## 모번호 조회 START");
-			OpmdRes opmdRes = this.uapsSCI.getOpmdInfo(mdn);
-			if (opmdRes.getResultCode() == 0) {
-				mdn = opmdRes.getMobileMdn();
-			} else {
-				throw new RuntimeException("UAPS 연동 오류");
-			}
-
-		}
-
-		return mdn;
+		return this.miscellaneousService.getOpmd(req).getMsisdn();
 	}
 
 	/**
