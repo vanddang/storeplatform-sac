@@ -207,7 +207,7 @@ public class DummyDataController {
 		logger.info("####################################################");
 
 		GetOpmdRes response = new GetOpmdRes();
-		response.setUserPhone("01023451102");
+		response.setMsisdn("01023451102");
 
 		return response;
 	}
