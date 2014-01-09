@@ -131,8 +131,7 @@ public class DummyDataController {
 	 * logger.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
 	 * logger.info("####################################################");
 	 * 
-	 * AuthorizeByIdRes res = new AuthorizeByIdRes();
-	 * res.setUserKey("IW102158844420091030165015");
+	 * AuthorizeByIdRes res = new AuthorizeByIdRes(); res.setUserKey("IW102158844420091030165015");
 	 * res.setUserAuthKey("1234567890");
 	 * 
 	 * return res; }
@@ -250,7 +249,7 @@ public class DummyDataController {
 			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
 			DeviceInfo deviceInfo = new DeviceInfo();
 
-			deviceInfo.setDeviceExtraInfoList(deviceExtraInfoList);
+			// deviceInfo.setDeviceExtraInfoList(deviceExtraInfoList);
 			deviceInfo.setDeviceKey("");
 			deviceInfo.setDeviceId("01011112222");
 			deviceInfo.setDeviceType("");

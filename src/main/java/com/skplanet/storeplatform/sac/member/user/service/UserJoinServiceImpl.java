@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.external.idp.service.IdpSacService;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
@@ -51,9 +50,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	@Autowired
 	private UserSCI userSCI;
-
-	@Autowired
-	private IdpSacService idpService;
 
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
