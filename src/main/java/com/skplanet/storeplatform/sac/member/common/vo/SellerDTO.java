@@ -3,7 +3,7 @@ package com.skplanet.storeplatform.sac.member.common.vo;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * TB_CM_CLAUSE TB_CM_TENANT_CLAUSE
+ * TB_DP_APP_PROD TB_DP_PROD
  * 
  * aid로 sellerKey 가져오기
  * 
