@@ -11,6 +11,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAc
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
@@ -53,14 +54,17 @@ public class DummyDataController {
 
 	@RequestMapping(value = "/confirmRealNameAuthorization/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization() {
+	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization(ConfirmRealNameAuthorizationReq request) {
 		logger.info("####################################################");
 		logger.info("####### 5.3.2. 실명 인증용 휴대폰 인증 코드 확인 ########");
 		logger.info("####################################################");
 
+		logger.info("## request : {}", request.toString());
+
 		ConfirmRealNameAuthorizationRes response = new ConfirmRealNameAuthorizationRes();
 		response.setUserCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1B9A3z5zrVHettHzKa5dpJA==");
 		response.setUserDI("skpone000012902JAyEAPgMkfp3WL1 caEThzSSWjsOXQCfONIbAJgSFvitpjcQ=");
+		logger.info("## res : {}", response.toString());
 
 		return response;
 	}
