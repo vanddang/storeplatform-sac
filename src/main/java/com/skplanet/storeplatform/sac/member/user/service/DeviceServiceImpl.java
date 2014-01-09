@@ -20,7 +20,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -113,22 +112,23 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 기기정보 수정 가능한 필드 */
-		String imMngNum = StringUtil.nvl(req.getImMngNum(), ""); // SKT 서비스 관리번호
-		String deviceTelecom = StringUtil.nvl(req.getDeviceTelecom(), ""); // 통신사코드
-		String deviceModelNo = StringUtil.nvl(req.getDeviceModelNo(), ""); // 단말모델코드
-		String deviceNickName = StringUtil.nvl(req.getDeviceNickName(), ""); // 휴대폰닉네임
-		String isPrimary = StringUtil.nvl(req.getIsPrimary(), ""); // 대표폰 여부
-		String imei = StringUtil.nvl(req.getImei(), ""); // imei
-		String isRecvSms = StringUtil.nvl(req.getIsRecvSms(), ""); // sms 수신여부
-		String deviceAccount = StringUtil.nvl(req.getDeviceAccount(), ""); // gmailAddr
+		String deviceModelNo = req.getDeviceModelNo(); // 단말모델코드
+		String imei = req.getImei(); // imei
+		String deviceAccount = req.getDeviceAccount(); // gmailAddr
+		String rooting = req.getRooting(); // rooting 여부
+		String osVer = req.getOsVer() == null ? req.getOsVerOrg() : req.getOsVer(); // OS버젼,OS오리지날버젼
+		String scVer = req.getScVer(); // SC버젼
+		String uacd = req.getUacd(); // uacd
 		
-		String rooting = StringUtil.nvl(req.getRooting(), ""); // rooting 여부
-		String osVer = req.getOsVer() == null ? StringUtil.nvl(req.getOsVerOrg(), "") : StringUtil.nvl(req.getOsVer(), ""); // OS버젼,OS오리지날버젼
-		String scVer = StringUtil.nvl(req.getScVer(), ""); // SC버젼
-		String uacd = StringUtil.nvl(req.getUacd(), ""); // uacd
-		String dotoriAuthDate = StringUtil.nvl(req.getDotoriAuthDate(), ""); // 도토리인증일
-		String dotoriAuthYn = StringUtil.nvl(req.getDotoriAuthYn(), ""); // 도토리인증여부
-
+		/*	수정 미적용 필드	*/
+		String imMngNum = req.getImMngNum(); // SKT 서비스 관리번호
+		String deviceTelecom = req.getDeviceTelecom(); // 통신사코드
+		String deviceNickName = req.getDeviceNickName(); // 휴대폰닉네임
+		String isPrimary = req.getIsPrimary(); // 대표폰 여부
+		String isRecvSms = req.getIsRecvSms(); // sms 수신여부
+		String dotoriAuthDate = req.getDotoriAuthDate(); // 도토리인증일
+		String dotoriAuthYn = req.getDotoriAuthYn(); // 도토리인증여부
+		
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -142,41 +142,53 @@ public class DeviceServiceImpl implements DeviceService {
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
-		if (!imMngNum.equals(userMbrDevice.getImMngNum())) {
+		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 
-		} else if (!deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
+		} else if (imei != null && !imei.equals(userMbrDevice.getNativeID())) {
 
-		} else if (!deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
+		} else if (deviceAccount != null && !deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
 
-		} else if (!deviceNickName.equals(userMbrDevice.getDeviceNickName())) {
+		} /*else if (imMngNum != null && !imMngNum.equals(userMbrDevice.getImMngNum())) {
+			
+		} else if (deviceTelecom != null && !deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
 
-		} else if (!isPrimary.equals(userMbrDevice.getIsPrimary())) {
+		} else if (deviceNickName != null && !deviceNickName.equals(userMbrDevice.getDeviceNickName())) {
 
-		} else if (!imei.equals(userMbrDevice.getNativeID())) {
+		} else if (isPrimary != null && !isPrimary.equals(userMbrDevice.getIsPrimary())) {
 
-		} else if (!isRecvSms.equals(userMbrDevice.getIsRecvSMS())) {
+		} else if (isRecvSms != null && !isRecvSms.equals(userMbrDevice.getIsRecvSMS())) {
 
-		} else if (!deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
-
-		}
+		}*/
 		
 		List<UserMbrDeviceDetail> deviceExtraList = userMbrDevice.getUserMbrDeviceDetail();
 		if(deviceExtraList.size() > 0){
 			for(UserMbrDeviceDetail extraInfo : deviceExtraList){
 				
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)){
-					
-				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION)){
-					
-				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION)){
-					
-				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)){
-					
-				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)){
-					
-				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)){
-					
-				}
+				if (rooting != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)){
+					if (!rooting.equals(extraInfo.getExtraProfileValue())){
+						
+					}
+				} else if (osVer != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION)){
+					if (!osVer.equals(extraInfo.getExtraProfileValue())){
+						
+					}
+				} else if (scVer != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION)){
+					if (!scVer.equals(extraInfo.getExtraProfileValue())){
+						
+					}
+				} else if (uacd != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)){
+					if (!uacd.equals(extraInfo.getExtraProfileValue())){
+						
+					}
+				} /*else if (dotoriAuthDate != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)){
+					if (!dotoriAuthDate.equals(extraInfo.getExtraProfileValue())){
+						
+					}
+				} else if (dotoriAuthYn != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)){
+					if (!dotoriAuthYn.equals(extraInfo.getExtraProfileValue())){
+						
+					}
+				}*/
 				
 			}
 		}
