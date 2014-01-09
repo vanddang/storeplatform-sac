@@ -17,14 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class IdpSacServiceImplTest {
 
 	// @Mock
-	// private IdpSacServiceImpl repository;
+	// private IdpSacRepository repository;
 
 	@Autowired
-	private IdpSacServiceImpl service;
+	private IdpSacService service;
 
 	@Test
-	public final void testAlredyJoinCheckByEmail() {
+	public void testAlredyJoinCheckByEmail() {
+
 		try {
+
 			this.service.alredyJoinCheckByEmail("aaaaa@gmail.com");
 			this.service.alredyJoinCheckBySn("1111111111111");
 			this.service.alredyJoinCheck("1", "1");
