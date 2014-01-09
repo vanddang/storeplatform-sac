@@ -7,6 +7,19 @@ package com.skplanet.storeplatform.sac.member.common;
  */
 public final class MemberConstants {
 
+	/** SC회원 결과 코드 */
+	public static final String RESULT_SUCCES = "0000"; // 성공
+	public static final String RESULT_FAIL = "9999"; // 실패
+	public static final String RESULT_NOT_FOUND_INPUT = "9998"; // 입력 파라미터가 없음
+	public static final String RESULT_NOT_FOUND_COMMON = "9997"; // 공통 파라미터 없음
+	public static final String RESULT_NOT_FOUND_TANENT_ID = "9996"; // 테넌트 아이디 없음
+	public static final String RESULT_NOT_FOUND_USER_KEY = "9995"; // 사용자키 없음
+	public static final String RESULT_NOT_FOUND_EDIT_INPUT_ITEM = "9994"; // 수정 또는 추가할 항목이 없음
+	public static final String RESULT_NOT_FOUND_MANDATORY = "9993"; // 필수 파라미터 없음
+	public static final String RESULT_WRONG_KEY_TYPE = "9992"; // 잘못된 키값
+	public static final String RESULT_UNKNOWN_ERR = "9991"; // 알수 없는 에러
+	public static final String RESULT_UNKNOWN_USER_ID = "9990"; // 존재하지 않는 사용자ID
+
 	/** 메인상태코드 */
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
 	public static final String MAIN_STATUS_SECEDE = "US010202"; // 탈퇴(자의탈퇴/직권탈퇴)
