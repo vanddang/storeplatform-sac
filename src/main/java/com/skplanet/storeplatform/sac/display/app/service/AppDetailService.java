@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.app.detail.service;
+package com.skplanet.storeplatform.sac.display.app.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;

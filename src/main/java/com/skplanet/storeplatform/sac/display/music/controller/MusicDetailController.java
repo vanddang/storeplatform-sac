@@ -1,8 +1,8 @@
-package com.skplanet.storeplatform.sac.display.music.detail.controller;
+package com.skplanet.storeplatform.sac.display.music.controller;
 
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
-import com.skplanet.storeplatform.sac.display.music.detail.service.MusicDetailService;
+import com.skplanet.storeplatform.sac.display.music.service.MusicDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

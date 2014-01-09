@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.music.detail.service;
+package com.skplanet.storeplatform.sac.display.music.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;

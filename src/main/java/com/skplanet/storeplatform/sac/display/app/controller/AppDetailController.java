@@ -1,8 +1,8 @@
-package com.skplanet.storeplatform.sac.display.app.detail.controller;
+package com.skplanet.storeplatform.sac.display.app.controller;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.display.app.detail.service.AppDetailService;
+import com.skplanet.storeplatform.sac.display.app.service.AppDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
