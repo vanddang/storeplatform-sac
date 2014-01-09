@@ -79,6 +79,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		logger.info("## dbAgreeInfo  : {}", dbAgreeInfo);
 		logger.info("## reqAgreeInfo : {}", reqAgreeInfo);
 		if (!StringUtils.equals(dbAgreeInfo.toString(), reqAgreeInfo.toString())) {
+			logger.error("## 필수 약관 미동의");
 			throw new RuntimeException("필수 약관 미동의");
 		}
 

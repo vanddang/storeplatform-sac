@@ -15,14 +15,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.common.vo.Device;
+import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
 /**
@@ -30,9 +28,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
  * 
  * Updated on : 2014. 1. 7. Updated by : 심대진, 다모아 솔루션.
  */
-@SuppressWarnings("unchecked")
 @Component
-@Transactional
 public class MemberCommonComponent {
 
 	private static final Logger logger = LoggerFactory.getLogger(MemberCommonComponent.class);
@@ -41,8 +37,7 @@ public class MemberCommonComponent {
 	private UAPSSCI uapsSCI;
 
 	@Autowired
-	@Qualifier("sac")
-	private CommonDAO commonDAO;
+	private MemberCommonRepository repository;
 
 	/**
 	 * <pre>
@@ -79,9 +74,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 */
 	public List<ClauseDTO> getMandAgreeList(String tenantId) throws Exception {
-		ClauseDTO dto = new ClauseDTO();
-		dto.setTenantId(tenantId);
-		return (List<ClauseDTO>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
+		return this.repository.getMandAgreeList(tenantId);
 	}
 
 	/**
@@ -94,9 +87,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 */
 	public Device getPhoneInfo(String deviceModelCd) throws Exception {
-		Device dto = new Device();
-		dto.setDeviceModelCd(deviceModelCd);
-		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
+		return this.repository.getPhoneInfo(deviceModelCd);
 	}
 
 }
