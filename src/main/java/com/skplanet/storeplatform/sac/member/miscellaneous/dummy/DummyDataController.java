@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
@@ -198,19 +197,19 @@ public class DummyDataController {
 		return response;
 	}
 
-	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public GetOpmdRes getOpmd() {
-
-		logger.info("####################################################");
-		logger.info("####### 5.3.12. OPMD 모회선 번호 조회 ################");
-		logger.info("####################################################");
-
-		GetOpmdRes response = new GetOpmdRes();
-		response.setMsisdn("01023451102");
-
-		return response;
-	}
+	// @RequestMapping(value = "/getOpmd/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public GetOpmdRes getOpmd() {
+	//
+	// logger.info("####################################################");
+	// logger.info("####### 5.3.12. OPMD 모회선 번호 조회 ################");
+	// logger.info("####################################################");
+	//
+	// GetOpmdRes response = new GetOpmdRes();
+	// response.setMsisdn("01023451102");
+	//
+	// return response;
+	// }
 
 	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
