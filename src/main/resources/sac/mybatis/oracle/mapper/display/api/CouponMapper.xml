@@ -411,6 +411,8 @@
           AND PROD_ID = #{prodId}
     </update>            
     
+    
+    
     <!--기존 ProductId를 가지고 새로 만든 productId 조회-->
     <select id="getProductID" resultType="String" parameterType="String">
        /* CouponMapper.xml, getProductID, SAC : 김형식 , 2013-01-08 */

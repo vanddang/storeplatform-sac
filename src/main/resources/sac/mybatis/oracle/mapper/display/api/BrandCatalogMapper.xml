@@ -253,7 +253,7 @@
     <!--카탈로그 관련 태그 테이블에 INSERT-->
     <insert id="INSERT_TBL_TAG_INFO" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo">
        /* BrandCatalogMapper.xml, INSERT_TBL_TAG_INFO, SAC : 김형식 , 2013-12-30 */
-        INSERT INTO TB_DP_PROD_TAG(
+        INSERT INTO TB_DP_PROD_TAG
             (
                  TAG_SEQ
                 ,CID
@@ -266,15 +266,15 @@
 	            ,UPD_DT   
             )
             VALUES(
-	            ,(SELECT (MAX(TAG_SEQ)+1) FROM TB_DP_PROD_TAG)
+	             (SELECT (MAX(TAG_SEQ)+1) FROM TB_DP_PROD_TAG)
 	            ,#{cid}
 	            ,#{tagTypeCd}         /*DP004507: 쇼핑/쿠폰 태그*/
 	            ,#{tagCd}
 	            ,#{tagNm}
-	            ,'admin'
-	            ,SYSDATE
-	            ,'admin'
-	            ,SYSDATE 
+	            ,#{regId}
+	            ,sysdate
+	            ,#{updId}
+	            ,sysdate
             )
     </insert>      
     
