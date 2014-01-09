@@ -11,63 +11,19 @@ package com.skplanet.storeplatform.sac.other.message.repository;
 
 import java.util.Map;
 
-import com.skplanet.storeplatform.external.client.message.vo.AomReq;
-import com.skplanet.storeplatform.external.client.message.vo.EmailReq;
-import com.skplanet.storeplatform.external.client.message.vo.MmsReq;
-import com.skplanet.storeplatform.external.client.message.vo.SmsReq;
+import com.skplanet.storeplatform.external.client.message.vo.AomSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.EmailSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.MmsSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 
-/**
- * 
- * Message E/C연동 Repository
- * 
- * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스
- */
 public interface MessageRepository {
-	/**
-	 * 
-	 * <pre>
-	 * SMS 연동.
-	 * </pre>
-	 * 
-	 * @param smsReq
-	 * @return Map
-	 */
-	public Map<String, String> smsSend(SmsReq smsReq);
 
-	/**
-	 * 
-	 * <pre>
-	 * MMS 연동.
-	 * </pre>
-	 * 
-	 * @param mmsReq
-	 *            mmsReq
-	 * @return Map
-	 */
-	public Map<String, String> mmsSend(MmsReq mmsReq);
+	public Map<String, String> smsSend(SmsSendReq smsReq);
 
-	/**
-	 * 
-	 * <pre>
-	 * AOM 연동.
-	 * </pre>
-	 * 
-	 * @param aomReq
-	 *            aomReq
-	 * @return Map
-	 */
-	public Map<String, String> aomSend(AomReq aomReq);
+	public Map<String, String> mmsSend(MmsSendReq mmsReq);
 
-	/**
-	 * 
-	 * <pre>
-	 * EMAIL 연동.
-	 * </pre>
-	 * 
-	 * @param emailReq
-	 *            emailReq
-	 * @return Map
-	 */
-	public Map<String, String> emailSend(EmailReq emailReq);
+	public Map<String, String> aomSend(AomSendReq aomReq);
+
+	public Map<String, String> emailSend(EmailSendReq emailReq);
 
 }

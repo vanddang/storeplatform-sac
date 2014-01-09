@@ -14,73 +14,35 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.message.vo.AomReq;
-import com.skplanet.storeplatform.external.client.message.vo.EmailReq;
-import com.skplanet.storeplatform.external.client.message.vo.MmsReq;
-import com.skplanet.storeplatform.external.client.message.vo.SmsReq;
+import com.skplanet.storeplatform.external.client.message.vo.AomSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.EmailSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.MmsSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 import com.skplanet.storeplatform.sac.other.message.repository.MessageRepository;
 
-/**
- * 
- * Message Service Class 구현체
- * 
- * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스.
- */
 @Service
 public class MessageServiceImpl implements MessageService {
 
 	@Autowired
 	private MessageRepository messageRepository;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.message.service.MessageService#smsSend(com.skplanet.storeplatform.external
-	 * .client.message.vo.SmsReq)
-	 */
 	@Override
-	public Map<String, String> smsSend(SmsReq smsReq) {
-
+	public Map<String, String> smsSend(SmsSendReq smsReq) {
 		return this.messageRepository.smsSend(smsReq);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.message.service.MessageService#mmsSend(com.skplanet.storeplatform.external
-	 * .client.message.vo.MmsReq)
-	 */
 	@Override
-	public Map<String, String> mmsSend(MmsReq mmsReq) {
-
+	public Map<String, String> mmsSend(MmsSendReq mmsReq) {
 		return this.messageRepository.mmsSend(mmsReq);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.message.service.MessageService#aomSend(com.skplanet.storeplatform.external
-	 * .client.message.vo.AomReq)
-	 */
 	@Override
-	public Map<String, String> aomSend(AomReq aomReq) {
-
+	public Map<String, String> aomSend(AomSendReq aomReq) {
 		return this.messageRepository.aomSend(aomReq);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.message.service.MessageService#emailSend(com.skplanet.storeplatform.external
-	 * .client.message.vo.EmailReq)
-	 */
 	@Override
-	public Map<String, String> emailSend(EmailReq emailReq) {
-
+	public Map<String, String> emailSend(EmailSendReq emailReq) {
 		return this.messageRepository.emailSend(emailReq);
 	}
 
