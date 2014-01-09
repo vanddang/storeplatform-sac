@@ -16,13 +16,13 @@ package com.skplanet.storeplatform.sac.display.feature.category.vo;
  */
 public class FeatureCategoryVodDTO {
 	private int totalCount;
-	private String upMenuId;
 	private String topMenuId;
 	private String menuId;
 	private String menuNm;
 	private String menuDesc;
 	private String metaClsfCd;
 	private String prodId;
+	private String vodTitlNm;
 	private String prodNm;
 	private String prodBaseDesc;
 	private String prodGrdCd;
@@ -38,7 +38,7 @@ public class FeatureCategoryVodDTO {
 	private String prchsCnt;
 	private Double avgEvluScore;
 	private String imgPath;
-	private String upMenuNm;
+	private String topMenuNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -46,14 +46,6 @@ public class FeatureCategoryVodDTO {
 
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
-	}
-
-	public String getUpMenuId() {
-		return this.upMenuId;
-	}
-
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
 	}
 
 	public String getTopMenuId() {
@@ -102,6 +94,14 @@ public class FeatureCategoryVodDTO {
 
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	public String getVodTitlNm() {
+		return this.vodTitlNm;
+	}
+
+	public void setVodTitlNm(String vodTitlNm) {
+		this.vodTitlNm = vodTitlNm;
 	}
 
 	public String getProdNm() {
@@ -224,11 +224,11 @@ public class FeatureCategoryVodDTO {
 		this.imgPath = imgPath;
 	}
 
-	public String getUpMenuNm() {
-		return this.upMenuNm;
+	public String getTopMenuNm() {
+		return this.topMenuNm;
 	}
 
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
 	}
 }

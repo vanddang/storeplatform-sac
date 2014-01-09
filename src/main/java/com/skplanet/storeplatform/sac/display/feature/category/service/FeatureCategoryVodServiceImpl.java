@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -19,9 +20,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVodDTO;
 
 @Service
@@ -33,22 +48,34 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
 	@Override
 	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		// 기준일시 받아오는 Method 호출되어야 함
-		req.setStdDt("20130101000000");
+		CategoryAppRes categoryAppRes = new CategoryAppRes();
+		CommonResponse commonResponse = new CommonResponse();
 
 		// 헤더값 세팅
 		req.setDeviceModelCd("SHV-E210S");
 		req.setTenantId("S01");
 		req.setImageCd("DP000101");
 
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
+		req.setStdDt(stdDt);
+
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("stdDt : {}", stdDt);
+		this.logger.debug("----------------------------------------------------------------");
+
 		List<FeatureCategoryVodDTO> vodList = null;
 
+		// DP17 : 영화, DP18 : 방송
 		if ("DP17".equals(req.getTopMenuId())) {
 			if ("recommend".equals(req.getFilterdby())) {
 				this.logger.debug("----------------------------------------------------------------");
@@ -63,12 +90,124 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			vodList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
 					FeatureCategoryVodDTO.class);
 
-			this.logger.debug("size : " + vodList.size());
-		} else if ("DP18".equals(req.getTopMenuId())) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("searchVodList Service started!!");
-			this.logger.debug("----------------------------------------------------------------");
+			if (vodList != null) {
+				FeatureCategoryVodDTO vodDto = null;
 
+				Identifier identifier = null;
+				Support support = null;
+				Menu menu = null;
+				Contributor contributor = null;
+				Date date = null;
+				Accrual accrual = null;
+				Rights rights = null;
+				Title title = null;
+				Source source = null;
+				Price price = null;
+				Product product = null;
+
+				List<Menu> menuList = null;
+				List<Source> sourceList = null;
+				List<Support> supportList = null;
+				List<Product> productList = new ArrayList<Product>();
+
+				for (int i = 0; i < vodList.size(); i++) {
+					product = new Product();
+					vodDto = vodList.get(i);
+
+					// 상품 정보 (상품ID)
+					identifier = new Identifier();
+					identifier.setType("channel");
+					identifier.setText(vodDto.getProdId());
+					product.setIdentifier(identifier);
+
+					// 상품 지원 정보
+					support = new Support();
+					supportList = new ArrayList<Support>();
+					support.setType("hd");
+					support.setText(vodDto.getHdvYn());
+					supportList.add(support);
+					product.setSupportList(supportList);
+
+					// 메뉴 정보
+					menu = new Menu();
+					menuList = new ArrayList<Menu>();
+					menu.setType("topClass");
+					menu.setId(vodDto.getTopMenuId());
+					menu.setName(vodDto.getTopMenuNm());
+					menuList.add(menu);
+
+					menu = new Menu();
+					menu.setId(vodDto.getMenuId());
+					menu.setName(vodDto.getMenuNm());
+					menuList.add(menu);
+
+					menu = new Menu();
+					menu.setType("metaClass");
+					menu.setId(vodDto.getMetaClsfCd());
+					menuList.add(menu);
+					product.setMenuList(menuList);
+
+					// 저작자 정보
+					contributor = new Contributor();
+					contributor.setArtist(vodDto.getArtist1Nm());
+					contributor.setDirector(vodDto.getArtist2Nm());
+
+					date = new Date();
+					date.setText(vodDto.getIssueDay());
+					contributor.setDate(date);
+					product.setContributor(contributor);
+
+					// 평점 정보
+					accrual = new Accrual();
+					accrual.setDownloadCount(vodDto.getPrchsCnt());
+					accrual.setScore(vodDto.getAvgEvluScore());
+					accrual.setVoterCount(vodDto.getPaticpersCnt());
+					product.setAccrual(accrual);
+
+					// 이용권한 정보
+					rights = new Rights();
+					rights.setGrade(vodDto.getProdGrdCd());
+					product.setRights(rights);
+
+					// 상품 정보 (상품명)
+					title = new Title();
+					title.setPrefix(vodDto.getVodTitlNm());
+					title.setText(vodDto.getProdNm());
+					product.setTitle(title);
+
+					// 이미지 정보
+					source = new Source();
+					sourceList = new ArrayList<Source>();
+					source.setType("thumbnail");
+					source.setMediaType("image/png");
+					source.setUrl(vodDto.getImgPath());
+					sourceList.add(source);
+					product.setSourceList(sourceList);
+
+					// 상품 정보 (상품설명)
+					product.setProductExplain(vodDto.getProdBaseDesc());
+
+					// 상품 정보 (상품가격)
+					price = new Price();
+					price.setText(Integer.parseInt(vodDto.getProdAmt()));
+					product.setPrice(price);
+
+					// 데이터 매핑
+					productList.add(i, product);
+				}
+
+				commonResponse.setTotalCount(vodDto.getTotalCount());
+				categoryAppRes.setProductList(productList);
+				categoryAppRes.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				categoryAppRes.setCommonResponse(commonResponse);
+			}
+		} else {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("방송 추천 상품 조회");
+			this.logger.debug("----------------------------------------------------------------");
 		}
 
 		return null;

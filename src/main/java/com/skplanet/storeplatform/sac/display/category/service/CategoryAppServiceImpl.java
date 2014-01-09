@@ -90,7 +90,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
-			List<Support> supportList = new ArrayList<Support>();
+			List<Support> supportList = null;
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < appList.size(); i++) {
