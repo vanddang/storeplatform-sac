@@ -16,6 +16,9 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -102,7 +105,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		DetailInformationRes response = new DetailInformationRes();
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
-
 		for (int i = 0; i < result.getExtraRight().size(); i++) {
 			ExtraRight extraRight = new ExtraRight();
 			extraRight.setEndDate(result.getExtraRight().get(i).getEndDate());
@@ -119,8 +121,44 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			eList.add(extraRight);
 		}
 
-		response.setExtraRight(eList);
-		response.setSellerKey(result.getSellerKey());
+		List<MbrClauseAgree> mList = new ArrayList<MbrClauseAgree>();
+		for (int i = 0; i < result.getMbrClauseAgree().size(); i++) {
+			MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
+			mbrClauseAgree.setExtraAgreementID(result.getMbrClauseAgree().get(i).getExtraAgreementID());
+			mbrClauseAgree.setExtraAgreementVersion(result.getMbrClauseAgree().get(i).getExtraAgreementVersion());
+			mbrClauseAgree.setIsExtraAgreement(result.getMbrClauseAgree().get(i).getIsExtraAgreement());
+			mbrClauseAgree.setIsMandatory(result.getMbrClauseAgree().get(i).getIsMandatory());
+			mbrClauseAgree.setMemberKey(result.getMbrClauseAgree().get(i).getMemberKey());
+			mbrClauseAgree.setRegDate(result.getMbrClauseAgree().get(i).getRegDate());
+			mbrClauseAgree.setTenantID(result.getMbrClauseAgree().get(i).getTenantID());
+			mbrClauseAgree.setUpdateDate(result.getMbrClauseAgree().get(i).getUpdateDate());
+			mList.add(mbrClauseAgree);
+		}
+
+		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+		mbrLglAgent.setIsParent(result.getMbrLglAgent().getIsParent());
+		mbrLglAgent.setMemberKey(result.getMbrLglAgent().getMemberKey());
+		mbrLglAgent.setParentBirthDay(result.getMbrLglAgent().getParentBirthDay());
+		mbrLglAgent.setParentCI(result.getMbrLglAgent().getParentCI());
+		mbrLglAgent.setParentDate(result.getMbrLglAgent().getParentDate());
+		mbrLglAgent.setParentEmail(result.getMbrLglAgent().getParentEmail());
+		mbrLglAgent.setParentMDN(result.getMbrLglAgent().getParentMDN());
+		mbrLglAgent.setParentName(result.getMbrLglAgent().getParentName());
+		mbrLglAgent.setParentRealNameDate(result.getMbrLglAgent().getParentRealNameDate());
+		mbrLglAgent.setParentRealNameMethod(result.getMbrLglAgent().getParentRealNameMethod());
+		mbrLglAgent.setParentRealNameSite(result.getMbrLglAgent().getParentRealNameSite());
+		mbrLglAgent.setParentTelecom(result.getMbrLglAgent().getParentTelecom());
+		mbrLglAgent.setParentType(result.getMbrLglAgent().getParentType());
+		mbrLglAgent.setSequence(result.getMbrLglAgent().getSequence());
+
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setApproveDate(result.getSellerMbr().getApproveDate());
+
+		response.setExtraRight(eList);// 판매자 멀티미디어정보
+		response.setMbrClauseAgree(mList);// 약관동의목록
+		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
+		response.setSellerMbr(sellerMbr);// 판매자 정보
+		response.setSellerKey(result.getSellerKey());// 판매자Key
 
 		return response;
 
