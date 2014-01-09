@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.api.v1.member.seller;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -30,7 +35,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class DetailInformationTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(LockAccountTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(DetailInformationTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -50,21 +55,28 @@ public class DetailInformationTest {
 
 	/**
 	 * <pre>
-	 * 판매자 기본정보조회
+	 * 판매자 기본정보 조회
 	 * </pre>
 	 */
 	@Test
 	public void detailInformation() {
 
-		new TestCaseTemplate(this.mockMvc)
-				.url("/member/seller/detailInformation/v1?sellerKey=IF1023501437920130904104346&aid=App2321381")
-				.httpMethod(HttpMethod.GET).success(LockAccountRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/seller/junit/detailInformation/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						DetailInformationReq req = new DetailInformationReq();
+						req.setAid("");
+						req.setSellerKey("IF1023501437920130904104346");
+						logger.info("{}", req.toString());
+						return req;
+					}
+				}).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-
-						// LockAccountRes res = (LockAccountRes) result;
-						// assertThat(res.getSellerKey(), notNullValue());
-						// logger.info("{}", res.toString());
+						DetailInformationRes res = (DetailInformationRes) result;
+						assertThat(res.getSellerKey(), notNullValue());
+						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
