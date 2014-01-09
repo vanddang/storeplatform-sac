@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
+
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -20,7 +22,7 @@ public class IdpSacServiceImplTest {
 	// private IdpSacRepository repository;
 
 	@Autowired
-	private IdpSacService service;
+	private IDPManager service;
 
 	@Test
 	public void testAlredyJoinCheckByEmail() {
