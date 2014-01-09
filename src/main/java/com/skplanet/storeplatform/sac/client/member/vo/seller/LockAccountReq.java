@@ -9,6 +9,7 @@ public class LockAccountReq extends CommonInfo {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 회원 ID */
 	private String sellerId;
 
 	public String getSellerId() {

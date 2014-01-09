@@ -19,19 +19,20 @@ public class LockAccountRes extends CommonInfo {
 		super();
 	}
 
-	public LockAccountRes(String sellerKey) {
+	public LockAccountRes(String sellerId) {
 		super();
-		this.sellerKey = sellerKey;
+		this.sellerId = sellerId;
 	}
 
-	private String sellerKey;
+	/** 판매자 회원 ID */
+	private String sellerId;
 
-	public String getSellerKey() {
-		return this.sellerKey;
+	public String getSellerId() {
+		return this.sellerId;
 	}
 
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
 	}
 
 }
