@@ -705,6 +705,8 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 					tagInfo.setTagTypeCd(CouponConstants.TAG_TYPE_FOR_COUPON_TAG);
 					tagInfo.setTagCd("");
 					tagInfo.setTagNm(tagNm);
+					tagInfo.setRegId("admin");
+					tagInfo.setUpdId("admin");
 					tagList.add(tagInfo);
 				}
 			}

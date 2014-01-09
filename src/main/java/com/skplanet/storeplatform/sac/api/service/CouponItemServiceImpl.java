@@ -89,7 +89,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 		try {
 			for (TbDpProdInfo vo : tblDpProdList) {
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdInfo", vo);
 				}
@@ -112,7 +112,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpShpgProdInfo vo : tbDpShpgProdList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpShpgProdInfo", vo);
 				}
@@ -135,7 +135,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdDescInfo vo : tbDpProdDescList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdDescInfo", vo);
 				}
@@ -159,7 +159,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdCatalogMapgInfo vo : tbDpProdCatalogMapg) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpProdCatalogMapgInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpProdCatalogMapgInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
 				}
@@ -183,7 +183,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdRshpInfo vo : tbDpProdRshpList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
 				}
 			}
 		} catch (Exception e) {
@@ -203,15 +203,15 @@ public class CouponItemServiceImpl implements CouponItemService {
 		try {
 			String prodId = "";
 			for (TbDpProdOpt vo : tbDpProdOptList) {
-				this.commonDAO.delete("Coupon.deleteTbDpProdOpt", vo);
+				// this.commonDAO.delete("Coupon.deleteTbDpProdOpt", vo);
 				break;
 			}
 			for (TbDpProdOpt vo : tbDpProdOptList) {
-				this.commonDAO.delete("Coupon.insertTbDpProdOpt", vo);
+				// this.commonDAO.insert("Coupon.insertTbDpProdOpt", vo);
 				prodId = vo.getChnlProdId();
 			}
 			if (StringUtils.isNotBlank(prodId)) {
-				this.commonDAO.update("Coupon.updateDPYNStatus", prodId);
+				// this.commonDAO.update("Coupon.updateDPYNStatus", prodId);
 			}
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -231,7 +231,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdInfo", vo);
 				}
@@ -254,7 +254,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpTenantProdPriceInfo vo : tbDpTenantProdPriceList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
+					// this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdPriceInfo", vo);
 				}

@@ -691,7 +691,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return Boolean result @
 	 */
 	private boolean setTbDpProdTagListValue(DpCouponInfo couponInfo, List<DpCatalogTagInfo> tbDpProdTagList) {
-		DpCatalogTagInfo dcti = new DpCatalogTagInfo();
 		try {
 
 			// ////////////////// Coupon 정보 S////////////////////////////
@@ -705,6 +704,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				tagInfo.setTagTypeCd(CouponConstants.TAG_TYPE_FOR_COUPON_TAG);
 				tagInfo.setTagCd("");
 				tagInfo.setTagNm(tagNm);
+				tagInfo.setRegId(couponInfo.getBpId());
+				tagInfo.setUpdId(couponInfo.getBpId());
 				tagList.add(tagInfo);
 			}
 			// 저장
