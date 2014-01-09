@@ -43,7 +43,7 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceModelNo;
 
 	/**
-	 * 통신사
+	 * 통신사 코드
 	 */
 	private String deviceTelecom;
 
@@ -98,6 +98,11 @@ public class DeviceInfo extends CommonInfo {
 	private String osVer;
 
 	/**
+	 * SC 버젼
+	 */
+	private String scVer;
+
+	/**
 	 * 제조사명
 	 */
 	private String makeComp;
@@ -131,6 +136,16 @@ public class DeviceInfo extends CommonInfo {
 	 * SKT 통합회원관리번호
 	 */
 	private String imMngNum;
+
+	/**
+	 * 도토리 인증일 : YYYYMMDDHH24MISS
+	 */
+	private String dotoriAuthDate;
+
+	/**
+	 * 도토리 인증여부 : Y/N
+	 */
+	private String dotoriAuthYn;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트
@@ -340,6 +355,30 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getScVer() {
+		return this.scVer;
+	}
+
+	public void setScVer(String scVer) {
+		this.scVer = scVer;
+	}
+
+	public String getDotoriAuthDate() {
+		return this.dotoriAuthDate;
+	}
+
+	public void setDotoriAuthDate(String dotoriAuthDate) {
+		this.dotoriAuthDate = dotoriAuthDate;
+	}
+
+	public String getDotoriAuthYn() {
+		return this.dotoriAuthYn;
+	}
+
+	public void setDotoriAuthYn(String dotoriAuthYn) {
+		this.dotoriAuthYn = dotoriAuthYn;
 	}
 
 }
