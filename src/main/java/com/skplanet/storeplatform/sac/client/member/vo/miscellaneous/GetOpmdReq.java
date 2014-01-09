@@ -18,16 +18,14 @@ public class GetOpmdReq extends CommonInfo {
 	/**
 	 * 자회선 번호
 	 */
-	private String userPhone;
+	private String msisdn;
 
-	public String getUserPhone() {
-		return userPhone;
+	public String getMsisdn() {
+		return this.msisdn;
 	}
 
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
 	}
-	
-	
 
 }
