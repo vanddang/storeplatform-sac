@@ -36,4 +36,30 @@ public interface IdpService {
 	 */
 	public String changeMobileNumber(HashMap map);
 
+	/**
+	 * 
+	 * <pre>
+	 * 휴대폰소유변경정보배포
+	 * - CMD : RXInvalidUserTelNoIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+	public ImResult rXInvalidUserTelNoIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 로그인 상태정보배포
+	 * - CMD : RXSetLoginConditionIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+	public ImResult rXSetLoginConditionIDP(HashMap map);
+
 }
