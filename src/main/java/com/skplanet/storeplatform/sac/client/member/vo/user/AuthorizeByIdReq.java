@@ -41,7 +41,7 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	/**
 	 * Gmail 주소
 	 */
-	private String gmailAddr;
+	private String deviceAccount;
 
 	/**
 	 * 기기 모델 번호
@@ -93,12 +93,12 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 		this.scVer = scVer;
 	}
 
-	public String getGmailAddr() {
-		return this.gmailAddr;
+	public String getDeviceAccount() {
+		return this.deviceAccount;
 	}
 
-	public void setGmailAddr(String gmailAddr) {
-		this.gmailAddr = gmailAddr;
+	public void setDeviceAccount(String deviceAccount) {
+		this.deviceAccount = deviceAccount;
 	}
 
 	public String getDeviceModelNo() {

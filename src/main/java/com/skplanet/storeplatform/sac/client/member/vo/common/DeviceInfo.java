@@ -158,11 +158,6 @@ public class DeviceInfo extends CommonInfo {
 	private String rooting;
 
 	/**
-	 * Gmail 주소
-	 */
-	private String gmailAddr;
-
-	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
 	 */
 	private List<DeviceExtraInfo> userDeviceExtraInfo;
@@ -389,14 +384,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setRooting(String rooting) {
 		this.rooting = rooting;
-	}
-
-	public String getGmailAddr() {
-		return this.gmailAddr;
-	}
-
-	public void setGmailAddr(String gmailAddr) {
-		this.gmailAddr = gmailAddr;
 	}
 
 	public String getOsVerOrg() {

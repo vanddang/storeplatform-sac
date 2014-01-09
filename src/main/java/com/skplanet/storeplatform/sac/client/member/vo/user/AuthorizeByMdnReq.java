@@ -29,7 +29,7 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	/**
 	 * Gmail 주소
 	 */
-	private String gmailAddr;
+	private String deviceAccount;
 
 	/**
 	 * Gmail 주소
@@ -80,12 +80,12 @@ public class AuthorizeByMdnReq extends CommonInfo {
 		this.rooting = rooting;
 	}
 
-	public String getGmailAddr() {
-		return this.gmailAddr;
+	public String getDeviceAccount() {
+		return this.deviceAccount;
 	}
 
-	public void setGmailAddr(String gmailAddr) {
-		this.gmailAddr = gmailAddr;
+	public void setDeviceAccount(String deviceAccount) {
+		this.deviceAccount = deviceAccount;
 	}
 
 	public String getDeviceModelNo() {
