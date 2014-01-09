@@ -18,7 +18,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
@@ -48,6 +50,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
 		List<Support> supportList = new ArrayList<Support>();
+		List<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service> serviceList = new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service>();
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
@@ -159,6 +162,94 @@ public class BestContentsServiceImpl implements BestContentsService {
 				// BestContentsVO = new BestContentsVO();
 				// BestContentsVO.setProduct(product);
 				// listVO.add(BestContentsVO);
+
+				productList.add(product);
+
+			}
+
+			for (int i = 1; i <= 1; i++) {
+				Music music = new Music();
+
+				// for (int i = 1; i <= 5; i++) {
+				Product product = new Product();
+				Identifier identifier = new Identifier();
+				App app = new App();
+				Accrual accrual = new Accrual();
+				Rights rights = new Rights();
+				Source source = new Source();
+				Price price = new Price();
+				Title title = new Title();
+				Contributor contributor = new Contributor();
+				com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
+
+				// 상품ID
+				identifier = new Identifier();
+				identifier.setType("H001557945");
+				identifier.setText("episode:H001557946");
+
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
+				Menu menu = new Menu();
+				menu.setId("MN05");
+				menu.setName("뮤직");
+				menu.setType("topClass");
+				menuList.add(menu);
+				menu = new Menu();
+				menu.setId("MN05001");
+				menu.setName("가요");
+				menu.setType("");
+				menuList.add(menu);
+
+				/*
+				 * TITLE
+				 */
+				title.setText("금요일에 만나요 (Feat. 장이정 Of HISTORY)");
+
+				/*
+				 * source mediaType, size, type, url
+				 */
+				source.setMediaType("image/png");
+				source.setSize("128");
+				source.setType("thumbNail");
+				source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PMUSIC/201312/29/0002074441/10/0003894669/10/10_0002074441_200_200_1701_200x200_R130x130.PNG");
+				sourceList.add(source);
+
+				/*
+				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
+				 */
+				accrual.setChangeRank("1");
+
+				/*
+				 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
+				 */
+				contributor.setName("아이유");
+				contributor.setAlbum("Modern Times - Epilogue");
+
+				/*
+				 * music
+				 */
+				service.setName("mp3");
+				service.setType("support");
+				serviceList.add(service);
+
+				service.setName("bell");
+				service.setType("support");
+				serviceList.add(service);
+
+				service.setName("ring");
+				service.setType("support");
+				serviceList.add(service);
+				music.setServiceList(serviceList);
+
+				product = new Product();
+				product.setIdentifier(identifier);
+				product.setMenuList(menuList);
+				product.setAccrual(accrual);
+				product.setTitle(title);
+				product.setSourceList(sourceList);
+				product.setContributor(contributor);
+				product.setMusic(music);
 
 				productList.add(product);
 

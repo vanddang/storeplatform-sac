@@ -63,8 +63,8 @@
            AND UA_CD = #uaCd#
 		  </if>
 		   -->
-		  <if test="model != null">
-		   AND DEVICE_MODEL_CD = #{model}
+		  <if test="deviceModelNo != null">
+		   AND DEVICE_MODEL_CD = #{deviceModelNo}
 		  </if>
  	</select>
 </mapper>

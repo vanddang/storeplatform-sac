@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.category.service;
 
 import java.util.ArrayList;
@@ -19,6 +28,7 @@ import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
@@ -26,12 +36,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.util.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificDTO;
 
 @Service
 @Transactional
-public class CategorySpecificServiceImpl implements CategorySpecificService {
+public class CategorySpecificProductServiceImpl implements CategorySpecificProductService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -46,9 +57,11 @@ public class CategorySpecificServiceImpl implements CategorySpecificService {
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 		if (prodIdList == null || prodIdList.size() == 0) {
 			// TODO osm1021 에러 처리
+		} else if (prodIdList.size() > 50) {
+			// TODO osm1021 에러 처리
 		}
 
-		List<CategorySpecificDTO> svcGrpCdList = this.commonDAO.queryForList("SpecificProduct.selectSvcGrpCd",
+		List<CategorySpecificDTO> svcGrpCdList = this.commonDAO.queryForList("CategorySpecificProduct.selectSvcGrpCd",
 				prodIdList, CategorySpecificDTO.class);
 
 		for (CategorySpecificDTO svcGtpCdDto : svcGrpCdList) {
@@ -64,8 +77,7 @@ public class CategorySpecificServiceImpl implements CategorySpecificService {
 
 			CategorySpecificDTO retDto = null;
 			if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-				retDto = this.commonDAO
-						.queryForObject("SpecificProduct.selectApp", paramMap, CategorySpecificDTO.class);
+
 			} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 
 			} else if (DisplayConstants.DP_SOCIAL_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
@@ -74,59 +86,82 @@ public class CategorySpecificServiceImpl implements CategorySpecificService {
 				// 폰 데코는 현재 사용하지 않기 때문에 SAC에서는 지원하지 않음
 			} else if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 
-				retDto = this.commonDAO
-						.queryForObject("SpecificProduct.selectApp", paramMap, CategorySpecificDTO.class);
+				retDto = this.commonDAO.queryForObject("CategorySpecificProduct.selectApp", paramMap,
+						CategorySpecificDTO.class);
+				if (retDto != null) {
+					Product product = new Product();
+					Identifier identifier = new Identifier();
+					Rights rights = new Rights();
+					Title title = new Title();
+					Source source = new Source();
+					App app = new App();
+					Price price = new Price();
+					Accrual accrual = new Accrual();
+					Menu menu = new Menu();
+					Support support = new Support();
 
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				Rights rights = new Rights();
-				Title title = new Title();
-				List<Source> sourceList = new ArrayList<Source>();
-				Source source = new Source();
-				App app = new App();
-				Price price = new Price();
-				Accrual accrual = new Accrual();
+					List<Source> sourceList = new ArrayList<Source>();
+					List<Menu> menuList = new ArrayList<Menu>();
+					List<Support> supportList = new ArrayList<Support>();
 
-				// Identifier 설정
-				identifier.setText(prodId);
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					// Identifier 설정
+					identifier.setText(prodId);
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 
-				// Title 설정
-				title.setText(retDto.getProdNm());
+					// Title 설정
+					title.setText(retDto.getProdNm());
 
-				// APP 설정
-				app.setAid(retDto.getAid());
-				app.setPackageName(retDto.getApkPkgNm());
-				app.setVersionCode(retDto.getApkVer());
-				app.setVersion(retDto.getProdVer());
+					// APP 설정
+					app.setAid(retDto.getAid());
+					app.setPackageName(retDto.getApkPkgNm());
+					app.setVersionCode(retDto.getApkVer());
+					app.setVersion(retDto.getProdVer());
 
-				// Price 설정
-				price.setText(retDto.getProdAmt());
+					// Price 설정
+					price.setText(retDto.getProdAmt());
 
-				accrual.setVoterCount(retDto.getPaticpersCnt());
-				accrual.setDownloadCount(retDto.getPrchsCnt());
-				accrual.setScore(retDto.getAvgEvluScore());
+					// supported hardware 정보
 
-				source.setMediaType(DisplayCommonUtil.getMimeType(retDto.getImgFilePath()));
-				source.setUrl(retDto.getImgFilePath());
-				// TODO osm1021 type이 thumnail 강제값인지 확인
-				source.setType("thumbnail");
-				sourceList.add(source);
+					support = new Support();
+					support.setType("drm");
+					support.setText(retDto.getDrmYn());
+					supportList.add(support);
 
-				rights.setGrade(retDto.getProdGrdCd());
+					support = new Support();
+					support.setType("inApp");
+					support.setText(retDto.getPartParentClsfCd());
+					supportList.add(support);
+					product.setSupportList(supportList);
 
-				product.setIdentifier(identifier);
-				product.setApp(app);
-				product.setAccrual(accrual);
-				product.setProductExplain(retDto.getProdBaseDesc());
-				product.setPrice(price);
+					accrual.setVoterCount(retDto.getPaticpersCnt());
+					accrual.setDownloadCount(retDto.getPrchsCnt());
+					accrual.setScore(retDto.getAvgEvluScore());
 
-				// TODO osm1021 menuList 처리 추가 필요
-				// productVO.setMenuList(menuList);
-				product.setRights(rights);
-				product.setTitle(title);
-				product.setSourceList(sourceList);
-				productList.add(product);
+					source.setMediaType(DisplayCommonUtil.getMimeType(retDto.getImgFilePath()));
+					source.setUrl(retDto.getImgFilePath());
+					// TODO osm1021 type이 thumnail 강제값인지 확인
+					source.setType("thumbnail");
+					sourceList.add(source);
+
+					rights.setGrade(retDto.getProdGrdCd());
+
+					menu.setId(retDto.getMenuId());
+					menu.setName(retDto.getMenuNm());
+					menuList.add(menu);
+
+					product.setIdentifier(identifier);
+					product.setApp(app);
+					product.setAccrual(accrual);
+					product.setProductExplain(retDto.getProdBaseDesc());
+					product.setPrice(price);
+
+					product.setRights(rights);
+					product.setTitle(title);
+					product.setSourceList(sourceList);
+					product.setMenuList(menuList);
+					product.setSupportList(supportList);
+					productList.add(product);
+				}
 			}
 		}
 		res.setProductList(productList);

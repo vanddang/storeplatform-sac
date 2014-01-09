@@ -26,7 +26,7 @@ public class BannerServceImpl implements BannerService {
 		BannerRes res = new BannerRes();
 		List<Banner> bannerList = new ArrayList<Banner>();
 
-		// product type일 경우
+		// ======================== product type일 경우 ========================
 		Banner banner = new Banner();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		Identifier identifier = new Identifier();
@@ -68,12 +68,75 @@ public class BannerServceImpl implements BannerService {
 		banner.setIdentifier(identifierList);
 		bannerList.add(banner);
 
-		// url type일 경우
+		// ======================== 외부 url일 경우 ========================
+		// sizeType 설정
 		banner = new Banner();
 		identifierList = new ArrayList<Identifier>();
 		identifier = new Identifier();
 		title = new Title();
 		Url url = new Url();
+
+		banner.setSizeType("B");
+
+		// Identifier 설정
+		identifier.setText("37274");
+		identifier.setType("external");
+		identifierList.add(identifier);
+		banner.setIdentifier(identifierList);
+
+		// URL 설정
+		url.setText("http://is.gd/643Al3?ua=Android%2F4.0.4+%28SHV-E160S%3Bresolution%3D800*1280%3Bdpi%3D320%29+Tstore-Svc%2F1.0+%28com.skt.skaf.A000Z00040%2F9999%29&amp;id=2830%2B20140103T084313Z&amp;type=banner");
+		banner.setUrl(url);
+
+		// Source 설정
+		sourceList = new ArrayList<Source>();
+		source = new Source();
+		source.setUrl("http://wap.tstore.co.kr/images/tstore30/banner/mainTop/mainTop_xhdpi_222_222_20131230092328698.png");
+		source.setMediaType("image/png");
+		sourceList.add(source);
+		banner.setSourceList(sourceList);
+
+		bannerList.add(banner);
+
+		// ======================== 메뉴 연결일 경우 ========================
+		// sizeType 설정
+		banner = new Banner();
+		identifierList = new ArrayList<Identifier>();
+		identifier = new Identifier();
+		title = new Title();
+		url = new Url();
+
+		banner.setSizeType("B");
+
+		// Title 설정
+		title.setText("메뉴");
+
+		// Identifier 설정
+		identifier.setText("37274");
+		identifier.setType("menu");
+		identifierList.add(identifier);
+		banner.setIdentifier(identifierList);
+
+		// URL 설정
+		url.setText("http://is.gd/643Al3?ua=Android%2F4.0.4+%28SHV-E160S%3Bresolution%3D800*1280%3Bdpi%3D320%29+Tstore-Svc%2F1.0+%28com.skt.skaf.A000Z00040%2F9999%29&amp;id=2830%2B20140103T084313Z&amp;type=banner");
+		banner.setUrl(url);
+
+		// Source 설정
+		sourceList = new ArrayList<Source>();
+		source = new Source();
+		source.setUrl("http://wap.tstore.co.kr/images/tstore30/banner/mainTop/mainTop_xhdpi_222_222_20131230092328698.png");
+		source.setMediaType("image/png");
+		sourceList.add(source);
+		banner.setSourceList(sourceList);
+
+		bannerList.add(banner);
+
+		// ========================url type일 경우========================
+		banner = new Banner();
+		identifierList = new ArrayList<Identifier>();
+		identifier = new Identifier();
+		title = new Title();
+		url = new Url();
 
 		// Identifier 설정
 		identifier.setText("37274");

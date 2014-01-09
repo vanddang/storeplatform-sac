@@ -65,7 +65,7 @@
         <typeAlias alias="DeviceProfileDTO"  type="com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO" />
         
         <!--  특정 상품 조회 -->
-        <typeAlias alias="SpecificProductDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificDTO" />
+        <typeAlias alias="CategorySpecificDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificDTO" />
         
         <!-- feature app 카테고리 상품 조회 -->
         <typeAlias alias="FeatureCategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppReq" />

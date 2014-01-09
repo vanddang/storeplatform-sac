@@ -72,13 +72,17 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 			device.setServices(deviceProfileDTO.getServicesMap());
 			device.setSupportedHardware(deviceProfileDTO.getSupportedHardwareMap());
 			device.setModelExplain(deviceProfileDTO.getModelNm());
+
+			commonRes.setTotalCount(1);
 			// TODO osm1021 DPI 넣어주는 처리가 필요
 		} else { // 미지원단말
 			device.setIdentifier("android_standard");
 			device.setType("restrict");
+			commonRes.setTotalCount(0);
 		}
 
 		deviceProfileResponse.setDevice(device);
+
 		deviceProfileResponse.setCommonRes(commonRes);
 		return deviceProfileResponse;
 	}

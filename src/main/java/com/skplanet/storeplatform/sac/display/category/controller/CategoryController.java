@@ -36,7 +36,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxReq;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
-import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductDummyService;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
@@ -61,7 +62,10 @@ public class CategoryController {
 	private CategoryMusicContentsService categoryMusicContentsService;
 
 	@Autowired
-	private CategorySpecificService categorySpecificService;
+	private CategorySpecificProductService categorySpecificService;
+
+	@Autowired
+	private CategorySpecificProductDummyService categorySpecificProductDummyService;
 
 	/**
 	 * <pre>
@@ -134,4 +138,12 @@ public class CategoryController {
 		return this.categorySpecificService.getSpecificProductList(req);
 	}
 
+	@RequestMapping(value = "/specific/product/list/dummy/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public CategorySpecificRes searchSpecificProductDummyList(CategorySpecificReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("searchSpecificProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.categorySpecificProductDummyService.getSpecificProductList(req);
+	}
 }
