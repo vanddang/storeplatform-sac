@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
 /**
@@ -26,26 +28,26 @@ public class MiscellaneousController {
 	@Autowired
 	private MiscellaneousService service;
 
-	// /**
-	// * <pre>
-	// * UA 코드 정보 조회.
-	// * </pre>
-	// *
-	// * @param request
-	// * @return
-	// * @throws Exception
-	// */
-	// @RequestMapping(value = "/getUaCode/v1", method = RequestMethod.GET)
-	// @ResponseBody
-	// public GetUaCodeRes getUaCode(GetUaCodeReq request) throws Exception {
-	//
-	// logger.info("#################  UA 코드 정보 조회 - START ######################");
-	// GetUaCodeRes response = new GetUaCodeRes();
-	// response = this.service.getUaCode(request);
-	//
-	// logger.info("#################  UA 코드 정보 조회 -  END #######################");
-	// return response;
-	// }
+	/**
+	 * <pre>
+	 * UA 코드 정보 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getUaCode/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public GetUaCodeRes getUaCode(GetUaCodeReq request) throws Exception {
+
+		logger.info("#################  UA 코드 정보 조회 - START ######################");
+		GetUaCodeRes response = new GetUaCodeRes();
+		response = this.service.getUaCode(request);
+
+		logger.info("#################  UA 코드 정보 조회 -  END #######################");
+		return response;
+	}
 
 	/**
 	 * <pre>

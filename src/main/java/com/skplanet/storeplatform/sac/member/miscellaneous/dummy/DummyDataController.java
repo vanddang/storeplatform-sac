@@ -20,7 +20,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaR
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
@@ -184,18 +183,18 @@ public class DummyDataController {
 		return response;
 	}
 
-	@RequestMapping(value = "/getUaCode/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public GetUaCodeRes getUaCode() {
-
-		logger.info("####################################################");
-		logger.info("####### 5.3.11. UA 코드 정보 조회     #################");
-		logger.info("####################################################");
-
-		GetUaCodeRes response = new GetUaCodeRes();
-		response.setUaCd("");
-		return response;
-	}
+	// @RequestMapping(value = "/getUaCode/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public GetUaCodeRes getUaCode() {
+	//
+	// logger.info("####################################################");
+	// logger.info("####### 5.3.11. UA 코드 정보 조회     #################");
+	// logger.info("####################################################");
+	//
+	// GetUaCodeRes response = new GetUaCodeRes();
+	// response.setUaCd("");
+	// return response;
+	// }
 
 	// @RequestMapping(value = "/getOpmd/v1", method = RequestMethod.GET)
 	// @ResponseBody
