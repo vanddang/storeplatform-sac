@@ -83,6 +83,11 @@ public class DeviceInfo extends CommonInfo {
 	private String imei;
 
 	/**
+	 * 기기고유 ID
+	 */
+	private String nativeId;
+
+	/**
 	 * 기기계정
 	 */
 	private String deviceAccount;
@@ -392,6 +397,14 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setOsVerOrg(String osVerOrg) {
 		this.osVerOrg = osVerOrg;
+	}
+
+	public String getNativeId() {
+		return this.nativeId;
+	}
+
+	public void setNativeId(String nativeId) {
+		this.nativeId = nativeId;
 	}
 
 }

@@ -19,7 +19,7 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	/**
 	 * 기기 고유 번호
 	 */
-	private String imei;
+	private String nativeId;
 
 	/**
 	 * 루팅 여부(Y/N)
@@ -64,12 +64,12 @@ public class AuthorizeByMdnReq extends CommonInfo {
 		this.deviceId = deviceId;
 	}
 
-	public String getImei() {
-		return this.imei;
+	public String getNativeId() {
+		return this.nativeId;
 	}
 
-	public void setImei(String imei) {
-		this.imei = imei;
+	public void setNativeId(String nativeId) {
+		this.nativeId = nativeId;
 	}
 
 	public String getRooting() {
