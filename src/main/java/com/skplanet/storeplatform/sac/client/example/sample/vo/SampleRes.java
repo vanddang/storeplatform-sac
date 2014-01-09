@@ -1,10 +1,10 @@
-package com.skplanet.storeplatform.sac.client.sample.vo;
+package com.skplanet.storeplatform.sac.client.example.sample.vo;
 
 import java.util.Date;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class SampleReqRes extends CommonInfo {
+public class SampleRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,10 +14,10 @@ public class SampleReqRes extends CommonInfo {
 	private String description;
 	private Date date;
 
-	public SampleReqRes() {
+	public SampleRes() {
 	}
 
-	public SampleReqRes(Integer no) {
+	public SampleRes(Integer no) {
 		this.no = no;
 	}
 
