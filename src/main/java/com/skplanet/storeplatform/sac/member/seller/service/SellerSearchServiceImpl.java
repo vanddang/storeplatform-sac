@@ -6,8 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -24,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
 
 @Service
 public class SellerSearchServiceImpl implements SellerSearchService {
@@ -32,6 +35,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	@Autowired
 	private SellerSCI sellerSCI;
+
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
 
 	@Override
 	public DuplicateByIdEmailRes duplicateByIdEmail(DuplicateByIdEmailReq req) {
@@ -86,17 +93,22 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	@Override
 	public DetailInformationRes detailInformation(DetailInformationReq req) {
+
+		SellerDTO dto = new SellerDTO();
+		dto.setSellerKey(req.getAid());
+		SellerDTO sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", dto, SellerDTO.class);
+
 		SearchSellerResponse result = new SearchSellerResponse();
-		// logger.info("----" + req.getKeySearchList().get(0).getKeyString());
-		/*
-		 * req.getAid(); req.getClass(); req.getSellerKey();
-		 */
 		SearchSellerRequest request = new SearchSellerRequest();
 
 		request.setCommonRequest(this.imsiCommonRequest());
 
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyString(req.getSellerKey());
+		if (sellerDTO.getSellerKey() == null)
+			keySearch.setKeyString(req.getSellerKey());
+		else
+			keySearch.setKeyString(sellerDTO.getSellerKey());
+
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
