@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.common.util.HttpUtil;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -59,14 +60,14 @@ public class SellerServiceImpl implements SellerService {
 		 * US010201(정상) US010202(탈퇴) US010203(가가입) US010204(일시정지) US010205(전환)
 		 */
 		// TODO 임시 코딩
-		updateStatusSellerRequest.setSellerMainStatus("US010204");
+		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_WATING);
 		/*
 		 * US010301(정상) US010302(탈퇴신청) US010303(탈퇴완료) US010304(가입승인만료) US010305(가입승인 대기) US010306(이메일변경승인대기)
 		 * US010307(로그인 제한) US010308(직권중지) US010309(7일이용정지) US010310(30일이용정지) US010311(영구이용정지) US010312(전환신청)
 		 * US010313(전환재신청) US010314(전환거절)
 		 */
 		// TODO 임시코딩
-		updateStatusSellerRequest.setSellerSubStatus("US010307");
+		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_LOGIN_PAUSE);
 
 		/** 3. SC회원 Call */
 		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
@@ -97,7 +98,6 @@ public class SellerServiceImpl implements SellerService {
 		commonRequest.setSystemID("S001");
 		// TODO SC회원 문의?? - Reamine ID생성 규칙과 다름
 		// T01(T-Store), T02(A-Store), T03(B-Store)
-		// commonRequest.setTenantID("T01");
 		commonRequest.setTenantID("S01");
 
 		return commonRequest;

@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 
 @Service
 public class SellerSearchServiceImpl implements SellerSearchService {
@@ -58,9 +59,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		 */
 		KeySearch keySearch = new KeySearch();
 		if ("id".equals(req.getKeyType()))
-			keySearch.setKeyType("SELLERMBR_ID");
+			keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
 		else if ("email".equals(req.getKeyType()))
-			keySearch.setKeyType("EMAIL");
+			keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
 		keySearch.setKeyString(req.getKeyString());
 		List<KeySearch> keySearchs = new ArrayList<KeySearch>();
 		keySearchs.add(keySearch);
@@ -177,8 +178,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		// S001(ShopClient), S002(WEB), S003(OpenAPI)
 		commonRequest.setSystemID("S001");
 		// TODO SC회원 문의?? - Reamine ID생성 규칙과 다름
-		// T01(T-Store), T02(A-Store), T03(B-Store)
-		// commonRequest.setTenantID("T01");
+		// T01(T-Store), T02(A-Store), T03(B-Store) - ['S01' 데이터로 마이그레이션 작업 할 예정]
 		commonRequest.setTenantID("S01");
 		return commonRequest;
 	}
