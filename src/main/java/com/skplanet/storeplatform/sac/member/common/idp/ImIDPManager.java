@@ -1,91 +1,147 @@
-/*
- * Copyright (c) 2013 SK planet.
- * All right reserved.
- *
- * This software is the confidential and proprietary information of SK planet.
- * You shall not disclose such Confidential Information and
- * shall use it only in accordance with the terms of the license agreement
- * you entered into with SK planet.
- */
-package com.skplanet.storeplatform.sac.external.idp.service;
+package com.skplanet.storeplatform.sac.member.common.idp;
 
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.time.StopWatch;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.idp.sci.IDPSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPTxReq;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPTxRes;
-import com.skplanet.storeplatform.sac.external.idp.ImIDPManager;
-import com.skplanet.storeplatform.sac.external.idp.ImIDPReceiver;
-import com.skplanet.storeplatform.sac.external.idp.ImIDPSender;
-import com.skplanet.storeplatform.sac.external.idp.util.IdpDateUtil;
-import com.skplanet.storeplatform.sac.external.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.sac.external.idp.vo.ImIDPSenderM;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.SendReq;
+import com.skplanet.storeplatform.external.client.idp.vo.SendRes;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
 
-@Service("ImIdpSacService")
-@Transactional
-public class ImIdpSacServiceImpl implements ImIdpSacService {
-
-	private static final Logger logger = LoggerFactory.getLogger(ImIDPManager.class);
-
+@Component
+public class ImIDPManager implements ImIDPConstants {
 	@Autowired
-	private IDPSCI idpSCI;
+	private IdpSCI idpSCI;
 
-	private static ImIDPReceiver idpReceiver = new ImIDPReceiver();
-	private static ImIDPSender imidpSender = new ImIDPSender();
-	private static ImIDPReceiverM receivData = new ImIDPReceiverM();
+	private static Logger logger = Logger.getLogger(ImIDPManager.class);
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private static ImIDPManager instance = null;
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private ImIDPReceiver idpReceiver = null;
+	@Autowired
+	private ImIDPSender idpSender;
+	private final ImIDPReceiverM receivData = null;
 
-	/** OMP 서비스 도메인 */
-	public static String OMP_SERVICE_DOMAIN = "https://www.skplanetoneid.com";
-	/** OMP 서비스 URL */
-	public static String OMP_SERVICE_URL = "omp.dev.service.url";
-	/** OMP 서비스 URL (HTTPS) */
-	public static String OMP_SERVICE_URL_HTTPS = "omp.dev.service.url.https";
-	/** OMP 서비스 URL IP */
-	public static String OMP_SERVICE_URL_IP = "omp.dev.service.url.ip";
+	// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+	// private SMSApi smsapi = null;
 
-	/** IDP 요청 도메인 (HTTP) */
-	public static String IDP_REQUEST_URL = "omp.imidp.request.url";
-	/** IDP 요청 도메인 (HTTPS) */
-	public static String IDP_REQUEST_URL_HTTPS = "omp.imidp.request.url.https";
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private DevProperties prop = null;
 
-	/** IDP에 등록한 OMP Association Key */
-	public static String IDP_REQ_OMP_ASSOC_KEY = "omp.idp.request.assockey";
-	/** IDP로 부터 발급된 Service ID */
-	public static String IDP_REQ_OMP_SERVICE_ID = "omp.idp.request.serviceid";
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// /** OMP 서비스 도메인 */
+	// public static String OMP_SERVICE_DOMAIN = "";
+	// /** OMP 서비스 URL */
+	// public static String OMP_SERVICE_URL = "";
+	// /** OMP 서비스 URL (HTTPS) */
+	// public static String OMP_SERVICE_URL_HTTPS = "";
+	// /** OMP 서비스 URL IP */
+	// public static String OMP_SERVICE_URL_IP = "";
+	//
+	// /** IDP 요청 도메인 (HTTP) */
+	// public static String IDP_REQUEST_URL = "";
+	// /** IDP 요청 도메인 (HTTPS) */
+	// public static String IDP_REQUEST_URL_HTTPS = ""; //
+	//
+	// /** IDP에 등록한 OMP Association Key */
+	// public static String IDP_REQ_OMP_ASSOC_KEY = "";
+	// /** IDP로 부터 발급된 Service ID */
+	// public static String IDP_REQ_OMP_SERVICE_ID = "";
+	//
+	// public static String IDP_OPERATION_MODE = "";
+	//
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// /* One ID 2.0 Portal Inbound Url Information */
+	// public static String ONEID_PORTAL_DOMAIN = "";// domain
+	// public static String ONEID_PORTAL_JOIN = "";// 가입
+	// public static String ONEID_PORTAL_TRANS_JOIN = "";// 바꾸기 (기존회원을 one id portal로 전환 )
+	// public static String ONEID_PORTAL_TRANS_JOIN_POINT = "";// 포인트 가입 처리 바꾸기
+	// public static String ONEID_PORTAL_AGREE = "";// 서비스 이용동의
+	// public static String ONEID_PORTAL_AGREE_POINT = "";// 포인트 가입 처리 이용동의
+	// public static String ONEID_PORTAL_DELETE = ""; // One ID 탈퇴
+	// public static String ONEID_PORTAL_UNLOCKUSER = "";// 아이디 잠금 해지
+	// public static String ONEID_PORTAL_SEARCHID = "";// 아이디 찾기
+	// public static String ONEID_PORTAL_SEARCHPASSWORD = "";// 비밀번호 재설정
+	// public static String ONEID_PORTAL_GUIDE = "";// 기존아이디 통합안내
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// static {
+	// ImIDPManager.getInstance();
+	// }
 
-	public static String IDP_OPERATION_MODE = "omp.idp.request.operation";
+	public ImIDPManager() {
+		// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+		// this.idpReceiver = new ImIDPReceiver();
+		// this.idpSender = new ImIDPSender();
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// this.smsapi = new SMSApi();
+		// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+		// this.setPropString();
+	}
 
-	/* One ID 2.0 Portal Inbound Url Information */
-	public static String ONEID_PORTAL_DOMAIN = "https://www.skplanetoneid.com";// domain
-	public static String ONEID_PORTAL_JOIN = "omp.oneid.portal.join";// 가입
-	public static String ONEID_PORTAL_TRANS_JOIN = "omp.oneid.portal.transJoin";// 바꾸기 (기존회원을 one id portal로 전환
-	public static String ONEID_PORTAL_TRANS_JOIN_POINT = "omp.oneid.portal.transJoinPoint";// 포인트 가입 처리 바꾸기
-	public static String ONEID_PORTAL_AGREE = "omp.oneid.portal.agree";// 서비스 이용동의
-	public static String ONEID_PORTAL_AGREE_POINT = "omp.oneid.portal.agreePoint";// 서비스 이용동의
-	public static String ONEID_PORTAL_DELETE = "omp.oneid.portal.delete"; // One ID 탈퇴
-	public static String ONEID_PORTAL_UNLOCKUSER = "omp.oneid.portal.unlockUser";// 아이디 잠금 해지
-	public static String ONEID_PORTAL_SEARCHID = "omp.oneid.portal.searchIdForm";//
-	public static String ONEID_PORTAL_SEARCHPASSWORD = "omp.oneid.portal.searchPasswordForm";//
-	public static String ONEID_PORTAL_GUIDE = "omp.oneid.portal.guide";//
-
-	/* One ID 2.0 */
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private void setPropString() {
+	// try {
+	// this.prop = new DevProperties();
+	//
+	// OMP_SERVICE_DOMAIN = this.prop.getString("omp.service.domain");
+	// OMP_SERVICE_URL = this.prop.getString("omp.dev.service.url");
+	// OMP_SERVICE_URL_HTTPS = this.prop.getString("omp.dev.service.url.https");
+	// OMP_SERVICE_URL_IP = this.prop.getString("omp.dev.service.url.ip");
+	//
+	// IDP_REQUEST_URL = this.prop.getString("omp.imidp.request.url");
+	// IDP_REQUEST_URL_HTTPS = this.prop.getString("omp.imidp.request.url.https");
+	//
+	// IDP_REQ_OMP_ASSOC_KEY = this.prop.getString("omp.idp.request.assockey");
+	// IDP_REQ_OMP_SERVICE_ID = this.prop.getString("omp.idp.request.serviceid");
+	//
+	// IDP_OPERATION_MODE = this.prop.getString("omp.idp.request.operation");
+	// // 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// // /* One ID 2.0 */
+	// // ONEID_PORTAL_DOMAIN = this.prop.getString("omp.oneid.portal.domain");// domain
+	// // ONEID_PORTAL_JOIN = this.prop.getString("omp.oneid.portal.join");// 가입
+	// // ONEID_PORTAL_TRANS_JOIN = this.prop.getString("omp.oneid.portal.transJoin");// 바꾸기 (기존회원을 one id portal로 전환
+	// // // )
+	// // ONEID_PORTAL_TRANS_JOIN_POINT = this.prop.getString("omp.oneid.portal.transJoinPoint");// 포인트 가입 처리 바꾸기
+	// // ONEID_PORTAL_AGREE = this.prop.getString("omp.oneid.portal.agree");// 서비스 이용동의
+	// // ONEID_PORTAL_AGREE_POINT = this.prop.getString("omp.oneid.portal.agreePoint");// 서비스 이용동의
+	// // ONEID_PORTAL_DELETE = this.prop.getString("omp.oneid.portal.delete"); // One ID 탈퇴
+	// // ONEID_PORTAL_UNLOCKUSER = this.prop.getString("omp.oneid.portal.unlockUser");// 아이디 잠금 해지
+	// // ONEID_PORTAL_SEARCHID = this.prop.getString("omp.oneid.portal.searchIdForm");//
+	// // ONEID_PORTAL_SEARCHPASSWORD = this.prop.getString("omp.oneid.portal.searchPasswordForm");//
+	// // ONEID_PORTAL_GUIDE = this.prop.getString("omp.oneid.portal.guide");//
+	// logger.info("<setPropString> IDP_REQ_OMP_SERVICE_ID : " + IDP_REQ_OMP_SERVICE_ID);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// /**
+	// * IDPManager Singleton 객체를 반환한다.
+	// *
+	// * @return
+	// */
+	// public static synchronized ImIDPManager getInstance() {
+	// if (instance == null) {
+	// instance = new ImIDPManager();
+	// logger.info("ImIDPManager Instance Create");
+	// }
+	// logger.info("ImIDPManager Instance is not null");
+	// return instance;
+	// }
 
 	/**
 	 * 2.1.1 신규가입요청
 	 */
-	@Override
 	public ImIDPReceiverM createUser(Map<String, Object> param) throws Exception {
-
 		String userId = (String) param.get("user_id");
 		String authType = (String) param.get("auth_type");
 		String oldId = (String) param.get("old_id");
@@ -128,8 +184,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		String userPasswdModifyDate = (String) param.get("user_passwd_modify_date");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(imidpSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(imidpSender.IDP_REQ_CMD_CREATE_USER);
+		sendData.setUrl(ImIDPSender.IDP_REQ_URL_JOIN);
+		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_CREATE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(userId);
@@ -212,19 +268,17 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 			sendData.setConsent_tac(consentTac);
 		if (joinPathCode != null)
 			sendData.setJoin_path_code(joinPathCode);
-		sendData.setJoin_date(IdpDateUtil.getCurrentDate());
-		sendData.setJoin_time(IdpDateUtil.getCurrentTime());
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setJoin_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setJoin_time(DateUtil.getToday("hhmmss"));
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
-		// TODO : business logic
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.2 서비스이용동의요청
 	 */
-	@Override
 	public ImIDPReceiverM agreeUser(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String key_type = (String) param.get("key_type");
@@ -241,8 +295,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		String parent_approve_sst_code = (String) param.get("parent_approve_sst_code");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(imidpSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(imidpSender.IDP_REQ_CMD_AGREE_USER);
+		sendData.setUrl(ImIDPSender.IDP_REQ_URL_JOIN);
+		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AGREE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -271,17 +325,15 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 			sendData.setIs_parent_approve(is_parent_approve);
 		if (parent_approve_sst_code != null)
 			sendData.setParent_approve_sst_code(parent_approve_sst_code);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
-		// TODO : business logic
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.3 회원탈퇴요청
 	 */
-	@Override
 	public ImIDPReceiverM DeleteUser(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
@@ -297,8 +349,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_auth_key(user_auth_key);
 		if (term_reason_cd != null)
 			sendData.setTerm_reason_cd(term_reason_cd);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
@@ -306,7 +358,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.4 개별약관해지요청
 	 */
-	@Override
 	public ImIDPReceiverM discardUser(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
@@ -322,8 +373,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_auth_key(user_auth_key);
 		if (term_reason_cd != null)
 			sendData.setTerm_reason_cd(term_reason_cd);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 
@@ -332,7 +383,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.5 공통프로파일조회요청 (For User Agent)
 	 */
-	@Override
 	public ImIDPReceiverM userInfoSearchBrowser(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
@@ -345,8 +395,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setUser_auth_key(user_auth_key);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData);
 	}
@@ -354,7 +404,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.6 공통프로파일조회요청 (For Server)
 	 */
-	@Override
 	public ImIDPReceiverM userInfoSearchServer(String imServiceNo) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -363,8 +412,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(imServiceNo);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
@@ -372,7 +421,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.7 공통프로파일정보수정요청
 	 */
-	@Override
 	public ImIDPReceiverM updateUserInfo(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
@@ -452,8 +500,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 			sendData.setUser_status_code(user_status_code);
 		if (udt_type_cd != null)
 			sendData.setUdt_type_cd(udt_type_cd);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		sendData.setUser_type(user_type);
 		sendData.setIs_biz_auth(is_biz_auth);
 
@@ -463,7 +511,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.8 부가프로파일정보수정요청
 	 */
-	@Override
 	public ImIDPReceiverM updateAdditionalInfo(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
@@ -497,8 +544,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 			sendData.setUser_address(user_address);
 		if (user_address2 != null)
 			sendData.setUser_address2(user_address2);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
@@ -506,7 +553,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.9 비밀번호변경요청
 	 */
-	@Override
 	public ImIDPReceiverM modifyPwd(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
@@ -528,8 +574,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 			sendData.setUser_passwd_type(user_passwd_type);
 		if (user_passwd_modify_date != null)
 			sendData.setUser_passwd_modify_date(user_passwd_modify_date);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
@@ -537,7 +583,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.10 비밀번호초기화및임시비번발급
 	 */
-	@Override
 	public ImIDPReceiverM resetPwd(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String user_tn = (String) param.get("user_tn");
@@ -571,8 +616,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		if (is_email_auth != null)
 			sendData.setIs_email_auth(is_email_auth);
 		sendData.setLang_code(IDP_PARAM_LANG_CODE);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
@@ -580,27 +625,21 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.11 ID 중복체크(가통합 ID Pool)
 	 */
-	@Override
 	public ImIDPReceiverM dupUserIdCheck(String id) throws Exception {
-
 		ImIDPSenderM sendData = new ImIDPSenderM();
-
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
 		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_DUP_CHECK_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
-
-		// TODO : business logic
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.13 전화번호중복체크
 	 */
-	@Override
 	public ImIDPReceiverM dupTelNoCheck(String user_tn) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -610,8 +649,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_tn(user_tn);
 		sendData.setUser_tn_type(IDP_PARAM_USER_TN_TYPE_MOBILE);
 		sendData.setUser_tn_nation_cd(IDP_PARAM_USER_TN_NATION_CD);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDP(sendData);
 	}
@@ -619,7 +658,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.14 인증 E-mail 재발송요청
 	 */
-	@Override
 	public ImIDPReceiverM resendConfirmEmail(String key, String user_email) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
@@ -630,15 +668,14 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_ID);
 		sendData.setUser_email(user_email);
 		sendData.setLang_code(IDP_PARAM_LANG_CODE);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.15 인증 SMS 발송요청
 	 */
-	@Override
 	public ImIDPReceiverM sendAuthSms(String key, String user_tn) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -650,15 +687,14 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setUser_tn(user_tn);
 		sendData.setLang_code(IDP_PARAM_LANG_CODE);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.16 인증 E-mail 발송요청(인증 코드 발급)
 	 */
-	@Override
 	public ImIDPReceiverM sendAuthEmail(String key, String user_email) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -670,8 +706,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_ID);
 		sendData.setUser_email(user_email);
 		sendData.setLang_code(IDP_PARAM_LANG_CODE);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
@@ -686,15 +722,14 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.20 유효기간설정해제
 	 */
-	@Override
 	public ImIDPReceiverM resetVaildPeriod(String key) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -704,8 +739,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDP(sendData);
 	}
@@ -713,7 +748,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.21 탈퇴가능 확인 요청
 	 */
-	@Override
 	public ImIDPReceiverM checkDelUser(String key) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -723,8 +757,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDP(sendData);
 	}
@@ -741,8 +775,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
 		sendData.setIpin_ci(ipin_ci);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDP(sendData);
 	}
@@ -750,26 +784,24 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.23 로그인 상태 정보 변경 요청
 	 */
-	@Override
 	public ImIDPReceiverM setLoginStatus(String key, String login_status_code) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_SET_LOGIN_STATUS);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
-		// sendData.setLogin_limit_sst_code(Constants.SSO_SST_CD_TSTORE_WEB);
+		sendData.setLogin_limit_sst_code(SSO_SST_CD_TSTORE_WEB);
 		sendData.setLogin_status_code(login_status_code);
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_ID);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.24 가입 인증 SMS 발송 요청
 	 */
-	@Override
 	public ImIDPReceiverM authCreateSms(String user_tn, String user_tn_nation_cd) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
@@ -779,18 +811,16 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_tn(user_tn);
 		sendData.setUser_tn_nation_cd(user_tn_nation_cd);
 		sendData.setLang_code(IDP_PARAM_LANG_CODE);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/**
 	 * 2.1.26 실명 변경 요청
 	 */
-	@Override
 	public ImIDPReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
 			String user_auth_key, String rname_auth_mns_code, String ci, String di, HashMap map) throws Exception {
-
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_UPDATE_USER_NAME);
@@ -801,12 +831,12 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_birthday(user_birthday);
 		sendData.setUser_calendar("1");
 		sendData.setIs_rname_auth("Y");
-		// sendData.setRname_auth_sst_code(Constants.SSO_SST_CD_TSTORE_WEB);
+		sendData.setRname_auth_sst_code(SSO_SST_CD_TSTORE_WEB);
 		sendData.setSn_auth_key(sn_auth_key);
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		sendData.setRname_auth_mns_code((rname_auth_mns_code == null || rname_auth_mns_code.equals("") ? "2" : rname_auth_mns_code));
 		sendData.setUser_ci(ci);
 		sendData.setUser_di(di);
@@ -822,7 +852,7 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 				&& !"".equals(map.get("rname_auth_type_cd").toString())) {
 			sendData.setRname_auth_type_cd(map.get("rname_auth_type_cd").toString());
 		}
-		sendData.setRname_auth_date(IdpDateUtil.getCurrentDate() + "" + IdpDateUtil.getCurrentTime());
+		sendData.setRname_auth_date(DateUtil.getToday("yyyyMMdd") + "" + DateUtil.getToday("hhmmss"));
 
 		return this.sendIDP(sendData);
 	}
@@ -830,7 +860,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.27 법정대리인 동의정보 변경 요청
 	 */
-	@Override
 	public ImIDPReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
 			String parent_name, String parent_email, String user_auth_key, String parent_birthday) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
@@ -847,16 +876,15 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setParent_name(parent_name);
 		sendData.setParent_birthday(parent_birthday);// 주민번호 앞자리
 		sendData.setParent_email(parent_email);
-		sendData.setParent_approve_date(IdpDateUtil.getCurrentDate());
+		sendData.setParent_approve_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setIs_parent_approve("Y");
-		// sendData.setParent_approve_sst_code(Constants.SSO_SST_CD_TSTORE_WEB);
-		sendData.setModify_req_date(IdpDateUtil.getCurrentDate());
-		sendData.setModify_req_time(IdpDateUtil.getCurrentTime());
+		sendData.setParent_approve_sst_code(SSO_SST_CD_TSTORE_WEB);
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		return this.sendIDP(sendData);
 	}
 
 	/* 2.1.27 개별 프로파일 조회 - One ID 2.0 신규 */
-	@Override
 	public ImIDPReceiverM getSerivceInfo(Map<String, Object> param) throws Exception {
 		String key = (String) param.get("key");
 		String emailYn = (String) param.get("emailYn");
@@ -878,8 +906,8 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 		sendData.setEmailYn(emailYn);
 		sendData.setMarketingYn(marketingYn);
 
@@ -890,7 +918,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.2.1 ID 중복체크
 	 */
-	@Override
 	public ImIDPReceiverM checkDupId(String id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -906,7 +933,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.2.5 통합 ID회원로그인
 	 */
-	@Override
 	public ImIDPReceiverM authForId(String key, String pwd) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -924,7 +950,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.2.6 통합 ID 서비스가입리스트조회
 	 */
-	@Override
 	public ImIDPReceiverM findJoinServiceList(String user_id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -940,7 +965,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.2.7 휴대폰 인증코드 발송
 	 */
-	@Override
 	public ImIDPReceiverM sendMobileAuthCode(String user_mdn, String user_mdn_type) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -950,11 +974,13 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
 		sendData.setUser_mdn_type(user_mdn_type);
-
-		return this.sendIDP(sendData);
+		sendData.setSend_order("1"); // 인증번호 요청은 1로 세팅
+		sendData.setScr_id("US004528"); // 기타
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.sendSMSAuthcodeIM(sendData);
+		return null;
 	}
 
-	@Override
 	public ImIDPReceiverM sendMobileAuthCode(String user_mdn, String user_mdn_type, String user_social_number)
 			throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
@@ -966,14 +992,34 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_mdn(user_mdn);
 		sendData.setUser_mdn_type(user_mdn_type);
 		sendData.setUser_social_number(user_social_number);
+		sendData.setSend_order("1"); // 인증번호 요청은 1로 세팅
+		sendData.setScr_id("US004528"); // 기타
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.sendSMSAuthcodeIM(sendData);
+		return null;
+	}
 
-		return this.sendIDP(sendData);
+	public ImIDPReceiverM sendMobileAuthCode(String user_mdn, String user_mdn_type, String user_social_number,
+			String scrId) throws Exception {
+		ImIDPSenderM sendData = new ImIDPSenderM();
+
+		sendData.setUrl(ImIDPSender.IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_PARENT_MOBILE_AUTHCODE_SEND);
+		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_mdn(user_mdn);
+		sendData.setUser_mdn_type(user_mdn_type);
+		sendData.setUser_social_number(user_social_number);
+		sendData.setScr_id(scrId);
+		sendData.setSend_order("1"); // 인증번호 요청은 1로 세팅
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.sendSMSAuthcodeIM(sendData);
+		return null;
 	}
 
 	/**
 	 * 2.2.8 휴대폰 인증
 	 */
-	@Override
 	public ImIDPReceiverM mobileAuth(Map<String, Object> param) throws Exception {
 		String user_mdn = (String) param.get("user_mdn");
 		String user_code = (String) param.get("user_code");
@@ -981,6 +1027,7 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		String sign_data = (String) param.get("sign_data");
 		String svc_mng_num = (String) param.get("svc_mng_num");
 		String model_id = (String) param.get("model_id");
+		String scr_id = (String) param.get("scr_id");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_MOBILE_AUTH);
@@ -991,18 +1038,19 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setUser_code(user_code);
 		sendData.setMobile_sign(mobile_sign);
 		sendData.setSign_data(sign_data);
+		sendData.setScr_id(scr_id);
 		if (null != svc_mng_num)
 			sendData.setSvc_mng_num(svc_mng_num);
 		if (null != model_id)
 			sendData.setModel_id(model_id);
-
-		return this.sendIDP(sendData);
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.confirmSMSAuthcodeIM(sendData);
+		return null;
 	}
 
 	/**
 	 * 2.2.9 ID 가입여부 체크
 	 */
-	@Override
 	public ImIDPReceiverM checkIdStatusIdpIm(String id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -1016,9 +1064,24 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	}
 
 	/**
+	 * IMDN 정보 조회 (SKT 가입자)
+	 */
+	public ImIDPReceiverM getMdnInfoIDP(String mdn) throws Exception {
+		ImIDPSenderM sendData = new ImIDPSenderM();
+
+		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_GET_MDNINFO_IDP);
+		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setMdn(mdn);
+
+		return this.sendIDPHttps(sendData);
+
+	}
+
+	/**
 	 * 2.2.10 통합 ID 전환시동일회원확인(SP용)
 	 */
-	@Override
 	public ImIDPReceiverM checkIdPwdAuth(String id, String pwd) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -1034,7 +1097,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.2.12 IM통합회원 ID 찾기
 	 */
-	@Override
 	public ImIDPReceiverM findUserIdByMdn(Map<String, Object> param) throws Exception {
 		String user_mdn = (String) param.get("user_mdn");
 		String user_code = (String) param.get("user_code");
@@ -1063,7 +1125,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.2.14 통합SSO ID회원 로그인
 	 */
-	@Override
 	public ImIDPReceiverM authForSvcNo(String im_int_svc_no) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
@@ -1079,7 +1140,6 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	/**
 	 * 2.1.16 공통프로파일조회요청 (For Server)
 	 */
-	@Override
 	public ImIDPReceiverM userInfoIdpSearchServer(String imServiceNo) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -1088,15 +1148,14 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(imServiceNo);
 		sendData.setKey_type(IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setReq_date(IdpDateUtil.getCurrentDate());
-		sendData.setReq_time(IdpDateUtil.getCurrentTime());
+		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
 		return this.sendIDPHttps(sendData); // sendIDP(sendData);
 	}
 
-	@Override
 	public String makeSnAuthKey(String mbrNm, String user_birthday) throws Exception {
-		return this.imidpSender.makeSnAuthKey(mbrNm, user_birthday);
+		return this.idpSender.makeSnAuthKey(mbrNm, user_birthday);
 	}
 
 	// ---------------------------------------------------------------------------------------------------------
@@ -1110,21 +1169,31 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	 */
 	public ImIDPReceiverM sendIDP(ImIDPSenderM sendData) throws Exception {
 
-		Hashtable param = this.imidpSender.makeSendParam(sendData);
+		StopWatch stopWatch = new StopWatch();
 
-		IDPTxReq req = new IDPTxReq();
-		req.setHttpMethod("");
-		req.setHttpProtocal("HTTP");
-		req.setReqUrl(sendData.getCmd());
+		stopWatch.start();
+		Hashtable param = this.idpSender.makeSendParam(sendData);
 
-		/**
-		 * Response
-		 */
-		IDPTxRes res = this.idpSCI.send(req);
-		String responseMsg = res.getResXml();
-		logger.info("HTTPS IDP 연동 결과 [XML] ::::   " + responseMsg);
+		SendReq sendReq = new SendReq();
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
+		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
+		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
+		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
+		sendReq.setIm(true);
+		sendReq.setUrl(sendData.getUrl());
+		sendReq.setReqParam(param);
 
-		ImIDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
+		SendRes sendRes = this.idpSCI.send(sendReq);
+
+		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
+
+		// String responseMsg = this.sendHttp(this.idpSender.idpReqUrl(sendData.getUrl()), param);
+		// logger.info("HTTP IDP 연동 결과 [XML] ::::   " + responseMsg);
+		//
+		// ImIDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
+		stopWatch.stop();
+		// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+		// ImIDPOMCLog.setLog(stopWatch, receiveData);
 
 		return receiveData;
 	}
@@ -1138,101 +1207,100 @@ public class ImIdpSacServiceImpl implements ImIdpSacService {
 	 */
 	public ImIDPReceiverM sendIDPHttps(ImIDPSenderM sendData) throws Exception {
 
-		// AS IS 로직 삭제
-		// StopWatch stopWatch = new StopWatch();
+		StopWatch stopWatch = new StopWatch();
 
-		// stopWatch.start();
+		stopWatch.start();
 
-		Hashtable param = this.imidpSender.makeSendParam(sendData);
+		Hashtable param = this.idpSender.makeSendParam(sendData);
 
-		IDPTxReq req = new IDPTxReq();
-		req.setHttpMethod("");
-		req.setHttpProtocal("HTTP");
-		req.setReqUrl(sendData.getCmd());
+		SendReq sendReq = new SendReq();
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
+		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
+		sendReq.setMethod(SendReq.HTTP_METHOD.POST);
+		sendReq.setIm(true);
+		sendReq.setUrl(sendData.getUrl());
+		sendReq.setReqParam(param);
 
-		/**
-		 * Response
-		 */
-		// AS IS 로직 삭제
+		SendRes sendRes = this.idpSCI.send(sendReq);
+
+		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
+
 		// String responseMsg = this.sendHttps(this.idpSender.idpReqUrlHttps(sendData.getUrl()), param);
+		//
+		// logger.info("HTTPS IDP 연동 결과 [XML] ::::   " + responseMsg);
+		//
+		// ImIDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
 
-		IDPTxRes res = this.idpSCI.send(req);
-		String responseMsg = res.getResXml();
-
-		logger.info("HTTPS IDP 연동 결과 [XML] ::::   " + responseMsg);
-
-		ImIDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
+		stopWatch.stop();
+		// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+		// ImIDPOMCLog.setLog(stopWatch, receiveData);
 
 		return receiveData;
 	}
+	// /**
+	// * HTTP URL에 해당하는 내용을 조회한다.
+	// *
+	// * @param url
+	// * @param param
+	// * @return
+	// * @throws Exception
+	// */
+	// public String sendHttp(String url, Hashtable param) throws Exception {
+	// if (url == null || url.trim().length() == 0)
+	// throw new Exception("URL is null.");
+	//
+	// logger.info("idp request url : " + url);
+	//
+	// HTTPUtil hc = new HTTPUtil(url, Constants.HTTP_METHOD_POST, param);
+	// hc.setEncoding("UTF-8");
+	//
+	// return hc.getContent(30000);
+	// }
 
-	/**
-	 * HTTP URL에 해당하는 내용을 조회한다.
-	 * 
-	 * @param url
-	 * @param param
-	 * @return
-	 * @throws Exception
-	 */
-	public String sendHttp(String url, Hashtable param) throws Exception {
-		if (url == null || url.trim().length() == 0)
-			throw new Exception("URL is null.");
+	// /**
+	// * HTTPS URL에 해당하는 내용을 조회한다.
+	// *
+	// * @param url
+	// * @param param
+	// * @return
+	// * @throws Exception
+	// */
+	// public String sendHttps(String url, Hashtable param) throws Exception {
+	// if (url == null || url.trim().length() == 0)
+	// throw new Exception("URL is null.");
+	//
+	// logger.info("idp request url : " + url);
+	//
+	// HTTPUtil hc = new HTTPUtil(url, Constants.HTTP_METHOD_POST, param);
+	// hc.setEncoding("UTF-8");
+	//
+	// return hc.getContentHttps();
+	// }
 
-		logger.info("idp request url : " + url);
-
-		// AS IS 로직 삭제
-		// HTTPUtil hc = new HTTPUtil(url, Constants.HTTP_METHOD_POST, param);
-		// hc.setEncoding("UTF-8");
-
-		return null; // TODO : hc.getContent(30000);
-	}
-
-	/**
-	 * HTTPS URL에 해당하는 내용을 조회한다. : TODO
-	 * 
-	 * @param url
-	 * @param param
-	 * @return
-	 * @throws Exception
-	 */
-	public String sendHttps(String url, Hashtable param) throws Exception {
-		if (url == null || url.trim().length() == 0)
-			throw new Exception("URL is null.");
-
-		logger.info("idp request url : " + url);
-
-		// AS IS 로직 삭제
-		// HTTPUtil hc = new HTTPUtil(url, Constants.HTTP_METHOD_POST, param);
-		// hc.setEncoding("UTF-8");
-
-		return null; // TODO : hc.getContent(30000);
-	}
-
-	/**
-	 * IDP 연동 결과를 Parsing 하여 recevie 객체에 담는다.
-	 * 
-	 * @param data
-	 * @return
-	 * @throws Exception
-	 */
-	private ImIDPReceiverM resultIDPFromXml(String data) throws Exception {
-
-		XStream xs = new XStream(new DomDriver());
-		this.receivData = new ImIDPReceiverM();
-
-		xs.alias("idpResponse", ImIDPReceiverM.class);
-
-		xs.fromXML(data, this.receivData);
-
-		this.receivData = this.idpReceiver.nullValue(this.receivData);
-
-		// String idList = receivData.getResponseBody().getId_list();
-
-		// if (!"".equals(idList) && idList != null) {
-		// receivData.getResponseBody().setIdList(idpReceiver.tokenize(idList, "|"));
-		// }
-
-		return this.receivData;
-	}
+	// /**
+	// * IDP 연동 결과를 Parsing 하여 recevie 객체에 담는다.
+	// *
+	// * @param data
+	// * @return
+	// * @throws Exception
+	// */
+	// private ImIDPReceiverM resultIDPFromXml(String data) throws Exception {
+	// XStream xs = new XStream(new DomDriver());
+	// this.receivData = new ImIDPReceiverM();
+	//
+	// xs.alias("idpResponse", ImIDPReceiverM.class);
+	//
+	// xs.fromXML(data, this.receivData);
+	//
+	// this.receivData = this.idpReceiver.nullValue(this.receivData);
+	//
+	// // String idList = receivData.getResponseBody().getId_list();
+	// //
+	// // if(!"".equals(idList) && idList != null) {
+	// // receivData.getResponseBody().setIdList(idpReceiver.tokenize(idList, "|"));
+	// // }
+	//
+	// return this.receivData;
+	// }
 
 }

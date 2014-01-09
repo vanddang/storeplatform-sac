@@ -1,4 +1,15 @@
-package com.skplanet.storeplatform.sac.external.idp;
+/*
+ * COPYRIGHT(c) SK telecom 2009
+ * This software is the proprietary information of SK telecom.
+ *
+ * Revision History
+ * Author       Date            Description
+ * --------     ----------      ------------------
+ * ?            ?               ?
+ * nefer        2009.12.08      move to omp_common / override func - makeSpAuthKey - support 'domain' parameters
+ *
+ */
+package com.skplanet.storeplatform.sac.member.common.idp;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -6,20 +17,29 @@ import java.util.Hashtable;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.sac.external.idp.constant.ImIDPManagerConstants;
-import com.skplanet.storeplatform.sac.external.idp.vo.ImIDPSenderM;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
 
-/**
- * Calss 설명
- * 
- * Updated on : 2013. 12. 30. Updated by : Jeon.ByungYoul, SK planet.
- */
+@Component
 public class ImIDPSender {
 
-	private static final Logger logger = LoggerFactory.getLogger(ImIDPSender.class);
+	/** IDP로 부터 발급된 Service ID */
+	@Value("#{propertiesForSac['idp.sp_id']}")
+	public String IDP_REQ_OMP_SERVICE_ID;
+	/** IDP 요청 도메인 (HTTP) */
+	@Value("#{propertiesForSac['idp.im.request.url']}")
+	public String IDP_REQUEST_URL;
+	/** IDP에 등록한 OMP Association Key */
+	@Value("#{propertiesForSac['idp.sp_key']}")
+	public String IDP_REQ_OMP_ASSOC_KEY;
+	/** OMP 서비스 도메인 */
+	@Value("#{propertiesForSac['idp.service_domain']}")
+	public String OMP_SERVICE_DOMAIN;
+
+	private static Logger logger = Logger.getLogger(ImIDPSender.class);
 
 	/* IDP 요청 URL */
 	public static final String IDP_REQ_URL_JOIN = "/web/IMJoin.api";
@@ -70,6 +90,7 @@ public class ImIDPSender {
 	public static final String IDP_REQ_CMD_FIND_USERID_BY_MDN = "findUserIdByMdn";
 	public static final String IDP_REQ_CMD_UPDATE_GUARDIAN = "TXUpdateGuardianInfoIDP";
 	public static final String IDP_REQ_CMD_GET_SERIVCE_INFO = "TXGetServiceInfoIDP";// 개별 프로파일 조회-신규
+	public static final String IDP_REQ_CMD_GET_MDNINFO_IDP = "getMdnInfoIDP";
 
 	// RX REQUEST
 	public static final String IDP_REQ_RX_CMD_CREATE_USER = "RXCreateUserIDP";
@@ -89,34 +110,32 @@ public class ImIDPSender {
 	 * @return
 	 * @throws Exception
 	 */
-	public Hashtable<String, String> makeSendParam(ImIDPSenderM sendData) throws Exception {
+	@SuppressWarnings("unchecked")
+	protected Hashtable<String, String> makeSendParam(ImIDPSenderM sendData) throws Exception {
 
 		Hashtable<String, String> param = new Hashtable<String, String>();
 
 		String cmd = sendData.getCmd();
-		String spId = ImIDPManager.IDP_REQ_OMP_SERVICE_ID;
+		String spId = this.IDP_REQ_OMP_SERVICE_ID;
 		String operation_mode = "";
-		if (ImIDPManagerConstants.IDP_CHECK_SERVER_DEV.equals(spId)
-				&& ImIDPManager.IDP_REQUEST_URL.indexOf("innoace.com:8002") > -1) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_DEV;
-		} else if (ImIDPManagerConstants.IDP_CHECK_SERVER_DEV.equals(spId)
-				&& ImIDPManager.IDP_REQUEST_URL.indexOf("innoace.com:8003") > -1) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_STAG;
-		} else if (ImIDPManagerConstants.IDP_CHECK_SERVER_STAG.equals(spId)
-				&& ImIDPManager.IDP_REQUEST_URL.indexOf("nate") > -1) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_TEST;
-		} else if (ImIDPManagerConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_REAL;
+		if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId) && this.IDP_REQUEST_URL.indexOf("innoace.com:8002") > -1) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_DEV;
+		} else if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId)
+				&& this.IDP_REQUEST_URL.indexOf("innoace.com:8003") > -1) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_STAG;
+		} else if (ImIDPConstants.IDP_CHECK_SERVER_STAG.equals(spId) && this.IDP_REQUEST_URL.indexOf("nate") > -1) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
+		} else if (ImIDPConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_REAL;
 		}
 		// 개발용
-		if (ImIDPManagerConstants.IDP_CHECK_SERVER_DEV.equals(spId)
-				&& ImIDPManager.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_TEST;
-		} else if (ImIDPManagerConstants.IDP_CHECK_SERVER_STAG.equals(spId)
-				&& ImIDPManager.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_TEST;
-		} else if (ImIDPManagerConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
-			operation_mode = ImIDPManagerConstants.IDP_PARAM_OPERATION_MODE_REAL;
+		if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId) && this.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
+		} else if (ImIDPConstants.IDP_CHECK_SERVER_STAG.equals(spId)
+				&& this.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
+		} else if (ImIDPConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
+			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_REAL;
 		}
 
 		String resp_type = sendData.getResp_type();
@@ -198,6 +217,7 @@ public class ImIDPSender {
 		String emailYn = sendData.getEmailYn();
 		String marketingYn = sendData.getMarketingYn();
 		String rname_auth_type_cd = sendData.getRname_auth_type_cd();
+		String mdn = sendData.getMdn();
 
 		logger.debug("IDP SEND DATA -----------------------------------");
 		logger.debug("cmd                     =" + cmd);
@@ -280,6 +300,7 @@ public class ImIDPSender {
 		logger.debug("emailYn 	  =" + emailYn);
 		logger.debug("marketingYn 	  =" + marketingYn);
 		logger.debug("rname_auth_type_cd 	  =" + rname_auth_type_cd);
+		logger.debug("mdn 	  =" + mdn);
 		logger.debug("--------------------------------------------------");
 
 		if (cmd != null && !"".equals(cmd))
@@ -442,6 +463,9 @@ public class ImIDPSender {
 			param.put("parent_birthday", parent_birthday);
 		if (rname_auth_type_cd != null && !"".equals(rname_auth_type_cd))
 			param.put("rname_auth_type_cd", rname_auth_type_cd);
+		if (mdn != null && !"".equals(mdn))
+			param.put("mdn", mdn);
+
 		Enumeration keys = param.keys();
 		String paramKey = null;
 		logger.info("IDP SEND DATA -----------------------------------");
@@ -506,7 +530,7 @@ public class ImIDPSender {
 		sb.append("|time=");
 		sb.append(time);
 
-		return this.generateMacSignature(ImIDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
+		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
 	}
 
 	/**
@@ -529,8 +553,8 @@ public class ImIDPSender {
 		sb.append(time);
 		logger.info("=============>[makeSnAuthKey str]" + sb.toString());
 		logger.info("=============>[sn_auth_key]"
-				+ this.generateMacSignature(ImIDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time);
-		return this.generateMacSignature(ImIDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
+				+ this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time);
+		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
 	}
 
 	/**
@@ -543,10 +567,9 @@ public class ImIDPSender {
 	 *          2. nefer 2009-12-08 override func - override func - support domain parameters
 	 */
 	public String makeSpAuthKey() throws Exception {
-		logger.debug("ImIDPManager.OMP_SERVICE_DOMAIN : " + ImIDPManager.OMP_SERVICE_DOMAIN);
-		logger.debug("makeSpAuthKey(ImIDPManager.OMP_SERVICE_DOMAIN) : "
-				+ this.makeSpAuthKey(ImIDPManager.OMP_SERVICE_DOMAIN));
-		return this.makeSpAuthKey(ImIDPManager.OMP_SERVICE_DOMAIN);
+		logger.debug("ImIDPManager.OMP_SERVICE_DOMAIN : " + this.OMP_SERVICE_DOMAIN);
+		logger.debug("makeSpAuthKey(ImIDPManager.OMP_SERVICE_DOMAIN) : " + this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN));
+		return this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN);
 	}
 
 	/**
@@ -562,7 +585,7 @@ public class ImIDPSender {
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("sp_id=");
-		sb.append(ImIDPManager.IDP_REQ_OMP_SERVICE_ID);
+		sb.append(this.IDP_REQ_OMP_SERVICE_ID);
 		sb.append("|");
 		sb.append("time=");
 		sb.append(time);
@@ -570,16 +593,16 @@ public class ImIDPSender {
 		sb.append("domain=");
 		sb.append(domain);
 
-		return this.generateMacSignature(ImIDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
+		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
 
 	}
-
-	public String idpReqUrl(String url) throws Exception {
-		return ImIDPManager.IDP_REQUEST_URL + url;
-	}
-
-	public String idpReqUrlHttps(String url) throws Exception {
-		return ImIDPManager.IDP_REQUEST_URL_HTTPS + url;
-	}
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// public String idpReqUrl(String url) throws Exception {
+	// return ImIDPManager.IDP_REQUEST_URL + url;
+	// }
+	//
+	// public String idpReqUrlHttps(String url) throws Exception {
+	// return ImIDPManager.IDP_REQUEST_URL_HTTPS + url;
+	// }
 
 }

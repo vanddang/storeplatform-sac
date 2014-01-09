@@ -1,4 +1,15 @@
-package com.skplanet.storeplatform.sac.external.idp;
+/*
+ * COPYRIGHT(c) SK telecom 2009
+ * This software is the proprietary information of SK telecom.
+ *
+ * Revision History
+ * Author       Date            Description
+ * --------     ----------      ------------------
+ * ?            ?               ?
+ * nefer        2009.12.08      move to omp_common / override func - makeSpAuthKey - support 'domain' parameters
+ *
+ */
+package com.skplanet.storeplatform.sac.member.common.idp;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -6,23 +17,25 @@ import java.util.Hashtable;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.sac.external.idp.vo.IDPSenderM;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
 
-/**
- * IDPSender Class
- * 
- * Updated on : 2013. 12. 30. Updated by : Jeon.ByungYoul, SK planet.
- */
+@Component
 public class IDPSender {
 
-	private static final Logger logger = LoggerFactory.getLogger(IDPSender.class);
+	private static Logger logger = Logger.getLogger(IDPSender.class);
 
-	// property get
-	// @Value("#{config['idp.sp_key']}")
-	String IDP_SP_KEY = "6b0cc48e477f066b7ef353a4f9e8b756";
+	@Value("#{propertiesForSac['idp.service_domain']}")
+	public String OMP_SERVICE_DOMAIN;
+	/** IDP에 등록한 OMP Association Key */
+	@Value("#{propertiesForSac['idp.sp_key']}")
+	public String IDP_REQ_OMP_ASSOC_KEY;
+	/** IDP로 부터 발급된 Service ID */
+	@Value("#{propertiesForSac['idp.sp_id']}")
+	public String IDP_REQ_OMP_SERVICE_ID;
 
 	/* IDP 요청 URL */
 	public static final String IDP_REQ_URL_JOIN = "/web/Join.api"; // omp.dev.idp.requrl.join
@@ -94,21 +107,18 @@ public class IDPSender {
 	public static final String IDP_REQ_CMD_OTHER_CHANNEL_REGIST = "joinApproveRequest";
 
 	/**
-	 * 
-	 * <pre>
 	 * idp에 전달할 파라미터를 설정한다.
-	 * </pre>
 	 * 
 	 * @param sendData
 	 * @return
 	 * @throws Exception
 	 */
-	public Hashtable<String, String> makeSendParam(IDPSenderM sendData) throws Exception {
-
+	@SuppressWarnings("unchecked")
+	protected Hashtable<String, String> makeSendParam(IDPSenderM sendData) throws Exception {
 		Hashtable<String, String> param = new Hashtable<String, String>();
 
 		String cmd = sendData.getCmd();
-		String spId = IDPManager.IDP_REQ_OMP_SERVICE_ID;
+		String spId = this.IDP_REQ_OMP_SERVICE_ID;
 		String respType = sendData.getResp_type();
 		String respFlow = sendData.getResp_flow();
 		String respUrl = sendData.getResp_url();
@@ -224,7 +234,6 @@ public class IDPSender {
 		logger.debug("service_id      =" + service_id);
 		logger.debug("user_ci      =" + user_ci);
 		logger.debug("--------------------------------------------------");
-
 		param.put("sp_id", spId);
 		param.put("sp_auth_key", spAuthKey);
 
@@ -355,15 +364,6 @@ public class IDPSender {
 
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * toHex 로 변환
-	 * </pre>
-	 * 
-	 * @param hash
-	 * @return
-	 */
 	private String toHex(byte hash[]) {
 		StringBuffer buf = new StringBuffer(hash.length * 2);
 
@@ -380,15 +380,8 @@ public class IDPSender {
 	}
 
 	/**
-	 * 
-	 * <pre>
 	 * SP_AUTH_KEY 작성시 호출해야할 Mac 생성 API
-	 * </pre>
 	 * 
-	 * @param key
-	 * @param message
-	 * @return
-	 * @throws Exception
 	 */
 	private String generateMacSignature(String key, String message) throws Exception {
 		logger.info("key : " + key);
@@ -419,7 +412,7 @@ public class IDPSender {
 		sb.append("|time=");
 		sb.append(time);
 
-		return this.generateMacSignature(IDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
+		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
 	}
 
 	/**
@@ -442,8 +435,8 @@ public class IDPSender {
 		sb.append(time);
 		logger.info("=============>[makeSnAuthKey str]" + sb.toString());
 		logger.info("=============>[sn_auth_key]"
-				+ this.generateMacSignature(IDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time);
-		return this.generateMacSignature(IDPManager.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
+				+ this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time);
+		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
 	}
 
 	/**
@@ -456,10 +449,9 @@ public class IDPSender {
 	 *          2. nefer 2009-12-08 override func - override func - support domain parameters
 	 */
 	public String makeSpAuthKey() throws Exception {
-		logger.debug("IDPManager.OMP_SERVICE_DOMAIN : " + IDPManager.OMP_SERVICE_DOMAIN);
-		logger.debug("makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN) : "
-				+ this.makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN));
-		return this.makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN);
+		logger.debug("IDPManager.OMP_SERVICE_DOMAIN : " + this.OMP_SERVICE_DOMAIN);
+		logger.debug("makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN) : " + this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN));
+		return this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN);
 	}
 
 	/**
@@ -471,12 +463,11 @@ public class IDPSender {
 	 *          2. nefer 2009-12-08 override func - override func - support domain parameters
 	 */
 	public String makeSpAuthKey(String domain) throws Exception {
-
 		String time = Long.toString(System.currentTimeMillis());
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("sp_id=");
-		sb.append(IDPManager.IDP_REQ_OMP_SERVICE_ID); // TODO
+		sb.append(this.IDP_REQ_OMP_SERVICE_ID);
 		sb.append("|");
 		sb.append("time=");
 		sb.append(time);
@@ -484,15 +475,17 @@ public class IDPSender {
 		sb.append("domain=");
 		sb.append(domain);
 
-		return this.generateMacSignature(this.IDP_SP_KEY, sb.toString()) + "|" + time; // TODO
+		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
+
 	}
 
-	public String idpReqUrl(String url) throws Exception {
-		return IDPManager.IDP_REQUEST_URL + url;
-	}
-
-	public String idpReqUrlHttps(String url) throws Exception {
-		return IDPManager.IDP_REQUEST_URL_HTTPS + url;
-	}
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// public String idpReqUrl(String url) throws Exception {
+	// return IDPManager.IDP_REQUEST_URL + url;
+	// }
+	//
+	// public String idpReqUrlHttps(String url) throws Exception {
+	// return IDPManager.IDP_REQUEST_URL_HTTPS + url;
+	// }
 
 }

@@ -1,92 +1,210 @@
 /*
- * Copyright (c) 2013 SK planet.
- * All right reserved.
+ * COPYRIGHT(c) SK telecom 2009
+ * This software is the proprietary information of SK telecom.
  *
- * This software is the confidential and proprietary information of SK planet.
- * You shall not disclose such Confidential Information and
- * shall use it only in accordance with the terms of the license agreement
- * you entered into with SK planet.
+ * Revision History
+ * or       Date            Description
+ * --------     ----------      ------------------
+ * ?            ?               ?
+ * nefer        2009.12.08      move to omp_common (remove unusable variable, change expose properties method)
+ *
  */
-package com.skplanet.storeplatform.sac.external.idp.service;
+package com.skplanet.storeplatform.sac.member.common.idp;
 
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.time.StopWatch;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.idp.sci.IDPSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPTxReq;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPTxRes;
-import com.skplanet.storeplatform.sac.external.idp.IDPReceiver;
-import com.skplanet.storeplatform.sac.external.idp.IDPSender;
-import com.skplanet.storeplatform.sac.external.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.sac.external.idp.vo.IDPSenderM;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
+import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.SendReq;
+import com.skplanet.storeplatform.external.client.idp.vo.SendRes;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
 
-/**
- * 
- * IdpService IDP 연동 서비스 인터페이스(CoreStoreBusiness) 구현체
- * 
- * Updated on : 2014. 1. 2. Updated by : Jeon.ByungYoul, SK planet.
- */
-@Service("IdpSacServiceImpl")
-@Transactional
-public class IdpSacServiceImpl implements IdpSacService {
-
-	private static final Logger logger = LoggerFactory.getLogger(IdpSacServiceImpl.class);
+@Component
+public class IDPManager implements IDPConstants {
 
 	@Autowired
-	private IDPSCI idpSCI;
+	private IdpSCI idpSCI;
 
-	private static IDPSender idpSender = new IDPSender();
+	private static Logger logger = Logger.getLogger(IDPManager.class);
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private static IDPManager instance = null;
 
-	private static IDPReceiver idpReceiver = new IDPReceiver();
-	private static IDPReceiverM receivData = new IDPReceiverM();
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private final IDPReceiver idpReceiver = null;
+	@Autowired
+	private IDPSender idpSender;
+	private final IDPReceiverM receivData = null;
+
+	// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+	// private SMSApi smsapi = null;
+
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private final DevProperties prop = null;
+	//
+	// /** OMP 서비스 도메인 */
+	// IDPSender로 이동하고 주석 처리 - 임재호 2014.1.8
+	// @Value("#{propertiesForSac['idp.service_domain']}")
+	// public static String OMP_SERVICE_DOMAIN;
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// /** OMP 서비스 URL */
+	// public static String OMP_SERVICE_URL = "";
+	// /** OMP 서비스 URL (HTTPS) */
+	// public static String OMP_SERVICE_URL_HTTPS = "";
+	// /** OMP 서비스 URL IP */
+	// public static String OMP_SERVICE_URL_IP = "";
+	//
+	// /** IDP 요청 도메인 (HTTP) */
+	// public static String IDP_REQUEST_URL = "";
+	// /** IDP 요청 도메인 (HTTPS) */
+	// public static String IDP_REQUEST_URL_HTTPS = ""; //
+	//
+	// public static String IDP_REQUEST_SERVER_URL = "";
+	// public static String IDP_REQUEST_SERVER_URL_HTTPS = "";
+	//
+	// IDPSender로 이동하고 주석 처리 - 임재호 2014.1.8
+	// /** IDP에 등록한 OMP Association Key */
+	// @Value("#{propertiesForSac['idp.sp_key']}")
+	// public static String IDP_REQ_OMP_ASSOC_KEY;
+	// /** IDP로 부터 발급된 Service ID */
+	@Value("#{propertiesForSac['idp.sp_id']}")
+	public String IDP_REQ_OMP_SERVICE_ID;
+
+	// /** IDP 인증 후 서비스 리턴 URL */
+	// // 로그인, SSO 인증
+	// public static String IDP_REDT_URL_USER_AUTH = "";
+	// /** IDP SSO 로그아웃 처리 후 리턴 URL */
+	// // 로그 아웃
+	// public static String IDP_REDT_URL_USER_LOGOUT = "";
+	// // 회원가입
+	// public static String IDP_REDT_URL_USER_REGIST_AUTH = "";
+	// // 회원정보 변경
+	// public static String IDP_REDT_URL_USER_MODIFY_PROFILE_AUTH = "";
+	// // 이메일 변경
+	// public static String IDP_REDT_URL_USER_MODIFY_EMAIL_AUTH = "";
+	// // 패스워드 변경
+	// public static String IDP_REDT_URL_USER_MODIFY_PWD_AUTH = "";
+	//
+	// /*
+	// * IDP 통합 회원 고도화 추가
+	// */
+	// // 타채널 아이디 인증
+	// public static String IDP_REDT_URL_OTHER_CHANNEL_ID_AUTH = "";
+	// // 타채널 가입 리스트 조회
+	// public static String IDP_REDT_URL_OTHER_CHANNEL_LIST = "";
+
+	// static {
+	// IDPManager.getInstance();
+	// }
+
+	public IDPManager() {
+
+		// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+		// this.idpReceiver = new IDPReceiver();
+		// this.idpSender = new IDPSender();
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// this.smsapi = new SMSApi();
+
+		// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+		// this.setPropString();
+	}
+
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// private void setPropString() {
+	// try {
+	//
+	// this.prop = new DevProperties();
+	//
+	// OMP_SERVICE_DOMAIN = this.prop.getString("omp.service.domain");
+	// OMP_SERVICE_URL = this.prop.getString("omp.dev.service.url");
+	// OMP_SERVICE_URL_HTTPS = this.prop.getString("omp.dev.service.url.https");
+	// OMP_SERVICE_URL_IP = this.prop.getString("omp.dev.service.url.ip");
+	//
+	// IDP_REQUEST_URL = this.prop.getString("omp.idp.request.url");
+	// IDP_REQUEST_URL_HTTPS = this.prop.getString("omp.idp.request.url.https");
+	//
+	// IDP_REQUEST_SERVER_URL = this.prop.getString("omp.idp.request.server.url");
+	// IDP_REQUEST_SERVER_URL_HTTPS = this.prop.getString("omp.idp.request.server.url.https");
+	//
+	// IDP_REQ_OMP_ASSOC_KEY = this.prop.getString("omp.idp.request.assockey");
+	// IDP_REQ_OMP_SERVICE_ID = this.prop.getString("omp.idp.request.serviceid");
+	//
+	// IDP_REDT_URL_USER_AUTH = this.prop.getString("omp.dev.idp.redturl.user.auth");
+	// IDP_REDT_URL_USER_LOGOUT = this.prop.getString("omp.dev.idp.redturl.user.logout");
+	// IDP_REDT_URL_USER_REGIST_AUTH = this.prop.getString("omp.dev.idp.redturl.user.regist.auth");
+	// IDP_REDT_URL_USER_MODIFY_PROFILE_AUTH =
+	// this.prop.getString("omp.dev.idp.redturl.user.modifyProfile.auth");
+	// IDP_REDT_URL_USER_MODIFY_EMAIL_AUTH = this.prop.getString("omp.dev.idp.redturl.user.modifyEmail.auth");
+	// IDP_REDT_URL_USER_MODIFY_PWD_AUTH = this.prop.getString("omp.dev.idp.redturl.user.modifyPwd.auth");
+	//
+	// logger.info("<setPropString> IDP_REQ_OMP_SERVICE_ID : " + IDP_REQ_OMP_SERVICE_ID);
+	// } catch (Exception e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// }
+
+	// 필요 없는 것으로 판단되어 주석 처리 - 임재호 2014.1.8
+	// /**
+	// * IDPManager Singleton 객체를 반환한다.
+	// *
+	// * @return
+	// */
+	// public synchronized static IDPManager getInstance() {
+	// if (instance == null) {
+	// instance = new IDPManager();
+	// logger.info("IDPManager Instance Create");
+	// }
+	// logger.info("IDPManager Instance is not null");
+	// return instance;
+	// }
 
 	// -------------------------------------------------
 	// 기본 API
 	// -------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 서비스 가입 여부를 체크한다. (이메일 기준)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #alredyJoinCheckByEmail(java.lang .String)
+	 * @param email
+	 *            이메일
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
-
-		logger.info("============ storeplatform-sac start ============");
-
 		return this.alredyJoinCheck(email, IDP_PARAM_KEY_TYPE_EMAIL);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 서비스 가입 여부를 체크한다. (주민등록번호 기준)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #alredyJoinCheckBySn(java.lang.String )
+	 * @param sn
+	 *            주민등록번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM alredyJoinCheckBySn(String ssn) throws Exception {
-
 		return this.alredyJoinCheck(ssn, IDP_PARAM_KEY_TYPE_SN);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 서비스 가입 여부를 체크한다.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #alredyJoinCheck(java.lang.String, java.lang.String)
+	 * @param checkKey
+	 *            가입체크 대상 정보
+	 * @param checkKeyType
+	 *            가입체크 대상 구분
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM alredyJoinCheck(String checkKey, String checkKeyType) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
@@ -99,14 +217,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * ID 중복 체크
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #checkDupID(java.lang.String)
+	 * @param id
+	 *            아이디
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM checkDupID(String id) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
@@ -118,37 +237,47 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 실명인증 (내국인)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #realNameAuthForNative(java.lang. String, java.lang.String)
+	 * @param name
+	 *            이름
+	 * @param ssn
+	 *            주민번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM realNameAuthForNative(String name, String ssn) throws Exception {
 		return this.realNameAuth(IDP_PARAM_KEY_AUTH_TYPE_NATIVE, name, ssn);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 실명인증 (외국인)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #realNameAuthForForeign(java.lang .String, java.lang.String)
+	 * @param name
+	 *            이름
+	 * @param ssn
+	 *            주민번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM realNameAuthForForeign(String name, String ssn) throws Exception {
 		return this.realNameAuth(IDP_PARAM_KEY_AUTH_TYPE_FOREIGN, name, ssn);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 실명인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #realNameAuth(java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @param personType
+	 *            실명인증 대상 구분
+	 * @param name
+	 *            이름
+	 * @param ssn
+	 *            주민번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM realNameAuth(String personType, String name, String ssn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		// 외국인 실명인증 메소드가 따로 존재하나 실명인증 소스가 사방에 퍼져있어 본 메소드만 수정. 20100108 soohee
@@ -172,36 +301,61 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO 스테이징 반영 시 https
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 인증번호 발송을 요청한다.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendMobileAuthCode(java.lang.String)
+	 * @param mdn
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM sendMobileAuthCode(String mdn) throws Exception {
 		return this.sendMobileAuthCode(mdn, null, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 인증번호 발송을 요청한다.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendMobileAuthCode(java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰번호
+	 * @param telType
+	 *            이통사구분
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM sendMobileAuthCode(String mdn, String telType) throws Exception {
 		return this.sendMobileAuthCode(mdn, telType, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 인증번호 발송을 요청한다.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendMobileAuthCode(java.lang.String, java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰번호
+	 * @param telType
+	 *            이통사구분
+	 * @param ssn
+	 *            주민번호 앞 7자리
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM sendMobileAuthCode(String mdn, String telType, String ssn) throws Exception {
+		return this.sendMobileAuthCode(mdn, telType, ssn, null);
+
+	}
+
+	/**
+	 * 인증번호 발송을 요청한다.
+	 * 
+	 * @param mdn
+	 *            휴대폰번호
+	 * @param telType
+	 *            이통사구분
+	 * @param ssn
+	 *            주민번호 앞 7자리
+	 * @return
+	 * @throws Exception
+	 */
+	public IDPReceiverM sendMobileAuthCode(String mdn, String telType, String ssn, String scrId) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_MOBILE_AUTH);
@@ -209,25 +363,49 @@ public class IdpSacServiceImpl implements IdpSacService {
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
+		sendData.setSend_order("1"); // 인증번호 요청은 1로 세팅
+		sendData.setScr_id(scrId);
 
 		if (telType != null)
 			sendData.setUser_mdn_type(telType);
-
 		if (ssn != null)
 			sendData.setUser_social_number(ssn);
-
-		return this.sendIDP(sendData);
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.sendSMSAuthcode(sendData);
+		return null;
 
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 휴대폰 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #mobileAuth(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰번호
+	 * @param authCode
+	 *            사용자 입력 인증코드
+	 * @param mobileSign
+	 * @param signData
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM mobileAuth(String mdn, String authCode, String mobileSign, String signData) throws Exception {
+		return this.mobileAuth(mdn, authCode, mobileSign, signData, null); // TODO https
+	}
+
+	/**
+	 * 휴대폰 인증
+	 * 
+	 * @param mdn
+	 *            휴대폰번호
+	 * @param authCode
+	 *            사용자 입력 인증코드
+	 * @param mobileSign
+	 * @param signData
+	 * @return
+	 * @throws Exception
+	 */
+	public IDPReceiverM mobileAuth(String mdn, String authCode, String mobileSign, String signData, String scrId)
+			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_MOBILE_AUTH);
@@ -238,16 +416,19 @@ public class IdpSacServiceImpl implements IdpSacService {
 		sendData.setUser_code(authCode);
 		sendData.setMobile_sign(mobileSign);
 		sendData.setSign_data(signData);
+		sendData.setScr_id(scrId);
 
-		return this.sendIDPHttps(sendData); // TODO https
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.confirmSMSAuthcode(sendData); // TODO https
+		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 워터마크 이미지 URL을 가져온다.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #warterMarkImageUrl()
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM warterMarkImageUrl() throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -259,13 +440,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 워터마크 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #warterMarkAuth(java.lang.String, java.lang.String, java.lang.String)
+	 * @param authCode
+	 *            사용자가 입력한 인증코드
+	 * @param imageSign
+	 * @param signData
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -280,13 +464,14 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Nate ID 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authNateId(java.lang.String,
-	 * java.lang.String)
+	 * @param nateId
+	 * @param natePwd
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM authNateId(String nateId, String natePwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -300,13 +485,14 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 유선회원의 Password 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authPwd(java.lang.String,
-	 * java.lang.String)
+	 * @param id
+	 * @param pwd
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM authPwd(String id, String pwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -320,13 +506,14 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 유선회원의 MDN 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authMdn(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	 * @param user_mdn
+	 * @param user_code
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM authMdn(String user_mdn, String user_code, String mobile_sign, String sign_data)
 			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
@@ -343,13 +530,13 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Email 인증 Link 재발급 (가가입 상태인 회원용)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #getEmailAuthLink(java.lang.String)
+	 * @param id
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM getEmailAuthLink(String id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -362,17 +549,9 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #getEmailAuthLink(java.lang.String, java.lang.String)
-	 */
-	@Override
 	public IDPReceiverM getEmailAuthLink(String user_auth_key, String id) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
-		// sendData.setSp_id(Constants.OMP_IDP_SP_ID); //
+		sendData.setSp_id(this.IDP_REQ_OMP_SERVICE_ID);
 		sendData.setSp_auth_key(user_auth_key);
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_GET_EMAIL_AUTH);
@@ -382,16 +561,18 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 가가입 회원의 이메일 변경
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyEmail4JoinWait(java.lang.String , java.lang.String, java.lang.String, java.lang.String)
+	 * @param preEmail
+	 * @param email
+	 * @param pwd
+	 * @param userKey
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM modifyEmail4JoinWait(String preEmail, String email, String pwd, String userKey)
 			throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
@@ -406,13 +587,14 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https 로 바꾸기
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyAuthInfo(java.lang.String, java.lang.String, java.lang.String)
+	 * @param user_auth_key
+	 * @param key_type
+	 * @param key
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM modifyAuthInfo(String user_auth_key, String key_type, String key) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
@@ -427,18 +609,10 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https 로 바꾸기
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyEmailAuthInfo(java.lang.String , java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
 	public IDPReceiverM modifyEmailAuthInfo(String sp_auth_key, String user_auth_key, String user_key, String pre_key,
 			String key) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
-		// sendData.setSp_id(Constants.OMP_IDP_SP_ID); //prop
+		sendData.setSp_id(this.IDP_REQ_OMP_SERVICE_ID);
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_AUTH_INFO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
@@ -453,18 +627,10 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https 로 바꾸기
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #modifyPasswordAuthInfo(java.lang .String, java.lang.String, java.lang.String, java.lang.String)
-	 */
-	@Override
 	public IDPReceiverM modifyPasswordAuthInfo(String user_auth_key, String user_key, String pre_key, String key)
 			throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
-		// sendData.setSp_id(Constants.OMP_IDP_SP_ID);
+		sendData.setSp_id(this.IDP_REQ_OMP_SERVICE_ID);
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_AUTH_INFO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
@@ -478,24 +644,24 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https 로 바꾸기
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 휴대폰인증 정보의 보안적용
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #makePhoneAuthKey(java.lang.String)
+	 * @param phoneMeta
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public String makePhoneAuthKey(String phoneMeta) throws Exception {
 		return this.idpSender.makePhoneAuthKey(phoneMeta);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 실명인증 정보의 보안적용
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #makeSnAuthKey(java.lang.String, java.lang.String)
+	 * @param phoneMeta
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public String makeSnAuthKey(String mbrNm, String userId) throws Exception {
 		return this.idpSender.makeSnAuthKey(mbrNm, userId);
 	}
@@ -503,14 +669,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	// -------------------------------------------------
 	// 회원 가입 API (IDP_REQ_CMD_JOIN_FOR_EMAIL)
 	// -------------------------------------------------
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #joinMember(java.util.Map)
-	 */
-	@Override
 	public IDPReceiverM joinMember(Map<String, Object> param) throws Exception {
-
 		String userId = (String) param.get("user_id");
 		String userPasswd = (String) param.get("user_passwd");
 		String userEmail = (String) param.get("user_email");
@@ -549,8 +708,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 		if (null != snAuthKey)
 			sendData.setSn_auth_key(snAuthKey);
 		// if(null != snAuthKey && (null != isRnameAuth &&
-		// "Y".equals(isRnameAuth)))sendData.setSn_auth_key(makeSnAuthKey(userName,
-		// userId));
+		// "Y".equals(isRnameAuth)))sendData.setSn_auth_key(makeSnAuthKey(userName, userId));
 		if (null != userSex)
 			sendData.setUser_sex(userSex);
 		if (null != userBirthday)
@@ -586,40 +744,19 @@ public class IdpSacServiceImpl implements IdpSacService {
 	}
 
 	// -------------------------------------------------
-	// 무선 회원 인증 API (redirect)
-	// -------------------------------------------------
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #userAuthForId(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public IDPReceiverM userAuthForWap(String userMdn) throws Exception {
-
-		IDPSenderM sendData = new IDPSenderM();
-
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_AUTH_FOR_WAP);
-		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setUser_mdn(userMdn);
-
-		return this.sendIDP(sendData);
-	}
-
-	// -------------------------------------------------
 	// 비 실명 회원 인증 API (redirect)
 	// -------------------------------------------------
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 유선회원의 ID 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #userAuthForId(java.lang.String, java.lang.String)
+	 * @param userId
+	 *            사용자 ID
+	 * @param userPwd
+	 *            사용자 PWD
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM userAuthForId(String userId, String userPwd) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
@@ -632,14 +769,10 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #userLogoutForSSO()
+	/**
+	 * 유선회원의 SSO로그아웃
 	 */
-	@Override
 	public IDPReceiverM userLogoutForSSO() throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
@@ -654,52 +787,63 @@ public class IdpSacServiceImpl implements IdpSacService {
 	// 회원 정보 조회 API
 	// -------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 회원 기본 정보 조회 (User Key)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserCommonInfoByUserKey(java .lang.String, java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param userKey
+	 *            회원가입시 IDP 로 부터 부여받는 사용자 키
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserCommonInfoByUserKey(String userAuthKey, String userKey) throws Exception {
 
 		return this.searchUserCommonInfo(userAuthKey, IDP_PARAM_KEY_QUERY_KEY_TYPE_USER_KEY, userKey);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 회원 기본 정보 조회 (ID)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserCommonInfoByID(java.lang .String, java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param userID
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserCommonInfoByID(String userAuthKey, String userID) throws Exception {
 
 		return this.searchUserCommonInfo(userAuthKey, IDP_PARAM_KEY_QUERY_KEY_TYPE_ID, userID);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 회원 기본 정보 조회 (EMAIL)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserCommonInfoByEmail(java .lang.String, java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param email
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserCommonInfoByEmail(String userAuthKey, String email) throws Exception {
 
 		return this.searchUserCommonInfo(userAuthKey, IDP_PARAM_KEY_QUERY_KEY_TYPE_EMAIL, email);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 회원 기본 정보 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserCommonInfo(java.lang.String , java.lang.String, java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param queryKeyType
+	 *            쿼리 조건 구분
+	 * @param queryKeyValue
+	 *            쿼리 값
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserCommonInfo(String userAuthKey, String queryKeyType, String queryKeyValue)
 			throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -713,13 +857,14 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData); // TODO https
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 회원기본정보조회 (SP 서버용)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserCommonInfo4SPServer(java .lang.String, java.lang.String)
+	 * @param keyType
+	 * @param key
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserCommonInfo4SPServer(String keyType, String key) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -733,54 +878,75 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData); // TODO 스테이징 반영 시 https
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * ID 조회 (EMAIL)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserIDByEmail(java.lang.String , java.lang.String, java.lang.String, java.lang.String)
+	 * @param email
+	 * @param userCode
+	 *            사용자 입력 코드
+	 * @param imageSign
+	 *            워터마크 인증을 위해 IDP로부터 받은 signature
+	 * @param signData
+	 *            signature을 구성한 source data
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserIDByEmail(String email, String userCode, String imageSign, String signData)
 			throws Exception {
 
 		return this.searchUserID(IDP_PARAM_KEY_QUERY_ID_KEY_TYPE_EMAIL, email, userCode, imageSign, signData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * ID 조회 (SSN)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserIDBySN(java.lang.String)
+	 * @param ssn
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserIDBySN(String ssn) throws Exception {
 
 		return this.searchUserID(IDP_PARAM_KEY_QUERY_ID_KEY_TYPE_SN, ssn, null, null, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * ID 조회 (User Key)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #searchUserIDByUserKey(java.lang. String, java.lang.String, java.lang.String, java.lang.String)
+	 * @param userKey
+	 *            회원가입시 IDP 로 부터 부여받는 사용자 키
+	 * @param userCode
+	 *            사용자 입력 코드
+	 * @param imageSign
+	 *            워터마크 인증을 위해 IDP로부터 받은 signature
+	 * @param signData
+	 *            signature을 구성한 source data
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserIDByUserKey(String userKey, String userCode, String imageSign, String signData)
 			throws Exception {
 
 		return this.searchUserID(IDP_PARAM_KEY_QUERY_ID_KEY_TYPE_USERKEY, userKey, userCode, imageSign, signData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * ID 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #searchUserID(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 * @param queryKeyType
+	 *            쿼리 조건 구분
+	 * @param queryKeyValue
+	 *            쿼리 값
+	 * @param userCode
+	 *            사용자 입력 코드
+	 * @param imageSign
+	 *            워터마크 인증을 위해 IDP로부터 받은 signature
+	 * @param signData
+	 *            signature을 구성한 source data
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM searchUserID(String queryKeyType, String queryKeyValue, String userCode, String imageSign,
 			String signData) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -805,16 +971,7 @@ public class IdpSacServiceImpl implements IdpSacService {
 	/*
 	 * 통합아이디 기존사용자 아이디 찾기
 	 */
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #searchUserID(java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
 	public IDPReceiverM searchUserID(String queryKeyType, String queryKeyValue) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -828,70 +985,77 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 임시 비밀 번호 발급 (EMAIL)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findPwdByEmail(java.lang.String)
+	 * @param email
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM findPwdByEmail(String email) throws Exception {
 		return this.findPwd(IDP_PARAM_KEY_QUERY_PWD_KEY_TYPE_EMAIL, email);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 임시 비밀 번호 발급 (ID)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwdByID(java.lang.String)
+	 * @param userID
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM findPwdByID(String userID) throws Exception {
 		return this.findPwd(IDP_PARAM_KEY_QUERY_PWD_KEY_TYPE_ID, userID);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 임시 비밀 번호 발급 (ID) 워터마크 포함
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwdByID(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String)
+	 * @param userID
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM findPwdByID(String userID, String userCode, String imageSign, String signData) throws Exception {
 		return this.findPwd(IDP_PARAM_KEY_QUERY_PWD_KEY_TYPE_ID, userID, userCode, imageSign, signData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 임시 비밀 번호 발급 (User Key)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #findPwdByUserKey(java.lang.String)
+	 * @param userKey
+	 *            회원가입시 IDP 로 부터 부여받는 사용자 키
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM findPwdByUserKey(String userKey) throws Exception {
 		return this.findPwd(IDP_PARAM_KEY_QUERY_PWD_KEY_TYPE_USERKEY, userKey);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 임시 비밀 번호 발급
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwd(java.lang.String,
-	 * java.lang.String)
+	 * @param queryKeyType
+	 *            쿼리 조건 구분
+	 * @param queryKeyValue
+	 *            쿼리 값
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM findPwd(String queryKeyType, String queryKeyValue) throws Exception {
 		return this.findPwd(queryKeyType, queryKeyValue, null, null, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 임시 비밀 번호 발급 (워터마크 포함)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findPwd(java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 * @param queryKeyType
+	 *            쿼리 조건 구분
+	 * @param queryKeyValue
+	 *            쿼리 값
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM findPwd(String queryKeyType, String queryKeyValue, String userCode, String imageSign,
 			String signData) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -918,37 +1082,46 @@ public class IdpSacServiceImpl implements IdpSacService {
 	// 회원 해지 API
 	// -------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 사용자 해지 (ID)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeUserByID(java.lang.String, java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param userID
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM secedeUserByID(String userAuthKey, String userID) throws Exception {
 		return this.secedeUser(userAuthKey, IDP_PARAM_KEY_SECEDE_KEY_TYPE_ID, userID);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 사용자 해지 (User Key)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeUserByUserKey(java.lang.String , java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param userKey
+	 *            회원가입시 IDP 로 부터 부여받는 사용자 키
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM secedeUserByUserKey(String userAuthKey, String userKey) throws Exception {
 		return this.secedeUser(userAuthKey, IDP_PARAM_KEY_SECEDE_KEY_TYPE_USERKEY, userKey);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 사용자 해지
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #secedeUser(java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @param userAuthKey
+	 *            사용자 인증시 IDP 로 부터 발급 받은 인증키
+	 * @param secedeKeyType
+	 *            해지 조건 구분
+	 * @param secedeKeyValue
+	 *            해지 사용자 uniq key
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
@@ -967,15 +1140,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 	// 무선 API
 	// -------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 가입여부 체크
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #aleadyJoinCheck4Mdn(java.lang.String )
+	 * @param mdn
+	 *            휴대폰번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM aleadyJoinCheck4Mdn(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
@@ -987,14 +1160,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 모바일 회원 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #authForWap(java.lang.String)
+	 * @param mdn
+	 *            휴대폰번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM authForWap(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
@@ -1006,14 +1180,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 모바일 회원가입
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #join4Wap(java.lang.String)
+	 * @param mdn
+	 *            휴대폰번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM join4Wap(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
@@ -1026,15 +1201,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 사용자 해지 (모바일 회원용)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeUser4Wap(java.lang.String)
+	 * @param mdn
+	 *            모바일 회원의 휴대폰번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM secedeUser4Wap(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
@@ -1050,26 +1225,33 @@ public class IdpSacServiceImpl implements IdpSacService {
 	// 부가서비스 API
 	// -------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 부가서비스 가입
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #joinSupService(java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰 번호
+	 * @param svcCd
+	 *            부가서비스 코드
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM joinSupService(String mdn, String svcCode) throws Exception {
 		return this.joinSupService(mdn, svcCode, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 부가서비스 가입
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #joinSupService(java.lang.String, java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰 번호
+	 * @param svcCd
+	 *            부가서비스 코드
+	 * @param svcMngNum
+	 *            휴대폰 번호에 대한 서비스 관리번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM joinSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
@@ -1085,26 +1267,33 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 부가서비스 해지
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeSupService(java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰 번호
+	 * @param svcCd
+	 *            부가서비스 코드
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM secedeSupService(String mdn, String svcCode) throws Exception {
 		return this.secedeSupService(mdn, svcCode, null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 부가서비스 해지
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeSupService(java.lang.String, java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰 번호
+	 * @param svcCd
+	 *            부가서비스 코드
+	 * @param svcMngNum
+	 *            휴대폰 번호에 대한 서비스 관리번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM secedeSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
@@ -1120,15 +1309,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * T-MAP 가입 가능 단말 여부 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #tmapServiceAvalibleCheck(java.lang .String)
+	 * @param mdn
+	 *            휴대폰 번호
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM tmapServiceAvalibleCheck(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -1140,15 +1329,17 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 부가서비스 가입 여부 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #tmapServiceCheck(java.lang.String, java.lang.String)
+	 * @param mdn
+	 *            휴대폰 번호
+	 * @param svcCd
+	 *            부가서비스 코드
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM tmapServiceCheck(String mdn, String svcCd) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -1163,198 +1354,75 @@ public class IdpSacServiceImpl implements IdpSacService {
 
 	// ---------------------------------------------------------------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * IDP 연동 결과를 XML로 전달받아 객체를 생성 반환한다.
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendIDP(com.skplanet.storeplatform .sac.external.idptemp.model.IDPSenderM)
+	 * @param sendData
+	 * @return
+	 * @throws Exception
 	 */
 	public IDPReceiverM sendIDP(IDPSenderM sendData) throws Exception {
 
-		// AS-IS 로직 삭제
-		// StopWatch stopWatch = new StopWatch();
+		StopWatch stopWatch = new StopWatch();
 
-		// stopWatch.start();
-		System.out.println("######################1111");
+		stopWatch.start();
+
 		Hashtable param = this.idpSender.makeSendParam(sendData);
-		System.out.println("######################2222");
+		SendReq sendReq = new SendReq();
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
+		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
+		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
+		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
+		sendReq.setIm(false);
+		sendReq.setUrl(sendData.getUrl());
+		sendReq.setReqParam(param);
 
-		// TO-BE 기능을 위한 로직 추가
-		IDPTxReq req = new IDPTxReq();
-		req.setHttpMethod("POST");
-		req.setHttpProtocal("HTTPS");
-		req.setReqUrl(sendData.getUrl());
-		req.setReqParamHtable(param);
+		SendRes sendRes = this.idpSCI.send(sendReq);
 
-		IDPTxRes res = this.idpSCI.send(req);
-		String responseMsg = res.getResXml();
-		// AS-IS 로직 삭제
-		// String responseMsg =
-		// sendHttp(this.idpSender.idpReqUrl(sendData.getUrl()), param);
+		IDPReceiverM receiveData = sendRes.getIdpReceiverM();
 
-		logger.info("HTTP IDP 연동 결과 [XML] ::::   " + responseMsg);
-
-		IDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
-
-		// stopWatch.stop();
-
+		stopWatch.stop();
+		// OMC로그 주석 처리 함
 		// IDPOMCLog.setLog(stopWatch, receiveData);
 
 		return receiveData;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendTempIDP(com.skplanet.storeplatform .sac.external.idptemp.model.IDPSenderM)
-	 */
-	public IDPReceiverM sendTempIDP(IDPSenderM sendData) throws Exception {
-
-		// AS-IS 로직 삭제
-		// StopWatch stopWatch = new StopWatch();
-
-		// stopWatch.start();
-
-		Hashtable param = this.idpSender.makeSendParam(sendData);
-
-		// TO-BE 기능을 위한 로직 추가
-		IDPTxReq req = new IDPTxReq();
-		req.setHttpMethod("POST");
-		req.setHttpProtocal("HTTPS");
-		req.setReqUrl(sendData.getUrl());
-		req.setReqParamHtable(param);
-
-		IDPTxRes res = this.idpSCI.send(req);
-		String responseMsg = res.getResXml();
-		// AS-IS 로직 삭제
-		// String responseMsg = this.sendHttp("http://idp.innoace.com" +
-		// sendData.getUrl(), param);
-
-		logger.info("HTTP IDP 연동 결과 [XML] ::::   " + responseMsg);
-
-		IDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
-
-		// stopWatch.stop();
-
-		return receiveData;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #sendIDPHttps(com.skplanet.storeplatform .sac.external.idptemp.model.IDPSenderM)
-	 */
-	@Override
-	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
-
-		// AS-IS 로직 삭제
-		// StopWatch stopWatch = new StopWatch();
-		//
-		// stopWatch.start();
-
-		Hashtable param = this.idpSender.makeSendParam(sendData);
-
-		// TO-BE 기능을 위한 로직 추가
-		IDPTxReq req = new IDPTxReq();
-		req.setHttpMethod("POST");
-		req.setHttpProtocal("HTTPS");
-		req.setReqUrl(sendData.getUrl());
-		req.setReqParamHtable(param);
-
-		IDPTxRes res = this.idpSCI.send(req);
-		String responseMsg = res.getResXml();
-		// AS-IS 로직 삭제
-		// String responseMsg =
-		// this.sendHttps(this.idpSender.idpReqUrlHttps(sendData.getUrl()),
-		// param);
-
-		logger.info("HTTPS IDP 연동 결과 [XML] ::::   " + responseMsg);
-
-		IDPReceiverM receiveData = this.resultIDPFromXml(responseMsg);
-
-		// stopWatch.stop();
-
-		return receiveData;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #sendHttp(java.lang.String,
-	 * java.util.Hashtable)
-	 */
-	public String sendHttp(String url, Hashtable param) throws Exception {
-
-		if (url == null || url.trim().length() == 0)
-			throw new Exception("URL is null.");
-
-		logger.info("idp request url : " + url);
-
-		// AS-IS 로직 삭제
-		// HTTPUtil hc = new HTTPUtil(url, Constants.HTTP_METHOD_POST, param);
-		// hc.setEncoding("UTF-8");
-		return null;
-		// return hc.getContent(30000); //ext 커널 VO return : TODO
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #sendHttps(java.lang.String,
-	 * java.util.Hashtable)
-	 */
-	public String sendHttps(String url, Hashtable param) throws Exception {
-
-		if (url == null || url.trim().length() == 0)
-			throw new Exception("URL is null.");
-
-		logger.info("idp request url : " + url);
-		// AS-IS 로직 삭제
-		// HTTPUtil hc = new HTTPUtil(url, Constants.HTTP_METHOD_POST, param);
-		// hc.setEncoding("UTF-8");
-		return null;
-		// return hc.getContent(30000); //ext 커널 VO return : TODO
-	}
-
 	/**
-	 * IDP 연동 결과를 Parsing 하여 recevie 객체에 담는다.
+	 * HTTPS 프로토콜로 IDP 연동 결과를 XML로 전달받아 객체를 생성 반환한다.
 	 * 
-	 * @param data
+	 * @param sendData
 	 * @return
 	 * @throws Exception
 	 */
-	private IDPReceiverM resultIDPFromXml(String data) throws Exception {
+	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
 
-		XStream xs = new XStream(new DomDriver());
-		this.receivData = new IDPReceiverM();
+		StopWatch stopWatch = new StopWatch();
 
-		xs.alias("idpResponse", IDPReceiverM.class);
+		stopWatch.start();
 
-		xs.fromXML(data, this.receivData);
+		Hashtable param = this.idpSender.makeSendParam(sendData);
 
-		this.receivData = this.idpReceiver.nullValue(this.receivData);
+		SendReq sendReq = new SendReq();
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
+		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
+		sendReq.setMethod(SendReq.HTTP_METHOD.POST);
+		sendReq.setIm(false);
+		sendReq.setUrl(sendData.getUrl());
+		sendReq.setReqParam(param);
 
-		if (null != this.receivData.getResponseBody()) {
-			String idList = this.receivData.getResponseBody().getId_list();
+		SendRes sendRes = this.idpSCI.send(sendReq);
 
-			if (!"".equals(idList) && idList != null) {
-				this.receivData.getResponseBody().setIdList(this.idpReceiver.tokenize(idList, "|"));
-			}
-		}
+		IDPReceiverM receiveData = sendRes.getIdpReceiverM();
 
-		return this.receivData;
+		stopWatch.stop();
+		// OMC로그 주석 처리 함
+		// IDPOMCLog.setLog(stopWatch, receiveData);
+
+		return receiveData;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #modifyProfile(java.util.Map)
-	 */
-	@Override
 	public IDPReceiverM modifyProfile(Map<String, Object> param) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
@@ -1500,18 +1568,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData); // TODO https
 	}
 
-	// ---------------------------------------------------------------------------------------------------------
-
 	// IDP 통합 고도화 -------------------------------------------------------------
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 타채널 ID 인증
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #otherChannelIdAuth(java.lang.String, java.lang.String)
+	 * @param id
+	 *            /pwd
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM otherChannelIdAuth(String user_id, String user_passwd) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
@@ -1524,15 +1590,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDPHttps(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 가입된 타채널 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #otherChannelList(java.lang.String, java.lang.String)
+	 * @param key_type
+	 *            /key
+	 * @return
+	 * @throws Exception
+	 *             key type 1:user_id, 2:email
 	 */
-	@Override
 	public IDPReceiverM otherChannelList(String key_type, String key) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -1545,15 +1612,15 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 가입동의에 의한 회원가입
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #otherChannelRegist(java.lang.String, java.lang.String)
+	 * @param user_id
+	 *            , passwd
+	 * @return
+	 * @throws Exception
 	 */
-	@Override
 	public IDPReceiverM otherChannelRegist(String user_id, String user_passwd) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
@@ -1566,15 +1633,8 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	// IDP 통합 고도화-skt폰 여부
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findModelId(java.lang.String)
-	 */
-	@Override
+	// skt폰 여부
 	public IDPReceiverM findModelId(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -1586,17 +1646,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	// IDP 통합 고도화-SMS 발송
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #mobileSend(java.lang.String,
-	 * java.lang.String)
-	 */
-	@Override
+	// SMS 발송
 	public IDPReceiverM mobileSend(String user_mdn, String comment) throws Exception {
+		return this.mobileSend(user_mdn, comment, null);
+	}
 
+	// SMS 발송
+	public IDPReceiverM mobileSend(String user_mdn, String comment, String scrId) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
+		if (scrId == null || scrId.equals(""))
+			scrId = "US004528";
 
 		sendData.setUrl(IDPSender.IDP_REQ_URL_MOBILE_SEND);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_MOBILE_SEND);
@@ -1604,34 +1663,70 @@ public class IdpSacServiceImpl implements IdpSacService {
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
 		sendData.setComment(comment);
+		sendData.setScr_id(scrId);
 
-		return this.sendIDPHttps(sendData); // real Https
+		if (scrId.equals("US004520"))
+			sendData.setSend_order("1"); // 웹2폰
+		else if (scrId.equals("US004521"))
+			sendData.setSend_order("1"); // QR코드 발송
+		else if (scrId.equals("US004522"))
+			sendData.setSend_order("1"); // 추천하기 발송
+		else if (scrId.equals("US004528"))
+			sendData.setSend_order("2"); // 기타공통
+
+		// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
+		// return this.smsapi.sendSimpleSMS(sendData); // real Https
+		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * IDP sms 전송 api - 보내는 이 추가
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #idpSmsSend(java.lang.String,
-	 * java.lang.String, java.lang.String)
+	 * @param receiverMdn
+	 * @param comment
+	 * @param senderMdn
+	 * @return
+	 * @throws Exception
+	 * @author J.I.PARK
+	 * @date 2011. 10. 13.
 	 */
-	@Override
 	public IDPReceiverM idpSmsSend(String receiverMdn, String msg, String senderMdn) throws Exception {
 
 		// TODO.. 현재는 보내는 사람 전화번호가 없음 .
-		// 보내는 이 전화번호(senderMdn)가 들어오게 되면 아래 로직에 보내는 이 정보 추가 필요. 2011.10.13
-		// jiaprk mod
+		// 보내는 이 전화번호(senderMdn)가 들어오게 되면 아래 로직에 보내는 이 정보 추가 필요. 2011.10.13 jiaprk mod
 		return this.mobileSend(receiverMdn, msg);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * IDP sms 전송 api - 보내는 이 추가
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #joinSupServiceRequest(java.lang. String, java.lang.String)
+	 * @param receiverMdn
+	 * @param comment
+	 * @param senderMdn
+	 * @return
+	 * @throws Exception
+	 * @author J.I.PARK
+	 * @date 2011. 10. 13.
 	 */
-	@Override
-	public IDPReceiverM joinSupServiceRequest(String mdn, String svcCode) throws Exception {
+	public IDPReceiverM idpSmsSend(String receiverMdn, String msg, String senderMdn, String scrId) throws Exception {
 
+		// TODO.. 현재는 보내는 사람 전화번호가 없음 .
+		// 보내는 이 전화번호(senderMdn)가 들어오게 되면 아래 로직에 보내는 이 정보 추가 필요. 2011.10.13 jiaprk mod
+		return this.mobileSend(receiverMdn, msg, scrId);
+	}
+
+	/**
+	 * 부가서비스 가입 처리를 요청하는 api
+	 * 
+	 * @param mdn
+	 * @param svcCode
+	 *            연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
+	 * @return
+	 * @throws Exception
+	 * @author bw yun
+	 * @date 2012. 3. 30.
+	 */
+	public IDPReceiverM joinSupServiceRequest(String mdn, String svcCode) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 		// 연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
 
@@ -1645,15 +1740,18 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 부가 서비스 해지 처리를 요청하는 API
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl
-	 * #secedeSupServiceRequest(java.lang .String, java.lang.String)
+	 * @param mdn
+	 * @param svcCode
+	 *            연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
+	 * @return
+	 * @throws Exception
+	 * @author bw yun
+	 * @date 2012. 3. 30.
 	 */
-	@Override
 	public IDPReceiverM secedeSupServiceRequest(String mdn, String svcCode) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 		// 연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
 
@@ -1667,14 +1765,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * skt가입자 요금제 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #findBill(java.lang.String)
+	 * @param mdn
+	 * @return
+	 * @throws Exception
+	 * @author bw yun
+	 * @date 2012. 4. 3.
 	 */
-	@Override
 	public IDPReceiverM findBill(String mdn) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 		// 연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
 
@@ -1687,14 +1787,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 토큰 생성
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #createToken(java.lang.String)
+	 * @param mdn
+	 * @return
+	 * @throws Exception
+	 * @author yk kim
+	 * @date 2012. 12. 10.
 	 */
-	@Override
 	public IDPReceiverM createToken(String user_id) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPSender.IDP_REQ_URL_CREATE_TOKEN);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_CREATE_TOKEN);
@@ -1704,14 +1806,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 토큰 맵핑
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #mappingToken(java.lang.String)
+	 * @param mdn
+	 * @return
+	 * @throws Exception
+	 * @author yk kim
+	 * @date 2012. 12. 10.
 	 */
-	@Override
 	public IDPReceiverM mappingToken(String user_id) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPSender.IDP_REQ_URL_MAPPING_TOKEN);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_MAPPING_TOKEN);
@@ -1724,14 +1828,16 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 토큰 조회
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #searchToken(java.lang.String)
+	 * @param mdn
+	 * @return
+	 * @throws Exception
+	 * @author yk kim
+	 * @date 2012. 12. 10.
 	 */
-	@Override
 	public IDPReceiverM searchToken(String user_id) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPSender.IDP_REQ_URL_SEARCH_TOKEN);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_SEARCH_TOKEN);
@@ -1741,22 +1847,22 @@ public class IdpSacServiceImpl implements IdpSacService {
 		return this.sendIDP(sendData);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * 토큰 삭제
 	 * 
-	 * @see com.skplanet.storeplatform.sac.external.idp.service.IdpSacServiceSample1Impl #deleteToken(java.lang.String)
+	 * @param mdn
+	 * @return
+	 * @throws Exception
+	 * @author yk kim
+	 * @date 2012. 12. 10.
 	 */
-	@Override
 	public IDPReceiverM deleteToken(String user_id) throws Exception {
-
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPSender.IDP_REQ_URL_DELETE_TOKEN);
 		sendData.setCmd(IDPSender.IDP_REQ_CMD_DELETE_TOKEN);
 		sendData.setUser_id(user_id);
 		sendData.setTarget_service("tstore");
 		sendData.setType("1");
-
 		return this.sendIDP(sendData);
 	}
-
 }

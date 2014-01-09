@@ -1,12 +1,41 @@
-package com.skplanet.storeplatform.sac.external.idp.constant;
-
-/**
- * 
- * ImIDPManagerConstants class
- * 
- * Updated on : 2014. 1. 6. Updated by : Jeon.ByungYoul, SK planet.
+/*
+ * COPYRIGHT(c) SK telecom 2009
+ * This software is the proprietary information of SK telecom.
+ *
+ * Revision History
+ * Author       Date            Description
+ * --------     ----------      ------------------
+ * ?            ?               ?
+ * nefer        2009.12.08      move to omp_common
+ *
  */
-public interface ImIDPManagerConstants {
+package com.skplanet.storeplatform.sac.member.common.idp;
+
+public interface ImIDPConstants {
+
+	public static String SSO_SST_CD_NATE_WEB = "10100";
+	public static String SSO_SST_CD_CYWORLD_WEB = "10200";
+	public static String SSO_SST_CD_11ST_WEB = "20100";
+	public static String SSO_SST_CD_MELON_WEB = "30100";
+	public static String SSO_SST_CD_TSTORE_WEB = "41100";
+	public static String SSO_SST_CD_TCLOUD_WEB = "41200";
+	public static String SSO_SST_CD_TMAP_WEB = "41300";
+	public static String SSO_SST_CD_IM_DEV_CENTER = "40100";
+	public static String SSO_SST_CD_CONTEXT_PORTAL = "40200";
+	public static String SSO_SST_CD_NOP = "40300";
+	public static String SSO_SST_CD_OCB_WEB = "42100";
+	public static String OCB_SST_CD = "40300";
+
+	public static String SSO_SST_NATE = "Nate";
+	public static String SSO_SST_CYWORLD = "Cyworld";
+	public static String SSO_SST_11ST = "11번가";
+	public static String SSO_SST_MELON = "멜론";
+	public static String SSO_SST_TSTORE = "Tstore";
+	public static String SSO_SST_TCLOUD = "Tcloud";
+	public static String SSO_SST_TMAP = "Tmap";
+	public static String sSO_SST_DEVCENTER = "통합개발자 센터";
+	public static String SSO_SST_C_PORTAL = "Context Portal";
+	public static String SSO_SST_NOP = "NOP";
 
 	public static final String IDP_CONN_HTTP_METHOD_GET = "GET";
 	public static final String IDP_CONN_HTTP_METHOD_POST = "POST";
