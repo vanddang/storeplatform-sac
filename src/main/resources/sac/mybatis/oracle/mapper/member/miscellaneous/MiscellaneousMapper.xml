@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Miscellaneous">
+
+<!-- UA 코드 정보 조회 -->
+<select id="getUaCode" parameterType="String" resultType="String">
+    SELECT /* MiscellaneousMapper.xml, getUaCode, SAC : 김다슬 , 2014-01-09 */
+        UA_CD
+    FROM
+        TB_CM_DEVICE
+    WHERE
+        DEVICE_MODEL_CD = #{deviceModelNo}    
+</select>
+</mapper>
