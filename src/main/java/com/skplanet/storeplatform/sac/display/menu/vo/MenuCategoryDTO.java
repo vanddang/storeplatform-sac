@@ -26,6 +26,7 @@ public class MenuCategoryDTO {
 	private int fileSize;
 	private String menuDesc;
 	private int menuProdCnt;
+	private int menuTotalProdCnt;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -33,6 +34,14 @@ public class MenuCategoryDTO {
 
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
+	}
+
+	public int getMenuTotalProdCount() {
+		return this.menuTotalProdCnt;
+	}
+
+	public void setMenuTotalProdCount(int menuTotalProdCnt) {
+		this.menuTotalProdCnt = menuTotalProdCnt;
 	}
 
 	public String getMenuId() {

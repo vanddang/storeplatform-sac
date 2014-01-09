@@ -348,6 +348,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 		if ("DP16".equals(menuId)) { // 음악
 			statementId = "MenuCategory.getMusicDetailCategoryList";
+		} else if ("DP17".equals(menuId)) { // 영화
+			statementId = "MenuCategory.getMovieDetailCategoryList";
 		} else {
 			statementId = "MenuCategory.getDetailCategoryList";
 		}
@@ -387,13 +389,13 @@ public class CategoryServiceImpl implements CategoryService {
 				category = new Menu();
 				source = new Source();
 
-				totalCount = mapperVO.getTotalCount();
+				totalCount = mapperVO.getTotalCount(); // 메뉴 목록 총 조회수
 
 				source.setSize(Integer.toString(mapperVO.getFileSize()));
 				source.setUrl(mapperVO.getFilePos());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
-				category.setCount(Integer.toString(mapperVO.getMenuProdCnt()));
+				category.setCount(Integer.toString(mapperVO.getMenuProdCnt())); // 전시 메뉴 상품수
 				category.setSource(source);
 
 				if (threeDepth) { // => 3 DEPTH MENU
