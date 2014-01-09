@@ -18,19 +18,19 @@ public class GetUaCodeReq extends CommonInfo {
 	/**
 	 * 휴대폰 번호
 	 */
-	private String userPhone;
+	private String msisdn;
 
 	/**
 	 * 단말 모델명
 	 */
 	private String deviceModelNo;
 
-	public String getUserPhone() {
-		return this.userPhone;
+	public String getMsisdn() {
+		return this.msisdn;
 	}
 
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
 	}
 
 	public String getDeviceModelNo() {
