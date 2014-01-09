@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
+import com.skplanet.storeplatform.sac.api.service.CouponItemService;
 import com.skplanet.storeplatform.sac.api.service.CouponProcessService;
 import com.skplanet.storeplatform.sac.api.service.ShoppingCouponService;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
@@ -63,6 +64,8 @@ public class ShoppingCouponContoller {
 
 	@Autowired
 	private ShoppingCouponService shoppingCouponService;
+	@Autowired
+	private CouponItemService couponItemService;
 
 	@Autowired
 	private CouponProcessService couponProcessService;
@@ -160,7 +163,7 @@ public class ShoppingCouponContoller {
 					// XML 전문 Parsing
 					result = this.parserXML(couponParameterInfo);
 					if (result) {
-						success = this.insertCouponInfo(this.containers, couponParameterInfo.getTxType());
+						success = this.insertCouponInfo(this.containers, couponParameterInfo);
 					}
 
 					if (success) {
@@ -175,19 +178,8 @@ public class ShoppingCouponContoller {
 
 					break;
 				case ST:
-					success = this.processForCouponStatus(couponParameterInfo);
-					if (success) {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
-					} else {
-						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
-					}
-					break;
-				case AT:
-					// success = processForCouponStatus(couponParameterInfo);
+					// 쿠폰 상태 변경 호출한다
+					success = this.updateForCouponStatus(couponParameterInfo);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -292,10 +284,10 @@ public class ShoppingCouponContoller {
 	 * 
 	 * @param CouponContainer
 	 *            containers, String txType
-	 * @throws
+	 * @response boolean
 	 */
-	public boolean insertCouponInfo(CouponContainer containers, String txType) {
-		boolean result = this.couponProcessService.insertCouponInfo(containers, txType);
+	public boolean insertCouponInfo(CouponContainer containers, CouponParameterInfo couponParameterInfo) {
+		boolean result = this.couponProcessService.insertCouponInfo(containers, couponParameterInfo);
 		return result;
 
 	}
@@ -305,10 +297,10 @@ public class ShoppingCouponContoller {
 	 * 
 	 * @param CouponParameterInfo
 	 *            couponParameterInfo
-	 * @throws
+	 * @response boolean
 	 */
-	public boolean processForCouponStatus(CouponParameterInfo couponParameterInfo) {
-		boolean result = this.couponProcessService.processForCouponStatus(couponParameterInfo);
+	public boolean updateForCouponStatus(CouponParameterInfo couponParameterInfo) {
+		boolean result = this.couponProcessService.updateForCouponStatus(couponParameterInfo);
 		return result;
 
 	}
@@ -695,6 +687,13 @@ public class ShoppingCouponContoller {
 			contentLists[0].add(hashMap);
 			DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
 			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
+			String couponProdId = this.couponItemService.couponGenerateId(); // 쿠폰 ID 생성
+
+			if (StringUtils.isBlank(couponProdId)) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+						"[COUPON_PRODUCT_ID]를 생성하지 못했습니다.", "");
+			}
+			couponInfo.setProdId(couponProdId);
 
 			for (int i = 0; i < 1; i++) { // 쿠폰 정보 Add
 				List<Map<String, String>> mapList = list.get(i);
@@ -710,10 +709,16 @@ public class ShoppingCouponContoller {
 			}
 
 			int kk = 0;
-
+			String itemProdId = "";
 			for (int i = 1; i < list.size(); i++) { // 아이템 정보 List Add
+				itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
 				List<Map<String, String>> mapList = list.get(i);
+
 				for (Map<String, String> map : mapList) {
+					if (StringUtils.isBlank(itemProdId)) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+								"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
+					}
 					DpItemInfo itemInfo = new DpItemInfo();
 					for (Map.Entry<String, String> entry : map.entrySet()) {
 						if (!this.invoke(itemInfo, "set" + entry.getKey().substring(0, 1).toUpperCase()
@@ -724,6 +729,7 @@ public class ShoppingCouponContoller {
 						}
 
 					}
+					itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
 					itemInfoList.add(itemInfo);
 					kk++;
 				}

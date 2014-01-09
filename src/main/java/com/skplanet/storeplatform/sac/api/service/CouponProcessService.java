@@ -13,14 +13,14 @@ public interface CouponProcessService {
 	 * 쿠폰 정보 입력
 	 * </pre>
 	 */
-	public boolean insertCouponInfo(CouponContainer containers, String txType);
+	public boolean insertCouponInfo(CouponContainer containers, CouponParameterInfo couponParameterInfo);
 
 	/**
 	 * <pre>
 	 * 상태 변경
 	 * </pre>
 	 */
-	public boolean processForCouponStatus(CouponParameterInfo couponParameterInfo);
+	public boolean updateForCouponStatus(CouponParameterInfo couponParameterInfo);
 
 	/**
 	 * <pre>

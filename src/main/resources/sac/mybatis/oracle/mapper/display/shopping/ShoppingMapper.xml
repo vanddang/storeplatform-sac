@@ -7,23 +7,24 @@
 		SELECT *
 		 FROM ( 
 		     SELECT 
-		            ROW_NUMBER()OVER(ORDER BY AA.REG_DT DESC, AA.CATALOG_NM ) AS RNUM        
+		            ROW_NUMBER()OVER(ORDER BY REG_DT DESC, CATALOG_NM ) AS RNUM        
 		           ,COUNT(CATALOG_ID) OVER() AS TOTALCOUNT      
-		           ,AA.CATALOG_ID AS catagoryId
-		           ,AA.CATALOG_NM AS catagoryName
-		           ,AA.PROD_NET_AMT AS prodNetAmt
-		           ,AA.DC_RATE AS dcRate
-		           ,AA.DC_AMT AS dcAmt
-		           ,AA.DLV_PROD_YN AS dlvProdYn
-		           ,AA.BRAND_ID AS brandId
-		           ,AA.BRAND_NM AS brandName
-		           ,AA.MENU_ID AS menuId
-		           ,AA.MENU_NM AS menuName
-		           ,AA.NO AS no
-		           ,AA.NEW_YN AS newYn
-		           ,AA.REG_DT AS regDt
-		           ,AA.TENANT_ID AS tenentId
-		           ,AA.PROD_ID as prodId
+		           ,CATALOG_ID AS catagoryId
+		           ,CATALOG_NM AS catagoryName
+		           ,PROD_NET_AMT AS prodNetAmt
+		           ,DC_RATE AS dcRate
+		           ,DC_AMT AS dcAmt
+		           ,DLV_PROD_YN AS dlvProdYn
+		           ,BRAND_ID AS brandId
+		           ,BRAND_NM AS brandName
+		           ,MENU_ID AS menuId
+		           ,MENU_NM AS menuName
+		           ,NO AS no
+		           ,NEW_YN AS newYn
+		           ,REG_DT AS regDt
+		           ,TENANT_ID AS tenentId
+		           ,PROD_ID as prodId
+		           ,DWLD_QTY as dwldQty
 		     FROM (
 		          SELECT  * 
 		           FROM (
@@ -43,6 +44,8 @@
 			               ,I.TENANT_ID 
 			               ,G.PROD_ID 
 			               ,G.DLV_PROD_YN
+                           ,M.PRCHS_QTY
+                           ,M.DWLD_QTY			               
 		              FROM 
 				              TB_DP_SHPG_CATALOG A
 				             ,TB_DP_SHPG_CATALOG_DESC B
@@ -56,8 +59,10 @@
 				             ,TB_DP_TENANT_PROD I
 				             ,TB_DP_TENANT_PROD_PRICE J
 				             ,(SELECT 
-				                  B1.PROD_ID, B1.SPRC_DC_RATE, B1.SPRC_PRICE
-				               FROM TB_DP_PROD_CATALOG_MAPG A1
+				                    B1.PROD_ID
+				                  , B1.SPRC_DC_RATE
+				                  , B1.SPRC_PRICE
+				               FROM  TB_DP_PROD_CATALOG_MAPG A1
 				                    ,TB_DP_SPRC_PROD B1
 				               WHERE 1=1
 				                 AND A1.PROD_ID = B1.PROD_ID
@@ -65,6 +70,27 @@
 				                 AND B1.CPN_ID IS NOT NULL
 				                 AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
 				              )K
+                            ,(
+                                SELECT  TDLP.TENANT_ID
+                                      , TDLP.LIST_ID
+                                      , TDLP.MENU_ID
+                                      , TDLP.PROD_ID
+                                      , TDLP.EXPO_ORD
+                                      , TDLP.PRCHS_QTY  
+                                      , TDLP.DWLD_QTY                                      
+                                  FROM  
+                                        TB_DP_LIST_PROD TDLP
+                                       ,TB_DP_LIST TDL
+                                 WHERE 1=1
+                                   AND  TDLP.TENANT_ID = TDL.TENANT_ID
+                                   AND  TDLP.LIST_ID   = TDL.LIST_ID
+                                   AND  TDLP.TENANT_ID = #{tenantId}   /* 테넌트ID */
+                                   AND  TDLP.LIST_ID   = #{listId}       /* ADM000000014 : 쇼핑 추천, RNK000000004 쇼핑 인기 */
+                                   AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+                                   AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
+                                   AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+                                   AND  SYSDATE BETWEEN TDLP.EXPO_START_DT AND TDLP.EXPO_END_DT                            
+                              ) M				              
 		            WHERE 1=1
 		            AND A.CATALOG_ID = B.CATALOG_ID
 		            AND A.CATALOG_ID = C.CATALOG_ID
@@ -76,6 +102,8 @@
 		            AND F.PROD_ID = I.PROD_ID
 		            AND F.PROD_ID = J.PROD_ID
 		            AND G.PROD_ID = L.PROD_ID
+                    AND I.TENANT_ID = M.TENANT_ID   
+                    AND F.PROD_ID = M.PROD_ID		            
 		            AND F.PROD_ID = K.PROD_ID(+)
 		            AND E.LANG_CD= 'ko'               /* ko : 한국어 */
 		            AND C.BASE_YN='Y'                 /* Y : 기본(기본여부) */
@@ -99,14 +127,7 @@
 		            AND I.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
 		           ) 
 		         WHERE NO =1
-		       ) AA
-		       ,TB_DP_LIST_PROD BB
-		       ,TB_DP_LIST CC
-		    WHERE AA.TENANT_ID = BB.TENANT_ID
-		      AND AA.TENANT_ID = CC.TENANT_ID
-		      AND AA.PROD_ID = BB.PROD_ID
-		      AND BB.LIST_ID = CC.LIST_ID  
-              AND BB.LIST_ID = #{listId}    
+		       ) 
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>
      

@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.google.protobuf.ServiceException;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
@@ -232,6 +233,33 @@ public class IcmsJobPrint {
 			log.error("■■■■■TbDpProdRshpInfo()■■■■■ : " + e.getMessage());
 			log.debug(e);
 			throw new ServiceException("TbDpProdRshpInfo  Fail", e);
+		}
+
+		return true;
+	}
+
+	public static boolean TbDpProdCatalogMapg(TbDpProdCatalogMapgInfo info, String title) throws Exception {
+
+		StringBuffer debugMsg = new StringBuffer();
+
+		try {
+
+			debugMsg.append("################################### TbDpProdCatalogMapgInfo INFO [" + title
+					+ "] TbDpProdCatalogMapgInfo INFO #################################### \n");
+			debugMsg.append("prodId = " + info.getProdId() + " \n");
+			debugMsg.append("catalogId" + info.getCatalogId() + " \n");
+			debugMsg.append("regId = " + info.getRegId() + " \n");
+			debugMsg.append("################################### TbDpProdCatalogMapgInfo INFO [" + title
+					+ "] TbDpProdCatalogMapgInfo INFO #################################### \n");
+
+			System.out.println(debugMsg.toString());
+			debugMsg.setLength(0);
+			debugMsg = null;
+
+		} catch (Exception e) {
+			log.error("■■■■■TbDpProdCatalogMapgInfo()■■■■■ : " + e.getMessage());
+			log.debug(e);
+			throw new ServiceException("TbDpProdCatalogMapgInfo  Fail", e);
 		}
 
 		return true;

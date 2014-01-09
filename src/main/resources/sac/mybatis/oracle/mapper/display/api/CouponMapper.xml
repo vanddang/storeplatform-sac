@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Coupon">
+    
+    <!--쿠폰ID 생성 조회-->
+    <select id="couponGenerateId" resultType="String">
+       /* CouponMapper.xml, couponGenerateId, SAC : 김형식 , 2013-01-08 */
+       SELECT 
+         'S90000'||(MAX(SUBSTR(PROD_ID,3,8))+1)
+        FROM TB_DP_SHPG_PROD A
+    </select>
+    
+    <!--아이템ID 생성 조회-->
+    <select id="itemGenerateId" resultType="String" >
+       /* CouponMapper.xml, itemGenerateId, SAC : 김형식 , 2013-01-08 */
+       SELECT 
+         (MAX(SUBSTR(PROD_ID,3,8))+2)
+        FROM TB_DP_SHPG_PROD A
+    </select>        
+    
+    <!--TB_DP_PROD 테이블에 INSERT-->    
+    <insert id="insertTbDpProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo">
+      /* CouponMapper.xml, insertTbDpProdInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_PROD(
+             PROD_ID                /* 상품_ID */
+            ,PROD_CHRG_YN           /* 상품_유료_여부 */
+            ,SELLER_MBR_NO          /* 판매자_회원_번호 */
+            ,SVC_GRP_CD             /* 서비스_그룹_코드 */
+            ,SVC_TYPE_CD            /* 서비스_타입_코드 */
+            ,PROD_GRD_CD            /* 상품_등급_코드 */
+            ,EXPO_SELLER_NM         /* 노출_판매자_명 */
+            ,EXPO_SELLER_TELNO      /* 노출_판매자_전화번호 */
+            ,EXPO_SELLER_EMAIL      /* 노출_판매자_이메일 */
+            ,CID                    /* CID */
+            ,MALL_CD                /* 상점_코드 */
+            ,FEE_CASE_CD            /* 요금_유형_코드 */
+            ,FEE_UNIT_CD            /* 요금_단위_코드 */
+            ,USE_PERIOD_UNIT_CD     /* 사용_기간_단위_코드 */
+            ,USE_PERIOD             /* 사용_기간 */
+            ,DRM_YN                 /* DRM_여부 */
+            ,DRM_SET_CD             /* DRM_설정_코드 */
+            ,DRM_SET_VALUE          /* DRM_설정_값 */
+            ,REG_ID                 /* 등록_ID */
+            ,REG_DT                 /* 등록_일시 */
+            ,UPD_ID                 /* 수정_ID */
+            ,UPD_DT                 /* 수정_일시 */
+        ) values (
+             #{prodId}
+            ,#{prodChrgYn}
+            ,#{sellerMbrNo}
+            ,#{svcGrpCdv
+            ,#{svcTypeCd}
+            ,#{prodGrdCd}
+            ,#{expoSellerNm}
+            ,#{expoSellerTelno}
+            ,#{expoSellerEmail}
+            ,#{cid}
+            ,#{mallCd}
+            ,#{feeCaseCd}
+            ,#{feeUnitCd}
+            ,#{usePeriodUnitCd}
+            ,#{usePeriod}
+            ,#{drmYn}
+            ,#{drmSetCd}
+            ,#{drmSetValue}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+    
+    <update id="updateTbDpProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo">
+        update TB_DP_PROD
+        set
+             PROD_CHRG_YN      = NVL(#{prodChrgYn},PROD_CHRG_YN)               /* 상품_유료_여부 */
+            ,SELLER_MBR_NO     = NVL(#{sellerMbrNo},SELLER_MBR_NO)             /* 판매자_회원_번호 */
+            ,SVC_GRP_CD        = NVL(#{svcGrpCd},SVC_GRP_CD)                   /* 서비스_그룹_코드 */
+            ,SVC_TYPE_CD       = NVL(#{svcTypeCd},SVC_TYPE_CD)                 /* 서비스_타입_코드 */
+            ,PROD_GRD_CD       = NVL(#{prodGrdCd},PROD_GRD_CD)                 /* 상품_등급_코드 */
+            ,EXPO_SELLER_NM    = NVL(#{expoSellerNm},EXPO_SELLER_NM)           /* 노출_판매자_명 */
+            ,EXPO_SELLER_TELNO = NVL(#{expoSellerTelno},EXPO_SELLER_TELNO)     /* 노출_판매자_전화번호 */
+            ,EXPO_SELLER_EMAIL = NVL(#{expoSellerEmail},EXPO_SELLER_EMAIL)     /* 노출_판매자_이메일 */
+            ,CID               = NVL(#{cid},CID)                               /* CID */
+            ,MALL_CD           = NVL(#{mallCd},MALL_CD)                        /* 상점_코드 */
+            ,FEE_CASE_CD       = NVL(#{feeCaseCd},FEE_CASE_CD)                 /* 요금_유형_코드 */
+            ,FEE_UNIT_CD       = NVL(#{feeUnitCd},FEE_UNIT_CD)                 /* 요금_단위_코드 */
+            ,USE_PERIOD_UNIT_CD= NVL(#{usePeriodUnitCd},USE_PERIOD_UNIT_CD)    /* 사용_기간_단위_코드 */
+            ,USE_PERIOD        = NVL(#{usePeriod},USE_PERIOD)                  /* 사용_기간 */
+            ,DRM_YN            = NVL(#{drmYn},DRM_YN)                          /* DRM_여부 */
+            ,DRM_SET_CD        = NVL(#{drmSetCd},DRM_SET_CD)                   /* DRM_설정_코드 */
+            ,DRM_SET_VALUE     = NVL(#{drmSetValue},DRM_SET_VALUE)             /* DRM_설정_값 */
+            ,REG_ID            = NVL(#{regId},REG_ID)                          /* 등록_ID */
+            ,REG_DT            = sysdate                                      /* 등록_일시 */
+            ,UPD_ID            = NVL(#{updId},UPD_ID)                          /* 수정_ID */
+            ,UPD_DT            = sysdate                                      /* 수정_일시 */
+        where 1=1
+         AND PROD_ID = #{prodId}
+    </update>    
+    
+    
+    <!--기존 ProductId를 가지고 새로 만든 productId 조회-->
+    <select id="getProductID" resultType="String" parameterType="String">
+       /* CouponMapper.xml, getProductID, SAC : 김형식 , 2013-01-08 */
+        SELECT 
+            PROD_ID
+        FROM TB_DP_SHPG_PROD
+        WHERE PROD_ID = #{prodId}
+    </select>
+    
+    <!-- 전시단 쿠폰상품 상태변경 -->
+    <update id="updateDPCouponStatus" parameterType="HashMap">
+        /* CouponMapper.xml, updateDPCouponStatus, SAC : 김형식 , 2013-01-08 */
+        UPDATE 
+            TB_DP_TENANT_PROD
+        SET PROD_STATUS_CD = #{dpStatusCode}
+        <if test="upType != '2'">
+        WHERE PROD_ID =#{prodId}
+        </if>
+        <if test="upType == '2'">
+        WHERE PROD_ID IN (
+               SELECT 
+                       A.PROD_ID  
+                FROM   TB_DP_SHPG_PROD A 
+                      ,TB_DP_PROD_RSHP B
+                WHERE A.PROD_ID = B.PROD_ID
+                  AND A.PROD_ID = #{prodId}     
+            )
+        </if>
+    </update>
+    
+    <!-- 전시단 쿠폰상품 판매중인 ITEM의 갯수 변경 -->
+    <update id="updateDPCouponItemCNT" parameterType="String">
+        /* CouponMapper.xml, updateDPCouponItemCNT, SAC : 김형식 , 2013-01-08 */
+        UPDATE 
+             TB_DP_SHPG_PROD
+        SET EPSD_CNT = (
+				SELECT 
+				       COUNT(A.PROD_ID)  
+				FROM   TB_DP_SHPG_PROD A 
+				      ,TB_DP_PROD_RSHP B
+				      ,TB_DP_TENANT_PROD C
+				WHERE A.PROD_ID = B.PROD_ID
+				  AND A.PROD_ID =C.PROD_ID
+				  AND C.PROD_STATUS_CD = 'PD000403'
+				  AND C.EXPO_YN ='Y'
+				  AND A.PROD_ID =  #{prodId}      
+        )
+        WHERE PROD_ID = #{prodId}
+    </update>    
+    
+    <!-- 전시단 판매중인 채널의 갯수 변경 -->
+    <update id="updateDPCouponCNT" parameterType="String">
+        /* CouponMapper.xml, updateDPCouponCNT, SAC : 김형식 , 2013-01-08 */
+        UPDATE 
+            TB_DP_SHPG_CATALOG
+        SET CHNL_CNT =  (
+				  SELECT 
+				        COUNT(A.PROD_ID)
+				  FROM  TB_DP_PROD_CATALOG_MAPG A
+				       ,TB_DP_SHPG_PROD B
+				  WHERE A.PROD_ID = B.PROD_ID
+				    AND  A.BASE_YN ='Y'
+				    AND  A.USE_YN ='Y'      
+				    AND A.CATALOG_ID IN (
+				         SELECT 
+				             CATALOG_ID 
+				         FROM TB_DP_PROD_CATALOG_MAPG
+				         WHERE PROD_ID =#{prodId}
+				   )                 
+        )
+        WHERE CATALOG_ID =
+        (
+                 SELECT 
+                    A.CATALOG_ID
+                  FROM TB_DP_PROD_CATALOG_MAPG A
+                      ,TB_DP_SHPG_PROD B
+                      ,TB_DP_TENANT_PROD C
+                  WHERE A.PROD_ID = B.PROD_ID
+                   AND  A.PROD_ID =C.PROD_ID
+                   AND  A.BASE_YN ='Y'
+                   AND  A.USE_YN ='Y'
+                   AND  C.EXPO_YN ='Y'
+                   AND  C.PROD_STATUS_CD = 'PD000403'   
+                   AND  A.PROD_ID =#{prodId}        
+        )
+        
+    </update>
+
+    <!-- 전시단 쿠폰 전시여부 변경 -->
+    <update id="updateDPYNStatus" parameterType="String">
+        /* CouponMapper.xml, updateDPYNStatus, SAC : 김형식 , 2013-01-08 */
+        MERGE INTO 
+            TB_DP_PROD_OPT A
+        USING ( SELECT  T1.CHNL_PROD_ID
+                        ,T1.OPT_PD_NM1
+                        ,CASE WHEN SUM(CASE WHEN T3.PROD_STAT_CD = 'PD000403' THEN 1 ELSE 0  END) > 0 THEN 'Y' ELSE 'N' END EXPO_YN
+                FROM 
+                      TB_DP_PROD_OPT T1
+                    , TB_DP_SHPG_PROD T2
+                    , TB_DP_TENANT_PROD T3
+                WHERE T1.CHNL_PROD_ID != T1.PROD_ID
+                AND T1.EPSD_PROD_ID = T2.PROD_ID
+                AND T1.EPSD_PROD_ID = T3.PROD_ID
+                AND T1.CHNL_PROD_ID = (SELECT DISTINCT CHANNEL_ID FROM TB_DP_PROD_RSHP WHERE PROD_ID = #{prodId} )
+                GROUP BY T1.CHNL_PROD_ID, T1.OPT_PD_NM1
+        ) B
+        ON (A.CHNL_PROD_ID = B.CHNL_PROD_ID AND A.OPT_PD_NM1 = B.OPT_PD_NM1 AND DP_ORDER = 1)
+        WHEN MATCHED THEN
+        UPDATE
+            SET A.EXPO_YN = B.EXPO_YN
+    </update>    
+        
+    <!--특가 상품 목록 조회-->
+    <select id="GET_SPECIAL_PRODUCT_INFO" resultType="int" parameterType="String">
+       /* CouponMapper.xml, GET_SPECIAL_PRODUCT_INFO, SAC : 김형식 , 2013-01-08 */
+        SELECT 
+               COUNT(A.PROD_ID) as CNT
+        FROM   TB_DP_SPRC_PROD A
+              ,TB_DP_SHPG_PROD B
+        WHERE A.PROD_ID = B.PROD_ID
+          AND A.PROD_ID =  #{prodId}
+          AND A.EXPO_YN = 'Y' 
+    </select>
+    
+    <!--특가 상품 상세 조회-->
+    <select id="GET_COUPON_INFO"  resultType="int" parameterType="String">
+       /* CouponMapper.xml, GET_COUPON_INFO, SAC : 김형식 , 2013-01-08 */
+        SELECT 
+            COUNT(PROD_ID) as CNT
+        FROM TB_DP_SHPG_PROD
+        WHERE PROD_ID = #{prodId}
+    </select>
+    
+    <!--특가 상품 상세 조회-->
+    <select id="GET_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo" parameterType="String">
+       /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL, SAC : 김형식 , 2013-01-08 */
+		SELECT 
+			   A.PROD_ID as couponCode
+			  ,B.PROD_NM  as eventName
+			  ,TO_CHAR(A.SPRC_APPLY_START_DT,'yyyyMMddHH24miss')  as eventStartDate
+			  ,TO_CHAR(A.SPRC_APPLY_END_DT,'yyyyMMddHH24miss')    as eventEndDate
+			  ,A.SPRC_DC_RATE as eventDcRate 
+		FROM   TB_DP_SPRC_PROD A
+		      ,TB_DP_PROD_DESC B
+		WHERE A.PROD_ID = B.PROD_ID
+		  AND A.PROD_ID =  #{prodId}
+		  AND A.EXPO_YN = 'Y' 
+		  AND ROWNUM =1
+    </select>    
+        
+    
+</mapper>

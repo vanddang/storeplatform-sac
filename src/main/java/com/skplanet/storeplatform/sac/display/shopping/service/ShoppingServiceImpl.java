@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.shopping.vo.ShoppingDTO;
 
 /**
@@ -51,6 +52,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/**
 	 * <pre>
@@ -68,6 +72,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setCount(20);
 		req.setListId("ADM000000014");
 		req.setTenantId("S01");
+
+		String stdDt = "";
+		stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
+		if (stdDt == null) {
+			stdDt = "20130101000000";
+		}
+		req.setStdDt(stdDt);
 
 		Integer totalCount = 0;
 		List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.getFeatureProductList", req,

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.api.vo;
 
 public class DpCouponInfo {
 
+	String prodId = ""; // 상품ID
 	String couponCode = ""; // 상품코드
 	String couponName = ""; // 쿠폰명
 	String issueSDate = ""; // 발급시작일시
@@ -31,6 +32,14 @@ public class DpCouponInfo {
 	String taxType = ""; // 세금구분유형
 	String bpId = ""; // 업체아이디
 	String coupnStatus = ""; // 쿠폰상태
+
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
 
 	public String getCouponCode() {
 		return this.couponCode;

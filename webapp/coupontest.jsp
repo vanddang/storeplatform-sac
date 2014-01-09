@@ -50,8 +50,14 @@
 
 			</tr>
             <tr>
-                <td>couponCode <input type="text" name='couponCode'  size=20 value ="1234"></td>
-                <td></td>
+                <td>couponCode <input type="text" name='couponCode'  size=20 value ="S900000989"></td>
+                <td>
+                    상품 상태 : <select name='coupnStatus' >
+                    <option value="3">판매중</option>
+                    <option value="4">판매중지</option>
+                    <option value="5">판매금지</option>
+                </select>                
+                </td>
                 <td></td>
 
             </tr>			

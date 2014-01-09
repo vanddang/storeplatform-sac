@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.api.vo;
 
 public class DpItemInfo {
 
+	String prodId = ""; // 상품ID
 	String itemCode = ""; // 단품코드
 	String storeLicenseCode = ""; // 스토어 라이선스 번호
 	String itemName = ""; // 단품명
@@ -30,6 +31,14 @@ public class DpItemInfo {
 	String shippingUrl = ""; // 배송지 정보 입력 URL
 	String itemStatus = ""; // 단품상태
 	String cudType = ""; // 추가수정플래그
+
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
 
 	public String getItemCode() {
 		return this.itemCode;
