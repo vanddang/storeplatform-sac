@@ -42,7 +42,7 @@ public class IdpController {
 	 * @param res
 	 * @return
 	 */
-	@RequestMapping(value = "/provisioning", method = RequestMethod.POST)
+	@RequestMapping(value = "/provisioning/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ProvisioningRes provisioning(@RequestBody ProvisioningReq provisioningReq) {
 		ProvisioningRes provisioningRes = new ProvisioningRes();
