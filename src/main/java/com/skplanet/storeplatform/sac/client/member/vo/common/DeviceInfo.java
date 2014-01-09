@@ -98,6 +98,11 @@ public class DeviceInfo extends CommonInfo {
 	private String osVer;
 
 	/**
+	 * OS 오리지날 버젼
+	 */
+	private String osVerOrg;
+
+	/**
 	 * SC 버젼
 	 */
 	private String scVer;
@@ -148,9 +153,14 @@ public class DeviceInfo extends CommonInfo {
 	private String dotoriAuthYn;
 
 	/**
-	 * 사용자 단말 부가 정보 리스트
+	 * 루팅 여부 : Y/N
 	 */
-	private List<DeviceExtraInfo> deviceExtraInfoList;
+	private String rooting;
+
+	/**
+	 * Gmail 주소
+	 */
+	private String gmailAddr;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
@@ -277,14 +287,6 @@ public class DeviceInfo extends CommonInfo {
 		this.makeComp = makeComp;
 	}
 
-	public List<DeviceExtraInfo> getDeviceExtraInfoList() {
-		return this.deviceExtraInfoList;
-	}
-
-	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
-		this.deviceExtraInfoList = deviceExtraInfoList;
-	}
-
 	public String getUacd() {
 		return this.uacd;
 	}
@@ -379,6 +381,30 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setDotoriAuthYn(String dotoriAuthYn) {
 		this.dotoriAuthYn = dotoriAuthYn;
+	}
+
+	public String getRooting() {
+		return this.rooting;
+	}
+
+	public void setRooting(String rooting) {
+		this.rooting = rooting;
+	}
+
+	public String getGmailAddr() {
+		return this.gmailAddr;
+	}
+
+	public void setGmailAddr(String gmailAddr) {
+		this.gmailAddr = gmailAddr;
+	}
+
+	public String getOsVerOrg() {
+		return this.osVerOrg;
+	}
+
+	public void setOsVerOrg(String osVerOrg) {
+		this.osVerOrg = osVerOrg;
 	}
 
 }
