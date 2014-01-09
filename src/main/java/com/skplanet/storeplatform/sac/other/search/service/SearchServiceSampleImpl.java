@@ -177,7 +177,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		// TB_CM_DEVICE의 UA_CD를 조회한다.
 		tstoreSearchReq.setMeta13(device.getUaCd());
 		List<String> listMeta17 = new ArrayList<String>();
-		String category = StringUtils.trimToEmpty(searchReq.getCategory());
 
 		// 카테고리가 app(DP000503,DP000504,DP000508)
 		if (StringUtils.equals(searchReq.getCategory(), "app") || StringUtils.equals(searchReq.getCategory(), "all")) {
@@ -305,7 +304,14 @@ public class SearchServiceSampleImpl implements SearchService {
 
 	private SearchRes getResultRecomData(SearchReq searchReq, TstoreSearchRes tstoreSearchRes) {
 
-		return new SearchRes();
+		SearchRes searchRes = new SearchRes();
+
+		// 검색결과가 없을경우에는 연관검색어에 제안검색어를 입력한다.
+		if (tstoreSearchRes != null && tstoreSearchRes.getResponse() != null
+				&& tstoreSearchRes.getResponse().getHeader() != null) {
+			searchRes.setRelKeywd(tstoreSearchRes.getResponse().getHeader().getRevisedQuery());
+		}
+		return searchRes;
 	}
 
 	private List<Search> getProductList(SearchReq searchReq, List<Doc> docList) {
