@@ -79,8 +79,4 @@ public class MbrPwd extends CommonInfo {
 		this.tenantID = tenantID;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

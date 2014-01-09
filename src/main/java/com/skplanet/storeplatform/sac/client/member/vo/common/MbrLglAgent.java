@@ -15,20 +15,46 @@ public class MbrLglAgent extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String isParent;
-	private String memberKey;
-	private String parentBirthDay;
-	private String parentCI;
-	private String parentDate;
-	private String parentEmail;
-	private String parentMDN;
-	private String parentName;
-	private String parentRealNameDate;
-	private String parentRealNameMethod;
-	private String parentRealNameSite;
-	private String parentTelecom;
-	private String parentType;
-	private String sequence;
+	private String sequence; // AUTH_SEQ
+
+	/** The 법정대리인 동의여부. */
+	private String isParent; // 법정대리인 동의여부(Y/N)
+
+	/** The 법정대리인 인증방법코드. */
+	private String parentRealNameMethod; // LGL_AGENT_AUTH_MTD_CD 법정대리인 인증방법코드, API : realNameMethod
+
+	/** The 법정대리인 이름. */
+	private String parentName; // LGL_AGENT_FLNM 법정대리인 이름, API : userName
+
+	/** The 법정대리인 관계. */
+	private String parentType; // LGL_AGENT_RSHP 법정대리인 관계, API : parentType
+
+	/** The 동의 일시. */
+	private String parentDate; // LGL_AGENT_AGREE_DT 동의 일시, API : realNameDate
+
+	/** The 법정대리인 email. */
+	private String parentEmail; // LGL_AGENT_EMAIL, API : parentEmail
+
+	/** The 법정대리인 생년월일. */
+	private String parentBirthDay; // LGL_AGENT_BIRTH, API : userBirthDay
+
+	/** The 법정대리인 통신사 코드. */
+	private String parentTelecom; // MNO_CD, API : userTelecom
+
+	/** The 법정대리인 전화번호. */
+	private String parentMDN; // LGL_AGENT_HP_NO, API : userPhone
+
+	/** The 법정대리인 ci. */
+	private String parentCI; // CI, API : userCI
+
+	/** The 인증 일시. */
+	private String parentRealNameDate; // REG_DT, API : 없음, 시스템 날짜
+
+	/** The 법정대리인 실명인증사이트 코드. */
+	private String parentRealNameSite; // AUTH_REQ_CHNL_CD 법정대리인 실명인증사이트 코드, API : realNameSite
+
+	/** The 내부 회원 키. */
+	private String memberKey; // INSD_SELLERMBR_NO 내부 사용자코드
 
 	public String getIsParent() {
 		return this.isParent;
@@ -140,10 +166,6 @@ public class MbrLglAgent extends CommonInfo {
 
 	public void setSequence(String sequence) {
 		this.sequence = sequence;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }
