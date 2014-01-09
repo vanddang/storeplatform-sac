@@ -20,6 +20,11 @@ public final class MemberConstants {
 	public static final String RESULT_UNKNOWN_ERR = "9991"; // 알수 없는 에러
 	public static final String RESULT_UNKNOWN_USER_ID = "9990"; // 존재하지 않는 사용자ID
 
+	/** 사용자구분코드 */
+	public static final String USER_STATE_MOBILE = "US011501"; // 기기사용자
+	public static final String USER_STATE_IDPID = "US011502"; // IDP사용자
+	public static final String USER_STATE_ONEID = "US011503"; // OneID사용자
+	
 	/** 메인상태코드 */
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
 	public static final String MAIN_STATUS_SECEDE = "US010202"; // 탈퇴(자의탈퇴/직권탈퇴)
