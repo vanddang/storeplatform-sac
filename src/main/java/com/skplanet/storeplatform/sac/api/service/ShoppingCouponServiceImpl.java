@@ -389,7 +389,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				this.brandCatalogService.deleteDpProdImg(catalogID);
 
 				// 수정일시 TBL_TAG_INFO 데이터 삭제
-				// this.brandCatalogService.deleteTblTagInfo(catalogID);
+				this.brandCatalogService.deleteTblTagInfo(catalogID);
 
 			}
 
@@ -401,7 +401,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 			this.catalogImgResize(dpCatalogInfo);
 
 			// 카탈로그 태그정보 처리
-			// this.catalogTagList(dpCatalogInfo);
+			this.catalogTagList(dpCatalogInfo);
 
 		} catch (CouponException e) {
 			throw new CouponException(e.getErrCode(), e.getMessage(), null);
@@ -701,16 +701,16 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 				for (String tagNm : tags) {
 					DpCatalogTagInfo tagInfo = new DpCatalogTagInfo();
 
-					tagInfo.setCId(dpCatalogInfo.getCreateCatalogId());
-					tagInfo.setTagType(CouponConstants.TAG_TYPE_FOR_COUPON_TAG);
+					tagInfo.setCid(dpCatalogInfo.getCreateCatalogId());
+					tagInfo.setTagTypeCd(CouponConstants.TAG_TYPE_FOR_COUPON_TAG);
+					tagInfo.setTagCd("");
 					tagInfo.setTagNm(tagNm);
-
 					tagList.add(tagInfo);
 				}
 			}
 
 			for (int i = 0; i < tagList.size(); i++) {
-				// this.brandCatalogService.insertTblTagInfo(tagList.get(i));
+				this.brandCatalogService.insertTblTagInfo(tagList.get(i));
 			}
 
 		} catch (Exception e) {

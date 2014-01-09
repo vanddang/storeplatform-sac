@@ -11,37 +11,46 @@ package com.skplanet.storeplatform.sac.api.vo;
 
 public class DpCatalogTagInfo {
 
-	private String tagInfoSeq = ""; // 태그 정보 SEQUENCE
-	private String cId = ""; // CID
-	private String tagType = ""; // 태그 타입
-	private String tagNm = ""; // 태그 코드
-	private String insDttm = ""; // 태그 명
-	private String insBy = "";
-	private String updDttm = "";
-	private String updBy = "";
+	private long tagSeq; //
+	private String cid; //
+	private String tagTypeCd; //
+	private String tagCd; //
+	private String tagNm; //
+	private String regId; //
+	private String regDt; //
+	private String updId; //
+	private String updDt; //
 
-	public String getTagInfoSeq() {
-		return this.tagInfoSeq;
+	public long getTagSeq() {
+		return this.tagSeq;
 	}
 
-	public void setTagInfoSeq(String tagInfoSeq) {
-		this.tagInfoSeq = tagInfoSeq;
+	public void setTagSeq(long tagSeq) {
+		this.tagSeq = tagSeq;
 	}
 
-	public String getCId() {
-		return this.cId;
+	public String getCid() {
+		return this.cid;
 	}
 
-	public void setCId(String id) {
-		this.cId = id;
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
-	public String getTagType() {
-		return this.tagType;
+	public String getTagTypeCd() {
+		return this.tagTypeCd;
 	}
 
-	public void setTagType(String tagType) {
-		this.tagType = tagType;
+	public void setTagTypeCd(String tagTypeCd) {
+		this.tagTypeCd = tagTypeCd;
+	}
+
+	public String getTagCd() {
+		return this.tagCd;
+	}
+
+	public void setTagCd(String tagCd) {
+		this.tagCd = tagCd;
 	}
 
 	public String getTagNm() {
@@ -52,35 +61,36 @@ public class DpCatalogTagInfo {
 		this.tagNm = tagNm;
 	}
 
-	public String getInsDttm() {
-		return this.insDttm;
+	public String getRegId() {
+		return this.regId;
 	}
 
-	public void setInsDttm(String insDttm) {
-		this.insDttm = insDttm;
+	public void setRegId(String regId) {
+		this.regId = regId;
 	}
 
-	public String getInsBy() {
-		return this.insBy;
+	public String getRegDt() {
+		return this.regDt;
 	}
 
-	public void setInsBy(String insBy) {
-		this.insBy = insBy;
+	public void setRegDt(String regDt) {
+		this.regDt = regDt;
 	}
 
-	public String getUpdDttm() {
-		return this.updDttm;
+	public String getUpdId() {
+		return this.updId;
 	}
 
-	public void setUpdDttm(String updDttm) {
-		this.updDttm = updDttm;
+	public void setUpdId(String updId) {
+		this.updId = updId;
 	}
 
-	public String getUpdBy() {
-		return this.updBy;
+	public String getUpdDt() {
+		return this.updDt;
 	}
 
-	public void setUpdBy(String updBy) {
-		this.updBy = updBy;
+	public void setUpdDt(String updDt) {
+		this.updDt = updDt;
 	}
+
 }

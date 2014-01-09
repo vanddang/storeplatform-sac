@@ -246,11 +246,11 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	 * TBL_TAG_INFO를 삭제 한다.
 	 */
 	@Override
-	public void deleteTblTagInfo(String prodId) {
+	public void deleteTblTagInfo(String cid) {
 
 		try {
-			this.log.info("prodId = " + prodId);
-			this.commonDAO.delete("BrandCatalog.DELETE_TBL_TAG_INFO", prodId);
+			this.log.info("catalogId = " + cid);
+			this.commonDAO.delete("BrandCatalog.DELETE_TBL_TAG_INFO", cid);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}

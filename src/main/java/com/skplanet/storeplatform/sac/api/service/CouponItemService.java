@@ -1,8 +1,10 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
+import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
@@ -61,7 +63,8 @@ public interface CouponItemService {
 	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType);
+	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType,
+			String prodId);
 
 	/**
 	 * <pre>
@@ -90,6 +93,13 @@ public interface CouponItemService {
 	 * </pre>
 	 */
 	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList, String cudType);
+
+	/**
+	 * <pre>
+	 * TB_DP_TENANT_PROD_PRICE 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+	public void insertTblTagInfo(ArrayList<DpCatalogTagInfo> tagList);
 
 	/**
 	 * <pre>

@@ -273,6 +273,13 @@
         )
     </insert>    
     
+     <!--TB_DP_PROD_OPT 테이블에 DELETE--> 
+     <!-- 쇼핑 옵션 정보 UPDATE 없이 무조건 INSERT 하는걸로 함 2013.05.31 서영배차장요청 -->
+    <delete id="deleteTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
+     /* CouponMapper.xml, deleteTbDpProdOpt, SAC : 김형식 , 2013-01-08 */
+        DELETE FROM TB_DP_PROD_OPT WHERE CHNL_PROD_ID = #{chnlProdId}
+    </delete>     
+    
     <!--TB_DP_PROD_OPT 테이블에 INSERT-->    
     <insert id="insertTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
       /* CouponMapper.xml, insertTbDpProdOpt, SAC : 김형식 , 2013-01-08 */
@@ -300,22 +307,6 @@
             ,sysdate
         )
     </insert>
-    
-     <!--TB_DP_PROD_OPT 테이블에 UPDATE--> 
-    <update id="updateTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
-     /* CouponMapper.xml, updateTbDpProdOpt, SAC : 김형식 , 2013-01-08 */
-        update TB_DP_PROD_OPT
-        set
-             OPT1_NM     = NVL(#{opt1Nm},OPT1_NM)            /* 옵션1_명 */
-            ,OPT2_NM     = NVL(#{opt2Nm},OPT2_NM)            /* 옵션2_명 */
-            ,EXPO_ORD    = NVL(#{expoOrd},EXPO_ORD)          /* 노출_순서 */
-            ,EXPO_YN     = NVL(#{expoYn},EXPO_YN)            /* 노출_여부 */
-            ,UPD_ID      = NVL(#{updId},UPD_ID)              /* 수정_ID */
-            ,UPD_DT      = sysdate                           /* 수정_일시 */
-        where 1=1
-        AND CHNL_PROD_ID = #{chnlProdId}
-        AND EPSD_PROD_ID = #{epsdProdId}
-    </update>       
     
     <!--TB_DP_TENANT_PROD 테이블에 INSERT-->    
     <insert id="insertTbDpTenantProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo">

@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
+import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
@@ -88,7 +89,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 		try {
 			for (TbDpProdInfo vo : tblDpProdList) {
 				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
+					this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdInfo", vo);
 				}
@@ -111,7 +112,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpShpgProdInfo vo : tbDpShpgProdList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
+					this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpShpgProdInfo", vo);
 				}
@@ -134,7 +135,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdDescInfo vo : tbDpProdDescList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
+					this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdDescInfo", vo);
 				}
@@ -152,7 +153,8 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType) {
+	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType,
+			String prodId) {
 		try {
 			for (TbDpProdCatalogMapgInfo vo : tbDpProdCatalogMapg) {
 
@@ -162,6 +164,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 					this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
 				}
 			}
+			this.commonDAO.update("Coupon.updateDPCouponCNT", prodId);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -180,7 +183,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdRshpInfo vo : tbDpProdRshpList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
+					this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
 				}
 			}
 		} catch (Exception e) {
@@ -198,13 +201,17 @@ public class CouponItemServiceImpl implements CouponItemService {
 	@Override
 	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList, String cudType) {
 		try {
+			String prodId = "";
 			for (TbDpProdOpt vo : tbDpProdOptList) {
-
-				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpProdOpt", vo);
-				} else { // 수정
-					this.commonDAO.update("Coupon.updateTbDpProdOpt", vo);
-				}
+				this.commonDAO.delete("Coupon.deleteTbDpProdOpt", vo);
+				break;
+			}
+			for (TbDpProdOpt vo : tbDpProdOptList) {
+				this.commonDAO.delete("Coupon.insertTbDpProdOpt", vo);
+				prodId = vo.getChnlProdId();
+			}
+			if (StringUtils.isNotBlank(prodId)) {
+				this.commonDAO.update("Coupon.updateDPYNStatus", prodId);
 			}
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -224,7 +231,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
+					this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdInfo", vo);
 				}
@@ -237,7 +244,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	/**
 	 * <pre>
-	 * TB_DP_TENANT_PROD 테이블 입력및 수정한다.
+	 * TB_DP_TENANT_PROD_PRICE 테이블 입력및 수정한다.
 	 * </pre>
 	 */
 
@@ -247,10 +254,33 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpTenantProdPriceInfo vo : tbDpTenantProdPriceList) {
 
 				if ("C".equalsIgnoreCase(cudType)) {
-					// this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
+					this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdPriceInfo", vo);
 				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TBL_TAG_INFO 테이블 입력한다.
+	 * </pre>
+	 */
+	@Override
+	public void insertTblTagInfo(ArrayList<DpCatalogTagInfo> tagList) {
+		try {
+			boolean delOK = true;
+			for (DpCatalogTagInfo vo : tagList) {
+				if (delOK) {
+					String cId = vo.getCid();
+					this.commonDAO.delete("BrandCatalog.DELETE_TBL_TAG_INFO", cId);
+					delOK = false;
+				}
+				this.commonDAO.insert("BrandCatalog.INSERT_TBL_TAG_INFO", vo);
 			}
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
