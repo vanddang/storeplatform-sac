@@ -3,29 +3,18 @@ package com.skplanet.storeplatform.sac.client.display.vo.device;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 public class DeviceProfileReq extends CommonInfo {
-	/**
-	 * 제조사명
-	 */
-	private String manufacturer;
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 모델명
 	 */
-	private String model;
+	private String deviceModelNo;
 
-	public String getManufacturer() {
-		return this.manufacturer;
+	public String getDeviceModelNo() {
+		return this.deviceModelNo;
 	}
 
-	public void setManufacturer(String manufacturer) {
-		this.manufacturer = manufacturer;
+	public void setDeviceModelNo(String deviceModelNo) {
+		this.deviceModelNo = deviceModelNo;
 	}
-
-	public String getModel() {
-		return this.model;
-	}
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
 }

@@ -5,6 +5,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 
 public class DeviceProfileRes extends CommonInfo {
+	private static final long serialVersionUID = 1L;
+
 	private CommonResponse commonRes;
 	private Device device;
 
