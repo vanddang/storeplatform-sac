@@ -60,7 +60,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private IDPManager idpManager;
 
-	IDPReceiverM idpReceiverM;
+	private IDPReceiverM idpReceiverM;
 
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
