@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 @TransactionConfiguration
 @Transactional
-public class ListDevice {
+public class ListDeviceTest {
 
 	@Autowired
 	private DeviceService deviceService;
@@ -31,7 +31,7 @@ public class ListDevice {
 	public void shouldDevice() {
 
 		ListDeviceReq req = new ListDeviceReq();
-		req.setUserKey("IW123123123123");
+		req.setUserKey("IM110000000154320130912135255");
 
 		try {
 			this.deviceService.listDevice(null, req);
