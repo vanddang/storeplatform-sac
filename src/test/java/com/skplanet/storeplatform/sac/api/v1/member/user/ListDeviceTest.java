@@ -31,7 +31,8 @@ public class ListDeviceTest {
 	public void shouldDevice() {
 
 		ListDeviceReq req = new ListDeviceReq();
-		req.setUserKey("IM110000000154320130912135255");
+		// req.setUserKey("IM110000000154320130912135255");
+		req.setDeviceId("01093808294");
 
 		try {
 			this.deviceService.listDevice(null, req);

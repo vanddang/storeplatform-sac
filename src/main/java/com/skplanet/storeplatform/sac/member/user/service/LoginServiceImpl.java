@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -23,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -48,6 +52,9 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private DeviceService deviceService; // 휴대기기 관련 서비스
 
+	@Autowired
+	private IDPManager idpManager; // IDP연동 클래스
+
 	@Override
 	public AuthorizeByMdnRes authorizeByMdn(HeaderVo headerVo,
 			AuthorizeByMdnReq req) throws Exception {
@@ -70,11 +77,10 @@ public class LoginServiceImpl implements LoginService {
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
-		key.setKeyType("DEVICE_ID");
+		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 		key.setKeyString(deviceId);
 		keySearchList.add(key);
 		schUserReq.setKeySearchList(keySearchList);
-
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		/* 회원 상태 확인 */
@@ -85,24 +91,24 @@ public class LoginServiceImpl implements LoginService {
 		userStateCd = schUserRes.getUserMbr().getUserState();
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
-		if (mainStatusCd.equals("US010202")) {// 탈퇴
+		if (StringUtil.equals(mainStatusCd, MemberConstants.MAIN_STATUS_SECEDE)) {// 탈퇴
 			throw new Exception("무선가입상태가 아닙니다.");
 		}
 
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
-		if (userStateCd.equals("US011501")) {
+		if (StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_MOBILE)) {
 			this.volatileMemberPoc(deviceId);
 		}
 
 		/* 무선회원 인증 */
-		if (userStateCd.equals("US011501") || userStateCd.equals("US011502")) {
-			/*
-			 * IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
-			 * if (idpReceiver.getResponseHeader().getResult() != "00000") { 로그인
-			 * 실패이력 저장 this.logInSCComponent(deviceId, null, "N",
-			 * userStateCd.equals("US011503") ? "Y" : "N"); throw new
-			 * Exception(idpReceiver.getResponseHeader().getResult()); }
-			 */
+		if (StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_MOBILE) || StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_IDPID)) {
+
+			IDPReceiverM idpReceiver = this.idpManager.authForWap(deviceId);
+			if (!idpReceiver.getResponseHeader().getResult().equals("00000")) {
+				/* 로그인 실패이력 저장 */
+				this.logInSCComponent(deviceId, null, "N", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID)  ? "Y" : "N");
+				throw new Exception(idpReceiver.getResponseHeader().getResult());
+			}
 		}
 
 		/* 단말정보 조회 및 merge */
@@ -118,8 +124,7 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y",
-				userStateCd.equals("US011503") ? "Y" : "N");
+		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */

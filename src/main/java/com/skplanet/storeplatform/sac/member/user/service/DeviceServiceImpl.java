@@ -70,7 +70,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
-		key.setKeyType("INSD_USERMBR_NO");
+		key.setKeyType("DEVICE_ID");
 		key.setKeyString(req.getDeviceId());
 		keySearchList.add(key);
 		schDeviceListReq.setKeySearchList(keySearchList);
