@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SellerSearch">
+
+
+
+    <!-- aid로 sellerKey 조회 -->
+    <select id="sellerKey" parameterType="SellerDTO" resultType="SellerDTO">
+		SELECT 
+		    seller_mbr_no sellerKey
+		FROM 
+		    TB_DP_APP_PROD app
+		left outer JOIN TB_DP_PROD prod 
+		ON app.PROD_ID=prod.PROD_ID
+		WHERE aid=#{sellerKey}
+    </select>
+    
+</mapper>
