@@ -113,7 +113,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 기기정보 수정 가능한 필드 */
 		String deviceModelNo = req.getDeviceModelNo(); // 단말모델코드
-		String imei = req.getImei(); // imei
+		String nativeId = req.getNativeId(); // nativeId(imei)
 		String deviceAccount = req.getDeviceAccount(); // gmailAddr
 		String rooting = req.getRooting(); // rooting 여부
 		String osVer = req.getOsVer() == null ? req.getOsVerOrg() : req.getOsVer(); // OS버젼,OS오리지날버젼
@@ -140,14 +140,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
-
+		
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
 		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
-
-		} else if (imei != null && !imei.equals(userMbrDevice.getNativeID())) {
-
+			userMbrDevice.setDeviceModelNo(deviceModelNo);
+		} else if (nativeId != null && !nativeId.equals(userMbrDevice.getNativeID())) {
+			userMbrDevice.setNativeID(nativeId);
 		} else if (deviceAccount != null && !deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
-
+			userMbrDevice.setDeviceAccount(deviceAccount);
 		} /*else if (imMngNum != null && !imMngNum.equals(userMbrDevice.getImMngNum())) {
 			
 		} else if (deviceTelecom != null && !deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
@@ -160,41 +160,64 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}*/
 		
+		/*	휴대기기 부가 정보 비교	*/
 		List<UserMbrDeviceDetail> deviceExtraList = userMbrDevice.getUserMbrDeviceDetail();
 		if(deviceExtraList.size() > 0){
+			
+			List<UserMbrDeviceDetail> modDeviceExtraList = new ArrayList<UserMbrDeviceDetail>();
+			
 			for(UserMbrDeviceDetail extraInfo : deviceExtraList){
 				
 				if (rooting != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)){
 					if (!rooting.equals(extraInfo.getExtraProfileValue())){
-						
+						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+						extraInfo.setExtraProfileValue(rooting);
+						modDeviceExtraList.add(extraInfo);
 					}
 				} else if (osVer != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION)){
 					if (!osVer.equals(extraInfo.getExtraProfileValue())){
-						
+						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+						extraInfo.setExtraProfileValue(osVer);
+						modDeviceExtraList.add(extraInfo);
 					}
 				} else if (scVer != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION)){
 					if (!scVer.equals(extraInfo.getExtraProfileValue())){
-						
+						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+						extraInfo.setExtraProfileValue(scVer);
+						modDeviceExtraList.add(extraInfo);
 					}
 				} else if (uacd != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)){
 					if (!uacd.equals(extraInfo.getExtraProfileValue())){
-						
+						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+						extraInfo.setExtraProfileValue(uacd);
+						modDeviceExtraList.add(extraInfo);
 					}
 				} /*else if (dotoriAuthDate != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)){
 					if (!dotoriAuthDate.equals(extraInfo.getExtraProfileValue())){
-						
+						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+						extraInfo.setExtraProfileValue(dotoriAuthDate);
 					}
 				} else if (dotoriAuthYn != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)){
 					if (!dotoriAuthYn.equals(extraInfo.getExtraProfileValue())){
-						
+						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
+						extraInfo.setExtraProfileValue(dotoriAuthYn);
 					}
 				}*/
-				
 			}
+			
+			userMbrDevice.setUserMbrDeviceDetail(modDeviceExtraList);
 		}
 		
-
 		/* 기기정보 업데이트 */
-
+		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
+		createDeviceReq.setUserKey("");
+		createDeviceReq.setIsNew("N");
+		createDeviceReq.setUserMbrDevice(userMbrDevice);
+		CreateDeviceResponse createDeviceRes = deviceSCI.createDevice(createDeviceReq);
+		
+		if(!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)){
+			throw new Exception("기기정보 수정중 에러 발생");
+		}
+		
 	}
 }
