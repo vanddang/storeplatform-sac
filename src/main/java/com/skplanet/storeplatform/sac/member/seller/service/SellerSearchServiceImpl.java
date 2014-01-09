@@ -97,7 +97,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyString(req.getSellerKey());
-		keySearch.setKeyType("INSD_SELLERMBR_NO");
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
 		List<KeySearch> list = new ArrayList<KeySearch>();
 		list.add(keySearch);
 		request.setKeySearchList(list);
