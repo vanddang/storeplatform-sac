@@ -52,13 +52,25 @@ public class UserSelectController extends ParameterExceptionHandling {
 		/**
 		 * 회원기본정보 조회 Biz
 		 */
-		if (req.getDeviceId() != null || req.getDeviceKey() != null || req.getUserId() != null
-				|| req.getUserKey() != null) {
+		int paramCnt = 0;
+		if (!"".equals(req.getUserKey()) && req.getUserKey() != null) {
+			paramCnt += 1;
+		} else if (!"".equals(req.getUserId()) && req.getUserId() != null) {
+			paramCnt += 1;
+		} else if (!"".equals(req.getDeviceKey()) && req.getDeviceKey() != null) {
+			paramCnt += 1;
+		} else if (!"".equals(req.getDeviceId()) && req.getDeviceId() != null) {
+			paramCnt += 1;
+			// throw new RuntimeException("입력된 [ deviceId ] 파라미터가 없습니다.");
+		}
+
+		logger.info("###### 입력된 queryString Value : " + String.valueOf(paramCnt));
+
+		if (paramCnt > 0) {
 			res = this.svc.exist(req);
 		} else {
 			throw new RuntimeException("입력된 파라미터가 없습니다.");
 		}
-
 		logger.info("Response : {}", res.toString());
 
 		return res;

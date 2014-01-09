@@ -52,13 +52,107 @@ public class ExistTest {
 
 	/**
 	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반)
+	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter Null1
 	 * </pre>
 	 */
 	@Test
-	public void exist() {
-		new TestCaseTemplate(this.mockMvc)
-				.url("/member/user/exist/v1?userKey=IW1024258669020110627132822&userId=shop_7263&deviceId=&deviceKey=")
+	public void existNull1() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.GET)
+				.success(ExistRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ExistRes res = (ExistRes) result;
+						assertThat(res.getTstoreYn(), notNullValue());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter Null2
+	 * </pre>
+	 */
+	@Test
+	public void existNull2() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?userKey=&userId=&deviceId=&deviceKey=")
+				.httpMethod(HttpMethod.GET).success(ExistRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ExistRes res = (ExistRes) result;
+						assertThat(res.getTstoreYn(), notNullValue());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userKey (임시 SC 소스 수정완료 후 변경예정)
+	 * </pre>
+	 */
+	@Test
+	public void existUserKey() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?userKey=IW1024258669020110627132822")
+				.httpMethod(HttpMethod.GET).success(ExistRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ExistRes res = (ExistRes) result;
+						assertThat(res.getTstoreYn(), notNullValue());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userId (임시 SC 소스 수정완료 후 변경예정)
+	 * </pre>
+	 */
+	@Test
+	public void existUserId() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?userId=shop_7743").httpMethod(HttpMethod.GET)
+				.success(ExistRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ExistRes res = (ExistRes) result;
+						assertThat(res.getTstoreYn(), notNullValue());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceId (임시 SC 소스 수정완료 후 변경예정)
+	 * </pre>
+	 */
+	@Test
+	public void existDeviceId() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?deviceId=01011112222").httpMethod(HttpMethod.GET)
+				.success(ExistRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ExistRes res = (ExistRes) result;
+						assertThat(res.getTstoreYn(), notNullValue());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceKey (임시 SC 소스 수정완료 후 변경예정)
+	 * </pre>
+	 */
+	@Test
+	public void existDeviceKey() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?deviceKey=01011112222")
 				.httpMethod(HttpMethod.GET).success(ExistRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

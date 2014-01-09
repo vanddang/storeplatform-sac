@@ -49,25 +49,33 @@ public class UserSelectServiceImpl implements UserSelectService {
 		SearchUserRequest schReq = new SearchUserRequest();
 
 		List<KeySearch> keySchList = new ArrayList<KeySearch>();
-		KeySearch keySch = new KeySearch();
-		if (req.getUserKey() != null) {
-			keySch.setKeyType("user_key");
-			keySch.setKeyString(req.getUserKey());
-		} else if (req.getUserId() != null) {
-			keySch.setKeyType("user_id");
-			keySch.setKeyString(req.getUserId());
-		} else if (req.getDeviceId() != null) {
-			keySch.setKeyType("device_id");
-			keySch.setKeyString(req.getDeviceId());
-		} else if (req.getDeviceKey() != null) {
-			keySch.setKeyType("device_key");
-			keySch.setKeyString(req.getDeviceKey());
-		} else {
-			keySch.setKeyType("user_key");
-			keySch.setKeyString(req.getUserKey());
-		}
-		keySchList.add(keySch);
+		KeySearch keySchUserKey = new KeySearch();
+		KeySearch keySchUserId = new KeySearch();
+		KeySearch keySchDeviceKey = new KeySearch();
+		KeySearch keySchDeviceId = new KeySearch();
 
+		// SC 소스 수정중으로 현재 userKey만 가능함
+		if (req.getUserKey() != null) {
+			// keySchUserKey.setKeyType("INSD_USERMBR_NO");
+			keySchUserKey.setKeyType("user_key");
+			keySchUserKey.setKeyString(req.getUserKey());
+			keySchList.add(keySchUserKey);
+		} else if (req.getUserId() != null) {
+			keySchUserId.setKeyType("MBR_ID");
+			keySchUserId.setKeyString(req.getUserId());
+			keySchList.add(keySchUserId);
+		} else if (req.getDeviceId() != null) {
+			keySchDeviceId.setKeyType("INSD_DEVICE_ID");
+			keySchDeviceId.setKeyString(req.getDeviceId());
+			keySchList.add(keySchDeviceId);
+		} else if (req.getDeviceKey() != null) {
+			keySchDeviceKey.setKeyType("DEVICE_ID");
+			keySchDeviceKey.setKeyString(req.getDeviceKey());
+			keySchList.add(keySchDeviceKey);
+		}
+
+		logger.info("###### : Request : " + req.toString());
+		logger.info("###### : keySchList : " + keySchList.toString());
 		schReq.setKeySearchList(keySchList);
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -93,6 +101,8 @@ public class UserSelectServiceImpl implements UserSelectService {
 				result.setIsRealName(schRes.getUserMbr().getIsRealName());
 				result.setAgencyYn(schRes.getUserMbr().getIsParent());
 				result.setUserEmail(schRes.getUserMbr().getUserEmail());
+				result.setUserMainStatus(schRes.getUserMbr().getUserMainStatus());
+				result.setUserSubStatus(schRes.getUserMbr().getUserSubStatus());
 			} else {
 				result.setTstoreYn("N");
 			}
