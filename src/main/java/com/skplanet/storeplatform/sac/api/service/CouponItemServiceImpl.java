@@ -17,7 +17,14 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
+import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
 @Service
 @Transactional
@@ -56,14 +63,193 @@ public class CouponItemServiceImpl implements CouponItemService {
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 쿠폰ID,아이템ID 가져오기
+	 * </pre>
+	 */
 	@Override
-	public void insertTbDpProdInfo(List<TbDpProdInfo> tblDpProdList, String txType) {
+	public String getGenerateId(String scrContentId) {
+		try {
+			return (String) this.commonDAO.queryForObject("Coupon.getGenerateId", scrContentId);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpProdInfo(List<TbDpProdInfo> tblDpProdList, String cudType) {
 		try {
 			for (TbDpProdInfo vo : tblDpProdList) {
-				if (txType.equals("C")) {
-					this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdInfo", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_SHPG_PROD 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpShpgProdInfo(List<TbDpShpgProdInfo> tbDpShpgProdList, String cudType) {
+		try {
+			for (TbDpShpgProdInfo vo : tbDpShpgProdList) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
+				} else { // 수정
+					this.commonDAO.update("Coupon.updateTbDpShpgProdInfo", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD_DESC 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpProdDescInfo(List<TbDpProdDescInfo> tbDpProdDescList, String cudType) {
+		try {
+			for (TbDpProdDescInfo vo : tbDpProdDescList) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
+				} else { // 수정
+					this.commonDAO.update("Coupon.updateTbDpProdDescInfo", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType) {
+		try {
+			for (TbDpProdCatalogMapgInfo vo : tbDpProdCatalogMapg) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					this.commonDAO.insert("Coupon.insertTbDpProdCatalogMapgInfo", vo);
+				} else { // 수정
+					this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD_RSHP 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpProdRshpInfo(List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType) {
+		try {
+			for (TbDpProdRshpInfo vo : tbDpProdRshpList) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD_OPT 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList, String cudType) {
+		try {
+			for (TbDpProdOpt vo : tbDpProdOptList) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpProdOpt", vo);
+				} else { // 수정
+					this.commonDAO.update("Coupon.updateTbDpProdOpt", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_TENANT_PROD 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList, String cudType) {
+		try {
+			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
+				} else { // 수정
+					this.commonDAO.update("Coupon.updateTbDpTenantProdInfo", vo);
+				}
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_TENANT_PROD 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList, String cudType) {
+		try {
+			for (TbDpTenantProdPriceInfo vo : tbDpTenantProdPriceList) {
+
+				if ("C".equalsIgnoreCase(cudType)) {
+					// this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
+				} else { // 수정
+					this.commonDAO.update("Coupon.updateTbDpTenantProdPriceInfo", vo);
 				}
 			}
 		} catch (Exception e) {

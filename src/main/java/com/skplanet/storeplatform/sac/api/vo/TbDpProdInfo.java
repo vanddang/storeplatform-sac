@@ -10,28 +10,28 @@
 package com.skplanet.storeplatform.sac.api.vo;
 
 public class TbDpProdInfo {
-	private String prodId = ""; // 상품_ID
-	private String prodChrgYn = ""; // 상품_유료_여부
-	private String sellerMbrNo = ""; // 판매자_회원_번호
-	private String svcGrpCd = ""; // 서비스_그룹_코드
-	private String svcTypeCd = ""; // 서비스_타입_코드
-	private String prodGrdCd = ""; // 상품_등급_코드
-	private String expoSellerNm = ""; // 노출_판매자_명
-	private String expoSellerTelno = ""; // 노출_판매자_전화번호
-	private String expoSellerEmail = ""; // 노출_판매자_이메일
-	private String cid = ""; // CID
-	private String mallCd = ""; // 상점_코드
-	private String feeCaseCd = ""; // 요금_유형_코드
-	private String feeUnitCd = ""; // 요금_단위_코드
-	private String usePeriodUnitCd = ""; // 사용_기간_단위_코드
-	private long usePeriod = 0L; // 사용_기간
-	private String drmYn = ""; // DRM_여부
-	private String drmSetCd = ""; // DRM_설정_코드
-	private String drmSetValue = ""; // DRM_설정_값
-	private String regId = ""; // 등록_ID
-	private String regDt = ""; // 등록_일시
-	private String updId = ""; // 수정_ID
-	private String updDt = ""; // 수정_일시
+	private String prodId; // 상품_ID
+	private String prodChrgYn; // 상품_유료_여부
+	private String sellerMbrNo; // 판매자_회원_번호
+	private String svcGrpCd; // 서비스_그룹_코드
+	private String svcTypeCd; // 서비스_타입_코드
+	private String prodGrdCd; // 상품_등급_코드
+	private String expoSellerNm; // 노출_판매자_명
+	private String expoSellerTelno; // 노출_판매자_전화번호
+	private String expoSellerEmail; // 노출_판매자_이메일
+	private String cid; // CID
+	private String mallCd; // 상점_코드
+	private String feeCaseCd; // 요금_유형_코드
+	private String feeUnitCd; // 요금_단위_코드
+	private String usePeriodUnitCd; // 사용_기간_단위_코드
+	private long usePeriod; // 사용_기간
+	private String drmYn; // DRM_여부
+	private String drmSetCd; // DRM_설정_코드
+	private String drmSetValue; // DRM_설정_값
+	private String regId; // 등록_ID
+	private String regDt; // 등록_일시
+	private String updId; // 수정_ID
+	private String updDt; // 수정_일시
 
 	public String getProdId() {
 		return this.prodId;

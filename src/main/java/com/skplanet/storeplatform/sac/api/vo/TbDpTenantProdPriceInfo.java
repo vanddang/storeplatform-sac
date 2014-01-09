@@ -10,28 +10,29 @@
 package com.skplanet.storeplatform.sac.api.vo;
 
 public class TbDpTenantProdPriceInfo {
-	private String taxClsf; //
-	private String prodId; //
-	private String tenantId; //
-	private String applyStartDt; //
-	private long seq; //
-	private String applyEndDt; //
-	private long settRate; //
-	private long prodAmt; //
-	private long chnlUnlmtAmt; //
-	private long chnlPeriodAmt; //
-	private long prodNetAmt; //
-	private long dcRate; //
-	private long dcAmt; //
-	private String regId; //
-	private String regDt; //
+	private String tenantId; // 테넌트_ID
+	private String prodId; // 상품_ID
+	private String applyStartDt; // 적용_시작_일시
+	private long seq; // SEQ
+	private String applyEndDt; // 적용_종료_일시
+	private long prodAmt; // 상품_금액
+	private long chnlUnlmtAmt; // 채널_무제한_금액
+	private long chnlPeriodAmt; // 채널_기간_금액
+	private long prodNetAmt; // 상품_정찰_금액
+	private long dcRate; // 할인_율
+	private long dcAmt; // 할인_금액
+	private String taxClsf; // 세금_구분
+	private String regId; // 등록_ID
+	private String regDt; // 등록_일시
+	private String updId; // 수정_ID
+	private String updDt; // 수정_일시
 
-	public String getTaxClsf() {
-		return this.taxClsf;
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
-	public void setTaxClsf(String taxClsf) {
-		this.taxClsf = taxClsf;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 	public String getProdId() {
@@ -40,14 +41,6 @@ public class TbDpTenantProdPriceInfo {
 
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
-	}
-
-	public String getTenantId() {
-		return this.tenantId;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
 	}
 
 	public String getApplyStartDt() {
@@ -72,14 +65,6 @@ public class TbDpTenantProdPriceInfo {
 
 	public void setApplyEndDt(String applyEndDt) {
 		this.applyEndDt = applyEndDt;
-	}
-
-	public long getSettRate() {
-		return this.settRate;
-	}
-
-	public void setSettRate(long settRate) {
-		this.settRate = settRate;
 	}
 
 	public long getProdAmt() {
@@ -130,6 +115,14 @@ public class TbDpTenantProdPriceInfo {
 		this.dcAmt = dcAmt;
 	}
 
+	public String getTaxClsf() {
+		return this.taxClsf;
+	}
+
+	public void setTaxClsf(String taxClsf) {
+		this.taxClsf = taxClsf;
+	}
+
 	public String getRegId() {
 		return this.regId;
 	}
@@ -144,6 +137,22 @@ public class TbDpTenantProdPriceInfo {
 
 	public void setRegDt(String regDt) {
 		this.regDt = regDt;
+	}
+
+	public String getUpdId() {
+		return this.updId;
+	}
+
+	public void setUpdId(String updId) {
+		this.updId = updId;
+	}
+
+	public String getUpdDt() {
+		return this.updDt;
+	}
+
+	public void setUpdDt(String updDt) {
+		this.updDt = updDt;
 	}
 
 }

@@ -687,18 +687,15 @@ public class ShoppingCouponContoller {
 			contentLists[0].add(hashMap);
 			DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
 			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
-			String couponProdId = this.couponItemService.couponGenerateId(); // 쿠폰 ID 생성
-
-			if (StringUtils.isBlank(couponProdId)) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-						"[COUPON_PRODUCT_ID]를 생성하지 못했습니다.", "");
-			}
-			couponInfo.setProdId(couponProdId);
-
+			String couponProdId = "";
+			String srcCouponContentId = "";
 			for (int i = 0; i < 1; i++) { // 쿠폰 정보 Add
 				List<Map<String, String>> mapList = list.get(i);
 				for (Map<String, String> map : mapList) {
 					for (Map.Entry<String, String> entry : map.entrySet()) {
+						if (entry.getKey().equals("couponCode")) {
+							srcCouponContentId = entry.getValue();
+						}
 						if (!this.invoke(couponInfo, "set" + entry.getKey().substring(0, 1).toUpperCase()
 								+ entry.getKey().substring(1), new Object[] { entry.getValue() })) { //
 							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "매핑 실패 ["
@@ -707,20 +704,29 @@ public class ShoppingCouponContoller {
 					}
 				}
 			}
+			System.out.println("srcCouponContentId::" + srcCouponContentId);
+			if ("C".equalsIgnoreCase(couponParameterInfo.getCudType())) {
+				couponProdId = this.couponItemService.couponGenerateId(); // 쿠폰 ID 생성
+			} else if ("U".equalsIgnoreCase(couponParameterInfo.getCudType())) {
+				couponProdId = this.couponItemService.getGenerateId(srcCouponContentId); // 기존 쿠폰 가져오기
+			}
+			if (StringUtils.isBlank(couponProdId)) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+						"[COUPON_PRODUCT_ID]를 생성하지 못했습니다.", "");
+			}
+			couponInfo.setProdId(couponProdId);
 
 			int kk = 0;
 			String itemProdId = "";
+			String srcItemContentId = "";
 			for (int i = 1; i < list.size(); i++) { // 아이템 정보 List Add
-				itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
 				List<Map<String, String>> mapList = list.get(i);
-
 				for (Map<String, String> map : mapList) {
-					if (StringUtils.isBlank(itemProdId)) {
-						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-								"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
-					}
 					DpItemInfo itemInfo = new DpItemInfo();
 					for (Map.Entry<String, String> entry : map.entrySet()) {
+						if (entry.getKey().equals("itemCode")) {
+							srcItemContentId = entry.getValue();
+						}
 						if (!this.invoke(itemInfo, "set" + entry.getKey().substring(0, 1).toUpperCase()
 								+ entry.getKey().substring(1), new Object[] { entry.getValue() })) { // itemInfo VO에 값
 																									 // 셋팅
@@ -728,6 +734,17 @@ public class ShoppingCouponContoller {
 									+ entry.getKey() + ":" + entry.getKey() + "]이 형식이 잘못 됐습니다.", "");
 						}
 
+					}
+					System.out.println("srcItemContentId::" + srcItemContentId);
+					if ("C".equalsIgnoreCase(couponParameterInfo.getCudType())) {
+						itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
+					} else if ("U".equalsIgnoreCase(couponParameterInfo.getCudType())) {
+						itemProdId = this.couponItemService.getGenerateId(srcItemContentId); // 기존 아이템 ID 가져오기
+					}
+
+					if (StringUtils.isBlank(itemProdId)) {
+						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+								"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
 					}
 					itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
 					itemInfoList.add(itemInfo);

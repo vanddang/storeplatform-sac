@@ -10,24 +10,24 @@
 package com.skplanet.storeplatform.sac.api.vo;
 
 public class TbDpProdDescInfo {
-	private String prodId = ""; //
-	private String langCd = ""; //
-	private String prodNm = ""; //
-	private String prodAlias = ""; //
-	private String prodBaseDesc = ""; //
-	private String prodDtlDesc = ""; //
-	private String prodIntrDscr = ""; //
-	private String prodUseMtd = ""; //
-	private String artist1Nm = ""; //
-	private String artist2Nm = ""; //
-	private String artist3Nm = ""; //
-	private String artist1Id = ""; //
-	private String artist2Id = ""; //
-	private String artist3Id = ""; //
-	private String regId = ""; //
-	private String regDt = ""; //
-	private String updId = ""; //
-	private String updDt = ""; //
+	private String prodId; //
+	private String langCd; //
+	private String prodNm; //
+	private String prodAlias; //
+	private String prodBaseDesc; //
+	private String prodDtlDesc; //
+	private String prodIntrDscr; //
+	private String prodUseMtd; //
+	private String artist1Nm; //
+	private String artist2Nm; //
+	private String artist3Nm; //
+	private String artist1Id; //
+	private String artist2Id; //
+	private String artist3Id; //
+	private String regId; //
+	private String regDt; //
+	private String updId; //
+	private String updDt; //
 
 	public String getProdId() {
 		return this.prodId;

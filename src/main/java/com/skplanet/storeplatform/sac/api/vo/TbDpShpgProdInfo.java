@@ -10,32 +10,33 @@
 package com.skplanet.storeplatform.sac.api.vo;
 
 public class TbDpShpgProdInfo {
-	private String prodId; //
-	private String contentsTypeCd; //
-	private long epsdCnt; //
-	private String chnlCompNm; //
-	private String samplUrl; //
-	private String saleYn; //
-	private String contentsOrdrCd; //
-	private String metaClsfCd; //
-	private String mgzinSubscripCd; //
-	private long mmMaxSaleQty; //
-	private long dayMaxSaleQty; //
-	private long mmMbrMaxPrchsQty; //
-	private long dayMbrMaxPrchsQty; //
-	private long firstMaxPrchsQty; //
-	private String usePlac; //
-	private String useLimtDesc; //
-	private String noticeMatt; //
-	private String prchsCancelDrbkReason; //
-	private String prodCaseCd; //
-	private String b2bProdYn; //
-	private String dlvProdYn; //
-	private String mangBpId; //
-	private String regId; //
-	private String regDt; //
-	private String updId; //
-	private String updDt; //
+	private String prodId; // 상품_ID
+	private String contentsTypeCd; // 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104)
+	private long epsdCnt; // 에피소드_수
+	private String chnlCompNm; // 채널_회사_명
+	private String samplUrl; // 샘플_URL
+	private String saleYn; // 판매_여부
+	private String contentsOrdrCd; // 컨텐츠_오더_코드(D)
+	private String metaClsfCd; // 메타_구분_코드(CT28)
+	private String mgzinSubscripCd; // 매거진_구독_코드
+	private long mmMaxSaleQty; // 월_최대_판매_수량
+	private long dayMaxSaleQty; // 일_최대_판매_수량
+	private long mmMbrMaxPrchsQty; // 월_회원_최대_구매_수량
+	private long dayMbrMaxPrchsQty; // 일_회원_최대_구매_수량
+	private long firstMaxPrchsQty; // 1차_최대_구매_수량
+	private String usePlac; // 사용_장소
+	private String useLimtDesc; // 사용_제한_설명
+	private String noticeMatt; // 공지_사항
+	private String prchsCancelDrbkReason; // 구매_취소_환불_사유
+	private String prodCaseCd; // 상품_유형_코드(DP0063)
+	private String b2bProdYn; // B2B_상품_여부
+	private String dlvProdYn; // 배송_상품_여부
+	private String mangBpId; // 관리_BP_ID
+	private String srcContentId; // 소스_컨텐트_ID
+	private String regId; // 등록_ID
+	private String regDt; // 등록_일시
+	private String updId; // 수정_ID
+	private String updDt; // 수정_일시
 
 	public String getProdId() {
 		return this.prodId;
@@ -211,6 +212,14 @@ public class TbDpShpgProdInfo {
 
 	public void setMangBpId(String mangBpId) {
 		this.mangBpId = mangBpId;
+	}
+
+	public String getSrcContentId() {
+		return this.srcContentId;
+	}
+
+	public void setSrcContentId(String srcContentId) {
+		this.srcContentId = srcContentId;
 	}
 
 	public String getRegId() {

@@ -11,12 +11,21 @@
     </select>
     
     <!--아이템ID 생성 조회-->
-    <select id="itemGenerateId" resultType="String" >
+    <select id="itemGenerateId" resultType="String">
        /* CouponMapper.xml, itemGenerateId, SAC : 김형식 , 2013-01-08 */
        SELECT 
          (MAX(SUBSTR(PROD_ID,3,8))+2)
         FROM TB_DP_SHPG_PROD A
-    </select>        
+    </select>
+
+    <!--쿠폰ID,아이템ID 가져오기 조회-->
+    <select id="getGenerateId" resultType="String"  parameterType="String">
+       /* CouponMapper.xml, getCouponGenerateId, SAC : 김형식 , 2013-01-08 */
+       SELECT 
+         PROD_ID
+        FROM TB_DP_SHPG_PROD A
+        WHERE SRC_CONTENT_ID= #{scrContentId}
+    </select>       
     
     <!--TB_DP_PROD 테이블에 INSERT-->    
     <insert id="insertTbDpProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo">
@@ -28,18 +37,11 @@
             ,SVC_GRP_CD             /* 서비스_그룹_코드 */
             ,SVC_TYPE_CD            /* 서비스_타입_코드 */
             ,PROD_GRD_CD            /* 상품_등급_코드 */
-            ,EXPO_SELLER_NM         /* 노출_판매자_명 */
-            ,EXPO_SELLER_TELNO      /* 노출_판매자_전화번호 */
-            ,EXPO_SELLER_EMAIL      /* 노출_판매자_이메일 */
             ,CID                    /* CID */
-            ,MALL_CD                /* 상점_코드 */
             ,FEE_CASE_CD            /* 요금_유형_코드 */
-            ,FEE_UNIT_CD            /* 요금_단위_코드 */
             ,USE_PERIOD_UNIT_CD     /* 사용_기간_단위_코드 */
             ,USE_PERIOD             /* 사용_기간 */
             ,DRM_YN                 /* DRM_여부 */
-            ,DRM_SET_CD             /* DRM_설정_코드 */
-            ,DRM_SET_VALUE          /* DRM_설정_값 */
             ,REG_ID                 /* 등록_ID */
             ,REG_DT                 /* 등록_일시 */
             ,UPD_ID                 /* 수정_ID */
@@ -48,29 +50,23 @@
              #{prodId}
             ,#{prodChrgYn}
             ,#{sellerMbrNo}
-            ,#{svcGrpCdv
+            ,#{svcGrpCd}
             ,#{svcTypeCd}
             ,#{prodGrdCd}
-            ,#{expoSellerNm}
-            ,#{expoSellerTelno}
-            ,#{expoSellerEmail}
             ,#{cid}
-            ,#{mallCd}
             ,#{feeCaseCd}
-            ,#{feeUnitCd}
             ,#{usePeriodUnitCd}
             ,#{usePeriod}
             ,#{drmYn}
-            ,#{drmSetCd}
-            ,#{drmSetValue}
             ,#{regId}
             ,sysdate
             ,#{updId}
             ,sysdate
         )
     </insert>
-    
+     <!--TB_DP_PROD 테이블에 UPDATE-->  
     <update id="updateTbDpProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo">
+    /* CouponMapper.xml, updateTbDpProdInfo, SAC : 김형식 , 2013-01-08 */
         update TB_DP_PROD
         set
              PROD_CHRG_YN      = NVL(#{prodChrgYn},PROD_CHRG_YN)               /* 상품_유료_여부 */
@@ -78,26 +74,351 @@
             ,SVC_GRP_CD        = NVL(#{svcGrpCd},SVC_GRP_CD)                   /* 서비스_그룹_코드 */
             ,SVC_TYPE_CD       = NVL(#{svcTypeCd},SVC_TYPE_CD)                 /* 서비스_타입_코드 */
             ,PROD_GRD_CD       = NVL(#{prodGrdCd},PROD_GRD_CD)                 /* 상품_등급_코드 */
-            ,EXPO_SELLER_NM    = NVL(#{expoSellerNm},EXPO_SELLER_NM)           /* 노출_판매자_명 */
-            ,EXPO_SELLER_TELNO = NVL(#{expoSellerTelno},EXPO_SELLER_TELNO)     /* 노출_판매자_전화번호 */
-            ,EXPO_SELLER_EMAIL = NVL(#{expoSellerEmail},EXPO_SELLER_EMAIL)     /* 노출_판매자_이메일 */
             ,CID               = NVL(#{cid},CID)                               /* CID */
-            ,MALL_CD           = NVL(#{mallCd},MALL_CD)                        /* 상점_코드 */
             ,FEE_CASE_CD       = NVL(#{feeCaseCd},FEE_CASE_CD)                 /* 요금_유형_코드 */
-            ,FEE_UNIT_CD       = NVL(#{feeUnitCd},FEE_UNIT_CD)                 /* 요금_단위_코드 */
             ,USE_PERIOD_UNIT_CD= NVL(#{usePeriodUnitCd},USE_PERIOD_UNIT_CD)    /* 사용_기간_단위_코드 */
             ,USE_PERIOD        = NVL(#{usePeriod},USE_PERIOD)                  /* 사용_기간 */
             ,DRM_YN            = NVL(#{drmYn},DRM_YN)                          /* DRM_여부 */
-            ,DRM_SET_CD        = NVL(#{drmSetCd},DRM_SET_CD)                   /* DRM_설정_코드 */
-            ,DRM_SET_VALUE     = NVL(#{drmSetValue},DRM_SET_VALUE)             /* DRM_설정_값 */
-            ,REG_ID            = NVL(#{regId},REG_ID)                          /* 등록_ID */
-            ,REG_DT            = sysdate                                      /* 등록_일시 */
             ,UPD_ID            = NVL(#{updId},UPD_ID)                          /* 수정_ID */
             ,UPD_DT            = sysdate                                      /* 수정_일시 */
         where 1=1
          AND PROD_ID = #{prodId}
     </update>    
     
+        <!--TB_DP_SHPG_PROD 테이블에 INSERT-->    
+    <insert id="insertTbDpShpgProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo">
+      /* CouponMapper.xml, insertTbDpShpgProdInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_SHPG_PROD(
+             PROD_ID                      /* 상품_ID */
+            ,CONTENTS_TYPE_CD             /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
+            ,EPSD_CNT                     /* 에피소드_수 */
+            ,CHNL_COMP_NM                 /* 채널_회사_명 */
+            ,SALE_YN                      /* 판매_여부 */
+            ,CONTENTS_ORDR_CD             /* 컨텐츠_오더_코드(D) */
+            ,META_CLSF_CD                 /* 메타_구분_코드(CT28) */
+            ,MM_MAX_SALE_QTY              /* 월_최대_판매_수량 */
+            ,DAY_MAX_SALE_QTY             /* 일_최대_판매_수량 */
+            ,MM_MBR_MAX_PRCHS_QTY         /* 월_회원_최대_구매_수량 */
+            ,DAY_MBR_MAX_PRCHS_QTY        /* 일_회원_최대_구매_수량 */
+            ,FIRST_MAX_PRCHS_QTY          /* 1차_최대_구매_수량 */
+            ,USE_PLAC                     /* 사용_장소 */
+            ,USE_LIMT_DESC                /* 사용_제한_설명 */
+            ,NOTICE_MATT                  /* 공지_사항 */
+            ,PRCHS_CANCEL_DRBK_REASON     /* 구매_취소_환불_사유 */
+            ,PROD_CASE_CD                 /* 상품_유형_코드(DP0063) */
+            ,B2B_PROD_YN                  /* B2B_상품_여부 */
+            ,DLV_PROD_YN                  /* 배송_상품_여부 */
+            ,MANG_BP_ID                   /* 관리_BP_ID */
+            ,SRC_CONTENT_ID               /* 소스_컨텐트_ID */
+            ,REG_ID                       /* 등록_ID */
+            ,REG_DT                       /* 등록_일시 */
+            ,UPD_ID                       /* 수정_ID */
+            ,UPD_DT                       /* 수정_일시 */
+        ) values (
+             #{prodId}
+            ,#{contentsTypeCd}
+            ,#{epsdCnt}
+            ,#{chnlCompNm}
+            ,#{saleYn}
+            ,#{contentsOrdrCd}
+            ,#{metaClsfCd}
+            ,#{mmMaxSaleQty}
+            ,#{dayMaxSaleQty}
+            ,#{mmMbrMaxPrchsQty}
+            ,#{dayMbrMaxPrchsQty}
+            ,#{firstMaxPrchsQty}
+            ,#{usePlac}
+            ,#{useLimtDesc}
+            ,#{noticeMatt}
+            ,#{prchsCancelDrbkReason}
+            ,#{prodCaseCd}
+            ,#{b2bProdYn}
+            ,#{dlvProdYn}
+            ,#{mangBpId}
+            ,#{srcContentId}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+     <!--TB_DP_SHPG_PROD 테이블에 UPDATE--> 
+    <update id="updateTbDpShpgProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo">
+     /* CouponMapper.xml, updateTbDpShpgProdInfo, SAC : 김형식 , 2013-01-08 */
+        update TB_DP_SHPG_PROD
+        set
+             CONTENTS_TYPE_CD        = NVL(#{contentsTypeCd},CONTENTS_TYPE_CD)                  /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
+            ,EPSD_CNT                = NVL(#{epsdCnt},EPSD_CNT)                                 /* 에피소드_수 */
+            ,CHNL_COMP_NM            = NVL(#{chnlCompNm},CHNL_COMP_NM)                          /* 채널_회사_명 */
+            ,SAMPL_URL               = NVL(#{samplUrl},SAMPL_URL)                               /* 샘플_URL */
+            ,SALE_YN                 = NVL(#{saleYn},SALE_YN)                                   /* 판매_여부 */
+            ,CONTENTS_ORDR_CD        = NVL(#{contentsOrdrCd},CONTENTS_ORDR_CD)                  /* 컨텐츠_오더_코드(D) */
+            ,META_CLSF_CD            = NVL(#{metaClsfCd},META_CLSF_CD)                          /* 메타_구분_코드(CT28) */
+            ,MM_MAX_SALE_QTY         = NVL(#{mmMaxSaleQty},MM_MAX_SALE_QTY)                     /* 월_최대_판매_수량 */
+            ,DAY_MAX_SALE_QTY        = NVL(#{dayMaxSaleQty},DAY_MAX_SALE_QTY)                   /* 일_최대_판매_수량 */
+            ,MM_MBR_MAX_PRCHS_QTY    = NVL(#{mmMbrMaxPrchsQty},MM_MBR_MAX_PRCHS_QTY)            /* 월_회원_최대_구매_수량 */
+            ,DAY_MBR_MAX_PRCHS_QTY   = NVL(#{dayMbrMaxPrchsQty},DAY_MBR_MAX_PRCHS_QTY)          /* 일_회원_최대_구매_수량 */
+            ,FIRST_MAX_PRCHS_QTY     = NVL(#{firstMaxPrchsQty},FIRST_MAX_PRCHS_QTY)             /* 1차_최대_구매_수량 */
+            ,USE_PLAC                = NVL(#{usePlac},USE_PLAC)                                 /* 사용_장소 */
+            ,USE_LIMT_DESC           = NVL(#{useLimtDesc},USE_LIMT_DESC)                        /* 사용_제한_설명 */
+            ,NOTICE_MATT             = NVL(#{noticeMatt},NOTICE_MATT)                           /* 공지_사항 */
+            ,PRCHS_CANCEL_DRBK_REASON= NVL(#{prchsCancelDrbkReason},PRCHS_CANCEL_DRBK_REASON)    /* 구매_취소_환불_사유 */
+            ,PROD_CASE_CD            = NVL(#{prodCaseCd},PROD_CASE_CD)                          /* 상품_유형_코드(DP0063) */
+            ,B2B_PROD_YN             = NVL(#{b2bProdYn},B2B_PROD_YN)                            /* B2B_상품_여부 */
+            ,DLV_PROD_YN             = NVL(#{dlvProdYn},DLV_PROD_YN)                            /* 배송_상품_여부 */
+            ,MANG_BP_ID              = NVL(#{mangBpId},MANG_BP_ID)                              /* 관리_BP_ID */
+            ,SRC_CONTENT_ID          = NVL(#{srcContentId},SRC_CONTENT_ID)                      /* 소스_컨텐트_ID */
+            ,UPD_ID                  = NVL(#{updId},UPD_ID)                                     /* 수정_ID */
+            ,UPD_DT                  = sysdate                                                  /* 수정_일시 */
+        where 1=1
+        AND PROD_ID = #{prodId}
+    </update>    
+    
+        <!--TB_DP_PROD_DESC 테이블에 INSERT-->    
+    <insert id="insertTbDpProdDescInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo">
+      /* CouponMapper.xml, insertTbDpProdDescInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_PROD_DESC(
+             PROD_ID            /*  */
+            ,LANG_CD            /*  */
+            ,PROD_NM            /*  */
+            ,PROD_BASE_DESC     /*  */
+            ,PROD_DTL_DESC      /*  */
+            ,PROD_INTR_DSCR     /*  */
+            ,PROD_USE_MTD       /*  */
+            ,REG_ID             /*  */
+            ,REG_DT             /*  */
+            ,UPD_ID             /*  */
+            ,UPD_DT             /*  */
+        ) values (
+             #{prodId}
+            ,#{langCd}
+            ,#{prodNm}
+            ,#{prodBaseDesc}
+            ,#{prodDtlDesc}
+            ,#{prodIntrDscr}
+            ,#{prodUseMtd}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+     <!--TB_DP_PROD_DESC 테이블에 UPDATE--> 
+    <update id="updateTbDpProdDescInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo">
+     /* CouponMapper.xml, updateTbDpProdDescInfo, SAC : 김형식 , 2013-01-08 */
+        update TB_DP_PROD_DESC
+        set
+             LANG_CD       = NVL(#{langCd},LANG_CD)                /*  */
+            ,PROD_NM       = NVL(#{prodNm},PROD_NM)                /*  */
+            ,PROD_BASE_DESC= NVL(#{prodBaseDesc},PROD_BASE_DESC)    /*  */
+            ,PROD_DTL_DESC = NVL(#{prodDtlDesc},PROD_DTL_DESC)     /*  */
+            ,PROD_INTR_DSCR= NVL(#{prodIntrDscr},PROD_INTR_DSCR)    /*  */
+            ,PROD_USE_MTD  = NVL(#{prodUseMtd},PROD_USE_MTD)       /*  */
+            ,UPD_ID        = NVL(#{updId},UPD_ID)                  /*  */
+            ,UPD_DT        = sysdate                               /*  */
+        where 1=1
+       AND PROD_ID = #{prodId}
+    </update>        
+    
+    <!--TB_DP_PROD_CATALOG_MAPG 테이블에 INSERT-->    
+    <insert id="insertTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo">
+      /* CouponMapper.xml, insertTbDpProdCatalogMapgInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_PROD_CATALOG_MAPG(
+             PROD_ID        /* 상품_ID */
+            ,CATALOG_ID     /* 카탈로그_ID */
+            ,BASE_YN        /* 기본_여부 */
+            ,USE_YN         /* 사용_여부 */
+            ,REG_ID         /* 등록_ID */
+            ,REG_DT         /* 등록_일시 */
+            ,UPD_ID         /* 수정_ID */
+            ,UPD_DT         /* 수정_일시 */
+        ) values (
+             #{prodId}
+            ,#{catalogId}
+            ,#{baseYn}
+            ,#{useYn}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+    
+     <!--TB_DP_PROD_CATALOG_MAPG 테이블에 UPDATE--> 
+    <update id="updateTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo">
+     /* CouponMapper.xml, updateTbDpProdCatalogMapgInfo, SAC : 김형식 , 2013-01-08 */
+        update TB_DP_PROD_CATALOG_MAPG
+        set
+            ,BASE_YN   = NVL(#{baseYn},BASE_YN)         /* 기본_여부 */
+            ,USE_YN    = NVL(#{useYn},USE_YN)           /* 사용_여부 */
+            ,UPD_ID    = NVL(#{updId},UPD_ID)           /* 수정_ID */
+            ,UPD_DT    = sysdate                        /* 수정_일시 */
+        where 1=1
+       AND PROD_ID = #{prodId}
+    </update>           
+    
+    <!--TB_DP_PROD_RSHP 테이블에 INSERT-->    
+    <insert id="insertTbDpProdRshpInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo">
+      /* CouponMapper.xml, insertTbDpProdRshpInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_PROD_RSHP(
+             PROD_ID          /*  */
+            ,PART_PROD_ID     /*  */
+            ,REG_ID           /*  */
+            ,REG_DT           /*  */
+        ) values (
+             #{prodId}
+            ,#{partProdId}
+            ,#{regId}
+            ,sysdate
+        )
+    </insert>    
+    
+    <!--TB_DP_PROD_OPT 테이블에 INSERT-->    
+    <insert id="insertTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
+      /* CouponMapper.xml, insertTbDpProdOpt, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_PROD_OPT(
+             CHNL_PROD_ID     /* 채널_상품_ID */
+            ,EPSD_PROD_ID     /* 에피소드_상품_ID */
+            ,OPT1_NM          /* 옵션1_명 */
+            ,OPT2_NM          /* 옵션2_명 */
+            ,EXPO_ORD         /* 노출_순서 */
+            ,EXPO_YN          /* 노출_여부 */
+            ,REG_ID           /* 등록_ID */
+            ,REG_DT           /* 등록_일시 */
+            ,UPD_ID           /* 수정_ID */
+            ,UPD_DT           /* 수정_일시 */
+        ) values (
+             #{chnlProdId}
+            ,#{epsdProdId}
+            ,#{opt1Nm}
+            ,#{opt2Nm}
+            ,#{expoOrd}
+            ,#{expoYn}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+    
+     <!--TB_DP_PROD_OPT 테이블에 UPDATE--> 
+    <update id="updateTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
+     /* CouponMapper.xml, updateTbDpProdOpt, SAC : 김형식 , 2013-01-08 */
+        update TB_DP_PROD_OPT
+        set
+             OPT1_NM     = NVL(#{opt1Nm},OPT1_NM)            /* 옵션1_명 */
+            ,OPT2_NM     = NVL(#{opt2Nm},OPT2_NM)            /* 옵션2_명 */
+            ,EXPO_ORD    = NVL(#{expoOrd},EXPO_ORD)          /* 노출_순서 */
+            ,EXPO_YN     = NVL(#{expoYn},EXPO_YN)            /* 노출_여부 */
+            ,UPD_ID      = NVL(#{updId},UPD_ID)              /* 수정_ID */
+            ,UPD_DT      = sysdate                           /* 수정_일시 */
+        where 1=1
+        AND CHNL_PROD_ID = #{chnlProdId}
+        AND EPSD_PROD_ID = #{epsdProdId}
+    </update>       
+    
+    <!--TB_DP_TENANT_PROD 테이블에 INSERT-->    
+    <insert id="insertTbDpTenantProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo">
+      /* CouponMapper.xml, insertTbDpTenantProdInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_TENANT_PROD(
+             PROD_ID            /*  */
+            ,TENANT_ID          /*  */
+            ,PROD_STATUS_CD     /*  */
+            ,EXPO_YN            /*  */
+            ,EXPO_ORD           /*  */
+            ,REG_ID             /*  */
+            ,REG_DT             /*  */
+            ,UPD_ID             /*  */
+            ,UPD_DT             /*  */
+        ) values (
+             #{prodId}
+            ,#{tenantId}
+            ,#{prodStatusCd}
+            ,#{expoYn}
+            ,#{expoOrd}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+    
+     <!--TB_DP_TENANT_PROD 테이블에 UPDATE--> 
+    <update id="updateTbDpTenantProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo">
+     /* CouponMapper.xml, updateTbDpTenantProdInfo, SAC : 김형식 , 2013-01-08 */
+        update TB_DP_TENANT_PROD
+        set
+             PROD_STATUS_CD= NVL(#{prodStatusCd},PROD_STATUS_CD)    /*  */
+            ,EXPO_YN       = NVL(#{expoYn},EXPO_YN)                /*  */
+            ,EXPO_ORD      = NVL(#{expoOrd},EXPO_ORD)              /*  */
+            ,UPD_ID        = NVL(#{updId},UPD_ID)                  /*  */
+            ,UPD_DT        = sysdate                               /*  */
+        where 1=1
+          AND TENANT_ID = #{tenantId}
+          AND PROD_ID = #{prodId}
+    </update>      
+    
+   <!--TB_DP_TENANT_PROD_PRICE 테이블에 INSERT-->    
+    <insert id="insertTbDpTenantProdPriceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo">
+      /* CouponMapper.xml, insertTbDpTenantProdPriceInfo, SAC : 김형식 , 2013-01-08 */
+        insert into TB_DP_TENANT_PROD_PRICE(
+             TENANT_ID           /* 테넌트_ID */
+            ,PROD_ID             /* 상품_ID */
+            ,APPLY_START_DT      /* 적용_시작_일시 */
+            ,SEQ                 /* SEQ */
+            ,APPLY_END_DT        /* 적용_종료_일시 */
+            ,PROD_AMT            /* 상품_금액 */
+            ,CHNL_UNLMT_AMT      /* 채널_무제한_금액 */
+            ,CHNL_PERIOD_AMT     /* 채널_기간_금액 */
+            ,PROD_NET_AMT        /* 상품_정찰_금액 */
+            ,DC_RATE             /* 할인_율 */
+            ,DC_AMT              /* 할인_금액 */
+            ,TAX_CLSF            /* 세금_구분 */
+            ,REG_ID              /* 등록_ID */
+            ,REG_DT              /* 등록_일시 */
+            ,UPD_ID              /* 수정_ID */
+            ,UPD_DT              /* 수정_일시 */
+        ) values (
+             #{tenantId}
+            ,#{prodId}
+            ,sysdate
+            ,#{seq}
+            ,sysdate
+            ,#{prodAmt}
+            ,#{chnlUnlmtAmt}
+            ,#{chnlPeriodAmt}
+            ,#{prodNetAmt}
+            ,#{dcRate}
+            ,#{dcAmt}
+            ,#{taxClsf}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>
+    
+     <!--TB_DP_TENANT_PROD_PRICE 테이블에 UPDATE--> 
+    <update id="updateTbDpTenantProdPriceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo">
+     /* CouponMapper.xml, updateTbDpTenantProdPriceInfo, SAC : 김형식 , 2013-01-08 */
+        update TB_DP_TENANT_PROD_PRICE
+        set
+             APPLY_START_DT = sysdate                                 /* 적용_시작_일시 */
+            ,SEQ            = NVL(#{seq},SEQ)                         /* SEQ */
+            ,APPLY_END_DT   = sysdate                                 /* 적용_종료_일시 */
+            ,PROD_AMT       = NVL(#{prodAmt},PROD_AMT)                /* 상품_금액 */
+            ,CHNL_UNLMT_AMT = NVL(#{chnlUnlmtAmt},CHNL_UNLMT_AMT)     /* 채널_무제한_금액 */
+            ,CHNL_PERIOD_AMT= NVL(#{chnlPeriodAmt},CHNL_PERIOD_AMT)    /* 채널_기간_금액 */
+            ,PROD_NET_AMT   = NVL(#{prodNetAmt},PROD_NET_AMT)         /* 상품_정찰_금액 */
+            ,DC_RATE        = NVL(#{dcRate},DC_RATE)                  /* 할인_율 */
+            ,DC_AMT         = NVL(#{dcAmt},DC_AMT)                    /* 할인_금액 */
+            ,TAX_CLSF       = NVL(#{taxClsf},TAX_CLSF)                /* 세금_구분 */
+            ,UPD_ID         = NVL(#{updId},UPD_ID)                    /* 수정_ID */
+            ,UPD_DT         = sysdate                                 /* 수정_일시 */
+        where 1=1
+          AND TENANT_ID = #{tenantId}
+          AND PROD_ID = #{prodId}
+    </update>            
     
     <!--기존 ProductId를 가지고 새로 만든 productId 조회-->
     <select id="getProductID" resultType="String" parameterType="String">
