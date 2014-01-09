@@ -10,7 +10,8 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,13 +20,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.framework.core.util.StringUtil;
+import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
@@ -33,6 +36,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberUserCode;
+import com.skplanet.storeplatform.sac.member.common.idp.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
 /**
@@ -51,8 +57,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private UserSCI userSCI;
 
+	@Autowired
+	private IDPManager idpManager;
+
+	IDPReceiverM idpReceiverM;
+
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
+
+		/**
+		 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
+		 */
+		String systemId = "S001";
+		String tenantId = "S01";
 
 		CreateByMdnRes response = new CreateByMdnRes();
 
@@ -63,127 +80,111 @@ public class UserJoinServiceImpl implements UserJoinService {
 		logger.info("### opmdMdn : " + opmdMdn);
 
 		/**
-		 * 약관 목록 조회 TODO ((( 테넌트ID 하드코딩을 변경해야 한다. ))) DB 약관목록과 비교하여 상의 할경우 익셉션을 발생시킨다.
+		 * 필수 약관 동의여부 체크 TODO 테넌트 아이디 하드코딩 변경 해야함
 		 */
-		List<ClauseDTO> clauseDTO = this.mcc.getMandAgreeList("S01");
-		StringBuffer dbAgreeInfo = new StringBuffer();
-		for (ClauseDTO dto : clauseDTO) {
-			dbAgreeInfo.append(dto.getClauseItemCd());
-		}
-
-		/**
-		 * TODO 리스트 Sort 해야함
-		 */
-		StringBuffer reqAgreeInfo = new StringBuffer();
-		for (AgreementInfo info : req.getAgreementList()) {
-			if (StringUtils.equals(info.getIsExtraAgreement(), "Y")) {
-				reqAgreeInfo.append(info.getExtraAgreementId());
-			}
-		}
-
-		logger.info("## dbAgreeInfo  : {}", dbAgreeInfo);
-		logger.info("## reqAgreeInfo : {}", reqAgreeInfo);
-		if (!StringUtils.equals(dbAgreeInfo.toString(), reqAgreeInfo.toString())) {
+		if (this.checkAgree(req.getAgreementList(), tenantId)) {
 			logger.error("## 필수 약관 미동의");
 			throw new RuntimeException("필수 약관 미동의");
 		}
 
 		/**
-		 * TODO (IDP 연동) 무선회원 가입
+		 * (IDP 연동) 무선회원 가입
 		 */
-		Hashtable<String, Object> param = new Hashtable<String, Object>();
-		param.put("cmd", "joinForWap");
-		param.put("user_mdn", "01011112222");
-		param.put("mdn_corp", "SKT");
-		param.put("sp_auth_key", "getSpAuthKey()");
-		param.put("sp_id", "OMP10000");
-		param.put("resp_type", "2");
-		param.put("resp_flow", "resp");
-		// IDPReceiverM idpReceiverM = this.idpService.join4Wap(req.getDeviceId());
-		// IDPReceiverM idpReceiverM = new IDPReceiverM();
-		// idpReceiverM.getResponseHeader().getResult();
+		this.idpReceiverM = this.idpManager.join4Wap(req.getDeviceId());
+		logger.info("## join4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
+		logger.info("## join4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
 
-		// 정상 가입이면................
-		String resultCode = "1000";
-		if (StringUtils.equals(resultCode, "1000")) {
-			logger.info("## IDP 연동 성공!!!!");
+		/**
+		 * 무선회원 연동 성공 여부에 따라 분기
+		 */
+		if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+			logger.info("## IDP 연동 성공 ==============================================");
 
 			/**
-			 * TODO (SC 연동) 회원 정보 등록
+			 * (SC 연동) 회원 정보 등록 TODO (이슈 : sc 컴포넌트 기능이 완료되면 파라미터들 다시한번 확인)
 			 */
 			// SC 공통정보 setting
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID("S001");
-			commonRequest.setTenantID("S01");
+			commonRequest.setSystemID(systemId);
+			commonRequest.setTenantID(tenantId);
 
 			// SC 사용자 기본정보 setting
 			UserMbr userMbr = new UserMbr();
-			userMbr.setImMbrNo("IDP MBRNO2");
-			userMbr.setUserType("US011501");// 모바일회원
-			userMbr.setUserMainStatus("US010201");// 모바일전용회원
-			userMbr.setUserSubStatus("US010301");// 신청
-			userMbr.setImRegDate("19001212");
+			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
+			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
+			userMbr.setUserType(MemberUserCode.USER_TYPE_MOBILE.getValue()); // 모바일회원
+			userMbr.setUserMainStatus(MemberUserCode.USER_MAIN_STATUS_1.getValue()); // 모바일전용회원
+			userMbr.setUserSubStatus(MemberUserCode.USER_SUBS_TATUS_1.getValue()); // 신청
+			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getDeviceId());// mdn, uuid 받는데로 넣는다. (SC 확인함.)
-
-			// // if() {
-			// // SC 법정대리인 정보 setting
-			// MbrLglAgent mbrLglAgent = new MbrLglAgent();
-			// mbrLglAgent.setParentBirthDay(req.getParentBirth());
-			// mbrLglAgent.setParentEmail(req.getParentEmail());
-			// mbrLglAgent.setParentMDN(req.getParentMdn());
-			// // }
 
 			// SC 이용약관 정보 setting
 			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+			for (AgreementInfo info : req.getAgreementList()) {
+				MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
+				mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
+				mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
+				mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+				mbrClauseAgreeList.add(mbrClauseAgree);
+			}
+
+			if (StringUtils.isNotEmpty(req.getOwnBirth())) {
+				// SC 법정대리인 정보 setting
+				MbrLglAgent mbrLglAgent = new MbrLglAgent();
+				mbrLglAgent.setParentBirthDay(req.getParentBirth());
+				mbrLglAgent.setParentEmail(req.getParentEmail());
+				mbrLglAgent.setParentMDN(req.getParentMdn());
+			}
 
 			// SC 사용자 가입요청 setting
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 			createUserRequest.setCommonRequest(commonRequest);
 			createUserRequest.setUserMbr(userMbr);
-			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-
-			logger.info("#### ResponseCode : " + createUserResponse.getCommonResponse().getResultCode());
-			logger.info("#### ResponseMsg  : " + createUserResponse.getCommonResponse().getResultMessage());
-
-			logger.info("userKey" + createUserResponse.getUserKey());
-			logger.info("UserMainStatus" + createUserResponse.getUserMainStatus());
-			logger.info("UserSubStatus" + createUserResponse.getUserSubStatus());
+			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
 
 			/**
-			 * 폰정보 조회
+			 * TODO sc 응답결과가 제대로 들어 오지 않음. 확인 요청함!!!
+			 */
+			logger.info("## SCI Request Info : {}", createUserRequest.toString());
+			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+
+			logger.info("## ResponseCode   : " + createUserResponse.getCommonResponse().getResultCode());
+			logger.info("## ResponseMsg    : " + createUserResponse.getCommonResponse().getResultMessage());
+			logger.info("## UserKey        : {}", createUserResponse.getUserKey());
+			logger.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
+			logger.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
+
+			/**
+			 * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
+			 */
+			/**
+			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
 			 */
 			// Device device = this.mcc.getPhoneInfo(req.getDeviceModelNo());
 			// logger.info("device : {}", device.getModelNm());
 			// logger.info("device : {}", device.getEngModelNm());
-			/**
-			 * TODO (SC 연동) 휴대기기 정보 등록
-			 */
-
-			/**
-			 * TODO 구매이력 이관 여부 [기존회원Key, 신규회원 Key]
-			 */
-			String key = "Y";
-			if (StringUtil.equals(key, "Y")) {
-				/**
-				 * 구매이력 이관 호출
-				 */
-			}
+			logger.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
 
 			response.setUserKey(createUserResponse.getUserKey());
 
-		} else if (StringUtils.equals(resultCode, "2100")) {
+		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
+
 			/**
-			 * TODO IDP 회원 기가입 상태인 경우 (IDP 연동) 무선회원 해지
+			 * (IDP 연동) 무선회원 해지
 			 */
+			logger.info("## IDP 무선회원 해지 연동 Start =================");
+			this.idpReceiverM = this.idpManager.secedeUser4Wap(req.getDeviceId());
+			logger.info("## secedeUser4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
+			logger.info("## secedeUser4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
+
 			logger.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 			throw new RuntimeException("IDP 무선회원 가입 실패");
-		} else {
-			/**
-			 * 2000 정의되지 않은 요청 2001 잘못된 요청 데이터 2002 필수 파라메타를 전달 받지 못함 2016 SP IP 검증 실패 2100 이미 서비스에 등록한 MDN 2216 UAPS로부터
-			 * MDN의 서비스 관리번호를 얻지 못함. 4200 UAPS 연동 오류 4201 UAPS 연동 간 SKT 사용자 인증 실패 5500 IDP에서 요청수행중 오류 발생(기타오류)
-			 */
+
+		} else { // 기타
+
 			logger.info("## IDP 무선회원 가입 연동 실패");
 			throw new RuntimeException("IDP 무선회원 가입 실패");
+
 		}
 
 		return response;
@@ -199,4 +200,83 @@ public class UserJoinServiceImpl implements UserJoinService {
 		return result;
 	}
 
+	/**
+	 * <pre>
+	 * 필수 약관 동의 정보를 체크 한다.
+	 * </pre>
+	 * 
+	 * @param getAgreementList
+	 *            요청 약관 동의 정보
+	 * @param tenantId
+	 *            테넌트 아이디
+	 * @return 하나라도 미동의시 : true
+	 * @throws Exception
+	 */
+	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) throws Exception {
+
+		/**
+		 * DB 약관 목록 조회 sorting
+		 */
+		List<ClauseDTO> dbAgreementList = this.mcc.getMandAgreeList(tenantId);
+		Comparator<ClauseDTO> dbComparator = new Comparator<ClauseDTO>() {
+			@Override
+			public int compare(ClauseDTO value1, ClauseDTO value2) {
+				return value1.getClauseItemCd().compareTo(value2.getClauseItemCd());
+			}
+		};
+		Collections.sort(dbAgreementList, dbComparator);
+
+		// sorting data setting
+		StringBuffer sortDbAgreeInfo = new StringBuffer();
+		for (ClauseDTO sortInfo : dbAgreementList) {
+			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
+		}
+		logger.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);
+
+		/**
+		 * 요청 약관 목록 조회 sorting
+		 */
+		Comparator<AgreementInfo> comparator = new Comparator<AgreementInfo>() {
+			@Override
+			public int compare(AgreementInfo o1, AgreementInfo o2) {
+				return o1.getExtraAgreementId().compareTo(o2.getExtraAgreementId());
+			}
+		};
+		Collections.sort(agreementList, comparator);
+
+		// sorting data setting
+		StringBuffer sortAgreeInfo = new StringBuffer();
+		for (AgreementInfo info : agreementList) {
+			if (StringUtils.equals(info.getIsExtraAgreement(), "Y")) {// 약관 동의한것만 비교대상으로 세팅
+				sortAgreeInfo.append(info.getExtraAgreementId());
+			}
+		}
+		logger.info("## DB 요청약관목록 : {}", sortAgreeInfo);
+
+		/**
+		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
+		 */
+		if (!StringUtils.equals(sortDbAgreeInfo.toString(), sortAgreeInfo.toString())) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	/**
+	 * TODO SC 회원 가입 연동시 데이타 세팅하는 부분 가져와서 Method로 빼자!!
+	 * 
+	 * <pre>
+	 * SC 회원 가입 연동시 데이타 세팅
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	private CreateUserRequest convertCreateUserRequest() {
+
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+
+		return createUserRequest;
+	}
 }

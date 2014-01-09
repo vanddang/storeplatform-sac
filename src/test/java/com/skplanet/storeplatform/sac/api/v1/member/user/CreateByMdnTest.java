@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,12 +64,13 @@ public class CreateByMdnTest {
 
 		new TestCaseTemplate(this.mvc).url("/member/user/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 
 						CreateByMdnReq reqJson = new CreateByMdnReq();
-						reqJson.setDeviceId("01090556567");
+						reqJson.setDeviceId("01088870008");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
 						reqJson.setDeviceModelNo("SHW-M190S");
@@ -108,6 +111,8 @@ public class CreateByMdnTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByMdnRes res = (CreateByMdnRes) result;
+						System.out.println(res);
+						assertNotNull(res);
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
