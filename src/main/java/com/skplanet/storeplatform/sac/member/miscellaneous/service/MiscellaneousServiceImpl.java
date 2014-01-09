@@ -108,7 +108,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				List<KeySearch> keySearchs = new ArrayList<KeySearch>();
 
 				KeySearch keySearch = new KeySearch();
-				keySearch = new KeySearch();
 				keySearch.setKeyType("DEVICE_ID");
 				keySearch.setKeyString(msisdn);
 				keySearchs.add(keySearch);
