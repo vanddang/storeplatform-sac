@@ -71,8 +71,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		String systemId = "S001";
 		String tenantId = "S01";
 
-		CreateByMdnRes response = new CreateByMdnRes();
-
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
@@ -165,6 +163,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 			// logger.info("device : {}", device.getEngModelNm());
 			logger.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
 
+			/**
+			 * 결과 세팅
+			 */
+			CreateByMdnRes response = new CreateByMdnRes();
 			response.setUserKey(createUserResponse.getUserKey());
 
 		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
