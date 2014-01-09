@@ -25,16 +25,14 @@ public class ExistRes extends CommonInfo {
 	private String userId;
 	/* 실명인증 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
 	private String isRealName;
-	/* 14세 미만 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
-	private String under14;
 	/* 14세 미만 법정대리인 동의 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
 	private String agencyYn;
-	/* 상품 19금 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
-	private String prodAdultYn;
-	/* 19세 미만 여부 Value : Y/N, Tstore회원이 아닐 경우 null */
-	private String under19;
 	/* 회원 이메일 정보 Value : 없을 경우 null */
 	private String userEmail;
+	/* 회원 메인 상태 코드 */
+	private String userMainStatus;
+	/* 회원 서브 상태 코드 */
+	private String userSubStatus;
 
 	public String getUserKey() {
 		return this.userKey;
@@ -76,14 +74,6 @@ public class ExistRes extends CommonInfo {
 		this.isRealName = isRealName;
 	}
 
-	public String getUnder14() {
-		return this.under14;
-	}
-
-	public void setUnder14(String under14) {
-		this.under14 = under14;
-	}
-
 	public String getAgencyYn() {
 		return this.agencyYn;
 	}
@@ -92,28 +82,28 @@ public class ExistRes extends CommonInfo {
 		this.agencyYn = agencyYn;
 	}
 
-	public String getProdAdultYn() {
-		return this.prodAdultYn;
-	}
-
-	public void setProdAdultYn(String prodAdultYn) {
-		this.prodAdultYn = prodAdultYn;
-	}
-
-	public String getUnder19() {
-		return this.under19;
-	}
-
-	public void setUnder19(String under19) {
-		this.under19 = under19;
-	}
-
 	public String getUserEmail() {
 		return this.userEmail;
 	}
 
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+
+	public String getUserMainStatus() {
+		return this.userMainStatus;
+	}
+
+	public void setUserMainStatus(String userMainStatus) {
+		this.userMainStatus = userMainStatus;
+	}
+
+	public String getUserSubStatus() {
+		return this.userSubStatus;
+	}
+
+	public void setUserSubStatus(String userSubStatus) {
+		this.userSubStatus = userSubStatus;
 	}
 
 	public static long getSerialversionuid() {
