@@ -61,6 +61,22 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_TEL_NO = "TEL_NO"; // 사용자 연락처
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
 
+	/** 휴대기기 부가속성 */
+	public static final String DEVICE_EXTRA_OMPDOWNLOADER_YN = "US011401"; //OMP DOWNLOADER 설치 여부
+	public static final String DEVICE_EXTRA_STANDBYSCREEN_YN = "US011402"; //대기화면 설정 여부
+	public static final String DEVICE_EXTRA_IMMNGNUM = "US011403"; //통합서비스관리번호
+	public static final String DEVICE_EXTRA_UACD = "US011404"; //UA 코드
+	public static final String DEVICE_EXTRA_OMPSUPPORT_YN = "US011405"; //OMP 지원 단말 여부
+	public static final String DEVICE_EXTRA_OSVERSION = "US011406"; //OS 버전
+	public static final String DEVICE_EXTRA_SCVERSION = "US011407"; //샵클 버전
+	public static final String DEVICE_EXTRA_APPSTATISTICS_YN = "US011408"; //앱 사용통계 사용여부
+	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011409"; //도토리 인증일
+	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011410"; //도토리 인증여부
+	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011411"; //임베디드 여부
+	public static final String DEVICE_EXTRA_OMPUACE = "US011412"; //OMD UA코드
+	public static final String DEVICE_EXTRA_ROOTING_YN = "US011413"; //루팅 여부
+	
+
 	/**
 	 * 판매자 회원 상수들
 	 * 
