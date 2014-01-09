@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResp
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
@@ -25,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -117,48 +120,69 @@ public class DeviceServiceImpl implements DeviceService {
 		String isPrimary = StringUtil.nvl(req.getIsPrimary(), ""); // 대표폰 여부
 		String imei = StringUtil.nvl(req.getImei(), ""); // imei
 		String isRecvSms = StringUtil.nvl(req.getIsRecvSms(), ""); // sms 수신여부
-
-		/* SC회원 콤포넌트 휴대기기 정보에 정의 되지 않은 필드들 */
-		String gmailAddr = StringUtil.nvl(req.getGmailAddr(), ""); // gmailAddr
+		String deviceAccount = StringUtil.nvl(req.getDeviceAccount(), ""); // gmailAddr
+		
 		String rooting = StringUtil.nvl(req.getRooting(), ""); // rooting 여부
 		String osVer = req.getOsVer() == null ? StringUtil.nvl(req.getOsVerOrg(), "") : StringUtil.nvl(req.getOsVer(), ""); // OS버젼,OS오리지날버젼
 		String scVer = StringUtil.nvl(req.getScVer(), ""); // SC버젼
 		String uacd = StringUtil.nvl(req.getUacd(), ""); // uacd
 		String dotoriAuthDate = StringUtil.nvl(req.getDotoriAuthDate(), ""); // 도토리인증일
 		String dotoriAuthYn = StringUtil.nvl(req.getDotoriAuthYn(), ""); // 도토리인증여부
-		/* SC회원 콤포넌트 휴대기기 정보에 정의 되지 않은 필드들 */
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
-		key.setKeyType("DEVICE_ID ");
+		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 		key.setKeyString(req.getDeviceId());
 		keySearchList.add(key);
 		schDeviceReq.setKeySearchList(keySearchList);
 
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
-		UserMbrDevice userMbrDevicd = schDeviceRes.getUserMbrDevice();
+		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
-		if (!imMngNum.equals(userMbrDevicd.getImMngNum())) {
+		if (!imMngNum.equals(userMbrDevice.getImMngNum())) {
 
-		} else if (!deviceTelecom.equals(userMbrDevicd.getDeviceTelecom())) {
+		} else if (!deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
 
-		} else if (!deviceModelNo.equals(userMbrDevicd.getDeviceModelNo())) {
+		} else if (!deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 
-		} else if (!deviceNickName.equals(userMbrDevicd.getDeviceNickName())) {
+		} else if (!deviceNickName.equals(userMbrDevice.getDeviceNickName())) {
 
-		} else if (!isPrimary.equals(userMbrDevicd.getIsPrimary())) {
+		} else if (!isPrimary.equals(userMbrDevice.getIsPrimary())) {
 
-		} else if (!imei.equals(userMbrDevicd.getNativeID())) {
+		} else if (!imei.equals(userMbrDevice.getNativeID())) {
 
-		} else if (!isRecvSms.equals(userMbrDevicd.getIsRecvSMS())) {
+		} else if (!isRecvSms.equals(userMbrDevice.getIsRecvSMS())) {
+
+		} else if (!deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
 
 		}
+		
+		List<UserMbrDeviceDetail> deviceExtraList = userMbrDevice.getUserMbrDeviceDetail();
+		if(deviceExtraList.size() > 0){
+			for(UserMbrDeviceDetail extraInfo : deviceExtraList){
+				
+				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)){
+					
+				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION)){
+					
+				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION)){
+					
+				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)){
+					
+				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)){
+					
+				} else if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)){
+					
+				}
+				
+			}
+		}
+		
 
 		/* 기기정보 업데이트 */
 
 	}
-
 }

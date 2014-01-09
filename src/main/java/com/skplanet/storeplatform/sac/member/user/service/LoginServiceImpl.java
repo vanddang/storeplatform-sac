@@ -37,8 +37,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Service
 public class LoginServiceImpl implements LoginService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private UAPSSCI uapsSCI; // UAPS 연동 인터페이스
@@ -62,8 +61,8 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		String deviceId = req.getDeviceId();
-		String userStateCd = ""; // 사용자구분코드(US011501:기기사용자,US011502:IDP사용자,US011503:OneID사용자)
-		String mainStatusCd = ""; // 메인상태코드(US010201:정상,US010202:탈퇴,US010203:가가입,US010204:일시정지,US010205:전환)
+		String userStateCd = ""; // 사용자구분코드
+		String mainStatusCd = ""; // 메인상태코드
 
 		/* 모번호 조회 */
 		OpmdRes ompdRes = this.uapsSCI.getOpmdInfo(deviceId);
@@ -82,16 +81,11 @@ public class LoginServiceImpl implements LoginService {
 		keySearchList.add(key);
 		schUserReq.setKeySearchList(keySearchList);
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-
-		/* 회원 상태 확인 */
-		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("무선가입상태가 아닙니다.");
-		}
-
 		userStateCd = schUserRes.getUserMbr().getUserState();
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
-
-		if (StringUtil.equals(mainStatusCd, MemberConstants.MAIN_STATUS_SECEDE)) {// 탈퇴
+		
+		/* 회원 상태 확인 */
+		if (schUserRes.getUserMbr() == null || StringUtil.equals(mainStatusCd, MemberConstants.MAIN_STATUS_SECEDE)) {
 			throw new Exception("무선가입상태가 아닙니다.");
 		}
 
@@ -106,7 +100,7 @@ public class LoginServiceImpl implements LoginService {
 			IDPReceiverM idpReceiver = this.idpManager.authForWap(deviceId);
 			if (!idpReceiver.getResponseHeader().getResult().equals("00000")) {
 				/* 로그인 실패이력 저장 */
-				this.logInSCComponent(deviceId, null, "N", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID)  ? "Y" : "N");
+				this.logInSCComponent(deviceId, null, "N", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
 				throw new Exception(idpReceiver.getResponseHeader().getResult());
 			}
 		}
@@ -118,7 +112,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
 		deviceInfo.setImei(req.getImei());
 		deviceInfo.setRooting(req.getRooting());
-		deviceInfo.setGmailAddr(req.getGmailAddr());
+		deviceInfo.setDeviceAccount(req.getDeviceAccount());
 		deviceInfo.setScVer(req.getScVer());
 		deviceInfo.setOsVerOrg(req.getOsVerOrg());
 		this.deviceService.mergeDeviceInfo(deviceInfo);
@@ -126,34 +120,32 @@ public class LoginServiceImpl implements LoginService {
 		/* 로그인 성공이력 저장 */
 		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
 
-		if (loginRes.getIsLoginSuccess().equals("Y")) {
+		if (StringUtil.equals(loginRes.getIsLoginSuccess(), "Y")) {
 			/* 로그인 Response 셋팅 */
 			String userStateVal = "";
-			if (userStateCd.equals("US011501")) {
+			if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_MOBILE)) {
 				userStateVal = "mobile";
-			} else if (userStateCd.equals("US011502")) {
+			} else if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_IDPID)) {
 				userStateVal = "tstoreId";
-			} else if (userStateCd.equals("US011503")) {
+			} else if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_ONEID)) {
 				userStateVal = "oneId";
 			}
 
-			if (mainStatusCd.equals("US010203")) {
+			if (StringUtil.equals(mainStatusCd, MemberConstants.MAIN_STATUS_WATING)) {
 				userStateVal = "temporary";
 			}
 
 			res.setUserKey(schUserRes.getUserMbr().getUserKey());
-			// res.setUserAuthKey(userAuthKey);
 			res.setUserStatus(userStateVal);
 		} else { // 로그인 실패
-
+			throw new Exception("SC 콤포넌트 로그인 실패");
 		}
 
 		return res;
 	}
 
 	@Override
-	public AuthorizeByIdRes authorizeById(HeaderVo headerVo,
-			AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(HeaderVo headerVo, AuthorizeByIdReq req) throws Exception {
 
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
@@ -196,8 +188,7 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.logInSCComponent(userId, userPw, "Y",
-				userStateCd.equals("US011503") ? "Y" : "N");
+		LogInUserResponse loginRes = this.logInSCComponent(userId, userPw, "Y",	userStateCd.equals("US011503") ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -214,10 +205,16 @@ public class LoginServiceImpl implements LoginService {
 	 * 변동성 회원 처리
 	 * 
 	 * @param deviceId
+	 * @throws Exception 
 	 */
-	public void volatileMemberPoc(String deviceId) {
+	public void volatileMemberPoc(String deviceId) throws Exception {
 		/* 1. 무선회원 가입 */
-
+		IDPReceiverM idpReceiver = this.idpManager.join4Wap(deviceId);
+		if (!idpReceiver.getResponseHeader().getResult().equals("00000")) {
+			throw new Exception("변동성 회원 가입실패");
+		}
+		
+		
 		/* 2. 회원정보 수정 */
 	}
 
@@ -229,8 +226,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param isOneId
 	 * @return
 	 */
-	public LogInUserResponse logInSCComponent(String userId, String userPw,
-			String isSuccess, String isOneId) {
+	public LogInUserResponse logInSCComponent(String userId, String userPw, String isSuccess, String isOneId) {
 		LogInUserRequest loginReq = new LogInUserRequest();
 		loginReq.setUserID(userId);
 		if (userPw != null)
