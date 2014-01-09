@@ -12,22 +12,7 @@ package com.skplanet.storeplatform.sac.other.search.repository;
 import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
 import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 
-/**
- * 
- * 검색 E/C를 연동하는 Repository
- * 
- * Updated on : 2014. 1. 7. Updated by : 김현일, 인크로스
- */
 public interface SearchRepository {
-	/**
-	 * 
-	 * <pre>
-	 * 검색 Repository 를 연동한다.
-	 * </pre>
-	 * 
-	 * @param ecSearchReq
-	 *            ecSearchReq
-	 * @return TstoreSearchRes
-	 */
+
 	public TstoreSearchRes search(TstoreSearchReq ecSearchReq);
 }

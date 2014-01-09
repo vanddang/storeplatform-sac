@@ -19,8 +19,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -45,18 +43,10 @@ import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.other.search.repository.SearchRepository;
 
-/**
- * 
- * 검색 서비스 Class 구현체
- * 
- * Updated on : 2014. 1. 6. Updated by : 김현일, 인크로스
- */
 @Profile(value = { "dev", "local" })
 @Service
 @Transactional
 public class SearchServiceSampleImpl implements SearchService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Autowired
 	private SearchRepository searchRepository;
@@ -67,9 +57,6 @@ public class SearchServiceSampleImpl implements SearchService {
 	@Autowired
 	private CategoryService categoryService;
 
-	/**
-	 * 요청 정렬관련 Map
-	 */
 	private final Map<String, String> orderMap;
 
 	public SearchServiceSampleImpl() {
@@ -84,30 +71,17 @@ public class SearchServiceSampleImpl implements SearchService {
 		this.orderMap.put("popular", "D");
 	}
 
-	/**
-	 * webtoonUrl 셋팅
-	 */
 	@Value("#{propertiesForSac['nate.tisp.json.webtoon.url']}")
 	private String webtoonUrl;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.other.search.service.SearchService#search(com.skplanet.storeplatform.sac.client
-	 * .other.vo.search.SearchReq)
-	 */
 	@Override
 	public SearchRes search(SearchReq searchReq) {
-
-		LOGGER.debug("Search Service");
 
 		// TB_CM_DEVICE 정보조회
 		// UA_CD 및 파라미터 조작시 필요
 		Device device = this.commonService.getDevice(searchReq.getDeviceModelNo());
 
 		if (device == null) {
-			LOGGER.warn("device is null");
 			throw new RuntimeException("device is null");
 		}
 		TstoreSearchReq ecSearchReq = new TstoreSearchReq();
@@ -137,26 +111,11 @@ public class SearchServiceSampleImpl implements SearchService {
 			ecSearchReq.setSc(sc);
 		// E/C 연동 후 String 형태의 JSON을 전달 받음.
 
-		LOGGER.debug("exSearchReq : {}", ecSearchReq);
-
 		TstoreSearchRes tstoreSearchRes = this.searchRepository.search(ecSearchReq);
-
-		LOGGER.debug("exSearchRes : {}", tstoreSearchRes);
 		// 데이터 가공
 		return this.getResultData(searchReq, ecSearchReq, tstoreSearchRes);
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 카테고리 셋팅.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @param exSearchReq
-	 *            exSearchReq
-	 */
 	private void setCategory(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 카테고리가 비어있거나, ALL이면 skip(통합검색)
 		if (StringUtils.isBlank(searchReq.getCategory()) || StringUtils.equals(searchReq.getCategory(), "all"))
@@ -173,17 +132,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		tstoreSearchReq.setCount(searchReq.getCount());
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 검색 기간 셋팅.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @param exSearchReq
-	 *            exSearchReq
-	 */
 	private void setDateFromTo(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 
 		// DateType이 존재하지 않으면 skip.
@@ -205,15 +153,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		tstoreSearchReq.setDateTo(DateFormatUtils.format(to, "yyyyMMdd"));
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 성인인증여부 셋팅.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 * @param exSearchReq
-	 */
 	private void setAdult(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 미실명인증 - A(전체노출)
 		// 실명인증(성인) - Y(성인컨텐츠포함)
@@ -224,17 +163,6 @@ public class SearchServiceSampleImpl implements SearchService {
 			tstoreSearchReq.setAdult(searchReq.getAdultYN());
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 검색 정렬 셋팅.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @param exSearchReq
-	 *            exSearchReq
-	 */
 	public void setOrder(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 정렬기준이 없으면 무조건 최신
 		if (!this.orderMap.containsKey(searchReq.getOrderedBy())) {
@@ -245,19 +173,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		}
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 그외 MetaData 셋팅.
-	 * </pre>
-	 * 
-	 * @param device
-	 *            device
-	 * @param searchReq
-	 *            searchReq
-	 * @param exSearchReq
-	 *            exSearchReq
-	 */
 	private void setMeta(Device device, SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// TB_CM_DEVICE의 UA_CD를 조회한다.
 		tstoreSearchReq.setMeta13(device.getUaCd());
@@ -328,20 +243,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		}
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 검색 결과 가공.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @param ecSearchReq
-	 *            ecSearchReq
-	 * @param exSearchRes
-	 *            exSearchRes
-	 * @return
-	 */
 	private SearchRes getResultData(SearchReq searchReq, TstoreSearchReq tstoreSearchReq,
 			TstoreSearchRes tstoreSearchRes) {
 
@@ -349,7 +250,7 @@ public class SearchServiceSampleImpl implements SearchService {
 				|| tstoreSearchRes.getResponse().getHeader() == null
 				|| tstoreSearchRes.getResponse().getHeader().getTotalCount() <= 0) {
 			// 추천상품리턴..
-			return this.getResultRecomData(searchReq);
+			return this.getResultRecomData(searchReq, tstoreSearchRes);
 		}
 		// 무조건 데이터가 있는 경우임.
 		Header header = tstoreSearchRes.getResponse().getHeader();
@@ -402,30 +303,11 @@ public class SearchServiceSampleImpl implements SearchService {
 		return searchRes;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 검색결과가 없을경우 T Store 운영자 추천상품 조회.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @return SearchRes
-	 */
-	private SearchRes getResultRecomData(SearchReq searchReq) {
-		return null;
+	private SearchRes getResultRecomData(SearchReq searchReq, TstoreSearchRes tstoreSearchRes) {
+
+		return new SearchRes();
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 검색 상품 리스트 가공.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 * @param docList
-	 * @return
-	 */
 	private List<Search> getProductList(SearchReq searchReq, List<Doc> docList) {
 		List<Search> productList = new ArrayList<Search>();
 		String topCatCd = "";
@@ -591,18 +473,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		return productList;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * WebtoonURL 가공.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @param doc
-	 *            doc
-	 * @return String
-	 */
 	private String getWebtoonUrl(SearchReq searchReq, Doc doc) {
 
 		// webtoonURL 설정파일로
@@ -612,19 +482,9 @@ public class SearchServiceSampleImpl implements SearchService {
 				.queryParam("token", this.getToken(searchReq))
 				.queryParam("phone_model_cd=", searchReq.getDeviceModelNo()).build();
 
-		return uriComponents.toUriString();
+		return uriComponents.encode().toUriString();
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * DPI Mapping.
-	 * </pre>
-	 * 
-	 * @param doc
-	 *            doc
-	 * @return String
-	 */
 	private String getDpiMapping(Doc doc) {
 		String dpi = "";
 		String topCatCd = doc.getMeta9();
@@ -697,16 +557,6 @@ public class SearchServiceSampleImpl implements SearchService {
 		return fileLoc;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * WebtoonURL 가공시 Token값 생성.
-	 * </pre>
-	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @return String
-	 */
 	private String getToken(SearchReq searchReq) {
 		StringBuffer token = new StringBuffer();
 
