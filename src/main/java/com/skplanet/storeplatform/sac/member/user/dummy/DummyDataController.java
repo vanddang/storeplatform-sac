@@ -356,7 +356,7 @@ public class DummyDataController {
 		res.setUserType("US011501");
 		res.setUserId("hkd");
 		res.setIsRealName("N");
-		res.setAgencyYn(null);
+		res.setAgencyYn("Y");
 		res.setUserEmail("hkd@aaaa.com");
 
 		return res;
