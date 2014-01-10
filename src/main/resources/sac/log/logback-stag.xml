@@ -1,20 +1,80 @@
+<!-- ====================================================================  
+# Important
+# CONSOLE APPENDER NAME : CONSOLE
+# CUSTOM APPENDER NAMING RULE : ${projectName}_APPEND_NAME
+# ex) MEMBER_FILE_APPENDER
+==================================================================== -->
 <included>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+    <appender name="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/sac/svc/service_storeplatform-sac.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/sac/svc/service_storeplatform-sac_%d{yyyyMMdd}.log</FileNamePattern>            
+        </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %m%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${instanceName}|%X{type}|%logger{36}:%file:%line]\t%msg%n</pattern>
         </layout>
     </appender>
-
-    <logger name="org.springframework" additivity="false">
-        <level value="DEBUG" />
-        <appender-ref ref="CONSOLE" />
+    
+    <appender name="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/sac/err/error_storeplatform-sac.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/sac/err/error_storeplatform-sac_%d{yyyyMMdd}.log</FileNamePattern>            
+        </rollingPolicy> 
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${instanceName}|%X{type}|%logger{36}:%file:%line]\t%msg%n</pattern>
+        </layout>
+    </appender>
+    
+    <appender name="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/omc/omc_요건1.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/omc/omc_요건1_%d{yyyyMMdd}.log</FileNamePattern>            
+        </rollingPolicy> 
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${instanceName}|%X{type}|%logger{36}:%file:%line]\t%msg%n</pattern>
+        </layout>
+    </appender>
+    
+    <!-- WARN, INFO, DEBUG 서비스 로그 -->
+    <logger name="com.skplanet.storeplatform.sac" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
-
-    <logger name="com.skplanet" additivity="false">
-        <level value="DEBUG" />
-        <appender-ref ref="CONSOLE" />
+    
+    <!-- ERROR 서비스 로그 -->
+    <logger name="com.skplanet.storeplatform.sac" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
-
+    
+    <!-- OMC 로그 -->
+    <logger name="OMC_요건1" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
+    
+    <!-- LOCAL 개발 CONSOL  로그 -->
+    <logger name="com.skplanet.storeplatform.sac" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
+    
+    <!-- plandas 로그 -->
+    <logger name="com.skplanet.plandasj" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
+    <logger name="com.skplanet.spring" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
+    <logger name="org.apache.zookeeper" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
+    
+    <!-- 기본jdbc 로그 사용 안함 -->
     <logger name="jdbc.resultset" additivity="false">
         <level value="INFO" /> 
     </logger>
@@ -27,6 +87,7 @@
     
     <root>
         <level value="INFO" />
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </root>
+    
 </included>
