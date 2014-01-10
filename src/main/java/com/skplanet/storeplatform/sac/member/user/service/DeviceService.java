@@ -39,11 +39,13 @@ public interface DeviceService {
 	/**
 	 * 기등록된 회원의 휴대기기 정보 처리
 	 * 
-	 * @param mdn
+	 * @param userKey
+	 * @param deviceInfo
 	 * @return
 	 * @throws Exception
 	 */
-	public String preRegMemberDeviceRegist(String mdn) throws Exception;
+	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo)
+			throws Exception;
 
 	/**
 	 * 기기정보 수정 처리

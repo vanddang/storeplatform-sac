@@ -26,12 +26,11 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-@RequestMapping(value = "/member/user")
+@RequestMapping(value = "/dev/member/user")
 @Controller
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -47,12 +46,12 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	/* @RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.GET) */
+	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn(
-			@RequestHeader Map<String, Object> headers,
-			@RequestBody AuthorizeByMdnReq req) throws Exception {
-
+	public AuthorizeByMdnRes authorizeByMdn(@RequestHeader Map<String, Object> headers,	@RequestBody AuthorizeByMdnReq req) throws Exception {
+		
+		logger.info("######################## LoginController authorizeByMdn start ############################");
+		
 		/* 필수 파라메터 체크 */
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
 		String deviceTelecom = StringUtil.nvl(req.getDeviceTelecom(), ""); // 이동통신사
@@ -71,6 +70,7 @@ public class LoginController {
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(headerVo, req);
 
+		logger.info("######################## LoginController authorizeByMdn end ############################");
 		return res;
 	}
 
@@ -82,11 +82,9 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	/*@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)*/
+	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById(
-			@RequestHeader Map<String, Object> headers,
-			@RequestBody AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(@RequestHeader Map<String, Object> headers, @RequestBody AuthorizeByIdReq req) throws Exception {
 
 		/* 필수 파라메터 체크 */
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
