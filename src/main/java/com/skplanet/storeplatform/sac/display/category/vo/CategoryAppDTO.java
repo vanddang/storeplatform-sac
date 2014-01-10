@@ -16,7 +16,7 @@ package com.skplanet.storeplatform.sac.display.category.vo;
  */
 public class CategoryAppDTO {
 	private int totalCount;
-	private String upMenuId;
+	private String topMenuId;
 	private String menuId;
 	private String menuNm;
 	private String prodId;
@@ -35,7 +35,7 @@ public class CategoryAppDTO {
 	private String paticpersCnt;
 	private String prchsCnt;
 	private Double avgEvluScore;
-	private String upMenuNm;
+	private String topMenuNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -45,12 +45,12 @@ public class CategoryAppDTO {
 		this.totalCount = totalCount;
 	}
 
-	public String getUpMenuId() {
-		return this.upMenuId;
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
 
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	public String getMenuId() {
@@ -197,11 +197,11 @@ public class CategoryAppDTO {
 		this.avgEvluScore = avgEvluScore;
 	}
 
-	public String getUpMenuNm() {
-		return this.upMenuNm;
+	public String getTopMenuNm() {
+		return this.topMenuNm;
 	}
 
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
 	}
 }

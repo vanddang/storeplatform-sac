@@ -120,8 +120,8 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				menu = new Menu();
 				menuList = new ArrayList<Menu>();
 				menu.setType("topClass");
-				menu.setId(categoryAppDTO.getUpMenuId());
-				menu.setName(categoryAppDTO.getUpMenuNm());
+				menu.setId(categoryAppDTO.getTopMenuId());
+				menu.setName(categoryAppDTO.getTopMenuNm());
 				menuList.add(menu);
 
 				menu = new Menu();

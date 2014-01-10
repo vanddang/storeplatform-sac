@@ -5,7 +5,7 @@
     <select id="selectCategoryAppList" parameterType="CategoryAppReq" resultType="CategoryAppDTO">
 		SELECT  /* CategoryMapper.XML, selectCategoryAppList, tae hee Lee, 2014-01-03 */
 		        KA.TOTAL_COUNT
-		      , KA.UP_MENU_ID
+		      , KA.TOP_MENU_ID
 		      , KA.MENU_ID
 		      , KA.MENU_NM
 		      , KA.PROD_ID
@@ -30,8 +30,8 @@
 		      ]]>
 		      , (SELECT MENU_NM
 		           FROM TB_DP_MENU_CATALOG_DESC
-		          WHERE MENU_ID = KA.UP_MENU_ID
-		            AND LANG_CD = 'ko') AS UP_MENU_NM
+		          WHERE MENU_ID = KA.TOP_MENU_ID
+		            AND LANG_CD = 'ko') AS TOP_MENU_NM
 		  FROM (SELECT JA.*, COUNT(JA.PROD_ID) OVER() AS TOTAL_COUNT
 		          FROM (SELECT ROW_NUMBER() OVER(ORDER BY NVL(IB.PRCHS_CNT, 0) DESC, IA.REG_DT DESC) AS RNUM
 		                     , IA.*
