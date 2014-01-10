@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
  * 
  * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
  */
-@RequestMapping(value = "/member/user")
+@RequestMapping(value = "/dev/member/user")
 @Controller
 public class UserJoinController {
 

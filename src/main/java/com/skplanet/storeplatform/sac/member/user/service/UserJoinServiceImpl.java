@@ -171,6 +171,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			response.setUserKey(createUserResponse.getUserKey());
 
 		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
+			logger.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 
 			/**
 			 * (IDP 연동) 무선회원 해지
@@ -180,7 +181,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			logger.info("## secedeUser4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
 			logger.info("## secedeUser4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
 
-			logger.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 			throw new RuntimeException("IDP 무선회원 가입 실패");
 
 		} else { // 기타
