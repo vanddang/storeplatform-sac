@@ -83,10 +83,6 @@ public class UserJoinController {
 		logger.info("Request : {}", req.toString());
 
 		/**
-		 * TODO 필수 파라미터 체크
-		 */
-
-		/**
 		 * Header 정보 세팅
 		 */
 		HeaderVo headerVo = this.headerInfo.getHeader(headers);

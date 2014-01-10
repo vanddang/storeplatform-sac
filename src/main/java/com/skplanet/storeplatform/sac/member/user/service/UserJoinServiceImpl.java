@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.MemberUserCode;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
@@ -112,11 +112,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
 			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
-			userMbr.setUserType(MemberUserCode.USER_TYPE_MOBILE.getValue()); // 모바일회원
-			userMbr.setUserMainStatus(MemberUserCode.USER_MAIN_STATUS_1.getValue()); // 모바일전용회원
-			userMbr.setUserSubStatus(MemberUserCode.USER_SUB_STATUS_1.getValue()); // 신청
+			userMbr.setUserType(MemberConstants.USER_STATE_MOBILE); // 모바일회원
+			userMbr.setUserMainStatus(MemberConstants.USER_MAIN_STATUS_MOBILE); // 모바일전용회원
+			userMbr.setUserSubStatus(MemberConstants.USER_SUB_STATUS_MOTION); // 신청
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getDeviceId());// mdn, uuid 받는데로 넣는다. (SC 확인함.)
+			userMbr.setUserTelecom(req.getDeviceTelecom());
 
 			// SC 이용약관 정보 setting
 			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
@@ -131,9 +132,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			// SC 법정대리인 정보 setting
 			if (StringUtils.isNotEmpty(req.getOwnBirth())) {
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
-				mbrLglAgent.setParentBirthDay(req.getParentBirth());
-				mbrLglAgent.setParentEmail(req.getParentEmail());
-				mbrLglAgent.setParentMDN(req.getParentMdn());
+				mbrLglAgent.setIsParent(MemberConstants.USE_Y); // 법정대리인 동의 여부
+				mbrLglAgent.setParentBirthDay(req.getParentBirth()); // 법정대리인 생년월일
+				mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 이메일
+				mbrLglAgent.setParentMDN(req.getParentMdn()); // 법정대리인 전화번호
+				mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 이동통신사
 			}
 
 			// SC 사용자 가입요청 setting
@@ -156,7 +159,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			logger.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
 			logger.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), "0000")) {
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
 				logger.info("## 사용자 회원 가입 실패 ===========================");
 				throw new RuntimeException("사용자 회원 가입 실패");
@@ -259,7 +262,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		// sorting data setting
 		StringBuffer sortAgreeInfo = new StringBuffer();
 		for (AgreementInfo info : agreementList) {
-			if (StringUtils.equals(info.getIsExtraAgreement(), "Y")) {// 약관 동의한것만 비교대상으로 세팅
+			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 약관 동의한것만 비교대상으로 세팅
 				sortAgreeInfo.append(info.getExtraAgreementId());
 			}
 		}
