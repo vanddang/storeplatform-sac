@@ -145,7 +145,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * TODO sc 응답결과가 제대로 들어 오지 않음. userKey 확인 요청함!!!
 			 */
-			logger.info("## SCI Request Info : {}", createUserRequest.toString());
+			logger.info("## SC Request commonRequest      : {}", createUserRequest.getCommonRequest().toString());
+			logger.info("## SC Request userMbr            : {}", createUserRequest.getUserMbr().toString());
+			logger.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 
 			logger.info("## ResponseCode   : " + createUserResponse.getCommonResponse().getResultCode());
