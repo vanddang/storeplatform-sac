@@ -17,10 +17,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.FeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListParticipationRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListParticipationRes;
 
-@Profile("local")
+@Profile(value = { "dev", "local" })
 @Service
 public class FeedbackServiceSampleImpl implements FeedbackService {
 
