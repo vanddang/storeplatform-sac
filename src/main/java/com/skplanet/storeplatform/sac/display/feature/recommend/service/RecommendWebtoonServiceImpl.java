@@ -76,7 +76,8 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
 				RecommendWebtoonDTO.class);
 
-		if (resultList != null) {
+		// if (resultList != null) {
+		if (false) {
 			RecommendWebtoonDTO webtoonDto = new RecommendWebtoonDTO();
 
 			// Response VO를 만들기위한 생성자
@@ -162,6 +163,90 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 
 			CommonResponse commonResponse = new CommonResponse();
 			commonResponse.setTotalCount(totalCount);
+			responseVO.setCommonResponse(commonResponse);
+		} else {
+			// Response VO를 만들기위한 생성자
+			Identifier identifier = new Identifier();
+			Menu menu = new Menu();
+			Rights rights = new Rights();
+			Title title = new Title();
+			Source source = new Source();
+			Price price = new Price();
+			Product product = new Product();
+			Contributor contributor = new Contributor();
+			Accrual accrual = new Accrual();
+			Date date = new Date();
+
+			List<Menu> menuList = new ArrayList<Menu>();
+			List<Source> sourceList = new ArrayList<Source>();
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < 1; i++) {
+				// RecommendWebtoonDTO = resultList.get(i);
+				// 상품 정보 (상품ID)
+				identifier.setType("episode");
+				identifier.setText("H090124341");
+
+				// 메뉴 정보
+				menu.setType("topClass");
+				menu.setId("MN26");
+				menu.setName("웹툰");
+				menuList.add(menu);
+
+				menu = new Menu();
+				menu.setType("menuId");
+				menu.setId("MN26004");
+				menu.setName("웹툰/스릴러");
+				menuList.add(menu);
+
+				// contributor
+				contributor.setName("장한나");
+
+				accrual.setScore(4.5);
+
+				// 상품 정보 (상품명)
+				title.setText("강철강");
+
+				// 이미지 정보
+				source.setMediaType("image/jpeg");
+				source.setType("thumbnail");
+				source.setUrl("inst_thumbnail_20111216154840.jpg");
+				sourceList.add(source);
+
+				// 이용권한 정보
+				rights.setGrade("PD004401");
+
+				// 상품 정보 (상품가격)
+				price.setText(Integer.parseInt("0"));
+				date.setText("20130820190000");
+				// 데이터 매핑
+				product.setIdentifier(identifier);
+				product.setMenuList(menuList);
+				product.setContributor(contributor);
+				product.setAccrual(accrual);
+				product.setTitle(title);
+				product.setRights(rights);
+				product.setSourceList(sourceList);
+				product.setPrice(price);
+				product.setDate(date);
+
+				productList.add(i, product);
+				identifier = new Identifier();
+				menu = new Menu();
+				menuList = new ArrayList<Menu>();
+				rights = new Rights();
+				title = new Title();
+				source = new Source();
+				sourceList = new ArrayList<Source>();
+				price = new Price();
+				product = new Product();
+			}
+
+			responseVO = new RecommendWebtoonRes();
+			responseVO.setProductList(productList);
+
+			CommonResponse commonResponse = new CommonResponse();
+			commonResponse.setTotalCount(20);
 			responseVO.setCommonResponse(commonResponse);
 		}
 		return responseVO;
