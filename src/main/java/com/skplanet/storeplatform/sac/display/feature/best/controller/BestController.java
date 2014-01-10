@@ -38,19 +38,19 @@ public class BestController {
 	@Autowired
 	private BestDownloadService bestDownloadService;
 
-	@RequestMapping(value = "/display/feature/best/bestAppList/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/display/feature/best/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestAppRes bestAppList(BestAppReq bestAppReq) {
 		return this.bestAppService.searchBestAppList(bestAppReq);
 	}
 
-	@RequestMapping(value = "/display/feature/best/bestContentsList/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/display/feature/best/content/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestContentsRes bestContentsList(BestContentsReq bestContentsReq) {
 		return this.bestContentsService.searchBestContentsList(bestContentsReq);
 	}
 
-	@RequestMapping(value = "/display/feature/best/bestDownloadList/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestDownloadRes bestDownloadList(BestDownloadReq bestDownloadReq) {
 		return this.bestDownloadService.searchBestDownloadList(bestDownloadReq);
