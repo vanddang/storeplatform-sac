@@ -436,42 +436,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	}// End setTbDpProdDesc
 
 	/**
-	 * setTbDpProdCatalogMapgInfoValue Info value 셋팅
-	 * 
-	 * @param DpCouponInfo
-	 *            couponInfo, List<DpItemInfo> itemInfoList, List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapgList,
-	 *            String cudType
-	 * @return Boolean result @
-	 */
-	private boolean setTbDpProdCatalogMapgInfoValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
-			List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapgList, String cudType) {
-		TbDpProdCatalogMapgInfo dpcm = new TbDpProdCatalogMapgInfo();
-		try {
-			// 상품- 카탈로그 에서는 상품 채널 - 카탈로그만 저장
-			// ////////////////// Coupon 정보 S////////////////////////////
-			dpcm.setProdId(couponInfo.getProdId());
-			dpcm.setCatalogId(couponInfo.getStoreCatalogCode());
-			dpcm.setBaseYn("Y");
-			dpcm.setUseYn("Y");
-			dpcm.setRegId(couponInfo.getBpId());
-			dpcm.setUpdId(couponInfo.getBpId());
-			tbDpProdCatalogMapgList.add(dpcm);
-			IcmsJobPrint.TbDpProdCatalogMapg(dpcm, "TB_DP_PROD_CATALOG_MAPG- COUPON");
-			// ////////////////// Coupon 정보 E////////////////////////////
-
-			this.couponItemService.insertTbDpProdCatalogMapgInfo(tbDpProdCatalogMapgList, cudType,
-					couponInfo.getProdId());
-		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
-					null);
-		} catch (Exception e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
-					null);
-		}
-		return true;
-	}// End setTbDpProdDesc
-
-	/**
 	 * setTbDpProdRshp Info value 셋팅
 	 * 
 	 * @param DpCouponInfo
@@ -500,69 +464,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_RSHP VO 셋팅 실패", null);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_RSHP VO 셋팅 실패", null);
-		}
-		return true;
-	}// End setTbDpProdDesc
-
-	/**
-	 * setTbDpProdRshp Info value 셋팅
-	 * 
-	 * @param DpCouponInfo
-	 *            couponInfo, List<DpItemInfo> itemInfoList,List<TbDpProdOpt> tbDpProdOptList, String cudType
-	 * @return Boolean result @
-	 */
-	private boolean setTbDpProdOptValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
-			List<TbDpProdOpt> tbDpProdOptList, String cudType) {
-		TbDpProdOpt dpo = new TbDpProdOpt();
-		try {
-
-			// ////////////////// Item 정보 S////////////////////////////
-			for (int i = 0; i < itemInfoList.size(); i++) {
-				DpItemInfo itemInfo = itemInfoList.get(i);
-				dpo = new TbDpProdOpt();
-				dpo.setChnlProdId(couponInfo.getProdId());
-				dpo.setEpsdProdId(couponInfo.getProdId());
-				dpo.setOpt1Nm(itemInfo.getItemValue1());
-				dpo.setOpt2Nm(couponInfo.getProdId());
-				dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
-				dpo.setExpoYn("");
-				dpo.setRegId(couponInfo.getBpId());
-				dpo.setUpdId(couponInfo.getBpId());
-				tbDpProdOptList.add(dpo);
-				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
-			}
-			// ////////////////// Item 정보 S////////////////////////////
-			for (int i = 0; i < itemInfoList.size(); i++) {
-				DpItemInfo itemInfo = itemInfoList.get(i);
-				dpo = new TbDpProdOpt();
-				dpo.setChnlProdId(couponInfo.getProdId());
-				dpo.setEpsdProdId(itemInfo.getProdId());
-				dpo.setOpt1Nm(itemInfo.getItemValue1());
-				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
-				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
-					dpo.setOpt2Nm(itemInfo.getItemValue2());
-				} else {
-					dpo.setOpt2Nm(itemInfo.getItemValue1());
-				}
-				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
-				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
-					dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_EPISODE);
-				} else {
-					dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
-				}
-				dpo.setExpoYn("");
-				dpo.setRegId(couponInfo.getBpId());
-				dpo.setUpdId(couponInfo.getBpId());
-				tbDpProdOptList.add(dpo);
-				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
-			}
-			// 저장
-			this.couponItemService.insertTbDpProdOptInfo(tbDpProdOptList, cudType);
-
-		} catch (CouponException e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_OPT VO 셋팅 실패", null);
-		} catch (Exception e) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_OPT VO 셋팅 실패", null);
 		}
 		return true;
 	}// End setTbDpProdDesc
@@ -683,6 +584,108 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return true;
 	}// End setTbDpTenantProdPrice
+
+	/**
+	 * setTbDpProdCatalogMapgInfoValue Info value 셋팅
+	 * 
+	 * @param DpCouponInfo
+	 *            couponInfo, List<DpItemInfo> itemInfoList, List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapgList,
+	 *            String cudType
+	 * @return Boolean result @
+	 */
+	private boolean setTbDpProdCatalogMapgInfoValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
+			List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapgList, String cudType) {
+		TbDpProdCatalogMapgInfo dpcm = new TbDpProdCatalogMapgInfo();
+		try {
+			// 상품- 카탈로그 에서는 상품 채널 - 카탈로그만 저장
+			// ////////////////// Coupon 정보 S////////////////////////////
+			dpcm.setProdId(couponInfo.getProdId());
+			dpcm.setCatalogId(couponInfo.getStoreCatalogCode());
+			dpcm.setBaseYn("Y");
+			dpcm.setUseYn("Y");
+			dpcm.setRegId(couponInfo.getBpId());
+			dpcm.setUpdId(couponInfo.getBpId());
+			tbDpProdCatalogMapgList.add(dpcm);
+			IcmsJobPrint.TbDpProdCatalogMapg(dpcm, "TB_DP_PROD_CATALOG_MAPG- COUPON");
+			// ////////////////// Coupon 정보 E////////////////////////////
+
+			this.couponItemService.insertTbDpProdCatalogMapgInfo(tbDpProdCatalogMapgList, cudType,
+					couponInfo.getProdId());
+		} catch (CouponException e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
+					null);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
+					null);
+		}
+		return true;
+	}// End setTbDpProdCatalogMapgInfoValue
+
+	/**
+	 * setTbDpProdOptValue Info value 셋팅
+	 * 
+	 * @param DpCouponInfo
+	 *            couponInfo, List<DpItemInfo> itemInfoList,List<DpItemInfo> tbDpProdOptList, String cudType
+	 * @return Boolean result @
+	 */
+	private boolean setTbDpProdOptValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
+			List<TbDpProdOpt> tbDpProdOptList, String cudType) {
+		TbDpProdOpt dpo = new TbDpProdOpt();
+		try {
+
+			// ////////////////// Item 정보 S////////////////////////////
+			for (int i = 0; i < itemInfoList.size(); i++) {
+				DpItemInfo itemInfo = itemInfoList.get(i);
+				dpo = new TbDpProdOpt();
+				dpo.setChnlProdId(couponInfo.getProdId());
+				dpo.setEpsdProdId(couponInfo.getProdId());
+				dpo.setOpt1Nm(itemInfo.getItemValue1());
+				dpo.setOpt2Nm(couponInfo.getProdId());
+				dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
+				dpo.setExpoYn("");
+				dpo.setRegId(couponInfo.getBpId());
+				dpo.setUpdId(couponInfo.getBpId());
+				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
+				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+					tbDpProdOptList.add(dpo);
+				}
+				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
+			}
+			// ////////////////// Item 정보 S////////////////////////////
+			for (int i = 0; i < itemInfoList.size(); i++) {
+				DpItemInfo itemInfo = itemInfoList.get(i);
+				dpo = new TbDpProdOpt();
+				dpo.setChnlProdId(couponInfo.getProdId());
+				dpo.setEpsdProdId(itemInfo.getProdId());
+				dpo.setOpt1Nm(itemInfo.getItemValue1());
+				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
+				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+					dpo.setOpt2Nm(itemInfo.getItemValue2());
+				} else {
+					dpo.setOpt2Nm(itemInfo.getItemValue1());
+				}
+				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
+				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+					dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_EPISODE);
+				} else {
+					dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
+				}
+				dpo.setExpoYn("");
+				dpo.setRegId(couponInfo.getBpId());
+				dpo.setUpdId(couponInfo.getBpId());
+				tbDpProdOptList.add(dpo);
+				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
+			}
+			// 저장
+			this.couponItemService.insertTbDpProdOptInfo(tbDpProdOptList, cudType);
+
+		} catch (CouponException e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_OPT VO 셋팅 실패", null);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_OPT VO 셋팅 실패", null);
+		}
+		return true;
+	}// End setTbDpProdOptValue
 
 	/**
 	 * setTbDpProdTagListValue Info value 셋팅

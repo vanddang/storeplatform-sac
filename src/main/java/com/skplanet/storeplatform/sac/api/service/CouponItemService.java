@@ -60,25 +60,10 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
-	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
-	 * </pre>
-	 */
-	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType,
-			String prodId);
-
-	/**
-	 * <pre>
 	 * TB_DP_PROD_RSHP 테이블 입력및 수정한다.TB_DP_PROD_RSHP
 	 * </pre>
 	 */
 	public void insertTbDpProdRshpInfo(List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType);
-
-	/**
-	 * <pre>
-	 * TB_DP_PROD_OPT 테이블 입력및 수정한다.
-	 * </pre>
-	 */
-	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList, String cudType);
 
 	/**
 	 * <pre>
@@ -93,6 +78,21 @@ public interface CouponItemService {
 	 * </pre>
 	 */
 	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList, String cudType);
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType,
+			String prodId);
+
+	/**
+	 * <pre>
+	 * TB_DP_PROD_OPT 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList, String cudType);
 
 	/**
 	 * <pre>
