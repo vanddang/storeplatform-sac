@@ -33,7 +33,7 @@ public class InterparkController {
 	@Autowired
 	private InterparkService service;
 
-	@RequestMapping(value = "/createOrder/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/createOrder/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateOrderRes createOrder(@RequestBody CreateOrderReq req) {
 		Purchase purchase = this.convert(req);
