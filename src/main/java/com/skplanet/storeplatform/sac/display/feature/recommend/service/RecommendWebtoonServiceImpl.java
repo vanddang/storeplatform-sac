@@ -64,10 +64,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req) {
 
 		RecommendWebtoonRes responseVO = null;
-		if (req.getMenuId().length() == 4) {
-			req.setUpMenuId(req.getMenuId());
-			req.setMenuId(null);
-		}
+
 		String stdDt = "";
 		stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
 		if (stdDt == null) {
