@@ -49,9 +49,9 @@
 		              FROM 
 				              TB_DP_SHPG_CATALOG A
 				             ,TB_DP_SHPG_CATALOG_DESC B
-				             ,TB_DP_MENU_CATALOG_MAPG C
-				             ,TB_DP_MENU D
-				             ,TB_DP_MENU_DESC E
+				             ,TB_DP_MENU_CATALOG_PROD_MAPG C
+				             ,TB_DP_MENU_CATALOG D
+				             ,TB_DP_MENU_CATALOG_DESC E
 				             ,TB_DP_PROD_CATALOG_MAPG F
 				             ,TB_DP_SHPG_PROD G
 				             ,TB_DP_PROD L 
