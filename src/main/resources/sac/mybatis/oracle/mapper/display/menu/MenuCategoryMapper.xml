@@ -13,7 +13,7 @@
              , MENU_DEPTH
         FROM
             (
-             SELECT MENU_ID
+             SELECT TENANT_MENU_ID AS MENU_ID
                   , MENU_NM
                   , MENU_DESC
                   , MENU_DEPTH
@@ -24,8 +24,8 @@
               FROM TB_DP_TENANT_MENU
              WHERE TENANT_ID = #{tenantId}
                AND SYSTEM_ID = #{systemId}
-             START WITH MENU_ID = #{menuId}
-             CONNECT BY PRIOR MENU_ID = UP_MENU_ID
+             START WITH TENANT_MENU_ID = #{menuId}
+             CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
             )
         GROUP BY MENU_ID
              , MENU_NM
@@ -79,11 +79,11 @@
                          , M.INFR_MENU_YN
                          , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
                          , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU M
-                          ,TB_DP_MENU_DESC D
+                      FROM TB_DP_MENU_CATALOG M
+                          ,TB_DP_MENU_CATALOG_DESC D
                           ,TB_DP_TENANT_MENU TM
                      WHERE M.MENU_ID = D.MENU_ID
-                       AND TM.MENU_ID = M.MENU_ID
+                       AND TM.TENANT_MENU_ID = M.MENU_ID
                        AND TM.TENANT_ID = #{tenantId}
                        AND TM.SYSTEM_ID = #{systemId}
                        AND M.MENU_ID LIKE #{menuId}||'%'
@@ -100,8 +100,8 @@
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_PROD_MAPG CP
-                        , TB_DP_MENU C
+                        , TB_DP_MENU_CATALOG_PROD_MAPG CP
+                        , TB_DP_MENU_CATALOG C
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI    
                         , TB_DP_CHART_PROD_MAPG MCP
@@ -139,8 +139,8 @@
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_PROD_MAPG CP
-                        , TB_DP_MENU C
+                        , TB_DP_MENU_CATALOG_PROD_MAPG CP
+                        , TB_DP_MENU_CATALOG C
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI    
                         , TB_DP_CHART_PROD_MAPG MCP
@@ -221,11 +221,11 @@
 		                     , M.INFR_MENU_YN
 		                     , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
 		                     , TM.BODY_FILE_SIZE AS FILE_SIZE
-		                  FROM TB_DP_MENU M
-		                      ,TB_DP_MENU_DESC D
+		                  FROM TB_DP_MENU_CATALOG M
+		                      ,TB_DP_MENU_CATALOG_DESC D
 		                      ,TB_DP_TENANT_MENU TM
 	                     WHERE M.MENU_ID = D.MENU_ID
-	                       AND TM.MENU_ID = M.MENU_ID
+	                       AND TM.TENANT_MENU_ID = M.MENU_ID
 	                       AND TM.TENANT_ID = #{tenantId}
 	                       AND TM.SYSTEM_ID = #{systemId}
 	                       AND M.MENU_ID LIKE #{menuId}||'%'
@@ -273,8 +273,8 @@
 		                                              FROM TB_DP_PROD P
 		                                                 , TB_DP_PROD_RSHP CP
 		                                                 , TB_DP_TENANT_PROD TP
-		                                                 , TB_DP_MENU_PROD_MAPG MP
-		                                                 , TB_DP_MENU C
+		                                                 , TB_DP_MENU_CATALOG_PROD_MAPG MP
+		                                                 , TB_DP_MENU_CATALOG C
 		                                                 , TB_DP_SUB_CONTENTS SC
 		                                                 , (SELECT PROD_ID
 		                                                    , SD_VIDEO_SPRT_YN
@@ -382,11 +382,11 @@
                          , M.INFR_MENU_YN
                          , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
                          , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU M
-                          ,TB_DP_MENU_DESC D
+                      FROM TB_DP_MENU_CATALOG M
+                          ,TB_DP_MENU_CATALOG_DESC D
                           ,TB_DP_TENANT_MENU TM
                      WHERE M.MENU_ID = D.MENU_ID
-                       AND TM.MENU_ID = M.MENU_ID
+                       AND TM.TENANT_MENU_ID = M.MENU_ID
                        AND TM.TENANT_ID = #{tenantId}
                        AND TM.SYSTEM_ID = #{systemId}
                        AND M.MENU_ID LIKE #{menuId}||'%'
@@ -405,8 +405,8 @@
                               FROM TB_DP_PROD P
                                  , TB_DP_PROD_RSHP CP
                                  , TB_DP_TENANT_PROD TP
-                                 , TB_DP_MENU_PROD_MAPG MP
-                                 , TB_DP_MENU C
+                                 , TB_DP_MENU_CATALOG_PROD_MAPG MP
+                                 , TB_DP_MENU_CATALOG C
                                  , (SELECT SH.PROD_ID
                                          , PI.EBOOK_SPRT_YN
                                          , PI.MAGAZINE_SPRT_YN

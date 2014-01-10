@@ -4,9 +4,9 @@
     <!-- Menu 리스트 조회-->
     <select id="selectMenuList" parameterType="MenuRequest" resultType="MenuDetailDTO">
         SELECT 
-                COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
+                COUNT(TENANT_MENU_ID) OVER() AS TOTAL_COUNT,
                 TENANT_ID  ,
-                MENU_ID    ,           
+                TENANT_MENU_ID AS MENU_ID,           
                 SYSTEM_ID  ,          
                 MENU_NM     ,         
                 MENU_ENG_NM  ,        
@@ -18,9 +18,6 @@
                 TARGET_URL         ,  
                 SEARCH_FILE_PATH    , 
                 SEARCH_FILE_NM       ,
-                LNB_FILE_PATH        ,
-                LNB_FILE_NM          ,
-                LNB_FILE_SIZE        ,
                 BODY_FILE_PATH       ,
                 BODY_FILE_NM         ,
                 BODY_FILE_SIZE       ,
@@ -37,7 +34,7 @@
                 UPD_DT               
                FROM TB_DP_TENANT_MENU
               WHERE TENANT_ID = #{tenantId}
-                <if test="menuId != null">AND MENU_ID = #{menuId}</if>
+                <if test="menuId != null">AND TENANT_MENU_ID = #{menuId}</if>
                 AND SYSTEM_ID = #{systemId}
                 AND USE_YN = 'Y'
     </select>
@@ -45,7 +42,7 @@
     <!-- Menu Detail 조회-->
     <select id="selectMenu" parameterType="MenuRequest" resultType="MenuDetailDTO">
         SELECT TENANT_ID  ,
-               MENU_ID    ,           
+               TENANT_MENU_ID AS MENU_ID,           
                SYSTEM_ID  ,          
                MENU_NM     ,         
                MENU_ENG_NM  ,        
@@ -57,9 +54,6 @@
                TARGET_URL         ,  
                SEARCH_FILE_PATH    , 
                SEARCH_FILE_NM       ,
-               LNB_FILE_PATH        ,
-               LNB_FILE_NM          ,
-               LNB_FILE_SIZE        ,
                BODY_FILE_PATH       ,
                BODY_FILE_NM         ,
                BODY_FILE_SIZE       ,
@@ -76,7 +70,7 @@
                UPD_DT 
           FROM TB_DP_TENANT_MENU
          WHERE TENANT_ID = #{tenantId}
-           AND MENU_ID = #{menuId}
+           AND TENANT_MENU_ID = #{menuId}
            AND SYSTEM_ID = #{systemId}
            AND USE_YN = 'Y'
     </select>
@@ -90,8 +84,8 @@
                T.MENU_DESC,
                T.BODY_FILE_SIZE
           FROM TB_DP_TENANT_MENU T,
-               TB_DP_MENU M
-         WHERE M.MENU_ID = T.MENU_ID
+               TB_DP_MENU_CATALOG M
+         WHERE M.MENU_ID = T.TENANT_MENU_ID
            AND T.TENANT_ID = #{tenantId}
            AND T.SYSTEM_ID = #{systemId}
            AND M.MENU_DEPTH = 1
@@ -111,17 +105,18 @@
                EXPO_ORD
         FROM
             (
-             SELECT MENU_ID,
-                    MENU_NM,
-                    MENU_DESC,
-                    BODY_FILE_SIZE,
-                    MENU_DEPTH,
-                    EXPO_ORD
+            SELECT TENANT_MENU_ID AS MENU_ID,
+                   MENU_NM,
+                   MENU_DESC,
+                   BODY_FILE_SIZE,
+                   MENU_DEPTH,
+                   EXPO_ORD
               FROM TB_DP_TENANT_MENU
              WHERE TENANT_ID = #{tenantId}
+               AND TENANT_MENU_ID = #{menuId}
                AND SYSTEM_ID = #{systemId}
-             START WITH MENU_ID = #{menuId}
-             CONNECT BY PRIOR MENU_ID = UP_MENU_ID
+             START WITH TENANT_MENU_ID = #{menuId}
+             CONNECT BY PRIOR TENANT_MENU_ID = UP_MENU_ID
             )
         GROUP BY MENU_ID,
                  MENU_NM,
@@ -135,12 +130,12 @@
     
     <!-- 3depth 메뉴 조회 -->
     <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailDTO">
-		SELECT M.MENU_ID
+		SELECT M.TENANT_MENU_ID AS MENU_ID
 		  FROM TB_DP_TENANT_MENU M,
 		      (
 		        SELECT DISTINCT UP_MENU_ID
 		          FROM TB_DP_TENANT_MENU
-		         WHERE MENU_ID IN (
+		         WHERE TENANT_MENU_ID IN (
 		            SELECT UP_MENU_ID
 		            FROM TB_DP_TENANT_MENU 
 		            WHERE MENU_DEPTH = 3
@@ -150,13 +145,13 @@
 		            )
 		       )S, 
 		       (SELECT MENU_ID 
-		          FROM TB_DP_MENU 
+		          FROM TB_DP_MENU_CATALOG 
 		         WHERE MENU_ID = #{menuId}
 		           AND USE_YN = 'Y') D
-		 WHERE M.MENU_ID = S.UP_MENU_ID
-		   AND D.MENU_ID = M.MENU_ID
+		 WHERE M.TENANT_MENU_ID = S.UP_MENU_ID
+		   AND D.MENU_ID = M.TENANT_MENU_ID
 		   AND M.TENANT_ID = #{tenantId}
-		   AND M.MENU_ID = #{menuId}
+		   AND M.TENANT_MENU_ID = #{menuId}
 		   AND M.SYSTEM_ID = #{systemId}
 		   AND M.MENU_DEPTH = 1
 		   AND M.USE_YN = 'Y'
