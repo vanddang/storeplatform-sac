@@ -42,7 +42,7 @@ import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.other.search.repository.SearchRepository;
 
-@Profile(value = { "dev", "local" })
+@Profile(value = { "stag", "real" })
 @Service
 @Transactional
 public class SearchServiceSampleImpl implements SearchService {
