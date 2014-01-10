@@ -114,7 +114,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
 			userMbr.setUserType(MemberUserCode.USER_TYPE_MOBILE.getValue()); // 모바일회원
 			userMbr.setUserMainStatus(MemberUserCode.USER_MAIN_STATUS_1.getValue()); // 모바일전용회원
-			userMbr.setUserSubStatus(MemberUserCode.USER_SUBS_TATUS_1.getValue()); // 신청
+			userMbr.setUserSubStatus(MemberUserCode.USER_SUB_STATUS_1.getValue()); // 신청
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getDeviceId());// mdn, uuid 받는데로 넣는다. (SC 확인함.)
 
@@ -128,8 +128,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 				mbrClauseAgreeList.add(mbrClauseAgree);
 			}
 
+			// SC 법정대리인 정보 setting
 			if (StringUtils.isNotEmpty(req.getOwnBirth())) {
-				// SC 법정대리인 정보 setting
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
 				mbrLglAgent.setParentBirthDay(req.getParentBirth());
 				mbrLglAgent.setParentEmail(req.getParentEmail());
@@ -143,7 +143,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
 
 			/**
-			 * TODO sc 응답결과가 제대로 들어 오지 않음. 확인 요청함!!!
+			 * TODO sc 응답결과가 제대로 들어 오지 않음. userKey 확인 요청함!!!
 			 */
 			logger.info("## SCI Request Info : {}", createUserRequest.toString());
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
@@ -153,6 +153,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 			logger.info("## UserKey        : {}", createUserResponse.getUserKey());
 			logger.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
 			logger.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
+
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), "0")) {
+
+				logger.info("## 사용자 회원 가입 실패 ===========================");
+				throw new RuntimeException("사용자 회원 가입 실패");
+
+			}
 
 			/**
 			 * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
@@ -267,19 +274,4 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	}
 
-	/**
-	 * TODO SC 회원 가입 연동시 데이타 세팅하는 부분 가져와서 Method로 빼자!!
-	 * 
-	 * <pre>
-	 * SC 회원 가입 연동시 데이타 세팅
-	 * </pre>
-	 * 
-	 * @return
-	 */
-	private CreateUserRequest convertCreateUserRequest() {
-
-		CreateUserRequest createUserRequest = new CreateUserRequest();
-
-		return createUserRequest;
-	}
 }
