@@ -65,6 +65,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
 
+		CreateByMdnRes response = new CreateByMdnRes();
+
 		/**
 		 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
 		 */
@@ -166,7 +168,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 결과 세팅
 			 */
-			CreateByMdnRes response = new CreateByMdnRes();
 			response.setUserKey(createUserResponse.getUserKey());
 
 		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
