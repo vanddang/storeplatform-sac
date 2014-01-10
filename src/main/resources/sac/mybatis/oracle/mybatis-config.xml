@@ -91,6 +91,12 @@
         
         <!-- BEST 앱 상품 조회 -->
         <typeAlias alias="BestAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq" />
-        <typeAlias alias="BestAppDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO" />                
+        <typeAlias alias="BestAppDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO" />
+        
+        <!-- VOD 상품 ID 리스트 조회 -->
+        <typeAlias alias="SearchProductReq"  type="com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq" />
+        <typeAlias alias="SearchProductDTO"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProductDTO" />
+        <typeAlias alias="SearchProductDetailDTO"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProductDetailDTO" />
+        <typeAlias alias="SearchProductMetaInfoDTO"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProductMetaInfoDTO" />
     </typeAliases>
 </configuration>
