@@ -12,6 +12,6 @@ package com.skplanet.storeplatform.sac.other.interpark.service;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InterparkServiceImpl {
+public class InterparkServiceImpl implements InterparkService {
 
 }
