@@ -19,6 +19,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
+import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 
 /**
@@ -94,7 +95,7 @@ public class IdpServiceImpl implements IdpService {
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
-		// IdpConstants idpConstant = new IdpConstants();
+		IdpConstants idpConstant = new IdpConstants();
 
 		// 회원 정보 조회
 		// 공통 헤더
@@ -141,11 +142,11 @@ public class IdpServiceImpl implements IdpService {
 
 		ImResult imResult = new ImResult();
 
-		// String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-		// String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+		String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 
-		// imResult.setResult(idpResult);
-		// imResult.setResultText(idpResultText);
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 		imResult.setUserId(map.get("user_id").toString());
 
@@ -187,6 +188,23 @@ public class IdpServiceImpl implements IdpService {
 		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 		// updateUserVo.setUserID(userID)
 		this.userSCI.updateStatus(updateUserVo);
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 신규가입정보를 미동의 사이트에 배포
+	 * - CMD : RXCreateUserIdIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+	@Override
+	public ImResult rXCreateUserIdIDP(HashMap map) throws Exception {
 
 		return null;
 	}
