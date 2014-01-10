@@ -6,9 +6,9 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRightList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrPwd;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
@@ -23,11 +23,11 @@ public class DetailInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<ExtraRight> extraRight;
+	List<ExtraRightList> extraRightList;
 
 	MbrAuth mbrAuth;
 
-	List<MbrClauseAgree> mbrClauseAgree;
+	List<MbrClauseAgreeList> mbrClauseAgree;
 
 	MbrLglAgent mbrLglAgent;
 
@@ -37,12 +37,12 @@ public class DetailInformationRes extends CommonInfo {
 
 	SellerMbr sellerMbr;
 
-	public List<ExtraRight> getExtraRight() {
-		return this.extraRight;
+	public List<ExtraRightList> getExtraRightList() {
+		return this.extraRightList;
 	}
 
-	public void setExtraRight(List<ExtraRight> extraRight) {
-		this.extraRight = extraRight;
+	public void setExtraRightList(List<ExtraRightList> extraRightList) {
+		this.extraRightList = extraRightList;
 	}
 
 	public MbrAuth getMbrAuth() {
@@ -53,11 +53,11 @@ public class DetailInformationRes extends CommonInfo {
 		this.mbrAuth = mbrAuth;
 	}
 
-	public List<MbrClauseAgree> getMbrClauseAgree() {
+	public List<MbrClauseAgreeList> getMbrClauseAgree() {
 		return this.mbrClauseAgree;
 	}
 
-	public void setMbrClauseAgree(List<MbrClauseAgree> mbrClauseAgree) {
+	public void setMbrClauseAgree(List<MbrClauseAgreeList> mbrClauseAgree) {
 		this.mbrClauseAgree = mbrClauseAgree;
 	}
 
