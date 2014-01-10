@@ -37,75 +37,6 @@ public class IDPSender {
 	@Value("#{propertiesForSac['idp.sp_id']}")
 	public String IDP_REQ_OMP_SERVICE_ID;
 
-	/* IDP 요청 URL */
-	public static final String IDP_REQ_URL_JOIN = "/web/Join.api"; // omp.dev.idp.requrl.join
-	public static final String IDP_REQ_URL_REALNAME_AUTH = "/web/RealNameAuth.api"; // omp.dev.idp.requrl.realname.auth
-	public static final String IDP_REQ_URL_NATEID_AUTH = "/web/AuthNateID.api"; // omp.dev.idp.requrl.nate.auth
-	public static final String IDP_REQ_URL_MOBILE_AUTH = "/web/MobileAuth.api"; // omp.dev.idp.requrl.mobile.auth
-	public static final String IDP_REQ_URL_WATERMARK_AUTH = "/web/WatermarkAuth.api"; // omp.dev.idp.requrl.watermark.auth
-	public static final String IDP_REQ_URL_USER_AUTH = "/web/Auth.api"; // omp.dev.idp.requrl.user.auth
-	public static final String IDP_REQ_URL_USER_INFO_SEARCH = "/web/Search.api"; // omp.dev.idp.requrl.userinfo.search
-	public static final String IDP_REQ_URL_USER_INFO_MODIFY = "/web/Modify.api"; // omp.dev.idp.requrl.userinfo.modify
-	public static final String IDP_REQ_URL_SECEDE = "/web/Secede.api"; // omp.dev.idp.requrl.secede
-	public static final String IDP_REQ_URL_MOBILE_SEND = "/web/MobileAuth.api";
-	public static final String IDP_REQ_URL_CREATE_TOKEN = "/web/SpToken.api";
-	public static final String IDP_REQ_URL_MAPPING_TOKEN = "/web/TokenMapping.api";
-	public static final String IDP_REQ_URL_SEARCH_TOKEN = "/web/SpTokenCheck.api";
-	public static final String IDP_REQ_URL_DELETE_TOKEN = "/web/MappingDel.api";
-
-	/* IDP 요청 COMMAND */
-	public static final String IDP_REQ_CMD_ALEADY_JOIN_CHECK = "aleadyJoinCheck"; // omp.dev.idp.reqcmd.aleady.joincheck
-	public static final String IDP_REQ_CMD_DUPLICATE_ID_CHECK = "duplicateIDCheck"; // omp.dev.idp.reqcmd.duplicate.idcheck
-	public static final String IDP_REQ_CMD_REALNAME_AUTH = "realNameAuth"; // omp.dev.idp.reqcmd.realname.auth
-	public static final String IDP_REQ_CMD_NATEID_AUTH = "authNateID"; // omp.dev.idp.reqcmd.nateid.auth
-	public static final String IDP_REQ_CMD_MOBILE_AUTHCODE_SEND = "mobileAuthcodeSend"; // omp.dev.idp.reqcmd.mobile.authcode.send
-	public static final String IDP_REQ_CMD_MOBILE_AUTH = "mobileAuth"; // omp.dev.idp.reqcmd.mobile.auth
-	public static final String IDP_REQ_CMD_WATERMARK_AUTH_IMAGE = "watermarkAuthImage"; // omp.dev.idp.reqcmd.watermark.auth.image
-	public static final String IDP_REQ_CMD_WATERMARK_AUTH = "watermarkAuth"; // omp.dev.idp.reqcmd.watermark.auth
-	public static final String IDP_REQ_CMD_JOIN_FOR_EMAIL = "joinApplyForEmail"; // omp.dev.idp.reqcmd.join.email
-	public static final String IDP_REQ_CMD_JOIN_FOR_SN = "joinApplyForSN"; // omp.dev.idp.reqcmd.join.sn
-	public static final String IDP_REQ_CMD_JOIN_COMPLETE = "joinComplete"; // omp.dev.idp.reqcmd.join.complete
-	public static final String IDP_REQ_CMD_JOIN_REQEST = "join"; // omp.dev.idp.reqcmd.reqest
-	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForId"; // omp.dev.idp.reqcmd.auth.id
-	public static final String IDP_REQ_CMD_AUTH_FOR_PWD = "authForPasswd"; // omp.dev.idp.reqcmd.auth.pwd
-	public static final String IDP_REQ_CMD_AUTH_FOR_MDN = "authForMDN"; // omp.dev.idp.reqcmd.auth.mdn
-	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_BROWSER = "findCommonProfile"; // omp.dev.idp.reqcmd.find.commonprofile
-	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "findCommonProfileForServer"; // omp.dev.idp.reqcmd.find.commonprofile.server
-	public static final String IDP_REQ_CMD_FIND_SPECIAL_PROFILE = "findSpecialProfile"; // omp.dev.idp.reqcmd.find.specialprofile
-	public static final String IDP_REQ_CMD_FIND_ID = "findID"; // omp.dev.idp.reqcmd.find.id
-	public static final String IDP_REQ_CMD_FIND_PWD = "findPasswd"; // omp.dev.idp.reqcmd.get.temppwd
-	public static final String IDP_REQ_CMD_MODIFY_AUTH_INFO = "modifyAuthInfo"; // omp.dev.idp.reqcmd.modify.authinfo
-	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "modifyProfile"; // omp.dev.idp.reqcmd.modify.profile
-	public static final String IDP_REQ_CMD_SECEDE_USER = "secedeUser"; // omp.dev.idp.reqcmd.secede.user
-	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap";
-	public static final String IDP_REQ_CMD_SECEDE_FOR_WAP = "secedeForWap"; // omp.dev.idp.reqcmd.secede.wap
-	public static final String IDP_REQ_CMD_JOIN_FOR_WAP = "joinForWap";
-	public static final String IDP_REQ_CMD_ALEADY_JOIN_MDN = "aleadyJoinCheckForMdn";
-	public static final String IDP_REQ_CMD_AUTH_FOR_SSO = "authForSSO"; // omp.dev.idp.reqcmd.auth.sso
-	public static final String IDP_REQ_CMD_LOGOUT_FOR_SSO = "logoutForSSO"; // omp.dev.idp.reqcmd.logout.sso
-	public static final String IDP_REQ_CMD_GET_EMAIL_AUTH = "getEmailAuthLink";
-	public static final String IDP_REQ_CMD_MODIFY_EMAIL = "modifyUserEmail";
-	public static final String IDP_REQ_CMD_JOIN_SUP_SERVICE = "joinSupServiceRequest";
-	public static final String IDP_REQ_CMD_SECEDE_SUP_SERVICE = "secedeSupServiceRequest";
-	public static final String IDP_REQ_CMD_TMAP_SERVICE_AVALIBLE_CHECK = "tmapServiceAvalibleCheck";
-	public static final String IDP_REQ_CMD_TMAP_SERVICE_CHECK = "tmapServiceCheck";
-	public static final String IDP_REQ_CMD_FIND_MODEL_ID = "findModelId";
-	public static final String IDP_REQ_CMD_MOBILE_SEND = "mobileSend";
-	public static final String IDP_REQ_CMD_JOIN_SUP_SERVICE_REQUEST = "joinSupServiceRequest";// 부가서비스 가입
-	public static final String IDP_REQ_CMD_SECEDE_SUP_SERVICE_REQUEST = "secedeSupServiceRequest";// 부가서비스 해지
-	public static final String IDP_REQ_CMD_FIND_BILL = "findBill";// skt가입자 요금제 조회
-	public static final String IDP_REQ_CMD_CREATE_TOKEN = "spToken";
-	public static final String IDP_REQ_CMD_MAPPING_TOKEN = "tokenMapping";
-	public static final String IDP_REQ_CMD_SEARCH_TOKEN = "spTokenCheck";
-	public static final String IDP_REQ_CMD_DELETE_TOKEN = "mappingDel";
-
-	/*
-	 * IDP 통합 회원 고도화 추가
-	 */
-	public static final String IDP_REQ_CMD_OTHER_CHANNEL_ID_AUTH = "authIntegratedPasswd";
-	public static final String IDP_REQ_CMD_OTHER_CHANNEL_LIST = "findJoinServiceList";
-	public static final String IDP_REQ_CMD_OTHER_CHANNEL_REGIST = "joinApproveRequest";
-
 	/**
 	 * idp에 전달할 파라미터를 설정한다.
 	 * 
@@ -113,7 +44,7 @@ public class IDPSender {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	protected Hashtable<String, String> makeSendParam(IDPSenderM sendData) throws Exception {
 		Hashtable<String, String> param = new Hashtable<String, String>();
 

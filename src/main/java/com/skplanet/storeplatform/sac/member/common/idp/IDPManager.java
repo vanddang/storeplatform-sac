@@ -40,7 +40,7 @@ public class IDPManager implements IDPConstants {
 	// private final IDPReceiver idpReceiver = null;
 	@Autowired
 	private IDPSender idpSender;
-	private final IDPReceiverM receivData = null;
+	// private final IDPReceiverM receivData = null;
 
 	// 일단 테스트를 위해 주석 처리 - 임재호 2014.1.8
 	// private SMSApi smsapi = null;
@@ -189,7 +189,9 @@ public class IDPManager implements IDPConstants {
 	 *            주민등록번호
 	 * @return
 	 * @throws Exception
+	 * @deprecated : IDP 실명 기반 API 삭제
 	 */
+	@Deprecated
 	public IDPReceiverM alredyJoinCheckBySn(String ssn) throws Exception {
 		return this.alredyJoinCheck(ssn, IDP_PARAM_KEY_TYPE_SN);
 	}
@@ -207,8 +209,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM alredyJoinCheck(String checkKey, String checkKeyType) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_ALEADY_JOIN_CHECK);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_ALEADY_JOIN_CHECK);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(checkKey);
@@ -228,8 +230,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM checkDupID(String id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_DUPLICATE_ID_CHECK);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_DUPLICATE_ID_CHECK);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -246,7 +248,9 @@ public class IDPManager implements IDPConstants {
 	 *            주민번호
 	 * @return
 	 * @throws Exception
+	 * @deprecated : IDP API 주민번호 필드 삭제
 	 */
+	@Deprecated
 	public IDPReceiverM realNameAuthForNative(String name, String ssn) throws Exception {
 		return this.realNameAuth(IDP_PARAM_KEY_AUTH_TYPE_NATIVE, name, ssn);
 	}
@@ -260,7 +264,9 @@ public class IDPManager implements IDPConstants {
 	 *            주민번호
 	 * @return
 	 * @throws Exception
+	 * @deprecated : IDP API 주민번호 필드 삭제
 	 */
+	@Deprecated
 	public IDPReceiverM realNameAuthForForeign(String name, String ssn) throws Exception {
 		return this.realNameAuth(IDP_PARAM_KEY_AUTH_TYPE_FOREIGN, name, ssn);
 	}
@@ -276,7 +282,9 @@ public class IDPManager implements IDPConstants {
 	 *            주민번호
 	 * @return
 	 * @throws Exception
+	 * @deprecated : IDP API 주민번호 필드 삭제
 	 */
+	@Deprecated
 	public IDPReceiverM realNameAuth(String personType, String name, String ssn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
@@ -290,8 +298,8 @@ public class IDPManager implements IDPConstants {
 			}
 		}
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_REALNAME_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_REALNAME_AUTH);
+		sendData.setUrl(IDP_REQ_URL_REALNAME_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_REALNAME_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setType(personType);
@@ -358,8 +366,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM sendMobileAuthCode(String mdn, String telType, String ssn, String scrId) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_MOBILE_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MOBILE_AUTHCODE_SEND);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_MOBILE_AUTHCODE_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -408,8 +416,8 @@ public class IDPManager implements IDPConstants {
 			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_MOBILE_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MOBILE_AUTH);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_MOBILE_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -432,8 +440,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM warterMarkImageUrl() throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_WATERMARK_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_WATERMARK_AUTH_IMAGE);
+		sendData.setUrl(IDP_REQ_URL_WATERMARK_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_WATERMARK_AUTH_IMAGE);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 
@@ -453,8 +461,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_WATERMARK_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_WATERMARK_AUTH);
+		sendData.setUrl(IDP_REQ_URL_WATERMARK_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_WATERMARK_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_code(authCode);
@@ -475,8 +483,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM authNateId(String nateId, String natePwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_NATEID_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_NATEID_AUTH);
+		sendData.setUrl(IDP_REQ_URL_NATEID_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_NATEID_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(nateId);
@@ -496,8 +504,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM authPwd(String id, String pwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_AUTH_FOR_PWD);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_FOR_PWD);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -518,8 +526,8 @@ public class IDPManager implements IDPConstants {
 			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_AUTH_FOR_MDN);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_FOR_MDN);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -540,8 +548,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM getEmailAuthLink(String id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_GET_EMAIL_AUTH);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_GET_EMAIL_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -553,8 +561,8 @@ public class IDPManager implements IDPConstants {
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setSp_id(this.IDP_REQ_OMP_SERVICE_ID);
 		sendData.setSp_auth_key(user_auth_key);
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_GET_EMAIL_AUTH);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_GET_EMAIL_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -575,8 +583,8 @@ public class IDPManager implements IDPConstants {
 			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_EMAIL);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_EMAIL);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setPre_user_email(preEmail);
@@ -597,8 +605,8 @@ public class IDPManager implements IDPConstants {
 	 */
 	public IDPReceiverM modifyAuthInfo(String user_auth_key, String key_type, String key) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_AUTH_INFO);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_AUTH_INFO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 
@@ -613,8 +621,8 @@ public class IDPManager implements IDPConstants {
 			String key) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setSp_id(this.IDP_REQ_OMP_SERVICE_ID);
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_AUTH_INFO);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_AUTH_INFO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setSp_auth_key(sp_auth_key);
@@ -631,8 +639,8 @@ public class IDPManager implements IDPConstants {
 			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setSp_id(this.IDP_REQ_OMP_SERVICE_ID);
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_AUTH_INFO);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_AUTH_INFO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_key(user_key);
@@ -694,8 +702,8 @@ public class IDPManager implements IDPConstants {
 		String userCi = (String) param.get("user_ci");
 
 		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_JOIN_FOR_EMAIL);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_JOIN_FOR_EMAIL);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(userId);
@@ -759,8 +767,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM userAuthForId(String userId, String userPwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_AUTH_FOR_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_FOR_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(userId);
@@ -775,8 +783,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM userLogoutForSSO() throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_LOGOUT_FOR_SSO);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_LOGOUT_FOR_SSO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 
@@ -846,8 +854,8 @@ public class IDPManager implements IDPConstants {
 			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_auth_key(userAuthKey);
@@ -868,8 +876,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM searchUserCommonInfo4SPServer(String keyType, String key) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey_type(keyType);
@@ -903,7 +911,9 @@ public class IDPManager implements IDPConstants {
 	 * @param ssn
 	 * @return
 	 * @throws Exception
+	 * @deprecated : IDP API 주민번호 필드 삭제
 	 */
+	@Deprecated
 	public IDPReceiverM searchUserIDBySN(String ssn) throws Exception {
 
 		return this.searchUserID(IDP_PARAM_KEY_QUERY_ID_KEY_TYPE_SN, ssn, null, null, null);
@@ -949,8 +959,8 @@ public class IDPManager implements IDPConstants {
 			String signData) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey_type(queryKeyType);
@@ -974,8 +984,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM searchUserID(String queryKeyType, String queryKeyValue) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey_type(queryKeyType);
@@ -1058,8 +1068,8 @@ public class IDPManager implements IDPConstants {
 			String signData) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_PWD);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_PWD);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setWatermark_auth(IDP_PARAM_KEY_WATERMARK_AUTH_NON_INCLISION);
@@ -1124,8 +1134,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_SECEDE_USER);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_SECEDE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		// sendData.setWatermark_auth(IDP_PARAM_KEY_WATERMARK_AUTH_NON_INCLISION);
@@ -1151,8 +1161,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM aleadyJoinCheck4Mdn(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_ALEADY_JOIN_MDN);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_ALEADY_JOIN_MDN);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1171,8 +1181,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM authForWap(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_AUTH_FOR_WAP);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_FOR_WAP);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1191,8 +1201,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM join4Wap(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_JOIN_FOR_WAP);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_JOIN_FOR_WAP);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setMdn_corp(IDP_PARAM_KEY_USER_MDN_TYPE_SKT);
@@ -1212,8 +1222,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM secedeUser4Wap(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_SECEDE_FOR_WAP);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_SECEDE_FOR_WAP);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1254,8 +1264,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM joinSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_JOIN_SUP_SERVICE);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_JOIN_SUP_SERVICE);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1296,8 +1306,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM secedeSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_SECEDE_SUP_SERVICE);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_SECEDE_SUP_SERVICE);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1320,8 +1330,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM tmapServiceAvalibleCheck(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_TMAP_SERVICE_AVALIBLE_CHECK);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_TMAP_SERVICE_AVALIBLE_CHECK);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1342,8 +1352,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM tmapServiceCheck(String mdn, String svcCd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_TMAP_SERVICE_CHECK);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_TMAP_SERVICE_CHECK);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1361,6 +1371,7 @@ public class IDPManager implements IDPConstants {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public IDPReceiverM sendIDP(IDPSenderM sendData) throws Exception {
 
 		StopWatch stopWatch = new StopWatch();
@@ -1395,6 +1406,7 @@ public class IDPManager implements IDPConstants {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
 
 		StopWatch stopWatch = new StopWatch();
@@ -1422,11 +1434,12 @@ public class IDPManager implements IDPConstants {
 		return receiveData;
 	}
 
+	@SuppressWarnings("unused")
 	public IDPReceiverM modifyProfile(Map<String, Object> param) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MODIFY_PROFILE);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_PROFILE);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 
@@ -1580,8 +1593,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM otherChannelIdAuth(String user_id, String user_passwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_OTHER_CHANNEL_ID_AUTH);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_OTHER_CHANNEL_ID_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(user_id);
@@ -1602,8 +1615,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM otherChannelList(String key_type, String key) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_OTHER_CHANNEL_LIST);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_OTHER_CHANNEL_LIST);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey_type(key_type);
@@ -1623,8 +1636,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM otherChannelRegist(String user_id, String user_passwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_OTHER_CHANNEL_REGIST);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_OTHER_CHANNEL_REGIST);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(user_id);
@@ -1637,8 +1650,8 @@ public class IDPManager implements IDPConstants {
 	public IDPReceiverM findModelId(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_MODEL_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_MODEL_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1657,8 +1670,8 @@ public class IDPManager implements IDPConstants {
 		if (scrId == null || scrId.equals(""))
 			scrId = "US004528";
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_MOBILE_SEND);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MOBILE_SEND);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_SEND);
+		sendData.setCmd(IDP_REQ_CMD_MOBILE_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -1730,8 +1743,8 @@ public class IDPManager implements IDPConstants {
 		IDPSenderM sendData = new IDPSenderM();
 		// 연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_JOIN_SUP_SERVICE_REQUEST);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_JOIN_SUP_SERVICE_REQUEST);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1755,8 +1768,8 @@ public class IDPManager implements IDPConstants {
 		IDPSenderM sendData = new IDPSenderM();
 		// 연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_SECEDE_SUP_SERVICE_REQUEST);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_SECEDE_SUP_SERVICE_REQUEST);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1778,8 +1791,8 @@ public class IDPManager implements IDPConstants {
 		IDPSenderM sendData = new IDPSenderM();
 		// 연동 코드 : NA00003492 (임시)티스토어정액제 / NA00003493 (실제)티스토어정액제
 
-		sendData.setUrl(IDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_FIND_BILL);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_BILL);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -1798,8 +1811,8 @@ public class IDPManager implements IDPConstants {
 	 */
 	public IDPReceiverM createToken(String user_id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPSender.IDP_REQ_URL_CREATE_TOKEN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_CREATE_TOKEN);
+		sendData.setUrl(IDP_REQ_URL_CREATE_TOKEN);
+		sendData.setCmd(IDP_REQ_CMD_CREATE_TOKEN);
 		sendData.setUser_id(user_id);
 		sendData.setTarget_service("tstore");
 
@@ -1817,8 +1830,8 @@ public class IDPManager implements IDPConstants {
 	 */
 	public IDPReceiverM mappingToken(String user_id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPSender.IDP_REQ_URL_MAPPING_TOKEN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_MAPPING_TOKEN);
+		sendData.setUrl(IDP_REQ_URL_MAPPING_TOKEN);
+		sendData.setCmd(IDP_REQ_CMD_MAPPING_TOKEN);
 		sendData.setUser_id(user_id);
 		sendData.setService_token("tstore");
 		sendData.setService_secret("tstore");
@@ -1839,8 +1852,8 @@ public class IDPManager implements IDPConstants {
 	 */
 	public IDPReceiverM searchToken(String user_id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPSender.IDP_REQ_URL_SEARCH_TOKEN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_SEARCH_TOKEN);
+		sendData.setUrl(IDP_REQ_URL_SEARCH_TOKEN);
+		sendData.setCmd(IDP_REQ_CMD_SEARCH_TOKEN);
 		sendData.setUser_id(user_id);
 		sendData.setTarget_service("tstore");
 		sendData.setSp_token("tstore");
@@ -1858,8 +1871,8 @@ public class IDPManager implements IDPConstants {
 	 */
 	public IDPReceiverM deleteToken(String user_id) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPSender.IDP_REQ_URL_DELETE_TOKEN);
-		sendData.setCmd(IDPSender.IDP_REQ_CMD_DELETE_TOKEN);
+		sendData.setUrl(IDP_REQ_URL_DELETE_TOKEN);
+		sendData.setCmd(IDP_REQ_CMD_DELETE_TOKEN);
 		sendData.setUser_id(user_id);
 		sendData.setTarget_service("tstore");
 		sendData.setType("1");

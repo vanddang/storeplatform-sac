@@ -13,6 +13,68 @@ package com.skplanet.storeplatform.sac.member.common.idp;
 
 public interface ImIDPConstants {
 
+	/* IDP 요청 URL */
+	public static final String IDP_REQ_URL_JOIN = "/web/IMJoin.api";
+	public static final String IDP_REQ_URL_SECEDE = "/web/IMSecede.api";
+	public static final String IDP_REQ_URL_USER_INFO_SEARCH = "/web/IMSearch.api";
+	public static final String IDP_REQ_URL_USER_INFO_MODIFY = "/web/IMModify.api";
+	public static final String IDP_REQ_URL_USER_AUTH = "/web/IMAuth.api";
+	public static final String IDP_REQ_URL_IM_CHECK = "/web/IMHealthCheck.api";
+	public static final String IDP_REQ_URL_ID_VALID = "/web/IMSetValid.api";
+	public static final String IDP_REQ_URL_IMID_CHECK = "/web/IntegrationAuth.api";
+	public static final String IDP_REQ_URL_MOBILE_AUTH = "/web/IMMobileAuth.api";
+
+	/* IDP 요청 COMMAND */
+	// TX REQUEST
+	public static final String IDP_REQ_CMD_CREATE_USER = "TXCreateUserIDP";
+	public static final String IDP_REQ_CMD_AGREE_USER = "TXAgreeUserIDP";
+	public static final String IDP_REQ_CMD_DELETE_USER = "TXDeleteUserIDP";
+	public static final String IDP_REQ_CMD_DISAGREE_USER = "TXDisagreeUserIDP";
+	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_BROWSER = "TXGetUserInfoIDP";
+	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "TXGetUserInfoForServerIDP";
+	public static final String IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER = "findCommonProfileForServerIDP";
+	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "TXUpdateUserInfoIDP";
+	public static final String IDP_REQ_CMD_UPDATE_USER_NAME = "TXUpdateUserNameIDP";
+	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
+	public static final String IDP_REQ_CMD_MODIFY_PWD = "TXUpdateUserPwdIDP";
+	public static final String IDP_REQ_CMD_RESET_PWD = "TXResetUserPwdIDP";
+	public static final String IDP_REQ_CMD_DUP_CHECK_ID = "TXCheckDupUserIdIDP";
+	public static final String IDP_REQ_CMD_DUP_CHECK_TELNO = "TXCheckDupTelNoIDP";
+	public static final String IDP_REQ_CMD_CONFIRM_EMAIL_RESEND = "TXResendConfirmEmailIDP";
+	public static final String IDP_REQ_CMD_AUTH_SMS_SEND = "TXAuthSMSIDP";
+	public static final String IDP_REQ_CMD_AUTH_EMAIL_SEND = "TXAuthEmailIDP";
+	public static final String IDP_REQ_CMD_SET_VAILD_PERIOD = "TXSetValidPeriodIDP";
+	public static final String IDP_REQ_CMD_RESET_VAILD_PERIOD = "TXResetValidPeriodIDP";
+	public static final String IDP_REQ_CMD_CHECK_DEL_USER = "TXPreCheckDeleteUserIDP";
+	public static final String IDP_REQ_CMD_CHECK_TRANS_USERID = "TXCheckTransUserIdIDP";
+	public static final String IDP_REQ_CMD_SET_LOGIN_STATUS = "TXSetLoginConditionIDP";
+	public static final String IDP_REQ_CMD_AUTH_CREATE_SMS = "TXAuthCreateSMSIDP";
+
+	public static final String IDP_REQ_CMD_DUP_ID_CHECK = "duplicateIDCheckIDP";
+	public static final String IDP_REQ_CMD_CHECK_IDPWD_AUTH = "authIntegratedSPPW";
+	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForIdIDP";
+	public static final String IDP_REQ_CMD_AUTH_FOR_SSO_ID = "authForSSOIdIDP";
+	public static final String IDP_REQ_CMD_JOIN_SERVICE_LIST = "findJoinServiceListIDP";
+	public static final String IDP_REQ_CMD_MOBILE_AUTHCODE_SEND = "mobileAuthcodeSendIDP";
+	public static final String IDP_REQ_CMD_PARENT_MOBILE_AUTHCODE_SEND = "parentMobileAuthcodeSendIDP";
+	public static final String IDP_REQ_CMD_MOBILE_AUTH = "mobileAuthIDP";
+	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
+	public static final String IDP_REQ_CMD_FIND_USERID_BY_MDN = "findUserIdByMdn";
+	public static final String IDP_REQ_CMD_UPDATE_GUARDIAN = "TXUpdateGuardianInfoIDP";
+	public static final String IDP_REQ_CMD_GET_SERIVCE_INFO = "TXGetServiceInfoIDP";// 개별 프로파일 조회-신규
+	public static final String IDP_REQ_CMD_GET_MDNINFO_IDP = "getMdnInfoIDP";
+
+	// RX REQUEST
+	// public static final String IDP_REQ_RX_CMD_CREATE_USER = "RXCreateUserIDP";
+	// public static final String IDP_REQ_RX_CMD_CREATE_USERID = "RXCreateUserIdIDP";
+	// public static final String IDP_REQ_RX_CMD_ACTIVE_USERID = "RXActivateUserIdIDP";
+	// public static final String IDP_REQ_RX_CMD_DELETE_USERID = "RXDeleteUserIdIDP";
+	// public static final String IDP_REQ_RX_CMD_CHECK_DELETE_USERID = "RXPreCheckDeleteUserIDP";
+	// public static final String IDP_REQ_RX_CMD_UPDATE_DISAGREE_USERID = "RXUpdateDisagreeUserIDP";
+	// public static final String IDP_REQ_RX_CMD_UPDATE_USERINFO = "RXUpdateUserInfoIDP";
+	// public static final String IDP_REQ_RX_CMD_INVALID_TEL_NO = "RXInvalidUserTelNoIDP";
+	// public static final String IDP_REQ_RX_CMD_LOGIN_CONDITION = "RXSetLoginConditionIDP";
+
 	public static String SSO_SST_CD_NATE_WEB = "10100";
 	public static String SSO_SST_CD_CYWORLD_WEB = "10200";
 	public static String SSO_SST_CD_11ST_WEB = "20100";

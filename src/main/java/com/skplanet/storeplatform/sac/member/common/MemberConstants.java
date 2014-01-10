@@ -115,8 +115,8 @@ public final class MemberConstants {
 		public static final String SELLER_TYPE_LEGAL_BUSINESS = "US010103"; // 법인 사업자
 
 		/** 판매자 분류 */
-		public static final String SELLER_TYPE_DEV_NOPAY = "US011301"; // 무료
-		public static final String SELLER_TYPE_DEV_PAY = "US011302"; // 유료
+		public static final String SELLER_TYPE_NOPAY = "US011301"; // 무료
+		public static final String SELLER_TYPE_PAY = "US011302"; // 유료
 		public static final String SELLER_TYPE_BP = "US011303"; // BP
 	}
 }

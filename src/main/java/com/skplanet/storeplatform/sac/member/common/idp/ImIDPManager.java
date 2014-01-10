@@ -184,8 +184,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String userPasswdModifyDate = (String) param.get("user_passwd_modify_date");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_CREATE_USER);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_CREATE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(userId);
@@ -295,8 +295,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String parent_approve_sst_code = (String) param.get("parent_approve_sst_code");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AGREE_USER);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_AGREE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -340,8 +340,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String term_reason_cd = (String) param.get("term_reason_cd");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_DELETE_USER);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_DELETE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -364,8 +364,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String term_reason_cd = (String) param.get("term_reason_cd");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_DISAGREE_USER);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_DISAGREE_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -388,8 +388,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String user_auth_key = (String) param.get("user_auth_key");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_BROWSER);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_BROWSER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -406,8 +406,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM userInfoSearchServer(String imServiceNo) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(imServiceNo);
@@ -459,8 +459,8 @@ public class ImIDPManager implements ImIDPConstants {
 		}
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_MODIFY_PROFILE);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_PROFILE);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -523,8 +523,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String user_address2 = (String) param.get("user_address2");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_MODIFY_ADDITIONAL);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_ADDITIONAL);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -561,8 +561,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String user_passwd_modify_date = (String) param.get("user_passwd_modify_date");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_MODIFY_PWD);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_MODIFY_PWD);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -595,8 +595,8 @@ public class ImIDPManager implements ImIDPConstants {
 			is_email_auth = "N";
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_RESET_PWD);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_RESET_PWD);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -627,8 +627,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM dupUserIdCheck(String id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_DUP_CHECK_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_DUP_CHECK_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -642,8 +642,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM dupTelNoCheck(String user_tn) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_DUP_CHECK_TELNO);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_DUP_CHECK_TELNO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_tn(user_tn);
@@ -660,8 +660,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM resendConfirmEmail(String key, String user_email) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_CONFIRM_EMAIL_RESEND);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_CONFIRM_EMAIL_RESEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -679,8 +679,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM sendAuthSms(String key, String user_tn) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AUTH_SMS_SEND);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_SMS_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -698,8 +698,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM sendAuthEmail(String key, String user_email) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AUTH_EMAIL_SEND);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_EMAIL_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -716,8 +716,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM setVaildPeriod(String key) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_ID_VALID);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_SET_VAILD_PERIOD);
+		sendData.setUrl(IDP_REQ_URL_ID_VALID);
+		sendData.setCmd(IDP_REQ_CMD_SET_VAILD_PERIOD);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -733,8 +733,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM resetVaildPeriod(String key) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_ID_VALID);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_RESET_VAILD_PERIOD);
+		sendData.setUrl(IDP_REQ_URL_ID_VALID);
+		sendData.setCmd(IDP_REQ_CMD_RESET_VAILD_PERIOD);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -751,8 +751,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM checkDelUser(String key) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_CHECK_DEL_USER);
+		sendData.setUrl(IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDP_REQ_CMD_CHECK_DEL_USER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -769,8 +769,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM checkTransUserId(String id, String ipin_ci) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_CHECK_TRANS_USERID);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_CHECK_TRANS_USERID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -786,8 +786,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM setLoginStatus(String key, String login_status_code) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_SET_LOGIN_STATUS);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_SET_LOGIN_STATUS);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setLogin_limit_sst_code(SSO_SST_CD_TSTORE_WEB);
@@ -804,8 +804,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM authCreateSms(String user_tn, String user_tn_nation_cd) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AUTH_CREATE_SMS);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_CREATE_SMS);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_tn(user_tn);
@@ -822,8 +822,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
 			String user_auth_key, String rname_auth_mns_code, String ci, String di, HashMap map) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_UPDATE_USER_NAME);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_UPDATE_USER_NAME);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_auth_key(user_auth_key);
@@ -863,8 +863,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
 			String parent_name, String parent_email, String user_auth_key, String parent_birthday) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_UPDATE_GUARDIAN);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDP_REQ_CMD_UPDATE_GUARDIAN);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_auth_key(user_auth_key);
@@ -900,8 +900,8 @@ public class ImIDPManager implements ImIDPConstants {
 		 * user_tn_auth)user_tn_auth = "N";
 		 */
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_GET_SERIVCE_INFO);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_GET_SERIVCE_INFO);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -921,8 +921,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM checkDupId(String id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_DUP_ID_CHECK);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_DUP_ID_CHECK);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -936,8 +936,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM authForId(String key, String pwd) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AUTH_FOR_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_FOR_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
@@ -953,8 +953,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM findJoinServiceList(String user_id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_JOIN_SERVICE_LIST);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_JOIN_SERVICE_LIST);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(user_id);
@@ -968,8 +968,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM sendMobileAuthCode(String user_mdn, String user_mdn_type) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_MOBILE_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_MOBILE_AUTHCODE_SEND);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_MOBILE_AUTHCODE_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -985,8 +985,8 @@ public class ImIDPManager implements ImIDPConstants {
 			throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_MOBILE_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_PARENT_MOBILE_AUTHCODE_SEND);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_PARENT_MOBILE_AUTHCODE_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -1003,8 +1003,8 @@ public class ImIDPManager implements ImIDPConstants {
 			String scrId) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_MOBILE_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_PARENT_MOBILE_AUTHCODE_SEND);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_PARENT_MOBILE_AUTHCODE_SEND);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -1030,8 +1030,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String scr_id = (String) param.get("scr_id");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_MOBILE_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_MOBILE_AUTH);
+		sendData.setUrl(IDP_REQ_URL_MOBILE_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_MOBILE_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -1054,8 +1054,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM checkIdStatusIdpIm(String id) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_JOIN);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_ID_STATUS_IDP_IM);
+		sendData.setUrl(IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDP_REQ_CMD_ID_STATUS_IDP_IM);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -1069,8 +1069,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM getMdnInfoIDP(String mdn) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_GET_MDNINFO_IDP);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_GET_MDNINFO_IDP);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setMdn(mdn);
@@ -1085,8 +1085,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM checkIdPwdAuth(String id, String pwd) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_IMID_CHECK);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_CHECK_IDPWD_AUTH);
+		sendData.setUrl(IDP_REQ_URL_IMID_CHECK);
+		sendData.setCmd(IDP_REQ_CMD_CHECK_IDPWD_AUTH);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
@@ -1106,8 +1106,8 @@ public class ImIDPManager implements ImIDPConstants {
 		String model_id = (String) param.get("model_id");
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_FIND_USERID_BY_MDN);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_USERID_BY_MDN);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
@@ -1128,8 +1128,8 @@ public class ImIDPManager implements ImIDPConstants {
 	public ImIDPReceiverM authForSvcNo(String im_int_svc_no) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_AUTH_FOR_SSO_ID);
+		sendData.setUrl(IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDP_REQ_CMD_AUTH_FOR_SSO_ID);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setIm_int_svc_no(im_int_svc_no);
@@ -1142,8 +1142,8 @@ public class ImIDPManager implements ImIDPConstants {
 	 */
 	public ImIDPReceiverM userInfoIdpSearchServer(String imServiceNo) throws Exception {
 		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPSender.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPSender.IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER);
+		sendData.setUrl(IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER);
 		sendData.setResp_type(IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(imServiceNo);
