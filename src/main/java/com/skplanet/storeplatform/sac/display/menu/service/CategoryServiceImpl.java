@@ -54,8 +54,8 @@ public class CategoryServiceImpl implements CategoryService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenuList(String tenantId, String
-	 * systemId, String menuId)
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchTopCategoryList(MenuReq
+	 * requestVO)
 	 */
 	@Override
 	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
@@ -99,26 +99,9 @@ public class CategoryServiceImpl implements CategoryService {
 				totalCount = mapperVO.getTotalCount();
 
 				source.setSize(mapperVO.getBodyFileSize());
-				// category.setMenuEngName(mapperVO.getMenuEngName());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
 				category.setType("topClass");
-				/*
-				 * category.setExpoOrd(mapperVO.getExpoOrd()); category.setInfrMenuYn(mapperVO.getInfrMenuYn());
-				 * category.setLnbFileName(mapperVO.getLnbFileName());
-				 * category.setLnbFilePath(mapperVO.getLnbFilePath());
-				 * category.setLnbFileSize(mapperVO.getLnbFileSize());
-				 * category.setMainOffFileName(mapperVO.getMainOffFileName());
-				 * category.setMainOffFilePath(mapperVO.getMainOffFilePath());
-				 * category.setMainOnFileName(mapperVO.getMainOnFileName());
-				 * category.setMenuDepth(mapperVO.getMenuDepth()); category.setRankFileName(mapperVO.getRankFileName());
-				 * category.setRankFilePath(mapperVO.getRankFilePath());
-				 * category.setSearchFileName(mapperVO.getSearchFileName());
-				 * category.setSearchFilePath(mapperVO.getSearchFilePath());
-				 * category.setSystemId(mapperVO.getSystemId()); category.setTargetUrl(mapperVO.getTargetUrl());
-				 * category.setTenantId(mapperVO.getTenantId()); category.setUpMenuId(mapperVO.getUpMenuId());
-				 * category.setUseYn(mapperVO.getUseYn());
-				 */
 
 				category.setSource(source);
 
@@ -145,8 +128,8 @@ public class CategoryServiceImpl implements CategoryService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenu(String tenantId, String
-	 * systemId, String menuId)
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchDetailCategoryList(MenuReq
+	 * requestVO)
 	 */
 	@Override
 	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
@@ -303,8 +286,8 @@ public class CategoryServiceImpl implements CategoryService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.biz.product.service.MenuListService#searchMenu(String tenantId, String
-	 * systemId, String menuId)
+	 * @see com.skplanet.storeplatform.sac.biz.product.service.CategoryServiceImpl#searchSubCategoryList(MenuReq
+	 * requestVO)
 	 */
 	@Override
 	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO) throws JsonGenerationException,
@@ -318,7 +301,6 @@ public class CategoryServiceImpl implements CategoryService {
 		String menuId = "";
 		String deviceCd = "";
 		String langCd = "";
-		String statementId = "";
 
 		tenantId = requestVO.getTenantId();
 		systemId = requestVO.getSystemId();
@@ -346,16 +328,8 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 
-		if ("DP13".equals(menuId) || "DP14".equals(menuId)) { // ebook/commic
-			statementId = "MenuCategory.getEBookComicDetailCategoryList";
-		} else if ("DP16".equals(menuId)) { // 음악
-			statementId = "MenuCategory.getMusicDetailCategoryList";
-		} else if ("DP17".equals(menuId) || "DP18".equals(menuId)) { // 영화/TV 방송
-			statementId = "MenuCategory.getMovieTvDetailCategoryList";
-		} else {
-			statementId = "MenuCategory.getDetailCategoryList";
-		}
-		List<MenuCategoryDTO> resultList = this.commonDAO.queryForList(statementId, requestVO, MenuCategoryDTO.class);
+		List<MenuCategoryDTO> resultList = this.commonDAO.queryForList(this.getStatementId(requestVO), requestVO,
+				MenuCategoryDTO.class);
 		if (resultList != null) {
 
 			threeDepth = this.check3DepthMenu(requestVO);
@@ -449,9 +423,6 @@ public class CategoryServiceImpl implements CategoryService {
 						count++;
 
 						if (count >= totalCount) {
-							/*
-							 * categoryDetail.setSubCategoryList(listVO); detailListVO.add(categoryDetail);
-							 */
 							responseVO.setCategoryList(listVO);
 						}
 					}
@@ -472,6 +443,23 @@ public class CategoryServiceImpl implements CategoryService {
 
 		}
 		return responseVO;
+	}
+
+	private String getStatementId(MenuReq requestVO) {
+
+		String statementId = "";
+		String menuId = requestVO.getMenuId();
+
+		if ("DP13".equals(menuId) || "DP14".equals(menuId)) { // ebook/commic
+			statementId = "MenuCategory.getEBookComicDetailCategoryList";
+		} else if ("DP16".equals(menuId)) { // 음악
+			statementId = "MenuCategory.getMusicDetailCategoryList";
+		} else if ("DP17".equals(menuId) || "DP18".equals(menuId)) { // 영화/TV 방송
+			statementId = "MenuCategory.getMovieTvDetailCategoryList";
+		} else {
+			statementId = "MenuCategory.getDetailCategoryList";
+		}
+		return statementId;
 	}
 
 	private boolean check3DepthMenu(MenuReq requestVO) {
