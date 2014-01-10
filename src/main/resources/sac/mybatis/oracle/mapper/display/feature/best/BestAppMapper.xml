@@ -64,7 +64,7 @@
 		                               ,D.AID             
 		                               ,F.UP_MENU_ID
 		                               ,F.TOP_MENU_ID
-		                               ,(SELECT MENU_NM FROM TB_DP_MENU_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
+		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
 		                               ,G.MENU_NM                               
 		                               ,G.MENU_DESC
 		                               ,H.SUB_CONTENTS_ID
@@ -95,9 +95,9 @@
 		                               ,TB_DP_PROD B
 		                               ,TB_DP_PROD_DESC C
 		                               ,TB_DP_APP_PROD D
-		                               ,TB_DP_MENU_PROD_MAPG E
-		                               ,TB_DP_MENU F
-		                               ,TB_DP_MENU_DESC G
+		                               ,TB_DP_MENU_CATALOG_PROD_MAPG E
+		                               ,TB_DP_MENU_CATALOG F
+		                               ,TB_DP_MENU_CATALOG_DESC G
 		                               ,TB_DP_SPRT_DEVICE H
 		                               ,TB_DP_TENANT_PROD I
 		                               ,TB_DP_TENANT_PROD_PRICE J
@@ -209,7 +209,7 @@
 		                                 ,D.AID             
 		                                 ,F.UP_MENU_ID
 		                                 ,F.TOP_MENU_ID
-		                                 ,(SELECT MENU_NM FROM TB_DP_MENU_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
+		                                 ,(SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
 		                                 ,G.MENU_NM                               
 		                                 ,G.MENU_DESC
 		                                 ,H.SUB_CONTENTS_ID
@@ -235,9 +235,9 @@
 		                                 ,TB_DP_PROD B
 		                                 ,TB_DP_PROD_DESC C
 		                                 ,TB_DP_APP_PROD D
-		                                 ,TB_DP_MENU_PROD_MAPG E
-		                                 ,TB_DP_MENU F
-		                                 ,TB_DP_MENU_DESC G
+		                                 ,TB_DP_MENU_CATALOG_PROD_MAPG E
+		                                 ,TB_DP_MENU_CATALOG F
+		                                 ,TB_DP_MENU_CATALOG_DESC G
 		                                 ,TB_DP_SPRT_DEVICE H
 		                                 ,TB_DP_TENANT_PROD I
 		                                 ,TB_DP_TENANT_PROD_PRICE J
