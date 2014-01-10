@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
  */
 @Service
 public class IdpServiceImpl implements IdpService {
+
+	private static final Logger logger = LoggerFactory.getLogger(IdpServiceImpl.class);
 
 	@Autowired
 	private UserSCI userSCI;
@@ -86,7 +90,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult rXInvalidUserTelNoIDP(HashMap map) {
+	public ImResult rXInvalidUserTelNoIDP(HashMap map) throws Exception {
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
@@ -102,10 +106,14 @@ public class IdpServiceImpl implements IdpService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("MBR_ID");
-		if (null != map.get("user_id"))
+		if (null != map.get("user_id")) {
 			keySearch.setKeyString((String) map.get("user_id"));
+		} else {
+			logger.info("########## Exception : user_id가 존재하지 않음. ##########");
+			throw new Exception("user_id가 존재하지 않음.");
+		}
 
-		keySearchList.add(0, keySearch);
+		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
 		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
@@ -120,10 +128,15 @@ public class IdpServiceImpl implements IdpService {
 		if (getUserMbr != null) {
 			userMbr.setUserMainStatus(getUserMbr.getUserMainStatus());
 			userMbr.setUserSubStatus(getUserMbr.getUserSubStatus());
+		} else {
+			logger.info("########## Exception :회원 정보 조회의 결과값에 UserMbr값이 없음 ##########");
+			throw new Exception("회원 정보 조회의 결과값에 UserMbr값이 없음");
 		}
 
 		userVo.setUserMbr(userMbr);
 		userVo.setCommonRequest(commonRequest);
+
+		// 회원 정보 수정 API call
 		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(userVo);
 
 		ImResult imResult = new ImResult();
@@ -151,7 +164,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult rXSetLoginConditionIDP(HashMap map) {
+	public ImResult rXSetLoginConditionIDP(HashMap map) throws Exception {
 
 		ImIDPSenderM imIdpSenderM = new ImIDPSenderM();
 
