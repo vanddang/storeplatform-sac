@@ -49,8 +49,8 @@
                               ,F.ARTIST3_NM
                               ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND ROWNUM=1) FILE_POS
                         FROM  TB_DP_MENU_CATALOG            A
-                            , TB_DP_MENU_PROD_MAPG          B
-                            , TB_DP_MENU_CATALOG_PROD_MAPG  C
+                            , TB_DP_MENU_CATALOG_PROD_MAPG  B
+                            , TB_DP_MENU_CATALOG_DESC       C
                             , TB_DP_PROD                    D
                             , TB_DP_MULTIMDA_PROD           E
                             , TB_DP_PROD_DESC               F
@@ -66,8 +66,8 @@
                                               ,J1.PART_PROD_ID
                                         FROM 
                                               TB_DP_MENU_CATALOG             A1
-                                            , TB_DP_MENU_PROD_MAPG           B1
-                                            , TB_DP_MENU_CATALOG_PROD_MAPG   C1
+                                            , TB_DP_MENU_CATALOG_PROD_MAPG   B1
+                                            , TB_DP_MENU_CATALOG_DESC        C1
                                             , TB_DP_PROD                     D1
                                             , TB_DP_MULTIMDA_PROD            E1
                                             , TB_DP_PROD_DESC                F1
