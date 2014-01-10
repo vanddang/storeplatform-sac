@@ -27,6 +27,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
@@ -65,34 +67,34 @@ public class DummyDataController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(UserJoinController.class);
 
-	// @RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
-	// @ResponseBody
-	// public CreateByMdnRes createByMdn() {
-	//
-	// logger.info("####################################################");
-	// logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
-	// logger.info("####################################################");
-	//
-	// CreateByMdnRes res = new CreateByMdnRes();
-	// res.setUserKey("IW102158844420091030165015");
-	//
-	// return res;
-	// }
-	//
-	// @RequestMapping(value = "/createByAgreement/v1", method =
-	// RequestMethod.POST)
-	// @ResponseBody
-	// public CreateByAgreementRes createByAgreement() {
-	//
-	// logger.info("####################################################");
-	// logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
-	// logger.info("####################################################");
-	//
-	// CreateByAgreementRes res = new CreateByAgreementRes();
-	// res.setUserKey("IW102158844420091030165015");
-	//
-	// return res;
-	// }
+	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateByMdnRes createByMdn() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
+		logger.info("####################################################");
+
+		CreateByMdnRes res = new CreateByMdnRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
+
+	@RequestMapping(value = "/createByAgreement/v1", method =
+			RequestMethod.POST)
+	@ResponseBody
+	public CreateByAgreementRes createByAgreement() {
+
+		logger.info("####################################################");
+		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
+		logger.info("####################################################");
+
+		CreateByAgreementRes res = new CreateByAgreementRes();
+		res.setUserKey("IW102158844420091030165015");
+
+		return res;
+	}
 
 	@RequestMapping(value = "/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
