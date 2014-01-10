@@ -37,7 +37,7 @@
               ]]>
 		      , CONCAT(LC.FILE_PATH, LC.FILE_NM) AS IMG_PATH
 		      , (SELECT MENU_NM
-		           FROM TB_DP_MENU_DESC
+		           FROM TB_DP_MENU_CATALOG_DESC
 		          WHERE MENU_ID = LA.TOP_MENU_ID
 		            AND LANG_CD = 'ko'
 		            AND ROWNUM = 1) AS TOP_MENU_NM
@@ -96,8 +96,8 @@
 		                                           AND  TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
 		                                           AND  SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
 		                                       )                       A
-		                                     , TB_DP_MENU              B
-		                                     , TB_DP_MENU_DESC         C
+		                                     , TB_DP_MENU_CATALOG      B
+		                                     , TB_DP_MENU_CATALOG_DESC C
 		                                     , TB_DP_PROD              D
 		                                     , TB_DP_MULTIMDA_PROD     E
 		                                     , TB_DP_PROD_DESC         F
