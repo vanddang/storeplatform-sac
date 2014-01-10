@@ -61,10 +61,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req) {
 
 		CategoryWebtoonRes responseVO = null;
-		if (req.getMenuId().length() == 4) {
-			req.setUpMenuId(req.getMenuId());
-			req.setMenuId(null);
-		}
+
 		Integer totalCount = 0;
 		List<CategoryWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
 				CategoryWebtoonDTO.class);
