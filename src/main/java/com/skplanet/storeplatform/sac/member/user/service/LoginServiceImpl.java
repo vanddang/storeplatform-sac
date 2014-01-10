@@ -41,17 +41,17 @@ import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
 public class LoginServiceImpl implements LoginService {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
-	
+
 	private static final String SYSTEMID = "S001";
 	private static final String TENANTID = "S01";
 	private static CommonRequest commonRequest;
-	
+
 	static {
 		commonRequest = new CommonRequest();
 		commonRequest.setSystemID(SYSTEMID);
 		commonRequest.setTenantID(TENANTID);
 	}
-	
+
 	@Autowired
 	private UAPSSCI uapsSCI; // UAPS 연동 인터페이스
 
@@ -66,13 +66,12 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IDPManager idpManager; // IDP연동 클래스
-	
-	
+
 	@Override
 	public AuthorizeByMdnRes authorizeByMdn(HeaderVo headerVo, AuthorizeByMdnReq req) throws Exception {
 
 		logger.info("######################## LoginServiceImpl authorizeByMdn start ############################");
-		
+
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		String deviceId = req.getDeviceId();
@@ -87,7 +86,7 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 			throw new Exception("UAPS연동시 오류가 발생하였습니다.");
 		}
-		
+
 		/* 회원정보 조회 (devicdId) */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
@@ -98,16 +97,18 @@ public class LoginServiceImpl implements LoginService {
 		keySearchList.add(key);
 		schUserReq.setKeySearchList(keySearchList);
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-		
-		if(!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("["+schUserRes.getCommonResponse().getResultCode()+"] " + schUserRes.getCommonResponse().getResultMessage());
+
+		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		/* 회원 상태 확인 */
-		if (schUserRes.getUserMbr() == null || StringUtil.equals(schUserRes.getUserMbr().getUserState(), MemberConstants.MAIN_STATUS_SECEDE)) {
+		if (schUserRes.getUserMbr() == null
+				|| StringUtil.equals(schUserRes.getUserMbr().getUserState(), MemberConstants.MAIN_STATUS_SECEDE)) {
 			throw new Exception("무선가입상태가 아닙니다.");
 		}
-		
+
 		userStateCd = schUserRes.getUserMbr().getUserState();
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
@@ -117,13 +118,15 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 무선회원 인증 */
-		if (StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_MOBILE) || StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_IDPID)) {
+		if (StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_MOBILE)
+				|| StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_IDPID)) {
 
 			IDPReceiverM idpReceiver = this.idpManager.authForWap(deviceId);
-			
+
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPManager.IDP_RES_CODE_OK)) {
 				/* 로그인 실패이력 저장 */
-				this.logInSCComponent(deviceId, null, "N", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
+				this.logInSCComponent(deviceId, null, "N",
+						StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
 				throw new Exception(idpReceiver.getResponseHeader().getResult());
 			}
 		}
@@ -141,8 +144,9 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y", StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
-		
+		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y",
+				StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_ONEID) ? "Y" : "N");
+
 		if (StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
 				&& StringUtil.equals(loginRes.getIsLoginSuccess(), "Y")) {
 			/* 로그인 Response 셋팅 */
@@ -162,11 +166,12 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserKey(schUserRes.getUserMbr().getUserKey());
 			res.setUserStatus(userStateVal);
 		} else {
-			throw new Exception("["+loginRes.getCommonResponse().getResultCode()+"] " + loginRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + loginRes.getCommonResponse().getResultCode() + "] "
+					+ loginRes.getCommonResponse().getResultMessage());
 		}
 
 		logger.info("######################## LoginServiceImpl authorizeByMdn end ############################");
-		
+
 		return res;
 	}
 
@@ -196,8 +201,7 @@ public class LoginServiceImpl implements LoginService {
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
 		if (mainStatusCd.equals("US010204")) {// 일시정지
-			throw new Exception(
-					"로그인 5회 입력 오류로 계정이 잠금 상태가 되었습니다. T store Web에서 해제 후 로그인해 주세요.");
+			throw new Exception("로그인 5회 입력 오류로 계정이 잠금 상태가 되었습니다. T store Web에서 해제 후 로그인해 주세요.");
 		}
 
 		/* 회원 인증 요청 */
@@ -215,7 +219,8 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.logInSCComponent(userId, userPw, "Y",	userStateCd.equals("US011503") ? "Y" : "N");
+		LogInUserResponse loginRes = this.logInSCComponent(userId, userPw, "Y",
+				userStateCd.equals("US011503") ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -234,7 +239,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param deviceId
 	 * @param userKey
 	 * @param imMbrNo
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void volatileMemberPoc(String deviceId, String userKey, String imMbrNo) throws Exception {
 		/* 1. 무선회원 가입 */
@@ -242,21 +247,21 @@ public class LoginServiceImpl implements LoginService {
 		if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPManager.IDP_RES_CODE_OK)) {
 			throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] 변동성 회원 가입실패");
 		}
-		
-		/* 2. 회원정보 수정 (변동성 회원인 경우 어떤정보를 업데이트 해야하는지 확인 필요)	*/
+
+		/* 2. 회원정보 수정 (변동성 회원인 경우 어떤정보를 업데이트 해야하는지 확인 필요) */
 		UpdateUserRequest updUserReq = new UpdateUserRequest();
 		updUserReq.setCommonRequest(commonRequest);
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(userKey);
 		userMbr.setImMbrNo(imMbrNo);
-		userMbr.setUserMainStatus(MemberConstants.USER_MAIN_STATUS_NORMAL);
+		// userMbr.setUserMainStatus(MemberConstants.USER_MAIN_STATUS_NORMAL);
 		updUserReq.setUserMbr(userMbr);
-		
-		UpdateUserResponse updUserRes = userSCI.updateUser(updUserReq);
+
+		UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
 		if (!StringUtil.equals(updUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			throw new Exception("[" + updUserRes.getCommonResponse().getResultCode() + "] 변동성 회원정보 업데이트 실패");
 		}
-		
+
 	}
 
 	/**
