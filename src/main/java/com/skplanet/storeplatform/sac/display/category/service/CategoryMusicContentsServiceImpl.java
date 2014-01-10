@@ -66,7 +66,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		int totalCount = 1;
 
 		String filteredBy; // 차트 구분 코드
-		String imageSizeCd; // 이미지 사이즈 코드
 		String purchase;
 		String orderedBy;
 		String menuId;
@@ -74,7 +73,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		String count; // 페이지당 노출 ROW 수
 
 		filteredBy = requestVO.getFilteredBy(); // 차트 구분 코드
-		imageSizeCd = requestVO.getImageSizeCd(); // 이미지 사이즈 코드
 		purchase = requestVO.getPurchase();
 		orderedBy = requestVO.getOrderedBy();
 		menuId = requestVO.getMenuId();
@@ -86,9 +84,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		if (null == filteredBy || "".equals(filteredBy)) {
 			throw new Exception("filteredBy 는 필수 파라메터 입니다.");
-		}
-		if (null == imageSizeCd || "".equals(imageSizeCd)) {
-			throw new Exception("imageSizeCd 는 필수 파라메터 입니다.");
 		}
 		if (null == purchase || "".equals(purchase)) {
 			throw new Exception("purchase 는 필수 파라메터 입니다.");
