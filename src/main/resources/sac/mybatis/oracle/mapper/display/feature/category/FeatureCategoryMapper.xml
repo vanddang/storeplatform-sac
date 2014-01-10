@@ -42,7 +42,13 @@
 		            AND LANG_CD = 'ko'
 		            AND ROWNUM = 1) AS TOP_MENU_NM
 		  FROM (SELECT KA.*
-		          FROM (SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
+		          FROM (SELECT JA.*
+		                     <if test='filterdby == "recommend"'>
+		                     , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.PROD_NM) AS RNUM
+		                     </if>
+		                     <if test='filterdby == "movie1000"'>
+		                     , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.UPD_DT DESC, JA.PROD_NM) AS RNUM
+		                     </if>
 		                  FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
 		                          FROM (SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.UPD_DT DESC) AS RN
 		                                     , A.TENANT_ID
@@ -55,6 +61,7 @@
 		                                     , C.MENU_DESC
 		                                     , D.PROD_GRD_CD
 		                                     , D.USE_PERIOD_UNIT_CD
+		                                     , D.UPD_DT
 		                                     , E.META_CLSF_CD
 		                                     , E.VOD_TITL_NM
 		                                     , E.STRM_EPSD_CNT
@@ -79,7 +86,12 @@
 		                                          FROM  TB_DP_LIST_PROD
 		                                         WHERE  TENANT_ID = #{tenantId}   /* 테넌트ID */
 		                                           AND  LIST_ID = #{listId}       /* ADM000000008 : 운영자추천 멀티미디어 */
+                                                 <if test='filterdby == "recommend"'>
 		                                           AND  ETC_CD = 'DP004801'       /* DP004801 : 영화 */
+                                                 </if>
+                                                 <if test='filterdby == "movie1000"'>
+		                                           AND  ETC_CD = 'DP004807'       /* DP004807 : 1000원관 */
+                                                 </if>
 		                                           AND  EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
 		                                           AND  TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
 		                                           AND  SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
@@ -126,7 +138,7 @@
 		                         WHERE IA.RN = 1
 		                       ) JA
 		               ) KA
-		         WHERE KA.RNUM BETWEEN 1 AND 20
+		         WHERE KA.RNUM BETWEEN #{offset} AND #{count}
 		       )                       LA
 		     , TB_DP_TENANT_PROD_STATS LB
 		     , TB_DP_PROD_IMG          LC

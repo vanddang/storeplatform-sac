@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -57,7 +56,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		CategoryAppRes categoryAppRes = new CategoryAppRes();
+		FeatureCategoryVodRes vodRes = new FeatureCategoryVodRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		// 헤더값 세팅
@@ -81,7 +80,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("영화 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
-			} else if ("movie1000".equals(req.getFilterdby())) {
+			} else {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("영화 1000원관");
 				this.logger.debug("----------------------------------------------------------------");
@@ -197,12 +196,12 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				}
 
 				commonResponse.setTotalCount(vodDto.getTotalCount());
-				categoryAppRes.setProductList(productList);
-				categoryAppRes.setCommonResponse(commonResponse);
+				vodRes.setProductList(productList);
+				vodRes.setCommonResponse(commonResponse);
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
-				categoryAppRes.setCommonResponse(commonResponse);
+				vodRes.setCommonResponse(commonResponse);
 			}
 		} else {
 			this.logger.debug("----------------------------------------------------------------");
@@ -210,6 +209,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("----------------------------------------------------------------");
 		}
 
-		return null;
+		return vodRes;
 	}
 }
