@@ -6,6 +6,13 @@ public class CreateOrderRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	public CreateOrderRes() {
+	}
+
+	public CreateOrderRes(String resultStatus) {
+		this.resultStatus = resultStatus;
+	}
+
 	private String resultStatus;
 
 	public String getResultStatus() {

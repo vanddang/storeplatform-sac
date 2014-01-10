@@ -14,6 +14,10 @@ public class CreateOrderReq extends CommonInfo {
 	private String qty;
 	private String flag;
 
+	public CreateOrderReq() {
+		this.qty = "1";
+		this.flag = "01";
+	}
 	public String getRevOrdNo() {
 		return this.revOrdNo;
 	}
