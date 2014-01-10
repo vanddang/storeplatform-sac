@@ -9,7 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class CreateByMdnTest {
 	@Test
 	public void createByMdn() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url("/member/user/createByMdn/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url("/dev/member/user/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -111,8 +112,8 @@ public class CreateByMdnTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByMdnRes res = (CreateByMdnRes) result;
-						System.out.println(res);
-						assertNotNull(res);
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

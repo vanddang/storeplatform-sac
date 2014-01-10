@@ -154,7 +154,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			logger.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
 			logger.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), "0")) {
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), "0000")) {
 
 				logger.info("## 사용자 회원 가입 실패 ===========================");
 				throw new RuntimeException("사용자 회원 가입 실패");
