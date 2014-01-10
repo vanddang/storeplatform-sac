@@ -62,4 +62,17 @@ public interface IdpService {
 	 */
 	public ImResult rXSetLoginConditionIDP(HashMap map) throws Exception;
 
+	/**
+	 * 
+	 * <pre>
+	 * 신규가입정보를 미동의 사이트에 배포
+	 * - CMD : RXCreateUserIdIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+	public ImResult rXCreateUserIdIDP(HashMap map) throws Exception;
+
 }
