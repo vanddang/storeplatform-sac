@@ -1,0 +1,7 @@
+package com.skplanet.storeplatform.sac.api.v1.member.constant;
+
+public final class MemberTestConstant {
+
+	public static final String PREFIX_SELLER_PATH = "/dev/member/seller";
+
+}

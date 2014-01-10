@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 
@@ -58,16 +59,16 @@ public class LockAccountTest {
 	 * 판매자 계정잠금
 	 * </pre>
 	 */
-	// @Test
+	@Test
 	public void lockAccount() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
 						req.setSellerId("test_jun");
-						logger.info("request param : {}", req.toString());
+						logger.debug("request param : {}", req.toString());
 						return req;
 					}
 				}).success(LockAccountRes.class, new SuccessCallback() {
@@ -75,22 +76,27 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountRes res = (LockAccountRes) result;
 						assertThat(res.getSellerId(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						logger.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
+	/**
+	 * <pre>
+	 * sellerId 공백일경우
+	 * </pre>
+	 */
 	@Test
 	public void lockAccountEmpty() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/seller/lockAccount/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
 						req.setSellerId("");
-						logger.info("request param : {}", req.toString());
+						logger.debug("request param : {}", req.toString());
 						return req;
 					}
 				}).success(LockAccountRes.class, new SuccessCallback() {
@@ -98,7 +104,7 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountRes res = (LockAccountRes) result;
 						assertThat(res.getSellerId(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						logger.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
