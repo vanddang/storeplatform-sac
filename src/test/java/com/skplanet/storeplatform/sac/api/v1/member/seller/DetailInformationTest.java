@@ -21,11 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 
 @ActiveProfiles(value = "local")
@@ -61,22 +59,13 @@ public class DetailInformationTest {
 	@Test
 	public void detailInformation() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/seller/junit/detailInformation/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DetailInformationReq req = new DetailInformationReq();
-						req.setAid("");
-						req.setSellerKey("IF1023501437920130904104346");
-						logger.info("{}", req.toString());
-						return req;
-					}
-				}).success(DetailInformationRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881")
+				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationRes res = (DetailInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("{}", res.toString());
+						logger.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

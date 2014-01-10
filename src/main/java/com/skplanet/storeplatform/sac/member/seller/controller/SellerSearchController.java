@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
  * Updated on : 2014. 1. 8. Updated by : 김경복, 부르칸.
  */
 @Controller
-// @RequestMapping(value = "/member/seller/junit")
+@RequestMapping(value = "/dev/member/seller")
 public class SellerSearchController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SellerSearchController.class);
@@ -37,7 +37,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return
 	 */
-	// @RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
 	private @ResponseBody
 	DuplicateByIdEmailRes duplicateByIdEmail(@RequestBody DuplicateByIdEmailReq req) {
 		// Req Debug
@@ -53,8 +53,8 @@ public class SellerSearchController {
 	 * @param req
 	 * @return
 	 */
-	// @RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
-	// @ResponseBody
+	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
 	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
 
 		return this.sellerSearchService.detailInformation(req);
