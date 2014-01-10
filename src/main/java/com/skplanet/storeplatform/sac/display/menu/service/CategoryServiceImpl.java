@@ -346,7 +346,9 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 
-		if ("DP16".equals(menuId)) { // 음악
+		if ("DP13".equals(menuId)) { // ebook
+			statementId = "MenuCategory.getEBookDetailCategoryList";
+		} else if ("DP16".equals(menuId)) { // 음악
 			statementId = "MenuCategory.getMusicDetailCategoryList";
 		} else if ("DP17".equals(menuId) || "DP18".equals(menuId)) { // 영화/TV 방송
 			statementId = "MenuCategory.getMovieTvDetailCategoryList";

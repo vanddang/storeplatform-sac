@@ -336,5 +336,120 @@
 		         ) C
 		---     WHERE C.MENU_PROD_CNT > 0
 		     ORDER BY C.CAT_PRIOR         
-    </select>	    
+    </select>
+    
+    
+    <!-- EBOOK 상세 카테고리 조회-->
+    <select id="getEBookDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+        /* MenuCategoryMapper.xml, getEBookDetailCategoryList, JuYoungYun, 2014-01-10 */
+    	SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
+             , MENU_ID
+             , MENU_NM
+             , MENU_DESC
+             , MENU_DEPTH
+             , INFR_MENU_YN AS SUB_YN
+             , MENU_PROD_CNT
+             , SUM( MENU_PROD_CNT ) OVER () AS TOTAL_PROD_CNT
+             , FILE_POS
+             , FILE_SIZE
+          FROM
+             (
+              SELECT C.MENU_ID
+                   , C.MENU_NM
+                   , C.MENU_DESC
+                   , C.MENU_DEPTH
+                   , C.INFR_MENU_YN
+                   , C.UP_MENU_ID
+                   , C.EXPO_ORD
+                   , C.FILE_POS
+                   , C.FILE_SIZE
+                   , DECODE( C.INFR_MENU_YN
+                           , 'Y'
+                           , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
+                           , P.CNT ) AS MENU_PROD_CNT
+                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
+                                             ORDER BY C.MENU_DEPTH
+                                                    , C.EXPO_ORD
+                                                    , C.MENU_NM ) AS CAT_PRIOR
+                FROM
+                (
+                    SELECT M.MENU_ID
+                         , D.MENU_NM
+                         , D.MENU_DESC
+                         , TM.EXPO_ORD
+                         , M.MENU_DEPTH
+                         , M.UP_MENU_ID
+                         , M.INFR_MENU_YN
+                         , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
+                         , TM.BODY_FILE_SIZE AS FILE_SIZE
+                      FROM TB_DP_MENU M
+                          ,TB_DP_MENU_DESC D
+                          ,TB_DP_TENANT_MENU TM
+                     WHERE M.MENU_ID = D.MENU_ID
+                       AND TM.MENU_ID = M.MENU_ID
+                       AND TM.TENANT_ID = #{tenantId}
+                       AND TM.SYSTEM_ID = #{systemId}
+                       AND M.MENU_ID LIKE #{menuId}||'%'
+                       AND M.USE_YN = 'Y'
+                       AND D.LANG_CD = 'ko'
+                       AND TM.USE_YN = 'Y'
+                    )  C
+                    ,
+                    (
+                     SELECT MENU_ID
+                          , COUNT(*) AS CNT
+                       FROM
+                          (
+                            SELECT C.MENU_ID
+                                 , CP.PROD_ID AS CHNL_PROD_ID
+                              FROM TB_DP_PROD P
+                                 , TB_DP_PROD_RSHP CP
+                                 , TB_DP_TENANT_PROD TP
+                                 , TB_DP_MENU_PROD_MAPG MP
+                                 , TB_DP_MENU C
+                                 , (SELECT SH.PROD_ID
+                                         , PI.EBOOK_SPRT_YN
+                                         , PI.MAGAZINE_SPRT_YN
+                                      FROM TB_DP_SPRT_DEVICE SH
+                                         , TB_CM_DEVICE PI 
+                                     WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
+                                       AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
+                                       AND PI.USE_YN = 'Y') SHI  
+                                 , TB_DP_PROD P2
+                                 , TB_DP_TENANT_PROD TP2
+                                 , TB_DP_MULTIMDA_PROD PM
+                             WHERE P.PROD_ID = CP.PROD_ID -- CHENAL PROD
+                               AND TP.PROD_ID = CP.PROD_ID
+                               AND TP2.PROD_ID = CP.PART_PROD_ID
+                               AND MP.PROD_ID = P.PROD_ID
+                               AND PM.PROD_ID = CP.PROD_ID
+                               AND MP.MENU_ID = C.MENU_ID
+                               AND CP.PART_PROD_ID = SHI.PROD_ID
+                               AND CP.PART_PROD_ID = P2.PROD_ID
+                               AND C.MENU_ID LIKE #{menuId}||'%'
+                               AND C.USE_YN = 'Y'
+                               AND DECODE( SHI.EBOOK_SPRT_YN
+                                          , 'Y'
+                                          , DECODE( PM.META_CLSF_CD
+                                                  , 'CT24' -- 잡지
+                                                  , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                                  , 'CT26' -- 인터렉티브 잡지
+                                                  , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                                  , 1 )
+                                          , 0 ) = 1
+                               AND P.SVC_GRP_CD = 'DP000203' -- 멀티미디어
+                               AND P2.SVC_GRP_CD = 'DP000203' -- 멀티미디어
+                               AND TP.PROD_STATUS_CD = 'PD000403'
+                               AND TP.EXPO_YN = 'Y'
+                               AND TP2.PROD_STATUS_CD = 'PD000403' 
+                               AND TP2.EXPO_YN = 'Y'
+                           )
+                       GROUP BY MENU_ID
+                      ) P
+                  WHERE C.MENU_ID = P.MENU_ID(+)
+              )
+--        WHERE MENU_PROD_CNT > 0
+          ORDER BY CAT_PRIOR
+    </select>
+        	    
 </mapper>
