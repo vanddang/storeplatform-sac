@@ -9,24 +9,26 @@
  */
 package com.skplanet.storeplatform.sac.other.interpark.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.other.vo.interpark.GetAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.other.vo.interpark.GetAuthKeyRes;
+import com.skplanet.storeplatform.sac.other.interpark.service.InterparkService;
+
 @Controller
 @RequestMapping(value = "/other/interpark")
 public class InterparkController {
 
-	@RequestMapping(value = "/createOrder", method = RequestMethod.POST)
-	@ResponseBody
-	public void createOrder() {
-
-	}
+	@Autowired
+	private InterparkService service;
 
 	@RequestMapping(value = "/getAuthKey", method = RequestMethod.GET)
 	@ResponseBody
-	public void getAuthKey() {
-
+	public GetAuthKeyRes getAuthKey(GetAuthKeyReq Req) {
+		return null;
 	}
 }
