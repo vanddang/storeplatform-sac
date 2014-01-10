@@ -112,9 +112,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
 			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
-			userMbr.setUserType(MemberConstants.USER_STATE_MOBILE); // 모바일회원
-			userMbr.setUserMainStatus(MemberConstants.USER_MAIN_STATUS_MOBILE); // 모바일전용회원
-			userMbr.setUserSubStatus(MemberConstants.USER_SUB_STATUS_MOTION); // 신청
+			userMbr.setUserType(MemberConstants.USER_STATE_MOBILE);
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getDeviceId());// mdn, uuid 받는데로 넣는다. (SC 확인함.)
 			userMbr.setUserTelecom(req.getDeviceTelecom());

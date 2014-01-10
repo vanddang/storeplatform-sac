@@ -29,37 +29,14 @@ public final class MemberConstants {
 	public static final String USER_STATE_IDPID = "US011502"; // IDP사용자
 	public static final String USER_STATE_ONEID = "US011503"; // OneID사용자
 
-	/** 사용자 메인 상태 코드 **/
-	public static final String USER_MAIN_STATUS_MOBILE = "US010201"; // 모바일전용회원
-	public static final String USER_MAIN_STATUS_WATING = "US010202"; // 가가입승인대기
-	public static final String USER_MAIN_STATUS_NORMAL = "US010203"; // 정상
-	public static final String USER_MAIN_STATUS_STOP = "US010204"; // 일시정지
-	public static final String USER_MAIN_STATUS_OWN_SECEDE = "US010205"; // 자의탈퇴
-	public static final String USER_MAIN_STATUS_EMAIL_CERT_WATING = "US010206"; // 이메일변경승인대기
-	public static final String USER_MAIN_STATUS_JOIN_APPLY_ETC = "US010207"; // 가입승인 만료
-	public static final String USER_MAIN_STATUS_AUTHORITY_SECEDE = "US010208"; // 직권탈퇴
-
-	/** 사용자 서브 상태 코드 **/
-	public static final String USER_SUB_STATUS_MOTION = "US010301"; // 신청
-	public static final String USER_SUB_STATUS_FINISH = "US010302"; // 완료
-	public static final String USER_SUB_STATUS_REJECT = "US010303"; // 거절
-	public static final String USER_SUB_STATUS_TURN_MOTION = "US010304"; // 전환신청
-	public static final String USER_SUB_STATUS_TURN_FINISH = "US010305"; // 전환완료
-	public static final String USER_SUB_STATUS_TURN_REJECT = "US010306"; // 전환거절
-	public static final String USER_SUB_STATUS_SECEDE_MOTION = "US010307"; // 탈퇴신청
-	public static final String USER_SUB_STATUS_SECEDE_FINISH = "US010308"; // 탈퇴완료
-	public static final String USER_SUB_STATUS_MOTION_AGAIN = "US010309"; // 재신청
-	public static final String USER_SUB_STATUS_APPLY_WATING = "US010310"; // 승인대기
-	public static final String USER_SUB_STATUS_PAUSE = "US010311"; // 일시정지
-
-	/** 메인상태코드 (확인후 삭제 예정) */
+	/** 메인상태코드 */
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
 	public static final String MAIN_STATUS_SECEDE = "US010202"; // 탈퇴(자의탈퇴/직권탈퇴)
 	public static final String MAIN_STATUS_WATING = "US010203"; // 가가입
 	public static final String MAIN_STATUS_PAUSE = "US010204"; // 일시정지(로그인제한/직권중지/7일이용정지/30일이용정지/영구이용정지)
 	public static final String MAIN_STATUS_CONVERSION = "US010205"; // 전환
 
-	/** 서브상태 코드 (확인후 삭제 예정) */
+	/** 서브상태 코드 */
 	public static final String SUB_STATUS_NORMAL = "US010301"; // 정상
 	public static final String SUB_STATUS_SECEDE_MOTION = "US010302"; // 탈퇴신청
 	public static final String SUB_STATUS_SECEDE_FINISH = "US010303"; // 탈퇴완료
