@@ -606,7 +606,6 @@ public class ShoppingCouponContoller {
 			Document doc = null;
 			ByteArrayInputStream in = new ByteArrayInputStream(couponParameterInfo.getRData().getBytes());
 			doc = builder.parse(in);
-			this.log.info("ContentXML xml = " + couponParameterInfo.getRData());
 
 			Element root = doc.getDocumentElement();
 
@@ -735,18 +734,19 @@ public class ShoppingCouponContoller {
 						}
 
 					}
-					System.out.println("srcItemContentId::" + srcItemContentId);
 					if ("C".equalsIgnoreCase(couponParameterInfo.getCudType())) {
 						itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
+						itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
 					} else if ("U".equalsIgnoreCase(couponParameterInfo.getCudType())) {
+						System.out.println(":::::::::::" + i + ":::::::::::::" + itemProdId);
 						itemProdId = this.couponItemService.getGenerateId(srcItemContentId); // 기존 아이템 ID 가져오기
+						itemInfo.setProdId(itemProdId);
 					}
-
 					if (StringUtils.isBlank(itemProdId)) {
 						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
 								"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
 					}
-					itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
+
 					itemInfoList.add(itemInfo);
 					kk++;
 				}
@@ -836,8 +836,20 @@ public class ShoppingCouponContoller {
 		String message = "";
 
 		try {
+			if (couponInfo.getProdId() == "") {
+				message = "유효성 검사 실패 [couponName : 상품코드] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (couponInfo.getCouponName() == "") {
+				message = "유효성 검사 실패 [couponName : 쿠폰명] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (couponInfo.getCouponName().length() > 100) {
 				message = "유효성 검사 실패 [couponName : 쿠폰명:" + couponInfo.getCouponName() + "]";
+				result = false;
+			}
+			if (couponInfo.getIssueSDate() == "") {
+				message = "유효성 검사 실패 [issueSDate : 발급시작일시] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (couponInfo.getIssueSDate() != "") {
@@ -846,64 +858,101 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
+			if (couponInfo.getIssueEDate() == "") {
+				message = "유효성 검사 실패 [issueEDate : 발급종료일시] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (couponInfo.getIssueEDate() != "") {
 				if (couponInfo.getIssueEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueEDate())) {
 					message = "유효성 검사 실패 [issueEDate : 발급종료일시:" + couponInfo.getIssueEDate() + "]";
 					result = false;
 				}
 			}
+			if (couponInfo.getValidSDate() == "") {
+				message = "유효성 검사 실패 [validSDate : 유효시작일시] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (couponInfo.getValidSDate() != "") {
 				if (couponInfo.getValidSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidSDate())) {
 					message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]";
 					result = false;
 				}
-			} else {
-				message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]";
+			}
+			if (couponInfo.getValidEDate() == "") {
+				message = "유효성 검사 실패 [validEDate : 유효종료일시] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-
 			if (couponInfo.getValidEDate() != "") {
 				if (couponInfo.getValidEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidEDate())) {
 					message = "유효성 검사 실패 [validEDate : 유효종료일시:" + couponInfo.getValidEDate() + "]";
 					result = false;
 				}
 			}
+			if (couponInfo.getValidUntil() == "") {
+				message = "유효성 검사 실패 [validUntil : 유효일수] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (couponInfo.getValidUntil() != "") {
 				if (!StringUtils.isNumeric(couponInfo.getValidUntil())) {
 					message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]";
 					result = false;
 				}
-			} else {
-				message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]";
-				result = false;
 			}
-			if (couponInfo.getDescription().length() > 250) {
-				message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]";
-				result = false;
+			if (couponInfo.getDescription() != "") {
+				if (couponInfo.getDescription().length() > 250) {
+					message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]";
+					result = false;
+				}
 			}
-			if (couponInfo.getDirection().length() > 4000) {
-				message = "유효성 검사 실패 [direction : 사용장소:" + couponInfo.getDirection() + "]";
-				result = false;
+			if (couponInfo.getDirection() != "") {
+				if (couponInfo.getDirection().length() > 4000) {
+					message = "유효성 검사 실패 [direction : 사용장소:" + couponInfo.getDirection() + "]";
+					result = false;
+				}
 			}
-			if (couponInfo.getUseCondition().length() > 4000) {
-				message = "유효성 검사 실패 [useCondition : 사용제한:" + couponInfo.getUseCondition() + "]";
-				result = false;
+			if (couponInfo.getUseCondition() != "") {
+				if (couponInfo.getUseCondition().length() > 4000) {
+					message = "유효성 검사 실패 [useCondition : 사용제한:" + couponInfo.getUseCondition() + "]";
+					result = false;
+				}
 			}
-			if (couponInfo.getAddtionalInfo().length() > 1000) {
-				message = "유효성 검사 실패 [addtionalInfo : 주의사항:" + couponInfo.getAddtionalInfo() + "]";
-				result = false;
+			if (couponInfo.getAddtionalInfo() != "") {
+				if (couponInfo.getAddtionalInfo().length() > 1000) {
+					message = "유효성 검사 실패 [addtionalInfo : 주의사항:" + couponInfo.getAddtionalInfo() + "]";
+					result = false;
+				}
 			}
-			if (couponInfo.getRefundCondition().length() > 4000) {
-				message = "유효성 검사 실패 [refundCondition : 구매취소(환불) 조건:" + couponInfo.getRefundCondition() + "]";
-				result = false;
+			if (couponInfo.getRefundCondition() != "") {
+				if (couponInfo.getRefundCondition().length() > 4000) {
+					message = "유효성 검사 실패 [refundCondition : 구매취소(환불) 조건:" + couponInfo.getRefundCondition() + "]";
+					result = false;
+				}
 			}
+
 			if (!couponInfo.getStoreSaleType().equals("1") && !couponInfo.getStoreSaleType().equals("2")
 					&& !couponInfo.getStoreSaleType().equals("3")) {
 				message = "유효성 검사 실패 [storeSaleType : 상품유형:" + couponInfo.getStoreSaleType() + "]";
 				result = false;
 			}
+			if (couponInfo.getStoreSaleType() == "") {
+				message = "유효성 검사 실패 [storeSaleType : 상품유형] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (!couponInfo.getStoreb2bFlag().equals("Y") && !couponInfo.getStoreb2bFlag().equals("N")) {
 				message = "유효성 검사 실패 [storeb2bFlag : B2B상품여부:" + couponInfo.getStoreb2bFlag() + "]";
+				result = false;
+			}
+			if (couponInfo.getStoreb2bFlag() == "") {
+				message = "유효성 검사 실패 [storeb2bFlag : B2B상품여부] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+
+			if (couponInfo.getStoreCatalogCode() == "") {
+				message = "유효성 검사 실패 [storeCatalogCode : 카탈로그 번호] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (couponInfo.getAccountingRate() == "") {
+				message = "유효성 검사 실패 [accountingRate : 정산율 번호] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (couponInfo.getAccountingRate() != "") {
@@ -912,6 +961,24 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
+
+			if (!couponInfo.getTaxType().equals("01") && !couponInfo.getTaxType().equals("02")) {
+				message = "유효성 검사 실패 [taxType : 세금구분유형:" + couponInfo.getTaxType() + "]";
+				result = false;
+			}
+			if (couponInfo.getTaxType() == "") {
+				message = "유효성 검사 실패 [taxType : 세금구분유형] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (couponInfo.getBpId() == "") {
+				message = "유효성 검사 실패 [bpId : 업체아이디] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (couponInfo.getCoupnStatus() == "") {
+				message = "유효성 검사 실패 [coupnStatus : 쿠폰상태] 이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+
 			if (!result) {
 				this.setERR_MESSAGE(message);
 				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
@@ -941,8 +1008,24 @@ public class ShoppingCouponContoller {
 		boolean result = true;
 		String message = "";
 		try {
+			if (itemInfo.getItemCode() == "") {
+				message = "유효성 검사 실패 [itemName : 단품코드 :이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (itemInfo.getStoreLicenseCode() == "") {
+				message = "유효성 검사 실패 [storeLicenseCode : 스토어 라이선스 번호 :이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (itemInfo.getItemName() == "") {
+				message = "유효성 검사 실패 [itemName : 단품명 :이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (itemInfo.getItemName().length() > 100) {
 				message = "유효성 검사 실패 [itemName : 단품명 :" + itemInfo.getItemName() + "]";
+				result = false;
+			}
+			if (itemInfo.getOrgPrice() == "") {
+				message = "유효성 검사 실패 [orgPrice : 정상가격 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (itemInfo.getOrgPrice() != "") {
@@ -951,11 +1034,19 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
+			if (itemInfo.getSalePrice() == "") {
+				message = "유효성 검사 실패 [salePrice : 할인가격 ]이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (itemInfo.getSalePrice() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getSalePrice())) {
 					message = "유효성 검사 실패 [salePrice : 할인가격 :" + itemInfo.getSalePrice() + "]";
 					result = false;
 				}
+			}
+			if (itemInfo.getItemPrice() == "") {
+				message = "유효성 검사 실패 [itemPrice : 단품가격 ]이 XML에 존재하지 않습니다.";
+				result = false;
 			}
 			if (itemInfo.getItemPrice() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getItemPrice())) {
@@ -963,11 +1054,19 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
+			if (itemInfo.getDcRate() == "") {
+				message = "유효성 검사 실패 [dcRate : 할인율 ]이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (itemInfo.getDcRate() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getDcRate())) {
 					message = "유효성 검사 실패 [dcRate : 할인율 :" + itemInfo.getDcRate() + "]";
 					result = false;
 				}
+			}
+			if (itemInfo.getMaxCount() == "") {
+				message = "유효성 검사 실패 [maxCount : 판매개수 ]이 XML에 존재하지 않습니다.";
+				result = false;
 			}
 			if (itemInfo.getMaxCount() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCount())) {
@@ -975,17 +1074,29 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
+			if (itemInfo.getMaxCountMonthly() == "") {
+				message = "유효성 검사 실패 [maxCountMonthly : 월간 상품 최대 판매 수량 ]이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (itemInfo.getMaxCountMonthly() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountMonthly())) {
 					message = "유효성 검사 실패 [maxCountMonthly : 월간 상품 최대 판매 수량 :" + itemInfo.getMaxCountMonthly() + "]";
 					result = false;
 				}
 			}
+			if (itemInfo.getMaxCountDaily() == "") {
+				message = "유효성 검사 실패 [maxCountMonthly : 일간 상품 최대 판매 수량 ]이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (itemInfo.getMaxCountDaily() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountDaily())) {
 					message = "유효성 검사 실패 [maxCountDaily : 일간 상품 최대 판매 수량 :" + itemInfo.getMaxCountDaily() + "]";
 					result = false;
 				}
+			}
+			if (itemInfo.getMaxCountMonthlyUser() == "") {
+				message = "유효성 검사 실패 [maxCountMonthlyUser : 1인 당월 최대 구매 수량 ]이 XML에 존재하지 않습니다.";
+				result = false;
 			}
 			if (itemInfo.getMaxCountMonthlyUser() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountMonthlyUser())) {
@@ -994,11 +1105,19 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
+			if (itemInfo.getMaxCountDailyUser() == "") {
+				message = "유효성 검사 실패 [maxCountDailyUser : 1인 당일 최대 구매 수량 ]이 XML에 존재하지 않습니다.";
+				result = false;
+			}
 			if (itemInfo.getMaxCountDailyUser() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountDailyUser())) {
 					message = "유효성 검사 실패 [maxCountDailyUser : 1인 당일 최대 구매 수량 :" + itemInfo.getMaxCountDailyUser() + "]";
 					result = false;
 				}
+			}
+			if (itemInfo.getBuyMaxLimit() == "") {
+				message = "유효성 검사 실패 [buyMaxLimit : 최대결제수량 ]이 XML에 존재하지 않습니다.";
+				result = false;
 			}
 			if (itemInfo.getBuyMaxLimit() != "") {
 				if (!StringUtils.isNumeric(itemInfo.getBuyMaxLimit())) {
@@ -1006,26 +1125,24 @@ public class ShoppingCouponContoller {
 					result = false;
 				}
 			}
-			if (itemInfo.getItemValue1() == "") {
-				message = "유효성 검사 실패 [itemValue1 : 옵션1 :" + itemInfo.getItemValue1() + "]";
-				result = false;
-			}
-			if (itemInfo.getItemValue2() == "") {
-				message = "유효성 검사 실패 [itemValue2 : 옵션2 :" + itemInfo.getItemValue2() + "]";
-				result = false;
-			}
+
 			if (itemInfo.getBpManageId() != "") {
-				if (itemInfo.getBpManageId() == "" || itemInfo.getBpManageId().length() > 32) {
+				if (itemInfo.getBpManageId().length() > 32) {
 					message = "유효성 검사 실패 [bpManageId : BP관리ID :" + itemInfo.getBpManageId() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getShippingUrl() == "") {
-				message = "유효성 검사 실패 [shippingUrl : 배송지 정보 입력 URL :" + itemInfo.getShippingUrl() + "]";
-				result = false;
-			}
+
 			if (!itemInfo.getCudType().equals("C") && !itemInfo.getCudType().equals("U")) {
 				message = "유효성 검사 실패 [cudType : 추가수정플래그 :" + itemInfo.getCudType() + "]";
+				result = false;
+			}
+			if (itemInfo.getCudType() == "") {
+				message = "유효성 검사 실패 [cudType : 추가수정플래그 ]이 XML에 존재하지 않습니다.";
+				result = false;
+			}
+			if (itemInfo.getItemStatus() == "") {
+				message = "유효성 검사 실패 [itemStatus : 단품상태 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (!result) {

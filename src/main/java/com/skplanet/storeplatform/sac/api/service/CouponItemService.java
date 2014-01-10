@@ -103,17 +103,10 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
-	 * 기존 ProductId를 가지고 새로 만든 productId 조회 한다.
-	 * </pre>
-	 */
-	public String getProductID(String couponCode);
-
-	/**
-	 * <pre>
 	 * 상태값을 변경 한다.
 	 * </pre>
 	 */
-	public void updateCouponStatus(String productID, String dpStatusCode, String upType, String itemCode);
+	public void updateCouponStatus(String newCouponCode, String dpStatusCode, String upType, String itemCode);
 
 	/**
 	 * <pre>

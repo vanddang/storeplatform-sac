@@ -162,6 +162,7 @@ public class IcmsJobPrint {
 			debugMsg.append("b2bProdYn = " + info.getB2bProdYn() + " \n");
 			debugMsg.append("dlvProdYn = " + info.getDlvProdYn() + " \n");
 			debugMsg.append("mangBpId = " + info.getMangBpId() + " \n");
+			debugMsg.append("mangBpId = " + info.getSrcContentId() + " \n");
 
 			debugMsg.append("regId = " + info.getRegId() + " \n");
 			debugMsg.append("updId = " + info.getUpdId() + " \n");

@@ -150,7 +150,6 @@
              CONTENTS_TYPE_CD        = NVL(#{contentsTypeCd},CONTENTS_TYPE_CD)                  /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
             ,EPSD_CNT                = NVL(#{epsdCnt},EPSD_CNT)                                 /* 에피소드_수 */
             ,CHNL_COMP_NM            = NVL(#{chnlCompNm},CHNL_COMP_NM)                          /* 채널_회사_명 */
-            ,SAMPL_URL               = NVL(#{samplUrl},SAMPL_URL)                               /* 샘플_URL */
             ,SALE_YN                 = NVL(#{saleYn},SALE_YN)                                   /* 판매_여부 */
             ,CONTENTS_ORDR_CD        = NVL(#{contentsOrdrCd},CONTENTS_ORDR_CD)                  /* 컨텐츠_오더_코드(D) */
             ,META_CLSF_CD            = NVL(#{metaClsfCd},META_CLSF_CD)                          /* 메타_구분_코드(CT28) */
@@ -167,7 +166,6 @@
             ,B2B_PROD_YN             = NVL(#{b2bProdYn},B2B_PROD_YN)                            /* B2B_상품_여부 */
             ,DLV_PROD_YN             = NVL(#{dlvProdYn},DLV_PROD_YN)                            /* 배송_상품_여부 */
             ,MANG_BP_ID              = NVL(#{mangBpId},MANG_BP_ID)                              /* 관리_BP_ID */
-            ,SRC_CONTENT_ID          = NVL(#{srcContentId},SRC_CONTENT_ID)                      /* 소스_컨텐트_ID */
             ,UPD_ID                  = NVL(#{updId},UPD_ID)                                     /* 수정_ID */
             ,UPD_DT                  = sysdate                                                  /* 수정_일시 */
         where 1=1
@@ -249,7 +247,7 @@
      /* CouponMapper.xml, updateTbDpProdCatalogMapgInfo, SAC : 김형식 , 2013-01-08 */
         update TB_DP_PROD_CATALOG_MAPG
         set
-            ,BASE_YN   = NVL(#{baseYn},BASE_YN)         /* 기본_여부 */
+             BASE_YN   = NVL(#{baseYn},BASE_YN)         /* 기본_여부 */
             ,USE_YN    = NVL(#{useYn},USE_YN)           /* 사용_여부 */
             ,UPD_ID    = NVL(#{updId},UPD_ID)           /* 수정_ID */
             ,UPD_DT    = sysdate                        /* 수정_일시 */
@@ -372,9 +370,9 @@
         ) values (
              #{tenantId}
             ,#{prodId}
-            ,sysdate
+            ,TO_DATE(#{applyStartDt},'yyyymmddhh24miss')
             ,#{seq}
-            ,sysdate
+            ,TO_DATE(#{applyEndDt},'yyyymmddhh24miss')
             ,#{prodAmt}
             ,#{chnlUnlmtAmt}
             ,#{chnlPeriodAmt}
@@ -394,9 +392,9 @@
      /* CouponMapper.xml, updateTbDpTenantProdPriceInfo, SAC : 김형식 , 2013-01-08 */
         update TB_DP_TENANT_PROD_PRICE
         set
-             APPLY_START_DT = sysdate                                 /* 적용_시작_일시 */
+             APPLY_START_DT = TO_DATE(#{applyStartDt},'yyyymmddhh24miss') /* 적용_시작_일시 */
             ,SEQ            = NVL(#{seq},SEQ)                         /* SEQ */
-            ,APPLY_END_DT   = sysdate                                 /* 적용_종료_일시 */
+            ,APPLY_END_DT   = TO_DATE(#{applyEndDt},'yyyymmddhh24miss')   /* 적용_종료_일시 */
             ,PROD_AMT       = NVL(#{prodAmt},PROD_AMT)                /* 상품_금액 */
             ,CHNL_UNLMT_AMT = NVL(#{chnlUnlmtAmt},CHNL_UNLMT_AMT)     /* 채널_무제한_금액 */
             ,CHNL_PERIOD_AMT= NVL(#{chnlPeriodAmt},CHNL_PERIOD_AMT)    /* 채널_기간_금액 */
@@ -412,34 +410,33 @@
     </update>            
     
     
-    
-    <!--기존 ProductId를 가지고 새로 만든 productId 조회-->
-    <select id="getProductID" resultType="String" parameterType="String">
-       /* CouponMapper.xml, getProductID, SAC : 김형식 , 2013-01-08 */
-        SELECT 
-            PROD_ID
-        FROM TB_DP_SHPG_PROD
-        WHERE PROD_ID = #{prodId}
-    </select>
-    
     <!-- 전시단 쿠폰상품 상태변경 -->
     <update id="updateDPCouponStatus" parameterType="HashMap">
         /* CouponMapper.xml, updateDPCouponStatus, SAC : 김형식 , 2013-01-08 */
         UPDATE 
             TB_DP_TENANT_PROD
         SET PROD_STATUS_CD = #{dpStatusCode}
-        <if test="upType != '2'">
-        WHERE PROD_ID =#{prodId}
+        WHERE 1=1
+        <if test='upType == "0"'>
+          AND PROD_ID =#{prodId}
         </if>
-        <if test="upType == '2'">
-        WHERE PROD_ID IN (
+        <if test='upType == "1"'>
+          AND PROD_ID =#{itemCode}
+        </if>
+        <if test='upType == "2"'>        
+          AND PROD_ID IN (
                SELECT 
-                       A.PROD_ID  
+                      PROD_ID 
+                 FROM TB_DP_SHPG_PROD
+                WHERE  PROD_ID = #{prodId}
+            UNION ALL 
+               SELECT 
+                       B.PART_PROD_ID
                 FROM   TB_DP_SHPG_PROD A 
                       ,TB_DP_PROD_RSHP B
                 WHERE A.PROD_ID = B.PROD_ID
                   AND A.PROD_ID = #{prodId}     
-            )
+          )
         </if>
     </update>
     
@@ -450,7 +447,7 @@
              TB_DP_SHPG_PROD
         SET EPSD_CNT = (
 				SELECT 
-				       COUNT(A.PROD_ID)  
+				       COUNT(B.PART_PROD_ID)  
 				FROM   TB_DP_SHPG_PROD A 
 				      ,TB_DP_PROD_RSHP B
 				      ,TB_DP_TENANT_PROD C
@@ -470,13 +467,15 @@
             TB_DP_SHPG_CATALOG
         SET CHNL_CNT =  (
 				  SELECT 
-				        COUNT(A.PROD_ID)
+				        COUNT(B.PROD_ID)
 				  FROM  TB_DP_PROD_CATALOG_MAPG A
-				       ,TB_DP_SHPG_PROD B
+				       ,TB_DP_TENANT_PROD B
 				  WHERE A.PROD_ID = B.PROD_ID
-				    AND  A.BASE_YN ='Y'
-				    AND  A.USE_YN ='Y'      
-				    AND A.CATALOG_ID IN (
+				    AND A.BASE_YN ='Y'
+				    AND A.USE_YN ='Y'
+				    AND B.EXPO_YN ='Y' 
+				    AND B.PROD_STATUS_CD = 'PD000403'      
+				    AND A.CATALOG_ID = (
 				         SELECT 
 				             CATALOG_ID 
 				         FROM TB_DP_PROD_CATALOG_MAPG
@@ -485,18 +484,12 @@
         )
         WHERE CATALOG_ID =
         (
-                 SELECT 
-                    A.CATALOG_ID
-                  FROM TB_DP_PROD_CATALOG_MAPG A
-                      ,TB_DP_SHPG_PROD B
-                      ,TB_DP_TENANT_PROD C
-                  WHERE A.PROD_ID = B.PROD_ID
-                   AND  A.PROD_ID =C.PROD_ID
-                   AND  A.BASE_YN ='Y'
-                   AND  A.USE_YN ='Y'
-                   AND  C.EXPO_YN ='Y'
-                   AND  C.PROD_STATUS_CD = 'PD000403'   
-                   AND  A.PROD_ID =#{prodId}        
+          SELECT 
+                 CATALOG_ID 
+            FROM TB_DP_PROD_CATALOG_MAPG
+           WHERE PROD_ID =#{prodId}
+             AND BASE_YN ='Y'
+             AND USE_YN ='Y'    
         )
         
     </update>
@@ -507,19 +500,20 @@
         MERGE INTO 
             TB_DP_PROD_OPT A
         USING ( SELECT  T1.CHNL_PROD_ID
-                        ,T1.OPT_PD_NM1
-                        ,CASE WHEN SUM(CASE WHEN T3.PROD_STAT_CD = 'PD000403' THEN 1 ELSE 0  END) > 0 THEN 'Y' ELSE 'N' END EXPO_YN
+                        ,T1.OPT1_NM
+                        ,CASE WHEN SUM(CASE WHEN T3.PROD_STATUS_CD = 'PD000403' THEN 1 ELSE 0  END) > 0 THEN 'Y' ELSE 'N' END EXPO_YN
                 FROM 
                       TB_DP_PROD_OPT T1
                     , TB_DP_SHPG_PROD T2
                     , TB_DP_TENANT_PROD T3
-                WHERE T1.CHNL_PROD_ID != T1.PROD_ID
+                WHERE T1.CHNL_PROD_ID != T1.EPSD_PROD_ID
                 AND T1.EPSD_PROD_ID = T2.PROD_ID
                 AND T1.EPSD_PROD_ID = T3.PROD_ID
-                AND T1.CHNL_PROD_ID = (SELECT DISTINCT CHANNEL_ID FROM TB_DP_PROD_RSHP WHERE PROD_ID = #{prodId} )
-                GROUP BY T1.CHNL_PROD_ID, T1.OPT_PD_NM1
+                AND T3.EXPO_YN ='Y'                
+                AND T1.CHNL_PROD_ID = #{prodId}
+                GROUP BY T1.CHNL_PROD_ID, T1.OPT1_NM
         ) B
-        ON (A.CHNL_PROD_ID = B.CHNL_PROD_ID AND A.OPT_PD_NM1 = B.OPT_PD_NM1 AND DP_ORDER = 1)
+        ON (A.CHNL_PROD_ID = B.CHNL_PROD_ID AND A.OPT1_NM = B.OPT1_NM AND EXPO_ORD = 1)
         WHEN MATCHED THEN
         UPDATE
             SET A.EXPO_YN = B.EXPO_YN

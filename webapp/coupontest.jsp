@@ -20,17 +20,17 @@
 
 		<table border=0>
 			<tr>
-				<td>BrandCode <input type="text" name='brandCode'  size=20 value ="b1234"></td>
+				<td>BrandCode <input type="text" name='brandCode'  size=20 value ="BR1111"></td>
 				<td>BrandName <input type="text" name='brandName'  size=20 value ="조은상품"></td>
 			</tr>
 			<tr>
-				<td>brandCategory  <input type="text" name='brandCategory'  size=20 value ="DP28007"></td>
+				<td>brandCategory  <input type="text" name='brandCategory'  size=20 value ="DP28005"></td>
 				<td>brandImage <input type="text" name='brandImage'  size=20 value ="http://tstore.co.kr/SMILE_DATA5/COUPON/201307/17/CL00000397/1372868171_2748_5723_180x180.jpg"></td>
 			</tr>
 		</table>
 		<table border=0>
 			<tr>
-				<td>CatalogId <input type="text" name='catalogCode'  size=20 value ="c1234"></td>
+				<td>CatalogId <input type="text" name='catalogCode'  size=20 value ="CT1111"></td>
 				<td>CatalogNm  <input type="text" name='catalogName'  size=20 value ="키탈로그상품"></td>
 			</tr>
 			<tr>
@@ -50,7 +50,8 @@
 
 			</tr>
             <tr>
-                <td>couponCode <input type="text" name='couponCode'  size=20 value ="S900000989"></td>
+                <td>couponCode <input type="text" name='couponCode'  size=20 value ="103826"></td>
+                <td>couponCode <input type="text" name='itemCode'  size=20 value ="103827"></td>
                 <td>
                     상품 상태 : <select name='coupnStatus' >
                     <option value="3">판매중</option>
@@ -80,15 +81,15 @@
 	<refundCondition><![CDATA[구매후 1주일 이내 취소 가능]]></refundCondition>
 	<storeSaleType>1</storeSaleType>
 	<storeb2bFlag>N</storeb2bFlag>
-	<storeCatalogCode>5000000242</storeCatalogCode>
+	<storeCatalogCode>CT1111</storeCatalogCode>
 	<accountingRate>95</accountingRate>
 	<taxType>01</taxType>
 	<bpId>testbp2</bpId>
-	<coupnStatus>2</coupnStatus>
+	<coupnStatus>3</coupnStatus>
 	<items>
 		<item>
 			<itemCode><%= DateUtil.getToday("HHmmss") %>1</itemCode>
-			<storeLicenseCode>4444</storeLicenseCode>
+			<storeLicenseCode>5555</storeLicenseCode>
 			<itemName><%= DateUtil.getToday("yyyyMMddHH") %>단품1</itemName>
 			<orgPrice>1000</orgPrice>
 			<salePrice>900</salePrice>
@@ -104,12 +105,12 @@
 			<itemValue2>단품속성11</itemValue2>
 			<bpManageId>4444</bpManageId>
 			<ShippingUrl>http://www.shopingcoupon.co.kr</ShippingUrl>
-			<itemStatus>2</itemStatus>
+			<itemStatus>3</itemStatus>
 			<cudType>C</cudType>
 		</item>
 		<item>
 			<itemCode><%= DateUtil.getToday("HHmmss") %>2</itemCode>
-			<storeLicenseCode>4445</storeLicenseCode>
+			<storeLicenseCode>5556</storeLicenseCode>
 			<itemName><%= DateUtil.getToday("yyyyMMddHH") %>단품2</itemName>
 			<orgPrice>1500</orgPrice>
 			<salePrice>950</salePrice>
@@ -125,12 +126,12 @@
 			<itemValue2>단품속성22</itemValue2>
 			<bpManageId>4445</bpManageId>
 			<ShippingUrl>http://www.shopingcoupon.co.kr</ShippingUrl>
-			<itemStatus>2</itemStatus>
+			<itemStatus>3</itemStatus>
 			<cudType>C</cudType>
 		</item>
 		<item>
 			<itemCode><%= DateUtil.getToday("HHmmss") %>3</itemCode>
-			<storeLicenseCode>4446</storeLicenseCode>
+			<storeLicenseCode>5557</storeLicenseCode>
 			<itemName><%= DateUtil.getToday("yyyyMMddHH") %>단품3</itemName>
 			<orgPrice>1600</orgPrice>
 			<salePrice>960</salePrice>
@@ -146,7 +147,7 @@
 			<itemValue2>단품속성32</itemValue2>
 			<bpManageId>4446</bpManageId>
 			<ShippingUrl>http://www.shopingcoupon.co.kr</ShippingUrl>
-			<itemStatus>2</itemStatus>
+			<itemStatus>3</itemStatus>
 			<cudType>C</cudType>
 		</item>
 	</items>

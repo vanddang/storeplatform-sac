@@ -137,8 +137,8 @@ public class CouponConstants {
 	public final static String PAY_CODE_GIFTCARD = "DP006301"; // 상품권
 	public final static String PAY_CODE_CUPON = "DP006302"; // 교환권
 	public final static String PAY_CODE_DELIVER = "DP006303"; // 배송상품
-	public final static String OPT_NUMBER_FOR_CHANNEL = "1"; // 옵션 전시순서(채널용)
-	public final static String OPT_NUMBER_FOR_EPISODE = "2"; // 옵션 전시순서(에피소드용)
+	public final static int OPT_NUMBER_FOR_CHANNEL = 1; // 옵션 전시순서(채널용)
+	public final static int OPT_NUMBER_FOR_EPISODE = 2; // 옵션 전시순서(에피소드용)
 
 	public final static String CUPON_SVC_GRP_CD = "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
 	public final static String CHNL_TP_CD_CUPON = "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
