@@ -37,7 +37,6 @@ import com.skplanet.storeplatform.sac.client.other.vo.search.Search;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchCategory;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
-import com.skplanet.storeplatform.sac.common.service.CategoryService;
 import com.skplanet.storeplatform.sac.common.service.CommonService;
 import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.common.vo.Device;
@@ -54,8 +53,8 @@ public class SearchServiceSampleImpl implements SearchService {
 	@Autowired
 	private CommonService commonService;
 
-	@Autowired
-	private CategoryService categoryService;
+	// @Autowired
+	// private CategoryService categoryService;
 
 	private final Map<String, String> orderMap;
 
@@ -123,11 +122,12 @@ public class SearchServiceSampleImpl implements SearchService {
 		// 그외 카테고리가 있는경우는 카테고리 검색임으로 아래와 같이 셋팅을한다.
 		// 카테고리, offset, count를 설정한다.
 		// String topCatCd = "";
-		if (StringUtils.equals(searchReq.getCategory(), "app")) {
-			tstoreSearchReq.setCategory("DP000503,DP000504,DP000508");
-		} else {
-			tstoreSearchReq.setCategory(this.categoryService.getCategoryCd(searchReq.getCategory()));
-		}
+		// if (StringUtils.equals(searchReq.getCategory(), "app")) {
+		// tstoreSearchReq.setCategory("DP000503,DP000504,DP000508");
+		// } else {
+		// tstoreSearchReq.setCategory(this.categoryService.getCategoryCd(searchReq.getCategory()));
+		// }
+		tstoreSearchReq.setCategory(StringUtils.trimToEmpty(searchReq.getCategory()));
 		tstoreSearchReq.setOffset(searchReq.getOffset());
 		tstoreSearchReq.setCount(searchReq.getCount());
 	}
@@ -179,11 +179,13 @@ public class SearchServiceSampleImpl implements SearchService {
 		List<String> listMeta17 = new ArrayList<String>();
 
 		// 카테고리가 app(DP000503,DP000504,DP000508)
-		if (StringUtils.equals(searchReq.getCategory(), "app") || StringUtils.equals(searchReq.getCategory(), "all")) {
+		if (StringUtils.equals(searchReq.getCategory(), "DP000503,DP000504,DP000508")
+				|| StringUtils.equals(searchReq.getCategory(), "all")
+				|| StringUtils.equals(searchReq.getCategory(), "")) {
 			listMeta17.add("I");
 		}
 		// 그외 카테고리는 Device 정보에서 필요한 메타값을 셋팅
-		if (!StringUtils.equals(searchReq.getCategory(), "app")) {
+		if (!StringUtils.equals(searchReq.getCategory(), "DP000503,DP000504,DP000508")) {
 			listMeta17.add("B");
 			// 고화질 지원여부
 			if (StringUtils.equals(device.getSdVideoSprtYn(), "Y")) {
@@ -264,11 +266,12 @@ public class SearchServiceSampleImpl implements SearchService {
 				for (Group group : groups) {
 					if (group.getDoclist().getNumFound() > 0) {
 						SearchCategory category = new SearchCategory();
-						if (StringUtils.equals(group.getGroupValue(), "DP000503,DP000504,DP000508")) {
-							category.setCategoryNm("app");
-						} else {
-							category.setCategoryNm(this.categoryService.getCategoryEngNm(group.getGroupValue()));
-						}
+						// if (StringUtils.equals(group.getGroupValue(), "DP000503,DP000504,DP000508")) {
+						// category.setCategoryNm("app");
+						// } else {
+						// category.setCategoryNm(this.categoryService.getCategoryEngNm(group.getGroupValue()));
+						// }
+						category.setCategoryCd(group.getGroupValue());
 						category.setCategoryCnt(group.getDoclist().getNumFound());
 						categoryList.add(category);
 						docList.addAll(group.getDoclist().getDocs());
@@ -280,11 +283,12 @@ public class SearchServiceSampleImpl implements SearchService {
 		} else {
 			if (header.getTotalCount() > 0) {
 				SearchCategory category = new SearchCategory();
-				if (StringUtils.equals(tstoreSearchReq.getCategory(), "DP000503,DP000504,DP000508")) {
-					category.setCategoryNm("app");
-				} else {
-					category.setCategoryNm(this.categoryService.getCategoryEngNm(searchReq.getCategory()));
-				}
+				// if (StringUtils.equals(tstoreSearchReq.getCategory(), "DP000503,DP000504,DP000508")) {
+				// category.setCategoryNm("app");
+				// } else {
+				// category.setCategoryNm(this.categoryService.getCategoryEngNm(searchReq.getCategory()));
+				// }
+				category.setCategoryCd(searchReq.getCategory());
 				category.setCategoryCnt(header.getTotalCount());
 				categoryList.add(category);
 				searchRes.setCategoryList(categoryList);
@@ -440,17 +444,14 @@ public class SearchServiceSampleImpl implements SearchService {
 				search.setProdGrdCd("4");
 			}
 			// TOP_CAT_CD
-			search.setTopCategory(new SearchCategory(topCatCd, this.categoryService.getCategoryEngNm(topCatCd),
-					this.categoryService.getCategoryDesc(topCatCd)));
+			search.setTopCategory(new SearchCategory(topCatCd));
 			// 카테고리 정보
 			if (StringUtils.isNotEmpty(doc.getMeta39())) {
-				search.setDpCategory(new SearchCategory(doc.getMeta39(), this.categoryService.getCategoryEngNm(doc
-						.getMeta39()), this.categoryService.getCategoryDesc(doc.getMeta39())));
+				search.setDpCategory(new SearchCategory(doc.getMeta39()));
 			}
 			// META_CLS_CD
 			if (StringUtils.isNotEmpty(doc.getMeta27())) {
-				search.setMetaClsf(new SearchCategory(doc.getMeta27(), this.categoryService.getCategoryEngNm(doc
-						.getMeta27()), this.categoryService.getCategoryDesc(doc.getMeta27())));
+				search.setMetaClsf(new SearchCategory(doc.getMeta27()));
 			}
 
 			// Tag 가공(Seller Tag 3개 + kewyd Tag 4개)
