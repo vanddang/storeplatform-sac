@@ -28,7 +28,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSelectService;
  * 
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
-@RequestMapping(value = "/member/user")
+@RequestMapping(value = "/dev/member/user")
 @Controller
 public class UserSelectController extends ParameterExceptionHandling {
 
