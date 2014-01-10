@@ -85,9 +85,7 @@
 				                        <if test="menuId != null">
 				                         AND  A1.MENU_ID = #{menuId}            /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
 				                        </if>        
-                                        <if test="upMenuId != null">
-                                         AND  A1.UP_MENU_ID = #{upMenuId}       /* DP26 : 웹툰 */
-                                        </if>     				                        
+                                         AND  A1.UP_MENU_ID ='DP26'      /* DP26 : 웹툰 */
 				                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -118,9 +116,7 @@
                         <if test="menuId != null">
                          AND A.MENU_ID = #{menuId}           /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                         </if>        
-                         <if test="upMenuId != null">
-                          AND A.UP_MENU_ID = #{upMenuId}             /* DP26 : 웹툰 */
-                         </if>                     
+                         AND  A.UP_MENU_ID = 'DP26'             /* DP26 : 웹툰 */
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -222,9 +218,7 @@
                                         <if test="menuId != null">
                                          AND  A1.MENU_ID = #{menuId}            /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                                         </if>        
-                                        <if test="upMenuId != null">
-                                         AND  A1.UP_MENU_ID = #{upMenuId}       /* DP26 : 웹툰 */
-                                        </if>                                           
+                                         AND  A1.UP_MENU_ID = 'DP26'       /* DP26 : 웹툰 */
                                          AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                          AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                          AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -279,9 +273,7 @@
                         <if test="menuId != null">
                          AND A.MENU_ID = #{menuId}           /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                         </if>        
-                        <if test="upMenuId != null">
-                         AND A.UP_MENU_ID = #{upMenuId}             /* DP26 : 웹툰 */
-                        </if>                     
+                         AND A.UP_MENU_ID = 'DP26'           /* DP26 : 웹툰 */
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
