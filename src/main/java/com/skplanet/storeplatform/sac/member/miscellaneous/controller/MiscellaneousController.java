@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.service.Miscellaneous
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
  */
 @Controller
-@RequestMapping(value = "/member/miscellaneous")
+@RequestMapping(value = "/dev/member/miscellaneous")
 public class MiscellaneousController {
 	private static final Logger logger = LoggerFactory.getLogger(MiscellaneousController.class);
 

@@ -70,13 +70,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetUaCodeRes getUaCode(GetUaCodeReq request) throws Exception {
-		String deviceModelNo = request.getDeviceModelNo();
-		String msisdn = request.getMsisdn();
+	public GetUaCodeRes getUaCode(GetUaCodeReq req) throws Exception {
+		String deviceModelNo = req.getDeviceModelNo();
+		String msisdn = req.getMsisdn();
 		String userKey = "";
 
 		GetUaCodeRes response = new GetUaCodeRes();
-		logger.info("########### GetUaCodeReq {}", request);
+		logger.info("########### GetUaCodeReq {}", req);
 
 		if (msisdn != null && deviceModelNo == null) { // 파라미터로 MSISDN만 넘어온 경우
 
