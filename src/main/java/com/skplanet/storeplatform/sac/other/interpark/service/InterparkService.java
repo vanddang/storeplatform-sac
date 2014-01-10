@@ -9,6 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.other.interpark.service;
 
+import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyReq;
+import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyRes;
+import com.skplanet.storeplatform.external.client.interpark.vo.Purchase;
+
 public interface InterparkService {
+
+	boolean createOrder(Purchase req);
+
+	AuthKeyRes getAuthKey(AuthKeyReq req);
 
 }

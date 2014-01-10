@@ -9,9 +9,33 @@
  */
 package com.skplanet.storeplatform.sac.other.interpark.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyReq;
+import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyRes;
+import com.skplanet.storeplatform.external.client.interpark.vo.Purchase;
+import com.skplanet.storeplatform.sac.other.interpark.repository.InterparkRepository;
 
 @Service
 public class InterparkServiceImpl implements InterparkService {
+
+	@Autowired
+	private InterparkRepository repository;
+
+	@Override
+	public boolean createOrder(Purchase req) {
+		try {
+			this.repository.createOrderByEC(req);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public AuthKeyRes getAuthKey(AuthKeyReq req) {
+		return this.repository.getAuthKeyFromEC(req);
+	}
 
 }
