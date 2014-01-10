@@ -20,6 +20,9 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.LogInUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LogInUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
@@ -110,7 +113,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
 		if (StringUtil.equals(mainStatusCd, MemberConstants.USER_STATE_MOBILE)) {
-			this.volatileMemberPoc(deviceId);
+			this.volatileMemberPoc(deviceId, schUserRes.getUserMbr().getUserKey(), schUserRes.getUserMbr().getImMbrNo());
 		}
 
 		/* 무선회원 인증 */
@@ -229,16 +232,30 @@ public class LoginServiceImpl implements LoginService {
 	 * 변동성 회원 처리
 	 * 
 	 * @param deviceId
+	 * @param userKey
+	 * @param imMbrNo
 	 * @throws Exception 
 	 */
-	public void volatileMemberPoc(String deviceId) throws Exception {
+	public void volatileMemberPoc(String deviceId, String userKey, String imMbrNo) throws Exception {
 		/* 1. 무선회원 가입 */
 		IDPReceiverM idpReceiver = this.idpManager.join4Wap(deviceId);
 		if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPManager.IDP_RES_CODE_OK)) {
-			throw new Exception("["+idpReceiver.getResponseHeader().getResult()+"] 변동성 회원 가입실패");
+			throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] 변동성 회원 가입실패");
 		}
 		
-		/* 2. 회원정보 수정 */
+		/* 2. 회원정보 수정 (변동성 회원인 경우 어떤정보를 업데이트 해야하는지 확인 필요)	*/
+		UpdateUserRequest updUserReq = new UpdateUserRequest();
+		updUserReq.setCommonRequest(commonRequest);
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(userKey);
+		userMbr.setImMbrNo(imMbrNo);
+		userMbr.setUserMainStatus(MemberConstants.USER_MAIN_STATUS_NORMAL);
+		updUserReq.setUserMbr(userMbr);
+		
+		UpdateUserResponse updUserRes = userSCI.updateUser(updUserReq);
+		if (!StringUtil.equals(updUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("[" + updUserRes.getCommonResponse().getResultCode() + "] 변동성 회원정보 업데이트 실패");
+		}
 		
 	}
 

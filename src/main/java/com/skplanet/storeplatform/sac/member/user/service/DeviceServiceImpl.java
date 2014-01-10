@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
+import com.skplanet.storeplatform.sac.member.common.idp.ImIDPManager;
 
 /**
  * 휴대기기 관련 인터페이스 구현체
@@ -63,6 +64,9 @@ public class DeviceServiceImpl implements DeviceService {
 	@Autowired
 	private IDPManager idpManager; // IDP연동 클래스
 	
+	@Autowired
+	private ImIDPManager imIdpManager; // IDP 통합회원 연동 클래스
+	
 	@Override
 	public CreateDeviceRes createDevice(HeaderVo headerVo, CreateDeviceReq req)
 			throws Exception {
@@ -82,7 +86,7 @@ public class DeviceServiceImpl implements DeviceService {
 		
 		
 		
-		/* 휴대기기 정보 등록 요청 */
+		/* IDP 휴대기기 정보 등록 요청 */
 
 		logger.info("######################## DeviceServiceImpl createDevice start ############################");
 		
@@ -168,7 +172,7 @@ public class DeviceServiceImpl implements DeviceService {
 			/*	2. 휴대기기 정보 등록완료 - 완료여부, 구매이력 이관 여부 확인*/
 			
 			
-			/*	3. 구매이관 대상인 경우 무개 이력 이관요청	*/
+			/*	3. 구매이관 대상인 경우 구개 이력 이관요청	*/
 			
 			
 			/*	4. 통합회원인 경우 무선회원 해지		*/
@@ -303,7 +307,7 @@ public class DeviceServiceImpl implements DeviceService {
 	
 	/**
 	 * 
-	 * SAC 휴대기기 부가서비스 리스트정보를 SC회원콤포넌트 휴대기기 부가서비스 리스트로 변환하는 메서드
+	 * SAC 휴대기기 부가서비스 리스트정보 --> SC회원콤포넌트 휴대기기 부가서비스 리스트정보
 	 * 
 	 * @param list
 	 * @return
