@@ -3,7 +3,7 @@
 <mapper namespace="FeatureCategory">
 
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectCategoryEpubListDummy" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpubDTO">
+    <select id="selectCategoryEpubListDummy" parameterType="CategoryEpubReq" resultType="CategoryEpubDTO">
        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
        SELECT
 			PROD.*
@@ -82,7 +82,7 @@
     </select>    
     
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectCategoryAppList" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryAppDTO">
+    <select id="selectCategoryAppList" parameterType="CategoryAppReq" resultType="CategoryAppDTO">
         /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
 		SELECT
 			F_PROD.*
@@ -164,7 +164,7 @@
     </select>
     
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectCategoryAppListDummy" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryAppDTO">
+    <select id="selectCategoryAppListDummy" parameterType="CategoryAppReq" resultType="CategoryAppDTO">
        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
         SELECT
 			PROD.*

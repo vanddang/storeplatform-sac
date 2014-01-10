@@ -3,7 +3,7 @@
 <mapper namespace="FeatureRecommend">
 
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectRecommendAdminList" parameterType="FeatureRecommendAdminReq" resultType="FeatureRecommendAdminDTO">
+    <select id="selectRecommendAdminList" parameterType="RecommendAdminReq" resultType="RecommendAdminDTO">
        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
 		SELECT
 			F_PROD.*
@@ -85,7 +85,7 @@
     </select>    
     
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectRecommendAdminListDummy" parameterType="FeatureRecommendAdminReq" resultType="FeatureRecommendAdminDTO">
+    <select id="selectRecommendAdminListDummy" parameterType="RecommendAdminReq" resultType="RecommendAdminDTO">
        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
         SELECT
 			PROD.*
@@ -103,18 +103,26 @@
 				, PS.PROD_NM
 				, PS.PROD_BASE_DESC
 				, PR.PROD_AMT
+				/*, DP.PROD_GRD_CD*/
 				, DECODE( DP.PROD_GRD_CD
 				        , 'PD004401', 0
 				        , 'PD004402', 1
 				        , 'PD004403', 2
 				        , 'PD004404', 4 ) AS PROD_GRD_CD
+				/*, AP.PART_PARENT_CLSF_CD*/
 				, DECODE( AP.PART_PARENT_CLSF_CD, 'PD012301', 'iab', NULL ) AS PART_PARENT_CLSF_CD
 				, DECODE( DP.DRM_YN, 'Y', 'drm', NULL ) AS DRM_YN
+				/*, DP.DRM_YN*/
 				, SC.APK_PKG_NM
 				, SC.APK_VER
 				, SC.FILE_SIZE AS APK_FILE_SIZE
+				, SC.FILE_SIZE
 				, AP.VER_MAJOR||'.'||AP.VER_MINOR AS PROD_VER
+				, AP.VER_MAJOR
+				, AP.VER_MINOR
 				, PI.FILE_PATH || PI.FILE_NM AS FILE_PATH
+				/*, PI.FILE_PATH || 
+				, PI.FILE_NM*/
 			FROM 
 				TB_DP_LIST_PROD LP,
 				TB_DP_PROD DP,
