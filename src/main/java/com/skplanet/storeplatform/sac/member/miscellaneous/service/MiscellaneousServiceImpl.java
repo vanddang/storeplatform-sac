@@ -16,7 +16,9 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
@@ -115,19 +117,29 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				searchDeviceRequest.setKeySearchList(keySearchs);
 
 				/** 4. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" API > DEVICE_ID를 이용한 회원정보 조회 기능 미구현으로 아직 동작 안됨. */
-				// userKey = this.userSCI.searchUser(searchUserRequest).getUserKey();
-				// logger.info("######## >>>>>>>>> userKey {}: ", userKey);
-				// searchDeviceRequest.setUserKey(userKey);
-				searchDeviceRequest.setUserKey("IF1023002708420090928145937"); // 일단 조회 되도록 userkey 셋팅
-																			   // (msisdn=01088902431)
-
-				if (userKey == null) { // userKey가 존재하지 않을 경우.
-					logger.info("########## Exception : userKey가 존재하지 않음. ##########");
-					throw new Exception("userKey가 존재하지 않음.");
+				SearchUserResponse searchUserResult = new SearchUserResponse();
+				searchUserResult = this.userSCI.searchUser(searchUserRequest);
+				if (searchUserResult.getCommonResponse().getResultCode().equals("0000")) {
+					userKey = searchUserResult.getUserKey();
+					logger.info("######## >>>>>>>>> userKey {}: ", userKey);
+					searchDeviceRequest.setUserKey(userKey);
+				} else {
+					searchDeviceRequest.setUserKey("IF1023002708420090928145937"); // 일단 조회 되도록 userkey 셋팅
+																				   // (msisdn=01088902431)
+					logger.info("########## SC 회원 기본정보 조회 API 연동 실패. ##############");
+					// throw new Exception("SC 회원 기본정보 조회 API 연동 실패.");
 				}
 				/** 5. deviceId로 deviceModelNo 조회 */
-				deviceModelNo = this.deviceSCI.searchDevice(searchDeviceRequest).getUserMbrDevice().getDeviceModelNo();
-				logger.info("######## >>>>>>>>> deviceModelNo {}: ", deviceModelNo);
+				SearchDeviceResponse searchDeviceResult = new SearchDeviceResponse();
+				searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
+				if (searchDeviceResult.getCommonResponse().getResultCode().equals("0000")) {
+					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
+					logger.info("######## >>>>>>>>> deviceModelNo {}: ", deviceModelNo);
+				} else {
+					logger.info("########## SC 회원 단말정보 조회 API 연동 실패. ##############");
+					throw new Exception("SC 회원 단말정보 조회 API 연동 실패.");
+				}
+
 			} else {
 				logger.info("########## Exception : 정상적인 휴대폰번호 아님. ##########");
 				throw new Exception("유효하지 않은 휴대폰 번호.");
