@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 
 /**
- * OPMD 모회선 번호 조회.
+ * OPMD 모회선 번호 조회 JUnit Test.
  * 
  * Updated on : 2014. 1. 9. Updated by : 김다슬, 인크로스.
  */
@@ -71,8 +71,67 @@ public class GetOpmdTest {
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
-	/** 1. 989로 시작하는 MDN이 Request로 올 경우 */
-	/** 2. 989로 시작하지 않는 MDN이 Request로 올 경우 */
-	/** 3. MDN 형태 오류 (10자리 또는 11자리가 아닌 경우) */
+
+	/**
+	 * <pre>
+	 * 성공 CASE
+	 * 정상 989로 시작하는 MDN이 Request로 올 경우.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void requestOpmdMsisdnTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1?msisdn=9890021222")
+				.httpMethod(HttpMethod.GET).success(GetOpmdRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetOpmdRes res = (GetOpmdRes) result;
+						logger.info("response :{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * 유효하지 않은 MDN이 Request로 넘어온 경우.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void requestinvalidMsisdnTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1?msisdn=11122220000")
+				.httpMethod(HttpMethod.GET).success(GetOpmdRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetOpmdRes res = (GetOpmdRes) result;
+						logger.info("response :{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * 유효하지 않은 OPMD MDN이 Request로 넘어온 경우.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void requestinvalidOpmdMsisdnTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1?msisdn=98911021222")
+				.httpMethod(HttpMethod.GET).success(GetOpmdRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetOpmdRes res = (GetOpmdRes) result;
+						logger.info("response :{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/** 회원 TB에 없는 MDN 일 경우. */
 
 }

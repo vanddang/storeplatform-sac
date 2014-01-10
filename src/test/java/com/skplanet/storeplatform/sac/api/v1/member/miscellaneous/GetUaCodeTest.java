@@ -58,7 +58,7 @@ public class GetUaCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 1. 정상 msisdn이 Request Parameter로 넘어온 경우.
+	 * 정상 msisdn이 Request Parameter로 넘어온 경우.
 	 * </pre>
 	 * 
 	 */
@@ -71,7 +71,7 @@ public class GetUaCodeTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes res = (GetUaCodeRes) result;
 						assertThat(res.getUaCd(), notNullValue());
-						logger.info("response :{}", res.toString());
+						logger.debug("response :{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -79,7 +79,7 @@ public class GetUaCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 2. deviceModelNo가 Request Parameter로 넘어온 경우.
+	 * deviceModelNo가 Request Parameter로 넘어온 경우.
 	 * </pre>
 	 */
 	@Test
@@ -91,7 +91,7 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes res = (GetUaCodeRes) result;
-						logger.info("{}", res.toString());
+						logger.debug("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -99,7 +99,7 @@ public class GetUaCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 3. msisdn, deviceModelNo 둘다 Request Parameter로 넘어온 경우.
+	 * msisdn, deviceModelNo 둘다 Request Parameter로 넘어온 경우.
 	 * </pre>
 	 */
 	@Test
@@ -110,26 +110,92 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes res = (GetUaCodeRes) result;
-						logger.info("{}", res.toString());
+						logger.debug("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
-	/** 4. MDN 형태 오류 (10자리 또는 11자리가 아닌 경우) - 실패 */
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * 유효하지 않은 MDN이 Request로 넘어온 경우.
+	 * 
+	 * [유효한 MDN]
+	 * 1. 10자리 또는 11자리
+	 * 2. 010/011/016/017/018
+	 * </pre>
+	 */
 	@Test
 	public void requestInvalidMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=010889024")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes res = (GetUaCodeRes) result;
-						logger.info("{}", res.toString());
+						logger.debug("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
-	/** 5. MDN, DeviceModelNo 둘다 파라미터로 넘어오지 않은 경우 - 실패 */
-	/** 6. 회원 테이블에 없는 MDN일 경우 - 실패 */
+
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * 회원 Table에 등록되지 않은 MDN이 Request로 넘어온 경우.
+	 * </pre>
+	 */
+	@Test
+	public void requestNonDbMsisdnTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=01011112222")
+				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes res = (GetUaCodeRes) result;
+						logger.debug("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * Request로 아무값도 넘어오지 않은 경우.
+	 * </pre>
+	 */
+	@Test
+	public void requestNonTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.GET)
+				.success(GetUaCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes res = (GetUaCodeRes) result;
+						logger.debug("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * Device Tabel에 없는 DeviceModelNo가 넘어온 경우.
+	 * </pre>
+	 */
+	@Test
+	public void responseNonUaCodeTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-W777")
+				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes res = (GetUaCodeRes) result;
+						logger.debug("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/** 6. DeviceModelNo에 맵핑되는 UA코드 정보가 없을 경우.???????????? */
 	/** 7. UA 코드가 없을 경우 ★ 중요!! ★ */
 	/** 8. SC 회원 API 응답 실패 ??? */
 	/** Exception에 ErrorCode & ErrorMessage 정의 하기 */
