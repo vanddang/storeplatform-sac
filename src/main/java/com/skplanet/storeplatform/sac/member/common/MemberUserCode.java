@@ -59,47 +59,47 @@ public enum MemberUserCode {
 	/**
 	 * 회원 상태 서브 코드 : 신청
 	 */
-	USER_SUBS_TATUS_1("US010301"),
+	USER_SUB_STATUS_1("US010301"),
 	/**
 	 * 회원 상태 서브 코드 : 완료
 	 */
-	USER_SUBS_TATUS_2("US010302"),
+	USER_SUB_STATUS_2("US010302"),
 	/**
 	 * 회원 상태 서브 코드 : 거절
 	 */
-	USER_SUBS_TATUS_3("US010303"),
+	USER_SUB_STATUS_3("US010303"),
 	/**
 	 * 회원 상태 서브 코드 : 전환신청
 	 */
-	USER_SUBS_TATUS_4("US010304"),
+	USER_SUB_STATUS_4("US010304"),
 	/**
 	 * 회원 상태 서브 코드 : 전환완료
 	 */
-	USER_SUBS_TATUS_5("US010305"),
+	USER_SUB_STATUS_5("US010305"),
 	/**
 	 * 회원 상태 서브 코드 : 전환거절
 	 */
-	USER_SUBS_TATUS_6("US010306"),
+	USER_SUB_STATUS_6("US010306"),
 	/**
 	 * 회원 상태 서브 코드 : 탈퇴신청
 	 */
-	USER_SUBS_TATUS_7("US010307"),
+	USER_SUB_STATUS_7("US010307"),
 	/**
 	 * 회원 상태 서브 코드 : 탈퇴완료
 	 */
-	USER_SUBS_TATUS_8("US010308"),
+	USER_SUB_STATUS_8("US010308"),
 	/**
 	 * 회원 상태 서브 코드 : 재신청
 	 */
-	USER_SUBS_TATUS_9("US010309"),
+	USER_SUB_STATUS_9("US010309"),
 	/**
 	 * 회원 상태 서브 코드 : 승인대기
 	 */
-	USER_SUBS_TATUS_10("US010310"),
+	USER_SUB_STATUS_10("US010310"),
 	/**
 	 * 회원 상태 서브 코드 : 일시정지
 	 */
-	USER_SUBS_TATUS_11("US010311"),
+	USER_SUB_STATUS_11("US010311"),
 
 	;
 
@@ -134,17 +134,17 @@ public enum MemberUserCode {
 		map.put(MemberUserCode.USER_MAIN_STATUS_6.getValue(), MemberUserCode.USER_MAIN_STATUS_6);
 		map.put(MemberUserCode.USER_MAIN_STATUS_7.getValue(), MemberUserCode.USER_MAIN_STATUS_7);
 		map.put(MemberUserCode.USER_MAIN_STATUS_8.getValue(), MemberUserCode.USER_MAIN_STATUS_8);
-		map.put(MemberUserCode.USER_SUBS_TATUS_1.getValue(), MemberUserCode.USER_SUBS_TATUS_1);
-		map.put(MemberUserCode.USER_SUBS_TATUS_2.getValue(), MemberUserCode.USER_SUBS_TATUS_2);
-		map.put(MemberUserCode.USER_SUBS_TATUS_3.getValue(), MemberUserCode.USER_SUBS_TATUS_3);
-		map.put(MemberUserCode.USER_SUBS_TATUS_4.getValue(), MemberUserCode.USER_SUBS_TATUS_4);
-		map.put(MemberUserCode.USER_SUBS_TATUS_5.getValue(), MemberUserCode.USER_SUBS_TATUS_5);
-		map.put(MemberUserCode.USER_SUBS_TATUS_6.getValue(), MemberUserCode.USER_SUBS_TATUS_6);
-		map.put(MemberUserCode.USER_SUBS_TATUS_7.getValue(), MemberUserCode.USER_SUBS_TATUS_7);
-		map.put(MemberUserCode.USER_SUBS_TATUS_8.getValue(), MemberUserCode.USER_SUBS_TATUS_8);
-		map.put(MemberUserCode.USER_SUBS_TATUS_9.getValue(), MemberUserCode.USER_SUBS_TATUS_9);
-		map.put(MemberUserCode.USER_SUBS_TATUS_10.getValue(), MemberUserCode.USER_SUBS_TATUS_10);
-		map.put(MemberUserCode.USER_SUBS_TATUS_11.getValue(), MemberUserCode.USER_SUBS_TATUS_11);
+		map.put(MemberUserCode.USER_SUB_STATUS_1.getValue(), MemberUserCode.USER_SUB_STATUS_1);
+		map.put(MemberUserCode.USER_SUB_STATUS_2.getValue(), MemberUserCode.USER_SUB_STATUS_2);
+		map.put(MemberUserCode.USER_SUB_STATUS_3.getValue(), MemberUserCode.USER_SUB_STATUS_3);
+		map.put(MemberUserCode.USER_SUB_STATUS_4.getValue(), MemberUserCode.USER_SUB_STATUS_4);
+		map.put(MemberUserCode.USER_SUB_STATUS_5.getValue(), MemberUserCode.USER_SUB_STATUS_5);
+		map.put(MemberUserCode.USER_SUB_STATUS_6.getValue(), MemberUserCode.USER_SUB_STATUS_6);
+		map.put(MemberUserCode.USER_SUB_STATUS_7.getValue(), MemberUserCode.USER_SUB_STATUS_7);
+		map.put(MemberUserCode.USER_SUB_STATUS_8.getValue(), MemberUserCode.USER_SUB_STATUS_8);
+		map.put(MemberUserCode.USER_SUB_STATUS_9.getValue(), MemberUserCode.USER_SUB_STATUS_9);
+		map.put(MemberUserCode.USER_SUB_STATUS_10.getValue(), MemberUserCode.USER_SUB_STATUS_10);
+		map.put(MemberUserCode.USER_SUB_STATUS_11.getValue(), MemberUserCode.USER_SUB_STATUS_11);
 	}
 
 	/**
