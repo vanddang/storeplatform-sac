@@ -96,7 +96,11 @@ public class BestAppServiceImpl implements BestAppService {
 		Support support = null;
 		Menu menu = null;
 
-		if (appList != null) {
+		this.log.debug("#######################################################################");
+		this.log.debug("appList	:	" + appList.size());
+		this.log.debug("#######################################################################");
+
+		if (appList.size() != 0) {
 			Iterator<BestAppDTO> iterator = appList.iterator();
 			while (iterator.hasNext()) {
 				product = new Product();
@@ -177,13 +181,95 @@ public class BestAppServiceImpl implements BestAppService {
 
 				productList.add(product);
 			}
-			response.setCommonResponse(commonResponse);
-			response.setProductList(productList);
 		} else {
 			// 조회 결과 없음
-			commonResponse.setTotalCount(0);
-			response.setCommonResponse(commonResponse);
+			menuList = new ArrayList<Menu>();
+			supportList = new ArrayList<Support>();
+			sourceList = new ArrayList<Source>();
+
+			product = new Product();
+			identifier = new Identifier();
+			app = new App();
+			accrual = new Accrual();
+			rights = new Rights();
+			source = new Source();
+			price = new Price();
+			title = new Title();
+			support = new Support();
+
+			// 상품ID
+			identifier = new Identifier();
+			identifier.setType("episodeId");
+			identifier.setText("0000643818");
+
+			support.setType("Y");
+			support.setText("iab");
+			supportList.add(support);
+
+			/*
+			 * Menu(메뉴정보) Id, Name, Type
+			 */
+			menu = new Menu();
+			menu.setId("DP000501");
+			menu.setName("게임");
+			menu.setType("topClass");
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId("DP01004");
+			menu.setName("RPG");
+			menuList.add(menu);
+
+			/*
+			 * App aid, packagename, versioncode, version
+			 */
+			app.setAid("OA00643818");
+			app.setPackageName("proj.syjt.tstore");
+			app.setVersionCode("11000");
+			app.setVersion("1.1");
+
+			/*
+			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
+			 */
+			accrual.setVoterCount("14305");
+			accrual.setDownloadCount("513434");
+			accrual.setScore(4.8);
+
+			/*
+			 * Rights grade
+			 */
+			rights.setGrade("0");
+
+			title.setText("워밸리 온라인");
+
+			/*
+			 * source mediaType, size, type, url
+			 */
+			source.setType("thumbnail");
+			source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
+			sourceList.add(source);
+
+			/*
+			 * Price text
+			 */
+			price.setText(0);
+
+			product = new Product();
+			product.setIdentifier(identifier);
+			// product.setSupport("y|iab");
+			product.setSupportList(supportList);
+			product.setMenuList(menuList);
+			product.setApp(app);
+			product.setAccrual(accrual);
+			product.setRights(rights);
+			product.setTitle(title);
+			product.setSourceList(sourceList);
+			product.setProductExplain("★이벤트★세상에 없던 모바일 MMORPG!");
+			product.setPrice(price);
+
+			productList.add(product);
 		}
+		response.setCommonResponse(commonResponse);
+		response.setProductList(productList);
 		return response;
 	}
 }
