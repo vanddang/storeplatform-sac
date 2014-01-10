@@ -77,8 +77,6 @@ public class DummySellerController {
 	@ResponseBody
 	public CreateRes create(@RequestHeader Map<String, Object> headers) {
 
-		this.sellerService.createSeller();
-
 		CreateRes responseVO = new CreateRes();
 		SellerInfo sellerInfo = new SellerInfo();
 
