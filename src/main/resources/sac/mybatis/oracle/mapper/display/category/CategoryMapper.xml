@@ -29,7 +29,7 @@
 		                  ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
 		      ]]>
 		      , (SELECT MENU_NM
-		           FROM TB_DP_MENU_DESC
+		           FROM TB_DP_MENU_CATALOG_DESC
 		          WHERE MENU_ID = KA.UP_MENU_ID
 		            AND LANG_CD = 'ko') AS UP_MENU_NM
 		  FROM (SELECT JA.*, COUNT(JA.PROD_ID) OVER() AS TOTAL_COUNT
@@ -57,15 +57,15 @@
 		                              , G.TENANT_ID
 		                              , H.PROD_AMT
 		                              , I.SUB_CONTENTS_ID
-		                          FROM  TB_DP_MENU              A
-		                              , TB_DP_MENU_PROD_MAPG    B
-		                              , TB_DP_MENU_DESC         C
-		                              , TB_DP_PROD              D
-		                              , TB_DP_APP_PROD          E
-		                              , TB_DP_PROD_DESC         F
-		                              , TB_DP_TENANT_PROD       G
-		                              , TB_DP_TENANT_PROD_PRICE H
-		                              , TB_DP_SPRT_DEVICE       I
+		                          FROM  TB_DP_MENU_CATALOG           A
+		                              , TB_DP_MENU_CATALOG_PROD_MAPG B
+		                              , TB_DP_MENU_CATALOG_DESC      C
+		                              , TB_DP_PROD                   D
+		                              , TB_DP_APP_PROD               E
+		                              , TB_DP_PROD_DESC              F
+		                              , TB_DP_TENANT_PROD            G
+		                              , TB_DP_TENANT_PROD_PRICE      H
+		                              , TB_DP_SPRT_DEVICE            I
 		                         WHERE  A.MENU_ID = B.MENU_ID
 		                           AND  A.MENU_ID = C.MENU_ID
 		                           AND  B.PROD_ID = D.PROD_ID
