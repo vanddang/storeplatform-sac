@@ -178,8 +178,8 @@
     </select>
     
     
-    <!-- Movie 상세 카테고리 조회-->
-    <select id="getMovieDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <!-- 영화/방송 상세 카테고리 조회-->
+    <select id="getMovieTvDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
 		    /* MenuCategoryMapper.xml, getMovieDetailCategoryList, JuYoungYun, 2014-01-09 */
 		    SELECT COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
 		         , SUM( C.MENU_PROD_CNT ) OVER ( ) AS TOTAL_PROD_CNT
@@ -298,7 +298,7 @@
 		                                               AND CP.PART_PROD_ID = P2.PROD_ID
 		                                               AND CP.PROD_ID = NV.PROD_ID
 		                                               AND NV.MENU_ID = MP.MENU_ID
-		                                               AND NV.LIST_ID = 'ADM000000003' -- 신작 영화
+		                                               AND NV.LIST_ID = 'ADM000000003' -- 운영자추천_신규상품_영화/방송
 		                                               AND C.MENU_ID LIKE #{menuId}||'%'
 		                                               AND C.USE_YN = 'Y'
 		                                               AND SC.SALE_YN = 'Y'

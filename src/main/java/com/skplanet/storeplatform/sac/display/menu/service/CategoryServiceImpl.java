@@ -348,8 +348,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 		if ("DP16".equals(menuId)) { // 음악
 			statementId = "MenuCategory.getMusicDetailCategoryList";
-		} else if ("DP17".equals(menuId)) { // 영화
-			statementId = "MenuCategory.getMovieDetailCategoryList";
+		} else if ("DP17".equals(menuId) || "DP18".equals(menuId)) { // 영화/TV 방송
+			statementId = "MenuCategory.getMovieTvDetailCategoryList";
 		} else {
 			statementId = "MenuCategory.getDetailCategoryList";
 		}
@@ -465,7 +465,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
 
-			this.log.debug("CategoryDetailList json : {}", CategoryDetailList);
+			this.log.debug("searchSubCategoryList json : {}", CategoryDetailList);
 			// System.out.println(json);
 
 		}
