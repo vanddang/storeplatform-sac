@@ -24,6 +24,7 @@ public class DuplicateByIdEmailRes extends CommonInfo {
 		this.isRegistered = isRegistered;
 	}
 
+	/** 사용유무(Y/N) */
 	private String isRegistered;
 
 	public String getIsRegistered() {

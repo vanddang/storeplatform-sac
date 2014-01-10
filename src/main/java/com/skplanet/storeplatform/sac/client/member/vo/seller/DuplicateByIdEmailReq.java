@@ -8,7 +8,7 @@ public class DuplicateByIdEmailReq extends CommonInfo {
 	 * Default SerialVersion
 	 */
 	private static final long serialVersionUID = 1L;
-	/** 검색구분 (ID / Email) */
+	/** 검색구분 (id / email) */
 	private String keyType;
 	/** 검색 값 */
 	private String keyString;
