@@ -207,6 +207,109 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("방송 추천 상품 조회");
 			this.logger.debug("----------------------------------------------------------------");
+
+			Identifier identifier = null;
+			Support support = null;
+			Menu menu = null;
+			Contributor contributor = null;
+			Date date = null;
+			Accrual accrual = null;
+			Rights rights = null;
+			Title title = null;
+			Source source = null;
+			Price price = null;
+			Product product = null;
+
+			List<Menu> menuList = null;
+			List<Source> sourceList = null;
+			List<Support> supportList = null;
+			List<Product> productList = new ArrayList<Product>();
+
+			product = new Product();
+
+			// 상품 정보 (상품ID)
+			identifier = new Identifier();
+			identifier.setType("channel");
+			identifier.setText("H900716008");
+			product.setIdentifier(identifier);
+
+			// 상품 지원 정보
+			support = new Support();
+			supportList = new ArrayList<Support>();
+			support.setType("hd");
+			support.setText("Y");
+			supportList.add(support);
+			product.setSupportList(supportList);
+
+			// 메뉴 정보
+			menu = new Menu();
+			menuList = new ArrayList<Menu>();
+			menu.setType("topClass");
+			menu.setId("DP18");
+			menu.setName("방송");
+			menuList.add(menu);
+
+			menu = new Menu();
+			menu.setId("DP18008");
+			menu.setName("문화/생활");
+			menuList.add(menu);
+
+			menu = new Menu();
+			menu.setType("metaClass");
+			menu.setId("CT16");
+			menuList.add(menu);
+			product.setMenuList(menuList);
+
+			// 저작자 정보
+			contributor = new Contributor();
+			contributor.setArtist("TV영어유치원 시즌4(상)");
+			contributor.setDirector("써니");
+
+			date = new Date();
+			date.setText("20131218");
+			contributor.setDate(date);
+			product.setContributor(contributor);
+
+			// 평점 정보
+			accrual = new Accrual();
+			accrual.setDownloadCount("81");
+			accrual.setScore(5);
+			accrual.setVoterCount("1");
+			product.setAccrual(accrual);
+
+			// 이용권한 정보
+			rights = new Rights();
+			rights.setGrade("PD004401");
+			product.setRights(rights);
+
+			// 상품 정보 (상품명)
+			title = new Title();
+			title.setText("TV영어유치원 시즌4(상)");
+			product.setTitle(title);
+
+			// 이미지 정보
+			source = new Source();
+			sourceList = new ArrayList<Source>();
+			source.setType("thumbnail");
+			source.setMediaType("image/png");
+			source.setUrl("/SMILE_DATA5/PVODS/201212/24/0000649038/1/0000721239/1/P_130x186.PNG");
+			sourceList.add(source);
+			product.setSourceList(sourceList);
+
+			// 상품 정보 (상품설명)
+			product.setProductExplain("피노키오 애니메이션과 그림일기를 통해 영어의 기초를 확실하게!");
+
+			// 상품 정보 (상품가격)
+			price = new Price();
+			price.setText(300);
+			product.setPrice(price);
+
+			// 데이터 매핑
+			productList.add(0, product);
+
+			commonResponse.setTotalCount(1);
+			vodRes.setProductList(productList);
+			vodRes.setCommonResponse(commonResponse);
 		}
 
 		return vodRes;
