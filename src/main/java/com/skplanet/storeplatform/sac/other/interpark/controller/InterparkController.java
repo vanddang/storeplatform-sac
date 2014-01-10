@@ -33,7 +33,7 @@ public class InterparkController {
 	@Autowired
 	private InterparkService service;
 
-	@RequestMapping(value = "/createOrder", method = RequestMethod.GET)
+	@RequestMapping(value = "/createOrder/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CreateOrderRes createOrder(@RequestBody CreateOrderReq req) {
 		Purchase purchase = this.convert(req);
@@ -57,7 +57,7 @@ public class InterparkController {
 		return o;
 	}
 
-	@RequestMapping(value = "/getAuthKey", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAuthKey/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetAuthKeyRes getAuthKey(@ModelAttribute GetAuthKeyReq req) {
 		AuthKeyReq authKeyReq = this.convert(req);
