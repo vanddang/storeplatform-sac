@@ -44,7 +44,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		if (prefix.equals("05")) {
 			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).query(from.getQuery());
 		} else {
-			to = UriComponentsBuilder.fromHttpUrl(this.localHost).port(from.getPort());
+			to = UriComponentsBuilder.fromHttpUrl(this.localHost);
 			List<String> rootPathList = UriComponentsBuilder.newInstance().path(this.rootPath).build()
 					.getPathSegments();
 			List<String> pathSegments = from.getPathSegments();
