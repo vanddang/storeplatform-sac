@@ -25,17 +25,29 @@ public class Date extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/*
-	 * 날짜타입 (date/reg : 등록일, date/saleReg : 판매등록 날짜, date/purchase : 구매날짜, date/update : 변경날짜, duration/usagePeriod :
-	 * 이용기간, uint/usagePeriod : 이용기간, date/auth : 인증 날짜, duration/salePeriod : 판매기간, date/access : 접속일자, date/cancel :
-	 * 해지일자 (자동결제 상품에서 사용), date/update : 인기검색어 업데이트 시간, duration/eventPeriod : 이벤트 기간, date/broadcast : 방송날짜)
-	 * date/duration : 특정기간, chart/duration : 음원순위기간, date/publish : 출판일)
+	 * 날짜타입 (date/reg : 등록일, date/saleReg : 판매등록 날짜, date/purchase : 구매날짜,
+	 * date/update : 변경날짜, duration/usagePeriod : 이용기간, uint/usagePeriod : 이용기간,
+	 * date/auth : 인증 날짜, duration/salePeriod : 판매기간, date/access : 접속일자,
+	 * date/cancel : 해지일자 (자동결제 상품에서 사용), date/update : 인기검색어 업데이트 시간,
+	 * duration/eventPeriod : 이벤트 기간, date/broadcast : 방송날짜) date/duration :
+	 * 특정기간, chart/duration : 음원순위기간, date/publish : 출판일)
 	 */
 	private String type;
 	/*
-	 * 날짜 ISO 8601 Basic 형식으로 표기 20120913T195630+0900/20121013T195630+0900 ; 시작/끝 날짜를 지정하는 경우, /20121013T195630+0900 ;
-	 * 시작 날짜 없이 끝 날짜만 지정하는 경우, 20120913T195630+0900/ ; 끝 날짜 없이 시작 날짜만 지정하는 경우
+	 * 날짜 ISO 8601 Basic 형식으로 표기 20120913T195630+0900/20121013T195630+0900 ;
+	 * 시작/끝 날짜를 지정하는 경우, /20121013T195630+0900 ; 시작 날짜 없이 끝 날짜만 지정하는 경우,
+	 * 20120913T195630+0900/ ; 끝 날짜 없이 시작 날짜만 지정하는 경우
 	 */
 	private String text;
+
+	public Date() {
+	}
+
+	public Date(String type, String text) {
+		super();
+		this.type = type;
+		this.text = text;
+	}
 
 	public String getType() {
 		return this.type;

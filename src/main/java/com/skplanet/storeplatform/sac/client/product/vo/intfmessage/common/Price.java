@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Interface Message Price Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -32,7 +32,14 @@ public class Price extends CommonInfo implements Serializable {
 	private String fixedPrice;// 정가
 	private String discountRate;// 할인률 (%생략)
 	private String discountPrice;// 할인가
-	private int text;// 가격
+	private Integer text;// 가격
+
+	public Price() {}
+
+	public Price(Integer text) {
+		super();
+		this.text = text;
+	}
 
 	public String getName() {
 		return this.name;
@@ -74,11 +81,11 @@ public class Price extends CommonInfo implements Serializable {
 		this.discountPrice = discountPrice;
 	}
 
-	public int getText() {
+	public Integer getText() {
 		return this.text;
 	}
 
-	public void setText(int text) {
+	public void setText(Integer text) {
 		this.text = text;
 	}
 }

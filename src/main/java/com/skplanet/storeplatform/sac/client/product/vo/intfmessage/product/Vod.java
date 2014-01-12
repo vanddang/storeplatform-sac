@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 
 /**
  * Interface Message Vod Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -29,6 +29,16 @@ public class Vod extends CommonInfo implements Serializable {
 	private Chapter chapter; // 회차
 	private VideoInfo videoInfo; // 화질별 video 정보
 	private VodExplain vodExplain; // vod 정보
+
+	public Vod() {
+		super();
+	}
+
+	public Vod(Time runningTime, VideoInfo videoInfo) {
+		super();
+		this.runningTime = runningTime;
+		this.videoInfo = videoInfo;
+	}
 
 	public Time getRunningTime() {
 		return this.runningTime;

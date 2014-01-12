@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Interface Message Time Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -34,6 +34,16 @@ public class Time extends CommonInfo implements Serializable {
 	 */
 	private String name;
 	private String text; // 24시간은 86400으로 표기 가능
+
+	public Time() {
+		super();
+	}
+
+	public Time(String unit, String text) {
+		super();
+		this.unit = unit;
+		this.text = text;
+	}
 
 	public String getUnit() {
 		return this.unit;
