@@ -9,23 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.epub;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 이북/코믹 채널 상세 조회 Request Value Object.
- * 
+ *
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
-public class EpubDetailReq extends CommonInfo implements Serializable {
+public class EpubDetailReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1030336138926751912L;
 
 	private String channelld; // 체널 ID
 
 	public String getChannelld() {
-		return channelld;
+		return this.channelld;
 	}
 
 	public void setChannelld(String channelld) {
@@ -34,7 +32,7 @@ public class EpubDetailReq extends CommonInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "EpubDetailReq [channelld=" + channelld + "]";
+		return "EpubDetailReq [channelld=" + this.channelld + "]";
 	}
 
 }

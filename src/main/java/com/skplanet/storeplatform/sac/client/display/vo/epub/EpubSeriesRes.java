@@ -14,12 +14,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * 이북/코믹 채널 상세 조회 Response Value Object.
+ * 이북/코믹 시리즈 조회 Response Value Object.
  *
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
-public class EpubDetailRes extends CommonInfo {
-	private static final long serialVersionUID = -2524545955211375637L;
+public class EpubSeriesRes extends CommonInfo {
+
+	private static final long serialVersionUID = -7112036496004829217L;
+
 	private CommonResponse commonResponse;
 	private Product product;
 
