@@ -16,6 +16,8 @@ import java.util.List;
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -45,6 +47,127 @@ public class EpubServceImpl implements EpubService {
 	@Override
 	public EpubDetailRes searchEpub(EpubDetailReq req) {
 		EpubDetailRes res = new EpubDetailRes();
+
+
+		Product product = new Product();
+		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, "H001539415"));
+
+        Menu menu = new Menu();
+        menu.setId("DP000518");
+        menu.setType("broadcast");
+
+        Menu menu1 = new Menu();
+        menu1.setId("DP18001");
+        menu1.setName("broadcast/drama");
+
+        product.setMenuList(new ArrayList<Menu>(Arrays.asList(menu, menu1)));
+
+        product.setTitle(new Title("별에서 온 그대 7회"));
+
+
+        //subProjectList
+        List<Product> subProjectList = new ArrayList<Product>();
+		Product product1 = new Product();
+		product1.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, "H001539415"));
+        product1.setTitle(new Title("별에서 온 그대 7회"));
+        Rights rights = new Rights();
+        rights.setPlay(new Play("", new Price(700), new Date("date/publish", "2013")));
+        rights.setStore(new Store("", new Price(700), new Date("date/publish", "2013")));
+        rights.setDate(new Date("date/publish", "2013"));
+        product1.setRights(rights);
+
+        Book book = new Book();
+		book.setStatus("continue");
+		book.setTotalPages("13");
+		book.setType("serial");
+
+		List<Support> supportList = new ArrayList<Support>();
+		Support support = new Support();
+		support.setType("store");
+		supportList.add(support);
+		book.setSupportList(supportList);
+        product1.setBook(new Book());
+        subProjectList.add(product1);
+        product.setSubProductList(subProjectList);
+
+        res.setProduct(product);
+/*
+
+{
+   "product":{
+		"identifier":{
+			"type":"STRING",
+			"text":"STRING"
+		},
+		"menuList":[
+              {
+                  "id":"STRING",
+                  "name":"STRING",
+                  "type":"STRING"
+              }
+          ],
+      "title":{
+         "text":"STRING"
+      },
+      "subProduct":{
+			"product":{
+	            "identifier":{
+	               "type":"STRING",
+	               "text":"STRING"
+	            },
+	            "title":{
+	               "text":"STRING"
+	            },
+	            "rights":{
+	               "play":{
+	                  "support":"STRING",
+	                  "price":{
+	                     "text":0
+	                  },
+	                  "date":{
+	                     "type":"STRING",
+	                     "text":"STRING"
+	                  }
+	               },
+	               "store":{
+	                  "support":"STRING",
+	                  "price":{
+	                     "text":0
+	                  },
+	                  "date":{
+	                     "type":"STRING",
+	                     "text":"STRING"
+	                  }
+	               }
+	            },
+	            "book":{
+	               "type":"STRING",
+	               "updateCycle":"STRING",
+	               "totalPages":"STRING",
+	               "bookVersion":"STRING",
+	               "scid":"STRING",
+	               "size":0,
+	               "url":"STRING",
+	               "chapter":{
+	                  "unit":"STRING"
+	               }
+	            }
+         	}
+      	}
+	}
+}
+ */
+
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.skplanet.storeplatform.sac.display.epub.service.EpubService#searchEpubSeries(com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq)
+	 */
+	@Override
+	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
+		EpubSeriesRes res = new EpubSeriesRes();
 
 
 		Product product = new Product();

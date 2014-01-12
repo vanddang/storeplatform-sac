@@ -11,6 +11,8 @@ package com.skplanet.storeplatform.sac.display.epub.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 
 /**
  * EPUB Controller
@@ -25,7 +27,17 @@ public interface EpubService {
 	 * @param req
 	 * 		요청 정보
 	 * @return
-	 * 		Vod Detail
+	 * 		EpubDetailRes EpubDetail
 	 */
 	public EpubDetailRes searchEpub(EpubDetailReq req);
+
+	/**
+	 * 채널 상품ID를 조건으로 하여 시리즈 상품 상세 정보를 조회한다.
+	 * @param req
+	 * 		요청 정보
+	 * @return
+	 * 		EpubSeriesRes EpubSeries
+	 */
+	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req);
+
 }

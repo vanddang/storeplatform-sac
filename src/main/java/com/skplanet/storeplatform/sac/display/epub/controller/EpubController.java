@@ -37,7 +37,19 @@ public class EpubController {
 	@RequestMapping(value = "/channel/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public EpubDetailRes searchEpub(EpubDetailReq req) {
-		return this.ebubService.searchEpub(req);
+		return this.epubService.searchEpub(req);
+
+	}
+
+	/**
+	 * 채널 상품ID를 조건으로 하여 eBook/코믹 상품 상세 정보를 조회한다.
+	 * @param req
+	 * @return EpubDetailRes
+	 */
+	@RequestMapping(value = "/series/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public EpubDetailRes searchEpubSeries(EpubDetailReq req) {
+		return this.epubService.searchEpubSeries(req);
 
 	}
 
