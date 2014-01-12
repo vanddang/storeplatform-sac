@@ -169,6 +169,11 @@ public class Product extends CommonInfo implements Serializable {
      */
     private String physicalPath;
 
+    /**
+     * 하위 상품 목록
+     */
+    private List<Product> subProductList;
+    
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
@@ -440,4 +445,13 @@ public class Product extends CommonInfo implements Serializable {
     public void setPhysicalPath(String physicalPath) {
         this.physicalPath = physicalPath;
     }
+
+	public List<Product> getSubProductList() {
+		return subProductList;
+	}
+
+	public void setSubProductList(List<Product> subProductList) {
+		this.subProductList = subProductList;
+	}
+    
 }
