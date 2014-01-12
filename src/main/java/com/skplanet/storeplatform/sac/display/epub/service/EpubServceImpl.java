@@ -7,46 +7,45 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.vod.service;
+package com.skplanet.storeplatform.sac.display.epub.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 
 /**
- * VOD Service
+ * EPUB Service
  *
  * Updated on : 2014-01-09
  * Updated by : 임근대, SK플래닛.
  */
 @Service
 @Transactional
-public class VodServceImpl implements VodService {
+public class EpubServceImpl implements EpubService {
 
 	/*
 	 * (non-Javadoc)
 	 * @see com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVod(com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq)
 	 */
 	@Override
-	public VodDetailRes searchVod(VodDetailReq req) {
-		//Dummy
-		VodDetailRes res = new VodDetailRes();
+	public EpubDetailRes searchEpub(EpubDetailReq req) {
+		EpubDetailRes res = new EpubDetailRes();
+
 
 		Product product = new Product();
 		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, "H001539415"));
@@ -75,22 +74,21 @@ public class VodServceImpl implements VodService {
         rights.setDate(new Date("date/publish", "2013"));
         product1.setRights(rights);
 
-        VideoInfo videoInfo = new VideoInfo();
-		videoInfo.setScid("0002663073");
-		videoInfo.setType("normal");
-		videoInfo.setPixel("576x324");
-		videoInfo.setPictureSize("16:9");
-		videoInfo.setVersion("1");
-		videoInfo.setBtvcid("2222222222");
-		videoInfo.setSize("307990233");
+        Book book = new Book();
+		book.setStatus("continue");
+		book.setTotalPages("13");
+		book.setType("serial");
 
-        product1.setVod(new Vod(new Time("16", "63"), videoInfo));
+		List<Support> supportList = new ArrayList<Support>();
+		Support support = new Support();
+		support.setType("store");
+		supportList.add(support);
+		book.setSupportList(supportList);
+        product1.setBook(new Book());
         subProjectList.add(product1);
         product.setSubProductList(subProjectList);
 
         res.setProduct(product);
-
-
 /*
 
 {
@@ -100,72 +98,64 @@ public class VodServceImpl implements VodService {
 			"text":"STRING"
 		},
 		"menuList":[
-        	{
+              {
                   "id":"STRING",
                   "name":"STRING",
                   "type":"STRING"
-            }
-		],
-		"title":{
-			"text":"STRING"
-		},
-      	"subProductList":{
+              }
+          ],
+      "title":{
+         "text":"STRING"
+      },
+      "subProduct":{
 			"product":{
-            	"identifier":{
-					"type":"STRING",
-					"text":"STRING"
-				},
-				"title":{
-					"text":"STRING"
-				},
-				"rights":{
-					"play":{
-						"support":"STRING",
-						"price":{
-							"text":0
-						},
-						"date":{
-							"type":"STRING",
-							"text":"STRING"
-						}
-               		},
-					"store":{
-                  		"support":"STRING",
-                  		"price":{
-                     		"text":0
-                  		},
-                  		"date":{
-                     		"type":"STRING",
-                     		"text":"STRING"
-                  		}
-               		}
-            	},
-				"vod":{
-               		"runningTime":{
-                  		"text":"STRING"
-               		},
-               		"videoInfo":{
-                  		"scid":"STRING",
-                  		"type":"STRING",
-                  		"pixel":"STRING",
-                  		"pictureSize":"STRING",
-                  		"version":"STRING",
-                  		"btvcid":"STRING",
-                  		"size":"STRING",
-                  		"url":"STRING"
-               		}
-            	},
-				"date":{
-               		"type":"STRING",
-               		"text":"STRING"
-            	}
+	            "identifier":{
+	               "type":"STRING",
+	               "text":"STRING"
+	            },
+	            "title":{
+	               "text":"STRING"
+	            },
+	            "rights":{
+	               "play":{
+	                  "support":"STRING",
+	                  "price":{
+	                     "text":0
+	                  },
+	                  "date":{
+	                     "type":"STRING",
+	                     "text":"STRING"
+	                  }
+	               },
+	               "store":{
+	                  "support":"STRING",
+	                  "price":{
+	                     "text":0
+	                  },
+	                  "date":{
+	                     "type":"STRING",
+	                     "text":"STRING"
+	                  }
+	               }
+	            },
+	            "book":{
+	               "type":"STRING",
+	               "updateCycle":"STRING",
+	               "totalPages":"STRING",
+	               "bookVersion":"STRING",
+	               "scid":"STRING",
+	               "size":0,
+	               "url":"STRING",
+	               "chapter":{
+	                  "unit":"STRING"
+	               }
+	            }
          	}
       	}
-   	}
+	}
 }
+ */
 
-
-*/
 		return res;
 	}
 
