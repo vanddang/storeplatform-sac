@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
@@ -643,14 +645,55 @@ public class DummyDataController {
 
 		mbrClauseAgreeList.add(mbrClauseAgree);
 
-		// res.setIsRealName("1234");
-		// res.setDeviceInfoList(deviceInfoList);
-		// res.setUserInfo(userInfoList);
-		// res.setAgreementList(agreementInfoList);
+		/*
+		 * 인증정보
+		 */
+		List<MbrAuth> mbrAuthList = new ArrayList<MbrAuth>();
+		MbrAuth mbrAuth = new MbrAuth();
+		mbrAuth.setBirthDay("");
+		mbrAuth.setCi("");
+		mbrAuth.setDi("");
+		mbrAuth.setIsRealName("");
+		mbrAuth.setMemberCategory("");
+		mbrAuth.setMemberKey("");
+		mbrAuth.setName("");
+		mbrAuth.setPhone("");
+		mbrAuth.setRealNameDate("");
+		mbrAuth.setRealNameMethod("");
+		mbrAuth.setRealNameSite("");
+		mbrAuth.setSequence("");
+		mbrAuth.setSex("");
+		mbrAuth.setTelecom("");
+		mbrAuth.setTenantID("");
+		mbrAuth.setUpdateDate("");
+		mbrAuthList.add(mbrAuth);
+
+		/*
+		 * 법정대리인 정보
+		 */
+		List<MbrLglAgent> mbrLglAgentList = new ArrayList<MbrLglAgent>();
+		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+		mbrLglAgent.setIsParent("");
+		mbrLglAgent.setMemberKey("");
+		mbrLglAgent.setParentBirthDay("");
+		mbrLglAgent.setParentCI("");
+		mbrLglAgent.setParentDate("");
+		mbrLglAgent.setParentEmail("");
+		mbrLglAgent.setParentMDN("");
+		mbrLglAgent.setParentName("");
+		mbrLglAgent.setParentRealNameDate("");
+		mbrLglAgent.setParentRealNameMethod("");
+		mbrLglAgent.setParentRealNameSite("");
+		mbrLglAgent.setParentTelecom("");
+		mbrLglAgent.setParentType("");
+		mbrLglAgent.setSequence("");
+		mbrLglAgentList.add(mbrLglAgent);
 
 		res.setUserInfoList(userInfoList);
 		res.setDeviceInfoList(deviceInfoList);
 		res.setMbrClauseAgreeList(mbrClauseAgreeList);
+		res.setMbrAuthList(mbrAuthList);
+		res.setMbrLglAgentList(mbrLglAgentList);
 
 		return res;
 
@@ -855,7 +898,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/createAddtionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAddtionalInformationRes createAddtionalInformation() {
 
@@ -877,7 +920,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/removeAddtionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/removeAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveAddtionalInformationRes removeAddtionalInformation() {
 
@@ -899,7 +942,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/listAddtionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListAddtionalInformationRes listAddtionalInformation() {
 
