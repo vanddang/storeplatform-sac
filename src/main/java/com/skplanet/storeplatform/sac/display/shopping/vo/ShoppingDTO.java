@@ -20,6 +20,7 @@ public class ShoppingDTO {
 	private String catagoryId;
 	private String catagoryName;
 	private String prodNetAmt;
+	private String prodAmt;
 	private String dcRate;
 	private String dcAmt;
 	private String dlvProdYn;
@@ -35,6 +36,7 @@ public class ShoppingDTO {
 	private String regDt;
 	private String tenentId;
 	private String prodId;
+	private String partProdId;
 	private String filePos;
 
 	public int getTotalCount() {
@@ -67,6 +69,14 @@ public class ShoppingDTO {
 
 	public void setProdNetAmt(String prodNetAmt) {
 		this.prodNetAmt = prodNetAmt;
+	}
+
+	public String getProdAmt() {
+		return this.prodAmt;
+	}
+
+	public void setProdAmt(String prodAmt) {
+		this.prodAmt = prodAmt;
 	}
 
 	public String getDcRate() {
@@ -171,6 +181,14 @@ public class ShoppingDTO {
 
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	public String getPartProdId() {
+		return this.partProdId;
+	}
+
+	public void setPartProdId(String partProdId) {
+		this.partProdId = partProdId;
 	}
 
 	public String getFilePos() {
