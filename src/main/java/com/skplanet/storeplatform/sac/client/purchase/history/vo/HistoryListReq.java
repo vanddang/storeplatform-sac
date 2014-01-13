@@ -12,12 +12,12 @@ public class HistoryListReq extends CommonInfo {
 	private String insdDeviceId;
 	private String startDt;
 	private String endDt;
-	private String prchsReqPathCd;
-	private String prodGrpCd;
-	private String prchsCaseCd;
+	private String tenantProdGrpCd;
+	private String prodId;
+	private String prchsProdType;
 	private String hidingYn;
 	private String prchsStatusCd;
-	private String freepassProdId;
+	private String frProdId;
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -67,28 +67,28 @@ public class HistoryListReq extends CommonInfo {
 		this.endDt = endDt;
 	}
 
-	public String getPrchsReqPathCd() {
-		return this.prchsReqPathCd;
+	public String getTenantProdGrpCd() {
+		return this.tenantProdGrpCd;
 	}
 
-	public void setPrchsReqPathCd(String prchsReqPathCd) {
-		this.prchsReqPathCd = prchsReqPathCd;
+	public void setTenantProdGrpCd(String tenantProdGrpCd) {
+		this.tenantProdGrpCd = tenantProdGrpCd;
 	}
 
-	public String getProdGrpCd() {
-		return this.prodGrpCd;
+	public String getProdId() {
+		return this.prodId;
 	}
 
-	public void setProdGrpCd(String prodGrpCd) {
-		this.prodGrpCd = prodGrpCd;
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
-	public String getPrchsCaseCd() {
-		return this.prchsCaseCd;
+	public String getPrchsProdType() {
+		return this.prchsProdType;
 	}
 
-	public void setPrchsCaseCd(String prchsCaseCd) {
-		this.prchsCaseCd = prchsCaseCd;
+	public void setPrchsProdType(String prchsProdType) {
+		this.prchsProdType = prchsProdType;
 	}
 
 	public String getHidingYn() {
@@ -107,12 +107,12 @@ public class HistoryListReq extends CommonInfo {
 		this.prchsStatusCd = prchsStatusCd;
 	}
 
-	public String getFreepassProdId() {
-		return this.freepassProdId;
+	public String getFrProdId() {
+		return this.frProdId;
 	}
 
-	public void setFreepassProdId(String freepassProdId) {
-		this.freepassProdId = freepassProdId;
+	public void setFrProdId(String frProdId) {
+		this.frProdId = frProdId;
 	}
 
 }

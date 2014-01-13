@@ -20,29 +20,35 @@ public class History extends CommonInfo implements Serializable {
 	private String useTenantId;
 	private String useInsdUsermbrNo;
 	private String useInsdDeviceId;
+	private String recvTenantId;
+	private String recvInsdUsermbrNo;
+	private String recvInsdDeviceId;
 	private String prchsDt;
 	private String totAmt;
 	private String sendInsdUsermbrNo;
 	private String sendInsdDeviceId;
 	private String recvDt;
+	private String recvConfPathCd;
+	private String tenantProdGrpCd;
 	private String prodId;
 	private String prodAmt;
 	private String prodQty;
-	private String prodGrpCd;
-	private String prchsStatusCd;
+	private String statusCd;
 	private String useStartDt;
 	private String useExprDt;
 	private String hidingYn;
 	private String cancelReqPathCd;
 	private String cancelDt;
-	private String cpnPublishCd;
-	private String cpnDlvUrl;
 	private String prchsCaseCd;
 	private String rePrchsPmtYn;
 	private String dwldStartDt;
 	private String dwldExprDt;
+	private String cpnPublishCd;
+	private String cpnDlvUrl;
+	private String etcSeq;
 	private String prodNm;
 	private String prodImgUrl;
+	private String frProdId;
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -100,6 +106,30 @@ public class History extends CommonInfo implements Serializable {
 		this.useInsdDeviceId = useInsdDeviceId;
 	}
 
+	public String getRecvTenantId() {
+		return this.recvTenantId;
+	}
+
+	public void setRecvTenantId(String recvTenantId) {
+		this.recvTenantId = recvTenantId;
+	}
+
+	public String getRecvInsdUsermbrNo() {
+		return this.recvInsdUsermbrNo;
+	}
+
+	public void setRecvInsdUsermbrNo(String recvInsdUsermbrNo) {
+		this.recvInsdUsermbrNo = recvInsdUsermbrNo;
+	}
+
+	public String getRecvInsdDeviceId() {
+		return this.recvInsdDeviceId;
+	}
+
+	public void setRecvInsdDeviceId(String recvInsdDeviceId) {
+		this.recvInsdDeviceId = recvInsdDeviceId;
+	}
+
 	public String getPrchsDt() {
 		return this.prchsDt;
 	}
@@ -140,6 +170,22 @@ public class History extends CommonInfo implements Serializable {
 		this.recvDt = recvDt;
 	}
 
+	public String getRecvConfPathCd() {
+		return this.recvConfPathCd;
+	}
+
+	public void setRecvConfPathCd(String recvConfPathCd) {
+		this.recvConfPathCd = recvConfPathCd;
+	}
+
+	public String getTenantProdGrpCd() {
+		return this.tenantProdGrpCd;
+	}
+
+	public void setTenantProdGrpCd(String tenantProdGrpCd) {
+		this.tenantProdGrpCd = tenantProdGrpCd;
+	}
+
 	public String getProdId() {
 		return this.prodId;
 	}
@@ -164,20 +210,12 @@ public class History extends CommonInfo implements Serializable {
 		this.prodQty = prodQty;
 	}
 
-	public String getProdGrpCd() {
-		return this.prodGrpCd;
+	public String getStatusCd() {
+		return this.statusCd;
 	}
 
-	public void setProdGrpCd(String prodGrpCd) {
-		this.prodGrpCd = prodGrpCd;
-	}
-
-	public String getPrchsStatusCd() {
-		return this.prchsStatusCd;
-	}
-
-	public void setPrchsStatusCd(String prchsStatusCd) {
-		this.prchsStatusCd = prchsStatusCd;
+	public void setStatusCd(String statusCd) {
+		this.statusCd = statusCd;
 	}
 
 	public String getUseStartDt() {
@@ -220,22 +258,6 @@ public class History extends CommonInfo implements Serializable {
 		this.cancelDt = cancelDt;
 	}
 
-	public String getCpnPublishCd() {
-		return this.cpnPublishCd;
-	}
-
-	public void setCpnPublishCd(String cpnPublishCd) {
-		this.cpnPublishCd = cpnPublishCd;
-	}
-
-	public String getCpnDlvUrl() {
-		return this.cpnDlvUrl;
-	}
-
-	public void setCpnDlvUrl(String cpnDlvUrl) {
-		this.cpnDlvUrl = cpnDlvUrl;
-	}
-
 	public String getPrchsCaseCd() {
 		return this.prchsCaseCd;
 	}
@@ -268,6 +290,30 @@ public class History extends CommonInfo implements Serializable {
 		this.dwldExprDt = dwldExprDt;
 	}
 
+	public String getCpnPublishCd() {
+		return this.cpnPublishCd;
+	}
+
+	public void setCpnPublishCd(String cpnPublishCd) {
+		this.cpnPublishCd = cpnPublishCd;
+	}
+
+	public String getCpnDlvUrl() {
+		return this.cpnDlvUrl;
+	}
+
+	public void setCpnDlvUrl(String cpnDlvUrl) {
+		this.cpnDlvUrl = cpnDlvUrl;
+	}
+
+	public String getEtcSeq() {
+		return this.etcSeq;
+	}
+
+	public void setEtcSeq(String etcSeq) {
+		this.etcSeq = etcSeq;
+	}
+
 	public String getProdNm() {
 		return this.prodNm;
 	}
@@ -282,6 +328,14 @@ public class History extends CommonInfo implements Serializable {
 
 	public void setProdImgUrl(String prodImgUrl) {
 		this.prodImgUrl = prodImgUrl;
+	}
+
+	public String getFrProdId() {
+		return this.frProdId;
+	}
+
+	public void setFrProdId(String frProdId) {
+		this.frProdId = frProdId;
 	}
 
 }
