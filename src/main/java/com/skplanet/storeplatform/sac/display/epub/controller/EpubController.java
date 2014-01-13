@@ -9,11 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.controller;
 
-import java.util.logging.Logger;
 
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 import com.skplanet.storeplatform.sac.display.epub.service.EpubService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * VOD Controller
@@ -48,7 +56,7 @@ public class EpubController {
 	 */
 	@RequestMapping(value = "/series/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public EpubDetailRes searchEpubSeries(EpubDetailReq req) {
+	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
 		return this.epubService.searchEpubSeries(req);
 
 	}

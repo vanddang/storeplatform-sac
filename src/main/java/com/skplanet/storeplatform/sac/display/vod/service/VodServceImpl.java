@@ -28,6 +28,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * VOD Service

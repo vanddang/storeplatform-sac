@@ -9,11 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.display.vod.controller;
 
-import java.util.logging.Logger;
 
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
 import com.skplanet.storeplatform.sac.display.vod.service.VodService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * VOD Controller
