@@ -126,8 +126,11 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param userKey
+	 *            String
 	 * @param deviceInfo
+	 *            DeviceInfo
 	 * @throws Exception
+	 *             Exception
 	 */
 	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo) throws Exception {
 		this.deviceService.preRegMemberDeviceRegist(userKey, deviceInfo);
