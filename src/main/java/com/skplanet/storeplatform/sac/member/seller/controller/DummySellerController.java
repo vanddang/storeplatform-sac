@@ -2,13 +2,11 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,7 +27,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassRes
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
@@ -60,7 +57,7 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 @Controller
 public class DummySellerController {
 
-	private static final Logger logger = LoggerFactory.getLogger(DummySellerController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DummySellerController.class);
 
 	@Autowired
 	private SellerService sellerService;
@@ -70,12 +67,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자 회원 가입
+	 * 판매자 회원 가입.
 	 * </pre>
+	 * 
+	 * @return CreateRes
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateRes create(@RequestHeader Map<String, Object> headers) {
+	public CreateRes create() {
 
 		CreateRes responseVO = new CreateRes();
 		SellerInfo sellerInfo = new SellerInfo();
@@ -86,30 +85,34 @@ public class DummySellerController {
 		sellerInfo.setSellerSubStatus("US010301");
 		responseVO.setSellerInfo(sellerInfo);
 
-		logger.debug("response : {}" + responseVO.toString());
+		LOGGER.debug("response : {}" + responseVO.toString());
 
 		return responseVO;
 	}
 
 	/**
 	 * <pre>
-	 * 판매자회원 ID/이메일 중복 조회
+	 * 판매자회원 ID/이메일 중복 조회.
 	 * </pre>
+	 * 
+	 * @return DuplicateByIdEmailRes
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DuplicateByIdEmailRes duplicateByIdEmail() throws Exception {
+	public DuplicateByIdEmailRes duplicateByIdEmail() {
 		return new DuplicateByIdEmailRes("Y");
 	}
 
 	/**
 	 * <pre>
-	 * 판매자 회원 인증
+	 * 판매자 회원 인증.
 	 * </pre>
+	 * 
+	 * @return AuthorizeRes
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public AuthorizeRes authorize() throws Exception {
+	public AuthorizeRes authorize() {
 
 		AuthorizeRes responseVO = new AuthorizeRes();
 		SellerInfo sellerInfo = new SellerInfo();
@@ -125,12 +128,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 ID찾기
+	 * 판매자회원 ID찾기.
 	 * </pre>
+	 * 
+	 * @return SearchIdRes
 	 */
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchIdRes searchId() throws Exception {
+	public SearchIdRes searchId() {
 
 		SearchIdRes responseVO = new SearchIdRes();
 		SellerId sellerIdList = null;
@@ -151,12 +156,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 Password찾기
+	 * 판매자회원 Password찾기.
 	 * </pre>
+	 * 
+	 * @return SearchPasswordRes
 	 */
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchPasswordRes searchPassword() throws Exception {
+	public SearchPasswordRes searchPassword() {
 
 		SearchPasswordRes responseVO = new SearchPasswordRes();
 
@@ -167,12 +174,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 확인
+	 * Password 보안 질문 확인.
 	 * </pre>
+	 * 
+	 * @return CheckPasswordReminderQuestionRes
 	 */
 	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion() throws Exception {
+	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion() {
 
 		CheckPasswordReminderQuestionRes responseVO = new CheckPasswordReminderQuestionRes();
 
@@ -183,12 +192,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * Password 보안 질문 조회
+	 * Password 보안 질문 조회.
 	 * </pre>
+	 * 
+	 * @return ListPasswordReminderQuestionRes
 	 */
 	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestion() throws Exception {
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestion() {
 
 		ListPasswordReminderQuestionRes responseVO = new ListPasswordReminderQuestionRes();
 		PwReminder pwReminderList = null;
@@ -206,12 +217,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본 정보 조회
+	 * 판매자회원 기본 정보 조회.
 	 * </pre>
+	 * 
+	 * @return DetailInformationRes
 	 */
 	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
+	public DetailInformationRes detailInformation() {
 
 		DetailInformationRes responseVO = new DetailInformationRes();
 		SellerMbr sellerMbr = new SellerMbr();
@@ -250,12 +263,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 정산 정보 조회
+	 * 판매자회원 정산 정보 조회.
 	 * </pre>
+	 * 
+	 * @return DetailAccountInformationRes
 	 */
 	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailAccountInformationRes detailAccountInformation() throws Exception {
+	public DetailAccountInformationRes detailAccountInformation() {
 
 		DetailAccountInformationRes responseVO = new DetailAccountInformationRes();
 		SellerInfo sellerInfo = new SellerInfo();
@@ -323,12 +338,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 기본 정보 수정
+	 * 판매자회원 기본 정보 수정.
 	 * </pre>
+	 * 
+	 * @return ModifyInformationRes
 	 */
 	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyInformationRes modifyInformation() throws Exception {
+	public ModifyInformationRes modifyInformation() {
 
 		ModifyInformationRes responseVO = new ModifyInformationRes();
 
@@ -340,12 +357,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 정산 정보 수정
+	 * 판매자회원 정산 정보 수정.
 	 * </pre>
+	 * 
+	 * @return ModifyAccountInformationRes
 	 */
 	@RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyAccountInformationRes modifyAccountInformation() throws Exception {
+	public ModifyAccountInformationRes modifyAccountInformation() {
 
 		ModifyAccountInformationRes responseVO = new ModifyAccountInformationRes();
 		responseVO.setSellerKey("User1");
@@ -355,12 +374,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 이메일 수정
+	 * 판매자회원 이메일 수정.
 	 * </pre>
+	 * 
+	 * @return ModifyEmailRes
 	 */
 	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyEmailRes modifyEmail() throws Exception {
+	public ModifyEmailRes modifyEmail() {
 
 		ModifyEmailRes responseVO = new ModifyEmailRes();
 		responseVO.setSellerKey("User1");
@@ -370,12 +391,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 Password 수정
+	 * 판매자회원 Password 수정.
 	 * </pre>
+	 * 
+	 * @return ModifyPasswordRes
 	 */
 	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyPasswordRes modifyPassword() throws Exception {
+	public ModifyPasswordRes modifyPassword() {
 
 		ModifyPasswordRes responseVO = new ModifyPasswordRes();
 		responseVO.setSellerKey("User1");
@@ -385,12 +408,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 계정 승인
+	 * 판매자회원 계정 승인.
 	 * </pre>
+	 * 
+	 * @return ConfirmRes
 	 */
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ConfirmRes confirm() throws Exception {
+	public ConfirmRes confirm() {
 
 		ConfirmRes responseVO = new ConfirmRes();
 		responseVO.setSellerKey("User1");
@@ -400,12 +425,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자 회원 전환 신청
+	 * 판매자 회원 전환 신청.
 	 * </pre>
+	 * 
+	 * @return ConversionClassRes
 	 */
 	@RequestMapping(value = "/conversionClass/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ConversionClassRes conversionClass() throws Exception {
+	public ConversionClassRes conversionClass() {
 
 		ConversionClassRes responseVO = new ConversionClassRes();
 		responseVO.setSellerKey("User1");
@@ -415,23 +442,27 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 계정 잠금
+	 * 판매자회원 계정 잠금.
 	 * </pre>
+	 * 
+	 * @return LockAccountRes
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public LockAccountRes lockAccount() throws Exception {
+	public LockAccountRes lockAccount() {
 		return new LockAccountRes("user1");
 	}
 
 	/**
 	 * <pre>
-	 * 판매자회원 실명 인증 정보 수정
+	 * 판매자회원 실명 인증 정보 수정.
 	 * </pre>
+	 * 
+	 * @return ModifyRealNameRes
 	 */
 	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyRealNameRes modifyRealName() throws Exception {
+	public ModifyRealNameRes modifyRealName() {
 
 		ModifyRealNameRes responseVO = new ModifyRealNameRes();
 		responseVO.setSellerKey("User1");
@@ -441,12 +472,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 서브계정 등록
+	 * 서브계정 등록.
 	 * </pre>
+	 * 
+	 * @return CreateSubsellerRes
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateSubsellerRes createSubseller() throws Exception {
+	public CreateSubsellerRes createSubseller() {
 
 		CreateSubsellerRes responseVO = new CreateSubsellerRes();
 		responseVO.setSellerKey("User1");
@@ -456,12 +489,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 서브계정 수정
+	 * 서브계정 수정.
 	 * </pre>
+	 * 
+	 * @return ModifySubsellerRes
 	 */
 	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifySubsellerRes modifySubseller() throws Exception {
+	public ModifySubsellerRes modifySubseller() {
 
 		ModifySubsellerRes responseVO = new ModifySubsellerRes();
 		responseVO.setSellerKey("User1");
@@ -471,12 +506,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 서브계정 삭제
+	 * 서브계정 삭제.
 	 * </pre>
+	 * 
+	 * @return RemoveSubsellerRes
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveSubsellerRes removeSubseller() throws Exception {
+	public RemoveSubsellerRes removeSubseller() {
 
 		RemoveSubsellerRes responseVO = new RemoveSubsellerRes();
 		responseVO.setRemoveCnt(1);
@@ -486,12 +523,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 서브계정 목록 조회
+	 * 서브계정 목록 조회.
 	 * </pre>
+	 * 
+	 * @return ListSubsellerRes
 	 */
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListSubsellerRes listSubseller() throws Exception {
+	public ListSubsellerRes listSubseller() {
 
 		ListSubsellerRes responseVO = new ListSubsellerRes();
 		responseVO.setMasSellerKey("IF1023511101420120615164319");
@@ -532,12 +571,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 서브계정 상세 조회
+	 * 서브계정 상세 조회.
 	 * </pre>
+	 * 
+	 * @return DetailSubsellerRes
 	 */
 	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailSubsellerRes detailSubseller() throws Exception {
+	public DetailSubsellerRes detailSubseller() {
 
 		DetailSubsellerRes responseVO = new DetailSubsellerRes();
 		responseVO.setMasSellerKey("IF1023511101420120615164319");
@@ -566,12 +607,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 서브계정 ID 중복 조회
+	 * 서브계정 ID 중복 조회.
 	 * </pre>
+	 * 
+	 * @return DuplicateBySubsellerIdRes
 	 */
 	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DuplicateBySubsellerIdRes duplicateBySubsellerId() throws Exception {
+	public DuplicateBySubsellerIdRes duplicateBySubsellerId() {
 
 		DuplicateBySubsellerIdRes responseVO = new DuplicateBySubsellerIdRes();
 		responseVO.setDuplicateYn("Y");
@@ -581,12 +624,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자회원 탈퇴
+	 * 판매자회원 탈퇴.
 	 * </pre>
+	 * 
+	 * @return WithdrawRes
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public WithdrawRes withdraw() throws Exception {
+	public WithdrawRes withdraw() {
 
 		WithdrawRes responseVO = new WithdrawRes();
 		responseVO.setSellerKey("User1");
@@ -596,12 +641,14 @@ public class DummySellerController {
 
 	/**
 	 * <pre>
-	 * 판매자 탈퇴사유 목록 조회
+	 * 판매자 탈퇴사유 목록 조회.
 	 * </pre>
+	 * 
+	 * @return ListWithdrawalReasonRes
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason() {
 
 		ListWithdrawalReasonRes responseVO = new ListWithdrawalReasonRes();
 
