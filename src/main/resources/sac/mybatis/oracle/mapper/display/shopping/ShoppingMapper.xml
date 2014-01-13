@@ -112,13 +112,13 @@
 		            AND F.BASE_YN='Y'                 /* Y : 기본(기본여부) */
 		            AND NVL(G.B2B_PROD_YN, 'N') != 'Y'
 		            <if test="prodCharge != null">
-		             AND L.PROD_CHRG_YN =${prodCharge}
+		             AND L.PROD_CHRG_YN =#{prodCharge}
 		            </if>
                     <if test="b2bProd != null">
-                    AND G.B2B_PROD_YN =${b2bProd}
+                    AND G.B2B_PROD_YN =#{b2bProd}
                     </if>
                     <if test="prodGradeCd != null">
-                    AND L.PROD_GRD_CD =${prodGradeCd}
+                    AND L.PROD_GRD_CD =#{prodGradeCd}
                     </if>                    		            
 		            AND F.USE_YN ='Y'                  /* Y : 기본(기본여부) */
 		            AND I.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
