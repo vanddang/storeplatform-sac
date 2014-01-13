@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Shopping">
 
-    <!-- 쇼핑 추천 상품 리스트 조회-->
+    <!-- 쇼핑/인기 추천 상품 리스트 조회-->
     <select id="getFeatureProductList" parameterType="ShoppingReq" resultType="ShoppingDTO">
        /* ShoppingMapper.xml.getFeatureProductList, sac: kim Hyung Sik , 2014-01-07 */
         SELECT *
@@ -26,8 +26,10 @@
                    ,REG_DT AS regDt
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
-                   ,PART_PROD_ID AS partProdId 
+                   ,PART_PROD_ID as partProdId 
+                   ,PRCHS_QTY as prchsQty
                    ,DWLD_QTY as dwldQty
+                   ,EXPO_ORD as expoOrd
              FROM (
                   SELECT  * 
                    FROM (
@@ -50,7 +52,8 @@
                                ,H.PART_PROD_ID  
                                ,I.DLV_PROD_YN
                                ,M.PRCHS_QTY
-                               ,M.DWLD_QTY                                
+                               ,M.DWLD_QTY  
+                               ,M.EXPO_ORD                              
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -136,7 +139,7 @@
                         </if>   
                    ) 
                  WHERE NO =1
-               ) 
+               ) ORDER BY DP_ORDER ASC, CATALOG_NM ASC
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>    
     
