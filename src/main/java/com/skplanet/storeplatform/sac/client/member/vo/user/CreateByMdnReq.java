@@ -26,6 +26,12 @@ public class CreateByMdnReq extends CommonInfo {
 	private String deviceId;
 
 	/**
+	 * “msisdn” or “uuid” 문자열.
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String deviceIdType;
+
+	/**
 	 * 이동 통신사.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
@@ -44,56 +50,67 @@ public class CreateByMdnReq extends CommonInfo {
 	private List<AgreementInfo> agreementList;
 
 	/**
-	 * 본인 생년월일.
+	 * 법정대리인 동의 여부
 	 */
-	@Pattern(regexp = "^([0-9]{4})([0-9]{2})([0-9]{2})", message = "유효한 생년월일이 아닙니다.")
-	private String ownBirth;
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String isParent;
 
 	/**
-	 * 법정대리인 관계 코드.
+	 * 법정대리인 인증방법코드
 	 */
-	private String parentType;
+	private String parentRealNameMethod;
 
 	/**
-	 * 법정대리인 인증타입.
-	 */
-	private String realNameMethod;
-
-	/**
-	 * 법정대리인 이름.
+	 * 법정대리인 이름
 	 */
 	private String parentName;
 
 	/**
-	 * 법정대리인 CI.
+	 * 법정대리인 관계
 	 */
-	private String parentCI;
+	private String parentType;
 
 	/**
-	 * 법정대리인 이메일.
+	 * 법정대리인 동의일시
+	 */
+	private String parentDate;
+
+	/**
+	 * 법정대리인 Email
 	 */
 	@Email(message = "유효한 Email 주소가 아닙니다.")
 	private String parentEmail;
 
 	/**
-	 * 법정대리인 통신사 정보.
+	 * 법정대리인 생년월일
+	 */
+	@Pattern(regexp = "^([0-9]{4})([0-9]{2})([0-9]{2})", message = "유효한 생년월일이 아닙니다.")
+	private String parentBirthDay;
+
+	/**
+	 * 법정대리인 통신사 코드
 	 */
 	private String parentTelecom;
 
 	/**
-	 * 법정대리인 휴대폰 번호.
+	 * 법정대리인 전화번호
 	 */
-	private String parentMdn;
+	private String parentPhone;
 
 	/**
-	 * 법정대리인 내/외국인 구분.
+	 * 법정대리인 CI
 	 */
-	private String parentResident;
+	private String pareantCi;
 
 	/**
-	 * 법정대리인 생년월일.
+	 * 법정대리인 인증 일시
 	 */
-	private String parentBirth;
+	private String parentRealNameDate;
+
+	/**
+	 * 법정대리인 실명인증사이트 코드
+	 */
+	private String parentRealNameSite;
 
 	/**
 	 * @return String : deviceId
@@ -108,6 +125,21 @@ public class CreateByMdnReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return String : deviceIdType
+	 */
+	public String getDeviceIdType() {
+		return this.deviceIdType;
+	}
+
+	/**
+	 * @param deviceIdType
+	 *            String : the deviceIdType to set
+	 */
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
 	}
 
 	/**
@@ -156,48 +188,33 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : ownBirth
+	 * @return String : isParent
 	 */
-	public String getOwnBirth() {
-		return this.ownBirth;
+	public String getIsParent() {
+		return this.isParent;
 	}
 
 	/**
-	 * @param ownBirth
-	 *            String : the ownBirth to set
+	 * @param isParent
+	 *            String : the isParent to set
 	 */
-	public void setOwnBirth(String ownBirth) {
-		this.ownBirth = ownBirth;
+	public void setIsParent(String isParent) {
+		this.isParent = isParent;
 	}
 
 	/**
-	 * @return String : parentType
+	 * @return String : parentRealNameMethod
 	 */
-	public String getParentType() {
-		return this.parentType;
+	public String getParentRealNameMethod() {
+		return this.parentRealNameMethod;
 	}
 
 	/**
-	 * @param parentType
-	 *            String : the parentType to set
+	 * @param parentRealNameMethod
+	 *            String : the parentRealNameMethod to set
 	 */
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
-	}
-
-	/**
-	 * @return String : realNameMethod
-	 */
-	public String getRealNameMethod() {
-		return this.realNameMethod;
-	}
-
-	/**
-	 * @param realNameMethod
-	 *            String : the realNameMethod to set
-	 */
-	public void setRealNameMethod(String realNameMethod) {
-		this.realNameMethod = realNameMethod;
+	public void setParentRealNameMethod(String parentRealNameMethod) {
+		this.parentRealNameMethod = parentRealNameMethod;
 	}
 
 	/**
@@ -216,18 +233,33 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : parentCI
+	 * @return String : parentType
 	 */
-	public String getParentCI() {
-		return this.parentCI;
+	public String getParentType() {
+		return this.parentType;
 	}
 
 	/**
-	 * @param parentCI
-	 *            String : the parentCI to set
+	 * @param parentType
+	 *            String : the parentType to set
 	 */
-	public void setParentCI(String parentCI) {
-		this.parentCI = parentCI;
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
+	}
+
+	/**
+	 * @return String : parentDate
+	 */
+	public String getParentDate() {
+		return this.parentDate;
+	}
+
+	/**
+	 * @param parentDate
+	 *            String : the parentDate to set
+	 */
+	public void setParentDate(String parentDate) {
+		this.parentDate = parentDate;
 	}
 
 	/**
@@ -246,6 +278,21 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
+	 * @return String : parentBirthDay
+	 */
+	public String getParentBirthDay() {
+		return this.parentBirthDay;
+	}
+
+	/**
+	 * @param parentBirthDay
+	 *            String : the parentBirthDay to set
+	 */
+	public void setParentBirthDay(String parentBirthDay) {
+		this.parentBirthDay = parentBirthDay;
+	}
+
+	/**
 	 * @return String : parentTelecom
 	 */
 	public String getParentTelecom() {
@@ -261,48 +308,63 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : parentMdn
+	 * @return String : parentPhone
 	 */
-	public String getParentMdn() {
-		return this.parentMdn;
+	public String getParentPhone() {
+		return this.parentPhone;
 	}
 
 	/**
-	 * @param parentMdn
-	 *            String : the parentMdn to set
+	 * @param parentPhone
+	 *            String : the parentPhone to set
 	 */
-	public void setParentMdn(String parentMdn) {
-		this.parentMdn = parentMdn;
+	public void setParentPhone(String parentPhone) {
+		this.parentPhone = parentPhone;
 	}
 
 	/**
-	 * @return String : parentResident
+	 * @return String : pareantCi
 	 */
-	public String getParentResident() {
-		return this.parentResident;
+	public String getPareantCi() {
+		return this.pareantCi;
 	}
 
 	/**
-	 * @param parentResident
-	 *            String : the parentResident to set
+	 * @param pareantCi
+	 *            String : the pareantCi to set
 	 */
-	public void setParentResident(String parentResident) {
-		this.parentResident = parentResident;
+	public void setPareantCi(String pareantCi) {
+		this.pareantCi = pareantCi;
 	}
 
 	/**
-	 * @return String : parentBirth
+	 * @return String : parentRealNameDate
 	 */
-	public String getParentBirth() {
-		return this.parentBirth;
+	public String getParentRealNameDate() {
+		return this.parentRealNameDate;
 	}
 
 	/**
-	 * @param parentBirth
-	 *            String : the parentBirth to set
+	 * @param parentRealNameDate
+	 *            String : the parentRealNameDate to set
 	 */
-	public void setParentBirth(String parentBirth) {
-		this.parentBirth = parentBirth;
+	public void setParentRealNameDate(String parentRealNameDate) {
+		this.parentRealNameDate = parentRealNameDate;
+	}
+
+	/**
+	 * @return String : parentRealNameSite
+	 */
+	public String getParentRealNameSite() {
+		return this.parentRealNameSite;
+	}
+
+	/**
+	 * @param parentRealNameSite
+	 *            String : the parentRealNameSite to set
+	 */
+	public void setParentRealNameSite(String parentRealNameSite) {
+		this.parentRealNameSite = parentRealNameSite;
 	}
 
 }

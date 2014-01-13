@@ -23,6 +23,12 @@ public class CreateByAgreementReq extends CommonInfo {
 	private String deviceId;
 
 	/**
+	 * “msisdn” or “uuid” 문자열.
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String deviceIdType;
+
+	/**
 	 * 사용자 아이디.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
@@ -59,6 +65,21 @@ public class CreateByAgreementReq extends CommonInfo {
 	 */
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	/**
+	 * @return String : deviceIdType
+	 */
+	public String getDeviceIdType() {
+		return this.deviceIdType;
+	}
+
+	/**
+	 * @param deviceIdType
+	 *            String : the deviceIdType to set
+	 */
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
 	}
 
 	/**
