@@ -47,8 +47,7 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private DeviceService deviceService;
-	
-	
+
 	/**
 	 * <pre>
 	 * 모번호 조회
@@ -118,23 +117,7 @@ public class MemberCommonComponent {
 		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
 		return this.uapsSCI.getMappingInfo(pReqParam, type);
 	}
-	
-	
-	/**
-	 * <pre>
-	 * 고객정보조회
-	 * 모번호 조회및 단말 정보 조회(USPS 정보와 서비스 관리번호 UA_CD 값이 같이 들어와야함.)
-	 * TODO 기타 파트에서 api 개발 완료되면 확인해봐야함.
-	 * </pre>
-	 * 
-	 * @param pReqParam
-	 *            pReqParam
-	 * @param type
-	 *            type
-	 * @return UserRes
-	 * @throws Exception
-	 *             Exception
-	 */
+
 	/**
 	 * 
 	 * <pre>
@@ -147,7 +130,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 */
 	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo) throws Exception {
-		deviceService.preRegMemberDeviceRegist(userKey, deviceInfo);
+		this.deviceService.preRegMemberDeviceRegist(userKey, deviceInfo);
 	}
 
 }
