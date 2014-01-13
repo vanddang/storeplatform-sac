@@ -70,11 +70,11 @@
         <typeAlias alias="CategorySpecificDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificDTO" />
         
         <!-- feature app 카테고리 상품 조회 -->
-        <typeAlias alias="FeatureCategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppReq" />
+        <typeAlias alias="FeatureCategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq" />
         <typeAlias alias="FeatureCategoryAppDTO"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryAppDTO" />
         
         <!-- feature epub 카테고리 상품 조회 -->
-        <typeAlias alias="FeatureCategoryEpubReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubReq" />
+        <typeAlias alias="FeatureCategoryEpubReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq" />
         <typeAlias alias="FeatureCategoryEpubDTO"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryEpubDTO" />
         
         <!-- feature vod 카테고리 상품 조회 -->
