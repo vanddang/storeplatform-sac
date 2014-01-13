@@ -53,14 +53,14 @@ public class DetailInformationTest {
 
 	/**
 	 * <pre>
-	 * 판매자 기본정보 조회
+	 * 판매자 기본정보 조회(모든키존재)
 	 * </pre>
 	 */
 	@Test
 	public void detailInformationFull() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=OA00049881")
+				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -72,11 +72,16 @@ public class DetailInformationTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 기본정보 조회(sellerKey만존재)
+	 * </pre>
+	 */
 	@Test
 	public void detailInformationSellerKey() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=")
+				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -88,10 +93,16 @@ public class DetailInformationTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 기본정보 조회(aid만 존재)
+	 * </pre>
+	 */
 	@Test
 	public void detailInformationAid() {
 
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881")
+		new TestCaseTemplate(this.mockMvc)
+				.url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -103,10 +114,16 @@ public class DetailInformationTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 기본정보 조회(모든키미존재)
+	 * </pre>
+	 */
 	@Test
 	public void detailInformationEmpity() {
 
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=")
+		new TestCaseTemplate(this.mockMvc)
+				.url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
