@@ -25,7 +25,7 @@ public class DeviceInfo extends CommonInfo {
 	/**
 	 * 사용자 key
 	 */
-	private String userAuthKey;
+	private String userKey;
 
 	/**
 	 * 기기 Key
@@ -438,12 +438,14 @@ public class DeviceInfo extends CommonInfo {
 		this.deviceIdType = deviceIdType;
 	}
 
-	public String getUserAuthKey() {
-		return this.userAuthKey;
+	public String getUserKey() {
+		return userKey;
 	}
 
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
+
+
 
 }
