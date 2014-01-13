@@ -56,18 +56,23 @@ public class AuthorizeByMdnTest {
 	@Test
 	public void shouldAuthorizeByMdn() {
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-		req.setDeviceAccount("vanddang@gmail.com");
-		req.setDeviceId("0162088230");
 		req.setDeviceModelNo("SHW-M250S");
-		req.setDeviceTelecom("KT");
-		req.setIsAutoUpdate("Y");
-		req.setNativeId("358362045580844");
 		req.setOsVerOrg("1.0");
-		req.setScVer("1.0");
+		
+		req.setDeviceId("01073215212");
+		//req.setDeviceId("01088870008");
+		req.setDeviceIdType("msisdn");
+		req.setDeviceTelecom("KT");
+		req.setNativeId("358362045580844");
 		req.setRooting("Y");
+		req.setDeviceAccount("vanddang@gmail.com");
+		req.setIsAutoUpdate("Y");
+		req.setScVer("1.0");
+		
 		
 		try {
-			this.loginService.authorizeByMdn(null, req);
+			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(null, req);
+			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
