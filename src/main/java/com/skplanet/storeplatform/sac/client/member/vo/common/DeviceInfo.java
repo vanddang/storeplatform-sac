@@ -163,6 +163,11 @@ public class DeviceInfo extends CommonInfo {
 	private String rooting;
 
 	/**
+	 * TenantId
+	 */
+	private String TenantId;
+
+	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
 	 */
 	private List<DeviceExtraInfo> userDeviceExtraInfo;
@@ -405,6 +410,14 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
+	}
+
+	public String getTenantId() {
+		return this.TenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.TenantId = tenantId;
 	}
 
 }
