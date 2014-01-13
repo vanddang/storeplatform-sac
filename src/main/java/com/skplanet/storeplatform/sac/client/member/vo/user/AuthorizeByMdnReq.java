@@ -12,9 +12,14 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 기기 ID (mdn, uuid)
+	 * 기기 ID
 	 */
 	private String deviceId;
+
+	/**
+	 * 기기 ID 타입 (msisdn, uuid, macaddress)
+	 */
+	private String deviceIdType;
 
 	/**
 	 * 기기 고유 번호
@@ -126,6 +131,14 @@ public class AuthorizeByMdnReq extends CommonInfo {
 
 	public void setOsVerOrg(String osVerOrg) {
 		this.osVerOrg = osVerOrg;
+	}
+
+	public String getDeviceIdType() {
+		return this.deviceIdType;
+	}
+
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
 	}
 
 }

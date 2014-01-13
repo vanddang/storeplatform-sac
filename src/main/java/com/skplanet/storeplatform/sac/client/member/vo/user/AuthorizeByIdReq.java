@@ -14,9 +14,14 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 기기 ID (mdn, uuid)
+	 * 기기 ID
 	 */
 	private String deviceId;
+
+	/**
+	 * 기기 ID 타입 (msisdn, uuid, macaddress)
+	 */
+	private String deviceIdType;
 
 	/**
 	 * 사용자 아이디
@@ -115,6 +120,14 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 
 	public void setDeviceTelecom(String deviceTelecom) {
 		this.deviceTelecom = deviceTelecom;
+	}
+
+	public String getDeviceIdType() {
+		return this.deviceIdType;
+	}
+
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
 	}
 
 }

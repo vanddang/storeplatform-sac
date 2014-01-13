@@ -33,6 +33,11 @@ public class DeviceInfo extends CommonInfo {
 	private String deviceId;
 
 	/**
+	 * 기기 ID 타입 (msisdn, uuid, macaddress)
+	 */
+	private String deviceIdType;
+
+	/**
 	 * 기기 타입 코드
 	 */
 	private String deviceType;
@@ -418,6 +423,14 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setTenantId(String tenantId) {
 		this.TenantId = tenantId;
+	}
+
+	public String getDeviceIdType() {
+		return this.deviceIdType;
+	}
+
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
 	}
 
 }
