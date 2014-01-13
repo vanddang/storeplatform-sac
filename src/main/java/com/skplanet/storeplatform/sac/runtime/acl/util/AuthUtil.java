@@ -96,19 +96,19 @@ public class AuthUtil {
 		}
 	}
 
-	/**
-	 * 인증 Signature 생성을 위한 URL (timestamp, nonce 생성) 요청 URL + 인증을 위한 Custom
-	 * Header (x-sac-auth-tenant-key+x-sac-auth-timestamp+x-sac-auth-nonce)
-	 *
-	 * @param baseUrl
-	 *            요청 URL
-	 * @param tenantKey
-	 *            Tenant Key
-	 * @return 인증 Signature 생성을 위한 URL
-	 */
-	public static String getUrlForAuth(String baseUrl, String tenantKey) {
-		return getUrlForAuth(baseUrl, tenantKey, getTimestamp(), getNonce());
-	}
+//	/**
+//	 * 인증 Signature 생성을 위한 URL (timestamp, nonce 생성) 요청 URL + 인증을 위한 Custom
+//	 * Header (x-sac-auth-tenant-key+x-sac-auth-timestamp+x-sac-auth-nonce)
+//	 *
+//	 * @param baseUrl
+//	 *            요청 URL
+//	 * @param tenantKey
+//	 *            Tenant Key
+//	 * @return 인증 Signature 생성을 위한 URL
+//	 */
+//	public static String getUrlForAuth(String baseUrl, String tenantKey) {
+//		return getUrlForAuth(baseUrl, tenantKey, getTimestamp(), getNonce());
+//	}
 
 	/**
 	 * 인증 Signature 생성을 위한 URL 요청 URL + 인증을 위한 Custom Header

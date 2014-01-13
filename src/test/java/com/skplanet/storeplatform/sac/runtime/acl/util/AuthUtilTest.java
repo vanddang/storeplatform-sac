@@ -96,78 +96,25 @@ public class AuthUtilTest {
 
 
 	@Test
-	public void getUrlForAuth1_no_param() {
-		String baseUrl = "http://store.skplanet.com/sac";
-		String tenantKey = "9Coum1NDRACh2v7eoYxfaA";
-		this.getUrlForAuth1(baseUrl, tenantKey);
-	}
-
-	@Test
-	public void getUrlForAuth1_param() {
-		String baseUrl = "http://store.skplanet.com/sac?dummy=test";
-		String tenantKey = "9Coum1NDRACh2v7eoYxfaA";
-		this.getUrlForAuth1(baseUrl, tenantKey);
-	}
-
-
-	private void getUrlForAuth1(String baseUrl, String tenantKey) {
-
-		String urlForAuth = AuthUtil.getUrlForAuth(baseUrl, tenantKey);
-
-		System.out.println("<getUrlForAuth1> urlForAuth="+urlForAuth);
-		//timestamp, nonce 가 계속 바뀌기 때문에 성공여부 확인 불가
-		//Parameter 를 parsing 하여 비교 한다.
-		//urlForAuth
-		//assertThat(urlForAuth, is("http://store.skplanet.com/sac?x-sac-auth-tenant-key=9Coum1NDRACh2v7eoYxfaA&x-sac-auth-timestamp=1389633599&x-sac-auth-nonce=8851706618849"));
-
-		URL url;
-		try {
-			url = new URL(urlForAuth);
-			System.out.println("<getUrlForAuth1> url="+url);
-			assertThat(url.getHost(), is("store.skplanet.com"));
-
-			Map<String, String> query_pairs = splitQuery(url);
-
-			//Tenant Key 비교
-			String urlTenantKey = query_pairs.get(AuthUtil.CUSTOM_HEADER_KEY_TENANTKEY);
-			assertThat(urlTenantKey, is(tenantKey));
-
-			//Timestamp, nonce 값 null 비교
-			String urlTimestamp = query_pairs.get(AuthUtil.CUSTOM_HEADER_KEY_TIMESTAMP);
-			assertNotNull(urlTimestamp);
-			String urlNonce = query_pairs.get(AuthUtil.CUSTOM_HEADER_KEY_NONCE);
-			assertNotNull(urlNonce);
-
-
-
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-	}
-
-
-	@Test
-	public void getUrlForAuth2_no_param() {
+	public void getUrlForAuth_no_param() {
 		String baseUrl = "http://store.skplanet.com/sac";
 		String tenantKey = "9Coum1NDRACh2v7eoYxfaA";
 		String timestamp = AuthUtil.getTimestamp();
 		String nonce = AuthUtil.getNonce();
-		this.getUrlForAuth2(baseUrl, tenantKey, timestamp, nonce);
+		this.getUrlForAuth(baseUrl, tenantKey, timestamp, nonce);
 	}
 
 	@Test
-	public void getUrlForAuth2_param() {
+	public void getUrlForAuth_param() {
 		String baseUrl = "http://store.skplanet.com/sac?dummy=test";
 		String tenantKey = "9Coum1NDRACh2v7eoYxfaA";
 		String timestamp = AuthUtil.getTimestamp();
 		String nonce = AuthUtil.getNonce();
-		this.getUrlForAuth2(baseUrl, tenantKey, timestamp, nonce);
+		this.getUrlForAuth(baseUrl, tenantKey, timestamp, nonce);
 	}
 
 
-	private void getUrlForAuth2(String baseUrl, String tenantKey, String timestamp, String nonce) {
+	private void getUrlForAuth(String baseUrl, String tenantKey, String timestamp, String nonce) {
 
 		String urlForAuth = AuthUtil.getUrlForAuth(baseUrl, tenantKey, timestamp, nonce);
 
