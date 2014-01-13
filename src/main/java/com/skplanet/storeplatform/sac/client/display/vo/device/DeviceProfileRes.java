@@ -7,15 +7,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Devi
 public class DeviceProfileRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 	private Device device;
 
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonResponse(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
 	public Device getDevice() {

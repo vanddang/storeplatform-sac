@@ -7,15 +7,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner;
 
 public class BannerRes extends CommonInfo {
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 	private List<Banner> bannerList;
 
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonResponse(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
 	public List<Banner> getBannerList() {

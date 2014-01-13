@@ -10,15 +10,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class CategorySpecificRes extends CommonInfo {
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 	private List<Product> productList;
 
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonResponse(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
 	public List<Product> getProductList() {
