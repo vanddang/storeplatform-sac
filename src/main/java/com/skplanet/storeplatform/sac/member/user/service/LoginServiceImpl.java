@@ -267,7 +267,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new Exception("변동성 회원 가입실패 [" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 		}
 
-		String imMbrNo = idpReceiver.getResponseBody().getUser_key();
+		String imMbrNo = idpReceiver.getResponseBody().getUser_key(); //IDP 관리번호
 		String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); //SKT사용자의 경우 사용자 관리번호
 		
 		logger.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
