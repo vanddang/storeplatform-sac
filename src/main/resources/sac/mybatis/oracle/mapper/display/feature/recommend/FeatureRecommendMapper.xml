@@ -9,6 +9,13 @@
 			F_PROD.*
 			, ST.DWLD_CNT
 			, ST.PRCHS_CNT
+			, NVL(
+				( 
+					CASE WHEN ( ST.AVG_EVLU_SCORE > 0 AND ST.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
+                    	WHEN ST.AVG_EVLU_SCORE > 5 THEN 5
+                    	ELSE ROUND( ST.AVG_EVLU_SCORE , 1 )
+                    END ) 
+                  , 0 ) AS AVG_EVLU_SCORE
 		FROM (
 				SELECT
 					R_PROD.*

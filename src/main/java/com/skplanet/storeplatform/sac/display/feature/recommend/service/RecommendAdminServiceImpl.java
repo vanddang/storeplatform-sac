@@ -135,7 +135,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			
 			accrual.setVoterCount(recommendAdminDTO.getPrchsCnt());
 			accrual.setDownloadCount(recommendAdminDTO.getDwldCnt());
-			accrual.setScore(3.3);
+			accrual.setDownloadCount(recommendAdminDTO.getAvgEvluScore());
+			//accrual.setScore(3.3);
 
 			/*
 			 * Rights grade

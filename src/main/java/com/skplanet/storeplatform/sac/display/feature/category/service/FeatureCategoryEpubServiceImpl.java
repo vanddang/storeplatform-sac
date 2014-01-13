@@ -151,9 +151,12 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			log.debug("setBook");
 			contributor.setName(categoryEpubDTO.getArtist1Nm());
 			contributor.setCompany(categoryEpubDTO.getChnlCompNm());
-			Date date = new Date();
-			date.setText(categoryEpubDTO.getIssueDay());
-			contributor.setDate(date);
+			if (!"".equals(StringUtil.nvl(categoryEpubDTO.getIssueDay(), ""))) {
+				Date date = new Date();
+				date.setType("date/reg");
+				date.setText(categoryEpubDTO.getIssueDay());
+				contributor.setDate(date);
+			}
 			log.debug("setCompany");
 			
 
@@ -199,7 +202,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		responseVO = new FeatureCategoryEpubRes();
 		commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(totalCount);
-		
+		log.debug(String.valueOf(listVO.size()));
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(listVO);
 		return responseVO;

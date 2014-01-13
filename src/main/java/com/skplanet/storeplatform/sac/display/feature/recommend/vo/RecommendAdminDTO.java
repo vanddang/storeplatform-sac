@@ -39,6 +39,7 @@ public class RecommendAdminDTO {
 	private String verMajor;
 	private String verMinor;
 	private String fileNm;
+	private String avgEvluScore;
 	
 	public int getTotalCount() {
 		return totalCount;
@@ -177,6 +178,12 @@ public class RecommendAdminDTO {
 	}
 	public void setFileNm(String fileNm) {
 		this.fileNm = fileNm;
+	}
+	public String getAvgEvluScore() {
+		return avgEvluScore;
+	}
+	public void setAvgEvluScore(String avgEvluScore) {
+		this.avgEvluScore = avgEvluScore;
 	}
 	
 }
