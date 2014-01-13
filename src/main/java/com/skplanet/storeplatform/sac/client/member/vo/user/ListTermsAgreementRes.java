@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 
 /**
  * [RESPONSE] Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다.
@@ -19,14 +19,14 @@ public class ListTermsAgreementRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/* 약관동의 리스트 */
-	private List<AgreementInfo> agreementList;
+	private List<MbrClauseAgreeList> mbrClauseAgreeList;
 
-	public List<AgreementInfo> getAgreementList() {
-		return this.agreementList;
+	public List<MbrClauseAgreeList> getMbrClauseAgreeList() {
+		return this.mbrClauseAgreeList;
 	}
 
-	public void setAgreementList(List<AgreementInfo> agreementList) {
-		this.agreementList = agreementList;
+	public void setMbrClauseAgreeList(List<MbrClauseAgreeList> mbrClauseAgreeList) {
+		this.mbrClauseAgreeList = mbrClauseAgreeList;
 	}
 
 	public static long getSerialversionuid() {
