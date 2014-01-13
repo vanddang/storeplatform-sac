@@ -22,9 +22,14 @@ public class ListDeviceReq extends CommonInfo {
 	private String userKey;
 
 	/**
-	 * 기기 ID(Mdn, uuId, macaddress)
+	 * 기기 ID
 	 */
 	private String deviceId;
+
+	/**
+	 * 조회여부(모든기기/대표기기) ALL/PRIMARY
+	 */
+	private String searchType;
 
 	/**
 	 * 기기 Key
@@ -61,6 +66,14 @@ public class ListDeviceReq extends CommonInfo {
 
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	public String getSearchType() {
+		return this.searchType;
+	}
+
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
 	}
 
 }
