@@ -17,8 +17,6 @@ public class ExistRes extends CommonInfo {
 
 	/* 사용자 Key, Value : IW102158844420091030165015 */
 	private String userKey;
-	/* 회원여부, Value : Y/N */
-	private String tstoreYn;
 	/* 사용자 구분 코드, Value : US011501(기기사용자) US011502(IDP사용자) US011503(OneId사용자) null(Tstore 회원 아님) */
 	private String userType;
 	/* 회원 아이디, Value : 모바일 회원이거나 Tstore, 회원이 아닐경우 null */
@@ -40,14 +38,6 @@ public class ExistRes extends CommonInfo {
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	public String getTstoreYn() {
-		return this.tstoreYn;
-	}
-
-	public void setTstoreYn(String tstoreYn) {
-		this.tstoreYn = tstoreYn;
 	}
 
 	public String getUserType() {
