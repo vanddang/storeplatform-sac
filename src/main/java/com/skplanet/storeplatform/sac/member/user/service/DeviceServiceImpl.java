@@ -1,3 +1,12 @@
+/*
+* Copyright (c) 2013 SK planet.
+* All right reserved.
+*
+* This software is the confidential and proprietary information of SK planet.
+* You shall not disclose such Confidential Information and
+* shall use it only in accordance with the terms of the license agreement
+* you entered into with SK planet.
+*/
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
@@ -32,8 +41,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
-import com.skplanet.storeplatform.sac.member.common.idp.ImIDPManager;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
 /**
  * 휴대기기 관련 인터페이스 구현체
@@ -62,10 +72,10 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
 
 	@Autowired
-	private IDPManager idpManager; // IDP연동 클래스
+	private IDPService idpService; // IDP 연동 클래스
 	
 	@Autowired
-	private ImIDPManager imIdpManager; // IDP 통합회원 연동 클래스
+	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
 	
 	@Override
 	public CreateDeviceRes createDevice(HeaderVo headerVo, CreateDeviceReq req)
@@ -192,10 +202,10 @@ public class DeviceServiceImpl implements DeviceService {
 				throw new Exception("["+schUserRes.getCommonResponse().getResultCode()+"] " + schUserRes.getCommonResponse().getResultMessage());
 			}
 			if(schUserRes.getUserMbr().getImSvcNo() != null){
-				IDPReceiverM idpReceiver = this.idpManager.authForWap(deviceId);
-				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPManager.IDP_RES_CODE_OK)) {
-					/*idpReceiver = this.idpManager.secedeForWap(deviceId);
-					if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPManager.IDP_RES_CODE_OK)) {
+				IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
+				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+					/*idpReceiver = this.idpService.secedeForWap(deviceId);
+					if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 						throw new Exception("IDP secedeForWap fail mdn : [" + deviceId + "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
 					}*/
 				}
@@ -212,22 +222,24 @@ public class DeviceServiceImpl implements DeviceService {
 		if (req.getDeviceId() == null) {
 			throw new Exception("deviceId is null 기기정보 수정 불가");
 		}
-
-		/* 기기정보 수정 가능한 필드 */
+		
+		logger.info("################ mergeDeviceInfo start ##################");
+		
+		/* 기기정보 필드 */
 		String deviceModelNo = req.getDeviceModelNo(); // 단말모델코드
 		String nativeId = req.getNativeId(); // nativeId(imei)
 		String deviceAccount = req.getDeviceAccount(); // gmailAddr
-		String rooting = req.getRooting(); // rooting 여부
-		String osVer = req.getOsVer() == null ? req.getOsVerOrg() : req.getOsVer(); // OS버젼,OS오리지날버젼
-		String scVer = req.getScVer(); // SC버젼
-		String uacd = req.getUacd(); // uacd
-
-		/* 수정 미적용 필드 */
 		String imMngNum = req.getImMngNum(); // SKT 서비스 관리번호
 		String deviceTelecom = req.getDeviceTelecom(); // 통신사코드
 		String deviceNickName = req.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = req.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = req.getIsRecvSms(); // sms 수신여부
+		
+		/* 부가 기기정보 필드 */
+		String rooting = req.getRooting(); // rooting 여부
+		String osVer = req.getOsVer() == null ? req.getOsVerOrg() : req.getOsVer(); // OS버젼,OS오리지날버젼
+		String scVer = req.getScVer(); // SC버젼
+		String uacd = req.getUacd(); // uacd
 		String dotoriAuthDate = req.getDotoriAuthDate(); // 도토리인증일
 		String dotoriAuthYn = req.getDotoriAuthYn(); // 도토리인증여부
 
@@ -244,14 +256,45 @@ public class DeviceServiceImpl implements DeviceService {
 
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
-
+		
+		if(!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)){
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
+					+ schDeviceRes.getCommonResponse().getResultMessage());
+		}
+			
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
-		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
+		if (deviceModelNo != null 
+				&& !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
-		} else if (nativeId != null	&& !nativeId.equals(userMbrDevice.getNativeID())) {
+			logger.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
+		} else if (nativeId != null	
+				&& !nativeId.equals(userMbrDevice.getNativeID())) {
 			userMbrDevice.setNativeID(nativeId);
-		} else if (deviceAccount != null && !deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
+			logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
+		} else if (deviceAccount != null 
+				&& !deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
 			userMbrDevice.setDeviceAccount(deviceAccount);
+			logger.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
+		} else if (imMngNum != null 
+				&& !imMngNum.equals(userMbrDevice.getImMngNum())) {
+			userMbrDevice.setImMngNum(imMngNum);
+			logger.info("[imMngNum] {} -> {}", userMbrDevice.getImMngNum(), imMngNum);
+		} else if (deviceTelecom != null 
+				&& !deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
+			userMbrDevice.setDeviceTelecom(deviceTelecom);
+			logger.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
+		} else if (deviceNickName != null 
+				&& !deviceNickName.equals(userMbrDevice.getDeviceNickName())) {
+			userMbrDevice.setDeviceNickName(deviceNickName);
+			logger.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
+		} else if (isPrimary != null 
+				&& !isPrimary.equals(userMbrDevice.getIsPrimary())) {
+			userMbrDevice.setIsPrimary(isPrimary);
+			logger.info("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
+		} else if (isRecvSms != null 
+				&& !isRecvSms.equals(userMbrDevice.getIsRecvSMS())) {
+			userMbrDevice.setIsRecvSMS(isRecvSms);
+			logger.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 		}
 
 		/* 휴대기기 부가 정보 비교 */
@@ -262,31 +305,45 @@ public class DeviceServiceImpl implements DeviceService {
 
 			for (UserMbrDeviceDetail extraInfo : deviceExtraList) {
 
-				if (rooting != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)) {
-					if (!rooting.equals(extraInfo.getExtraProfileValue())) {
-						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-						extraInfo.setExtraProfileValue(rooting);
-						modDeviceExtraList.add(extraInfo);
-					}
-				} else if (osVer != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION)) {
-					if (!osVer.equals(extraInfo.getExtraProfileValue())) {
-						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
-						extraInfo.setExtraProfileValue(osVer);
-						modDeviceExtraList.add(extraInfo);
-					}
-				} else if (scVer != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION)) {
-					if (!scVer.equals(extraInfo.getExtraProfileValue())) {
-						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-						extraInfo.setExtraProfileValue(scVer);
-						modDeviceExtraList.add(extraInfo);
-					}
-				} else if (uacd != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)) {
-					if (!uacd.equals(extraInfo.getExtraProfileValue())) {
-						extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-						extraInfo.setExtraProfileValue(uacd);
-						modDeviceExtraList.add(extraInfo);
-					}
-				} 
+				if (rooting != null 
+						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN) 
+						&& !rooting.equals(extraInfo.getExtraProfileValue())) {
+					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+					extraInfo.setExtraProfileValue(rooting);
+					logger.info("[rooting] {} -> {}", extraInfo.getExtraProfileValue(), rooting);
+				} else if (osVer != null 
+						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION) 
+						&& !osVer.equals(extraInfo.getExtraProfileValue())) {
+					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+					extraInfo.setExtraProfileValue(osVer);
+					logger.info("[osVer] {} -> {}", extraInfo.getExtraProfileValue(), osVer);
+				} else if (scVer != null 
+						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION) 
+						&& !scVer.equals(extraInfo.getExtraProfileValue())) {
+					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+					extraInfo.setExtraProfileValue(scVer);
+					logger.info("[scVer] {} -> {}", extraInfo.getExtraProfileValue(), scVer);
+				} else if (uacd != null 
+						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD) 
+						&& !uacd.equals(extraInfo.getExtraProfileValue())) {
+					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+					extraInfo.setExtraProfileValue(uacd);
+					logger.info("[uacd] {} -> {}", extraInfo.getExtraProfileValue(), uacd);
+				} else if (dotoriAuthDate != null 
+						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE) 
+						&& !dotoriAuthDate.equals(extraInfo.getExtraProfileValue())) {
+					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+					extraInfo.setExtraProfileValue(dotoriAuthDate);
+					logger.info("[dotoriAuthDate] {} -> {}", extraInfo.getExtraProfileValue(), dotoriAuthDate);
+				}  else if (dotoriAuthYn != null 
+						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN) 
+						&& !dotoriAuthYn.equals(extraInfo.getExtraProfileValue())) {
+					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
+					extraInfo.setExtraProfileValue(dotoriAuthYn);
+					logger.info("[dotoriAuthYn] {} -> {}", extraInfo.getExtraProfileValue(), dotoriAuthYn);
+				}
+				
+				modDeviceExtraList.add(extraInfo);
 			}
 
 			userMbrDevice.setUserMbrDeviceDetail(modDeviceExtraList);
@@ -302,7 +359,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 			throw new Exception("result_code : [" + createDeviceRes.getCommonResponse().getResultCode() + "] result_message : [" + createDeviceRes.getCommonResponse().getResultMessage() + "]");
-		} 
+		}
+		
+		logger.info("################ mergeDeviceInfo end ##################");
+		
 	}
 	
 	/**
