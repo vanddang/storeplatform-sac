@@ -63,6 +63,13 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		CategoryWebtoonRes responseVO = null;
 
 		Integer totalCount = 0;
+		if (req.getTenantId() == null) {
+			req.setTenantId("S01");
+		}
+		if (req.getImageCd() == null) {
+			req.setImageCd("DP000196");
+		}
+
 		List<CategoryWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
 				CategoryWebtoonDTO.class);
 
@@ -129,7 +136,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 
 				// 업데이트 날짜
 				date = new Date();
-				date.setType("date");
+				date.setType("date/reg");
 				date.setText(webtoonDto.getUpdDt());
 
 				// 데이터 매핑
