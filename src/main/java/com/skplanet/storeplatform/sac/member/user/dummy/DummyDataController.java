@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
@@ -66,8 +66,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 public class DummyDataController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinController.class);
 
 	/**
 	 * <pre>
@@ -343,7 +342,7 @@ public class DummyDataController {
 			deviceInfo.setDeviceType("");
 			deviceInfo.setDeviceModelNo("LG-SH810");
 			deviceInfo.setDeviceTelecom("SKT");
-			deviceInfo.setImMngNom("");
+			deviceInfo.setImMngNum("");
 			deviceInfo.setDeviceNickName("LG-SH810");
 			deviceInfo.setIsPrimary("Y");
 			deviceInfo.setIsAuthenticated("Y");
@@ -461,7 +460,7 @@ public class DummyDataController {
 	 * 
 	 * @return ExistRes
 	 */
-	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistRes exist() {
 
@@ -476,6 +475,8 @@ public class DummyDataController {
 		res.setIsRealName("N");
 		res.setAgencyYn("Y");
 		res.setUserEmail("hkd@aaaa.com");
+		res.setUserMainStatus("US010202");
+		res.setUserSubStatus("US010303");
 
 		return res;
 	}
@@ -487,7 +488,7 @@ public class DummyDataController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdRes searchId() {
 
@@ -508,7 +509,7 @@ public class DummyDataController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordRes searchPassword() {
 
@@ -531,7 +532,7 @@ public class DummyDataController {
 	 * 
 	 * @return DetailRes
 	 */
-	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRes detail() {
 
@@ -541,110 +542,115 @@ public class DummyDataController {
 
 		DetailRes res = new DetailRes();
 
-		try {
-			/*
-			 * 휴대기기 부가정보 리스트
-			 */
-			List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-			deviceExtraInfo.setExtraProfile("US011404");
-			deviceExtraInfo.setExtraProfileValue("LGFL");
-			deviceExtraInfoList.add(deviceExtraInfo);
+		/*
+		 * 휴대기기 부가정보 리스트
+		 */
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile("US011404");
+		deviceExtraInfo.setExtraProfileValue("LGFL");
+		deviceExtraInfoList.add(deviceExtraInfo);
 
-			/*
-			 * 휴대기기 정보 리스트
-			 */
-			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-			DeviceInfo deviceInfo = new DeviceInfo();
+		/*
+		 * 휴대기기 정보 리스트
+		 */
+		List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+		DeviceInfo deviceInfo = new DeviceInfo();
 
-			deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-			deviceInfo.setDeviceKey("");
-			deviceInfo.setDeviceId("01011112222");
-			deviceInfo.setDeviceType("");
-			deviceInfo.setDeviceModelNo("LG-SH810");
-			deviceInfo.setImMngNum("");
-			deviceInfo.setDeviceTelecom("SKT");
-			deviceInfo.setDeviceNickName("LG-SH810");
-			deviceInfo.setIsPrimary("Y");
-			deviceInfo.setIsAuthenticated("Y");
-			deviceInfo.setAuthenticationDate("20140106");
-			deviceInfo.setIsRecvSms("N");
-			deviceInfo.setImei("358362045580844");
-			deviceInfo.setDeviceAccount("hkd@aaaa.com");
-			deviceInfo.setJoinId("US002903");
+		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+		deviceInfo.setDeviceKey("");
+		deviceInfo.setDeviceId("01011112222");
+		deviceInfo.setDeviceType("");
+		deviceInfo.setDeviceModelNo("LG-SH810");
+		deviceInfo.setImMngNum("");
+		deviceInfo.setDeviceTelecom("SKT");
+		deviceInfo.setDeviceNickName("LG-SH810");
+		deviceInfo.setIsPrimary("Y");
+		deviceInfo.setIsAuthenticated("Y");
+		deviceInfo.setAuthenticationDate("20140106");
+		deviceInfo.setIsRecvSms("N");
+		deviceInfo.setImei("358362045580844");
+		deviceInfo.setDeviceAccount("hkd@aaaa.com");
+		deviceInfo.setJoinId("US002903");
 
-			deviceInfoList.add(deviceInfo);
+		deviceInfoList.add(deviceInfo);
 
-			/*
-			 * 사용자 부가정보 리스트
-			 */
-			List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
-			UserExtraInfo userExtraInfo = new UserExtraInfo();
-			userExtraInfo.setExtraProfile("US010901");
-			userExtraInfo.setExtraProfileValue("100000003899");
-			userExtraInfoList.add(userExtraInfo);
+		/*
+		 * 사용자 부가정보 리스트
+		 */
+		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
+		UserExtraInfo userExtraInfo = new UserExtraInfo();
+		userExtraInfo.setExtraProfile("US010901");
+		userExtraInfo.setExtraProfileValue("100000003899");
+		userExtraInfoList.add(userExtraInfo);
 
-			/*
-			 * 사용자 정보 리스트
-			 */
-			List<UserInfo> userInfoList = new ArrayList<UserInfo>();
-			UserInfo userInfo = new UserInfo();
-			userInfo.setUserExtraInfo(userExtraInfoList);
-			userInfo.setUserKey("IW102158844420091030165015");
-			userInfo.setUserType("US011501");
-			userInfo.setUserMainStatus("US010701");
-			userInfo.setUserSubStatus("US010201");
-			userInfo.setImSvcNo("100001111241");
-			userInfo.setIsImChanged("Y");
-			userInfo.setImRegDat("20121126");
-			userInfo.setUserId("hkd");
-			userInfo.setUserTelecom("SKT");
-			userInfo.setUserPhoneCountry("82");
-			userInfo.setUserPhone("01011112222");
-			userInfo.setIsRecvSMS("N");
-			userInfo.setUserEmail("hkd@aaaa.com");
-			userInfo.setIsRecvEmail("N");
-			userInfo.setIsRestricted("Y");
-			userInfo.setRestrictStartDate("20130726");
-			userInfo.setRestrictEndDate("20130801");
-			userInfo.setRestrictId("PD00542");
-			userInfo.setRestrictCount("6");
-			userInfo.setRestrictRegisterDate("2013-12-26");
-			userInfo.setRestrictOwner("admin");
-			userInfo.setUserName("홍길동");
-			userInfo.setUserSex("M");
-			userInfo.setUserBirthDay("19700407");
-			userInfo.setUserZip("157030");
-			userInfo.setUserAddress("서울 강서구 등촌동");
-			userInfo.setUserDetailAddress("999-9");
-			userInfo.setUserCity("");
-			userInfo.setUserState("");
-			userInfo.setUserCountry("");
-			userInfo.setUserLanguage("ko");
-			userInfo.setIsParent("N");
-			userInfo.setIsRealName("N");
-			userInfo.setImSiteCode("");
+		/*
+		 * 사용자 정보 리스트
+		 */
+		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
+		UserInfo userInfo = new UserInfo();
+		userInfo.setUserExtraInfo(userExtraInfoList);
+		userInfo.setUserKey("IW102158844420091030165015");
+		userInfo.setUserType("US011501");
+		userInfo.setUserMainStatus("US010701");
+		userInfo.setUserSubStatus("US010201");
+		userInfo.setImSvcNo("100001111241");
+		userInfo.setIsImChanged("Y");
+		userInfo.setImRegDat("20121126");
+		userInfo.setUserId("hkd");
+		userInfo.setUserTelecom("SKT");
+		userInfo.setUserPhoneCountry("82");
+		userInfo.setUserPhone("01011112222");
+		userInfo.setIsRecvSMS("N");
+		userInfo.setUserEmail("hkd@aaaa.com");
+		userInfo.setIsRecvEmail("N");
+		userInfo.setIsRestricted("Y");
+		userInfo.setRestrictStartDate("20130726");
+		userInfo.setRestrictEndDate("20130801");
+		userInfo.setRestrictId("PD00542");
+		userInfo.setRestrictCount("6");
+		userInfo.setRestrictRegisterDate("2013-12-26");
+		userInfo.setRestrictOwner("admin");
+		userInfo.setUserName("홍길동");
+		userInfo.setUserSex("M");
+		userInfo.setUserBirthDay("19700407");
+		userInfo.setUserZip("157030");
+		userInfo.setUserAddress("서울 강서구 등촌동");
+		userInfo.setUserDetailAddress("999-9");
+		userInfo.setUserCity("");
+		userInfo.setUserState("");
+		userInfo.setUserCountry("");
+		userInfo.setUserLanguage("ko");
+		userInfo.setIsParent("N");
+		userInfo.setIsRealName("N");
+		userInfo.setImSiteCode("");
 
-			userInfoList.add(userInfo);
+		userInfoList.add(userInfo);
 
-			/*
-			 * 약관동의 리스트
-			 */
-			List<AgreementInfo> agreementInfoList = new ArrayList<AgreementInfo>();
-			AgreementInfo agreementInfo = new AgreementInfo();
-			agreementInfo.setExtraAgreementId("US010601");
-			agreementInfo.setExtraAgreementVersion("");
-			agreementInfo.setIsExtraAgreement("Y");
+		/*
+		 * 약관동의 리스트
+		 */
+		List<MbrClauseAgreeList> mbrClauseAgreeList = new ArrayList<MbrClauseAgreeList>();
+		MbrClauseAgreeList mbrClauseAgree = new MbrClauseAgreeList();
+		mbrClauseAgree.setExtraAgreementID("US010601");
+		mbrClauseAgree.setExtraAgreementVersion("");
+		mbrClauseAgree.setIsExtraAgreement("Y");
+		mbrClauseAgree.setIsMandatory("");
+		mbrClauseAgree.setMemberKey("");
+		mbrClauseAgree.setRegDate("");
+		mbrClauseAgree.setTenantID("");
+		mbrClauseAgree.setUpdateDate("");
 
-			agreementInfoList.add(agreementInfo);
+		mbrClauseAgreeList.add(mbrClauseAgree);
 
-			// res.setIsRealName("1234");
-			// res.setDeviceInfoList(deviceInfoList);
-			// res.setUserInfo(userInfoList);
-			// res.setAgreementList(agreementInfoList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// res.setIsRealName("1234");
+		// res.setDeviceInfoList(deviceInfoList);
+		// res.setUserInfo(userInfoList);
+		// res.setAgreementList(agreementInfoList);
+
+		res.setUserInfoList(userInfoList);
+		res.setDeviceInfoList(deviceInfoList);
+		res.setMbrClauseAgreeList(mbrClauseAgreeList);
 
 		return res;
 
@@ -657,7 +663,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListTermsAgreementRes
 	 */
-	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListTermsAgreementRes listTermsAgreement() {
 
@@ -666,15 +672,19 @@ public class DummyDataController {
 		LOGGER.info("####################################################");
 
 		ListTermsAgreementRes res = new ListTermsAgreementRes();
-		List<AgreementInfo> agreementInfoList = new ArrayList<AgreementInfo>();
-		AgreementInfo agreementInfo = new AgreementInfo();
-		agreementInfo.setExtraAgreementId("US010601");
-		agreementInfo.setExtraAgreementVersion("");
-		agreementInfo.setIsExtraAgreement("Y");
+		List<MbrClauseAgreeList> mbrClauseAgreeList = new ArrayList<MbrClauseAgreeList>();
+		MbrClauseAgreeList mbrClauseAgree = new MbrClauseAgreeList();
+		mbrClauseAgree.setExtraAgreementID("US010601");
+		mbrClauseAgree.setExtraAgreementVersion("");
+		mbrClauseAgree.setIsExtraAgreement("Y");
+		mbrClauseAgree.setIsMandatory("");
+		mbrClauseAgree.setMemberKey("");
+		mbrClauseAgree.setRegDate("");
+		mbrClauseAgree.setTenantID("");
+		mbrClauseAgree.setUpdateDate("");
 
-		agreementInfoList.add(agreementInfo);
-
-		res.setAgreementList(agreementInfoList);
+		mbrClauseAgreeList.add(mbrClauseAgree);
+		res.setMbrClauseAgreeList(mbrClauseAgreeList);
 
 		return res;
 	}
@@ -686,7 +696,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetSupportAomRes
 	 */
-	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetSupportAomRes getSupportAom() {
 
@@ -707,7 +717,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetProvisioningHistoryRes
 	 */
-	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory() {
 
@@ -730,7 +740,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveDeviceRes
 	 */
-	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveDeviceRes removeDevice() {
 
@@ -751,7 +761,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyRepresentationDeviceRes
 	 */
-	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRepresentationDeviceRes modifyRepresentationDevice() {
 
@@ -772,7 +782,7 @@ public class DummyDataController {
 	 * 
 	 * @return DetailRepresentationDeviceRes
 	 */
-	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRepresentationDeviceRes detailRepresentationDevice() {
 
@@ -823,7 +833,7 @@ public class DummyDataController {
 	 * 
 	 * @return WithdrawRes
 	 */
-	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes withdraw() {
 
@@ -845,7 +855,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/createAddtionalInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/createAddtionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAddtionalInformationRes createAddtionalInformation() {
 
@@ -867,7 +877,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/removeAddtionalInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/removeAddtionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveAddtionalInformationRes removeAddtionalInformation() {
 
@@ -889,7 +899,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/listAddtionalInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listAddtionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListAddtionalInformationRes listAddtionalInformation() {
 

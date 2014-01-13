@@ -111,6 +111,15 @@ public class UserSelectServiceImpl implements UserSelectService {
 				userInfo.setUserMainStatus(info.getUserMainStatus());
 				userInfo.setUserSubStatus(info.getUserSubStatus());
 			}
+
+			result.setUserKey(userInfo.getUserKey());
+			result.setUserType(userInfo.getUserType());
+			result.setUserId(userInfo.getUserId());
+			result.setIsRealName(userInfo.getIsRealName());
+			result.setAgencyYn(userInfo.getIsParent());
+			result.setUserEmail(userInfo.getUserEmail());
+			result.setUserMainStatus(userInfo.getUserMainStatus());
+			result.setUserSubStatus(userInfo.getUserSubStatus());
 		}
 
 		logger.info("###### userInfo.getImSvcNo : " + userInfo.getImSvcNo());
@@ -149,14 +158,14 @@ public class UserSelectServiceImpl implements UserSelectService {
 		//
 		// if (StringUtils.equals(this.imIdpReceiverM.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK))
 		// {
-		result.setUserKey(userInfo.getUserKey());
-		result.setUserType(userInfo.getUserType());
-		result.setUserId(userInfo.getUserId());
-		result.setIsRealName(userInfo.getIsRealName());
-		result.setAgencyYn(userInfo.getIsParent());
-		result.setUserEmail(userInfo.getUserEmail());
-		result.setUserMainStatus(userInfo.getUserMainStatus());
-		result.setUserSubStatus(userInfo.getUserSubStatus());
+		// result.setUserKey(userInfo.getUserKey());
+		// result.setUserType(userInfo.getUserType());
+		// result.setUserId(userInfo.getUserId());
+		// result.setIsRealName(userInfo.getIsRealName());
+		// result.setAgencyYn(userInfo.getIsParent());
+		// result.setUserEmail(userInfo.getUserEmail());
+		// result.setUserMainStatus(userInfo.getUserMainStatus());
+		// result.setUserSubStatus(userInfo.getUserSubStatus());
 		// } else {
 		// throw new RuntimeException("OneID 회원조회 실패 : 해당 회원이 없음");
 		// }
@@ -175,24 +184,24 @@ public class UserSelectServiceImpl implements UserSelectService {
 		DetailRes result = new DetailRes();
 
 		List<KeySearch> keySchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		KeySearch keySchUserId = new KeySearch();
-		KeySearch keySchDeviceKey = new KeySearch();
-		KeySearch keySchDeviceId = new KeySearch();
 
 		if (req.getUserKey() != null) {
+			KeySearch keySchUserKey = new KeySearch();
 			keySchUserKey.setKeyType("INSD_USERMBR_NO");
 			keySchUserKey.setKeyString(req.getUserKey());
 			keySchList.add(keySchUserKey);
 		} else if (req.getUserId() != null) {
+			KeySearch keySchUserId = new KeySearch();
 			keySchUserId.setKeyType("MBR_ID");
 			keySchUserId.setKeyString(req.getUserId());
 			keySchList.add(keySchUserId);
 		} else if (req.getDeviceId() != null) {
+			KeySearch keySchDeviceId = new KeySearch();
 			keySchDeviceId.setKeyType("INSD_DEVICE_ID");
 			keySchDeviceId.setKeyString(req.getDeviceId());
 			keySchList.add(keySchDeviceId);
 		} else if (req.getDeviceKey() != null) {
+			KeySearch keySchDeviceKey = new KeySearch();
 			keySchDeviceKey.setKeyType("DEVICE_ID");
 			keySchDeviceKey.setKeyString(req.getDeviceKey());
 			keySchList.add(keySchDeviceKey);
