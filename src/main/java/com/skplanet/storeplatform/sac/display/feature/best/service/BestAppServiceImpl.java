@@ -98,9 +98,96 @@ public class BestAppServiceImpl implements BestAppService {
 		Support support = null;
 		Menu menu = null;
 
-		if (appList.size() != 0) {
-			Iterator<BestAppDTO> iterator = appList.iterator();
-			while (iterator.hasNext()) {
+		if (bestAppReq.getDummy() == null) {
+			// dummy 호출이 아닐때
+
+			if (appList.size() != 0) {
+				Iterator<BestAppDTO> iterator = appList.iterator();
+				while (iterator.hasNext()) {
+					product = new Product();
+					identifier = new Identifier();
+					app = new App();
+					accrual = new Accrual();
+					rights = new Rights();
+					source = new Source();
+					price = new Price();
+					title = new Title();
+					support = new Support();
+
+					BestAppDTO mapperVO = iterator.next();
+
+					totalCount = mapperVO.getTotalCount();
+					commonResponse.setTotalCount(totalCount);
+
+					identifier.setType("episodeId");
+					identifier.setText(mapperVO.getProdId());
+
+					supportList = new ArrayList<Support>();
+					support = new Support();
+					support.setType("drm");
+					support.setText(mapperVO.getDrmYn());
+					supportList.add(support);
+					support = new Support();
+					support.setType("iab");
+					if (mapperVO.getPartParentClsfCd() == null || "".equals(mapperVO.getPartParentClsfCd())) {
+						support.setText("");
+					} else {
+						support.setText(mapperVO.getPartParentClsfCd());
+					}
+					supportList.add(support);
+
+					menuList = new ArrayList<Menu>();
+
+					menu = new Menu();
+					menu.setId(mapperVO.getUpMenuid());
+					menu.setName(mapperVO.getUpMenuNm());
+					menu.setType("topClass");
+					menuList.add(menu);
+					menu = new Menu();
+					menu.setId(mapperVO.getMenuId());
+					menu.setName(mapperVO.getMenuNm());
+					menuList.add(menu);
+
+					app.setAid(mapperVO.getAid());
+					app.setPackageName(mapperVO.getApkPkgNm());
+					app.setVersionCode(mapperVO.getApkVerCd());
+					app.setVersion(mapperVO.getApkVer());
+
+					accrual.setVoterCount(mapperVO.getPaticpersCnt());
+					accrual.setDownloadCount(mapperVO.getDwldCnt());
+					accrual.setScore(mapperVO.getAvgEvluScore());
+
+					rights.setGrade(mapperVO.getProdGrdCd());
+
+					title.setText(mapperVO.getProdNm());
+
+					sourceList = new ArrayList<Source>();
+					source.setType("thumbnail");
+					source.setUrl(mapperVO.getImgPath());
+					sourceList.add(source);
+
+					price.setText(mapperVO.getProdAmt());
+
+					product = new Product();
+					product.setIdentifier(identifier);
+					product.setSupportList(supportList);
+					product.setMenuList(menuList);
+					product.setApp(app);
+					product.setAccrual(accrual);
+					product.setRights(rights);
+					product.setTitle(title);
+					product.setSourceList(sourceList);
+					product.setProductExplain(mapperVO.getProdBaseDesc());
+					product.setPrice(price);
+
+					productList.add(product);
+				}
+			} else {
+				// 조회 결과가 없으면 dummy 호출
+				menuList = new ArrayList<Menu>();
+				supportList = new ArrayList<Support>();
+				sourceList = new ArrayList<Source>();
+
 				product = new Product();
 				identifier = new Identifier();
 				app = new App();
@@ -111,62 +198,65 @@ public class BestAppServiceImpl implements BestAppService {
 				title = new Title();
 				support = new Support();
 
-				BestAppDTO mapperVO = iterator.next();
-
-				totalCount = mapperVO.getTotalCount();
-				commonResponse.setTotalCount(totalCount);
-
+				// 상품ID
+				identifier = new Identifier();
 				identifier.setType("episodeId");
-				identifier.setText(mapperVO.getProdId());
+				identifier.setText("0000643818");
 
-				supportList = new ArrayList<Support>();
-				support = new Support();
-				support.setType("drm");
-				support.setText(mapperVO.getDrmYn());
-				supportList.add(support);
-				support = new Support();
-				support.setType("iab");
-				if (mapperVO.getPartParentClsfCd() == null || "".equals(mapperVO.getPartParentClsfCd())) {
-					support.setText("");
-				} else {
-					support.setText(mapperVO.getPartParentClsfCd());
-				}
+				support.setType("Y");
+				support.setText("iab");
 				supportList.add(support);
 
-				menuList = new ArrayList<Menu>();
-
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
 				menu = new Menu();
-				menu.setId(mapperVO.getUpMenuid());
-				menu.setName(mapperVO.getUpMenuNm());
+				menu.setId("DP000501");
+				menu.setName("게임");
 				menu.setType("topClass");
 				menuList.add(menu);
 				menu = new Menu();
-				menu.setId(mapperVO.getMenuId());
-				menu.setName(mapperVO.getMenuNm());
+				menu.setId("DP01004");
+				menu.setName("RPG");
 				menuList.add(menu);
 
-				app.setAid(mapperVO.getAid());
-				app.setPackageName(mapperVO.getApkPkgNm());
-				app.setVersionCode(mapperVO.getApkVerCd());
-				app.setVersion(mapperVO.getApkVer());
+				/*
+				 * App aid, packagename, versioncode, version
+				 */
+				app.setAid("OA00643818");
+				app.setPackageName("proj.syjt.tstore");
+				app.setVersionCode("11000");
+				app.setVersion("1.1");
 
-				accrual.setVoterCount(mapperVO.getPaticpersCnt());
-				accrual.setDownloadCount(mapperVO.getDwldCnt());
-				accrual.setScore(mapperVO.getAvgEvluScore());
+				/*
+				 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
+				 */
+				accrual.setVoterCount("14305");
+				accrual.setDownloadCount("513434");
+				accrual.setScore(4.8);
 
-				rights.setGrade(mapperVO.getProdGrdCd());
+				/*
+				 * Rights grade
+				 */
+				rights.setGrade("0");
 
-				title.setText(mapperVO.getProdNm());
+				title.setText("워밸리 온라인");
 
-				sourceList = new ArrayList<Source>();
+				/*
+				 * source mediaType, size, type, url
+				 */
 				source.setType("thumbnail");
-				source.setUrl(mapperVO.getImgPath());
+				source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 				sourceList.add(source);
 
-				price.setText(mapperVO.getProdAmt());
+				/*
+				 * Price text
+				 */
+				price.setText(0);
 
 				product = new Product();
 				product.setIdentifier(identifier);
+				// product.setSupport("y|iab");
 				product.setSupportList(supportList);
 				product.setMenuList(menuList);
 				product.setApp(app);
@@ -174,13 +264,13 @@ public class BestAppServiceImpl implements BestAppService {
 				product.setRights(rights);
 				product.setTitle(title);
 				product.setSourceList(sourceList);
-				product.setProductExplain(mapperVO.getProdBaseDesc());
+				product.setProductExplain("★이벤트★세상에 없던 모바일 MMORPG!");
 				product.setPrice(price);
 
 				productList.add(product);
 			}
 		} else {
-			// 조회 결과 없음
+			// dummy data를 호출할때
 			menuList = new ArrayList<Menu>();
 			supportList = new ArrayList<Support>();
 			sourceList = new ArrayList<Source>();

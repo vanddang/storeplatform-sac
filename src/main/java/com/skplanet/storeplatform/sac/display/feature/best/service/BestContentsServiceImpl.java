@@ -3,6 +3,8 @@ package com.skplanet.storeplatform.sac.display.feature.best.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
@@ -32,6 +32,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
  */
 @Service
 public class BestContentsServiceImpl implements BestContentsService {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -55,8 +58,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
 
-		if (!"shopping".equals(bestContentsRequest.getFiteredBy())) {
-
+		if (bestContentsRequest.getDummy() != null) {
+			// dummy 호출이 아닐때
 			for (int i = 1; i <= 1; i++) {
 				Product product = new Product();
 				Identifier identifier = new Identifier();
@@ -167,182 +170,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 			}
 
-			for (int i = 1; i <= 1; i++) {
-				Music music = new Music();
-
-				// for (int i = 1; i <= 5; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				App app = new App();
-				Accrual accrual = new Accrual();
-				Rights rights = new Rights();
-				Source source = new Source();
-				Price price = new Price();
-				Title title = new Title();
-				Contributor contributor = new Contributor();
-				com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
-
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType("H001557945");
-				identifier.setText("episode:H001557946");
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				Menu menu = new Menu();
-				menu.setId("MN05");
-				menu.setName("뮤직");
-				menu.setType("topClass");
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId("MN05001");
-				menu.setName("가요");
-				menu.setType("");
-				menuList.add(menu);
-
-				/*
-				 * TITLE
-				 */
-				title.setText("금요일에 만나요 (Feat. 장이정 Of HISTORY)");
-
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType("image/png");
-				source.setSize("128");
-				source.setType("thumbNail");
-				source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PMUSIC/201312/29/0002074441/10/0003894669/10/10_0002074441_200_200_1701_200x200_R130x130.PNG");
-				sourceList.add(source);
-
-				/*
-				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
-				 */
-				accrual.setChangeRank("1");
-
-				/*
-				 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
-				 */
-				contributor.setName("아이유");
-				contributor.setAlbum("Modern Times - Epilogue");
-
-				/*
-				 * music
-				 */
-				service.setName("mp3");
-				service.setType("support");
-				serviceList.add(service);
-
-				service.setName("bell");
-				service.setType("support");
-				serviceList.add(service);
-
-				service.setName("ring");
-				service.setType("support");
-				serviceList.add(service);
-				music.setServiceList(serviceList);
-
-				product = new Product();
-				product.setIdentifier(identifier);
-				product.setMenuList(menuList);
-				product.setAccrual(accrual);
-				product.setTitle(title);
-				product.setSourceList(sourceList);
-				product.setContributor(contributor);
-				product.setMusic(music);
-
-				productList.add(product);
-
-			}
-			// } else {
-			//
-			// for (int i = 1; i <= 1; i++) {
-			// Product product = new Product();
-			// Identifier identifier = new Identifier();
-			// Contributor contributor = new Contributor();
-			// Accrual accrual = new Accrual();
-			// Rights rights = new Rights();
-			// Title title = new Title();
-			// Source source = new Source();
-			// Price price = new Price();
-			// SalesOption salesOption = new SalesOption();
-			//
-			// // 상품ID
-			// identifier = new Identifier();
-			// identifier.setType("product" + i);
-			// identifier.setText("H090101222_" + i);
-			//
-			// /*
-			// * Menu(메뉴정보) Id, Name, Type
-			// */
-			// Menu menu = new Menu();
-			// menu.setName("recommand");
-			// menu.setType("recommandShopping");
-			// menuList.add(menu);
-			// menu = new Menu();
-			// menu.setId("dummyMenuId1");
-			// menu.setName("dummyMenuName1");
-			// menu.setType("dummyMenuType1");
-			// menuList.add(menu);
-			// menu = new Menu();
-			// menu.setId("dummyMenuId2");
-			// menu.setName("dummyMenuName2");
-			// menu.setType("dummyMenuType2");
-			// menuList.add(menu);
-			//
-			// title.setText("뜨레쥬르가 쏜다!");
-			//
-			// identifier = new Identifier();
-			// identifier.setType("BRAND");
-			// identifier.setText("B123455");
-			// contributor.setIdentifier(identifier);
-			// contributor.setBrand("뚜레주르");
-			//
-			// /*
-			// * source mediaType - url, type, size, meidaType
-			// */
-			// source.setUrl("http://../image.jpg");
-			// source.setType("thmubnail"); // 하드코딩
-			// source.setSize("128");
-			// source.setMediaType("image/jpeg");
-			// sourceList.add(source);
-			//
-			// Date date = new Date();
-			// date.setType("duration/usagePeriod");
-			// date.setText("20121202T125122+0900/20131202T235959+0900");
-			// rights.setDate(date);
-			//
-			// /*
-			// * Accrual - DownloadCount (다운로드 수)
-			// */
-			// accrual.setDownloadCount("800");
-			//
-			// /*
-			// * Price - fixedPrice(정가), discountRate(할인률), text(가격)
-			// */
-			// price.setFixedPrice("5000");
-			// price.setDiscountRate("50");
-			// price.setText(2500);
-			//
-			// product = new Product();
-			// product.setIdentifier(identifier);
-			// product.setMenuList(menuList);
-			// product.setTitle(title);
-			// product.setContributor(contributor);
-			// product.setProductExplain("2012년 상반기 슈크림을 시~원하게 쏩니다.");
-			// product.setSourceList(sourceList);
-			// product.setRights(rights);
-			// product.setAccrual(accrual);
-			// product.setPrice(price);
-			// if ("배송상품 일 경우".equals("배송상품 조회 데이터")) {
-			// salesOption.setType("delivery");
-			// product.setSalesOption(salesOption);
-			// }
-			//
-			// productList.add(product);
-			//
-			// }
+		} else {
+			// dummy data 호출
 		}
+
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);
 
