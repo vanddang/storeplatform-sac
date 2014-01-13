@@ -6,9 +6,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraDocument;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccountInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
+import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
  * 판매자회원 정산 정보 조회
@@ -20,53 +21,50 @@ public class DetailAccountInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	SellerInfo sellerInfo;
+	List<Document> document;
+	List<ExtraRight> extraRight;
+	SellerAccount sellerAccount;
+	private String sellerKey;
+	SellerMbr sellerMbr;
 
-	public SellerInfo getSellerInfo() {
-		return this.sellerInfo;
+	public List<Document> getDocument() {
+		return this.document;
 	}
 
-	public void setSellerInfo(SellerInfo sellerInfo) {
-		this.sellerInfo = sellerInfo;
+	public void setDocument(List<Document> document) {
+		this.document = document;
 	}
 
-	SellerAccountInfo sellerAccountInfo;
-
-	public SellerAccountInfo getSellerAccountInfo() {
-		return this.sellerAccountInfo;
+	public List<ExtraRight> getExtraRight() {
+		return this.extraRight;
 	}
 
-	public void setSellerAccountInfo(SellerAccountInfo sellerAccountInfo) {
-		this.sellerAccountInfo = sellerAccountInfo;
+	public void setExtraRight(List<ExtraRight> extraRight) {
+		this.extraRight = extraRight;
 	}
 
-	List<ExtraDocument> extraDocumentList;
-
-	public List<ExtraDocument> getExtraDocumentList() {
-		return this.extraDocumentList;
+	public SellerAccount getSellerAccount() {
+		return this.sellerAccount;
 	}
 
-	public void setExtraDocumentList(List<ExtraDocument> extraDocumentList) {
-		this.extraDocumentList = extraDocumentList;
+	public void setSellerAccount(SellerAccount sellerAccount) {
+		this.sellerAccount = sellerAccount;
 	}
 
-	private String regDate;
-	private String appoveDate;
-
-	public String getRegDate() {
-		return this.regDate;
+	public String getSellerKey() {
+		return this.sellerKey;
 	}
 
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
 	}
 
-	public String getAppoveDate() {
-		return this.appoveDate;
+	public SellerMbr getSellerMbr() {
+		return this.sellerMbr;
 	}
 
-	public void setAppoveDate(String appoveDate) {
-		this.appoveDate = appoveDate;
+	public void setSellerMbr(SellerMbr sellerMbr) {
+		this.sellerMbr = sellerMbr;
 	}
 
 }

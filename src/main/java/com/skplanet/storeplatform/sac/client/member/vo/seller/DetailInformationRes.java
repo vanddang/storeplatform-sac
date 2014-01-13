@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRightList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -23,11 +23,11 @@ public class DetailInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<ExtraRightList> extraRightList;
+	List<ExtraRight> extraRightList;
 
 	MbrAuth mbrAuth;
 
-	List<MbrClauseAgreeList> mbrClauseAgree;
+	List<MbrClauseAgreeList> mbrClauseAgreeList;
 
 	MbrLglAgent mbrLglAgent;
 
@@ -37,11 +37,11 @@ public class DetailInformationRes extends CommonInfo {
 
 	SellerMbr sellerMbr;
 
-	public List<ExtraRightList> getExtraRightList() {
+	public List<ExtraRight> getExtraRightList() {
 		return this.extraRightList;
 	}
 
-	public void setExtraRightList(List<ExtraRightList> extraRightList) {
+	public void setExtraRightList(List<ExtraRight> extraRightList) {
 		this.extraRightList = extraRightList;
 	}
 
@@ -53,12 +53,12 @@ public class DetailInformationRes extends CommonInfo {
 		this.mbrAuth = mbrAuth;
 	}
 
-	public List<MbrClauseAgreeList> getMbrClauseAgree() {
-		return this.mbrClauseAgree;
+	public List<MbrClauseAgreeList> getMbrClauseAgreeList() {
+		return this.mbrClauseAgreeList;
 	}
 
-	public void setMbrClauseAgree(List<MbrClauseAgreeList> mbrClauseAgree) {
-		this.mbrClauseAgree = mbrClauseAgree;
+	public void setMbrClauseAgreeList(List<MbrClauseAgreeList> mbrClauseAgreeList) {
+		this.mbrClauseAgreeList = mbrClauseAgreeList;
 	}
 
 	public MbrLglAgent getMbrLglAgent() {
