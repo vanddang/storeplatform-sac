@@ -133,11 +133,6 @@ public class DeviceInfo extends CommonInfo {
 	private String uacd;
 
 	/**
-	 * SKT 휴대기기 통합 관리 번호
-	 */
-	private String imMngNom;
-
-	/**
 	 * 수정 일시
 	 */
 	private String updateDate;
@@ -308,14 +303,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUacd(String uacd) {
 		this.uacd = uacd;
-	}
-
-	public String getImMngNom() {
-		return this.imMngNom;
-	}
-
-	public void setImMngNom(String imMngNom) {
-		this.imMngNom = imMngNom;
 	}
 
 	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
