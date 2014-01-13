@@ -43,10 +43,10 @@
 		            AND ROWNUM = 1) AS TOP_MENU_NM
 		  FROM (SELECT KA.*
 		          FROM (SELECT JA.*
-		                     <if test='filterdby == "recommend"'>
+		                     <if test='filteredBy == "recommend"'>
 		                     , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.PROD_NM) AS RNUM
 		                     </if>
-		                     <if test='filterdby == "movie1000"'>
+		                     <if test='filteredBy == "movie1000"'>
 		                     , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.UPD_DT DESC, JA.PROD_NM) AS RNUM
 		                     </if>
 		                  FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT

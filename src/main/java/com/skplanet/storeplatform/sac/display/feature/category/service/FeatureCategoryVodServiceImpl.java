@@ -50,6 +50,13 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService#searchVodList(com.skplanet
+	 * .storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq)
+	 */
 	@Override
 	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req) {
 		this.logger.debug("----------------------------------------------------------------");
@@ -76,7 +83,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 		// DP17 : 영화, DP18 : 방송
 		if ("DP17".equals(req.getTopMenuId())) {
-			if ("recommend".equals(req.getFilterdby())) {
+			if ("recommend".equals(req.getFilteredBy())) {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("영화 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
