@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -53,6 +54,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req) {
 
 		CategorySpecificRes res = new CategorySpecificRes();
+		CommonResponse commonResponse = new CommonResponse();
+
 		List<Product> productList = new ArrayList<Product>();
 		List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 		if (prodIdList == null || prodIdList.size() == 0) {
@@ -165,6 +168,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 			}
 		}
 		res.setProductList(productList);
+
 		// 상품 type 조회
 		// DP000203 : 멀티미디어
 		// DP000206 : Tstore 쇼핑

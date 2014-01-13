@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq;
 import com.skplanet.storeplatform.sac.client.display.vo.banner.BannerRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -24,6 +25,8 @@ public class BannerServceImpl implements BannerService {
 	public BannerRes searchBannerList(BannerReq req) {
 
 		BannerRes res = new BannerRes();
+		CommonResponse commonResponse = new CommonResponse();
+
 		List<Banner> bannerList = new ArrayList<Banner>();
 
 		// ======================== product type일 경우 ========================
@@ -200,8 +203,10 @@ public class BannerServceImpl implements BannerService {
 		banner.setSourceList(sourceList);
 		bannerList.add(banner);
 
-		res.setBannerList(bannerList);
+		commonResponse.setTotalCount(bannerList.size());
 
+		res.setBannerList(bannerList);
+		res.setCommonResponse(commonResponse);
 		return res;
 	}
 

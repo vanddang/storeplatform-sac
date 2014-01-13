@@ -129,7 +129,7 @@ public class CategoryController {
 		return this.categoryMusicContentsService.searchMusicContentsList(requestVO);
 	}
 
-	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/specific/product/list/real/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategorySpecificRes searchSpecificProductList(CategorySpecificReq req) {
 		this.logger.debug("----------------------------------------------------------------");
@@ -138,7 +138,7 @@ public class CategoryController {
 		return this.categorySpecificService.getSpecificProductList(req);
 	}
 
-	@RequestMapping(value = "/specific/product/list/dummy/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/specific/product/list//v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategorySpecificRes searchSpecificProductDummyList(CategorySpecificReq req) {
 		this.logger.debug("----------------------------------------------------------------");

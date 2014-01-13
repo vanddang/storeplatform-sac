@@ -47,7 +47,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO) {
 		// TODO Auto-generated method stub
 
-		CommonResponse commonRes = new CommonResponse();
+		CommonResponse commonResponse = new CommonResponse();
 		DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
 		DeviceProfileDTO deviceProfileDTO = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile",
 				requestVO, DeviceProfileDTO.class);
@@ -73,17 +73,16 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 			device.setSupportedHardware(deviceProfileDTO.getSupportedHardwareMap());
 			device.setModelExplain(deviceProfileDTO.getModelNm());
 
-			commonRes.setTotalCount(1);
+			commonResponse.setTotalCount(1);
 			// TODO osm1021 DPI 넣어주는 처리가 필요
 		} else { // 미지원단말
 			device.setIdentifier("android_standard");
 			device.setType("restrict");
-			commonRes.setTotalCount(0);
+			commonResponse.setTotalCount(0);
 		}
 
 		deviceProfileResponse.setDevice(device);
-
-		deviceProfileResponse.setCommonRes(commonRes);
+		deviceProfileResponse.setCommonResponse(commonResponse);
 		return deviceProfileResponse;
 	}
 }

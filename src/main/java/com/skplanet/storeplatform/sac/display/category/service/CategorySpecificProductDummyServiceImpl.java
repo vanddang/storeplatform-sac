@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -30,6 +31,8 @@ public class CategorySpecificProductDummyServiceImpl implements CategorySpecific
 	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req) {
 
 		CategorySpecificRes res = new CategorySpecificRes();
+		CommonResponse commonResponse = new CommonResponse();
+
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = new ArrayList<Menu>();
 		List<Source> sourceList = new ArrayList<Source>();
@@ -298,7 +301,8 @@ public class CategorySpecificProductDummyServiceImpl implements CategorySpecific
 			product.setContributor(contributor);
 			productList.add(product);
 		}
-
+		commonResponse.setTotalCount(productList.size());
+		res.setCommonResponse(commonResponse);
 		res.setProductList(productList);
 		return res;
 	}
