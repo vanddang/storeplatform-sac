@@ -155,7 +155,7 @@ public class DeviceServiceImpl implements DeviceService {
 		
 		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
 		schDeviceListReq.setUserKey(userKey);
-		schDeviceListReq.setSearchType(""); //여부 - 대표기기/모든기기
+		schDeviceListReq.setSearchType(req.getSearchType());
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 		
@@ -434,7 +434,11 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
 		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
 		deviceInfo.setNativeId(userMbrDevice.getNativeID());
-		deviceInfo.setUserDeviceExtraInfo(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
+		deviceInfo.setJoinId(userMbrDevice.getJoinId());
+		deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
+		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
+		
+		deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		return deviceInfo;
 	}
 	
@@ -500,8 +504,7 @@ public class DeviceServiceImpl implements DeviceService {
 		
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
-		//userMbrDevice.setTenantID(deviceInfo.getTenantId());
-		userMbrDevice.setTenantID(TENANTID);
+		userMbrDevice.setTenantID(deviceInfo.getTenantId());
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
 		userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
 		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
@@ -510,6 +513,10 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setIsPrimary(deviceInfo.getIsPrimary());
 		userMbrDevice.setIsRecvSMS(deviceInfo.getIsRecvSms());
 		userMbrDevice.setNativeID(deviceInfo.getNativeId());
+		userMbrDevice.setJoinId(deviceInfo.getJoinId());
+		userMbrDevice.setIsAuthenticated(deviceInfo.getIsAuthenticated());
+		userMbrDevice.setAuthenticationDate(deviceInfo.getAuthenticationDate());
+		
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo.getUserDeviceExtraInfo()));
 		
 		return userMbrDevice;
