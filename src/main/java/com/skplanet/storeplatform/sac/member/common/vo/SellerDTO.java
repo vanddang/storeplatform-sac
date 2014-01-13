@@ -15,10 +15,17 @@ public class SellerDTO extends CommonInfo {
 
 	private String sellerKey;
 
+	/**
+	 * @return String : sellerKey
+	 */
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
+	/**
+	 * @param sellerKey
+	 *            String : the sellerKey to set
+	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}

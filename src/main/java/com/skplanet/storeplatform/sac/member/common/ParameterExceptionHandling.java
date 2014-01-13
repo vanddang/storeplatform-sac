@@ -31,8 +31,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @SuppressWarnings("unused")
 public class ParameterExceptionHandling {
 
-	private static final Logger logger = LoggerFactory.getLogger(ParameterExceptionHandling.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ParameterExceptionHandling.class);
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param ex
+	 *            MethodArgumentNotValidException
+	 * @return Map<String, String>
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ResponseBody

@@ -26,11 +26,20 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 @Component
 public class HeaderInfo {
 
-	private static final Logger logger = LoggerFactory.getLogger(HeaderInfo.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HeaderInfo.class);
 
+	/**
+	 * <pre>
+	 * 공통 헤더 정보 세팅.
+	 * </pre>
+	 * 
+	 * @param headers
+	 *            헤더 정보
+	 * @return HeaderVo
+	 */
 	public HeaderVo getHeader(Map<String, Object> headers) {
 
-		logger.info("Headers  : {}", headers.entrySet());
+		LOGGER.info("Headers  : {}", headers.entrySet());
 
 		HeaderVo headerVo = new HeaderVo();
 

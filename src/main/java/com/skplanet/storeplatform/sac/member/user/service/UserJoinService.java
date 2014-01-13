@@ -24,7 +24,23 @@ public interface UserJoinService {
 
 	/**
 	 * <pre>
-	 * 모바일 전용 회원 가입 (MDN 회원 가입)
+	 * 모바일 전용 회원 가입 (MDN 회원 가입).
+	 * </pre>
+	 * 
+	 * @param headerVo
+	 *            HeaderVo
+	 * @param req
+	 *            CreateByMdnReq
+	 * @return CreateByMdnRes
+	 * @throws Exception
+	 *             Exception
+	 * 
+	 */
+	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * 
 	 * </pre>
 	 * 
 	 * @param headerVo
@@ -32,17 +48,18 @@ public interface UserJoinService {
 	 * @return
 	 * @throws Exception
 	 */
-	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception;
-
 	/**
 	 * <pre>
-	 * ID 회원 약관 동의 가입 (One ID 회원)
+	 * ID 회원 약관 동의 가입 (One ID 회원).
 	 * </pre>
 	 * 
 	 * @param headerVo
+	 *            HeaderVo
 	 * @param req
-	 * @return
+	 *            CreateByAgreementReq
+	 * @return CreateByAgreementRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) throws Exception;
 

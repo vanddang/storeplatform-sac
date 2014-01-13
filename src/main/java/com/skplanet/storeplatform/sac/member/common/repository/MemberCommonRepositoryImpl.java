@@ -23,7 +23,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 @Transactional
 public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 
-	private static final Logger logger = LoggerFactory.getLogger(MemberCommonRepositoryImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberCommonRepositoryImpl.class);
 
 	@Autowired
 	@Qualifier("sac")

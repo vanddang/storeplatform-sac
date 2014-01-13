@@ -15,23 +15,27 @@ public interface MemberCommonRepository {
 
 	/**
 	 * <pre>
-	 * 필수 약관 동의 목록 조회
+	 * 필수 약관 동의 목록 조회.
 	 * </pre>
 	 * 
 	 * @param tenantId
-	 * @return
+	 *            테넌트 아이디
+	 * @return List<ClauseDTO>
 	 * @throws Exception
+	 *             Exception
 	 */
 	public List<ClauseDTO> getMandAgreeList(String tenantId) throws Exception;
 
 	/**
 	 * <pre>
-	 * 폰 정보 조회
+	 * 폰 정보 조회.
 	 * </pre>
 	 * 
 	 * @param deviceModelCd
-	 * @return
+	 *            단말 모델 코드
+	 * @return Device
 	 * @throws Exception
+	 *             Exception
 	 */
 	public Device getPhoneInfo(String deviceModelCd) throws Exception;
 

@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.service.Miscellaneous
 @Component
 public class MemberCommonComponent {
 
-	private static final Logger logger = LoggerFactory.getLogger(MemberCommonComponent.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberCommonComponent.class);
 
 	@Autowired
 	private MemberCommonRepository repository;
@@ -51,8 +51,10 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param msisdn
-	 * @return
+	 *            msisdn
+	 * @return String
 	 * @throws Exception
+	 *             Exception
 	 */
 	public String getOpmdMdnInfo(String msisdn) throws Exception { // 2014. 01. 09. 김다슬, 인크로스. 수정
 		GetOpmdReq req = new GetOpmdReq();
@@ -63,12 +65,14 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 필수 약관 동의 목록 조회
+	 * 필수 약관 동의 목록 조회.
 	 * </pre>
 	 * 
 	 * @param tenantId
-	 * @return
+	 *            tenantId
+	 * @return List<ClauseDTO>
 	 * @throws Exception
+	 *             Exception
 	 */
 	public List<ClauseDTO> getMandAgreeList(String tenantId) throws Exception {
 		return this.repository.getMandAgreeList(tenantId);
@@ -76,12 +80,14 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 폰 정보 조회
+	 * 폰 정보 조회.
 	 * </pre>
 	 * 
 	 * @param deviceModelCd
-	 * @return
+	 *            deviceModelCd
+	 * @return Device
 	 * @throws Exception
+	 *             Exception
 	 */
 	public Device getPhoneInfo(String deviceModelCd) throws Exception {
 		return this.repository.getPhoneInfo(deviceModelCd);
@@ -95,12 +101,15 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param pReqParam
+	 *            pReqParam
 	 * @param type
-	 * @return
+	 *            type
+	 * @return UserRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
-		logger.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
+		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
 		return this.uapsSCI.getMappingInfo(pReqParam, type);
 	}
 

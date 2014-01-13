@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
@@ -61,6 +62,7 @@ public class UserJoinController {
 	 *             Exception
 	 */
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) throws Exception {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
@@ -97,6 +99,7 @@ public class UserJoinController {
 	 *             Exception
 	 */
 	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) throws Exception {
 
 		LOGGER.info("####################################################");

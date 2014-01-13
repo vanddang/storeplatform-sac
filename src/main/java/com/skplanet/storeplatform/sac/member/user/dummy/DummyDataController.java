@@ -65,16 +65,23 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserJoinController.class);
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateByMdnRes
+	 */
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByMdnRes createByMdn() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
+		LOGGER.info("####################################################");
 
 		CreateByMdnRes res = new CreateByMdnRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -82,14 +89,20 @@ public class DummyDataController {
 		return res;
 	}
 
-	@RequestMapping(value = "/createByAgreement/v1", method =
-			RequestMethod.POST)
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateByAgreementRes
+	 */
+	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByAgreementRes createByAgreement() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
+		LOGGER.info("####################################################");
 
 		CreateByAgreementRes res = new CreateByAgreementRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -97,13 +110,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateBySimpleRes
+	 */
 	@RequestMapping(value = "/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateBySimpleRes createBySimple() {
 
-		logger.info("#############################################");
-		logger.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
-		logger.info("#############################################");
+		LOGGER.info("#############################################");
+		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
+		LOGGER.info("#############################################");
 
 		CreateBySimpleRes res = new CreateBySimpleRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -111,13 +131,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return AuthorizeByMdnRes
+	 */
 	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.4. 모바일 전용 회원 인증 (MDN 인증) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.4. 모바일 전용 회원 인증 (MDN 인증) #####");
+		LOGGER.info("####################################################");
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -126,13 +153,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return AuthorizeByIdRes
+	 */
 	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
+		LOGGER.info("####################################################");
 
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -141,13 +175,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ModifyRes
+	 */
 	@RequestMapping(value = "/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRes modify() {
 
-		logger.info("#################################");
-		logger.info("##### 5.1.13. 회원 정보 수정 #####");
-		logger.info("#################################");
+		LOGGER.info("#################################");
+		LOGGER.info("##### 5.1.13. 회원 정보 수정 #####");
+		LOGGER.info("#################################");
 
 		ModifyRes res = new ModifyRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -155,13 +196,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ModifyPasswordRes
+	 */
 	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordRes modifyPassword() {
 
-		logger.info("################################");
-		logger.info("##### 5.1.14. 비밀번호 수정 #####");
-		logger.info("################################");
+		LOGGER.info("################################");
+		LOGGER.info("##### 5.1.14. 비밀번호 수정 #####");
+		LOGGER.info("################################");
 
 		ModifyPasswordRes res = new ModifyPasswordRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -169,13 +217,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ModifyEmailRes
+	 */
 	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailRes modifyEmail() {
 
-		logger.info("##################################");
-		logger.info("##### 5.1.15. 이메일 주소 수정 #####");
-		logger.info("##################################");
+		LOGGER.info("##################################");
+		LOGGER.info("##### 5.1.15. 이메일 주소 수정 #####");
+		LOGGER.info("##################################");
 
 		ModifyEmailRes res = new ModifyEmailRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -183,13 +238,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateTermsAgreementRes
+	 */
 	@RequestMapping(value = "/createTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateTermsAgreementRes createTermsAgreement() {
 
-		logger.info("######################################");
-		logger.info("##### 5.1.16. Store 약관 동의 등록 #####");
-		logger.info("######################################");
+		LOGGER.info("######################################");
+		LOGGER.info("##### 5.1.16. Store 약관 동의 등록 #####");
+		LOGGER.info("######################################");
 
 		CreateTermsAgreementRes res = new CreateTermsAgreementRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -197,13 +259,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ModifyTermsAgreementRes
+	 */
 	@RequestMapping(value = "/modifyTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyTermsAgreementRes modifyTermsAgreement() {
 
-		logger.info("######################################");
-		logger.info("##### 5.1.17. Store 약관 동의 수정 #####");
-		logger.info("######################################");
+		LOGGER.info("######################################");
+		LOGGER.info("##### 5.1.17. Store 약관 동의 수정 #####");
+		LOGGER.info("######################################");
 
 		ModifyTermsAgreementRes res = new ModifyTermsAgreementRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -211,13 +280,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateRealNameRes
+	 */
 	@RequestMapping(value = "/createRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRealNameRes createRealName() {
 
-		logger.info("#####################################");
-		logger.info("##### 5.1.18. 실명 인증 정보 등록 #####");
-		logger.info("#####################################");
+		LOGGER.info("#####################################");
+		LOGGER.info("##### 5.1.18. 실명 인증 정보 등록 #####");
+		LOGGER.info("#####################################");
 
 		CreateRealNameRes res = new CreateRealNameRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -225,13 +301,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ListDeviceRes
+	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListDeviceRes listDevice() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.17.	휴대기기 목록 조회 #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.17.	휴대기기 목록 조회 #####");
+		LOGGER.info("####################################################");
 
 		ListDeviceRes res = new ListDeviceRes();
 
@@ -279,13 +362,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateDeviceRes
+	 */
 	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateDeviceRes createDevice() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.18.	휴대기기 등록 #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.18.	휴대기기 등록 #####");
+		LOGGER.info("####################################################");
 
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId("01011112222");
@@ -295,13 +385,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateOcbInformationRes
+	 */
 	@RequestMapping(value = "/createOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateOcbInformationRes createOcbInformation() {
 
-		logger.info("#########################################");
-		logger.info("##### 5.1.28. 회원 OCB 정보 등록/수정 #####");
-		logger.info("#########################################");
+		LOGGER.info("#########################################");
+		LOGGER.info("##### 5.1.28. 회원 OCB 정보 등록/수정 #####");
+		LOGGER.info("#########################################");
 
 		CreateOcbInformationRes res = new CreateOcbInformationRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -309,13 +406,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return RemoveOcbInformationRes
+	 */
 	@RequestMapping(value = "/removeOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveOcbInformationRes removeOcbInformation() {
 
-		logger.info("####################################");
-		logger.info("##### 5.1.29. 회원 OCB 정보 삭제 #####");
-		logger.info("####################################");
+		LOGGER.info("####################################");
+		LOGGER.info("##### 5.1.29. 회원 OCB 정보 삭제 #####");
+		LOGGER.info("####################################");
 
 		RemoveOcbInformationRes res = new RemoveOcbInformationRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -323,13 +427,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return GetOcbInformationRes
+	 */
 	@RequestMapping(value = "/getOcbInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOcbInformationRes getOcbInformation() {
 
-		logger.info("####################################");
-		logger.info("##### 5.1.30. 회원 OCB 정보 조회 #####");
-		logger.info("####################################");
+		LOGGER.info("####################################");
+		LOGGER.info("##### 5.1.30. 회원 OCB 정보 조회 #####");
+		LOGGER.info("####################################");
 
 		GetOcbInformationRes res = new GetOcbInformationRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -342,13 +453,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ExistRes
+	 */
 	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ExistRes exist() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
+		LOGGER.info("####################################################");
 
 		ExistRes res = new ExistRes();
 		res.setUserKey("IW102158844420091030165015");
@@ -362,13 +480,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return SearchIdRes
+	 */
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchIdRes searchId() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
+		LOGGER.info("####################################################");
 
 		SearchIdRes res = new SearchIdRes();
 		res.setUserId("hkd");
@@ -376,13 +501,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return SearchPasswordRes
+	 */
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchPasswordRes searchPassword() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
+		LOGGER.info("####################################################");
 
 		SearchPasswordRes res = new SearchPasswordRes();
 		res.setUserPw("");
@@ -392,13 +524,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return DetailRes
+	 */
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailRes detail() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.9. ID/MDN를 기반으로 사용자 회원 정보 조회 기능을 제공한다. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.9. ID/MDN를 기반으로 사용자 회원 정보 조회 기능을 제공한다. #####");
+		LOGGER.info("####################################################");
 
 		DetailRes res = new DetailRes();
 
@@ -513,13 +652,20 @@ public class DummyDataController {
 
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ListTermsAgreementRes
+	 */
 	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListTermsAgreementRes listTermsAgreement() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.10. Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.10. Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다. #####");
+		LOGGER.info("####################################################");
 
 		ListTermsAgreementRes res = new ListTermsAgreementRes();
 		List<AgreementInfo> agreementInfoList = new ArrayList<AgreementInfo>();
@@ -535,13 +681,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return GetSupportAomRes
+	 */
 	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetSupportAomRes getSupportAom() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.3.8. 단말 AOM 지원 여부 확인. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.3.8. 단말 AOM 지원 여부 확인. #####");
+		LOGGER.info("####################################################");
 
 		GetSupportAomRes res = new GetSupportAomRes();
 		res.setIsAomSupport("Y");
@@ -549,13 +702,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return GetProvisioningHistoryRes
+	 */
 	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.3.14.	회원 프로비저닝 이력 조회. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.3.14.	회원 프로비저닝 이력 조회. #####");
+		LOGGER.info("####################################################");
 
 		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
 		res.setMbrNo("");
@@ -565,13 +725,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return RemoveDeviceRes
+	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public RemoveDeviceRes removeDevice() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.19.	휴대기기 삭제. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.19.	휴대기기 삭제. #####");
+		LOGGER.info("####################################################");
 
 		RemoveDeviceRes res = new RemoveDeviceRes();
 		res.setDeviceKey("01011112222");
@@ -579,13 +746,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ModifyRepresentationDeviceRes
+	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ModifyRepresentationDeviceRes modifyRepresentationDevice() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.20.	대표 단말 설정. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.20.	대표 단말 설정. #####");
+		LOGGER.info("####################################################");
 
 		ModifyRepresentationDeviceRes res = new ModifyRepresentationDeviceRes();
 		res.setDeviceKey("01011112222");
@@ -593,13 +767,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return DetailRepresentationDeviceRes
+	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailRepresentationDeviceRes detailRepresentationDevice() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.21.	대표 단말 정보 조회. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.21.	대표 단말 정보 조회. #####");
+		LOGGER.info("####################################################");
 
 		DetailRepresentationDeviceRes res = new DetailRepresentationDeviceRes();
 
@@ -637,13 +818,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return WithdrawRes
+	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public WithdrawRes withdraw() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.22.	회원 탈퇴. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.22.	회원 탈퇴. #####");
+		LOGGER.info("####################################################");
 
 		WithdrawRes res = new WithdrawRes();
 
@@ -652,13 +840,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return CreateAddtionalInformationRes
+	 */
 	@RequestMapping(value = "/createAddtionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CreateAddtionalInformationRes createAddtionalInformation() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.25.	회원 부가 정보 등록/수정. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.25.	회원 부가 정보 등록/수정. #####");
+		LOGGER.info("####################################################");
 
 		CreateAddtionalInformationRes res = new CreateAddtionalInformationRes();
 
@@ -667,13 +862,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return RemoveAddtionalInformationRes
+	 */
 	@RequestMapping(value = "/removeAddtionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public RemoveAddtionalInformationRes removeAddtionalInformation() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.26.	회원 부가 정보 삭제. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.26.	회원 부가 정보 삭제. #####");
+		LOGGER.info("####################################################");
 
 		RemoveAddtionalInformationRes res = new RemoveAddtionalInformationRes();
 
@@ -682,13 +884,20 @@ public class DummyDataController {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ListAddtionalInformationRes
+	 */
 	@RequestMapping(value = "/listAddtionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListAddtionalInformationRes listAddtionalInformation() {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.27.	회원 부가 정보 조회. #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.27.	회원 부가 정보 조회. #####");
+		LOGGER.info("####################################################");
 
 		ListAddtionalInformationRes res = new ListAddtionalInformationRes();
 
