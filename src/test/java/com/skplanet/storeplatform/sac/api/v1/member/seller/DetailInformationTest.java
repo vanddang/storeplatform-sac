@@ -77,61 +77,51 @@ public class DetailInformationTest {
 	 * 판매자 기본정보 조회(sellerKey만존재)
 	 * </pre>
 	 */
-	@Test
-	public void detailInformationSellerKey() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
+	/*
+	 * @Test public void detailInformationSellerKey() {
+	 * 
+	 * new TestCaseTemplate(this.mockMvc)
+	 * .url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO"
+	 * ) .httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+	 * 
+	 * @Override public void success(Object result, HttpStatus httpStatus, RunMode runMode) { DetailInformationRes res =
+	 * (DetailInformationRes) result; assertThat(res.getSellerKey(), notNullValue()); logger.info("response param : {}",
+	 * res.toString()); } }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	 * 
+	 * }
+	 *//**
 	 * <pre>
 	 * 판매자 기본정보 조회(aid만 존재)
 	 * </pre>
 	 */
-	@Test
-	public void detailInformationAid() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
+	/*
+	 * @Test public void detailInformationAid() {
+	 * 
+	 * new TestCaseTemplate(this.mockMvc)
+	 * .url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
+	 * .httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+	 * 
+	 * @Override public void success(Object result, HttpStatus httpStatus, RunMode runMode) { DetailInformationRes res =
+	 * (DetailInformationRes) result; assertThat(res.getSellerKey(), notNullValue()); logger.info("response param : {}",
+	 * res.toString()); } }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	 * 
+	 * }
+	 *//**
 	 * <pre>
 	 * 판매자 기본정보 조회(모든키미존재)
 	 * </pre>
 	 */
-	@Test
-	public void detailInformationEmpity() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=&keyType=INSD_SELLERMBR_NO")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
+	/*
+	 * @Test public void detailInformationEmpity() {
+	 * 
+	 * new TestCaseTemplate(this.mockMvc)
+	 * .url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=&keyType=INSD_SELLERMBR_NO")
+	 * .httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+	 * 
+	 * @Override public void success(Object result, HttpStatus httpStatus, RunMode runMode) { DetailInformationRes res =
+	 * (DetailInformationRes) result; assertThat(res.getSellerKey(), notNullValue()); logger.info("response param : {}",
+	 * res.toString()); } }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	 * 
+	 * }
+	 */
 }
