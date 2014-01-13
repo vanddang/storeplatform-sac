@@ -28,7 +28,7 @@ public class FeatureCategoryEpubRes {
 	}
 
 	public void setProductList(List<Product> productList) {
-		productList = productList;
+		this.productList = productList;
 	}
 
 	public CommonResponse getCommonResponse() {
