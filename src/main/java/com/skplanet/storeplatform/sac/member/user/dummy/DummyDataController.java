@@ -830,7 +830,7 @@ public class DummyDataController {
 	public DetailRepresentationDeviceRes detailRepresentationDevice() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.21.	대표 단말 정보 조회. #####");
+		LOGGER.info("##### 5.1.23.	대표 단말 정보 조회. #####");
 		LOGGER.info("####################################################");
 
 		DetailRepresentationDeviceRes res = new DetailRepresentationDeviceRes();

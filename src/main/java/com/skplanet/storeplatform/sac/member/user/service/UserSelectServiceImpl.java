@@ -95,7 +95,6 @@ public class UserSelectServiceImpl implements UserSelectService {
 		// 회원정보 세팅
 		detailRes = this.detail(detailReq);
 
-		// userType 으로 IDP, OneID 확인
 		UserInfo userInfo = new UserInfo();
 		if ("".equals(detailRes.getUserInfoList()) || detailRes.getUserInfoList() == null) {
 			throw new RuntimeException("SC 회원조회 실패 : 해당 회원이 없음");
