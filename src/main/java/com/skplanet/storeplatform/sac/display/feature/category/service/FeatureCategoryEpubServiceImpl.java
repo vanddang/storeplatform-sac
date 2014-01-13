@@ -107,6 +107,8 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
 			
+			totalCount = categoryEpubDTO.getTotalCount();
+			
 			identifier.setType("channel");
 			identifier.setText(categoryEpubDTO.getProdId());
 			title.setText(categoryEpubDTO.getProdNm());
@@ -195,6 +197,10 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		}
 		responseVO = new FeatureCategoryEpubRes();
+		commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(totalCount);
+		
+		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(listVO);
 		return responseVO;
 	}

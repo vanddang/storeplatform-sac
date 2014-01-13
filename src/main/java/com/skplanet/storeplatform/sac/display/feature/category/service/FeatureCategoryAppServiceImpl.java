@@ -110,6 +110,8 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
+			
+			totalCount = categoryAppDTO.getTotalCount();
 
 			identifier.setType("episode");
 			identifier.setText(categoryAppDTO.getProdId());
@@ -169,6 +171,10 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		}
 
 		responseVO = new FeatureCategoryAppRes();
+		commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(totalCount);
+		
+		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(listVO);
 		return responseVO;
 	}
