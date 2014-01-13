@@ -18,11 +18,13 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
+import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -43,6 +45,10 @@ public class MemberCommonComponent {
 	@Autowired
 	private UAPSSCI uapsSCI;
 
+	@Autowired
+	private DeviceService deviceService;
+	
+	
 	/**
 	 * <pre>
 	 * 모번호 조회
@@ -111,6 +117,37 @@ public class MemberCommonComponent {
 	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
 		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
 		return this.uapsSCI.getMappingInfo(pReqParam, type);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * 고객정보조회
+	 * 모번호 조회및 단말 정보 조회(USPS 정보와 서비스 관리번호 UA_CD 값이 같이 들어와야함.)
+	 * TODO 기타 파트에서 api 개발 완료되면 확인해봐야함.
+	 * </pre>
+	 * 
+	 * @param pReqParam
+	 *            pReqParam
+	 * @param type
+	 *            type
+	 * @return UserRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	/**
+	 * 
+	 * <pre>
+	 * 휴대기기 등록 서브 모듈
+	 * SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 * @param deviceInfo
+	 * @throws Exception
+	 */
+	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo) throws Exception {
+		deviceService.preRegMemberDeviceRegist(userKey, deviceInfo);
 	}
 
 }
