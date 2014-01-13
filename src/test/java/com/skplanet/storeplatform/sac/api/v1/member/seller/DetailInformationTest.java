@@ -57,9 +57,56 @@ public class DetailInformationTest {
 	 * </pre>
 	 */
 	@Test
-	public void detailInformation() {
+	public void detailInformationFull() {
+
+		new TestCaseTemplate(this.mockMvc)
+				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=OA00049881")
+				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						DetailInformationRes res = (DetailInformationRes) result;
+						assertThat(res.getSellerKey(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void detailInformationSellerKey() {
+
+		new TestCaseTemplate(this.mockMvc)
+				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=")
+				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						DetailInformationRes res = (DetailInformationRes) result;
+						assertThat(res.getSellerKey(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void detailInformationAid() {
 
 		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881")
+				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						DetailInformationRes res = (DetailInformationRes) result;
+						assertThat(res.getSellerKey(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	@Test
+	public void detailInformationEmpity() {
+
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
