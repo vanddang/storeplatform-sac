@@ -12,4 +12,8 @@ public interface IDPRepository {
 	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception;
 
 	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) throws Exception;
+
+	public ImIDPReceiverM sendImIDPPHttps(ImIDPSenderM sendData) throws Exception;
+
+	public String makePhoneAuthKey(String phoneMeta) throws Exception;
 }

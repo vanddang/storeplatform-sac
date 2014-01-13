@@ -42,14 +42,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	@Autowired
 	private IdpSCI idpSCI;
 
-	@Override
-	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
-	 * IDP 연동 결과를 XML로 전달받아 객체를 생성 반환한다.
+	 * <pre>
+	 * IDP _HTTP
+	 * </pre>
 	 * 
 	 * @param sendData
 	 * @return
@@ -58,9 +54,6 @@ public class IDPRepositoryImpl implements IDPRepository {
 	@Override
 	public IDPReceiverM sendIDP(IDPSenderM sendData) throws Exception {
 
-		// StopWatch stopWatch = new StopWatch();
-
-		// stopWatch.start();
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
@@ -74,15 +67,13 @@ public class IDPRepositoryImpl implements IDPRepository {
 
 		IDPReceiverM receiveData = sendRes.getIdpReceiverM();
 
-		// stopWatch.stop();
-		// OMC로그 주석 처리 함
-		// IDPOMCLog.setLog(stopWatch, receiveData);
-
 		return receiveData;
 	}
 
 	/**
-	 * HTTPS 프로토콜로 IDP 연동 결과를 XML로 전달받아 객체를 생성 반환한다.
+	 * <pre>
+	 * IDP - HTTPS
+	 * </pre>
 	 * 
 	 * @param sendData
 	 * @return
@@ -90,10 +81,6 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 */
 	@Override
 	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
-
-		// StopWatch stopWatch = new StopWatch();
-
-		// stopWatch.start();
 
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
@@ -107,9 +94,60 @@ public class IDPRepositoryImpl implements IDPRepository {
 
 		IDPReceiverM receiveData = sendRes.getIdpReceiverM();
 
-		// stopWatch.stop();
-		// OMC로그 주석 처리 함
-		// IDPOMCLog.setLog(stopWatch, receiveData);
+		return receiveData;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param sendData
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) throws Exception {
+		SendReq sendReq = new SendReq();
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
+		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
+		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
+		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
+		sendReq.setIm(true);
+		sendReq.setUrl(sendData.getUrl());
+		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
+
+		SendRes sendRes = this.idpSCI.send(sendReq);
+
+		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
+
+		return receiveData;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param sendData
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public ImIDPReceiverM sendImIDPPHttps(ImIDPSenderM sendData) throws Exception {
+
+		SendReq sendReq = new SendReq();
+		// TODO HTTPS 로 변경
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
+		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
+		sendReq.setMethod(SendReq.HTTP_METHOD.POST);
+		sendReq.setIm(true);
+		sendReq.setUrl(sendData.getUrl());
+		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
+
+		SendRes sendRes = this.idpSCI.send(sendReq);
+
+		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
 
 		return receiveData;
 	}
@@ -153,6 +191,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public String makePhoneAuthKey(String phoneMeta) throws Exception {
 		String time = Long.toString(System.currentTimeMillis());
 
@@ -494,6 +533,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings("rawtypes")
 	public Hashtable<String, String> makeImIDPSendParam(ImIDPSenderM sendData) throws Exception {
 
 		Hashtable<String, String> param = new Hashtable<String, String>();

@@ -21,11 +21,14 @@ public final class IDPConstants {
 	/** API COMMAND */
 	/** */
 	public static final String IDP_REQ_CMD_DUPLICATE_ID_CHECK = "duplicateIDCheck"; // ID 중복체크
+	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForId"; // 회원 인증
+	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "modifyProfile"; // 프로파일 수정
 
 	/** 모바일 */
 	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap"; // 인증
 	public static final String IDP_REQ_CMD_JOIN_FOR_WAP = "joinForWap"; // 가입
 	public static final String IDP_REQ_CMD_SECEDE_FOR_WAP = "secedeForWap"; // 모바일 탈퇴
+	public static final String IDP_REQ_CMD_FIND_PROFILE_FOR_WAP = "findProfileForWap"; // 정보조회
 
 	/** API RESP_TYPE */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default
