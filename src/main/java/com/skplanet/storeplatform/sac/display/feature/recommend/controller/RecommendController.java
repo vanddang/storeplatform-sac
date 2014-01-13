@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
@@ -42,6 +43,13 @@ public class RecommendController {
 		//this.logger.info(requestVO.toString());
 		if ( requestVO.getCount() == 0 )
 			requestVO.setCount(10);
+		//임시 저장
+		requestVO.setTenantId("S01");
+		requestVO.setDeviceModelCd("SHW-M180L");
+		requestVO.setLangCd("ko");
+		requestVO.setListId("ADM000000012");
+		requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
+		
 		RecommendAdminRes responseVO;
 		responseVO = recommendAdminService.searchAdminList(requestVO);
 		return responseVO;

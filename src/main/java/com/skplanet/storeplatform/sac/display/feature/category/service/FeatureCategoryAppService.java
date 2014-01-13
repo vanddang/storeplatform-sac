@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppRes;;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;;
 
 /**
  * 
@@ -27,6 +27,6 @@ public interface FeatureCategoryAppService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	CategoryAppRes searchAppList(CategoryAppReq requestVO);
+	FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO);
 
 }

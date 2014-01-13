@@ -38,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Serv
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.display.feature.FeatureConstant;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO;
 
 /**
@@ -65,8 +66,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		int totalCount = 0;
 		RecommendAdminRes responseVO = null;
 		CommonResponse commonResponse = null;
-
-		List<RecommendAdminDTO> resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminListDummy",requestVO, RecommendAdminDTO.class);
+		
+		List<RecommendAdminDTO> resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList",requestVO, RecommendAdminDTO.class);
 		List<Product> listVO = new ArrayList<Product>();
 		
 		RecommendAdminDTO recommendAdminDTO;
@@ -86,7 +87,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
-		
+
 		for (int i = 0 ; resultList != null && i < resultList.size(); i++ ) {
 			
 			recommendAdminDTO = resultList.get(i);
@@ -107,6 +108,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
+			
+			totalCount = recommendAdminDTO.getTotalCount();
 
 			identifier.setType("episode");
 			identifier.setText(recommendAdminDTO.getProdId());
@@ -126,7 +129,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			app.setAid(recommendAdminDTO.getAid());
 			app.setPackageName(recommendAdminDTO.getApkPkgNm());
 			app.setVersionCode(recommendAdminDTO.getApkVer());
-			app.setVersion(recommendAdminDTO.getProdVer());
+			//app.setVersion(recommendAdminDTO.getProdVer());
+			app.setVersion(FeatureConstant.convertProdVer(recommendAdminDTO.getVerMajor(), recommendAdminDTO.getVerMinor()));
 			product.setApp(app);
 			
 			accrual.setVoterCount(recommendAdminDTO.getPrchsCnt());
@@ -136,7 +140,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			/*
 			 * Rights grade
 			 */
-			rights.setGrade(recommendAdminDTO.getProdGrdCd());
+			//rights.setGrade(recommendAdminDTO.getProdGrdCd());
+			rights.setGrade(FeatureConstant.convertProdGrdCd(recommendAdminDTO.getProdGrdCd()));
 			
 			//source.setMediaType("");
 			source.setSize(recommendAdminDTO.getFileSize());
@@ -151,8 +156,10 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 
 			product.setIdentifier(identifier);
 			product.setTitle(title);
-			support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" + StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
+			//support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" + StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
+			support.setText(FeatureConstant.convertAppSupport(StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""), StringUtil.nvl(recommendAdminDTO.getDrmYn(), "")));
 			supportList.add(support);
+			
 			product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
@@ -162,142 +169,15 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			product.setSourceList(sourceList);
 			product.setPrice(price);
 
-			//featureProductVO = new RecommendProductVO();
-			//featureProductVO.setProduct(product);
 			listVO.add(product);
 		}
-		//RecommendProductVO featureProductVO = null;
 		
-/*
-		for (int i = 0; i < 5; i++) {
-			Product product = new Product();
-			Identifier identifier = new Identifier();
-			Title title = new Title();
-			App app = new App();
-			Book book = new Book();
-			Music music = new Music();
-			Vod vod = new Vod();
-			VideoInfo videoInfo = new VideoInfo();
-			Accrual accrual = new Accrual();
-			Rights rights = new Rights();
-			Source source = new Source();
-			Price price = new Price();
-			Support support = new Support();
-			
-			// Response VO를 만들기위한 생성자
-			List<Product> productList = new ArrayList<Product>();
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Support> supportList = new ArrayList<Support>();
-
-			// 상품ID
-			identifier = new Identifier();
-			//identifier.setType("product" + i);
-			identifier.setText("H900101222" + i);
-			
-			title = new Title();
-			title.setText("Test용 더미 데이터");
-*/
-			/*
-			 * Menu(메뉴정보) Id, Name, Type
-			 */
-/*			Menu topMenu = new Menu();
-			topMenu.setId("dummyMenuId0");
-			topMenu.setName("dummyMenuName0");
-			topMenu.setType("dummyMenuType0");
-			menuList.add(topMenu);
-			Menu menu = new Menu();
-			menu.setId("dummyMenuId1");
-			menu.setName("dummyMenuName1");
-			menu.setType("dummyMenuType1");
-			menuList.add(menu);
-
-			if (i == 0){*/
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-/*				app.setAid("A090101222_" + i);
-				app.setPackageName("app dummy package" + i);
-				app.setVersionCode("dummy version Code" + i);
-				app.setVersion("1.1");
-				product.setApp(app);
-			}
-			else if (i == 1) {*/
-			/*
-			 * App aid, packagename, versioncode, version
-			 */
-/*				book.setType("");
-				book.setTotalPages("100");
-				book.setStatus("");
-				support.setText("");
-				supportList.add(support);
-				book.setSupportList(supportList);
-				product.setBook(book);
-			}
-			else if (i == 2) {
-				List<Service> serviceList = new ArrayList();
-				Service service = new Service();
-
-				service.setType("support");
-				service.setName("mp3");
-				serviceList.add(service);
-				music.setServiceList(serviceList);
-				product.setMusic(music);
-			}
-			else if (i == 3) {
-				videoInfo.setType("hd");
-				vod.setVideoInfo(videoInfo);
-				product.setVod(vod);
-			}
-*/
-			/*
-			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-			 */
-//			accrual.setVoterCount("1234");
-//			accrual.setDownloadCount("800");
-//			accrual.setScore(3.3);
-
-			/*
-			 * Rights grade
-			 */
-//			rights.setGrade("1");
-
-			/*
-			 * source mediaType, size, type, url
-			 */
-//			source.setMediaType("media_" + i);
-//			source.setSize("1024_" + i);
-//			source.setType("thumbNail");
-//			source.setUrl("http://www.naver.com");
-//			sourceList.add(source);
-
-			/*
-			 * Price text
-			 */
-/*			price.setText(0);
-
-			product = new Product();
-			product.setIdentifier(identifier);
-			product.setTitle(title);
-			support.setText("y|iab");
-			supportList.clear();
-			supportList.add(support);
-			product.setSupportList(supportList);
-			product.setMenuList(menuList);
-
-			product.setAccrual(accrual);
-			product.setRights(rights);
-			product.setProductExplain("베스트 앱_" + i);
-			product.setSourceList(sourceList);
-			product.setPrice(price);
-
-			//featureProductVO = new RecommendProductVO();
-			//featureProductVO.setProduct(product);
-			listVO.add(product);
-
-		}*/
 		responseVO = new RecommendAdminRes();
-		responseVO.setFeatureProductList(listVO);
+		commonResponse = new CommonResponse();
+		commonResponse.setTotalCount(totalCount);
+		
+		responseVO.setCommonResponse(commonResponse);
+		responseVO.setProductList(listVO);
 		return responseVO;
 	}
 

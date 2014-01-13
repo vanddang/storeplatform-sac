@@ -36,6 +36,28 @@ public class CategoryAppDTO {
 	private String fileSize;
 	private String prodVer;
 	private String filePath;
+	private String verMajor;
+	private String verMinor;
+	private String fileNm;
+	
+	public String getVerMajor() {
+		return verMajor;
+	}
+	public void setVerMajor(String verMajor) {
+		this.verMajor = verMajor;
+	}
+	public String getVerMinor() {
+		return verMinor;
+	}
+	public void setVerMinor(String verMinor) {
+		this.verMinor = verMinor;
+	}
+	public String getFileNm() {
+		return fileNm;
+	}
+	public void setFileNm(String fileNm) {
+		this.fileNm = fileNm;
+	}
 	public int getTotalCount() {
 		return totalCount;
 	}

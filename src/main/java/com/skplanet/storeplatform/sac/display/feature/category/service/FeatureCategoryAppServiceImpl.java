@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -62,11 +62,11 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 	 * @see com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public CategoryAppRes searchAppList(CategoryAppReq requestVO) {
+	public FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO) {
 		// TODO Auto-generated method stub
 		//공통 응답 변수 선언
 		int totalCount = 0;
-		CategoryAppRes responseVO = null;
+		FeatureCategoryAppRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		List<CategoryAppDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryAppListDummy",requestVO, CategoryAppDTO.class);
@@ -168,8 +168,8 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			listVO.add(product);
 		}
 
-		responseVO = new CategoryAppRes();
-		responseVO.setFeatureProductList(listVO);
+		responseVO = new FeatureCategoryAppRes();
+		responseVO.setProductList(listVO);
 		return responseVO;
 	}
 }

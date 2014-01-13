@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.CategoryEpubRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -57,11 +57,11 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 	 * @see com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public CategoryEpubRes searchEpubList(CategoryEpubReq requestVO) {
+	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO) {
 		// TODO Auto-generated method stub
 		//공통 응답 변수 선언
 		int totalCount = 0;
-		CategoryEpubRes responseVO = null;
+		FeatureCategoryEpubRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		List<CategoryEpubDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy",requestVO, CategoryEpubDTO.class);
@@ -194,8 +194,8 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			listVO.add(product);
 
 		}
-		responseVO = new CategoryEpubRes();
-		responseVO.setFeatureProductList(listVO);
+		responseVO = new FeatureCategoryEpubRes();
+		responseVO.setProductList(listVO);
 		return responseVO;
 	}
 

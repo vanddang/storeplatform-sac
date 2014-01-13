@@ -148,4 +148,228 @@
 		   AND LC.EXPO_ORD = '1'
 		   AND LC.IMG_CD = #{imageCd}
     </select>
+    
+    <!--운영자 추천 앱상품 조회-->
+    <select id="selectCategoryEpubListDummy" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpubDTO">
+       /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
+       SELECT
+			PROD.*
+			, NVL(ST.DWLD_CNT, 0) DWLD_CNT
+			, NVL(ST.PRCHS_CNT, 0) PRCHS_CNT
+		FROM (
+			SELECT 
+				LP.TENANT_ID
+				, MN.UP_MENU_ID AS TOP_MENU_ID
+				, (SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = MN.UP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
+				, MN.MENU_ID
+				, (SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = MN.MENU_ID AND LANG_CD = 'ko') MENU_NM
+				, DP.PROD_ID
+				, AP.META_CLSF_CD
+				, AP.BOOK_CLSF_CD
+				, AP.CHAPTER
+                , CONCAT( PS.PROD_NM
+                	, NVL2( AP.BOOK_CLSF_CD
+                       , ' '||CONCAT( AP.CHAPTER
+                                    , DECODE( AP.BOOK_CLSF_CD
+                                            , 'DP004301', '권'
+                                            , 'DP004302', '회'
+                                            , 'DP004303', '호' ) )
+                       , NULL ) ) AS PROD_NM
+				, PS.PROD_BASE_DESC
+				, PR.PROD_AMT
+				, PR.PROD_NET_AMT
+				, PS.ARTIST1_NM
+        		, PS.ARTIST2_NM
+        		, PS.ARTIST3_NM
+				, DECODE( DP.PROD_GRD_CD
+				        , 'PD004401', 0
+				        , 'PD004402', 1
+				        , 'PD004403', 2
+				        , 'PD004404', 4 ) AS PROD_GRD_CD
+				, AP.CHNL_COMP_NM
+        		, AP.ISSUE_DAY
+        		, AP.BOOK_PAGE_CNT
+        		, NVL(AP.EPSD_CNT, 0) EPSD_CNT
+        		, NVL(AP.STRM_EPSD_CNT, 0) STRM_EPSD_CNT
+        		, AP.CAPTION_YN
+				, ( CASE WHEN AP.META_CLSF_CD = 'CT20' THEN 'serial' END ) AS BOOK_TYPE
+        		, ( CASE WHEN AP.META_CLSF_CD = 'CT20' THEN ( AP.EPSD_CNT + AP.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
+        		, ( CASE WHEN AP.EPSD_CNT > 0 THEN 'store' END ) AS SUPPORT_STORE
+        		, ( CASE WHEN AP.STRM_EPSD_CNT > 0 THEN 'play' END ) AS SUPPORT_PLAY
+        		, ( CASE WHEN AP.META_CLSF_CD = 'CT20' THEN DECODE( AP.CAPTION_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+				, SC.FILE_SIZE AS FILE_SIZE
+				, PI.FILE_PATH || PI.FILE_NM AS FILE_PATH
+			FROM 
+				TB_DP_LIST_PROD LP,
+				TB_DP_PROD DP,
+				TB_DP_TENANT_PROD_PRICE PR,
+				TB_DP_MENU_CATALOG_PROD_MAPG MP, 
+				TB_DP_MULTIMDA_PROD AP,
+				TB_DP_TENANT_PROD TP, 
+				TB_DP_PROD_DESC PS,
+				TB_DP_SUB_CONTENTS SC,
+				TB_DP_PROD_IMG PI,
+				TB_DP_MENU_CATALOG MN
+			WHERE LP.LIST_ID LIKE 'ADM%'
+			AND DP.PROD_ID = LP.PROD_ID
+			AND DP.PROD_ID = PR.PROD_ID
+			AND MP.PROD_ID = DP.PROD_ID
+			AND DP.PROD_ID = AP.PROD_ID
+			AND DP.PROD_ID = TP.PROD_ID
+			AND DP.PROD_ID = PS.PROD_ID
+			AND DP.PROD_ID = SC.PROD_ID
+			AND DP.PROD_ID = PI.PROD_ID
+			AND MN.MENU_ID = MP.MENU_ID
+			AND PI.IMG_CD = 'DP000109'
+			AND ROWNUM <![CDATA[<=]]> #{count}
+			AND AP.META_CLSF_CD IN ('CT20','CT19')
+		) PROD LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS ST
+		ON PROD.PROD_ID = ST.PROD_ID
+		AND PROD.TENANT_ID = ST.TENANT_ID
+    </select>    
+    
+    <!--운영자 추천 앱상품 조회-->
+    <select id="selectCategoryAppList" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryAppDTO">
+        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
+		SELECT
+			F_PROD.*
+			, ST.DWLD_CNT
+			, ST.PRCHS_CNT
+		FROM (
+				SELECT
+					R_PROD.*
+				FROM (
+					SELECT
+						T_PROD.*
+						, ROWNUM AS RNUM
+					FROM (
+						SELECT
+							COUNT(*) OVER () AS TOTAL_COUNT
+							, TP.TENANT_ID
+							, MN.TOP_MENU_ID
+							, (SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = MN.UP_MENU_ID AND LANG_CD = #{langCd}) TOP_MENU_NM
+							, MN.MENU_ID
+							, (SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = MN.MENU_ID AND LANG_CD = #{langCd}) MENU_NM
+							, P1.PROD_ID
+							, AP.AID
+							, PS.PROD_NM
+							, PS.PROD_BASE_DESC
+							, TR.PROD_AMT
+							, P1.PROD_GRD_CD
+							, AP.PART_PARENT_CLSF_CD
+							, P1.DRM_YN
+							, SC.APK_PKG_NM
+							, SC.APK_VER
+							, SC.FILE_SIZE
+							, AP.VER_MAJOR
+							, AP.VER_MINOR
+							, PI.FILE_PATH
+							, PI.FILE_NM
+						FROM TB_DP_LIST_PROD LP
+						    , TB_DP_MENU_CATALOG_PROD_MAPG MP
+						    , TB_DP_MENU_CATALOG MN
+						    , TB_DP_PROD P1
+						    , TB_DP_PROD_DESC PS
+						    , TB_DP_TENANT_PROD TP 
+						    , TB_DP_TENANT_PROD_PRICE TR
+						    , TB_DP_SUB_CONTENTS SC
+						    , TB_DP_APP_PROD AP
+						    , TB_DP_PROD_IMG PI
+						    , TB_DP_SPRT_DEVICE DV
+						    , TB_CM_DEVICE CD
+						WHERE LP.TENANT_ID = #{tenantId}
+						AND LP.LIST_ID = #{listId}
+						AND LP.PROD_ID = P1.PROD_ID
+						AND P1.PROD_ID = PS.PROD_ID
+						AND PS.LANG_CD = #{langCd}
+						AND MN.TOP_MENU_ID = #{topMenuId}
+						AND MN.MENU_ID = MP.MENU_ID
+						AND MP.PROD_ID = P1.PROD_ID
+						AND TP.PROD_ID = P1.PROD_ID
+						AND TP.TENANT_ID = LP.TENANT_ID
+						AND TP.PROD_ID = LP.PROD_ID
+						AND TP.PROD_STATUS_CD = 'PD000403'
+						AND TP.EXPO_YN = 'Y'
+						AND P1.PROD_ID = SC.PROD_ID
+						AND P1.PROD_ID = AP.PROD_ID
+						AND TP.PROD_ID = TR.PROD_ID
+						AND TP.TENANT_ID = TR.TENANT_ID
+						AND SYSDATE BETWEEN TR.APPLY_START_DT AND TR.APPLY_END_DT
+						AND PI.PROD_ID = P1.PROD_ID
+						AND PI.IMG_CD = 'DP001007'
+						AND SC.PROD_ID = DV.PROD_ID
+						AND SC.SUB_CONTENTS_ID = DV.SUB_CONTENTS_ID
+						AND DV.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+						AND CD.DEVICE_MODEL_CD = #{deviceModelCd}
+						ORDER BY LP.EXPO_ORD , PS.PROD_NM
+					) T_PROD
+				) R_PROD
+				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count})
+			) F_PROD LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS ST
+		ON F_PROD.PROD_ID = ST.PROD_ID
+		AND F_PROD.TENANT_ID = ST.TENANT_ID
+    </select>
+    
+    <!--운영자 추천 앱상품 조회-->
+    <select id="selectCategoryAppListDummy" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryAppDTO">
+       /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
+        SELECT
+			PROD.*
+			, NVL(ST.DWLD_CNT, 0) DWLD_CNT
+			, NVL(ST.PRCHS_CNT, 0) PRCHS_CNT
+		FROM (
+			SELECT 
+				LP.TENANT_ID
+				, MN.UP_MENU_ID AS TOP_MENU_ID
+				, (SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = MN.UP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
+				, MN.MENU_ID
+				, (SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = MN.MENU_ID AND LANG_CD = 'ko') MENU_NM
+				, DP.PROD_ID
+				, AP.AID
+				, PS.PROD_NM
+				, PS.PROD_BASE_DESC
+				, PR.PROD_AMT
+				, DECODE( DP.PROD_GRD_CD
+				        , 'PD004401', 0
+				        , 'PD004402', 1
+				        , 'PD004403', 2
+				        , 'PD004404', 4 ) AS PROD_GRD_CD
+				, DECODE( AP.PART_PARENT_CLSF_CD, 'PD012301', 'iab', NULL ) AS PART_PARENT_CLSF_CD
+				, DECODE( DP.DRM_YN, 'Y', 'drm', NULL ) AS DRM_YN
+				, SC.APK_PKG_NM
+				, SC.APK_VER
+				, SC.FILE_SIZE AS APK_FILE_SIZE
+				, AP.VER_MAJOR||'.'||AP.VER_MINOR AS PROD_VER
+				, PI.FILE_PATH || PI.FILE_NM AS FILE_PATH
+			FROM 
+				TB_DP_LIST_PROD LP,
+				TB_DP_PROD DP,
+				TB_DP_TENANT_PROD_PRICE PR,
+				TB_DP_MENU_CATALOG_PROD_MAPG MP, 
+				TB_DP_APP_PROD AP,
+				TB_DP_TENANT_PROD TP, 
+				TB_DP_PROD_DESC PS,
+				TB_DP_SUB_CONTENTS SC,
+				TB_DP_PROD_IMG PI,
+				TB_DP_SPRT_DEVICE DV,
+				TB_DP_MENU_CATALOG MN
+			WHERE LP.LIST_ID = 'ADM000000013'
+			AND DP.PROD_ID = LP.PROD_ID
+			AND DP.PROD_ID = PR.PROD_ID
+			AND MP.PROD_ID = DP.PROD_ID
+			AND DP.PROD_ID = AP.PROD_ID
+			AND DP.PROD_ID = TP.PROD_ID
+			AND DP.PROD_ID = PS.PROD_ID
+			AND DP.PROD_ID = SC.PROD_ID
+			AND DP.PROD_ID = PI.PROD_ID
+			AND SC.SUB_CONTENTS_ID = DV.SUB_CONTENTS_ID 
+			AND SC.PROD_ID = DV.PROD_ID 
+			AND MN.MENU_ID = MP.MENU_ID
+			AND PI.IMG_CD = 'DP000101'
+			AND DV.DEVICE_MODEL_CD = 'SCH-W940'
+			AND ROWNUM <![CDATA[<=]]> #{count}
+		) PROD LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS ST
+		ON PROD.PROD_ID = ST.PROD_ID
+		AND PROD.TENANT_ID = ST.TENANT_ID
+    </select>
 </mapper>
