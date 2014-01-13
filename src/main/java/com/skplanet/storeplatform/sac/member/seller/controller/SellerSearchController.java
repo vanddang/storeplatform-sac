@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
@@ -57,5 +59,20 @@ public class SellerSearchController {
 	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
 		LOGGER.debug("request param : {}", req.toString());
 		return this.sellerSearchService.detailInformation(req);
+	}
+
+	/**
+	 * <pre>
+	 * 판매자회원 정산정보조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return DetailAccountInformationRes
+	 */
+	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) throws Exception {
+
+		return this.sellerSearchService.detailAccountInformation(req);
 	}
 }
