@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 
 /**
  * IDP - 아이디중복체크, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -34,13 +34,14 @@ public class CheckDupIDTest {
 	private static final Logger logger = LoggerFactory.getLogger(CheckDupIDTest.class);
 
 	@Autowired
-	private IDPManager idpManager;
+	private IDPService idpService;
+
 
 	@Test
 	public void checkDupID() {
 		try {
 
-			IDPReceiverM receiverM = this.idpManager.checkDupID("asd");
+			IDPReceiverM receiverM = this.idpService.checkDupID("asd");
 			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 			assertThat(receiverM.getResponseHeader().getCmd(), is("duplicateIDCheck"));
 			logger.info("result code : {}", receiverM.getResponseHeader().getResult());
