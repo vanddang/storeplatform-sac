@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.api.v1.other.search.repository;
+package com.skplanet.storeplatform.sac.other.search.repository;
 
 import static org.junit.Assert.assertNotNull;
 

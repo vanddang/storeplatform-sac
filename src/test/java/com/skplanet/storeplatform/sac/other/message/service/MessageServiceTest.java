@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.api.v1.other.message.service;
+package com.skplanet.storeplatform.sac.other.message.service;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;

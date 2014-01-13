@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.api.v1.other.uaps.repository;
+package com.skplanet.storeplatform.sac.other.uaps.repository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
