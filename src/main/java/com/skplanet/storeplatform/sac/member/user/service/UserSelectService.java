@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 
@@ -29,6 +32,18 @@ public interface UserSelectService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ExistRes exist(ExistReq req) throws Exception;
+	public ExistRes exist(HeaderVo headerVo, ExistReq req) throws Exception;
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 정보 조회
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public DetailRes detail(DetailReq req) throws Exception;
 
 }

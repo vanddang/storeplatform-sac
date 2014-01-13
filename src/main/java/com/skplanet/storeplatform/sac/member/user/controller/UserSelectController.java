@@ -9,18 +9,24 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSelectService;
 
 /**
@@ -40,14 +46,22 @@ public class UserSelectController extends ParameterExceptionHandling {
 	@Autowired
 	private HeaderInfo headerInfo;
 
-	@RequestMapping(value = "/exist/v1", method = RequestMethod.GET)
+	@Autowired
+	private IDPService idpService;
+
+	@RequestMapping(value = "/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistRes exist(ExistReq req) throws Exception {
+	public ExistRes exist(@RequestBody ExistReq req, @RequestHeader Map<String, Object> headers) throws Exception {
 		logger.info("####################################################");
 		logger.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
 		logger.info("####################################################");
 
 		ExistRes res = new ExistRes();
+
+		/**
+		 * Header 정보 세팅
+		 */
+		HeaderVo headerVo = this.headerInfo.getHeader(headers);
 
 		/**
 		 * 회원기본정보 조회 Biz
@@ -67,7 +81,7 @@ public class UserSelectController extends ParameterExceptionHandling {
 		logger.info("###### 입력된 queryString Value : " + String.valueOf(paramCnt));
 
 		if (paramCnt > 0) {
-			res = this.svc.exist(req);
+			res = this.svc.exist(headerVo, req);
 		} else {
 			throw new RuntimeException("입력된 파라미터가 없습니다.");
 		}

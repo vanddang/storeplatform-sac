@@ -20,10 +20,13 @@ import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
+import com.skplanet.storeplatform.sac.member.user.service.UserSelectServiceImpl;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
@@ -41,6 +44,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private MiscellaneousService miscellaneousService;
+
+	@Autowired
+	private UserSelectServiceImpl userSelectService;
 
 	@Autowired
 	private UAPSSCI uapsSCI;
@@ -134,6 +140,20 @@ public class MemberCommonComponent {
 	 */
 	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo) throws Exception {
 		this.deviceService.preRegMemberDeviceRegist(userKey, deviceInfo);
+	}
+
+	/**
+	 * <pre>
+	 * 회원정보조회
+	 * </pre>
+	 * 
+	 * @param DetailReq
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	public DetailRes getDetailRes(DetailReq detailReq) throws Exception {
+		return this.userSelectService.detail(detailReq);
 	}
 
 }

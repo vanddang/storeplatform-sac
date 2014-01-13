@@ -65,6 +65,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserJoinController.class);
 
@@ -470,7 +471,6 @@ public class DummyDataController {
 
 		ExistRes res = new ExistRes();
 		res.setUserKey("IW102158844420091030165015");
-		res.setTstoreYn("Y");
 		res.setUserType("US011501");
 		res.setUserId("hkd");
 		res.setIsRealName("N");
@@ -624,8 +624,6 @@ public class DummyDataController {
 			userInfo.setIsParent("N");
 			userInfo.setIsRealName("N");
 			userInfo.setImSiteCode("");
-			userInfo.setUserDeviceInfo("");
-			userInfo.setRealNameInfo("");
 
 			userInfoList.add(userInfo);
 
@@ -640,10 +638,10 @@ public class DummyDataController {
 
 			agreementInfoList.add(agreementInfo);
 
-			res.setIsRealName("1234");
-			res.setDeviceInfoList(deviceInfoList);
-			res.setUserInfo(userInfoList);
-			res.setAgreementList(agreementInfoList);
+			// res.setIsRealName("1234");
+			// res.setDeviceInfoList(deviceInfoList);
+			// res.setUserInfo(userInfoList);
+			// res.setAgreementList(agreementInfoList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

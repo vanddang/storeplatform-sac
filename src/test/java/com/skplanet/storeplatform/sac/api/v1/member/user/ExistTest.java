@@ -1,8 +1,5 @@
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +59,6 @@ public class ExistTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						assertThat(res.getTstoreYn(), notNullValue());
 						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -81,7 +77,6 @@ public class ExistTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						assertThat(res.getTstoreYn(), notNullValue());
 						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -100,7 +95,6 @@ public class ExistTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						assertThat(res.getTstoreYn(), notNullValue());
 						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -119,7 +113,6 @@ public class ExistTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						assertThat(res.getTstoreYn(), notNullValue());
 						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -138,7 +131,6 @@ public class ExistTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						assertThat(res.getTstoreYn(), notNullValue());
 						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -157,7 +149,6 @@ public class ExistTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						assertThat(res.getTstoreYn(), notNullValue());
 						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
