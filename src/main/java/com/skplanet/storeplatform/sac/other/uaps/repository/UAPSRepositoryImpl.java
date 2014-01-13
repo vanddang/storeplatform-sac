@@ -20,6 +20,12 @@ import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 
+/**
+ * 
+ * UAPS 외부연동 Repository 구현체
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Profile(value = { "stag", "real" })
 @Component
 public class UAPSRepositoryImpl implements UAPSRepository {

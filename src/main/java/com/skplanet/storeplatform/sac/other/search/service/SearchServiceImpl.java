@@ -20,6 +20,12 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 
+/**
+ * 
+ * T Store 검색 Service 구현체
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Profile(value = { "dev", "local" })
 @Service
 public class SearchServiceImpl implements SearchService {

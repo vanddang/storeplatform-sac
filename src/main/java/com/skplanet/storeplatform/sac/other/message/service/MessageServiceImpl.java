@@ -20,6 +20,12 @@ import com.skplanet.storeplatform.external.client.message.vo.MmsSendReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 import com.skplanet.storeplatform.sac.other.message.repository.MessageRepository;
 
+/**
+ * 
+ * Message 전송 Service 구현체
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Service
 public class MessageServiceImpl implements MessageService {
 
@@ -45,5 +51,4 @@ public class MessageServiceImpl implements MessageService {
 	public Map<String, String> emailSend(EmailSendReq emailReq) {
 		return this.messageRepository.emailSend(emailReq);
 	}
-
 }

@@ -20,6 +20,12 @@ import com.skplanet.storeplatform.external.client.message.vo.EmailSendReq;
 import com.skplanet.storeplatform.external.client.message.vo.MmsSendReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 
+/**
+ * 
+ * Message 연동 Repository Sample
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Profile(value = { "dev", "local" })
 @Service
 public class MessageRepositorySampleImpl implements MessageRepository {

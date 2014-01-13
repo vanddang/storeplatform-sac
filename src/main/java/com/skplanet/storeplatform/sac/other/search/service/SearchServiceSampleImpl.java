@@ -42,6 +42,12 @@ import com.skplanet.storeplatform.sac.common.util.CryptUtils;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.other.search.repository.SearchRepository;
 
+/**
+ * 
+ * T Store 검색 Service Sample
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Profile(value = { "stag", "real" })
 @Service
 @Transactional
@@ -58,6 +64,9 @@ public class SearchServiceSampleImpl implements SearchService {
 
 	private final Map<String, String> orderMap;
 
+	/**
+	 * 생성자 초기화.
+	 */
 	public SearchServiceSampleImpl() {
 		this.orderMap = new HashMap<String, String>();
 		// 최신
@@ -115,6 +124,17 @@ public class SearchServiceSampleImpl implements SearchService {
 		return this.getResultData(searchReq, ecSearchReq, tstoreSearchRes);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 카테고리 설정.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 */
 	private void setCategory(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 카테고리가 비어있거나, ALL이면 skip(통합검색)
 		if (StringUtils.isBlank(searchReq.getCategory()) || StringUtils.equals(searchReq.getCategory(), "all"))
@@ -132,6 +152,17 @@ public class SearchServiceSampleImpl implements SearchService {
 		tstoreSearchReq.setCount(searchReq.getCount());
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색 기간 설정.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 */
 	private void setDateFromTo(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 
 		// DateType이 존재하지 않으면 skip.
@@ -153,6 +184,17 @@ public class SearchServiceSampleImpl implements SearchService {
 		tstoreSearchReq.setDateTo(DateFormatUtils.format(to, "yyyyMMdd"));
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 성인 인증 여부 설정.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 */
 	private void setAdult(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 미실명인증 - A(전체노출)
 		// 실명인증(성인) - Y(성인컨텐츠포함)
@@ -163,6 +205,17 @@ public class SearchServiceSampleImpl implements SearchService {
 			tstoreSearchReq.setAdult(searchReq.getAdultYN());
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색 정렬 설정.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 */
 	public void setOrder(SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// 정렬기준이 없으면 무조건 최신
 		if (!this.orderMap.containsKey(searchReq.getOrderedBy())) {
@@ -173,6 +226,19 @@ public class SearchServiceSampleImpl implements SearchService {
 		}
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 메타정보 설정.
+	 * </pre>
+	 * 
+	 * @param device
+	 *            device
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 */
 	private void setMeta(Device device, SearchReq searchReq, TstoreSearchReq tstoreSearchReq) {
 		// TB_CM_DEVICE의 UA_CD를 조회한다.
 		tstoreSearchReq.setMeta13(device.getUaCd());
@@ -244,6 +310,20 @@ public class SearchServiceSampleImpl implements SearchService {
 		}
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색 결과 가공.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 * @param tstoreSearchRes
+	 *            tstoreSearchRes
+	 * @return SearchRes
+	 */
 	private SearchRes getResultData(SearchReq searchReq, TstoreSearchReq tstoreSearchReq,
 			TstoreSearchRes tstoreSearchRes) {
 
@@ -306,6 +386,18 @@ public class SearchServiceSampleImpl implements SearchService {
 		return searchRes;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색결과 없을경우 추천상품 조회.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param tstoreSearchRes
+	 *            tstoreSearchRes
+	 * @return SearchRes
+	 */
 	private SearchRes getResultRecomData(SearchReq searchReq, TstoreSearchRes tstoreSearchRes) {
 
 		SearchRes searchRes = new SearchRes();
@@ -318,6 +410,18 @@ public class SearchServiceSampleImpl implements SearchService {
 		return searchRes;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색 결과 상품 리스트 가공.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param docList
+	 *            docList
+	 * @return List<Search>
+	 */
 	private List<Search> getProductList(SearchReq searchReq, List<Doc> docList) {
 		List<Search> productList = new ArrayList<Search>();
 		String topCatCd = "";
@@ -480,6 +584,18 @@ public class SearchServiceSampleImpl implements SearchService {
 		return productList;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 웹툰 URL 생성.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @param doc
+	 *            doc
+	 * @return String
+	 */
 	private String getWebtoonUrl(SearchReq searchReq, Doc doc) {
 
 		// webtoonURL 설정파일로
@@ -492,6 +608,16 @@ public class SearchServiceSampleImpl implements SearchService {
 		return uriComponents.encode().toUriString();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * DPI별 아이콘 맵핑.
+	 * </pre>
+	 * 
+	 * @param doc
+	 *            doc
+	 * @return String
+	 */
 	private String getDpiMapping(Doc doc) {
 		String dpi = "";
 		String topCatCd = doc.getMeta9();
@@ -564,6 +690,16 @@ public class SearchServiceSampleImpl implements SearchService {
 		return fileLoc;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Token 생성.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @return String
+	 */
 	private String getToken(SearchReq searchReq) {
 		StringBuffer token = new StringBuffer();
 

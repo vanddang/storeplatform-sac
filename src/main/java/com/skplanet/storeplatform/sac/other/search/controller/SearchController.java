@@ -19,6 +19,12 @@ import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 import com.skplanet.storeplatform.sac.other.search.service.SearchService;
 
+/**
+ * 
+ * T Store 검색 Controller
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Controller
 @RequestMapping(value = "/other/search")
 public class SearchController {
@@ -26,9 +32,20 @@ public class SearchController {
 	@Autowired
 	private SearchService searchService;
 
+	/**
+	 * 
+	 * <pre>
+	 * T Store 검색 기능.
+	 * </pre>
+	 * 
+	 * @param searchReq
+	 *            searchReq
+	 * @return SearchRes
+	 */
 	@RequestMapping(value = "/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchRes search(SearchReq searchReq) {
+		// 시스템 구분..
 		return this.searchService.search(searchReq);
 	}
 }

@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.other.uaps.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,12 @@ import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.sac.other.uaps.repository.UAPSRepository;
 
-@Profile(value = { "stag", "real" })
+/**
+ * 
+ * UAPS 조회 Service 구현체
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Service
 @Transactional
 public class UAPSServiceImpl implements UAPSService {

@@ -20,6 +20,12 @@ import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UafmapRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 
+/**
+ * 
+ * UAPS 외부연동 Repository Sample
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
+ */
 @Profile(value = { "dev", "local" })
 @Component
 public class UAPSRepositorySampleImpl implements UAPSRepository {
@@ -43,25 +49,21 @@ public class UAPSRepositorySampleImpl implements UAPSRepository {
 
 	@Override
 	public UserRes getMapping(String deviceId, String type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public UserRes getAuthorize(String custId, String deviceId, String type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public UafmapRes getDevice(String deviceId, String type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public LimitSvcRes getLimitSvc(String deviceId, String type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
