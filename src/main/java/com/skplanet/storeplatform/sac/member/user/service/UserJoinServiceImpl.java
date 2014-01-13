@@ -12,15 +12,19 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -31,16 +35,18 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
 /**
@@ -62,7 +68,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private IDPService idpService;
 
+	@Autowired
+	private ImIDPService imIdpService;
+
+	@Autowired
+	private IDPRepository idpRepository;
+
 	private IDPReceiverM idpReceiverM;
+
+	@Value("#{propertiesForSac['idp.im.request.operation']}")
+	public String IDP_OPERATION_MODE;
+
+	/**
+	 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
+	 */
+	private static final String SYSTEM_ID = "S001";
+	private static final String TENANT_ID = "S01";
 
 	@Override
 	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
@@ -70,21 +91,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 		CreateByMdnRes response = new CreateByMdnRes();
 
 		/**
-		 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
-		 */
-		String systemId = "S001";
-		String tenantId = "S01";
-
-		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
-		String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-		LOGGER.info("### opmdMdn : {}", opmdMdn);
+		String msisdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+		LOGGER.info("### opmdMdn : {}", msisdn);
 
 		/**
-		 * 필수 약관 동의여부 체크 TODO 테넌트 아이디 하드코딩 변경 해야함
+		 * 필수 약관 동의여부 체크
 		 */
-		if (this.checkAgree(req.getAgreementList(), tenantId)) {
+		if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
@@ -92,7 +107,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * (IDP 연동) 무선회원 가입
 		 */
-		this.idpReceiverM = this.idpService.join4Wap(req.getDeviceId());
+		this.idpReceiverM = this.idpService.join4Wap(msisdn);
 		LOGGER.info("## join4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
 		LOGGER.info("## join4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
 
@@ -107,8 +122,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			// SC 공통정보 setting
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(systemId);
-			commonRequest.setTenantID(tenantId);
+			commonRequest.setSystemID(SYSTEM_ID);
+			commonRequest.setTenantID(TENANT_ID);
 
 			// SC 사용자 기본정보 setting
 			UserMbr userMbr = new UserMbr();
@@ -118,9 +133,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
-			userMbr.setUserID(req.getDeviceId());
-			/** mdn, uuid 받는데로 넣는다. (SC 확인함.) */
-			userMbr.setUserTelecom(req.getDeviceTelecom());
+			userMbr.setUserID(msisdn);
+			userMbr.setUserTelecom(req.getDeviceTelecom()); // mdn, uuid 받는데로 넣는다. (SC 확인함.)
 
 			// SC 이용약관 정보 setting
 			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
@@ -133,12 +147,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			}
 
 			// SC 법정대리인 정보 setting
-			if (StringUtils.isNotEmpty(req.getOwnBirth())) {
+			if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
 				mbrLglAgent.setIsParent(MemberConstants.USE_Y); // 법정대리인 동의 여부
-				mbrLglAgent.setParentBirthDay(req.getParentBirth()); // 법정대리인 생년월일
+				mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
 				mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 이메일
-				mbrLglAgent.setParentMDN(req.getParentMdn()); // 법정대리인 전화번호
+				mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
 				mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 이동통신사
 			}
 
@@ -171,7 +185,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			/**
 			 * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
+			 * 
+			 * TODO DeviceInfo 정보 넘겨서 반대리님
 			 */
+			DeviceInfo deviceInfo = new DeviceInfo();
+			this.mcc.preRegMemberDeviceRegist(createUserResponse.getUserKey(), deviceInfo);
 			/**
 			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
 			 */
@@ -192,7 +210,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * (IDP 연동) 무선회원 해지
 			 */
 			LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
-			this.idpReceiverM = this.idpService.secedeUser4Wap(req.getDeviceId());
+			this.idpReceiverM = this.idpService.secedeUser4Wap(msisdn);
 			LOGGER.info("## secedeUser4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
 			LOGGER.info("## secedeUser4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
 
@@ -215,24 +233,76 @@ public class UserJoinServiceImpl implements UserJoinService {
 		CreateByAgreementRes response = new CreateByAgreementRes();
 
 		/**
-		 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
+		 * 필수 약관 동의여부 체크
 		 */
-		String systemId = "S001";
-		String tenantId = "S01";
-
-		/**
-		 * 필수 약관 동의여부 체크 TODO 테넌트 아이디 하드코딩 변경 해야함
-		 */
-		if (this.checkAgree(req.getAgreementList(), tenantId)) {
+		if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
 
 		/**
-		 * TODO 기타 파트에서 제공하는..(1월 27일 제공 예정이라함....) 모번호조회 할때 us_cd도 같이 내려 주는 API 호출로 바꿔야함. (1번 2번 3번 항목)
-		 * UAPSSCI.getMappingInfo
+		 * TODO 기타 파트에서 제공하는..(1월 27일 제공 예정이라함....)
+		 * 
+		 * TODO 모번호조회 할때 us_cd, IM_INT_SVC_NO(서비스 관리 번호)
 		 */
-		this.getMappingInfo(req.getDeviceId(), "mdn");
+		UserRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), req.getDeviceIdType());
+		LOGGER.debug("## userRes : {}" + userRes.toString());
+
+		/**
+		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
+		 * 
+		 * TODO ua_cd 정보 유무에 따른 파라미터 정보 세팅 분기 로직 처리해야함.
+		 */
+		StringBuffer sbUserPhone = new StringBuffer();
+		sbUserPhone.append(userRes.getMdn());
+		sbUserPhone.append(",");
+		sbUserPhone.append(userRes.getSvcMngNum());
+		sbUserPhone.append(",");
+		sbUserPhone.append(userRes.getDeviceModel());
+		sbUserPhone.append(",");
+		sbUserPhone.append(req.getDeviceTelecom());
+
+		/**
+		 * (OneID 연동) 이용동의 가입
+		 */
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("cmd", "TXAgreeUserIDP");
+		LOGGER.debug("############## this.IDP_OPERATION_MODE : {}", this.IDP_OPERATION_MODE);
+		// param.put("operation_mode", this.IDP_OPERATION_MODE);
+		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
+		param.put("key", req.getUserId());
+		param.put("user_mdn", sbUserPhone.toString());
+		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
+		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
+		param.put("modify_req_date", DateUtil.getToday());
+		param.put("modify_req_time", DateUtil.getTime());
+		LOGGER.debug("## param : {}", param.entrySet());
+		ImIDPReceiverM imIDPReceiverM = this.imIdpService.agreeUser(param);
+		LOGGER.debug("## Im Result Code   : {}", imIDPReceiverM.getResponseHeader().getResult());
+		LOGGER.debug("## Im Result Text   : {}", imIDPReceiverM.getResponseHeader().getResult_text());
+
+		if (StringUtils.equals(imIDPReceiverM.getResponseHeader().getResult(), "00000")) {
+
+			LOGGER.debug("## Im user_key      : {}", imIDPReceiverM.getResponseBody().getUser_key());
+			LOGGER.debug("## Im im_int_svc_no : {}", imIDPReceiverM.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im user_tn       : {}", imIDPReceiverM.getResponseBody().getUser_tn());
+			LOGGER.debug("## Im user_email    : {}", imIDPReceiverM.getResponseBody().getUser_email());
+
+			/**
+			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+			 */
+			this.imIdpService.userInfoIdpSearchServer("파라미터 넣어야함 - imServiceNo");
+
+			// sMbrNm = mapParse.get("user_name");
+			// sBirthDt = mapParse.get("user_birthday");
+
+		} else {
+
+			LOGGER.error("## 통합 서비스 이용동의 가입 실패!!");
+			throw new RuntimeException("통합 서비스 이용동의 가입 실패");
+
+		}
 
 		/**
 		 * TODO 결과정보 셋팅 해야함.
@@ -251,7 +321,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            요청 약관 동의 정보
 	 * @param tenantId
 	 *            테넌트 아이디
-	 * @return 하나라도 미동의시 : true
+	 * @return boolean
 	 * @throws Exception
 	 *             Exception
 	 */
@@ -307,43 +377,73 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	}
 
-	/**
-	 * <pre>
-	 * TODO 기타 파트에서 제공해야될 API 로써 삭제되야될 메서드임..!!!!!
-	 * TODO 기존 내부로직 분석하여 임시로 넣어둠.................!!!!!
-	 * </pre>
-	 * 
-	 * @param pReqParam
-	 *            mdn or uuid 값
-	 * @param type
-	 *            타입
-	 * @return UserRes
-	 * @throws Exception
-	 *             Exception
-	 */
-	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
-
-		LOGGER.debug("## ================================== 고객정보조회");
-
-		UserRes userRes = new UserRes();
-		/**
-		 * 1. 모번호 조회 (989 일 경우만)
-		 */
-		String opmdMdn = this.mcc.getOpmdMdnInfo(pReqParam);
-		LOGGER.info("### opmdMdn : {}", opmdMdn);
-
-		/**
-		 * TODO HEADER 정보로 바꿀걸....
-		 */
-		// logger.debug("## DeviceInfo : {}", headerVo.getxSacDeviceInfo());
-		Device device = this.mcc.getPhoneInfo("LG-SU910");
-		LOGGER.debug("Device : {}", device.getUaCd());
-
-		/**
-		 * OneID - getMdnInfoIDP IDP - findProfileForWap
-		 */
-
-		return userRes;
-	}
+	// /**
+	// * <pre>
+	// * 기존 As-Is 소스 그대로 로직 옴김......
+	// * TODO 기타 파트에서 제공해야될 API 로써 삭제되야될 메서드임..!!!!!
+	// * TODO 기존 내부로직 분석하여 임시로 넣어둠.................!!!!!
+	// * </pre>
+	// *
+	// * @param pReqParam
+	// * mdn or uuid 값
+	// * @param type
+	// * 타입
+	// * @return UserRes
+	// * @throws Exception
+	// * Exception
+	// */
+	// public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
+	//
+	// LOGGER.debug("## ================================== 고객정보조회");
+	//
+	// UserRes userRes = new UserRes();
+	// /**
+	// * 1. 모번호 조회 (989 일 경우만)
+	// */
+	// String opmdMdn = this.mcc.getOpmdMdnInfo(pReqParam);
+	// LOGGER.info("### opmdMdn : {}", opmdMdn);
+	//
+	// /**
+	// * TODO HEADER 정보로 바꿀것....
+	// */
+	// // logger.debug("## DeviceInfo : {}", headerVo.getxSacDeviceInfo());
+	// Device device = this.mcc.getPhoneInfo("LG-SU910");
+	// LOGGER.debug("## ua_cd : {}", device.getUaCd());
+	//
+	// /**
+	// * MBR_ID 로 회원 기본 정보 조회
+	// */
+	// CommonRequest commonRequest = new CommonRequest();
+	// commonRequest.setSystemID(SYSTEM_ID);
+	// commonRequest.setTenantID(TENANT_ID);
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySearch = new KeySearch();
+	// keySearch.setKeyString(pReqParam);
+	// keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+	// keySearchList.add(keySearch);
+	//
+	// SearchUserRequest searchUserRequest = new SearchUserRequest();
+	// searchUserRequest.setCommonRequest(commonRequest);
+	// searchUserRequest.setKeySearchList(keySearchList);
+	// SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
+	// LOGGER.debug("@@@ Response : {}", searchUserResponse.toString());
+	// LOGGER.debug("@@@ Response : {}", searchUserResponse.getUserMbr().getImMbrNo());
+	//
+	// // if (StringUtils.isNotEmpty(sPreImIntSvcNo)) {
+	// // mapUrl.put("cmd", "getMdnInfoIDP");
+	// // mapUrl.put("mdn", sMdn);
+	// //
+	// // } else {
+	// // mapUrl.put("cmd", "findProfileForWap");
+	// // mapUrl.put("key", sMdn);
+	// // mapUrl.put("key_type", "1");
+	// // }
+	//
+	// /**
+	// * OneID - getMdnInfoIDP IDP - findProfileForWap
+	// */
+	//
+	// return userRes;
+	// }
 
 }

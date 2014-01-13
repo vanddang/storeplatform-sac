@@ -80,6 +80,15 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_OMPUACE = "US011412"; // OMD UA코드
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011413"; // 루팅 여부
 
+	/** 미지원 단말. */
+	public static final String NOT_SUPPORT_HP_CORP = "NSH";
+	public static final String NOT_SUPPORT_HP_UACODE = "9999";
+	public static final String NOT_SUPPORT_HP_MODEL_CD = "android_standard";
+	public static final String NOT_SUPPORT_HP_MODEL_NM = "미지원표준단말";
+
+	/** 통합회원. */
+	public static final String SSO_SST_CD_TSTORE = "41100";
+
 	/**
 	 * 판매자 회원 상수들
 	 * 

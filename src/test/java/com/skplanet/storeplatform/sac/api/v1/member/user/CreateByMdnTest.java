@@ -73,18 +73,23 @@ public class CreateByMdnTest {
 
 						CreateByMdnReq reqJson = new CreateByMdnReq();
 						reqJson.setDeviceId("01088870008");
+						reqJson.setDeviceIdType("msisdn");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
-						reqJson.setOwnBirth("20020409");
-						reqJson.setParentType("");
-						reqJson.setRealNameMethod("US011101");
-						reqJson.setParentName("부모이름");
-						reqJson.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-						reqJson.setParentEmail("hkd@aaaa.com");
-						reqJson.setParentTelecom("US001201");
-						reqJson.setParentMdn("01088889999");
-						reqJson.setParentResident("local");
-						reqJson.setParentBirth("19700407");
+						reqJson.setIsParent("N");
+
+						// // 법정 대리인 정보
+						// reqJson.setParentRealNameMethod("US011101");
+						// reqJson.setParentName("홍길동");
+						// reqJson.setParentType(parentType);
+						// reqJson.setParentDate(parentDate);
+						// reqJson.setParentEmail("hkd@aaaa.com");
+						// reqJson.setParentBirthDay(parentBirthDay);
+						// reqJson.setParentTelecom("US001201");
+						// reqJson.setParentPhone("01088889999");
+						// reqJson.setPareantCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+						// reqJson.setParentRealNameDate(parentRealNameDate);
+						// reqJson.setParentRealNameSite(parentRealNameSite);
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
