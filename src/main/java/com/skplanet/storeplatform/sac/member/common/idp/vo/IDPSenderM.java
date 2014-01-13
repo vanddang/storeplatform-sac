@@ -11,54 +11,59 @@
  */
 package com.skplanet.storeplatform.sac.member.common.idp.vo;
 
+/**
+ * Calss 설명
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
+ */
 public class IDPSenderM {
 	/* 연동 요청 (공통 결과 API) */
-	/** 세부 요청 command */
+	/** 세부 요청 command. */
 	private String cmd;
-	/** 등록된 SP ID */
+	/** 등록된 SP ID. */
 	private String sp_id;
-	/** 요청 인증을 위한 signature */
+	/** 요청 인증을 위한 signature. */
 	private String sp_auth_key;
-	/** 처리 결과 Data Format */
+	/** 처리 결과 Data Format. */
 	private String resp_type; // 1 : "name=vlaue", 2 : XML default=1
-	/** 처리결과 전달 방식 */
+	/** 처리결과 전달 방식. */
 	private String resp_flow; // resp : response 방식, redt : redirect 방식 default=resp
-	/** redirect 할 url */
+	/** redirect 할 url. */
 	private String resp_url;
 
 	/* 연동 요청 (기본 API) */
-	/** 서비스 중복 가입 체크 key 종류 */
+	/** 서비스 중복 가입 체크 key 종류. */
 	private String key_type; // 1 : email, 2 : 주민번호 default=1
-	/** 서비스 중복 가입을 체크 할 값 */
+	/** 서비스 중복 가입을 체크 할 값. */
 	private String key;
 	private String pre_key;
-	/** 사용자 아이디 */
+	/** 사용자 아이디. */
 	private String user_id;
-	/** 내국인, 외국인에 따른 실명 인증 type */
+	/** 내국인, 외국인에 따른 실명 인증 type. */
 	private String type; // 1 : 내국인, 2 : 국내거주외국인
-	/** 사용자 이름 or 국내 거주 외국인 이름 */
+	/** 사용자 이름 or 국내 거주 외국인 이름. */
 	private String user_name;
-	/** 사용자 주민번호 or 외국인번호 */
+	/** 사용자 주민번호 or 외국인번호. */
 	private String user_social_number;
-	/** 사용자 패스워드 */
+	/** 사용자 패스워드. */
 	private String user_passwd;
-	/** 인증 할 휴대폰번호 */
+	/** 인증 할 휴대폰번호. */
 	private String user_mdn;
-	/** 이통사 구분 */
+	/** 이통사 구분. */
 	private String user_mdn_type;
-	/** 입력한 휴대폰 인증 코드 */
+	/** 입력한 휴대폰 인증 코드. */
 	private String user_code;
-	/** IDP로 부터 발행 받은 mobile_sign value */
+	/** IDP로 부터 발행 받은 mobile_sign value. */
 	private String mobile_sign;
-	/** IDP로 부터 전달 받은 sign_data value */
+	/** IDP로 부터 전달 받은 sign_data value. */
 	private String sign_data;
-	/** 발급된 watermark image url */
+	/** 발급된 watermark image url. */
 	private String image_url;
-	/** 인증코드 확인을 위한 signature */
+	/** 인증코드 확인을 위한 signature. */
 	private String image_sign;
-	/** 변경 전 mail */
+	/** 변경 전 mail. */
 	private String pre_user_email;
-	/** 가입 시 발행된 user key */
+	/** 가입 시 발행된 user key. */
 	private String user_key;
 
 	/* 연동 요청 (회원 가입 API) */

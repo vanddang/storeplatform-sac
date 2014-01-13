@@ -45,6 +45,27 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
+	 * Email 중복 가입여부 조회.
+	 * </pre>
+	 * 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_ALEADY_JOIN_CHECK);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey(email);
+		sendData.setKey_type(IDPConstants.IDP_PARAM_KEY_TYPE_EMAIL);
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
 	 * 모바일 회원 인증
 	 * </pre>
 	 * 

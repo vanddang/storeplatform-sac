@@ -28,18 +28,18 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class FindCommonProfileForServerIDPTest {
+public class CheckIdStatusIdpImTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FindCommonProfileForServerIDPTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CheckIdStatusIdpImTest.class);
 
 	@Autowired
 	private ImIDPService imIDPService;
 
 	@Test
-	public void findCommonProfileForServerIDP() {
+	public void checkIdStatusIdpIm() {
 		try {
 
-			ImIDPReceiverM receiverM = this.imIDPService.userInfoIdpSearchServer("1000000013521");
+			ImIDPReceiverM receiverM = this.imIDPService.checkIdStatusIdpIm("awdawdawdawdw");
 			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 			LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
 			LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
@@ -47,5 +47,4 @@ public class FindCommonProfileForServerIDPTest {
 			e.printStackTrace();
 		}
 	}
-
 }

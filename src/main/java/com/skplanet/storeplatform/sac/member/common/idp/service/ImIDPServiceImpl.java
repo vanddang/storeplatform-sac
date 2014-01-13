@@ -13,10 +13,15 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
 
+/**
+ * ImIDP API
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
+ */
 @Service
 public class ImIDPServiceImpl implements ImIDPService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ImIDPServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImIDPServiceImpl.class);
 
 	@Autowired
 	private IDPRepository repository;
@@ -28,7 +33,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * 
 	 * @param key
 	 * @param pwd
-	 * @return
+	 * @return ImIDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -52,7 +57,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return
+	 * @return ImIDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -74,7 +79,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return
+	 * @return ImIDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -136,7 +141,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * </pre>
 	 * 
 	 * @param imServiceNo
-	 * @return
+	 * @return ImIDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -151,6 +156,29 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData); // sendIDP(sendData);
+		return this.repository.sendImIDP(sendData);
 	}
+
+	/**
+	 * <pre>
+	 * ID 가입여부 체크.
+	 * </pre>
+	 * 
+	 * @param id
+	 * @return ImIDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public ImIDPReceiverM checkIdStatusIdpIm(String id) throws Exception {
+		ImIDPSenderM sendData = new ImIDPSenderM();
+
+		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_ID_STATUS_IDP_IM);
+		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_id(id);
+
+		return this.repository.sendImIDP(sendData);
+	}
+
 }
