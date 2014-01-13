@@ -94,159 +94,163 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailInformationRes detailInformation(DetailInformationReq req) {
 
-		SearchSellerResponse sc_res = new SearchSellerResponse();
-		SearchSellerRequest sc_req = new SearchSellerRequest();
+		SearchSellerResponse schRes = new SearchSellerResponse();
+		SearchSellerRequest schReq = new SearchSellerRequest();
 
-		sc_req.setCommonRequest(this.imsiCommonRequest());
+		schReq.setCommonRequest(this.imsiCommonRequest());
 
+		DetailInformationRes response = new DetailInformationRes();
 		KeySearch keySearch = new KeySearch();
 
-		if (req.getSellerKey().equals("") && !req.getAid().equals("")) {
-			SellerDTO dto = new SellerDTO();
-			dto.setSellerKey(req.getAid());
-			SellerDTO sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", dto, SellerDTO.class);
-			keySearch.setKeyString(sellerDTO.getSellerKey());
-		} else if (!req.getSellerKey().equals("")) {
-			keySearch.setKeyString(req.getSellerKey());
+		if (!req.getSellerKey().equals("") || !req.getAid().equals("")) {
+			if (!req.getSellerKey().equals("")) {
+				keySearch.setKeyString(req.getSellerKey());
+			} else {
+				SellerDTO dto = new SellerDTO();
+				dto.setSellerKey(req.getAid());
+				SellerDTO sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", dto, SellerDTO.class);
+				keySearch.setKeyString(sellerDTO.getSellerKey());
+			}
 		} else {
 			keySearch.setKeyString("");
 		}
 
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
-		List<KeySearch> list = new ArrayList<KeySearch>();
-		list.add(keySearch);
-		sc_req.setKeySearchList(list);
+		if (keySearch.getKeyString() != null)
+			if (!keySearch.getKeyString().equals("")) {
 
-		sc_res = this.sellerSCI.searchSeller(sc_req);
+				keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
+				List<KeySearch> list = new ArrayList<KeySearch>();
+				list.add(keySearch);
+				schReq.setKeySearchList(list);
 
-		DetailInformationRes response = new DetailInformationRes();
+				schRes = this.sellerSCI.searchSeller(schReq);
 
-		// 판매자 멀티미디어정보
-		List<ExtraRightList> eList = new ArrayList<ExtraRightList>();
-		for (int i = 0; i < sc_res.getExtraRightList().size(); i++) {
-			ExtraRightList extraRightList = new ExtraRightList();
-			extraRightList.setEndDate(sc_res.getExtraRightList().get(i).getEndDate());
-			extraRightList.setRegDate(sc_res.getExtraRightList().get(i).getRegDate());
-			extraRightList.setRegID(sc_res.getExtraRightList().get(i).getRegID());
-			extraRightList.setRightProfileCode(sc_res.getExtraRightList().get(i).getRightProfileCode());
-			extraRightList.setSellerKey(sc_res.getExtraRightList().get(i).getSellerKey());
-			extraRightList.setSellerRate(sc_res.getExtraRightList().get(i).getSellerRate());
-			extraRightList.setStartDate(sc_res.getExtraRightList().get(i).getStartDate());
-			extraRightList.setTenantID(sc_res.getExtraRightList().get(i).getTenantID());
-			extraRightList.setTenantRate(sc_res.getExtraRightList().get(i).getTenantRate());
-			extraRightList.setUpdateDate(sc_res.getExtraRightList().get(i).getUpdateDate());
-			extraRightList.setUpdateID(sc_res.getExtraRightList().get(i).getUpdateID());
-			eList.add(extraRightList);
-		}
+				// 판매자 멀티미디어정보
+				List<ExtraRightList> eList = new ArrayList<ExtraRightList>();
+				for (int i = 0; i < schRes.getExtraRightList().size(); i++) {
+					ExtraRightList extraRightList = new ExtraRightList();
+					extraRightList.setEndDate(schRes.getExtraRightList().get(i).getEndDate());
+					extraRightList.setRegDate(schRes.getExtraRightList().get(i).getRegDate());
+					extraRightList.setRegID(schRes.getExtraRightList().get(i).getRegID());
+					extraRightList.setRightProfileCode(schRes.getExtraRightList().get(i).getRightProfileCode());
+					extraRightList.setSellerKey(schRes.getExtraRightList().get(i).getSellerKey());
+					extraRightList.setSellerRate(schRes.getExtraRightList().get(i).getSellerRate());
+					extraRightList.setStartDate(schRes.getExtraRightList().get(i).getStartDate());
+					extraRightList.setTenantID(schRes.getExtraRightList().get(i).getTenantID());
+					extraRightList.setTenantRate(schRes.getExtraRightList().get(i).getTenantRate());
+					extraRightList.setUpdateDate(schRes.getExtraRightList().get(i).getUpdateDate());
+					extraRightList.setUpdateID(schRes.getExtraRightList().get(i).getUpdateID());
+					eList.add(extraRightList);
+				}
 
-		// 약관동의목록
-		List<MbrClauseAgreeList> mList = new ArrayList<MbrClauseAgreeList>();
-		for (int i = 0; i < sc_res.getMbrClauseAgreeList().size(); i++) {
-			MbrClauseAgreeList mbrClauseAgreeList = new MbrClauseAgreeList();
-			mbrClauseAgreeList.setExtraAgreementID(sc_res.getMbrClauseAgreeList().get(i).getExtraAgreementID());
-			mbrClauseAgreeList.setExtraAgreementVersion(sc_res.getMbrClauseAgreeList().get(i)
-					.getExtraAgreementVersion());
-			mbrClauseAgreeList.setIsExtraAgreement(sc_res.getMbrClauseAgreeList().get(i).getIsExtraAgreement());
-			mbrClauseAgreeList.setIsMandatory(sc_res.getMbrClauseAgreeList().get(i).getIsMandatory());
-			mbrClauseAgreeList.setMemberKey(sc_res.getMbrClauseAgreeList().get(i).getMemberKey());
-			mbrClauseAgreeList.setRegDate(sc_res.getMbrClauseAgreeList().get(i).getRegDate());
-			mbrClauseAgreeList.setTenantID(sc_res.getMbrClauseAgreeList().get(i).getTenantID());
-			mbrClauseAgreeList.setUpdateDate(sc_res.getMbrClauseAgreeList().get(i).getUpdateDate());
-			mList.add(mbrClauseAgreeList);
-		}
+				// 약관동의목록
+				List<MbrClauseAgreeList> mList = new ArrayList<MbrClauseAgreeList>();
+				for (int i = 0; i < schRes.getMbrClauseAgreeList().size(); i++) {
+					MbrClauseAgreeList mbrClauseAgreeList = new MbrClauseAgreeList();
+					mbrClauseAgreeList.setExtraAgreementID(schRes.getMbrClauseAgreeList().get(i).getExtraAgreementID());
+					mbrClauseAgreeList.setExtraAgreementVersion(schRes.getMbrClauseAgreeList().get(i)
+							.getExtraAgreementVersion());
+					mbrClauseAgreeList.setIsExtraAgreement(schRes.getMbrClauseAgreeList().get(i).getIsExtraAgreement());
+					mbrClauseAgreeList.setIsMandatory(schRes.getMbrClauseAgreeList().get(i).getIsMandatory());
+					mbrClauseAgreeList.setMemberKey(schRes.getMbrClauseAgreeList().get(i).getMemberKey());
+					mbrClauseAgreeList.setRegDate(schRes.getMbrClauseAgreeList().get(i).getRegDate());
+					mbrClauseAgreeList.setTenantID(schRes.getMbrClauseAgreeList().get(i).getTenantID());
+					mbrClauseAgreeList.setUpdateDate(schRes.getMbrClauseAgreeList().get(i).getUpdateDate());
+					mList.add(mbrClauseAgreeList);
+				}
 
-		// 법정대리인정보
-		MbrLglAgent mbrLglAgent = new MbrLglAgent();
-		mbrLglAgent.setIsParent(sc_res.getMbrLglAgent().getIsParent());
-		mbrLglAgent.setMemberKey(sc_res.getMbrLglAgent().getMemberKey());
-		mbrLglAgent.setParentBirthDay(sc_res.getMbrLglAgent().getParentBirthDay());
-		mbrLglAgent.setParentCI(sc_res.getMbrLglAgent().getParentCI());
-		mbrLglAgent.setParentDate(sc_res.getMbrLglAgent().getParentDate());
-		mbrLglAgent.setParentEmail(sc_res.getMbrLglAgent().getParentEmail());
-		mbrLglAgent.setParentMDN(sc_res.getMbrLglAgent().getParentMDN());
-		mbrLglAgent.setParentName(sc_res.getMbrLglAgent().getParentName());
-		mbrLglAgent.setParentRealNameDate(sc_res.getMbrLglAgent().getParentRealNameDate());
-		mbrLglAgent.setParentRealNameMethod(sc_res.getMbrLglAgent().getParentRealNameMethod());
-		mbrLglAgent.setParentRealNameSite(sc_res.getMbrLglAgent().getParentRealNameSite());
-		mbrLglAgent.setParentTelecom(sc_res.getMbrLglAgent().getParentTelecom());
-		mbrLglAgent.setParentType(sc_res.getMbrLglAgent().getParentType());
-		mbrLglAgent.setSequence(sc_res.getMbrLglAgent().getSequence());
+				// 법정대리인정보
+				MbrLglAgent mbrLglAgent = new MbrLglAgent();
+				mbrLglAgent.setIsParent(schRes.getMbrLglAgent().getIsParent());
+				mbrLglAgent.setMemberKey(schRes.getMbrLglAgent().getMemberKey());
+				mbrLglAgent.setParentBirthDay(schRes.getMbrLglAgent().getParentBirthDay());
+				mbrLglAgent.setParentCI(schRes.getMbrLglAgent().getParentCI());
+				mbrLglAgent.setParentDate(schRes.getMbrLglAgent().getParentDate());
+				mbrLglAgent.setParentEmail(schRes.getMbrLglAgent().getParentEmail());
+				mbrLglAgent.setParentMDN(schRes.getMbrLglAgent().getParentMDN());
+				mbrLglAgent.setParentName(schRes.getMbrLglAgent().getParentName());
+				mbrLglAgent.setParentRealNameDate(schRes.getMbrLglAgent().getParentRealNameDate());
+				mbrLglAgent.setParentRealNameMethod(schRes.getMbrLglAgent().getParentRealNameMethod());
+				mbrLglAgent.setParentRealNameSite(schRes.getMbrLglAgent().getParentRealNameSite());
+				mbrLglAgent.setParentTelecom(schRes.getMbrLglAgent().getParentTelecom());
+				mbrLglAgent.setParentType(schRes.getMbrLglAgent().getParentType());
+				mbrLglAgent.setSequence(schRes.getMbrLglAgent().getSequence());
 
-		// 판매자 정보
-		SellerMbr sellerMbr = new SellerMbr();
-		sellerMbr.setApproveDate(sc_res.getSellerMbr().getApproveDate());
-		sellerMbr.setBizGrade(sc_res.getSellerMbr().getBizGrade());
-		sellerMbr.setBizKindCd(sc_res.getSellerMbr().getBizKindCd());
-		sellerMbr.setBizRegNumber(sc_res.getSellerMbr().getBizRegNumber());
-		sellerMbr.setBizUnregReason(sc_res.getSellerMbr().getBizUnregReason());
-		sellerMbr.setCeoBirthDay(sc_res.getSellerMbr().getCeoBirthDay());
-		sellerMbr.setCeoName(sc_res.getSellerMbr().getCeoName());
-		sellerMbr.setCharger(sc_res.getSellerMbr().getCharger());
-		sellerMbr.setCordedTelephone(sc_res.getSellerMbr().getCordedTelephone());
-		sellerMbr.setCordedTelephoneCountry(sc_res.getSellerMbr().getCordedTelephoneCountry());
-		sellerMbr.setCustomerEmail(sc_res.getSellerMbr().getCustomerEmail());
-		sellerMbr.setCustomerPhone(sc_res.getSellerMbr().getCustomerPhone());
-		sellerMbr.setCustomerPhoneCountry(sc_res.getSellerMbr().getCustomerPhoneCountry());
-		sellerMbr.setIsAccountReal(sc_res.getSellerMbr().getIsAccountReal());
-		sellerMbr.setIsBizRegistered(sc_res.getSellerMbr().getIsBizRegistered());
-		sellerMbr.setIsBizTaxable(sc_res.getSellerMbr().getIsBizTaxable());
-		sellerMbr.setIsDeductible(sc_res.getSellerMbr().getIsDeductible());
-		sellerMbr.setIsForeign(sc_res.getSellerMbr().getIsForeign());
-		sellerMbr.setIsParent(sc_res.getSellerMbr().getIsParent());
-		sellerMbr.setIsRealName(sc_res.getSellerMbr().getIsRealName());
-		sellerMbr.setIsRecvEmail(sc_res.getSellerMbr().getIsRecvEmail());
-		sellerMbr.setIsRecvSMS(sc_res.getSellerMbr().getIsRecvSMS());
-		sellerMbr.setMarketCode(sc_res.getSellerMbr().getMarketCode());
-		sellerMbr.setMarketStatus(sc_res.getSellerMbr().getMarketStatus());
-		sellerMbr.setMemo(sc_res.getSellerMbr().getMemo());
-		sellerMbr.setParentSellerKey(sc_res.getSellerMbr().getParentSellerKey());
-		sellerMbr.setRegDate(sc_res.getSellerMbr().getRegDate());
-		sellerMbr.setRepEmail(sc_res.getSellerMbr().getRepEmail());
-		sellerMbr.setRepFax(sc_res.getSellerMbr().getRepFax());
-		sellerMbr.setRepFaxArea(sc_res.getSellerMbr().getRepFaxArea());
-		sellerMbr.setRepPhone(sc_res.getSellerMbr().getRepPhone());
-		sellerMbr.setRepPhoneArea(sc_res.getSellerMbr().getRepPhoneArea());
-		sellerMbr.setRightProfileList(sc_res.getSellerMbr().getRightProfileList());
-		sellerMbr.setSecedeDate(sc_res.getSellerMbr().getSecedeDate());
-		sellerMbr.setSecedePathCd(sc_res.getSellerMbr().getSecedePathCd());
-		sellerMbr.setSecedeReasonCode(sc_res.getSellerMbr().getSecedeReasonCode());
-		sellerMbr.setSecedeReasonMessage(sc_res.getSellerMbr().getSecedeReasonMessage());
-		sellerMbr.setSellerAddress(sc_res.getSellerMbr().getSellerAddress());
-		sellerMbr.setSellerBirthDay(sc_res.getSellerMbr().getSellerBirthDay());
-		sellerMbr.setSellerBizCategory(sc_res.getSellerMbr().getSellerBizCategory());
-		sellerMbr.setSellerBizCorpNumber(sc_res.getSellerMbr().getSellerBizCorpNumber());
-		sellerMbr.setSellerBizNumber(sc_res.getSellerMbr().getSellerBizNumber());
-		sellerMbr.setSellerBizType(sc_res.getSellerMbr().getSellerBizType());
-		sellerMbr.setSellerCategory(sc_res.getSellerMbr().getSellerCategory());
-		sellerMbr.setSellerCity(sc_res.getSellerMbr().getSellerCity());
-		sellerMbr.setSellerClass(sc_res.getSellerMbr().getSellerClass());
-		sellerMbr.setSellerCompany(sc_res.getSellerMbr().getSellerCompany());
-		sellerMbr.setSellerCountry(sc_res.getSellerMbr().getSellerCountry());
-		sellerMbr.setSellerDetailAddress(sc_res.getSellerMbr().getSellerDetailAddress());
-		sellerMbr.setSellerEmail(sc_res.getSellerMbr().getSellerEmail());
-		sellerMbr.setSellerID(sc_res.getSellerMbr().getSellerID());
-		sellerMbr.setSellerKey(sc_res.getSellerMbr().getSellerKey());
-		sellerMbr.setSellerLanguage(sc_res.getSellerMbr().getSellerLanguage());
-		sellerMbr.setSellerMainStatus(sc_res.getSellerMbr().getSellerMainStatus());
-		sellerMbr.setSellerName(sc_res.getSellerMbr().getSellerName());
-		sellerMbr.setSellerNickName(sc_res.getSellerMbr().getSellerNickName());
-		sellerMbr.setSellerPhone(sc_res.getSellerMbr().getSellerPhone());
-		sellerMbr.setSellerPhoneCountry(sc_res.getSellerMbr().getSellerPhoneCountry());
-		sellerMbr.setSellerSex(sc_res.getSellerMbr().getSellerSex());
-		sellerMbr.setSellerSSNumber(sc_res.getSellerMbr().getSellerSSNumber());
-		sellerMbr.setSellerState(sc_res.getSellerMbr().getSellerState());
-		sellerMbr.setSellerSubStatus(sc_res.getSellerMbr().getSellerSubStatus());
-		sellerMbr.setSellerTelecom(sc_res.getSellerMbr().getSellerTelecom());
-		sellerMbr.setSellerZip(sc_res.getSellerMbr().getSellerZip());
-		sellerMbr.setTenantID(sc_res.getSellerMbr().getTenantID());
-		sellerMbr.setVendorCode(sc_res.getSellerMbr().getVendorCode());
+				// 판매자 정보
+				SellerMbr sellerMbr = new SellerMbr();
+				sellerMbr.setApproveDate(schRes.getSellerMbr().getApproveDate());
+				sellerMbr.setBizGrade(schRes.getSellerMbr().getBizGrade());
+				sellerMbr.setBizKindCd(schRes.getSellerMbr().getBizKindCd());
+				sellerMbr.setBizRegNumber(schRes.getSellerMbr().getBizRegNumber());
+				sellerMbr.setBizUnregReason(schRes.getSellerMbr().getBizUnregReason());
+				sellerMbr.setCeoBirthDay(schRes.getSellerMbr().getCeoBirthDay());
+				sellerMbr.setCeoName(schRes.getSellerMbr().getCeoName());
+				sellerMbr.setCharger(schRes.getSellerMbr().getCharger());
+				sellerMbr.setCordedTelephone(schRes.getSellerMbr().getCordedTelephone());
+				sellerMbr.setCordedTelephoneCountry(schRes.getSellerMbr().getCordedTelephoneCountry());
+				sellerMbr.setCustomerEmail(schRes.getSellerMbr().getCustomerEmail());
+				sellerMbr.setCustomerPhone(schRes.getSellerMbr().getCustomerPhone());
+				sellerMbr.setCustomerPhoneCountry(schRes.getSellerMbr().getCustomerPhoneCountry());
+				sellerMbr.setIsAccountReal(schRes.getSellerMbr().getIsAccountReal());
+				sellerMbr.setIsBizRegistered(schRes.getSellerMbr().getIsBizRegistered());
+				sellerMbr.setIsBizTaxable(schRes.getSellerMbr().getIsBizTaxable());
+				sellerMbr.setIsDeductible(schRes.getSellerMbr().getIsDeductible());
+				sellerMbr.setIsForeign(schRes.getSellerMbr().getIsForeign());
+				sellerMbr.setIsParent(schRes.getSellerMbr().getIsParent());
+				sellerMbr.setIsRealName(schRes.getSellerMbr().getIsRealName());
+				sellerMbr.setIsRecvEmail(schRes.getSellerMbr().getIsRecvEmail());
+				sellerMbr.setIsRecvSMS(schRes.getSellerMbr().getIsRecvSMS());
+				sellerMbr.setMarketCode(schRes.getSellerMbr().getMarketCode());
+				sellerMbr.setMarketStatus(schRes.getSellerMbr().getMarketStatus());
+				sellerMbr.setMemo(schRes.getSellerMbr().getMemo());
+				sellerMbr.setParentSellerKey(schRes.getSellerMbr().getParentSellerKey());
+				sellerMbr.setRegDate(schRes.getSellerMbr().getRegDate());
+				sellerMbr.setRepEmail(schRes.getSellerMbr().getRepEmail());
+				sellerMbr.setRepFax(schRes.getSellerMbr().getRepFax());
+				sellerMbr.setRepFaxArea(schRes.getSellerMbr().getRepFaxArea());
+				sellerMbr.setRepPhone(schRes.getSellerMbr().getRepPhone());
+				sellerMbr.setRepPhoneArea(schRes.getSellerMbr().getRepPhoneArea());
+				sellerMbr.setRightProfileList(schRes.getSellerMbr().getRightProfileList());
+				sellerMbr.setSecedeDate(schRes.getSellerMbr().getSecedeDate());
+				sellerMbr.setSecedePathCd(schRes.getSellerMbr().getSecedePathCd());
+				sellerMbr.setSecedeReasonCode(schRes.getSellerMbr().getSecedeReasonCode());
+				sellerMbr.setSecedeReasonMessage(schRes.getSellerMbr().getSecedeReasonMessage());
+				sellerMbr.setSellerAddress(schRes.getSellerMbr().getSellerAddress());
+				sellerMbr.setSellerBirthDay(schRes.getSellerMbr().getSellerBirthDay());
+				sellerMbr.setSellerBizCategory(schRes.getSellerMbr().getSellerBizCategory());
+				sellerMbr.setSellerBizCorpNumber(schRes.getSellerMbr().getSellerBizCorpNumber());
+				sellerMbr.setSellerBizNumber(schRes.getSellerMbr().getSellerBizNumber());
+				sellerMbr.setSellerBizType(schRes.getSellerMbr().getSellerBizType());
+				sellerMbr.setSellerCategory(schRes.getSellerMbr().getSellerCategory());
+				sellerMbr.setSellerCity(schRes.getSellerMbr().getSellerCity());
+				sellerMbr.setSellerClass(schRes.getSellerMbr().getSellerClass());
+				sellerMbr.setSellerCompany(schRes.getSellerMbr().getSellerCompany());
+				sellerMbr.setSellerCountry(schRes.getSellerMbr().getSellerCountry());
+				sellerMbr.setSellerDetailAddress(schRes.getSellerMbr().getSellerDetailAddress());
+				sellerMbr.setSellerEmail(schRes.getSellerMbr().getSellerEmail());
+				sellerMbr.setSellerID(schRes.getSellerMbr().getSellerID());
+				sellerMbr.setSellerKey(schRes.getSellerMbr().getSellerKey());
+				sellerMbr.setSellerLanguage(schRes.getSellerMbr().getSellerLanguage());
+				sellerMbr.setSellerMainStatus(schRes.getSellerMbr().getSellerMainStatus());
+				sellerMbr.setSellerName(schRes.getSellerMbr().getSellerName());
+				sellerMbr.setSellerNickName(schRes.getSellerMbr().getSellerNickName());
+				sellerMbr.setSellerPhone(schRes.getSellerMbr().getSellerPhone());
+				sellerMbr.setSellerPhoneCountry(schRes.getSellerMbr().getSellerPhoneCountry());
+				sellerMbr.setSellerSex(schRes.getSellerMbr().getSellerSex());
+				sellerMbr.setSellerSSNumber(schRes.getSellerMbr().getSellerSSNumber());
+				sellerMbr.setSellerState(schRes.getSellerMbr().getSellerState());
+				sellerMbr.setSellerSubStatus(schRes.getSellerMbr().getSellerSubStatus());
+				sellerMbr.setSellerTelecom(schRes.getSellerMbr().getSellerTelecom());
+				sellerMbr.setSellerZip(schRes.getSellerMbr().getSellerZip());
+				sellerMbr.setTenantID(schRes.getSellerMbr().getTenantID());
+				sellerMbr.setVendorCode(schRes.getSellerMbr().getVendorCode());
 
-		response.setExtraRightList(eList);// 판매자 멀티미디어정보
-		response.setMbrClauseAgree(mList);// 약관동의목록
-		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
-		response.setSellerMbr(sellerMbr);// 판매자 정보
-		response.setSellerKey(sc_res.getSellerKey());// 판매자Key
-
+				response.setExtraRightList(eList);// 판매자 멀티미디어정보
+				response.setMbrClauseAgree(mList);// 약관동의목록
+				response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
+				response.setSellerMbr(sellerMbr);// 판매자 정보
+				response.setSellerKey(schRes.getSellerKey());// 판매자Key
+			}
 		return response;
 
 	}
