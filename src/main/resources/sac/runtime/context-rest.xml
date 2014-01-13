@@ -31,16 +31,14 @@
         <mvc:argument-resolvers>
             <bean class="com.skplanet.storeplatform.framework.web.bind.LocaleHandlerWebArgumentResolver">
                 <constructor-arg ref="localeResolver" />
-            </bean>
+            </bean> 
+            <bean class="com.skplanet.storeplatform.sac.common.resolver.SacHeaderResolver" />             
         </mvc:argument-resolvers> 
         <mvc:message-converters register-defaults="false" >
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                 <property name="supportedMediaTypes" value="application/json; charset=UTF-8" />
                 <property name="prettyPrint" value="true" />
-            </bean>
-            <bean class="com.skplanet.storeplatform.framework.web.converter.ProtobufHttpMessageConverter">
-                  <property name="supportedMediaTypes" value="application/x-protobuf; charset=UTF-8" />
-            </bean>  
+            </bean> 
         </mvc:message-converters> 
     </mvc:annotation-driven>   
      

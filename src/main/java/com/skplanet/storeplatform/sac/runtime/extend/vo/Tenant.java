@@ -13,32 +13,31 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 테넌트 관련 정보를 컨트롤러에서 제공하기 위한 Value Object
- *
- * Updated on : 2014. 1. 13.
- * Updated by : 서대영, SK 플래닛.
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 서대영, SK 플래닛.
  */
 public class Tenant extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String tenantID;
-	private String systemID;
+	private String tenantId;
 
-	public Tenant() {
-		super();
+	private String systemId;
+
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
-	public String getTenantID() {
-		return this.tenantID;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
-	public void setTenantID(String tenantID) {
-		this.tenantID = tenantID;
+
+	public String getSystemId() {
+		return this.systemId;
 	}
-	public String getSystemID() {
-		return this.systemID;
-	}
-	public void setSystemID(String systemID) {
-		this.systemID = systemID;
+
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 }

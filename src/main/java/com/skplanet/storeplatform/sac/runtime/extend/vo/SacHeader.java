@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 13.
  * Updated by : 서대영, SK 플래닛.
  */
-public class SACHeader extends CommonInfo {
+public class SacHeader extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,7 +16,7 @@ public class SACHeader extends CommonInfo {
 	private Device device;
 	private Network network;
 
-	public SACHeader() {
+	public SacHeader() {
 		super();
 	}
 
