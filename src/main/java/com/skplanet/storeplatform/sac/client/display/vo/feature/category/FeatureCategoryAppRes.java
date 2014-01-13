@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.product.vo.feature;
+package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
 import java.util.List;
 
@@ -19,16 +19,16 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 12. 20. Updated by : 서영배, GTSOFT.
  */
-public class RecommendProductResponse {
+public class FeatureCategoryAppRes {
 	private CommonResponse commonResponse;
-	private List<Product> featureProductList;
+	private List<Product> productList;
 
-	public List<Product> getFeatureProductList() {
-		return featureProductList;
+	public List<Product> getProductList() {
+		return productList;
 	}
 
-	public void setFeatureProductList(List<Product> featureProductList) {
-		this.featureProductList = featureProductList;
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 	public CommonResponse getCommonResponse() {
@@ -38,4 +38,5 @@ public class RecommendProductResponse {
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
+
 }

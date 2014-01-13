@@ -10,26 +10,22 @@ public class RecommendAdminReq {
 	private static final long serialVersionUID = 1L;
 
 	private String listId; // 리스트ID
-	private String drm; // drm여부
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
-	private String hdv; // hdv
-	private String menuId; // 메뉴ID
-	private String imageSizeCd; // 이미지코드
+	private String topMenuId; // 메뉴ID
 	private int offset; // offset
 	private int count; // count
-	private String filteredBy; // 필터 조건
+	
+	//common req 전까지 임시
+	private String tenantId; // 메뉴ID
+	private String langCd; // 메뉴ID
+	private String deviceModelCd; // 메뉴ID
+	
 	public String getListId() {
 		return listId;
 	}
 	public void setListId(String listId) {
 		this.listId = listId;
-	}
-	public String getDrm() {
-		return drm;
-	}
-	public void setDrm(String drm) {
-		this.drm = drm;
 	}
 	public String getProdCharge() {
 		return prodCharge;
@@ -43,23 +39,11 @@ public class RecommendAdminReq {
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
 	}
-	public String getHdv() {
-		return hdv;
+	public String getTopMenuId() {
+		return topMenuId;
 	}
-	public void setHdv(String hdv) {
-		this.hdv = hdv;
-	}
-	public String getMenuId() {
-		return menuId;
-	}
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
-	}
-	public String getImageSizeCd() {
-		return imageSizeCd;
-	}
-	public void setImageSizeCd(String imageSizeCd) {
-		this.imageSizeCd = imageSizeCd;
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 	public int getOffset() {
 		return offset;
@@ -73,14 +57,26 @@ public class RecommendAdminReq {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	public String getFilteredBy() {
-		return filteredBy;
-	}
-	public void setFilteredBy(String filteredBy) {
-		this.filteredBy = filteredBy;
-	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+	public String getTenantId() {
+		return tenantId;
+	}
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	public String getLangCd() {
+		return langCd;
+	}
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+	public String getDeviceModelCd() {
+		return deviceModelCd;
+	}
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
 }

@@ -21,14 +21,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  */
 public class RecommendAdminRes {
 	private CommonResponse commonResponse;
-	private List<Product> featureProductList;
+	private List<Product> productList;
 
-	public List<Product> getFeatureProductList() {
-		return featureProductList;
+	public List<Product> getProductList() {
+		return productList;
 	}
 
-	public void setFeatureProductList(List<Product> featureProductList) {
-		this.featureProductList = featureProductList;
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 	public CommonResponse getCommonResponse() {
