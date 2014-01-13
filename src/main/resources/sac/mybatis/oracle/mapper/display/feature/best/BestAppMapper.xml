@@ -87,8 +87,8 @@
 		                                    AND A.LIST_ID = #{listId} /* param : listId */
 		                                    AND A.EXPO_YN ='Y' /* 전시여부 */ 
 		                                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
-		                                    /* BEST 앱 인기(매출)일 경우 노출시작일자 노출종료일자 조건 추가 */
 		                                    <if test='listId == "RNK000000022"'>
+		                                    /* BEST 앱 인기(매출)일 경우 노출시작일자 노출종료일자 조건 추가 */
 		                                    AND SYSDATE BETWEEN A.EXPO_START_DT AND A.EXPO_END_DT
 		                                    </if>                       
 		                               ) A
@@ -133,7 +133,7 @@
 		                   WHERE  IA.TENANT_ID = IB.TENANT_ID(+)
 		                     AND  IA.PROD_ID = IB.PROD_ID(+)                                
 		              ) JA
-		         WHERE JA.RNUM BETWEEN  1 AND 10 /* param : offset, count */ 
+		         WHERE JA.RNUM BETWEEN  #{offset} AND #{count} /* param : offset, count */ 
 		        )                   KA
 		        ,TB_DP_SUB_CONTENTS KB
 		        ,TB_DP_PROD_IMG     KC
@@ -275,7 +275,7 @@
 		                       AND IA.PROD_ID = IB.PROD_ID(+)                                
 		                       AND IA.RN <![CDATA[<=]]> 2
 		                 ) JA          
-		            WHERE JA.RNUM BETWEEN  1 AND 100 /* param : offset, count */ 
+		            WHERE JA.RNUM BETWEEN  #{offset} AND #{count} /* param : offset, count */  
 		          )                   KA
 		          ,TB_DP_SUB_CONTENTS KB
 		          ,TB_DP_PROD_IMG     KC

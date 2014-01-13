@@ -67,9 +67,11 @@ public class BestAppServiceImpl implements BestAppService {
 		List<Menu> menuList = null;
 		List<Support> supportList = null;
 		List<Source> sourceList = null;
+		int count = 0;
+		count = Integer.parseInt(bestAppReq.getOffset()) + Integer.parseInt(bestAppReq.getCount()) - 1;
+		bestAppReq.setCount(Integer.toString(count));
 
 		String stdDt = this.commonService.getBatchStandardDateString("S01", bestAppReq.getListId());
-
 		bestAppReq.setStdDt(stdDt);
 
 		// BEST 앱 상품 조회
@@ -95,10 +97,6 @@ public class BestAppServiceImpl implements BestAppService {
 		Title title = null;
 		Support support = null;
 		Menu menu = null;
-
-		this.log.debug("#######################################################################");
-		this.log.debug("appList	:	" + appList.size());
-		this.log.debug("#######################################################################");
 
 		if (appList.size() != 0) {
 			Iterator<BestAppDTO> iterator = appList.iterator();
