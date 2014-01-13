@@ -126,6 +126,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			acc.setDownloadCount("6229");
 
 			// 이용권한 정보
+			date.setType("date/reg");
 			date.setText("20130820190000/20131231235959");
 			rights.setGrade("PD004401");
 			rights.setDate(date);
