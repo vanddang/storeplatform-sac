@@ -27,7 +27,7 @@ public class FeatureCategoryVodReq extends CommonInfo {
 
 	private String listId; // 리스트ID
 
-	private String filterdby; // 조회유형
+	private String filteredBy; // 조회유형
 
 	private String orderedBy; // 상품정렬순서
 
@@ -75,12 +75,12 @@ public class FeatureCategoryVodReq extends CommonInfo {
 		this.listId = listId;
 	}
 
-	public String getFilterdby() {
-		return this.filterdby;
+	public String getFilteredBy() {
+		return this.filteredBy;
 	}
 
-	public void setFilterdby(String filterdby) {
-		this.filterdby = filterdby;
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
 	}
 
 	public String getOrderedBy() {

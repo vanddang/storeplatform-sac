@@ -25,7 +25,7 @@ public class CategoryEbookComicReq extends CommonInfo {
 
 	private String menuId; // 메뉴ID
 
-	private String filterdBy; // 조회유형
+	private String filteredBy; // 조회유형
 
 	private Integer offset; // 시작점 ROW
 
@@ -35,7 +35,7 @@ public class CategoryEbookComicReq extends CommonInfo {
 
 	private String tenantId; // 테넌트ID
 
-	private String imageCd; // 이미짖 코드
+	private String imageCd; // 이미지 코드
 
 	public String getProdGradeCd() {
 		return this.prodGradeCd;
@@ -61,12 +61,12 @@ public class CategoryEbookComicReq extends CommonInfo {
 		this.menuId = menuId;
 	}
 
-	public String getFilterdBy() {
-		return this.filterdBy;
+	public String getFilteredBy() {
+		return this.filteredBy;
 	}
 
-	public void setFilterdBy(String filterdBy) {
-		this.filterdBy = filterdBy;
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
 	}
 
 	public Integer getOffset() {
