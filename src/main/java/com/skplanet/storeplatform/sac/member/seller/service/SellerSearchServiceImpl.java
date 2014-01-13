@@ -202,7 +202,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbr.setIsRecvSMS(schRes.getSellerMbr().getIsRecvSMS());
 				sellerMbr.setMarketCode(schRes.getSellerMbr().getMarketCode());
 				sellerMbr.setMarketStatus(schRes.getSellerMbr().getMarketStatus());
-				sellerMbr.setMemo(schRes.getSellerMbr().getMemo());
 				sellerMbr.setParentSellerKey(schRes.getSellerMbr().getParentSellerKey());
 				sellerMbr.setRegDate(schRes.getSellerMbr().getRegDate());
 				sellerMbr.setRepEmail(schRes.getSellerMbr().getRepEmail());
