@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 
@@ -14,18 +16,34 @@ public class CreateByAgreementReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 기기 ID (msisdn, uuid)
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceId;
 
+	/**
+	 * 사용자 아이디
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userId;
 
+	/**
+	 * 이동 통신사
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceTelecom;
 
+	/**
+	 * 가입 채널 코드
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String joinId;
 
-	private String embededYn;
-
-	private String deviceModelNo;
-
+	/**
+	 * 약관 동의 정보
+	 */
+	@NotEmpty(groups = AgreementInfo.class, message = "필수 파라미터 입니다.")
 	private List<AgreementInfo> agreementList;
 
 	public String getDeviceId() {
@@ -58,22 +76,6 @@ public class CreateByAgreementReq extends CommonInfo {
 
 	public void setJoinId(String joinId) {
 		this.joinId = joinId;
-	}
-
-	public String getEmbededYn() {
-		return this.embededYn;
-	}
-
-	public void setEmbededYn(String embededYn) {
-		this.embededYn = embededYn;
-	}
-
-	public String getDeviceModelNo() {
-		return this.deviceModelNo;
-	}
-
-	public void setDeviceModelNo(String deviceModelNo) {
-		this.deviceModelNo = deviceModelNo;
 	}
 
 	public List<AgreementInfo> getAgreementList() {

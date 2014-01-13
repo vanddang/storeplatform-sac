@@ -38,12 +38,6 @@ public class CreateByMdnReq extends CommonInfo {
 	private String joinId;
 
 	/**
-	 * 기기 모델 번호
-	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String deviceModelNo;
-
-	/**
 	 * 약관동의 정보
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
@@ -123,14 +117,6 @@ public class CreateByMdnReq extends CommonInfo {
 
 	public void setJoinId(String joinId) {
 		this.joinId = joinId;
-	}
-
-	public String getDeviceModelNo() {
-		return this.deviceModelNo;
-	}
-
-	public void setDeviceModelNo(String deviceModelNo) {
-		this.deviceModelNo = deviceModelNo;
 	}
 
 	public List<AgreementInfo> getAgreementList() {

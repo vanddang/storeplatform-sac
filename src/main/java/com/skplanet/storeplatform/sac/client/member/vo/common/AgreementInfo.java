@@ -22,7 +22,6 @@ public class AgreementInfo extends CommonInfo {
 	/**
 	 * 약관 버전
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String extraAgreementVersion;
 
 	/**
