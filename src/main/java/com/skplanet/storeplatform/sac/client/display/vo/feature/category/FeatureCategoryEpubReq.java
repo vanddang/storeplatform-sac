@@ -16,6 +16,12 @@ public class FeatureCategoryEpubReq {
 	private int offset; // offset
 	private int count; // count
 	private String filteredBy; // 필터 조건
+	
+	//common req 전까지 임시
+	private String tenantId; // 메뉴ID
+	private String langCd; // 메뉴ID
+	private String deviceModelCd; // 메뉴ID
+	
 	public String getListId() {
 		return listId;
 	}
@@ -60,6 +66,24 @@ public class FeatureCategoryEpubReq {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getTenantId() {
+		return tenantId;
+	}
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	public String getLangCd() {
+		return langCd;
+	}
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+	public String getDeviceModelCd() {
+		return deviceModelCd;
+	}
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 
 	

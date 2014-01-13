@@ -15,6 +15,12 @@ public class FeatureCategoryAppReq {
 	private String menuId; // 메뉴ID
 	private int offset; // offset
 	private int count; // count
+	
+	//common req 전까지 임시
+	private String tenantId; // 메뉴ID
+	private String langCd; // 메뉴ID
+	private String deviceModelCd; // 메뉴ID
+	
 	public String getListId() {
 		return listId;
 	}
@@ -53,6 +59,24 @@ public class FeatureCategoryAppReq {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getTenantId() {
+		return tenantId;
+	}
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+	public String getLangCd() {
+		return langCd;
+	}
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+	public String getDeviceModelCd() {
+		return deviceModelCd;
+	}
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
 	}
 	
 }
