@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
@@ -37,6 +39,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private MiscellaneousService miscellaneousService;
+
+	@Autowired
+	private UAPSSCI uapsSCI;
 
 	/**
 	 * <pre>
@@ -80,6 +85,23 @@ public class MemberCommonComponent {
 	 */
 	public Device getPhoneInfo(String deviceModelCd) throws Exception {
 		return this.repository.getPhoneInfo(deviceModelCd);
+	}
+
+	/**
+	 * <pre>
+	 * 고객정보조회
+	 * 모번호 조회및 단말 정보 조회(USPS 정보와 서비스 관리번호 UA_CD 값이 같이 들어와야함.)
+	 * TODO 기타 파트에서 api 개발 완료되면 확인해봐야함.
+	 * </pre>
+	 * 
+	 * @param pReqParam
+	 * @param type
+	 * @return
+	 * @throws Exception
+	 */
+	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
+		logger.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
+		return this.uapsSCI.getMappingInfo(pReqParam, type);
 	}
 
 }

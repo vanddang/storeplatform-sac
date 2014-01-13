@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
@@ -35,10 +36,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.IDPManager;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 
 /**
@@ -49,7 +51,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 @Service
 public class UserJoinServiceImpl implements UserJoinService {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinServiceImpl.class);
 
 	@Autowired
 	private MemberCommonComponent mcc;
@@ -58,7 +60,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private IDPManager idpManager;
+	private IDPService idpService;
 
 	private IDPReceiverM idpReceiverM;
 
@@ -77,28 +79,28 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
-		logger.info("### opmdMdn : " + opmdMdn);
+		LOGGER.info("### opmdMdn : {}", opmdMdn);
 
 		/**
 		 * 필수 약관 동의여부 체크 TODO 테넌트 아이디 하드코딩 변경 해야함
 		 */
 		if (this.checkAgree(req.getAgreementList(), tenantId)) {
-			logger.error("## 필수 약관 미동의");
-			throw new RuntimeException("필수 약관 미동의");
+			LOGGER.error("## 필수 약관 미동의");
+			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
 
 		/**
 		 * (IDP 연동) 무선회원 가입
 		 */
-		this.idpReceiverM = this.idpManager.join4Wap(req.getDeviceId());
-		logger.info("## join4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
-		logger.info("## join4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
+		this.idpReceiverM = this.idpService.join4Wap(req.getDeviceId());
+		LOGGER.info("## join4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
+		LOGGER.info("## join4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
 
 		/**
 		 * 무선회원 연동 성공 여부에 따라 분기
 		 */
 		if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
-			logger.info("## IDP 연동 성공 ==============================================");
+			LOGGER.info("## IDP 연동 성공 ==============================================");
 
 			/**
 			 * (SC 연동) 회원 정보 등록 TODO (이슈 : sc 컴포넌트 기능이 완료되면 파라미터들 다시한번 확인)
@@ -116,7 +118,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
-			userMbr.setUserID(req.getDeviceId());// mdn, uuid 받는데로 넣는다. (SC 확인함.)
+			userMbr.setUserID(req.getDeviceId());
+			/** mdn, uuid 받는데로 넣는다. (SC 확인함.) */
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 
 			// SC 이용약관 정보 setting
@@ -148,20 +151,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * TODO sc 응답결과가 제대로 들어 오지 않음. userKey 확인 요청함!!!
 			 */
-			logger.info("## SC Request commonRequest      : {}", createUserRequest.getCommonRequest().toString());
-			logger.info("## SC Request userMbr            : {}", createUserRequest.getUserMbr().toString());
-			logger.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
+			LOGGER.info("## SC Request commonRequest      : {}", createUserRequest.getCommonRequest().toString());
+			LOGGER.info("## SC Request userMbr            : {}", createUserRequest.getUserMbr().toString());
+			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 
-			logger.info("## ResponseCode   : " + createUserResponse.getCommonResponse().getResultCode());
-			logger.info("## ResponseMsg    : " + createUserResponse.getCommonResponse().getResultMessage());
-			logger.info("## UserKey        : {}", createUserResponse.getUserKey());
-			logger.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
-			logger.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
+			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
+			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
+			LOGGER.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
+			LOGGER.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
 
 			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
-				logger.info("## 사용자 회원 가입 실패 ===========================");
+				LOGGER.info("## 사용자 회원 가입 실패 ===========================");
 				throw new RuntimeException("사용자 회원 가입 실패");
 
 			}
@@ -175,7 +178,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			// Device device = this.mcc.getPhoneInfo(req.getDeviceModelNo());
 			// logger.info("device : {}", device.getModelNm());
 			// logger.info("device : {}", device.getEngModelNm());
-			logger.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
+			LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
 
 			/**
 			 * 결과 세팅
@@ -183,21 +186,21 @@ public class UserJoinServiceImpl implements UserJoinService {
 			response.setUserKey(createUserResponse.getUserKey());
 
 		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
-			logger.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
+			LOGGER.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 
 			/**
 			 * (IDP 연동) 무선회원 해지
 			 */
-			logger.info("## IDP 무선회원 해지 연동 Start =================");
-			this.idpReceiverM = this.idpManager.secedeUser4Wap(req.getDeviceId());
-			logger.info("## secedeUser4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
-			logger.info("## secedeUser4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
+			LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
+			this.idpReceiverM = this.idpService.secedeUser4Wap(req.getDeviceId());
+			LOGGER.info("## secedeUser4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
+			LOGGER.info("## secedeUser4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
 
 			throw new RuntimeException("IDP 무선회원 가입 실패");
 
 		} else { // 기타
 
-			logger.info("## IDP 무선회원 가입 연동 실패");
+			LOGGER.info("## IDP 무선회원 가입 연동 실패");
 			throw new RuntimeException("IDP 무선회원 가입 실패");
 
 		}
@@ -209,10 +212,34 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Override
 	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) throws Exception {
 
-		CreateByAgreementRes result = new CreateByAgreementRes();
-		result.setUserKey("12321423543464567457");
+		CreateByAgreementRes response = new CreateByAgreementRes();
 
-		return result;
+		/**
+		 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
+		 */
+		String systemId = "S001";
+		String tenantId = "S01";
+
+		/**
+		 * 필수 약관 동의여부 체크 TODO 테넌트 아이디 하드코딩 변경 해야함
+		 */
+		if (this.checkAgree(req.getAgreementList(), tenantId)) {
+			LOGGER.error("## 필수 약관 미동의");
+			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+		}
+
+		/**
+		 * TODO 기타 파트에서 제공하는..(1월 27일 제공 예정이라함....) 모번호조회 할때 us_cd도 같이 내려 주는 API 호출로 바꿔야함. (1번 2번 3번 항목)
+		 * UAPSSCI.getMappingInfo
+		 */
+		this.getMappingInfo(req.getDeviceId(), "mdn");
+
+		/**
+		 * TODO 결과정보 셋팅 해야함.
+		 */
+		response.setUserKey("12321423543464567457");
+
+		return response;
 	}
 
 	/**
@@ -220,12 +247,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * 필수 약관 동의 정보를 체크 한다.
 	 * </pre>
 	 * 
-	 * @param getAgreementList
+	 * @param agreementList
 	 *            요청 약관 동의 정보
 	 * @param tenantId
 	 *            테넌트 아이디
 	 * @return 하나라도 미동의시 : true
 	 * @throws Exception
+	 *             Exception
 	 */
 	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) throws Exception {
 
@@ -246,7 +274,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		for (ClauseDTO sortInfo : dbAgreementList) {
 			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
 		}
-		logger.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);
+		LOGGER.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);
 
 		/**
 		 * 요청 약관 목록 조회 sorting
@@ -266,7 +294,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 				sortAgreeInfo.append(info.getExtraAgreementId());
 			}
 		}
-		logger.info("## DB 요청약관목록 : {}", sortAgreeInfo);
+		LOGGER.info("## DB 요청약관목록 : {}", sortAgreeInfo);
 
 		/**
 		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
@@ -277,6 +305,45 @@ public class UserJoinServiceImpl implements UserJoinService {
 			return false;
 		}
 
+	}
+
+	/**
+	 * <pre>
+	 * TODO 기타 파트에서 제공해야될 API 로써 삭제되야될 메서드임..!!!!!
+	 * TODO 기존 내부로직 분석하여 임시로 넣어둠.................!!!!!
+	 * </pre>
+	 * 
+	 * @param pReqParam
+	 *            mdn or uuid 값
+	 * @param type
+	 *            타입
+	 * @return UserRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
+
+		LOGGER.debug("## ================================== 고객정보조회");
+
+		UserRes userRes = new UserRes();
+		/**
+		 * 1. 모번호 조회 (989 일 경우만)
+		 */
+		String opmdMdn = this.mcc.getOpmdMdnInfo(pReqParam);
+		LOGGER.info("### opmdMdn : {}", opmdMdn);
+
+		/**
+		 * TODO HEADER 정보로 바꿀걸....
+		 */
+		// logger.debug("## DeviceInfo : {}", headerVo.getxSacDeviceInfo());
+		Device device = this.mcc.getPhoneInfo("LG-SU910");
+		LOGGER.debug("Device : {}", device.getUaCd());
+
+		/**
+		 * OneID - getMdnInfoIDP IDP - findProfileForWap
+		 */
+
+		return userRes;
 	}
 
 }

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
@@ -40,7 +39,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 @Controller
 public class UserJoinController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private UserJoinService svc;
@@ -48,14 +47,26 @@ public class UserJoinController {
 	@Autowired
 	private HeaderInfo headerInfo;
 
+	/**
+	 * <pre>
+	 * 모바일 전용 회원 가입 (MDN 회원 가입).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            CreateByMdnReq
+	 * @param headers
+	 *            Request Headers
+	 * @return CreateByMdnRes
+	 * @throws Exception
+	 *             Exception
+	 */
 	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
-	@ResponseBody
 	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, @RequestHeader Map<String, Object> headers) throws Exception {
-		logger.info("####################################################");
-		logger.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
+		LOGGER.info("####################################################");
 
-		logger.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		/**
 		 * Header 정보 세팅
@@ -67,20 +78,32 @@ public class UserJoinController {
 		 */
 		CreateByMdnRes res = this.svc.createByMdn(headerVo, req);
 
-		logger.info("Response : {}", res.toString());
+		LOGGER.info("Response : {}", res.toString());
 
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * ID 회원 약관 동의 가입 (One ID 회원).
+	 * </pre>
+	 * 
+	 * @param req
+	 *            CreateByAgreementReq
+	 * @param headers
+	 *            Request Headers
+	 * @return CreateByAgreementRes
+	 * @throws Exception
+	 *             Exception
+	 */
 	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
-	@ResponseBody
 	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, @RequestHeader Map<String, Object> headers) throws Exception {
 
-		logger.info("####################################################");
-		logger.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
-		logger.info("####################################################");
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
+		LOGGER.info("####################################################");
 
-		logger.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", req.toString());
 
 		/**
 		 * Header 정보 세팅
@@ -92,7 +115,7 @@ public class UserJoinController {
 		 */
 		CreateByAgreementRes res = this.svc.createByAgreement(headerVo, req);
 
-		logger.info("Response : {}", res.toString());
+		LOGGER.info("Response : {}", res.toString());
 
 		return res;
 	}

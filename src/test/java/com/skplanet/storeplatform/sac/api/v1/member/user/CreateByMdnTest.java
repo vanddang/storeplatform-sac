@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
@@ -63,7 +64,7 @@ public class CreateByMdnTest {
 	@Test
 	public void createByMdn() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url("/dev/member/user/createByMdn/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -74,7 +75,6 @@ public class CreateByMdnTest {
 						reqJson.setDeviceId("01088870008");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
-						reqJson.setDeviceModelNo("SHW-M190S");
 						reqJson.setOwnBirth("20020409");
 						reqJson.setParentType("");
 						reqJson.setRealNameMethod("US011101");
