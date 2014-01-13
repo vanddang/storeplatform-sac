@@ -84,7 +84,7 @@
                T.MENU_DESC,
                T.BODY_FILE_SIZE
           FROM TB_DP_TENANT_MENU T,
-               TB_DP_MENU_CATEGORY M
+               TB_DP_MENU_CATALOG M
          WHERE M.MENU_ID = T.TENANT_MENU_ID
            AND T.TENANT_ID = #{tenantId}
            AND T.SYSTEM_ID = #{systemId}
@@ -145,7 +145,7 @@
 		            )
 		       )S, 
 		       (SELECT MENU_ID 
-		          FROM TB_DP_MENU_CATEGORY 
+		          FROM TB_DP_MENU_CATALOG 
 		         WHERE MENU_ID = #{menuId}
 		           AND USE_YN = 'Y') D
 		 WHERE M.TENANT_MENU_ID = S.UP_MENU_ID

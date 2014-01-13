@@ -79,8 +79,8 @@
                          , M.INFR_MENU_YN
                          , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
                          , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATEGORY M
-                          ,TB_DP_MENU_CATEGORY_DESC D
+                      FROM TB_DP_MENU_CATALOG M
+                          ,TB_DP_MENU_CATALOG_DESC D
                           ,TB_DP_TENANT_MENU TM
                      WHERE M.MENU_ID = D.MENU_ID
                        AND TM.TENANT_MENU_ID = M.MENU_ID
@@ -100,8 +100,8 @@
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_CATEGORY_PROD_MAPG CP
-                        , TB_DP_MENU_CATEGORY C
+                        , TB_DP_MENU_CATALOG_PROD_MAPG CP
+                        , TB_DP_MENU_CATALOG C
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI    
                         , TB_DP_CHART_PROD_MAPG MCP
@@ -139,8 +139,8 @@
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_CATEGORY_PROD_MAPG CP
-                        , TB_DP_MENU_CATEGORY C
+                        , TB_DP_MENU_CATALOG_PROD_MAPG CP
+                        , TB_DP_MENU_CATALOG C
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI    
                         , TB_DP_CHART_PROD_MAPG MCP
@@ -221,8 +221,8 @@
 		                     , M.INFR_MENU_YN
 		                     , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
 		                     , TM.BODY_FILE_SIZE AS FILE_SIZE
-		                  FROM TB_DP_MENU_CATEGORY M
-		                      ,TB_DP_MENU_CATEGORY_DESC D
+		                  FROM TB_DP_MENU_CATALOG M
+		                      ,TB_DP_MENU_CATALOG_DESC D
 		                      ,TB_DP_TENANT_MENU TM
 	                     WHERE M.MENU_ID = D.MENU_ID
 	                       AND TM.TENANT_MENU_ID = M.MENU_ID
@@ -273,8 +273,8 @@
 		                                              FROM TB_DP_PROD P
 		                                                 , TB_DP_PROD_RSHP CP
 		                                                 , TB_DP_TENANT_PROD TP
-		                                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-		                                                 , TB_DP_MENU_CATEGORY C
+		                                                 , TB_DP_MENU_CATALOG_PROD_MAPG MP
+		                                                 , TB_DP_MENU_CATALOG C
 		                                                 , TB_DP_SUB_CONTENTS SC
 		                                                 , (SELECT PROD_ID
 		                                                    , SD_VIDEO_SPRT_YN
@@ -382,8 +382,8 @@
                          , M.INFR_MENU_YN
                          , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
                          , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATEGORY M
-                          ,TB_DP_MENU_CATEGORY_DESC D
+                      FROM TB_DP_MENU_CATALOG M
+                          ,TB_DP_MENU_CATALOG_DESC D
                           ,TB_DP_TENANT_MENU TM
                      WHERE M.MENU_ID = D.MENU_ID
                        AND TM.TENANT_MENU_ID = M.MENU_ID
@@ -405,8 +405,8 @@
                               FROM TB_DP_PROD P
                                  , TB_DP_PROD_RSHP CP
                                  , TB_DP_TENANT_PROD TP
-                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-                                 , TB_DP_MENU_CATEGORY C
+                                 , TB_DP_MENU_CATALOG_PROD_MAPG MP
+                                 , TB_DP_MENU_CATALOG C
                                  , (SELECT SH.PROD_ID
                                          , PI.EBOOK_SPRT_YN
                                          , PI.MAGAZINE_SPRT_YN
