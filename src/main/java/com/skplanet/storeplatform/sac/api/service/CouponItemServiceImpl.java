@@ -256,6 +256,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 				this.commonDAO.insert("Coupon.insertTbDpProdOpt", vo);
 				prodId = vo.getChnlProdId();
 			}
+
 			if (StringUtils.isNotBlank(prodId)) {
 				this.commonDAO.update("Coupon.updateDPYNStatus", prodId);
 			}

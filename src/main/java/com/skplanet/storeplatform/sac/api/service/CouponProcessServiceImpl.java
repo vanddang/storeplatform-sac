@@ -633,48 +633,77 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		TbDpProdOpt dpo = new TbDpProdOpt();
 		try {
 
+			boolean newOpt = true;
+			ArrayList<String> optListForCha = new ArrayList<String>();
 			// ////////////////// Item 정보 S////////////////////////////
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
+
+				// 옵션2가 없는 경우는 채널 생성하지 않음 20130603 이성수차장요청
+				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+					if (StringUtils.isNotBlank(itemInfo.getItemValue1())) {
+						for (String optpdNm1 : optListForCha) {
+							// 중복 된 옵션이 있거나 옵션이 없는 경우 flase
+							if (StringUtils.equalsIgnoreCase(optpdNm1, itemInfo.getItemValue1())) {
+								newOpt = false;
+							}
+						}
+						if (newOpt) {
+							optListForCha.add(itemInfo.getItemValue1());
+						}
+						// 옵션 중복여부 초기화
+						newOpt = true;
+					}
+				}
+			}
+			// 채널용 옵션 설정
+			for (String optNmStr : optListForCha) {
+
 				dpo = new TbDpProdOpt();
 				dpo.setChnlProdId(couponInfo.getProdId());
 				dpo.setEpsdProdId(couponInfo.getProdId());
-				dpo.setOpt1Nm(itemInfo.getItemValue1());
+				dpo.setOpt1Nm(optNmStr);
 				dpo.setOpt2Nm(couponInfo.getProdId());
 				dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
 				dpo.setExpoYn("");
 				dpo.setRegId(couponInfo.getBpId());
 				dpo.setUpdId(couponInfo.getBpId());
-				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
-				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
-					tbDpProdOptList.add(dpo);
-				}
-				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
+				tbDpProdOptList.add(dpo);
+				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::");
 			}
+			boolean firstFlag = false;
+
 			// ////////////////// Item 정보 S////////////////////////////
+			// 에피소드용 옵션 설정
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
-				dpo = new TbDpProdOpt();
-				dpo.setChnlProdId(couponInfo.getProdId());
-				dpo.setEpsdProdId(itemInfo.getProdId());
-				dpo.setOpt1Nm(itemInfo.getItemValue1());
-				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
-				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
-					dpo.setOpt2Nm(itemInfo.getItemValue2());
-				} else {
-					dpo.setOpt2Nm(itemInfo.getItemValue1());
+				if (StringUtils.isNotBlank(itemInfo.getItemValue1())) {
+					firstFlag = true;
 				}
-				// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
-				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
-					dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_EPISODE);
-				} else {
-					dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
+
+				if (firstFlag) {
+					dpo = new TbDpProdOpt();
+					dpo.setChnlProdId(couponInfo.getProdId());
+					dpo.setEpsdProdId(itemInfo.getProdId());
+					dpo.setOpt1Nm(itemInfo.getItemValue1());
+					// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
+					if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+						dpo.setOpt2Nm(itemInfo.getItemValue2());
+					} else {
+						dpo.setOpt2Nm(itemInfo.getItemValue1());
+					}
+					// 옵션2가 없는 경우 : 옵션 1로 설정 20130603 이성수차장요청
+					if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+						dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_EPISODE);
+					} else {
+						dpo.setExpoOrd(CouponConstants.OPT_NUMBER_FOR_CHANNEL);
+					}
+					dpo.setExpoYn("");
+					dpo.setRegId(couponInfo.getBpId());
+					dpo.setUpdId(couponInfo.getBpId());
+					tbDpProdOptList.add(dpo);
+					IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
 				}
-				dpo.setExpoYn("");
-				dpo.setRegId(couponInfo.getBpId());
-				dpo.setUpdId(couponInfo.getBpId());
-				tbDpProdOptList.add(dpo);
-				IcmsJobPrint.printTbDpProdOpt(dpo, "TB_DP_PROD_OPT- ITEM:::" + i);
 			}
 			// 저장
 			this.couponItemService.insertTbDpProdOptInfo(tbDpProdOptList, cudType);
@@ -789,11 +818,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 1. Validation Check
 			// 쿠폰상태 값 유효성 검증
-			if (!(StringUtils.equalsIgnoreCase(coupnStatus, "3") || StringUtils.equalsIgnoreCase(coupnStatus, "4") || StringUtils
-					.equalsIgnoreCase(coupnStatus, "5"))) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰상태 값이 유효하지 않습니다.",
-						coupnStatus);
-			}
+			// if (!(StringUtils.equalsIgnoreCase(coupnStatus, "3") || StringUtils.equalsIgnoreCase(coupnStatus, "4") ||
+			// StringUtils
+			// .equalsIgnoreCase(coupnStatus, "5"))) {
+			// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰상태 값이 유효하지 않습니다.",
+			// coupnStatus);
+			// }
 
 			// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
 			String newCouponCode = this.couponItemService.getGenerateId(couponCode);
