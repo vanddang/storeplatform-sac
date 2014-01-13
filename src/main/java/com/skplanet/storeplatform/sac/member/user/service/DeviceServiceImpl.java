@@ -268,11 +268,36 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public void mergeDeviceInfo(DeviceInfo req) throws Exception {
 
+		logger.info("################ mergeDeviceInfo start ##################");
+		
+		
 		if (req.getDeviceId() == null) {
 			throw new Exception("deviceId is null 기기정보 수정 불가");
 		}
 		
-		logger.info("################ mergeDeviceInfo start ##################");
+		/* 기기정보 조회 */
+		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
+		
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		key.setKeyString(req.getDeviceId());
+		keySearchList.add(key);
+		
+		schDeviceReq.setCommonRequest(commonRequest);
+		schDeviceReq.setUserKey(req.getUserKey());
+		schDeviceReq.setKeySearchList(keySearchList);
+
+		logger.info(" param : {}" + schDeviceReq.toString());
+		
+		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
+		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
+		
+		if(!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)){
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
+					+ schDeviceRes.getCommonResponse().getResultMessage());
+		}
+		
 		
 		/* 기기정보 필드 */
 		String deviceModelNo = req.getDeviceModelNo(); // 단말모델코드
@@ -292,25 +317,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String dotoriAuthDate = req.getDotoriAuthDate(); // 도토리인증일
 		String dotoriAuthYn = req.getDotoriAuthYn(); // 도토리인증여부
 
-		/* 기기정보 조회 */
-		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
-		schDeviceReq.setCommonRequest(commonRequest);
-
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		key.setKeyString(req.getDeviceId());
-		keySearchList.add(key);
-		schDeviceReq.setKeySearchList(keySearchList);
-
-		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
-		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
-		
-		if(!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)){
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
-					+ schDeviceRes.getCommonResponse().getResultMessage());
-		}
-			
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
 		if (deviceModelNo != null 
 				&& !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {

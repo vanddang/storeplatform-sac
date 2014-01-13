@@ -89,17 +89,20 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		String deviceId = req.getDeviceId();
-		String userStateCd = ""; // 사용자구분코드
+		String userTypeCd = ""; // 사용자구분코드
 		String mainStatusCd = ""; // 메인상태코드
 
 		/* 모번호 조회 */
 		OpmdRes ompdRes = this.uapsSCI.getOpmdInfo(deviceId);
-		logger.info("### usps 모번호 조회 resultCode : {}", ompdRes.getResultCode());
+		logger.info("### uaps 모번호 조회 resultCode : {}", ompdRes.getResultCode());
 		if (ompdRes.getResultCode() == 0) {
 			deviceId = ompdRes.getMobileMdn();
 		} else {
 			throw new Exception("UAPS연동시 오류가 발생하였습니다.");
 		}
+		
+		//uaps연동 데이터가 박혀있는듯... 
+		if(deviceId.equals("0101231234")) deviceId = req.getDeviceId();
 
 		/* 회원정보 조회 (devicdId) */
 		SearchUserRequest schUserReq = new SearchUserRequest();
@@ -122,31 +125,32 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtil.equals(schUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_SECEDE)) {
 			throw new Exception("무선가입상태가 아닙니다.");
 		}
-
-		userStateCd = schUserRes.getUserMbr().getUserState();
+		
+		userTypeCd = schUserRes.getUserMbr().getUserType();
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
-		if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_MOBILE)) {
+		if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_MOBILE)) {
 			this.volatileMemberPoc(deviceId, schUserRes.getUserMbr().getUserKey());
 		}
 
 		/* 무선회원 인증 */
-		if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_MOBILE)
-				|| StringUtil.equals(userStateCd, MemberConstants.USER_STATE_IDPID)) {
+		if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_MOBILE)
+				|| StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_IDPID)) {
 
 			IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
 
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				/* 로그인 실패이력 저장 */
-				this.logInSCComponent(deviceId, null, "N", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
-				throw new Exception(idpReceiver.getResponseHeader().getResult());
+				/*	로그인 실패이력 저장	*/ 
+				this.insertloginHistory(deviceId, null, "N", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "]" + idpReceiver.getResponseHeader().getResult_text());
 			}
 		}
 
 		/* 단말정보 조회 및 merge */
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setDeviceId(deviceId);
+		deviceInfo.setUserKey(schUserRes.getUserMbr().getUserKey());
 		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 		deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
 		deviceInfo.setNativeId(req.getNativeId());
@@ -157,17 +161,16 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.logInSCComponent(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
-
-		if (StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& StringUtil.equals(loginRes.getIsLoginSuccess(), "Y")) {
+		LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+		
+		if (StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			/* 로그인 Response 셋팅 */
 			String userStateVal = "";
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
 				userStateVal = "oneId";
-			} else if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_MOBILE)) {
+			} else if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_MOBILE)) {
 				userStateVal = "mobile";
-			} else if (StringUtil.equals(userStateCd, MemberConstants.USER_STATE_IDPID)) {
+			} else if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_IDPID)) {
 				userStateVal = "tstoreId";
 			} 
 
@@ -175,7 +178,7 @@ public class LoginServiceImpl implements LoginService {
 				userStateVal = "temporary";
 			}
 
-			res.setUserKey(schUserRes.getUserMbr().getUserKey());
+			res.setUserKey(loginRes.getUserKey());
 			res.setUserStatus(userStateVal);
 		} else {
 			throw new Exception("[" + loginRes.getCommonResponse().getResultCode() + "] "
@@ -194,7 +197,7 @@ public class LoginServiceImpl implements LoginService {
 
 		String userId = req.getUserId();
 		String userPw = req.getUserPw();
-		String userStateCd = ""; // 사용자구분코드(US011501:기기사용자,US011502:IDP사용자,US011503:OneID사용자)
+		String userTypeCd = ""; // 사용자구분코드(US011501:기기사용자,US011502:IDP사용자,US011503:OneID사용자)
 		String mainStatusCd = ""; // 메인상태코드(US010201:정상,US010202:탈퇴,US010203:가가입,US010204:일시정지,US010205:전환)
 
 		/* 회원정보 조회 (userId) */
@@ -209,7 +212,7 @@ public class LoginServiceImpl implements LoginService {
 			throw new Exception("존재하지 않는 아이디입니다");
 		}
 
-		userStateCd = schUserRes.getUserMbr().getUserState();
+		userTypeCd = schUserRes.getUserMbr().getUserType();
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
 		if (mainStatusCd.equals("US010204")) {// 일시정지
@@ -218,9 +221,9 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 회원 인증 요청 */
 		String userStateVal = "";
-		if (userStateCd.equals("US011502")) { // 기존 IDP회원
+		if (userTypeCd.equals("US011502")) { // 기존 IDP회원
 			userStateVal = "tstoreId";
-		} else if (userStateCd.equals("US011503")) {// 통합회원
+		} else if (userTypeCd.equals("US011503")) {// 통합회원
 			userStateVal = "oneId";
 		} else {
 			throw new Exception("SC콤포넌트 사용자구분 코드 확인");
@@ -231,8 +234,8 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.logInSCComponent(userId, userPw, "Y",
-				userStateCd.equals("US011503") ? "Y" : "N");
+		LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "Y",
+				userTypeCd.equals("US011503") ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -244,6 +247,7 @@ public class LoginServiceImpl implements LoginService {
 
 		return res;
 	}
+
 
 	/**
 	 * 변동성 회원 처리
@@ -298,7 +302,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @param isOneId
 	 * @return
 	 */
-	public LogInUserResponse logInSCComponent(String userId, String userPw, String isSuccess, String isOneId) {
+	public LogInUserResponse insertloginHistory(String userId, String userPw, String isSuccess, String isOneId) {
 		LogInUserRequest loginReq = new LogInUserRequest();
 		loginReq.setCommonRequest(commonRequest);
 		loginReq.setUserID(userId);
