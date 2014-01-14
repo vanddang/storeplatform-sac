@@ -19,6 +19,16 @@ public class ListDeviceRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * 사용자 ID
+	 */
+	private String userId;
+
+	/**
+	 * 사용자 Key
+	 */
+	private String userKey;
+
+	/**
 	 * 휴대기기정보 리스트
 	 */
 	private List<DeviceInfo> deviceInfoList;
@@ -29,6 +39,22 @@ public class ListDeviceRes extends CommonInfo {
 
 	public void setDeviceInfoList(List<DeviceInfo> deviceInfoList) {
 		this.deviceInfoList = deviceInfoList;
+	}
+
+	public String getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }
