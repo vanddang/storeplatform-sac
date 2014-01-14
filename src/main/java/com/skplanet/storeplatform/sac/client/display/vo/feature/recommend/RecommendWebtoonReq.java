@@ -27,8 +27,8 @@ public class RecommendWebtoonReq extends CommonInfo {
 	private String listId; // 리스트아이디
 	private String weekDayCd; // 요일별 구분 코드
 	private String stdDt;
-	private int offset = 1; // offset
-	private int count = 20; // count
+	private Integer offset = 1; // offset
+	private Integer count = 20; // count
 
 	public String getTenantId() {
 		return this.tenantId;
