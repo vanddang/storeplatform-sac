@@ -28,8 +28,8 @@ public class WebtoonRequest extends CommonInfo {
 	private String prodGradeCd; // 상품등급코드
 	private String drm; // DRM 지원 구분
 	private String weekDayCd; // 요일별 구분 코드
-	private int offset = 1; // offset
-	private int count = 20; // count
+	private Integer offset = 1; // offset
+	private Integer count = 20; // count
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -64,7 +64,7 @@ public class WebtoonRequest extends CommonInfo {
 	}
 
 	public String getListId() {
-		return listId;
+		return this.listId;
 	}
 
 	public void setListId(String listId) {
