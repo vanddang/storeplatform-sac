@@ -27,7 +27,7 @@ public class SearchMetaInfoServiceImpl implements SearchMetaInfoService {
 	public List<SearchProductMetaInfoDTO> searchMetaInfoList(SearchProductReq req, SearchProductDTO dto) {
 		// dto.getProdList();
 		List<SearchProductMetaInfoDTO> vodList = this.commonDAO.queryForList(
-				"SearchVodBoxProduct.searchVodBoxMetaInfo", dto, SearchProductMetaInfoDTO.class);
+				"SearchVodBoxProductMeta.searchVodBoxMetaInfo", dto, SearchProductMetaInfoDTO.class);
 		return vodList;
 	}
 }

@@ -45,5 +45,4 @@ public class SearchProductDTO {
 	public void setProdList(List<String> prodList) {
 		this.prodList = prodList;
 	}
-
 }

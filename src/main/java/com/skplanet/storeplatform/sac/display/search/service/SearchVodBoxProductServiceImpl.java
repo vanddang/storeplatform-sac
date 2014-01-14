@@ -63,16 +63,21 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		// req.setTenantId("S01");
 
 		// 배치완료 기준일시 조회
-		String stdDt = this.displayCommonService.getBatchStandardDateString((String) reqMap.get("tenantId"),
-				(String) reqMap.get("listId"));
+		// String stdDt = this.displayCommonService.getBatchStandardDateString((String) reqMap.get("tenantId"),
+		// (String) reqMap.get("listId"));
+		// TODO osm1021 배치 완료일 문제로 더미 값 추가
+		String stdDt = "20140101000000";
 		reqMap.put("stdDt", stdDt);
 
 		// ID list 조회
 		SearchProductDTO searchProductDTO = this.commonDAO.queryForObject("SearchVodBoxProduct.searchVodBoxProdId",
 				reqMap, SearchProductDTO.class);
 
-		// Meta 정보 조회
-		List<SearchProductMetaInfoDTO> vodList = this.searchMetaInfoService.searchMetaInfoList(req, searchProductDTO);
+		List<SearchProductMetaInfoDTO> vodList = null;
+		if (searchProductDTO != null) {
+			// Meta 정보 조회
+			vodList = this.searchMetaInfoService.searchMetaInfoList(req, searchProductDTO);
+		}
 
 		// DP17 : 영화, DP18 : 방송
 		if ("DP17".equals(req.getTopMenuId())) {
