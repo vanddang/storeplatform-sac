@@ -456,6 +456,8 @@ public class CategoryServiceImpl implements CategoryService {
 			statementId = "MenuCategory.getMusicDetailCategoryList";
 		} else if ("DP17".equals(menuId) || "DP18".equals(menuId)) { // 영화/TV 방송
 			statementId = "MenuCategory.getMovieTvDetailCategoryList";
+		} else if ("DP28".equals(menuId)) { // 쇼핑 - 쿼리 검증 요망
+			statementId = "MenuCategory.getShoppingDetailCategoryList";
 		} else {
 			statementId = "MenuCategory.getDetailCategoryList";
 		}

@@ -79,8 +79,8 @@
                          , M.INFR_MENU_YN
                          , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
                          , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATALOG M
-                          ,TB_DP_MENU_CATALOG_DESC D
+                      FROM TB_DP_MENU_CATEGORY M
+                          ,TB_DP_MENU_CATEGORY_DESC D
                           ,TB_DP_TENANT_MENU TM
                      WHERE M.MENU_ID = D.MENU_ID
                        AND TM.TENANT_MENU_ID = M.MENU_ID
@@ -100,8 +100,8 @@
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_CATALOG_PROD_MAPG CP
-                        , TB_DP_MENU_CATALOG C
+                        , TB_DP_MENU_CATEGORY_PROD_MAPG CP
+                        , TB_DP_MENU_CATEGORY C
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI    
                         , TB_DP_CHART_PROD_MAPG MCP
@@ -139,8 +139,8 @@
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
-                        , TB_DP_MENU_CATALOG_PROD_MAPG CP
-                        , TB_DP_MENU_CATALOG C
+                        , TB_DP_MENU_CATEGORY_PROD_MAPG CP
+                        , TB_DP_MENU_CATEGORY C
                         , TB_DP_SPRT_DEVICE SH
                         , TB_CM_DEVICE PHI    
                         , TB_DP_CHART_PROD_MAPG MCP
@@ -221,8 +221,8 @@
 		                     , M.INFR_MENU_YN
 		                     , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
 		                     , TM.BODY_FILE_SIZE AS FILE_SIZE
-		                  FROM TB_DP_MENU_CATALOG M
-		                      ,TB_DP_MENU_CATALOG_DESC D
+		                  FROM TB_DP_MENU_CATEGORY M
+		                      ,TB_DP_MENU_CATEGORY_DESC D
 		                      ,TB_DP_TENANT_MENU TM
 	                     WHERE M.MENU_ID = D.MENU_ID
 	                       AND TM.TENANT_MENU_ID = M.MENU_ID
@@ -273,8 +273,8 @@
 		                                              FROM TB_DP_PROD P
 		                                                 , TB_DP_PROD_RSHP CP
 		                                                 , TB_DP_TENANT_PROD TP
-		                                                 , TB_DP_MENU_CATALOG_PROD_MAPG MP
-		                                                 , TB_DP_MENU_CATALOG C
+		                                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
+		                                                 , TB_DP_MENU_CATEGORY C
 		                                                 , TB_DP_SUB_CONTENTS SC
 		                                                 , (SELECT PROD_ID
 		                                                    , SD_VIDEO_SPRT_YN
@@ -382,8 +382,8 @@
                          , M.INFR_MENU_YN
                          , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
                          , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATALOG M
-                          ,TB_DP_MENU_CATALOG_DESC D
+                      FROM TB_DP_MENU_CATEGORY M
+                          ,TB_DP_MENU_CATEGORY_DESC D
                           ,TB_DP_TENANT_MENU TM
                      WHERE M.MENU_ID = D.MENU_ID
                        AND TM.TENANT_MENU_ID = M.MENU_ID
@@ -405,8 +405,8 @@
                               FROM TB_DP_PROD P
                                  , TB_DP_PROD_RSHP CP
                                  , TB_DP_TENANT_PROD TP
-                                 , TB_DP_MENU_CATALOG_PROD_MAPG MP
-                                 , TB_DP_MENU_CATALOG C
+                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
+                                 , TB_DP_MENU_CATEGORY C
                                  , (SELECT SH.PROD_ID
                                          , PI.EBOOK_SPRT_YN
                                          , PI.MAGAZINE_SPRT_YN
@@ -457,5 +457,74 @@
 --        WHERE MENU_PROD_CNT > 0
           ORDER BY CAT_PRIOR
     </select>
-        	    
+
+
+    <!-- Shopping 상세 카테고리 조회 - 추후 검증 요망 ( DATA NOT EXIST ) -->
+    <select id="getShoppingDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+	    SELECT /* MenuCategoryMapper.xml, getShoppingDetailCategoryList, JuYoungYun, 2014-01-13 */
+	           COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
+             , C.MENU_ID
+	         , MIN( C.MENU_NM ) AS MENU_NM
+	         , MIN( C.EXPO_ORD ) AS DP_CAT_PRIOR         
+	         , MIN( C.INFR_MENU_YN ) AS INFR_MENU_YN
+	         , COUNT (*) AS MENU_PROD_CNT
+	         , C.MENU_DESC
+	      FROM TB_DP_SHPG_CATALOG SC
+	         , TB_DP_SHPG_BRAND TB
+	         , TB_DP_MENU_SHPG_MAPG MCM
+	         , (
+	            SELECT M.MENU_ID
+	                 , D.MENU_NM
+	                 , D.MENU_DESC
+	                 , TM.EXPO_ORD
+	                 , M.MENU_DEPTH
+	                 , M.UP_MENU_ID
+	                 , M.INFR_MENU_YN
+	                 , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
+	                 , TM.BODY_FILE_SIZE AS FILE_SIZE
+	              FROM TB_DP_MENU_CATEGORY M
+	                  ,TB_DP_MENU_CATEGORY_DESC D
+	                  ,TB_DP_TENANT_MENU TM
+	             WHERE M.MENU_ID = D.MENU_ID
+	               AND TM.TENANT_MENU_ID = M.MENU_ID
+	               AND TM.TENANT_ID = #{tenantId}
+	               AND TM.SYSTEM_ID = #{systemId}
+	               AND M.MENU_ID LIKE #{menuId}||'%'
+	               AND M.USE_YN = 'Y'
+	               AND D.LANG_CD = 'ko'
+	               AND TM.USE_YN = 'Y'
+	           ) C
+	     WHERE TB.BRAND_ID = SC.BRAND_ID
+	       AND SC.CATALOG_ID = MCM.CATALOG_ID
+	       AND C.MENU_ID = MCM.MENU_ID
+	       AND SC.CHNL_CNT > 0
+	       AND EXISTS ( SELECT 'X'
+	                      FROM TB_DP_PROD_CATALOG_MAPG TCP -- 상품 카탈로그 매핑
+	                         , TB_DP_PROD_RSHP PRSH -- 상품 관계(채널,에피소드)
+	                         , TB_DP_SHPG_PROD SHP -- 쇼핑상품
+	                         , TB_DP_PROD P -- 상품 메인
+	                         , TB_DP_TENANT_PROD TP -- 테넌트 상품
+	                         , TB_DP_TENANT_PROD_PRICE TPP -- 테넌트 상품 가격
+	                         , TB_DP_SPRT_DEVICE SH -- 지원 기기
+	                         , TB_CM_DEVICE PHI -- 기기 정보
+	                    WHERE TCP.PROD_ID = PRSH.PROD_ID -- TB_DP_PROD_CATALOG_MAPG PROD_ID = CHANNEL ID
+	                       AND SHP.PROD_ID = PRSH.PART_PROD_ID
+	                       AND P.PROD_ID = SHP.PROD_ID
+	                       AND TP.PROD_ID = P.PROD_ID
+	                       AND TP.PROD_ID = TPP.PROD_ID
+	                       AND TP.TENANT_ID = TPP.TENANT_ID   
+	                       AND TCP.CATALOG_ID = SC.CATALOG_ID
+	                       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
+	                       AND TP.PROD_STATUS_CD = 'PD000403'
+	                       AND TP.EXPO_YN = 'Y'
+                           AND SHP.B2B_PROD_YN <![CDATA[<>]]> 'Y'
+                           AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
+                           AND SH.PROD_ID = PRSH.PART_PROD_ID -- 지원기기 = 에피소드 상품 아이디
+                           AND PHI.DEVICE_MODEL_CD = #{deviceModelCd} -- 지원기기 모델
+                           AND PHI.USE_YN = 'Y' 
+                           AND PHI.SCL_SHPG_SPRT_YN IN ( 'Y', 'S' ) -- 소설 쇼핑 지원여부    
+                           AND ROWNUM <![CDATA[<=]]> 1 )
+        GROUP BY C.MENU_ID, C.MENU_DESC	     
+    </select>
+     
 </mapper>
