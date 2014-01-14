@@ -16,6 +16,12 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+/**
+ * 
+ * 선물수신확인 요청.
+ * 
+ * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
+ */
 public class GiftReceiveReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
