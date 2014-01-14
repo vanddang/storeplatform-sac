@@ -9,7 +9,7 @@
                 SELECT  
                        ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
                       ,COUNT(PROD_ID) OVER() AS totalCount
-                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
+                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
                       ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
                       ,MENU_ID as menuId                                  /* 메뉴ID */
                       ,MENU_DESC as menuNm                                /* 메뉴명 */
@@ -48,9 +48,9 @@
                               ,F.ARTIST2_NM
                               ,F.ARTIST3_NM
                               ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND ROWNUM=1) FILE_POS
-                        FROM  TB_DP_MENU_CATALOG            A
-                            , TB_DP_MENU_CATALOG_PROD_MAPG  B
-                            , TB_DP_MENU_CATALOG_DESC       C
+                        FROM  TB_DP_MENU_CATEGORY            A
+                            , TB_DP_MENU_CATEGORY_PROD_MAPG  B
+                            , TB_DP_MENU_CATEGORY_DESC       C
                             , TB_DP_PROD                    D
                             , TB_DP_MULTIMDA_PROD           E
                             , TB_DP_PROD_DESC               F
@@ -65,9 +65,9 @@
                                               ,J1.PROD_ID
                                               ,J1.PART_PROD_ID
                                         FROM 
-                                              TB_DP_MENU_CATALOG             A1
-                                            , TB_DP_MENU_CATALOG_PROD_MAPG   B1
-                                            , TB_DP_MENU_CATALOG_DESC        C1
+                                              TB_DP_MENU_CATEGORY             A1
+                                            , TB_DP_MENU_CATEGORY_PROD_MAPG   B1
+                                            , TB_DP_MENU_CATEGORY_DESC        C1
                                             , TB_DP_PROD                     D1
                                             , TB_DP_MULTIMDA_PROD            E1
                                             , TB_DP_PROD_DESC                F1
@@ -142,7 +142,7 @@
                 SELECT  
                        ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
                       ,COUNT(PROD_ID) OVER() AS totalCount
-                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATALOG_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
+                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
                       ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
                       ,MENU_ID as menuId                                  /* 메뉴ID */
                       ,MENU_DESC as menuNm                                /* 메뉴명 */
@@ -181,9 +181,9 @@
                               ,F.ARTIST2_NM
                               ,F.ARTIST3_NM
                               ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND ROWNUM=1) FILE_POS
-                        FROM  TB_DP_MENU_CATALOG               A
-                            , TB_DP_MENU_CATALOG_PROD_MAPG     B
-                            , TB_DP_MENU_CATALOG_DESC          C
+                        FROM  TB_DP_MENU_CATEGORY               A
+                            , TB_DP_MENU_CATEGORY_PROD_MAPG     B
+                            , TB_DP_MENU_CATEGORY_DESC          C
                             , TB_DP_PROD                       D
                             , TB_DP_MULTIMDA_PROD              E
                             , TB_DP_PROD_DESC                  F
@@ -198,9 +198,9 @@
                                               ,J1.PROD_ID
                                               ,J1.PART_PROD_ID
                                         FROM 
-                                              TB_DP_MENU_CATALOG                A1
-                                            , TB_DP_MENU_CATALOG_PROD_MAPG      B1
-                                            , TB_DP_MENU_CATALOG_DESC           C1
+                                              TB_DP_MENU_CATEGORY                A1
+                                            , TB_DP_MENU_CATEGORY_PROD_MAPG      B1
+                                            , TB_DP_MENU_CATEGORY_DESC           C1
                                             , TB_DP_PROD                        D1
                                             , TB_DP_MULTIMDA_PROD               E1
                                             , TB_DP_PROD_DESC                   F1
