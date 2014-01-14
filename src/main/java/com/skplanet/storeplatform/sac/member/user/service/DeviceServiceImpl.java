@@ -220,23 +220,25 @@ public class DeviceServiceImpl implements DeviceService {
 			
 			/*	3. 구매이력 이관 여부 확인 [기존 회원 key, 신규 회원 key]*/
 			
-			/*	4. 구매이관 대상인 경우 구개 이력 이관요청	*/
+			/*	4. 구매이관 대상인 경우 구매이력 이관요청	*/
 			
 			/*	5. 약관 이관 처리	*/
 			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
 			schAgreeListReq.setCommonRequest(commonRequest);
-			schAgreeListReq.setUserKey(userKey);
+			schAgreeListReq.setUserKey("기존 회원 key");
 			SearchAgreementListResponse schAgreeListRes = userSCI.searchAgreementList(schAgreeListReq);
-			if(schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)){
-				
-				MbrClauseAgree agreeInfo = new MbrClauseAgree();
-				
+			if (schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
 				updAgreeReq.setCommonRequest(commonRequest);
-				updAgreeReq.setUserKey("기존 회원 key");
-				/*	내부 회원키 변경 반법 SC회원 콤포넌트쪽 확인 필요	*/
+				updAgreeReq.setUserKey("신규 회원 key");
 				updAgreeReq.setMbrClauseAgreeList(schAgreeListRes.getMbrClauseAgreeList());
-				UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);	
+				UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
+				
+				if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+					throw new Exception("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]" + updAgreeRes.getCommonResponse().getResultMessage());
+				}
+			} else {
+				throw new Exception("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]" + schAgreeListRes.getCommonResponse().getResultMessage());
 			}
 			
 			
@@ -420,7 +422,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("result_code : [" + createDeviceRes.getCommonResponse().getResultCode() + "] result_message : [" + createDeviceRes.getCommonResponse().getResultMessage() + "]");
+			throw new Exception("휴대기기정보 업데이트 실패 [" + createDeviceRes.getCommonResponse().getResultCode() + "]" + createDeviceRes.getCommonResponse().getResultMessage());
 		}
 		
 		logger.info("################ mergeDeviceInfo end ##################");
@@ -440,7 +442,6 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setTenantId(userMbrDevice.getTenantID());
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
-		//deviceInfo.setDeviceType(userMbrDevice.getDeviceType());
 		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
@@ -520,7 +521,6 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setTenantID(deviceInfo.getTenantId());
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
-		//userMbrDevice.setDeviceType(deviceInfo.getDeviceType());
 		userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
 		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
