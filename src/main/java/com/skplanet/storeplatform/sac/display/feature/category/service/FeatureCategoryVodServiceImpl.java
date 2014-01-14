@@ -100,7 +100,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
 		}
-
 		// 영화>추천, 영화>1000원관, 방송>카테고리별 추천, 방송>방송사별 최신Up API는 filteredBy 필수
 		if (StringUtils.isEmpty(req.getMenuId()) && StringUtils.isEmpty(filteredBy)) {
 			this.logger.debug("----------------------------------------------------------------");
@@ -110,6 +109,14 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			vodRes = new FeatureCategoryVodRes();
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
+		}
+		// 시작점 ROW Default 세팅
+		if (req.getOffset() == 0) {
+			req.setOffset(1);
+		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (req.getCount() == 0) {
+			req.setOffset(20);
 		}
 
 		// 헤더값 세팅
