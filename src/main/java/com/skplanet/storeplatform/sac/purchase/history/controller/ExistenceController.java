@@ -44,10 +44,10 @@ public class ExistenceController {
 	private ExistenceService existenceService;
 
 	/**
-	 * 기구매 체크.
+	 * 기구매 체크 SAC.
 	 * 
 	 * @param ExistenceRequest
-	 *            기구매 체크
+	 *            기구매 체크 SAC
 	 * @return List<ExistenceResponse>
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)

@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse;
 
 /**
- * 선물확인 Service 인터페이스
+ * 선물확인 SAC Service 인터페이스
  * 
  * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */

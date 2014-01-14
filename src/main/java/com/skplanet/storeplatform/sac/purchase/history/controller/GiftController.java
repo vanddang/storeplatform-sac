@@ -39,10 +39,10 @@ public class GiftController {
 	private GiftService giftService;
 
 	/**
-	 * 선물수신확인 체크.
+	 * 선물수신확인 체크 SAC.
 	 * 
 	 * @param GiftReceiveReq
-	 *            선물수신확인 체크
+	 *            선물수신확인 체크 SAC
 	 * @return GiftReceiveRes
 	 */
 	@RequestMapping(value = "/history/gift/get/v1", method = RequestMethod.POST)

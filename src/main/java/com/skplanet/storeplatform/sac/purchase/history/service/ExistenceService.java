@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
 
 /**
- * 기구매체크 Service 인터페이스
+ * 기구매체크 SAC Service 인터페이스
  * 
  * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
