@@ -5,27 +5,28 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 public class SearchProductRes extends CommonInfo {
 	private static final long serialVersionUID = 11123123142L;
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 
-	List<String> prodIdList = new ArrayList<String>();
+	List<Product> productList = new ArrayList<Product>();
 
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonResponse(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
-	public List<String> getProdIdList() {
-		return this.prodIdList;
+	public List<Product> getProductList() {
+		return this.productList;
 	}
 
-	public void setProdIdList(List<String> prodIdList) {
-		this.prodIdList = prodIdList;
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 }
