@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchV2Req;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
 import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
 import com.skplanet.storeplatform.sac.other.search.service.SearchService;
+import com.skplanet.storeplatform.sac.other.search.service.SearchServiceV2;
 
 /**
  * 
@@ -31,6 +34,9 @@ public class SearchController {
 
 	@Autowired
 	private SearchService searchService;
+
+	@Autowired
+	private SearchServiceV2 searchServiceV2;
 
 	/**
 	 * 
@@ -47,5 +53,12 @@ public class SearchController {
 	public SearchRes search(SearchReq searchReq) {
 		// 시스템 구분..
 		return this.searchService.search(searchReq);
+	}
+
+	@RequestMapping(value = "/v2", method = RequestMethod.GET)
+	@ResponseBody
+	public TstoreSearchRes searchV2(TstoreSearchV2Req tstoreSearchV2Req) {
+		// 시스템 구분..
+		return this.searchServiceV2.search(tstoreSearchV2Req);
 	}
 }

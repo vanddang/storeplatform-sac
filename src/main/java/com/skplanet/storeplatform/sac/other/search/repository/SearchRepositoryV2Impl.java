@@ -13,23 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.search.sci.SearchSCI;
-import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
 import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchV2Req;
 
-/**
- * 
- * T Store 검색 연동 Repository 구현체
- * 
- * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
- */
 @Component
-public class SearchRepositoryImpl implements SearchRepository {
+public class SearchRepositoryV2Impl implements SearchRepositoryV2 {
 
 	@Autowired
 	private SearchSCI searchSCI;
 
 	@Override
-	public TstoreSearchRes search(TstoreSearchReq tstoreSearchReq) {
-		return this.searchSCI.search(tstoreSearchReq);
+	public TstoreSearchRes search(TstoreSearchV2Req tstoreSearchV2Req) {
+		return this.searchSCI.searchV2(tstoreSearchV2Req);
 	}
 }
