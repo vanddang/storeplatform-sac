@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
@@ -35,11 +34,13 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -84,9 +85,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private ImIDPReceiverM imIDPReceiverM;
 
-	@Value("#{propertiesForSac['idp.im.request.operation']}")
-	public String IDP_OPERATION_MODE;
-
 	/**
 	 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
 	 */
@@ -123,21 +121,23 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 무선회원 연동 성공 여부에 따라 분기
 		 */
 		if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+
 			LOGGER.info("## IDP 연동 성공 ==============================================");
 
-			/**
-			 * (SC 연동) 회원 정보 등록 TODO (이슈 : sc 컴포넌트 기능이 완료되면 파라미터들 다시한번 확인)
-			 */
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 
-			// SC 공통정보 setting
+			/**
+			 * SC 공통정보 setting
+			 */
 			CommonRequest commonRequest = new CommonRequest();
 			commonRequest.setSystemID(SYSTEM_ID);
 			commonRequest.setTenantID(TENANT_ID);
 			createUserRequest.setCommonRequest(commonRequest);
 			LOGGER.info("## SC Request commonRequest : {}", createUserRequest.getCommonRequest().toString());
 
-			// SC 사용자 기본정보 setting
+			/**
+			 * SC 사용자 기본정보 setting
+			 */
 			UserMbr userMbr = new UserMbr();
 			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
 			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
@@ -152,7 +152,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			createUserRequest.setUserMbr(userMbr);
 			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
-			// SC 이용약관 정보 setting
+			/**
+			 * SC 이용약관 정보 setting
+			 */
 			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
 			for (AgreementInfo info : req.getAgreementList()) {
 				MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
@@ -165,7 +167,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
 			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
 
-			// SC 법정대리인 정보 setting
+			/**
+			 * SC 법정대리인 정보 setting
+			 */
 			if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
@@ -204,20 +208,23 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			}
 
-			// /**
-			// * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
-			// *
-			// * TODO DeviceInfo 정보 넘겨서 반대리님
-			// */
-			// DeviceInfo deviceInfo = new DeviceInfo();
-			// this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
-			// /**
-			// * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
-			// */
-			// Device device = this.mcc.getPhoneInfo(req.getDeviceModelNo());
-			// logger.info("device : {}", device.getModelNm());
-			// logger.info("device : {}", device.getEngModelNm());
-			// LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
+			/**
+			 * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
+			 * 
+			 * TODO DeviceInfo 정보 넘겨서 반대리님
+			 */
+			DeviceInfo deviceInfo = new DeviceInfo();
+			deviceInfo.setDeviceId(msisdn);
+			deviceInfo.setDeviceIdType("msisdn");
+
+			this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
+			/**
+			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
+			 */
+			Device device = this.mcc.getPhoneInfo("SK-T100");
+			LOGGER.info("device : {}", device.getModelNm());
+			LOGGER.info("device : {}", device.getEngModelNm());
+			LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
 
 			/**
 			 * 결과 세팅

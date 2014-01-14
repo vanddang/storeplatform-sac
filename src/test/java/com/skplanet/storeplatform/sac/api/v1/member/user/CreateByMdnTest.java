@@ -77,7 +77,7 @@ public class CreateByMdnTest {
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
-						reqJson.setIsParent("N"); // 법정대리인정보 등록 여부.
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 
 						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
 						reqJson.setParentRealNameMethod("US011101");

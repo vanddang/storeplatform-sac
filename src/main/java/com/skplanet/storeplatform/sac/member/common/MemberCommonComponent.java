@@ -9,8 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.member.common;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +23,16 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
@@ -51,6 +61,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private UAPSSCI uapsSCI;
+
+	@Autowired
+	private UserSCI userSCI;
 
 	@Autowired
 	private DeviceService deviceService;
@@ -90,7 +103,7 @@ public class MemberCommonComponent {
 		request.setDeviceModelNo(deviceModelNo);
 		return this.miscellaneousService.getUaCode(request).getUaCd();
 	}
-	
+
 	/**
 	 * <pre>
 	 * 필수 약관 동의 목록 조회.
@@ -161,17 +174,97 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 회원정보조회.
+	 * 회원 기본 정보 조회 (기본정보만...조회 - TB_US_USERMBR).
+	 * test userKey - "IF1023002708420090928145937"
+	 * 
+	 * TODO 추가 필요한 정보가 있으면 정의해서 쓰면됨.
 	 * </pre>
 	 * 
-	 * @param detailReq
-	 *            DetailReq
-	 * @return DetailRes
+	 * @param keyType
+	 *            검색 조건 타입
+	 * @param keyValue
+	 *            검색 조건 값
+	 * @param systemId
+	 *            시스템 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 * @return UserInfo
 	 * @throws Exception
 	 *             Exception
 	 */
-	public DetailRes searchUser(DetailReq detailReq) throws Exception {
-		return this.userSelectService.detail(detailReq);
+	public UserInfo getUserBaseInfo(String keyType, String keyValue, String systemId, String tenantId) throws Exception {
+
+		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
+		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
+		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
+		keySchUserKey.setKeyString(keyValue);
+		keySearchList.add(keySchUserKey);
+
+		/**
+		 * SearchUserRequest setting
+		 */
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(systemId);
+		commonRequest.setTenantID(tenantId);
+		searchUserRequest.setCommonRequest(commonRequest);
+		searchUserRequest.setKeySearchList(keySearchList);
+
+		/**
+		 * SC 사용자 회원 기본정보를 조회
+		 */
+		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+
+		UserInfo userInfo = new UserInfo();
+		if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+			/**
+			 * 사용자 정보
+			 */
+			if (schUserRes.getUserMbr() != null) {
+				userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
+				userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
+				userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
+				userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
+				userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
+				userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
+				userInfo.setImRegDat(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
+				userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
+				userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
+				userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
+				userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
+				userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
+				userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
+				userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
+				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
+				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
+				userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
+				userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
+				userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
+				userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
+				userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
+				userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
+				userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
+				userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
+				userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
+				userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
+			} else {
+				throw new RuntimeException("SearchUser.UserMbr (사용자정보) 데이터가 없습니다.");
+			}
+
+		}
+
+		return userInfo;
 	}
 
 }
