@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.sac.runtime.extend.vo.Network;
 import com.skplanet.storeplatform.sac.runtime.extend.vo.SacHeader;
 import com.skplanet.storeplatform.sac.runtime.extend.vo.Tenant;
 
-public class SacHeaderResolver implements WebArgumentResolver {
+public class SacHeaderWebArgumentResolver implements WebArgumentResolver {
 
 	@Override
 	public Object resolveArgument(MethodParameter methodParameter, NativeWebRequest webRequest) throws Exception {
