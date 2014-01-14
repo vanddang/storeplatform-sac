@@ -9,9 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
@@ -25,12 +28,11 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-@RequestMapping(value = "/member/user")
+@RequestMapping(value = "/dev/member/user")
 @Controller
 public class DeviceController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -46,18 +48,17 @@ public class DeviceController {
 	 * @return
 	 * @throws Exception
 	 */
-	/* @RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET) */
+	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListDeviceRes listDevice(@RequestHeader Map<String, Object> headers,
-			@RequestBody ListDeviceReq req) throws Exception {
+	public ListDeviceRes listDevice(@RequestHeader Map<String, Object> headers, @RequestBody ListDeviceReq req)
+			throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
 
-		if (userId.equals("") && userKey.equals("") && deviceId.equals("")
-				&& deviceKey.equals("")) {
+		if (userId.equals("") && userKey.equals("") && deviceId.equals("") && deviceKey.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
@@ -79,14 +80,72 @@ public class DeviceController {
 	 */
 	/* @RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST) */
 	@ResponseBody
-	public CreateDeviceRes createDevice(
-			@RequestHeader Map<String, Object> headers,
-			@RequestBody CreateDeviceReq req) throws Exception {
+	public CreateDeviceRes createDevice(@RequestHeader Map<String, Object> headers, @RequestBody CreateDeviceReq req)
+			throws Exception {
 
 		/* Header 정보 세팅 */
 		HeaderVo headerVo = this.headerInfo.getHeader(headers);
 
 		CreateDeviceRes res = this.deviceService.createDevice(headerVo, req);
+
+		return res;
+	}
+
+	/**
+	 * 휴대기기 대표단말 설정
+	 * 
+	 * @param headers
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DeviceInfo modifyRepresentationDevice(@RequestHeader Map<String, Object> headers,
+			@RequestBody SetMainDeviceRequest req) throws Exception {
+
+		/* Header 정보 세팅 */
+		HeaderVo headerVo = this.headerInfo.getHeader(headers);
+
+		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
+
+		if (userKey.equals("") || deviceKey.equals("")) {
+			throw new Exception("필수요청 파라메터 부족");
+		}
+
+		DeviceInfo res = this.deviceService.modifyRepresentationDevice(headerVo, req);
+
+		return res;
+	}
+
+	/**
+	 * 휴대기기 대표단말 조회
+	 * 
+	 * @param headers
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ListDeviceRes detailRepresentationDevice(@RequestHeader Map<String, Object> headers,
+			@RequestBody ListDeviceReq req) throws Exception {
+
+		/* Header 정보 세팅 */
+		HeaderVo headerVo = this.headerInfo.getHeader(headers);
+
+		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
+		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
+		String searchType = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표단말 조회설정
+
+		if (userId.equals("") || userKey.equals("") || searchType.equals("")) {
+			throw new Exception("필수요청 파라메터 부족");
+		} else if ("".equals(searchType) || "N".equals(searchType)) {
+			throw new Exception("대표단말 조회값이 없거나 'N' 입니다.");
+		}
+
+		ListDeviceRes res = this.deviceService.listDevice(headerVo, req);
 
 		return res;
 	}

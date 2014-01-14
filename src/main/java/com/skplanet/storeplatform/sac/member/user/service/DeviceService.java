@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -22,8 +23,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public CreateDeviceRes createDevice(HeaderVo headerVo, CreateDeviceReq req)
-			throws Exception;
+	public CreateDeviceRes createDevice(HeaderVo headerVo, CreateDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 목록 조회
@@ -33,8 +33,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ListDeviceRes listDevice(HeaderVo headerVo, ListDeviceReq req)
-			throws Exception;
+	public ListDeviceRes listDevice(HeaderVo headerVo, ListDeviceReq req) throws Exception;
 
 	/**
 	 * 
@@ -46,8 +45,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo)
-			throws Exception;
+	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo) throws Exception;
 
 	/**
 	 * 기기정보 수정
@@ -58,4 +56,13 @@ public interface DeviceService {
 	 */
 	public void mergeDeviceInfo(DeviceInfo req) throws Exception;
 
+	/**
+	 * 휴대기기 대표단말 설정
+	 * 
+	 * @param headerVo
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public DeviceInfo modifyRepresentationDevice(HeaderVo headerVo, SetMainDeviceRequest req) throws Exception;
 }
