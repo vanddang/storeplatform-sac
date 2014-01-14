@@ -100,6 +100,10 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 			appRes.setCommonResponse(commonRes);
 			return appRes;
 		}
+		// 상품 유무료 구분 Default 세팅
+		if (!"A".equals(prodCharge) && (!"Y".equals(prodCharge) && !"N".equals(prodCharge))) {
+			prodCharge = "A";
+		}
 
 		// 헤더값 세팅
 		req.setDeviceModelCd("SHV-E210S");
