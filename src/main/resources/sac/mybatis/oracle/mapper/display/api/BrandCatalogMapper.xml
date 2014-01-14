@@ -154,9 +154,9 @@
     </insert>   
     
     <!--카탈로그_카테고리 매핑 테이블에 INSERT-->
-    <insert id="INSERT_TB_DP_MENU_CATA_CATA_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+    <insert id="INSERT_TB_DP_MENU_CATE_SHPG_CATA_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
         /* BrandCatalogMapper.xml, INSERT_TB_DP_CATEGORY_MENU_MAPG, SAC : 김형식 , 2013-12-30 */
-        INSERT INTO TB_DP_MENU_CATA_CATA_MAPG(
+        INSERT INTO TB_DP_MENU_CATE_SHPG_CATA_MAPG(
    	         MENU_ID
 	        ,CATALOG_ID
 	        ,BASE_YN
@@ -203,10 +203,10 @@
     </update>       
            
     <!--카탈로그_카테고리 매핑 테이블에 UPDATE-->
-    <update id="UPDATE_TB_DP_MENU_CATA_CATA_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+    <update id="UPDATE_TB_DP_MENU_CATE_SHPG_CATA_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
        /* BrandCatalogMapper.xml, UPDATE_TB_DP_CATEGORY_MENU_MAPG, SAC : 김형식 , 2013-12-30 */
         UPDATE 
-            TB_DP_MENU_CATA_CATA_MAPG
+            TB_DP_MENU_CATE_SHPG_CATA_MAPG
         SET 
             MENU_ID  = #{dpCatNo}
           , UPD_DT    = SYSDATE

@@ -172,7 +172,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 				if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
 					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG", dpCatalogInfo);
 					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG_DESC", dpCatalogInfo);
-					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_MENU_CATA_CATA_MAPG", dpCatalogInfo);
+					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_MENU_CATE_SHPG_CATA_MAPG", dpCatalogInfo);
 				} else {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 							"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
@@ -203,7 +203,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 					if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
 						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_CATALOG", dpCatalogInfo);
 						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_CATALOG_DESC", dpCatalogInfo);
-						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_MENU_CATA_CATA_MAPG", dpCatalogInfo);
+						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_MENU_CATE_SHPG_CATA_MAPG", dpCatalogInfo);
 					} else {
 						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 								"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
