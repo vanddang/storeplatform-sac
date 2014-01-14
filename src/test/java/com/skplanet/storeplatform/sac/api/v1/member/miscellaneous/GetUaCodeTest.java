@@ -64,7 +64,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?msisdn=01088902431")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=01088902431")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -85,7 +85,7 @@ public class GetUaCodeTest {
 	@Test
 	public void requestDeviceModelNoTest() {
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750&?msisdn=01088902431")
+				.url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750&?msisdn=01088902431")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -104,7 +104,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestMsisdnDeviceModelNoTest() {
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -128,7 +128,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestInvalidMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -148,7 +148,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestNonDbMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?msisdn=01011112222")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=01011112222")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -168,7 +168,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestNonTest() {
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.GET)
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.GET)
 				.success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -188,7 +188,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void responseNonUaCodeTest() {
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-W777")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-W777")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
