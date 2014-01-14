@@ -184,22 +184,22 @@ public class UserSelectServiceImpl implements UserSelectService {
 
 		List<KeySearch> keySchList = new ArrayList<KeySearch>();
 
-		if (req.getUserKey() != null) {
+		if (req.getUserKey() != null && !"".equals(req.getUserKey())) {
 			KeySearch keySchUserKey = new KeySearch();
 			keySchUserKey.setKeyType("INSD_USERMBR_NO");
 			keySchUserKey.setKeyString(req.getUserKey());
 			keySchList.add(keySchUserKey);
-		} else if (req.getUserId() != null) {
+		} else if (req.getUserId() != null && !"".equals(req.getUserId())) {
 			KeySearch keySchUserId = new KeySearch();
 			keySchUserId.setKeyType("MBR_ID");
 			keySchUserId.setKeyString(req.getUserId());
 			keySchList.add(keySchUserId);
-		} else if (req.getDeviceId() != null) {
+		} else if (req.getDeviceId() != null && !"".equals(req.getDeviceId())) {
 			KeySearch keySchDeviceId = new KeySearch();
 			keySchDeviceId.setKeyType("INSD_DEVICE_ID");
 			keySchDeviceId.setKeyString(req.getDeviceId());
 			keySchList.add(keySchDeviceId);
-		} else if (req.getDeviceKey() != null) {
+		} else if (req.getDeviceKey() != null && !"".equals(req.getUserKey())) {
 			KeySearch keySchDeviceKey = new KeySearch();
 			keySchDeviceKey.setKeyType("DEVICE_ID");
 			keySchDeviceKey.setKeyString(req.getDeviceKey());
@@ -217,8 +217,6 @@ public class UserSelectServiceImpl implements UserSelectService {
 
 		schUserReq.setKeySearchList(keySchList);
 		schDeviceListReq.setKeySearchList(keySchList);
-		schUserExtraInfoReq.setUserKey(req.getUserKey());
-		schAgreementListReq.setUserKey(req.getUserKey());
 
 		// 공통헤더 세팅
 		schUserReq.setCommonRequest(this.commonRequest());
@@ -233,6 +231,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 		userInfoList.add(userInfo);
 
 		// 사용자 부가정보 리스트 세팅
+		schUserExtraInfoReq.setUserKey(userInfo.getUserKey());
 		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
 		UserExtraInfo userExtraInfo = this.userExtraInfo(schUserExtraInfoReq);
 		userExtraInfoList.add(userExtraInfo);
@@ -254,6 +253,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 		deviceInfoList.add(deviceInfo);
 
 		// 약관동의목록정보 세팅
+		schAgreementListReq.setUserKey(userInfo.getUserKey());
 		List<MbrClauseAgreeList> mbrClauseAgreeList = new ArrayList<MbrClauseAgreeList>();
 		MbrClauseAgreeList mbrClause = this.mbrClauseAgreeList(schAgreementListReq);
 		mbrClauseAgreeList.add(mbrClause);
