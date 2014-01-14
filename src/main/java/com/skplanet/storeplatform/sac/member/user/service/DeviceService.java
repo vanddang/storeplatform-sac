@@ -37,14 +37,14 @@ public interface DeviceService {
 			throws Exception;
 
 	/**
-	 * 기등록된 회원의 휴대기기 정보 처리
+	 * 휴대기기 정보 등록
 	 * 
 	 * @param userKey
 	 * @param deviceInfo
 	 * @return
 	 * @throws Exception
 	 */
-	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo)
+	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo)
 			throws Exception;
 
 	/**

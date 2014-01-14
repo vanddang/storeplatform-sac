@@ -189,7 +189,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * TODO DeviceInfo 정보 넘겨서 반대리님
 			 */
 			DeviceInfo deviceInfo = new DeviceInfo();
-			this.mcc.preRegMemberDeviceRegist(createUserResponse.getUserKey(), deviceInfo);
+			this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
 			/**
 			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
 			 */

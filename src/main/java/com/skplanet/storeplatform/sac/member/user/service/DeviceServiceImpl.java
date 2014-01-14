@@ -90,6 +90,7 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("######################## DeviceServiceImpl createDevice start ############################");
 		
 		String userKey = req.getUserKey();
+		String userAuthKey = req.getUserAuthKey();
 		String deviceId = req.getDeviceInfo().getDeviceId();
 		
 		/*	회원 정보 조회	*/
@@ -113,7 +114,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 		
 		/* 기등록된 회원의 휴대기기 정보 처리 */
-		this.preRegMemberDeviceRegist(userKey, req.getDeviceInfo());
+		this.insertDeviceInfo(userKey, req.getDeviceInfo());
 		
 		/* sc회원 컴포넌트 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -150,6 +151,8 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public ListDeviceRes listDevice(HeaderVo headerVo, ListDeviceReq req)
 			throws Exception {
+		
+		logger.info("######################## DeviceServiceImpl listDevice start ############################");
 		
 		String userKey = req.getUserKey();
 		
@@ -192,13 +195,16 @@ public class DeviceServiceImpl implements DeviceService {
 			
 		}
 		
+		logger.info("######################## DeviceServiceImpl listDevice end ############################");
 		
 		return res;
 	}
 
 	@Override
-	public void preRegMemberDeviceRegist(String userKey, DeviceInfo deviceInfo)
+	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo)
 			throws Exception {
+		
+		logger.info("######################## DeviceServiceImpl preRegMemberDeviceRegist start ############################");
 		
 		/*	1. 휴대기기 정보 등록 요청	*/
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -209,7 +215,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 		
-		/*	2.휴대기기 정보 등록완료		*/
+		/*	2.휴대기기 정보 등록완료	*/
 		if (StringUtil.equals(createDeviceRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			
 			/*	3. 구매이력 이관 여부 확인 [기존 회원 key, 신규 회원 key]*/
@@ -221,8 +227,7 @@ public class DeviceServiceImpl implements DeviceService {
 			schAgreeListReq.setCommonRequest(commonRequest);
 			schAgreeListReq.setUserKey(userKey);
 			SearchAgreementListResponse schAgreeListRes = userSCI.searchAgreementList(schAgreeListReq);
-			if(schAgreeListRes.getCommonResponse().equals(MemberConstants.RESULT_SUCCES)){
-				
+			if(schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)){
 				
 				MbrClauseAgree agreeInfo = new MbrClauseAgree();
 				
@@ -263,6 +268,8 @@ public class DeviceServiceImpl implements DeviceService {
 		} else {
 			throw new Exception("["	+ createDeviceRes.getCommonResponse().getResultCode() + "] " + createDeviceRes.getCommonResponse().getResultMessage());
 		}
+		
+		logger.info("######################## DeviceServiceImpl preRegMemberDeviceRegist end ############################");
 	}
 
 	@Override
@@ -433,6 +440,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
 		deviceInfo.setTenantId(userMbrDevice.getTenantID());
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
+		//deviceInfo.setDeviceType(userMbrDevice.getDeviceType());
 		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
@@ -512,6 +520,7 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setTenantID(deviceInfo.getTenantId());
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
+		//userMbrDevice.setDeviceType(deviceInfo.getDeviceType());
 		userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
 		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
