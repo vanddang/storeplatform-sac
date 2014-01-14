@@ -139,7 +139,7 @@
                         </if>   
                    ) 
                  WHERE NO =1
-               ) ORDER BY DP_ORDER ASC, CATALOG_NM ASC
+               ) ORDER BY EXPO_ORD ASC, CATALOG_NM ASC
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>    
     
