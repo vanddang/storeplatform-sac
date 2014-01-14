@@ -83,7 +83,9 @@ public class IDPRepositoryImpl implements IDPRepository {
 	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
 
 		SendReq sendReq = new SendReq();
-		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
+		// TODO 임시 HTTP 연동, HTTPS 수정해야함
+		// sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
 		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
 		sendReq.setMethod(SendReq.HTTP_METHOD.POST);
 		sendReq.setIm(false);
@@ -212,6 +214,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * @return
 	 * @throws Exception
 	 */
+	@Override
 	public String makeSnAuthKey(String mbrNm, String userId) throws Exception {
 		String time = Long.toString(System.currentTimeMillis());
 

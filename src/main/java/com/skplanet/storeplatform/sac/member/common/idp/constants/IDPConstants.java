@@ -29,6 +29,8 @@ public final class IDPConstants {
 	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForId"; // 회원 인증
 	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "modifyProfile"; // 프로파일 수정
 	public static final String IDP_REQ_CMD_ALEADY_JOIN_CHECK = "aleadyJoinCheck"; // 가입여부 확인
+	public static final String IDP_REQ_CMD_WATERMARK_AUTH_IMAGE = "watermarkAuthImage"; // 위터마크발급
+	public static final String IDP_REQ_CMD_WATERMARK_AUTH = "watermarkAuth"; // 워터마크인증
 
 	/** 모바일. */
 	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap"; // 인증

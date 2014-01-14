@@ -66,6 +66,52 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
+	 * 워터마크 발급.
+	 * </pre>
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM warterMarkImageUrl() throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_WATERMARK_AUTH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_WATERMARK_AUTH_IMAGE);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 워터마크 인증.
+	 * </pre>
+	 * 
+	 * @param authCode
+	 * @param imageSign
+	 * @param signData
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_WATERMARK_AUTH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_WATERMARK_AUTH);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_code(authCode);
+		sendData.setImage_sign(imageSign);
+		sendData.setSign_data(signData);
+
+		return this.repository.sendIDPHttps(sendData); // TODO https
+	}
+
+	/**
+	 * <pre>
 	 * 모바일 회원 인증
 	 * </pre>
 	 * 
@@ -223,13 +269,14 @@ public class IDPServiceImpl implements IDPService {
 		user_ci = (String) param.get("user_ci");
 
 		if (user_phone != null && !"".equals(user_phone)) {
-			try {
-				if (phone_auth_key == null || "".equals(phone_auth_key)) {
-					phone_auth_key = this.repository.makePhoneAuthKey(user_phone);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (phone_auth_key == null || "".equals(phone_auth_key)) {
+				phone_auth_key = this.repository.makePhoneAuthKey(user_phone);
+			}
+		}
+
+		if (is_rname_auth != null && "Y".equals(is_rname_auth)) {
+			if (user_name != null && !"".equals(is_rname_auth)) {
+				sn_auth_key = this.repository.makeSnAuthKey(user_name, user_id);
 			}
 		}
 

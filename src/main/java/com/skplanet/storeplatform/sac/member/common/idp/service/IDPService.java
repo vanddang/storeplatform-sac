@@ -20,8 +20,14 @@ public interface IDPService {
 	/** 프로파일 수정. */
 	public IDPReceiverM modifyProfile(Map<String, Object> param) throws Exception;
 
-	/** 서비스 가입 여부를 체크한다. (이메일 기준) */
+	/** 서비스 가입 여부를 체크한다. (이메일 기준). */
 	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception;
+
+	/** Captcha 문자 발급. */
+	public IDPReceiverM warterMarkImageUrl() throws Exception;
+
+	/** Captcha 문자 확인. */
+	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception;
 
 	/** 모바일 API */
 	/** 모바일 회원 인증. */
