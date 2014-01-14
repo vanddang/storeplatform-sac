@@ -67,8 +67,10 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	/**
 	 * <pre>
@@ -140,7 +142,7 @@ public class DummyDataController {
 	 * 
 	 * @return AuthorizeByMdnRes
 	 */
-	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn() {
 
@@ -312,7 +314,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListDeviceRes
 	 */
-	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListDeviceRes listDevice() {
 
@@ -360,7 +362,7 @@ public class DummyDataController {
 			deviceInfo.setMakeComp("SAMSUNG");
 
 			deviceInfoList.add(deviceInfo);
-			
+
 			res.setUserId("hdk");
 			res.setUserKey("IW102158844420091030165015");
 			res.setDeviceInfoList(deviceInfoList);
