@@ -24,15 +24,15 @@ public interface CategoryDetailRes extends Serializable {
 
 	public static final long serialVersionUID = 11123123111L;
 
-	public CommonResponse commonRes = new CommonResponse();
+	public CommonResponse commonResponse = new CommonResponse();
 
 	public Menu category = new Menu();
 
 	public List categoryList = new ArrayList();
 
-	public CommonResponse getCommonRes();
+	public CommonResponse getCommonResponse();
 
-	public void setCommonRes(CommonResponse commonRes);
+	public void setCommonResponse(CommonResponse commonResponse);
 
 	public Menu getCategory();
 

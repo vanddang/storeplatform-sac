@@ -23,20 +23,20 @@ public class CategoryDetail3ListRes extends CommonInfo implements CategoryDetail
 
 	private static final long serialVersionUID = 111231231122L;
 
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 
 	private Menu category;
 
 	private List<CategoryDetail> categoryList;
 
 	@Override
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
 	@Override
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonResponse(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
 	@Override

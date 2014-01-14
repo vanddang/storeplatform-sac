@@ -23,15 +23,15 @@ public class MenuDetailRes extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 11123123125L;
 
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 	private MenuDetail menu;
 
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonRes(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
 	public MenuDetail getMenu() {
