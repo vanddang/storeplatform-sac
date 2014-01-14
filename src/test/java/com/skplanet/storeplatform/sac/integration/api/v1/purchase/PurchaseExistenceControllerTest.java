@@ -47,7 +47,7 @@ public class PurchaseExistenceControllerTest {
 	@Test
 	public void existenceControllerTest() throws Exception {
 
-		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/Existence/list/v1")
+		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/existence/list/v1")
 				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
 				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
