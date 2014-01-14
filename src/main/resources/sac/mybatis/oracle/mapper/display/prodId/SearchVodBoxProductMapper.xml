@@ -8,7 +8,7 @@
 	          <id property="expoOrd" column="EXPO_ORD"/>
 	      </collection>
         </resultMap>
-		<select id="searchVodBoxProdId" parameterType="SearchProductReq" resultMap="prodIdInfoResultMap">
+       <select id="searchVodBoxProdId" parameterType="Map" resultMap="prodIdInfoResultMap">
 		SELECT KA.*
           FROM (SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
                   FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
@@ -71,8 +71,7 @@
        ) KA
  WHERE KA.RNUM BETWEEN #{offset} AND #{count}
  	</select>
- 	
- 	<select id="searchVodBoxMetaInfo" parameterType="SearchProductReq" resultMap="prodIdInfoResultMap">
+ 	<select id="searchVodBoxMetaInfo" parameterType="SearchProductDTO" resultType="SearchProductMetaInfoDTO">
  	   SELECT  /* selectFeatureMovieList.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
 		        LA.UP_MENU_ID
 		      , LA.TOP_MENU_ID
@@ -105,7 +104,7 @@
 		      , LA.FILE_PATH
 		      , LA.FILE_NM
 		      , (SELECT MENU_NM
-		           FROM TB_DP_MENU_DESC
+		           FROM TB_DP_MENU_CATALOG_DESC
 		          WHERE MENU_ID = LA.UP_MENU_ID
 		            AND LANG_CD = 'ko'
 		            AND ROWNUM = 1) AS UP_MENU_NM
@@ -139,9 +138,9 @@
 		                                     , K.FILE_PATH
 		                                     , K.FILE_NM
 		                                     , K.FILE_SIZE
-		                                  FROM TB_DP_MENU_PROD_MAPG    A                                       
-		                                     , TB_DP_MENU              B
-		                                     , TB_DP_MENU_DESC         C
+		                                  FROM TB_DP_MENU_CATALOG_PROD_MAPG    A                                       
+		                                     , TB_DP_MENU_CATALOG              B
+		                                     , TB_DP_MENU_CATALOG_DESC         C
 		                                     , TB_DP_PROD              D
 		                                     , TB_DP_MULTIMDA_PROD     E
 		                                     , TB_DP_PROD_DESC         F
@@ -163,23 +162,35 @@
 		                                   AND A.BASE_YN = 'Y'                        /* Y : 사용 (사용여부) */
 		                                   AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
 		                                   AND C.LANG_CD = 'ko'                      /* ko : 한국어 */                                   
-		                                   AND G.TENANT_ID = 'S01'
+		                                   AND G.TENANT_ID = #{tenantId}
 		                                   AND F.LANG_CD = 'ko'                      /* ko : 한국어 */
 		                                   AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
 		                                   AND K.IMG_CD = 'DP000101'                 
 		                                   AND K.EXPO_ORD = '1'                 
 		                                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-		                                   ------------------------------------------------------------------------------
+		                                   <if test = "prodList != null">
+                                           AND I.PART_PROD_ID IN
+                                               <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")"> 
+                                                    #{item}
+                                               </foreach>
+                                           
+                                           </if>
+                                           ------------------------------------------------------------------------------
 		                                   -- INPUT PARAMETER
 		                                   ------------------------------------------------------------------------------                                  
-		                                   AND I.PART_PROD_ID IN ('H900065887', 'H900065072', 'H900065030', 'H900065022') /* EPSOIDE ID */
-		                                   --AND I.PROD_ID IN ('H900065886', 'H900065071', 'H900065029', 'H900065021') /* CHANNEL ID */
+		                                   -- AND I.PART_PROD_ID IN ('H900065887', 'H900065072', 'H900065030', 'H900065022') /* EPSOIDE ID */
+		                                   -- AND I.PROD_ID IN ('H900065886', 'H900065071', 'H900065029', 'H900065021') /* CHANNEL ID */
 		                                   ------------------------------------------------------------------------------
 		                               ) JA 
 		       ) LA
 		     , TB_DP_TENANT_PROD_STATS LB
 		 WHERE LA.TENANT_ID = LB.TENANT_ID(+)
 		   AND LA.PROD_ID = LB.PROD_ID(+)
+		 <if test = "prodList != null">  
+		    ORDER BY instr
+		    <foreach collection="prodList" item="item" index="index" open="(" separator="||" close=",part_prod_id)"> 
+                #{item}
+            </foreach>
+         </if>                                      
  	</select>
- 	
 </mapper>

@@ -1,291 +1,221 @@
 package com.skplanet.storeplatform.sac.display.search.vo;
 
-import java.util.List;
-
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-
 public class SearchProductMetaInfoDTO {
-	private Identifier identifier;
-	private Title title;
-	private Price price;
-	private List<Menu> menuList;
-	private List<Source> sourceList;
-	private List<Support> supportList;
+	private int totalCount;
+	private String topMenuId;
+	private String menuId;
+	private String menuNm;
+	private String menuDesc;
+	private String metaClsfCd;
+	private String prodId;
+	private String vodTitlNm;
+	private String prodNm;
+	private String prodBaseDesc;
+	private String prodGrdCd;
+	private String artist1Nm;
+	private String artist2Nm;
+	private String issueDay;
+	private String chnlCompNm;
+	private String agencyNm;
+	private String hdvYn;
+	private String dolbySprtYn;
+	private String prodAmt;
+	private String paticpersCnt;
+	private String prchsCnt;
+	private Double avgEvluScore;
+	private String imgPath;
+	private String topMenuNm;
 
-	public Identifier getIdentifier() {
-		return this.identifier;
+	public int getTotalCount() {
+		return this.totalCount;
 	}
 
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 
-	public List<Menu> getMenuList() {
-		return this.menuList;
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
 
-	public void setMenuList(List<Menu> menuList) {
-		this.menuList = menuList;
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
-	public List<Source> getSourceList() {
-		return this.sourceList;
+	public String getMenuId() {
+		return this.menuId;
 	}
 
-	public void setSourceList(List<Source> sourceList) {
-		this.sourceList = sourceList;
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
-	public List<Support> getSupportList() {
-		return this.supportList;
+	public String getMenuNm() {
+		return this.menuNm;
 	}
 
-	public void setSupportList(List<Support> supportList) {
-		this.supportList = supportList;
+	public void setMenuNm(String menuNm) {
+		this.menuNm = menuNm;
 	}
 
-	public Title getTitle() {
-		return this.title;
+	public String getMenuDesc() {
+		return this.menuDesc;
 	}
 
-	public void setTitle(Title title) {
-		this.title = title;
+	public void setMenuDesc(String menuDesc) {
+		this.menuDesc = menuDesc;
 	}
 
-	public Price getPrice() {
-		return this.price;
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
 	}
 
-	public void setPrice(Price price) {
-		this.price = price;
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
 	}
 
-	private class Identifier {
-		private String type;
-		private String text; // 상품ID
-
-		public String getType() {
-			return this.type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
-
-		public String getText() {
-			return this.text;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
+	public String getProdId() {
+		return this.prodId;
 	}
 
-	private class Menu {
-		private String id; // 전시 메뉴ID type에 따른 ID
-		private String name; // 전시 메뉴ID에 따른 이름
-		private String type; // 전시 메뉴 타입
-		private String count; // 전시 메뉴 상품수
-		private Source source; // 전시 메뉴의 graphic resource가 있을 경우 정의
-
-		public String getId() {
-			return this.id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getName() {
-			return this.name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getType() {
-			return this.type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
-
-		public String getCount() {
-			return this.count;
-		}
-
-		public void setCount(String count) {
-			this.count = count;
-		}
-
-		public Source getSource() {
-			return this.source;
-		}
-
-		public void setSource(Source source) {
-			this.source = source;
-		}
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
-	private class Source {
-		private String mediaType;
-		private String size; // 파일 사이즈
-		private String type;
-		private String url; // Resource URL
-
-		public String getMediaType() {
-			return this.mediaType;
-		}
-
-		public void setMediaType(String mediaType) {
-			this.mediaType = mediaType;
-		}
-
-		public String getSize() {
-			return this.size;
-		}
-
-		public void setSize(String size) {
-			this.size = size;
-		}
-
-		public String getType() {
-			return this.type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
-
-		public String getUrl() {
-			return this.url;
-		}
-
-		public void setUrl(String url) {
-			this.url = url;
-		}
+	public String getVodTitlNm() {
+		return this.vodTitlNm;
 	}
 
-	private class Support {
-		private String type;
-		private String text;
-
-		public String getType() {
-			return this.type;
-		}
-
-		public void setType(String type) {
-			this.type = type;
-		}
-
-		public String getText() {
-			return this.text;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
+	public void setVodTitlNm(String vodTitlNm) {
+		this.vodTitlNm = vodTitlNm;
 	}
 
-	private class Title {
-		private String text; // 제목
-
-		public String getText() {
-			return this.text;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
+	public String getProdNm() {
+		return this.prodNm;
 	}
 
-	private class Accrual {
-		private String voterCount;
-		private String downloadCount;
-		private String score;
-
-		public String getVoterCount() {
-			return this.voterCount;
-		}
-
-		public void setVoterCount(String voterCount) {
-			this.voterCount = voterCount;
-		}
-
-		public String getDownloadCount() {
-			return this.downloadCount;
-		}
-
-		public void setDownloadCount(String downloadCount) {
-			this.downloadCount = downloadCount;
-		}
-
-		public String getScore() {
-			return this.score;
-		}
-
-		public void setScore(String score) {
-			this.score = score;
-		}
+	public void setProdNm(String prodNm) {
+		this.prodNm = prodNm;
 	}
 
-	private class Rights {
-		private String grade;
-
-		public String getGrade() {
-			return this.grade;
-		}
-
-		public void setGrade(String grade) {
-			this.grade = grade;
-		}
+	public String getProdBaseDesc() {
+		return this.prodBaseDesc;
 	}
 
-	private class Vod {
-		private VideoInfo videoInfo;
-
-		public VideoInfo getVideoInfo() {
-			return this.videoInfo;
-		}
-
-		public void setVideoInfo(VideoInfo videoInfo) {
-			this.videoInfo = videoInfo;
-		}
-
-		private class VideoInfo {
-			private String type;
-
-			public String getType() {
-				return this.type;
-			}
-
-			public void setType(String type) {
-				this.type = type;
-			}
-		}
+	public void setProdBaseDesc(String prodBaseDesc) {
+		this.prodBaseDesc = prodBaseDesc;
 	}
 
-	private class Date {
-		private String type;
-		private String text;
+	public String getProdGrdCd() {
+		return this.prodGrdCd;
+	}
 
-		public String getType() {
-			return this.type;
-		}
+	public void setProdGrdCd(String prodGrdCd) {
+		this.prodGrdCd = prodGrdCd;
+	}
 
-		public void setType(String type) {
-			this.type = type;
-		}
+	public String getArtist1Nm() {
+		return this.artist1Nm;
+	}
 
-		public String getText() {
-			return this.text;
-		}
+	public void setArtist1Nm(String artist1Nm) {
+		this.artist1Nm = artist1Nm;
+	}
 
-		public void setText(String text) {
-			this.text = text;
-		}
+	public String getArtist2Nm() {
+		return this.artist2Nm;
+	}
+
+	public void setArtist2Nm(String artist2Nm) {
+		this.artist2Nm = artist2Nm;
+	}
+
+	public String getIssueDay() {
+		return this.issueDay;
+	}
+
+	public void setIssueDay(String issueDay) {
+		this.issueDay = issueDay;
+	}
+
+	public String getChnlCompNm() {
+		return this.chnlCompNm;
+	}
+
+	public void setChnlCompNm(String chnlCompNm) {
+		this.chnlCompNm = chnlCompNm;
+	}
+
+	public String getAgencyNm() {
+		return this.agencyNm;
+	}
+
+	public void setAgencyNm(String agencyNm) {
+		this.agencyNm = agencyNm;
+	}
+
+	public String getHdvYn() {
+		return this.hdvYn;
+	}
+
+	public void setHdvYn(String hdvYn) {
+		this.hdvYn = hdvYn;
+	}
+
+	public String getDolbySprtYn() {
+		return this.dolbySprtYn;
+	}
+
+	public void setDolbySprtYn(String dolbySprtYn) {
+		this.dolbySprtYn = dolbySprtYn;
+	}
+
+	public String getProdAmt() {
+		return this.prodAmt;
+	}
+
+	public void setProdAmt(String prodAmt) {
+		this.prodAmt = prodAmt;
+	}
+
+	public String getPaticpersCnt() {
+		return this.paticpersCnt;
+	}
+
+	public void setPaticpersCnt(String paticpersCnt) {
+		this.paticpersCnt = paticpersCnt;
+	}
+
+	public String getPrchsCnt() {
+		return this.prchsCnt;
+	}
+
+	public void setPrchsCnt(String prchsCnt) {
+		this.prchsCnt = prchsCnt;
+	}
+
+	public Double getAvgEvluScore() {
+		return this.avgEvluScore;
+	}
+
+	public void setAvgEvluScore(Double avgEvluScore) {
+		this.avgEvluScore = avgEvluScore;
+	}
+
+	public String getImgPath() {
+		return this.imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public String getTopMenuNm() {
+		return this.topMenuNm;
+	}
+
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
 	}
 
 }

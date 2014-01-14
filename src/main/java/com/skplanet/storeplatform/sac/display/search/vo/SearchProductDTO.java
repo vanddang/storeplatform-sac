@@ -1,12 +1,13 @@
 package com.skplanet.storeplatform.sac.display.search.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchProductDTO {
 	private String tenantId;
 	private String menuId;
 	private List<SearchProductDetailDTO> searchProdinfoList;;
-	private List<String> prodList;
+	private List<String> prodList = new ArrayList<String>();
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -33,8 +34,10 @@ public class SearchProductDTO {
 	}
 
 	public List<String> getProdList() {
-		for (SearchProductDetailDTO dto : this.searchProdinfoList) {
-			this.prodList.add(dto.getProdId());
+		if (this.searchProdinfoList != null) {
+			for (SearchProductDetailDTO dto : this.searchProdinfoList) {
+				this.prodList.add(dto.getPartProdId());
+			}
 		}
 		return this.prodList;
 	}
