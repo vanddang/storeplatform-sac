@@ -1,77 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="SearchVodBoxProduct">
-	   <resultMap id="prodIdInfoResultMap" type="SearchProductDTO" autoMapping="true">
-	      <collection property="searchProdinfoList" ofType="SearchProductDetailDTO">
-	          <id property="prodId" column="PROD_ID"/>
-	          <id property="partProdId" column="PART_PROD_ID"/>
-	          <id property="expoOrd" column="EXPO_ORD"/>
-	      </collection>
-        </resultMap>
-       <select id="searchVodBoxProdId" parameterType="Map" resultMap="prodIdInfoResultMap">
-		SELECT KA.*
-          FROM (SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
-                  FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-                     FROM ( SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.UPD_DT DESC) AS RN
-                       , A.TENANT_ID
-                       , A.MENU_ID
-                       , A.PROD_ID
-                       , I.PART_PROD_ID
-                       , A.EXPO_ORD
-                    FROM (SELECT  TENANT_ID
-                                , LIST_ID
-                                , MENU_ID
-                                , PROD_ID
-                                , EXPO_ORD
-                            FROM  TB_DP_LIST_PROD
-                           WHERE  TENANT_ID = #{tenantId}         /* 테넌트ID */
-                             AND  LIST_ID = #{listId} /* ADM000000008 : 운영자추천 멀티미디어 */
-                             AND  ETC_CD = 'DP004801'       /* DP004801 : 영화 */
-                             AND  EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
-                             AND  TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
-                             AND  SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
-                         )                       A
-                       , TB_DP_MENU_CATALOG      B
-                       , TB_DP_PROD              D
-                       , TB_DP_MULTIMDA_PROD     E
-                       , TB_DP_TENANT_PROD       G
-                       , TB_DP_TENANT_PROD_PRICE H
-                       , TB_DP_PROD_RSHP         I
-                       , TB_DP_PROD              J
-                       , TB_DP_SPRT_DEVICE       K
-                    WHERE A.MENU_ID = B.MENU_ID
-                     AND A.PROD_ID = D.PROD_ID
-                     AND A.PROD_ID = E.PROD_ID
-                     AND A.PROD_ID = G.PROD_ID
-                     AND A.TENANT_ID = G.TENANT_ID
-                     AND A.PROD_ID = H.PROD_ID
-                     AND A.TENANT_ID = H.TENANT_ID
-                     AND A.PROD_ID = I.PROD_ID
-                     AND I.PART_PROD_ID = J.PROD_ID
-                     AND I.PART_PROD_ID = K.PROD_ID(+)
-                     AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                     AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
-                     AND E.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-                     AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
-                     AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
-                     AND K.DEVICE_MODEL_CD(+) = #{deviceModelNo}    /* 단말기 모델 코드 */
-                     AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
-                     AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = 'SHV-E210S') = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
-                               ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
-                     ------------------------------------------------------------------------------
-                     -- INPUT PARAMETER
-                     ------------------------------------------------------------------------------
-                     AND B.TOP_MENU_ID = #{topMenuId}                /* 탑메뉴ID */
-                      <if test='prodGradeCd != null'>
-                     AND D.PROD_GRD_CD = #{prodGradeCd}            /* 상품등급코드 */
-                     </if>
-              ) IA
-            WHERE IA.RN = 1
-                ) JA
-       ) KA
- WHERE KA.RNUM BETWEEN #{offset} AND #{count}
- 	</select>
- 	<select id="searchVodBoxMetaInfo" parameterType="SearchProductDTO" resultType="SearchProductMetaInfoDTO">
+<mapper namespace="SearchVodBoxProductMeta">
+	<select id="searchVodBoxMetaInfo" parameterType="SearchProductDTO" resultType="SearchProductMetaInfoDTO">
  	   SELECT  /* selectFeatureMovieList.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
 		        LA.UP_MENU_ID
 		      , LA.TOP_MENU_ID
