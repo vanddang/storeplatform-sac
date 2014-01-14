@@ -64,7 +64,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=01088902431")
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?msisdn=01088902431")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -85,7 +85,7 @@ public class GetUaCodeTest {
 	@Test
 	public void requestDeviceModelNoTest() {
 		new TestCaseTemplate(this.mockMvc)
-				.url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750&?msisdn=01088902431")
+				.url("/dev/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750&?msisdn=01088902431")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -104,7 +104,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestMsisdnDeviceModelNoTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750")
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-B750")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -119,6 +119,7 @@ public class GetUaCodeTest {
 	 * <pre>
 	 * 실패 CASE
 	 * 유효하지 않은 MDN이 Request로 넘어온 경우.
+	 * Biz.Logic - Exception 처리
 	 * 
 	 * [유효한 MDN]
 	 * 1. 10자리 또는 11자리
@@ -127,7 +128,7 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestInvalidMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -142,11 +143,12 @@ public class GetUaCodeTest {
 	 * <pre>
 	 * 실패 CASE
 	 * 회원 Table에 등록되지 않은 MDN이 Request로 넘어온 경우.
+	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
 	@Test
 	public void requestNonDbMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=01011112222")
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?msisdn=01011112222")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -161,11 +163,12 @@ public class GetUaCodeTest {
 	 * <pre>
 	 * 실패 CASE
 	 * Request로 아무값도 넘어오지 않은 경우.
+	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
 	@Test
 	public void requestNonTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.GET)
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.GET)
 				.success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -179,12 +182,13 @@ public class GetUaCodeTest {
 	/**
 	 * <pre>
 	 * 실패 CASE
-	 * Device Tabel에 없는 DeviceModelNo가 넘어온 경우.
+	 * Device Tabel에 없는 DeviceModelNo가 넘어온 경우.(UA코드가 없는 경우)
+	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
 	@Test
 	public void responseNonUaCodeTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-W777")
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/miscellaneous/getUaCode/v1?deviceModelNo=SCH-W777")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
@@ -194,10 +198,4 @@ public class GetUaCodeTest {
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
-
-	/** 6. DeviceModelNo에 맵핑되는 UA코드 정보가 없을 경우.???????????? */
-	/** 7. UA 코드가 없을 경우 ★ 중요!! ★ */
-	/** 8. SC 회원 API 응답 실패 ??? */
-	/** Exception에 ErrorCode & ErrorMessage 정의 하기 */
-
 }
