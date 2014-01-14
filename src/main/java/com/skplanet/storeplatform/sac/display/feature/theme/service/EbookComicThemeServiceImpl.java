@@ -96,7 +96,7 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 				banner.setSizeType("A");
 				banner.setType("themeZone");
 				banner.setTitle(title);
-				banner.setProductId("AR00001359");
+				banner.setBannerId("AR00001359");
 				banner.setTitleName(titleName);
 				banner.setThemeInfo("베스트 로맨스 도서 37종 50프로 할인 이벤트");
 				banner.setSourceList(sourceList);
@@ -134,7 +134,7 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 				banner.setSizeType("A");
 				banner.setType("themeZone");
 				banner.setTitle(title);
-				banner.setProductId("AR00001386");
+				banner.setBannerId("AR00001386");
 				banner.setTitleName(titleName);
 				banner.setThemeInfo("반전에 반전을 거듭하는 묘미~황성 작품들만 모아보기");
 				banner.setSourceList(sourceList);
