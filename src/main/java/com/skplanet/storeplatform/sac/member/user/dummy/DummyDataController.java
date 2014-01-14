@@ -150,7 +150,7 @@ public class DummyDataController {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 		res.setUserKey("IW102158844420091030165015");
-		res.setUserAuthKey("1234567890");
+		res.setUserStatus("mobile");
 
 		return res;
 	}
@@ -173,7 +173,9 @@ public class DummyDataController {
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 		res.setUserKey("IW102158844420091030165015");
 		res.setUserAuthKey("1234567890");
-
+		res.setUserStatus("temporary");
+		res.setJoinSiteCd("90000");
+		res.setJoinSiteNm("One ID");
 		return res;
 	}
 
@@ -339,22 +341,28 @@ public class DummyDataController {
 			DeviceInfo deviceInfo = new DeviceInfo();
 
 			deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-			deviceInfo.setDeviceKey("");
+			deviceInfo.setDeviceKey("01011112222");
 			deviceInfo.setDeviceId("01011112222");
-			deviceInfo.setDeviceType("");
 			deviceInfo.setDeviceModelNo("LG-SH810");
 			deviceInfo.setDeviceTelecom("SKT");
 			deviceInfo.setImMngNum("");
 			deviceInfo.setDeviceNickName("LG-SH810");
 			deviceInfo.setIsPrimary("Y");
 			deviceInfo.setIsAuthenticated("Y");
-			deviceInfo.setAuthenticationDate("20140106");
+			deviceInfo.setAuthenticationDate("20131226103711");
+			deviceInfo.setIsRecvSms("Y");
+			deviceInfo.setNativeId("358362045580844");
+			deviceInfo.setDeviceAccount("hkd@gmail.com");
+			deviceInfo.setJoinId("US012301");
 			deviceInfo.setOsVer("1.0");
+			deviceInfo.setScVer("1.0");
+			deviceInfo.setRooting("N");
 			deviceInfo.setMakeComp("SAMSUNG");
-			deviceInfo.setUserId("hkd");
 
 			deviceInfoList.add(deviceInfo);
-
+			
+			res.setUserId("hdk");
+			res.setUserKey("IW102158844420091030165015");
 			res.setDeviceInfoList(deviceInfoList);
 
 		} catch (Exception e) {
