@@ -95,9 +95,9 @@
 		                               ,TB_DP_PROD B
 		                               ,TB_DP_PROD_DESC C
 		                               ,TB_DP_APP_PROD D
-		                               ,TB_DP_MENU_CATALOG_PROD_MAPG E
-		                               ,TB_DP_MENU_CATALOG F
-		                               ,TB_DP_MENU_CATALOG_DESC G
+		                               ,TB_DP_MENU_CATEGORY_PROD_MAPG E
+		                               ,TB_DP_MENU_CATEGORY F
+		                               ,TB_DP_MENU_CATEGORY_DESC G
 		                               ,TB_DP_SPRT_DEVICE H
 		                               ,TB_DP_TENANT_PROD I
 		                               ,TB_DP_TENANT_PROD_PRICE J
@@ -235,9 +235,9 @@
 		                                 ,TB_DP_PROD B
 		                                 ,TB_DP_PROD_DESC C
 		                                 ,TB_DP_APP_PROD D
-		                                 ,TB_DP_MENU_CATALOG_PROD_MAPG E
-		                                 ,TB_DP_MENU_CATALOG F
-		                                 ,TB_DP_MENU_CATALOG_DESC G
+                                         ,TB_DP_MENU_CATEGORY_PROD_MAPG E
+                                         ,TB_DP_MENU_CATEGORY F
+                                         ,TB_DP_MENU_CATEGORY_DESC G
 		                                 ,TB_DP_SPRT_DEVICE H
 		                                 ,TB_DP_TENANT_PROD I
 		                                 ,TB_DP_TENANT_PROD_PRICE J
