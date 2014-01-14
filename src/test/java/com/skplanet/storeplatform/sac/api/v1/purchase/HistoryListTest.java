@@ -79,7 +79,7 @@ public class HistoryListTest {
 	 *             Exception
 	 */
 	@Test
-	public void shouldObtainPurchaseList() throws Exception {
+	public void shouldObtainHistoryList() throws Exception {
 		new TestCaseTemplate(this.mockMvc).url("/purchase/history/list/v1").httpMethod(HttpMethod.POST)
 
 		.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -107,22 +107,42 @@ public class HistoryListTest {
 						assertThat(res, notNullValue());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-		// new TestCaseTemplate(this.mockMvc).url("/bypass/purchase/search/1").httpMethod(HttpMethod.POST)
-		// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-		// .requestBody(new RequestBodySetter() {
-		// @Override
-		// public Object requestBody() {
-		// Purchase purchaseVO = new Purchase();
-		//
-		// return purchaseVO;
-		// }
-		// }).success(PurchaseList.class, new SuccessCallback() {
-		// @Override
-		// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-		// PurchaseList paymentListVO = (PurchaseList) result;
-		//
-		// assertThat(paymentListVO.getPurchase(), notNullValue());
-		// }
-		// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON, RunMode.PROTOBUF);
+	}
+
+	/**
+	 * 구매 목록 단위테스트.
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void shouldObtainHistoryCount() throws Exception {
+		new TestCaseTemplate(this.mockMvc).url("/purchase/history/count/v1").httpMethod(HttpMethod.POST)
+
+		.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						HistoryListReq req = new HistoryListReq();
+						req.setTenantId("S01"); // 테넌트ID
+						req.setInsdUsermbrNo("IF1423020847420091202152309"); // 사용자번호
+						req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
+						req.setStartDt("20100101000000"); // 조회시작일시
+						req.setEndDt("20140113000000"); // 조회종료일시
+						req.setHidingYn("N"); // 숨김여부 Y:숨김 N:비숨김 null:전체
+						// req.setTenantProdGrpCd("GRP");
+
+						// req.setPrchsProdType("send");
+
+						return req;
+					}
+				}).success(HistoryListRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						HistoryListRes res = (HistoryListRes) result;
+
+						assertThat(res, notNullValue());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 }

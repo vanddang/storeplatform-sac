@@ -23,9 +23,15 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryList;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResponse;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.History;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
 
+/**
+ * 구매내역 Implements
+ * 
+ * Updated on : 2014-01-10 Updated by : 양주원, 엔텔스.
+ */
 @Service
 @Transactional
 public class HistoryListServiceImpl implements HistoryListService {
@@ -35,8 +41,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 	@Autowired
 	private HistorySCI historySci;
 
+	/**
+	 * 구매내역조회
+	 * 
+	 * @param request
+	 * @return
+	 */
 	@Override
-	public HistoryListRes list(HistoryListReq historyListReq) {
+	public HistoryListRes list(HistoryListReq request) {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
@@ -44,21 +56,21 @@ public class HistoryListServiceImpl implements HistoryListService {
 		HistoryListResponse scResponse = new HistoryListResponse();
 
 		// SC Request Set
-		scRequest.setTenantId(historyListReq.getTenantId());
-		scRequest.setInsdUsermbrNo(historyListReq.getInsdUsermbrNo());
-		scRequest.setStartDt(historyListReq.getStartDt());
-		scRequest.setEndDt(historyListReq.getEndDt());
-		scRequest.setPrchsProdType(historyListReq.getPrchsProdType());
-		scRequest.setPrchsStatusCd(historyListReq.getPrchsStatusCd());
-		scRequest.setProdId(historyListReq.getProdId());
-		scRequest.setHidingYn(historyListReq.getHidingYn());
-		scRequest.setTenantProdGrpCd(historyListReq.getTenantProdGrpCd());
+		scRequest.setTenantId(request.getTenantId());
+		scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
+		scRequest.setStartDt(request.getStartDt());
+		scRequest.setEndDt(request.getEndDt());
+		scRequest.setPrchsProdType(request.getPrchsProdType());
+		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+		scRequest.setProdId(request.getProdId());
+		scRequest.setHidingYn(request.getHidingYn());
+		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
 		// SC Call
 		scResponse = this.historySci.listHistory(scRequest);
 
 		// SAC Response VO
-		HistoryListRes historyListRes = new HistoryListRes();
+		HistoryListRes response = new HistoryListRes();
 		List<History> sacHistoryList = new ArrayList<History>();
 		History history = new History();
 
@@ -100,10 +112,45 @@ public class HistoryListServiceImpl implements HistoryListService {
 			sacHistoryList.add(history);
 		}
 
-		historyListRes.setHistoryList(sacHistoryList);
-		historyListRes.setTotalCnt(sacHistoryList.size());
+		response.setHistoryList(sacHistoryList);
+		response.setTotalCnt(sacHistoryList.size());
 
 		// logger.debug("list : {}", historyListRes);
-		return historyListRes;
+		return response;
+	}
+
+	/**
+	 * 구매건수조회
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public HistoryCountRes count(HistoryListReq request) {
+		// logger.debug("list : {}", historyListReq);
+
+		// SC request/response VO
+		HistoryListRequest scRequest = new HistoryListRequest();
+		int scResponse = 0;
+
+		// SC Request Set
+		scRequest.setTenantId(request.getTenantId());
+		scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
+		scRequest.setStartDt(request.getStartDt());
+		scRequest.setEndDt(request.getEndDt());
+		scRequest.setPrchsProdType(request.getPrchsProdType());
+		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+		scRequest.setProdId(request.getProdId());
+		scRequest.setHidingYn(request.getHidingYn());
+		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
+
+		// SC Call
+		scResponse = this.historySci.getHistoryCount(scRequest);
+
+		HistoryCountRes response = new HistoryCountRes();
+		response.setTotalCnt(scResponse);
+
+		// logger.debug("list : {}", historyListRes);
+		return response;
 	}
 }
