@@ -39,6 +39,10 @@ public class ShoppingDTO {
 	private String prodId;
 	private String partProdId;
 	private String filePos;
+	private String prodGrdCd;
+	private String applyStartDt;
+	private String applyEndDt;
+	private String prodCaseCd;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -206,6 +210,38 @@ public class ShoppingDTO {
 
 	public void setFilePos(String filePos) {
 		this.filePos = filePos;
+	}
+
+	public String getProdGrdCd() {
+		return this.prodGrdCd;
+	}
+
+	public void setProdGrdCd(String prodGrdCd) {
+		this.prodGrdCd = prodGrdCd;
+	}
+
+	public String getApplyStartDt() {
+		return this.applyStartDt;
+	}
+
+	public void setApplyStartDt(String applyStartDt) {
+		this.applyStartDt = applyStartDt;
+	}
+
+	public String getApplyEndDt() {
+		return this.applyEndDt;
+	}
+
+	public void setApplyEndDt(String applyEndDt) {
+		this.applyEndDt = applyEndDt;
+	}
+
+	public String getProdCaseCd() {
+		return this.prodCaseCd;
+	}
+
+	public void setProdCaseCd(String prodCaseCd) {
+		this.prodCaseCd = prodCaseCd;
 	}
 
 }
