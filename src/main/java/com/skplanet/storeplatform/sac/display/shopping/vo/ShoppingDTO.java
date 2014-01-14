@@ -25,6 +25,7 @@ public class ShoppingDTO {
 	private String dcAmt;
 	private String dlvProdYn;
 	private String dwldQty;
+	private String prchsQty;
 	private String expoOrd;
 
 	private String brandId;
@@ -114,6 +115,14 @@ public class ShoppingDTO {
 
 	public void setDwldQty(String dwldQty) {
 		this.dwldQty = dwldQty;
+	}
+
+	public String getPrchsQty() {
+		return this.prchsQty;
+	}
+
+	public void setPrchsQty(String prchsQty) {
+		this.prchsQty = prchsQty;
 	}
 
 	public String getExpoOrd() {
