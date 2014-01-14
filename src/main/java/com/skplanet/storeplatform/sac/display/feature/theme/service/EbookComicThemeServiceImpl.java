@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.display.feature.theme.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Banner;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -33,6 +36,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 
 @Service
 public class EbookComicThemeServiceImpl implements EbookComicThemeService {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
@@ -48,79 +54,100 @@ public class EbookComicThemeServiceImpl implements EbookComicThemeService {
 	public EbookComicThemeRes searchEbookComicThemeList(EbookComicThemeReq ebookComicThemeRequest) {
 		EbookComicThemeRes response = new EbookComicThemeRes();
 
-		List<Product> productList = new ArrayList<Product>();
-		List<Source> sourceList = new ArrayList<Source>();
+		Layout layout = new Layout();
+		List<Banner> bannerList = null;
+		List<Identifier> identifierList = null;
+		List<Source> sourceList = null;
+		Banner banner = null;
+		Identifier identifier = null;
+		Title title = null;
+		Source source = null;
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
 
 		if ("ebook".equals(ebookComicThemeRequest.getFilteredBy())) {
 			for (int i = 1; i <= 1; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				Source source = new Source();
-				Title title = new Title();
 
-				// 상품ID
+				banner = new Banner();
 				identifier = new Identifier();
+				title = new Title();
+				source = new Source();
+
+				identifierList = new ArrayList<Identifier>();
 				identifier.setType("channelId");
-				identifier.setText("2443");
+				identifier.setText("2866");
+				identifierList.add(identifier);
 
-				title.setText("추리, 심리, 미스터리 모음 테마 이북 모음전");
+				title.setText("최고의 로맨스소설 50프로 할인 이벤트");
 
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType("image/jpeg");
-				source.setSize("128");
-				source.setType("thmubnail");
-				source.setUrl("http://<<BASE>>/image/bb.jpg");
+				Title titleName = new Title();
+				titleName.setName("theme");
+				titleName.setText("최고의 로맨스소설 50프로 할인이벤트");
+
+				sourceList = new ArrayList<Source>();
+				source.setMediaType("image/png");
+				source.setUrl("http://wap.tstore.co.kr/images/tstore30/banner/ebook/ebook_xhdpi_290_191_20140106144054878.png");
 				sourceList.add(source);
 
-				product = new Product();
-				product.setIdentifier(identifier);
-				product.setTitle(title);
-				product.setSourceList(sourceList);
-				product.setProductExplain("치열한 두뇌싸움을 좋아하는 분들에게 Tstore가 추천");
-
-				productList.add(product);
+				bannerList = new ArrayList<Banner>();
+				banner.setBase("/category/themeZone");
+				banner.setIdentifier(identifierList);
+				banner.setSizeType("A");
+				banner.setType("themeZone");
+				banner.setTitle(title);
+				banner.setProductId("AR00001359");
+				banner.setTitleName(titleName);
+				banner.setThemeInfo("베스트 로맨스 도서 37종 50프로 할인 이벤트");
+				banner.setSourceList(sourceList);
+				bannerList.add(banner);
 
 			}
-
-		} else {
+			layout.setBannerList(bannerList);
+		} else if ("cartoon".equals(ebookComicThemeRequest.getFilteredBy())) {
 			for (int i = 1; i <= 1; i++) {
-				Product product = new Product();
-				Identifier identifier = new Identifier();
-				Source source = new Source();
-				Title title = new Title();
 
-				// 상품ID
+				banner = new Banner();
 				identifier = new Identifier();
-				identifier.setType("product" + i);
-				identifier.setText("H090101222_" + i);
+				title = new Title();
+				source = new Source();
 
-				title.setText("로맨스, 유머 모음 테마 코믹 모음전");
+				identifierList = new ArrayList<Identifier>();
+				identifier.setType("channelId");
+				identifier.setText("2866");
+				identifierList.add(identifier);
 
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType("image/jpeg");
-				source.setSize("128");
-				source.setType("thmubnail");
-				source.setUrl("http://<<BASE>>/image/bb.jpg");
+				title.setText("황성");
+
+				Title titleName = new Title();
+				titleName.setName("theme");
+				titleName.setText("무협 황성 작가관");
+
+				sourceList = new ArrayList<Source>();
+				source.setMediaType("image/png");
+				source.setUrl("http://wap.tstore.co.kr/images/tstore30/banner/comic/comic_xhdpi_290_191_20140110143611883.png");
 				sourceList.add(source);
 
-				product = new Product();
-				product.setIdentifier(identifier);
-				product.setTitle(title);
-				product.setSourceList(sourceList);
-				product.setProductExplain("재미와 로맨스를 원하시는 분들에게 Tstore가 추천");
-
-				productList.add(product);
+				bannerList = new ArrayList<Banner>();
+				banner.setBase("/category/themeZone");
+				banner.setIdentifier(identifierList);
+				banner.setSizeType("A");
+				banner.setType("themeZone");
+				banner.setTitle(title);
+				banner.setProductId("AR00001386");
+				banner.setTitleName(titleName);
+				banner.setThemeInfo("반전에 반전을 거듭하는 묘미~황성 작품들만 모아보기");
+				banner.setSourceList(sourceList);
+				bannerList.add(banner);
 
 			}
+
+			layout.setBannerList(bannerList);
+		} else {
+			this.log.debug("해당 요청이 없습니다.");
 		}
 		response.setCommonResponse(commonResponse);
+		response.setLayout(layout);
 		// response.setProductList(productList);
 		return response;
 	}
