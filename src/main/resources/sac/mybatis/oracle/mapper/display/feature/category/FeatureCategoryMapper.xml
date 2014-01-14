@@ -146,6 +146,7 @@
 		   AND LA.PROD_ID = LB.PROD_ID(+)
 		   AND LA.PROD_ID = LC.PROD_ID
 		   AND LC.EXPO_ORD = '1'
+		   AND LC.LANG_CD = 'ko'
 		   AND LC.IMG_CD = #{imageCd}
     </select>
     
@@ -306,6 +307,7 @@
 		   AND LA.PROD_ID = LB.PROD_ID(+)
 		   AND LA.PROD_ID = LC.PROD_ID
 		   AND LC.EXPO_ORD = '1'
+		   AND LC.LANG_CD = 'ko'
 		   AND LC.IMG_CD = #{imageCd}
     </select>
     

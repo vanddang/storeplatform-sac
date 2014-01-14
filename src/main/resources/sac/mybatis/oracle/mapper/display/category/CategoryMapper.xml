@@ -109,6 +109,7 @@
 		   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
 		   AND  KA.PROD_ID = KC.PROD_ID
 		   AND  KC.EXPO_ORD = '1'
+		   AND  KC.LANG_CD = 'ko'
 		   AND  KC.IMG_CD = #{imageCd}
     </select>
 </mapper>
