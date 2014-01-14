@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,7 +49,7 @@ public class MessageController {
 	 */
 	@RequestMapping(value = "/sms/send/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, String> smsSend(SmsSendReq smsReq) {
+	public Map<String, String> smsSend(@RequestBody SmsSendReq smsReq) {
 		return this.messageService.smsSend(smsReq);
 	}
 

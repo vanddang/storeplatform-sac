@@ -9,10 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.other.message.repository;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
  * 
  * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
  */
-@Profile(value = { "stag", "real" })
 @Service
 public class MessageRepositoryImpl implements MessageRepository {
 
@@ -41,17 +40,23 @@ public class MessageRepositoryImpl implements MessageRepository {
 
 	@Override
 	public Map<String, String> mmsSend(MmsSendReq mmsReq) {
-		return null;
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("resultStatus", "success");
+		return result;
 	}
 
 	@Override
 	public Map<String, String> aomSend(AomSendReq aomReq) {
-		return null;
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("resultStatus", "success");
+		return result;
 	}
 
 	@Override
 	public Map<String, String> emailSend(EmailSendReq emailReq) {
-		return null;
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("resultStatus", "success");
+		return result;
 	}
 
 }
