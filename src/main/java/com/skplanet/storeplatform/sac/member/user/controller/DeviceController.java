@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
@@ -158,6 +160,38 @@ public class DeviceController {
 		}
 
 		ListDeviceRes res = this.deviceService.listDevice(headerVo, req);
+
+		return res;
+	}
+
+	/**
+	 * 휴대기기 단말 삭제
+	 * 
+	 * @param headers
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public List<DeviceInfo> removeDevice(@RequestHeader Map<String, Object> headers, @RequestBody RemoveDeviceReq req)
+			throws Exception {
+
+		/* Header 정보 세팅 */
+		HeaderVo headerVo = this.headerInfo.getHeader(headers);
+
+		// String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+
+		if (/* userAuthKey.equals("") || */userKey.equals("") && deviceKey.equals("") && userId.equals("")
+				&& deviceId.equals("")) {
+			throw new Exception("필수요청 파라메터 부족");
+		}
+
+		List<DeviceInfo> res = this.deviceService.removeDevice(headerVo, req);
 
 		return res;
 	}

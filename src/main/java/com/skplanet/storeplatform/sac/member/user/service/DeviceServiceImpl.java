@@ -55,6 +55,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
@@ -221,7 +222,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
 		schDeviceListReq.setUserKey(userKey);
-		schDeviceListReq.setIsMainDevice(req.getIsMainDevice());
+		schDeviceListReq.setIsMainDevice(StringUtil.trim(req.getIsMainDevice()));
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
@@ -239,6 +240,10 @@ public class DeviceServiceImpl implements DeviceService {
 		keySearchList.add(key);
 		schDeviceListReq.setKeySearchList(keySearchList);
 		schDeviceListReq.setCommonRequest(commonRequest);
+
+		logger.info("###### schDeviceListReq : " + schDeviceListReq);
+		logger.info("###### schDeviceListReq.getKeySearchList() : " + schDeviceListReq.getKeySearchList());
+		logger.info("###### schDeviceListReq.getCommonRequest() : " + schDeviceListReq.getCommonRequest());
 
 		/* 사용자 휴대기기 목록 조회 */
 		SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
@@ -720,5 +725,78 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		return res;
+	}
+
+	/**
+	 * 
+	 * 휴대기기 삭제
+	 * 
+	 * @param SetMainDeviceRequest
+	 * @return
+	 */
+	@Override
+	public List<DeviceInfo> removeDevice(HeaderVo headerVo, RemoveDeviceReq req) throws Exception {
+
+		logger.info("######################## DeviceServiceImpl 휴대기기 삭제 start ############################");
+
+		String userKey = req.getUserKey();
+		String deviceKey = req.getDeviceKey();
+
+		/* 회원 정보 조회 */
+		SearchUserRequest schUserReq = new SearchUserRequest();
+		schUserReq.setCommonRequest(commonRequest);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		key.setKeyString(userKey);
+		keySearchList.add(key);
+		schUserReq.setKeySearchList(keySearchList);
+		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+
+		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
+		}
+
+		/* sc회원 컴포넌트 휴대기기 목록 조회 */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setDeviceId(req.getDeviceId());
+		listDeviceReq.setUserKey(userKey);
+		ListDeviceRes listDeviceRes = this.listDevice(headerVo, listDeviceReq);
+
+		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
+		List<DeviceInfo> deviceModifyList = new ArrayList<DeviceInfo>();
+		DeviceInfo info = new DeviceInfo();
+
+		if (deviceInfoList.size() > 0) {
+			for (DeviceInfo deviceInfo : deviceInfoList) {
+
+				if (!req.getDeviceId().equals(deviceInfo.getDeviceId())) {
+					info = deviceInfo;
+					deviceModifyList.add(info);
+				}
+
+				logger.info("###### Tenant User Key: " + req.getDeviceId());
+				logger.info("###### SC User Key: " + info.getDeviceId());
+			}
+
+		}
+
+		/* IDP 휴대기기 정보 등록 요청 */
+		if (schUserRes.getUserMbr().getImSvcNo() != null) { // 통합회원
+			// TXUpdateAdditionalUserInfoIDP
+		} else {
+			// modifyProfile
+		}
+
+		/* SC 휴대기기 정보 삭제 */
+
+		/* 월정액 탈퇴 */
+
+		/* 게임센터 연동 처리 */
+
+		logger.info("######################## DeviceServiceImpl 휴대기기 삭제 start ############################");
+
+		return deviceModifyList;
 	}
 }

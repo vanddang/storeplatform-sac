@@ -84,22 +84,48 @@ public class UserSelectServiceImpl implements UserSelectService {
 	@Override
 	public ExistRes exist(HeaderVo headerVo, ExistReq req) throws Exception {
 		ExistRes result = new ExistRes();
-		DetailRes detailRes = new DetailRes();
-		DetailReq detailReq = new DetailReq();
+		SearchUserRequest schUserReq = new SearchUserRequest();
 
-		detailReq.setUserKey(StringUtil.setTrim(req.getUserKey()));
-		detailReq.setUserId(StringUtil.setTrim(req.getUserId()));
-		detailReq.setDeviceKey(StringUtil.setTrim(req.getDeviceKey()));
-		detailReq.setDeviceId(StringUtil.setTrim(req.getDeviceId()));
+		String userKey = StringUtil.setTrim(req.getUserKey());
+		String userId = StringUtil.setTrim(req.getUserId());
+		String deviceKey = StringUtil.setTrim(req.getDeviceKey());
+		String deviceId = StringUtil.setTrim(req.getDeviceId());
+
+		List<KeySearch> keySchList = new ArrayList<KeySearch>();
+
+		if (userKey != null && !"".equals(userKey)) {
+			KeySearch keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType("INSD_USERMBR_NO");
+			keySchUserKey.setKeyString(userKey);
+			keySchList.add(keySchUserKey);
+		} else if (userId != null && !"".equals(userId)) {
+			KeySearch keySchUserId = new KeySearch();
+			keySchUserId.setKeyType("MBR_ID");
+			keySchUserId.setKeyString(userId);
+			keySchList.add(keySchUserId);
+		} else if (deviceId != null && !"".equals(deviceId)) {
+			KeySearch keySchDeviceId = new KeySearch();
+			keySchDeviceId.setKeyType("INSD_DEVICE_ID");
+			keySchDeviceId.setKeyString(deviceId);
+			keySchList.add(keySchDeviceId);
+		} else if (deviceKey != null && !"".equals(deviceKey)) {
+			KeySearch keySchDeviceKey = new KeySearch();
+			keySchDeviceKey.setKeyType("DEVICE_ID");
+			keySchDeviceKey.setKeyString(deviceKey);
+			keySchList.add(keySchDeviceKey);
+		}
 
 		// 회원정보 세팅
-		detailRes = this.detail(detailReq);
+		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
+		schUserReq.setKeySearchList(keySchList);
+		schUserReq.setCommonRequest(this.commonRequest());
+		UserInfo userInfo = this.userInfo(schUserReq);
+		userInfoList.add(userInfo);
 
-		UserInfo userInfo = new UserInfo();
-		if ("".equals(detailRes.getUserInfoList()) || detailRes.getUserInfoList() == null) {
+		if ("".equals(userInfo) || userInfo == null) {
 			throw new RuntimeException("SC 회원조회 실패 : 해당 회원이 없음");
 		} else {
-			for (UserInfo info : detailRes.getUserInfoList()) {
+			for (UserInfo info : userInfoList) {
 				userInfo.setImSvcNo(info.getImSvcNo());
 				userInfo.setUserKey(info.getUserKey());
 				userInfo.setUserType(info.getUserType());
