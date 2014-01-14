@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
@@ -41,11 +42,11 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetUaCodeRes getUaCode(GetUaCodeReq request) throws Exception {
 
-		logger.info("#################  UA 코드 정보 조회 - START ######################");
+		logger.debug("#################  UA 코드 정보 조회 - START ######################");
 		GetUaCodeRes response = new GetUaCodeRes();
 		response = this.service.getUaCode(request);
 
-		logger.info("#################  UA 코드 정보 조회 -  END #######################");
+		logger.debug("#################  UA 코드 정보 조회 -  END #######################");
 		return response;
 	}
 
@@ -61,12 +62,33 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
-		logger.info("#####################>> request msisdn : " + req.getMsisdn());
+		logger.debug("#################  OPMD 모번호 조회 - START ######################");
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(this.service.getOpmd(req).getMsisdn());
-		logger.info("#####################>> response msisdn : " + res.getMsisdn());
+		logger.debug("#################  OPMD 모번호 조회 -  END #######################");
 
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * Captcha 문자 발급.
+	 * </pre>
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getCaptcha/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public GetCaptchaRes getCaptcha() throws Exception {
+
+		GetCaptchaRes res = new GetCaptchaRes();
+		logger.debug("######## Captcha 문자 발급 Controller 시작 ##############");
+		res = this.service.getCaptcha();
+		logger.debug("### >> GetCaptchaRes {} ", res);
+		// res.setImageData(imageData);
+		// res.setImageSign(imageSign);
+		logger.debug("######## Captcha 문자 발급 Controller 종료 ##############");
+		return res;
+	}
 }

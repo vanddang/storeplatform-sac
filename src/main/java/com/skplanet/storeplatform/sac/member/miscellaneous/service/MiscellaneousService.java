@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
@@ -37,4 +38,14 @@ public interface MiscellaneousService {
 	 */
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception;
 
+	/**
+	 * <pre>
+	 * Captcha 문자 발급.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public GetCaptchaRes getCaptcha() throws Exception;
 }

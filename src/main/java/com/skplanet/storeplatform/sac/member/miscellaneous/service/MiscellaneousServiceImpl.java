@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -19,10 +21,13 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.miscellaneous.repository.MiscellaneousRepository;
 
 /**
@@ -36,16 +41,29 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private static final Logger logger = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
 
 	@Autowired
-	private UAPSSCI uapsSCI;
+	private UAPSSCI uapsSCI; // UAPS 연동 Interface.
 
 	@Autowired
-	private UserSCI userSCI;
+	private UserSCI userSCI; // 회원 Component 사용자 기능 Interface.
 
 	@Autowired
-	private DeviceSCI deviceSCI;
+	private DeviceSCI deviceSCI; // 회원 Component 휴대기기 기능 Interface.
 
 	@Autowired
-	private MiscellaneousRepository repository;
+	private IDPService idpService; // IDP 연동 class.
+
+	@Autowired
+	private MiscellaneousRepository repository; // 기타 기능 Repository.
+
+	private static final String SYSTEMID = "S001";
+	private static final String TENANTID = "S01";
+	private static CommonRequest commonRequest;
+
+	static {
+		commonRequest = new CommonRequest();
+		commonRequest.setSystemID(SYSTEMID);
+		commonRequest.setTenantID(TENANTID);
+	}
 
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
@@ -54,17 +72,37 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(msisdn);
 
-		// 자번호(989)가 아닌 경우, request로 전달된 msisdn 그대로 반환
+		/** 1. OPMD번호(989)여부 검사 ( OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 ) */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
-			logger.info("## 모번호 조회 START >> {}", msisdn);
-			OpmdRes opmdRes = this.uapsSCI.getOpmdInfo(msisdn);// 989 MSISDN이 들어오면 여기 지금 에러남.
-			logger.info("#################################");
-			if (opmdRes.getResultCode() == 0) {
-				res.setMsisdn(opmdRes.getMobileMdn());
-			} else {
-				throw new RuntimeException("UAPS 연동 오류");
-			}
+			/** 1) 유효성 검사 (OPMD 번호) */
+			if (msisdn.length() == 10) { // ex)9890001111
+				logger.debug("############ >> msisdn {} ", msisdn);
+				/** 2) OPMD 모번호 조회 (UAPS 연동) */
+				OpmdRes opmdRes = new OpmdRes();
+				opmdRes = this.uapsSCI.getOpmdInfo(msisdn);
 
+				logger.debug("############ >> opmdRes {}", opmdRes);
+				/** 3) UAPS 연동 결과 확인 */
+				if (opmdRes.getResultCode() == 0) {
+					logger.debug("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
+					logger.debug("##### OPMD MDN {}", opmdRes.getOpmdMdn());
+					res.setMsisdn(opmdRes.getMobileMdn());
+				} else {
+					logger.debug("#####External Comp. UAPS 연동오류 {}", opmdRes.getResultCode());
+					throw new RuntimeException("UAPS 연동 오류");
+				}
+			} else {
+				logger.debug("########## Exception : 정상적인 휴대폰번호 아님. ##########");
+				throw new Exception("유효하지 않은 휴대폰 번호.");
+			}
+		} else {
+			/** 2. 유효성 검사 (OPMD 번호가 아닌 경우) */
+			if (this.mdnValidation(msisdn).equals("Y")) {
+				logger.debug("########## OPMD 번호 아님. ##########");
+			} else {
+				logger.debug("########## Exception : 정상적인 휴대폰번호 아님. ##########");
+				throw new Exception("유효하지 않은 휴대폰 번호.");
+			}
 		}
 		return res;
 	}
@@ -76,9 +114,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String userKey = "";
 
 		GetUaCodeRes response = new GetUaCodeRes();
-		logger.info("########### GetUaCodeReq {}", req);
+		logger.debug("########### GetUaCodeReq {}", req);
 
-		if (msisdn != null && deviceModelNo == null) { // 파라미터로 MSISDN만 넘어온 경우
+		/** 파라미터로 MSISDN만 넘어온 경우 */
+		if (msisdn != null && deviceModelNo == null) {
 
 			/** 1. SC 회원 Request 생성 */
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -88,76 +127,120 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			String validation = this.mdnValidation(msisdn);
 			if (validation.equals("Y")) {
 
-				/** TODO 3. 임시 공통헤더 생성 주입 */
-				searchUserRequest.setCommonRequest(this.imsiCommonRequest());
-				searchDeviceRequest.setCommonRequest(this.imsiCommonRequest());
-				logger.info("##### >> imsiCommonRequest {}", searchDeviceRequest.getCommonRequest());
+				/** 3. 임시 공통헤더 생성 주입 */
+				searchUserRequest.setCommonRequest(commonRequest);
+				searchDeviceRequest.setCommonRequest(commonRequest);
 
-				/**
-				 * 검색 조건 타입 <br>
-				 * INSD_USERMBR_NO : 내부 사용자 키 <br>
-				 * MBR_ID : 사용자 ID <br>
-				 * INSD_SELLERMBR_NO : 내부 판매자 키 <br>
-				 * SELLERMBR_ID : 판매자 ID <br>
-				 * USERMBR_NO : 통합서비스 키 <br>
-				 * INSD_DEVICE_ID : 내부 기기 키 <br>
-				 * DEVICE_ID : 기기 ID <br>
-				 * EMAIL_ADDR : 사용자 이메일 <br>
-				 * EMAIL : 판매자 이메일 <br>
-				 * TEL_NO : 사용자 연락처 <br>
-				 * WILS_TEL_NO : 판매자 연락처
-				 */
-				List<KeySearch> keySearchs = new ArrayList<KeySearch>();
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 
 				KeySearch keySearch = new KeySearch();
-				keySearch.setKeyType("DEVICE_ID");
+				keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 				keySearch.setKeyString(msisdn);
-				keySearchs.add(keySearch);
-				searchUserRequest.setKeySearchList(keySearchs);
-				searchDeviceRequest.setKeySearchList(keySearchs);
+				keySearchList.add(keySearch);
+				searchUserRequest.setKeySearchList(keySearchList);
+				searchDeviceRequest.setKeySearchList(keySearchList);
 
-				/** 4. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" API > DEVICE_ID를 이용한 회원정보 조회 기능 미구현으로 아직 동작 안됨. */
+				/** 4. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
 				SearchUserResponse searchUserResult = new SearchUserResponse();
 				searchUserResult = this.userSCI.searchUser(searchUserRequest);
-				if (searchUserResult.getCommonResponse().getResultCode().equals("0000")) {
-					userKey = searchUserResult.getUserKey();
-					logger.info("######## >>>>>>>>> userKey {}: ", userKey);
-					searchDeviceRequest.setUserKey(userKey);
+
+				if (StringUtil.equals(searchUserResult.getCommonResponse().getResultCode(),
+						MemberConstants.RESULT_SUCCES)) {
+					if (searchUserResult.getUserMbr() == null) {
+						logger.debug("######## DeviceId에 해당하는 회원정보 없음. ########");
+						throw new Exception("DeviceId에 해당하는 회원정보 없음.");
+					} else {
+						userKey = searchUserResult.getUserMbr().getUserKey();
+						searchDeviceRequest.setUserKey(userKey);
+					}
+
+					logger.debug("######## >>>>>>>>> userKey {}: ", userKey);
 				} else {
-					searchDeviceRequest.setUserKey("IF1023002708420090928145937"); // 일단 조회 되도록 userkey 셋팅
-																				   // (msisdn=01088902431)
-					logger.info("########## SC 회원 기본정보 조회 API 연동 실패. ##############");
-					// throw new Exception("SC 회원 기본정보 조회 API 연동 실패.");
+					logger.debug("######## SC 회원 회원 기본 정보 조회 API 연동 오류. ########");
+					throw new Exception("[" + searchUserResult.getCommonResponse().getResultCode() + "] "
+							+ searchUserResult.getCommonResponse().getResultMessage());
 				}
-				/** 5. deviceId로 deviceModelNo 조회 */
+				/** 5. deviceId와 userKey로 deviceModelNo 조회 */
 				SearchDeviceResponse searchDeviceResult = new SearchDeviceResponse();
 				searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
-				if (searchDeviceResult.getCommonResponse().getResultCode().equals("0000")) {
-					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
-					logger.info("######## >>>>>>>>> deviceModelNo {}: ", deviceModelNo);
+
+				deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
+				if (StringUtil.equals(searchDeviceResult.getCommonResponse().getResultCode(),
+						MemberConstants.RESULT_SUCCES)) {
+					logger.debug("######## >>>>>>>>> deviceModelNo {}: ", deviceModelNo);
+					if (deviceModelNo != null) {
+						// DB 접속(TB_CM_DEVICE) - UaCode 조회
+						String uaCode = this.repository.getUaCode(deviceModelNo);
+						if (uaCode != null) {
+							response.setUaCd(uaCode);
+						} else {
+							throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
+						}
+					}
+				} else if (deviceModelNo == null) {
+					throw new Exception("userKey와 deviceId에 해당하는 deviceModelNo 없음.");
 				} else {
-					logger.info("########## SC 회원 단말정보 조회 API 연동 실패. ##############");
-					throw new Exception("SC 회원 단말정보 조회 API 연동 실패.");
+					throw new Exception("[" + searchDeviceResult.getCommonResponse().getResultCode() + "] "
+							+ searchDeviceResult.getCommonResponse().getResultMessage());
 				}
 
 			} else {
-				logger.info("########## Exception : 정상적인 휴대폰번호 아님. ##########");
 				throw new Exception("유효하지 않은 휴대폰 번호.");
 			}
 		}
-		if (deviceModelNo != null) { // 파라미터로 deviceModelNo가 넘어왔거나, MDN으로 deviceModelNo를 조회해서 가져온 경우
+		/** deviceModelNo 가 파라미터로 들어온 경우 */
+		else if ((msisdn != null && deviceModelNo != null) || (msisdn == null && deviceModelNo != null)) {
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.repository.getUaCode(deviceModelNo);
-			response.setUaCd(uaCode);
+			if (uaCode != null) {
+				response.setUaCd(uaCode);
+			} else {
+				throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
+			}
+		} else {
+			throw new Exception("필수 파라미터 없음.");
 		}
 
 		return response;
+	}
+
+	@Override
+	public GetCaptchaRes getCaptcha() throws Exception {
+
+		GetCaptchaRes response = new GetCaptchaRes();
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * Encodes the byte array info base64 String.
+	 * </pre>
+	 * 
+	 * @param imageByteArray
+	 * @return
+	 */
+	public static String encodeImage(byte[] imageByteArray) {
+		return Base64.encodeBase64URLSafeString(imageByteArray);
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param imageDataString
+	 * @return
+	 */
+	public static byte[] decodeImage(String imageDataString) {
+		return Base64.decodeBase64(imageDataString);
 	}
 
 	/**
 	 * 
 	 * <pre>
 	 * 휴대폰번호 유효성 검사.
+	 * 1. 10자리 또는 11자리 인지 확인.
+	 * 2. 010/011/016/017/018 인지 확인
 	 * </pre>
 	 * 
 	 * @param mdn
@@ -166,24 +249,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public String mdnValidation(String mdn) {
 		String validation = "N";
 		if (mdn.length() == 10 | mdn.length() == 11) {
-			validation = "Y";
+			String temp = StringUtils.substring(mdn, 0, 3);
+			if (temp.equals("010") || temp.equals("011") || temp.equals("016") || temp.equals("017")
+					|| temp.equals("018")) {
+				validation = "Y";
+			}
+
 		}
 		return validation;
 	}
 
-	/**
-	 * <pre>
-	 * TODO 임시 SC회원 전달용 공통헤더
-	 * </pre>
-	 * 
-	 * @return
-	 */
-	private CommonRequest imsiCommonRequest() {
-		/** TODO 임시 공통헤더 생성 주입 */
-		CommonRequest commonRequest = new CommonRequest();
-		// S001(ShopClient), S002(WEB), S003(OpenAPI)
-		commonRequest.setSystemID("S001");
-		commonRequest.setTenantID("S01");
-		return commonRequest;
-	}
 }
