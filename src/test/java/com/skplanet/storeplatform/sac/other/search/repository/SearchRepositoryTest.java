@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
 import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
-import com.skplanet.storeplatform.sac.other.search.repository.SearchRepository;
 
 /**
  * 
@@ -47,7 +46,7 @@ public class SearchRepositoryTest {
 	 * </pre>
 	 */
 	@Test
-	public void shouldSearch() {
+	public void testSearch() {
 		TstoreSearchReq ecSearchReq = new TstoreSearchReq();
 		ecSearchReq.setQ("pc매니저");
 		ecSearchReq.setCategory("ALL");
