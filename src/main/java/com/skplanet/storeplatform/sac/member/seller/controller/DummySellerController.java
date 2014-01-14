@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
+import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
@@ -227,35 +230,101 @@ public class DummySellerController {
 	public DetailInformationRes detailInformation() {
 
 		DetailInformationRes responseVO = new DetailInformationRes();
+		// 판매자 멀티미디어정보
+		List<ExtraRight> eList = new ArrayList<ExtraRight>();
+
+		// 약관동의목록
+		List<MbrClauseAgreeList> mList = new ArrayList<MbrClauseAgreeList>();
+		MbrClauseAgreeList mbrClauseAgreeList = null;
+		for (int i = 0; i < 1; i++) {
+			mbrClauseAgreeList = new MbrClauseAgreeList();
+			mbrClauseAgreeList.setExtraAgreementID("US004901");
+			mbrClauseAgreeList.setExtraAgreementVersion("1.0");
+			mbrClauseAgreeList.setIsExtraAgreement("Y");
+			mbrClauseAgreeList.setIsMandatory("");
+			mbrClauseAgreeList.setMemberKey("IF102158942020090723111912");
+			mbrClauseAgreeList.setRegDate("2009-07-23 00:00:00");
+			mbrClauseAgreeList.setTenantID("");
+			mbrClauseAgreeList.setUpdateDate("");
+			mList.add(mbrClauseAgreeList);
+		}
+
+		// 법정대리인정보
+		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+
+		// 판매자 정보
 		SellerMbr sellerMbr = new SellerMbr();
-		sellerMbr.setSellerKey("IF1023599819420120111013407");
-		sellerMbr.setSellerClass("US010101");
-		sellerMbr.setSellerCategory("US011301");
-		sellerMbr.setSellerMainStatus("US010704");
-		sellerMbr.setSellerSubStatus("US010301");
-		sellerMbr.setSellerTelecom("SKT");
-		sellerMbr.setSellerPhoneCountry("82");
-		sellerMbr.setSellerPhone("01011112222");
-		sellerMbr.setSellerEmail("abc@gmail.com");
-		sellerMbr.setIsRecvEmail("Y");
-		sellerMbr.setSellerName("홍길동");
-		sellerMbr.setSellerNickName("Best Seller");
-		sellerMbr.setSellerSex("M");
-		sellerMbr.setSellerBirthDay("19801105");
-		sellerMbr.setSellerSSNumber("130101-1111111");
-		sellerMbr.setSellerZip("135070");
-		sellerMbr.setSellerAddress("삼평동 680");
-		sellerMbr.setSellerDetailAddress("H스퀘어 S동 4층");
-		sellerMbr.setSellerCity("123123");
-		sellerMbr.setSellerState("LA");
-		sellerMbr.setSellerCountry("USA");
-		sellerMbr.setSellerLanguage("ko");
+		sellerMbr.setApproveDate("20120820");
+		sellerMbr.setBizGrade("ggg");
+		sellerMbr.setBizKindCd("US000901");
+		sellerMbr.setBizRegNumber("2");
+		sellerMbr.setBizUnregReason("US000603");
+		sellerMbr.setCeoBirthDay("19270304");
+		sellerMbr.setCeoName("테스트");
+		sellerMbr.setCharger("김덕중");
+		sellerMbr.setCordedTelephone("022224444");
+		sellerMbr.setCordedTelephoneCountry("");
+		sellerMbr.setCustomerEmail("sel@nate.com");
+		sellerMbr.setCustomerPhone("022224444");
+		sellerMbr.setCustomerPhoneCountry("dd");
+		sellerMbr.setIsAccountReal("Y");
+		sellerMbr.setIsBizRegistered("N");
+		sellerMbr.setIsBizTaxable("Y");
+		sellerMbr.setIsDeductible("");
 		sellerMbr.setIsForeign("Y");
-		sellerMbr.setCustomerPhoneCountry("82");
-		sellerMbr.setCustomerPhone("01011112222");
-		sellerMbr.setCustomerEmail("abc@gmail.com");
-		responseVO.setSellerMbr(sellerMbr);
-		responseVO.setSellerKey("IF1023599819420120111013407");
+		sellerMbr.setIsParent("");
+		sellerMbr.setIsRealName("Y");
+		sellerMbr.setIsRecvEmail("Y");
+		sellerMbr.setIsRecvSMS("N");
+		sellerMbr.setMarketCode("US001202");
+		sellerMbr.setMarketStatus("");
+		sellerMbr.setParentSellerKey("");
+		sellerMbr.setRegDate("20120820");
+		sellerMbr.setRepEmail("signtest@yopmail.com");
+		sellerMbr.setRepFax("0211112222");
+		sellerMbr.setRepFaxArea("");
+		sellerMbr.setRepPhone("0211112222");
+		sellerMbr.setRepPhoneArea("");
+		sellerMbr.setRightProfileList("");
+		sellerMbr.setSecedeDate("");
+		sellerMbr.setSecedePathCd("");
+		sellerMbr.setSecedeReasonCode("");
+		sellerMbr.setSecedeReasonMessage("");
+		sellerMbr.setSellerAddress("123123");
+		sellerMbr.setSellerBirthDay("19781101");
+		sellerMbr.setSellerBizCategory("test");
+		sellerMbr.setSellerBizCorpNumber("7887845121");
+		sellerMbr.setSellerBizNumber("");
+		sellerMbr.setSellerBizType("test");
+		sellerMbr.setSellerCategory("US011302");
+		sellerMbr.setSellerCity("123123");
+		sellerMbr.setSellerClass("US010101");
+		sellerMbr.setSellerCompany("(주)동해물과 백두산이 마르고 닳도록");
+		sellerMbr.setSellerCountry("");
+		sellerMbr.setSellerDetailAddress("123123");
+		sellerMbr.setSellerEmail("signtest@yopmail.com");
+		sellerMbr.setSellerID("signtest");
+		sellerMbr.setSellerKey("IF102158942020090723111912");
+		sellerMbr.setSellerLanguage("US004301");
+		sellerMbr.setSellerMainStatus("US010205");
+		sellerMbr.setSellerName("김덕중");
+		sellerMbr.setSellerNickName("판매자정보팝업용판매자명");
+		sellerMbr.setSellerPhone("01083982958");
+		sellerMbr.setSellerPhoneCountry("");
+		sellerMbr.setSellerSex("F");
+		sellerMbr.setSellerSSNumber("");
+		sellerMbr.setSellerState("");
+		sellerMbr.setSellerSubStatus("US010314");
+		sellerMbr.setSellerTelecom("US001202");
+		sellerMbr.setSellerZip("120830");
+		sellerMbr.setTenantID("");
+		sellerMbr.setVendorCode("");
+
+		responseVO.setExtraRightList(eList);// 판매자 멀티미디어정보
+		responseVO.setMbrClauseAgreeList(mList);// 약관동의목록
+		responseVO.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
+		responseVO.setSellerKey("IF102158942020090723111912");// 판매자Key
+		responseVO.setSellerMbr(sellerMbr);// 판매자 정보
 
 		return responseVO;
 
@@ -289,6 +358,7 @@ public class DummySellerController {
 			document.setSellerKey("IF1023599819420120111013407");
 			document.setUpdateDate("2013-12-12");
 			document.setUpdateID("chd");
+			dList.add(document);
 		}
 
 		// 판매자 정산정보
