@@ -138,7 +138,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
 			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
-			userMbr.setUserType(MemberConstants.USER_STATE_MOBILE);
+			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE);
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
