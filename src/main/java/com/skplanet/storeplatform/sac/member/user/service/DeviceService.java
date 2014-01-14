@@ -26,7 +26,7 @@ public interface DeviceService {
 			throws Exception;
 
 	/**
-	 * 휴대기기 목록 조회
+	 * 휴대기기 목록 조회 searchType에 따라 모든기기/대표기기 조회
 	 * 
 	 * @param headerVo
 	 * @param req
