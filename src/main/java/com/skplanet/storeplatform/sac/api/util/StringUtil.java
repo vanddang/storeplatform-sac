@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 공통적으로 필요한 데이터 변환기능 및 문자열 조작기능등이 구현되어 있음
  */
-public class StringUtil {
+public class StringUtil extends StringUtils {
 	public static final int RIGHT = 1;
 	public static final int LEFT = 2;
 
