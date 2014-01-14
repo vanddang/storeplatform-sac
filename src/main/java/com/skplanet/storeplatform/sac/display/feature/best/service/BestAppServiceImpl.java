@@ -77,14 +77,6 @@ public class BestAppServiceImpl implements BestAppService {
 		// BEST 앱 상품 조회
 		List<BestAppDTO> appList = null;
 
-		if (!"ADM000000001".equals(bestAppReq.getListId())) {
-			// 추천, 인기(매출), 인기신규 상품 조회
-			appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, BestAppDTO.class);
-		} else {
-			// 신규 상품조회
-			appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, BestAppDTO.class);
-		}
-
 		CommonResponse commonResponse = new CommonResponse();
 
 		Product product = null;
@@ -101,6 +93,14 @@ public class BestAppServiceImpl implements BestAppService {
 		if (bestAppReq.getDummy() == null) {
 			// dummy 호출이 아닐때
 
+			if (!"ADM000000001".equals(bestAppReq.getListId())) {
+				// 추천, 인기(매출), 인기신규 상품 조회
+				appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, BestAppDTO.class);
+			} else {
+				// 신규 상품조회
+				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, BestAppDTO.class);
+			}
+			
 			if (appList.size() != 0) {
 				Iterator<BestAppDTO> iterator = appList.iterator();
 				while (iterator.hasNext()) {
@@ -139,7 +139,7 @@ public class BestAppServiceImpl implements BestAppService {
 					menuList = new ArrayList<Menu>();
 
 					menu = new Menu();
-					menu.setId(mapperVO.getUpMenuid());
+					menu.setId(mapperVO.getTopMenuId());
 					menu.setName(mapperVO.getUpMenuNm());
 					menu.setType("topClass");
 					menuList.add(menu);

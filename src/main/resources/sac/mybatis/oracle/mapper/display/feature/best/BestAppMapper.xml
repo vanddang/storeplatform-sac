@@ -64,7 +64,7 @@
 		                               ,D.AID             
 		                               ,F.UP_MENU_ID
 		                               ,F.TOP_MENU_ID
-		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
+		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
 		                               ,G.MENU_NM                               
 		                               ,G.MENU_DESC
 		                               ,H.SUB_CONTENTS_ID
@@ -209,7 +209,7 @@
 		                                 ,D.AID             
 		                                 ,F.UP_MENU_ID
 		                                 ,F.TOP_MENU_ID
-		                                 ,(SELECT MENU_NM FROM TB_DP_MENU_CATALOG_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
+		                                 ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
 		                                 ,G.MENU_NM                               
 		                                 ,G.MENU_DESC
 		                                 ,H.SUB_CONTENTS_ID

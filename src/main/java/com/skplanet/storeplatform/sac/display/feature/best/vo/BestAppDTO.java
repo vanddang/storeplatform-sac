@@ -10,9 +10,9 @@
 package com.skplanet.storeplatform.sac.display.feature.best.vo;
 
 /**
- * 웹툰 DTO Default Value Object.
+ * BEST 앱 DTO Default Value Object.
  * 
- * Updated on : 2013. 12. 22. Updated by : 김형식, SK 플래닛.
+ * Updated on : 2014. 1. 8. Updated by : 이석희, 아이에스플러스.
  */
 public class BestAppDTO {
 	private int totalCount;
