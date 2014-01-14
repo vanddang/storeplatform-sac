@@ -371,7 +371,7 @@ public class CategoryServiceImpl implements CategoryService {
 				source.setUrl(mapperVO.getFilePos());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
-				category.setCount(Integer.toString(mapperVO.getMenuProdCnt())); // 전시 메뉴 상품수
+				category.setCount(mapperVO.getMenuProdCnt()); // 전시 메뉴 상품수
 				category.setSource(source);
 
 				if (threeDepth) { // => 3 DEPTH MENU
