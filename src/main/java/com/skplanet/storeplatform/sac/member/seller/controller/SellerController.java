@@ -75,7 +75,6 @@ public class SellerController {
 	AuthorizeRes authorize(@RequestBody AuthorizeReq req) {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("request param : {}", req.toString());
-		// return this.sellerService.authorize(req);
-		return null;
+		return this.sellerService.authorize(req);
 	}
 }

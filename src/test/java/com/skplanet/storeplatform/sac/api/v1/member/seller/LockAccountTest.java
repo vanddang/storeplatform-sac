@@ -29,6 +29,11 @@ import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 
+/**
+ * 판매자 계정 잠금
+ * 
+ * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,7 +41,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class LockAccountTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(LockAccountTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LockAccountTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -56,7 +61,7 @@ public class LockAccountTest {
 
 	/**
 	 * <pre>
-	 * 판매자 계정잠금
+	 * 판매자 계정잠금.
 	 * </pre>
 	 */
 	@Test
@@ -68,7 +73,7 @@ public class LockAccountTest {
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
 						req.setSellerId("test_jun");
-						logger.debug("request param : {}", req.toString());
+						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
 				}).success(LockAccountRes.class, new SuccessCallback() {
@@ -76,7 +81,7 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountRes res = (LockAccountRes) result;
 						assertThat(res.getSellerId(), notNullValue());
-						logger.debug("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -84,7 +89,7 @@ public class LockAccountTest {
 
 	/**
 	 * <pre>
-	 * sellerId 공백일경우
+	 * sellerId 공백일경우.
 	 * </pre>
 	 */
 	@Test
@@ -95,8 +100,8 @@ public class LockAccountTest {
 					@Override
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
-						req.setSellerId("");
-						logger.debug("request param : {}", req.toString());
+						req.setSellerId("awdadawd");
+						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
 				}).success(LockAccountRes.class, new SuccessCallback() {
@@ -104,7 +109,7 @@ public class LockAccountTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						LockAccountRes res = (LockAccountRes) result;
 						assertThat(res.getSellerId(), notNullValue());
-						logger.debug("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

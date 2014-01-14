@@ -21,25 +21,28 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 
 /**
- * ID / Email 중복체크.
+ * Calss 설명
  * 
- * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
+ * Updated on : 2014. 1. 14. Updated by : 김경복, 부르칸.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class DuplicateByIdEmailTest {
+public class AuthorizeTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DuplicateByIdEmailTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizeTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -59,42 +62,30 @@ public class DuplicateByIdEmailTest {
 
 	/**
 	 * <pre>
-	 * 판매자 ID 중복체크.
+	 * 회원 인증.
 	 * </pre>
 	 */
 	@Test
-	public void duplicateById() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=id&keyString=test_jun")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+	public void authorize() {
+
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						AuthorizeReq req = new AuthorizeReq();
+						req.setSellerId("qatestqwe");
+						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(LockAccountRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
-						assertThat(res.getIsRegistered(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+						AuthorizeRes res = (AuthorizeRes) result;
+						assertThat(res.getSellerInfo(), notNullValue());
+						LOGGER.debug("response param : {}", res.getSellerInfo().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 Email 중복체크.
-	 * TODO keyString 주입
-	 * </pre>
-	 */
-	@Test
-	public void duplicateByEmail() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
-						+ "/duplicateByIdEmail/v1?keyType=email&keyString=op_tabs_1001@gmail.com")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
-						assertThat(res.getIsRegistered(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 }

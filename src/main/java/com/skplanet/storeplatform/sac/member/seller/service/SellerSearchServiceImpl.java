@@ -71,10 +71,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		 * WILS_TEL_NO : 판매자 연락처
 		 */
 		KeySearch keySearch = new KeySearch();
-		if ("id".equals(req.getKeyType()))
+		if ("id".equals(req.getKeyType())) {
 			keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
-		else if ("email".equals(req.getKeyType()))
+		} else if ("email".equals(req.getKeyType())) {
 			keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
+		}
 		keySearch.setKeyString(req.getKeyString());
 		List<KeySearch> keySearchs = new ArrayList<KeySearch>();
 		keySearchs.add(keySearch);
@@ -86,10 +87,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				.checkDuplicationSeller(checkDuplicationSellerRequest);
 
 		// Response Debug
-		LOGGER.info("UpdateStatusSellerResponse Code : {}", checkDuplicationSellerResponse.getCommonResponse()
+		LOGGER.info("checkDuplicationSellerResponse Code : {}", checkDuplicationSellerResponse.getCommonResponse()
 				.getResultCode());
-		LOGGER.info("UpdateStatusSellerResponse Messge : {}", checkDuplicationSellerResponse.getCommonResponse()
+		LOGGER.info("checkDuplicationSellerResponse Messge : {}", checkDuplicationSellerResponse.getCommonResponse()
 				.getResultMessage());
+
+		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
+		if (!MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
+		}
 
 		/** 4. Tenant Response 생성 및 주입 */
 		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes(checkDuplicationSellerResponse.getIsRegistered());
