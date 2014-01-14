@@ -77,20 +77,20 @@ public class CreateByMdnTest {
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
-						reqJson.setIsParent("N");
+						reqJson.setIsParent("N"); // 법정대리인정보 등록 여부.
 
-						// 법정 대리인 정보
+						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
 						reqJson.setParentRealNameMethod("US011101");
 						reqJson.setParentName("홍길동");
 						reqJson.setParentType("F");
-						reqJson.setParentDate(DateUtil.getToday() + DateUtil.getTime());
+						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
 						reqJson.setParentBirthDay("19700331");
 						reqJson.setParentTelecom("US001201");
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-						reqJson.setParentRealNameDate(DateUtil.getToday() + DateUtil.getTime());
-						reqJson.setParentRealNameSite("");
+						reqJson.setParentRealNameDate(DateUtil.getToday());
+						reqJson.setParentRealNameSite("101");
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();

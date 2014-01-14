@@ -26,8 +26,8 @@ import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
-import com.skplanet.storeplatform.sac.member.user.service.UserSelectServiceImpl;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
+import com.skplanet.storeplatform.sac.member.user.service.UserSelectServiceImpl;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -144,15 +144,16 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * 회원정보조회
+	 * 회원정보조회.
 	 * </pre>
 	 * 
-	 * @param DetailReq
-	 * @param type
-	 * @return
+	 * @param detailReq
+	 *            DetailReq
+	 * @return DetailRes
 	 * @throws Exception
+	 *             Exception
 	 */
-	public DetailRes getDetailRes(DetailReq detailReq) throws Exception {
+	public DetailRes searchUser(DetailReq detailReq) throws Exception {
 		return this.userSelectService.detail(detailReq);
 	}
 

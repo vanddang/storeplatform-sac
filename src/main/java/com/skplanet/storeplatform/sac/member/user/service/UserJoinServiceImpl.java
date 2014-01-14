@@ -35,7 +35,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
@@ -129,10 +128,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * (SC 연동) 회원 정보 등록 TODO (이슈 : sc 컴포넌트 기능이 완료되면 파라미터들 다시한번 확인)
 			 */
+			CreateUserRequest createUserRequest = new CreateUserRequest();
+
 			// SC 공통정보 setting
 			CommonRequest commonRequest = new CommonRequest();
 			commonRequest.setSystemID(SYSTEM_ID);
 			commonRequest.setTenantID(TENANT_ID);
+			createUserRequest.setCommonRequest(commonRequest);
+			LOGGER.info("## SC Request commonRequest : {}", createUserRequest.getCommonRequest().toString());
 
 			// SC 사용자 기본정보 setting
 			UserMbr userMbr = new UserMbr();
@@ -144,6 +147,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(msisdn);
 			userMbr.setUserTelecom(req.getDeviceTelecom()); // mdn, uuid 받는데로 넣는다. (SC 확인함.)
+			userMbr.setIsParent(req.getIsParent());
+			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
+			createUserRequest.setUserMbr(userMbr);
+			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
 			// SC 이용약관 정보 setting
 			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
@@ -152,14 +159,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 				mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
 				mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
 				mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+				mbrClauseAgree.setRegDate(DateUtil.getToday());
 				mbrClauseAgreeList.add(mbrClauseAgree);
 			}
+			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
+			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
 
 			// SC 법정대리인 정보 setting
 			if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
-				mbrLglAgent.setIsParent(MemberConstants.USE_Y); // 법정대리인 동의 여부
+				mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
 				mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
 				mbrLglAgent.setParentName(req.getParentName()); // 법정대리인 이름
 				mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계
@@ -171,21 +181,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 				mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
 				mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
 				mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
+				createUserRequest.setMbrLglAgent(mbrLglAgent);
+				LOGGER.info("## SC Request mbrLglAgent : {}", createUserRequest.getMbrLglAgent().toString());
 
 			}
 
-			// SC 사용자 가입요청 setting
-			CreateUserRequest createUserRequest = new CreateUserRequest();
-			createUserRequest.setCommonRequest(commonRequest);
-			createUserRequest.setUserMbr(userMbr);
-			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
-
 			/**
-			 * TODO sc 응답결과가 제대로 들어 오지 않음. userKey 확인 요청함!!!
+			 * SC 사용자 가입요청
 			 */
-			LOGGER.info("## SC Request commonRequest      : {}", createUserRequest.getCommonRequest().toString());
-			LOGGER.info("## SC Request userMbr            : {}", createUserRequest.getUserMbr().toString());
-			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
 
 			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
@@ -201,20 +204,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			}
 
-			/**
-			 * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
-			 * 
-			 * TODO DeviceInfo 정보 넘겨서 반대리님
-			 */
-			DeviceInfo deviceInfo = new DeviceInfo();
-			this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
-			/**
-			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
-			 */
+			// /**
+			// * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
+			// *
+			// * TODO DeviceInfo 정보 넘겨서 반대리님
+			// */
+			// DeviceInfo deviceInfo = new DeviceInfo();
+			// this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
+			// /**
+			// * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
+			// */
 			// Device device = this.mcc.getPhoneInfo(req.getDeviceModelNo());
 			// logger.info("device : {}", device.getModelNm());
 			// logger.info("device : {}", device.getEngModelNm());
-			LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
+			// LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
 
 			/**
 			 * 결과 세팅
@@ -405,74 +408,5 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 	}
-
-	// /**
-	// * <pre>
-	// * 기존 As-Is 소스 그대로 로직 옴김......
-	// * TODO 기타 파트에서 제공해야될 API 로써 삭제되야될 메서드임..!!!!!
-	// * TODO 기존 내부로직 분석하여 임시로 넣어둠.................!!!!!
-	// * </pre>
-	// *
-	// * @param pReqParam
-	// * mdn or uuid 값
-	// * @param type
-	// * 타입
-	// * @return UserRes
-	// * @throws Exception
-	// * Exception
-	// */
-	// public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
-	//
-	// LOGGER.debug("## ================================== 고객정보조회");
-	//
-	// UserRes userRes = new UserRes();
-	// /**
-	// * 1. 모번호 조회 (989 일 경우만)
-	// */
-	// String opmdMdn = this.mcc.getOpmdMdnInfo(pReqParam);
-	// LOGGER.info("### opmdMdn : {}", opmdMdn);
-	//
-	// /**
-	// * TODO HEADER 정보로 바꿀것....
-	// */
-	// // logger.debug("## DeviceInfo : {}", headerVo.getxSacDeviceInfo());
-	// Device device = this.mcc.getPhoneInfo("LG-SU910");
-	// LOGGER.debug("## ua_cd : {}", device.getUaCd());
-	//
-	// /**
-	// * MBR_ID 로 회원 기본 정보 조회
-	// */
-	// CommonRequest commonRequest = new CommonRequest();
-	// commonRequest.setSystemID(SYSTEM_ID);
-	// commonRequest.setTenantID(TENANT_ID);
-	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	// KeySearch keySearch = new KeySearch();
-	// keySearch.setKeyString(pReqParam);
-	// keySearch.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-	// keySearchList.add(keySearch);
-	//
-	// SearchUserRequest searchUserRequest = new SearchUserRequest();
-	// searchUserRequest.setCommonRequest(commonRequest);
-	// searchUserRequest.setKeySearchList(keySearchList);
-	// SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
-	// LOGGER.debug("@@@ Response : {}", searchUserResponse.toString());
-	// LOGGER.debug("@@@ Response : {}", searchUserResponse.getUserMbr().getImMbrNo());
-	//
-	// // if (StringUtils.isNotEmpty(sPreImIntSvcNo)) {
-	// // mapUrl.put("cmd", "getMdnInfoIDP");
-	// // mapUrl.put("mdn", sMdn);
-	// //
-	// // } else {
-	// // mapUrl.put("cmd", "findProfileForWap");
-	// // mapUrl.put("key", sMdn);
-	// // mapUrl.put("key_type", "1");
-	// // }
-	//
-	// /**
-	// * OneID - getMdnInfoIDP IDP - findProfileForWap
-	// */
-	//
-	// return userRes;
-	// }
 
 }

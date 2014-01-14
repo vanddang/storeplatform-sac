@@ -78,6 +78,7 @@ public class CreateByAgreementTest {
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
@@ -89,7 +90,7 @@ public class CreateByAgreementTest {
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US002903");
 
-						// // 동의 정보
+						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreement1 = new AgreementInfo();
 						agreement1.setExtraAgreementId("US010607");
