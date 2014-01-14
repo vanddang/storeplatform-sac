@@ -30,6 +30,13 @@
                    ,PRCHS_QTY as prchsQty
                    ,DWLD_QTY as dwldQty
                    ,EXPO_ORD as expoOrd
+                   ,PROD_GRD_CD as prodGrdCd
+                   ,APPLY_START_DT as applyStartDt     
+                   ,APPLY_END_DT as applyEndDt    
+                   ,DECODE(PROD_CASE_CD
+                     , 'DP006301', 'giftcard'
+                     , 'DP006302', 'exchange'
+                     , 'DP006303', 'delivery' ) AS prodCaseCd                                       
              FROM (
                   SELECT  * 
                    FROM (
@@ -53,7 +60,11 @@
                                ,I.DLV_PROD_YN
                                ,M.PRCHS_QTY
                                ,M.DWLD_QTY  
-                               ,M.EXPO_ORD                              
+                               ,M.EXPO_ORD     
+                               ,J.PROD_GRD_CD   
+                               ,L.APPLY_START_DT     
+                               ,L.APPLY_END_DT    
+                               ,I.PROD_CASE_CD                                                         
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
