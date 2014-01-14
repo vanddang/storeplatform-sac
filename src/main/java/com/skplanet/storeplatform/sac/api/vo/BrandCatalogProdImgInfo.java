@@ -20,6 +20,7 @@ public class BrandCatalogProdImgInfo {
 	private String updDts; // 수정일시
 	private String filePos;
 	private String fileNm;
+	private String langCd;
 	private int seq = 1; // TBL_DP_PROD_IMG.DP_ORDER
 
 	public String getImgCls() {
@@ -92,6 +93,14 @@ public class BrandCatalogProdImgInfo {
 
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
+	}
+
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
 	}
 
 	public int getSeq() {

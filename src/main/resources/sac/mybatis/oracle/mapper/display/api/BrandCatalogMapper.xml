@@ -220,6 +220,7 @@
 	         PROD_ID
 	        ,IMG_CD
 	        ,EXPO_ORD
+	        ,LANG_CD
 	        ,FILE_PATH
 	        ,FILE_NM
 	        ,FILE_SIZE
@@ -232,6 +233,7 @@
              #{prodId}
             ,#{imgCls}
             ,#{seq}
+            ,#{langCd}
             ,#{filePos}
             ,#{fileNm}
             ,#{fileSize}
