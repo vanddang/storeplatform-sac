@@ -96,7 +96,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			vodList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
 					FeatureCategoryVodDTO.class);
 
-			if (vodList != null) {
+			if (!vodList.isEmpty()) {
 				FeatureCategoryVodDTO vodDto = null;
 
 				Identifier identifier = null;

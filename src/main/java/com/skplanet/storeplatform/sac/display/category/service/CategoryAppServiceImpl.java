@@ -74,7 +74,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		List<CategoryAppDTO> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
 				CategoryAppDTO.class);
 
-		if (appList != null) {
+		if (!appList.isEmpty()) {
 			CategoryAppDTO categoryAppDTO = null;
 
 			Identifier identifier = null;
