@@ -116,7 +116,6 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 		String userStateVal = "";
 		
-		//if (schUserRes.getUserMbr().getImSvcNo() != null) { // 통합아이디
 		if (StringUtil.equals(userTypeCd, MemberConstants.USER_TYPE_ONEID)) {
 			
 			userStateVal = "oneId";
@@ -125,7 +124,7 @@ public class LoginServiceImpl implements LoginService {
 			this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req, null);
 			
 			/* 로그인 성공이력 저장 */
-			LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+			LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
 			
 			res.setUserKey(loginRes.getUserKey());
 			res.setUserStatus(userStateVal);
@@ -151,7 +150,7 @@ public class LoginServiceImpl implements LoginService {
 				this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req, null);
 
 				/* 로그인 성공이력 저장 */
-				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
 
 				res.setUserKey(loginRes.getUserKey());
 				res.setUserStatus(userStateVal);
@@ -214,8 +213,7 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.insertloginHistory(userId, userPw,
-				"Y", userTypeCd.equals("US011503") ? "Y" : "N");
+		LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "Y");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -290,15 +288,18 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 	}
 	
+	
 	/**
+	 * 
 	 * SC콤포넌트 로그인 이력저장
 	 * 
-	 * @param key
+	 * @param userId
+	 * @param userPw
 	 * @param isSuccess
-	 * @param isOneId
 	 * @return
+	 * @throws Exception
 	 */
-	public LogInUserResponse insertloginHistory(String userId, String userPw, String isSuccess, String isOneId) throws Exception {
+	public LogInUserResponse insertloginHistory(String userId, String userPw, String isSuccess) throws Exception {
 		LogInUserRequest loginReq = new LogInUserRequest();
 		loginReq.setCommonRequest(commonRequest);
 		loginReq.setUserID(userId);
@@ -306,7 +307,7 @@ public class LoginServiceImpl implements LoginService {
 			loginReq.setUserPW(userPw);
 		}
 		loginReq.setIsSuccess(isSuccess);
-		loginReq.setIsOneID(isOneId);
+		loginReq.setIsOneID("Y");
 
 		LogInUserResponse loginRes = this.userSCI.logInUser(loginReq);
 		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
