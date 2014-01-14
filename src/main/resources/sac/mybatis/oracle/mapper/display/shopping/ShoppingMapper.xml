@@ -69,9 +69,9 @@
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
                                  ,TB_DP_SHPG_CATALOG_DESC C
-                                 ,TB_DP_MENU_CATA_CATA_MAPG D
-                                 ,TB_DP_MENU_CATALOG E
-                                 ,TB_DP_MENU_CATALOG_DESC F 
+                                 ,TB_DP_MENU_SHPG_MAPG D
+                                 ,TB_DP_MENU_CATEGORY E
+                                 ,TB_DP_MENU_CATEGORY_DESC F 
                                  ,TB_DP_PROD_CATALOG_MAPG G 
                                  ,TB_DP_PROD_RSHP H
                                  ,TB_DP_SHPG_PROD I
@@ -154,6 +154,133 @@
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>    
     
+    <!-- 최신 상품 리스트 조회-->
+    <select id="getNewProductList" parameterType="ShoppingReq" resultType="ShoppingDTO">
+       /* ShoppingMapper.xml.getNewProductList, sac: kim Hyung Sik , 2014-01-07 */
+        SELECT *
+         FROM ( 
+             SELECT 
+                    ROW_NUMBER()OVER(ORDER BY REG_DT DESC, CATALOG_NM ) AS RNUM        
+                   ,COUNT(CATALOG_ID) OVER() AS TOTALCOUNT      
+                   ,CATALOG_ID AS catagoryId
+                   ,CATALOG_NM AS catagoryName
+                   ,PROD_NET_AMT AS prodNetAmt
+                   ,PROD_AMT AS prodAmt
+                   ,DC_RATE AS dcRate
+                   ,DC_AMT AS dcAmt
+                   ,DLV_PROD_YN AS dlvProdYn
+                   ,BRAND_ID AS brandId
+                   ,BRAND_NM AS brandName
+                   ,MENU_ID AS menuId
+                   ,MENU_NM AS menuName
+                   ,NO AS no
+                   ,NEW_YN AS newYn
+                   ,REG_DT AS regDt
+                   ,TENANT_ID AS tenentId
+                   ,PROD_ID as prodId
+                   ,PART_PROD_ID as partProdId 
+                   ,PRCHS_CNT as prchsQty
+                   ,PROD_GRD_CD as prodGrdCd
+                   ,APPLY_START_DT as applyStartDt     
+                   ,APPLY_END_DT as applyEndDt    
+                   ,DECODE(PROD_CASE_CD
+                     , 'DP006301', 'giftcard'
+                     , 'DP006302', 'exchange'
+                     , 'DP006303', 'delivery' ) AS prodCaseCd                                       
+             FROM (
+                  SELECT  * 
+                   FROM (
+                          SELECT 
+                                B.CATALOG_ID 
+                               ,C.CATALOG_NM 
+                               ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
+                               ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
+                               ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
+                               ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
+                               ,A.BRAND_ID  
+                               ,A.BRAND_NM  
+                               ,D.MENU_ID  
+                               ,F.MENU_NM   
+                               ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
+                               ,CASE WHEN TO_CHAR(SYSDATE - 7, 'YYYYMMDD')  <![CDATA[ <= ]]>  SUBSTR(I.REG_DT, 0, 8) THEN 'Y' ELSE 'N' END AS NEW_YN 
+                               ,I.REG_DT 
+                               ,K.TENANT_ID 
+                               ,H.PROD_ID 
+                               ,H.PART_PROD_ID  
+                               ,I.DLV_PROD_YN
+                               ,M.PRCHS_CNT
+                               ,J.PROD_GRD_CD   
+                               ,L.APPLY_START_DT     
+                               ,L.APPLY_END_DT    
+                               ,I.PROD_CASE_CD                                                         
+                          FROM 
+                                  TB_DP_SHPG_BRAND A
+                                 ,TB_DP_SHPG_CATALOG B
+                                 ,TB_DP_SHPG_CATALOG_DESC C
+                                 ,TB_DP_MENU_SHPG_MAPG D
+                                 ,TB_DP_MENU_CATEGORY E
+                                 ,TB_DP_MENU_CATEGORY_DESC F 
+                                 ,TB_DP_PROD_CATALOG_MAPG G 
+                                 ,TB_DP_PROD_RSHP H
+                                 ,TB_DP_SHPG_PROD I
+                                 ,TB_DP_PROD J
+                                 ,TB_DP_TENANT_PROD K
+                                 ,TB_DP_TENANT_PROD_PRICE L
+                                 ,TB_DP_TENANT_PROD_STATS M
+                                 ,(SELECT 
+                                        B1.PROD_ID
+                                      , B1.SPRC_DC_RATE
+                                      , B1.SPRC_PRICE
+                                   FROM  TB_DP_PROD_CATALOG_MAPG A1
+                                        ,TB_DP_SPRC_PROD B1
+                                   WHERE 1=1
+                                     AND A1.PROD_ID = B1.PROD_ID
+                                     AND B1.EXPO_YN ='Y'
+                                     AND B1.CPN_ID IS NOT NULL
+                                     AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
+                                  )N
+                                                             
+                        WHERE 1=1
+                        AND A.BRAND_ID = B.BRAND_ID
+                        AND B.CATALOG_ID = C.CATALOG_ID
+                        AND C.CATALOG_ID = D.CATALOG_ID     
+                        AND D.MENU_ID = E.MENU_ID
+                        AND D.MENU_ID = F.MENU_ID
+                        AND B.CATALOG_ID = G.CATALOG_ID
+                        AND G.PROD_ID = H.PROD_ID
+                        AND H.PART_PROD_ID = I.PROD_ID
+                        AND I.PROD_ID = J.PROD_ID
+                        AND I.PROD_ID = K.PROD_ID
+                        AND I.PROD_ID = L.PROD_ID
+                        AND K.TENANT_ID = M.TENANT_ID 
+                        AND I.PROD_ID = M.PROD_ID                           
+                        AND I.PROD_ID = N.PROD_ID(+)                    
+                        AND C.LANG_CD= 'ko'               /* ko : 한국어 */
+                        AND F.LANG_CD= 'ko'               /* ko : 한국어 */
+                        AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                        AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
+                        AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
+                        AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                        AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
+                        AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
+                        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                        AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
+                        <if test="prodCharge != null">
+                        AND J.PROD_CHRG_YN =#{prodCharge}
+                        </if>
+                        <if test="b2bProd != null">
+                        AND I.B2B_PROD_YN =#{b2bProd}
+                        </if>
+                        <if test="prodGradeCd != null">
+                        AND J.PROD_GRD_CD =#{prodGradeCd}
+                        </if>   
+                   ) 
+                 WHERE NO =1
+               ) ORDER BY REG_DT DESC, CATALOG_NM ASC
+        ) WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>        
     
 
      
