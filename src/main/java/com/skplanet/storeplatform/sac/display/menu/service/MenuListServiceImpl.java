@@ -127,7 +127,7 @@ public class MenuListServiceImpl implements MenuListService {
 			commonResponse = new CommonResponse();
 			responseVO.setMenuList(listVO);
 			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonRes(commonResponse);
+			responseVO.setCommonResponse(commonResponse);
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);

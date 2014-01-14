@@ -272,7 +272,7 @@ public class CategoryServiceImpl implements CategoryService {
 				responseVO.setCategoryList(detailListVO); // set category detail list = 3 DEPTH MENU
 			}
 			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonRes(commonResponse);
+			responseVO.setCommonResponse(commonResponse);
 
 			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
 
@@ -434,7 +434,7 @@ public class CategoryServiceImpl implements CategoryService {
 				responseVO.setCategoryList(detailListVO); // set category detail list = 3 DEPTH MENU
 			}
 			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonRes(commonResponse);
+			responseVO.setCommonResponse(commonResponse);
 
 			String CategoryDetailList = objectMapper.writeValueAsString(responseVO);
 
