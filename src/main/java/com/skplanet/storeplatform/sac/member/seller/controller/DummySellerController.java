@@ -361,6 +361,9 @@ public class DummySellerController {
 			dList.add(document);
 		}
 
+		// 판매자 부가정보
+		List<ExtraRight> eList = new ArrayList<ExtraRight>();
+
 		// 판매자 정산정보
 		SellerAccount sellerAccount = new SellerAccount();
 		sellerAccount.setAbaCode("");
@@ -451,6 +454,7 @@ public class DummySellerController {
 		sellerMbr.setVendorCode("");
 
 		responseVO.setDocument(dList);
+		responseVO.setExtraRight(eList);
 		responseVO.setSellerAccount(sellerAccount);
 		responseVO.setSellerKey("IF102158942020090723111912");
 		responseVO.setSellerMbr(sellerMbr);
