@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.category.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +63,43 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		this.logger.debug("searchAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		CategoryAppRes categoryAppRes = new CategoryAppRes();
-		CommonResponse commonResponse = new CommonResponse();
+		CategoryAppRes appRes = new CategoryAppRes();
+		CommonResponse commonRes = new CommonResponse();
+
+		String prodCharge = req.getProdCharge();
+		String prodGradeCd = req.getProdGradeCd();
+		String menuId = req.getMenuId();
+		String orderedBy = req.getOrderedBy();
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(prodCharge) || StringUtils.isEmpty(menuId) || StringUtils.isEmpty(orderedBy)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("필수 파라미터 부족");
+			this.logger.debug("----------------------------------------------------------------");
+
+			appRes.setCommonResponse(commonRes);
+			return appRes;
+		}
+		// 상품등급코드 유효값 체크
+		if (StringUtils.isNotEmpty(prodGradeCd)) {
+			if (!"PD004401".equals(prodGradeCd) && !"PD004402".equals(prodGradeCd) && !"PD004403".equals(prodGradeCd)) {
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("유효하지않은 상품 등급 코드");
+				this.logger.debug("----------------------------------------------------------------");
+
+				appRes.setCommonResponse(commonRes);
+				return appRes;
+			}
+		}
+		// 상품정렬순서 유효값 체크
+		if (!"download".equals(orderedBy)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("유효하지않은 상품 정렬 순서");
+			this.logger.debug("----------------------------------------------------------------");
+
+			appRes.setCommonResponse(commonRes);
+			return appRes;
+		}
 
 		// 헤더값 세팅
 		req.setDeviceModelCd("SHV-E210S");
@@ -177,15 +213,14 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				productList.add(i, product);
 			}
 
-			commonResponse.setTotalCount(categoryAppDTO.getTotalCount());
-			categoryAppRes.setProductList(productList);
-			categoryAppRes.setCommonResponse(commonResponse);
+			commonRes.setTotalCount(categoryAppDTO.getTotalCount());
+			appRes.setProductList(productList);
+			appRes.setCommonResponse(commonRes);
 		} else {
 			// 조회 결과 없음
-			commonResponse.setTotalCount(0);
-			categoryAppRes.setCommonResponse(commonResponse);
+			appRes.setCommonResponse(commonRes);
 		}
 
-		return categoryAppRes;
+		return appRes;
 	}
 }
