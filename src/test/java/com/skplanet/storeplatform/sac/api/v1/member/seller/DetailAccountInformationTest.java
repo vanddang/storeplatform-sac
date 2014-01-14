@@ -72,4 +72,23 @@ public class DetailAccountInformationTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 정산정보 조회 데이터 없을시
+	 * </pre>
+	 */
+	/*
+	 * @Test public void DetailAccountInformationEmpty() {
+	 * 
+	 * new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailAccountInformation/v1?sellerKey=")
+	 * .httpMethod(HttpMethod.GET).success(DetailAccountInformationRes.class, new SuccessCallback() {
+	 * 
+	 * @Override public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+	 * DetailAccountInformationRes res = (DetailAccountInformationRes) result; assertThat(res.getSellerKey(),
+	 * notNullValue()); logger.info("response param : {}", res.toString()); } }, HttpStatus.OK,
+	 * HttpStatus.ACCEPTED).run(RunMode.JSON);
+	 * 
+	 * }
+	 */
+
 }
