@@ -51,7 +51,7 @@
 			</tr>
             <tr>
                 <td>couponCode <input type="text" name='couponCode'  size=20 value ="103826"></td>
-                <td>couponCode <input type="text" name='itemCode'  size=20 value ="103827"></td>
+                <td>itemCode <input type="text" name='itemCode'  size=20 value ="103827"></td>
                 <td>
                     상품 상태 : <select name='coupnStatus' >
                     <option value="3">판매중</option>
@@ -69,7 +69,7 @@
 	<couponCode><%= DateUtil.getToday("HHmmss") %></couponCode>
 	<couponName><%= DateUtil.getToday("yyyyMMddHH") %>샘플쿠폰</couponName>
 	<issueSDate>20130305000000</issueSDate>
-	<issueEDate>20130325235959</issueEDate>
+	<issueEDate>20140325235959</issueEDate>
 	<validSDate>20130326000000</validSDate>
 	<validEDate>20140326235959</validEDate>
 	<validUntil>10</validUntil>
