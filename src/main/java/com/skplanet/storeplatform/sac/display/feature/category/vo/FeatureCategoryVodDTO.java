@@ -24,6 +24,7 @@ public class FeatureCategoryVodDTO {
 	private String prodId;
 	private String vodTitlNm;
 	private String prodNm;
+	private String chapter;
 	private String prodBaseDesc;
 	private String prodGrdCd;
 	private String artist1Nm;
@@ -110,6 +111,14 @@ public class FeatureCategoryVodDTO {
 
 	public void setProdNm(String prodNm) {
 		this.prodNm = prodNm;
+	}
+
+	public String getChapter() {
+		return this.chapter;
+	}
+
+	public void setChapter(String chapter) {
+		this.chapter = chapter;
 	}
 
 	public String getProdBaseDesc() {
