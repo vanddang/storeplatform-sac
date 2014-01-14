@@ -16,6 +16,7 @@ public class Agreement extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String extraAgreementId;
 	private String isExtraAgreement;
+	private String extraAgreementVersion;
 
 	public String getExtraAgreementId() {
 		return this.extraAgreementId;
@@ -31,6 +32,21 @@ public class Agreement extends CommonInfo {
 
 	public void setIsExtraAgreement(String isExtraAgreement) {
 		this.isExtraAgreement = isExtraAgreement;
+	}
+
+	/**
+	 * @return the extraAgreementVersion
+	 */
+	public String getExtraAgreementVersion() {
+		return this.extraAgreementVersion;
+	}
+
+	/**
+	 * @param extraAgreementVersion
+	 *            the extraAgreementVersion to set
+	 */
+	public void setExtraAgreementVersion(String extraAgreementVersion) {
+		this.extraAgreementVersion = extraAgreementVersion;
 	}
 
 }
