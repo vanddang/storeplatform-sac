@@ -41,7 +41,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.common.util.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificDTO;
 
 @Service

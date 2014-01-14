@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.common.util;
+package com.skplanet.storeplatform.sac.display.common;
 
 import org.apache.commons.lang3.StringUtils;
 
