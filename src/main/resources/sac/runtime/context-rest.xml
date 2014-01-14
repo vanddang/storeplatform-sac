@@ -32,7 +32,7 @@
             <bean class="com.skplanet.storeplatform.framework.web.bind.LocaleHandlerWebArgumentResolver">
                 <constructor-arg ref="localeResolver" />
             </bean> 
-            <bean class="com.skplanet.storeplatform.sac.common.resolver.SacHeaderResolver" />             
+            <bean class="com.skplanet.storeplatform.sac.common.resolver.SacHeaderWebArgumentResolver" />             
         </mvc:argument-resolvers> 
         <mvc:message-converters register-defaults="false" >
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
