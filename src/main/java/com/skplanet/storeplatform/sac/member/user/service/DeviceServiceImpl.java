@@ -217,57 +217,59 @@ public class DeviceServiceImpl implements DeviceService {
 		if (StringUtil.equals(createDeviceRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
 			/* 3. 구매이력 이관 여부 확인 [기존 회원 key, 신규 회원 key] */
-
-			/* 4. 구매이관 대상인 경우 구매이력 이관요청 */
-
-			/* 5. 약관 이관 처리 */
-			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
-			schAgreeListReq.setCommonRequest(commonRequest);
-			schAgreeListReq.setUserKey("기존 회원 key");
-			SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
-			if (schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
-				updAgreeReq.setCommonRequest(commonRequest);
-				updAgreeReq.setUserKey("신규 회원 key");
-				updAgreeReq.setMbrClauseAgreeList(schAgreeListRes.getMbrClauseAgreeList());
-				UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
-
-				if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-					throw new Exception("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
-							+ updAgreeRes.getCommonResponse().getResultMessage());
+			if(false){
+				
+				/* 4. 구매이관 대상인 경우 구매이력 이관요청 */
+	
+				/* 5. 약관 이관 처리 */
+				SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
+				schAgreeListReq.setCommonRequest(commonRequest);
+				schAgreeListReq.setUserKey("기존 회원 key");
+				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+				if (schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+					UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
+					updAgreeReq.setCommonRequest(commonRequest);
+					updAgreeReq.setUserKey("신규 회원 key");
+					updAgreeReq.setMbrClauseAgreeList(schAgreeListRes.getMbrClauseAgreeList());
+					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
+	
+					if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+						throw new Exception("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
+								+ updAgreeRes.getCommonResponse().getResultMessage());
+					}
+				} else {
+					throw new Exception("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
+							+ schAgreeListRes.getCommonResponse().getResultMessage());
 				}
-			} else {
-				throw new Exception("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
-						+ schAgreeListRes.getCommonResponse().getResultMessage());
-			}
-
-			/* 6. 통합회원인 경우 무선회원 해지 */
-			SearchUserRequest schUserReq = new SearchUserRequest();
-			schUserReq.setCommonRequest(commonRequest);
-			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-			KeySearch key = new KeySearch();
-			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-			key.setKeyString(userKey);
-			keySearchList.add(key);
-			schUserReq.setKeySearchList(keySearchList);
-			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-
-			if (!schUserRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-						+ schUserRes.getCommonResponse().getResultMessage());
-			}
-			if (schUserRes.getUserMbr().getImSvcNo() != null) {
-				IDPReceiverM idpReceiver = this.idpService.authForWap(deviceInfo.getDeviceId());
-				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					/*
-					 * ImIDPReceiverM imIDPReceiverM = this.imIdpService.secedeForWap(deviceInfo.getDeviceId()); if
-					 * (!StringUtil.equals(imIDPReceiverM.getResponseHeader().getResult(),
-					 * IDPConstants.IDP_RES_CODE_OK)) { throw new Exception("IDP secedeForWap fail mdn : [" + deviceId +
-					 * "] result code : [" + imIDPReceiverM.getResponseHeader().getResult() + "]"); }
-					 */
+	
+				/* 6. 통합회원인 경우 무선회원 해지 */
+				SearchUserRequest schUserReq = new SearchUserRequest();
+				schUserReq.setCommonRequest(commonRequest);
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+				KeySearch key = new KeySearch();
+				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+				key.setKeyString(userKey);
+				keySearchList.add(key);
+				schUserReq.setKeySearchList(keySearchList);
+				SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+	
+				if (!schUserRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+					throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+							+ schUserRes.getCommonResponse().getResultMessage());
 				}
+				if (schUserRes.getUserMbr().getImSvcNo() != null) {
+					IDPReceiverM idpReceiver = this.idpService.authForWap(deviceInfo.getDeviceId());
+					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+						/*
+						 * ImIDPReceiverM imIDPReceiverM = this.imIdpService.secedeForWap(deviceInfo.getDeviceId()); if
+						 * (!StringUtil.equals(imIDPReceiverM.getResponseHeader().getResult(),
+						 * IDPConstants.IDP_RES_CODE_OK)) { throw new Exception("IDP secedeForWap fail mdn : [" + deviceId +
+						 * "] result code : [" + imIDPReceiverM.getResponseHeader().getResult() + "]"); }
+						 */
+					}
+				}
+				
 			}
-
 		} else {
 			throw new Exception("[" + createDeviceRes.getCommonResponse().getResultCode() + "] "
 					+ createDeviceRes.getCommonResponse().getResultMessage());
