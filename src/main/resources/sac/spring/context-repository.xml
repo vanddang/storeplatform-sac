@@ -23,6 +23,7 @@
         <constructor-arg>
             <list>
                 <ref bean="transactionManagerForSac" />  
+                <ref bean="transactionManagerForScPurchase" />  
             </list>
         </constructor-arg>
     </bean>  
