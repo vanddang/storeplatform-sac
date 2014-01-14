@@ -515,16 +515,112 @@
 	                       AND TP.TENANT_ID = TPP.TENANT_ID   
 	                       AND TCP.CATALOG_ID = SC.CATALOG_ID
 	                       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
-	                       AND TP.PROD_STATUS_CD = 'PD000403'
+	                       AND TP.PROD_STATUS_CD = 'PD000403' -- 판매중
 	                       AND TP.EXPO_YN = 'Y'
                            AND SHP.B2B_PROD_YN <![CDATA[<>]]> 'Y'
                            AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                           AND SH.PROD_ID = PRSH.PART_PROD_ID -- 지원기기 = 에피소드 상품 아이디
+                           AND SH.PROD_ID(+) = PRSH.PART_PROD_ID -- 지원기기 = 에피소드 상품 아이디
                            AND PHI.DEVICE_MODEL_CD = #{deviceModelCd} -- 지원기기 모델
                            AND PHI.USE_YN = 'Y' 
                            AND PHI.SCL_SHPG_SPRT_YN IN ( 'Y', 'S' ) -- 소설 쇼핑 지원여부    
                            AND ROWNUM <![CDATA[<=]]> 1 )
-        GROUP BY C.MENU_ID, C.MENU_DESC	     
+        GROUP BY C.MENU_ID, C.MENU_DESC
     </select>
-     
+    
+    
+    <!-- App 상세 카테고리 조회 -->
+    <select id="getAppDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+        SELECT /* MenuCategoryMapper.xml, getAppDetailCategoryList, JuYoungYun, 2014-01-14 */
+               COUNT(MENU_ID) OVER() AS TOTAL_COUNT
+             , MENU_ID
+             , MENU_NM
+             , MENU_DESC
+             , MENU_DEPTH
+             , INFR_MENU_YN AS SUB_YN
+             , MENU_PROD_CNT
+             , SUM( MENU_PROD_CNT ) OVER () AS TOTAL_PROD_CNT
+             , FILE_POS
+             , FILE_SIZE
+          FROM
+             (
+              SELECT C.MENU_ID
+                   , C.MENU_NM
+                   , C.MENU_DESC
+                   , C.MENU_DEPTH
+                   , C.INFR_MENU_YN
+                   , C.UP_MENU_ID
+                   , C.EXPO_ORD
+                   , C.FILE_POS
+                   , C.FILE_SIZE
+                   , DECODE( C.INFR_MENU_YN
+                           , 'Y'
+                           , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
+                           , P.CNT ) AS MENU_PROD_CNT
+                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
+                                             ORDER BY C.MENU_DEPTH
+                                                    , C.EXPO_ORD
+                                                    , C.MENU_NM ) AS CAT_PRIOR
+                FROM
+                (
+                    SELECT M.MENU_ID
+                         , D.MENU_NM
+                         , D.MENU_DESC
+                         , TM.EXPO_ORD
+                         , M.MENU_DEPTH
+                         , M.UP_MENU_ID
+                         , M.INFR_MENU_YN
+                         , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
+                         , TM.BODY_FILE_SIZE AS FILE_SIZE
+                      FROM TB_DP_MENU_CATEGORY M
+                          ,TB_DP_MENU_CATEGORY_DESC D
+                          ,TB_DP_TENANT_MENU TM
+                     WHERE M.MENU_ID = D.MENU_ID
+                       AND TM.TENANT_MENU_ID = M.MENU_ID
+	                   AND TM.TENANT_ID = #{tenantId}
+	                   AND TM.SYSTEM_ID = #{systemId}
+	                   AND M.MENU_ID LIKE #{menuId}||'%'
+                       AND M.MENU_DEPTH >= 1
+                       AND M.USE_YN = 'Y'
+                       AND D.LANG_CD = 'ko'
+                       AND TM.USE_YN = 'Y'
+                    )  C
+                    ,
+                    (
+                     SELECT MENU_ID
+                          , COUNT(*) AS CNT
+                       FROM
+                          (
+                            SELECT C.MENU_ID
+                                 , CP.PROD_ID AS PROD_ID
+                              FROM TB_DP_PROD P
+                                 , TB_DP_PROD_RSHP CP
+                                 , TB_DP_TENANT_PROD TP
+                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
+                                 , TB_DP_MENU_CATEGORY C
+                                 , (SELECT SH.PROD_ID
+                                      FROM TB_DP_SPRT_DEVICE SH
+                                         , TB_CM_DEVICE PI 
+                                     WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
+                                       AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
+                                       AND PI.USE_YN = 'Y') SHI  
+                                 , TB_DP_APP_PROD AP
+                             WHERE P.PROD_ID = CP.PART_PROD_ID -- 앱은 EPISODE 아이디만 존재
+                               AND TP.PROD_ID = CP.PART_PROD_ID
+                               AND MP.PROD_ID = P.PROD_ID
+                               AND AP.PROD_ID = CP.PART_PROD_ID
+                               AND MP.MENU_ID = C.MENU_ID
+                               AND CP.PART_PROD_ID = SHI.PROD_ID(+) -- 단말 지원 정책 확인 요망
+                               AND C.MENU_ID LIKE #{menuId}||'%'
+                               AND C.USE_YN = 'Y'
+                               AND P.SVC_GRP_CD = 'DP000201' -- 앱
+                               AND TP.PROD_STATUS_CD = 'PD000403' -- 판매중
+                               AND TP.EXPO_YN = 'Y'
+                           )
+                       GROUP BY MENU_ID
+                      ) P
+                  WHERE C.MENU_ID = P.MENU_ID(+)                       
+              )
+          ORDER BY CAT_PRIOR    
+    </select>
+         
 </mapper>

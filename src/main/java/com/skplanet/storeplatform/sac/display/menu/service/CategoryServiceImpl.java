@@ -458,8 +458,8 @@ public class CategoryServiceImpl implements CategoryService {
 			statementId = "MenuCategory.getMovieTvDetailCategoryList";
 		} else if ("DP28".equals(menuId)) { // 쇼핑 - 쿼리 검증 요망
 			statementId = "MenuCategory.getShoppingDetailCategoryList";
-		} else {
-			statementId = "MenuCategory.getDetailCategoryList";
+		} else { // 그외 APP
+			statementId = "MenuCategory.getAppDetailCategoryList";
 		}
 		return statementId;
 	}
