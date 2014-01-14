@@ -57,11 +57,16 @@ public class DeviceController {
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
-
+		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표기기 조회여부
+		
 		if (userId.equals("") && userKey.equals("") && deviceId.equals("") && deviceKey.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
-
+		
+		if (isMainDevice.equals("")) {
+			throw new Exception("필수요청 파라메터 부족");
+		}
+		
 		/* Header 정보 세팅 */
 		HeaderVo headerVo = this.headerInfo.getHeader(headers);
 
