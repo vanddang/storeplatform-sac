@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
 import org.junit.Before;
@@ -38,11 +47,12 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class AuthorizeByMdnTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthorizeByMdnTest.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(AuthorizeByMdnTest.class);
 
 	@Autowired
 	private LoginService loginService;
-	
+
 	@Autowired
 	private WebApplicationContext wac;
 
@@ -52,15 +62,59 @@ public class AuthorizeByMdnTest {
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
-	
-	@Test
+
+	// @Test
 	public void shouldAuthorizeByMdn() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/dev/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceModelNo("SHW-M250S");
+							req.setOsVerOrg("1.0");
+
+							req.setDeviceId("01073215212");
+							// req.setDeviceId("01088870008");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom("KT");
+							req.setNativeId("358362045580844");
+							req.setRooting("Y");
+							req.setDeviceAccount("vanddang@gmail.com");
+							req.setIsAutoUpdate("Y");
+							req.setScVer("1.0");
+
+							logger.info("request param : {}", req.toString());
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result,
+								HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							logger.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void shouldAuthorizeByMdnService() {
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 		req.setDeviceModelNo("SHW-M250S");
 		req.setOsVerOrg("1.0");
-		
+
 		req.setDeviceId("01073215212");
-		//req.setDeviceId("01088870008");
+		// req.setDeviceId("01088870008");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom("KT");
 		req.setNativeId("358362045580844");
@@ -68,8 +122,7 @@ public class AuthorizeByMdnTest {
 		req.setDeviceAccount("vanddang@gmail.com");
 		req.setIsAutoUpdate("Y");
 		req.setScVer("1.0");
-		
-		
+
 		try {
 			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(null, req);
 			logger.info("res : {} " + res.toString());
@@ -78,34 +131,4 @@ public class AuthorizeByMdnTest {
 			e.printStackTrace();
 		}
 	}
-		/*new TestCaseTemplate(this.mockMvc).url("/dev/member/user/authorizeByMdn/v1")
-				.httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-						req.setDeviceAccount("vanddang@gmail.com");
-						req.setDeviceId("0101231234");
-						req.setDeviceModelNo("SHP-112");
-						req.setDeviceTelecom("SKT");
-						req.setIsAutoUpdate("Y");
-						req.setNativeId("358362045580844");
-						req.setOsVerOrg("1.0");
-						req.setScVer("1.0");
-						req.setRooting("Y");
-						
-						logger.info("request param : {}", req.toString());
-						
-						return req;
-					}
-				}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus,
-							RunMode runMode) {
-						AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
-						logger.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}*/
 }

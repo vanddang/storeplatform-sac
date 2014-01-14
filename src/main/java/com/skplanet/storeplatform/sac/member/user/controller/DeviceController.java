@@ -32,7 +32,8 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @Controller
 public class DeviceController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -50,23 +51,24 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListDeviceRes listDevice(@RequestHeader Map<String, Object> headers, @RequestBody ListDeviceReq req)
-			throws Exception {
+	public ListDeviceRes listDevice(@RequestHeader Map<String, Object> headers,
+			@RequestBody ListDeviceReq req) throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
-		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표기기 조회여부
-		
-		if (userId.equals("") && userKey.equals("") && deviceId.equals("") && deviceKey.equals("")) {
+		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표기기조회여부
+
+		if (userId.equals("") && userKey.equals("") && deviceId.equals("")
+				&& deviceKey.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
-		
+
 		if (isMainDevice.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
-		
+
 		/* Header 정보 세팅 */
 		HeaderVo headerVo = this.headerInfo.getHeader(headers);
 
@@ -85,8 +87,9 @@ public class DeviceController {
 	 */
 	/* @RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST) */
 	@ResponseBody
-	public CreateDeviceRes createDevice(@RequestHeader Map<String, Object> headers, @RequestBody CreateDeviceReq req)
-			throws Exception {
+	public CreateDeviceRes createDevice(
+			@RequestHeader Map<String, Object> headers,
+			@RequestBody CreateDeviceReq req) throws Exception {
 
 		/* Header 정보 세팅 */
 		HeaderVo headerVo = this.headerInfo.getHeader(headers);
@@ -106,7 +109,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DeviceInfo modifyRepresentationDevice(@RequestHeader Map<String, Object> headers,
+	public DeviceInfo modifyRepresentationDevice(
+			@RequestHeader Map<String, Object> headers,
 			@RequestBody SetMainDeviceRequest req) throws Exception {
 
 		/* Header 정보 세팅 */
@@ -119,7 +123,8 @@ public class DeviceController {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
-		DeviceInfo res = this.deviceService.modifyRepresentationDevice(headerVo, req);
+		DeviceInfo res = this.deviceService.modifyRepresentationDevice(
+				headerVo, req);
 
 		return res;
 	}
@@ -134,7 +139,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes detailRepresentationDevice(@RequestHeader Map<String, Object> headers,
+	public ListDeviceRes detailRepresentationDevice(
+			@RequestHeader Map<String, Object> headers,
 			@RequestBody ListDeviceReq req) throws Exception {
 
 		/* Header 정보 세팅 */
@@ -142,7 +148,8 @@ public class DeviceController {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
-		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표단말 조회설정
+		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표단말
+																			// 조회설정
 
 		if (userId.equals("") || userKey.equals("") || isMainDevice.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");

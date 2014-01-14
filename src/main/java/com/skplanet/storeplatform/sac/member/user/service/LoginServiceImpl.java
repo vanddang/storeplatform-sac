@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -67,9 +66,6 @@ public class LoginServiceImpl implements LoginService {
 	MemberCommonComponent commService; // 회원 공통 서비스
 
 	@Autowired
-	private UAPSSCI uapsSCI; // UAPS 연동 인터페이스
-
-	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
 
 	@Autowired
@@ -92,7 +88,7 @@ public class LoginServiceImpl implements LoginService {
 		String deviceId = req.getDeviceId();
 		String userTypeCd = ""; // 사용자구분코드
 		String mainStatusCd = ""; // 메인상태코드
-
+		
 		/* 모번호 조회 */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
@@ -272,6 +268,7 @@ public class LoginServiceImpl implements LoginService {
 		
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
+		
 		if (authorizeByMdnReq != null) { // mdn인증인경우
 			deviceInfo.setDeviceId(authorizeByMdnReq.getDeviceId());
 			deviceInfo.setDeviceTelecom(authorizeByMdnReq.getDeviceTelecom());
@@ -281,6 +278,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(authorizeByMdnReq.getDeviceAccount());
 			deviceInfo.setScVer(authorizeByMdnReq.getScVer());
 			deviceInfo.setOsVerOrg(authorizeByMdnReq.getOsVerOrg());
+			deviceInfo.setUacd(commService.getUaCode(authorizeByMdnReq.getDeviceModelNo()));
 		} else if(authorizeByIdReq != null) { //id인증인 경우
 			
 		}
@@ -324,7 +322,6 @@ public class LoginServiceImpl implements LoginService {
 	 * 
 	 * @param deviceId
 	 * @param userKey
-	 * @param imMbrNo
 	 * @throws Exception
 	 */
 	public void volatileMemberPoc(String deviceId, String userKey) throws Exception {

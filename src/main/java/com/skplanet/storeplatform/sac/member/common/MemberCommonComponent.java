@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.common.vo.Device;
@@ -74,6 +75,22 @@ public class MemberCommonComponent {
 		return this.miscellaneousService.getOpmd(req).getMsisdn();
 	}
 
+	/**
+	 * <pre>
+	 * deviceModelNo로 UA 코드 정보 조회.
+	 * </pre>
+	 * 
+	 * @param String
+	 *            deviceModelNo
+	 * @return String uaCode
+	 * @throws Exception
+	 */
+	public String getUaCode(String deviceModelNo) throws Exception { // 2014. 01. 14. 김다슬, 인크로스. 추가
+		GetUaCodeReq request = new GetUaCodeReq();
+		request.setDeviceModelNo(deviceModelNo);
+		return this.miscellaneousService.getUaCode(request).getUaCd();
+	}
+	
 	/**
 	 * <pre>
 	 * 필수 약관 동의 목록 조회.

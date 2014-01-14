@@ -1,12 +1,12 @@
 /*
-* Copyright (c) 2013 SK planet.
-* All right reserved.
-*
-* This software is the confidential and proprietary information of SK planet.
-* You shall not disclose such Confidential Information and
-* shall use it only in accordance with the terms of the license agreement
-* you entered into with SK planet.
-*/
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
 import java.util.Map;
@@ -39,7 +39,8 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @Controller
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -57,21 +58,23 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn(@RequestHeader Map<String, Object> headers,	@RequestBody AuthorizeByMdnReq req) throws Exception {
-		
+	public AuthorizeByMdnRes authorizeByMdn(
+			@RequestHeader Map<String, Object> headers,
+			@RequestBody AuthorizeByMdnReq req) throws Exception {
+
 		logger.info("######################## LoginController authorizeByMdn start ############################");
-		
+
 		/* 필수 파라메터 체크 */
-		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
+		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID
+		String deviceIdType = StringUtil.nvl(req.getDeviceIdType(), ""); // 기기ID타입(msisdn,uuid,macaddress
 		String deviceTelecom = StringUtil.nvl(req.getDeviceTelecom(), ""); // 이동통신사
-		String deviceModelNo = StringUtil.nvl(req.getDeviceModelNo(), ""); // 기기모델번호
 
 		if (deviceId.equals("")) {
 			throw new Exception("필수요청 파라메터 부족(\"devicdId\")");
 		} else if (deviceTelecom.equals("")) {
 			throw new Exception("필수요청 파라메터 부족(\"deviceTelecom\")");
-		} else if (deviceModelNo.equals("")) {
-			throw new Exception("필수요청 파라메터 부족(\"deviceModelNo\")");
+		} else if (deviceIdType.equals("")) {
+			throw new Exception("필수요청 파라메터 부족(\"deviceIdType\")");
 		}
 
 		/* Header 정보 세팅 */
@@ -93,7 +96,9 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById(@RequestHeader Map<String, Object> headers, @RequestBody AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(
+			@RequestHeader Map<String, Object> headers,
+			@RequestBody AuthorizeByIdReq req) throws Exception {
 
 		/* 필수 파라메터 체크 */
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
