@@ -470,6 +470,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				this.brandCatalogProdImgInfo.setProdId(dpBrandInfo.getCreateBrandId());
 				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE[i]);
+				this.brandCatalogProdImgInfo.setLangCd("ko");
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
 				this.brandCatalogProdImgInfo.setSeq(seq);
@@ -577,6 +578,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
 				this.brandCatalogProdImgInfo.setImgCls(IMG_CLS_CODE_TOP[i]);
+				this.brandCatalogProdImgInfo.setLangCd("ko");
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName);
 				this.brandCatalogProdImgInfo.setSeq(seq);
@@ -608,6 +610,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 
 				this.brandCatalogProdImgInfo.setProdId(dpCatalogInfo.getCreateCatalogId());
 				this.brandCatalogProdImgInfo.setImgCls(CouponConstants.CATALOG_DTL_IMG_684xY);
+				this.brandCatalogProdImgInfo.setLangCd("ko");
 				this.brandCatalogProdImgInfo.setFilePos(uploadDir1);
 				this.brandCatalogProdImgInfo.setFileNm(targetFileName1);
 				this.brandCatalogProdImgInfo.setSeq(seq);
@@ -642,6 +645,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 						nHeightSize = nHeightSize + 1170;
 
 						this.brandCatalogProdImgInfo.setSeq(seq);
+						this.brandCatalogProdImgInfo.setLangCd("ko");
 						this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
 
 						// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
@@ -661,6 +665,7 @@ public class ShoppingCouponServiceImpl implements ShoppingCouponService {
 							// log.info("■■■■■BrandImgResize■■■■■ : " + ResizetargetFileName1 + "을 생성 하였습니다.");
 
 							this.brandCatalogProdImgInfo.setSeq(seq);
+							this.brandCatalogProdImgInfo.setLangCd("ko");
 							this.brandCatalogProdImgInfo.setFileNm(ResizetargetFileName1);
 
 							// TBL_DP_PROD_IMG 테이블에 INSERT/UPDATE
