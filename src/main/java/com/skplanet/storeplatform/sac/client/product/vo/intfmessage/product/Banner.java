@@ -90,9 +90,9 @@ public class Banner extends CommonInfo implements Serializable {
 	private String themeInfo;
 
 	/*
-	 * 상품 ID > 이북/코믹테마에서 사용
+	 * 배너 ID > 이북/코믹테마에서 사용
 	 */
-	private String productId;
+	private String bannerId;
 
 	public String getBase() {
 		return this.base;
@@ -206,12 +206,11 @@ public class Banner extends CommonInfo implements Serializable {
 		this.themeInfo = themeInfo;
 	}
 
-	public String getProductId() {
-		return this.productId;
+	public String getBannerId() {
+		return this.bannerId;
 	}
 
-	public void setProductId(String productId) {
-		this.productId = productId;
+	public void setBannerId(String bannerId) {
+		this.bannerId = bannerId;
 	}
-
 }
