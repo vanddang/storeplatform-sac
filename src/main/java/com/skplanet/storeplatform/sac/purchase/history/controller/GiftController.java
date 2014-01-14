@@ -114,11 +114,6 @@ public class GiftController {
 	private GiftReceiveRes resConvert(GiftReceiveResponse giftReceiveResponse) {
 		GiftReceiveRes res = new GiftReceiveRes();
 		res.setRecvDt(giftReceiveResponse.getRecvDt());
-		res.setResvCol01(giftReceiveResponse.getResvCol01());
-		res.setResvCol02(giftReceiveResponse.getResvCol02());
-		res.setResvCol03(giftReceiveResponse.getResvCol03());
-		res.setResvCol04(giftReceiveResponse.getResvCol04());
-		res.setResvCol05(giftReceiveResponse.getResvCol05());
 
 		return res;
 	}

@@ -98,11 +98,6 @@ public class ExistenceController {
 			ExistenceRes ExistenceRes = new ExistenceRes();
 			ExistenceRes.setPrchsId(existenceResponseList.get(i).getPrchsId());
 			ExistenceRes.setProdId(existenceResponseList.get(i).getProdId());
-			ExistenceRes.setResvCol01(existenceResponseList.get(i).getResvCol01());
-			ExistenceRes.setResvCol02(existenceResponseList.get(i).getResvCol02());
-			ExistenceRes.setResvCol03(existenceResponseList.get(i).getResvCol03());
-			ExistenceRes.setResvCol04(existenceResponseList.get(i).getResvCol04());
-			ExistenceRes.setResvCol05(existenceResponseList.get(i).getResvCol05());
 			res.add(ExistenceRes);
 		}
 
