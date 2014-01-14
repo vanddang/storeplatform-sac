@@ -15,9 +15,9 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
 
 /**
- * Member Service 인터페이스(CoreStoreBusiness)
+ * 기구매체크 Service 인터페이스
  * 
- * Updated on : 2013-09-01 Updated by : 조용진, 엔텔스.
+ * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
 public interface ExistenceService {
 

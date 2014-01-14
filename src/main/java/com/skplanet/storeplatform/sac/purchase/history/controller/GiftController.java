@@ -20,12 +20,17 @@ import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse;
-import com.skplanet.storeplatform.purchase.history.service.GiftService;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveRes;
+import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
 
+/**
+ * 구매 SAC 컨트롤러
+ * 
+ * Updated on : 2014-01-14 Updated by : 조용진, 엔텔스.
+ */
 @Controller
 @RequestMapping(value = "/purchase")
 public class GiftController {
@@ -33,6 +38,13 @@ public class GiftController {
 	@Autowired
 	private GiftService giftService;
 
+	/**
+	 * 선물수신확인 체크.
+	 * 
+	 * @param GiftReceiveReq
+	 *            선물수신확인 체크
+	 * @return GiftReceiveRes
+	 */
 	@RequestMapping(value = "/history/gift/get/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GiftReceiveRes searchGiftReceive(@RequestBody GiftReceiveReq giftReceiveReq) {
@@ -45,6 +57,13 @@ public class GiftController {
 		return res;
 	}
 
+	/**
+	 * 선물수신.
+	 * 
+	 * @param GiftConfirmReq
+	 *            선물수신
+	 * @return GiftConfirmRes
+	 */
 	@RequestMapping(value = "/history/gift/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GiftConfirmRes modifyGiftConfirm(@RequestBody GiftConfirmReq giftConfirmReq) {

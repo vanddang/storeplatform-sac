@@ -21,14 +21,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceList;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
 
+/**
+ * 구매 SAC 컨트롤러
+ * 
+ * Updated on : 2014-01-14 Updated by : 조용진, 엔텔스.
+ */
 @Controller
 @RequestMapping(value = "/purchase")
 public class ExistenceController {
@@ -38,6 +43,13 @@ public class ExistenceController {
 	@Autowired
 	private ExistenceService existenceService;
 
+	/**
+	 * 기구매 체크.
+	 * 
+	 * @param ExistenceRequest
+	 *            기구매 체크
+	 * @return List<ExistenceResponse>
+	 */
 	@RequestMapping(value = "/history/Existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistenceListRes getExist(@RequestBody ExistenceReq existenceReq) {
@@ -73,7 +85,7 @@ public class ExistenceController {
 			existenceList.setTenantProdGrpCd(existenceReq.getExistenceList().get(i).getTenantProdGrpCd());
 			list.add(existenceList);
 		}
-		// req.setExistenceList(list);
+		req.setExistenceList(list);
 
 		return req;
 	}

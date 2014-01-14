@@ -21,9 +21,9 @@ import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse;
 
 /**
- * Member Service 인터페이스(CoreStoreBusiness) 구현체
+ * 선물확인 Service 인터페이스 구현체
  * 
- * Updated on : 2013-09-01 Updated by : $$Id$$.
+ * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
 @Service
 public class GiftServiceImpl implements GiftService {

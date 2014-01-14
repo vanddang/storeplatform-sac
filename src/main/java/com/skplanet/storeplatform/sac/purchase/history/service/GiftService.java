@@ -15,9 +15,9 @@ import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse;
 
 /**
- * Member Service 인터페이스(CoreStoreBusiness)
+ * 선물확인 Service 인터페이스
  * 
- * Updated on : 2013-09-01 Updated by : 아키텍쳐팀, SK플래닛.
+ * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
 public interface GiftService {
 
