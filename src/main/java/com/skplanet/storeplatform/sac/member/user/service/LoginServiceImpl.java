@@ -1,12 +1,12 @@
 /*
-* Copyright (c) 2013 SK planet.
-* All right reserved.
-*
-* This software is the confidential and proprietary information of SK planet.
-* You shall not disclose such Confidential Information and
-* shall use it only in accordance with the terms of the license agreement
-* you entered into with SK planet.
-*/
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
-import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -38,6 +37,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
@@ -64,6 +64,9 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Autowired
+	MemberCommonComponent commService; // 회원 공통 서비스
+
+	@Autowired
 	private UAPSSCI uapsSCI; // UAPS 연동 인터페이스
 
 	@Autowired
@@ -77,7 +80,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private IDPService idpService; // IDP 연동 클래스
-	
+
 	@Autowired
 	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
 
@@ -86,104 +89,81 @@ public class LoginServiceImpl implements LoginService {
 
 		logger.info("######################## LoginServiceImpl authorizeByMdn start ############################");
 
-		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
-
 		String deviceId = req.getDeviceId();
 		String userTypeCd = ""; // 사용자구분코드
 		String mainStatusCd = ""; // 메인상태코드
 
 		/* 모번호 조회 */
-		OpmdRes ompdRes = this.uapsSCI.getOpmdInfo(deviceId);
-		logger.info("### uaps 모번호 조회 resultCode : {}", ompdRes.getResultCode());
-		if (ompdRes.getResultCode() == 0) {
-			deviceId = ompdRes.getMobileMdn();
-		} else {
-			throw new Exception("UAPS연동시 오류가 발생하였습니다.");
-		}
-		
-		//uaps연동 데이터가 박혀있는듯... 
-		if(deviceId.equals("0101231234")) deviceId = req.getDeviceId();
+		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
 		/* 회원정보 조회 (devicdId) */
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		key.setKeyString(deviceId);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-
-		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
-		}
+		SearchUserResponse schUserRes = this.searchUserInfo(deviceId, null);
 
 		/* 회원 상태 확인 */
 		if (schUserRes.getUserMbr() == null
 				|| StringUtil.equals(schUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_SECEDE)) {
 			throw new Exception("무선가입상태가 아닙니다.");
 		}
-		
+
 		userTypeCd = schUserRes.getUserMbr().getUserType();
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
-		if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_MOBILE)) {
+		if (StringUtil.equals(userTypeCd, MemberConstants.USER_TYPE_MOBILE)) {
 			this.volatileMemberPoc(deviceId, schUserRes.getUserMbr().getUserKey());
 		}
 
-		/* 무선회원 인증 */
-		if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_MOBILE)
-				|| StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_IDPID)) {
-
-			IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
-
-			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				/*	로그인 실패이력 저장	*/ 
-				this.insertloginHistory(deviceId, null, "N", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "]" + idpReceiver.getResponseHeader().getResult_text());
-			}
-		}
-
-		/* 단말정보 조회 및 merge */
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setDeviceId(deviceId);
-		deviceInfo.setUserKey(schUserRes.getUserMbr().getUserKey());
-		deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-		deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
-		deviceInfo.setNativeId(req.getNativeId());
-		deviceInfo.setRooting(req.getRooting());
-		deviceInfo.setDeviceAccount(req.getDeviceAccount());
-		deviceInfo.setScVer(req.getScVer());
-		deviceInfo.setOsVerOrg(req.getOsVerOrg());
-		this.deviceService.mergeDeviceInfo(deviceInfo);
-
-		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
+		String userStateVal = "";
 		
-		if (StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			/* 로그인 Response 셋팅 */
-			String userStateVal = "";
-			if (schUserRes.getUserMbr().getImSvcNo() != null) {
-				userStateVal = "oneId";
-			} else if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_MOBILE)) {
-				userStateVal = "mobile";
-			} else if (StringUtil.equals(userTypeCd, MemberConstants.USER_STATE_IDPID)) {
-				userStateVal = "tstoreId";
-			} 
-
-			if (StringUtil.equals(mainStatusCd, MemberConstants.MAIN_STATUS_WATING)) {
-				userStateVal = "temporary";
-			}
-
+		//if (schUserRes.getUserMbr().getImSvcNo() != null) { // 통합아이디
+		if (StringUtil.equals(userTypeCd, MemberConstants.USER_TYPE_ONEID)) {
+			
+			userStateVal = "oneId";
+			
+			/* 단말정보 merge */
+			this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req, null);
+			
+			/* 로그인 성공이력 저장 */
+			LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+			
 			res.setUserKey(loginRes.getUserKey());
 			res.setUserStatus(userStateVal);
+			
 		} else {
-			throw new Exception("[" + loginRes.getCommonResponse().getResultCode() + "] "
-					+ loginRes.getCommonResponse().getResultMessage());
+			
+			/* 무선회원 인증 */
+			IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
+
+			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(),	IDPConstants.IDP_RES_CODE_OK)) {
+				
+				if (StringUtil.equals(userTypeCd, MemberConstants.USER_TYPE_MOBILE)) {
+					userStateVal = "mobile";
+				} else if (StringUtil.equals(userTypeCd, MemberConstants.USER_TYPE_IDPID)) {
+					userStateVal = "tstoreId";
+				}
+
+				if (StringUtil.equals(mainStatusCd, MemberConstants.MAIN_STATUS_WATING)) {
+					userStateVal = "temporary";
+				}
+				
+				/* 단말정보 merge */
+				this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req, null);
+
+				/* 로그인 성공이력 저장 */
+				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+
+				res.setUserKey(loginRes.getUserKey());
+				res.setUserStatus(userStateVal);
+				
+			} else { //무선회원 인증 실패
+				/* 로그인 실패이력 저장 */
+				this.insertloginHistory(deviceId, null, "N", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
+				throw new Exception("["	+ idpReceiver.getResponseHeader().getResult() + "] "	+ idpReceiver.getResponseHeader().getResult_text());
+			}
+			
 		}
+
 
 		logger.info("######################## LoginServiceImpl authorizeByMdn end ############################");
 
@@ -191,7 +171,8 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public AuthorizeByIdRes authorizeById(HeaderVo headerVo, AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(HeaderVo headerVo,
+			AuthorizeByIdReq req) throws Exception {
 
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
@@ -216,7 +197,8 @@ public class LoginServiceImpl implements LoginService {
 		mainStatusCd = schUserRes.getUserMbr().getUserMainStatus();
 
 		if (mainStatusCd.equals("US010204")) {// 일시정지
-			throw new Exception("로그인 5회 입력 오류로 계정이 잠금 상태가 되었습니다. T store Web에서 해제 후 로그인해 주세요.");
+			throw new Exception(
+					"로그인 5회 입력 오류로 계정이 잠금 상태가 되었습니다. T store Web에서 해제 후 로그인해 주세요.");
 		}
 
 		/* 회원 인증 요청 */
@@ -234,8 +216,8 @@ public class LoginServiceImpl implements LoginService {
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		/* 로그인 성공이력 저장 */
-		LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "Y",
-				userTypeCd.equals("US011503") ? "Y" : "N");
+		LogInUserResponse loginRes = this.insertloginHistory(userId, userPw,
+				"Y", userTypeCd.equals("US011503") ? "Y" : "N");
 
 		if (loginRes.getIsLoginSuccess().equals("Y")) {
 			/* 로그인 Response 셋팅 */
@@ -248,7 +230,96 @@ public class LoginServiceImpl implements LoginService {
 		return res;
 	}
 
+	/**
+	 * 
+	 * SC콤포넌트 회원정보 조회
+	 * 
+	 * @param deviceId
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public SearchUserResponse searchUserInfo(String deviceId, String userId) throws Exception {
+		SearchUserRequest schUserReq = new SearchUserRequest();
+		schUserReq.setCommonRequest(commonRequest);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		if (deviceId != null) {
+			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		} else if (userId != null) {
+			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+		}
+		key.setKeyString(deviceId);
+		keySearchList.add(key);
+		schUserReq.setKeySearchList(keySearchList);
 
+		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("["
+					+ schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
+		}
+
+		return schUserRes;
+	}
+
+	/**
+	 * 
+	 * 휴대기기정보 merge
+	 * 
+	 * @param userKey
+	 * @param authorizeByMdnReq
+	 * @param authorizeByIdReq
+	 * @throws Exception 
+	 */
+	public void mergeDeviceInfo(String userKey, AuthorizeByMdnReq authorizeByMdnReq, AuthorizeByIdReq authorizeByIdReq) throws Exception{
+		
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setUserKey(userKey);
+		if (authorizeByMdnReq != null) { // mdn인증인경우
+			deviceInfo.setDeviceId(authorizeByMdnReq.getDeviceId());
+			deviceInfo.setDeviceTelecom(authorizeByMdnReq.getDeviceTelecom());
+			deviceInfo.setDeviceModelNo(authorizeByMdnReq.getDeviceModelNo());
+			deviceInfo.setNativeId(authorizeByMdnReq.getNativeId());
+			deviceInfo.setRooting(authorizeByMdnReq.getRooting());
+			deviceInfo.setDeviceAccount(authorizeByMdnReq.getDeviceAccount());
+			deviceInfo.setScVer(authorizeByMdnReq.getScVer());
+			deviceInfo.setOsVerOrg(authorizeByMdnReq.getOsVerOrg());
+		} else if(authorizeByIdReq != null) { //id인증인 경우
+			
+		}
+		
+		this.deviceService.mergeDeviceInfo(deviceInfo);
+	}
+	
+	/**
+	 * SC콤포넌트 로그인 이력저장
+	 * 
+	 * @param key
+	 * @param isSuccess
+	 * @param isOneId
+	 * @return
+	 */
+	public LogInUserResponse insertloginHistory(String userId, String userPw, String isSuccess, String isOneId) throws Exception {
+		LogInUserRequest loginReq = new LogInUserRequest();
+		loginReq.setCommonRequest(commonRequest);
+		loginReq.setUserID(userId);
+		if (userPw != null) {
+			loginReq.setUserPW(userPw);
+		}
+		loginReq.setIsSuccess(isSuccess);
+		loginReq.setIsOneID(isOneId);
+
+		LogInUserResponse loginRes = this.userSCI.logInUser(loginReq);
+		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("["
+					+ loginRes.getCommonResponse().getResultCode() + "] "
+					+ loginRes.getCommonResponse().getResultMessage());
+		}
+		return loginRes;
+	}
+
+	
 	/**
 	 * 변동성 회원 처리
 	 * 
@@ -258,21 +329,23 @@ public class LoginServiceImpl implements LoginService {
 	 * @throws Exception
 	 */
 	public void volatileMemberPoc(String deviceId, String userKey) throws Exception {
-		
+
 		logger.info("########## volatileMember process start #########");
-		
+
 		/* 1. 무선회원 가입 */
 		IDPReceiverM idpReceiver = this.idpService.join4Wap(deviceId);
 		if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-			throw new Exception("변동성 회원 가입실패 [" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+			throw new Exception("["
+					+ idpReceiver.getResponseHeader().getResult() + "] "
+					+ idpReceiver.getResponseHeader().getResult_text());
 		}
 
-		String imMbrNo = idpReceiver.getResponseBody().getUser_key(); //IDP 관리번호
-		String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); //SKT사용자의 경우 사용자 관리번호
-		
+		String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
+		String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); // SKT사용자의 경우 사용자 관리번호
+
 		logger.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
-		
-		/* 2. 회원정보 수정  */
+
+		/* 2. 회원정보 수정 */
 		UpdateUserRequest updUserReq = new UpdateUserRequest();
 		updUserReq.setCommonRequest(commonRequest);
 		UserMbr userMbr = new UserMbr();
@@ -282,36 +355,18 @@ public class LoginServiceImpl implements LoginService {
 		updUserReq.setUserMbr(userMbr);
 		UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
 		if (!StringUtil.equals(updUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("변동성 회원정보 업데이트 실패 [" + updUserRes.getCommonResponse().getResultCode() + "] " + updUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("["
+					+ updUserRes.getCommonResponse().getResultCode() + "] "
+					+ updUserRes.getCommonResponse().getResultMessage());
 		}
-		
-		/*	3. 휴대기기 정보 수정		*/
+
+		/* 3. 휴대기기 정보 수정 */
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setDeviceId(deviceId);
 		deviceInfo.setImMngNum(imMngNum);
-		deviceService.mergeDeviceInfo(deviceInfo);
+		this.deviceService.mergeDeviceInfo(deviceInfo);
 
 		logger.info("########## volatileMember process end #########");
-	}
-
-	/**
-	 * SC콤포넌트 로그인 이력저장
-	 * 
-	 * @param key
-	 * @param isSuccess
-	 * @param isOneId
-	 * @return
-	 */
-	public LogInUserResponse insertloginHistory(String userId, String userPw, String isSuccess, String isOneId) {
-		LogInUserRequest loginReq = new LogInUserRequest();
-		loginReq.setCommonRequest(commonRequest);
-		loginReq.setUserID(userId);
-		if (userPw != null) {
-			loginReq.setUserPW(userPw);
-		}
-		loginReq.setIsSuccess(isSuccess);
-		loginReq.setIsOneID(isOneId);
-		return this.userSCI.logInUser(loginReq);
 	}
 
 }
