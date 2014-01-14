@@ -110,7 +110,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		}
 		// 페이지당 노출될 ROW 개수 Default 세팅
 		if (req.getCount() == null) {
-			req.setOffset(20);
+			req.setCount(20);
 		}
 
 		// 헤더값 세팅
