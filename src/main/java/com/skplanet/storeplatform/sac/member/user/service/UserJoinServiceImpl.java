@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -74,7 +75,15 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private IDPRepository idpRepository;
 
+	/**
+	 * IDP 연동 결과
+	 */
 	private IDPReceiverM idpReceiverM;
+
+	/**
+	 * 통합 IDP 연동 결과
+	 */
+	private ImIDPReceiverM imIDPReceiverM;
 
 	@Value("#{propertiesForSac['idp.im.request.operation']}")
 	public String IDP_OPERATION_MODE;
@@ -148,12 +157,21 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			// SC 법정대리인 정보 setting
 			if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
 				mbrLglAgent.setIsParent(MemberConstants.USE_Y); // 법정대리인 동의 여부
+				mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
+				mbrLglAgent.setParentName(req.getParentName()); // 법정대리인 이름
+				mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계
+				mbrLglAgent.setParentDate(req.getParentDate()); // 법정대리인 동의일시
+				mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 Email
 				mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
-				mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 이메일
+				mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 통신사 코드
 				mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
-				mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 이동통신사
+				mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
+				mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
+				mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
+
 			}
 
 			// SC 사용자 가입요청 setting
@@ -246,7 +264,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * TODO 모번호조회 할때 us_cd, IM_INT_SVC_NO(서비스 관리 번호)
 		 */
 		UserRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), req.getDeviceIdType());
-		LOGGER.debug("## userRes : {}" + userRes.toString());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -267,35 +284,43 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("cmd", "TXAgreeUserIDP");
-		LOGGER.debug("############## this.IDP_OPERATION_MODE : {}", this.IDP_OPERATION_MODE);
-		// param.put("operation_mode", this.IDP_OPERATION_MODE);
 		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
 		param.put("key", req.getUserId());
 		param.put("user_mdn", sbUserPhone.toString());
 		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
-		param.put("modify_req_date", DateUtil.getToday());
-		param.put("modify_req_time", DateUtil.getTime());
 		LOGGER.debug("## param : {}", param.entrySet());
-		ImIDPReceiverM imIDPReceiverM = this.imIdpService.agreeUser(param);
-		LOGGER.debug("## Im Result Code   : {}", imIDPReceiverM.getResponseHeader().getResult());
-		LOGGER.debug("## Im Result Text   : {}", imIDPReceiverM.getResponseHeader().getResult_text());
+		this.imIDPReceiverM = this.imIdpService.agreeUser(param);
+		LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
+		LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
 
-		if (StringUtils.equals(imIDPReceiverM.getResponseHeader().getResult(), "00000")) {
+		/**
+		 * 이용동의 가입 성공시
+		 */
+		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
 
-			LOGGER.debug("## Im user_key      : {}", imIDPReceiverM.getResponseBody().getUser_key());
-			LOGGER.debug("## Im im_int_svc_no : {}", imIDPReceiverM.getResponseBody().getIm_int_svc_no());
-			LOGGER.debug("## Im user_tn       : {}", imIDPReceiverM.getResponseBody().getUser_tn());
-			LOGGER.debug("## Im user_email    : {}", imIDPReceiverM.getResponseBody().getUser_email());
+			LOGGER.debug("## Im user_key      : {}", this.imIDPReceiverM.getResponseBody().getUser_key());
+			LOGGER.debug("## Im im_int_svc_no : {}", this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im user_tn       : {}", this.imIDPReceiverM.getResponseBody().getUser_tn());
+			LOGGER.debug("## Im user_email    : {}", this.imIDPReceiverM.getResponseBody().getUser_email());
 
 			/**
 			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 			 */
-			this.imIdpService.userInfoIdpSearchServer("파라미터 넣어야함 - imServiceNo");
+			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
+			LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
 
-			// sMbrNm = mapParse.get("user_name");
-			// sBirthDt = mapParse.get("user_birthday");
+			/**
+			 * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
+			 */
+			if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+
+				LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
+				LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
+
+			}
 
 		} else {
 
@@ -331,6 +356,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * DB 약관 목록 조회 sorting
 		 */
 		List<ClauseDTO> dbAgreementList = this.mcc.getMandAgreeList(tenantId);
+		if (dbAgreementList.size() == 0) {
+			LOGGER.debug("## 체크할 필수 약관이 존재 하지 않습니다.");
+			return false;
+		}
 		Comparator<ClauseDTO> dbComparator = new Comparator<ClauseDTO>() {
 			@Override
 			public int compare(ClauseDTO value1, ClauseDTO value2) {

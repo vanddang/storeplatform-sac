@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,11 @@ public class UserJoinController {
 	private HeaderInfo headerInfo;
 
 	/**
+	 * Data Binding
+	 */
+	ObjectMapper objMapper = new ObjectMapper();
+
+	/**
 	 * <pre>
 	 * 모바일 전용 회원 가입 (MDN 회원 가입).
 	 * </pre>
@@ -68,7 +74,7 @@ public class UserJoinController {
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		LOGGER.info("####################################################");
 
-		LOGGER.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
 		 * Header 정보 세팅
@@ -106,7 +112,7 @@ public class UserJoinController {
 		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
 		LOGGER.info("####################################################");
 
-		LOGGER.info("Request : {}", req.toString());
+		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
 		 * Header 정보 세팅
