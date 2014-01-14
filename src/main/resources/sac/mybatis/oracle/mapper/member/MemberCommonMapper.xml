@@ -25,7 +25,7 @@
 		WHERE A.CLAUSE_ID = B.CLAUSE_ID
 		AND A.TENANT_ID = #{tenantId}
 		AND A.USE_YN = 'Y'
-		/*AND A.MAND_AGREE_YN = 'Y'*/
+		AND A.MAND_AGREE_YN = 'Y'
 		ORDER BY B.CLAUSE_ITEM_CD
     </select>
 

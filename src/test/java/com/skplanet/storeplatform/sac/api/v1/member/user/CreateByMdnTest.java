@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
@@ -78,18 +79,18 @@ public class CreateByMdnTest {
 						reqJson.setJoinId("US002903");
 						reqJson.setIsParent("N");
 
-						// // 법정 대리인 정보
-						// reqJson.setParentRealNameMethod("US011101");
-						// reqJson.setParentName("홍길동");
-						// reqJson.setParentType(parentType);
-						// reqJson.setParentDate(parentDate);
-						// reqJson.setParentEmail("hkd@aaaa.com");
-						// reqJson.setParentBirthDay(parentBirthDay);
-						// reqJson.setParentTelecom("US001201");
-						// reqJson.setParentPhone("01088889999");
-						// reqJson.setPareantCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-						// reqJson.setParentRealNameDate(parentRealNameDate);
-						// reqJson.setParentRealNameSite(parentRealNameSite);
+						// 법정 대리인 정보
+						reqJson.setParentRealNameMethod("US011101");
+						reqJson.setParentName("홍길동");
+						reqJson.setParentType("F");
+						reqJson.setParentDate(DateUtil.getToday() + DateUtil.getTime());
+						reqJson.setParentEmail("hkd@aaaa.com");
+						reqJson.setParentBirthDay("19700331");
+						reqJson.setParentTelecom("US001201");
+						reqJson.setParentPhone("01088889999");
+						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+						reqJson.setParentRealNameDate(DateUtil.getToday() + DateUtil.getTime());
+						reqJson.setParentRealNameSite("");
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
