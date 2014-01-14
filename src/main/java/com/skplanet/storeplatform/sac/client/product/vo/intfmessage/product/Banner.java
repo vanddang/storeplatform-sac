@@ -79,6 +79,21 @@ public class Banner extends CommonInfo implements Serializable {
 
 	private List<Menu> menuList;
 
+	/*
+	 * 타이블 분류 > name > text >이북/코믹테마에서 사용
+	 */
+	private Title titleName;
+
+	/*
+	 * 테마 정보 > 이북/코믹테마에서 사용
+	 */
+	private String themeInfo;
+
+	/*
+	 * 상품 ID > 이북/코믹테마에서 사용
+	 */
+	private String productId;
+
 	public String getBase() {
 		return this.base;
 	}
@@ -117,6 +132,14 @@ public class Banner extends CommonInfo implements Serializable {
 
 	public void setTitle(Title title) {
 		this.title = title;
+	}
+
+	public Title getTitleName() {
+		return this.titleName;
+	}
+
+	public void setTitleName(Title titleName) {
+		this.titleName = titleName;
 	}
 
 	public String getCategory() {
@@ -173,6 +196,22 @@ public class Banner extends CommonInfo implements Serializable {
 
 	public void setMenuList(List<Menu> menuList) {
 		this.menuList = menuList;
+	}
+
+	public String getThemeInfo() {
+		return this.themeInfo;
+	}
+
+	public void setThemeInfo(String themeInfo) {
+		this.themeInfo = themeInfo;
+	}
+
+	public String getProductId() {
+		return this.productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 }
