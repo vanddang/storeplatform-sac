@@ -158,7 +158,7 @@ public class DeviceServiceImpl implements DeviceService {
 		
 		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
 		schDeviceListReq.setUserKey(userKey);
-		schDeviceListReq.setSearchType(req.getSearchType());
+		schDeviceListReq.setIsMainDevice(req.getIsMainDevice());
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 		

@@ -157,8 +157,6 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserStatus(userStateVal);
 				
 			} else { //무선회원 인증 실패
-				/* 로그인 실패이력 저장 */
-				this.insertloginHistory(deviceId, null, "N", schUserRes.getUserMbr().getImSvcNo() == null ? "N" : "Y");
 				throw new Exception("["	+ idpReceiver.getResponseHeader().getResult() + "] "	+ idpReceiver.getResponseHeader().getResult_text());
 			}
 			
