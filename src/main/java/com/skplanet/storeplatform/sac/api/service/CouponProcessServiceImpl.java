@@ -818,12 +818,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// 1. Validation Check
 			// 쿠폰상태 값 유효성 검증
-			// if (!(StringUtils.equalsIgnoreCase(coupnStatus, "3") || StringUtils.equalsIgnoreCase(coupnStatus, "4") ||
-			// StringUtils
-			// .equalsIgnoreCase(coupnStatus, "5"))) {
-			// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰상태 값이 유효하지 않습니다.",
-			// coupnStatus);
-			// }
+			if (!(StringUtils.equalsIgnoreCase(upType, "0") || StringUtils.equalsIgnoreCase(upType, "1") || StringUtils
+					.equalsIgnoreCase(upType, "2"))) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "쿠폰상태 값이 유효하지 않습니다.",
+						coupnStatus);
+			}
 
 			// 기등록된 컨텐트 존재여부 확인 old쿠폰ID,아이템ID로 new쿠폰ID,아이템ID 가져오기 조회
 			String newCouponCode = this.couponItemService.getGenerateId(couponCode);
