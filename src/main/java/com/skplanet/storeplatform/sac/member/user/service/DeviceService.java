@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 public interface DeviceService {
 
 	/**
-	 * 휴대기기 등록 처리
+	 * 휴대기기 등록
 	 * 
 	 * @param headerVo
 	 * @param req
@@ -37,7 +37,9 @@ public interface DeviceService {
 			throws Exception;
 
 	/**
-	 * 휴대기기 정보 등록
+	 * 
+	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
+	 * 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param userKey
 	 * @param deviceInfo
@@ -48,7 +50,7 @@ public interface DeviceService {
 			throws Exception;
 
 	/**
-	 * 기기정보 수정 처리
+	 * 기기정보 수정
 	 * 
 	 * @param req
 	 * @return
