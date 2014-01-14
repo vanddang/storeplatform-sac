@@ -137,11 +137,11 @@ public class DeviceController {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
-		String searchType = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표단말 조회설정
+		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표단말 조회설정
 
-		if (userId.equals("") || userKey.equals("") || searchType.equals("")) {
+		if (userId.equals("") || userKey.equals("") || isMainDevice.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
-		} else if ("".equals(searchType) || "N".equals(searchType)) {
+		} else if ("".equals(isMainDevice) || "N".equals(isMainDevice)) {
 			throw new Exception("대표단말 조회값이 없거나 'N' 입니다.");
 		}
 
