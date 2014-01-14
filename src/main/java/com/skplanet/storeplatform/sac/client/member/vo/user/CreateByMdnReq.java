@@ -100,7 +100,7 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 법정대리인 CI
 	 */
-	private String pareantCi;
+	private String parentCi;
 
 	/**
 	 * 법정대리인 인증 일시
@@ -323,18 +323,18 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : pareantCi
+	 * @return String : parentCi
 	 */
-	public String getPareantCi() {
-		return this.pareantCi;
+	public String getParentCi() {
+		return this.parentCi;
 	}
 
 	/**
-	 * @param pareantCi
-	 *            String : the pareantCi to set
+	 * @param parentCi
+	 *            String : the parentCi to set
 	 */
-	public void setPareantCi(String pareantCi) {
-		this.pareantCi = pareantCi;
+	public void setParentCi(String parentCi) {
+		this.parentCi = parentCi;
 	}
 
 	/**
