@@ -29,8 +29,8 @@ public class ShoppingReq extends CommonInfo {
 	private String b2bProd; // B2B 상품 구분
 	private String orderedBy; // 정렬순서
 	private String stdDt; // 기준일자
-	private int offset; // offset
-	private int count; // count
+	private Integer offset; // offset
+	private Integer count; // count
 
 	public String getTenantId() {
 		return this.tenantId;
