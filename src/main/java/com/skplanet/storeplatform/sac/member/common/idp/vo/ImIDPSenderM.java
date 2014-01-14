@@ -1,253 +1,258 @@
 package com.skplanet.storeplatform.sac.member.common.idp.vo;
 
+
 public class ImIDPSenderM {
-    /* 연동 요청 (공통 결과 API) */
-    /** 세부 요청 command */
-    private String cmd;
-    /** 등록된 SP ID */
-    private String sp_id;
-    /** 요청 인증을 위한 signature */
-    private String sp_auth_key;
-    /** 처리 결과 Data Format */
-    private String resp_type; // 1 : "name=vlaue", 2 : XML default=1
-    /** 처리결과 전달 방식 */
-    private String resp_flow; // resp : response 방식, redt : redirect 방식 default=resp
-    /** redirect 할 url */
-    private String resp_url;
+	/* 연동 요청 (공통 결과 API) */
+	/** 세부 요청 command */
+	private String cmd;
+	/** 등록된 SP ID */
+	private String sp_id;
+	/** 요청 인증을 위한 signature */
+	private String sp_auth_key;
+	/** 처리 결과 Data Format */
+	private String resp_type; // 1 : "name=vlaue", 2 : XML default=1
+	/** 처리결과 전달 방식 */
+	private String resp_flow; // resp : response 방식, redt : redirect 방식 default=resp
+	/** redirect 할 url */
+	private String resp_url;
 
-    /* 연동 요청 (기본 API) */
-    /** 서비스 중복 가입 체크 key 종류 */
-    private String key_type; // 1 : IM 통합서비스 no, 2 : IM 통합ID  default=1
+	/* 연동 요청 (기본 API) */
+	/** 서비스 중복 가입 체크 key 종류 */
+	private String key_type; // 1 : IM 통합서비스 no, 2 : IM 통합ID default=1
 
-    /** 서비스 중복 가입을 체크 할 값*/
-    private String key;
+	/** 서비스 중복 가입을 체크 할 값 */
+	private String key;
 
-    /** 인증 키 */
-    private String user_auth_key;
+	/** 인증 키 */
+	private String user_auth_key;
 
-    /** 사용자 아이디 */
-    private String user_id;
+	/** 사용자 아이디 */
+	private String user_id;
 
-    /** 사용자 패스워드 */
-    private String user_passwd;
+	/** 사용자 패스워드 */
+	private String user_passwd;
 
-    /** 사용자 패스워드 타입 */
-    private String user_passwd_type;
+	/** 사용자 패스워드 타입 */
+	private String user_passwd_type;
 
-    /** 사용자 패스워드 변경일 */
-    private String user_passwd_modify_date;
+	/** 사용자 패스워드 변경일 */
+	private String user_passwd_modify_date;
 
-    /** 인증 유형 코드 */
-    private String auth_type;
+	/** 인증 유형 코드 */
+	private String auth_type;
 
-    /** 필수 전화번호 */
-    private String user_tn;
+	/** 필수 전화번호 */
+	private String user_tn;
 
-    /** 필수 전화번호 소유여부*/
-    private String is_user_tn_own;
+	/** 필수 전화번호 소유여부 */
+	private String is_user_tn_own;
 
-    private String is_user_tn_auth;
+	private String is_user_tn_auth;
 
-    /** 필수 전화번호 국가코드 */
-    private String user_tn_nation_cd;
+	/** 필수 전화번호 국가코드 */
+	private String user_tn_nation_cd;
 
-    /** 필수 전화번호 유형*/
-    private String user_tn_type;
+	/** 필수 전화번호 유형 */
+	private String user_tn_type;
 
-    /** 사용자 email */
-    private String user_email;
+	/** 사용자 email */
+	private String user_email;
 
-    /** 사용자 email 인증 여부*/
-    private String is_email_auth;
+	/** 사용자 email 인증 여부 */
+	private String is_email_auth;
 
-    /** 회원 유형 */
-    private String user_type;
+	/** 회원 유형 */
+	private String user_type;
 
-    /** 사용자 이름 or 국내 거주 외국인 이름 */
-    private String user_name;
+	/** 사용자 이름 or 국내 거주 외국인 이름 */
+	private String user_name;
 
-    /** 실명인증여부 */
-    private String is_rname_auth;
+	/** 실명인증여부 */
+	private String is_rname_auth;
 
-    /** 인증 할 휴대폰번호 */
-    private String user_mdn;
+	/** 인증 할 휴대폰번호 */
+	private String user_mdn;
 
-    /** 조회할휴대전화번호 (SKT 가입자에 한함) **/
-    private String mdn;
+	/** 조회할휴대전화번호 (SKT 가입자에 한함) **/
+	private String mdn;
 
-    /** 인증 할 휴대폰번호 signature */
-    private String user_mdn_auth_key;
+	/** 인증 할 휴대폰번호 signature */
+	private String user_mdn_auth_key;
 
-    /** 성별 */
-    private String user_sex;
+	/** 성별 */
+	private String user_sex;
 
-    /** 생년월일 */
-    private String user_birthday;
+	/** 생년월일 */
+	private String user_birthday;
 
-    /** 양음력 여부 */
-    private String user_calendar;
+	/** 양음력 여부 */
+	private String user_calendar;
 
-    /** 우편번호 */
-    private String user_zipcode;
+	/** 우편번호 */
+	private String user_zipcode;
 
-    /** 거주지 주소 */
-    private String user_address;
+	/** 거주지 주소 */
+	private String user_address;
 
-    /** 거주지 상세주소 */
-    private String user_address2;
+	/** 거주지 상세주소 */
+	private String user_address2;
 
-    /** 국가 코드 */
-    private String user_nation_code;
-    private String user_nation_name;
+	/** 국가 코드 */
+	private String user_nation_code;
+	private String user_nation_name;
 
-    /** 언어 */
-    private String lang_code;
+	/** 언어 */
+	private String lang_code;
 
-    /** 통합 전환 여부 */
-    private String is_im_changed;
+	/** 통합 전환 여부 */
+	private String is_im_changed;
 
-    /** 일괄전환 대상 서비스 사이트 */
-    private String tans_sst_list;
+	/** 일괄전환 대상 서비스 사이트 */
+	private String tans_sst_list;
 
-    /** 가입자 상태 코드 */
-    private String user_status_code;
+	/** 가입자 상태 코드 */
+	private String user_status_code;
 
-    /** 부모 관계 코드 */
-    private String parent_type;
+	/** 부모 관계 코드 */
+	private String parent_type;
 
-    /** 부모 실명인증 수단 코드 */
-    private String parent_rname_auth_type;
+	/** 부모 실명인증 수단 코드 */
+	private String parent_rname_auth_type;
 
-    /** 부모 실명인증 CI값 */
-    private String parent_rname_auth_key;
+	/** 부모 실명인증 CI값 */
+	private String parent_rname_auth_key;
 
-    /** 부모 이름 */
-    private String parent_name;
+	/** 부모 이름 */
+	private String parent_name;
 
-    /** 부모 전화번호 */
-    private String parent_mdn;
+	/** 부모 전화번호 */
+	private String parent_mdn;
 
-    /** 부모 이메일 */
-    private String parent_email;
+	/** 부모 이메일 */
+	private String parent_email;
 
-    /** 부모 동의 일자 */
-    private String parent_approve_date;
+	/** 부모 동의 일자 */
+	private String parent_approve_date;
 
-    /** 부모 동의 여부 */
-    private String is_parent_approve;
+	/** 부모 동의 여부 */
+	private String is_parent_approve;
 
-    /** 부모 동의 서비스 사이트 코드 */
-    private String parent_approve_sst_code;
+	/** 부모 동의 서비스 사이트 코드 */
+	private String parent_approve_sst_code;
 
-    /** 약관동의 정보  */
-    private String consent_tac;
+	/** 약관동의 정보 */
+	private String consent_tac;
 
-    /** 가입경로 코드  */
-    private String join_path_code;
+	/** 가입경로 코드 */
+	private String join_path_code;
 
-    /** 가입일자  */
-    private String join_date;
+	/** 가입일자 */
+	private String join_date;
 
-    /** 가입시간  */
-    private String join_time;
+	/** 가입시간 */
+	private String join_time;
 
-    /** 변경 요청 일자  */
-    private String modify_req_date;
+	/** 변경 요청 일자 */
+	private String modify_req_date;
 
-    /** 변경 요청 시간  */
-    private String modify_req_time;
+	/** 변경 요청 시간 */
+	private String modify_req_time;
 
-    /** 해지 사유 코드 */
-    private String term_reason_cd;
+	/** 해지 사유 코드 */
+	private String term_reason_cd;
 
-    /** 요청 일자 */
-    private String req_date;
+	/** 요청 일자 */
+	private String req_date;
 
-    /** 요청 시간 */
-    private String req_time;
+	/** 요청 시간 */
+	private String req_time;
 
-    /** CI값 */
-    private String ipin_ci;
+	/** CI값 */
+	private String ipin_ci;
 
-    /** 로그인 상태 코드 */
-    private String login_status_code;
+	/** 로그인 상태 코드 */
+	private String login_status_code;
 
-    /** 제한 서비스사이트 코드 */
-    private String login_limit_sst_code;
+	/** 제한 서비스사이트 코드 */
+	private String login_limit_sst_code;
 
-    /** 서비스 사이트명 */
-    private String service_name;
+	/** 서비스 사이트명 */
+	private String service_name;
 
-    /** 통합 서비스 번호  */
-    private String im_int_svc_no;
+	/** 통합 서비스 번호 */
+	private String im_int_svc_no;
 
-    /** 서비스 관리 번호  */
-    private String svc_mng_num;
+	/** 서비스 관리 번호 */
+	private String svc_mng_num;
 
-    /** 단말 모델ID  */
-    private String model_id;
+	/** 단말 모델ID */
+	private String model_id;
 
-    /** 사용자 주민번호 or 외국인번호 */
-    private String user_social_number;
+	/** 사용자 주민번호 or 외국인번호 */
+	private String user_social_number;
 
-    /** 이통사 구분 */
-    private String user_mdn_type;
+	/** 이통사 구분 */
+	private String user_mdn_type;
 
-    /** 입력한 휴대폰 인증 코드 */
-    private String user_code;
+	/** 입력한 휴대폰 인증 코드 */
+	private String user_code;
 
-    /** IDP로 부터 발행 받은 mobile_sign value */
-    private String mobile_sign;
+	/** IDP로 부터 발행 받은 mobile_sign value */
+	private String mobile_sign;
 
-    /** IDP로 부터 전달 받은 sign_data value */
-    private String sign_data;
+	/** IDP로 부터 전달 받은 sign_data value */
+	private String sign_data;
 
-    private String url;
+	private String url;
 
+	// TX(provisioning)시 사용
+	private String rname_auth_sst_code;
 
-    //TX(provisioning)시 사용
-    private String rname_auth_sst_code;
+	private String rname_auth_type_cd;
 
-    private String rname_auth_type_cd;
+	private String join_sst_code;
 
-    private String join_sst_code;
+	private String modify_sst_code;
 
-    private String modify_sst_code;
+	private String join_sst_list;
 
-    private String join_sst_list;
+	private String target_sst_cd;
 
-    private String target_sst_cd;
+	private String sn_auth_key;
 
-    private String sn_auth_key;
+	private String old_id;
 
-    private String old_id;
+	private String is_biz_auth;
 
-    private String is_biz_auth;
+	private String user_ci;
+	private String user_di;//
 
-    private String user_ci;
-    private String user_di;//
+	// OneID20적용 후 추가
+	/* 트랜잭션 번호 */
+	private String trx_no;
+	/* 직권중지 상태 코드 */
+	private String sus_status_code;
 
+	// ONE ID 2.0 TX
+	private String udt_type_cd;// 업데이트 구분 코드 1: TN, 2:EM, 3:TN + EM 4: 부가정보 (lang_code, is_mkt_email_recv 만 업데이트 할 경우)
+							   // 5: 법인정보 (biz_number, biz_name, is_biz_auth 필수 값)
+	private String rname_auth_mns_code;// 실명인증 수단 코드 1: 휴대폰, 2: 아이핀
+	private String rname_auth_date;// 실명인증 일시 – 14 자리
+	private String parent_birthday;// 법정대리인 생년월일
+	private String emailYn;//
+	private String marketingYn;//
 
-	//OneID20적용 후 추가
-   	/*트랜잭션 번호*/
-    private String trx_no;
-    /*직권중지 상태 코드*/
-    private String sus_status_code;
+	private String scr_id = "";
+	private String send_order = "";
 
+	private String operator_id;
+	private String ocb_join_code;
+	private String os_code;
+	private String browser_code;
+	private String service_profiles;
 
-    //ONE ID 2.0 TX
-    private String udt_type_cd;//업데이트 구분 코드    1: TN, 2:EM, 3:TN + EM    4: 부가정보    (lang_code, is_mkt_email_recv 만 업데이트 할 경우)    5: 법인정보 (biz_number, biz_name, is_biz_auth 필수 값)
-    private String rname_auth_mns_code;//실명인증 수단 코드    1: 휴대폰, 2: 아이핀
-    private String rname_auth_date;//실명인증 일시 – 14 자리
-    private String parent_birthday;//법정대리인 생년월일
-    private String emailYn;//
-    private String marketingYn;//
-
-    private String scr_id = "";
-    private String send_order = "";
-    
 	public String getSend_order() {
-		return send_order;
+		return this.send_order;
 	}
 
 	public void setSend_order(String send_order) {
@@ -255,7 +260,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getScr_id() {
-		return scr_id;
+		return this.scr_id;
 	}
 
 	public void setScr_id(String scr_id) {
@@ -263,7 +268,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getTarget_sst_cd() {
-		return target_sst_cd;
+		return this.target_sst_cd;
 	}
 
 	public void setTarget_sst_cd(String target_sst_cd) {
@@ -271,7 +276,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getJoin_sst_list() {
-		return join_sst_list;
+		return this.join_sst_list;
 	}
 
 	public void setJoin_sst_list(String join_sst_list) {
@@ -279,7 +284,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getModify_sst_code() {
-		return modify_sst_code;
+		return this.modify_sst_code;
 	}
 
 	public void setModify_sst_code(String modify_sst_code) {
@@ -287,7 +292,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getJoin_sst_code() {
-		return join_sst_code;
+		return this.join_sst_code;
 	}
 
 	public void setJoin_sst_code(String join_sst_code) {
@@ -295,7 +300,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getRname_auth_sst_code() {
-		return rname_auth_sst_code;
+		return this.rname_auth_sst_code;
 	}
 
 	public void setRname_auth_sst_code(String rname_auth_sst_code) {
@@ -303,7 +308,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIs_user_tn_auth() {
-		return is_user_tn_auth;
+		return this.is_user_tn_auth;
 	}
 
 	public void setIs_user_tn_auth(String is_user_tn_auth) {
@@ -311,7 +316,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
@@ -319,7 +324,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_tn() {
-		return user_tn;
+		return this.user_tn;
 	}
 
 	public void setUser_tn(String user_tn) {
@@ -327,7 +332,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_tn_nation_cd() {
-		return user_tn_nation_cd;
+		return this.user_tn_nation_cd;
 	}
 
 	public void setUser_tn_nation_cd(String user_tn_nation_cd) {
@@ -335,7 +340,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_tn_type() {
-		return user_tn_type;
+		return this.user_tn_type;
 	}
 
 	public void setUser_tn_type(String user_tn_type) {
@@ -343,7 +348,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getReq_date() {
-		return req_date;
+		return this.req_date;
 	}
 
 	public void setReq_date(String req_date) {
@@ -351,11 +356,11 @@ public class ImIDPSenderM {
 	}
 
 	public String getReq_time() {
-		return req_time;
+		return this.req_time;
 	}
 
 	public String getSvc_mng_num() {
-		return svc_mng_num;
+		return this.svc_mng_num;
 	}
 
 	public void setSvc_mng_num(String svc_mng_num) {
@@ -363,7 +368,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getModel_id() {
-		return model_id;
+		return this.model_id;
 	}
 
 	public void setModel_id(String model_id) {
@@ -371,7 +376,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIm_int_svc_no() {
-		return im_int_svc_no;
+		return this.im_int_svc_no;
 	}
 
 	public void setIm_int_svc_no(String im_int_svc_no) {
@@ -383,7 +388,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getService_name() {
-		return service_name;
+		return this.service_name;
 	}
 
 	public void setService_name(String service_name) {
@@ -391,7 +396,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getLogin_status_code() {
-		return login_status_code;
+		return this.login_status_code;
 	}
 
 	public void setLogin_status_code(String login_status_code) {
@@ -399,7 +404,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getLogin_limit_sst_code() {
-		return login_limit_sst_code;
+		return this.login_limit_sst_code;
 	}
 
 	public void setLogin_limit_sst_code(String login_limit_sst_code) {
@@ -407,7 +412,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIpin_ci() {
-		return ipin_ci;
+		return this.ipin_ci;
 	}
 
 	public void setIpin_ci(String ipin_ci) {
@@ -415,11 +420,11 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_calendar() {
-        return user_calendar;
-    }
+		return this.user_calendar;
+	}
 
-    public String getIs_user_tn_own() {
-		return is_user_tn_own;
+	public String getIs_user_tn_own() {
+		return this.is_user_tn_own;
 	}
 
 	public void setIs_user_tn_own(String is_user_tn_own) {
@@ -427,7 +432,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIs_email_auth() {
-		return is_email_auth;
+		return this.is_email_auth;
 	}
 
 	public void setIs_email_auth(String is_email_auth) {
@@ -435,7 +440,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getTerm_reason_cd() {
-		return term_reason_cd;
+		return this.term_reason_cd;
 	}
 
 	public void setTerm_reason_cd(String term_reason_cd) {
@@ -443,7 +448,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_mdn_auth_key() {
-		return user_mdn_auth_key;
+		return this.user_mdn_auth_key;
 	}
 
 	public void setUser_mdn_auth_key(String user_mdn_auth_key) {
@@ -451,7 +456,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_nation_code() {
-		return user_nation_code;
+		return this.user_nation_code;
 	}
 
 	public void setUser_nation_code(String user_nation_code) {
@@ -459,7 +464,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getLang_code() {
-		return lang_code;
+		return this.lang_code;
 	}
 
 	public void setLang_code(String lang_code) {
@@ -467,7 +472,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIs_im_changed() {
-		return is_im_changed;
+		return this.is_im_changed;
 	}
 
 	public void setIs_im_changed(String is_im_changed) {
@@ -475,7 +480,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getTans_sst_list() {
-		return tans_sst_list;
+		return this.tans_sst_list;
 	}
 
 	public void setTans_sst_list(String tans_sst_list) {
@@ -483,7 +488,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_status_code() {
-		return user_status_code;
+		return this.user_status_code;
 	}
 
 	public void setUser_status_code(String user_status_code) {
@@ -491,7 +496,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_type() {
-		return parent_type;
+		return this.parent_type;
 	}
 
 	public void setParent_type(String parent_type) {
@@ -499,7 +504,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_rname_auth_type() {
-		return parent_rname_auth_type;
+		return this.parent_rname_auth_type;
 	}
 
 	public void setParent_rname_auth_type(String parent_rname_auth_type) {
@@ -507,7 +512,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_rname_auth_key() {
-		return parent_rname_auth_key;
+		return this.parent_rname_auth_key;
 	}
 
 	public void setParent_rname_auth_key(String parent_rname_auth_key) {
@@ -515,7 +520,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_approve_date() {
-		return parent_approve_date;
+		return this.parent_approve_date;
 	}
 
 	public void setParent_approve_date(String parent_approve_date) {
@@ -523,7 +528,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIs_parent_approve() {
-		return is_parent_approve;
+		return this.is_parent_approve;
 	}
 
 	public void setIs_parent_approve(String is_parent_approve) {
@@ -531,7 +536,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_approve_sst_code() {
-		return parent_approve_sst_code;
+		return this.parent_approve_sst_code;
 	}
 
 	public void setParent_approve_sst_code(String parent_approve_sst_code) {
@@ -539,7 +544,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getConsent_tac() {
-		return consent_tac;
+		return this.consent_tac;
 	}
 
 	public void setConsent_tac(String consent_tac) {
@@ -547,7 +552,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getJoin_path_code() {
-		return join_path_code;
+		return this.join_path_code;
 	}
 
 	public void setJoin_path_code(String join_path_code) {
@@ -555,7 +560,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getJoin_date() {
-		return join_date;
+		return this.join_date;
 	}
 
 	public void setJoin_date(String join_date) {
@@ -563,7 +568,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getJoin_time() {
-		return join_time;
+		return this.join_time;
 	}
 
 	public void setJoin_time(String join_time) {
@@ -571,7 +576,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getModify_req_date() {
-		return modify_req_date;
+		return this.modify_req_date;
 	}
 
 	public void setModify_req_date(String modify_req_date) {
@@ -579,7 +584,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getModify_req_time() {
-		return modify_req_time;
+		return this.modify_req_time;
 	}
 
 	public void setModify_req_time(String modify_req_time) {
@@ -587,123 +592,123 @@ public class ImIDPSenderM {
 	}
 
 	public void setUser_calendar(String user_calendar) {
-        this.user_calendar = user_calendar;
-    }
+		this.user_calendar = user_calendar;
+	}
 
-    public String getIs_rname_auth() {
-        return is_rname_auth;
-    }
+	public String getIs_rname_auth() {
+		return this.is_rname_auth;
+	}
 
-    public void setIs_rname_auth( String is_rname_auth ) {
-        this.is_rname_auth = is_rname_auth;
-    }
+	public void setIs_rname_auth(String is_rname_auth) {
+		this.is_rname_auth = is_rname_auth;
+	}
 
-    public String getCmd() {
-        return cmd;
-    }
+	public String getCmd() {
+		return this.cmd;
+	}
 
-    public void setCmd( String cmd ) {
-        this.cmd = cmd;
-    }
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
 
-    public String getSp_id() {
-        return sp_id;
-    }
+	public String getSp_id() {
+		return this.sp_id;
+	}
 
-    public void setSp_id( String sp_id ) {
-        this.sp_id = sp_id;
-    }
+	public void setSp_id(String sp_id) {
+		this.sp_id = sp_id;
+	}
 
-    public String getSp_auth_key() {
-        return sp_auth_key;
-    }
+	public String getSp_auth_key() {
+		return this.sp_auth_key;
+	}
 
-    public void setSp_auth_key( String sp_auth_key ) {
-        this.sp_auth_key = sp_auth_key;
-    }
+	public void setSp_auth_key(String sp_auth_key) {
+		this.sp_auth_key = sp_auth_key;
+	}
 
-    public String getResp_type() {
-        return resp_type;
-    }
+	public String getResp_type() {
+		return this.resp_type;
+	}
 
-    public void setResp_type( String resp_type ) {
-        this.resp_type = resp_type;
-    }
+	public void setResp_type(String resp_type) {
+		this.resp_type = resp_type;
+	}
 
-    public String getResp_flow() {
-        return resp_flow;
-    }
+	public String getResp_flow() {
+		return this.resp_flow;
+	}
 
-    public void setResp_flow( String resp_flow ) {
-        this.resp_flow = resp_flow;
-    }
+	public void setResp_flow(String resp_flow) {
+		this.resp_flow = resp_flow;
+	}
 
-    public String getResp_url() {
-        return resp_url;
-    }
+	public String getResp_url() {
+		return this.resp_url;
+	}
 
-    public void setResp_url( String resp_url ) {
-        this.resp_url = resp_url;
-    }
+	public void setResp_url(String resp_url) {
+		this.resp_url = resp_url;
+	}
 
-    public String getKey_type() {
-        return key_type;
-    }
+	public String getKey_type() {
+		return this.key_type;
+	}
 
-    public void setKey_type( String key_type ) {
-        this.key_type = key_type;
-    }
+	public void setKey_type(String key_type) {
+		this.key_type = key_type;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public String getKey() {
+		return this.key;
+	}
 
-    public void setKey( String key ) {
-        this.key = key;
-    }
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    public String getUser_id() {
-        return user_id;
-    }
+	public String getUser_id() {
+		return this.user_id;
+	}
 
-    public void setUser_id( String user_id ) {
-        this.user_id = user_id;
-    }
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
 
-    public String getOld_id() {
-        return old_id;
-    }
+	public String getOld_id() {
+		return this.old_id;
+	}
 
-    public void setOld_id( String old_id ) {
-        this.old_id = old_id;
-    }
+	public void setOld_id(String old_id) {
+		this.old_id = old_id;
+	}
 
-    public String getUser_name() {
-        return user_name;
-    }
+	public String getUser_name() {
+		return this.user_name;
+	}
 
-    public void setUser_name( String user_name ) {
-        this.user_name = user_name;
-    }
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
 
-    public String getUser_social_number() {
-        return user_social_number;
-    }
+	public String getUser_social_number() {
+		return this.user_social_number;
+	}
 
-    public void setUser_social_number( String user_social_number ) {
-        this.user_social_number = user_social_number;
-    }
+	public void setUser_social_number(String user_social_number) {
+		this.user_social_number = user_social_number;
+	}
 
-    public String getUser_passwd() {
-        return user_passwd;
-    }
+	public String getUser_passwd() {
+		return this.user_passwd;
+	}
 
-    public void setUser_passwd( String user_passwd ) {
-        this.user_passwd = user_passwd;
-    }
+	public void setUser_passwd(String user_passwd) {
+		this.user_passwd = user_passwd;
+	}
 
-    public String getUser_passwd_type() {
-		return user_passwd_type;
+	public String getUser_passwd_type() {
+		return this.user_passwd_type;
 	}
 
 	public void setUser_passwd_type(String user_passwd_type) {
@@ -711,7 +716,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_passwd_modify_date() {
-		return user_passwd_modify_date;
+		return this.user_passwd_modify_date;
 	}
 
 	public void setUser_passwd_modify_date(String user_passwd_modify_date) {
@@ -719,7 +724,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getAuth_type() {
-		return auth_type;
+		return this.auth_type;
 	}
 
 	public void setAuth_type(String auth_type) {
@@ -727,127 +732,127 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_mdn() {
-        return user_mdn;
-    }
+		return this.user_mdn;
+	}
 
-    public void setUser_mdn( String user_mdn ) {
-        this.user_mdn = user_mdn;
-    }
+	public void setUser_mdn(String user_mdn) {
+		this.user_mdn = user_mdn;
+	}
 
-    public String getUser_mdn_type() {
-        return user_mdn_type;
-    }
+	public String getUser_mdn_type() {
+		return this.user_mdn_type;
+	}
 
-    public void setUser_mdn_type( String user_mdn_type ) {
-        this.user_mdn_type = user_mdn_type;
-    }
+	public void setUser_mdn_type(String user_mdn_type) {
+		this.user_mdn_type = user_mdn_type;
+	}
 
-    public String getUser_code() {
-        return user_code;
-    }
+	public String getUser_code() {
+		return this.user_code;
+	}
 
-    public void setUser_code( String user_code ) {
-        this.user_code = user_code;
-    }
+	public void setUser_code(String user_code) {
+		this.user_code = user_code;
+	}
 
-    public String getMobile_sign() {
-        return mobile_sign;
-    }
+	public String getMobile_sign() {
+		return this.mobile_sign;
+	}
 
-    public void setMobile_sign( String mobile_sign ) {
-        this.mobile_sign = mobile_sign;
-    }
+	public void setMobile_sign(String mobile_sign) {
+		this.mobile_sign = mobile_sign;
+	}
 
-    public String getSign_data() {
-        return sign_data;
-    }
+	public String getSign_data() {
+		return this.sign_data;
+	}
 
-    public void setSign_data( String sign_data ) {
-        this.sign_data = sign_data;
-    }
+	public void setSign_data(String sign_data) {
+		this.sign_data = sign_data;
+	}
 
-    public String getUser_email() {
-        return user_email;
-    }
+	public String getUser_email() {
+		return this.user_email;
+	}
 
-    public void setUser_email( String user_email ) {
-        this.user_email = user_email;
-    }
+	public void setUser_email(String user_email) {
+		this.user_email = user_email;
+	}
 
-    public String getUser_zipcode() {
-        return user_zipcode;
-    }
+	public String getUser_zipcode() {
+		return this.user_zipcode;
+	}
 
-    public void setUser_zipcode( String user_zipcode ) {
-        this.user_zipcode = user_zipcode;
-    }
+	public void setUser_zipcode(String user_zipcode) {
+		this.user_zipcode = user_zipcode;
+	}
 
-    public String getUser_address() {
-        return user_address;
-    }
+	public String getUser_address() {
+		return this.user_address;
+	}
 
-    public void setUser_address( String user_address ) {
-        this.user_address = user_address;
-    }
+	public void setUser_address(String user_address) {
+		this.user_address = user_address;
+	}
 
 	public String getUser_address2() {
-		return user_address2;
+		return this.user_address2;
 	}
 
 	public void setUser_address2(String user_address2) {
 		this.user_address2 = user_address2;
 	}
 
-    public String getUser_sex() {
-        return user_sex;
-    }
+	public String getUser_sex() {
+		return this.user_sex;
+	}
 
-    public void setUser_sex( String user_sex ) {
-        this.user_sex = user_sex;
-    }
+	public void setUser_sex(String user_sex) {
+		this.user_sex = user_sex;
+	}
 
-    public String getUser_birthday() {
-        return user_birthday;
-    }
+	public String getUser_birthday() {
+		return this.user_birthday;
+	}
 
-    public void setUser_birthday( String user_birthday ) {
-        this.user_birthday = user_birthday;
-    }
+	public void setUser_birthday(String user_birthday) {
+		this.user_birthday = user_birthday;
+	}
 
-    public String getUser_type() {
-        return user_type;
-    }
+	public String getUser_type() {
+		return this.user_type;
+	}
 
-    public void setUser_type( String user_type ) {
-        this.user_type = user_type;
-    }
+	public void setUser_type(String user_type) {
+		this.user_type = user_type;
+	}
 
-    public String getParent_name() {
-        return parent_name;
-    }
+	public String getParent_name() {
+		return this.parent_name;
+	}
 
-    public void setParent_name( String parent_name ) {
-        this.parent_name = parent_name;
-    }
+	public void setParent_name(String parent_name) {
+		this.parent_name = parent_name;
+	}
 
-    public String getParent_mdn() {
-        return parent_mdn;
-    }
+	public String getParent_mdn() {
+		return this.parent_mdn;
+	}
 
-    public void setParent_mdn( String parent_mdn ) {
-        this.parent_mdn = parent_mdn;
-    }
+	public void setParent_mdn(String parent_mdn) {
+		this.parent_mdn = parent_mdn;
+	}
 
-    public String getUser_auth_key() {
-        return user_auth_key;
-    }
+	public String getUser_auth_key() {
+		return this.user_auth_key;
+	}
 
-    public void setUser_auth_key( String user_auth_key ) {
-        this.user_auth_key = user_auth_key;
-    }
+	public void setUser_auth_key(String user_auth_key) {
+		this.user_auth_key = user_auth_key;
+	}
 
 	public String getSn_auth_key() {
-		return sn_auth_key;
+		return this.sn_auth_key;
 	}
 
 	public void setSn_auth_key(String sn_auth_key) {
@@ -855,7 +860,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_email() {
-		return parent_email;
+		return this.parent_email;
 	}
 
 	public void setParent_email(String parent_email) {
@@ -863,7 +868,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getIs_biz_auth() {
-		return is_biz_auth;
+		return this.is_biz_auth;
 	}
 
 	public void setIs_biz_auth(String is_biz_auth) {
@@ -871,7 +876,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_nation_name() {
-		return user_nation_name;
+		return this.user_nation_name;
 	}
 
 	public void setUser_nation_name(String user_nation_name) {
@@ -879,7 +884,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_ci() {
-		return user_ci;
+		return this.user_ci;
 	}
 
 	public void setUser_ci(String user_ci) {
@@ -887,7 +892,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getSus_status_code() {
-		return sus_status_code;
+		return this.sus_status_code;
 	}
 
 	public void setSus_status_code(String sus_status_code) {
@@ -895,7 +900,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getTrx_no() {
-		return trx_no;
+		return this.trx_no;
 	}
 
 	public void setTrx_no(String trx_no) {
@@ -903,7 +908,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUdt_type_cd() {
-		return udt_type_cd;
+		return this.udt_type_cd;
 	}
 
 	public void setUdt_type_cd(String udt_type_cd) {
@@ -911,7 +916,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getRname_auth_mns_code() {
-		return rname_auth_mns_code;
+		return this.rname_auth_mns_code;
 	}
 
 	public void setRname_auth_mns_code(String rname_auth_mns_code) {
@@ -919,7 +924,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getUser_di() {
-		return user_di;
+		return this.user_di;
 	}
 
 	public void setUser_di(String user_di) {
@@ -927,7 +932,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getRname_auth_date() {
-		return rname_auth_date;
+		return this.rname_auth_date;
 	}
 
 	public void setRname_auth_date(String rname_auth_date) {
@@ -935,7 +940,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getParent_birthday() {
-		return parent_birthday;
+		return this.parent_birthday;
 	}
 
 	public void setParent_birthday(String parent_birthday) {
@@ -943,7 +948,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getEmailYn() {
-		return emailYn;
+		return this.emailYn;
 	}
 
 	public void setEmailYn(String emailYn) {
@@ -951,7 +956,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getMarketingYn() {
-		return marketingYn;
+		return this.marketingYn;
 	}
 
 	public void setMarketingYn(String marketingYn) {
@@ -959,7 +964,7 @@ public class ImIDPSenderM {
 	}
 
 	public String getRname_auth_type_cd() {
-		return rname_auth_type_cd;
+		return this.rname_auth_type_cd;
 	}
 
 	public void setRname_auth_type_cd(String rname_auth_type_cd) {
@@ -967,11 +972,86 @@ public class ImIDPSenderM {
 	}
 
 	public String getMdn() {
-		return mdn;
+		return this.mdn;
 	}
 
 	public void setMdn(String mdn) {
 		this.mdn = mdn;
+	}
+
+	/**
+	 * @return the operator_id
+	 */
+	public String getOperator_id() {
+		return this.operator_id;
+	}
+
+	/**
+	 * @param operator_id
+	 *            the operator_id to set
+	 */
+	public void setOperator_id(String operator_id) {
+		this.operator_id = operator_id;
+	}
+
+	/**
+	 * @return the ocb_join_code
+	 */
+	public String getOcb_join_code() {
+		return this.ocb_join_code;
+	}
+
+	/**
+	 * @param ocb_join_code
+	 *            the ocb_join_code to set
+	 */
+	public void setOcb_join_code(String ocb_join_code) {
+		this.ocb_join_code = ocb_join_code;
+	}
+
+	/**
+	 * @return the os_code
+	 */
+	public String getOs_code() {
+		return this.os_code;
+	}
+
+	/**
+	 * @param os_code
+	 *            the os_code to set
+	 */
+	public void setOs_code(String os_code) {
+		this.os_code = os_code;
+	}
+
+	/**
+	 * @return the browser_code
+	 */
+	public String getBrowser_code() {
+		return this.browser_code;
+	}
+
+	/**
+	 * @param browser_code
+	 *            the browser_code to set
+	 */
+	public void setBrowser_code(String browser_code) {
+		this.browser_code = browser_code;
+	}
+
+	/**
+	 * @return the service_profiles
+	 */
+	public String getService_profiles() {
+		return this.service_profiles;
+	}
+
+	/**
+	 * @param service_profiles
+	 *            the service_profiles to set
+	 */
+	public void setService_profiles(String service_profiles) {
+		this.service_profiles = service_profiles;
 	}
 
 }

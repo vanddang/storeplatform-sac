@@ -29,6 +29,7 @@ public final class ImIDPConstants {
 	public static final String IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER = "findCommonProfileForServerIDP";// 기본프로파일조회(for
 																												// Server)
 	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
+	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
 
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default

@@ -84,54 +84,88 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 */
 	@Override
 	public ImIDPReceiverM agreeUser(Map<String, Object> param) throws Exception {
-		String key = (String) param.get("key");
-		String key_type = (String) param.get("key_type");
-		String user_mdn = (String) param.get("user_mdn");
-		String user_mdn_auth_key = (String) param.get("user_mdn_auth_key");
-		String parent_type = (String) param.get("parent_type");
-		String parent_rname_auth_type = (String) param.get("parent_rname_auth_type");
-		String parent_rname_auth_key = (String) param.get("parent_rname_auth_key");
-		String parent_name = (String) param.get("parent_name");
-		// String parent_mdn = (String) param.get("parent_mdn");
-		String parent_email = (String) param.get("parent_email");
-		String parent_approve_date = (String) param.get("parent_approve_date");
-		String is_parent_approve = (String) param.get("is_parent_approve");
-		// String parent_approve_sst_code = (String) param.get("parent_approve_sst_code");
+		// String key = (String) param.get("key");
+		// String key_type = (String) param.get("key_type");
+		// String user_mdn = (String) param.get("user_mdn");
+		// String user_mdn_auth_key = (String) param.get("user_mdn_auth_key");
+		// String parent_type = (String) param.get("parent_type");
+		// String parent_rname_auth_type = (String) param.get("parent_rname_auth_type");
+		// String parent_rname_auth_key = (String) param.get("parent_rname_auth_key");
+		// String parent_name = (String) param.get("parent_name");
+		// // String parent_mdn = (String) param.get("parent_mdn");
+		// String parent_email = (String) param.get("parent_email");
+		// String parent_approve_date = (String) param.get("parent_approve_date");
+		// String is_parent_approve = (String) param.get("is_parent_approve");
+		// // String parent_approve_sst_code = (String) param.get("parent_approve_sst_code");
+		//
+		// ImIDPSenderM sendData = new ImIDPSenderM();
+		// sendData.setUrl(ImIDPConstants.IDP_REQ_URL_JOIN);
+		// sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_AGREE_USER);
+		// sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		// sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		// sendData.setKey(key);
+		// if (null == key_type || "".equals(key_type))
+		// key_type = ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO;
+		// sendData.setKey_type(key_type);
+		// if (user_mdn != null)
+		// sendData.setUser_mdn(user_mdn);
+		// if (user_mdn_auth_key != null)
+		// sendData.setUser_mdn_auth_key(user_mdn_auth_key);
+		// if (parent_type != null)
+		// sendData.setParent_type(parent_type);
+		// if (parent_rname_auth_type != null)
+		// sendData.setParent_rname_auth_type(parent_rname_auth_type);
+		// if (parent_rname_auth_key != null)
+		// sendData.setParent_rname_auth_key(parent_rname_auth_key);
+		// if (parent_name != null)
+		// sendData.setParent_name(parent_name);
+		// // if (parent_mdn != null)
+		// // sendData.setParent_mdn(parent_mdn);
+		// if (parent_email != null)
+		// sendData.setParent_email(parent_email);
+		// if (parent_approve_date != null)
+		// sendData.setParent_approve_date(parent_approve_date);
+		// if (is_parent_approve != null)
+		// sendData.setIs_parent_approve(is_parent_approve);
+		// if (parent_approve_sst_code != null)
+		// sendData.setParent_approve_sst_code(parent_approve_sst_code);
+
+		/** param Key. */
+		// operator_id
+		// key_type
+		// key
+		// user_mdn
+		// user_ci
+		// user_di
+		// join_sst_list
+		// ocb_join_code
+		// os_code
+		// browser_code
+		// user_mdn_auth_key
+		// modify_req_date
+		// modify_req_time
+		// service_profiles
 
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_JOIN);
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_AGREE_USER);
 		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setKey(key);
-		if (null == key_type || "".equals(key_type))
-			key_type = ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO;
-		sendData.setKey_type(key_type);
-		if (user_mdn != null)
-			sendData.setUser_mdn(user_mdn);
-		if (user_mdn_auth_key != null)
-			sendData.setUser_mdn_auth_key(user_mdn_auth_key);
-		if (parent_type != null)
-			sendData.setParent_type(parent_type);
-		if (parent_rname_auth_type != null)
-			sendData.setParent_rname_auth_type(parent_rname_auth_type);
-		if (parent_rname_auth_key != null)
-			sendData.setParent_rname_auth_key(parent_rname_auth_key);
-		if (parent_name != null)
-			sendData.setParent_name(parent_name);
-		// if (parent_mdn != null)
-		// sendData.setParent_mdn(parent_mdn);
-		if (parent_email != null)
-			sendData.setParent_email(parent_email);
-		if (parent_approve_date != null)
-			sendData.setParent_approve_date(parent_approve_date);
-		if (is_parent_approve != null)
-			sendData.setIs_parent_approve(is_parent_approve);
-		// if (parent_approve_sst_code != null)
-		// sendData.setParent_approve_sst_code(parent_approve_sst_code);
+
+		sendData.setOperator_id((String) param.get("operator_id"));
+		sendData.setOcb_join_code((String) param.get("ocb_join_code"));
+		sendData.setOs_code((String) param.get("os_code"));
+		sendData.setBrowser_code((String) param.get("browser_code"));
+		sendData.setService_profiles((String) param.get("key_type"));
+		sendData.setKey_type((String) param.get("key_type"));
+		sendData.setKey((String) param.get("key"));
+		sendData.setUser_mdn((String) param.get("user_mdn"));
+		sendData.setUser_ci((String) param.get("user_ci"));
+		sendData.setUser_di((String) param.get("user_di"));
+		sendData.setJoin_sst_list((String) param.get("join_sst_list"));
+		sendData.setUser_mdn_auth_key((String) param.get("user_mdn_auth_key"));
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-
 		return this.repository.sendImIDPPHttps(sendData); // sendIDP(sendData);
 	}
 
@@ -179,6 +213,55 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setUser_id(id);
 
 		return this.repository.sendImIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 부가프로파일정보수정요청.
+	 * </pre>
+	 * 
+	 * @param param
+	 * @return ImIDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public ImIDPReceiverM updateAdditionalInfo(Map<String, Object> param) throws Exception {
+		String key = (String) param.get("key");
+		String user_auth_key = (String) param.get("user_auth_key");
+		String user_mdn = (String) param.get("user_mdn");
+		String user_mdn_auth_key = (String) param.get("user_mdn_auth_key");
+		String user_sex = (String) param.get("user_sex");
+		String user_calendar = (String) param.get("user_calendar");
+		String user_zipcode = (String) param.get("user_zipcode");
+		String user_address = (String) param.get("user_address");
+		String user_address2 = (String) param.get("user_address2");
+
+		ImIDPSenderM sendData = new ImIDPSenderM();
+		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_MODIFY_ADDITIONAL);
+		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey(key);
+		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setUser_auth_key(user_auth_key);
+		if (user_mdn != null)
+			sendData.setUser_mdn(user_mdn);
+		if (user_mdn_auth_key != null)
+			sendData.setUser_mdn_auth_key(user_mdn_auth_key);
+		if (user_sex != null)
+			sendData.setUser_sex(user_sex);
+		if (user_calendar != null)
+			sendData.setUser_calendar(user_calendar);
+		if (user_zipcode != null)
+			sendData.setUser_zipcode(user_zipcode);
+		if (user_address != null)
+			sendData.setUser_address(user_address);
+		if (user_address2 != null)
+			sendData.setUser_address2(user_address2);
+		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
+		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
+
+		return this.repository.sendImIDPPHttps(sendData);
 	}
 
 }
