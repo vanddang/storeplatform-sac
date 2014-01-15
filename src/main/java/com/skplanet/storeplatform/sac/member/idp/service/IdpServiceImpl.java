@@ -11,14 +11,18 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
+import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
+import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 
@@ -167,29 +171,65 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXSetLoginConditionIDP(HashMap map) throws Exception {
 
-		ImIDPSenderM imIdpSenderM = new ImIDPSenderM();
-
-		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
-		if (null != map.get("im_int_svc_no"))
-			imIdpSenderM.setIm_int_svc_no((String) map.get("im_int_svc_no"));
-		if (null != map.get("login_status_code"))
-			imIdpSenderM.setLogin_status_code((String) map.get("login_status_code"));
-		if (null != map.get("login_limit_sst_code"))
-			imIdpSenderM.setLogin_limit_sst_code((String) map.get("login_limit_sst_code"));
-		if (null != map.get("modify_sst_code"))
-			imIdpSenderM.setModify_sst_code((String) map.get("modify_sst_code"));
-		if (null != map.get("modify_req_date"))
-			imIdpSenderM.setModify_req_date((String) map.get("modify_req_date"));
-		if (null != map.get("modify_req_time"))
-			imIdpSenderM.setModify_req_time((String) map.get("modify_req_time"));
-
-		HashMap resultMap = new HashMap();
-
 		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
-		// updateUserVo.setUserID(userID)
-		this.userSCI.updateStatus(updateUserVo);
+		MemberConstants memberConstant = new MemberConstants();
+		IdpConstants idpConstant = new IdpConstants();
 
-		return null;
+		// 공통 헤더 세팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID("S001");
+		commonRequest.setTenantID("S01");
+		updateUserVo.setCommonRequest(commonRequest);
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType("INTG_SVC_NO");
+		keySearch.setKeyString((String) map.get("im_int_svc_no"));
+
+		keySearchList.add(keySearch);
+		updateUserVo.setKeySearchList(keySearchList);
+
+		String loginStatusCode = (String) map.get("login_status_code");
+		if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_RELEASE)) {// 로그인 가능
+			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_NORMAL);
+			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_NORMAL);
+		} else if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_LOCK)) {// 로그인 제한
+			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
+			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_LOGIN_PAUSE);
+		} else {
+			logger.info("########## Exception :login_status_code 코드 외값 ##########");
+			throw new Exception("login_status_code 코드 외값");
+		}
+
+		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+
+		// 미동의 회원 정보 수정
+		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+		updateMbrOneIDRequest.setCommonRequest(commonRequest);
+		MbrOneID mbrOneID = new MbrOneID();
+		mbrOneID.setLoginStatusCode(loginStatusCode);
+		mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+		UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+		// 결과값 세팅
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		if (updateStatusResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)
+				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {// SC반환값이
+																													 // 성공이면
+			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+
+		return imResult;
 	}
 
 	/**
@@ -206,6 +246,136 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXCreateUserIdIDP(HashMap map) throws Exception {
 
-		return null;
+		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		UpdateUserRequest userVo = new UpdateUserRequest();
+		IdpConstants idpConstant = new IdpConstants();
+		MemberConstants memberConstant = new MemberConstants();
+
+		// 회원 정보 조회
+		// 공통 헤더
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID("S001");
+		commonRequest.setTenantID("S01");
+		searchUserRequest.setCommonRequest(commonRequest);
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType("MBR_ID");
+		if (null != map.get("user_id")) {
+			keySearch.setKeyString((String) map.get("user_id"));
+		} else {
+			logger.info("########## Exception : user_id가 존재하지 않음. ##########");
+			throw new Exception("user_id가 존재하지 않음.");
+		}
+
+		keySearchList.add(keySearch);
+		searchUserRequest.setKeySearchList(keySearchList);
+		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+
+		String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
+		if (null == searchUserRespnse.getUserKey()) {// 회원 존재 여부 확인
+			// one id 가입 정보 등록
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(commonRequest);
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setIntgMbrCaseCode((String) map.get("im_int_svc_no"));
+			mbrOneID.setIntgSvcNumber((String) map.get("im_mem_type_cd"));// 통합회원 유형 코드
+			mbrOneID.setUserID((String) map.get("user_id"));
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_FAIL)) {// SC반환값이
+				idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+			}
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+
+		return imResult;
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 직권중지 상태정보 배포
+	 * - CMD : RXSetSuspendUserIdIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+	@Override
+	public ImResult rXSetSuspendUserIdIDP(HashMap map) throws Exception {
+		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
+		MemberConstants memberConstant = new MemberConstants();
+		IdpConstants idpConstant = new IdpConstants();
+
+		// 공통 헤더 세팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID("S001");
+		commonRequest.setTenantID("S01");
+		updateUserVo.setCommonRequest(commonRequest);
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType("INTG_SVC_NO");
+		keySearch.setKeyString((String) map.get("im_int_svc_no"));
+
+		keySearchList.add(keySearch);
+		updateUserVo.setKeySearchList(keySearchList);
+
+		String susStatusCode = (String) map.get("sus_status_code");
+		if (susStatusCode.equals(idpConstant.SUS_STATUS_RELEASE)) {// 직권중지 해제
+			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_NORMAL);
+			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_NORMAL);
+		} else if (susStatusCode.equals(idpConstant.SUS_STATUS_LOCK)) {// 직권중지
+			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
+			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_AUTHORITY_PAUSE);
+		} else {
+			logger.info("########## Exception :sus_status_code 코드 외값 ##########");
+			throw new Exception("sus_status_code 코드 외값");
+		}
+
+		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+
+		// 미동의 회원 정보 수정
+		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+		updateMbrOneIDRequest.setCommonRequest(commonRequest);
+		MbrOneID mbrOneID = new MbrOneID();
+		mbrOneID.setLoginStatusCode(susStatusCode);
+		mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+		// 미개발 더미 세팅 삭제 예정!!!!!!
+		mbrOneID.setUserKey("1111");
+		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+		UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+		// 결과값 세팅
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		if (updateStatusResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)
+				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {// SC반환값이
+																													 // 성공이면
+			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+
+		return imResult;
+	}
+
 }

@@ -39,4 +39,9 @@ public final class IdpConstants {
 	public static final String IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE = "9999N005";
 	public static final String IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT = "은 존재 하지 않는 회원 입니다.";
 
+	public static final String SUS_STATUS_RELEASE = "80";// 직권 중지 해제
+	public static final String SUS_STATUS_LOCK = "90";// 직권 중지
+
+	public static final String LOGIN_STATUS_RELEASE = "10";// 로그인 가능
+	public static final String LOGIN_STATUS_LOCK = "20";// 로그인 제한
 }

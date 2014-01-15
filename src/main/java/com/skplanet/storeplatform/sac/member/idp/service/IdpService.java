@@ -75,4 +75,17 @@ public interface IdpService {
 	 */
 	public ImResult rXCreateUserIdIDP(HashMap map) throws Exception;
 
+	/**
+	 * 
+	 * <pre>
+	 * 직권중지 상태정보 배포
+	 * - CMD : RXSetSuspendUserIdIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+	public ImResult rXSetSuspendUserIdIDP(HashMap map) throws Exception;
+
 }
