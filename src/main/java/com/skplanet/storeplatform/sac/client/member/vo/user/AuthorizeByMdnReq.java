@@ -59,7 +59,7 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	/**
 	 * 오리지널 OS 버전
 	 */
-	private String osVerOrg;
+	private String osVer;
 
 	public String getDeviceId() {
 		return this.deviceId;
@@ -125,12 +125,16 @@ public class AuthorizeByMdnReq extends CommonInfo {
 		this.scVer = scVer;
 	}
 
-	public String getOsVerOrg() {
-		return this.osVerOrg;
+	public String getOsVer() {
+		return this.osVer;
 	}
 
-	public void setOsVerOrg(String osVerOrg) {
-		this.osVerOrg = osVerOrg;
+	public void setOsVer(String osVer) {
+		this.osVer = osVer;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	public String getDeviceIdType() {
