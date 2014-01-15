@@ -66,6 +66,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
+		scRequest.setOffset(request.getOffset());
+		scRequest.setCount(request.getCount());
+
 		// SC Call
 		scResponse = this.historySci.listHistory(scRequest);
 
