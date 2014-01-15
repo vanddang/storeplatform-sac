@@ -92,7 +92,7 @@ public class SellerServiceImpl implements SellerService {
 		// * 판매자:'US010802'<br>
 		// */
 		// private String memberCategory; // MBR_CLSF_CD 회원구분코드 (user:'US010801' , seller:'US010802')
-		// /** Tenant ID. */
+		// /** TenantRes ID. */
 		// private String tenantID; // TENANT_ID 테넌트 아이디
 		// /** 내부 회원 키. */
 		// private String memberKey; // INSD_SELLERMBR_NO
@@ -240,7 +240,7 @@ public class SellerServiceImpl implements SellerService {
 		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
 			throw new RuntimeException(updateStatusSellerResponse.getCommonResponse().getResultMessage());
 		}
-		/** 4. Tenant Response 생성 및 주입 */
+		/** 4. TenantRes Response 생성 및 주입 */
 		LockAccountRes res = new LockAccountRes(updateStatusSellerRequest.getSellerID());
 		return res;
 	}

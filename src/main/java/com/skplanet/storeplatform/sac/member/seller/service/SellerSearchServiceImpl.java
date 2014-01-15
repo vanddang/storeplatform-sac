@@ -99,7 +99,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
 		}
 
-		/** 4. Tenant Response 생성 및 주입 */
+		/** 4. TenantRes Response 생성 및 주입 */
 		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes(checkDuplicationSellerResponse.getIsRegistered());
 
 		return response;
