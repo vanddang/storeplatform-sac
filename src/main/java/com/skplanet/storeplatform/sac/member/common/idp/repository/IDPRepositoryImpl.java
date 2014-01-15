@@ -861,8 +861,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * @return
 	 * @throws Exception
 	 */
-	@Override
-	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
-		return this.idpSCI.alredyJoinCheckByEmail(email, 1).getIdpReceiverM();
-	}
+	// @Override
+	// public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
+	// return this.idpSCI.alredyJoinCheckByEmail(email, 1).getIdpReceiverM();
+	// }
 }

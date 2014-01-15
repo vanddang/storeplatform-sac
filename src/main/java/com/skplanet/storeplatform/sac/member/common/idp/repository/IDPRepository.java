@@ -15,5 +15,5 @@ public interface IDPRepository {
 
 	public String makeSnAuthKey(String mbrNm, String userId) throws Exception;
 
-	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception;
+	// public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception;
 }
