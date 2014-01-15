@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 테넌트 관련 정보를 컨트롤러에서 제공하기 위한 Value Object
- * 
+ *
  * Updated on : 2014. 1. 13. Updated by : 서대영, SK 플래닛.
  */
 public class TenantHeader extends CommonInfo {
@@ -23,6 +23,10 @@ public class TenantHeader extends CommonInfo {
 	private String tenantId;
 
 	private String systemId;
+
+	public TenantHeader() {
+		super();
+	}
 
 	public String getTenantId() {
 		return this.tenantId;
