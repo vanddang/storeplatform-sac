@@ -113,7 +113,7 @@ public class LoginServiceImpl implements LoginService {
 			userStateVal = "oneId";
 			
 			/* 단말정보 merge */
-			this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req, null);
+			this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req);
 			
 			/* 로그인 성공이력 저장 */
 			LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
@@ -139,7 +139,7 @@ public class LoginServiceImpl implements LoginService {
 				}
 				
 				/* 단말정보 merge */
-				this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req, null);
+				this.mergeDeviceInfo(schUserRes.getUserMbr().getUserKey(), req);
 
 				/* 로그인 성공이력 저장 */
 				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
@@ -256,28 +256,40 @@ public class LoginServiceImpl implements LoginService {
 	 * 휴대기기정보 merge
 	 * 
 	 * @param userKey
-	 * @param authorizeByMdnReq
-	 * @param authorizeByIdReq
+	 * @param obj
 	 * @throws Exception 
 	 */
-	public void mergeDeviceInfo(String userKey, AuthorizeByMdnReq authorizeByMdnReq, AuthorizeByIdReq authorizeByIdReq) throws Exception{
+	public void mergeDeviceInfo(String userKey, Object obj) throws Exception{
 		
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
 		
-		if (authorizeByMdnReq != null) { // mdn인증인경우
-			deviceInfo.setDeviceId(authorizeByMdnReq.getDeviceId());
-			deviceInfo.setDeviceTelecom(authorizeByMdnReq.getDeviceTelecom());
-			deviceInfo.setDeviceModelNo(authorizeByMdnReq.getDeviceModelNo());
-			deviceInfo.setNativeId(authorizeByMdnReq.getNativeId());
-			deviceInfo.setRooting(authorizeByMdnReq.getRooting());
-			deviceInfo.setDeviceAccount(authorizeByMdnReq.getDeviceAccount());
-			deviceInfo.setScVer(authorizeByMdnReq.getScVer());
-			deviceInfo.setOsVerOrg(authorizeByMdnReq.getOsVerOrg());
-			deviceInfo.setUacd(commService.getUaCode(authorizeByMdnReq.getDeviceModelNo()));
-		} else if(authorizeByIdReq != null) { //id인증인 경우
-			
+		if (obj instanceof AuthorizeByMdnReq) {
+			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+			req = (AuthorizeByMdnReq) obj;
+			deviceInfo.setDeviceId(req.getDeviceId());
+			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+			deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
+			deviceInfo.setNativeId(req.getNativeId());
+			deviceInfo.setRooting(req.getRooting());
+			deviceInfo.setDeviceAccount(req.getDeviceAccount());
+			deviceInfo.setScVer(req.getScVer());
+			deviceInfo.setOsVerOrg(req.getOsVerOrg());
+			deviceInfo.setUacd(commService.getUaCode(req.getDeviceModelNo()));
+		} else if (obj instanceof AuthorizeByIdReq) {
+			AuthorizeByIdReq req = new AuthorizeByIdReq();
+			req = (AuthorizeByIdReq) obj;
+			deviceInfo.setDeviceId(req.getDeviceId());
+			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+			deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
+			//deviceInfo.setNativeId(req.getNativeId());
+			//deviceInfo.setRooting(req.getRooting());
+			deviceInfo.setDeviceAccount(req.getDeviceAccount());
+			deviceInfo.setScVer(req.getScVer());
+			deviceInfo.setOsVerOrg(req.getOsVerOrg());
+			deviceInfo.setUacd(commService.getUaCode(req.getDeviceModelNo()));
 		}
+		
 		
 		this.deviceService.mergeDeviceInfo(deviceInfo);
 	}
