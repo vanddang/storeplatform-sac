@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
@@ -76,5 +78,21 @@ public class SellerController {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("request param : {}", req.toString());
 		return this.sellerService.authorize(req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.24. 판매자 회원 탈퇴.
+	 * </pre>
+	 * 
+	 * @param WithdrawReq
+	 * @return WithdrawRes : JSON
+	 */
+	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	WithdrawRes withdraw(@RequestBody WithdrawReq req) {
+		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
+		LOGGER.debug("request param : {}", req.toString());
+		return this.sellerService.withdraw(req);
 	}
 }

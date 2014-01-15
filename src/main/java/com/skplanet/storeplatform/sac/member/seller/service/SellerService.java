@@ -6,6 +6,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 
 /**
  * 판매자 회원 가입/인증/탈퇴 기능 항목들.
@@ -22,4 +24,7 @@ public interface SellerService {
 
 	/** 판매자 회원 인증. */
 	public AuthorizeRes authorize(AuthorizeReq req);
+
+	/** 판매자 회원 탈퇴. */
+	public WithdrawRes withdraw(WithdrawReq req);
 }

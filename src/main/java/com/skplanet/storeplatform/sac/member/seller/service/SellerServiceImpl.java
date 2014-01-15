@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LogInSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LogInSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
@@ -32,6 +34,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.util.HttpUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.thoughtworks.xstream.XStream;
@@ -271,6 +275,24 @@ public class SellerServiceImpl implements SellerService {
 		res.setSellerInfo(new SellerInfo());
 
 		return res;
+	}
+
+	@Override
+	public WithdrawRes withdraw(WithdrawReq req) {
+
+		RemoveSellerResponse schRes = new RemoveSellerResponse();
+		RemoveSellerRequest schReq = new RemoveSellerRequest();
+
+		schReq.setCommonRequest(this.imsiCommonRequest());
+		schReq.setSellerKey(req.getSellerKey());
+		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
+		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
+
+		WithdrawRes response = new WithdrawRes();
+
+		schRes = this.sellerSCI.removeSeller(schReq);
+
+		return response;
 	}
 
 	/**
