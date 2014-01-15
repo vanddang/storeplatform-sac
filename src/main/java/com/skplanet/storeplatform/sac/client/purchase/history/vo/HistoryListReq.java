@@ -19,6 +19,9 @@ public class HistoryListReq extends CommonInfo {
 	private String prchsStatusCd;
 	private String frProdId;
 
+	private int offset;
+	private int count;
+
 	public String getTenantId() {
 		return this.tenantId;
 	}
@@ -113,6 +116,22 @@ public class HistoryListReq extends CommonInfo {
 
 	public void setFrProdId(String frProdId) {
 		this.frProdId = frProdId;
+	}
+
+	public int getOffset() {
+		return this.offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public int getCount() {
+		return this.count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }
