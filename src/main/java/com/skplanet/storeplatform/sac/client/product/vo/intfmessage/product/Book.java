@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Count
 
 /**
  * Interface Message Book Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 오승민, Incross.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -75,6 +75,8 @@ public class Book extends CommonInfo implements Serializable {
 	 * 지원 >play >store
 	 */
 	private List<Support> supportList;
+
+	private int totalCount;
 
 	public Book() {
 		super();
@@ -174,5 +176,13 @@ public class Book extends CommonInfo implements Serializable {
 
 	public void setSupportList(List<Support> supportList) {
 		this.supportList = supportList;
+	}
+
+	public int getTotalCount() {
+		return this.totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 }
