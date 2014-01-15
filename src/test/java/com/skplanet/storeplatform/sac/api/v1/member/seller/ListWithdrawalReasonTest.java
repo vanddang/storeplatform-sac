@@ -59,8 +59,8 @@ public class ListWithdrawalReasonTest {
 	@Test
 	public void ListWithdrawalReason() {
 
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/listWithdrawalReasonTest/v1")
-				.httpMethod(HttpMethod.GET).success(ListWithdrawalReasonRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/listWithdrawalReason/v1").httpMethod(HttpMethod.GET)
+				.success(ListWithdrawalReasonRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ListWithdrawalReasonRes res = (ListWithdrawalReasonRes) result;

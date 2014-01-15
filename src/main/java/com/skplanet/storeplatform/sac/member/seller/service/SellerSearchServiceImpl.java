@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
@@ -310,10 +309,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchSellerRequest schReq = new SearchSellerRequest();
 		schReq.setCommonRequest(this.imsiCommonRequest());
 
-		ListWithdrawalReasonReq dto = new ListWithdrawalReasonReq();
+		SellerDTO dto = new SellerDTO();
 		dto.setKoUsWhether("ko");
-		List<SecedeReson> secedeReson = (List<SecedeReson>) this.commonDAO.queryForList(
-				"seller.getSellerSecedeResonList", dto);
+		List<SecedeReson> secedeReson = this.commonDAO.queryForList("seller.listWithdrawalReason", dto,
+				SecedeReson.class);
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
 
