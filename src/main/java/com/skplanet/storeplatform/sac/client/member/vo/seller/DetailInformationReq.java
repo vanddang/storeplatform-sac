@@ -29,6 +29,16 @@ public class DetailInformationReq extends CommonInfo {
 	private String sellerKey;
 	/** App ID */
 	private String aid;
+	/** 조회필드명 */
+	private String keyType;
+
+	public String getKeyType() {
+		return this.keyType;
+	}
+
+	public void setKeyType(String keyType) {
+		this.keyType = keyType;
+	}
 
 	public String getSellerKey() {
 		return this.sellerKey;
