@@ -10,15 +10,12 @@ lose such Confidential Information and
  */
 package com.skplanet.storeplatform.sac.client.display.vo.theme;
 
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
  * Ebook/코믹 테마 상품 조회 List Value Object.
@@ -29,7 +26,6 @@ public class EbookComicThemeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;
 	private Layout layout;
-	private List<Product> productList;
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
@@ -45,14 +41,6 @@ public class EbookComicThemeRes extends CommonInfo {
 
 	public void setLayout(Layout layout) {
 		this.layout = layout;
-	}
-
-	public List<Product> getProductList() {
-		return this.productList;
-	}
-
-	public void setProductList(List<Product> productList) {
-		this.productList = productList;
 	}
 
 	@Override
