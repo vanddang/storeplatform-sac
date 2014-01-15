@@ -19,15 +19,6 @@ public class ListWithdrawalReasonRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	List<SecedeReson> secedeResonList;
-	private String koUsWhether;
-
-	public String getKoUsWhether() {
-		return this.koUsWhether;
-	}
-
-	public void setKoUsWhether(String koUsWhether) {
-		this.koUsWhether = koUsWhether;
-	}
 
 	public List<SecedeReson> getSecedeResonList() {
 		return this.secedeResonList;
