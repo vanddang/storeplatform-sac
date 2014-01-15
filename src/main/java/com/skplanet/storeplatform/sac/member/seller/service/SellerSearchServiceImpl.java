@@ -132,7 +132,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
-		schReq.setCommonRequest(this.imsiCommonRequest());
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
 		KeySearch keySearch = new KeySearch();
 		if (!req.getSellerKey().equals("") || !req.getAid().equals("")) {
 			if (!req.getSellerKey().equals("")) {
@@ -237,7 +247,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
-		schReq.setCommonRequest(this.imsiCommonRequest());
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchAccountSeller(schReq);
@@ -346,7 +364,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
-		schReq.setCommonRequest(this.imsiCommonRequest());
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
 		schReq.setSellerBizNumber(req.getSellerBizNumber());
 		schReq.setSellerCompany(req.getSellerCompany());
 		schReq.setSellerEmail(req.getSellerEmail());
