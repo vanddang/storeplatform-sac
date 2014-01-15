@@ -4,7 +4,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
  * 판매자회원 인증
@@ -16,14 +16,14 @@ public class AuthorizeRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	SellerInfo sellerInfo;
+	SellerMbr sellerMbr;
 
-	public SellerInfo getSellerInfo() {
-		return this.sellerInfo;
+	public SellerMbr getSellerMbr() {
+		return this.sellerMbr;
 	}
 
-	public void setSellerInfo(SellerInfo sellerInfo) {
-		this.sellerInfo = sellerInfo;
+	public void setSellerMbr(SellerMbr sellerMbr) {
+		this.sellerMbr = sellerMbr;
 	}
 
 }

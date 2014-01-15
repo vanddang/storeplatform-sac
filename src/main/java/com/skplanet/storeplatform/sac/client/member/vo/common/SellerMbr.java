@@ -80,6 +80,15 @@ public class SellerMbr extends CommonInfo {
 	private String sellerZip;
 	private String tenantID;
 	private String vendorCode;
+	private String sellerId;
+
+	public String getSellerId() {
+		return this.sellerId;
+	}
+
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
 
 	public String getApproveDate() {
 		return this.approveDate;
