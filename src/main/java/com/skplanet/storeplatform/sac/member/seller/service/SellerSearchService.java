@@ -7,6 +7,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface SellerSearchService {
@@ -34,5 +36,12 @@ public interface SellerSearchService {
 	 * @throws Exception
 	 */
 	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception;
+
+	/**
+	 * 판매자 회원 ID 찾기.
+	 * 
+	 * @throws Exception
+	 */
+	public SearchIdRes searchId(SearchIdReq req) throws Exception;
 
 }
