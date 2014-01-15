@@ -17,6 +17,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
@@ -33,6 +35,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
@@ -334,6 +338,112 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		return response;
 
+	}
+
+	@Override
+	public SearchIdRes searchId(SearchIdReq req) throws Exception {
+
+		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
+		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
+		schReq.setCommonRequest(this.imsiCommonRequest());
+		schReq.setSellerBizNumber(req.getSellerBizNumber());
+		schReq.setSellerCompany(req.getSellerCompany());
+		schReq.setSellerEmail(req.getSellerEmail());
+		schReq.setSellerPhone(req.getSellerPhone());
+
+		schRes = this.sellerSCI.searchIDSeller(schReq);
+
+		SearchIdRes response = new SearchIdRes();
+		response.setSellerMbr(this.sellerMbrList(schRes.getSellerMbr()));// 판매자 정보 리스트
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * TODO 판매자 정보.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	private List<SellerMbr> sellerMbrList(
+			List<com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr> sellerMbr) {
+
+		List<SellerMbr> sList = new ArrayList<SellerMbr>();
+		SellerMbr sellerMbrRes = null;
+		if (sellerMbr != null)
+			for (int i = 0; i < sellerMbr.size(); i++) {
+				sellerMbrRes = new SellerMbr();
+				sellerMbrRes.setApproveDate(sellerMbr.get(i).getApproveDate());
+				sellerMbrRes.setBizGrade(sellerMbr.get(i).getBizGrade());
+				sellerMbrRes.setBizKindCd(sellerMbr.get(i).getBizKindCd());
+				sellerMbrRes.setBizRegNumber(sellerMbr.get(i).getBizRegNumber());
+				sellerMbrRes.setBizUnregReason(sellerMbr.get(i).getBizUnregReason());
+				sellerMbrRes.setCeoBirthDay(sellerMbr.get(i).getCeoBirthDay());
+				sellerMbrRes.setCeoName(sellerMbr.get(i).getCeoName());
+				sellerMbrRes.setCharger(sellerMbr.get(i).getCharger());
+				sellerMbrRes.setCordedTelephone(sellerMbr.get(i).getCordedTelephone());
+				sellerMbrRes.setCordedTelephoneCountry(sellerMbr.get(i).getCordedTelephoneCountry());
+				sellerMbrRes.setCustomerEmail(sellerMbr.get(i).getCustomerEmail());
+				sellerMbrRes.setCustomerPhone(sellerMbr.get(i).getCustomerPhone());
+				sellerMbrRes.setCustomerPhoneCountry(sellerMbr.get(i).getCustomerPhoneCountry());
+				sellerMbrRes.setIsAccountReal(sellerMbr.get(i).getIsAccountReal());
+				sellerMbrRes.setIsBizRegistered(sellerMbr.get(i).getIsBizRegistered());
+				sellerMbrRes.setIsBizTaxable(sellerMbr.get(i).getIsBizTaxable());
+				sellerMbrRes.setIsDeductible(sellerMbr.get(i).getIsDeductible());
+				sellerMbrRes.setIsForeign(sellerMbr.get(i).getIsForeign());
+				sellerMbrRes.setIsParent(sellerMbr.get(i).getIsParent());
+				sellerMbrRes.setIsRealName(sellerMbr.get(i).getIsRealName());
+				sellerMbrRes.setIsRecvEmail(sellerMbr.get(i).getIsRecvEmail());
+				sellerMbrRes.setIsRecvSMS(sellerMbr.get(i).getIsRecvSMS());
+				sellerMbrRes.setMarketCode(sellerMbr.get(i).getMarketCode());
+				sellerMbrRes.setMarketStatus(sellerMbr.get(i).getMarketStatus());
+				sellerMbrRes.setParentSellerKey(sellerMbr.get(i).getParentSellerKey());
+				sellerMbrRes.setRegDate(sellerMbr.get(i).getRegDate());
+				sellerMbrRes.setRepEmail(sellerMbr.get(i).getRepEmail());
+				sellerMbrRes.setRepFax(sellerMbr.get(i).getRepFax());
+				sellerMbrRes.setRepFaxArea(sellerMbr.get(i).getRepFaxArea());
+				sellerMbrRes.setRepPhone(sellerMbr.get(i).getRepPhone());
+				sellerMbrRes.setRepPhoneArea(sellerMbr.get(i).getRepPhoneArea());
+				sellerMbrRes.setRightProfileList(sellerMbr.get(i).getRightProfileList());
+				sellerMbrRes.setSecedeDate(sellerMbr.get(i).getSecedeDate());
+				sellerMbrRes.setSecedePathCd(sellerMbr.get(i).getSecedePathCd());
+				sellerMbrRes.setSecedeReasonCode(sellerMbr.get(i).getSecedeReasonCode());
+				sellerMbrRes.setSecedeReasonMessage(sellerMbr.get(i).getSecedeReasonMessage());
+				sellerMbrRes.setSellerAddress(sellerMbr.get(i).getSellerAddress());
+				sellerMbrRes.setSellerBirthDay(sellerMbr.get(i).getSellerBirthDay());
+				sellerMbrRes.setSellerBizCategory(sellerMbr.get(i).getSellerBizCategory());
+				sellerMbrRes.setSellerBizCorpNumber(sellerMbr.get(i).getSellerBizCorpNumber());
+				sellerMbrRes.setSellerBizNumber(sellerMbr.get(i).getSellerBizNumber());
+				sellerMbrRes.setSellerBizType(sellerMbr.get(i).getSellerBizType());
+				sellerMbrRes.setSellerCategory(sellerMbr.get(i).getSellerCategory());
+				sellerMbrRes.setSellerCity(sellerMbr.get(i).getSellerCity());
+				sellerMbrRes.setSellerClass(sellerMbr.get(i).getSellerClass());
+				sellerMbrRes.setSellerCompany(sellerMbr.get(i).getSellerCompany());
+				sellerMbrRes.setSellerCountry(sellerMbr.get(i).getSellerCountry());
+				sellerMbrRes.setSellerDetailAddress(sellerMbr.get(i).getSellerDetailAddress());
+				sellerMbrRes.setSellerEmail(sellerMbr.get(i).getSellerEmail());
+				sellerMbrRes.setSellerID(sellerMbr.get(i).getSellerID());
+				sellerMbrRes.setSellerKey(sellerMbr.get(i).getSellerKey());
+				sellerMbrRes.setSellerLanguage(sellerMbr.get(i).getSellerLanguage());
+				sellerMbrRes.setSellerMainStatus(sellerMbr.get(i).getSellerMainStatus());
+				sellerMbrRes.setSellerName(sellerMbr.get(i).getSellerName());
+				sellerMbrRes.setSellerNickName(sellerMbr.get(i).getSellerNickName());
+				sellerMbrRes.setSellerPhone(sellerMbr.get(i).getSellerPhone());
+				sellerMbrRes.setSellerPhoneCountry(sellerMbr.get(i).getSellerPhoneCountry());
+				sellerMbrRes.setSellerSex(sellerMbr.get(i).getSellerSex());
+				sellerMbrRes.setSellerSSNumber(sellerMbr.get(i).getSellerSSNumber());
+				sellerMbrRes.setSellerState(sellerMbr.get(i).getSellerState());
+				sellerMbrRes.setSellerSubStatus(sellerMbr.get(i).getSellerSubStatus());
+				sellerMbrRes.setSellerTelecom(sellerMbr.get(i).getSellerTelecom());
+				sellerMbrRes.setSellerZip(sellerMbr.get(i).getSellerZip());
+				sellerMbrRes.setTenantID(sellerMbr.get(i).getTenantID());
+				sellerMbrRes.setVendorCode(sellerMbr.get(i).getVendorCode());
+				sList.add(sellerMbrRes);
+			}
+
+		return sList;
 	}
 
 	/**
