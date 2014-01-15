@@ -32,6 +32,11 @@ public class CreateByMdnReq extends CommonInfo {
 	private String deviceIdType;
 
 	/**
+	 * 기기 고유 아이디
+	 */
+	private String imei;
+
+	/**
 	 * 이동 통신사.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
@@ -40,13 +45,11 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 가입 채널 코드.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String joinId;
 
 	/**
 	 * 약관동의 정보.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private List<AgreementInfo> agreementList;
 
 	/**
@@ -140,6 +143,21 @@ public class CreateByMdnReq extends CommonInfo {
 	 */
 	public void setDeviceIdType(String deviceIdType) {
 		this.deviceIdType = deviceIdType;
+	}
+
+	/**
+	 * @return String : imei
+	 */
+	public String getImei() {
+		return this.imei;
+	}
+
+	/**
+	 * @param imei
+	 *            String : the imei to set
+	 */
+	public void setImei(String imei) {
+		this.imei = imei;
 	}
 
 	/**
