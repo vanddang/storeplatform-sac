@@ -15,6 +15,24 @@ public class SellerDTO extends CommonInfo {
 
 	private String sellerKey;
 	private String koUsWhether;
+	private String secedeReasonCode;
+	private String secedeReasonMessage;
+
+	public String getSecedeReasonCode() {
+		return this.secedeReasonCode;
+	}
+
+	public void setSecedeReasonCode(String secedeReasonCode) {
+		this.secedeReasonCode = secedeReasonCode;
+	}
+
+	public String getSecedeReasonMessage() {
+		return this.secedeReasonMessage;
+	}
+
+	public void setSecedeReasonMessage(String secedeReasonMessage) {
+		this.secedeReasonMessage = secedeReasonMessage;
+	}
 
 	/**
 	 * @return String : sellerKey

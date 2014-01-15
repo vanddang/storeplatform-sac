@@ -305,10 +305,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
 
-		SearchSellerResponse schRes = new SearchSellerResponse();
-		SearchSellerRequest schReq = new SearchSellerRequest();
-		schReq.setCommonRequest(this.imsiCommonRequest());
-
 		SellerDTO dto = new SellerDTO();
 		dto.setKoUsWhether("ko");
 		List<SecedeReson> secedeReson = this.commonDAO.queryForList("seller.listWithdrawalReason", dto,
