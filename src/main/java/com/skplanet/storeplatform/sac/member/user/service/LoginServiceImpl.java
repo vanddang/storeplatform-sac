@@ -231,59 +231,72 @@ public class LoginServiceImpl implements LoginService {
 		/* 회원 인증 요청 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 			
-			ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
-
-			if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				
-				userStateVal = "oneId";
-				
-				/* 단말정보 merge */
-				this.mergeDeviceInfo(userKey, req);
-				
-				/* 로그인 성공이력 저장 */
-				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
-				
-				res.setUserKey(loginRes.getUserKey());
-				res.setUserStatus(userStateVal);
-				
-			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_INVALID_USER_INFO)){
-				
-				userStateVal = "temporary";
-				// 가가입 상태 - 가입신청 사이트 정보
-                String joinSst = imIdpReceiver.getResponseBody().getJoin_sst_list();
-                String joinSstCd = "";
-                String joinSstNm = "";
-
-                for (Entry<String, String> entry : mapSiteCd.entrySet()) {
-                    if (StringUtil.contains(joinSst, entry.getKey())) {
-                        joinSstCd = entry.getKey();
-                        joinSstNm = entry.getValue();
-                        break;
-                    }
-                }
-
-                if (StringUtil.isEmpty(joinSstCd)) {
-                    joinSstCd = "90000"; // One ID
-                    joinSstNm = mapSiteCd.get(joinSstCd);
-                }
-				
-                res.setUserKey(schUserRes.getUserMbr().getUserKey());
-				res.setUserStatus(userStateVal);
-				res.setJoinSiteCd(joinSstCd);
-				res.setJoinSiteNm(joinSstNm);
-				
-			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_UNAUTHORIZED)){
+			if (!isExistAgreeSiteTstore(schUserRes.getUserMbr().getImSiteCode())) { //서비스 이용동의 간편 가입 대상 확인
 				
 				userStateVal = "notYetAgreeTerms";
 				
-				//findJoinServiceListIDP 연동 후 통합회원 관리번호를 리턴받는다.
+				//통합서비스 관리번호 조회(findJoinServiceListIDP)
 				
-				res.setUserKey(schUserRes.getUserMbr().getUserKey());
-				res.setUserStatus(userStateVal);
 				res.setImIntSvcNo("");
+				res.setLoginStatCd("");
+				res.setSubStatCd("");
 				
-			} else {
-				throw new Exception("["	+ imIdpReceiver.getResponseHeader().getResult() + "] "	+ imIdpReceiver.getResponseHeader().getResult_text());
+			}else {
+				
+				ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
+
+				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+					
+					userStateVal = "oneId";
+					
+					this.mergeDeviceInfo(userKey, req);
+					
+					LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "Y");
+					
+					res.setUserKey(loginRes.getUserKey());
+					res.setUserStatus(userStateVal);
+					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
+					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
+					
+				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+					
+					this.insertloginHistory(userId, userPw, "N");
+					throw new Exception("["	+ imIdpReceiver.getResponseHeader().getResult() + "] "	+ imIdpReceiver.getResponseHeader().getResult_text());
+					
+				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
+					
+					userStateVal = "temporary";
+					// 가가입 상태 - 가입신청 사이트 정보
+	                String joinSst = imIdpReceiver.getResponseBody().getJoin_sst_list();
+	                String joinSstCd = "";
+	                String joinSstNm = "";
+
+	                for (Entry<String, String> entry : mapSiteCd.entrySet()) {
+	                    if (StringUtil.contains(joinSst, entry.getKey())) {
+	                        joinSstCd = entry.getKey();
+	                        joinSstNm = entry.getValue();
+	                        break;
+	                    }
+	                }
+
+	                if (StringUtil.isEmpty(joinSstCd)) {
+	                    joinSstCd = "90000"; // One ID
+	                    joinSstNm = mapSiteCd.get(joinSstCd);
+	                }
+					
+	                res.setUserKey(schUserRes.getUserMbr().getUserKey());
+					res.setUserStatus(userStateVal);
+					res.setJoinSiteCd(joinSstCd);
+					res.setJoinSiteNm(joinSstNm);
+					
+				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), "2222")) { // 로그인 제한상태
+					
+				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), "2403")) { // 직권중지 상태
+					
+				} else {
+					throw new Exception("["	+ imIdpReceiver.getResponseHeader().getResult() + "] "	+ imIdpReceiver.getResponseHeader().getResult_text());
+				}
+				
 			}
 			
 		} else {
@@ -294,11 +307,9 @@ public class LoginServiceImpl implements LoginService {
 				
 				userStateVal = "tstoreId";
 				
-				/* 단말정보 merge */
 				this.mergeDeviceInfo(userKey, req);
 				
-				/* 로그인 성공이력 저장 */
-				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
+				LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "N");
 				
 				res.setUserKey(loginRes.getUserKey());
 				res.setUserStatus(userStateVal);
@@ -477,4 +488,22 @@ public class LoginServiceImpl implements LoginService {
 		logger.info("########## volatileMember process end #########");
 	}
 
+	public boolean isExistAgreeSiteTstore(String imSiteCode) {
+		
+		boolean joinTstore = false;
+		if (imSiteCode != null && !imSiteCode.equals("")) {
+			
+			String[] arrImSiteCode = imSiteCode.split("\\|");
+			for (int i=0; i<arrImSiteCode.length; i++) {
+				
+				String[] arrImSiteCode2 = arrImSiteCode[0].split("\\,");
+				if (arrImSiteCode2[0].equals("41100")) {
+					joinTstore = true;
+					break;
+				}
+			}
+		}
+		
+		return joinTstore;
+	}
 }
