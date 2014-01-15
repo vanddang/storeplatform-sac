@@ -14,6 +14,7 @@ public class SellerDTO extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String sellerKey;
+	private String koUsWhether;
 
 	/**
 	 * @return String : sellerKey
@@ -28,6 +29,21 @@ public class SellerDTO extends CommonInfo {
 	 */
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
+	}
+
+	/**
+	 * @return String : koUsWhether
+	 */
+	public String getKoUsWhether() {
+		return this.koUsWhether;
+	}
+
+	/**
+	 * @param koUsWhether
+	 *            String : the koUsWhether to set
+	 */
+	public void setKoUsWhether(String koUsWhether) {
+		this.koUsWhether = koUsWhether;
 	}
 
 }
