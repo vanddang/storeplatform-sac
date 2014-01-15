@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness)
@@ -27,8 +27,8 @@ public interface UserJoinService {
 	 * 모바일 전용 회원 가입 (MDN 회원 가입).
 	 * </pre>
 	 * 
-	 * @param headerVo
-	 *            HeaderVo
+	 * @param sacHeader
+	 *            SacRequestHeader
 	 * @param req
 	 *            CreateByMdnReq
 	 * @return CreateByMdnRes
@@ -36,31 +36,21 @@ public interface UserJoinService {
 	 *             Exception
 	 * 
 	 */
-	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception;
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) throws Exception;
 
-	/**
-	 * <pre>
-	 * 
-	 * </pre>
-	 * 
-	 * @param headerVo
-	 * @param req
-	 * @return
-	 * @throws Exception
-	 */
 	/**
 	 * <pre>
 	 * ID 회원 약관 동의 가입 (One ID 회원).
 	 * </pre>
 	 * 
-	 * @param headerVo
-	 *            HeaderVo
+	 * @param sacHeader
+	 *            SacRequestHeader
 	 * @param req
 	 *            CreateByAgreementReq
 	 * @return CreateByAgreementRes
 	 * @throws Exception
 	 *             Exception
 	 */
-	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) throws Exception;
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
 
 }

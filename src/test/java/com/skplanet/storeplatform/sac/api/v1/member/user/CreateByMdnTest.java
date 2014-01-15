@@ -68,6 +68,7 @@ public class CreateByMdnTest {
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
@@ -76,6 +77,7 @@ public class CreateByMdnTest {
 						reqJson.setDeviceId("01088870008");
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setDeviceTelecom("US001201");
+						reqJson.setImei("A0000031648EE9");
 						reqJson.setJoinId("US002903");
 						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 
@@ -124,45 +126,5 @@ public class CreateByMdnTest {
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
-
-	// @Test
-	// public void createByMdn() throws Exception {
-	//
-	// CreateByMdnReq reqJson = new CreateByMdnReq();
-	// reqJson.setDeviceId("01090556567");
-	// reqJson.setDeviceTelecom("US001201");
-	// reqJson.setJoinId("US002903");
-	// reqJson.setDeviceModelNo("LG-SH810");
-	// reqJson.setOwnBirth("20020409");
-	// reqJson.setParentType("");
-	// reqJson.setRealNameMethod("US011101");
-	// reqJson.setParentName("부모이름");
-	// reqJson.setParentCI("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-	// reqJson.setParentEmail("hkd@aaaa.com");
-	// reqJson.setParentTelecom("US001201");
-	// reqJson.setParentMdn("01088889999");
-	// reqJson.setParentResident("local");
-	// reqJson.setParentBirth("19700407");
-	//
-	// // 동의 정보
-	// AgreementInfo agreementInfo = new AgreementInfo();
-	// agreementInfo.setExtraAgreementId("asdasdasd");
-	// agreementInfo.setExtraAgreementVersion("0.1");
-	// agreementInfo.setIsExtraAgreement("Y");
-	//
-	// List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-	// agreementList.add(agreementInfo);
-	// reqJson.setAgreementList(agreementList);
-	//
-	// ObjectMapper mapper = new ObjectMapper();
-	// String json = mapper.writeValueAsString(reqJson);
-	// System.out.println(json);
-	//
-	// this.mvc.perform(post("/member/user/createByMdn/v1").content(json).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
-	// .andDo(print())
-	// .andExpect(content().contentType("application/json;charset=UTF-8"))
-	// .andExpect(status().isOk());
-	//
-	// }
 
 }

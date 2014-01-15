@@ -21,10 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
+import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
@@ -35,11 +37,11 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -56,6 +58,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
  * Updated on : 2013. 12. 31. Updated by : 심대진, 다모아 솔루션.
  */
 @Service
+@Transactional
 public class UserJoinServiceImpl implements UserJoinService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinServiceImpl.class);
@@ -92,7 +95,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private static final String TENANT_ID = "S01";
 
 	@Override
-	public CreateByMdnRes createByMdn(HeaderVo headerVo, CreateByMdnReq req) throws Exception {
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) throws Exception {
 
 		CreateByMdnRes response = new CreateByMdnRes();
 
@@ -209,23 +212,78 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			}
 
-			/**
-			 * TODO (SC 연동) 휴대기기 정보 등록 - 대표폰 여부 정보 포함
-			 * 
-			 * TODO DeviceInfo 정보 넘겨서 반대리님
-			 */
 			DeviceInfo deviceInfo = new DeviceInfo();
+
+			/**
+			 * 폰정보 조회 (Phone ModelCode)
+			 */
+			DeviceDTO deviceDTO = this.mcc.getPhoneInfo(sacHeader.getDeviceHeader().getModel());
+			if (deviceDTO == null) {
+
+				/**
+				 * 미지원 단말 setting
+				 */
+				deviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
+				deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
+				deviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
+				deviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
+
+			} else {
+
+				// UA코드 setting
+				if (StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+
+					/**
+					 * UAPS 연동하여 uacd를 세팅한다.
+					 */
+					LOGGER.debug("## UAPS UA 코드 : {}", deviceDTO.getUaCd());
+					deviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
+
+				} else {
+
+					/**
+					 * DB 정보로 uacd를 세팅한다.
+					 */
+					LOGGER.debug("## DB UA 코드 : {}", deviceDTO.getUaCd());
+					deviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
+
+				}
+
+				deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+				deviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
+				deviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
+
+				/**
+				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.)
+				 */
+				if (StringUtil.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_UUID)) {
+					if (!StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_IOS)) {
+						LOGGER.warn("###############################################################################");
+						LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
+						LOGGER.warn("###############################################################################");
+					}
+				}
+
+			}
+
+			/**
+			 * 휴대기기 등록정보 setting
+			 * 
+			 * TODO 대표폰 여부 정보 포함
+			 */
+			deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 			deviceInfo.setDeviceId(msisdn);
 			deviceInfo.setDeviceIdType("msisdn");
+			deviceInfo.setDeviceTelecom("SKT");
+			deviceInfo.setJoinId(req.getJoinId());
+			deviceInfo.setImMngNum(this.idpReceiverM.getResponseBody().getSvc_mng_num());
+			deviceInfo.setDeviceModelNo(this.idpReceiverM.getResponseBody().getModel_id());
+			LOGGER.debug("## deviceInfo : {}", deviceInfo.toString());
 
-			this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
 			/**
-			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
+			 * 휴대기기 등록 submodule 호출.
 			 */
-			DeviceDTO device = this.mcc.getPhoneInfo("SK-T100");
-			LOGGER.info("device : {}", device.getModelNm());
-			LOGGER.info("device : {}", device.getEngModelNm());
-			LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
+			this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
 
 			/**
 			 * 결과 세팅
@@ -258,7 +316,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreement(HeaderVo headerVo, CreateByAgreementReq req) throws Exception {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
 
 		CreateByAgreementRes response = new CreateByAgreementRes();
 

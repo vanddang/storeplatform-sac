@@ -65,16 +65,15 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_TEL_NO = "TEL_NO"; // 사용자 연락처
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
 
-	
-	/**	통신사 코드. */
-	public static final String DEVICE_TELECOM_SKT = "US012101"; //SKT
-	public static final String DEVICE_TELECOM_KT = "US012102"; //KT		
-	public static final String DEVICE_TELECOM_LGT = "US012103"; //U+
-	public static final String DEVICE_TELECOM_OMD = "US012104"; //자급제 단말
-	public static final String DEVICE_TELECOM_NSH = "US012105"; //NSH
-	public static final String DEVICE_TELECOM_NON = "US012106"; //NON
-	public static final String DEVICE_TELECOM_IOS = "US012107"; //iOS
-	
+	/** 통신사 코드. */
+	public static final String DEVICE_TELECOM_SKT = "US012101"; // SKT
+	public static final String DEVICE_TELECOM_KT = "US012102"; // KT
+	public static final String DEVICE_TELECOM_LGT = "US012103"; // U+
+	public static final String DEVICE_TELECOM_OMD = "US012104"; // 자급제 단말
+	public static final String DEVICE_TELECOM_NSH = "US012105"; // NSH
+	public static final String DEVICE_TELECOM_NON = "US012106"; // NON
+	public static final String DEVICE_TELECOM_IOS = "US012107"; // iOS
+
 	/** 휴대기기 부가속성. */
 	public static final String DEVICE_EXTRA_OMPDOWNLOADER_YN = "US011401"; // OMP DOWNLOADER 설치 여부
 	public static final String DEVICE_EXTRA_STANDBYSCREEN_YN = "US011402"; // 대기화면 설정 여부
@@ -96,9 +95,13 @@ public final class MemberConstants {
 	public static final String NOT_SUPPORT_HP_MODEL_CD = "android_standard";
 	public static final String NOT_SUPPORT_HP_MODEL_NM = "미지원표준단말";
 
+	/** DeviceIdType 정의. */
+	public static final String DEVICE_ID_TYPE_MSISDN = "msisdn";
+	public static final String DEVICE_ID_TYPE_UUID = "uuid";
+	public static final String DEVICE_ID_TYPE_MACADDRESS = "macaddress";
+
 	/** 통합회원. */
 	public static final String SSO_SST_CD_TSTORE = "41100";
-	
 
 	/**
 	 * 판매자 회원 상수들
