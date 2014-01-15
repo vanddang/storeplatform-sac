@@ -7,11 +7,13 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.other.search.repository;
+package com.skplanet.storeplatform.sac.other.message.respository;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
-import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,31 +22,42 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
-import com.skplanet.storeplatform.sac.other.search.common.SearchCommon;
+import com.skplanet.storeplatform.sac.other.message.common.MessageCommon;
+import com.skplanet.storeplatform.sac.other.message.repository.MessageRepository;
 
 /**
  * 
- * 검색 외부연동 SCI 테스트
+ * Message Repository Test
  * 
- * Updated on : 2014. 1. 6. Updated by : 김현일, 인크로스
+ * Updated on : 2014. 1. 15. Updated by : 김현일, 인크로스.
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@WebAppConfiguration
 @TransactionConfiguration
 @Transactional
-public class SearchRepositoryTest {
+public class MessageRepositoryTest {
 
 	@Autowired
-	private SearchRepository searchRepository;
+	private MessageRepository messageRepository;
 
 	@Test
-	public void testSearch() throws URISyntaxException {
-		// URL 복사해서 넣기.
-		TstoreSearchRes result = this.searchRepository.search(SearchCommon.getTstoreSearchReq());
-		assertNotNull(result);
+	public void testSmsSend() {
+		Map<String, String> resultMap = this.messageRepository.smsSend(MessageCommon.getSmsSendReq());
+		//
+		assertNotNull(resultMap);
+		assertThat(resultMap.get("resultStatus"), is("success"));
 	}
+
+	// @Test
+	// public void testEmailSend() {
+	//
+	// int result = (Integer) this.messageRepository.emailSend(MessageCommon.getEmailSendReq());
+	// //
+	// assertThat(result, is(1));
+	// }
 }

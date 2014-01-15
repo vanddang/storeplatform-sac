@@ -7,14 +7,18 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.other.search.controller;
+package com.skplanet.storeplatform.sac.other.message.controller;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Map;
+
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,25 +30,26 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.sac.other.search.common.SearchCommon;
+import com.skplanet.storeplatform.sac.other.message.common.MessageCommon;
 
 /**
  * 
- * 검색 컨트롤러 클래스 테스트
+ * Message Controller Test
  * 
- * Updated on : 2014. 1. 6. Updated by : 김현일, 인크로스
+ * Updated on : 2014. 1. 15. Updated by : 김현일, 인크로스.
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml", "classpath*:spring-test/context-mvc.xml" })
 @WebAppConfiguration
 @TransactionConfiguration
 @Transactional
-public class SearchControllerTest {
+public class MessageControllerTest {
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -57,14 +62,14 @@ public class SearchControllerTest {
 	}
 
 	@Test
-	public void testSearch() throws Exception {
-		this.mvc.perform(
-				get("/other/search/v1").contentType(MediaType.APPLICATION_JSON).param("q", SearchCommon.Q)
-						.param("category", SearchCommon.CATEGORY).param("meta17", SearchCommon.META17)
-						.param("meta77", SearchCommon.META77).param("order", SearchCommon.ORDER)
-						.param("offset", Integer.toString(SearchCommon.OFFSET))
-						.param("count", Integer.toString(SearchCommon.COUNT)).param("adult", SearchCommon.ADULT)
-						.param("rel", SearchCommon.REL).param("uvKey", SearchCommon.UVKEY)).andDo(print())
-				.andExpect(status().isOk()).andExpect(jsonPath("$.response", notNullValue()));
+	public void testSmsSend() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String content = mapper.writeValueAsString(MessageCommon.getSmsSendReq());
+		MvcResult result = this.mvc
+				.perform(post("/other/message/sms/send/v1").contentType(MediaType.APPLICATION_JSON).content(content))
+				.andDo(print()).andExpect(status().isOk()).andReturn();
+		Map<String, String> resultMap = mapper.readValue(result.getResponse().getContentAsString(), Map.class);
+		assertNotNull(resultMap);
+		assertThat(resultMap.get("resultStatus"), is("success"));
 	}
 }

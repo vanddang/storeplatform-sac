@@ -9,12 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.other.message.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.Map;
+
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.skplanet.storeplatform.sac.other.message.common.MessageCommon;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,5 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 @TransactionConfiguration
 @Transactional
 public class MessageServiceTest {
+	@Autowired
+	private MessageService messageService;
 
+	@Test
+	public void testSmsSend() {
+		Map<String, String> result = this.messageService.smsSend(MessageCommon.getSmsSendReq());
+		assertThat(result.get("resultStatus"), is("success"));
+	}
 }
