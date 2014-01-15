@@ -91,9 +91,9 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	WithdrawRes withdraw(@RequestBody WithdrawReq req) throws Exception {
+	WithdrawRes withdraw(SacRequestHeader header, @RequestBody WithdrawReq req) throws Exception {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("request param : {}", req.toString());
-		return this.sellerService.withdraw(req);
+		return this.sellerService.withdraw(header, req);
 	}
 }

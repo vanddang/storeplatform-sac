@@ -304,7 +304,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public WithdrawRes withdraw(WithdrawReq req) throws Exception {
+	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception {
 
 		if (req.getSellerKey() == null | req.getSecedeReasonCode() == null | req.getSecedeReasonMessage() == null)
 			throw new Exception("필수 파라미터 미존재");
@@ -314,7 +314,15 @@ public class SellerServiceImpl implements SellerService {
 
 		RemoveSellerResponse schRes = new RemoveSellerResponse();
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
-		schReq.setCommonRequest(this.imsiCommonRequest());
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());

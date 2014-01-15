@@ -31,5 +31,5 @@ public interface SellerService {
 	 * 
 	 * @throws Exception
 	 */
-	public WithdrawRes withdraw(WithdrawReq req) throws Exception;
+	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception;
 }
