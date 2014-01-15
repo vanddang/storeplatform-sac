@@ -33,7 +33,7 @@ public interface MemberCommonRepository {
 	 * 
 	 * @param deviceModelCd
 	 *            단말 모델 코드
-	 * @return Device
+	 * @return DeviceHeader
 	 * @throws Exception
 	 *             Exception
 	 */

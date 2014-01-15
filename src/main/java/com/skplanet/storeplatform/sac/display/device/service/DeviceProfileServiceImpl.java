@@ -52,7 +52,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 		DeviceProfileDTO deviceProfileDTO = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile",
 				requestVO, DeviceProfileDTO.class);
 
-		// Device Profile 조회
+		// DeviceHeader Profile 조회
 		Device device = new Device();
 		if (deviceProfileDTO != null) {
 			String sComp = deviceProfileDTO.getCmntCompCd();

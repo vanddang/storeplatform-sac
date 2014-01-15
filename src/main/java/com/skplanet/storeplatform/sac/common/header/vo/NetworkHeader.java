@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.runtime.extend.vo;
+package com.skplanet.storeplatform.sac.common.header.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 13.
  * Updated by : 서대영, SK 플래닛.
  */
-public class Network extends CommonInfo {
+public class NetworkHeader extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -25,7 +25,7 @@ public class Network extends CommonInfo {
 	private String operator;
 	private String simOperator;
 
-	public Network() {
+	public NetworkHeader() {
 		super();
 	}
 

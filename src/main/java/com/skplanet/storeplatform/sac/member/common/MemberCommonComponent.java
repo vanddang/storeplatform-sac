@@ -130,7 +130,7 @@ public class MemberCommonComponent {
 	 * 
 	 * @param deviceModelCd
 	 *            deviceModelCd
-	 * @return Device
+	 * @return DeviceHeader
 	 * @throws Exception
 	 *             Exception
 	 */
