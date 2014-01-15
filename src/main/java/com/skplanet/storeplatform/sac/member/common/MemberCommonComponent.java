@@ -34,9 +34,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
-import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSelectServiceImpl;
@@ -68,7 +68,7 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private ICASSCI icasSCI;
-	
+
 	@Autowired
 	private DeviceService deviceService;
 
@@ -134,7 +134,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public Device getPhoneInfo(String deviceModelCd) throws Exception {
+	public DeviceDTO getPhoneInfo(String deviceModelCd) throws Exception {
 		return this.repository.getPhoneInfo(deviceModelCd);
 	}
 
@@ -270,8 +270,7 @@ public class MemberCommonComponent {
 
 		return userInfo;
 	}
-	
-	
+
 	/**
 	 * <pre>
 	 * ICAS 연동 getCustomer.
@@ -282,9 +281,9 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 */
 	public Map<String, String> getCustomer(String msisdn) throws Exception {
-		return this.icasSCI.getCustomer(msisdn );
+		return this.icasSCI.getCustomer(msisdn);
 	}
-	
+
 	/**
 	 * <pre>
 	 * ICAS 연동 getCustomerCard.
@@ -295,9 +294,9 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 */
 	public Map<String, String> getCustomerCard(String msisdn) throws Exception {
-		return this.icasSCI.getCustomerCard(msisdn );
+		return this.icasSCI.getCustomerCard(msisdn);
 	}
-	
+
 	/**
 	 * <pre>
 	 * ICAS 연동 getMvService.
@@ -308,7 +307,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 */
 	public Map<String, String> getMvService(String msisdn) throws Exception {
-		return this.icasSCI.getMvService(msisdn );
+		return this.icasSCI.getMvService(msisdn);
 	}
 
 }

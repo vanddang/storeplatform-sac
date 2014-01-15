@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
 
 /**
  * 공통 관련 인터페이스 구현체
@@ -37,10 +37,10 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	}
 
 	@Override
-	public Device getPhoneInfo(String deviceModelCd) throws Exception {
-		Device dto = new Device();
+	public DeviceDTO getPhoneInfo(String deviceModelCd) throws Exception {
+		DeviceDTO dto = new DeviceDTO();
 		dto.setDeviceModelCd(deviceModelCd);
-		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
+		return (DeviceDTO) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
 	}
 
 }

@@ -2,8 +2,8 @@ package com.skplanet.storeplatform.sac.member.common.repository;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
 
 /**
  * 공통 관련 인터페이스
@@ -37,6 +37,6 @@ public interface MemberCommonRepository {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public Device getPhoneInfo(String deviceModelCd) throws Exception;
+	public DeviceDTO getPhoneInfo(String deviceModelCd) throws Exception;
 
 }

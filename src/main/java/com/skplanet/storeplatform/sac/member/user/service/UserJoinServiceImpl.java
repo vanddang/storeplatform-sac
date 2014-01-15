@@ -40,7 +40,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
-import com.skplanet.storeplatform.sac.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -49,6 +48,7 @@ import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -201,7 +201,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
 			LOGGER.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(),
+					MemberConstants.RESULT_SUCCES)) {
 
 				LOGGER.info("## 사용자 회원 가입 실패 ===========================");
 				throw new RuntimeException("사용자 회원 가입 실패");
@@ -221,7 +222,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * TODO 폰정보 조회로 필요 데이타 세팅 (휴대기기 정보 등록 공통 모듈 나와봐야할듯....)
 			 */
-			Device device = this.mcc.getPhoneInfo("SK-T100");
+			DeviceDTO device = this.mcc.getPhoneInfo("SK-T100");
 			LOGGER.info("device : {}", device.getModelNm());
 			LOGGER.info("device : {}", device.getEngModelNm());
 			LOGGER.info("## ModelId : {}", this.idpReceiverM.getResponseBody().getModel_id());
@@ -231,7 +232,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
 
-		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
+		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(),
+				IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
 			LOGGER.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 
 			/**
@@ -297,7 +299,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
 		param.put("key", req.getUserId());
 		param.put("user_mdn", sbUserPhone.toString());
-		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
+				+ DateUtil.getToday() + "," + DateUtil.getTime());
 		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 		LOGGER.debug("## param : {}", param.entrySet());
@@ -318,7 +321,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 			 */
-			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
+			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
+					.getIm_int_svc_no());
 			LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
 			LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
 
