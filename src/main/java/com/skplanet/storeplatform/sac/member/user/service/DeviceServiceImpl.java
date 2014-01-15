@@ -291,7 +291,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (StringUtil.equals(createDeviceRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
 			/* 3. 구매이력 이관 여부 확인 [기존 회원 key, 신규 회원 key] */
-			//if (false) {
+			if (false) {
 
 				/* 4. 구매이관 대상인 경우 구매이력 이관요청 */
 
@@ -341,7 +341,7 @@ public class DeviceServiceImpl implements DeviceService {
 					}
 				}
 
-			//}
+			}
 				
 		} else {
 			throw new Exception("["	+ createDeviceRes.getCommonResponse().getResultCode() + "] " + createDeviceRes.getCommonResponse().getResultMessage());
@@ -406,8 +406,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (deviceModelNo != null
 				&& !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 			
-			/*	자급제 단말이 아닌경우 단말정보가 상이한경우 IDP deviceCompare 연동	*/
-			if ("SKT".equals(userMbrDevice.getDeviceTelecom())) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
 				
 				IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
 				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(),	IDPConstants.IDP_RES_CODE_OK)) {
@@ -430,7 +429,8 @@ public class DeviceServiceImpl implements DeviceService {
 			
 		} else if (nativeId != null) {
 			
-			if ("SKT".equals(userMbrDevice.getDeviceTelecom())) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
+				
 				if (!nativeId.equals(userMbrDevice.getNativeID())) {
 					userMbrDevice.setNativeID(nativeId);
 					
@@ -441,7 +441,7 @@ public class DeviceServiceImpl implements DeviceService {
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 	            
 				if ("Y".equals(rooting) && !isOpmd) {
-					 Map<String, String> mapIcas = null;
+					Map<String, String> mapIcas = null;
 					if (!commService.getMappingInfo(deviceId, "11").getMvnoCD().equals("0")) { //MVNO
 						mapIcas = commService.getMvService(deviceId);
 					} else {
