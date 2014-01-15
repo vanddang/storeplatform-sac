@@ -12,24 +12,21 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 import java.io.Serializable;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * 기구매체크 요청.
+ * 구매내역숨김처리 컴포넌트 요청.
  * 
- * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
+ * Updated on : 2014. 12. 20. Updated by : 조용진, 엔텔스.
  */
-public class ExistenceReq extends CommonInfo implements Serializable {
+public class HidingReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
 	private String insdUsermbrNo; // 회원번호
 	private String insdDeviceId; // 디바이스 번호
-	private List<ExistenceList> existenceList; // 기구매 상품 리스트
+	private List<HidingSacList> hidingSacList; // 구매내역 숨김 리스트
 
 	/**
 	 * @return the tenantId
@@ -77,23 +74,18 @@ public class ExistenceReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the existenceList
+	 * @return the hidingSacList
 	 */
-	public List<ExistenceList> getExistenceList() {
-		return this.existenceList;
+	public List<HidingSacList> getHidingSacList() {
+		return this.hidingSacList;
 	}
 
 	/**
-	 * @param existenceList
-	 *            the existenceList to set
+	 * @param hidingSacList
+	 *            the hidingSacList to set
 	 */
-	public void setExistenceList(List<ExistenceList> existenceList) {
-		this.existenceList = existenceList;
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public void setHidingSacList(List<HidingSacList> hidingSacList) {
+		this.hidingSacList = hidingSacList;
 	}
 
 }

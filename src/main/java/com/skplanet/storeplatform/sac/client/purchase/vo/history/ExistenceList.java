@@ -17,9 +17,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 기구매체크 상품리스트 input Value Object
+ * 기구매체크 SAC 상품리스트 input Value Object
  * 
- * Updated on : 2013. 12. 20. Updated by : wisestone_mikepark
+ * Updated on : 2013. 12. 20. Updated by : 조용진, 엔텔스.
  */
 public class ExistenceList extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;

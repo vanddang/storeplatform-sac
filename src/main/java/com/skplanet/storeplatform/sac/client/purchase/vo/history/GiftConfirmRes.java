@@ -13,21 +13,53 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class GiftConfirmRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Integer count; // update count
+	private String prodId; // 상품 아이디
+	private String prchsId; // 구매ID
+	private String resultYn; // update 성공여부
 
 	/**
-	 * @return the count
+	 * @return the prodId
 	 */
-	public Integer getCount() {
-		return this.count;
+	public String getProdId() {
+		return this.prodId;
 	}
 
 	/**
-	 * @param count
-	 *            the count to set
+	 * @param prodId
+	 *            the prodId to set
 	 */
-	public void setCount(Integer count) {
-		this.count = count;
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the prchsId
+	 */
+	public String getPrchsId() {
+		return this.prchsId;
+	}
+
+	/**
+	 * @param prchsId
+	 *            the prchsId to set
+	 */
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the resultYn
+	 */
+	public String getResultYn() {
+		return this.resultYn;
+	}
+
+	/**
+	 * @param resultYn
+	 *            the resultYn to set
+	 */
+	public void setResultYn(String resultYn) {
+		this.resultYn = resultYn;
 	}
 
 }
