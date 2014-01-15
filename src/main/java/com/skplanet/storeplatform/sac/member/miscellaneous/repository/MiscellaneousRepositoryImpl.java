@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.repository;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,5 +25,20 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	@Override
 	public String getUaCode(String deviceModelNo) {
 		return (String) this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo);
+	}
+
+	@Override
+	public void insertPhoneAuthCode(HashMap<String, String> phoneAuthCodeInfo) {
+		this.commonDao.insert("Miscellaneous.insertPhoneAuthCode", phoneAuthCodeInfo);
+	}
+
+	@Override
+	public HashMap<String, String> getPhoneAuthYn(String userKey) {
+		return (HashMap<String, String>) this.commonDao.queryForObject("Miscellaneous.getSmsAuthYn", userKey);
+	}
+
+	@Override
+	public void mergeIntoPhoneAuthCode(HashMap<String, String> phoneAuthCodeInfo) {
+		this.commonDao.update("Miscellanous.mergeIntoPhoneAuthCode", phoneAuthCodeInfo);
 	}
 }
