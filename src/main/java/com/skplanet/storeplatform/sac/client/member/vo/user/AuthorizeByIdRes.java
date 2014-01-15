@@ -40,6 +40,11 @@ public class AuthorizeByIdRes extends CommonInfo {
 	 */
 	private String joinSiteNm;
 
+	/**
+	 * 통합아이디 관리번호
+	 */
+	private String imIntSvcNo;
+
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -78,6 +83,14 @@ public class AuthorizeByIdRes extends CommonInfo {
 
 	public void setJoinSiteNm(String joinSiteNm) {
 		this.joinSiteNm = joinSiteNm;
+	}
+
+	public String getImIntSvcNo() {
+		return this.imIntSvcNo;
+	}
+
+	public void setImIntSvcNo(String imIntSvcNo) {
+		this.imIntSvcNo = imIntSvcNo;
 	}
 
 }
