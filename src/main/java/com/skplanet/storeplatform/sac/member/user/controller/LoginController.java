@@ -9,27 +9,21 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
-import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -64,12 +58,6 @@ public class LoginController {
 
 		logger.info("######################## LoginController authorizeByMdn start ############################");
 
-		TenantHeader header = requestHeader.getTenantHeader();
-		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
-
-		req.setOsVer(deviceHeader.getOsVersion());
-		req.setOsVer(deviceHeader.getModel());
-
 		/* 필수 파라메터 체크 */
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID
 		String deviceIdType = StringUtil.nvl(req.getDeviceIdType(), ""); // 기기ID타입(msisdn,uuid,macaddress)
@@ -83,7 +71,7 @@ public class LoginController {
 			throw new Exception("필수요청 파라메터 부족(\"deviceIdType\")");
 		}
 
-		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(null, req);
+		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
 		logger.info("######################## LoginController authorizeByMdn end ############################");
 		return res;
@@ -99,7 +87,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById(@RequestHeader Map<String, Object> headers, @RequestBody AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @RequestBody AuthorizeByIdReq req) throws Exception {
 
 		/* 필수 파라메터 체크 */
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 아이디
@@ -111,10 +99,7 @@ public class LoginController {
 			throw new Exception("필수요청 파라메터 부족(\"userPw\")");
 		}
 
-		/* Header 정보 세팅 */
-		HeaderVo headerVo = this.headerInfo.getHeader(headers);
-
-		AuthorizeByIdRes res = this.loginService.authorizeById(headerVo, req);
+		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
 
 		return res;
 	}

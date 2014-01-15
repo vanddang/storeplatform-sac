@@ -10,6 +10,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 휴대기기 관련 인터페이스
@@ -26,7 +27,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public CreateDeviceRes createDevice(HeaderVo headerVo, CreateDeviceReq req) throws Exception;
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 목록 조회
@@ -36,11 +37,12 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ListDeviceRes listDevice(HeaderVo headerVo, ListDeviceReq req) throws Exception;
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception;
 
 	/**
 	 * 
-	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
+	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
+	 * 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param userKey
 	 * @param deviceInfo
@@ -76,6 +78,6 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeviceInfo> removeDevice(HeaderVo headerVo, RemoveDeviceReq req) throws Exception;
+	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
 	// public RemoveDeviceRes removeDevice(HeaderVo headerVo, RemoveDeviceReq req) throws Exception;
 }

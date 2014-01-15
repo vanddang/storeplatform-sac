@@ -1,10 +1,10 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 회원 로그인 관련 인터페이스
@@ -21,8 +21,7 @@ public interface LoginService {
 	 * @return
 	 * @throws Exception
 	 */
-	public AuthorizeByMdnRes authorizeByMdn(HeaderVo headerVo,
-			AuthorizeByMdnReq req) throws Exception;
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) throws Exception;
 
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원)
@@ -32,6 +31,5 @@ public interface LoginService {
 	 * @return
 	 * @throws Exception
 	 */
-	public AuthorizeByIdRes authorizeById(HeaderVo headerVo,
-			AuthorizeByIdReq req) throws Exception;
+	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) throws Exception;
 }

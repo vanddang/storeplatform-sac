@@ -56,6 +56,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -108,7 +109,7 @@ public class DeviceServiceImpl implements DeviceService {
 	public String IDP_OPERATION_MODE;
 
 	@Override
-	public CreateDeviceRes createDevice(HeaderVo headerVo, CreateDeviceReq req) throws Exception {
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl createDevice start ############################");
 
@@ -144,7 +145,7 @@ public class DeviceServiceImpl implements DeviceService {
 		listDeviceReq.setIsMainDevice("N");
 		listDeviceReq.setUserKey(userKey);
 		listDeviceReq.setDeviceId(deviceId);
-		ListDeviceRes listDeviceRes = this.listDevice(headerVo, listDeviceReq);
+		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
 
 		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 		StringBuffer sbUserPhone = new StringBuffer();
@@ -219,7 +220,7 @@ public class DeviceServiceImpl implements DeviceService {
 	}
 
 	@Override
-	public ListDeviceRes listDevice(HeaderVo headerVo, ListDeviceReq req) throws Exception {
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl listDevice start ############################");
 
@@ -772,7 +773,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public List<DeviceInfo> removeDevice(HeaderVo headerVo, RemoveDeviceReq req) throws Exception {
+	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl 휴대기기 삭제 start ############################");
 
@@ -798,7 +799,7 @@ public class DeviceServiceImpl implements DeviceService {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setDeviceId(req.getDeviceId());
 		listDeviceReq.setUserKey(userKey);
-		ListDeviceRes listDeviceRes = this.listDevice(headerVo, listDeviceReq);
+		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
 
 		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 		List<DeviceInfo> deviceModifyList = new ArrayList<DeviceInfo>();
