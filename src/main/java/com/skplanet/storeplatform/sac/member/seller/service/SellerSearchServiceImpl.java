@@ -307,7 +307,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SellerDTO dto = new SellerDTO();
 		dto.setKoUsWhether("ko");
-		List<SecedeReson> secedeReson = this.commonDAO.queryForList("seller.listWithdrawalReason", dto,
+		List<SecedeReson> secedeReson = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", dto,
 				SecedeReson.class);
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();

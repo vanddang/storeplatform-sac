@@ -64,7 +64,7 @@ public class ListWithdrawalReasonTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ListWithdrawalReasonRes res = (ListWithdrawalReasonRes) result;
-						assertThat(res.getSecedeResonList().get(0).getSecedeReasonMessage(), notNullValue());
+						assertThat(res.getSecedeResonList(), notNullValue());
 						logger.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
