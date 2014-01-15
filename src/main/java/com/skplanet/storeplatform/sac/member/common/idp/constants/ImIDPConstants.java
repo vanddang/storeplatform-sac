@@ -30,6 +30,7 @@ public final class ImIDPConstants {
 																												// Server)
 	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
 	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
+	public static final String IDP_REQ_CMD_DISAGREE_USER = "TXDisagreeUserIDP";
 
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default

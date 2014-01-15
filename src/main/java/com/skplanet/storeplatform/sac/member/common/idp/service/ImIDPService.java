@@ -26,6 +26,10 @@ public interface ImIDPService {
 	/** ID 가입여부 체크. */
 	public ImIDPReceiverM checkIdStatusIdpIm(String id) throws Exception;
 
-	/** 부가프로파일정보수정요청 */
+	/** 부가프로파일정보수정요청. */
 	public ImIDPReceiverM updateAdditionalInfo(Map<String, Object> param) throws Exception;
+
+	/** 2.1.4 개별약관해지요청. */
+	public ImIDPReceiverM discardUser(Map<String, Object> param) throws Exception;
+
 }

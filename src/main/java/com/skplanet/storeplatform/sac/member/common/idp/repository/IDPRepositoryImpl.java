@@ -36,8 +36,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 	@Value("#{propertiesForSac['idp.sp_id']}")
 	public String IDP_REQ_OMP_SERVICE_ID;
 	/** ImIDP 요청 도메인 (HTTP) */
-	@Value("#{propertiesForSac['idp.im.request.url']}")
-	public String IDP_REQUEST_URL;
+	@Value("#{propertiesForSac['idp.im.request.operation']}")
+	public String IDP_OPERATION_MODE;
 
 	@Autowired
 	private IdpSCI idpSCI;
@@ -55,39 +55,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	public IDPReceiverM sendIDP(IDPSenderM sendData) throws Exception {
 
 		SendReq sendReq = new SendReq();
-		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
 		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
 		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
-		sendReq.setIm(false);
-		sendReq.setUrl(sendData.getUrl());
-		sendReq.setReqParam(this.makeIDPSendParam(sendData));
-
-		SendRes sendRes = this.idpSCI.send(sendReq);
-
-		IDPReceiverM receiveData = sendRes.getIdpReceiverM();
-
-		return receiveData;
-	}
-
-	/**
-	 * <pre>
-	 * IDP - HTTPS
-	 * </pre>
-	 * 
-	 * @param sendData
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public IDPReceiverM sendIDPHttps(IDPSenderM sendData) throws Exception {
-
-		SendReq sendReq = new SendReq();
-		// TODO 임시 HTTP 연동, HTTPS 수정해야함
-		// sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
-		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
-		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
-		sendReq.setMethod(SendReq.HTTP_METHOD.POST);
 		sendReq.setIm(false);
 		sendReq.setUrl(sendData.getUrl());
 		sendReq.setReqParam(this.makeIDPSendParam(sendData));
@@ -111,38 +82,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	@Override
 	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) throws Exception {
 		SendReq sendReq = new SendReq();
-		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
+		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
 		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
 		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
-		sendReq.setIm(true);
-		sendReq.setUrl(sendData.getUrl());
-		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
-
-		SendRes sendRes = this.idpSCI.send(sendReq);
-
-		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
-
-		return receiveData;
-	}
-
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param sendData
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public ImIDPReceiverM sendImIDPPHttps(ImIDPSenderM sendData) throws Exception {
-
-		SendReq sendReq = new SendReq();
-		// TODO HTTPS 로 변경
-		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTP);
-		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
-		sendReq.setMethod(SendReq.HTTP_METHOD.POST);
 		sendReq.setIm(true);
 		sendReq.setUrl(sendData.getUrl());
 		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
@@ -543,26 +486,27 @@ public class IDPRepositoryImpl implements IDPRepository {
 
 		String cmd = sendData.getCmd();
 		String spId = this.IDP_REQ_OMP_SERVICE_ID;
-		String operation_mode = "";
-		if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId) && this.IDP_REQUEST_URL.indexOf("innoace.com:8002") > -1) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_DEV;
-		} else if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId)
-				&& this.IDP_REQUEST_URL.indexOf("innoace.com:8003") > -1) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_STAG;
-		} else if (ImIDPConstants.IDP_CHECK_SERVER_STAG.equals(spId) && this.IDP_REQUEST_URL.indexOf("nate") > -1) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
-		} else if (ImIDPConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_REAL;
-		}
-		// 개발용
-		if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId) && this.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
-		} else if (ImIDPConstants.IDP_CHECK_SERVER_STAG.equals(spId)
-				&& this.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
-		} else if (ImIDPConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
-			operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_REAL;
-		}
+		String operation_mode = this.IDP_OPERATION_MODE;
+		// if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId) && this.IDP_REQUEST_URL.indexOf("innoace.com:8002") >
+		// -1) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_DEV;
+		// } else if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId)
+		// && this.IDP_REQUEST_URL.indexOf("innoace.com:8003") > -1) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_STAG;
+		// } else if (ImIDPConstants.IDP_CHECK_SERVER_STAG.equals(spId) && this.IDP_REQUEST_URL.indexOf("nate") > -1) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
+		// } else if (ImIDPConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_REAL;
+		// }
+		// // 개발용
+		// if (ImIDPConstants.IDP_CHECK_SERVER_DEV.equals(spId) && this.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
+		// } else if (ImIDPConstants.IDP_CHECK_SERVER_STAG.equals(spId)
+		// && this.IDP_REQUEST_URL.indexOf("211.63.6.59") > -1) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_TEST;
+		// } else if (ImIDPConstants.IDP_CHECK_SERVER_REAL.equals(spId)) {
+		// operation_mode = ImIDPConstants.IDP_PARAM_OPERATION_MODE_REAL;
+		// }
 
 		String resp_type = sendData.getResp_type();
 		String resp_flow = sendData.getResp_flow();
@@ -906,5 +850,19 @@ public class IDPRepositoryImpl implements IDPRepository {
 		logger.info("--------------------------------------------------");
 		return param;
 
+	}
+
+	/**
+	 * <pre>
+	 * 이메일 중복 체크.
+	 * </pre>
+	 * 
+	 * @param email
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
+		return this.idpSCI.alredyJoinCheckByEmail(email, 1).getIdpReceiverM();
 	}
 }

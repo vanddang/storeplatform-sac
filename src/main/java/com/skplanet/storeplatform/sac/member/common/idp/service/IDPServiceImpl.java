@@ -96,8 +96,7 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM warterMarkAuth(String authCode, String imageSign,
-			String signData) throws Exception {
+	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_WATERMARK_AUTH);
@@ -107,8 +106,33 @@ public class IDPServiceImpl implements IDPService {
 		sendData.setUser_code(authCode);
 		sendData.setImage_sign(imageSign);
 		sendData.setSign_data(signData);
+		return this.repository.sendIDP(sendData);
+	}
 
-		return this.repository.sendIDPHttps(sendData); // TODO https
+	/**
+	 * <pre>
+	 * 회원탈퇴.
+	 * </pre>
+	 * 
+	 * @param userAuthKey
+	 * @param secedeKeyType
+	 * @param secedeKeyValue
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SECEDE_USER);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		// sendData.setWatermark_auth(IDP_PARAM_KEY_WATERMARK_AUTH_NON_INCLISION);
+		sendData.setUser_auth_key(userAuthKey);
+		sendData.setKey_type(secedeKeyType);
+		sendData.setKey(secedeKeyValue);
+		return this.repository.sendIDP(sendData);
 	}
 
 	/**
@@ -188,8 +212,7 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM userAuthForId(String userId, String userPwd)
-			throws Exception {
+	public IDPReceiverM userAuthForId(String userId, String userPwd) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
@@ -212,8 +235,7 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM modifyProfile(Map<String, Object> param)
-			throws Exception {
+	public IDPReceiverM modifyProfile(Map<String, Object> param) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
@@ -284,11 +306,9 @@ public class IDPServiceImpl implements IDPService {
 		}
 
 		/*
-		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) &&
-		 * !"".equals(user_id)) { try { sn_auth_key = makeSnAuthKey(user_name,
-		 * user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch
-		 * (Exception e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } } else { is_rname_auth = "N"; } }
+		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) && !"".equals(user_id)) { try { sn_auth_key =
+		 * makeSnAuthKey(user_name, user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch (Exception e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } } else { is_rname_auth = "N"; } }
 		 */
 
 		// sendData.setSp_id(Constants.OMP_IDP_SP_ID);

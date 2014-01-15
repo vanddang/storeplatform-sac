@@ -29,6 +29,9 @@ public interface IDPService {
 	/** Captcha 문자 확인. */
 	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception;
 
+	/** 회원 탈퇴. */
+	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception;
+
 	/** 모바일 API */
 	/** 모바일 회원 인증. */
 	public IDPReceiverM authForWap(String mdn) throws Exception;
