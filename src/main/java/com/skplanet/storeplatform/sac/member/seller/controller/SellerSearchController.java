@@ -60,9 +60,9 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
+	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
 		LOGGER.debug("request param : {}", req.toString());
-		return this.sellerSearchService.detailInformation(req);
+		return this.sellerSearchService.detailInformation(header, req);
 	}
 
 	/**
@@ -75,9 +75,10 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) throws Exception {
+	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
+			throws Exception {
 
-		return this.sellerSearchService.detailAccountInformation(req);
+		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
 
 	/**
@@ -90,9 +91,9 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) throws Exception {
 
-		return this.sellerSearchService.listWithdrawalReason();
+		return this.sellerSearchService.listWithdrawalReason(header);
 	}
 
 	/**
@@ -105,8 +106,8 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchIdRes searchId(SearchIdReq req) throws Exception {
+	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
 
-		return this.sellerSearchService.searchId(req);
+		return this.sellerSearchService.searchId(header, req);
 	}
 }

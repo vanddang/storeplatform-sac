@@ -118,7 +118,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
+	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
 
 		if (req.getKeyType() == null)
 			throw new Exception("필수 파라미터 미존재");
@@ -227,7 +227,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) throws Exception {
+	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
+			throws Exception {
 
 		if (req.getSellerKey() == null)
 			throw new Exception("판매자키가 없습니다");
@@ -315,7 +316,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) throws Exception {
 
 		SellerDTO dto = new SellerDTO();
 		dto.setKoUsWhether("ko");
@@ -341,7 +342,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public SearchIdRes searchId(SearchIdReq req) throws Exception {
+	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
 
 		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();

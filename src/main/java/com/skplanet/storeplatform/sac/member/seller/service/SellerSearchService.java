@@ -21,27 +21,28 @@ public interface SellerSearchService {
 	 * 
 	 * @throws Exception
 	 */
-	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception;
+	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception;
 
 	/**
 	 * 판매자 회원 정산정보조회.
 	 * 
 	 * @throws Exception
 	 */
-	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) throws Exception;
+	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
+			throws Exception;
 
 	/**
 	 * 탈퇴 사유 목록 조회.
 	 * 
 	 * @throws Exception
 	 */
-	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception;
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) throws Exception;
 
 	/**
 	 * 판매자 회원 ID 찾기.
 	 * 
 	 * @throws Exception
 	 */
-	public SearchIdRes searchId(SearchIdReq req) throws Exception;
+	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception;
 
 }
