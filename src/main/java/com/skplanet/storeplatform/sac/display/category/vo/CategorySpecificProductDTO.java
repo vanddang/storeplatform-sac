@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.display.category.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class CategorySpecificDTO extends CommonInfo {
+public class CategorySpecificProductDTO extends CommonInfo {
 	private int totalCount;
 	private String upMenuId;
 	private String upMenuNm;
@@ -35,8 +35,18 @@ public class CategorySpecificDTO extends CommonInfo {
 	private String prchsCnt;
 	private Double avgEvluScore;
 	private String paticpersCnt;
-	private String imgFilePath;
+	private String imgPath;
 	private String svcGrpCd;
+	private String svcTypeCd;
+
+	private String hdvYn;
+	private String dolbySprtYn;
+	private String agencyNm;
+	private String topMenuNm;
+	private String artist1Nm;
+	private String artist2Nm;
+	private String issueDay;
+	private String vodTitlNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -222,12 +232,12 @@ public class CategorySpecificDTO extends CommonInfo {
 		this.paticpersCnt = paticpersCnt;
 	}
 
-	public String getImgFilePath() {
-		return this.imgFilePath;
+	public String getImgPath() {
+		return this.imgPath;
 	}
 
-	public void setImgFilePath(String imgFilePath) {
-		this.imgFilePath = imgFilePath;
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
 	}
 
 	public String getSvcGrpCd() {
@@ -236,6 +246,78 @@ public class CategorySpecificDTO extends CommonInfo {
 
 	public void setSvcGrpCd(String svcGrpCd) {
 		this.svcGrpCd = svcGrpCd;
+	}
+
+	public String getSvcTypeCd() {
+		return this.svcTypeCd;
+	}
+
+	public void setSvcTypeCd(String svcTypeCd) {
+		this.svcTypeCd = svcTypeCd;
+	}
+
+	public String getHdvYn() {
+		return this.hdvYn;
+	}
+
+	public void setHdvYn(String hdvYn) {
+		this.hdvYn = hdvYn;
+	}
+
+	public String getDolbySprtYn() {
+		return this.dolbySprtYn;
+	}
+
+	public void setDolbySprtYn(String dolbySprtYn) {
+		this.dolbySprtYn = dolbySprtYn;
+	}
+
+	public String getAgencyNm() {
+		return this.agencyNm;
+	}
+
+	public void setAgencyNm(String agencyNm) {
+		this.agencyNm = agencyNm;
+	}
+
+	public String getTopMenuNm() {
+		return this.topMenuNm;
+	}
+
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
+	}
+
+	public String getArtist1Nm() {
+		return this.artist1Nm;
+	}
+
+	public void setArtist1Nm(String artist1Nm) {
+		this.artist1Nm = artist1Nm;
+	}
+
+	public String getArtist2Nm() {
+		return this.artist2Nm;
+	}
+
+	public void setArtist2Nm(String artist2Nm) {
+		this.artist2Nm = artist2Nm;
+	}
+
+	public String getIssueDay() {
+		return this.issueDay;
+	}
+
+	public void setIssueDay(String issueDay) {
+		this.issueDay = issueDay;
+	}
+
+	public String getVodTitlNm() {
+		return this.vodTitlNm;
+	}
+
+	public void setVodTitlNm(String vodTitlNm) {
+		this.vodTitlNm = vodTitlNm;
 	}
 
 }

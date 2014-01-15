@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -53,30 +54,36 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		CommonResponse commonResponse = new CommonResponse();
 		SearchProductRes res = new SearchProductRes();
 
+		// TODO osm1021 헤더값 세팅 꼭 삭제할것 & Map 설정 필요
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> reqMap = mapper.convertValue(req, Map.class);
 
-		// TODO osm1021 헤더값 세팅 꼭 삭제할것 & Map 설정 필요
 		reqMap.put("deviceModelNo", "SHV-E210S");
 		reqMap.put("tenantId", "S01");
 		// req.setDeviceModelNo("SHV-E210S");
 		// req.setTenantId("S01");
 
 		// 배치완료 기준일시 조회
-		// String stdDt = this.displayCommonService.getBatchStandardDateString((String) reqMap.get("tenantId"),
-		// (String) reqMap.get("listId"));
-		// TODO osm1021 배치 완료일 문제로 더미 값 추가
-		String stdDt = "20140101000000";
+		String stdDt = this.displayCommonService.getBatchStandardDateString((String) reqMap.get("tenantId"),
+				(String) reqMap.get("listId"));
 		reqMap.put("stdDt", stdDt);
+
+		// TB_DP_MULTIMDA_PROD Table 삭제
+		reqMap.put("svgGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
+		reqMap.put("etcCd", DisplayConstants.DP_MOVIE_ETC_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 		// ID list 조회
 		SearchProductDTO searchProductDTO = this.commonDAO.queryForObject("SearchVodBoxProduct.searchVodBoxProdId",
 				reqMap, SearchProductDTO.class);
 
 		List<SearchProductMetaInfoDTO> vodList = null;
+		List<Product> productList = new ArrayList<Product>();
+
 		if (searchProductDTO != null) {
 			// Meta 정보 조회
-			vodList = this.searchMetaInfoService.searchMetaInfoList(req, searchProductDTO);
+			vodList = this.searchMetaInfoService.searchMetaInfoList(searchProductDTO);
 		}
 
 		// DP17 : 영화, DP18 : 방송
@@ -107,7 +114,6 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 				List<Menu> menuList = null;
 				List<Source> sourceList = null;
 				List<Support> supportList = null;
-				List<Product> productList = new ArrayList<Product>();
 
 				for (SearchProductMetaInfoDTO vodDto : vodList) {
 					product = new Product();
@@ -193,17 +199,20 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 					// 데이터 매핑
 					productList.add(product);
 				}
-
 				commonResponse.setTotalCount(productList.size());
 				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			} else {
 				// 조회 결과 없음
 				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
 				res.setCommonResponse(commonResponse);
 			}
 		} else {
 			// 방송 추천 상품 조회
+			commonResponse.setTotalCount(0);
+			res.setProductList(productList);
+			res.setCommonResponse(commonResponse);
 		}
 		return res;
 	}

@@ -80,4 +80,25 @@ public class DisplayConstants {
 	public static final String DP_FOREIGNER_IDENTIFIER_CD = "foreigner";
 	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
 
+	// ////////////////////////////////////// ETC Code //////////////////////////////////////////
+	/**
+	 * 영화
+	 */
+	public static final String DP_MOVIE_ETC_CD = "DP004801";
+
+	// ////////////////////////////////////// Content Type Code //////////////////////////////////////////
+	/**
+	 * 채널 타입
+	 */
+	public static final String DP_CHANNEL_CONTENT_TYPE_CD = "PD002501";
+	/**
+	 * 에피소드 타입
+	 */
+	public static final String DP_EPISODE_CONTENT_TYPE_CD = "PD002502";
+
+	// //////////////////////////////////////Content Type Code //////////////////////////////////////////
+	/**
+	 * 판매중
+	 */
+	public static final String DP_SALE_STAT_ING = "PD000403";
 }

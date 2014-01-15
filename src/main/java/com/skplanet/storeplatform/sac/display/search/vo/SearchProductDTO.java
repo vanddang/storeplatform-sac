@@ -36,7 +36,7 @@ public class SearchProductDTO {
 	public List<String> getProdList() {
 		if (this.searchProdinfoList != null) {
 			for (SearchProductDetailDTO dto : this.searchProdinfoList) {
-				this.prodList.add(dto.getPartProdId());
+				this.prodList.add(dto.getProdId());
 			}
 		}
 		return this.prodList;

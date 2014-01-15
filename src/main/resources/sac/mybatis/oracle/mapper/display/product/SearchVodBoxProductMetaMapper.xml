@@ -34,7 +34,7 @@
 		      , LA.FILE_PATH
 		      , LA.FILE_NM
 		      , (SELECT MENU_NM
-		           FROM TB_DP_MENU_CATALOG_DESC
+		           FROM TB_DP_MENU_CATEGORY_DESC
 		          WHERE MENU_ID = LA.UP_MENU_ID
 		            AND LANG_CD = 'ko'
 		            AND ROWNUM = 1) AS UP_MENU_NM
@@ -68,9 +68,9 @@
 		                                     , K.FILE_PATH
 		                                     , K.FILE_NM
 		                                     , K.FILE_SIZE
-		                                  FROM TB_DP_MENU_CATALOG_PROD_MAPG    A                                       
-		                                     , TB_DP_MENU_CATALOG              B
-		                                     , TB_DP_MENU_CATALOG_DESC         C
+		                                  FROM TB_DP_MENU_CATEGORY_PROD_MAPG    A                                       
+		                                     , TB_DP_MENU_CATEGORY              B
+		                                     , TB_DP_MENU_CATEGORY_DESC         C
 		                                     , TB_DP_PROD              D
 		                                     , TB_DP_MULTIMDA_PROD     E
 		                                     , TB_DP_PROD_DESC         F
@@ -94,7 +94,6 @@
 		                                   AND C.LANG_CD = 'ko'                      /* ko : 한국어 */                                   
 		                                   AND G.TENANT_ID = #{tenantId}
 		                                   AND F.LANG_CD = 'ko'                      /* ko : 한국어 */
-		                                   AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
 		                                   AND K.IMG_CD = 'DP000101'                 
 		                                   AND K.EXPO_ORD = '1'                 
 		                                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
@@ -103,7 +102,6 @@
                                                <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")"> 
                                                     #{item}
                                                </foreach>
-                                           
                                            </if>
                                            ------------------------------------------------------------------------------
 		                                   -- INPUT PARAMETER
@@ -121,6 +119,6 @@
 		    <foreach collection="prodList" item="item" index="index" open="(" separator="||" close=",part_prod_id)"> 
                 #{item}
             </foreach>
-         </if>                                      
+         </if>
  	</select>
 </mapper>

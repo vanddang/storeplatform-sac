@@ -24,10 +24,10 @@ import com.skplanet.storeplatform.sac.display.search.service.SearchVodBoxProduct
 @Controller
 @RequestMapping("/display/search/product")
 public class SearchProductController {
-	private transient Logger logger = LoggerFactory.getLogger(SearchProductController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SearchProductController.class);
 
 	@Autowired
-	SearchVodBoxProductService searchVodBoxProductService;
+	private SearchVodBoxProductService searchVodBoxProductService;
 
 	@RequestMapping(value = "/vod", method = RequestMethod.GET)
 	@ResponseBody

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq;
 import com.skplanet.storeplatform.sac.display.search.vo.SearchProductDTO;
 import com.skplanet.storeplatform.sac.display.search.vo.SearchProductMetaInfoDTO;
 
@@ -24,10 +23,17 @@ public class SearchMetaInfoServiceImpl implements SearchMetaInfoService {
 	private CommonDAO commonDAO;
 
 	@Override
-	public List<SearchProductMetaInfoDTO> searchMetaInfoList(SearchProductReq req, SearchProductDTO dto) {
+	public List<SearchProductMetaInfoDTO> searchMetaInfoList(SearchProductDTO dto) {
 		// dto.getProdList();
 		List<SearchProductMetaInfoDTO> vodList = this.commonDAO.queryForList(
 				"SearchVodBoxProductMeta.searchVodBoxMetaInfo", dto, SearchProductMetaInfoDTO.class);
 		return vodList;
 	}
+
+	@Override
+	public SearchProductMetaInfoDTO searchMeatInfo(SearchProductDTO dto) {
+		return this.commonDAO.queryForObject("SearchVodBoxProductMeta.searchVodBoxMetaInfo", dto,
+				SearchProductMetaInfoDTO.class);
+	}
+
 }
