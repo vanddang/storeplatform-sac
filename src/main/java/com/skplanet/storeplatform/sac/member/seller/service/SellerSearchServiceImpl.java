@@ -307,12 +307,22 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SellerDTO dto = new SellerDTO();
 		dto.setKoUsWhether("ko");
-		List<SecedeReson> secedeReson = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", dto,
-				SecedeReson.class);
+
+		List<SellerDTO> sellerDTO = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", dto,
+				SellerDTO.class);
+
+		List<SecedeReson> sList = new ArrayList<SecedeReson>();
+		SecedeReson secedeReson = null;
+		if (sellerDTO != null)
+			for (int i = 0; i < sellerDTO.size(); i++) {
+				secedeReson = new SecedeReson();
+				secedeReson.setSecedeReasonCode(sellerDTO.get(i).getSecedeReasonCode());
+				secedeReson.setSecedeReasonMessage(sellerDTO.get(i).getSecedeReasonMessage());
+				sList.add(secedeReson);
+			}
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
-
-		response.setSecedeResonList(secedeReson);
+		response.setSecedeResonList(sList);
 
 		return response;
 
