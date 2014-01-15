@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
@@ -99,8 +100,37 @@ public class CreateDeviceTest {
 	@Test
 	public void shouldCreateDeviceService() {
 		CreateDeviceReq req = new CreateDeviceReq();
+		req.setUserKey("US201401141629187750000063");
+		req.setRegMaxCnt(5);
 
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setDeviceKey("DE201401150903534380000026");
+		deviceInfo.setUserKey("US201401141629187750000063");
+		deviceInfo.setAuthenticationDate("");
+		deviceInfo.setDeviceId("01066786220");
+		deviceInfo.setDeviceAccount("vanddang@gmail.com");
+		deviceInfo.setDeviceModelNo("SHP-110S");
+		deviceInfo.setDeviceNickName("SHP-110S(임시)");
+		deviceInfo.setDeviceTelecom("US012101");
+		deviceInfo.setDeviceType("deviceType");
+		deviceInfo.setNativeId("358362045580844");
+		deviceInfo.setIsAuthenticated("Y");
+		deviceInfo.setIsPrimary("Y");
+		deviceInfo.setIsRecvSms("Y");
+		deviceInfo.setIsUsed("Y");
+		deviceInfo.setStartDate("");
+		deviceInfo.setTenantId("S01");
+
+		deviceInfo.setDotoriAuthDate("");
+		deviceInfo.setDotoriAuthYn("Y");
+		deviceInfo.setOsVer("1.0");
+		deviceInfo.setScVer("1.0");
+		deviceInfo.setRooting("N");
+		deviceInfo.setUacd("uacd");
+
+		req.setDeviceInfo(deviceInfo);
 		try {
+
 			CreateDeviceRes res = this.deviceService.createDevice(null, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {

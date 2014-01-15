@@ -27,6 +27,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
@@ -39,8 +42,7 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @Controller
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -58,15 +60,19 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn(
-			@RequestHeader Map<String, Object> headers,
-			@RequestBody AuthorizeByMdnReq req) throws Exception {
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @RequestBody AuthorizeByMdnReq req) throws Exception {
 
 		logger.info("######################## LoginController authorizeByMdn start ############################");
 
+		TenantHeader header = requestHeader.getTenantHeader();
+		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
+
+		req.setOsVer(deviceHeader.getOsVersion());
+		req.setOsVer(deviceHeader.getModel());
+
 		/* 필수 파라메터 체크 */
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID
-		String deviceIdType = StringUtil.nvl(req.getDeviceIdType(), ""); // 기기ID타입(msisdn,uuid,macaddress
+		String deviceIdType = StringUtil.nvl(req.getDeviceIdType(), ""); // 기기ID타입(msisdn,uuid,macaddress)
 		String deviceTelecom = StringUtil.nvl(req.getDeviceTelecom(), ""); // 이동통신사
 
 		if (deviceId.equals("")) {
@@ -77,10 +83,7 @@ public class LoginController {
 			throw new Exception("필수요청 파라메터 부족(\"deviceIdType\")");
 		}
 
-		/* Header 정보 세팅 */
-		HeaderVo headerVo = this.headerInfo.getHeader(headers);
-
-		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(headerVo, req);
+		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(null, req);
 
 		logger.info("######################## LoginController authorizeByMdn end ############################");
 		return res;
@@ -96,9 +99,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById(
-			@RequestHeader Map<String, Object> headers,
-			@RequestBody AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(@RequestHeader Map<String, Object> headers, @RequestBody AuthorizeByIdReq req) throws Exception {
 
 		/* 필수 파라메터 체크 */
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 아이디

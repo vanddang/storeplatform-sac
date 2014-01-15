@@ -31,7 +31,7 @@ public final class ImIDPConstants {
 	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
 	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
 	public static final String IDP_REQ_CMD_DISAGREE_USER = "TXDisagreeUserIDP";
-
+	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICELIST = "findJoinServiceListIDP)";
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default
 	public static final String IDP_PARAM_RESP_TYPE_XML = "2"; // xml
@@ -132,6 +132,7 @@ public final class ImIDPConstants {
 	/** 이미 서비스에 등록한 사용자 (2100). */
 	public static final String IDP_RES_CODE_ALREADY_JOIN = "2100X000";
 
+	/** 직권중지 상태 (2403). */
 	public static final String IDP_RES_CODE_SUSPEND = "2403X000";
 
 	/** 가 가입 상태인 사용자 (2101). */
@@ -166,7 +167,7 @@ public final class ImIDPConstants {
 	public static final String IDP_RES_CODE_USER_DATA_NOT_EXIST = "2208X000";
 	/** 가입신청 상태이므로 로그인 실패 (2215). */
 	public static final String IDP_RES_CODE_INVALID_USER_INFO = "2215X000";
-	// 로그인 제한 상태
+	/** 로그인 제한 상태 (2222) */
 	public static final String IDP_RES_CODE_LOGIN_RESTRICT = "2222X000";
 	/** 한신정 연동 실패 (4000). */
 	public static final String IDP_RES_CODE_NICE_LINKAGE_FAIL = "4000X000";

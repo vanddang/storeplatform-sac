@@ -32,4 +32,7 @@ public interface ImIDPService {
 	/** 2.1.4 개별약관해지요청. */
 	public ImIDPReceiverM discardUser(Map<String, Object> param) throws Exception;
 
+	/** 서비스 가입리스트 조회. */
+	public ImIDPReceiverM findJoinServiceListIDP(Map<String, Object> param) throws Exception;
+
 }

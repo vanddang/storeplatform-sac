@@ -249,4 +249,18 @@ public class ImIDPServiceImpl implements ImIDPService {
 		return this.repository.sendImIDP(sendData);
 	}
 
+	@Override
+	public ImIDPReceiverM findJoinServiceListIDP(Map<String, Object> param) throws Exception {
+		String key = (String) param.get("key");
+		String keyType = (String) param.get("keyType");
+		ImIDPSenderM sendData = new ImIDPSenderM();
+		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_JOIN_SERVICELIST);
+		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey(key);
+		sendData.setKey_type(keyType);
+		return this.repository.sendImIDP(sendData);
+	}
+
 }
