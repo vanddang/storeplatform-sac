@@ -37,6 +37,8 @@ public final class IDPConstants {
 	public static final String IDP_REQ_CMD_JOIN_FOR_WAP = "joinForWap"; // 가입
 	public static final String IDP_REQ_CMD_SECEDE_FOR_WAP = "secedeForWap"; // 모바일 탈퇴
 	public static final String IDP_REQ_CMD_FIND_PROFILE_FOR_WAP = "findProfileForWap"; // 정보조회
+	public static final String IDP_REQ_CMD_DEVICE_COMPARE = "deviceCompare"; //휴대폰 단말 기종 조회 및 업데이트
+	
 
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default

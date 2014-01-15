@@ -96,7 +96,8 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception {
+	public IDPReceiverM warterMarkAuth(String authCode, String imageSign,
+			String signData) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_WATERMARK_AUTH);
@@ -187,7 +188,8 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM userAuthForId(String userId, String userPwd) throws Exception {
+	public IDPReceiverM userAuthForId(String userId, String userPwd)
+			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
@@ -210,7 +212,8 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM modifyProfile(Map<String, Object> param) throws Exception {
+	public IDPReceiverM modifyProfile(Map<String, Object> param)
+			throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
@@ -281,9 +284,11 @@ public class IDPServiceImpl implements IDPService {
 		}
 
 		/*
-		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) && !"".equals(user_id)) { try { sn_auth_key =
-		 * makeSnAuthKey(user_name, user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch (Exception e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } } else { is_rname_auth = "N"; } }
+		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) &&
+		 * !"".equals(user_id)) { try { sn_auth_key = makeSnAuthKey(user_name,
+		 * user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch
+		 * (Exception e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } } else { is_rname_auth = "N"; } }
 		 */
 
 		// sendData.setSp_id(Constants.OMP_IDP_SP_ID);
@@ -373,6 +378,20 @@ public class IDPServiceImpl implements IDPService {
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
 		sendData.setCmd(IDPConstants.IDP_REQ_CMD_FIND_PROFILE_FOR_WAP);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey(mdn);
+		sendData.setKey_type("1");
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	@Override
+	public IDPReceiverM deviceCompare(String mdn) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_DEVICE_COMPARE);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(mdn);

@@ -41,4 +41,7 @@ public interface IDPService {
 
 	/** 3.4.1 무선 회원 Profile 조회 (For SP Server). */
 	public IDPReceiverM findProfileForWap(String mdn) throws Exception;
+	
+	/** 2.1.13	휴대폰 단말 기종 조회 및 업데이트 */
+	public IDPReceiverM deviceCompare(String mdn) throws Exception;
 }
