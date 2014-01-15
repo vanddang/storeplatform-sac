@@ -87,10 +87,11 @@ public class SellerController {
 	 * 
 	 * @param WithdrawReq
 	 * @return WithdrawRes : JSON
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	WithdrawRes withdraw(@RequestBody WithdrawReq req) {
+	WithdrawRes withdraw(@RequestBody WithdrawReq req) throws Exception {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("request param : {}", req.toString());
 		return this.sellerService.withdraw(req);

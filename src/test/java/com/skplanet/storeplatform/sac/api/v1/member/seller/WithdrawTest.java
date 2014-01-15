@@ -86,4 +86,34 @@ public class WithdrawTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 회원 탈퇴(값없음).
+	 * </pre>
+	 */
+	@Test
+	public void withdrawEmpty() {
+
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/withdraw/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						WithdrawReq req = new WithdrawReq();
+						// req.setSellerKey("IF102158942020090723111912");
+						// req.setSecedeReasonCode("US010401");
+						// req.setSecedeReasonMessage("ID 변경");
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(WithdrawRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						WithdrawRes res = (WithdrawRes) result;
+						// assertThat(res.getSellerKey(), notNullValue());
+						LOGGER.debug("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 }

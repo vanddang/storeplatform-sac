@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
@@ -31,6 +32,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
 
@@ -104,16 +107,22 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public DetailInformationRes detailInformation(DetailInformationReq req) {
+	public DetailInformationRes detailInformation(DetailInformationReq req) throws Exception {
+
+		if (req.getKeyType() == null)
+			throw new Exception("필수 파라미터 미존재");
+		if (req.getKeyType().equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
+		if (req.getSellerKey() == null && req.getAid() == null)
+			throw new Exception("필수 파라미터 미존재");
+		if (req.getKeyType().equals("") && req.getAid().equals(""))
+			throw new Exception("필수 파라미터 미존재");
 
 		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
-
 		schReq.setCommonRequest(this.imsiCommonRequest());
-
-		DetailInformationRes response = new DetailInformationRes();
 		KeySearch keySearch = new KeySearch();
-
 		if (!req.getSellerKey().equals("") || !req.getAid().equals("")) {
 			if (!req.getSellerKey().equals("")) {
 				keySearch.setKeyString(req.getSellerKey());
@@ -127,10 +136,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			keySearch.setKeyString("");
 		}
 
+		DetailInformationRes response = new DetailInformationRes();
 		if (keySearch.getKeyString() != null)
 			if (!keySearch.getKeyString().equals("")) {
 
-				keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
+				keySearch.setKeyType(req.getKeyType());
 				List<KeySearch> list = new ArrayList<KeySearch>();
 				list.add(keySearch);
 				schReq.setKeySearchList(list);
@@ -206,15 +216,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) {
+	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) throws Exception {
+
+		if (req.getSellerKey() == null)
+			throw new Exception("판매자키가 없습니다");
+		if (req.getSellerKey().equals(""))
+			throw new Exception("판매자키가 없습니다");
 
 		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
-
 		schReq.setCommonRequest(this.imsiCommonRequest());
 		schReq.setSellerKey(req.getSellerKey());
-
-		DetailAccountInformationRes response = new DetailAccountInformationRes();
 
 		schRes = this.sellerSCI.searchAccountSeller(schReq);
 
@@ -281,11 +293,32 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
 		}
 
+		DetailAccountInformationRes response = new DetailAccountInformationRes();
 		response.setDocument(dList);
 		response.setExtraRight(eList);
 		response.setSellerAccount(sellerAccount);
 		response.setSellerKey(schRes.getSellerKey());
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
+		return response;
+
+	}
+
+	@Override
+	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
+
+		SearchSellerResponse schRes = new SearchSellerResponse();
+		SearchSellerRequest schReq = new SearchSellerRequest();
+		schReq.setCommonRequest(this.imsiCommonRequest());
+
+		ListWithdrawalReasonReq dto = new ListWithdrawalReasonReq();
+		dto.setKoUsWhether("ko");
+		List<SecedeReson> secedeReson = (List<SecedeReson>) this.commonDAO.queryForList(
+				"seller.getSellerSecedeResonList", dto);
+
+		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
+
+		response.setSecedeResonList(secedeReson);
+
 		return response;
 
 	}

@@ -782,8 +782,8 @@ public class DummySellerController {
 		List<SecedeReson> myList = new ArrayList<SecedeReson>();
 		for (int i = 0; i < 1; i++) {
 			secedeResonList = new SecedeReson();
-			secedeResonList.setSecedeReasonCd("US010401");
-			secedeResonList.setSecedeReasonDes("ID 변경");
+			secedeResonList.setSecedeReasonCode("US010401");
+			secedeResonList.setSecedeReasonMessage("ID 변경");
 			myList.add(secedeResonList);
 		}
 

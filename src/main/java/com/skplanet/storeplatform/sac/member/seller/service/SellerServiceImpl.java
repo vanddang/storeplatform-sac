@@ -278,19 +278,24 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public WithdrawRes withdraw(WithdrawReq req) {
+	public WithdrawRes withdraw(WithdrawReq req) throws Exception {
+
+		if (req.getSellerKey() == null | req.getSecedeReasonCode() == null | req.getSecedeReasonMessage() == null)
+			throw new Exception("필수 파라미터 미존재");
+		if (req.getSellerKey().equals("") | req.getSecedeReasonCode().equals("")
+				| req.getSecedeReasonMessage().equals(""))
+			throw new Exception("필수 파라미터 미존재");
 
 		RemoveSellerResponse schRes = new RemoveSellerResponse();
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
-
 		schReq.setCommonRequest(this.imsiCommonRequest());
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
 
-		WithdrawRes response = new WithdrawRes();
-
 		schRes = this.sellerSCI.removeSeller(schReq);
+
+		WithdrawRes response = new WithdrawRes();
 
 		return response;
 	}

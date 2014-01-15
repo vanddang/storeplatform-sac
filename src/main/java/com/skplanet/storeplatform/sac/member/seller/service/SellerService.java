@@ -25,6 +25,10 @@ public interface SellerService {
 	/** 판매자 회원 인증. */
 	public AuthorizeRes authorize(AuthorizeReq req);
 
-	/** 판매자 회원 탈퇴. */
-	public WithdrawRes withdraw(WithdrawReq req);
+	/**
+	 * 판매자 회원 탈퇴.
+	 * 
+	 * @throws Exception
+	 */
+	public WithdrawRes withdraw(WithdrawReq req) throws Exception;
 }

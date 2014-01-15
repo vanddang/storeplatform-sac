@@ -14,6 +14,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -74,5 +75,20 @@ public class SellerSearchController {
 	public DetailAccountInformationRes detailAccountInformation(DetailAccountInformationReq req) throws Exception {
 
 		return this.sellerSearchService.detailAccountInformation(req);
+	}
+
+	/**
+	 * <pre>
+	 * 탈퇴 사유 목록 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return DetailAccountInformationRes
+	 */
+	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
+
+		return this.sellerSearchService.listWithdrawalReason();
 	}
 }
