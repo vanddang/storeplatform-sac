@@ -57,7 +57,7 @@ public class DetailAccountInformationTest {
 	 * </pre>
 	 */
 	@Test
-	public void DetailAccountInformationFull() {
+	public void detailAccountInformation() {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url("/dev/member/seller/detailAccountInformation/v1?sellerKey=IF102158942020090723111912")
@@ -78,7 +78,7 @@ public class DetailAccountInformationTest {
 	 * </pre>
 	 */
 	@Test
-	public void DetailAccountInformationEmpty() {
+	public void detailAccountInformationEmpty() {
 
 		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailAccountInformation/v1?sellerKey=")
 				.httpMethod(HttpMethod.GET).success(DetailAccountInformationRes.class, new SuccessCallback() {
