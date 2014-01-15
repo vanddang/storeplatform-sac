@@ -241,7 +241,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setLoginStatCd("");
 				res.setSubStatCd("");
 				
-			}else {
+			} else {
 				
 				ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
 

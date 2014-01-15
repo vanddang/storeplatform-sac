@@ -131,7 +131,8 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("["	+ schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
-		if (Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) == req.getRegMaxCnt()) {
+		if (schUserRes.getUserMbr().getDeviceCount() != null
+				&& Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req.getRegMaxCnt()) {
 			throw new Exception("등록 가능한 단말개수가 초과되었습니다.");
 		}
 
@@ -140,6 +141,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* sc회원 컴포넌트 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setIsMainDevice("N");
+		listDeviceReq.setUserKey(userKey);
 		listDeviceReq.setDeviceId(deviceId);
 		ListDeviceRes listDeviceRes = this.listDevice(headerVo, listDeviceReq);
 
@@ -243,7 +246,7 @@ public class DeviceServiceImpl implements DeviceService {
 		keySearchList.add(key);
 		schDeviceListReq.setKeySearchList(keySearchList);
 		schDeviceListReq.setCommonRequest(commonRequest);
-
+		
 		logger.info("###### schDeviceListReq : " + schDeviceListReq);
 		logger.info("###### schDeviceListReq.getKeySearchList() : " + schDeviceListReq.getKeySearchList());
 		logger.info("###### schDeviceListReq.getCommonRequest() : " + schDeviceListReq.getCommonRequest());
@@ -403,7 +406,12 @@ public class DeviceServiceImpl implements DeviceService {
 		String dotoriAuthYn = req.getDotoriAuthYn(); // 도토리인증여부
 
 		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
-		if (deviceModelNo != null
+		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
+			
+			userMbrDevice.setDeviceID(deviceId);
+			logger.info("[deviceId] {} -> {}",	userMbrDevice.getDeviceID(), deviceId);
+			
+		} else if (deviceModelNo != null
 				&& !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 			
 			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
@@ -614,8 +622,10 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setJoinId(userMbrDevice.getJoinId());
 		deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
-
-		deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
+		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
+			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));	
+		}
+		
 		return deviceInfo;
 	}
 
@@ -688,8 +698,11 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setIsAuthenticated(deviceInfo.getIsAuthenticated());
 		userMbrDevice.setAuthenticationDate(deviceInfo.getAuthenticationDate());
-		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo.getUserDeviceExtraInfo()));
-
+		
+		if (deviceInfo.getUserDeviceExtraInfo() != null) {
+			userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo.getUserDeviceExtraInfo()));	
+		}
+		
 		return userMbrDevice;
 
 	}
