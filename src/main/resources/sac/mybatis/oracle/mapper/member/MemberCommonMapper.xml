@@ -30,7 +30,7 @@
     </select>
 
     <!-- 폰 정보 조회 -->
-    <select id="getPhoneInfo" parameterType="CmDevice" resultType="CmDevice">
+    <select id="getPhoneInfo" parameterType="DeviceDTO" resultType="DeviceDTO">
 		SELECT /* MemberCommonMapper.xml, getPhoneInfo, SAC : 심대진 , 2014-01-08 */
             *
         FROM TB_CM_DEVICE

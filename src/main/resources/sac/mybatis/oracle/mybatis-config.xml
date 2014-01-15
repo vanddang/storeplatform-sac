@@ -33,7 +33,7 @@
         <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
         
         <!-- 공통 관련 조회 -->
-        <typeAlias alias="CmDevice"      type="com.skplanet.storeplatform.sac.common.vo.Device" />
+        <typeAlias alias="DeviceDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO" />
         <typeAlias alias="ClauseDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO" />
         <typeAlias alias="SellerDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.SellerDTO" />
         
