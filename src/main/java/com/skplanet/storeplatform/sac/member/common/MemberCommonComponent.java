@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -65,6 +66,9 @@ public class MemberCommonComponent {
 	@Autowired
 	private UserSCI userSCI;
 
+	@Autowired
+	private ICASSCI icasSCI;
+	
 	@Autowired
 	private DeviceService deviceService;
 
@@ -265,6 +269,46 @@ public class MemberCommonComponent {
 		}
 
 		return userInfo;
+	}
+	
+	
+	/**
+	 * <pre>
+	 * ICAS 연동 getCustomer.
+	 * </pre>
+	 * 
+	 * @param msisdn
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> getCustomer(String msisdn) throws Exception {
+		return this.icasSCI.getCustomer(msisdn );
+	}
+	
+	/**
+	 * <pre>
+	 * ICAS 연동 getCustomerCard.
+	 * </pre>
+	 * 
+	 * @param msisdn
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> getCustomerCard(String msisdn) throws Exception {
+		return this.icasSCI.getCustomerCard(msisdn );
+	}
+	
+	/**
+	 * <pre>
+	 * ICAS 연동 getMvService.
+	 * </pre>
+	 * 
+	 * @param msisdn
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> getMvService(String msisdn) throws Exception {
+		return this.icasSCI.getMvService(msisdn );
 	}
 
 }

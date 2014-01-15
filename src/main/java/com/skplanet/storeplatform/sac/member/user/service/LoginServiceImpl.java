@@ -21,7 +21,6 @@ import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
-import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LogInUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LogInUserResponse;
@@ -67,9 +66,6 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
-
-	@Autowired
-	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
 
 	@Autowired
 	private DeviceService deviceService; // 휴대기기 관련 서비스
