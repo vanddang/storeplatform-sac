@@ -231,6 +231,7 @@
 		                                    WHERE A.TENANT_ID = 'S01' /* header param : tenantId */ 
 		                                      AND A.LIST_ID = #{listId} /* param : listId */
 		                                      AND A.EXPO_YN ='Y' /* 전시여부 */
+                                              AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */		                                      
 		                                 ) A
 		                                 ,TB_DP_PROD B
 		                                 ,TB_DP_PROD_DESC C

@@ -61,12 +61,22 @@ public class BestAppServiceImpl implements BestAppService {
 	@Override
 	public BestAppRes searchBestAppList(BestAppReq bestAppReq) {
 		BestAppRes response = new BestAppRes();
+		CommonResponse commonResponse = new CommonResponse();
 		int totalCount = 0;
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = null;
 		List<Support> supportList = null;
 		List<Source> sourceList = null;
+
+		if (bestAppReq.getListId() == null || "".equals(bestAppReq.getListId())) {
+			this.log.error("필수 파라미터(listId)값이 없음");
+			commonResponse.setTotalCount(0);
+			response.setCommonResponse(commonResponse);
+			response.setProductList(productList);
+			return response;
+		}
+
 		int count = 0;
 		count = Integer.parseInt(bestAppReq.getOffset()) + Integer.parseInt(bestAppReq.getCount()) - 1;
 		bestAppReq.setCount(Integer.toString(count));
@@ -76,8 +86,6 @@ public class BestAppServiceImpl implements BestAppService {
 
 		// BEST 앱 상품 조회
 		List<BestAppDTO> appList = null;
-
-		CommonResponse commonResponse = new CommonResponse();
 
 		Product product = null;
 		Identifier identifier = null;
@@ -100,7 +108,7 @@ public class BestAppServiceImpl implements BestAppService {
 				// 신규 상품조회
 				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, BestAppDTO.class);
 			}
-			
+
 			if (appList.size() != 0) {
 				Iterator<BestAppDTO> iterator = appList.iterator();
 				while (iterator.hasNext()) {
