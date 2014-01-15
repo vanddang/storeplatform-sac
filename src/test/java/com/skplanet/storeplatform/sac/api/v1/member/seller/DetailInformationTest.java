@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class DetailInformationTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(DetailInformationTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DetailInformationTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -66,7 +66,7 @@ public class DetailInformationTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationRes res = (DetailInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -87,7 +87,7 @@ public class DetailInformationTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationRes res = (DetailInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -108,7 +108,7 @@ public class DetailInformationTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationRes res = (DetailInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -128,7 +128,7 @@ public class DetailInformationTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationRes res = (DetailInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

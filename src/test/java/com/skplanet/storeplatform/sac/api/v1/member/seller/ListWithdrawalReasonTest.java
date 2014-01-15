@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReas
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class ListWithdrawalReasonTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ListWithdrawalReasonTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListWithdrawalReasonTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -65,7 +65,7 @@ public class ListWithdrawalReasonTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ListWithdrawalReasonRes res = (ListWithdrawalReasonRes) result;
 						assertThat(res.getSecedeResonList(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

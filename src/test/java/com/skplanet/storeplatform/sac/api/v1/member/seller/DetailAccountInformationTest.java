@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInfor
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class DetailAccountInformationTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(DetailAccountInformationTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DetailAccountInformationTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -66,7 +66,7 @@ public class DetailAccountInformationTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailAccountInformationRes res = (DetailAccountInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -86,7 +86,7 @@ public class DetailAccountInformationTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailAccountInformationRes res = (DetailAccountInformationRes) result;
 						assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
