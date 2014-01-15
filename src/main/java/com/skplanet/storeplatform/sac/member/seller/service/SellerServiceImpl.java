@@ -20,6 +20,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LogInSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LogInSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
@@ -35,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.HttpUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.thoughtworks.xstream.XStream;
@@ -54,9 +56,9 @@ public class SellerServiceImpl implements SellerService {
 	private SellerSCI sellerSCI;
 
 	@Override
-	public CreateRes createSeller(CreateReq req) {
+	public CreateRes createSeller(SacRequestHeader header, CreateReq req) {
 
-		/** 1. SC회원 Req 생성 및 주입 */
+		/** 1. SC회원 Req 생성 및 주입. */
 		CreateSellerRequest createSellerRequest = new CreateSellerRequest();
 
 		// 실명인증정보
@@ -69,53 +71,42 @@ public class SellerServiceImpl implements SellerService {
 		mbrAuth.setDi(req.getSellerDI());
 		// 인증방법코드
 		mbrAuth.setRealNameMethod(req.getRealNameMethod());
-
-		// /** 통신사 코드. */
-		// private String telecom; // MNO_CD 통신사 코드
-		// /** 무선 전화번호. */
-		// private String phone; // WILS_TEL_NO 무선 전화번호
-		// /** 생년월일. */
-		// private String birthDay; // BIRTH 생년월일 DB 에 없음
-		// /** 성별. */
-		// private String sex; // SEX
-		// /** 회원명. */
-		// private String name; // MBR_NM 회원명
-		// /** 인증 요청 채널 코드. */
-		// private String realNameSite; // AUTH_REQ_CHNL_CD 실명인증사이트 코드(인증 요청 채널 코드)
-		// /** 인증일시. */
-		// private String realNameDate; // AUTH_DT 인증일시
-		// /** 수정일시. */
-		// private String updateDate; // UPD_DT 수정일시
-		// /**
-		// * 회원구분코드.<br>
-		// * 사용자:'US010801'<br>
-		// * 판매자:'US010802'<br>
-		// */
-		// private String memberCategory; // MBR_CLSF_CD 회원구분코드 (user:'US010801' , seller:'US010802')
-		// /** TenantRes ID. */
-		// private String tenantID; // TENANT_ID 테넌트 아이디
-		// /** 내부 회원 키. */
-		// private String memberKey; // INSD_SELLERMBR_NO
-
 		// mbrAuth.set
 		createSellerRequest.setMbrAuth(new MbrAuth());
-		// createSellerRequest.
+
 		// 약관동의 정보 리스트
-		List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+		List<MbrClauseAgree> mbrClauseAgreeList = null;
 		MbrClauseAgree mbrClauseAgree = null;
 		// new MbrClauseAgree();
-		for (int i = 0; i < req.getAgreementList().size(); i++) {
-			mbrClauseAgree = new MbrClauseAgree();
-			// 약관동의 ID
-			mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
-			// 약관동의 여부
-			mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
-			// 약관 버전
-			mbrClauseAgree.setExtraAgreementVersion(req.getAgreementList().get(i).getExtraAgreementVersion());
-			mbrClauseAgreeList.add(mbrClauseAgree);
+		if (req.getAgreementList() != null) {
+			mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+			for (int i = 0; i < req.getAgreementList().size(); i++) {
+				mbrClauseAgree = new MbrClauseAgree();
+				// 약관동의 ID
+				mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
+				// 약관동의 여부
+				mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
+				// 약관 버전
+				mbrClauseAgree.setExtraAgreementVersion(req.getAgreementList().get(i).getExtraAgreementVersion());
+				mbrClauseAgreeList.add(mbrClauseAgree);
+			}
+			createSellerRequest.setMbrClauseAgree(mbrClauseAgreeList);
 		}
 
-		createSellerRequest.setMbrClauseAgree(mbrClauseAgreeList);
+		// 보안질문 리스트
+		List<PWReminder> pWReminderList = null;
+		if (req.getPWReminderList() != null) {
+			pWReminderList = new ArrayList<PWReminder>();
+			for (int i = 0; i < req.getPWReminderList().size(); i++) {
+				PWReminder pwReminder = new PWReminder();
+				// TODO Req 재정의 요망
+				pwReminder.setAnswerString(req.getPWReminderList().get(i).getPwReminderQ());
+				pwReminder.setQuestionID(null);
+				pwReminder.setQuestionMessage(null);
+				pWReminderList.add(pwReminder);
+			}
+			createSellerRequest.setPWReminderList(pWReminderList);
+		}
 
 		// 판매자 회원 정보
 		SellerMbr sellerMbr = new SellerMbr();
@@ -193,8 +184,15 @@ public class SellerServiceImpl implements SellerService {
 
 		LOGGER.debug("### 넘긴 데이터 : {}", createSellerRequest.toString());
 
-		/** TODO 2. 임시 공통헤더 생성 주입 */
-		createSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			createSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			createSellerRequest.setCommonRequest(commonRequest);
+		}
 
 		CreateSellerResponse createSellerResponse = this.sellerSCI.createSeller(createSellerRequest);
 		LOGGER.debug("code : {}" + createSellerResponse.getCommonResponse().getResultCode());
@@ -205,7 +203,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public LockAccountRes lockAccount(LockAccountReq req) {
+	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) {
 
 		/** 1. SC회원 Req 생성 및 주입 */
 		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
@@ -223,8 +221,15 @@ public class SellerServiceImpl implements SellerService {
 		// TODO 임시코딩
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_LOGIN_PAUSE);
 
-		/** TODO 2. 임시 공통헤더 생성 주입 */
-		updateStatusSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			updateStatusSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			updateStatusSellerRequest.setCommonRequest(commonRequest);
+		}
 
 		/** 3. SC회원 Call */
 		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
@@ -246,15 +251,27 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public AuthorizeRes authorize(AuthorizeReq req) {
+	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) {
 
 		/** 1. SC회원 Req 생성 및 주입 */
 		LogInSellerRequest logInSellerRequest = new LogInSellerRequest();
 		logInSellerRequest.setSellerID(req.getSellerId());
 		logInSellerRequest.setSellerPW(req.getSellerPW());
 
-		/** TODO 2. 임시 공통헤더 생성 주입 */
-		logInSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		// TODO Exception
+		if (req == null) {
+			throw new RuntimeException("Parameter 불충분");
+		}
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			logInSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			logInSellerRequest.setCommonRequest(commonRequest);
+		}
 
 		/** 3. SC-로그인인증 Call */
 		LogInSellerResponse logInSellerResponse = this.sellerSCI.logInSeller(logInSellerRequest);
@@ -268,8 +285,18 @@ public class SellerServiceImpl implements SellerService {
 			throw new RuntimeException(logInSellerResponse.getCommonResponse().getResultMessage());
 		}
 
-		// TODO
 		AuthorizeRes res = new AuthorizeRes();
+		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
+
+		if (logInSellerResponse != null) {
+			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
+			sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+			sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
+			sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
+			sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
+			res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+			res.setSellerMbr(sellerMbr);
+		}
 		logInSellerResponse.getLoginFailCount();
 		res.setSellerMbr(new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr());
 
@@ -301,6 +328,8 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
+	 * <<<<<<< .mine
+	 * =======
 	 * SC SellerMbr To SAC SellerInfo.
 	 * </pre>
 	 * 

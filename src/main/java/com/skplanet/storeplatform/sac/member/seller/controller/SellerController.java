@@ -17,6 +17,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
@@ -43,9 +44,8 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateRes createSeller(@RequestBody CreateReq createReq) {
-
-		return null;
+	CreateRes createSeller(SacRequestHeader header, @RequestBody CreateReq req) {
+		return this.sellerService.createSeller(header, req);
 	}
 
 	/**
@@ -58,10 +58,10 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	LockAccountRes lockAccount(@RequestBody LockAccountReq req) {
+	LockAccountRes lockAccount(SacRequestHeader header, @RequestBody LockAccountReq req) {
 		LOGGER.debug("### 5.2.16. 판매자회원 계정 잠금 [lockAccount] START ###");
 		LOGGER.debug("request param : {}", req.toString());
-		return this.sellerService.lockAccount(req);
+		return this.sellerService.lockAccount(header, req);
 	}
 
 	/**
@@ -74,10 +74,10 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	AuthorizeRes authorize(@RequestBody AuthorizeReq req) {
+	AuthorizeRes authorize(SacRequestHeader header, @RequestBody AuthorizeReq req) {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("request param : {}", req.toString());
-		return this.sellerService.authorize(req);
+		return this.sellerService.authorize(header, req);
 	}
 
 	/**

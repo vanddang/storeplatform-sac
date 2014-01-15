@@ -7,11 +7,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface SellerSearchService {
 
 	/** 판매자 회원 ID/Email 중복조회 */
-	public DuplicateByIdEmailRes duplicateByIdEmail(DuplicateByIdEmailReq req);
+	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req);
 
 	/**
 	 * 판매자 회원 기본정보조회.

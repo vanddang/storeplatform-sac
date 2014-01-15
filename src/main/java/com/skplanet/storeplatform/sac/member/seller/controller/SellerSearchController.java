@@ -15,6 +15,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -41,10 +42,10 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
 	private @ResponseBody
-	DuplicateByIdEmailRes duplicateByIdEmail(DuplicateByIdEmailReq req) {
+	DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req) {
 		// Req Debug
 		LOGGER.debug("req : {}", req);
-		return this.sellerSearchService.duplicateByIdEmail(req);
+		return this.sellerSearchService.duplicateByIdEmail(header, req);
 	}
 
 	/**

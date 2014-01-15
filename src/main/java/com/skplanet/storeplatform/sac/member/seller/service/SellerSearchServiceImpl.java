@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
 
@@ -49,14 +50,21 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	private CommonDAO commonDAO;
 
 	@Override
-	public DuplicateByIdEmailRes duplicateByIdEmail(DuplicateByIdEmailReq req) {
+	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req) {
 
 		/** SC회원 시작 */
 		/** 1. ID/Email Req 생성 및 주입 */
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
 
-		/** TODO 2. 임시 공통헤더 생성 주입 */
-		checkDuplicationSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			checkDuplicationSellerRequest.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+		}
 
 		/**
 		 * 검색 조건 타입 <br>
