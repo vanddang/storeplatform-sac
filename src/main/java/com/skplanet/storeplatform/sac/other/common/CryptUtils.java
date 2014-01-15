@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.common.util;
+package com.skplanet.storeplatform.sac.other.common;
 
 import java.security.Key;
 import java.security.spec.KeySpec;
