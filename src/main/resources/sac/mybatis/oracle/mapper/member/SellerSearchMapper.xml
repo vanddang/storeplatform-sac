@@ -15,4 +15,16 @@
 		WHERE aid=#{sellerKey}
     </select>
     
+    <!-- 탈퇴 사유 목록 조회 -->
+    <select id="listWithdrawalReason" parameterType="SellerDTO" resultType="SellerDTO">
+        SELECT 
+            cd_id secedeReasonCode,
+            cd_nm secedeReasonMessage
+        FROM 
+            TB_CM_CD 
+        WHERE 
+            cd_id LIKE '%US0104%'
+            AND lang_cd =#{koUsWhether} 
+    </select>
+    
 </mapper>
