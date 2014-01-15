@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
@@ -91,5 +93,20 @@ public class SellerSearchController {
 	public ListWithdrawalReasonRes listWithdrawalReason() throws Exception {
 
 		return this.sellerSearchService.listWithdrawalReason();
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 ID 찾기.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return DetailAccountInformationRes
+	 */
+	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SearchIdRes searchId(SearchIdReq req) throws Exception {
+
+		return this.sellerSearchService.searchId(req);
 	}
 }
