@@ -1,10 +1,5 @@
 package com.skplanet.storeplatform.sac.display.shopping.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 
@@ -33,8 +28,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getNewProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getNewProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -44,8 +38,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSubProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getSubProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -55,8 +48,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSecialPriceProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getSecialPriceProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -66,8 +58,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSpecialSalesList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getSpecialSalesList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -77,8 +68,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSpecialSalesProductList(ShoppingReq req) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public ShoppingRes getSpecialSalesProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -88,8 +78,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getBrandshopMainList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getBrandshopMainList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -99,8 +88,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getBrandshopProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getBrandshopProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -110,8 +98,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getThemeList(ShoppingReq req) throws JsonGenerationException, JsonMappingException, IOException,
-			Exception;
+	public ShoppingRes getThemeList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -121,8 +108,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getThemeProductList(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getThemeProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -132,8 +118,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getCatagoryAnotherProductList(ShoppingReq req) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public ShoppingRes getCatagoryAnotherProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -143,8 +128,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getBrandAnotherProductList(ShoppingReq req) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public ShoppingRes getBrandAnotherProductList(ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -154,6 +138,5 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getShoppingDetail(ShoppingReq req) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception;
+	public ShoppingRes getShoppingDetail(ShoppingReq req);
 }

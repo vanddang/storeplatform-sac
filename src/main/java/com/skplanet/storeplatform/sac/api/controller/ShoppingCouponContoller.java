@@ -59,8 +59,6 @@ public class ShoppingCouponContoller {
 	private List<CouponResponseInfo> couponList = null;
 	private CouponResponseInfo couponInfo = null;
 	public String response;
-	private final String errorCode = "";
-	private final String message = "";
 
 	@Autowired
 	private ShoppingCouponService shoppingCouponService;
@@ -76,7 +74,7 @@ public class ShoppingCouponContoller {
 		this.brandCatalogProdImgInfo = new BrandCatalogProdImgInfo();
 	}
 
-	@RequestMapping(value = "/api/couponInterface.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/couponInterface", method = RequestMethod.GET)
 	@ResponseBody
 	public CouponResponseInfo apiCouponInterface(CouponParameterInfo couponParameterInfo) {
 		CouponResponseInfo responseVO = null;

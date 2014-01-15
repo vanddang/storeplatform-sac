@@ -172,6 +172,7 @@ public class CouponConstants {
 
 	public static final String LANG_CD_KO = "ko"; // ko 한글 코드값
 	public static final String TENANT_ID = "S01"; // S01 값
+	public static final String PROD_RSHP_CD = "DP010802"; // 채널-에피소드 상품 관계
 
 	/**
 	 * 4091 error code 가 아닌 경우에는 아리와 같은 메세지로 쇼핑쿠폰에 전송함.

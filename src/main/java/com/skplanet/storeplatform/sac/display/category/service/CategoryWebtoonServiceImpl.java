@@ -63,11 +63,19 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		CategoryWebtoonRes responseVO = null;
 
 		Integer totalCount = 0;
+
+		// HEAD 정보
 		if (req.getTenantId() == null) {
 			req.setTenantId("S01");
 		}
 		if (req.getImageCd() == null) {
 			req.setImageCd("DP000196");
+		}
+		if (req.getLangCd() == null) {
+			req.setLangCd("ko");
+		}
+		if (req.getDeviceModelCd() == null) {
+			req.setDeviceModelCd("SHV-E330SSO");
 		}
 
 		List<CategoryWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,

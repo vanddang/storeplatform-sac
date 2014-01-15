@@ -451,8 +451,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			for (int i = 0; i < itemInfoList.size(); i++) {
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				dps = new TbDpProdRshpInfo();
-				dps.setProdId(couponInfo.getProdId());
-				dps.setPartProdId(itemInfo.getProdId()); // ko 한글 코드값
+				dps.setProdId(couponInfo.getProdId()); // 채널 상품
+				dps.setPartProdId(itemInfo.getProdId()); // 에피소드 상품
+				dps.setProdRshpCd(CouponConstants.PROD_RSHP_CD); // 채널-에피소드 상품 관계
 				dps.setRegId(couponInfo.getBpId());
 				tbDpProdRshpList.add(dps);
 				IcmsJobPrint.printTbDpProdRshp(dps, "TB_DP_PROD_RSHP- ITEM:::" + i);

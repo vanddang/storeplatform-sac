@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 </head>
 <body >
-	<form name='af' action='/internal/shopping/api/couponInterface.do' method=get>
+	<form name='af' action='/internal/shopping/api/couponInterface' method=get>
 		TX TYPE : <select name='txType' >
 					<option value="bd">브랜드상품(bd)</option>
 					<option value="ct">카탈로그상품(ct)</option>
@@ -94,7 +94,7 @@
 			<orgPrice>1000</orgPrice>
 			<salePrice>900</salePrice>
 			<itemPrice>900</itemPrice>
-			<dcRate>40</dcRate>
+			<dcRate>10</dcRate>
 			<maxCount>10000</maxCount>
 			<maxCountMonthly>1000</maxCountMonthly>
 			<maxCountDaily>100</maxCountDaily>
@@ -112,10 +112,10 @@
 			<itemCode><%= DateUtil.getToday("HHmmss") %>2</itemCode>
 			<storeLicenseCode>5556</storeLicenseCode>
 			<itemName><%= DateUtil.getToday("yyyyMMddHH") %>단품2</itemName>
-			<orgPrice>1500</orgPrice>
-			<salePrice>950</salePrice>
-			<itemPrice>950</itemPrice>
-			<dcRate>45</dcRate>
+			<orgPrice>2000</orgPrice>
+			<salePrice>1000</salePrice>
+			<itemPrice>1000</itemPrice>
+			<dcRate>50</dcRate>
 			<maxCount>10005</maxCount>
 			<maxCountMonthly>1005</maxCountMonthly>
 			<maxCountDaily>105</maxCountDaily>
@@ -134,9 +134,9 @@
 			<storeLicenseCode>5557</storeLicenseCode>
 			<itemName><%= DateUtil.getToday("yyyyMMddHH") %>단품3</itemName>
 			<orgPrice>1600</orgPrice>
-			<salePrice>960</salePrice>
-			<itemPrice>960</itemPrice>
-			<dcRate>46</dcRate>
+			<salePrice>1280</salePrice>
+			<itemPrice>1280</itemPrice>
+			<dcRate>20</dcRate>
 			<maxCount>10006</maxCount>
 			<maxCountMonthly>1006</maxCountMonthly>
 			<maxCountDaily>106</maxCountDaily>

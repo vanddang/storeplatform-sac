@@ -12,11 +12,11 @@
     </select>
     
     <!--브랜드, 카탈로그 카테고리 조회-->
-    <select id="SELECT_COUNT_TBL_DP_MENU" parameterType="String" resultType="int">
+    <select id="SELECT_COUNT_TB_DP_MENU_CATEGORY" parameterType="String" resultType="int">
        /* BrandCatalogMapper.xml, SELECT_COUNT_TBL_DP_MENU, SAC : 김형식 , 2013-12-30 */
         SELECT 
          COUNT(*) CNT
-        FROM TB_DP_MENU_CATALOG A
+        FROM TB_DP_MENU_CATEGORY A
         WHERE 1=1
         AND USE_YN ='Y'
         AND MENU_ID=#{dpCatNo}

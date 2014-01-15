@@ -30,4 +30,24 @@ public class ShoppingController {
 
 	}
 
+	@RequestMapping(value = "/category/newProductList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getNewProductList(ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getNewProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getNewProductList(req);
+
+	}
+
+	@RequestMapping(value = "/category/subProductList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getSubProductList(ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSubProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSubProductList(req);
+
+	}
+
 }

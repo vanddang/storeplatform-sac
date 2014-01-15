@@ -259,13 +259,15 @@
     <insert id="insertTbDpProdRshpInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo">
       /* CouponMapper.xml, insertTbDpProdRshpInfo, SAC : 김형식 , 2013-01-08 */
         insert into TB_DP_PROD_RSHP(
-             PROD_ID          /*  */
-            ,PART_PROD_ID     /*  */
-            ,REG_ID           /*  */
-            ,REG_DT           /*  */
+             PROD_ID          /*상품ID  */
+            ,PART_PROD_ID     /*부분_상품_ID  */
+            ,PROD_RSHP_CD     /*상품_관계_코드(DP0108)  */
+            ,REG_ID           /*등록_ID  */
+            ,REG_DT           /*등록_일시  */
         ) values (
              #{prodId}
             ,#{partProdId}
+            ,#{prodRshpCd}
             ,#{regId}
             ,sysdate
         )

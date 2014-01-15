@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.api.vo;
 public class TbDpProdRshpInfo {
 	private String prodId; //
 	private String partProdId; //
+	private String prodRshpCd; //
 	private String regId; //
 	private String regDt; //
 
@@ -29,6 +30,14 @@ public class TbDpProdRshpInfo {
 
 	public void setPartProdId(String partProdId) {
 		this.partProdId = partProdId;
+	}
+
+	public String getProdRshpCd() {
+		return this.prodRshpCd;
+	}
+
+	public void setProdRshpCd(String prodRshpCd) {
+		this.prodRshpCd = prodRshpCd;
 	}
 
 	public String getRegId() {

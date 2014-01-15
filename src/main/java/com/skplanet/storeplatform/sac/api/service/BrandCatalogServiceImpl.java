@@ -44,7 +44,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 
 	public int selectCountBrandCategory(String dpCatNo) {
 		Integer cnt = null;
-		cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_TBL_DP_MENU", dpCatNo);
+		cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_TB_DP_MENU_CATEGORY", dpCatNo);
 		return cnt.intValue();
 	}
 

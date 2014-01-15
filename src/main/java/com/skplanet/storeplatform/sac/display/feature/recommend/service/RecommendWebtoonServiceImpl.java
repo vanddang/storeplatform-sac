@@ -64,11 +64,19 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req) {
 
 		RecommendWebtoonRes responseVO = null;
+
+		// HEAD 정보
 		if (req.getTenantId() == null) {
 			req.setTenantId("S01");
 		}
 		if (req.getImageCd() == null) {
 			req.setImageCd("DP000196");
+		}
+		if (req.getLangCd() == null) {
+			req.setLangCd("ko");
+		}
+		if (req.getDeviceModelCd() == null) {
+			req.setDeviceModelCd("SHV-E330SSO");
 		}
 
 		String stdDt = "";

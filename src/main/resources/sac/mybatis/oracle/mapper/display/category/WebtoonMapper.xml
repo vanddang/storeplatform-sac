@@ -91,7 +91,7 @@
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-				                         AND  C1.LANG_CD = 'ko'               /* ko : 한국어 */
+				                         AND  C1.LANG_CD = #{langCd}          /* ko : 한국어 */
 				                         AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
 				                         AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
 				                         AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
@@ -123,7 +123,7 @@
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-                         AND  C.LANG_CD = 'ko'               /* ko : 한국어 */
+                         AND  C.LANG_CD = #{langCd}          /* ko : 한국어 */
                          AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
                          AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                          AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
@@ -131,6 +131,7 @@
                          <if test="weekDayCd != null">
                          AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
                         </if>     
+                         AND  NOT EXISTS (SELECT 1 FROM  TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd} AND PROD_ID = D.PROD_ID )
                    )
                ) ka
          WHERE RNUM BETWEEN #{offset} AND #{count}
@@ -220,13 +221,13 @@
                                         <if test="menuId != null">
                                          AND  A1.MENU_ID = #{menuId}            /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                                         </if>       
-                                         AND  J1.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/    
+                                         AND  J1.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
                                          AND  A1.UP_MENU_ID = 'DP26'       /* DP26 : 웹툰 */
                                          AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                          AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                          AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                          AND  B1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-                                         AND  C1.LANG_CD = 'ko'               /* ko : 한국어 */
+                                         AND  C1.LANG_CD = #{langCd}          /* ko : 한국어 */
                                          AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
                                          AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                                          AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
@@ -276,20 +277,21 @@
                         <if test="menuId != null">
                          AND A.MENU_ID = #{menuId}           /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                         </if>        
-                         AND A.UP_MENU_ID = 'DP26'           /* DP26 : 웹툰 */
-                         AND J.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
+                         AND  A.UP_MENU_ID = 'DP26'           /* DP26 : 웹툰 */
+                         AND  J.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
-                         AND  C.LANG_CD = 'ko'               /* ko : 한국어 */
+                         AND  C.LANG_CD =  #{langCd}         /* ko : 한국어 */
                          AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
                          AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                          AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                          AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
                          <if test="weekDayCd != null">
                          AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
-                        </if>     
+                        </if>
+                         AND  NOT EXISTS (SELECT 1 FROM  TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd} AND PROD_ID = D.PROD_ID )     
                    )
                ) ka
          WHERE RNUM BETWEEN #{offset} AND #{count}
