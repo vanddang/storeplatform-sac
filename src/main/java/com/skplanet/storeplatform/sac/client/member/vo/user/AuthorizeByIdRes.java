@@ -41,6 +41,16 @@ public class AuthorizeByIdRes extends CommonInfo {
 	private String joinSiteNm;
 
 	/**
+	 * 로그인 상태코드(mbrStatus notYetAgreeTerms 일때만 유효)
+	 */
+	private String loginStatCd;
+
+	/**
+	 * 직권중지 상태코드(mbrStatus notYetAgreeTerms 일때만 유효)
+	 */
+	private String subStatCd;
+
+	/**
 	 * 통합아이디 관리번호
 	 */
 	private String imIntSvcNo;
@@ -91,6 +101,22 @@ public class AuthorizeByIdRes extends CommonInfo {
 
 	public void setImIntSvcNo(String imIntSvcNo) {
 		this.imIntSvcNo = imIntSvcNo;
+	}
+
+	public String getLoginStatCd() {
+		return this.loginStatCd;
+	}
+
+	public void setLoginStatCd(String loginStatCd) {
+		this.loginStatCd = loginStatCd;
+	}
+
+	public String getSubStatCd() {
+		return this.subStatCd;
+	}
+
+	public void setSubStatCd(String subStatCd) {
+		this.subStatCd = subStatCd;
 	}
 
 }
