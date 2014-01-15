@@ -81,7 +81,7 @@
                                              , F.ARTIST3_NM
                                              , F.PROD_BASE_DESC
                                              , H.CHNL_PERIOD_AMT
-                                             , H.CHNL_UNLMT_AMT                                     
+                                             , H.CHNL_UNLMT_AMT
                                              , J.DRM_YN
                                           FROM (SELECT A.TENANT_ID
                                                       ,A.PROD_ID
@@ -190,13 +190,14 @@
               , LA.AGENCY_NM
               , LA.HDV_YN
               , LA.DOLBY_SPRT_YN
-             , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
-             , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( LA.EPSD_CNT + LA.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-             , ( CASE WHEN LA.EPSD_CNT <![CDATA[ > ]]> 0 THEN 'store' END ) AS SUPPORT_STORE
-             , ( CASE WHEN LA.STRM_EPSD_CNT <![CDATA[ > ]]> 0 THEN 'play' END ) AS SUPPORT_PLAY
-             , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( LA.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
+              , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
+              , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( LA.EPSD_CNT + LA.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
+              , ( CASE WHEN LA.EPSD_CNT <![CDATA[ > ]]> 0 THEN 'store' END ) AS SUPPORT_STORE
+              , ( CASE WHEN LA.STRM_EPSD_CNT <![CDATA[ > ]]> 0 THEN 'play' END ) AS SUPPORT_PLAY
+              , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( LA.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
               , CASE WHEN (LA.CHNL_PERIOD_AMT <![CDATA[ >= ]]> 0  AND STRM_EPSD_CNT <![CDATA[ > ]]> 0) THEN CHNL_PERIOD_AMT
                      ELSE CHNL_UNLMT_AMT END AS PROD_AMT
+              , (SELECT PROD_NET_AMT FROM TB_DP_TENANT_PROD_PRICE WHERE PROD_ID = LA.PART_PROD_ID) AS PROD_NET_AMT
               , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT
               , NVL(LB.PRCHS_CNT, 0) AS DWLD_CNT
               <![CDATA[                       
@@ -254,7 +255,8 @@
                                              , F.ARTIST3_NM
                                              , F.PROD_BASE_DESC
                                              , H.CHNL_PERIOD_AMT
-                                             , H.CHNL_UNLMT_AMT                                     
+                                             , H.CHNL_UNLMT_AMT
+                                             , H.PROD_NET_AMT                                     
                                              , J.DRM_YN
                                           FROM (SELECT A.TENANT_ID
                                                       ,A.PROD_ID
