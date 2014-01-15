@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
@@ -80,6 +82,9 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(SYSTEMID);
 		commonRequest.setTenantID(TENANTID);
 	}
+
+	@Autowired
+	MemberCommonComponent commService; // 회원 공통 서비스
 
 	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
@@ -239,6 +244,10 @@ public class DeviceServiceImpl implements DeviceService {
 		schDeviceListReq.setKeySearchList(keySearchList);
 		schDeviceListReq.setCommonRequest(commonRequest);
 
+		logger.info("###### schDeviceListReq : " + schDeviceListReq);
+		logger.info("###### schDeviceListReq.getKeySearchList() : " + schDeviceListReq.getKeySearchList());
+		logger.info("###### schDeviceListReq.getCommonRequest() : " + schDeviceListReq.getCommonRequest());
+		
 		/* 사용자 휴대기기 목록 조회 */
 		SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
 		if (!schDeviceListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
@@ -319,25 +328,26 @@ public class DeviceServiceImpl implements DeviceService {
 				if (!schUserRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 					throw new Exception("["	+ schUserRes.getCommonResponse().getResultCode() + "] "	+ schUserRes.getCommonResponse().getResultMessage());
 				}
+				
+				/*	통합 회원 아이디에 휴대기기 등록 시 IDP에 무선 회원 해지 요청 - 자동 해지 안된다고 함	*/
 				if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) {
 					IDPReceiverM idpReceiver = this.idpService.authForWap(deviceInfo.getDeviceId());
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 						
-						//ImIDPReceiverM imIDPReceiverM = this.imIdpService.secedeForWap(deviceInfo.getDeviceId()); 
-						//if (!StringUtil.equals(imIDPReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { 
-						//	throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : [" + imIDPReceiverM.getResponseHeader().getResult() + "]"); 
-						//}
+						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId()); 
+						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { 
+							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]"); 
+						}
 					}
 				}
 
 			//}
+				
 		} else {
-			throw new Exception("["
-					+ createDeviceRes.getCommonResponse().getResultCode()
-					+ "] "
-					+ createDeviceRes.getCommonResponse().getResultMessage());
+			throw new Exception("["	+ createDeviceRes.getCommonResponse().getResultCode() + "] " + createDeviceRes.getCommonResponse().getResultMessage());
 		}
 
+		
 		logger.info("######################## DeviceServiceImpl preRegMemberDeviceRegist end ############################");
 	}
 
@@ -345,8 +355,10 @@ public class DeviceServiceImpl implements DeviceService {
 	public void mergeDeviceInfo(DeviceInfo req) throws Exception {
 
 		logger.info("################ mergeDeviceInfo start ##################");
-
-		if (req.getDeviceId() == null) {
+		
+		String deviceId = req.getDeviceId();
+		
+		if (deviceId == null) {
 			throw new Exception("deviceId is null 기기정보 수정 불가");
 		}
 
@@ -356,7 +368,7 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		key.setKeyString(req.getDeviceId());
+		key.setKeyString(deviceId);
 		keySearchList.add(key);
 
 		schDeviceReq.setCommonRequest(commonRequest);
@@ -365,8 +377,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info(" param : {}" + schDeviceReq.toString());
 
-		SearchDeviceResponse schDeviceRes = this.deviceSCI
-				.searchDevice(schDeviceReq);
+		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
@@ -395,6 +406,25 @@ public class DeviceServiceImpl implements DeviceService {
 		if (deviceModelNo != null
 				&& !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 			
+			/*	자급제 단말이 아닌경우 단말정보가 상이한경우 IDP deviceCompare 연동	*/
+			if ("SKT".equals(userMbrDevice.getDeviceTelecom())) {
+				
+				IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
+				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(),	IDPConstants.IDP_RES_CODE_OK)) {
+					String idpModelId = idpReceiver.getResponseBody().getModel_id();
+					
+					if (idpModelId != null && !idpModelId.equals("")) {
+						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
+                        if ("SSNU".equals(idpModelId)) { // SHW-M200K -> SHW-M200S
+                        	idpModelId = "SSNL";
+                        } else if ("SP05".equals(idpModelId)) { // SHW-M420K -> SHW-M420S
+                        	idpModelId = "SSO0";
+                        }
+                        
+                        uacd = idpModelId;
+					}
+				}
+			}
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
 			logger.info("[deviceModelNo] {} -> {}",	userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			
@@ -403,18 +433,34 @@ public class DeviceServiceImpl implements DeviceService {
 			if ("SKT".equals(userMbrDevice.getDeviceTelecom())) {
 				if (!nativeId.equals(userMbrDevice.getNativeID())) {
 					userMbrDevice.setNativeID(nativeId);
+					
+					logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(),	nativeId);
 				}
 				
 				// 자번호 여부
-				boolean isOpmd = StringUtils.substring(req.getDeviceId(), 0, 3).equals("989");
+				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 	            
 				if ("Y".equals(rooting) && !isOpmd) {
-					//ICAS 연동 로직 추가 
+					 Map<String, String> mapIcas = null;
+					if (!commService.getMappingInfo(deviceId, "11").getMvnoCD().equals("0")) { //MVNO
+						mapIcas = commService.getMvService(deviceId);
+					} else {
+						mapIcas = commService.getCustomer(deviceId);
+					}
+					
+					if (mapIcas.get("RESULT_CODE").equals("0")) {
+						if (!mapIcas.get("IMEI_NUM").equals(nativeId)) {
+							throw new Exception("로그인에 실패하였습니다.(오류코드 4204).");
+						}
+					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
+						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다.");
+					}
 				}
 			} else { //타사
 				
 				if (userMbrDevice.getNativeID() == null || userMbrDevice.getNativeID().equals("")) {
 					userMbrDevice.setNativeID(nativeId);
+					logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(),	nativeId);
 				} else {
 					if (rooting.equals("Y") && !nativeId.equals(userMbrDevice.getNativeID())) {
 						throw new Exception("로그인에 실패하였습니다.(오류코드 4204)");
@@ -422,7 +468,6 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 			}
 			
-			logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(),	nativeId);
 			
 		} else if (deviceAccount != null
 				&& !deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
