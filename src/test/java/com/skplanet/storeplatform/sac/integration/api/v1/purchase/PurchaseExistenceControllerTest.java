@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
  * 
  * Calss 설명
  * 
- * Updated on : 2013. 11. 28. Updated by : 김현일, 인크로스.
+ * Updated on : 2013. 11. 28. Updated by : 조용진, 엔텔스.
  */
 
 public class PurchaseExistenceControllerTest {
@@ -59,8 +59,8 @@ public class PurchaseExistenceControllerTest {
 						ExistenceList existenceList = new ExistenceList();
 
 						existenceReq.setTenantId("S01");
-						existenceReq.setMbrNo("IW1023795408420101206143202");
-						existenceReq.setDeviceNo("01040449015");
+						existenceReq.setInsdUsermbrNo("IW1023795408420101206143202");
+						existenceReq.setInsdDeviceId("01040449015");
 
 						existenceList.setProdId("H900000037");
 						existenceList.setTenantProdGrpCd("");

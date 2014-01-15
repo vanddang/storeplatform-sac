@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
  * 
  * Calss 설명
  * 
- * Updated on : 2013. 11. 28. Updated by : 김현일, 인크로스.
+ * Updated on : 2013. 11. 28. Updated by : 조용진, 엔텔스.
  */
 
 public class PurchaseGiftControllerTest {
@@ -113,10 +113,9 @@ public class PurchaseGiftControllerTest {
 					@Override
 					public void success(Object result) throws Exception {
 						GiftConfirmRes giftConfirmRes = (GiftConfirmRes) result;
-						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getCount());
-						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getCount());
-						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getCount());
-						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getCount());
+						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getPrchsId());
+						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getProdId());
+						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getResultYn());
 						assertThat(giftConfirmRes, notNullValue());
 					}
 				}).run();

@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
  * 
  * Calss 설명
  * 
- * Updated on : 2013. 11. 28. Updated by : 김현일, 인크로스.
+ * Updated on : 2013. 11. 28. Updated by : 조용진, 엔텔스.
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -107,7 +107,7 @@ public class PurchaseGiftServiceTest {
 		GiftConfirmResponse giftConfirmResponse = new GiftConfirmResponse();
 		giftConfirmResponse = this.giftService.modifyGiftConfirm(giftConfirmRequest);
 
-		assertThat(1, is(giftConfirmResponse.getCount()));
+		assertThat("Y", is(giftConfirmResponse.getResultYn()));
 
 	}
 }
