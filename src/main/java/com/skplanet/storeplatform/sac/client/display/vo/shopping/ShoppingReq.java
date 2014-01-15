@@ -29,6 +29,9 @@ public class ShoppingReq extends CommonInfo {
 	private String b2bProd; // B2B 상품 구분
 	private String orderedBy; // 정렬순서
 	private String stdDt; // 기준일자
+	private String langCd; // 언어코드
+	private String deviceModelCd; // 디바이스 모델 코드
+	private String dummy; // 더비 구분값
 	private Integer offset; // offset
 	private Integer count; // count
 
@@ -112,19 +115,43 @@ public class ShoppingReq extends CommonInfo {
 		this.stdDt = stdDt;
 	}
 
-	public int getOffset() {
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	public String getDummy() {
+		return this.dummy;
+	}
+
+	public void setDummy(String dummy) {
+		this.dummy = dummy;
+	}
+
+	public Integer getOffset() {
 		return this.offset;
 	}
 
-	public void setOffset(int offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 

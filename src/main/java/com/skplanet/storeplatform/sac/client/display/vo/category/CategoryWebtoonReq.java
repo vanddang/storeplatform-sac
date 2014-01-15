@@ -26,8 +26,10 @@ public class CategoryWebtoonReq extends CommonInfo {
 	private String menuId; // 메뉴아이디
 	private String listId; // 리스트아이디
 	private String weekDayCd; // 요일별 구분 코드
-	private int offset = 1; // offset
-	private int count = 20; // count
+	private String langCd; // 언어코드
+	private String deviceModelCd; // 디바이스 모델 코드
+	private Integer offset = 1; // offset
+	private Integer count = 20; // count
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -85,19 +87,35 @@ public class CategoryWebtoonReq extends CommonInfo {
 		this.weekDayCd = weekDayCd;
 	}
 
-	public int getOffset() {
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	public Integer getOffset() {
 		return this.offset;
 	}
 
-	public void setOffset(int offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 
