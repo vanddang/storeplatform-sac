@@ -121,7 +121,7 @@
 		                            AND A.PROD_ID = I.PROD_ID
 		                            AND A.PROD_ID = J.PROD_ID
 		                            AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
-		                            AND (F.TOP_MENU_ID <![CDATA[<>]]> 'DP000502' OR F.TOP_MENU_ID IS NULL)
+		                            AND (F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' OR F.TOP_MENU_ID IS NULL) /* DP02 : 폰꾸미기 */
 		                            AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
 		                            AND K.DEVICE_MODEL_CD = 'SHV-E210S' /* header param : 단말코드 */
 		                            AND K.USE_YN ='Y'
@@ -263,7 +263,7 @@
 		                              AND A.PROD_ID = I.PROD_ID
 		                              AND A.PROD_ID = J.PROD_ID
 		                              AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
-		                              AND (F.TOP_MENU_ID <![CDATA[<>]]> 'DP000502' OR F.TOP_MENU_ID IS NULL)
+		                              AND (F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' OR F.TOP_MENU_ID IS NULL) /* DP02 : 폰꾸미기 */
 		                              AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
 		                              AND K.DEVICE_MODEL_CD = 'SHV-E210S' /* header param : 단말코드 */
 		                              AND K.USE_YN ='Y'
