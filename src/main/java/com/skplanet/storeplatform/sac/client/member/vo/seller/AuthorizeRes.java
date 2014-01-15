@@ -15,8 +15,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 public class AuthorizeRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-
-	SellerMbr sellerMbr;
+	/** 판매자 회원 정보. */
+	private SellerMbr sellerMbr;
+	/** 로그인 실패 횟수 . */
+	private String loginFailCount;
 
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
@@ -26,4 +28,18 @@ public class AuthorizeRes extends CommonInfo {
 		this.sellerMbr = sellerMbr;
 	}
 
+	/**
+	 * @return the loginFailCount
+	 */
+	public String getLoginFailCount() {
+		return this.loginFailCount;
+	}
+
+	/**
+	 * @param loginFailCount
+	 *            the loginFailCount to set
+	 */
+	public void setLoginFailCount(String loginFailCount) {
+		this.loginFailCount = loginFailCount;
+	}
 }
