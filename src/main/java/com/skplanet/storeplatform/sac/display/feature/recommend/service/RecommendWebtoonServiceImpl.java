@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoonDTO;
 
@@ -61,21 +62,21 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	 */
 
 	@Override
-	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req) {
+	public RecommendWebtoonRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonReq req) {
 
 		RecommendWebtoonRes responseVO = null;
 
-		// HEAD 정보
-		if (req.getTenantId() == null) {
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
 			req.setTenantId("S01");
-		}
-		if (req.getImageCd() == null) {
 			req.setImageCd("DP000196");
-		}
-		if (req.getLangCd() == null) {
 			req.setLangCd("ko");
-		}
-		if (req.getDeviceModelCd() == null) {
+			req.setDeviceModelCd("SHV-E330SSO");
+		} else {
+			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setSystemId(header.getTenantHeader().getSystemId());
+			req.setImageCd("DP000196");
+			req.setLangCd("ko");
 			req.setDeviceModelCd("SHV-E330SSO");
 		}
 

@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListR
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryEbookComicService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryMusicContentsService;
@@ -103,11 +104,11 @@ public class CategoryController {
 
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req) {
+	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.categoryWebtoonService.searchWebtoonList(req);
+		return this.categoryWebtoonService.searchWebtoonList(header, req);
 
 	}
 

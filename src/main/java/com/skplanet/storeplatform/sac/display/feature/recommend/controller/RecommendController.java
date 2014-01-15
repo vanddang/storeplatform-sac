@@ -13,6 +13,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.Recomm
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
@@ -28,11 +29,11 @@ public class RecommendController {
 
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req) {
+	public RecommendWebtoonRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAdminWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.recommendWebtoonService.searchWebtoonList(req);
+		return this.recommendWebtoonService.searchWebtoonList(header, req);
 
 	}
 
@@ -40,18 +41,18 @@ public class RecommendController {
 	@ResponseBody
 	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
 
-		//this.logger.info(requestVO.toString());
-		if ( requestVO.getCount() == 0 )
+		// this.logger.info(requestVO.toString());
+		if (requestVO.getCount() == 0)
 			requestVO.setCount(10);
-		//임시 저장
+		// 임시 저장
 		requestVO.setTenantId("S01");
 		requestVO.setDeviceModelCd("SHW-M180L");
 		requestVO.setLangCd("ko");
 		requestVO.setListId("ADM000000012");
 		requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
-		
+
 		RecommendAdminRes responseVO;
-		responseVO = recommendAdminService.searchAdminList(requestVO);
+		responseVO = this.recommendAdminService.searchAdminList(requestVO);
 		return responseVO;
 	}
 }

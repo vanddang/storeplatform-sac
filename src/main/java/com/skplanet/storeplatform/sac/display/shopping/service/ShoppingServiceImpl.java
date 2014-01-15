@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.shopping.vo.ShoppingDTO;
 
@@ -62,22 +63,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getFeatureProductList(ShoppingReq req) {
+	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
 
 		if (req.getDummy() == null) {
 			ShoppingRes responseVO = null;
 
-			// Header 정보 //
-			if (req.getTenantId() == null) {
+			/** TODO 2. 테스트용 if 헤더 셋팅 */
+			if (header.getTenantHeader() == null) {
 				req.setTenantId("S01");
-			}
-			if (req.getImageCd() == null) {
 				req.setImageCd("DP000196");
-			}
-			if (req.getLangCd() == null) {
 				req.setLangCd("ko");
-			}
-			if (req.getDeviceModelCd() == null) {
+				req.setDeviceModelCd("SHV-E330SSO");
+			} else {
+				req.setTenantId(header.getTenantHeader().getTenantId());
+				req.setSystemId(header.getTenantHeader().getSystemId());
+				req.setImageCd("DP000196");
+				req.setLangCd("ko");
 				req.setDeviceModelCd("SHV-E330SSO");
 			}
 
@@ -321,20 +322,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getNewProductList(ShoppingReq req) {
+	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req) {
 		if (req.getDummy() == null) {
 			ShoppingRes responseVO = null;
-			// Header 정보 //
-			if (req.getTenantId() == null) {
+			/** TODO 2. 테스트용 if 헤더 셋팅 */
+			if (header.getTenantHeader() == null) {
 				req.setTenantId("S01");
-			}
-			if (req.getImageCd() == null) {
 				req.setImageCd("DP000196");
-			}
-			if (req.getLangCd() == null) {
 				req.setLangCd("ko");
-			}
-			if (req.getDeviceModelCd() == null) {
+				req.setDeviceModelCd("SHV-E330SSO");
+			} else {
+				req.setTenantId(header.getTenantHeader().getTenantId());
+				req.setSystemId(header.getTenantHeader().getSystemId());
+				req.setImageCd("DP000196");
+				req.setLangCd("ko");
 				req.setDeviceModelCd("SHV-E330SSO");
 			}
 
@@ -571,26 +572,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getSubProductList(ShoppingReq req) {
+	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
 		if (req.getDummy() == null) {
 			ShoppingRes responseVO = null;
 
-			// Header 정보 //
-			if (req.getTenantId() == null) {
+			/** TODO 2. 테스트용 if 헤더 셋팅 */
+			if (header.getTenantHeader() == null) {
 				req.setTenantId("S01");
-			}
-			if (req.getImageCd() == null) {
 				req.setImageCd("DP000196");
-			}
-			if (req.getLangCd() == null) {
 				req.setLangCd("ko");
-			}
-			if (req.getDeviceModelCd() == null) {
 				req.setDeviceModelCd("SHV-E330SSO");
-			}
-			// default 정보
-			if (req.getOrderedBy() == null) {
-				req.setOrderedBy("recent");
+			} else {
+				req.setTenantId(header.getTenantHeader().getTenantId());
+				req.setSystemId(header.getTenantHeader().getSystemId());
+				req.setImageCd("DP000196");
+				req.setLangCd("ko");
+				req.setDeviceModelCd("SHV-E330SSO");
 			}
 
 			if (req.getOrderedBy().equals("download")) {
@@ -835,7 +832,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getSecialPriceProductList(ShoppingReq req) {
+	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -849,7 +846,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getSpecialSalesList(ShoppingReq req) {
+	public ShoppingRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -972,7 +969,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getSpecialSalesProductList(ShoppingReq req) {
+	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1095,7 +1092,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getBrandshopMainList(ShoppingReq req) {
+	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1218,7 +1215,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getBrandshopProductList(ShoppingReq req) {
+	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1341,7 +1338,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getThemeList(ShoppingReq req) {
+	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1464,7 +1461,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getThemeProductList(ShoppingReq req) {
+	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1587,7 +1584,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getCatagoryAnotherProductList(ShoppingReq req) {
+	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1710,7 +1707,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getBrandAnotherProductList(ShoppingReq req) {
+	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
@@ -1833,7 +1830,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * @return ShoppingRes 리스트
 	 */
 	@Override
-	public ShoppingRes getShoppingDetail(ShoppingReq req) {
+	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
 		ShoppingRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();

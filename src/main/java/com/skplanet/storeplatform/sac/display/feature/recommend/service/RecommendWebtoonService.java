@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface RecommendWebtoonService {
 
@@ -13,6 +14,6 @@ public interface RecommendWebtoonService {
 	 * @param RecommendWebtoonReq
 	 * @return RecommendWebtoonRes 리스트
 	 */
-	public RecommendWebtoonRes searchWebtoonList(RecommendWebtoonReq req);
+	public RecommendWebtoonRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonReq req);
 
 }

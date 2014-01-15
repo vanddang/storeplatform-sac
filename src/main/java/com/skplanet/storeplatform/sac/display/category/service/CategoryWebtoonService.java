@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.category.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface CategoryWebtoonService {
 
@@ -13,5 +14,5 @@ public interface CategoryWebtoonService {
 	 * @param CategoryWebtoonReq
 	 * @return CategoryWebtoonRes 리스트
 	 */
-	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req);
+	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req);
 }

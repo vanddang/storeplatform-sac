@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 쇼핑 Service 인터페이스(CoreStoreBusiness)
@@ -18,7 +19,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getFeatureProductList(ShoppingReq req);
+	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -28,7 +29,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getNewProductList(ShoppingReq req);
+	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -38,7 +39,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSubProductList(ShoppingReq req);
+	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -48,7 +49,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSecialPriceProductList(ShoppingReq req);
+	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -58,7 +59,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSpecialSalesList(ShoppingReq req);
+	public ShoppingRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -68,7 +69,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getSpecialSalesProductList(ShoppingReq req);
+	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -78,7 +79,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getBrandshopMainList(ShoppingReq req);
+	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -88,7 +89,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getBrandshopProductList(ShoppingReq req);
+	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -98,7 +99,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getThemeList(ShoppingReq req);
+	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -108,7 +109,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getThemeProductList(ShoppingReq req);
+	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -118,7 +119,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getCatagoryAnotherProductList(ShoppingReq req);
+	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -128,7 +129,7 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getBrandAnotherProductList(ShoppingReq req);
+	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>
@@ -138,5 +139,5 @@ public interface ShoppingService {
 	 * @param ShoppingReq
 	 * @return ShoppingRes 리스트
 	 */
-	public ShoppingRes getShoppingDetail(ShoppingReq req);
+	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req);
 }

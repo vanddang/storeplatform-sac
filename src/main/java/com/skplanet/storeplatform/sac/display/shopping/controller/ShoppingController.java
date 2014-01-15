@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
 @Controller
@@ -22,31 +23,31 @@ public class ShoppingController {
 
 	@RequestMapping(value = "/featureProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getFeatureProductList(ShoppingReq req) {
+	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchFeatureProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.shoppingService.getFeatureProductList(req);
+		return this.shoppingService.getFeatureProductList(header, req);
 
 	}
 
 	@RequestMapping(value = "/category/newProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getNewProductList(ShoppingReq req) {
+	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getNewProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.shoppingService.getNewProductList(req);
+		return this.shoppingService.getNewProductList(header, req);
 
 	}
 
 	@RequestMapping(value = "/category/subProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getSubProductList(ShoppingReq req) {
+	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getSubProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.shoppingService.getSubProductList(req);
+		return this.shoppingService.getSubProductList(header, req);
 
 	}
 

@@ -32,6 +32,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoonDTO;
 
 /**
@@ -58,23 +59,23 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	 * @throws Exception
 	 */
 	@Override
-	public CategoryWebtoonRes searchWebtoonList(CategoryWebtoonReq req) {
+	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req) {
 
 		CategoryWebtoonRes responseVO = null;
 
 		Integer totalCount = 0;
 
-		// HEAD 정보
-		if (req.getTenantId() == null) {
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
 			req.setTenantId("S01");
-		}
-		if (req.getImageCd() == null) {
 			req.setImageCd("DP000196");
-		}
-		if (req.getLangCd() == null) {
 			req.setLangCd("ko");
-		}
-		if (req.getDeviceModelCd() == null) {
+			req.setDeviceModelCd("SHV-E330SSO");
+		} else {
+			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setSystemId(header.getTenantHeader().getSystemId());
+			req.setImageCd("DP000196");
+			req.setLangCd("ko");
 			req.setDeviceModelCd("SHV-E330SSO");
 		}
 
