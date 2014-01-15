@@ -86,6 +86,7 @@
 				                         AND  A1.MENU_ID = #{menuId}            /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
 				                        </if>        
                                          AND  A1.UP_MENU_ID ='DP26'      /* DP26 : 웹툰 */
+                                         AND  J1.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
 				                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -117,6 +118,7 @@
                          AND A.MENU_ID = #{menuId}           /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                         </if>        
                          AND  A.UP_MENU_ID = 'DP26'             /* DP26 : 웹툰 */
+                         AND  J.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -217,7 +219,8 @@
                                          AND  G1.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                                         <if test="menuId != null">
                                          AND  A1.MENU_ID = #{menuId}            /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
-                                        </if>        
+                                        </if>       
+                                         AND  J1.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/    
                                          AND  A1.UP_MENU_ID = 'DP26'       /* DP26 : 웹툰 */
                                          AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                                          AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
@@ -274,6 +277,7 @@
                          AND A.MENU_ID = #{menuId}           /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                         </if>        
                          AND A.UP_MENU_ID = 'DP26'           /* DP26 : 웹툰 */
+                         AND J.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
