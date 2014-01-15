@@ -92,7 +92,9 @@ public class GiftController {
 
 	private GiftConfirmRes resConvert(GiftConfirmResponse giftComfirmResponse) {
 		GiftConfirmRes res = new GiftConfirmRes();
-		res.setCount(giftComfirmResponse.getCount());
+		res.setPrchsId(giftComfirmResponse.getPrchsId());
+		res.setProdId(giftComfirmResponse.getProdId());
+		res.setResultYn(giftComfirmResponse.getResultYn());
 
 		return res;
 	}

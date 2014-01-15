@@ -64,10 +64,10 @@ public class ExistenceController {
 		this.logger.debug("@@@@@@@@@@@@@" + res.size());
 		this.logger.debug("@@@@@@@@@@@@@" + res.size());
 		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		ExistenceListRes ExistenceListRes = new ExistenceListRes();
+		ExistenceListRes existenceListRes = new ExistenceListRes();
 
-		ExistenceListRes.setExistenceRes(res);
-		return ExistenceListRes;
+		existenceListRes.setExistenceRes(res);
+		return existenceListRes;
 	}
 
 	private ExistenceRequest reqConvert(ExistenceReq existenceReq) {
@@ -75,8 +75,8 @@ public class ExistenceController {
 		List<ExistenceList> list = new ArrayList<ExistenceList>();
 
 		req.setTenantId(existenceReq.getTenantId());
-		req.setMbrNo(existenceReq.getMbrNo());
-		req.setDeviceNo(existenceReq.getDeviceNo());
+		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
+		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
 		int size = existenceReq.getExistenceList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
