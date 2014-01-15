@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.search.service;
 
-import com.skplanet.storeplatform.sac.client.other.vo.search.SearchReq;
-import com.skplanet.storeplatform.sac.client.other.vo.search.SearchRes;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
+import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 
 /**
  * 
@@ -30,5 +30,5 @@ public interface SearchService {
 	 *            searchReq
 	 * @return SearchRes
 	 */
-	public SearchRes search(SearchReq searchReq);
+	public TstoreSearchRes search(TstoreSearchReq tstoreSearchReq);
 }
