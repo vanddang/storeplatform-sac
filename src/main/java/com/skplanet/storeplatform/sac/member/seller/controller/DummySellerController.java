@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerId;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
@@ -80,13 +79,13 @@ public class DummySellerController {
 	public CreateRes create() {
 
 		CreateRes responseVO = new CreateRes();
-		SellerInfo sellerInfo = new SellerInfo();
+		SellerMbr sellerInfo = new SellerMbr();
 
 		sellerInfo.setSellerId("user1");
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
 		sellerInfo.setSellerMainStatus("US010704");
 		sellerInfo.setSellerSubStatus("US010301");
-		responseVO.setSellerInfo(sellerInfo);
+		responseVO.setSellerMbr(sellerInfo);
 
 		LOGGER.debug("response : {}" + responseVO.toString());
 
@@ -118,13 +117,13 @@ public class DummySellerController {
 	public AuthorizeRes authorize() {
 
 		AuthorizeRes responseVO = new AuthorizeRes();
-		SellerInfo sellerInfo = new SellerInfo();
+		SellerMbr sellerInfo = new SellerMbr();
 
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
 		sellerInfo.setSellerClass("US010101");
 		sellerInfo.setSellerMainStatus("US010704");
 		sellerInfo.setSellerSubStatus("US010301");
-		responseVO.setSellerInfo(sellerInfo);
+		responseVO.setSellerMbr(sellerInfo);
 
 		return responseVO;
 	}

@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRespon
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CmsReq;
@@ -272,7 +271,7 @@ public class SellerServiceImpl implements SellerService {
 		// TODO
 		AuthorizeRes res = new AuthorizeRes();
 		logInSellerResponse.getLoginFailCount();
-		res.setSellerInfo(new SellerInfo());
+		res.setSellerMbr(new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr());
 
 		return res;
 	}
@@ -308,8 +307,8 @@ public class SellerServiceImpl implements SellerService {
 	 * @param sellerInfo
 	 * @return SellerInfo
 	 */
-	private SellerInfo converterSACToSCSellerMbr(SellerMbr sellerMbr) {
-		SellerInfo sellerInfo = new SellerInfo();
+	private SellerMbr converterSACToSCSellerMbr(SellerMbr sellerMbr) {
+		SellerMbr sellerInfo = new SellerMbr();
 		// sellerMbr.set
 		return sellerInfo;
 	}

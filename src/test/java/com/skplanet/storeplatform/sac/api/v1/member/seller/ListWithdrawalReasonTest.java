@@ -21,28 +21,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 
-/**
- * Calss 설명
- * 
- * Updated on : 2014. 1. 14. Updated by : 김경복, 부르칸.
- */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class AuthorizeTest {
+public class ListWithdrawalReasonTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizeTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ListWithdrawalReasonTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -62,30 +53,22 @@ public class AuthorizeTest {
 
 	/**
 	 * <pre>
-	 * 회원 인증.
+	 * 탈퇴 사유 목록 조회.
 	 * </pre>
 	 */
 	@Test
-	public void authorize() {
+	public void ListWithdrawalReason() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatestqwe");
-						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(LockAccountRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/listWithdrawalReasonTest/v1")
+				.httpMethod(HttpMethod.GET).success(ListWithdrawalReasonRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						ListWithdrawalReasonRes res = (ListWithdrawalReasonRes) result;
+						assertThat(res.getSecedeResonList().get(0).getSecedeReasonMessage(), notNullValue());
+						logger.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
+
 }
