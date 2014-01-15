@@ -101,13 +101,10 @@ public class LoginController {
 			@RequestBody AuthorizeByIdReq req) throws Exception {
 
 		/* 필수 파라메터 체크 */
-		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 아이디
 		String userPw = StringUtil.nvl(req.getUserPw(), ""); // 사용자 패스워드
 
-		if (deviceId.equals("")) {
-			throw new Exception("필수요청 파라메터 부족(\"devicdId\")");
-		} else if (userId.equals("")) {
+		if (userId.equals("")) {
 			throw new Exception("필수요청 파라메터 부족(\"userId\")");
 		} else if (userPw.equals("")) {
 			throw new Exception("필수요청 파라메터 부족(\"userPw\")");
