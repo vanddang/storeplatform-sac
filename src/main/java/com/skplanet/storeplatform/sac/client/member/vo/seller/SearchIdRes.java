@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerId;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
  * 판매자회원 ID 찾기
@@ -18,41 +18,15 @@ public class SearchIdRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<SellerId> sllerIdList;
-	private String sellerName;
-	private String regDate;
-	private String sellerEmail;
+	/** 판매자 정보 Value Object 목록. */
+	private List<SellerMbr> sellerMbr;// 판매자정보
 
-	public List<SellerId> getSllerIdList() {
-		return this.sllerIdList;
+	public List<SellerMbr> getSellerMbr() {
+		return this.sellerMbr;
 	}
 
-	public void setSllerIdList(List<SellerId> sllerIdList) {
-		this.sllerIdList = sllerIdList;
-	}
-
-	public String getSellerName() {
-		return this.sellerName;
-	}
-
-	public void setSellerName(String sellerName) {
-		this.sellerName = sellerName;
-	}
-
-	public String getRegDate() {
-		return this.regDate;
-	}
-
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
-	}
-
-	public String getSellerEmail() {
-		return this.sellerEmail;
-	}
-
-	public void setSellerEmail(String sellerEmail) {
-		this.sellerEmail = sellerEmail;
+	public void setSellerMbr(List<SellerMbr> sellerMbr) {
+		this.sellerMbr = sellerMbr;
 	}
 
 }
