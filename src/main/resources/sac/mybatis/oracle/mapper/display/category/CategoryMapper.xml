@@ -79,7 +79,6 @@
 		                           AND  G.PROD_ID = H.PROD_ID
 		                           AND  B.PROD_ID = I.PROD_ID
 		                           AND  A.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
-		                           AND  B.BASE_YN = 'Y'                      /* Y : 기본 (기본여부) */
 		                           AND  B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
 		                           AND  C.LANG_CD = 'ko'                     /* ko : 한국어 */
 		                           AND  D.SVC_GRP_CD = 'DP000201'            /* DP000201 : 애플리캐이션 */
