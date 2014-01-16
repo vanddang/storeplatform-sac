@@ -43,6 +43,11 @@ public class Device extends CommonInfo implements Serializable {
 	 * 단말 모델명
 	 */
 	private String model;
+
+	/**
+	 * UA CD
+	 */
+	private String uaCd;
 	/**
 	 * 단말 OS 플랫폼
 	 */
@@ -74,6 +79,14 @@ public class Device extends CommonInfo implements Serializable {
 	private String msisdn;
 
 	private Map<String, Object> services;
+
+	public String getUaCd() {
+		return this.uaCd;
+	}
+
+	public void setUaCd(String uaCd) {
+		this.uaCd = uaCd;
+	}
 
 	public String getIdentifier() {
 		return this.identifier;
