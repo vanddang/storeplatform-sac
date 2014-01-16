@@ -593,6 +593,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 		String marketingYn = sendData.getMarketingYn();
 		String rname_auth_type_cd = sendData.getRname_auth_type_cd();
 		String mdn = sendData.getMdn();
+		String join_sst_list = sendData.getJoin_sst_list();
 
 		// LOGGER.debug("IDP SEND DATA -----------------------------------");
 		// LOGGER.debug("cmd                     =" + cmd);
@@ -840,6 +841,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 			param.put("rname_auth_type_cd", rname_auth_type_cd);
 		if (mdn != null && !"".equals(mdn))
 			param.put("mdn", mdn);
+		if (join_sst_list != null && !"".equals(join_sst_list))
+			param.put("join_sst_list", join_sst_list);
 
 		Enumeration keys = param.keys();
 		String paramKey = null;

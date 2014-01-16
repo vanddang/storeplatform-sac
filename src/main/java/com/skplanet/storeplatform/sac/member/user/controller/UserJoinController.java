@@ -148,7 +148,7 @@ public class UserJoinController {
 			/**
 			 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 미포함 ]] Biz
 			 */
-			LOGGER.info("## 단말정보 없음  ==========================================");
+			LOGGER.info("## 단말정보 미존재  ==========================================");
 			res = this.svc.createByAgreementId(sacHeader, req);
 
 		}
