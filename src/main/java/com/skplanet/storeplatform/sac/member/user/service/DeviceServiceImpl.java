@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateAgreementRespo
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -110,7 +111,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq)
 	 */
@@ -122,8 +124,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
-		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());
 
 		String userKey = req.getUserKey();
 		String deviceId = req.getDeviceInfo().getDeviceId();
@@ -140,15 +140,20 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (req.getRegMaxCnt() == 0
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr()
-						.getDeviceCount()) >= req.getRegMaxCnt())) {
+				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
+						.getRegMaxCnt())) {
 			throw new Exception("등록 가능한 단말개수가 초과되었습니다.");
 		}
+
+		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); //단말모델
+		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());//os버젼
+		req.getDeviceInfo().setAuthenticationDate(DateUtil.getToday()); //인증일자
+		req.getDeviceInfo().setIsAuthenticated("Y"); //인증여부
+		req.getDeviceInfo().setIsUsed("Y"); //사용여부
 
 		/* 기등록된 회원의 휴대기기 정보 처리 */
 		this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
@@ -198,7 +203,9 @@ public class DeviceServiceImpl implements DeviceService {
 		if (userMbr.getUserPhone() != null) {
 			param.put("user_tel", userMbr.getUserPhone());
 		}
-		param.put("is_foreign", (userMbr.getUserPhoneCountry().equals("82") ? "N" : "Y"));
+		if (userMbr.getUserPhoneCountry() != null) {
+			param.put("is_foreign", (userMbr.getUserPhoneCountry().equals("82") ? "N" : "Y"));
+		}
 
 		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
 
@@ -222,8 +229,7 @@ public class DeviceServiceImpl implements DeviceService {
 			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
-						+ idpReceiver.getResponseHeader().getResult_text());
+				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 			}
 
 		}
@@ -236,7 +242,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq)
 	 */
@@ -303,29 +310,32 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# insertDeviceInfo(java.lang.String,
-	 * java.lang.String, java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * insertDeviceInfo(java.lang.String, java.lang.String, java.lang.String,
+	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo)
-			throws Exception {
+	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo start ############################");
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(systemId);
-		commonRequest.setTenantID(tenanId);
+		commonRequest.setTenantID(tenantId);
 
 		/* 1. 휴대기기 정보 등록 요청 */
+
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(userKey);
 
+		deviceInfo.setTenantId(tenantId);
 		createDeviceReq.setUserMbrDevice(this.getConverterUserMbrDeviceInfo(deviceInfo));
 
-		logger.info(":::::::::::: deviceInfo :::::::::::::: {}", createDeviceReq.toString());
-		logger.info(":::::::::::: deviceInfo :::::::::::::: {}", createDeviceReq.getUserMbrDevice().toString());
+		logger.info(":::::::::::: deviceInfo :::::::::::::: {}", deviceInfo.toString());
+		logger.info(":::::::::::: createDeviceReq :::::::::::::: {}", createDeviceReq.toString());
+		logger.info(":::::::::::: UserMbrDevice :::::::::::::: {}", createDeviceReq.getUserMbrDevice().toString());
 
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
@@ -380,10 +390,9 @@ public class DeviceServiceImpl implements DeviceService {
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
-								IDPConstants.IDP_RES_CODE_OK)) {
-							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId()
-									+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
+						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
+									+ idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
 				}
@@ -401,8 +410,9 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# mergeDeviceInfo(java.lang.String,
-	 * java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * mergeDeviceInfo(java.lang.String, java.lang.String,
+	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
 	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception {
@@ -443,8 +453,7 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("::::::::::::: userMbrDevice Detail 조회결과 : {} " + userMbrDevice.getUserMbrDeviceDetail().toString());
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
-					+ schDeviceRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
 		/* 기기정보 필드 */
@@ -650,8 +659,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
 
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
-			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice
-					.getUserMbrDeviceDetail()));
+			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		}
 
 		return deviceInfo;
@@ -679,15 +687,12 @@ public class DeviceServiceImpl implements DeviceService {
 			String extraProfile = deviceDetail.getExtraProfile();
 
 			if (extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_SCVERSION)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)) {
 
 				deviceExtraInfo.setExtraProfile(extraProfile);
@@ -743,68 +748,99 @@ public class DeviceServiceImpl implements DeviceService {
 	public List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) {
 
 		List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+		UserMbrDeviceDetail userMbrDeviceDetail = null;
 
 		if (deviceInfo.getOmpDownloaderYn() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpDownloaderYn());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getStandByScreenYn() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getStandByScreenYn());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getUacd() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getUacd());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getOmpSupportYn() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpSupportYn());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getOsVer() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOsVer());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getScVer() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getScVer());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getAppStatisticsYn() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getAppStatisticsYn());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getDotoriAuthDate() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthDate());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getDotoriAuthYn() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthYn());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		if (deviceInfo.getRooting() != null) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getRooting());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 		}
 
+		logger.info(":::::: getConverterUserMbrDeviceDetailList : {}", userMbrDeviceDetailList.toString());
 		return userMbrDeviceDetailList;
 
 	}
@@ -817,8 +853,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req)
-			throws Exception {
+	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req) throws Exception {
 		req.setCommonRequest(commonRequest);
 		SetMainDeviceResponse scRes = this.deviceSCI.setMainDevice(req);
 		DeviceInfo res = new DeviceInfo();
@@ -860,8 +895,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		/* SC 회원 컴포넌트 휴대기기 목록 조회 */

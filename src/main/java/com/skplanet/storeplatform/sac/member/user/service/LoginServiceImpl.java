@@ -201,6 +201,11 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserMainStatus(userMainStatus);
 				res.setUserSubStatus(userSubStatus);
 
+			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+
+				/* 미가입 회원인 경우 로그 님김 */
+				logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}", deviceId);
+
 			} else { //무선회원 인증 실패
 
 				this.insertloginHistory(deviceId, null, "N");
@@ -395,6 +400,11 @@ public class LoginServiceImpl implements LoginService {
 
 				this.insertloginHistory(userId, userPw, "N");
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+
+			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+
+				/* 미존재 회원인 경우 로그 님김 */
+				logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}", userId);
 
 			} else {
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
