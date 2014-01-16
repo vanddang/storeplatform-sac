@@ -60,7 +60,7 @@ public class SearchIdTest {
 	public void searchId() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/searchId/v1?sellerEmail=&sellerCompany=&sellerBizNumber=&sellerPhone")
+				.url("/dev/member/seller/searchId/v1?sellerEmail=omc97@hanmail.net&sellerCompany=&sellerBizNumber=&sellerPhone=")
 				.httpMethod(HttpMethod.GET).success(SearchIdRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
