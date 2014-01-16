@@ -21,14 +21,19 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String userKey;
 
 	/**
-	 * IDP 인증 Key
+	 * 사용자 구분코드
 	 */
-	private String userAuthKey;
+	private String userType;
 
 	/**
-	 * 회원상태
+	 * 사용자 main 상태코드
 	 */
-	private String userStatus;
+	private String userMainStatus;
+
+	/**
+	 * 사용자 sub 상태코드
+	 */
+	private String userSubStatus;
 
 	public String getUserKey() {
 		return this.userKey;
@@ -38,20 +43,28 @@ public class AuthorizeByMdnRes extends CommonInfo {
 		this.userKey = userKey;
 	}
 
-	public String getUserAuthKey() {
-		return this.userAuthKey;
+	public String getUserType() {
+		return this.userType;
 	}
 
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
-	public String getUserStatus() {
-		return this.userStatus;
+	public String getUserMainStatus() {
+		return this.userMainStatus;
 	}
 
-	public void setUserStatus(String userStatus) {
-		this.userStatus = userStatus;
+	public void setUserMainStatus(String userMainStatus) {
+		this.userMainStatus = userMainStatus;
+	}
+
+	public String getUserSubStatus() {
+		return this.userSubStatus;
+	}
+
+	public void setUserSubStatus(String userSubStatus) {
+		this.userSubStatus = userSubStatus;
 	}
 
 }
