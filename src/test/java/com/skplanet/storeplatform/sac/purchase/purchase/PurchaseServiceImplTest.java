@@ -64,7 +64,6 @@ public class PurchaseServiceImplTest {
 	public void checkPurchase() throws Exception {
 		this.purchaseService.checkPurchase(this.purchaseInfo);
 
-		// System.out.println("ICASTEST\n" + this.icas.getCustomer("01046353524"));
 	}
 
 	/**

@@ -1,9 +1,9 @@
 package com.skplanet.storeplatform.sac.purchase.prototype.service;
 
-import com.skplanet.storeplatform.purchase.client.prototype.vo.OwnProductList;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestCheckOwnProduct;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestPurchaseHistory;
-import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistory;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryRes;
 
 /**
  * SAC 구매/구매내역 서비스 인터페이스.
@@ -21,7 +21,7 @@ public interface PurchasePrototypeService {
 	 *            구매내역 조회조건
 	 * @return MyPage 구매내역
 	 */
-	public MyPagePurchaseHistory searchPurchaseList(RequestPurchaseHistory paramVO);
+	public MyPagePurchaseHistoryRes searchPurchaseList(MyPagePurchaseHistoryReq paramVO);
 
 	/**
 	 * <pre>
@@ -32,5 +32,5 @@ public interface PurchasePrototypeService {
 	 *            구매내역 조회조건
 	 * @return MyPage 구매내역
 	 */
-	public OwnProductList checkPurchase(RequestCheckOwnProduct paramVO);
+	public CheckPurchaseRes checkPurchase(CheckPurchaseReq paramVO);
 }

@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyPurchaseServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
 
@@ -10,6 +13,8 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class ValidationChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(ValidationChecker.class);
+
 	private final DummyPurchaseServiceImpl dummyService = new DummyPurchaseServiceImpl();
 
 	/**
@@ -37,9 +42,9 @@ public class ValidationChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,VALIDATION,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,VALIDATION,START," + purchaseInfo);
 
-		System.out.println("PRCHS,DUMMY,VALIDATION,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,VALIDATION,END," + purchaseInfo);
 		return true;
 	}
 }

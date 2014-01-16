@@ -10,14 +10,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.prototype.sci.PurchasePrototypeSCI;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.OwnProductList;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.CheckPurchaseRequest;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.CheckPurchaseResponse;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.OwnProduct;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.ProductOwnType;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.Purchase;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.PurchaseHistory;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestCheckOwnProduct;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestPurchaseHistory;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.PurchaseHistoryRequest;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.PurchaseHistoryResponse;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchase;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPageProduct;
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchase;
-import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistory;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseProduct;
 
 /**
@@ -43,17 +49,36 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 	 * @return MyPage 구매내역
 	 */
 	@Override
-	public MyPagePurchaseHistory searchPurchaseList(RequestPurchaseHistory paramVO) {
+	public MyPagePurchaseHistoryRes searchPurchaseList(MyPagePurchaseHistoryReq paramVO) {
 		this.log.debug("PurchasePrototypeServiceImpl.searchPurchaseList,START,{}", paramVO);
 
-		PurchaseHistory purchaseHistory = this.purchaseSCI.searchList(paramVO);
+		// SC(Purchase) REQ
+		PurchaseHistoryRequest sciReq = new PurchaseHistoryRequest();
+		sciReq.setTenantId(paramVO.getTenantId());
+		sciReq.setDeviceNo(paramVO.getDeviceNo());
+		sciReq.setMbrNo(paramVO.getMbrNo());
+		sciReq.setPrchsId(paramVO.getPrchsId());
+		sciReq.setPrchsDtlId(paramVO.getPrchsDtlId());
+		sciReq.setProdId(paramVO.getProdId());
+		sciReq.setProdOwnType(paramVO.getProdOwnType());
+		sciReq.setStartDt(paramVO.getStartDt());
+		sciReq.setEndDt(paramVO.getEndDt());
+		sciReq.setStartRow(paramVO.getStartRow());
+		sciReq.setEndRow(paramVO.getEndRow());
+		sciReq.setProdGrpCd(paramVO.getProdGrpCd());
+		sciReq.setTarget(paramVO.getTarget());
+		sciReq.setPrchsStatus(paramVO.getPrchsStatus());
+		sciReq.setHiding(paramVO.getHiding());
 
+		// 구매내역
+		PurchaseHistoryResponse sciRes = this.purchaseSCI.searchList(sciReq);
+
+		// 구매&상품 결합
 		List<MyPagePurchaseProduct> myPagePurchaseProductList = new ArrayList<MyPagePurchaseProduct>();
-
 		MyPagePurchase myPagePurchase = null;
 		MyPageProduct myPageProduct = null;
-		for (Purchase purchaseVO : purchaseHistory.getPurchaseList()) {
-			// -
+		for (Purchase purchaseVO : sciRes.getPurchaseList()) {
+			// 구매 정보 세팅
 			myPagePurchase = new MyPagePurchase();
 			myPagePurchase.setUseTenantId(purchaseVO.getUseTenantId());
 			myPagePurchase.setUseMbrNo(purchaseVO.getUseMbrNo());
@@ -78,15 +103,15 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 			myPagePurchase.setHidingYn(purchaseVO.getHidingYn());
 			myPagePurchase.setExpiredYn(purchaseVO.getExpiredYn());
 
-			// -
+			// 상품 정보 조회
 			myPageProduct = new MyPageProduct();
 			myPageProduct.setProdId(purchaseVO.getProdId());
 
-			// -
+			// 구매&상품 내역 추가
 			myPagePurchaseProductList.add(new MyPagePurchaseProduct(myPagePurchase, myPageProduct));
 		}
 
-		MyPagePurchaseHistory myPagePurchaseHistory = new MyPagePurchaseHistory();
+		MyPagePurchaseHistoryRes myPagePurchaseHistory = new MyPagePurchaseHistoryRes();
 		myPagePurchaseHistory.setHistory(myPagePurchaseProductList);
 
 		this.log.debug("PurchaseServiceImpl.searchPurchaseList,END,{}", myPagePurchaseHistory.getHistory().size());
@@ -103,10 +128,42 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 	 * @return MyPage 구매내역
 	 */
 	@Override
-	public OwnProductList checkPurchase(RequestCheckOwnProduct paramVO) {
-		OwnProductList ownPorductList = null;
+	public CheckPurchaseRes checkPurchase(CheckPurchaseReq paramVO) {
+		this.log.debug("PurchaseServiceImpl.checkPurchase,START,{}", paramVO);
 
-		return ownPorductList;
+		// SC(Purchase) REQ
+		CheckPurchaseRequest sciReq = new CheckPurchaseRequest();
+		sciReq.setTenantId(paramVO.getTenantId());
+		sciReq.setMbrNo(paramVO.getMbrNo());
+		sciReq.setDeviceNo(paramVO.getDeviceNo());
+		sciReq.setPrchsId(paramVO.getPrchsId());
+
+		List<ProductOwnType> prodList = new ArrayList<ProductOwnType>();
+		String prodOwnType = null;
+		for (String prodId : paramVO.getProdIdList()) {
+			prodOwnType = this.checkOwnType(prodId); // 상품소유타입 조회 : id | mdn 기반
+			prodList.add(new ProductOwnType(prodId, prodOwnType));
+		}
+		sciReq.setProdList(prodList);
+
+		// 기구매체크
+		CheckPurchaseResponse checkPurchaseResponse = this.purchaseSCI.checkOwnProduct(sciReq);
+
+		// RES
+		List<CheckPurchase> checkPurchaseList = new ArrayList<CheckPurchase>();
+		for (OwnProduct ownProduct : checkPurchaseResponse.getOwnProductList()) {
+			checkPurchaseList.add(new CheckPurchase(ownProduct.getProdId(), ownProduct.getPrchsId()));
+		}
+
+		CheckPurchaseRes res = new CheckPurchaseRes();
+		res.setCheckPurchaseList(checkPurchaseList);
+
+		this.log.debug("PurchaseServiceImpl.checkPurchase,END,{}", checkPurchaseList.size());
+		return res;
+	}
+
+	private String checkOwnType(String prodId) {
+		return prodId.startsWith("0") ? "id" : "mdn";
 	}
 
 }

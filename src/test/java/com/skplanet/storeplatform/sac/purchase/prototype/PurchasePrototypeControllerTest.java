@@ -5,6 +5,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestPurchaseHistory;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -39,7 +43,7 @@ public class PurchasePrototypeControllerTest {
 
 	@Test
 	public void searchPurchaseList() throws Exception {
-		RequestPurchaseHistory req = new RequestPurchaseHistory();
+		MyPagePurchaseHistoryReq req = new MyPagePurchaseHistoryReq();
 
 		req.setTenantId("S01"); // 테넌트 ID
 		// req.setMbrNo("IF102815948420090820103525");
@@ -54,10 +58,37 @@ public class PurchasePrototypeControllerTest {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String reqJsonStr = mapper.writeValueAsString(req);
-		System.out.println(reqJsonStr);
 
 		this.mvc.perform(
 				post("/purchase/prototype/list/v1").content(reqJsonStr)
+						.contentType(MediaType.parseMediaType("application/json;charset=UTF-8"))
+						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).andDo(print())
+				.andExpect(content().contentType("application/json;charset=UTF-8")).andExpect(status().isOk());
+	}
+
+	@Test
+	public void checkPurchase() throws Exception {
+		CheckPurchaseReq req = new CheckPurchaseReq();
+
+		req.setTenantId("S01"); // 테넌트 ID
+		req.setMbrNo("MBR01");
+		req.setDeviceNo("MBR01_1");
+
+		List<String> prodIdList = new ArrayList<String>();
+		prodIdList.add("0000027381");
+		prodIdList.add("0000122080");
+		prodIdList.add("H900725970");
+		prodIdList.add("0000413250");
+		prodIdList.add("H000044541");
+		prodIdList.add("H000040313");
+
+		req.setProdIdList(prodIdList);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String reqJsonStr = mapper.writeValueAsString(req);
+
+		this.mvc.perform(
+				post("/purchase/prototype/check/v1").content(reqJsonStr)
 						.contentType(MediaType.parseMediaType("application/json;charset=UTF-8"))
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).andDo(print())
 				.andExpect(content().contentType("application/json;charset=UTF-8")).andExpect(status().isOk());

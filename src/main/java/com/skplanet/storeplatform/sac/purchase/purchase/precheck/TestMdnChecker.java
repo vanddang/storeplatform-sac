@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyAdminServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
 
@@ -10,6 +13,8 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class TestMdnChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(TestMdnChecker.class);
+
 	private final DummyAdminServiceImpl dummyService = new DummyAdminServiceImpl();
 
 	/**
@@ -38,7 +43,7 @@ public class TestMdnChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,TESTMDN,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,TESTMDN,START," + purchaseInfo);
 
 		// 테스트폰 여부 조회 : 테넌트ID, MDN
 		if (this.dummyService.isTestMdn(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember().getMdn())) {
@@ -47,7 +52,7 @@ public class TestMdnChecker implements PurchasePreChecker {
 			return false;
 		}
 
-		System.out.println("PRCHS,DUMMY,TESTMDN,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,TESTMDN,END," + purchaseInfo);
 		return true;
 	}
 }

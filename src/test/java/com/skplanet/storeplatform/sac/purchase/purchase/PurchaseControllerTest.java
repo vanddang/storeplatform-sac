@@ -60,7 +60,6 @@ public class PurchaseControllerTest {
 
 		ObjectMapper mapper = new ObjectMapper();
 		String reqJsonStr = mapper.writeValueAsString(req);
-		System.out.println(reqJsonStr);
 
 		this.mvc.perform(
 				post("/purchase/purchase/create/v1").content(reqJsonStr)

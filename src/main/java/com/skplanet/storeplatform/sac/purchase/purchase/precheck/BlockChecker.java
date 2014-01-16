@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyMemberServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
 
@@ -10,6 +13,8 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class BlockChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(BlockChecker.class);
+
 	private final DummyMemberServiceImpl dummyService = new DummyMemberServiceImpl();
 
 	/**
@@ -38,7 +43,7 @@ public class BlockChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,BLOCK,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,BLOCK,START," + purchaseInfo);
 
 		// 구매 차단 여부 조회 : 테넌트ID, 내부회원NO, 디바이스ID
 		if (this.dummyService.isBlock(purchaseInfo.getTenantId(), purchaseInfo.getInsdUsermbrNo(),
@@ -48,7 +53,7 @@ public class BlockChecker implements PurchasePreChecker {
 			return false;
 		}
 
-		System.out.println("PRCHS,DUMMY,BLOCK,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,BLOCK,END," + purchaseInfo);
 
 		return true;
 	}

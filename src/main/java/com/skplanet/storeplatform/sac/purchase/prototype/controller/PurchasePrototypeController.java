@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestPurchaseHistory;
-import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistory;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryRes;
 import com.skplanet.storeplatform.sac.purchase.prototype.service.PurchasePrototypeService;
 
 /**
- * 구매 처리 컨트롤러
+ * 구매 Prototype 처리 컨트롤러
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
@@ -37,12 +39,34 @@ public class PurchasePrototypeController {
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public MyPagePurchaseHistory searchPurchaseListTest(@RequestBody RequestPurchaseHistory paramVO) {
-		this.log.debug("PurchasePrototypeController.searchPurchaseListTest,START,{}", paramVO);
+	public MyPagePurchaseHistoryRes searchPurchaseListTest(@RequestBody MyPagePurchaseHistoryReq req) {
+		this.log.debug("PurchasePrototypeController.searchPurchaseListTest,START,{}", req);
 
-		MyPagePurchaseHistory purchaseHistory = this.purchaseService.searchPurchaseList(paramVO);
+		// 구매내역 조회
+		MyPagePurchaseHistoryRes res = this.purchaseService.searchPurchaseList(req);
 
-		this.log.debug("PurchasePrototypeController.searchPurchaseListTest,END,{}", purchaseHistory.getHistory().size());
-		return purchaseHistory;
+		this.log.debug("PurchasePrototypeController.searchPurchaseListTest,END,{}", res.getHistory().size());
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 기구매 체크.
+	 * </pre>
+	 * 
+	 * @param paramVO
+	 *            기구매체크 조건
+	 * @return MyPage 구매내역
+	 */
+	@RequestMapping(value = "/check/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CheckPurchaseRes checkPurchase(@RequestBody CheckPurchaseReq req) {
+		this.log.debug("PurchasePrototypeController.checkPurchase,START,{}", req);
+
+		// 기구매체크
+		CheckPurchaseRes res = this.purchaseService.checkPurchase(req);
+
+		this.log.debug("PurchasePrototypeController.checkPurchase,END,{}");
+		return res;
 	}
 }

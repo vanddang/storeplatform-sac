@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyAdminServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
@@ -12,6 +14,7 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class GiftSendLimitChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(GiftSendLimitChecker.class);
 	private final DummyAdminServiceImpl dummyService = new DummyAdminServiceImpl();
 
 	/**
@@ -41,11 +44,11 @@ public class GiftSendLimitChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,SENDLIMIT,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,SENDLIMIT,START," + purchaseInfo);
 
 		this.dummyService.getGiftSendLimit();
 
-		System.out.println("PRCHS,DUMMY,SENDLIMIT,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,SENDLIMIT,END," + purchaseInfo);
 		return true;
 	}
 }

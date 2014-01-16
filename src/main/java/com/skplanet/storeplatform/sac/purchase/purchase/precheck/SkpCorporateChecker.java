@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyAdminServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
 
@@ -10,6 +13,8 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class SkpCorporateChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(SkpCorporateChecker.class);
+
 	private final DummyAdminServiceImpl dummyService = new DummyAdminServiceImpl();
 
 	/**
@@ -38,7 +43,7 @@ public class SkpCorporateChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,SKPCORP,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,SKPCORP,START," + purchaseInfo);
 
 		// SKP 법인폰 여부 조회 : 테넌트ID, MDN
 		if (this.dummyService.isSkpCorporate(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember().getMdn())) {
@@ -46,7 +51,7 @@ public class SkpCorporateChecker implements PurchasePreChecker {
 			return false;
 		}
 
-		System.out.println("PRCHS,DUMMY,SKPCORP,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,SKPCORP,END," + purchaseInfo);
 		return true;
 	}
 }

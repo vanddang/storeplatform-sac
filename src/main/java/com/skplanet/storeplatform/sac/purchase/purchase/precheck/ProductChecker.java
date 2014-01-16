@@ -3,6 +3,9 @@ package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyProductServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.vo.DummyProduct;
@@ -15,6 +18,8 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class ProductChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(ProductChecker.class);
+
 	private final DummyProductServiceImpl dummyService = new DummyProductServiceImpl();
 
 	/**
@@ -42,7 +47,7 @@ public class ProductChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,PRODUCT,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,PRODUCT,START," + purchaseInfo);
 
 		// 상품 정보 조회 : 테넌트ID, 상품ID, 디바이스모델코드
 		// tenantId, String prodId, String deviceModelCd
@@ -56,7 +61,7 @@ public class ProductChecker implements PurchasePreChecker {
 
 		purchaseInfo.setProductList(prodList);
 
-		System.out.println("PRCHS,DUMMY,PRODUCT,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,PRODUCT,END," + purchaseInfo);
 		return true;
 	}
 }

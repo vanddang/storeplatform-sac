@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.purchase.precheck;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.service.DummyMemberServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.purchase.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
@@ -11,6 +14,8 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class MemberChecker implements PurchasePreChecker {
+	private static final Logger logger = LoggerFactory.getLogger(MemberChecker.class);
+
 	private final DummyMemberServiceImpl dummyService = new DummyMemberServiceImpl();
 
 	/**
@@ -38,13 +43,13 @@ public class MemberChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		System.out.println("PRCHS,DUMMY,MEMBER,START," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,MEMBER,START," + purchaseInfo);
 
 		// 회원 정보 조회 : 테넌트ID, 내부회원NO, 디바이스ID
 		DummyMember member = this.dummyService.getMemberInfo(purchaseInfo.getTenantId(),
 				purchaseInfo.getInsdUsermbrNo(), purchaseInfo.getInsdDeviceId());
 
-		System.out.println("DUMMY,MEMBER," + member);
+		logger.debug("DUMMY,MEMBER," + member);
 		purchaseInfo.setPurchaseMember(member);
 
 		// if( "선물발신코드".equals(purchaseInfo.getCreatePurchaseReq().getPrchsCaseCd()) ) {
@@ -52,11 +57,11 @@ public class MemberChecker implements PurchasePreChecker {
 			member = this.dummyService.getMemberInfo(purchaseInfo.getRecvTenantId(),
 					purchaseInfo.getRecvInsdUsermbrNo(), purchaseInfo.getRecvInsdDeviceId());
 
-			System.out.println("DUMMY,MEMBER,RECV," + member);
+			logger.debug("DUMMY,MEMBER,RECV," + member);
 			purchaseInfo.setRecvMember(member);
 		}
 
-		System.out.println("PRCHS,DUMMY,MEMBER,END," + purchaseInfo);
+		logger.debug("PRCHS,DUMMY,MEMBER,END," + purchaseInfo);
 		return true;
 	}
 }

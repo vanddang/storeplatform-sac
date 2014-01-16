@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.purchase.prototype;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -10,7 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.purchase.client.prototype.vo.RequestPurchaseHistory;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
 import com.skplanet.storeplatform.sac.purchase.prototype.service.PurchasePrototypeService;
 
 @ActiveProfiles(value = "local")
@@ -31,7 +35,7 @@ public class PurchasePrototypeServiceImplTest {
 	 */
 	@Test
 	public void shouldObtainPurchaseList() throws Exception {
-		RequestPurchaseHistory paramVO = new RequestPurchaseHistory();
+		MyPagePurchaseHistoryReq paramVO = new MyPagePurchaseHistoryReq();
 
 		paramVO.setTenantId("S01");
 		// paramVO.setMbrNo("IF102815948420090820103525");
@@ -45,6 +49,34 @@ public class PurchasePrototypeServiceImplTest {
 		paramVO.setEndRow(100);
 
 		this.purchasePrototypeService.searchPurchaseList(paramVO);
+
+	}
+
+	/**
+	 * 기구매체크 테스트.
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void checkPurchase() throws Exception {
+		CheckPurchaseReq paramVO = new CheckPurchaseReq();
+
+		paramVO.setTenantId("S01");
+		paramVO.setMbrNo("MBR01");
+		paramVO.setDeviceNo("MBR01_1");
+
+		List<String> prodIdList = new ArrayList<String>();
+		prodIdList.add("0000027381");
+		prodIdList.add("0000122080");
+		prodIdList.add("H900725970");
+		prodIdList.add("0000413250");
+		prodIdList.add("H000044541");
+		prodIdList.add("H000040313");
+
+		paramVO.setProdIdList(prodIdList);
+
+		this.purchasePrototypeService.checkPurchase(paramVO);
 
 	}
 }

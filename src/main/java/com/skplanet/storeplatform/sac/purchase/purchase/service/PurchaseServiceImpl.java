@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
 @Service
 @Transactional
 public class PurchaseServiceImpl implements PurchaseService {
+	private static final Logger logger = LoggerFactory.getLogger(PurchaseServiceImpl.class);
 
 	@Autowired
 	private DummyPurchaseSCI dummyPurchaseSCI;
@@ -56,7 +59,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 			}
 		}
 
-		System.out.println("PRCHS,DUMMY,CHECK," + (System.currentTimeMillis() - startTime) + "ms");
+		logger.debug("PRCHS,DUMMY,CHECK," + (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	/**
