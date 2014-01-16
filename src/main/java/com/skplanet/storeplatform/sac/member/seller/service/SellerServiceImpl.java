@@ -293,9 +293,7 @@ public class SellerServiceImpl implements SellerService {
 			res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 			res.setSellerMbr(sellerMbr);
 		}
-		logInSellerResponse.getLoginFailCount();
-		res.setSellerMbr(new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr());
-
+		res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 		return res;
 	}
 

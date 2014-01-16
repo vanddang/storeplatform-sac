@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,7 +26,6 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 
 /**
  * Calss 설명
@@ -36,7 +33,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
  * Updated on : 2014. 1. 14. Updated by : 김경복, 부르칸.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -79,7 +75,7 @@ public class AuthorizeTest {
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
-				}).success(LockAccountRes.class, new SuccessCallback() {
+				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						AuthorizeRes res = (AuthorizeRes) result;
