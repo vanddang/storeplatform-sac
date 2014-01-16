@@ -25,7 +25,7 @@ public class PurchaseCancelRes extends PurchaseCommonRes {
 	private Integer totCnt;
 	private Integer successCnt;
 	private Integer failCnt;
-	private List<PurchaseCancelResult> prchsCancelResultList;
+	private List<PurchaseCancelResDetail> prchsCancelResultList;
 
 	/**
 	 * @return the totCnt
@@ -75,7 +75,7 @@ public class PurchaseCancelRes extends PurchaseCommonRes {
 	/**
 	 * @return the prchsCancelResultList
 	 */
-	public List<PurchaseCancelResult> getPrchsCancelResultList() {
+	public List<PurchaseCancelResDetail> getPrchsCancelResultList() {
 		return this.prchsCancelResultList;
 	}
 
@@ -83,7 +83,7 @@ public class PurchaseCancelRes extends PurchaseCommonRes {
 	 * @param prchsCancelResultList
 	 *            the prchsCancelResultList to set
 	 */
-	public void setPrchsCancelResultList(List<PurchaseCancelResult> prchsCancelResultList) {
+	public void setPrchsCancelResultList(List<PurchaseCancelResDetail> prchsCancelResultList) {
 		this.prchsCancelResultList = prchsCancelResultList;
 	}
 

@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelResult extends CommonInfo {
+public class PurchaseCancelResDetail extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
