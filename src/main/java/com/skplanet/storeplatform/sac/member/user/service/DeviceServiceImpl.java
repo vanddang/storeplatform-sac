@@ -58,6 +58,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
@@ -861,26 +863,36 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param SetMainDeviceRequest
 	 * @return
 	 */
+	// @Override
+	// public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req)
+	// throws Exception {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
 	@Override
-	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req)
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req)
 			throws Exception {
+
+		SetMainDeviceRequest setMainDeviceRequest = new SetMainDeviceRequest();
+		SetMainDeviceRes setMainDeviceRes = new SetMainDeviceRes();
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-		req.setCommonRequest(commonRequest);
+		setMainDeviceRequest.setCommonRequest(commonRequest);
+		setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
+		setMainDeviceRequest.setUserKey(req.getUserKey());
 
-		SetMainDeviceResponse scRes = this.deviceSCI.setMainDevice(req);
-		DeviceInfo res = new DeviceInfo();
+		SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
-		if (!scRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("result_code : [" + scRes.getCommonResponse().getResultCode() + "] result_message : ["
-					+ scRes.getCommonResponse().getResultMessage() + "]");
+		if (!res.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("result_code : [" + res.getCommonResponse().getResultCode() + "] result_message : ["
+					+ res.getCommonResponse().getResultMessage() + "]");
 		} else {
-			res.setDeviceKey(req.getDeviceKey());
+			setMainDeviceRes.setDeviceKey(req.getDeviceKey());
 		}
 
-		return res;
+		return setMainDeviceRes;
 	}
 
 	/**

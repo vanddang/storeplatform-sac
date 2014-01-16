@@ -2,13 +2,14 @@ package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -68,7 +69,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req)
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req)
 			throws Exception;
 
 	/**

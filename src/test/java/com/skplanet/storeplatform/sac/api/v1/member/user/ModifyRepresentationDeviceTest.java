@@ -25,9 +25,9 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceResponse;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 
 /**
  * Calss 설명
@@ -66,22 +66,23 @@ public class ModifyRepresentationDeviceTest {
 	 */
 	@Test
 	public void modifyRepresentationDevice() {
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/modifyRepresentationDevice/v1")
+		new TestCaseTemplate(this.mockMvc)
+				.url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/modifyRepresentationDevice/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						SetMainDeviceRequest req = new SetMainDeviceRequest();
+						SetMainDeviceReq req = new SetMainDeviceReq();
 						req.setUserKey("IF1023002708420090928145937");
 						req.setDeviceKey("01088902431");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
-				}).success(SetMainDeviceResponse.class, new SuccessCallback() {
+				}).success(SetMainDeviceRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						SetMainDeviceResponse res = (SetMainDeviceResponse) result;
-						assertThat(res.getCommonResponse().getResultMessage(), notNullValue());
-						LOGGER.debug("response param : {}", res.getCommonResponse().toString());
+						SetMainDeviceRes res = (SetMainDeviceRes) result;
+						assertThat(res.getDeviceKey(), notNullValue());
+						LOGGER.debug("response param : {}", res.getDeviceKey());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

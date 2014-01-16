@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -21,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
@@ -97,7 +98,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceRequest req)
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req)
 			throws Exception {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
@@ -107,7 +108,7 @@ public class DeviceController {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
-		DeviceInfo res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
+		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
 		return res;
 	}
