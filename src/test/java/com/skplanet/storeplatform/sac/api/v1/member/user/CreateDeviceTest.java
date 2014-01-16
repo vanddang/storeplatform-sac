@@ -74,7 +74,7 @@ public class CreateDeviceTest {
 		try {
 
 			new TestCaseTemplate(this.mockMvc)
-					.url("/member/user/createDevice/v1")
+					.url("/dev/member/user/createDevice/v1")
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
@@ -91,7 +91,7 @@ public class CreateDeviceTest {
 
 							DeviceInfo deviceInfo = new DeviceInfo();
 							deviceInfo.setUserKey("US201401161859405900000107");
-							deviceInfo.setDeviceId("01066786221");
+							deviceInfo.setDeviceId("01066786222");
 							deviceInfo.setDeviceIdType("msisdn ");
 							deviceInfo.setDeviceTelecom("US012102");
 							deviceInfo.setNativeId("358362045580844");
