@@ -235,7 +235,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 					/**
 					 * UAPS 연동하여 uacd를 세팅한다.
+					 * 
+					 * TODO UAPS 방화벽 이슈가 종료 되면 로직 테스트해서 넣을것....
 					 */
+					String uacd = this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getDeviceModel();
 					LOGGER.debug("## UAPS UA 코드 : {}", deviceDTO.getUaCd());
 					deviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
 
@@ -276,6 +279,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType("msisdn");
 			deviceInfo.setDeviceTelecom("SKT");
 			deviceInfo.setJoinId(req.getJoinId());
+			deviceInfo.setImei(req.getImei());
 			deviceInfo.setImMngNum(this.idpReceiverM.getResponseBody().getSvc_mng_num());
 			deviceInfo.setDeviceModelNo(this.idpReceiverM.getResponseBody().getModel_id());
 			LOGGER.debug("## deviceInfo : {}", deviceInfo.toString());
@@ -283,7 +287,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록 submodule 호출.
 			 */
-			this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
+			try {
+				this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
+			} catch (Exception e) {
+				throw new RuntimeException("## 휴대기기 등록실패!!!! submodule ERROR");
+			}
 
 			/**
 			 * 결과 세팅
@@ -333,7 +341,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 
 		 * TODO 모번호조회 할때 us_cd, IM_INT_SVC_NO(서비스 관리 번호)
 		 */
-		UserRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), req.getDeviceIdType());
+		UserRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), "mdn");
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
