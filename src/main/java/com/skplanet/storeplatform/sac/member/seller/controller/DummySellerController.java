@@ -120,8 +120,9 @@ public class DummySellerController {
 
 		sellerInfo.setSellerKey("IF1023599819420120111013407");
 		sellerInfo.setSellerClass("US010101");
-		sellerInfo.setSellerMainStatus("US010704");
-		sellerInfo.setSellerSubStatus("US010301");
+		sellerInfo.setSellerMainStatus("US010204");
+		sellerInfo.setSellerSubStatus("US010307");
+		responseVO.setLoginFailCount("2");
 		responseVO.setSellerMbr(sellerInfo);
 
 		return responseVO;
