@@ -93,24 +93,19 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
-			/** 1) 유효성 검사 (OPMD 번호) */
-			if (msisdn.length() == 10) { // ex)9890001111
-				LOGGER.debug("############ >> msisdn {} ", msisdn);
-				/** 2) OPMD 모번호 조회 (UAPS 연동) */
-				OpmdRes opmdRes = new OpmdRes();
-				opmdRes = this.uapsSCI.getOpmdInfo(msisdn);
+			LOGGER.debug("############ >> msisdn {} ", msisdn);
+			/** 1) OPMD 모번호 조회 (UAPS 연동) */
+			OpmdRes opmdRes = new OpmdRes();
+			opmdRes = this.uapsSCI.getOpmdInfo(msisdn);
 
-				LOGGER.debug("############ >> opmdRes {}", opmdRes);
-				/** 3) UAPS 연동 결과 확인 */
-				if (opmdRes.getResultCode() == 0) {
-					LOGGER.debug("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
-					LOGGER.debug("##### OPMD MDN {}", opmdRes.getOpmdMdn());
-					res.setMsisdn(opmdRes.getMobileMdn());
-				} else {
-					throw new RuntimeException("UAPS 연동 오류" + opmdRes.getResultCode());
-				}
+			LOGGER.debug("############ >> opmdRes {}", opmdRes);
+			/** 2) UAPS 연동 결과 확인 */
+			if (opmdRes.getResultCode() == 0) {
+				LOGGER.debug("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
+				LOGGER.debug("##### OPMD MDN {}", opmdRes.getOpmdMdn());
+				res.setMsisdn(opmdRes.getMobileMdn());
 			} else {
-				throw new Exception("유효하지 않은 OPMD 번호.");
+				throw new RuntimeException("UAPS 연동 오류" + opmdRes.getResultCode());
 			}
 		} else {
 			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
@@ -184,7 +179,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			}
 		}
 		/** deviceModelNo 가 파라미터로 들어온 경우 */
-		else if ((msisdn != null && deviceModelNo != null) || (msisdn == null && deviceModelNo != null)) {
+		else if (deviceModelNo != null) {
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.repository.getUaCode(deviceModelNo);
 			if (uaCode != null) {
@@ -192,8 +187,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			} else {
 				throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
 			}
-		} else {
-			throw new Exception("필수 파라미터 없음.");
 		}
 
 		return response;
