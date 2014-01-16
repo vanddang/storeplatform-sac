@@ -147,6 +147,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * TODO 모바일 전용 회원일 경우는 SC 에서 자체적으로 만들어서 넣기로함. (임과장님 확인 내용.) 현재 SC 필수 항목이라 넣고있음. 추후 넣지않도록 빼야함.
 			 */
 			userMbr.setUserID(msisdn);
+
+			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 			userMbr.setIsParent(req.getIsParent());
 			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
