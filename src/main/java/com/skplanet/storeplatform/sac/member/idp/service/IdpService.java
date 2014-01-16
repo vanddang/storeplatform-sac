@@ -47,7 +47,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXInvalidUserTelNoIDP(HashMap map) throws Exception;
+	public ImResult rXInvalidUserTelNoIDP(HashMap map);
 
 	/**
 	 * 
@@ -60,7 +60,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXSetLoginConditionIDP(HashMap map) throws Exception;
+	public ImResult rXSetLoginConditionIDP(HashMap map);
 
 	/**
 	 * 
@@ -73,7 +73,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXCreateUserIdIDP(HashMap map) throws Exception;
+	public ImResult rXCreateUserIdIDP(HashMap map);
 
 	/**
 	 * 
@@ -86,6 +86,6 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
-	public ImResult rXSetSuspendUserIdIDP(HashMap map) throws Exception;
+	public ImResult rXSetSuspendUserIdIDP(HashMap map);
 
 }
