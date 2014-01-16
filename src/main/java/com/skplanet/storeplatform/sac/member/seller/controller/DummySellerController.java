@@ -73,7 +73,7 @@ public class DummySellerController {
 	 * 
 	 * @return CreateRes
 	 */
-	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRes create() {
 
@@ -98,7 +98,7 @@ public class DummySellerController {
 	 * 
 	 * @return DuplicateByIdEmailRes
 	 */
-	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DuplicateByIdEmailRes duplicateByIdEmail() {
 		return new DuplicateByIdEmailRes("Y");
@@ -111,7 +111,7 @@ public class DummySellerController {
 	 * 
 	 * @return AuthorizeRes
 	 */
-	@RequestMapping(value = "/authorize/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/authorize/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public AuthorizeRes authorize() {
 
@@ -284,7 +284,7 @@ public class DummySellerController {
 	 * 
 	 * @return DetailInformationRes
 	 */
-	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailInformationRes detailInformation() {
 
@@ -396,7 +396,7 @@ public class DummySellerController {
 	 * 
 	 * @return DetailAccountInformationRes
 	 */
-	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation() {
 
