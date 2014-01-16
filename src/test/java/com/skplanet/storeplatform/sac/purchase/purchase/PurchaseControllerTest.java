@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.CreatePurchaseReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.PurchaseProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)

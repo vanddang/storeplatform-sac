@@ -13,10 +13,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.CreatePurchaseReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.PurchaseProduct;
-import com.skplanet.storeplatform.sac.purchase.purchase.service.PurchaseService;
-import com.skplanet.storeplatform.sac.purchase.purchase.vo.PrePurchaseInfo;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseService;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
 
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
