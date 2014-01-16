@@ -33,8 +33,7 @@ public final class MemberConstants {
 	public static final String MAIN_STATUS_NORMAL = "US010201"; // 정상
 	public static final String MAIN_STATUS_SECEDE = "US010202"; // 탈퇴(자의탈퇴/직권탈퇴)
 	public static final String MAIN_STATUS_WATING = "US010203"; // 가가입
-	public static final String MAIN_STATUS_PAUSE = "US010204"; // 일시정지(로그인제한/직권중지/7일이용정지/30일이용정지/영구이용정지)
-	public static final String MAIN_STATUS_CONVERSION = "US010205"; // 전환
+	public static final String MAIN_STATUS_PAUSE = "US010204"; // 계정잠금/7일이용정지/30일이용정지/영구이용정지
 
 	/** 서브상태 코드. */
 	public static final String SUB_STATUS_NORMAL = "US010301"; // 정상
@@ -43,7 +42,11 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_JOIN_APPLY_ETC = "US010304"; // 가입승인 만료
 	public static final String SUB_STATUS_JOIN_APPLY_WATING = "US010305"; // 가입승인 대기
 	public static final String SUB_STATUS_EMAIL_CERT_WATING = "US010306"; // 이메일변경 승인 대기
-	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 로그인 제한
+	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 계정잠금
+	/**
+	 * SC 회원 코드 변경으로 인한 삭제.
+	 */
+	@Deprecated
 	public static final String SUB_STATUS_AUTHORITY_PAUSE = "US010308"; // 직권 중지
 	public static final String SUB_STATUS_SEVEN_PAUSE = "US010309"; // 7일 이용정지
 	public static final String SUB_STATUS_THIRTY_PAUSE = "US010310"; // 30일 이용정지
