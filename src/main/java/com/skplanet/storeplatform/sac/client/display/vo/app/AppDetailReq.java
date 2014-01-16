@@ -7,16 +7,7 @@ package com.skplanet.storeplatform.sac.client.display.vo.app;
  */
 public class AppDetailReq {
 
-    private String seedApp;
     private String episodeId;
-
-    public String getSeedApp() {
-        return seedApp;
-    }
-
-    public void setSeedApp(String seedApp) {
-        this.seedApp = seedApp;
-    }
 
     public String getEpisodeId() {
         return episodeId;
