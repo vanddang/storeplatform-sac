@@ -39,7 +39,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -49,6 +48,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
@@ -82,7 +82,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 	 * 회원 가입 조회
 	 */
 	@Override
-	public ExistRes exist(HeaderVo headerVo, ExistReq req) throws Exception {
+	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) throws Exception {
 		ExistRes result = new ExistRes();
 		SearchUserRequest schUserReq = new SearchUserRequest();
 
@@ -429,7 +429,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 					deviceInfo.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
 					deviceInfo.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
 					deviceInfo.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSMS()));
-					deviceInfo.setImei(StringUtil.setTrim(info.getNativeID()));
+					deviceInfo.setNativeId(StringUtil.setTrim(info.getNativeID()));
 					deviceInfo.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
 					deviceInfo.setJoinId(StringUtil.setTrim(info.getJoinId()));
 					deviceInfo.setUpdateDate(StringUtil.setTrim(info.getUpdateDate()));

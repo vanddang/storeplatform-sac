@@ -9,11 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 회원 조회 서비스 인터페이스(CoreStoreBusiness)
@@ -32,7 +32,7 @@ public interface UserSelectService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ExistRes exist(HeaderVo headerVo, ExistReq req) throws Exception;
+	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) throws Exception;
 
 	/**
 	 * 
