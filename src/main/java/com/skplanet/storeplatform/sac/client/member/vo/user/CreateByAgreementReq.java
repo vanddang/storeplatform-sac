@@ -19,13 +19,11 @@ public class CreateByAgreementReq extends CommonInfo {
 	/**
 	 * 기기 ID (msisdn, uuid).
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceId;
 
 	/**
 	 * “msisdn” or “uuid” 문자열.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceIdType;
 
 	/**
@@ -37,19 +35,16 @@ public class CreateByAgreementReq extends CommonInfo {
 	/**
 	 * 이동 통신사.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceTelecom;
 
 	/**
 	 * 가입 채널 코드.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String joinId;
 
 	/**
 	 * 약관 동의 정보.
 	 */
-	@NotEmpty(groups = AgreementInfo.class, message = "필수 파라미터 입니다.")
 	private List<AgreementInfo> agreementList;
 
 	/**
