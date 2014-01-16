@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
@@ -22,10 +22,15 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants
 import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
 
-@Component
+/**
+ * SAC => E/C Outbound
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 김경복, 부르칸.
+ */
+@Repository
 public class IDPRepositoryImpl implements IDPRepository {
 
-	private static final Logger logger = LoggerFactory.getLogger(IDPRepositoryImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(IDPRepositoryImpl.class);
 
 	@Value("#{propertiesForSac['idp.service_domain']}")
 	public String OMP_SERVICE_DOMAIN;
@@ -117,8 +122,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * 
 	 */
 	private String generateMacSignature(String key, String message) throws Exception {
-		logger.info("key : " + key);
-		logger.info("message : " + message);
+		LOGGER.info("key : " + key);
+		LOGGER.info("message : " + message);
 		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(), "HmacSHA1");
 
 		Mac mac = Mac.getInstance("HmacSHA1");
@@ -168,8 +173,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 		sb.append(mbrNm);
 		sb.append("|time=");
 		sb.append(time);
-		logger.info("=============>[makeSnAuthKey str]" + sb.toString());
-		logger.info("=============>[sn_auth_key]"
+		LOGGER.info("=============>[makeSnAuthKey str]" + sb.toString());
+		LOGGER.info("=============>[sn_auth_key]"
 				+ this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time);
 		return this.generateMacSignature(this.IDP_REQ_OMP_ASSOC_KEY, sb.toString()) + "|" + time;
 	}
@@ -184,8 +189,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 *          2. nefer 2009-12-08 override func - override func - support domain parameters
 	 */
 	public String makeSpAuthKey() throws Exception {
-		logger.debug("IDPManager.OMP_SERVICE_DOMAIN : " + this.OMP_SERVICE_DOMAIN);
-		logger.debug("makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN) : " + this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN));
+		LOGGER.debug("IDPManager.OMP_SERVICE_DOMAIN : " + this.OMP_SERVICE_DOMAIN);
+		LOGGER.debug("makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN) : " + this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN));
 		return this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN);
 	}
 
@@ -284,64 +289,64 @@ public class IDPRepositoryImpl implements IDPRepository {
 		String service_id = sendData.getService_id();
 		String user_ci = sendData.getUser_ci();
 
-		// logger.debug("IDP SEND DATA -----------------------------------");
-		// logger.debug("cmd                =" + cmd);
-		// logger.debug("spId               =" + spId);
-		// logger.debug("respType           =" + respType);
-		// logger.debug("respFlow           =" + respFlow);
-		// logger.debug("respUrl            =" + respUrl);
-		// logger.debug("keyType            =" + keyType);
-		// logger.debug("key                =" + key);
-		// logger.debug("pre_key            =" + pre_key);
-		// logger.debug("userId             =" + userId);
-		// logger.debug("type               =" + type);
-		// logger.debug("userName           =" + userName);
-		// logger.debug("userSocialNumber   =" + userSocialNumber);
-		// logger.debug("userPasswd         =" + userPasswd);
-		// logger.debug("userMdn            =" + userMdn);
-		// logger.debug("userMdnType        =" + userMdnType);
-		// logger.debug("userCode           =" + userCode);
-		// logger.debug("mobileSign         =" + mobileSign);
-		// logger.debug("signData           =" + signData);
-		// logger.debug("imageUrl           =" + imageUrl);
-		// logger.debug("imageSign          =" + imageSign);
-		// logger.debug("userEmail          =" + userEmail);
-		// logger.debug("userJobCode        =" + userJobCode);
-		// logger.debug("userZipcode        =" + userZipcode);
-		// logger.debug("userAddress        =" + userAddress);
-		// logger.debug("userAddress2       =" + userAddress2);
-		// logger.debug("userSex            =" + userSex);
-		// logger.debug("userBirthday       =" + userBirthday);
-		// logger.debug("userPhone          =" + userPhone);
-		// logger.debug("watermarkAuth      =" + watermarkAuth);
-		// logger.debug("userType           =" + userType);
-		// logger.debug("isParents          =" + isParents);
-		// logger.debug("parentSocialNumber =" + parentSocialNumber);
-		// logger.debug("parentName         =" + parentName);
-		// logger.debug("parentEmail        =" + parentEmail);
-		// logger.debug("parentMdn          =" + parentMdn);
-		// logger.debug("userJob            =" + userJob);
-		// logger.debug("userTel            =" + userTel);
-		// logger.debug("userAuthKey        =" + userAuthKey);
-		// logger.debug("preUserEmail       =" + preUserEmail);
-		// logger.debug("userKey            =" + userKey);
-		// logger.debug("user_calendar      =" + userCalendar);
-		// logger.debug("is_rname_auth      =" + isRnameAuth);
-		// logger.debug("sn_auth_key        =" + snAuthKey);
-		// logger.debug("phone_auth_key     =" + phoneAuthKey);
-		// logger.debug("sp_auth_key        =" + spAuthKey);
-		// logger.debug("mdnCorp            =" + mdnCorp);
-		// logger.debug("svcCode            =" + svcCode);
-		// logger.debug("userSvcMngNum      =" + userSvcMngNum);
-		// logger.debug("approve_sp_id      =" + approve_sp_id);
-		// logger.debug("comment      =" + comment);
-		// logger.debug("targetService      =" + targetService);
-		// logger.debug("sp_token      =" + sp_token);
-		// logger.debug("service_token      =" + service_token);
-		// logger.debug("service_secret      =" + service_secret);
-		// logger.debug("service_id      =" + service_id);
-		// logger.debug("user_ci      =" + user_ci);
-		// logger.debug("--------------------------------------------------");
+		// LOGGER.debug("IDP SEND DATA -----------------------------------");
+		// LOGGER.debug("cmd                =" + cmd);
+		// LOGGER.debug("spId               =" + spId);
+		// LOGGER.debug("respType           =" + respType);
+		// LOGGER.debug("respFlow           =" + respFlow);
+		// LOGGER.debug("respUrl            =" + respUrl);
+		// LOGGER.debug("keyType            =" + keyType);
+		// LOGGER.debug("key                =" + key);
+		// LOGGER.debug("pre_key            =" + pre_key);
+		// LOGGER.debug("userId             =" + userId);
+		// LOGGER.debug("type               =" + type);
+		// LOGGER.debug("userName           =" + userName);
+		// LOGGER.debug("userSocialNumber   =" + userSocialNumber);
+		// LOGGER.debug("userPasswd         =" + userPasswd);
+		// LOGGER.debug("userMdn            =" + userMdn);
+		// LOGGER.debug("userMdnType        =" + userMdnType);
+		// LOGGER.debug("userCode           =" + userCode);
+		// LOGGER.debug("mobileSign         =" + mobileSign);
+		// LOGGER.debug("signData           =" + signData);
+		// LOGGER.debug("imageUrl           =" + imageUrl);
+		// LOGGER.debug("imageSign          =" + imageSign);
+		// LOGGER.debug("userEmail          =" + userEmail);
+		// LOGGER.debug("userJobCode        =" + userJobCode);
+		// LOGGER.debug("userZipcode        =" + userZipcode);
+		// LOGGER.debug("userAddress        =" + userAddress);
+		// LOGGER.debug("userAddress2       =" + userAddress2);
+		// LOGGER.debug("userSex            =" + userSex);
+		// LOGGER.debug("userBirthday       =" + userBirthday);
+		// LOGGER.debug("userPhone          =" + userPhone);
+		// LOGGER.debug("watermarkAuth      =" + watermarkAuth);
+		// LOGGER.debug("userType           =" + userType);
+		// LOGGER.debug("isParents          =" + isParents);
+		// LOGGER.debug("parentSocialNumber =" + parentSocialNumber);
+		// LOGGER.debug("parentName         =" + parentName);
+		// LOGGER.debug("parentEmail        =" + parentEmail);
+		// LOGGER.debug("parentMdn          =" + parentMdn);
+		// LOGGER.debug("userJob            =" + userJob);
+		// LOGGER.debug("userTel            =" + userTel);
+		// LOGGER.debug("userAuthKey        =" + userAuthKey);
+		// LOGGER.debug("preUserEmail       =" + preUserEmail);
+		// LOGGER.debug("userKey            =" + userKey);
+		// LOGGER.debug("user_calendar      =" + userCalendar);
+		// LOGGER.debug("is_rname_auth      =" + isRnameAuth);
+		// LOGGER.debug("sn_auth_key        =" + snAuthKey);
+		// LOGGER.debug("phone_auth_key     =" + phoneAuthKey);
+		// LOGGER.debug("sp_auth_key        =" + spAuthKey);
+		// LOGGER.debug("mdnCorp            =" + mdnCorp);
+		// LOGGER.debug("svcCode            =" + svcCode);
+		// LOGGER.debug("userSvcMngNum      =" + userSvcMngNum);
+		// LOGGER.debug("approve_sp_id      =" + approve_sp_id);
+		// LOGGER.debug("comment      =" + comment);
+		// LOGGER.debug("targetService      =" + targetService);
+		// LOGGER.debug("sp_token      =" + sp_token);
+		// LOGGER.debug("service_token      =" + service_token);
+		// LOGGER.debug("service_secret      =" + service_secret);
+		// LOGGER.debug("service_id      =" + service_id);
+		// LOGGER.debug("user_ci      =" + user_ci);
+		// LOGGER.debug("--------------------------------------------------");
 		param.put("sp_id", spId);
 		param.put("sp_auth_key", spAuthKey);
 
@@ -457,17 +462,17 @@ public class IDPRepositoryImpl implements IDPRepository {
 			param.put("user_ci", user_ci);
 		Enumeration keys = param.keys();
 		String paramKey = null;
-		logger.info("IDP SEND DATA -----------------------------------");
-		logger.info("url=" + sendData.getUrl());
+		LOGGER.info("IDP SEND DATA -----------------------------------");
+		LOGGER.info("url=" + sendData.getUrl());
 		while ((keys != null) && keys.hasMoreElements()) {
 			paramKey = (String) keys.nextElement();
 			if ("user_social_number".equals(paramKey) || "parent_social_number".equals(paramKey)
 					|| ("key".equals(paramKey) && param.get(paramKey).length() == 13))
-				logger.info(paramKey + "= " + param.get(paramKey).substring(0, 6) + "*******");
+				LOGGER.info(paramKey + "= " + param.get(paramKey).substring(0, 6) + "*******");
 			else
-				logger.info(paramKey + "= " + param.get(paramKey));
+				LOGGER.info(paramKey + "= " + param.get(paramKey));
 		}
-		logger.info("--------------------------------------------------");
+		LOGGER.info("--------------------------------------------------");
 		return param;
 
 	}
@@ -589,89 +594,89 @@ public class IDPRepositoryImpl implements IDPRepository {
 		String rname_auth_type_cd = sendData.getRname_auth_type_cd();
 		String mdn = sendData.getMdn();
 
-		// logger.debug("IDP SEND DATA -----------------------------------");
-		// logger.debug("cmd                     =" + cmd);
-		// logger.debug("spId                    =" + spId);
-		// logger.debug("sp_auth_key             =" + spAuthKey);
-		// logger.debug("resp_type               =" + resp_type);
-		// logger.debug("resp_flow               =" + resp_flow);
-		// logger.debug("resp_url                =" + resp_url);
-		// logger.debug("key_type                =" + key_type);
-		// logger.debug("key                     =" + key);
-		// logger.debug("user_auth_key           =" + user_auth_key);
-		// logger.debug("user_id                 =" + user_id);
-		// logger.debug("old_id                  =" + old_id);
-		// logger.debug("user_passwd             =" + user_passwd);
-		// logger.debug("user_passwd_type        =" + user_passwd_type);
-		// logger.debug("auth_type               =" + auth_type);
-		// logger.debug("user_tn                 =" + user_tn);
-		// logger.debug("is_user_tn_own          =" + is_user_tn_own);
-		// logger.debug("is_user_tn_auth         =" + is_user_tn_auth);
-		// logger.debug("user_tn_nation_cd       =" + user_tn_nation_cd);
-		// logger.debug("user_tn_type            =" + user_tn_type);
-		// logger.debug("user_email              =" + user_email);
-		// logger.debug("is_email_auth           =" + is_email_auth);
-		// logger.debug("user_type               =" + user_type);
-		// logger.debug("user_name               =" + user_name);
-		// logger.debug("is_rname_auth           =" + is_rname_auth);
-		// logger.debug("user_mdn                =" + user_mdn);
-		// logger.debug("user_mdn_auth_key       =" + user_mdn_auth_key);
-		// logger.debug("user_sex                =" + user_sex);
-		// logger.debug("user_birthday           =" + user_birthday);
-		// logger.debug("user_calendar           =" + user_calendar);
-		// logger.debug("user_zipcode            =" + user_zipcode);
-		// logger.debug("user_address            =" + user_address);
-		// logger.debug("user_address2           =" + user_address2);
-		// logger.debug("user_nation_code        =" + user_nation_code);
-		// logger.debug("user_nation_name        =" + user_nation_name);
-		// logger.debug("lang_code               =" + lang_code);
-		// logger.debug("is_im_changed           =" + is_im_changed);
-		// logger.debug("trans_sst_list          =" + trans_sst_list);
-		// logger.debug("user_status_code        =" + user_status_code);
-		// logger.debug("parent_type             =" + parent_type);
-		// logger.debug("parent_rname_auth_type  =" + parent_rname_auth_type);
-		// logger.debug("parent_rname_auth_key   =" + parent_rname_auth_key);
-		// logger.debug("parent_name             =" + parent_name);
-		// logger.debug("parent_birthday             =" + parent_birthday);
-		// logger.debug("parent_mdn              =" + parent_mdn);
-		// logger.debug("parent_email            =" + parent_email);
-		// logger.debug("parent_approve_date     =" + parent_approve_date);
-		// logger.debug("is_parent_approve       =" + is_parent_approve);
-		// logger.debug("parent_approve_sst_code =" + parent_approve_sst_code);
-		// logger.debug("consent_tac             =" + consent_tac);
-		// logger.debug("join_path_code          =" + join_path_code);
-		// logger.debug("join_date               =" + join_date);
-		// logger.debug("join_time               =" + join_time);
-		// logger.debug("modify_req_date         =" + modify_req_date);
-		// logger.debug("modify_req_time         =" + modify_req_time);
-		// logger.debug("term_reason_cd          =" + term_reason_cd);
-		// logger.debug("req_date                =" + req_date);
-		// logger.debug("req_time                =" + req_time);
-		// logger.debug("ipin_ci                 =" + ipin_ci);
-		// logger.debug("login_status_code       =" + login_status_code);
-		// logger.debug("login_limit_sst_code    =" + login_limit_sst_code);
-		// logger.debug("service_name            =" + service_name);
-		// logger.debug("im_int_svc_no           =" + im_int_svc_no);
-		// logger.debug("svc_mng_num             =" + svc_mng_num);
-		// logger.debug("model_id                =" + model_id);
-		// logger.debug("user_social_number      =" + user_social_number);
-		// logger.debug("user_mdn_type           =" + user_mdn_type);
-		// logger.debug("user_code               =" + user_code);
-		// logger.debug("mobile_sign             =" + mobile_sign);
-		// logger.debug("sign_data               =" + sign_data);
-		// logger.debug("snAuthKey 			  =" + snAuthKey);
-		// logger.debug("is_biz_auth 			  =" + is_biz_auth);
-		// logger.debug("rname_auth_mns_code 	  =" + rname_auth_mns_code);
-		// logger.debug("rname_auth_sst_code 	  =" + rname_auth_sst_code);
-		// logger.debug("user_ci 	  =" + user_ci);
-		// logger.debug("user_di 	  =" + user_di);
-		// logger.debug("rname_auth_date 	  =" + rname_auth_date);
-		// logger.debug("udt_type_cd 	  =" + udt_type_cd);
-		// logger.debug("emailYn 	  =" + emailYn);
-		// logger.debug("marketingYn 	  =" + marketingYn);
-		// logger.debug("rname_auth_type_cd 	  =" + rname_auth_type_cd);
-		// logger.debug("mdn 	  =" + mdn);
-		// logger.debug("--------------------------------------------------");
+		// LOGGER.debug("IDP SEND DATA -----------------------------------");
+		// LOGGER.debug("cmd                     =" + cmd);
+		// LOGGER.debug("spId                    =" + spId);
+		// LOGGER.debug("sp_auth_key             =" + spAuthKey);
+		// LOGGER.debug("resp_type               =" + resp_type);
+		// LOGGER.debug("resp_flow               =" + resp_flow);
+		// LOGGER.debug("resp_url                =" + resp_url);
+		// LOGGER.debug("key_type                =" + key_type);
+		// LOGGER.debug("key                     =" + key);
+		// LOGGER.debug("user_auth_key           =" + user_auth_key);
+		// LOGGER.debug("user_id                 =" + user_id);
+		// LOGGER.debug("old_id                  =" + old_id);
+		// LOGGER.debug("user_passwd             =" + user_passwd);
+		// LOGGER.debug("user_passwd_type        =" + user_passwd_type);
+		// LOGGER.debug("auth_type               =" + auth_type);
+		// LOGGER.debug("user_tn                 =" + user_tn);
+		// LOGGER.debug("is_user_tn_own          =" + is_user_tn_own);
+		// LOGGER.debug("is_user_tn_auth         =" + is_user_tn_auth);
+		// LOGGER.debug("user_tn_nation_cd       =" + user_tn_nation_cd);
+		// LOGGER.debug("user_tn_type            =" + user_tn_type);
+		// LOGGER.debug("user_email              =" + user_email);
+		// LOGGER.debug("is_email_auth           =" + is_email_auth);
+		// LOGGER.debug("user_type               =" + user_type);
+		// LOGGER.debug("user_name               =" + user_name);
+		// LOGGER.debug("is_rname_auth           =" + is_rname_auth);
+		// LOGGER.debug("user_mdn                =" + user_mdn);
+		// LOGGER.debug("user_mdn_auth_key       =" + user_mdn_auth_key);
+		// LOGGER.debug("user_sex                =" + user_sex);
+		// LOGGER.debug("user_birthday           =" + user_birthday);
+		// LOGGER.debug("user_calendar           =" + user_calendar);
+		// LOGGER.debug("user_zipcode            =" + user_zipcode);
+		// LOGGER.debug("user_address            =" + user_address);
+		// LOGGER.debug("user_address2           =" + user_address2);
+		// LOGGER.debug("user_nation_code        =" + user_nation_code);
+		// LOGGER.debug("user_nation_name        =" + user_nation_name);
+		// LOGGER.debug("lang_code               =" + lang_code);
+		// LOGGER.debug("is_im_changed           =" + is_im_changed);
+		// LOGGER.debug("trans_sst_list          =" + trans_sst_list);
+		// LOGGER.debug("user_status_code        =" + user_status_code);
+		// LOGGER.debug("parent_type             =" + parent_type);
+		// LOGGER.debug("parent_rname_auth_type  =" + parent_rname_auth_type);
+		// LOGGER.debug("parent_rname_auth_key   =" + parent_rname_auth_key);
+		// LOGGER.debug("parent_name             =" + parent_name);
+		// LOGGER.debug("parent_birthday             =" + parent_birthday);
+		// LOGGER.debug("parent_mdn              =" + parent_mdn);
+		// LOGGER.debug("parent_email            =" + parent_email);
+		// LOGGER.debug("parent_approve_date     =" + parent_approve_date);
+		// LOGGER.debug("is_parent_approve       =" + is_parent_approve);
+		// LOGGER.debug("parent_approve_sst_code =" + parent_approve_sst_code);
+		// LOGGER.debug("consent_tac             =" + consent_tac);
+		// LOGGER.debug("join_path_code          =" + join_path_code);
+		// LOGGER.debug("join_date               =" + join_date);
+		// LOGGER.debug("join_time               =" + join_time);
+		// LOGGER.debug("modify_req_date         =" + modify_req_date);
+		// LOGGER.debug("modify_req_time         =" + modify_req_time);
+		// LOGGER.debug("term_reason_cd          =" + term_reason_cd);
+		// LOGGER.debug("req_date                =" + req_date);
+		// LOGGER.debug("req_time                =" + req_time);
+		// LOGGER.debug("ipin_ci                 =" + ipin_ci);
+		// LOGGER.debug("login_status_code       =" + login_status_code);
+		// LOGGER.debug("login_limit_sst_code    =" + login_limit_sst_code);
+		// LOGGER.debug("service_name            =" + service_name);
+		// LOGGER.debug("im_int_svc_no           =" + im_int_svc_no);
+		// LOGGER.debug("svc_mng_num             =" + svc_mng_num);
+		// LOGGER.debug("model_id                =" + model_id);
+		// LOGGER.debug("user_social_number      =" + user_social_number);
+		// LOGGER.debug("user_mdn_type           =" + user_mdn_type);
+		// LOGGER.debug("user_code               =" + user_code);
+		// LOGGER.debug("mobile_sign             =" + mobile_sign);
+		// LOGGER.debug("sign_data               =" + sign_data);
+		// LOGGER.debug("snAuthKey 			  =" + snAuthKey);
+		// LOGGER.debug("is_biz_auth 			  =" + is_biz_auth);
+		// LOGGER.debug("rname_auth_mns_code 	  =" + rname_auth_mns_code);
+		// LOGGER.debug("rname_auth_sst_code 	  =" + rname_auth_sst_code);
+		// LOGGER.debug("user_ci 	  =" + user_ci);
+		// LOGGER.debug("user_di 	  =" + user_di);
+		// LOGGER.debug("rname_auth_date 	  =" + rname_auth_date);
+		// LOGGER.debug("udt_type_cd 	  =" + udt_type_cd);
+		// LOGGER.debug("emailYn 	  =" + emailYn);
+		// LOGGER.debug("marketingYn 	  =" + marketingYn);
+		// LOGGER.debug("rname_auth_type_cd 	  =" + rname_auth_type_cd);
+		// LOGGER.debug("mdn 	  =" + mdn);
+		// LOGGER.debug("--------------------------------------------------");
 
 		if (cmd != null && !"".equals(cmd))
 			param.put("cmd", cmd);
@@ -838,16 +843,16 @@ public class IDPRepositoryImpl implements IDPRepository {
 
 		Enumeration keys = param.keys();
 		String paramKey = null;
-		logger.info("IDP SEND DATA -----------------------------------");
-		logger.info("url=" + sendData.getUrl());
+		LOGGER.info("IDP SEND DATA -----------------------------------");
+		LOGGER.info("url=" + sendData.getUrl());
 		while ((keys != null) && keys.hasMoreElements()) {
 			paramKey = (String) keys.nextElement();
 			if ("user_social_number".equals(paramKey))
-				logger.info(paramKey + "= " + param.get(paramKey).substring(0, 6) + "*******");
+				LOGGER.info(paramKey + "= " + param.get(paramKey).substring(0, 6) + "*******");
 			else
-				logger.info(paramKey + "= " + param.get(paramKey));
+				LOGGER.info(paramKey + "= " + param.get(paramKey));
 		}
-		logger.info("--------------------------------------------------");
+		LOGGER.info("--------------------------------------------------");
 		return param;
 
 	}

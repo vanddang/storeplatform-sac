@@ -30,7 +30,7 @@ public class IdpController {
 	@Autowired
 	private IdpService service;
 
-	private static final Logger logger = LoggerFactory.getLogger(IdpController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(IdpController.class);
 
 	/**
 	 * 
@@ -47,7 +47,8 @@ public class IdpController {
 	public ProvisioningRes provisioning(@RequestBody ProvisioningReq provisioningReq) {
 		ProvisioningRes provisioningRes = new ProvisioningRes();
 		try {
-			logger.debug("provisioning - cmd : {}, query string : {}", provisioningReq.getCmd(),
+			LOGGER.info("#### E/C => SAC [Inbound] Start ####");
+			LOGGER.info("provisioning - cmd : {}, query string : {}", provisioningReq.getCmd(),
 					provisioningReq.getReqParam());
 			String cmd = provisioningReq.getCmd();
 			boolean isIm = (cmd.indexOf("RX") == 0);
@@ -59,10 +60,11 @@ public class IdpController {
 				provisioningRes.setResult((String) method.invoke(this.service, provisioningReq.getReqParam()));
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			// TODO : SAC 정의 Exception으로 변경 하기 - 임재호 2014.1.8
 			throw new RuntimeException(e.getMessage());
 		}
+		LOGGER.info("#### E/C => SAC [Inbound] End ####");
 		return provisioningRes;
 	}
 }

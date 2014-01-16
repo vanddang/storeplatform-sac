@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
@@ -48,6 +49,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  * Updated on : 2014. 1. 7. Updated by : 김경복, 부르칸.
  */
 @Service
+@Transactional
 public class SellerServiceImpl implements SellerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerServiceImpl.class);
