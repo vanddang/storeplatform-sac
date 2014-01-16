@@ -17,8 +17,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 public class BestDownloadReq extends CommonInfo {
-
 	private static final long serialVersionUID = 1L;
+	private String tenantId; // tenantId
+	private String systemId; // 시스템Id
+	private String deviceModelCd; // 단말모델코드
+	private String langCd; // 언어코드
 	private String listId; // 리스트 Id
 	private String imageSizeCd; // 이미지 사이즈 코드
 	private String menuId; // 메뉴 Id
@@ -30,6 +33,106 @@ public class BestDownloadReq extends CommonInfo {
 	private String offset; // 시작점 ROW
 	private String count; // 페이지당 노출 ROW 수
 	private String dummy;
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            tenantId
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param systemId
+	 *            systemId
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param deviceModelCd
+	 *            deviceModelCd
+	 */
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param langCd
+	 *            langCd
+	 */
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
 
 	/**
 	 * 
