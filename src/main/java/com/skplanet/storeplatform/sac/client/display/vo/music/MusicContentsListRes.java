@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.music;
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -21,7 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
-public class MusicContentsListRes extends CommonInfo implements Serializable {
+public class MusicContentsListRes extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123126L;
 

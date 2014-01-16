@@ -9,22 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.music;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 일반 상품 카테고리 리스트 조회 Input Value Object.
+ * 음원컨텐츠 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
  */
-public class MusicContentsReq extends CommonInfo implements Serializable {
+public class MusicContentsReq extends CommonInfo {
 
-	private static final long serialVersionUID = 11123123133L;
+	private static final long serialVersionUID = 11123123145L;
 
 	private String filteredBy; // 차트 구분 코드
 
-	private String imageSizeCd; // 이미지 사이즈 코드
+	private String imageCd; // 이미지 사이즈 코드
 
 	private String purchase;
 
@@ -32,9 +30,15 @@ public class MusicContentsReq extends CommonInfo implements Serializable {
 
 	private String menuId;
 
-	private String offset; // 시작점 ROW
+	private String langCd;
 
-	private String count; // 페이지당 노출 ROW 수
+	private String deviceModelCd;
+
+	private String tenantId;
+
+	private int offset = 1; // 시작점 ROW
+
+	private int count = 100; // 페이지당 노출 ROW 수
 
 	public String getFilteredBy() {
 		return this.filteredBy;
@@ -44,12 +48,12 @@ public class MusicContentsReq extends CommonInfo implements Serializable {
 		this.filteredBy = filteredBy;
 	}
 
-	public String getImageSizeCd() {
-		return this.imageSizeCd;
+	public String getImageCd() {
+		return this.imageCd;
 	}
 
-	public void setImageSizeCd(String imageSizeCd) {
-		this.imageSizeCd = imageSizeCd;
+	public void setImageCd(String imageCd) {
+		this.imageCd = imageCd;
 	}
 
 	public String getPurchase() {
@@ -76,20 +80,44 @@ public class MusicContentsReq extends CommonInfo implements Serializable {
 		this.menuId = menuId;
 	}
 
-	public String getOffset() {
+	public int getOffset() {
 		return this.offset;
 	}
 
-	public void setOffset(String offset) {
+	public void setOffset(int offset) {
 		this.offset = offset;
 	}
 
-	public String getCount() {
+	public int getCount() {
 		return this.count;
 	}
 
-	public void setCount(String count) {
+	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
+	public String getDeviceModelCd() {
+		return this.deviceModelCd;
+	}
+
+	public void setDeviceModelCd(String deviceModelCd) {
+		this.deviceModelCd = deviceModelCd;
+	}
+
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
