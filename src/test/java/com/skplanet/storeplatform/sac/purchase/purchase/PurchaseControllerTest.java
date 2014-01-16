@@ -62,7 +62,7 @@ public class PurchaseControllerTest {
 		String reqJsonStr = mapper.writeValueAsString(req);
 
 		this.mvc.perform(
-				post("/purchase/purchase/create/v1").content(reqJsonStr)
+				post("/purchase/order/create/v1").content(reqJsonStr)
 						.contentType(MediaType.parseMediaType("application/json;charset=UTF-8"))
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))).andDo(print())
 				.andExpect(content().contentType("application/json;charset=UTF-8")).andExpect(status().isOk());
