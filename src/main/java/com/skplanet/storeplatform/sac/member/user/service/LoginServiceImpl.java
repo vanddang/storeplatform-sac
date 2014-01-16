@@ -121,7 +121,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) throws Exception {
 
-		logger.info("######################## LoginServiceImpl authorizeByMdn start ############################");
+		logger.info("############################ LoginServiceImpl authorizeByMdn start ############################");
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -136,6 +136,7 @@ public class LoginServiceImpl implements LoginService {
 		String userType = null;
 		String userMainStatus = null;
 		String userSubStatus = null;
+		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		/* 모번호 조회 */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
@@ -144,8 +145,8 @@ public class LoginServiceImpl implements LoginService {
 		SearchUserResponse schUserRes = this.searchUserInfo(MemberConstants.KEY_TYPE_DEVICE_ID, deviceId);
 
 		/* 회원 상태 확인 */
-		if (schUserRes.getUserMbr() == null || StringUtil.equals(schUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_SECEDE)) {
-			throw new Exception("무선가입상태가 아닙니다.");
+		if (schUserRes.getUserMbr() == null) {
+			throw new Exception("회원정보 없음.");
 		}
 
 		userKey = schUserRes.getUserMbr().getUserKey();
@@ -153,12 +154,19 @@ public class LoginServiceImpl implements LoginService {
 		userMainStatus = schUserRes.getUserMbr().getUserMainStatus();
 		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
 
+		/* 탈퇴 회원 */
+		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)) {
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
+			return res;
+		}
+
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
 			//this.volatileMemberPoc(deviceId, userKey);
 		}
-
-		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
@@ -166,9 +174,10 @@ public class LoginServiceImpl implements LoginService {
 			this.mergeDeviceInfo(userKey, req);
 
 			/* 로그인 성공이력 저장 */
-			LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
+			this.insertloginHistory(deviceId, null, "Y");
 
-			res.setUserKey(loginRes.getUserKey());
+			/* 로그인 결과 */
+			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
@@ -184,9 +193,10 @@ public class LoginServiceImpl implements LoginService {
 				this.mergeDeviceInfo(userKey, req);
 
 				/* 로그인 성공이력 저장 */
-				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
+				this.insertloginHistory(deviceId, null, "Y");
 
-				res.setUserKey(loginRes.getUserKey());
+				/* 로그인 결과 */
+				res.setUserKey(userKey);
 				res.setUserType(userType);
 				res.setUserMainStatus(userMainStatus);
 				res.setUserSubStatus(userSubStatus);
@@ -197,9 +207,10 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		logger.info("######################## LoginServiceImpl authorizeByMdn end ############################");
+		logger.info("############################ LoginServiceImpl authorizeByMdn end ############################");
 
 		return res;
+
 	}
 
 	/*
@@ -213,7 +224,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) throws Exception {
 
-		logger.info("######################## LoginServiceImpl authorizeById start ############################");
+		logger.info("############################ LoginServiceImpl authorizeById start ############################");
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -225,7 +236,8 @@ public class LoginServiceImpl implements LoginService {
 		String userPw = req.getUserPw();
 		String userKey = null;
 		String userType = null;
-		String userStateVal = null;
+		String userMainStatus = null;
+		String userSubStatus = null;
 
 		/* 모번호 조회 */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
@@ -235,24 +247,30 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 회원 상태 확인 */
 		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("존재하지 않는 아이디입니다.");
-		}
-
-		if (StringUtil.equals(schUserRes.getUserMbr().getUserMainStatus(), MemberConstants.MAIN_STATUS_PAUSE)) {
-			throw new Exception("로그인 5회 입력 오류로 계정이 잠금 상태가 되었습니다. T store Web에서 해제 후 로그인해 주세요.");
+			throw new Exception("회원정보 없음.");
 		}
 
 		userKey = schUserRes.getUserMbr().getUserKey();
 		userType = schUserRes.getUserMbr().getUserType();
+		userMainStatus = schUserRes.getUserMbr().getUserMainStatus();
+		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
 
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
+
+		/* 탈퇴 / 정지상태 회원 */
+		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
+				|| StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)) {
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
+			return res;
+		}
 
 		/* 회원 인증 요청 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
 			if (!this.isExistAgreeSiteTstore(schUserRes.getUserMbr().getImSiteCode())) { //서비스 이용동의 간편 가입 대상 확인
-
-				userStateVal = "notYetAgreeTerms";
 
 				//통합서비스 관리번호 조회(findJoinServiceListIDP)
 				Map<String, Object> param = new HashMap<String, Object>();
@@ -260,10 +278,19 @@ public class LoginServiceImpl implements LoginService {
 				param.put("key", userId);
 				ImIDPReceiverM imIdpReceiver = this.imIdpService.findJoinServiceListIDP(param);
 				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+
+					res.setUserKey(userKey);
+					res.setUserType(userType);
+					res.setUserMainStatus(userMainStatus);
+					res.setUserSubStatus(userSubStatus);
 					res.setImIntSvcNo(imIdpReceiver.getResponseBody().getIm_int_svc_no());
 					//SC회원 콤포넌트의 코드값 셋팅
 					res.setLoginStatCd("");
 					res.setSubStatCd("");
+
+				} else {
+					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+							+ imIdpReceiver.getResponseHeader().getResult_text());
 				}
 
 			} else {
@@ -272,14 +299,14 @@ public class LoginServiceImpl implements LoginService {
 
 				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
-					userStateVal = "oneId";
-
 					this.mergeDeviceInfo(userKey, req);
 
-					LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "Y");
+					this.insertloginHistory(userId, userPw, "Y");
 
-					res.setUserKey(loginRes.getUserKey());
-					res.setUserStatus(userStateVal);
+					res.setUserKey(userKey);
+					res.setUserType(userType);
+					res.setUserMainStatus(userMainStatus);
+					res.setUserSubStatus(userSubStatus);
 					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
 					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
 
@@ -291,7 +318,6 @@ public class LoginServiceImpl implements LoginService {
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
-					userStateVal = "temporary";
 					// 가가입 상태 - 가입신청 사이트 정보
 					String joinSst = imIdpReceiver.getResponseBody().getJoin_sst_list();
 					String joinSstCd = "";
@@ -310,8 +336,10 @@ public class LoginServiceImpl implements LoginService {
 						joinSstNm = mapSiteCd.get(joinSstCd);
 					}
 
-					res.setUserKey(schUserRes.getUserMbr().getUserKey());
-					res.setUserStatus(userStateVal);
+					res.setUserKey(userKey);
+					res.setUserType(userType);
+					res.setUserMainStatus(userMainStatus);
+					res.setUserSubStatus(userSubStatus);
 					res.setJoinSiteCd(joinSstCd);
 					res.setJoinSiteNm(joinSstNm);
 
@@ -319,8 +347,9 @@ public class LoginServiceImpl implements LoginService {
 
 					this.mergeDeviceInfo(userKey, req);
 
-					res.setUserKey(schUserRes.getUserMbr().getUserKey());
-					res.setUserStatus(userStateVal);
+					res.setUserType(userType);
+					res.setUserMainStatus(userMainStatus);
+					res.setUserSubStatus(userSubStatus);
 					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
 					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
 
@@ -328,8 +357,10 @@ public class LoginServiceImpl implements LoginService {
 
 					this.mergeDeviceInfo(userKey, req);
 
-					res.setUserKey(schUserRes.getUserMbr().getUserKey());
-					res.setUserStatus(userStateVal);
+					res.setUserKey(userKey);
+					res.setUserType(userType);
+					res.setUserMainStatus(userMainStatus);
+					res.setUserSubStatus(userSubStatus);
 					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
 					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
 
@@ -346,14 +377,14 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
-				userStateVal = "tstoreId";
-
 				this.mergeDeviceInfo(userKey, req);
 
-				LogInUserResponse loginRes = this.insertloginHistory(userId, userPw, "Y");
+				this.insertloginHistory(userId, userPw, "Y");
 
-				res.setUserKey(loginRes.getUserKey());
-				res.setUserStatus(userStateVal);
+				res.setUserKey(userKey);
+				res.setUserType(userType);
+				res.setUserMainStatus(userMainStatus);
+				res.setUserSubStatus(userSubStatus);
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
@@ -546,4 +577,5 @@ public class LoginServiceImpl implements LoginService {
 
 		return joinTstore;
 	}
+
 }

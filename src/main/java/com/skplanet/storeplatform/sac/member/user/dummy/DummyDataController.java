@@ -139,7 +139,7 @@ public class DummyDataController {
 	 * 
 	 * @return AuthorizeByMdnRes
 	 */
-	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn() {
 
@@ -149,10 +149,12 @@ public class DummyDataController {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 		res.setUserKey("IW102158844420091030165015");
-		//res.setUserStatus("mobile");
+		res.setUserType("US011501");
+		res.setUserMainStatus("US010201");
+		res.setUserSubStatus("US010301");
 
 		return res;
-	}
+	}*/
 
 	/**
 	 * <pre>
@@ -172,9 +174,9 @@ public class DummyDataController {
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 		res.setUserKey("IW102158844420091030165015");
 		res.setUserAuthKey("1234567890");
-		res.setUserStatus("temporary");
-		res.setJoinSiteCd("90000");
-		res.setJoinSiteNm("One ID");
+		res.setUserType("US011501");
+		res.setUserMainStatus("US010201");
+		res.setUserSubStatus("US010301");
 		return res;
 	}
 
