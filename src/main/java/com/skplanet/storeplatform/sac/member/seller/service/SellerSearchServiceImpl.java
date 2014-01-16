@@ -119,6 +119,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 판매자회원 기본정보 조회.
+	 * </pre>
+	 * 
+	 * @param DetailInformationReq
+	 * @return DetailInformationRes
+	 */
 	@Override
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
 
@@ -238,6 +246,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자회원 정산정보 조회.
+	 * </pre>
+	 * 
+	 * @param DetailAccountInformationReq
+	 * @return DetailAccountInformationRes
+	 */
 	@Override
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
 			throws Exception {
@@ -335,6 +351,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	}
 
+	/**
+	 * <pre>
+	 * 탈퇴 사유 목록 조회.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return ListWithdrawalReasonRes
+	 */
 	@Override
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) throws Exception {
 
@@ -361,6 +385,14 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	}
 
+	/**
+	 * <pre>
+	 * 판매자회원 ID 찾기.
+	 * </pre>
+	 * 
+	 * @param SearchIdReq
+	 * @return SearchIdRes
+	 */
 	@Override
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
 
