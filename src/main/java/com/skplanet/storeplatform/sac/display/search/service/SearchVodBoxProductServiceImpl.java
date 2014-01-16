@@ -34,8 +34,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.search.vo.SearchProductDTO;
-import com.skplanet.storeplatform.sac.display.search.vo.SearchProductMetaInfoDTO;
+import com.skplanet.storeplatform.sac.display.search.vo.SearchProduct;
+import com.skplanet.storeplatform.sac.display.search.vo.VODMetaInfo;
 
 @Service
 @Transactional
@@ -62,13 +62,6 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 
 		String tenantId = tenantHeader.getTenantId();
 		String listId = req.getListId();
-		// TODO osm1021 헤더값 세팅 꼭 삭제할것 & Map 설정 필요
-		// ObjectMapper mapper = new ObjectMapper();
-		// Map<String, Object> reqMap = mapper.convertValue(req, Map.class);
-		// reqMap.put("deviceModelNo", "SHV-E210S");
-		// reqMap.put("tenantId", "S01");
-		// req.setDeviceModelNo("SHV-E210S");
-		// req.setTenantId("S01");
 
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId, listId);
@@ -87,11 +80,11 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 		// ID list 조회
-		List<SearchProductDTO> searchProductDTOList = this.commonDAO.queryForList(
-				"SearchVodBoxProduct.searchVodBoxProdId", reqMap, SearchProductDTO.class);
+		List<SearchProduct> searchProductList = this.commonDAO.queryForList("SearchVodBoxProduct.searchVodBoxProdId",
+				reqMap, SearchProduct.class);
 		List<Product> productList = new ArrayList<Product>();
 
-		if (searchProductDTOList != null) {
+		if (searchProductList != null) {
 			Identifier identifier = null;
 			Support support = null;
 			Menu menu = null;
@@ -108,22 +101,22 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 			List<Source> sourceList = null;
 			List<Support> supportList = null;
 
-			for (SearchProductDTO searchProductDTO : searchProductDTOList) {
-				SearchProductMetaInfoDTO retDTO = this.metaInfoService.getMetaInfo(searchProductDTO);
+			for (SearchProduct searchProduct : searchProductList) {
+				VODMetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(searchProduct);
 
 				product = new Product();
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-				identifier.setText(retDTO.getProdId());
+				identifier.setText(retMetaInfo.getProdId());
 				product.setIdentifier(identifier);
 
 				// 상품 지원 정보
 				support = new Support();
 				supportList = new ArrayList<Support>();
 				support.setType("hd");
-				support.setText(retDTO.getHdvYn());
+				support.setText(retMetaInfo.getHdvYn());
 				supportList.add(support);
 				product.setSupportList(supportList);
 
@@ -131,64 +124,64 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 				menu = new Menu();
 				menuList = new ArrayList<Menu>();
 				menu.setType("topClass");
-				menu.setId(retDTO.getTopMenuId());
-				menu.setName(retDTO.getTopMenuNm());
+				menu.setId(retMetaInfo.getTopMenuId());
+				menu.setName(retMetaInfo.getTopMenuNm());
 				menuList.add(menu);
 
 				menu = new Menu();
-				menu.setId(retDTO.getMenuId());
-				menu.setName(retDTO.getMenuNm());
+				menu.setId(retMetaInfo.getMenuId());
+				menu.setName(retMetaInfo.getMenuNm());
 				menuList.add(menu);
 
 				menu = new Menu();
 				menu.setType("metaClass");
-				menu.setId(retDTO.getMetaClsfCd());
+				menu.setId(retMetaInfo.getMetaClsfCd());
 				menuList.add(menu);
 				product.setMenuList(menuList);
 
 				// 저작자 정보
 				contributor = new Contributor();
-				contributor.setArtist(retDTO.getArtist1Nm());
-				contributor.setDirector(retDTO.getArtist2Nm());
+				contributor.setArtist(retMetaInfo.getArtist1Nm());
+				contributor.setDirector(retMetaInfo.getArtist2Nm());
 
 				date = new Date();
-				date.setText(retDTO.getIssueDay());
+				date.setText(retMetaInfo.getIssueDay());
 				contributor.setDate(date);
 				product.setContributor(contributor);
 
 				// 평점 정보
 				accrual = new Accrual();
-				accrual.setDownloadCount(retDTO.getPrchsCnt());
-				accrual.setScore(retDTO.getAvgEvluScore());
-				accrual.setVoterCount(retDTO.getPaticpersCnt());
+				accrual.setDownloadCount(retMetaInfo.getPrchsCnt());
+				accrual.setScore(retMetaInfo.getAvgEvluScore());
+				accrual.setVoterCount(retMetaInfo.getPaticpersCnt());
 				product.setAccrual(accrual);
 
 				// 이용권한 정보
 				rights = new Rights();
-				rights.setGrade(retDTO.getProdGrdCd());
+				rights.setGrade(retMetaInfo.getProdGrdCd());
 				product.setRights(rights);
 
 				// 상품 정보 (상품명)
 				title = new Title();
-				title.setPrefix(retDTO.getVodTitlNm());
-				title.setText(retDTO.getProdNm());
+				title.setPrefix(retMetaInfo.getVodTitlNm());
+				title.setText(retMetaInfo.getProdNm());
 				product.setTitle(title);
 
 				// 이미지 정보
 				source = new Source();
 				sourceList = new ArrayList<Source>();
 				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-				source.setMediaType(DisplayCommonUtil.getMimeType(retDTO.getFileNm()));
-				source.setUrl(retDTO.getFilePath() + retDTO.getFileNm());
+				source.setMediaType(DisplayCommonUtil.getMimeType(retMetaInfo.getFileNm()));
+				source.setUrl(retMetaInfo.getFilePath() + retMetaInfo.getFileNm());
 				sourceList.add(source);
 				product.setSourceList(sourceList);
 
 				// 상품 정보 (상품설명)
-				product.setProductExplain(retDTO.getProdBaseDesc());
+				product.setProductExplain(retMetaInfo.getProdBaseDesc());
 
 				// 상품 정보 (상품가격)
 				price = new Price();
-				price.setText(Integer.parseInt(retDTO.getProdAmt()));
+				price.setText(retMetaInfo.getProdAmt());
 				product.setPrice(price);
 
 				// 데이터 매핑

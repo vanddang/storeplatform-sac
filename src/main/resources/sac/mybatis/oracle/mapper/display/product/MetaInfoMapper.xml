@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MetaInfo">
-	<select id="getMetaInfo" parameterType="SearchProductDTO" resultType="SearchProductMetaInfoDTO">
- 	   SELECT  /* selectFeatureMovieList.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
+	<select id="getVODMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+ 	   SELECT  /* MetaInfoMapper.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
 		        LA.UP_MENU_ID
 		      , LA.TOP_MENU_ID
 		      , LA.MENU_ID
@@ -50,7 +50,7 @@
 		                                     , C.MENU_DESC
 		                                     , D.PROD_GRD_CD
 		                                     , D.USE_PERIOD_UNIT_CD
-		                                     , E.META_CLSF_CD
+		                                     , D.META_CLSF_CD
 		                                     , E.VOD_TITL_NM
 		                                     , E.STRM_EPSD_CNT
 		                                     , E.ISSUE_DAY
@@ -105,4 +105,13 @@
 		 WHERE LA.TENANT_ID = LB.TENANT_ID(+)
 		   AND LA.PROD_ID = LB.PROD_ID(+)
 	</select>
-</mapper>
+	
+	<select id="getMusicMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+	</select>
+	<select id="getEbookComidMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+    </select>
+	<select id="getAppMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+    </select>
+    <select id="getShoppingMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+    </select>
+ </mapper>

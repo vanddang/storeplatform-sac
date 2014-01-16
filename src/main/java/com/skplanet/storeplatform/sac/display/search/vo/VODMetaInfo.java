@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.display.search.vo;
 
-public class SearchProductMetaInfoDTO {
+public class VODMetaInfo {
 	private int totalCount;
 	private String topMenuId;
 	private String menuId;
@@ -19,7 +19,7 @@ public class SearchProductMetaInfoDTO {
 	private String agencyNm;
 	private String hdvYn;
 	private String dolbySprtYn;
-	private String prodAmt;
+	private Integer prodAmt;
 	private String paticpersCnt;
 	private String prchsCnt;
 	private Double avgEvluScore;
@@ -171,11 +171,11 @@ public class SearchProductMetaInfoDTO {
 		this.dolbySprtYn = dolbySprtYn;
 	}
 
-	public String getProdAmt() {
+	public Integer getProdAmt() {
 		return this.prodAmt;
 	}
 
-	public void setProdAmt(String prodAmt) {
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 

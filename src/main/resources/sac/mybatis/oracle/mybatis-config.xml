@@ -100,9 +100,14 @@
         <typeAlias alias="BestContentsDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestContentsDTO" />
         
         <!-- VOD 상품 ID 리스트 조회 -->
-        <typeAlias alias="SearchProductDTO"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProductDTO" />
-        <typeAlias alias="SearchProductDetailDTO"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProductDetailDTO" />
-        <typeAlias alias="SearchProductMetaInfoDTO"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProductMetaInfoDTO" />
+        <typeAlias alias="SearchProduct"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProduct" />
+        
+        <!-- 상품 meta 정보 조회 -->
+        <typeAlias alias="AppMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.AppMetaInfo" />
+        <typeAlias alias="EbookComicMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.EbookComicMetaInfo" />
+        <typeAlias alias="MusicMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.MusicMetaInfo" />
+        <typeAlias alias="ShoppingMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.ShoppingMetaInfo" />
+        <typeAlias alias="VODMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.VODMetaInfo" />
         
     </typeAliases>
 </configuration>

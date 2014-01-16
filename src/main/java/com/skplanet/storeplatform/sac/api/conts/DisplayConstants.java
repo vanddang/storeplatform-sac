@@ -80,6 +80,48 @@ public class DisplayConstants {
 	public static final String DP_FOREIGNER_IDENTIFIER_CD = "foreigner";
 	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
 
+	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
+	/**
+	 * 게임
+	 */
+	public static final String DP_GAME_TOP_MENU_ID = "DP01";
+	/**
+	 * FUN
+	 */
+	public static final String DP_FUN_TOP_MENU_ID = "DP03";
+	/**
+	 * 생활/위치
+	 */
+	public static final String DP_LIFE_LIVING_TOP_MENU_ID = "DP04";
+	/**
+	 * 어학/교육
+	 */
+	public static final String DP_LANG_EDU_TOP_MENU_ID = "DP08";
+	/**
+	 * VOD 다운로드
+	 */
+	public static final String DP_VOD_TOP_MENU_ID = "DP09";
+	/**
+	 * Android
+	 */
+	public static final String DP_ANDROID_TOP_MENU_ID = "DP12";
+	/**
+	 * eBook
+	 */
+	public static final String DP_EBOOK_TOP_MENU_ID = "DP13";
+	/**
+	 * 만화
+	 */
+	public static final String DP_COMIC_TOP_MENU_ID = "DP14";
+	/**
+	 * 쇼핑/쿠폰
+	 */
+	public static final String DP_SHOPPING_COUPON_TOP_MENU_ID = "DP15";
+	/**
+	 * 음악
+	 */
+	public static final String DP_MUSIC_TOP_MENU_ID = "DP16";
+
 	// ////////////////////////////////////// ETC Code //////////////////////////////////////////
 	/**
 	 * 영화

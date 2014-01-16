@@ -1,9 +1,28 @@
 package com.skplanet.storeplatform.sac.display.search.vo;
 
-public class SearchProductDetailDTO {
+
+public class SearchProduct {
+	private String tenantId;
+	private String menuId;
 	private String prodId;
 	private String partProdId;
 	private String expoOrd;
+
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
+	}
 
 	public String getProdId() {
 		return this.prodId;
