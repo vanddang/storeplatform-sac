@@ -27,8 +27,8 @@ public class CryptUtils {
 	public static final String AES128_CTR = "AES128-CTR";
 	public static final String AES128_CTR_NONCE = "AES128-CTR_NONCE"; // 클라이언트 발급용
 	public static final String DES = "DES";
-	public static final String DESede = "DESede";
-	public static final String TripleDES = "TripleDES";
+	public static final String DESEDE = "DESede";
+	public static final String TRIPLEDES = "TripleDES";
 	private static final String BLOCK_ECB_PKCS5 = "/ECB/PKCS5Padding";
 
 	private static final String AES128_CTR_IV_PARAM = "8558d09bee338fd8bb530006ab9e3351";
@@ -46,6 +46,7 @@ public class CryptUtils {
 
 	/**
 	 * 암호화 알고리즘에 사용할 비밀키를 생성한다<br>
+	 * .
 	 * 
 	 * @param algorithm
 	 *            암호화 알고리즘
@@ -53,6 +54,7 @@ public class CryptUtils {
 	 *            비밀키
 	 * @return 생성된 SecretKey
 	 * @throws Exception
+	 *             Exception
 	 */
 	private static Key keygen(String algorithm, String key) throws Exception {
 
@@ -65,7 +67,7 @@ public class CryptUtils {
 			KeySpec keySpec = new DESKeySpec(btKey);
 			SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(algorithm);
 			secretKey = secretKeyFactory.generateSecret(keySpec);
-		} else if (algorithm.equals(DESede) || algorithm.equals(algorithm.equals(TripleDES))) {
+		} else if (algorithm.equals(DESEDE) || algorithm.equals(algorithm.equals(TRIPLEDES))) {
 			// 192bit ( 64bit*3)
 			btKey = StringUtils.leftPad(key, 24, "0").getBytes();
 			KeySpec keySpec = new DESedeKeySpec(btKey);
@@ -83,15 +85,16 @@ public class CryptUtils {
 		} else if (algorithm.equals(AES128_CTR_NONCE)) {
 			btKey = toBytesFromHexString(AES128_CTR_KEY_NONCE[NumberUtils.toInt(key)]);
 			secretKey = new SecretKeySpec(btKey, "AES");
-		} else {
-			// throw new BaseException("지원하지 않는 암호화 algorithm 입니다.(AES128-CTR,AES,DES,DESede,TripleDES 지원)", "02004");
 		}
+		// else {
+		// throw new BaseException("지원하지 않는 암호화 algorithm 입니다.(AES128-CTR,AES,DES,DESede,TripleDES 지원)", "02004");
+		// }
 
 		return secretKey;
 	}
 
 	/**
-	 * 암호화 알고리즘에 따른 암호화
+	 * 암호화 알고리즘에 따른 암호화.
 	 * 
 	 * @param algorithm
 	 *            암호화 알고리즘
@@ -129,7 +132,7 @@ public class CryptUtils {
 	}
 
 	/**
-	 * 암호화 알고리즘에 따른 복호화
+	 * 암호화 알고리즘에 따른 복호화.
 	 * 
 	 * @param algorithm
 	 *            암호화 알고리즘
@@ -184,7 +187,9 @@ public class CryptUtils {
 	 *            16진수 문자열
 	 * @return byte 배열
 	 * @throws IllegalArgumentException
+	 *             IllegalArgumentException
 	 * @throws NumberFormatException
+	 *             NumberFormatException
 	 */
 	public static byte[] toBytesFromHexString(String digits) throws IllegalArgumentException, NumberFormatException {
 		if (digits == null) {
@@ -230,10 +235,28 @@ public class CryptUtils {
 		return result.toString();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param index
+	 *            index
+	 * @return String
+	 */
 	public static String getNonceKey(String index) {
 		return AES128_CTR_KEY_NONCE[NumberUtils.toInt(index)];
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public static String getNonceIv() {
 		return AES128_CTR_IV_PARAM_NONCE;
 	}

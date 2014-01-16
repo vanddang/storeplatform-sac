@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 
 /**
  * 
- * T Store 검색 Service
+ * Search Service
  * 
  * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
  */
@@ -23,11 +23,11 @@ public interface SearchService {
 	/**
 	 * 
 	 * <pre>
-	 * T Store 검색 데이터를 가공.
+	 * Search 서비스 기능.
 	 * </pre>
 	 * 
-	 * @param searchReq
-	 *            searchReq
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
 	 * @return SearchRes
 	 */
 	public TstoreSearchRes search(TstoreSearchReq tstoreSearchReq);

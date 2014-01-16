@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchRes;
 
 /**
  * 
- * T Store 검색 Service 구현체
+ * Search Service 구현체
  * 
  * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
  */

@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.other.search.service.SearchService;
 
 /**
  * 
- * T Store 검색 Controller
+ * Search Controller
  * 
  * Updated on : 2014. 1. 13. Updated by : 김현일, 인크로스.
  */
@@ -35,12 +35,12 @@ public class SearchController {
 	/**
 	 * 
 	 * <pre>
-	 * T Store 검색 기능.
+	 * Search Controller 기능.
 	 * </pre>
 	 * 
-	 * @param searchReq
-	 *            searchReq
-	 * @return SearchRes
+	 * @param tstoreSearchReq
+	 *            tstoreSearchReq
+	 * @return TstoreSearchRes
 	 */
 	@RequestMapping(value = "/v1", method = RequestMethod.GET)
 	@ResponseBody

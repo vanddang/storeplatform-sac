@@ -7,19 +7,14 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.other.feedback.service;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+package com.skplanet.storeplatform.sac.other.feedback.repository;
 
 /**
  * 
- * Feedback Service 구현체
+ * Feedback Repository
  * 
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
-@Service
-@Transactional
-public class FeedbackServiceImpl implements FeedbackService {
+public interface FeedbackRepository {
 
 }

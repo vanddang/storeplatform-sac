@@ -22,6 +22,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.skplanet.storeplatform.framework.integration.bean.RuntimeContextHolder;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
 
+/**
+ * 
+ * ServiceUrlSearcher 구현체
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
+ */
 @Component
 public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
