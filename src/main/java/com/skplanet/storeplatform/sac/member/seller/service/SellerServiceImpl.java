@@ -305,6 +305,14 @@ public class SellerServiceImpl implements SellerService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 판매자회원 탈퇴.
+	 * </pre>
+	 * 
+	 * @param WithdrawReq
+	 * @return WithdrawRes
+	 */
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception {
 
