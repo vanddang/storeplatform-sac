@@ -135,7 +135,7 @@ public class LoginServiceImpl implements LoginService {
 		String userKey = null;
 		String userType = null;
 		String userMainStatus = null;
-		String userStateVal = null;
+		String userSubStatus = null;
 
 		/* 모번호 조회 */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
@@ -151,6 +151,7 @@ public class LoginServiceImpl implements LoginService {
 		userKey = schUserRes.getUserMbr().getUserKey();
 		userType = schUserRes.getUserMbr().getUserType();
 		userMainStatus = schUserRes.getUserMbr().getUserMainStatus();
+		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
 
 		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
@@ -161,8 +162,6 @@ public class LoginServiceImpl implements LoginService {
 
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
-			userStateVal = "oneId";
-
 			/* 단말정보 merge */
 			this.mergeDeviceInfo(userKey, req);
 
@@ -170,7 +169,9 @@ public class LoginServiceImpl implements LoginService {
 			LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
 
 			res.setUserKey(loginRes.getUserKey());
-			res.setUserStatus(userStateVal);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
 
 		} else {
 
@@ -179,16 +180,6 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
-				if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
-					userStateVal = "mobile";
-				} else if (StringUtil.equals(userType, MemberConstants.USER_TYPE_IDPID)) {
-					userStateVal = "tstoreId";
-				}
-
-				if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_WATING)) {
-					userStateVal = "temporary";
-				}
-
 				/* 단말정보 merge */
 				this.mergeDeviceInfo(userKey, req);
 
@@ -196,7 +187,9 @@ public class LoginServiceImpl implements LoginService {
 				LogInUserResponse loginRes = this.insertloginHistory(deviceId, null, "Y");
 
 				res.setUserKey(loginRes.getUserKey());
-				res.setUserStatus(userStateVal);
+				res.setUserType(userType);
+				res.setUserMainStatus(userMainStatus);
+				res.setUserSubStatus(userSubStatus);
 
 			} else { //무선회원 인증 실패
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());

@@ -143,13 +143,12 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (req.getRegMaxCnt() == 0
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr()
-						.getDeviceCount()) >= req.getRegMaxCnt())) {
+				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
+						.getRegMaxCnt())) {
 			throw new Exception("등록 가능한 단말개수가 초과되었습니다.");
 		}
 
@@ -225,8 +224,7 @@ public class DeviceServiceImpl implements DeviceService {
 			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
-						+ idpReceiver.getResponseHeader().getResult_text());
+				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 			}
 
 		}
@@ -384,10 +382,9 @@ public class DeviceServiceImpl implements DeviceService {
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
-								IDPConstants.IDP_RES_CODE_OK)) {
-							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId()
-									+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
+						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
+									+ idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
 				}
@@ -420,6 +417,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String deviceId = req.getDeviceId();
 
+		logger.info("::::::::::::: mergeDeviceInfo req : {} " + req.toString());
+
 		if (deviceId == null) {
 			throw new Exception("deviceId is null 기기정보 수정 불가");
 		}
@@ -442,9 +441,11 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
+		logger.info("::::::::::::: userMbrDevice 조회결과 : {} " + userMbrDevice.toString());
+		logger.info("::::::::::::: userMbrDevice Detail 조회결과 : {} " + userMbrDevice.getUserMbrDeviceDetail().toString());
+
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
-					+ schDeviceRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
 		/* 기기정보 필드 */
@@ -603,16 +604,14 @@ public class DeviceServiceImpl implements DeviceService {
 					extraInfo.setExtraProfileValue(uacd);
 					logger.info("[uacd] {} -> {}", extraInfo.getExtraProfileValue(), uacd);
 
-				} else if (dotoriAuthDate != null
-						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
+				} else if (dotoriAuthDate != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
 						&& !dotoriAuthDate.equals(extraInfo.getExtraProfileValue())) {
 
 					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
 					extraInfo.setExtraProfileValue(dotoriAuthDate);
 					logger.info("[dotoriAuthDate] {} -> {}", extraInfo.getExtraProfileValue(), dotoriAuthDate);
 
-				} else if (dotoriAuthYn != null
-						&& extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)
+				} else if (dotoriAuthYn != null && extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)
 						&& !dotoriAuthYn.equals(extraInfo.getExtraProfileValue())) {
 
 					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
@@ -653,27 +652,27 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	public DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) {
+
 		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
-		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
-		deviceInfo.setStartDate(userMbrDevice.getStartDate());
-		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
-		deviceInfo.setTenantId(userMbrDevice.getTenantID());
+		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
+		deviceInfo.setTenantId(userMbrDevice.getTenantID());
 		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
-		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
-		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
 		deviceInfo.setImMngNum(userMbrDevice.getImMngNum());
+		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
+		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
-		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
-		deviceInfo.setNativeId(userMbrDevice.getNativeID());
-		deviceInfo.setJoinId(userMbrDevice.getJoinId());
 		deviceInfo.setIsAuthenticated(userMbrDevice.getIsAuthenticated());
 		deviceInfo.setAuthenticationDate(userMbrDevice.getAuthenticationDate());
+		deviceInfo.setIsRecvSms(userMbrDevice.getIsRecvSMS());
+		deviceInfo.setNativeId(userMbrDevice.getNativeID());
+		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
+		deviceInfo.setJoinId(userMbrDevice.getJoinId());
+		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
+
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
-			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice
-					.getUserMbrDeviceDetail()));
+			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		}
 
 		return deviceInfo;
@@ -701,15 +700,12 @@ public class DeviceServiceImpl implements DeviceService {
 			String extraProfile = deviceDetail.getExtraProfile();
 
 			if (extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_SCVERSION)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)) {
 
 				deviceExtraInfo.setExtraProfile(extraProfile);
@@ -733,28 +729,25 @@ public class DeviceServiceImpl implements DeviceService {
 	public UserMbrDevice getConverterUserMbrDeviceInfo(DeviceInfo deviceInfo) {
 
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
-		userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
 		userMbrDevice.setUserKey(deviceInfo.getUserKey());
-		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
-		userMbrDevice.setIsUsed(deviceInfo.getIsUsed());
-		userMbrDevice.setStartDate(deviceInfo.getStartDate());
-		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
-		userMbrDevice.setTenantID(deviceInfo.getTenantId());
+		userMbrDevice.setDeviceKey(deviceInfo.getDeviceKey());
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
+		userMbrDevice.setTenantID(deviceInfo.getTenantId());
 		userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
-		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
-		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 		userMbrDevice.setImMngNum(deviceInfo.getImMngNum());
+		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
+		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setIsPrimary(deviceInfo.getIsPrimary());
-		userMbrDevice.setIsRecvSMS(deviceInfo.getIsRecvSms());
-		userMbrDevice.setNativeID(deviceInfo.getNativeId());
-		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setIsAuthenticated(deviceInfo.getIsAuthenticated());
 		userMbrDevice.setAuthenticationDate(deviceInfo.getAuthenticationDate());
+		userMbrDevice.setIsRecvSMS(deviceInfo.getIsRecvSms());
+		userMbrDevice.setNativeID(deviceInfo.getNativeId());
+		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
+		userMbrDevice.setJoinId(deviceInfo.getJoinId());
+		userMbrDevice.setIsUsed(deviceInfo.getIsUsed());
 
 		if (deviceInfo.getUserDeviceExtraInfo() != null) {
-			userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo
-					.getUserDeviceExtraInfo()));
+			userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo.getUserDeviceExtraInfo()));
 		}
 
 		return userMbrDevice;
@@ -782,16 +775,13 @@ public class DeviceServiceImpl implements DeviceService {
 			String extraProfile = extraInfo.getExtraProfile();
 
 			if (extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_SCVERSION)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_EMBEDDED_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
+					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_EMBEDDED_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
 					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)) {
 
 				userMbrDeviceDetail.setExtraProfile(extraProfile);
@@ -813,8 +803,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req)
-			throws Exception {
+	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req) throws Exception {
 		req.setCommonRequest(commonRequest);
 		SetMainDeviceResponse scRes = this.deviceSCI.setMainDevice(req);
 		DeviceInfo res = new DeviceInfo();
@@ -856,8 +845,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		/* SC 회원 컴포넌트 휴대기기 목록 조회 */
@@ -972,8 +960,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		/* IDP 회원탈퇴 */
