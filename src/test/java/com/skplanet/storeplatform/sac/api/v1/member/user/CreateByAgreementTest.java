@@ -152,17 +152,17 @@ public class CreateByAgreementTest {
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreement1 = new AgreementInfo();
-						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementId("US010601");
 						agreement1.setExtraAgreementVersion("0.1");
 						agreement1.setIsExtraAgreement("Y");
 						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementId("US010602");
 						agreement2.setExtraAgreementVersion("0.1");
 						agreement2.setIsExtraAgreement("Y");
 						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementId("US010603");
 						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
+						agreement3.setIsExtraAgreement("N");
 						agreementList.add(agreement1);
 						agreementList.add(agreement2);
 						agreementList.add(agreement3);

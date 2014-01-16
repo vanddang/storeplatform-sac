@@ -39,6 +39,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 
+/**
+ * 모바일 전용 회원 가입 (MDN 회원 가입)
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 심대진, 다모아 솔루션.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -50,6 +55,13 @@ public class CreateByMdnTest {
 
 	private MockMvc mvc;
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * void
+	 */
 	@Before
 	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -57,10 +69,11 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
-	 * 모바일 전용 회원 가입 (MDN 회원 가입)
+	 * 모바일 전용 회원 가입 (MDN 회원 가입).
 	 * </pre>
 	 * 
 	 * @throws Exception
+	 *             Exception
 	 */
 	@Test
 	public void createByMdn() throws Exception {
