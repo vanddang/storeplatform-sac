@@ -36,7 +36,7 @@ public interface SellerSearchService {
 	 * 
 	 * @throws Exception
 	 */
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) throws Exception;
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) throws Exception;
 
 	/**
 	 * 판매자 회원 ID 찾기.

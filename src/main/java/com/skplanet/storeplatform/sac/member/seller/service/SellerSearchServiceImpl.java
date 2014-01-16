@@ -336,10 +336,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	}
 
 	@Override
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header) throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) throws Exception {
 
 		SellerDTO dto = new SellerDTO();
-		dto.setKoUsWhether("ko");
+		dto.setKoUsWhether(language);
 
 		List<SellerDTO> sellerDTO = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", dto,
 				SellerDTO.class);
