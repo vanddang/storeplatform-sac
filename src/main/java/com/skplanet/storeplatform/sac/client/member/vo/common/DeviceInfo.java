@@ -90,11 +90,6 @@ public class DeviceInfo extends CommonInfo {
 	/**
 	 * 기기고유 ID
 	 */
-	private String imei;
-
-	/**
-	 * 기기고유 ID
-	 */
 	private String nativeId;
 
 	/**
@@ -250,14 +245,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setIsRecvSms(String isRecvSms) {
 		this.isRecvSms = isRecvSms;
-	}
-
-	public String getImei() {
-		return this.imei;
-	}
-
-	public void setImei(String imei) {
-		this.imei = imei;
 	}
 
 	public String getDeviceAccount() {
