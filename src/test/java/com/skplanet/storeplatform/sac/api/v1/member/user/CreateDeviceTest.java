@@ -68,13 +68,13 @@ public class CreateDeviceTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-	// @Test
+	@Test
 	public void shouldCreateDevice() {
 
 		try {
 
 			new TestCaseTemplate(this.mockMvc)
-					.url("/dev/member/user/createDevice/v1")
+					.url("/member/user/createDevice/v1")
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
@@ -85,6 +85,29 @@ public class CreateDeviceTest {
 						public Object requestBody() {
 
 							CreateDeviceReq req = new CreateDeviceReq();
+							req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
+							req.setUserKey("US201401161859405900000107");
+							req.setRegMaxCnt(5);
+
+							DeviceInfo deviceInfo = new DeviceInfo();
+							deviceInfo.setUserKey("US201401161859405900000107");
+							deviceInfo.setDeviceId("01066786221");
+							deviceInfo.setDeviceIdType("msisdn ");
+							deviceInfo.setDeviceTelecom("US012102");
+							deviceInfo.setNativeId("358362045580844");
+							deviceInfo.setDeviceAccount("vanddang@gmail.com");
+							deviceInfo.setIsRecvSms("Y");
+							deviceInfo.setIsPrimary("N");
+							deviceInfo.setDeviceNickName("SHP-110S(임시)");
+
+							deviceInfo.setDotoriAuthDate(DateUtil.getToday());
+							deviceInfo.setDotoriAuthYn("Y");
+							deviceInfo.setOsVer("1.0");
+							deviceInfo.setScVer("1.0");
+							deviceInfo.setRooting("N");
+							deviceInfo.setUacd("uacd");
+
+							req.setDeviceInfo(deviceInfo);
 							logger.info("request param : {}", req.toString());
 
 							return req;
