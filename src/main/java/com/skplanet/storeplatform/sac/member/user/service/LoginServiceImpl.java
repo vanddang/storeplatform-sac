@@ -451,6 +451,7 @@ public class LoginServiceImpl implements LoginService {
 			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 			req = (AuthorizeByMdnReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId());
+			deviceInfo.setDeviceIdType(req.getDeviceIdType());
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 			deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
 			deviceInfo.setNativeId(req.getNativeId());
@@ -463,6 +464,7 @@ public class LoginServiceImpl implements LoginService {
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId());
+			deviceInfo.setDeviceIdType(req.getDeviceIdType());
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 			deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
 			//deviceInfo.setNativeId(req.getNativeId());

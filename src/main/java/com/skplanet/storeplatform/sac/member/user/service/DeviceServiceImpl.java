@@ -460,6 +460,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String rooting = req.getRooting(); // rooting 여부
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
+
 		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
 
 			logger.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceId);
@@ -485,6 +486,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 						req.setUacd(idpModelId);
 					}
+
+				} else {
+					throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 				}
 			}
 			logger.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
@@ -504,9 +508,20 @@ public class DeviceServiceImpl implements DeviceService {
 				// 자번호 여부
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 
+				// 루팅 단말이고 OPMD 단말이 아닌 경우만 nativeId 체크
 				if ("Y".equals(rooting) && !isOpmd) {
 					Map<String, String> mapIcas = null;
-					if (!this.commService.getMappingInfo(deviceId, "11").getMvnoCD().equals("0")) { // MVNO
+
+					String paramType = null;
+					if (req.getDeviceIdType().equals("msisdn")) {
+						paramType = "11";
+					} else if (req.getDeviceIdType().equals("uuid")) {
+						paramType = "12";
+					} else {
+						paramType = "13";
+					}
+					logger.info("::::  rooting device :::: deviceType {}, paramType {}", req.getDeviceIdType(), paramType);
+					if (!this.commService.getMappingInfo(deviceId, paramType).getMvnoCD().equals("0")) { // MVNO
 						mapIcas = this.commService.getMvService(deviceId);
 					} else {
 						mapIcas = this.commService.getCustomer(deviceId);
