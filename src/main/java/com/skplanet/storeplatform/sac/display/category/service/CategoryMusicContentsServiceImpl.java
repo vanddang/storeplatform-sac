@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -65,8 +66,6 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		this.log.debug("searchMusicContentsList start !!");
-
 		int totalCount = 0;
 
 		String filteredBy; // 차트 구분 코드
@@ -74,6 +73,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		String orderedBy;
 		String menuId;
 		String imageCd; // 이미지 사이즈 코드
+		String dpi;
 		String langCd;
 		String deviceModelCd;
 		String tenantId;
@@ -88,14 +88,13 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		imageCd = requestVO.getImageCd(); // dpi 코드를 받아서 이미지 사이즈 코드를 알아내는 로직 추가 되어야 함.
 		deviceModelCd = requestHeader.getDeviceHeader().getModel();
 		tenantId = requestHeader.getTenantHeader().getTenantId();
+		dpi = requestHeader.getDeviceHeader().getDpi();
 		offset = requestVO.getOffset(); // 시작점 ROW
 		count = requestVO.getCount(); // 페이지당 노출 ROW 수
 
 		requestVO.setDeviceModelCd(deviceModelCd);
 		requestVO.setTenantId(tenantId);
-
-		this.log.debug("offset : " + offset);
-		this.log.debug("count : " + count);
+		requestVO.setDpi(dpi);
 
 		MusicContentsListRes responseVO = null;
 		CommonResponse commonResponse = null;
@@ -117,8 +116,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			requestVO.setLangCd("ko");
 		}
 		if (null == menuId || "".equals(menuId)) {
-			menuId = "DP16";
-			requestVO.setMenuId(menuId);
+			requestVO.setMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
 		}
 		if (null == imageCd || "".equals(imageCd)) {
 			imageCd = "DP000191";
@@ -169,7 +167,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("channel"); // 채널 상품 ID
+				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD); // 채널 상품 ID
 				identifier.setText(mapperVO.getChnlProdId());
 
 				/*
@@ -178,7 +176,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				Menu menu = new Menu();
 				menu.setId(mapperVO.getTopMenuId());
 				menu.setName(mapperVO.getTopMenuNm());
-				menu.setType("topClass");
+				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 				menuList.add(menu);
 				menu = new Menu();
 				menu.setId(mapperVO.getMenuId());
@@ -196,7 +194,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				 */
 				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePos()));
 				source.setSize(Integer.toString(mapperVO.getFileSize()));
-				source.setType("thumbNail");
+				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 				source.setUrl(mapperVO.getFilePos());
 				sourceList.add(source);
 
@@ -216,17 +214,17 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				/*
 				 * music
 				 */
-				service.setName("mp3");
+				service.setName(DisplayConstants.DP_MUSIC_SERVICE_MP3);
 				service.setType(mapperVO.getMp3Sprt());
 				serviceList.add(service);
 
 				service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
-				service.setName("bell");
+				service.setName(DisplayConstants.DP_MUSIC_SERVICE_BELL);
 				service.setType(mapperVO.getBellSprt());
 				serviceList.add(service);
 
 				service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
-				service.setName("ring");
+				service.setName(DisplayConstants.DP_MUSIC_SERVICE_RING);
 				service.setType(mapperVO.getRingSprt());
 				serviceList.add(service);
 				music.setServiceList(serviceList);
@@ -270,7 +268,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		if ("top".equals(filteredBy) || "recent".equals(filteredBy)) { // TOP 뮤직/ 최신순
 			statementId = "MusicMain.getMusicMainList";
-		} else { // 그외 APP
+		} else { // 그외
 			statementId = "MusicMain.getMusicMainDummyList";
 		}
 		return statementId;
