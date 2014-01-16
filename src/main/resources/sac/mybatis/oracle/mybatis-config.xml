@@ -99,15 +99,13 @@
         <typeAlias alias="BestContentsReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq" />
         <typeAlias alias="BestContentsDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestContentsDTO" />
         
-        <!-- VOD 상품 ID 리스트 조회 -->
-        <typeAlias alias="SearchProduct"  type="com.skplanet.storeplatform.sac.display.search.vo.SearchProduct" />
-        
         <!-- 상품 meta 정보 조회 -->
-        <typeAlias alias="AppMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.AppMetaInfo" />
-        <typeAlias alias="EbookComicMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.EbookComicMetaInfo" />
-        <typeAlias alias="MusicMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.MusicMetaInfo" />
-        <typeAlias alias="ShoppingMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.ShoppingMetaInfo" />
-        <typeAlias alias="VODMetaInfo"  type="com.skplanet.storeplatform.sac.display.search.vo.VODMetaInfo" />
+        <typeAlias alias="ProductBasicInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo" />
+        <typeAlias alias="AppMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.AppMetaInfo" />
+        <typeAlias alias="EbookComicMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.EbookComicMetaInfo" />
+        <typeAlias alias="MusicMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.MusicMetaInfo" />
+        <typeAlias alias="ShoppingMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ShoppingMetaInfo" />
+        <typeAlias alias="VODMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo" />
         
     </typeAliases>
 </configuration>

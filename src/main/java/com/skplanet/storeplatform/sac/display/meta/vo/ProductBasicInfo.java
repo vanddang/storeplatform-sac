@@ -1,7 +1,7 @@
-package com.skplanet.storeplatform.sac.display.search.vo;
+package com.skplanet.storeplatform.sac.display.meta.vo;
 
 
-public class SearchProduct {
+public class ProductBasicInfo {
 	private String tenantId;
 	private String menuId;
 	private String prodId;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MetaInfo">
-	<select id="getVODMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+	<select id="getVODMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
  	   SELECT  /* MetaInfoMapper.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
 		        LA.UP_MENU_ID
 		      , LA.TOP_MENU_ID
@@ -106,12 +106,12 @@
 		   AND LA.PROD_ID = LB.PROD_ID(+)
 	</select>
 	
-	<select id="getMusicMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+	<select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
 	</select>
-	<select id="getEbookComidMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+	<select id="getEbookComidMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
     </select>
-	<select id="getAppMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+	<select id="getAppMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
     </select>
-    <select id="getShoppingMetaInfo" parameterType="SearchProduct" resultType="VODMetaInfo">
+    <select id="getShoppingMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
     </select>
  </mapper>

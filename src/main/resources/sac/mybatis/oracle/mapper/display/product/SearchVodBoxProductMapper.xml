@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="SearchVodBoxProduct">
-	  <select id="searchVodBoxProdId" parameterType="Map" resultType="SearchProduct">
+	  <select id="searchVodBoxProdId" parameterType="Map" resultType="ProductBasicInfo">
 		SELECT KA.*
           FROM (SELECT JA.*, ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD) AS RNUM
                   FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
@@ -44,7 +44,7 @@
                      AND D.SVC_GRP_CD = #{svgGrpCd}             /* DP000203 : 멀티미디어 */
                      </if>
                      <if test='contentTypeCd != null'>
-                     AND E.CONTENTS_TYPE_CD = #{contentTypeCd}       /* PD002501 : 채널타입 */
+                     AND D.CONTENTS_TYPE_CD = #{contentTypeCd}       /* PD002501 : 채널타입 */
                      </if>
                      <if test='prodStatusCd != null'>
                      AND G.PROD_STATUS_CD = #{prodStatusCd}         /* PD000403 : 판매중 */

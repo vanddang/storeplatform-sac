@@ -34,8 +34,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
-import com.skplanet.storeplatform.sac.display.search.vo.SearchProduct;
-import com.skplanet.storeplatform.sac.display.search.vo.VODMetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo;
 
 @Service
 @Transactional
@@ -80,11 +80,11 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
 		// ID list 조회
-		List<SearchProduct> searchProductList = this.commonDAO.queryForList("SearchVodBoxProduct.searchVodBoxProdId",
-				reqMap, SearchProduct.class);
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+				"SearchVodBoxProduct.searchVodBoxProdId", reqMap, ProductBasicInfo.class);
 		List<Product> productList = new ArrayList<Product>();
 
-		if (searchProductList != null) {
+		if (productBasicInfoList != null) {
 			Identifier identifier = null;
 			Support support = null;
 			Menu menu = null;
@@ -101,8 +101,8 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 			List<Source> sourceList = null;
 			List<Support> supportList = null;
 
-			for (SearchProduct searchProduct : searchProductList) {
-				VODMetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(searchProduct);
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				VODMetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 
 				product = new Product();
 

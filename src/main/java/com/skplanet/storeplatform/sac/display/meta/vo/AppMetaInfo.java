@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.display.search.vo;
+package com.skplanet.storeplatform.sac.display.meta.vo;
 
 public class AppMetaInfo {
 	private int totalCount;

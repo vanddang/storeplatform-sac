@@ -44,10 +44,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProductDTO;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
-import com.skplanet.storeplatform.sac.display.search.vo.EbookComicMetaInfo;
-import com.skplanet.storeplatform.sac.display.search.vo.MusicMetaInfo;
-import com.skplanet.storeplatform.sac.display.search.vo.SearchProduct;
-import com.skplanet.storeplatform.sac.display.search.vo.VODMetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.EbookComicMetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.MusicMetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo;
 
 @Service
 @Transactional
@@ -106,7 +106,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				paramMap.put("tenantId", "S01");
 				paramMap.put("imageCd", "DP000101");
 
-				SearchProduct searchProductDTO = new SearchProduct();
+				ProductBasicInfo productBasicInfo = new ProductBasicInfo();
 
 				// 상품 SVC_GRP_CD 조회
 				// DP000203 : 멀티미디어
@@ -118,13 +118,13 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				// 멀티미디어 타입일 경우
 				if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 
-					searchProductDTO.setProdId(prodId);
-					searchProductDTO.setTenantId(tenantId);
+					productBasicInfo.setProdId(prodId);
+					productBasicInfo.setTenantId(tenantId);
 
 					// VOD 상품의 경우
 					if (DisplayConstants.DP_VOD_TOP_MENU_ID.equals(topMenuId)) {
-						VODMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo",
-								searchProductDTO, VODMetaInfo.class);
+						VODMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", productBasicInfo,
+								VODMetaInfo.class);
 
 						if (retDto != null) {
 							product = new Product();
@@ -217,22 +217,22 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 					else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
 						EbookComicMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo",
-								searchProductDTO, EbookComicMetaInfo.class);
+								productBasicInfo, EbookComicMetaInfo.class);
 					}
 					// 음원 상품의 경우
 					else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
 						MusicMetaInfo retDTO = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo",
-								searchProductDTO, MusicMetaInfo.class);
+								productBasicInfo, MusicMetaInfo.class);
 					}
 				}
 				// 쇼핑 상품의 경우
 				else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					MusicMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo",
-							searchProductDTO, MusicMetaInfo.class);
+					MusicMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
+							MusicMetaInfo.class);
 				}
 				// APP 상품의 경우
 				else if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					VODMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", searchProductDTO,
+					VODMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", productBasicInfo,
 							VODMetaInfo.class);
 					if (retDto != null) {
 						product = new Product();
