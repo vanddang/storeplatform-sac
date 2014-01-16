@@ -29,9 +29,9 @@ public final class IDPConstants {
 																					// 중복체크
 	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForId"; // 회원 인증
 	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "modifyProfile"; // 프로파일
-																				// 수정
+																			 // 수정
 	public static final String IDP_REQ_CMD_ALEADY_JOIN_CHECK = "aleadyJoinCheck"; // 가입여부
-																					// 확인
+																				  // 확인
 	public static final String IDP_REQ_CMD_WATERMARK_AUTH_IMAGE = "watermarkAuthImage"; // 위터마크발급
 	public static final String IDP_REQ_CMD_WATERMARK_AUTH = "watermarkAuth"; // 워터마크인증
 	public static final String IDP_REQ_CMD_SECEDE_USER = "secedeUser"; // 회원 탈퇴
@@ -43,11 +43,11 @@ public final class IDPConstants {
 																			// 탈퇴
 	public static final String IDP_REQ_CMD_FIND_PROFILE_FOR_WAP = "findProfileForWap"; // 정보조회
 	public static final String IDP_REQ_CMD_DEVICE_COMPARE = "deviceCompare"; // 휴대폰
-																				// 단말
-																				// 기종
-																				// 조회
-																				// 및
-																				// 업데이트
+																			 // 단말
+																			 // 기종
+																			 // 조회
+																			 // 및
+																			 // 업데이트
 
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default
@@ -63,6 +63,10 @@ public final class IDPConstants {
 	public static final String IDP_PARAM_KEY_USER_MDN_TYPE_LGT = "LGT";
 
 	public static final String IDP_PARAM_KEY_TYPE_EMAIL = "1"; // default
+
+	/** 회원탈퇴 **/
+	public static final String IDP_PARAM_KEY_SECEDE_KEY_TYPE_ID = "1"; // default
+	public static final String IDP_PARAM_KEY_SECEDE_KEY_TYPE_USERKEY = "2";
 
 	// 결과 코드
 	/** 요청 수행 성공 (1000). */
