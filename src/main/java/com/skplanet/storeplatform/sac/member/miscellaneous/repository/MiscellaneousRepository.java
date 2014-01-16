@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.repository;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -15,8 +15,7 @@ public interface MiscellaneousRepository {
 	 * UA 코드 조회.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            deviceModelNo
+	 * @param deviceModelNo
 	 * @return String
 	 */
 	public String getUaCode(String deviceModelNo);
@@ -26,26 +25,54 @@ public interface MiscellaneousRepository {
 	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 재인증 여부 확인.
 	 * </pre>
 	 * 
-	 * @param map
+	 * @param userKey
 	 * @return String
 	 */
-	public HashMap<String, String> getPhoneAuthYn(String userKey);
+	public Map<String, String> getPhoneAuthYn(String userKey);
 
 	/**
 	 * <pre>
-	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 저장 / 삭제 예정 - 아래 method로 대체.
+	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 저장 / 삭제 예정 - 아래 merge method로 대체  예정.
 	 * </pre>
 	 * 
-	 * @param request
+	 * @param phoneAuthCodeInfo
 	 */
-	public void insertPhoneAuthCode(HashMap<String, String> phoneAuthCodeInfo);
+	public void insertPhoneAuthCode(Map<String, String> phoneAuthCodeInfo);
+
+	/**
+	 * <pre>
+	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 저장 / 삭제 예정 - 아래 merge method로 대체 예정.
+	 * </pre>
+	 * 
+	 * @param phoneAuthCodeInfo
+	 */
+	public void updatePhoneAuthCode(Map<String, String> phoneAuthCodeInfo);
 
 	/**
 	 * <pre>
 	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 정보 Merge Into.
 	 * </pre>
 	 * 
-	 * @param request
+	 * @param phoneAuthCodeInfo
 	 */
-	public void mergeIntoPhoneAuthCode(HashMap<String, String> phoneAuthCodeInfo);
+	public void mergeIntoPhoneAuthCode(Map<String, String> phoneAuthCodeInfo);
+
+	/**
+	 * <pre>
+	 * 휴대폰 인증 코드 정보 확인.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 * @return Map
+	 */
+	public Map<String, String> confirmPhoneAuthCode(String userKey);
+
+	/**
+	 * <pre>
+	 * 휴대폰 인증 코드 확인 - 인증 여부 Update.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 */
+	public void updatePhoneAuthYn(String userKey);
 }

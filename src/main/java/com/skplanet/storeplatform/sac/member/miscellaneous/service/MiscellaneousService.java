@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
@@ -55,6 +56,17 @@ public interface MiscellaneousService {
 	 */
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(GetPhoneAuthorizationCodeReq request)
 			throws Exception;
+
+	/**
+	 * <pre>
+	 * 휴대폰 인증 코드 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 * @return String userPhone
+	 * @throws Exception
+	 */
+	public String confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) throws Exception;
 
 	/**
 	 * <pre>

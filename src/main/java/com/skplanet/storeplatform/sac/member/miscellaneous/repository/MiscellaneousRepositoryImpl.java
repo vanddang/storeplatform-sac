@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.repository;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,17 +29,34 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	}
 
 	@Override
-	public void insertPhoneAuthCode(HashMap<String, String> phoneAuthCodeInfo) {
+	public void insertPhoneAuthCode(Map<String, String> phoneAuthCodeInfo) {
 		this.commonDao.insert("Miscellaneous.insertPhoneAuthCode", phoneAuthCodeInfo);
 	}
 
 	@Override
-	public HashMap<String, String> getPhoneAuthYn(String userKey) {
-		return (HashMap<String, String>) this.commonDao.queryForObject("Miscellaneous.getSmsAuthYn", userKey);
+	public void updatePhoneAuthCode(Map<String, String> phoneAuthCodeInfo) {
+		this.commonDao.update("Miscellaneous.updatePhoneAuthCode", phoneAuthCodeInfo);
 	}
 
 	@Override
-	public void mergeIntoPhoneAuthCode(HashMap<String, String> phoneAuthCodeInfo) {
+	public Map<String, String> getPhoneAuthYn(String userKey) {
+		return (HashMap<String, String>) this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", userKey);
+	}
+
+	@Override
+	public void mergeIntoPhoneAuthCode(Map<String, String> phoneAuthCodeInfo) {
 		this.commonDao.update("Miscellanous.mergeIntoPhoneAuthCode", phoneAuthCodeInfo);
 	}
+
+	@Override
+	public Map<String, String> confirmPhoneAuthCode(String userKey) {
+		// TODO Auto-generated method stub
+		return (HashMap<String, String>) this.commonDao.queryForObject("Miscellaneous.confirmPhoneAuthCode", userKey);
+	}
+
+	@Override
+	public void updatePhoneAuthYn(String userKey) {
+		this.commonDao.update("Miscellaneous.updatePhoneAuthYn", userKey);
+	}
+
 }

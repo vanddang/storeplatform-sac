@@ -30,7 +30,7 @@
         /* MiscellaneousMapper.xml, insertPhoneAuthCode, SAC : 김다슬 , 2014-01-14 */
         INSERT INTO
             TB_CM_SVC_AUTH(
-                MBR_NO
+                MBR_NO,
                 TENANT_ID,
                 AUTH_TYPE_CD, /* 인증 타입 (SMS or Email) */
                 AUTH_SIGN, /* 인증 Signature */
@@ -49,10 +49,25 @@
                #{auth_value},
                #{auth_value_create_dt},
                'admin',
-               #{reg_dt},
+               SYSDATE,
                'admin',
                SYSDATE
             )
+    </insert>
+    <!-- 휴대폰 SMS 인증 코드 수정 -->
+    <insert id="updatePhoneAuthCode"
+        parameterType="HashMap">
+        /* MiscellaneousMapper.xml, updatePhoneAuthCode, SAC : 김다슬 , 2014-01-14 */
+        UPDATE 
+            TB_CM_SVC_AUTH
+        SET
+            AUTH_SIGN = #{auth_sign},
+            AUTH_VALUE = #{auth_value},
+            AUTH_VALUE_CREATE_DT = #{auth_value_create_dt},
+            UPD_ID = 'admin',
+            UPD_DT = SYSDATE
+        WHERE 
+            MBR_NO = #{mbr_no}    
     </insert>
     
     <update id="mergeIntoPhoneAuthCode" parameterType="HashMap">
@@ -64,9 +79,9 @@
         AUTH_VALUE 
     THEN 
         UPDATE SET
-            AUTH_SIGN = #{AUTH_SIGN},
-            AUTH_VALUE = #{AUTH_VALUE},
-            AUTH_VALUE_CREATE_DT = #{AUTH_VALUE_CREATE_DT},
+            AUTH_SIGN = #{auth_sign},
+            AUTH_VALUE = #{auth_value},
+            AUTH_VALUE_CREATE_DT = #{auth_value_create_dt},
             UPD_ID = 'admin',
             UPD_DT = SYSDATE
         WHERE 
@@ -100,5 +115,30 @@
             'admin',
             SYSDATE
             )
+    </update>
+    
+    <select id="confirmPhoneAuthCode" parameterType="String" resultType="HashMap">
+    /* MiscellaneousMapper.xml, confirmPhoneAuthCode, SAC : 김다슬 , 2014-01-16 */
+    SELECT 
+        AUTH_COMPT_YN,  
+        AUTH_SIGN, 
+        AUTH_VALUE,
+        TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyymmddhh24miss') AS AUTH_VALUE_CREATE_DT
+    FROM 
+        TB_CM_SVC_AUTH
+    WHERE
+        MBR_NO = #{userKey}
+    </select>
+    
+    <update id="updatePhoneAuthYn" parameterType="HashMap">
+    /* MiscellaneousMapper.xml, updatePhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
+    UPDATE 
+        TB_CM_SVC_AUTH
+    SET
+       AUTH_COMPT_YN = 'Y',
+       UPD_ID = 'admin',
+       UPD_DT = SYSDATE
+    WHERE 
+       MBR_NO = #{userKey}    
     </update>
 </mapper>

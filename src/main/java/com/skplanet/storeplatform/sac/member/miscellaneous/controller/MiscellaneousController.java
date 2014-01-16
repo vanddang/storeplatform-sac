@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
@@ -46,7 +48,7 @@ public class MiscellaneousController {
 
 		LOGGER.debug("#################  UA 코드 정보 조회 - START ######################");
 		if (request.getDeviceModelNo() == null && request.getMsisdn() == null) {
-			throw new Exception("필수요청 파라메터 부족");
+			throw new Exception("필수요청 파라메터 부족.");
 		}
 
 		GetUaCodeRes response = new GetUaCodeRes();
@@ -69,6 +71,9 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetOpmdRes getOpmd(GetOpmdReq request) throws Exception {
 		LOGGER.debug("#################  OPMD 모번호 조회 - START ######################");
+		if (request.getMsisdn() == null) {
+			throw new Exception("필수요청 파라메터 부족.");
+		}
 
 		GetOpmdRes response = new GetOpmdRes();
 		response = this.service.getOpmd(request);
@@ -91,13 +96,44 @@ public class MiscellaneousController {
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(GetPhoneAuthorizationCodeReq request) throws Exception {
 
 		LOGGER.debug("################## 휴대폰 인증 SMS 발송 - START #######################");
-		if (request.getUserPhone() == null || request.getUserTelecom() == null) {
-			throw new Exception("필수 파라메터 부족.");
+		if (request.getUserPhone() == null || request.getUserTelecom() == null || request.getSrcId() == null
+				|| request.getTeleSvcId() == null) {
+			throw new Exception("필수 요청 파라메터 부족.");
 		}
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
 		response = this.service.getPhoneAuthorizationCode(request);
 
 		LOGGER.debug("################## 휴대폰 인증 SMS 발송 - END #########################");
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * 휴대폰 인증 코드 확인. ( 구현중 2014-01-16 )
+	 * </pre>
+	 * 
+	 * @param request
+	 * @return ConfirmPhoneAuthorizationCodeRes
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/confirmPhoneAutorizationCode/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request)
+			throws Exception {
+
+		LOGGER.debug("################## 휴대폰 인증 코드 확인 - START #######################");
+		if (request.getUserPhone() == null || request.getPhoneAuthCode() == null || request.getPhoneSign() == null
+				|| request.getTimeToLive() == null) {
+			throw new Exception("필수 요청 파라메터 부족.");
+		}
+
+		String userPhone = this.service.confirmPhoneAutorizationCode(request);
+
+		ConfirmPhoneAuthorizationCodeRes response = new ConfirmPhoneAuthorizationCodeRes();
+		response.setUserPhone(userPhone);
+		LOGGER.debug("################## 휴대폰 인증 코드 확인 - END #########################");
 
 		return response;
 
