@@ -40,7 +40,7 @@ public interface UserJoinService {
 
 	/**
 	 * <pre>
-	 * ID 회원 약관 동의 가입 (One ID 회원).
+	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 미포함 ]].
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -51,6 +51,21 @@ public interface UserJoinService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
+	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 ]].
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateByAgreementReq
+	 * @return CreateByAgreementRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
 
 }

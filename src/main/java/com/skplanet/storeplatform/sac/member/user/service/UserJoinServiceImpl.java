@@ -12,9 +12,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -25,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -45,7 +42,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -276,9 +272,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceId(msisdn);
 			deviceInfo.setDeviceIdType("msisdn");
 			deviceInfo.setJoinId(req.getJoinId());
-			deviceInfo.setImei(req.getImei());
+			deviceInfo.setNativeId(req.getImei());
 			deviceInfo.setImMngNum(this.idpReceiverM.getResponseBody().getSvc_mng_num());
 			deviceInfo.setDeviceModelNo(this.idpReceiverM.getResponseBody().getModel_id());
+			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y);
+			deviceInfo.setAuthenticationDate(DateUtil.getToday());
+			deviceInfo.setIsUsed(MemberConstants.USE_Y);
 			LOGGER.debug("## deviceInfo : {}", deviceInfo.toString());
 
 			/**
@@ -321,90 +320,107 @@ public class UserJoinServiceImpl implements UserJoinService {
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
+	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
 
 		CreateByAgreementRes response = new CreateByAgreementRes();
 
-		/**
-		 * 필수 약관 동의여부 체크
-		 */
-		if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
-			LOGGER.error("## 필수 약관 미동의");
-			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
-		}
+		// /**
+		// * 필수 약관 동의여부 체크
+		// */
+		// if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
+		// LOGGER.error("## 필수 약관 미동의");
+		// throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+		// }
 
-		/**
-		 * TODO 기타 파트에서 제공하는..(1월 27일 제공 예정이라함....)
-		 * 
-		 * TODO 모번호조회 할때 us_cd, IM_INT_SVC_NO(서비스 관리 번호)
-		 */
-		UserRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), "mdn");
+		return response;
 
-		/**
-		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
-		 * 
-		 * TODO ua_cd 정보 유무에 따른 파라미터 정보 세팅 분기 로직 처리해야함.
-		 */
-		StringBuffer sbUserPhone = new StringBuffer();
-		sbUserPhone.append(userRes.getMdn());
-		sbUserPhone.append(",");
-		sbUserPhone.append(userRes.getSvcMngNum());
-		sbUserPhone.append(",");
-		sbUserPhone.append(userRes.getDeviceModel());
-		sbUserPhone.append(",");
-		sbUserPhone.append(req.getDeviceTelecom());
+	}
 
-		/**
-		 * (OneID 연동) 이용동의 가입
-		 */
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("cmd", "TXAgreeUserIDP");
-		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
-		param.put("key", req.getUserId());
-		param.put("user_mdn", sbUserPhone.toString());
-		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
-				+ DateUtil.getToday() + "," + DateUtil.getTime());
-		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
-		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
-		LOGGER.debug("## param : {}", param.entrySet());
-		this.imIDPReceiverM = this.imIdpService.agreeUser(param);
-		LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-		LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+	@Override
+	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
 
-		/**
-		 * 이용동의 가입 성공시
-		 */
-		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+		CreateByAgreementRes response = new CreateByAgreementRes();
 
-			LOGGER.debug("## Im user_key      : {}", this.imIDPReceiverM.getResponseBody().getUser_key());
-			LOGGER.debug("## Im im_int_svc_no : {}", this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
-			LOGGER.debug("## Im user_tn       : {}", this.imIDPReceiverM.getResponseBody().getUser_tn());
-			LOGGER.debug("## Im user_email    : {}", this.imIDPReceiverM.getResponseBody().getUser_email());
-
-			/**
-			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
-			 */
-			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
-					.getIm_int_svc_no());
-			LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-			LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
-
-			/**
-			 * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
-			 */
-			if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
-
-				LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
-				LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
-
-			}
-
-		} else {
-
-			LOGGER.error("## 통합 서비스 이용동의 가입 실패!!");
-			throw new RuntimeException("통합 서비스 이용동의 가입 실패");
-
-		}
+		// /**
+		// * 필수 약관 동의여부 체크
+		// */
+		// if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
+		// LOGGER.error("## 필수 약관 미동의");
+		// throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+		// }
+		//
+		// /**
+		// * TODO 기타 파트에서 제공하는..(1월 27일 제공 예정이라함....)
+		// *
+		// * TODO 모번호조회 할때 us_cd, IM_INT_SVC_NO(서비스 관리 번호)
+		// */
+		// UserRes userRes = this.mcc.getMappingInfo(req.getDeviceId(), "mdn");
+		//
+		// /**
+		// * 통합 IDP 연동을 위한.... Phone 정보 세팅.
+		// *
+		// * TODO ua_cd 정보 유무에 따른 파라미터 정보 세팅 분기 로직 처리해야함.
+		// */
+		// StringBuffer sbUserPhone = new StringBuffer();
+		// sbUserPhone.append(userRes.getMdn());
+		// sbUserPhone.append(",");
+		// sbUserPhone.append(userRes.getSvcMngNum());
+		// sbUserPhone.append(",");
+		// sbUserPhone.append(userRes.getDeviceModel());
+		// sbUserPhone.append(",");
+		// sbUserPhone.append(req.getDeviceTelecom());
+		//
+		// /**
+		// * (OneID 연동) 이용동의 가입
+		// */
+		// Map<String, Object> param = new HashMap<String, Object>();
+		// param.put("cmd", "TXAgreeUserIDP");
+		// param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
+		// param.put("key", req.getUserId());
+		// param.put("user_mdn", sbUserPhone.toString());
+		// param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
+		// + DateUtil.getToday() + "," + DateUtil.getTime());
+		// param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
+		// param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
+		// LOGGER.debug("## param : {}", param.entrySet());
+		// this.imIDPReceiverM = this.imIdpService.agreeUser(param);
+		// LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
+		// LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+		//
+		// /**
+		// * 이용동의 가입 성공시
+		// */
+		// if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+		//
+		// LOGGER.debug("## Im user_key      : {}", this.imIDPReceiverM.getResponseBody().getUser_key());
+		// LOGGER.debug("## Im im_int_svc_no : {}", this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
+		// LOGGER.debug("## Im user_tn       : {}", this.imIDPReceiverM.getResponseBody().getUser_tn());
+		// LOGGER.debug("## Im user_email    : {}", this.imIDPReceiverM.getResponseBody().getUser_email());
+		//
+		// /**
+		// * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+		// */
+		// this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
+		// .getIm_int_svc_no());
+		// LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
+		// LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+		//
+		// /**
+		// * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
+		// */
+		// if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+		//
+		// LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
+		// LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
+		//
+		// }
+		//
+		// } else {
+		//
+		// LOGGER.error("## 통합 서비스 이용동의 가입 실패!!");
+		// throw new RuntimeException("통합 서비스 이용동의 가입 실패");
+		//
+		// }
 
 		/**
 		 * TODO 결과정보 셋팅 해야함.
@@ -412,6 +428,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		response.setUserKey("12321423543464567457");
 
 		return response;
+
 	}
 
 	/**
