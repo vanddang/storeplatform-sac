@@ -61,11 +61,12 @@ public class MenuListServiceImpl implements MenuListService {
 
 		String tenantId = "";
 		String systemId = "";
-		String menuId = "";
 
-		tenantId = requestVO.getTenantId();
-		systemId = requestVO.getSystemId();
-		menuId = requestVO.getMenuId();
+		tenantId = requestHeader.getTenantHeader().getTenantId();
+		systemId = requestHeader.getTenantHeader().getSystemId();
+
+		requestVO.setTenantId(tenantId);
+		requestVO.setSystemId(systemId);
 
 		MenuListRes responseVO = null;
 		CommonResponse commonResponse = null;
@@ -74,7 +75,7 @@ public class MenuListServiceImpl implements MenuListService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -157,8 +158,12 @@ public class MenuListServiceImpl implements MenuListService {
 		String systemId = "";
 		String menuId = "";
 
-		tenantId = requestVO.getTenantId();
-		systemId = requestVO.getSystemId();
+		tenantId = requestHeader.getTenantHeader().getTenantId();
+		systemId = requestHeader.getTenantHeader().getSystemId();
+
+		requestVO.setTenantId(tenantId);
+		requestVO.setSystemId(systemId);
+
 		menuId = requestVO.getMenuId();
 
 		MenuDetailRes responseVO = null;
@@ -171,7 +176,7 @@ public class MenuListServiceImpl implements MenuListService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}

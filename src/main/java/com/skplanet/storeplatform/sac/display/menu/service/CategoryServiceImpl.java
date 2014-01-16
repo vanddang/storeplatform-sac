@@ -67,8 +67,11 @@ public class CategoryServiceImpl implements CategoryService {
 		String tenantId = "";
 		String systemId = "";
 
-		tenantId = requestVO.getTenantId();
-		systemId = requestVO.getSystemId();
+		tenantId = requestHeader.getTenantHeader().getTenantId();
+		systemId = requestHeader.getTenantHeader().getSystemId();
+
+		requestVO.setTenantId(tenantId);
+		requestVO.setSystemId(systemId);
 
 		CategoryListRes responseVO = null;
 		CommonResponse commonResponse = null;
@@ -77,7 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -144,8 +147,12 @@ public class CategoryServiceImpl implements CategoryService {
 		String menuId = "";
 		String statementId = "";
 
-		tenantId = requestVO.getTenantId();
-		systemId = requestVO.getSystemId();
+		tenantId = requestHeader.getTenantHeader().getTenantId();
+		systemId = requestHeader.getTenantHeader().getSystemId();
+
+		requestVO.setTenantId(tenantId);
+		requestVO.setSystemId(systemId);
+
 		menuId = requestVO.getMenuId();
 
 		CategoryDetailRes responseVO = null;
@@ -155,7 +162,7 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -303,11 +310,16 @@ public class CategoryServiceImpl implements CategoryService {
 		String deviceCd = "";
 		String langCd = "";
 
-		tenantId = requestVO.getTenantId();
-		systemId = requestVO.getSystemId();
+		tenantId = requestHeader.getTenantHeader().getTenantId();
+		systemId = requestHeader.getTenantHeader().getSystemId();
+		deviceCd = requestHeader.getDeviceHeader().getModel();
+
+		requestVO.setTenantId(tenantId);
+		requestVO.setSystemId(systemId);
+		requestVO.setDeviceModelCd(deviceCd);
+
 		menuId = requestVO.getMenuId();
 		langCd = requestVO.getLangCd();
-		deviceCd = requestVO.getDeviceModelCd();
 
 		CategoryDetailRes responseVO = null;
 		CommonResponse commonResponse = null;
@@ -315,7 +327,7 @@ public class CategoryServiceImpl implements CategoryService {
 		if (null == tenantId || "".equals(tenantId)) {
 			requestVO.setTenantId("S01");
 		}
-		if (null == systemId || "".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
 			requestVO.setSystemId("test01");
 		}
 		if (null == deviceCd || "".equals(deviceCd)) {
