@@ -74,13 +74,13 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryAppRes searchAppList(CategoryAppReq req) {
+	public CategoryAppRes searchAppList(CategoryAppReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.categoryAppService.searchAppList(req);
+		return this.categoryAppService.searchAppList(req, header);
 	}
 
 	/**
@@ -93,13 +93,13 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req) {
+	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchEbookComicList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.categoryEbookComicService.searchEbookComicList(req);
+		return this.categoryEbookComicService.searchEbookComicList(req, header);
 	}
 
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
