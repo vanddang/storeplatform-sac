@@ -578,7 +578,7 @@ public class DummyDataController {
 		deviceInfo.setIsAuthenticated("Y");
 		deviceInfo.setAuthenticationDate("20140106");
 		deviceInfo.setIsRecvSms("N");
-		deviceInfo.setImei("358362045580844");
+		deviceInfo.setNativeId("358362045580844");
 		deviceInfo.setDeviceAccount("hkd@aaaa.com");
 		deviceInfo.setJoinId("US002903");
 
@@ -713,7 +713,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListTermsAgreementRes
 	 */
-	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListTermsAgreementRes listTermsAgreement() {
 
@@ -746,7 +746,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetSupportAomRes
 	 */
-	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetSupportAomRes getSupportAom() {
 
@@ -767,7 +767,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetProvisioningHistoryRes
 	 */
-	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory() {
 
@@ -865,7 +865,7 @@ public class DummyDataController {
 		deviceInfo.setIsAuthenticated("Y");
 		deviceInfo.setAuthenticationDate("2013-12-26");
 		deviceInfo.setIsRecvSms("N");
-		deviceInfo.setImei("358362045580844");
+		deviceInfo.setNativeId("358362045580844");
 		deviceInfo.setDeviceAccount("hkd@aaaa.com");
 		deviceInfo.setJoinId("US002903");
 
@@ -949,7 +949,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListAddtionalInformationRes listAddtionalInformation() {
 
