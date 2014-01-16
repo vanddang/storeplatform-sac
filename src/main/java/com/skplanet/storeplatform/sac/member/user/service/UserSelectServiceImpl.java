@@ -28,17 +28,12 @@ import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDevice;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -48,7 +43,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
@@ -70,6 +67,9 @@ public class UserSelectServiceImpl implements UserSelectService {
 
 	@Autowired
 	private IDPService idpService;
+
+	@Autowired
+	private MemberCommonComponent memberCommonComponent;
 
 	private IDPReceiverM idpReceiverM;
 
@@ -274,9 +274,8 @@ public class UserSelectServiceImpl implements UserSelectService {
 		mbrLglAgentList.add(mbrLglAgent);
 
 		// 디바이스목록정보 세팅
-		List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-		DeviceInfo deviceInfo = this.deviceInfo(schDeviceListReq);
-		deviceInfoList.add(deviceInfo);
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		// ListDeviceRes listDeviceRes = this.memberCommonComponent.listDevice(requestHeader, listDeviceReq);
 
 		// 약관동의목록정보 세팅
 		schAgreementListReq.setUserKey(userInfo.getUserKey());
@@ -287,7 +286,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 		result.setUserInfoList(userInfoList);
 		result.setMbrAuthList(mbrAuthList);
 		result.setMbrLglAgentList(mbrLglAgentList);
-		result.setDeviceInfoList(deviceInfoList);
+		// result.setDeviceInfoList(listDeviceRes);
 		result.setMbrClauseAgreeList(mbrClauseAgreeList);
 
 		logger.info("###### getUserInfoList : " + result.getUserInfoList());
@@ -397,65 +396,6 @@ public class UserSelectServiceImpl implements UserSelectService {
 		}
 
 		return userExtraInfo;
-	}
-
-	// 디바이스 목록 정보
-	public DeviceInfo deviceInfo(SearchDeviceListRequest schDeviceReq) throws Exception {
-
-		// SC
-		SearchDeviceListResponse schDeviceRes = this.deviceSCI.searchDeviceList(schDeviceReq);
-		DeviceInfo deviceInfo = new DeviceInfo();
-		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-
-		logger.info("###### schDeviceRes.getDeviceInfo : " + schDeviceRes.getCommonResponse().getResultCode());
-		logger.info("###### schDeviceRes.getDeviceInfo : " + schDeviceRes.getCommonResponse().getResultMessage());
-
-		if ("0000".equals(schDeviceRes.getCommonResponse().getResultCode())) {
-
-			/**
-			 * 휴대기기 정보
-			 */
-			if (schDeviceRes.getUserMbrDevice() != null) {
-				for (UserMbrDevice info : schDeviceRes.getUserMbrDevice()) {
-					deviceInfo.setUserId(StringUtil.setTrim(schDeviceRes.getUserID()));
-					deviceInfo.setIsUsed(StringUtil.setTrim(info.getIsUsed()));
-					deviceInfo.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
-					deviceInfo.setDeviceId(StringUtil.setTrim(info.getDeviceID()));
-					deviceInfo.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
-					deviceInfo.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
-					deviceInfo.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
-					deviceInfo.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
-					deviceInfo.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
-					deviceInfo.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
-					deviceInfo.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
-					deviceInfo.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSMS()));
-					deviceInfo.setNativeId(StringUtil.setTrim(info.getNativeID()));
-					deviceInfo.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
-					deviceInfo.setJoinId(StringUtil.setTrim(info.getJoinId()));
-					deviceInfo.setUpdateDate(StringUtil.setTrim(info.getUpdateDate()));
-					deviceInfo.setStartDate(StringUtil.setTrim(info.getStartDate()));
-					deviceInfo.setEndDate(StringUtil.setTrim(info.getEndDate()));
-
-					for (UserMbrDeviceDetail extraInfo : info.getUserMbrDeviceDetail()) {
-						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-						deviceExtraInfo.setExtraProfile(StringUtil.setTrim(extraInfo.getExtraProfile()));
-						deviceExtraInfo.setExtraProfileValue(StringUtil.setTrim(extraInfo.getExtraProfileValue()));
-						logger.info("###### deviceExtraInfo.getExtraProfile : " + deviceExtraInfo.getExtraProfile());
-						logger.info("###### deviceExtraInfo.getExtraProfileValue : "
-								+ deviceExtraInfo.getExtraProfileValue());
-						deviceExtraInfoList.add(deviceExtraInfo);
-					}
-					deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-				}
-			} else {
-				throw new RuntimeException("SearchDeviceList (휴대기기 정보 리스트)가 없습니다.");
-			}
-
-		} else {
-			throw new RuntimeException("SC 호출에러 Code : " + schDeviceRes.getCommonResponse().getResultCode());
-		}
-
-		return deviceInfo;
 	}
 
 	// 사용자 인증정보 세팅
@@ -580,7 +520,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 	 * 
 	 * @return
 	 */
-	private CommonRequest commonRequest() {
+	public CommonRequest commonRequest() {
 		/** TODO 임시 공통헤더 생성 주입 */
 		CommonRequest commonRequest = new CommonRequest();
 		// S001(ShopClient), S002(WEB), S003(OpenAPI)

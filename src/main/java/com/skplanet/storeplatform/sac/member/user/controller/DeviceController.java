@@ -50,9 +50,10 @@ public class DeviceController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req)
+			throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
@@ -78,7 +79,8 @@ public class DeviceController {
 	 */
 	/* @RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST) */
 	@ResponseBody
-	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) throws Exception {
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req)
+			throws Exception {
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
 
@@ -120,7 +122,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
+	public ListDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader,
+			@Valid @RequestBody ListDeviceReq req) throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key

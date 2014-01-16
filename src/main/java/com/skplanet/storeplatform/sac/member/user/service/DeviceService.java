@@ -9,8 +9,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -49,7 +47,8 @@ public interface DeviceService {
 	 * @param deviceInfo
 	 * @throws Exception
 	 */
-	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
+	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo)
+			throws Exception;
 
 	/**
 	 * 기기정보 merge
@@ -82,15 +81,4 @@ public interface DeviceService {
 	 */
 	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
 
-	// public RemoveDeviceRes removeDevice(HeaderVo headerVo, RemoveDeviceReq req) throws Exception;
-
-	/**
-	 * 회원탈퇴
-	 * 
-	 * @param headerVo
-	 * @param WithdrawReq
-	 * @return
-	 * @throws Exception
-	 */
-	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) throws Exception;
 }
