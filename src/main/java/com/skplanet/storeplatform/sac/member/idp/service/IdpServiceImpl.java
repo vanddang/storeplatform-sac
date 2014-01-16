@@ -86,7 +86,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult rXInvalidUserTelNoIDP(HashMap map) throws Exception {
+	public ImResult rXInvalidUserTelNoIDP(HashMap map) {
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
@@ -102,12 +102,7 @@ public class IdpServiceImpl implements IdpService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("MBR_ID");
-		if (null != map.get("user_id")) {
-			keySearch.setKeyString((String) map.get("user_id"));
-		} else {
-			LOGGER.info("########## Exception : user_id가 존재하지 않음. ##########");
-			throw new Exception("user_id가 존재하지 않음.");
-		}
+		keySearch.setKeyString((String) map.get("user_id"));
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
@@ -119,23 +114,22 @@ public class IdpServiceImpl implements IdpService {
 		UserMbr getUserMbr = new UserMbr();
 		getUserMbr = searchUserRespnse.getUserMbr();
 
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
 		if (getUserMbr != null) {
 			getUserMbr.setUserPhone((String) map.get("user_tn"));
-		} else {
-			LOGGER.info("########## Exception :회원 정보 조회의 결과값에 UserMbr값이 없음 ##########");
-			throw new Exception("회원 정보 조회의 결과값에 UserMbr값이 없음");
+			userVo.setUserMbr(getUserMbr);
+			userVo.setCommonRequest(commonRequest);
+
+			// 회원 정보 수정 API call
+			UpdateUserResponse updateUserResponse = this.userSCI.updateUser(userVo);
+
+			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 		}
 
-		userVo.setUserMbr(getUserMbr);
-		userVo.setCommonRequest(commonRequest);
-
-		// 회원 정보 수정 API call
-		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(userVo);
-
 		ImResult imResult = new ImResult();
-
-		String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-		String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
@@ -154,7 +148,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return HashMap
 	 */
 	@Override
-	public ImResult rXSetLoginConditionIDP(HashMap map) throws Exception {
+	public ImResult rXSetLoginConditionIDP(HashMap map) {
 
 		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 		MemberConstants memberConstant = new MemberConstants();
@@ -181,9 +175,6 @@ public class IdpServiceImpl implements IdpService {
 		} else if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_LOCK)) { // 로그인 제한
 			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
 			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_LOGIN_PAUSE);
-		} else {
-			LOGGER.info("########## Exception :login_status_code 코드 외값 ##########");
-			throw new Exception("login_status_code 코드 외값");
 		}
 
 		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
@@ -226,7 +217,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return ImResult
 	 */
 	@Override
-	public ImResult rXCreateUserIdIDP(HashMap map) throws Exception {
+	public ImResult rXCreateUserIdIDP(HashMap map) {
 
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -246,11 +237,7 @@ public class IdpServiceImpl implements IdpService {
 		keySearch.setKeyType("MBR_ID");
 		if (null != map.get("user_id")) {
 			keySearch.setKeyString((String) map.get("user_id"));
-		} else {
-			LOGGER.info("########## Exception : user_id가 존재하지 않음. ##########");
-			throw new Exception("user_id가 존재하지 않음.");
 		}
-
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
 		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
@@ -258,13 +245,15 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
-		if (null == searchUserRespnse.getUserKey()) { // 회원 존재 여부 확인
+		// 회원 존재 여부 확인
+		if (null == searchUserRespnse.getUserKey()) {
 			// one id 가입 정보 등록
 			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 			updateMbrOneIDRequest.setCommonRequest(commonRequest);
 			MbrOneID mbrOneID = new MbrOneID();
 			mbrOneID.setIntgMbrCaseCode((String) map.get("im_int_svc_no"));
-			mbrOneID.setIntgSvcNumber((String) map.get("im_mem_type_cd")); // 통합회원 유형 코드
+			// 통합회원 유형 코드
+			mbrOneID.setIntgSvcNumber((String) map.get("im_mem_type_cd"));
 			mbrOneID.setUserID((String) map.get("user_id"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
@@ -294,7 +283,7 @@ public class IdpServiceImpl implements IdpService {
 	 * @return ImResult
 	 */
 	@Override
-	public ImResult rXSetSuspendUserIdIDP(HashMap map) throws Exception {
+	public ImResult rXSetSuspendUserIdIDP(HashMap map) {
 		UpdateStatusUserRequest updateUserVo = new UpdateStatusUserRequest();
 		MemberConstants memberConstant = new MemberConstants();
 		IdpConstants idpConstant = new IdpConstants();
@@ -320,9 +309,6 @@ public class IdpServiceImpl implements IdpService {
 		} else if (susStatusCode.equals(idpConstant.SUS_STATUS_LOCK)) { // 직권중지
 			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
 			// updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_AUTHORITY_PAUSE);
-		} else {
-			LOGGER.info("########## Exception :sus_status_code 코드 외값 ##########");
-			throw new Exception("sus_status_code 코드 외값");
 		}
 
 		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
