@@ -10,6 +10,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
@@ -30,12 +32,19 @@ public class ListDeviceTest {
 	@Test
 	public void shouldDevice() {
 
-		ListDeviceReq req = new ListDeviceReq();
-		// req.setUserKey("IM110000000154320130912135255");
-		req.setDeviceId("01093808294");
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setSystemId("S001");
+		tenantHeader.setTenantId("S01");
 
+		SacRequestHeader header = new SacRequestHeader();
+		header.setTenantHeader(tenantHeader);
+
+		ListDeviceReq req = new ListDeviceReq();
+		req.setUserKey("US201401161104582130000089");
+		req.setDeviceId("01093808294");
+		//req.setIsMainDevice("N");
 		try {
-			this.deviceService.listDevice(null, req);
+			this.deviceService.listDevice(header, req);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
