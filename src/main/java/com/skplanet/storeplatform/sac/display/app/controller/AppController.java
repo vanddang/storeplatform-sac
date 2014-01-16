@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.display.app.controller;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.display.app.service.AppDetailService;
+import com.skplanet.storeplatform.sac.display.app.service.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,18 +17,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/display")
-public class AppDetailController {
+public class AppController {
 
     @Autowired
-    private AppDetailService appDetailService;
+    private AppService appService;
 
     @RequestMapping(value = "/app/detail/v1", method = RequestMethod.GET)
     @ResponseBody
-    public AppDetailRes getAppDetail(String episodeId, @RequestParam(required = false) String seedApp) {
+    public AppDetailRes getAppDetail(String episodeId) {
         AppDetailReq request = new AppDetailReq();
         request.setEpisodeId(episodeId);
-        request.setSeedApp(seedApp);
 
-        return appDetailService.getAppDetail(request);
+        return appService.getAppDetail(request);
     }
 }

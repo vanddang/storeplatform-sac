@@ -23,9 +23,9 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class AppDetailServiceImpl implements AppDetailService {
+public class AppServiceImpl implements AppService {
 
-    protected Logger logger = LoggerFactory.getLogger(AppDetailServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
 
     @Autowired
     @Qualifier("sac")
@@ -36,16 +36,6 @@ public class AppDetailServiceImpl implements AppDetailService {
         // Dummy generation
         AppDetailRes res = new AppDetailRes();
         Product product = new Product();
-
-        // SeedApp 정보
-        if ("Y".equals(request.getSeedApp())) {
-            List<Component> componentList = new ArrayList<Component>();
-            Component component = new Component();
-            component.setIdentifier(new Identifier("seedId", "PD013005"));
-            componentList.add(component);
-            res.setComponentList(componentList);
-        }
-
 
         product.setIdentifier(new Identifier("episode", "0000308800"));
 
