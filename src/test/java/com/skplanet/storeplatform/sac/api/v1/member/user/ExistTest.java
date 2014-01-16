@@ -18,9 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 
 @ActiveProfiles(value = "local")
@@ -49,53 +51,25 @@ public class ExistTest {
 
 	/**
 	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter Null1
-	 * </pre>
-	 */
-	@Test
-	public void existNull1() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.GET)
-				.success(ExistRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ExistRes res = (ExistRes) result;
-						logger.info("{}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter Null2
-	 * </pre>
-	 */
-	@Test
-	public void existNull2() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?userKey=&userId=&deviceId=&deviceKey=")
-				.httpMethod(HttpMethod.GET).success(ExistRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ExistRes res = (ExistRes) result;
-						logger.info("{}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userKey
 	 * </pre>
 	 */
 	@Test
 	public void existUserKey() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?userKey=IF1023002708420090928145937")
-				.httpMethod(HttpMethod.GET).success(ExistRes.class, new SuccessCallback() {
+
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ExistReq req = new ExistReq();
+						req.setUserKey("IF1023002708420090928145937");
+						logger.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ExistRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -106,17 +80,23 @@ public class ExistTest {
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userId
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void existUserId() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?userId=tstore44").httpMethod(HttpMethod.GET)
-				.success(ExistRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ExistReq req = new ExistReq();
+						req.setUserId("tstore44");
+						logger.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ExistRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 
 	/**
@@ -124,14 +104,21 @@ public class ExistTest {
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceId
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void existDeviceId() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?deviceId=01088902431").httpMethod(HttpMethod.GET)
-				.success(ExistRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ExistReq req = new ExistReq();
+						req.setDeviceId("01088902431");
+						logger.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ExistRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -142,16 +129,22 @@ public class ExistTest {
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceKey
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void existDeviceKey() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1?deviceKey=01088902431")
-				.httpMethod(HttpMethod.GET).success(ExistRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ExistReq req = new ExistReq();
+						req.setDeviceKey("01088902431");
+						logger.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ExistRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ExistRes res = (ExistRes) result;
-						logger.info("{}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 }
