@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
@@ -94,6 +95,15 @@ public class SellerController {
 	WithdrawRes withdraw(SacRequestHeader header, @RequestBody WithdrawReq req) throws Exception {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("request param : {}", req.toString());
+
+		String secedeReasonCode = StringUtil.nvl(req.getSecedeReasonCode(), "");
+		String secedeReasonMessage = StringUtil.nvl(req.getSecedeReasonMessage(), "");
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+
+		if (secedeReasonCode.equals("") | secedeReasonMessage.equals("") | sellerKey.equals("")) {
+			throw new Exception("필수 파라미터 미존재");
+		}
+
 		return this.sellerService.withdraw(header, req);
 	}
 }
