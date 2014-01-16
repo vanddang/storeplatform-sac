@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -23,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class MenuListRes extends CommonInfo implements Serializable {
+public class MenuListRes extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123126L;
 

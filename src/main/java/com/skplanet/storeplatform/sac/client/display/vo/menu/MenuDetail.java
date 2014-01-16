@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
-import java.io.Serializable;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -18,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
-public class MenuDetail extends CommonInfo implements Serializable {
+public class MenuDetail extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123123L;
 

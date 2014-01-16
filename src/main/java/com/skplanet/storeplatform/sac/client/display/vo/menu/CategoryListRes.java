@@ -10,7 +10,6 @@ lose such Confidential Information and
  */
 package com.skplanet.storeplatform.sac.client.display.vo.menu;
 
-import java.io.Serializable;
 import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -25,7 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
  * Updated on : 2013. 12. 20. Updated by : 윤주영, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class CategoryListRes extends CommonInfo implements Serializable {
+public class CategoryListRes extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123128L;
 
