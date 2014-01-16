@@ -72,7 +72,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			req.setLangCd("ko");
 			req.setDeviceModelCd("SHV-E330SSO");
 		} else {
-			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setTenantId("S01");
 			req.setSystemId(header.getTenantHeader().getSystemId());
 			req.setImageCd("DP000196");
 			req.setLangCd("ko");
