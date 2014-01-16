@@ -229,7 +229,7 @@ public class SellerServiceImpl implements SellerService {
 		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 		updateStatusSellerRequest.setSellerID(req.getSellerId());
 
-		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_WATING);
+		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_PAUSE);
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_LOGIN_PAUSE);
 
 		/** 2. 공통 헤더 생성 및 주입. */
