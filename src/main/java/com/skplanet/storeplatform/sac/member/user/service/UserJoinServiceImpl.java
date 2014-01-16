@@ -78,16 +78,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 	@Autowired
 	private IDPRepository idpRepository;
 
-	/**
-	 * IDP 연동 결과.
-	 */
-	private IDPReceiverM idpReceiverM;
-
-	/**
-	 * 통합 IDP 연동 결과.
-	 */
-	private ImIDPReceiverM imIDPReceiverM;
-
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) throws Exception {
 
@@ -110,14 +100,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * (IDP 연동) 무선회원 가입
 		 */
-		this.idpReceiverM = this.idpService.join4Wap(msisdn);
-		LOGGER.info("## join4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
-		LOGGER.info("## join4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
+		IDPReceiverM join4WapInfo = this.idpService.join4Wap(msisdn);
+		LOGGER.info("## join4Wap - Result Code : {}", join4WapInfo.getResponseHeader().getResult());
+		LOGGER.info("## join4Wap - Result Text : {}", join4WapInfo.getResponseHeader().getResult_text());
 
 		/**
 		 * 무선회원 연동 성공 여부에 따라 분기
 		 */
-		if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+		if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
 
 			LOGGER.info("## IDP 연동 성공 ==============================================");
 
@@ -136,8 +126,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 기본정보 setting
 			 */
 			UserMbr userMbr = new UserMbr();
-			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
-			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
+			userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key());
+			userMbr.setImSvcNo(join4WapInfo.getResponseBody().getSvc_mng_num());
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE);
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
@@ -280,8 +270,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setDeviceIdType("msisdn");
 			deviceInfo.setJoinId(req.getJoinId());
 			deviceInfo.setNativeId(req.getImei());
-			deviceInfo.setImMngNum(this.idpReceiverM.getResponseBody().getSvc_mng_num());
-			deviceInfo.setDeviceModelNo(this.idpReceiverM.getResponseBody().getModel_id());
+			deviceInfo.setImMngNum(join4WapInfo.getResponseBody().getSvc_mng_num());
+			deviceInfo.setDeviceModelNo(join4WapInfo.getResponseBody().getModel_id());
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y);
 			deviceInfo.setAuthenticationDate(DateUtil.getToday());
 			deviceInfo.setIsUsed(MemberConstants.USE_Y);
@@ -302,17 +292,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
 
-		} else if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(),
-				IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
+		} else if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
 			LOGGER.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 
 			/**
 			 * (IDP 연동) 무선회원 해지
 			 */
 			LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
-			this.idpReceiverM = this.idpService.secedeUser4Wap(msisdn);
-			LOGGER.info("## secedeUser4Wap - Result Code : {}", this.idpReceiverM.getResponseHeader().getResult());
-			LOGGER.info("## secedeUser4Wap - Result Text : {}", this.idpReceiverM.getResponseHeader().getResult_text());
+			IDPReceiverM secedeUser4WapInfo = this.idpService.secedeUser4Wap(msisdn);
+			LOGGER.info("## secedeUser4Wap - Result Code : {}", secedeUser4WapInfo.getResponseHeader().getResult());
+			LOGGER.info("## secedeUser4Wap - Result Text : {}", secedeUser4WapInfo.getResponseHeader().getResult_text());
 
 			throw new RuntimeException("IDP 무선회원 가입 실패");
 
@@ -353,9 +342,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * (통합 IDP 연동) 이용동의 가입
 		 */
-		this.imIDPReceiverM = this.imIdpService.agreeUser(param);
-		LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-		LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
+		LOGGER.debug("## Im Result Code   : {}", agreeUserInfo.getResponseHeader().getResult());
+		LOGGER.debug("## Im Result Text   : {}", agreeUserInfo.getResponseHeader().getResult_text());
 
 		/**
 		 * (통합 IDP 연동) 이용동의 가입 성공시....
@@ -364,26 +353,27 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 */
 		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
 
-			LOGGER.debug("## Im user_key      : {}", this.imIDPReceiverM.getResponseBody().getUser_key());
-			LOGGER.debug("## Im im_int_svc_no : {}", this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
-			LOGGER.debug("## Im user_tn       : {}", this.imIDPReceiverM.getResponseBody().getUser_tn());
-			LOGGER.debug("## Im user_email    : {}", this.imIDPReceiverM.getResponseBody().getUser_email());
+			LOGGER.debug("## IDP 연동 성공 ==============================================");
+
+			LOGGER.debug("## Im user_key      : {}", agreeUserInfo.getResponseBody().getUser_key());
+			LOGGER.debug("## Im im_int_svc_no : {}", agreeUserInfo.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im user_tn       : {}", agreeUserInfo.getResponseBody().getUser_tn());
+			LOGGER.debug("## Im user_email    : {}", agreeUserInfo.getResponseBody().getUser_email());
 
 			/**
 			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 			 */
-			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
-					.getIm_int_svc_no());
-			LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-			LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im Result Code   : {}", profileInfo.getResponseHeader().getResult());
+			LOGGER.debug("## Im Result Text   : {}", profileInfo.getResponseHeader().getResult_text());
 
 			/**
 			 * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
 			 */
 			if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
 
-				LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
-				LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
+				LOGGER.debug("## Im user_name     : {}", profileInfo.getResponseBody().getUser_name());
+				LOGGER.debug("## Im user_birthday : {}", profileInfo.getResponseBody().getUser_birthday());
 
 			}
 
@@ -440,40 +430,38 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
 		param.put("key", req.getUserId());
 		param.put("user_mdn", sbUserPhone.toString());
-		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005,"
-				+ DateUtil.getToday() + "," + DateUtil.getTime());
+		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 		LOGGER.debug("## param : {}", param.entrySet());
-		this.imIDPReceiverM = this.imIdpService.agreeUser(param);
-		LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-		LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
+		LOGGER.debug("## Im Result Code   : {}", agreeUserInfo.getResponseHeader().getResult());
+		LOGGER.debug("## Im Result Text   : {}", agreeUserInfo.getResponseHeader().getResult_text());
 
 		/**
 		 * 이용동의 가입 성공시
 		 */
 		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
 
-			LOGGER.debug("## Im user_key      : {}", this.imIDPReceiverM.getResponseBody().getUser_key());
-			LOGGER.debug("## Im im_int_svc_no : {}", this.imIDPReceiverM.getResponseBody().getIm_int_svc_no());
-			LOGGER.debug("## Im user_tn       : {}", this.imIDPReceiverM.getResponseBody().getUser_tn());
-			LOGGER.debug("## Im user_email    : {}", this.imIDPReceiverM.getResponseBody().getUser_email());
+			LOGGER.debug("## Im user_key      : {}", agreeUserInfo.getResponseBody().getUser_key());
+			LOGGER.debug("## Im im_int_svc_no : {}", agreeUserInfo.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im user_tn       : {}", agreeUserInfo.getResponseBody().getUser_tn());
+			LOGGER.debug("## Im user_email    : {}", agreeUserInfo.getResponseBody().getUser_email());
 
 			/**
 			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 			 */
-			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
-					.getIm_int_svc_no());
-			LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-			LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
+			LOGGER.debug("## Im Result Code   : {}", profileInfo.getResponseHeader().getResult());
+			LOGGER.debug("## Im Result Text   : {}", profileInfo.getResponseHeader().getResult_text());
 
 			/**
 			 * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
 			 */
 			if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
 
-				LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
-				LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
+				LOGGER.debug("## Im user_name     : {}", profileInfo.getResponseBody().getUser_name());
+				LOGGER.debug("## Im user_birthday : {}", profileInfo.getResponseBody().getUser_birthday());
 
 			}
 
