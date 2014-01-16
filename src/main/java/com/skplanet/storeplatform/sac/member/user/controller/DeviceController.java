@@ -1,7 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SetMainDeviceRequest;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.HeaderVo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
@@ -98,10 +95,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DeviceInfo modifyRepresentationDevice(@RequestHeader Map<String, Object> headers, @RequestBody SetMainDeviceRequest req) throws Exception {
-
-		/* Header 정보 세팅 */
-		HeaderVo headerVo = this.headerInfo.getHeader(headers);
+	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceRequest req)
+			throws Exception {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
@@ -110,7 +105,7 @@ public class DeviceController {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
-		DeviceInfo res = this.deviceService.modifyRepresentationDevice(headerVo, req);
+		DeviceInfo res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
 		return res;
 	}
@@ -130,7 +125,7 @@ public class DeviceController {
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표단말
-																			// 조회설정
+																		 // 조회설정
 
 		if (userId.equals("") || userKey.equals("") || isMainDevice.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
@@ -153,7 +148,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) throws Exception {
+	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req)
+			throws Exception {
 
 		// String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
@@ -161,7 +157,8 @@ public class DeviceController {
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
-		if (/* userAuthKey.equals("") || */userKey.equals("") && deviceKey.equals("") && userId.equals("") && deviceId.equals("")) {
+		if (/* userAuthKey.equals("") || */userKey.equals("") && deviceKey.equals("") && userId.equals("")
+				&& deviceId.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
