@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.client.purchase.vo.purchase;
+package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
