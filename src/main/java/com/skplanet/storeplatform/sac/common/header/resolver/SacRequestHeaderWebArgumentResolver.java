@@ -10,10 +10,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 
 /**
- * SAC Custom Header 값들을 Spring Controller에서 쓰기 위한 WebArgumentResolver 구현체
- * (임시적으로 상위 규격서의 샘플 값들을 넣어놓았으며, 추후 ACL Flow가 완성되면 보완한다.)
- * Updated on : 2014. 1. 15.
- * Updated by : 서대영, SK 플래닛.
+ * SAC Custom Header 값들을 Spring Controller에서 쓰기 위한 WebArgumentResolver 구현체 (임시적으로 상위 규격서의 샘플 값들을 넣어놓았으며, 추후 ACL Flow가
+ * 완성되면 보완한다.) Updated on : 2014. 1. 15. Updated by : 서대영, SK 플래닛.
  */
 public class SacRequestHeaderWebArgumentResolver implements WebArgumentResolver {
 
@@ -37,7 +35,7 @@ public class SacRequestHeaderWebArgumentResolver implements WebArgumentResolver 
 			TenantHeader tenant = new TenantHeader();
 
 			tenant.setSystemId("S001");
-			tenant.setTenantId("T01");
+			tenant.setTenantId("S01");
 
 			SacRequestHeader sacHeader = new SacRequestHeader();
 
