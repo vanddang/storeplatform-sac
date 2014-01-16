@@ -26,27 +26,37 @@ public class AuthorizeByIdRes extends CommonInfo {
 	private String userAuthKey;
 
 	/**
-	 * 회원상태
+	 * 사용자 구분코드
 	 */
-	private String userStatus;
+	private String userType;
 
 	/**
-	 * 가입사이트 코드(mbrStatus Temporary 일때만 유효)
+	 * 사용자 main 상태코드
+	 */
+	private String userMainStatus;
+
+	/**
+	 * 사용자 sub 상태코드
+	 */
+	private String userSubStatus;
+
+	/**
+	 * 가입사이트 코드
 	 */
 	private String joinSiteCd;
 
 	/**
-	 * 가입사이트 코드 값(mbrStatus Temporary 일때만 유효)
+	 * 가입사이트 코드 값
 	 */
 	private String joinSiteNm;
 
 	/**
-	 * 로그인 상태코드(mbrStatus notYetAgreeTerms 일때만 유효)
+	 * 로그인 상태코드
 	 */
 	private String loginStatCd;
 
 	/**
-	 * 직권중지 상태코드(mbrStatus notYetAgreeTerms 일때만 유효)
+	 * 직권중지 상태코드
 	 */
 	private String subStatCd;
 
@@ -71,12 +81,28 @@ public class AuthorizeByIdRes extends CommonInfo {
 		this.userAuthKey = userAuthKey;
 	}
 
-	public String getUserStatus() {
-		return this.userStatus;
+	public String getUserType() {
+		return this.userType;
 	}
 
-	public void setUserStatus(String userStatus) {
-		this.userStatus = userStatus;
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	public String getUserMainStatus() {
+		return this.userMainStatus;
+	}
+
+	public void setUserMainStatus(String userMainStatus) {
+		this.userMainStatus = userMainStatus;
+	}
+
+	public String getUserSubStatus() {
+		return this.userSubStatus;
+	}
+
+	public void setUserSubStatus(String userSubStatus) {
+		this.userSubStatus = userSubStatus;
 	}
 
 	public String getJoinSiteCd() {
