@@ -103,24 +103,14 @@ public class DeviceInfo extends CommonInfo {
 	private String joinId;
 
 	/**
-	 * OS 버젼
-	 */
-	private String osVer;
-
-	/**
-	 * SC 버젼
-	 */
-	private String scVer;
-
-	/**
 	 * 제조사명
 	 */
 	private String makeComp;
 
 	/**
-	 * uacd
+	 * 루팅 여부 : Y/N
 	 */
-	private String uacd;
+	private String rooting;
 
 	/**
 	 * 수정 일시
@@ -138,9 +128,49 @@ public class DeviceInfo extends CommonInfo {
 	private String endDate;
 
 	/**
+	 * TenantId
+	 */
+	private String TenantId;
+
+	/**
 	 * SKT 통합회원관리번호
 	 */
 	private String imMngNum;
+
+	/**
+	 * OMP DOWNLOADER 설치 여부
+	 */
+	private String ompDownloaderYn;
+
+	/**
+	 * 대기화면 설정 여부
+	 */
+	private String standByScreenYn;
+
+	/**
+	 * uacd
+	 */
+	private String uacd;
+
+	/**
+	 * OMP 지원 단말 여부
+	 */
+	private String ompSupportYn;
+
+	/**
+	 * OS 버젼
+	 */
+	private String osVer;
+
+	/**
+	 * SC 버젼
+	 */
+	private String scVer;
+
+	/**
+	 * 앱 사용통계 사용여부
+	 */
+	private String appStatisticsYn;
 
 	/**
 	 * 도토리 인증일 : YYYYMMDDHH24MISS
@@ -151,16 +181,6 @@ public class DeviceInfo extends CommonInfo {
 	 * 도토리 인증여부 : Y/N
 	 */
 	private String dotoriAuthYn;
-
-	/**
-	 * 루팅 여부 : Y/N
-	 */
-	private String rooting;
-
-	/**
-	 * TenantId
-	 */
-	private String TenantId;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
@@ -405,6 +425,38 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	public String getOmpDownloaderYn() {
+		return this.ompDownloaderYn;
+	}
+
+	public void setOmpDownloaderYn(String ompDownloaderYn) {
+		this.ompDownloaderYn = ompDownloaderYn;
+	}
+
+	public String getStandByScreenYn() {
+		return this.standByScreenYn;
+	}
+
+	public void setStandByScreenYn(String standByScreenYn) {
+		this.standByScreenYn = standByScreenYn;
+	}
+
+	public String getOmpSupportYn() {
+		return this.ompSupportYn;
+	}
+
+	public void setOmpSupportYn(String ompSupportYn) {
+		this.ompSupportYn = ompSupportYn;
+	}
+
+	public String getAppStatisticsYn() {
+		return this.appStatisticsYn;
+	}
+
+	public void setAppStatisticsYn(String appStatisticsYn) {
+		this.appStatisticsYn = appStatisticsYn;
 	}
 
 }
