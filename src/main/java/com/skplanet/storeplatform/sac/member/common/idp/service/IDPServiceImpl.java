@@ -308,9 +308,11 @@ public class IDPServiceImpl implements IDPService {
 		}
 
 		/*
-		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) && !"".equals(user_id)) { try { sn_auth_key =
-		 * makeSnAuthKey(user_name, user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch (Exception e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } } else { is_rname_auth = "N"; } }
+		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) &&
+		 * !"".equals(user_id)) { try { sn_auth_key = makeSnAuthKey(user_name,
+		 * user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch
+		 * (Exception e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); } } else { is_rname_auth = "N"; } }
 		 */
 
 		// sendData.setSp_id(Constants.OMP_IDP_SP_ID);
@@ -416,8 +418,7 @@ public class IDPServiceImpl implements IDPService {
 		sendData.setCmd(IDPConstants.IDP_REQ_CMD_DEVICE_COMPARE);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setKey(mdn);
-		sendData.setKey_type("1");
+		sendData.setUser_mdn(mdn);
 
 		return this.repository.sendIDP(sendData);
 	}
