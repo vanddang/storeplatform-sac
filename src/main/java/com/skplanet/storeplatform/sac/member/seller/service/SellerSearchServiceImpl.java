@@ -407,12 +407,31 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 			schReq.setCommonRequest(commonRequest);
 		}
-		schReq.setSellerBizNumber(req.getSellerBizNumber());
-		schReq.setSellerCompany(req.getSellerCompany());
-		schReq.setSellerEmail(req.getSellerEmail());
-		schReq.setSellerPhone(req.getSellerPhone());
 
-		schRes = this.sellerSCI.searchIDSeller(schReq);
+		boolean reqStat = false;
+		if (req.getSellerBizNumber() != null)
+			if (!req.getSellerBizNumber().isEmpty()) {
+				schReq.setSellerBizNumber(req.getSellerBizNumber());
+				reqStat = true;
+			}
+		if (req.getSellerCompany() != null)
+			if (!req.getSellerCompany().isEmpty()) {
+				schReq.setSellerCompany(req.getSellerCompany());
+				reqStat = true;
+			}
+		if (req.getSellerEmail() != null)
+			if (!req.getSellerEmail().isEmpty()) {
+				schReq.setSellerEmail(req.getSellerEmail());
+				reqStat = true;
+			}
+		if (req.getSellerPhone() != null)
+			if (!req.getSellerPhone().isEmpty()) {
+				schReq.setSellerPhone(req.getSellerPhone());
+				reqStat = true;
+			}
+
+		if (reqStat)
+			schRes = this.sellerSCI.searchIDSeller(schReq);
 
 		SearchIdRes response = new SearchIdRes();
 		response.setSellerMbr(this.sellerMbrList(schRes.getSellerMbr()));// 판매자 정보 리스트
