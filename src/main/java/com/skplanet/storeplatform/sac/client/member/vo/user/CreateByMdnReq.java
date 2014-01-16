@@ -32,9 +32,20 @@ public class CreateByMdnReq extends CommonInfo {
 	private String deviceIdType;
 
 	/**
-	 * 기기 고유 아이디
+	 * 기기 고유 아이디.
 	 */
 	private String imei;
+
+	/**
+	 * Sms 수신 동의 여부.
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String isRecvSms;
+
+	/**
+	 * 본인의 생년월일.
+	 */
+	private String ownBirth;
 
 	/**
 	 * 이동 통신사.
@@ -158,6 +169,36 @@ public class CreateByMdnReq extends CommonInfo {
 	 */
 	public void setImei(String imei) {
 		this.imei = imei;
+	}
+
+	/**
+	 * @return String : isRecvSms
+	 */
+	public String getIsRecvSms() {
+		return this.isRecvSms;
+	}
+
+	/**
+	 * @param isRecvSms
+	 *            String : the isRecvSms to set
+	 */
+	public void setIsRecvSms(String isRecvSms) {
+		this.isRecvSms = isRecvSms;
+	}
+
+	/**
+	 * @return String : ownBirth
+	 */
+	public String getOwnBirth() {
+		return this.ownBirth;
+	}
+
+	/**
+	 * @param ownBirth
+	 *            String : the ownBirth to set
+	 */
+	public void setOwnBirth(String ownBirth) {
+		this.ownBirth = ownBirth;
 	}
 
 	/**
