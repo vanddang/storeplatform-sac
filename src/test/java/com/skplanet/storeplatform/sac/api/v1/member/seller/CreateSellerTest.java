@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 
 /**
  * 판매자 회원 가입
@@ -72,12 +71,26 @@ public class CreateSellerTest {
 	@Test
 	public void createSeller() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						CreateReq req = new CreateReq();
+
+						req.setSellerClass("US010101");
+						req.setSellerCategory("US011301");
+						req.setSellerMainStatus("US010201");
+						req.setSellerSubStatus("US010301");
+						req.setSellerTelecom("US001201");
+						req.setIsRecvSMS("Y");
+						req.setIsRecvEmail("seoguman@nate.com");
+						req.setSellerSex("F");
+						req.setSellerCountry("USA");
+						req.setSellerLanguage("US004301");
+						req.setIsForeign("Y");
+						req.setRealNameMethod("US011101");
+
 						// 약관정보
 						List<Agreement> agreementList = new ArrayList<CreateReq.Agreement>();
 						CreateReq.Agreement agreement = req.new Agreement();
@@ -91,7 +104,7 @@ public class CreateSellerTest {
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
-				}).success(LockAccountRes.class, new SuccessCallback() {
+				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateRes res = (CreateRes) result;
