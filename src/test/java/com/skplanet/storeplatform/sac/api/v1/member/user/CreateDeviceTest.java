@@ -31,10 +31,14 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
@@ -49,8 +53,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class CreateDeviceTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CreateDeviceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(CreateDeviceTest.class);
 
 	@Autowired
 	private DeviceService deviceService;
@@ -70,9 +73,7 @@ public class CreateDeviceTest {
 
 		try {
 
-			new TestCaseTemplate(this.mockMvc)
-					.url("/dev/member/user/createDevice/v1")
-					.httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mockMvc).url("/dev/member/user/createDevice/v1").httpMethod(HttpMethod.POST)
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
@@ -84,8 +85,7 @@ public class CreateDeviceTest {
 						}
 					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
 						@Override
-						public void success(Object result,
-								HttpStatus httpStatus, RunMode runMode) {
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
 							logger.info("response param : {}", res.toString());
 						}
@@ -99,29 +99,35 @@ public class CreateDeviceTest {
 
 	@Test
 	public void shouldCreateDeviceService() {
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setSystemId("S001");
+		tenantHeader.setTenantId("S01");
+
+		DeviceHeader deviceHeader = new DeviceHeader();
+		//deviceHeader.setModel("SHW-M440S");
+		deviceHeader.setModel("SHW-M220L");
+		deviceHeader.setOsVersion("1.0");
+
+		SacRequestHeader header = new SacRequestHeader();
+		header.setDeviceHeader(deviceHeader);
+		header.setTenantHeader(tenantHeader);
+
 		CreateDeviceReq req = new CreateDeviceReq();
-		req.setUserKey("US201401141629187750000063");
+		req.setUserKey("US201401161859405900000107");
 		req.setRegMaxCnt(5);
 
 		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setDeviceKey("DE201401150903534380000026");
-		deviceInfo.setUserKey("US201401141629187750000063");
-		deviceInfo.setAuthenticationDate("");
-		deviceInfo.setDeviceId("01066786220");
-		deviceInfo.setDeviceAccount("vanddang@gmail.com");
-		deviceInfo.setDeviceModelNo("SHP-110S");
-		deviceInfo.setDeviceNickName("SHP-110S(임시)");
+		deviceInfo.setUserKey("US201401161859405900000107");
+		deviceInfo.setDeviceId("01066786221");
+		deviceInfo.setDeviceIdType("msisdn ");
 		deviceInfo.setDeviceTelecom("US012101");
-		deviceInfo.setDeviceType("deviceType");
 		deviceInfo.setNativeId("358362045580844");
-		deviceInfo.setIsAuthenticated("Y");
-		deviceInfo.setIsPrimary("Y");
+		deviceInfo.setDeviceAccount("vanddang@gmail.com");
 		deviceInfo.setIsRecvSms("Y");
-		deviceInfo.setIsUsed("Y");
-		deviceInfo.setStartDate("");
-		deviceInfo.setTenantId("S01");
+		deviceInfo.setIsPrimary("N");
+		deviceInfo.setDeviceNickName("SHP-110S(임시)");
 
-		deviceInfo.setDotoriAuthDate("");
+		deviceInfo.setDotoriAuthDate(DateUtil.getToday());
 		deviceInfo.setDotoriAuthYn("Y");
 		deviceInfo.setOsVer("1.0");
 		deviceInfo.setScVer("1.0");
@@ -131,7 +137,7 @@ public class CreateDeviceTest {
 		req.setDeviceInfo(deviceInfo);
 		try {
 
-			CreateDeviceRes res = this.deviceService.createDevice(null, req);
+			CreateDeviceRes res = this.deviceService.createDevice(header, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
