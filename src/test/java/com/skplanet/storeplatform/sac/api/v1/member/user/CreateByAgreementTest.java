@@ -143,7 +143,7 @@ public class CreateByAgreementTest {
 					public Object requestBody() {
 
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
-						reqJson.setUserId("tstore_oneid_01");
+						reqJson.setUserId("tstore_oneid");
 						reqJson.setDeviceId("");
 						reqJson.setDeviceIdType("");
 						reqJson.setDeviceTelecom("");

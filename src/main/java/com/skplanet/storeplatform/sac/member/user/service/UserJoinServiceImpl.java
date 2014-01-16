@@ -192,11 +192,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
-			LOGGER.info("## UserMainStatus : {}", createUserResponse.getUserMainStatus());
-			LOGGER.info("## UserSubStatus  : {}", createUserResponse.getUserSubStatus());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(),
-					MemberConstants.RESULT_SUCCES)) {
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
 				LOGGER.info("## 사용자 회원 가입 실패 ===========================");
 				throw new RuntimeException("사용자 회원 가입 실패");
@@ -360,6 +357,32 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.debug("## Im user_tn       : {}", agreeUserInfo.getResponseBody().getUser_tn());
 			LOGGER.debug("## Im user_email    : {}", agreeUserInfo.getResponseBody().getUser_email());
 
+			CreateUserRequest createUserRequest = new CreateUserRequest();
+
+			/**
+			 * SC 공통정보 setting
+			 */
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+			createUserRequest.setCommonRequest(commonRequest);
+			LOGGER.info("## SC Request commonRequest : {}", createUserRequest.getCommonRequest().toString());
+
+			/**
+			 * SC 이용약관 정보 setting
+			 */
+			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+			for (AgreementInfo info : req.getAgreementList()) {
+				MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
+				mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
+				mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
+				mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+				mbrClauseAgree.setRegDate(DateUtil.getToday());
+				mbrClauseAgreeList.add(mbrClauseAgree);
+			}
+			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
+			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
+
 			/**
 			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 			 */
@@ -368,14 +391,49 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.debug("## Im Result Text   : {}", profileInfo.getResponseHeader().getResult_text());
 
 			/**
-			 * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
+			 * SC 사용자 기본정보 setting
 			 */
-			if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email());
+			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn());
+			userMbr.setUserName(profileInfo.getResponseBody().getUser_name());
+			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday());
+			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key());
+			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getSvc_mng_num());
+			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+			userMbr.setImRegDate(DateUtil.getToday());
+			userMbr.setUserID(req.getUserId());
+			userMbr.setUserTelecom(req.getDeviceTelecom());
+			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // AI-IS 로직 반영.
+			userMbr.setIsParent(MemberConstants.USE_N); // AI-IS 로직 반영.
+			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
+			createUserRequest.setUserMbr(userMbr);
+			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
-				LOGGER.debug("## Im user_name     : {}", profileInfo.getResponseBody().getUser_name());
-				LOGGER.debug("## Im user_birthday : {}", profileInfo.getResponseBody().getUser_birthday());
+			/**
+			 * SC 사용자 가입요청
+			 */
+			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+
+			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
+			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
+
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+				LOGGER.info("## OneID 약관동의 가입 실패 ===========================");
+				throw new RuntimeException("사용자 회원 가입 실패");
 
 			}
+
+			/**
+			 * 결과 세팅
+			 */
+			response.setUserKey(createUserResponse.getUserKey());
 
 		} else {
 
