@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
 
 /**
@@ -53,8 +54,8 @@ public class MenuListServiceImpl implements MenuListService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public MenuListRes searchMenuList(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception {
+	public MenuListRes searchMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
 
@@ -147,8 +148,8 @@ public class MenuListServiceImpl implements MenuListService {
 	 * systemId, String menuId)
 	 */
 	@Override
-	public MenuDetailRes searchMenu(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception {
+	public MenuDetailRes searchMenu(MenuReq requestVO, SacRequestHeader requestHeader) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
 

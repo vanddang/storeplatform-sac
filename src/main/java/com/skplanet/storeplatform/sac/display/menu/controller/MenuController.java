@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.menu.service.CategoryService;
 import com.skplanet.storeplatform.sac.display.menu.service.MenuListService;
 
@@ -32,62 +33,62 @@ public class MenuController {
 
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListRes searchMenuList(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception {
+	public MenuListRes searchMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchMenuList start !!");
 
-		return this.menuListService.searchMenuList(requestVO);
+		return this.menuListService.searchMenuList(requestVO, requestHeader);
 	}
 
 	@RequestMapping(value = "/specific/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MenuListRes searchMenu(MenuReq requestVO) throws JsonGenerationException, JsonMappingException, IOException,
-			Exception {
+	public MenuListRes searchMenu(MenuReq requestVO, SacRequestHeader requestHeader) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchMenu start !!");
 
-		return this.menuListService.searchMenuList(requestVO);
+		return this.menuListService.searchMenuList(requestVO, requestHeader);
 	}
 
 	@RequestMapping(value = "/category/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryListRes searchTopCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchTopCategoryList start !!");
 
-		return this.categoryService.searchTopCategoryList(requestVO);
+		return this.categoryService.searchTopCategoryList(requestVO, requestHeader);
 	}
 
 	@RequestMapping(value = "/category/subCategory/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchDetailCategoryList start !!");
 
-		return this.categoryService.searchDetailCategoryList(requestVO);
+		return this.categoryService.searchDetailCategoryList(requestVO, requestHeader);
 	}
 
 	@RequestMapping(value = "/category/top/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryListRes searchTopMenuList(MenuReq requestVO) throws JsonGenerationException, JsonMappingException,
-			IOException, Exception {
+	public CategoryListRes searchTopMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchTopMenuList start !!");
 
-		return this.categoryService.searchTopCategoryList(requestVO);
+		return this.categoryService.searchTopCategoryList(requestVO, requestHeader);
 	}
 
 	@RequestMapping(value = "/category/sub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryDetailRes searchDetailMenuList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryDetailRes searchDetailMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchSubCategoryList start !!");
 
-		return this.categoryService.searchSubCategoryList(requestVO);
+		return this.categoryService.searchSubCategoryList(requestVO, requestHeader);
 	}
 
 }

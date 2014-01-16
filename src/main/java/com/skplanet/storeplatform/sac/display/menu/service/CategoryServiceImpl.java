@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategoryDTO;
 import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
 
@@ -58,8 +59,8 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryListRes searchTopCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
 
@@ -132,8 +133,8 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
 		boolean threeDepth = false;
@@ -290,8 +291,8 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
+	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
 		boolean threeDepth = false;

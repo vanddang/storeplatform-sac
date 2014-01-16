@@ -8,6 +8,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * Category Service 인터페이스(CoreStoreBusiness)
@@ -25,8 +26,8 @@ public interface CategoryService {
 	 *            requestVO
 	 * @return Menu 리스트
 	 */
-	public CategoryListRes searchTopCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public CategoryListRes searchTopCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 
 	/**
 	 * <pre>
@@ -37,8 +38,8 @@ public interface CategoryService {
 	 *            requestVO
 	 * @return Menu 상세
 	 */
-	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 
 	/**
 	 * <pre>
@@ -49,6 +50,6 @@ public interface CategoryService {
 	 *            requestVO
 	 * @return Menu 상세
 	 */
-	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 }
