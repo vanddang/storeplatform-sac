@@ -47,7 +47,7 @@ public class UserJoinController {
 	private HeaderInfo headerInfo;
 
 	/**
-	 * Data Binding
+	 * Data Binding.
 	 */
 	ObjectMapper objMapper = new ObjectMapper();
 
@@ -58,8 +58,8 @@ public class UserJoinController {
 	 * 
 	 * @param req
 	 *            CreateByMdnReq
-	 * @param headers
-	 *            Request Headers
+	 * @param sacHeader
+	 *            SacRequestHeader
 	 * @return CreateByMdnRes
 	 * @throws Exception
 	 *             Exception
@@ -97,8 +97,8 @@ public class UserJoinController {
 	 * 
 	 * @param req
 	 *            CreateByAgreementReq
-	 * @param headers
-	 *            Request Headers
+	 * @param sacHeader
+	 *            SacRequestHeader
 	 * @return CreateByAgreementRes
 	 * @throws Exception
 	 *             Exception

@@ -84,7 +84,7 @@ public class CreateByAgreementTest {
 					public Object requestBody() {
 
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
-						reqJson.setDeviceId("01088870008");
+						reqJson.setDeviceId("01020284280");
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setUserId("test1234");
 						reqJson.setDeviceTelecom("US001201");

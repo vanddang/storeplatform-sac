@@ -49,8 +49,8 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
-import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
-import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
  * 회원 가입 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -79,12 +79,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private IDPRepository idpRepository;
 
 	/**
-	 * IDP 연동 결과
+	 * IDP 연동 결과.
 	 */
 	private IDPReceiverM idpReceiverM;
 
 	/**
-	 * 통합 IDP 연동 결과
+	 * 통합 IDP 연동 결과.
 	 */
 	private ImIDPReceiverM imIDPReceiverM;
 
@@ -217,7 +217,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 폰정보 조회 (Phone ModelCode)
 			 */
-			DeviceDTO deviceDTO = this.mcc.getPhoneInfo(sacHeader.getDeviceHeader().getModel());
+			Device deviceDTO = this.mcc.getPhoneInfo(sacHeader.getDeviceHeader().getModel());
 			if (deviceDTO == null) {
 
 				/**
@@ -271,13 +271,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 			/**
 			 * 휴대기기 등록정보 setting
-			 * 
-			 * TODO 대표폰 여부 정보 포함
 			 */
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y);
 			deviceInfo.setDeviceId(msisdn);
 			deviceInfo.setDeviceIdType("msisdn");
-			deviceInfo.setDeviceTelecom("SKT");
 			deviceInfo.setJoinId(req.getJoinId());
 			deviceInfo.setImei(req.getImei());
 			deviceInfo.setImMngNum(this.idpReceiverM.getResponseBody().getSvc_mng_num());
@@ -288,7 +285,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 submodule 호출.
 			 */
 			try {
-				this.mcc.insertDeviceInfo(createUserResponse.getUserKey(), deviceInfo);
+				this.mcc.insertDeviceInfo(SYSTEM_ID, TENANT_ID, createUserResponse.getUserKey(), deviceInfo);
 			} catch (Exception e) {
 				throw new RuntimeException("## 휴대기기 등록실패!!!! submodule ERROR");
 			}
@@ -435,14 +432,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * DB 약관 목록 조회 sorting
 		 */
-		List<ClauseDTO> dbAgreementList = this.mcc.getMandAgreeList(tenantId);
+		List<Clause> dbAgreementList = this.mcc.getMandAgreeList(tenantId);
 		if (dbAgreementList.size() == 0) {
 			LOGGER.debug("## 체크할 필수 약관이 존재 하지 않습니다.");
 			return false;
 		}
-		Comparator<ClauseDTO> dbComparator = new Comparator<ClauseDTO>() {
+		Comparator<Clause> dbComparator = new Comparator<Clause>() {
 			@Override
-			public int compare(ClauseDTO value1, ClauseDTO value2) {
+			public int compare(Clause value1, Clause value2) {
 				return value1.getClauseItemCd().compareTo(value2.getClauseItemCd());
 			}
 		};
@@ -450,7 +447,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		// sorting data setting
 		StringBuffer sortDbAgreeInfo = new StringBuffer();
-		for (ClauseDTO sortInfo : dbAgreementList) {
+		for (Clause sortInfo : dbAgreementList) {
 			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
 		}
 		LOGGER.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);

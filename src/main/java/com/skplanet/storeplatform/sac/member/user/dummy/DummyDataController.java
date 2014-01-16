@@ -67,8 +67,6 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserJoinController.class);
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserJoinController.class);
 

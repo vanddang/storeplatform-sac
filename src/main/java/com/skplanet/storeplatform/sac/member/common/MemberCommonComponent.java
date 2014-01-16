@@ -35,8 +35,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
-import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
-import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSelectServiceImpl;
@@ -97,10 +97,11 @@ public class MemberCommonComponent {
 	 * deviceModelNo로 UA 코드 정보 조회.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            deviceModelNo
-	 * @return String uaCode
+	 * @param deviceModelNo
+	 *            String
+	 * @return String
 	 * @throws Exception
+	 *             Exception
 	 */
 	public String getUaCode(String deviceModelNo) throws Exception { // 2014. 01. 14. 김다슬, 인크로스. 추가
 		GetUaCodeReq request = new GetUaCodeReq();
@@ -119,7 +120,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public List<ClauseDTO> getMandAgreeList(String tenantId) throws Exception {
+	public List<Clause> getMandAgreeList(String tenantId) throws Exception {
 		return this.repository.getMandAgreeList(tenantId);
 	}
 
@@ -134,7 +135,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public DeviceDTO getPhoneInfo(String deviceModelCd) throws Exception {
+	public Device getPhoneInfo(String deviceModelCd) throws Exception {
 		return this.repository.getPhoneInfo(deviceModelCd);
 	}
 
@@ -276,8 +277,10 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param msisdn
-	 * @return
+	 *            String
+	 * @return Map<String, String>
 	 * @throws Exception
+	 *             Exception
 	 */
 	public Map<String, String> getCustomer(String msisdn) throws Exception {
 		return this.icasSCI.getCustomer(msisdn);
@@ -289,8 +292,10 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param msisdn
-	 * @return
+	 *            String
+	 * @return Map<String, String>
 	 * @throws Exception
+	 *             Exception
 	 */
 	public Map<String, String> getCustomerCard(String msisdn) throws Exception {
 		return this.icasSCI.getCustomerCard(msisdn);
@@ -302,8 +307,10 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param msisdn
-	 * @return
+	 *            String
+	 * @return Map<String, String>
 	 * @throws Exception
+	 *             Exception
 	 */
 	public Map<String, String> getMvService(String msisdn) throws Exception {
 		return this.icasSCI.getMvService(msisdn);

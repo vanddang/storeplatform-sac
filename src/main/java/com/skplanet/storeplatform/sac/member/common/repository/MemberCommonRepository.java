@@ -2,8 +2,8 @@ package com.skplanet.storeplatform.sac.member.common.repository;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
-import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
  * 공통 관련 인터페이스
@@ -24,7 +24,7 @@ public interface MemberCommonRepository {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public List<ClauseDTO> getMandAgreeList(String tenantId) throws Exception;
+	public List<Clause> getMandAgreeList(String tenantId) throws Exception;
 
 	/**
 	 * <pre>
@@ -37,6 +37,6 @@ public interface MemberCommonRepository {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public DeviceDTO getPhoneInfo(String deviceModelCd) throws Exception;
+	public Device getPhoneInfo(String deviceModelCd) throws Exception;
 
 }

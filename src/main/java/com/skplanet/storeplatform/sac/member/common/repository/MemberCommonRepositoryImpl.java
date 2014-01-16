@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.member.common.vo.ClauseDTO;
-import com.skplanet.storeplatform.sac.member.common.vo.DeviceDTO;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
  * 공통 관련 인터페이스 구현체
@@ -30,17 +30,17 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	private CommonDAO commonDAO;
 
 	@Override
-	public List<ClauseDTO> getMandAgreeList(String tenantId) throws Exception {
-		ClauseDTO dto = new ClauseDTO();
+	public List<Clause> getMandAgreeList(String tenantId) throws Exception {
+		Clause dto = new Clause();
 		dto.setTenantId(tenantId);
-		return (List<ClauseDTO>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
+		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
 	}
 
 	@Override
-	public DeviceDTO getPhoneInfo(String deviceModelCd) throws Exception {
-		DeviceDTO dto = new DeviceDTO();
+	public Device getPhoneInfo(String deviceModelCd) throws Exception {
+		Device dto = new Device();
 		dto.setDeviceModelCd(deviceModelCd);
-		return (DeviceDTO) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
+		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
 	}
 
 }

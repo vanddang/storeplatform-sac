@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 8. Updated by : 심대진, 다모아 솔루션.
  */
-public class ClauseDTO extends CommonInfo {
+public class Clause extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
