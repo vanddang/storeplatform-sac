@@ -378,11 +378,11 @@ public class DummySellerController {
 		sellerMbr.setTenantID("");
 		sellerMbr.setVendorCode("");
 
-		responseVO.setExtraRightList(eList);// 판매자 멀티미디어정보
-		responseVO.setMbrClauseAgreeList(mList);// 약관동의목록
-		responseVO.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
-		responseVO.setSellerKey("IF102158942020090723111912");// 판매자Key
-		responseVO.setSellerMbr(sellerMbr);// 판매자 정보
+		responseVO.setExtraRightList(eList);
+		responseVO.setMbrClauseAgreeList(mList);
+		responseVO.setMbrLglAgent(mbrLglAgent);
+		responseVO.setSellerKey("IF102158942020090723111912");
+		responseVO.setSellerMbr(sellerMbr);
 
 		return responseVO;
 
