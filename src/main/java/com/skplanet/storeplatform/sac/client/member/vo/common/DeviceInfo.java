@@ -113,11 +113,6 @@ public class DeviceInfo extends CommonInfo {
 	private String osVer;
 
 	/**
-	 * OS 오리지날 버젼
-	 */
-	private String osVerOrg;
-
-	/**
 	 * SC 버젼
 	 */
 	private String scVer;
@@ -391,14 +386,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setRooting(String rooting) {
 		this.rooting = rooting;
-	}
-
-	public String getOsVerOrg() {
-		return this.osVerOrg;
-	}
-
-	public void setOsVerOrg(String osVerOrg) {
-		this.osVerOrg = osVerOrg;
 	}
 
 	public String getNativeId() {
