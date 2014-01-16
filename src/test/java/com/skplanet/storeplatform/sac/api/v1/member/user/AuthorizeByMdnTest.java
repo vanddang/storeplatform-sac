@@ -47,8 +47,7 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class AuthorizeByMdnTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AuthorizeByMdnTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthorizeByMdnTest.class);
 
 	@Autowired
 	private LoginService loginService;
@@ -68,16 +67,13 @@ public class AuthorizeByMdnTest {
 
 		try {
 
-			new TestCaseTemplate(this.mockMvc)
-					.url("/dev/member/user/authorizeByMdn/v1")
-					.httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mockMvc).url("/dev/member/user/authorizeByMdn/v1").httpMethod(HttpMethod.POST)
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 							req.setDeviceModelNo("SHW-M250S");
-							req.setOsVerOrg("1.0");
-
+							req.setOsVer("1.0");
 							req.setDeviceId("01073215212");
 							// req.setDeviceId("01088870008");
 							req.setDeviceIdType("msisdn");
@@ -94,8 +90,7 @@ public class AuthorizeByMdnTest {
 						}
 					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
 						@Override
-						public void success(Object result,
-								HttpStatus httpStatus, RunMode runMode) {
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
 							logger.info("response param : {}", res.toString());
 						}
@@ -111,7 +106,7 @@ public class AuthorizeByMdnTest {
 	public void shouldAuthorizeByMdnService() {
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 		req.setDeviceModelNo("SHW-M250S");
-		req.setOsVerOrg("1.0");
+		req.setOsVer("1.0");
 
 		req.setDeviceId("01073215212");
 		// req.setDeviceId("01088870008");
