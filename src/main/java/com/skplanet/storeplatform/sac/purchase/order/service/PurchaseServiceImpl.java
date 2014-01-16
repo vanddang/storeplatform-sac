@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.purchase.client.dummypurchase.sci.DummyPurchaseSCI;
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.PurchaseProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.precheck.CheckerManager;
 import com.skplanet.storeplatform.sac.purchase.order.precheck.PurchasePreChecker;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;

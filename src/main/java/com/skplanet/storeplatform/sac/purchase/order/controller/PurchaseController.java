@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.CreatePurchaseReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.CreatePurchaseRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseRes;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
 

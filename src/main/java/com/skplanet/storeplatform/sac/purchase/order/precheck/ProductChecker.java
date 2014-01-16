@@ -6,7 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.PurchaseProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyProductServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;

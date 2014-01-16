@@ -3,7 +3,7 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.purchase.vo.purchase.CreatePurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 
