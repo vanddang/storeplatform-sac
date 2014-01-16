@@ -24,6 +24,8 @@ public class MusicContentsReq extends CommonInfo {
 
 	private String imageCd; // 이미지 사이즈 코드
 
+	private String dpi;
+
 	private String purchase;
 
 	private String orderedBy;
@@ -118,6 +120,14 @@ public class MusicContentsReq extends CommonInfo {
 
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String getDpi() {
+		return this.dpi;
+	}
+
+	public void setDpi(String dpi) {
+		this.dpi = dpi;
 	}
 
 }
