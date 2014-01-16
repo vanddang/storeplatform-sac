@@ -91,9 +91,9 @@ public class CreateDeviceTest {
 
 							DeviceInfo deviceInfo = new DeviceInfo();
 							deviceInfo.setUserKey("US201401161859405900000107");
-							deviceInfo.setDeviceId("01066786222");
+							deviceInfo.setDeviceId("01048088874");
 							deviceInfo.setDeviceIdType("msisdn ");
-							deviceInfo.setDeviceTelecom("US012102");
+							deviceInfo.setDeviceTelecom("US012101");
 							deviceInfo.setNativeId("358362045580844");
 							deviceInfo.setDeviceAccount("vanddang@gmail.com");
 							deviceInfo.setIsRecvSms("Y");
@@ -147,9 +147,9 @@ public class CreateDeviceTest {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey("US201401161859405900000107");
-		deviceInfo.setDeviceId("01066786221");
+		deviceInfo.setDeviceId("01048088874");
 		deviceInfo.setDeviceIdType("msisdn ");
-		deviceInfo.setDeviceTelecom("US012102");
+		deviceInfo.setDeviceTelecom("US012101");
 		deviceInfo.setNativeId("358362045580844");
 		deviceInfo.setDeviceAccount("vanddang@gmail.com");
 		deviceInfo.setIsRecvSms("Y");
