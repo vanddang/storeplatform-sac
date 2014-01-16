@@ -61,12 +61,11 @@ public class LockAccountTest {
 	 * 판매자 계정잠금.
 	 * </pre>
 	 */
-	// @Test
+	@Test
 	public void lockAccount() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.addHeaders("Content-Type", "application/json").addHeaders("Accept", "application/json")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
@@ -100,7 +99,7 @@ public class LockAccountTest {
 					@Override
 					public Object requestBody() {
 						LockAccountReq req = new LockAccountReq();
-						req.setSellerId("");
+						req.setSellerId("asdawdwdwd");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}

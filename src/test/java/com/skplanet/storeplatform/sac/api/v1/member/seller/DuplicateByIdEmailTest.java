@@ -66,6 +66,7 @@ public class DuplicateByIdEmailTest {
 	public void duplicateById() {
 		new TestCaseTemplate(this.mockMvc)
 				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=id&keyString=test_jun")
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -88,6 +89,7 @@ public class DuplicateByIdEmailTest {
 		new TestCaseTemplate(this.mockMvc)
 				.url(MemberTestConstant.PREFIX_SELLER_PATH
 						+ "/duplicateByIdEmail/v1?keyType=email&keyString=op_tabs_1001@gmail.com")
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
