@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 @SuppressWarnings("serial")
 public class CreateReq extends CommonInfo {
@@ -28,8 +30,12 @@ public class CreateReq extends CommonInfo {
 	@NotBlank
 	private String sellerSubStatus;
 	/** 판매자 ID. */
+	@NotNull
+	@NotBlank
 	private String sellerId;
 	/** 판매자 PW. */
+	@NotNull
+	@NotBlank
 	private String sellerPW;
 	/** 이동통신사. */
 	@NotNull
@@ -92,8 +98,8 @@ public class CreateReq extends CommonInfo {
 	/** DI. */
 	private String sellerDI;
 	/** 실명인증수단 코드. */
-	@NotNull
-	@NotBlank
+	// @NotNull
+	// @NotBlank
 	private String realNameMethod;
 	/** 실명인증사이트 코드. */
 	private String realNameSystemId;
@@ -111,9 +117,9 @@ public class CreateReq extends CommonInfo {
 	private String sellerBizCorpNumber;
 
 	/** 약관 정보들. */
-	private List<Agreement> agreementList;
+	private List<AgreementInfo> agreementList;
 	/** 보안질문 정보들. */
-	private List<PwReminde> PWReminderList;
+	private List<PwReminder> PWReminderList;
 
 	public String getSellerClass() {
 		return this.sellerClass;
@@ -411,109 +417,19 @@ public class CreateReq extends CommonInfo {
 		this.sellerBizCorpNumber = sellerBizCorpNumber;
 	}
 
-	public List<Agreement> getAgreementList() {
+	public List<AgreementInfo> getAgreementList() {
 		return this.agreementList;
 	}
 
-	public void setAgreementList(List<Agreement> agreementList) {
+	public void setAgreementList(List<AgreementInfo> agreementList) {
 		this.agreementList = agreementList;
 	}
 
-	public List<PwReminde> getPWReminderList() {
+	public List<PwReminder> getPWReminderList() {
 		return this.PWReminderList;
 	}
 
-	public void setPWReminderList(List<PwReminde> pWReminderList) {
+	public void setPWReminderList(List<PwReminder> pWReminderList) {
 		this.PWReminderList = pWReminderList;
-	}
-
-	/**
-	 * 보안 질문
-	 * 
-	 * Updated on : 2014. 1. 16. Updated by : 김경복, 부르칸.
-	 */
-	public class PwReminde {
-		/** 보안질문 답변. */
-		@NotBlank
-		@NotNull
-		private String answerString;
-
-		/** 보안질문 ID. */
-		@NotBlank
-		@NotNull
-		private String questionID;
-
-		/** 보안질문 직접입력 값. */
-		@NotBlank
-		@NotNull
-		private String questionMessage;
-
-		public String getAnswerString() {
-			return this.answerString;
-		}
-
-		public void setAnswerString(String answerString) {
-			this.answerString = answerString;
-		}
-
-		public String getQuestionID() {
-			return this.questionID;
-		}
-
-		public void setQuestionID(String questionID) {
-			this.questionID = questionID;
-		}
-
-		public String getQuestionMessage() {
-			return this.questionMessage;
-		}
-
-		public void setQuestionMessage(String questionMessage) {
-			this.questionMessage = questionMessage;
-		}
-	}
-
-	/**
-	 * 이용약관
-	 * 
-	 * Updated on : 2014. 1. 16. Updated by : 김경복, 부르칸.
-	 */
-	public class Agreement {
-		/** 이용약관 ID. */
-		@NotBlank
-		@NotNull
-		private String extraAgreementID;
-
-		/** 이용약관 동의 여부. */
-		@NotBlank
-		@NotNull
-		private String isExtraAgreement;
-
-		/** 이용약관 버전. */
-		private String extraAgreementVersion;
-
-		public String getExtraAgreementID() {
-			return this.extraAgreementID;
-		}
-
-		public void setExtraAgreementID(String extraAgreementID) {
-			this.extraAgreementID = extraAgreementID;
-		}
-
-		public String getIsExtraAgreement() {
-			return this.isExtraAgreement;
-		}
-
-		public void setIsExtraAgreement(String isExtraAgreement) {
-			this.isExtraAgreement = isExtraAgreement;
-		}
-
-		public String getExtraAgreementVersion() {
-			return this.extraAgreementVersion;
-		}
-
-		public void setExtraAgreementVersion(String extraAgreementVersion) {
-			this.extraAgreementVersion = extraAgreementVersion;
-		}
 	}
 }

@@ -1,7 +1,10 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
+import javax.validation.constraints.NotNull;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -15,23 +18,42 @@ public class PwReminder extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String pwReminderCode;
-	private String pwReminderQ;
+	/** 보안질문 답변. */
+	@NotBlank
+	@NotNull
+	private String answerString;
 
-	public String getPwReminderCode() {
-		return this.pwReminderCode;
+	/** 보안질문 ID. */
+	@NotBlank
+	@NotNull
+	private String questionID;
+
+	/** 보안질문 직접입력 값. */
+	@NotBlank
+	@NotNull
+	private String questionMessage;
+
+	public String getAnswerString() {
+		return this.answerString;
 	}
 
-	public void setPwReminderCode(String pwReminderCode) {
-		this.pwReminderCode = pwReminderCode;
+	public void setAnswerString(String answerString) {
+		this.answerString = answerString;
 	}
 
-	public String getPwReminderQ() {
-		return this.pwReminderQ;
+	public String getQuestionID() {
+		return this.questionID;
 	}
 
-	public void setPwReminderQ(String pwReminderQ) {
-		this.pwReminderQ = pwReminderQ;
+	public void setQuestionID(String questionID) {
+		this.questionID = questionID;
 	}
 
+	public String getQuestionMessage() {
+		return this.questionMessage;
+	}
+
+	public void setQuestionMessage(String questionMessage) {
+		this.questionMessage = questionMessage;
+	}
 }
