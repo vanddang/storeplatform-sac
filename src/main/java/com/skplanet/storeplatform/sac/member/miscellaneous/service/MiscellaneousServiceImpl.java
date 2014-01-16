@@ -107,19 +107,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 					LOGGER.debug("##### OPMD MDN {}", opmdRes.getOpmdMdn());
 					res.setMsisdn(opmdRes.getMobileMdn());
 				} else {
-					throw new RuntimeException("UAPS 연동 오류");
+					throw new RuntimeException("UAPS 연동 오류" + opmdRes.getResultCode());
 				}
 			} else {
-				throw new Exception("유효하지 않은 휴대폰 번호.");
+				throw new Exception("유효하지 않은 OPMD 번호.");
 			}
 		} else {
 			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
-			if (this.mdnValidation(msisdn).equals("Y")) {
-				res.setMsisdn(msisdn);
-				LOGGER.debug("OPMD 번호 아님, Request 번호 그대로 내려줌.");
-			} else {
-				throw new Exception("유효하지 않은 휴대폰 번호.");
-			}
+			res.setMsisdn(msisdn);
+			LOGGER.debug("OPMD 번호 아님, Request값 그대로 내려줌.");
 		}
 		return res;
 	}
