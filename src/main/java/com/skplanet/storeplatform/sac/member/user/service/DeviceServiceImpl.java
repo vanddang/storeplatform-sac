@@ -469,7 +469,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
 				IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
 				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
@@ -494,7 +494,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (nativeId != null) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
 				if (!nativeId.equals(userMbrDevice.getNativeID())) {
 					logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
@@ -576,9 +576,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
+		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
+
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(req));
-		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
