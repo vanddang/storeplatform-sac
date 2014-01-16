@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
@@ -52,19 +53,15 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
 @Service
+@Transactional
 public class LoginServiceImpl implements LoginService {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
-
-	private static final String SYSTEMID = "S001";
-	private static final String TENANTID = "S01";
 	private static CommonRequest commonRequest;
 	private static Map<String, String> mapSiteCd = new HashMap<String, String>();
 
 	static {
 		commonRequest = new CommonRequest();
-		commonRequest.setSystemID(SYSTEMID);
-		commonRequest.setTenantID(TENANTID);
 
 		mapSiteCd.put("10100", "네이트");
 		mapSiteCd.put("10200", "싸이월드");
@@ -113,10 +110,26 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
+	 * authorizeByMdn
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
+	 */
 	@Override
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) throws Exception {
 
 		logger.info("######################## LoginServiceImpl authorizeByMdn start ############################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		req.setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
+		req.setOsVer(requestHeader.getDeviceHeader().getOsVersion());
+
+		logger.info("::::::::::: AuthorizeByMdnReq req : {} ", req.toString());
 
 		String deviceId = req.getDeviceId();
 		String userKey = null;
@@ -196,10 +209,23 @@ public class LoginServiceImpl implements LoginService {
 		return res;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
+	 */
 	@Override
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) throws Exception {
 
 		logger.info("######################## LoginServiceImpl authorizeById start ############################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		req.setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
 
 		String deviceId = req.getDeviceId();
 		String userId = req.getUserId();
@@ -423,7 +449,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setUacd(this.commService.getUaCode(req.getDeviceModelNo()));
 		}
 
-		this.deviceService.mergeDeviceInfo(deviceInfo);
+		this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
 	}
 
 	/**
@@ -492,7 +518,7 @@ public class LoginServiceImpl implements LoginService {
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setDeviceId(deviceId);
 			deviceInfo.setImMngNum(imMngNum);
-			this.deviceService.mergeDeviceInfo(deviceInfo);
+			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
 
 		} else {
 
@@ -503,6 +529,12 @@ public class LoginServiceImpl implements LoginService {
 		logger.info("########## volatileMember process end #########");
 	}
 
+	/**
+	 * 미동의회원 구분
+	 * 
+	 * @param imSiteCode
+	 * @return
+	 */
 	public boolean isExistAgreeSiteTstore(String imSiteCode) {
 
 		boolean joinTstore = false;

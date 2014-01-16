@@ -33,6 +33,9 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -71,13 +74,25 @@ public class AuthorizeByMdnTest {
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
+							TenantHeader tenantHeader = new TenantHeader();
+							tenantHeader.setSystemId("S001");
+							tenantHeader.setTenantId("S01");
+
+							DeviceHeader deviceHeader = new DeviceHeader();
+							deviceHeader.setModel("SHP_110S");
+							deviceHeader.setOsVersion("0.1");
+
+							SacRequestHeader header = new SacRequestHeader();
+							header.setDeviceHeader(deviceHeader);
+							header.setTenantHeader(tenantHeader);
+
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 							req.setDeviceModelNo("SHW-M250S");
 							req.setOsVer("1.0");
-							req.setDeviceId("01073215212");
-							// req.setDeviceId("01088870008");
+
+							req.setDeviceId("01088870008");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom("KT");
+							req.setDeviceTelecom("US012101");
 							req.setNativeId("358362045580844");
 							req.setRooting("Y");
 							req.setDeviceAccount("vanddang@gmail.com");
@@ -97,21 +112,32 @@ public class AuthorizeByMdnTest {
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@Test
 	public void shouldAuthorizeByMdnService() {
+
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setSystemId("S001");
+		tenantHeader.setTenantId("S01");
+
+		DeviceHeader deviceHeader = new DeviceHeader();
+		deviceHeader.setModel("SHP_110S");
+		deviceHeader.setOsVersion("0.1");
+
+		SacRequestHeader header = new SacRequestHeader();
+		header.setDeviceHeader(deviceHeader);
+		header.setTenantHeader(tenantHeader);
+
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 		req.setDeviceModelNo("SHW-M250S");
 		req.setOsVer("1.0");
 
-		req.setDeviceId("01073215212");
-		// req.setDeviceId("01088870008");
+		req.setDeviceId("01088870008");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("KT");
+		req.setDeviceTelecom("US012101");
 		req.setNativeId("358362045580844");
 		req.setRooting("Y");
 		req.setDeviceAccount("vanddang@gmail.com");
@@ -119,10 +145,9 @@ public class AuthorizeByMdnTest {
 		req.setScVer("1.0");
 
 		try {
-			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(null, req);
+			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(header, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

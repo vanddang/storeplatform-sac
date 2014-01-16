@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
@@ -70,18 +71,15 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
 @Service
+@Transactional
 public class DeviceServiceImpl implements DeviceService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
-	private static final String SYSTEMID = "S001";
-	private static final String TENANTID = "S01";
 	private static CommonRequest commonRequest;
 
 	static {
 		commonRequest = new CommonRequest();
-		commonRequest.setSystemID(SYSTEMID);
-		commonRequest.setTenantID(TENANTID);
 	}
 
 	@Autowired
@@ -108,10 +106,24 @@ public class DeviceServiceImpl implements DeviceService {
 	@Value("#{propertiesForSac['idp.im.request.operation']}")
 	public String IDP_OPERATION_MODE;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq)
+	 */
 	@Override
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl createDevice start ############################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
+		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());
 
 		String userKey = req.getUserKey();
 		String deviceId = req.getDeviceInfo().getDeviceId();
@@ -138,7 +150,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 기등록된 회원의 휴대기기 정보 처리 */
-		this.insertDeviceInfo(userKey, req.getDeviceInfo());
+		this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
 
 		/* sc회원 컴포넌트 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -219,10 +231,22 @@ public class DeviceServiceImpl implements DeviceService {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq)
+	 */
 	@Override
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl listDevice start ############################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		String userKey = req.getUserKey();
 
@@ -275,10 +299,21 @@ public class DeviceServiceImpl implements DeviceService {
 		return res;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * insertDeviceInfo(java.lang.String, java.lang.String, java.lang.String,
+	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 */
 	@Override
-	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo) throws Exception {
+	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo start ############################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(systemId);
+		commonRequest.setTenantID(tenanId);
 
 		/* 1. 휴대기기 정보 등록 요청 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -361,10 +396,21 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * mergeDeviceInfo(java.lang.String, java.lang.String,
+	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 */
 	@Override
-	public void mergeDeviceInfo(DeviceInfo req) throws Exception {
+	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception {
 
 		logger.info("################ mergeDeviceInfo start ##################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(systemId);
+		commonRequest.setTenantID(tenanId);
 
 		String deviceId = req.getDeviceId();
 

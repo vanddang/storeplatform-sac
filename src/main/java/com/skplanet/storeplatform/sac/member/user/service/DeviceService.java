@@ -40,25 +40,26 @@ public interface DeviceService {
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception;
 
 	/**
-	 * 
 	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
 	 * 경우 IDP에 무선회원 해지 요청.
 	 * 
+	 * @param systemId
+	 * @param tenanId
 	 * @param userKey
 	 * @param deviceInfo
-	 * @return
 	 * @throws Exception
 	 */
-	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo) throws Exception;
+	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
 
 	/**
-	 * 기기정보 수정
+	 * 기기정보 merge
 	 * 
+	 * @param systemId
+	 * @param tenanId
 	 * @param req
-	 * @return
 	 * @throws Exception
 	 */
-	public void mergeDeviceInfo(DeviceInfo req) throws Exception;
+	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception;
 
 	/**
 	 * 휴대기기 대표단말 설정

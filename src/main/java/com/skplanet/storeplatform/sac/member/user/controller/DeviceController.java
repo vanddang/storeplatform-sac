@@ -3,6 +3,8 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,26 +48,21 @@ public class DeviceController {
 	/**
 	 * 휴대기기 목록조회
 	 * 
-	 * @param headers
+	 * @param requestHeader
 	 * @param req
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @RequestBody ListDeviceReq req) throws Exception {
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
-		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), ""); // 대표기기조회여부
 
 		if (userId.equals("") && userKey.equals("") && deviceId.equals("") && deviceKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족");
-		}
-
-		if (isMainDevice.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
@@ -77,14 +74,14 @@ public class DeviceController {
 	/**
 	 * 휴대기기 등록
 	 * 
-	 * @param headers
+	 * @param requestHeader
 	 * @param req
 	 * @return
 	 * @throws Exception
 	 */
 	/* @RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST) */
 	@ResponseBody
-	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @RequestBody CreateDeviceReq req) throws Exception {
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) throws Exception {
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
 
@@ -128,7 +125,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody ListDeviceReq req) throws Exception {
+	public ListDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key

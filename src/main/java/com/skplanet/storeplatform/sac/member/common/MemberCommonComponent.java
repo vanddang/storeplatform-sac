@@ -165,15 +165,14 @@ public class MemberCommonComponent {
 	 * SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
 	 * </pre>
 	 * 
+	 * @param systemId
+	 * @param tenantId
 	 * @param userKey
-	 *            String
 	 * @param deviceInfo
-	 *            DeviceInfo
 	 * @throws Exception
-	 *             Exception
 	 */
-	public void insertDeviceInfo(String userKey, DeviceInfo deviceInfo) throws Exception {
-		this.deviceService.insertDeviceInfo(userKey, deviceInfo);
+	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
+		this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, deviceInfo);
 	}
 
 	/**

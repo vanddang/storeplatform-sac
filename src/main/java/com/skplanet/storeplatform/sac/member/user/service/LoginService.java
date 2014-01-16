@@ -16,7 +16,7 @@ public interface LoginService {
 	/**
 	 * 모바일 전용 회원 인증 (MDN 인증)
 	 * 
-	 * @param headerVo
+	 * @param requestHeader
 	 * @param req
 	 * @return
 	 * @throws Exception
@@ -26,7 +26,7 @@ public interface LoginService {
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원)
 	 * 
-	 * @param headerVo
+	 * @param requestHeader
 	 * @param req
 	 * @return
 	 * @throws Exception
