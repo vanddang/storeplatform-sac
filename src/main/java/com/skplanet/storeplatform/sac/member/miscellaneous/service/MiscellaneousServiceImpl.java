@@ -91,7 +91,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		GetOpmdRes res = new GetOpmdRes();
 		res.setMsisdn(msisdn);
 
-		/** 1. OPMD번호(989)여부 검사 ( OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 ) */
+		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
 			/** 1) 유효성 검사 (OPMD 번호) */
 			if (msisdn.length() == 10) { // ex)9890001111
@@ -113,9 +113,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				throw new Exception("유효하지 않은 휴대폰 번호.");
 			}
 		} else {
-			/** 2. 유효성 검사 (OPMD 번호가 아닌 경우) */
+			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
 			if (this.mdnValidation(msisdn).equals("Y")) {
-				throw new Exception("OPMD 번호 아님.");
+				res.setMsisdn(msisdn);
+				LOGGER.debug("OPMD 번호 아님, Request 번호 그대로 내려줌.");
 			} else {
 				throw new Exception("유효하지 않은 휴대폰 번호.");
 			}
