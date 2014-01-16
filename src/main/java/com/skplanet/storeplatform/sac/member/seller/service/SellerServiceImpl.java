@@ -78,7 +78,7 @@ public class SellerServiceImpl implements SellerService {
 		mbrAuth.setRealNameSite(req.getRealNameSystemId());
 		// 실명 인증 일시
 		mbrAuth.setRealNameDate(req.getRealNameDate());
-		createSellerRequest.setMbrAuth(new MbrAuth());
+		// createSellerRequest.setMbrAuth(mbrAuth);
 		/** 실명인증정보 생성 및 주입 [끝]. */
 
 		/** 약관동의 정보 리스트 주입 - [시작]. */
@@ -89,7 +89,7 @@ public class SellerServiceImpl implements SellerService {
 			for (int i = 0; i < req.getAgreementList().size(); i++) {
 				mbrClauseAgree = new MbrClauseAgree();
 				// 약관동의 ID
-				mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementID());
+				mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
 				// 약관동의 여부
 				mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
 				// 약관 버전

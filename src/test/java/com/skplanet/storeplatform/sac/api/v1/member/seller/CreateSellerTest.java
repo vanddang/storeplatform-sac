@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,8 +27,9 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 
 /**
@@ -39,7 +38,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -82,9 +80,12 @@ public class CreateSellerTest {
 						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
+						req.setSellerId("seller_test");
+						req.setSellerPW("awdawe123dw2");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
-						req.setIsRecvEmail("seoguman@nate.com");
+						req.setSellerEmail("abc@acd.com");
+						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
@@ -92,15 +93,22 @@ public class CreateSellerTest {
 						req.setRealNameMethod("US011101");
 
 						// 약관정보
-						List<Agreement> agreementList = new ArrayList<CreateReq.Agreement>();
-						CreateReq.Agreement agreement = req.new Agreement();
-						agreement.setExtraAgreementID("");
-						agreement.setExtraAgreementVersion("");
-						agreement.setIsExtraAgreement("");
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement = new AgreementInfo();
+						agreement.setExtraAgreementId("a");
+						agreement.setExtraAgreementVersion("a");
+						agreement.setIsExtraAgreement("a");
 						agreementList.add(agreement);
 						req.setAgreementList(agreementList);
 						// 보안질문
-						// List<PwReminde>
+						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
+						PwReminder pwReminder = new PwReminder();
+						pwReminder.setAnswerString("temp");
+						pwReminder.setQuestionID("Q123");
+						pwReminder.setQuestionMessage("qwdwd");
+						pwReminders.add(pwReminder);
+						req.setPWReminderList(pwReminders);
+
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
