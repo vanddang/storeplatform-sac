@@ -121,6 +121,14 @@ public class DisplayConstants {
 	 * 음악
 	 */
 	public static final String DP_MUSIC_TOP_MENU_ID = "DP16";
+	/**
+	 * 영화
+	 */
+	public static final String DP_MOVIE_TOP_MENU_ID = "DP17";
+	/**
+	 * 쇼핑
+	 */
+	public static final String DP_SHOPPING_TOP_MENU_ID = "DP28";
 
 	// ////////////////////////////////////// ETC Code //////////////////////////////////////////
 	/**
