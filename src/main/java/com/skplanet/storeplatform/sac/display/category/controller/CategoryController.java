@@ -121,9 +121,9 @@ public class CategoryController {
 
 	@RequestMapping(value = "/music/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception {
-		return this.categoryMusicContentsService.searchMusicContentsList(requestVO);
+	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+		return this.categoryMusicContentsService.searchMusicContentsList(requestVO, requestHeader);
 	}
 
 	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)

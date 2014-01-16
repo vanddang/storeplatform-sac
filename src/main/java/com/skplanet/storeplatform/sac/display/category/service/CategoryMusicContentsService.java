@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * Music Contents List Service 인터페이스(CoreStoreBusiness)
@@ -24,7 +25,7 @@ public interface CategoryMusicContentsService {
 	 *            requestVO
 	 * @return MusicContentsListResponse
 	 */
-	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO) throws JsonGenerationException,
-			JsonMappingException, IOException, Exception;
+	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
+			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 
 }
