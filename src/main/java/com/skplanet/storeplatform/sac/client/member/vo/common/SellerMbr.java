@@ -64,6 +64,8 @@ public class SellerMbr extends CommonInfo {
 	private String sellerCountry;
 	private String sellerDetailAddress;
 	private String sellerEmail;
+	@Deprecated
+	// 중복
 	private String sellerID;
 	private String sellerKey;
 	private String sellerLanguage;
