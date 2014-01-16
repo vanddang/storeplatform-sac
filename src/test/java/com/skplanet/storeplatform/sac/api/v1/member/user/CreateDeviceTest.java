@@ -73,7 +73,13 @@ public class CreateDeviceTest {
 
 		try {
 
-			new TestCaseTemplate(this.mockMvc).url("/dev/member/user/createDevice/v1").httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mockMvc)
+					.url("/dev/member/user/createDevice/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M220L\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
@@ -104,7 +110,6 @@ public class CreateDeviceTest {
 		tenantHeader.setTenantId("S01");
 
 		DeviceHeader deviceHeader = new DeviceHeader();
-		//deviceHeader.setModel("SHW-M440S");
 		deviceHeader.setModel("SHW-M220L");
 		deviceHeader.setOsVersion("1.0");
 
@@ -113,6 +118,7 @@ public class CreateDeviceTest {
 		header.setTenantHeader(tenantHeader);
 
 		CreateDeviceReq req = new CreateDeviceReq();
+		req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
 		req.setUserKey("US201401161859405900000107");
 		req.setRegMaxCnt(5);
 
@@ -120,7 +126,7 @@ public class CreateDeviceTest {
 		deviceInfo.setUserKey("US201401161859405900000107");
 		deviceInfo.setDeviceId("01066786221");
 		deviceInfo.setDeviceIdType("msisdn ");
-		deviceInfo.setDeviceTelecom("US012101");
+		deviceInfo.setDeviceTelecom("US012102");
 		deviceInfo.setNativeId("358362045580844");
 		deviceInfo.setDeviceAccount("vanddang@gmail.com");
 		deviceInfo.setIsRecvSms("Y");

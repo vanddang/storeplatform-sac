@@ -70,32 +70,24 @@ public class AuthorizeByMdnTest {
 
 		try {
 
-			new TestCaseTemplate(this.mockMvc).url("/dev/member/user/authorizeByMdn/v1").httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mockMvc)
+					.url("/dev/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
-							TenantHeader tenantHeader = new TenantHeader();
-							tenantHeader.setSystemId("S001");
-							tenantHeader.setTenantId("S01");
-
-							DeviceHeader deviceHeader = new DeviceHeader();
-							deviceHeader.setModel("SHP_110S");
-							deviceHeader.setOsVersion("0.1");
-
-							SacRequestHeader header = new SacRequestHeader();
-							header.setDeviceHeader(deviceHeader);
-							header.setTenantHeader(tenantHeader);
 
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-							req.setDeviceModelNo("SHW-M250S");
-							req.setOsVer("1.0");
-
-							req.setDeviceId("01088870008");
+							req.setDeviceId("01020284280");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom("US012101");
-							req.setNativeId("358362045580844");
-							req.setRooting("Y");
-							req.setDeviceAccount("vanddang@gmail.com");
+							req.setDeviceTelecom("US001201");
+							req.setNativeId("358362045580842");
+							req.setRooting("N");
+							req.setDeviceAccount("vanddang333@gmail.com");
 							req.setIsAutoUpdate("Y");
 							req.setScVer("1.0");
 
@@ -125,7 +117,7 @@ public class AuthorizeByMdnTest {
 
 		DeviceHeader deviceHeader = new DeviceHeader();
 		//deviceHeader.setModel("SHW-M440S");
-		deviceHeader.setModel("SHW-M220L");
+		deviceHeader.setModel("SHW-M110S");
 		deviceHeader.setOsVersion("1.0");
 
 		SacRequestHeader header = new SacRequestHeader();
@@ -133,9 +125,9 @@ public class AuthorizeByMdnTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-		req.setDeviceId("01088870008");
+		req.setDeviceId("01020284280");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("US012101");
+		req.setDeviceTelecom("US001201");
 		req.setNativeId("358362045580842");
 		req.setRooting("N");
 		req.setDeviceAccount("vanddang333@gmail.com");

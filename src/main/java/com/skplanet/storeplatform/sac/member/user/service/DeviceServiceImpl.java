@@ -175,9 +175,14 @@ public class DeviceServiceImpl implements DeviceService {
 				sbUserPhone.append(",");
 				sbUserPhone.append(deviceInfo.getUacd());
 				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getDeviceTelecom());
+				sbUserPhone.append(this.converterTelecomCode(deviceInfo.getDeviceTelecom()));
 				sbUserPhone.append("|");
 			}
+		}
+
+		String userPhoneStr = sbUserPhone.toString();
+		if (!userPhoneStr.equals("")) {
+			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
 		}
 
 		/* IDP 휴대기기 정보 등록 요청 */
@@ -213,8 +218,8 @@ public class DeviceServiceImpl implements DeviceService {
 			param.put("key_type", "1"); // IM 통합서비스 번호
 			param.put("key", schUserRes.getUserMbr().getImSvcNo());
 			param.put("operation_mode", this.IDP_OPERATION_MODE);
-			param.put("user_mdn", sbUserPhone.toString());
-			param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
+			param.put("user_mdn", userPhoneStr);
+			param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 
 			Date dtCur = new Date();
 			param.put("modify_req_date", new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
@@ -224,8 +229,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			param.put("key_type", "2");
 			param.put("key", schUserRes.getUserMbr().getImMbrNo());
-			param.put("user_phone", sbUserPhone.toString());
-			param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
+			param.put("user_phone", userPhoneStr);
+			param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
@@ -238,6 +243,18 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("######################## DeviceServiceImpl createDevice start ############################");
 
 		return null;
+	}
+
+	public String converterTelecomCode(String code) {
+		String value = "";
+		if (code.equals(MemberConstants.DEVICE_TELECOM_SKT)) {
+			value = "SKT";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_KT)) {
+			value = "KTF";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_LGT)) {
+			value = "LGT";
+		}
+		return value;
 	}
 
 	/*
@@ -612,6 +629,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
+		/** SC컴포넌트 에러로 임시로 값을 넘기지 않음!!! */
+		userMbrDevice.setAuthenticationDate("");
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(req));
 
