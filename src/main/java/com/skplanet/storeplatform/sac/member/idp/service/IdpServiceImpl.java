@@ -34,20 +34,17 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 @Service
 public class IdpServiceImpl implements IdpService {
 
-	private static final Logger logger = LoggerFactory.getLogger(IdpServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(IdpServiceImpl.class);
 
 	@Autowired
 	private UserSCI userSCI;
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 통합회원전환생성정보를사이트에배포 
-	 * - CMD : RXCreateUserIDP
-	 * </pre>
+	 * <pre> 통합회원전환생성정보를사이트에배포 - CMD : RXCreateUserIDP </pre>
 	 * 
-	 * @param map
-	 *            Request로 받은 Parameter Map
+	 * @param map Request로 받은 Parameter Map
+	 * 
 	 * @return One ID Rx 처리 결과
 	 */
 	@Override
@@ -66,15 +63,12 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 회선 변경 정보 Provisioning (무선, 통합 회원)
-	 * - CMD : changeMobileNumber
-	 * </pre>
+	 * <pre> 회선 변경 정보 Provisioning (무선, 통합 회원) - CMD : changeMobileNumber </pre>
 	 * 
-	 * @param map
-	 *            Request로 받은 Parameter Map
+	 * @param map Request로 받은 Parameter Map
+	 * 
 	 * @return IDP Provisioning 처리 결과
 	 */
 	@Override
@@ -83,15 +77,12 @@ public class IdpServiceImpl implements IdpService {
 		return "0000";
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 휴대폰소유변경정보배포
-	 * - CMD : RXInvalidUserTelNoIDP
-	 * </pre>
+	 * <pre> 휴대폰소유변경정보배포 - CMD : RXInvalidUserTelNoIDP </pre>
 	 * 
-	 * @param map
-	 *            Request로 받은 Parameter Map
+	 * @param map Request로 받은 Parameter Map
+	 * 
 	 * @return HashMap
 	 */
 	@Override
@@ -104,8 +95,8 @@ public class IdpServiceImpl implements IdpService {
 		// 회원 정보 조회
 		// 공통 헤더
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID("S001");
-		commonRequest.setTenantID("S01");
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
 		searchUserRequest.setCommonRequest(commonRequest);
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -114,7 +105,7 @@ public class IdpServiceImpl implements IdpService {
 		if (null != map.get("user_id")) {
 			keySearch.setKeyString((String) map.get("user_id"));
 		} else {
-			logger.info("########## Exception : user_id가 존재하지 않음. ##########");
+			LOGGER.info("########## Exception : user_id가 존재하지 않음. ##########");
 			throw new Exception("user_id가 존재하지 않음.");
 		}
 
@@ -125,20 +116,17 @@ public class IdpServiceImpl implements IdpService {
 		UserMbr userMbr = new UserMbr();
 
 		// 회원 수정 정보 세팅
-		if (null != map.get("user_tn"))
-			userMbr.setUserPhone((String) map.get("user_tn"));
-		userMbr.setUserKey(searchUserRespnse.getUserKey());
 		UserMbr getUserMbr = new UserMbr();
 		getUserMbr = searchUserRespnse.getUserMbr();
+
 		if (getUserMbr != null) {
-			userMbr.setUserMainStatus(getUserMbr.getUserMainStatus());
-			userMbr.setUserSubStatus(getUserMbr.getUserSubStatus());
+			getUserMbr.setUserPhone((String) map.get("user_tn"));
 		} else {
-			logger.info("########## Exception :회원 정보 조회의 결과값에 UserMbr값이 없음 ##########");
+			LOGGER.info("########## Exception :회원 정보 조회의 결과값에 UserMbr값이 없음 ##########");
 			throw new Exception("회원 정보 조회의 결과값에 UserMbr값이 없음");
 		}
 
-		userVo.setUserMbr(userMbr);
+		userVo.setUserMbr(getUserMbr);
 		userVo.setCommonRequest(commonRequest);
 
 		// 회원 정보 수정 API call
@@ -157,15 +145,12 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 로그인 상태정보배포
-	 * - CMD : RXSetLoginConditionIDP
-	 * </pre>
+	 * <pre> 로그인 상태정보배포 - CMD : RXSetLoginConditionIDP </pre>
 	 * 
-	 * @param map
-	 *            Request로 받은 Parameter Map
+	 * @param map Request로 받은 Parameter Map
+	 * 
 	 * @return HashMap
 	 */
 	@Override
@@ -177,8 +162,8 @@ public class IdpServiceImpl implements IdpService {
 
 		// 공통 헤더 세팅
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID("S001");
-		commonRequest.setTenantID("S01");
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
 		updateUserVo.setCommonRequest(commonRequest);
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -190,14 +175,14 @@ public class IdpServiceImpl implements IdpService {
 		updateUserVo.setKeySearchList(keySearchList);
 
 		String loginStatusCode = (String) map.get("login_status_code");
-		if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_RELEASE)) {// 로그인 가능
+		if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_RELEASE)) { // 로그인 가능
 			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_NORMAL);
 			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_NORMAL);
-		} else if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_LOCK)) {// 로그인 제한
+		} else if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_LOCK)) { // 로그인 제한
 			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
 			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_LOGIN_PAUSE);
 		} else {
-			logger.info("########## Exception :login_status_code 코드 외값 ##########");
+			LOGGER.info("########## Exception :login_status_code 코드 외값 ##########");
 			throw new Exception("login_status_code 코드 외값");
 		}
 
@@ -218,8 +203,8 @@ public class IdpServiceImpl implements IdpService {
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
 		if (updateStatusResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)
-				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {// SC반환값이
-																													 // 성공이면
+				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) { // SC반환값이
+																													  // 성공이면
 			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 		}
@@ -232,15 +217,12 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 신규가입정보를 미동의 사이트에 배포
-	 * - CMD : RXCreateUserIdIDP
-	 * </pre>
+	 * <pre> 신규가입정보를 미동의 사이트에 배포 - CMD : RXCreateUserIdIDP </pre>
 	 * 
-	 * @param map
-	 *            Request로 받은 Parameter Map
+	 * @param map Request로 받은 Parameter Map
+	 * 
 	 * @return ImResult
 	 */
 	@Override
@@ -255,8 +237,8 @@ public class IdpServiceImpl implements IdpService {
 		// 회원 정보 조회
 		// 공통 헤더
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID("S001");
-		commonRequest.setTenantID("S01");
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
 		searchUserRequest.setCommonRequest(commonRequest);
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -265,7 +247,7 @@ public class IdpServiceImpl implements IdpService {
 		if (null != map.get("user_id")) {
 			keySearch.setKeyString((String) map.get("user_id"));
 		} else {
-			logger.info("########## Exception : user_id가 존재하지 않음. ##########");
+			LOGGER.info("########## Exception : user_id가 존재하지 않음. ##########");
 			throw new Exception("user_id가 존재하지 않음.");
 		}
 
@@ -273,27 +255,28 @@ public class IdpServiceImpl implements IdpService {
 		searchUserRequest.setKeySearchList(keySearchList);
 		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-		String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-		String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
-		if (null == searchUserRespnse.getUserKey()) {// 회원 존재 여부 확인
+		if (null == searchUserRespnse.getUserKey()) { // 회원 존재 여부 확인
 			// one id 가입 정보 등록
 			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 			updateMbrOneIDRequest.setCommonRequest(commonRequest);
 			MbrOneID mbrOneID = new MbrOneID();
 			mbrOneID.setIntgMbrCaseCode((String) map.get("im_int_svc_no"));
-			mbrOneID.setIntgSvcNumber((String) map.get("im_mem_type_cd"));// 통합회원 유형 코드
+			mbrOneID.setIntgSvcNumber((String) map.get("im_mem_type_cd")); // 통합회원 유형 코드
 			mbrOneID.setUserID((String) map.get("user_id"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_FAIL)) {// SC반환값이
-				idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
-				idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) { // SC반환값이
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
 		}
 
+		// 회원이 존재 하지 않으면 FAIL값 return
 		ImResult imResult = new ImResult();
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
@@ -302,15 +285,12 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
-	/**
+	/*
 	 * 
-	 * <pre>
-	 * 직권중지 상태정보 배포
-	 * - CMD : RXSetSuspendUserIdIDP
-	 * </pre>
+	 * <pre> 직권중지 상태정보 배포 - CMD : RXSetSuspendUserIdIDP </pre>
 	 * 
-	 * @param map
-	 *            Request로 받은 Parameter Map
+	 * @param map Request로 받은 Parameter Map
+	 * 
 	 * @return ImResult
 	 */
 	@Override
@@ -321,8 +301,8 @@ public class IdpServiceImpl implements IdpService {
 
 		// 공통 헤더 세팅
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID("S001");
-		commonRequest.setTenantID("S01");
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
 		updateUserVo.setCommonRequest(commonRequest);
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -334,14 +314,14 @@ public class IdpServiceImpl implements IdpService {
 		updateUserVo.setKeySearchList(keySearchList);
 
 		String susStatusCode = (String) map.get("sus_status_code");
-		if (susStatusCode.equals(idpConstant.SUS_STATUS_RELEASE)) {// 직권중지 해제
+		if (susStatusCode.equals(idpConstant.SUS_STATUS_RELEASE)) { // 직권중지 해제
 			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_NORMAL);
 			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_NORMAL);
-		} else if (susStatusCode.equals(idpConstant.SUS_STATUS_LOCK)) {// 직권중지
+		} else if (susStatusCode.equals(idpConstant.SUS_STATUS_LOCK)) { // 직권중지
 			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
-			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_AUTHORITY_PAUSE);
+			// updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_AUTHORITY_PAUSE);
 		} else {
-			logger.info("########## Exception :sus_status_code 코드 외값 ##########");
+			LOGGER.info("########## Exception :sus_status_code 코드 외값 ##########");
 			throw new Exception("sus_status_code 코드 외값");
 		}
 
@@ -353,8 +333,6 @@ public class IdpServiceImpl implements IdpService {
 		MbrOneID mbrOneID = new MbrOneID();
 		mbrOneID.setLoginStatusCode(susStatusCode);
 		mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
-		// 미개발 더미 세팅 삭제 예정!!!!!!
-		mbrOneID.setUserKey("1111");
 		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 		UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
@@ -364,8 +342,8 @@ public class IdpServiceImpl implements IdpService {
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
 		if (updateStatusResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)
-				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {// SC반환값이
-																													 // 성공이면
+				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) { // SC반환값이
+																													  // 성공이면
 			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 		}
