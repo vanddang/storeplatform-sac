@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail2ListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail3ListRes;
@@ -105,7 +106,7 @@ public class CategoryServiceImpl implements CategoryService {
 				source.setSize(mapperVO.getBodyFileSize());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());
-				category.setType("topClass");
+				category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 
 				category.setSource(source);
 
@@ -219,7 +220,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				if (threeDepth) { // => 3 DEPTH MENU
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType("topClass");
+						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 						responseVO.setCategory(category);
 					} else {
 						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
@@ -257,7 +258,7 @@ public class CategoryServiceImpl implements CategoryService {
 					idx++;
 				} else { // 2depth
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType("topClass");
+						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 						responseVO.setCategory(category);
 						count++;
 					} else {
@@ -389,7 +390,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				if (threeDepth) { // => 3 DEPTH MENU
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType("topClass");
+						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 						responseVO.setCategory(category);
 					} else {
 						if (Integer.valueOf(mapperVO.getMenuDepth()) < 3) { // 2 depth
@@ -427,7 +428,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				} else { // 2depth
 					if (Integer.valueOf(mapperVO.getMenuDepth()) == 1) {
-						category.setType("topClass");
+						category.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 						responseVO.setCategory(category);
 						count++;
 					} else {
@@ -463,13 +464,15 @@ public class CategoryServiceImpl implements CategoryService {
 		String statementId = "";
 		String menuId = requestVO.getMenuId();
 
-		if ("DP13".equals(menuId) || "DP14".equals(menuId)) { // ebook/commic
+		if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(menuId)
+				|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(menuId)) { // ebook/commic
 			statementId = "MenuCategory.getEBookComicDetailCategoryList";
-		} else if ("DP16".equals(menuId)) { // 음악
+		} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(menuId)) { // 음악
 			statementId = "MenuCategory.getMusicDetailCategoryList";
-		} else if ("DP17".equals(menuId) || "DP18".equals(menuId)) { // 영화/TV 방송
+		} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(menuId)
+				|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(menuId)) { // 영화/TV 방송
 			statementId = "MenuCategory.getMovieTvDetailCategoryList";
-		} else if ("DP28".equals(menuId)) { // 쇼핑 - 쿼리 검증 요망
+		} else if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(menuId)) { // 쇼핑 - 쿼리 검증 요망
 			statementId = "MenuCategory.getShoppingDetailCategoryList";
 		} else { // 그외 APP
 			statementId = "MenuCategory.getAppDetailCategoryList";
