@@ -14,6 +14,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsRes;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.best.service.BestAppService;
 import com.skplanet.storeplatform.sac.display.feature.best.service.BestContentsService;
 import com.skplanet.storeplatform.sac.display.feature.best.service.BestDownloadService;
@@ -40,20 +41,20 @@ public class BestController {
 
 	@RequestMapping(value = "/display/feature/best/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestAppRes bestAppList(BestAppReq bestAppReq) {
-		return this.bestAppService.searchBestAppList(bestAppReq);
+	public BestAppRes bestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq) {
+		return this.bestAppService.searchBestAppList(requestheader, bestAppReq);
 	}
 
 	@RequestMapping(value = "/display/feature/best/content/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestContentsRes bestContentsList(BestContentsReq bestContentsReq) {
-		return this.bestContentsService.searchBestContentsList(bestContentsReq);
+	public BestContentsRes bestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq) {
+		return this.bestContentsService.searchBestContentsList(requestheader, bestContentsReq);
 	}
 
 	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestDownloadRes bestDownloadList(BestDownloadReq bestDownloadReq) {
-		return this.bestDownloadService.searchBestDownloadList(bestDownloadReq);
+	public BestDownloadRes bestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq) {
+		return this.bestDownloadService.searchBestDownloadList(requestheader, bestDownloadReq);
 	}
 
 }
