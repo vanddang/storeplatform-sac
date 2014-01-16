@@ -26,7 +26,7 @@ public class FeatureCategoryVodRes extends CommonInfo {
 
 	private CommonResponse commonResponse; // 공통 Response
 
-	private List<Product> productList; // 앱 상품 리스트
+	private List<Product> productList; // Feature VOD 상품 리스트
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
