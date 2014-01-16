@@ -67,8 +67,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 @Controller
 public class DummyDataController {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(UserJoinController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinController.class);
 
 	/**
 	 * <pre>
@@ -150,7 +149,7 @@ public class DummyDataController {
 
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 		res.setUserKey("IW102158844420091030165015");
-		res.setUserStatus("mobile");
+		//res.setUserStatus("mobile");
 
 		return res;
 	}
