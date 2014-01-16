@@ -460,7 +460,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 부가 기기정보 필드 */
 		String rooting = req.getRooting(); // rooting 여부
-		String osVer = req.getOsVer() == null ? req.getOsVerOrg() : req.getOsVer(); // OS버젼,OS오리지날버젼
+		String osVer = req.getOsVer(); // OS버젼
 		String scVer = req.getScVer(); // SC버젼
 		String uacd = req.getUacd(); // uacd
 		String dotoriAuthDate = req.getDotoriAuthDate(); // 도토리인증일

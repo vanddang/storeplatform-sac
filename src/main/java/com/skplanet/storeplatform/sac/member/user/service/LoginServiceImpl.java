@@ -426,7 +426,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setRooting(req.getRooting());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
-			deviceInfo.setOsVerOrg(req.getOsVer());
+			deviceInfo.setOsVer(req.getOsVer());
 			deviceInfo.setUacd(this.commService.getUaCode(req.getDeviceModelNo()));
 		} else if (obj instanceof AuthorizeByIdReq) {
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
@@ -438,7 +438,7 @@ public class LoginServiceImpl implements LoginService {
 			//deviceInfo.setRooting(req.getRooting());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
-			deviceInfo.setOsVerOrg(req.getOsVerOrg());
+			deviceInfo.setOsVer(req.getOsVerOrg());
 			deviceInfo.setUacd(this.commService.getUaCode(req.getDeviceModelNo()));
 		}
 
