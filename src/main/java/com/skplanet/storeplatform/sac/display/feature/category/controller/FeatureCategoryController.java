@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.category.Feature
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryAppService;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService;
@@ -50,34 +51,35 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/vod/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req) {
+	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
+		this.logger.debug("Input Parameters {}", header.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.featureCategoryVodService.searchVodList(req);
+		return this.featureCategoryVodService.searchVodList(req, header);
 	}
-	
+
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO) {
 
-		if ( requestVO.getCount() == 0 )
+		if (requestVO.getCount() == 0)
 			requestVO.setCount(10);
 		FeatureCategoryAppRes responseVO;
-		responseVO = categoryAppService.searchAppList(requestVO);
+		responseVO = this.categoryAppService.searchAppList(requestVO);
 		return responseVO;
 	}
-	
+
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO) {
 
-		if ( requestVO.getCount() == 0 )
+		if (requestVO.getCount() == 0)
 			requestVO.setCount(10);
 		FeatureCategoryEpubRes responseVO;
-		responseVO = categoryEpubService.searchEpubList(requestVO);
+		responseVO = this.categoryEpubService.searchEpubList(requestVO);
 		return responseVO;
 	}
 }

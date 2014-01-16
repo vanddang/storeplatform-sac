@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -34,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryAppDTO;
 
 /**
@@ -58,7 +60,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 	 * .storeplatform.sac.client.display.vo.category.CategoryAppReq)
 	 */
 	@Override
-	public CategoryAppRes searchAppList(CategoryAppReq req) {
+	public CategoryAppRes searchAppList(CategoryAppReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -114,8 +116,8 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		}
 
 		// 헤더값 세팅
-		req.setDeviceModelCd("SHV-E210S");
-		req.setTenantId("S01");
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setTenantId(header.getTenantHeader().getTenantId());
 		req.setImageCd("DP000101");
 
 		// 일반 카테고리 앱 상품 조회
@@ -147,7 +149,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
-				identifier.setType("episode");
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				identifier.setText(categoryAppDTO.getProdId());
 				product.setIdentifier(identifier);
 

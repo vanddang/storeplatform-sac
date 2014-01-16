@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.category.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * CategoryEbookComic Service 인터페이스(CoreStoreBusiness)
@@ -27,5 +28,5 @@ public interface CategoryEbookComicService {
 	 * @param CategoryAppReq
 	 * @return CategoryAppRes
 	 */
-	CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req);
+	CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req, SacRequestHeader header);
 }

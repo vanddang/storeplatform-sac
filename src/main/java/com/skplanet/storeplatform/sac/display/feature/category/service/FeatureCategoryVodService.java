@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.feature.category.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface FeatureCategoryVodService {
 	/**
@@ -21,5 +22,5 @@ public interface FeatureCategoryVodService {
 	 * @param FeatureCategoryVodReq
 	 * @return FeatureCategoryVodRes
 	 */
-	FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req);
+	FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header);
 }

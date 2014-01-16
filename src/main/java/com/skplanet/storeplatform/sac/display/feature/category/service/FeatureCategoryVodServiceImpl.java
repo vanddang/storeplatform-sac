@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -35,7 +36,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVodDTO;
 
@@ -59,7 +62,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	 * .storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq)
 	 */
 	@Override
-	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req) {
+	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -120,8 +123,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		}
 
 		// 헤더값 세팅
-		req.setDeviceModelCd("SHV-E210S");
-		req.setTenantId("S01");
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setTenantId(header.getTenantHeader().getTenantId());
 		req.setImageCd("DP000101");
 
 		// 배치완료 기준일시 조회
@@ -132,6 +135,10 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("배치완료 기준일시 정보 누락");
 			this.logger.debug("----------------------------------------------------------------");
+
+			vodRes = new FeatureCategoryVodRes();
+			vodRes.setCommonResponse(new CommonResponse());
+			return vodRes;
 		}
 		req.setStdDt(stdDt);
 
@@ -223,7 +230,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
-				identifier.setType("channel");
+				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 				identifier.setText(vodDto.getProdId());
 				product.setIdentifier(identifier);
 
@@ -287,7 +294,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				source = new Source();
 				sourceList = new ArrayList<Source>();
 				source.setType("thumbnail");
-				source.setMediaType("image/png");
+
+				source.setMediaType(DisplayCommonUtil.getMimeType(vodDto.getImgPath()));
 				source.setUrl(vodDto.getImgPath());
 				sourceList.add(source);
 				product.setSourceList(sourceList);

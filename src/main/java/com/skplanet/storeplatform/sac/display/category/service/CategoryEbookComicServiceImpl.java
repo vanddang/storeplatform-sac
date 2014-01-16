@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
 /**
@@ -52,7 +53,7 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 	private CommonDAO commonDAO;
 
 	@Override
-	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req) {
+	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchEbookComicList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
