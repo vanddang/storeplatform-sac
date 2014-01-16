@@ -111,8 +111,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq)
 	 */
@@ -140,20 +139,21 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (req.getRegMaxCnt() == 0
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
-						.getRegMaxCnt())) {
+				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr()
+						.getDeviceCount()) >= req.getRegMaxCnt())) {
 			throw new Exception("등록 가능한 단말개수가 초과되었습니다.");
 		}
 
-		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); //단말모델
-		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());//os버젼
-		req.getDeviceInfo().setAuthenticationDate(DateUtil.getToday()); //인증일자
-		req.getDeviceInfo().setIsAuthenticated("Y"); //인증여부
-		req.getDeviceInfo().setIsUsed("Y"); //사용여부
+		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
+		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
+		req.getDeviceInfo().setAuthenticationDate(DateUtil.getToday()); // 인증일자
+		req.getDeviceInfo().setIsAuthenticated("Y"); // 인증여부
+		req.getDeviceInfo().setIsUsed("Y"); // 사용여부
 
 		/* 기등록된 회원의 휴대기기 정보 처리 */
 		this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
@@ -229,7 +229,8 @@ public class DeviceServiceImpl implements DeviceService {
 			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
 			}
 
 		}
@@ -242,8 +243,7 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq)
 	 */
@@ -310,12 +310,12 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * insertDeviceInfo(java.lang.String, java.lang.String, java.lang.String,
-	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# insertDeviceInfo(java.lang.String,
+	 * java.lang.String, java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
+	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
+			throws Exception {
 
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo start ############################");
 
@@ -390,9 +390,10 @@ public class DeviceServiceImpl implements DeviceService {
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
-									+ idpReceiver.getResponseHeader().getResult() + "]");
+						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
+								IDPConstants.IDP_RES_CODE_OK)) {
+							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId()
+									+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
 				}
@@ -410,9 +411,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * mergeDeviceInfo(java.lang.String, java.lang.String,
-	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# mergeDeviceInfo(java.lang.String,
+	 * java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
 	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception {
@@ -453,7 +453,8 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("::::::::::::: userMbrDevice Detail 조회결과 : {} " + userMbrDevice.getUserMbrDeviceDetail().toString());
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
+					+ schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
 		/* 기기정보 필드 */
@@ -480,7 +481,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
-				//폰정보 조회 (deviceModelNo)
+				// 폰정보 조회 (deviceModelNo)
 				Device deviceDTO = this.commService.getPhoneInfo(deviceModelNo);
 
 				// OMD 단말이 아닐 경우만
@@ -537,7 +538,8 @@ public class DeviceServiceImpl implements DeviceService {
 					} else {
 						paramType = "13";
 					}
-					logger.info("::::  rooting device :::: deviceType {}, paramType {}", req.getDeviceIdType(), paramType);
+					logger.info("::::  rooting device :::: deviceType {}, paramType {}", req.getDeviceIdType(),
+							paramType);
 					if (!this.commService.getMappingInfo(deviceId, paramType).getMvnoCD().equals("0")) { // MVNO
 						mapIcas = this.commService.getMvService(deviceId);
 					} else {
@@ -659,7 +661,8 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
 
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
-			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
+			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice
+					.getUserMbrDeviceDetail()));
 		}
 
 		return deviceInfo;
@@ -840,8 +843,14 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req) throws Exception {
+	public DeviceInfo modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceRequest req)
+			throws Exception {
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 		req.setCommonRequest(commonRequest);
+
 		SetMainDeviceResponse scRes = this.deviceSCI.setMainDevice(req);
 		DeviceInfo res = new DeviceInfo();
 
@@ -882,7 +891,8 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		/* SC 회원 컴포넌트 휴대기기 목록 조회 */

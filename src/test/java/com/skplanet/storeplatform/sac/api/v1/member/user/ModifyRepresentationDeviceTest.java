@@ -66,7 +66,6 @@ public class ModifyRepresentationDeviceTest {
 	 */
 	@Test
 	public void modifyRepresentationDevice() {
-
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/modifyRepresentationDevice/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override

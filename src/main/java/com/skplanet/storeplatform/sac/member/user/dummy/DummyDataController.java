@@ -34,9 +34,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetSupportAomRes;
@@ -45,7 +43,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveAddtionalInformationRes;
@@ -467,26 +464,26 @@ public class DummyDataController {
 	 * 
 	 * @return ExistRes
 	 */
-	@RequestMapping(value = "/exist/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ExistRes exist() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
-		LOGGER.info("####################################################");
-
-		ExistRes res = new ExistRes();
-		res.setUserKey("IW102158844420091030165015");
-		res.setUserType("US011501");
-		res.setUserId("hkd");
-		res.setIsRealName("N");
-		res.setAgencyYn("Y");
-		res.setUserEmail("hkd@aaaa.com");
-		res.setUserMainStatus("US010202");
-		res.setUserSubStatus("US010303");
-
-		return res;
-	}
+	// @RequestMapping(value = "/exist/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public ExistRes exist() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
+	// LOGGER.info("####################################################");
+	//
+	// ExistRes res = new ExistRes();
+	// res.setUserKey("IW102158844420091030165015");
+	// res.setUserType("US011501");
+	// res.setUserId("hkd");
+	// res.setIsRealName("N");
+	// res.setAgencyYn("Y");
+	// res.setUserEmail("hkd@aaaa.com");
+	// res.setUserMainStatus("US010202");
+	// res.setUserSubStatus("US010303");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -809,19 +806,19 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyRepresentationDeviceRes
 	 */
-	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ModifyRepresentationDeviceRes modifyRepresentationDevice() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.20.	대표 단말 설정. #####");
-		LOGGER.info("####################################################");
-
-		ModifyRepresentationDeviceRes res = new ModifyRepresentationDeviceRes();
-		res.setDeviceKey("01011112222");
-
-		return res;
-	}
+	// @RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public ModifyRepresentationDeviceRes modifyRepresentationDevice() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.20.	대표 단말 설정. #####");
+	// LOGGER.info("####################################################");
+	//
+	// ModifyRepresentationDeviceRes res = new ModifyRepresentationDeviceRes();
+	// res.setDeviceKey("01011112222");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -830,49 +827,49 @@ public class DummyDataController {
 	 * 
 	 * @return DetailRepresentationDeviceRes
 	 */
-	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public DetailRepresentationDeviceRes detailRepresentationDevice() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.23.	대표 단말 정보 조회. #####");
-		LOGGER.info("####################################################");
-
-		DetailRepresentationDeviceRes res = new DetailRepresentationDeviceRes();
-
-		// 휴대기기 부가정보
-		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile("US011404");
-		deviceExtraInfo.setExtraProfileValue("LGFL");
-
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		// 휴대기기정보
-		List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-		deviceInfo.setDeviceKey("01011112222");
-		deviceInfo.setDeviceId("01011112222");
-		deviceInfo.setDeviceType("");
-		deviceInfo.setDeviceModelNo("LG-SH810");
-		deviceInfo.setImMngNum("");
-		deviceInfo.setDeviceTelecom("SKT");
-		deviceInfo.setDeviceNickName("LG-SH810(임시)");
-		deviceInfo.setIsPrimary("Y");
-		deviceInfo.setIsAuthenticated("Y");
-		deviceInfo.setAuthenticationDate("2013-12-26");
-		deviceInfo.setIsRecvSms("N");
-		deviceInfo.setNativeId("358362045580844");
-		deviceInfo.setDeviceAccount("hkd@aaaa.com");
-		deviceInfo.setJoinId("US002903");
-
-		deviceInfoList.add(deviceInfo);
-
-		res.setUserDeviceInfo(deviceInfoList);
-
-		return res;
-	}
+	// @RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public DetailRepresentationDeviceRes detailRepresentationDevice() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.23.	대표 단말 정보 조회. #####");
+	// LOGGER.info("####################################################");
+	//
+	// DetailRepresentationDeviceRes res = new DetailRepresentationDeviceRes();
+	//
+	// // 휴대기기 부가정보
+	// List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+	// DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+	// deviceExtraInfo.setExtraProfile("US011404");
+	// deviceExtraInfo.setExtraProfileValue("LGFL");
+	//
+	// deviceExtraInfoList.add(deviceExtraInfo);
+	//
+	// // 휴대기기정보
+	// List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+	// DeviceInfo deviceInfo = new DeviceInfo();
+	// deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+	// deviceInfo.setDeviceKey("01011112222");
+	// deviceInfo.setDeviceId("01011112222");
+	// deviceInfo.setDeviceType("");
+	// deviceInfo.setDeviceModelNo("LG-SH810");
+	// deviceInfo.setImMngNum("");
+	// deviceInfo.setDeviceTelecom("SKT");
+	// deviceInfo.setDeviceNickName("LG-SH810(임시)");
+	// deviceInfo.setIsPrimary("Y");
+	// deviceInfo.setIsAuthenticated("Y");
+	// deviceInfo.setAuthenticationDate("2013-12-26");
+	// deviceInfo.setIsRecvSms("N");
+	// deviceInfo.setNativeId("358362045580844");
+	// deviceInfo.setDeviceAccount("hkd@aaaa.com");
+	// deviceInfo.setJoinId("US002903");
+	//
+	// deviceInfoList.add(deviceInfo);
+	//
+	// res.setUserDeviceInfo(deviceInfoList);
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
