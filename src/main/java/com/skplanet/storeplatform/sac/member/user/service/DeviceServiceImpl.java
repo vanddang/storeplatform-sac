@@ -457,17 +457,9 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceNickName = req.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = req.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = req.getIsRecvSms(); // sms 수신여부
-
-		/* 부가 기기정보 필드 */
 		String rooting = req.getRooting(); // rooting 여부
-		String osVer = req.getOsVer(); // OS버젼
-		String scVer = req.getScVer(); // SC버젼
-		String uacd = req.getUacd(); // uacd
-		String dotoriAuthDate = req.getDotoriAuthDate(); // 도토리인증일
-		String dotoriAuthYn = req.getDotoriAuthYn(); // 도토리인증여부
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
-		/* 파라메터 기기 정보와 SC콤포넌트 기기 정보 비교 */
 		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
 
 			logger.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceId);
@@ -491,7 +483,7 @@ public class DeviceServiceImpl implements DeviceService {
 							idpModelId = "SSO0";
 						}
 
-						uacd = idpModelId;
+						req.setUacd(idpModelId);
 					}
 				}
 			}
@@ -584,73 +576,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		/* 휴대기기 부가 정보 비교 */
-		List<UserMbrDeviceDetail> deviceExtraList = userMbrDevice.getUserMbrDeviceDetail();
-		if (deviceExtraList.size() > 0) {
-
-			List<UserMbrDeviceDetail> modDeviceExtraList = new ArrayList<UserMbrDeviceDetail>();
-
-			for (UserMbrDeviceDetail extraInfo : deviceExtraList) {
-
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN) && rooting != null
-						&& !rooting.equals(extraInfo.getExtraProfileValue())) {
-
-					logger.info("[rooting] {} -> {}", extraInfo.getExtraProfileValue(), rooting);
-					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-					extraInfo.setExtraProfileValue(rooting);
-
-				}
-
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OSVERSION) && osVer != null
-						&& !osVer.equals(extraInfo.getExtraProfileValue())) {
-
-					logger.info("[osVer] {} -> {}", extraInfo.getExtraProfileValue(), osVer);
-					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
-					extraInfo.setExtraProfileValue(osVer);
-
-				}
-
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_SCVERSION) && scVer != null
-						&& !scVer.equals(extraInfo.getExtraProfileValue())) {
-
-					logger.info("[scVer] {} -> {}", extraInfo.getExtraProfileValue(), scVer);
-					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-					extraInfo.setExtraProfileValue(scVer);
-
-				}
-
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD) && uacd != null
-						&& !uacd.equals(extraInfo.getExtraProfileValue())) {
-
-					logger.info("[uacd] {} -> {}", extraInfo.getExtraProfileValue(), uacd);
-					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-					extraInfo.setExtraProfileValue(uacd);
-
-				}
-
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE) && dotoriAuthDate != null
-						&& !dotoriAuthDate.equals(extraInfo.getExtraProfileValue())) {
-
-					logger.info("[dotoriAuthDate] {} -> {}", extraInfo.getExtraProfileValue(), dotoriAuthDate);
-					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
-					extraInfo.setExtraProfileValue(dotoriAuthDate);
-
-				}
-
-				if (extraInfo.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN) && dotoriAuthYn != null
-						&& !dotoriAuthYn.equals(extraInfo.getExtraProfileValue())) {
-
-					logger.info("[dotoriAuthYn] {} -> {}", extraInfo.getExtraProfileValue(), dotoriAuthYn);
-					extraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
-					extraInfo.setExtraProfileValue(dotoriAuthYn);
-
-				}
-
-				modDeviceExtraList.add(extraInfo);
-			}
-
-			userMbrDevice.setUserMbrDeviceDetail(modDeviceExtraList);
-		}
+		/* 휴대기기 부가정보 */
+		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(req));
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
 		/* 기기정보 업데이트 */
