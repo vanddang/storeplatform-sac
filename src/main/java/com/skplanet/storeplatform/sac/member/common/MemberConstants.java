@@ -106,6 +106,13 @@ public final class MemberConstants {
 	/** 통합회원. */
 	public static final String SSO_SST_CD_TSTORE = "41100";
 
+	/** 실명인증 사이트 코드 (realNameSite). TODO "US0054" --> 공통코드로 정의되는지 확인해 봐야함. */
+	public static final String AUTH_CHNL_WEB = "101"; // 웹
+	public static final String AUTH_CHNL_MOBILE_2X = "102"; // MobileClient2.X
+	public static final String AUTH_CHNL_MOBILE_3X = "103"; // MobileClient3.X\
+	public static final String AUTH_CHNL_MOBILE_WEB = "104";// 모바일웹
+	public static final String AUTH_CHNL_MOBILE_OPENAPI = "105";// OPENAPI
+
 	/**
 	 * 판매자 회원 상수들
 	 * 

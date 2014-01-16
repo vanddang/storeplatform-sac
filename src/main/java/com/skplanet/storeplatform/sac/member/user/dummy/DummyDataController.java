@@ -27,10 +27,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
@@ -69,26 +67,26 @@ public class DummyDataController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinController.class);
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return CreateByMdnRes
-	 */
-	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateByMdnRes createByMdn() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
-		LOGGER.info("####################################################");
-
-		CreateByMdnRes res = new CreateByMdnRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return CreateByMdnRes
+	// */
+	// @RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateByMdnRes createByMdn() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
+	// LOGGER.info("####################################################");
+	//
+	// CreateByMdnRes res = new CreateByMdnRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -139,22 +137,20 @@ public class DummyDataController {
 	 * 
 	 * @return AuthorizeByMdnRes
 	 */
-	/*@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.4. 모바일 전용 회원 인증 (MDN 인증) #####");
-		LOGGER.info("####################################################");
-
-		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
-		res.setUserKey("IW102158844420091030165015");
-		res.setUserType("US011501");
-		res.setUserMainStatus("US010201");
-		res.setUserSubStatus("US010301");
-
-		return res;
-	}*/
+	/*
+	 * @RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public AuthorizeByMdnRes authorizeByMdn() {
+	 * 
+	 * LOGGER.info("####################################################");
+	 * LOGGER.info("##### 5.1.4. 모바일 전용 회원 인증 (MDN 인증) #####");
+	 * LOGGER.info("####################################################");
+	 * 
+	 * AuthorizeByMdnRes res = new AuthorizeByMdnRes(); res.setUserKey("IW102158844420091030165015");
+	 * res.setUserType("US011501"); res.setUserMainStatus("US010201"); res.setUserSubStatus("US010301");
+	 * 
+	 * return res; }
+	 */
 
 	/**
 	 * <pre>

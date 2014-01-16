@@ -36,7 +36,6 @@ import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
  * 
  * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
  */
-@RequestMapping(value = "/dev/member/user")
 @Controller
 public class UserJoinController {
 
@@ -66,7 +65,7 @@ public class UserJoinController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/createByMdn/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, SacRequestHeader sacHeader) throws Exception {
 
@@ -108,7 +107,7 @@ public class UserJoinController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dev/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, SacRequestHeader sacHeader) throws Exception {
 

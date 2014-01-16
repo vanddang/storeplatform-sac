@@ -67,7 +67,7 @@ public class DetailRepresentationDeviceTest {
 	@Test
 	public void detailRepresentationDevice() throws Exception {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_USER_PATH + "/detailRepresentationDevice/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/detailRepresentationDevice/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

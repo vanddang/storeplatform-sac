@@ -88,12 +88,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 */
 	private ImIDPReceiverM imIDPReceiverM;
 
-	/**
-	 * TODO 테넌트 아이디/시스템아이디 변경할것 헤더로 들어온다고 하던데....
-	 */
-	private static final String SYSTEM_ID = "S001";
-	private static final String TENANT_ID = "S01";
-
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) throws Exception {
 
@@ -108,7 +102,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 필수 약관 동의여부 체크
 		 */
-		if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
+		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
@@ -133,8 +127,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 공통정보 setting
 			 */
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(SYSTEM_ID);
-			commonRequest.setTenantID(TENANT_ID);
+			commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 			createUserRequest.setCommonRequest(commonRequest);
 			LOGGER.info("## SC Request commonRequest : {}", createUserRequest.getCommonRequest().toString());
 
@@ -144,14 +138,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setImMbrNo(this.idpReceiverM.getResponseBody().getUser_key());
 			userMbr.setImSvcNo(this.idpReceiverM.getResponseBody().getSvc_mng_num());
+			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE);
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
+			/**
+			 * TODO 모바일 전용 회원일 경우는 SC 에서 자체적으로 만들어서 넣기로함. (임과장님 확인 내용.) 현재 SC 필수 항목이라 넣고있음. 추후 넣지않도록 빼야함.
+			 */
 			userMbr.setUserID(msisdn);
-			userMbr.setUserTelecom(req.getDeviceTelecom()); // mdn, uuid 받는데로 넣는다. (SC 확인함.)
+			userMbr.setUserTelecom(req.getDeviceTelecom());
 			userMbr.setIsParent(req.getIsParent());
 			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
+			userMbr.setUserBirthDay(req.getOwnBirth());
 			createUserRequest.setUserMbr(userMbr);
 			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
@@ -238,9 +237,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 					 * 
 					 * TODO UAPS 방화벽 이슈가 종료 되면 로직 테스트해서 넣을것....
 					 */
-					String uacd = this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getDeviceModel();
+					// String uacd = this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getDeviceModel();
 					LOGGER.debug("## UAPS UA 코드 : {}", deviceDTO.getUaCd());
 					deviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
+					// this.idpReceiverM.getResponseBody().getModel_id(); // OMD_UA_CD (AS-IS 로직 TBL_OMD_PHONE_INFO 뒤져서
+					// 존재하면 데이타를 세팅했다.)
 
 				} else {
 
@@ -282,13 +283,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y);
 			deviceInfo.setAuthenticationDate(DateUtil.getToday());
 			deviceInfo.setIsUsed(MemberConstants.USE_Y);
+			deviceInfo.setIsRecvSms(req.getIsRecvSms());
 			LOGGER.debug("## deviceInfo : {}", deviceInfo.toString());
 
 			/**
 			 * 휴대기기 등록 submodule 호출.
 			 */
 			try {
-				this.mcc.insertDeviceInfo(SYSTEM_ID, TENANT_ID, createUserResponse.getUserKey(), deviceInfo);
+				this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), createUserResponse.getUserKey(), deviceInfo);
 			} catch (Exception e) {
 				throw new RuntimeException("## 휴대기기 등록실패!!!! submodule ERROR");
 			}
@@ -331,13 +333,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 필수 약관 동의여부 체크
 		 */
-		if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
+		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
 
 		/**
-		 * (OneID 연동) 이용동의 가입
+		 * 이용동의 가입 데이타 setting
 		 */
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("cmd", "TXAgreeUserIDP");
@@ -346,12 +348,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 
+		/**
+		 * (통합 IDP 연동) 이용동의 가입
+		 */
 		this.imIDPReceiverM = this.imIdpService.agreeUser(param);
 		LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
 		LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
 
 		/**
-		 * 이용동의 가입 성공시
+		 * (통합 IDP 연동) 이용동의 가입 성공시....
+		 * 
+		 * TODO 통합 IDP 연동 가능한 테스트 ID가 없어서 무조건 성공으로 하드코딩함.
 		 */
 		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
 
@@ -360,23 +367,23 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.debug("## Im user_tn       : {}", this.imIDPReceiverM.getResponseBody().getUser_tn());
 			LOGGER.debug("## Im user_email    : {}", this.imIDPReceiverM.getResponseBody().getUser_email());
 
-			// /**
-			// * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
-			// */
-			// this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
-			// .getIm_int_svc_no());
-			// LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
-			// LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
-			//
-			// /**
-			// * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
-			// */
-			// if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
-			//
-			// LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
-			// LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
-			//
-			// }
+			/**
+			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+			 */
+			this.imIDPReceiverM = this.imIdpService.userInfoIdpSearchServer(this.imIDPReceiverM.getResponseBody()
+					.getIm_int_svc_no());
+			LOGGER.debug("## Im Result Code   : {}", this.imIDPReceiverM.getResponseHeader().getResult());
+			LOGGER.debug("## Im Result Text   : {}", this.imIDPReceiverM.getResponseHeader().getResult_text());
+
+			/**
+			 * TODO 조회 성공시 이름과 생년월일을 받아 온다. (등록시 데이타로 넣는다.)
+			 */
+			if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+
+				LOGGER.debug("## Im user_name     : {}", this.imIDPReceiverM.getResponseBody().getUser_name());
+				LOGGER.debug("## Im user_birthday : {}", this.imIDPReceiverM.getResponseBody().getUser_birthday());
+
+			}
 
 		} else {
 
@@ -397,7 +404,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 필수 약관 동의여부 체크
 		 */
-		if (this.checkAgree(req.getAgreementList(), TENANT_ID)) {
+		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}

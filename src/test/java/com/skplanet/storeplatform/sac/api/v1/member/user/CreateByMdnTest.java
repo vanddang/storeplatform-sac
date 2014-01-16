@@ -65,7 +65,7 @@ public class CreateByMdnTest {
 	@Test
 	public void createByMdn() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH + "/createByMdn/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
@@ -79,6 +79,9 @@ public class CreateByMdnTest {
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setImei("A0000031648EE9");
 						reqJson.setJoinId("US002903");
+						reqJson.setIsRecvSms("Y");
+						reqJson.setOwnBirth("20020328");
+
 						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 
 						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
