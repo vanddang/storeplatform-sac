@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class SearchIdTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DetailAccountInformationTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearchIdTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
