@@ -202,7 +202,10 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserSubStatus(userSubStatus);
 
 			} else { //무선회원 인증 실패
+
+				this.insertloginHistory(deviceId, null, "N");
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+
 			}
 
 		}
@@ -267,12 +270,14 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
+		/* 로그인 상태코드, 직원중지 상태코드 체크 */
+
 		/* 회원 인증 요청 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
 			if (!this.isExistAgreeSiteTstore(schUserRes.getUserMbr().getImSiteCode())) { //서비스 이용동의 간편 가입 대상 확인
 
-				//통합서비스 관리번호 조회(findJoinServiceListIDP)
+				//통합서비스 관리번호 조회
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("key_type", "2");
 				param.put("key", userId);

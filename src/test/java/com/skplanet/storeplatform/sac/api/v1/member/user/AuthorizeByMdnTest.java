@@ -124,8 +124,8 @@ public class AuthorizeByMdnTest {
 		tenantHeader.setTenantId("S01");
 
 		DeviceHeader deviceHeader = new DeviceHeader();
-		deviceHeader.setModel("SHW-M440S");
-		//deviceHeader.setModel("SHW-M220L");
+		//deviceHeader.setModel("SHW-M440S");
+		deviceHeader.setModel("SHW-M220L");
 		deviceHeader.setOsVersion("1.0");
 
 		SacRequestHeader header = new SacRequestHeader();

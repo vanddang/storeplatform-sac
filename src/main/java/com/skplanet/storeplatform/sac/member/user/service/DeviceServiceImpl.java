@@ -67,6 +67,7 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 /**
  * 휴대기기 관련 인터페이스 구현체
@@ -472,23 +473,32 @@ public class DeviceServiceImpl implements DeviceService {
 
 			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
-				IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
-				if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					String idpModelId = idpReceiver.getResponseBody().getModel_id();
+				//폰정보 조회 (deviceModelNo)
+				Device deviceDTO = this.commService.getPhoneInfo(deviceModelNo);
 
-					if (idpModelId != null && !idpModelId.equals("")) {
-						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-						if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
-							idpModelId = "SSNL";
-						} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
-							idpModelId = "SSO0";
+				// OMD 단말이 아닐 경우만
+				if (!MemberConstants.DEVICE_TELECOM_OMD.equals(deviceDTO.getCmntCompCd())) {
+
+					IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
+					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+						String idpModelId = idpReceiver.getResponseBody().getModel_id();
+
+						if (idpModelId != null && !idpModelId.equals("")) {
+							// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
+							if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
+								idpModelId = "SSNL";
+							} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
+								idpModelId = "SSO0";
+							}
+
+							req.setUacd(idpModelId);
 						}
 
-						req.setUacd(idpModelId);
+					} else {
+						throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
+								+ idpReceiver.getResponseHeader().getResult_text());
 					}
 
-				} else {
-					throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 				}
 			}
 			logger.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
