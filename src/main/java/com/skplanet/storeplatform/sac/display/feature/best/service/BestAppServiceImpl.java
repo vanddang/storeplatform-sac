@@ -33,6 +33,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO;
 
@@ -59,7 +62,13 @@ public class BestAppServiceImpl implements BestAppService {
 	 * .storeplatform.sac.client.product.vo.BestAppReqVO)
 	 */
 	@Override
-	public BestAppRes searchBestAppList(BestAppReq bestAppReq) {
+	public BestAppRes searchBestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq) {
+		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		bestAppReq.setTenantId(tanantHeader.getTenantId());
+		bestAppReq.setDeviceModelCd(deviceHeader.getModel());
+
 		BestAppRes response = new BestAppRes();
 		CommonResponse commonResponse = new CommonResponse();
 		int totalCount = 0;

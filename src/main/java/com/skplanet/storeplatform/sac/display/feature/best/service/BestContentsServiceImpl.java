@@ -26,6 +26,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.best.vo.BestContentsDTO;
 
@@ -52,7 +55,13 @@ public class BestContentsServiceImpl implements BestContentsService {
 	 * .storeplatform.sac.client.product.vo.bestContentsReqVO)
 	 */
 	@Override
-	public BestContentsRes searchBestContentsList(BestContentsReq bestContentsReq) {
+	public BestContentsRes searchBestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq) {
+		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		bestContentsReq.setTenantId(tanantHeader.getTenantId());
+		bestContentsReq.setDeviceModelCd(deviceHeader.getModel());
+
 		BestContentsRes response = new BestContentsRes();
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -171,7 +180,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 					 */
 					rights.setGrade(mapperVO.getProdGrdCd());
 
-					title.setText(mapperVO.getConcatProdNm());
+					title.setPrefix(mapperVO.getVodTitlNm());
+					title.setText(mapperVO.getProdNm());
+					title.setPostfix(mapperVO.getChapter());
+					// title.setText(mapperVO.getConcatProdNm());
 
 					/*
 					 * source mediaType - url
@@ -309,7 +321,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 			 */
 			rights.setGrade("4");
 
-			title.setText("[20%할인]친구 2");
+			title.setPrefix("[20%할인]");
+			title.setText("친구");
+			title.setPostfix("2");
+			// title.setText("[20%할인]친구 2");
 
 			/*
 			 * source mediaType - url

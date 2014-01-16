@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -19,5 +20,5 @@ public interface BestContentsService {
 	 *            BEST 컨텐츠 상품 리스트 요청 Value Object
 	 * @return BEST 컨텐츠 상품 리스트
 	 */
-	BestContentsRes searchBestContentsList(BestContentsReq bestContentsReq);
+	BestContentsRes searchBestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq);
 }

@@ -32,6 +32,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -55,7 +58,13 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 	 * .storeplatform.sac.client.product.vo.BestDownloadRequestVO)
 	 */
 	@Override
-	public BestDownloadRes searchBestDownloadList(BestDownloadReq bestDownloadReq) {
+	public BestDownloadRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq) {
+		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
+
+		bestDownloadReq.setTenantId(tanantHeader.getTenantId());
+		bestDownloadReq.setDeviceModelCd(deviceHeader.getModel());
+
 		BestDownloadRes response = new BestDownloadRes();
 
 		List<Product> productList = new ArrayList<Product>();

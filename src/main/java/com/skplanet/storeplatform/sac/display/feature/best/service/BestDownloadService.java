@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness)
@@ -19,5 +20,5 @@ public interface BestDownloadService {
 	 *            BEST 다운로드 상품 리스트 요청 Value Object
 	 * @return BEST 다운로드 상품 리스트
 	 */
-	BestDownloadRes searchBestDownloadList(BestDownloadReq bestDownloadReq);
+	BestDownloadRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq);
 }

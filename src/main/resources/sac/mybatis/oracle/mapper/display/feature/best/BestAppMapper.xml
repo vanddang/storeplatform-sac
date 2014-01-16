@@ -83,7 +83,7 @@
 		                                       ,A.EXPO_START_DT
 		                                       ,A.EXPO_END_DT
 		                                   FROM TB_DP_LIST_PROD A
-		                                  WHERE A.TENANT_ID = 'S01' /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
+		                                  WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
 		                                    AND A.LIST_ID = #{listId} /* param : listId */
 		                                    AND A.EXPO_YN ='Y' /* 전시여부 */ 
 		                                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
@@ -123,7 +123,7 @@
 		                            AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
 		                            AND (F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' OR F.TOP_MENU_ID IS NULL) /* DP02 : 폰꾸미기 */
 		                            AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
-		                            AND K.DEVICE_MODEL_CD = 'SHV-E210S' /* header param : 단말코드 */
+		                            AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
 		                            AND K.USE_YN ='Y'
 		                            AND I.EXPO_YN ='Y' /* 노출여부 */
 		                            AND SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT 
@@ -144,6 +144,7 @@
 		     AND KC.IMG_CD = 'DP000101'    	       
     </select>
     
+    <!-- BEST 앱 상품 조회(신규) -->
     <select id="selectNewBestAppList" parameterType="BestAppReq" resultType="BestAppDTO">
 		  SELECT KA.RN
 		        ,KA.SELLER_MBR_NO
@@ -228,7 +229,7 @@
 		                                         ,A.EXPO_START_DT
 		                                         ,A.EXPO_END_DT
 		                                     FROM TB_DP_LIST_PROD A                                       
-		                                    WHERE A.TENANT_ID = 'S01' /* header param : tenantId */ 
+		                                    WHERE A.TENANT_ID = #{tenantId} /* header param : tenantId */ 
 		                                      AND A.LIST_ID = #{listId} /* param : listId */
 		                                      AND A.EXPO_YN ='Y' /* 전시여부 */
                                               AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */		                                      
@@ -265,7 +266,7 @@
 		                              AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
 		                              AND (F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' OR F.TOP_MENU_ID IS NULL) /* DP02 : 폰꾸미기 */
 		                              AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
-		                              AND K.DEVICE_MODEL_CD = 'SHV-E210S' /* header param : 단말코드 */
+		                              AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
 		                              AND K.USE_YN ='Y'
 		                              AND I.EXPO_YN ='Y' /* 노출여부 */
 		                              AND SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT 
