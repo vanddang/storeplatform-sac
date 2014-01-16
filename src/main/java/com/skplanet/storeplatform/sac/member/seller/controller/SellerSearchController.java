@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -63,6 +64,17 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
 		LOGGER.debug("request param : {}", req.toString());
+
+		String keyType = StringUtil.nvl(req.getKeyType(), "");
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+		String aid = StringUtil.nvl(req.getAid(), "");
+
+		if (keyType.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
+		if (sellerKey.equals("") && aid.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
 		return this.sellerSearchService.detailInformation(header, req);
 	}
 
@@ -78,6 +90,11 @@ public class SellerSearchController {
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
 			throws Exception {
+
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+
+		if (sellerKey.equals(""))
+			throw new Exception("필수 파라미터 미존재");
 
 		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
@@ -109,6 +126,15 @@ public class SellerSearchController {
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
+
+		String sellerBizNumber = StringUtil.nvl(req.getSellerBizNumber(), "");
+		String sellerCompany = StringUtil.nvl(req.getSellerCompany(), "");
+		String sellerEmail = StringUtil.nvl(req.getSellerEmail(), "");
+		String sellerPhone = StringUtil.nvl(req.getSellerPhone(), "");
+
+		if (sellerBizNumber.equals("") & sellerCompany.equals("") & sellerEmail.equals("") & sellerPhone.equals("")) {
+			throw new Exception("필수 파라미터 미존재");
+		}
 
 		return this.sellerSearchService.searchId(header, req);
 	}

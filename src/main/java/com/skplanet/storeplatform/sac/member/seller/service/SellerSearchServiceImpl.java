@@ -130,16 +130,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
 
-		if (req.getKeyType() == null)
-			throw new Exception("필수 파라미터 미존재");
-		if (req.getKeyType().equals(""))
-			throw new Exception("필수 파라미터 미존재");
-
-		if (req.getSellerKey() == null && req.getAid() == null)
-			throw new Exception("필수 파라미터 미존재");
-		if (req.getKeyType().equals("") && req.getAid().equals(""))
-			throw new Exception("필수 파라미터 미존재");
-
 		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
 
@@ -257,11 +247,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
 			throws Exception {
-
-		if (req.getSellerKey() == null)
-			throw new Exception("판매자키가 없습니다");
-		if (req.getSellerKey().equals(""))
-			throw new Exception("판매자키가 없습니다");
 
 		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
