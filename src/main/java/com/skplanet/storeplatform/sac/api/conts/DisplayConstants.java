@@ -101,4 +101,7 @@ public class DisplayConstants {
 	 * 판매중
 	 */
 	public static final String DP_SALE_STAT_ING = "PD000403";
+
+	// //////////////////////////////////////Source Code //////////////////////////////////////////
+	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
 }

@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.device.service;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO;
 
 /**
@@ -44,7 +47,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 	 * java.lang.String)
 	 */
 	@Override
-	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO) {
+	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 
 		CommonResponse commonResponse = new CommonResponse();
@@ -55,6 +58,11 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 		// DeviceHeader Profile 조회
 		Device device = new Device();
 		if (deviceProfileDTO != null) {
+			Map<String, Object> supportedHardwareMap = deviceProfileDTO.getSupportedHardwareMap();
+			String dpi = header.getDeviceHeader().getDpi();
+			// dpi 세팅
+			supportedHardwareMap.put("dpi", dpi);
+
 			String sComp = deviceProfileDTO.getCmntCompCd();
 			StringBuilder sb = new StringBuilder();
 
@@ -68,13 +76,13 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 			device.setType("US001204".equals(sComp) ? "omd" : "normal");
 			device.setManufacturer(deviceProfileDTO.getMakeCompNm());
 			device.setPlatform(deviceProfileDTO.getVmTypeNm());
+			device.setUaCd(deviceProfileDTO.getUaCd());
 
 			device.setServices(deviceProfileDTO.getServicesMap());
-			device.setSupportedHardware(deviceProfileDTO.getSupportedHardwareMap());
+			device.setSupportedHardware(supportedHardwareMap);
 			device.setModelExplain(deviceProfileDTO.getModelNm());
 
 			commonResponse.setTotalCount(1);
-			// TODO osm1021 DPI 넣어주는 처리가 필요
 		} else { // 미지원단말
 			device.setIdentifier("android_standard");
 			device.setType("restrict");

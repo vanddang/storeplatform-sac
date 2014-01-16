@@ -41,8 +41,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProductDTO;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 
 @Service
 @Transactional
@@ -54,7 +55,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	private CommonDAO commonDAO;
 
 	@Override
-	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req) {
+	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
 
 		CategorySpecificRes res = new CategorySpecificRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -184,7 +185,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 							source = new Source();
 							sourceList = new ArrayList<Source>();
 							source.setType("thumbnail");
-							source.setMediaType("image/png");
+							source.setMediaType(DisplayCommonUtil.getMimeType(retDto.getImgPath()));
 							source.setUrl(retDto.getImgPath());
 							sourceList.add(source);
 							product.setSourceList(sourceList);

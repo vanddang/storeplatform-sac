@@ -15,7 +15,7 @@ import com.skplanet.storeplatform.sac.display.search.vo.SearchProductMetaInfoDTO
 
 @Service
 @Transactional
-public class SearchMetaInfoServiceImpl implements SearchMetaInfoService {
+public class MetaInfoServiceImpl implements MetaInfoService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -23,17 +23,16 @@ public class SearchMetaInfoServiceImpl implements SearchMetaInfoService {
 	private CommonDAO commonDAO;
 
 	@Override
-	public List<SearchProductMetaInfoDTO> searchMetaInfoList(SearchProductDTO dto) {
+	public List<SearchProductMetaInfoDTO> getMetaInfoList(SearchProductDTO dto) {
 		// dto.getProdList();
-		List<SearchProductMetaInfoDTO> vodList = this.commonDAO.queryForList(
-				"SearchVodBoxProductMeta.searchVodBoxMetaInfo", dto, SearchProductMetaInfoDTO.class);
+		List<SearchProductMetaInfoDTO> vodList = this.commonDAO.queryForList("GetMetaInfoMapper.searchVodBoxMetaInfo",
+				dto, SearchProductMetaInfoDTO.class);
 		return vodList;
 	}
 
 	@Override
-	public SearchProductMetaInfoDTO searchMeatInfo(SearchProductDTO dto) {
-		return this.commonDAO.queryForObject("SearchVodBoxProductMeta.searchVodBoxMetaInfo", dto,
-				SearchProductMetaInfoDTO.class);
+	public SearchProductMetaInfoDTO getMetaInfo(SearchProductDTO dto) {
+		return this.commonDAO.queryForObject("MetaInfo.getMetaInfo", dto, SearchProductMetaInfoDTO.class);
 	}
 
 }

@@ -23,8 +23,9 @@ public class SearchProductMetaInfoDTO {
 	private String paticpersCnt;
 	private String prchsCnt;
 	private Double avgEvluScore;
-	private String imgPath;
 	private String topMenuNm;
+	private String fileNm;
+	private String filePath;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -202,12 +203,20 @@ public class SearchProductMetaInfoDTO {
 		this.avgEvluScore = avgEvluScore;
 	}
 
-	public String getImgPath() {
-		return this.imgPath;
+	public String getFileNm() {
+		return this.fileNm;
 	}
 
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
+	public void setFileNm(String fileNm) {
+		this.fileNm = fileNm;
+	}
+
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 	public String getTopMenuNm() {

@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.display.device.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 특정 단말 정보 조회(CoreStoreBusiness)
@@ -30,5 +31,5 @@ public interface DeviceProfileService {
 	 *            모델명
 	 * @return
 	 */
-	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO);
+	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO, SacRequestHeader header);
 }

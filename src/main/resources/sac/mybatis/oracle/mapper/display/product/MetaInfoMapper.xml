@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="SearchVodBoxProductMeta">
-	<select id="searchVodBoxMetaInfo" parameterType="SearchProductDTO" resultType="SearchProductMetaInfoDTO">
+<mapper namespace="MetaInfo">
+	<select id="getMetaInfo" parameterType="SearchProductDTO" resultType="SearchProductMetaInfoDTO">
  	   SELECT  /* selectFeatureMovieList.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
 		        LA.UP_MENU_ID
 		      , LA.TOP_MENU_ID
@@ -10,7 +10,7 @@
 		      , LA.MENU_DESC
 		      , LA.META_CLSF_CD
 		      , LA.PROD_ID
-		      , LA.PART_PROD_ID
+		--      , LA.PART_PROD_ID
 		      , LA.VOD_TITL_NM
 		      , LA.PROD_NM
 		      , LA.PROD_BASE_DESC
@@ -45,7 +45,7 @@
 		                                     , B.UP_MENU_ID
 		                                     , B.TOP_MENU_ID
 		                                     , A.PROD_ID
-		                                     , I.PART_PROD_ID
+		                                --     , I.PART_PROD_ID
 		                                     , C.MENU_NM
 		                                     , C.MENU_DESC
 		                                     , D.PROD_GRD_CD
@@ -76,8 +76,8 @@
 		                                     , TB_DP_PROD_DESC         F
 		                                     , TB_DP_TENANT_PROD       G
 		                                     , TB_DP_TENANT_PROD_PRICE H                                     
-		                                     , TB_DP_PROD_RSHP         I
-		                                     , TB_DP_PROD              J
+		                                --   , TB_DP_PROD_RSHP         I
+		                                --   , TB_DP_PROD              J
 		                                     , TB_DP_PROD_IMG          K
 		                                 WHERE A.MENU_ID = B.MENU_ID
 		                                   AND A.MENU_ID = C.MENU_ID
@@ -86,9 +86,10 @@
 		                                   AND D.PROD_ID = F.PROD_ID                                   
 		                                   AND D.PROD_ID = G.PROD_ID
 		                                   AND D.PROD_ID = H.PROD_ID
-		                                   AND A.PROD_ID = I.PROD_ID                                   
-		                                   AND I.PART_PROD_ID = J.PROD_ID
-		                                   AND I.PROD_ID = K.PROD_ID
+		                               --    AND A.PROD_ID = I.PROD_ID                                   
+		                               --    AND I.PART_PROD_ID = J.PROD_ID
+		                               --    AND I.PROD_ID = K.PROD_ID
+		                                   AND D.PROD_ID = K.PROD_ID 
 		                                   AND A.BASE_YN = 'Y'                        /* Y : 사용 (사용여부) */
 		                                   AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
 		                                   AND C.LANG_CD = 'ko'                      /* ko : 한국어 */                                   
@@ -97,28 +98,11 @@
 		                                   AND K.IMG_CD = 'DP000101'                 
 		                                   AND K.EXPO_ORD = '1'                 
 		                                   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-		                                   <if test = "prodList != null">
-                                           AND I.PART_PROD_ID IN
-                                               <foreach collection="prodList" item="item" index="index" open="(" separator="," close=")"> 
-                                                    #{item}
-                                               </foreach>
-                                           </if>
-                                           ------------------------------------------------------------------------------
-		                                   -- INPUT PARAMETER
-		                                   ------------------------------------------------------------------------------                                  
-		                                   -- AND I.PART_PROD_ID IN ('H900065887', 'H900065072', 'H900065030', 'H900065022') /* EPSOIDE ID */
-		                                   -- AND I.PROD_ID IN ('H900065886', 'H900065071', 'H900065029', 'H900065021') /* CHANNEL ID */
-		                                   ------------------------------------------------------------------------------
-		                               ) JA 
+		                                   AND D.PROD_ID = #{prodId} 
+                                       ) JA 
 		       ) LA
 		     , TB_DP_TENANT_PROD_STATS LB
 		 WHERE LA.TENANT_ID = LB.TENANT_ID(+)
 		   AND LA.PROD_ID = LB.PROD_ID(+)
-		 <if test = "prodList != null">  
-		    ORDER BY instr
-		    <foreach collection="prodList" item="item" index="index" open="(" separator="||" close=",part_prod_id)"> 
-                #{item}
-            </foreach>
-         </if>
- 	</select>
+	</select>
 </mapper>

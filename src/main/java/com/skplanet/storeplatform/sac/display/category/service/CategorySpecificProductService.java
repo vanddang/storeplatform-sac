@@ -11,7 +11,8 @@ package com.skplanet.storeplatform.sac.display.category.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface CategorySpecificProductService {
-	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req);
+	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header);
 }

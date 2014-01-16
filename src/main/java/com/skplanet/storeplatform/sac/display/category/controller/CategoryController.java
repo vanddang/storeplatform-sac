@@ -128,11 +128,11 @@ public class CategoryController {
 
 	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificRes searchSpecificProductList(CategorySpecificReq req) {
+	public CategorySpecificRes searchSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.categorySpecificService.getSpecificProductList(req);
+		return this.categorySpecificService.getSpecificProductList(req, header);
 	}
 }

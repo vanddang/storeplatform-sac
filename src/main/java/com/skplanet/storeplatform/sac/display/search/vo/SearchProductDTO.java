@@ -1,13 +1,12 @@
 package com.skplanet.storeplatform.sac.display.search.vo;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchProductDTO {
 	private String tenantId;
 	private String menuId;
-	private List<SearchProductDetailDTO> searchProdinfoList;;
-	private List<String> prodList = new ArrayList<String>();
+	private String prodId;
+	private String partProdId;
+	private String expoOrd;
 
 	public String getTenantId() {
 		return this.tenantId;
@@ -25,24 +24,28 @@ public class SearchProductDTO {
 		this.menuId = menuId;
 	}
 
-	public List<SearchProductDetailDTO> getSearchProdinfoList() {
-		return this.searchProdinfoList;
+	public String getProdId() {
+		return this.prodId;
 	}
 
-	public void setSearchProdinfoList(List<SearchProductDetailDTO> searchProdinfoList) {
-		this.searchProdinfoList = searchProdinfoList;
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
-	public List<String> getProdList() {
-		if (this.searchProdinfoList != null) {
-			for (SearchProductDetailDTO dto : this.searchProdinfoList) {
-				this.prodList.add(dto.getProdId());
-			}
-		}
-		return this.prodList;
+	public String getPartProdId() {
+		return this.partProdId;
 	}
 
-	public void setProdList(List<String> prodList) {
-		this.prodList = prodList;
+	public void setPartProdId(String partProdId) {
+		this.partProdId = partProdId;
 	}
+
+	public String getExpoOrd() {
+		return this.expoOrd;
+	}
+
+	public void setExpoOrd(String expoOrd) {
+		this.expoOrd = expoOrd;
+	}
+
 }

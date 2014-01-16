@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductReq;
 import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.search.service.SearchVodBoxProductService;
 
 @Controller
@@ -31,10 +32,10 @@ public class SearchProductController {
 
 	@RequestMapping(value = "/vod", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchProductRes searchVodBoxProdIdList(SearchProductReq req) {
+	public SearchProductRes searchVodBoxProdIdList(SearchProductReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodBoxProdIdList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
-		return this.searchVodBoxProductService.searchVodBoxProdIdList(req);
+		return this.searchVodBoxProductService.searchVodBoxProduct(req, header);
 	}
 }
