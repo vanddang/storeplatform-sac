@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -26,11 +28,13 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	/**
 	 * 사용자 아이디
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userId;
 
 	/**
 	 * 사용자 패스워드
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userPw;
 
 	/**

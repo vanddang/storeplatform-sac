@@ -426,13 +426,11 @@ public class DeviceInfo extends CommonInfo {
 	}
 
 	public String getUserKey() {
-		return userKey;
+		return this.userKey;
 	}
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
 	}
-
-
 
 }

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -14,12 +16,20 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	/**
 	 * 기기 ID
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceId;
 
 	/**
 	 * 기기 ID 타입 (msisdn, uuid, macaddress)
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceIdType;
+
+	/**
+	 * 이동 통신사
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String deviceTelecom;
 
 	/**
 	 * 기기 고유 번호
@@ -45,11 +55,6 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	 * 자동 업데이트 여부(Y/N)
 	 */
 	private String isAutoUpdate;
-
-	/**
-	 * 이동 통신사
-	 */
-	private String deviceTelecom;
 
 	/**
 	 * 삽클 버전

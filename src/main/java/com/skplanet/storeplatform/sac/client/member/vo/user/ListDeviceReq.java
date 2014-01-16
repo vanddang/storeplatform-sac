@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -29,6 +31,7 @@ public class ListDeviceReq extends CommonInfo {
 	/**
 	 * 대표기기 여부
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String isMainDevice;
 
 	/**
@@ -69,12 +72,11 @@ public class ListDeviceReq extends CommonInfo {
 	}
 
 	public String getIsMainDevice() {
-		return isMainDevice;
+		return this.isMainDevice;
 	}
 
 	public void setIsMainDevice(String isMainDevice) {
 		this.isMainDevice = isMainDevice;
 	}
-
 
 }
