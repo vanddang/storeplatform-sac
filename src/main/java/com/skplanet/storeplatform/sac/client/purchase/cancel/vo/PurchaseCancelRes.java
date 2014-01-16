@@ -7,24 +7,25 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.purchase.vo;
+package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonRes;
 
 /**
  * 구매 취소 응답 VO.
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class CancelRes extends CommonInfo {
+public class PurchaseCancelRes extends PurchaseCommonRes {
 
 	private static final long serialVersionUID = 1L;
 
 	private Integer totCnt;
 	private Integer successCnt;
 	private Integer failCnt;
+	private List<PurchaseCancelResult> prchsCancelResultList;
 
 	/**
 	 * @return the totCnt
@@ -71,12 +72,10 @@ public class CancelRes extends CommonInfo {
 		this.failCnt = failCnt;
 	}
 
-	private List<CancelDetailRes> prchsCancelResultList;
-
 	/**
 	 * @return the prchsCancelResultList
 	 */
-	public List<CancelDetailRes> getPrchsCancelResultList() {
+	public List<PurchaseCancelResult> getPrchsCancelResultList() {
 		return this.prchsCancelResultList;
 	}
 
@@ -84,7 +83,7 @@ public class CancelRes extends CommonInfo {
 	 * @param prchsCancelResultList
 	 *            the prchsCancelResultList to set
 	 */
-	public void setPrchsCancelResultList(List<CancelDetailRes> prchsCancelResultList) {
+	public void setPrchsCancelResultList(List<PurchaseCancelResult> prchsCancelResultList) {
 		this.prchsCancelResultList = prchsCancelResultList;
 	}
 

@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.purchase.vo;
+package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class CancelDetailReq extends CommonInfo {
+public class PurchaseCancelReqDetail extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

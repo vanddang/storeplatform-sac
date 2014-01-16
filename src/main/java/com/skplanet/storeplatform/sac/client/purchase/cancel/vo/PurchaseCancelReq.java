@@ -7,27 +7,27 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.purchase.vo;
+package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonReq;
 
 /**
  * 구매 취소 요청 VO.
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class CancelReq extends CommonInfo {
+public class PurchaseCancelReq extends PurchaseCommonReq {
 
 	private static final long serialVersionUID = 1L;
 
-	List<CancelDetailReq> prchsCancelReqList;
+	private List<PurchaseCancelReqDetail> prchsCancelReqList;
 
 	/**
 	 * @return the prchsCancelReqList
 	 */
-	public List<CancelDetailReq> getPrchsCancelReqList() {
+	public List<PurchaseCancelReqDetail> getPrchsCancelReqList() {
 		return this.prchsCancelReqList;
 	}
 
@@ -35,7 +35,7 @@ public class CancelReq extends CommonInfo {
 	 * @param prchsCancelReqList
 	 *            the prchsCancelReqList to set
 	 */
-	public void setPrchsCancelReqList(List<CancelDetailReq> prchsCancelReqList) {
+	public void setPrchsCancelReqList(List<PurchaseCancelReqDetail> prchsCancelReqList) {
 		this.prchsCancelReqList = prchsCancelReqList;
 	}
 
