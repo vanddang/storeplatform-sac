@@ -146,4 +146,10 @@ public class DisplayConstants {
 
 	// //////////////////////////////////////Source Code //////////////////////////////////////////
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
+
+	public static final String DP_MENU_TOPCLASS_TYPE = "topClass";
+
+	public static final String DP_MUSIC_SERVICE_MP3 = "mp3";
+	public static final String DP_MUSIC_SERVICE_BELL = "bell";
+	public static final String DP_MUSIC_SERVICE_RING = "ring";
 }
