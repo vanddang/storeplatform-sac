@@ -684,22 +684,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		for (UserMbrDeviceDetail deviceDetail : list) {
 
-			String extraProfile = deviceDetail.getExtraProfile();
-
-			if (extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_SCVERSION)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)) {
-
-				deviceExtraInfo.setExtraProfile(extraProfile);
-				deviceExtraInfo.setExtraProfileValue(deviceDetail.getExtraProfileValue());
-
-				deviceExtraInfoList.add(deviceExtraInfo);
-			}
+			deviceExtraInfo.setExtraProfile(deviceDetail.getExtraProfile());
+			deviceExtraInfo.setExtraProfileValue(deviceDetail.getExtraProfileValue());
+			deviceExtraInfoList.add(deviceExtraInfo);
 		}
 
 		return deviceExtraInfoList;
