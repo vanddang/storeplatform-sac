@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +34,12 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
 
+/**
+ * 
+ * 구매 처리 컨트롤러 테스트
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -35,11 +50,21 @@ public class PurchaseControllerTest {
 
 	private MockMvc mvc;
 
+	/**
+	 */
 	@Before
 	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * <pre>
+	 * 무료상품 구매 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void testFreePurchase() throws Exception {
 		CreatePurchaseReq req = new CreatePurchaseReq();

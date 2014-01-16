@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.prototype.service;
 
 import java.util.ArrayList;
@@ -27,7 +36,7 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchas
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseProduct;
 
 /**
- * SAC 구매/구매내역 서비스 구현체
+ * [Prototype] 구매내역 서비스 구현체
  * 
  * Updated on : 2013. 12. 10. Updated by : 이승택, nTels.
  */
@@ -141,7 +150,7 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 		List<ProductOwnType> prodList = new ArrayList<ProductOwnType>();
 		String prodOwnType = null;
 		for (String prodId : paramVO.getProdIdList()) {
-			prodOwnType = this.checkOwnType(prodId); // 상품소유타입 조회 : id | mdn 기반
+			prodOwnType = this.getOwnType(prodId); // 상품소유타입 조회 : id | mdn 기반
 			prodList.add(new ProductOwnType(prodId, prodOwnType));
 		}
 		sciReq.setProdList(prodList);
@@ -162,7 +171,17 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 		return res;
 	}
 
-	private String checkOwnType(String prodId) {
+	/**
+	 * 
+	 * <pre>
+	 * 상품의 소유타입(id/mdn 기반) 조회.
+	 * </pre>
+	 * 
+	 * @param prodId
+	 *            상품ID
+	 * @return id-id기반,mdn-mdn기반
+	 */
+	private String getOwnType(String prodId) {
 		return prodId.startsWith("0") ? "id" : "mdn";
 	}
 

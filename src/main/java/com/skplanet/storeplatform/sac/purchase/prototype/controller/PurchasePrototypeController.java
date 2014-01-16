@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.prototype.controller;
 
 import org.slf4j.Logger;
@@ -16,14 +25,14 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchas
 import com.skplanet.storeplatform.sac.purchase.prototype.service.PurchasePrototypeService;
 
 /**
- * 구매 Prototype 처리 컨트롤러
+ * [Prototype] 구매 Prototype 처리 컨트롤러
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 @Controller
 @RequestMapping("/purchase/prototype")
 public class PurchasePrototypeController {
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private PurchasePrototypeService purchaseService;
@@ -33,19 +42,19 @@ public class PurchasePrototypeController {
 	 * MyPage 구매내역 조회.
 	 * </pre>
 	 * 
-	 * @param paramVO
+	 * @param req
 	 *            구매내역 조회조건
 	 * @return MyPage 구매내역
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public MyPagePurchaseHistoryRes searchPurchaseListTest(@RequestBody MyPagePurchaseHistoryReq req) {
-		this.log.debug("PurchasePrototypeController.searchPurchaseListTest,START,{}", req);
+		this.logger.debug("PurchasePrototypeController.searchPurchaseListTest,START,{}", req);
 
 		// 구매내역 조회
 		MyPagePurchaseHistoryRes res = this.purchaseService.searchPurchaseList(req);
 
-		this.log.debug("PurchasePrototypeController.searchPurchaseListTest,END,{}", res.getHistory().size());
+		this.logger.debug("PurchasePrototypeController.searchPurchaseListTest,END,{}", res.getHistory().size());
 		return res;
 	}
 
@@ -54,19 +63,19 @@ public class PurchasePrototypeController {
 	 * 기구매 체크.
 	 * </pre>
 	 * 
-	 * @param paramVO
+	 * @param req
 	 *            기구매체크 조건
 	 * @return MyPage 구매내역
 	 */
 	@RequestMapping(value = "/check/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CheckPurchaseRes checkPurchase(@RequestBody CheckPurchaseReq req) {
-		this.log.debug("PurchasePrototypeController.checkPurchase,START,{}", req);
+		this.logger.debug("PurchasePrototypeController.checkPurchase,START,{}", req);
 
 		// 기구매체크
 		CheckPurchaseRes res = this.purchaseService.checkPurchase(req);
 
-		this.log.debug("PurchasePrototypeController.checkPurchase,END,{}");
+		this.logger.debug("PurchasePrototypeController.checkPurchase,END,{}");
 		return res;
 	}
 }

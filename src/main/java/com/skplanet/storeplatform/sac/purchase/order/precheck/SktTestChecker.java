@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
 import org.slf4j.Logger;
@@ -13,7 +22,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class SktTestChecker implements PurchasePreChecker {
-	private static final Logger logger = LoggerFactory.getLogger(SktTestChecker.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyAdminServiceImpl dummyService = new DummyAdminServiceImpl();
 
@@ -43,7 +52,7 @@ public class SktTestChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		logger.debug("PRCHS,DUMMY,SKTTEST,START," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,SKTTEST,START," + purchaseInfo);
 
 		// SKT시험폰 여부 조회 : 테넌트ID, MDN
 		if (this.dummyService.isSktTest(purchaseInfo.getTenantId(), purchaseInfo.getPurchaseMember().getMdn())) {
@@ -51,7 +60,7 @@ public class SktTestChecker implements PurchasePreChecker {
 			return false;
 		}
 
-		logger.debug("PRCHS,DUMMY,SKTTEST,END," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,SKTTEST,END," + purchaseInfo);
 		return true;
 	}
 }

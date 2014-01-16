@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.prototype;
 
 import java.util.ArrayList;
@@ -17,6 +26,12 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchase
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
 import com.skplanet.storeplatform.sac.purchase.prototype.service.PurchasePrototypeService;
 
+/**
+ * 
+ * [Prototype] 구매내역 서비스 테스트
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -50,6 +65,7 @@ public class PurchasePrototypeServiceImplTest {
 
 		this.purchasePrototypeService.searchPurchaseList(paramVO);
 
+		this.logger.debug("dummy");
 	}
 
 	/**

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
 import org.slf4j.Logger;
@@ -13,7 +22,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class BlockChecker implements PurchasePreChecker {
-	private static final Logger logger = LoggerFactory.getLogger(BlockChecker.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyMemberServiceImpl dummyService = new DummyMemberServiceImpl();
 
@@ -43,7 +52,7 @@ public class BlockChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		logger.debug("PRCHS,DUMMY,BLOCK,START," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,BLOCK,START," + purchaseInfo);
 
 		// 구매 차단 여부 조회 : 테넌트ID, 내부회원NO, 디바이스ID
 		if (this.dummyService.isBlock(purchaseInfo.getTenantId(), purchaseInfo.getInsdUsermbrNo(),
@@ -53,7 +62,7 @@ public class BlockChecker implements PurchasePreChecker {
 			return false;
 		}
 
-		logger.debug("PRCHS,DUMMY,BLOCK,END," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,BLOCK,END," + purchaseInfo);
 
 		return true;
 	}

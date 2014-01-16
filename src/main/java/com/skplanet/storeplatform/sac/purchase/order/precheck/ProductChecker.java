@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
 import java.util.ArrayList;
@@ -18,7 +27,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class ProductChecker implements PurchasePreChecker {
-	private static final Logger logger = LoggerFactory.getLogger(ProductChecker.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyProductServiceImpl dummyService = new DummyProductServiceImpl();
 
@@ -47,7 +56,7 @@ public class ProductChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		logger.debug("PRCHS,DUMMY,PRODUCT,START," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,PRODUCT,START," + purchaseInfo);
 
 		// 상품 정보 조회 : 테넌트ID, 상품ID, 디바이스모델코드
 		// tenantId, String prodId, String deviceModelCd
@@ -61,7 +70,7 @@ public class ProductChecker implements PurchasePreChecker {
 
 		purchaseInfo.setProductList(prodList);
 
-		logger.debug("PRCHS,DUMMY,PRODUCT,END," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,PRODUCT,END," + purchaseInfo);
 		return true;
 	}
 }

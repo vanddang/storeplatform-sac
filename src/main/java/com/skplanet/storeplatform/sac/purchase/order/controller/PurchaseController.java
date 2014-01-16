@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.controller;
 
 import org.slf4j.Logger;
@@ -22,7 +31,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
 @Controller
 @RequestMapping("/purchase/order")
 public class PurchaseController {
-	private static final Logger logger = LoggerFactory.getLogger(PurchaseController.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private PurchaseService purchaseService;
@@ -33,14 +42,14 @@ public class PurchaseController {
 	 * 구매 요청 처리: 무료구매 경우는 구매완료 처리, 유료구매 경우는 PayPlanet 결제Page 요청을 위한 처리.
 	 * </pre>
 	 * 
-	 * @param createPurchaseReq
+	 * @param req
 	 *            구매요청 정보
 	 * @return 구매요청 처리 결과: 무료구매완료 또는 결제page요청정보
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreatePurchaseRes createPurchase(@RequestBody CreatePurchaseReq req) {
-		logger.debug("PRCHS,INFO,CREATE,REQ,{}", req);
+		this.logger.debug("PRCHS,INFO,CREATE,REQ,{}", req);
 
 		PrePurchaseInfo purchaseInfo = new PrePurchaseInfo(req);
 		purchaseInfo.setTenantId(req.getTenantId());
@@ -76,7 +85,7 @@ public class PurchaseController {
 		res.setPaymentPageUrl(purchaseInfo.getPaymentPageUrl());
 		res.setPaymentPageParam(purchaseInfo.getPaymentPageParam());
 
-		logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
+		this.logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
 		return res;
 	}
 }

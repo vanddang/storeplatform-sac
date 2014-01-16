@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
 import org.slf4j.Logger;
@@ -14,7 +23,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class MemberChecker implements PurchasePreChecker {
-	private static final Logger logger = LoggerFactory.getLogger(MemberChecker.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyMemberServiceImpl dummyService = new DummyMemberServiceImpl();
 
@@ -43,13 +52,13 @@ public class MemberChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		logger.debug("PRCHS,DUMMY,MEMBER,START," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,MEMBER,START," + purchaseInfo);
 
 		// 회원 정보 조회 : 테넌트ID, 내부회원NO, 디바이스ID
 		DummyMember member = this.dummyService.getMemberInfo(purchaseInfo.getTenantId(),
 				purchaseInfo.getInsdUsermbrNo(), purchaseInfo.getInsdDeviceId());
 
-		logger.debug("DUMMY,MEMBER," + member);
+		this.logger.debug("DUMMY,MEMBER," + member);
 		purchaseInfo.setPurchaseMember(member);
 
 		// if( "선물발신코드".equals(purchaseInfo.getCreatePurchaseReq().getPrchsCaseCd()) ) {
@@ -57,11 +66,11 @@ public class MemberChecker implements PurchasePreChecker {
 			member = this.dummyService.getMemberInfo(purchaseInfo.getRecvTenantId(),
 					purchaseInfo.getRecvInsdUsermbrNo(), purchaseInfo.getRecvInsdDeviceId());
 
-			logger.debug("DUMMY,MEMBER,RECV," + member);
+			this.logger.debug("DUMMY,MEMBER,RECV," + member);
 			purchaseInfo.setRecvMember(member);
 		}
 
-		logger.debug("PRCHS,DUMMY,MEMBER,END," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,MEMBER,END," + purchaseInfo);
 		return true;
 	}
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.prototype;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +34,12 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.CheckPurchaseReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchaseHistoryReq;
 
+/**
+ * 
+ * [Prototype] 구매내역 컨트롤러 테스트
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -36,11 +51,22 @@ public class PurchasePrototypeControllerTest {
 
 	private MockMvc mvc;
 
+	/**
+	 */
 	@Before
 	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 구매내역 조회 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void searchPurchaseList() throws Exception {
 		MyPagePurchaseHistoryReq req = new MyPagePurchaseHistoryReq();
@@ -66,6 +92,15 @@ public class PurchasePrototypeControllerTest {
 				.andExpect(content().contentType("application/json;charset=UTF-8")).andExpect(status().isOk());
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 기구매 체크 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void checkPurchase() throws Exception {
 		CheckPurchaseReq req = new CheckPurchaseReq();

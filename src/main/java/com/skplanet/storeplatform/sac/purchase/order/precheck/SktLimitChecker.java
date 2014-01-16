@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
 import org.slf4j.Logger;
@@ -13,7 +22,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class SktLimitChecker implements PurchasePreChecker {
-	private static final Logger logger = LoggerFactory.getLogger(SktLimitChecker.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyAdminServiceImpl dummyService = new DummyAdminServiceImpl();
 
@@ -43,11 +52,11 @@ public class SktLimitChecker implements PurchasePreChecker {
 	 */
 	@Override
 	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
-		logger.debug("PRCHS,DUMMY,SKTLIMIT,START," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,SKTLIMIT,START," + purchaseInfo);
 
 		this.dummyService.getSktLimit();
 
-		logger.debug("PRCHS,DUMMY,SKTLIMIT,END," + purchaseInfo);
+		this.logger.debug("PRCHS,DUMMY,SKTLIMIT,END," + purchaseInfo);
 		return true;
 	}
 }

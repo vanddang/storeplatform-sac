@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order;
 
 import java.util.ArrayList;
@@ -18,6 +27,12 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
 
+/**
+ * 
+ * 구매 처리 서비스 테스트
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -33,6 +48,8 @@ public class PurchaseServiceImplTest {
 	CreatePurchaseReq createPurchaseReq;
 	PrePurchaseInfo purchaseInfo;
 
+	/**
+	 */
 	@Before
 	public void init() {
 		this.createPurchaseReq = new CreatePurchaseReq();
@@ -60,6 +77,14 @@ public class PurchaseServiceImplTest {
 		this.purchaseInfo.setRecvInsdDeviceId(this.createPurchaseReq.getRecvInsdDeviceId());
 	}
 
+	/**
+	 * <pre>
+	 * 구매 전처리 (제한정책 체크).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void checkPurchase() throws Exception {
 		this.purchaseService.checkPurchase(this.purchaseInfo);
@@ -73,6 +98,7 @@ public class PurchaseServiceImplTest {
 	 * </pre>
 	 * 
 	 * @throws Exception
+	 *             Exception
 	 */
 	// @Test
 	public void freePurchaseInsert() throws Exception {

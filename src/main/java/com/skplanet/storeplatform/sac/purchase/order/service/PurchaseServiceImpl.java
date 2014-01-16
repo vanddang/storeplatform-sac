@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.Calendar;
@@ -27,7 +36,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
 @Service
 @Transactional
 public class PurchaseServiceImpl implements PurchaseService {
-	private static final Logger logger = LoggerFactory.getLogger(PurchaseServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private DummyPurchaseSCI dummyPurchaseSCI;
@@ -59,7 +68,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 			}
 		}
 
-		logger.debug("PRCHS,DUMMY,CHECK," + (System.currentTimeMillis() - startTime) + "ms");
+		this.logger.debug("PRCHS,DUMMY,CHECK," + (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	/**

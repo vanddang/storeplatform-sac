@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
 import java.util.ArrayList;
@@ -16,6 +25,8 @@ import org.apache.commons.lang.StringUtils;
 public class CheckerManager {
 	private final Map<String, List<PurchasePreChecker>> checkerMap = new HashMap<String, List<PurchasePreChecker>>();
 
+	/**
+	 */
 	public CheckerManager() {
 		//
 		// ##### 순서 중요 #####
@@ -37,6 +48,15 @@ public class CheckerManager {
 		this.checkerMap.put("BASIC", checkerList);
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param type
+	 *            제한체크 타입
+	 * @return 제한체크 목록
+	 */
 	public List<PurchasePreChecker> getCheckerList(String type) {
 		if (StringUtils.isEmpty(type)) {
 			type = "BASIC";
