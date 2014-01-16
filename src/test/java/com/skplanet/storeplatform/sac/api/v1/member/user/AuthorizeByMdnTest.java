@@ -124,25 +124,23 @@ public class AuthorizeByMdnTest {
 		tenantHeader.setTenantId("S01");
 
 		DeviceHeader deviceHeader = new DeviceHeader();
-		deviceHeader.setModel("SHP_110S");
-		deviceHeader.setOsVersion("0.1");
+		//deviceHeader.setModel("SHW-M440S");
+		deviceHeader.setModel("SHW-M220L");
+		deviceHeader.setOsVersion("1.1");
 
 		SacRequestHeader header = new SacRequestHeader();
 		header.setDeviceHeader(deviceHeader);
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-		req.setDeviceModelNo("SHW-M250S");
-		req.setOsVer("1.0");
-
 		req.setDeviceId("01088870008");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("US012101");
-		req.setNativeId("358362045580844");
-		req.setRooting("Y");
-		req.setDeviceAccount("vanddang@gmail.com");
-		req.setIsAutoUpdate("Y");
-		req.setScVer("1.0");
+		req.setDeviceTelecom("US012103");
+		req.setNativeId("358362045580842");
+		req.setRooting("N");
+		req.setDeviceAccount("vanddang222@gmail.com");
+		req.setIsAutoUpdate("N");
+		req.setScVer("1.1");
 
 		try {
 			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(header, req);

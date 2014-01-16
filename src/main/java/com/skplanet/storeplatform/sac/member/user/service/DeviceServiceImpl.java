@@ -772,10 +772,7 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setIsUsed(deviceInfo.getIsUsed());
-
-		if (deviceInfo.getUserDeviceExtraInfo() != null) {
-			userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo.getUserDeviceExtraInfo()));
-		}
+		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;
 
@@ -788,34 +785,69 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param list
 	 * @return
 	 */
-	public List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(List<DeviceExtraInfo> list) {
+	public List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) {
 
-		List<UserMbrDeviceDetail> userMbrDeviceDetailList = null;
-		UserMbrDeviceDetail userMbrDeviceDetail = null;
-		if (list.size() > 0) {
-			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
+		List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+
+		if (deviceInfo.getOmpDownloaderYn() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpDownloaderYn());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
-		for (DeviceExtraInfo extraInfo : list) {
+		if (deviceInfo.getStandByScreenYn() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getStandByScreenYn());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
 
-			String extraProfile = extraInfo.getExtraProfile();
+		if (deviceInfo.getUacd() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getUacd());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
 
-			if (extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_UACD)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OSVERSION)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_SCVERSION)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_EMBEDDED_YN) || extraProfile.equals(MemberConstants.DEVICE_EXTRA_OMPUACE)
-					|| extraProfile.equals(MemberConstants.DEVICE_EXTRA_ROOTING_YN)) {
+		if (deviceInfo.getOmpSupportYn() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpSupportYn());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
 
-				userMbrDeviceDetail.setExtraProfile(extraProfile);
-				userMbrDeviceDetail.setExtraProfileValue(extraInfo.getExtraProfileValue());
+		if (deviceInfo.getOsVer() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOsVer());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
 
-				userMbrDeviceDetailList.add(userMbrDeviceDetail);
-			}
+		if (deviceInfo.getScVer() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getScVer());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
+
+		if (deviceInfo.getAppStatisticsYn() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getAppStatisticsYn());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
+
+		if (deviceInfo.getDotoriAuthDate() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthDate());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
+
+		if (deviceInfo.getDotoriAuthYn() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthYn());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+		}
+
+		if (deviceInfo.getRooting() != null) {
+			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getRooting());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		return userMbrDeviceDetailList;
