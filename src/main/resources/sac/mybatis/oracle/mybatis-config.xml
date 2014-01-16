@@ -52,6 +52,10 @@
         <typeAlias alias="FeatureVodProductRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequest" />
         <typeAlias alias="FeatureVodProductDTO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO" />
         
+        <!-- 일반카테고리 음원 상품 조회 -->
+        <typeAlias alias="MusicContentsRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq" />
+        <typeAlias alias="MusicContentsDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.MusicContentsDTO" />
+
         <!-- 메뉴/카테고리 조회 -->
         <typeAlias alias="MenuRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq" />
         <typeAlias alias="MenuDetailDTO"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO" />
