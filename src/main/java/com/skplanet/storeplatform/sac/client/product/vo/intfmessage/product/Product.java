@@ -68,6 +68,11 @@ public class Product extends CommonInfo implements Serializable {
 	 * > paid-rss : RSS 과금상품(PD000605) > free-rss : RSS 비과금상품(PD000606)
 	 */
 	private String packetFee;
+
+	/**
+	 * resource 정보
+	 */
+	private Source source;
 	/**
 	 * resource 정보
 	 */
@@ -164,16 +169,16 @@ public class Product extends CommonInfo implements Serializable {
 	 * ebook의 최신호 정보
 	 */
 	private String latestIssue;
-    /**
-     * 물리 파일 경로
-     */
-    private String physicalPath;
+	/**
+	 * 물리 파일 경로
+	 */
+	private String physicalPath;
 
-    /**
-     * 하위 상품 목록
-     */
-    private List<Product> subProductList;
-    
+	/**
+	 * 하위 상품 목록
+	 */
+	private List<Product> subProductList;
+
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
@@ -244,6 +249,14 @@ public class Product extends CommonInfo implements Serializable {
 
 	public void setPacketFee(String packetFee) {
 		this.packetFee = packetFee;
+	}
+
+	public Source getSource() {
+		return this.source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
 	}
 
 	public List<Source> getSourceList() {
@@ -438,20 +451,20 @@ public class Product extends CommonInfo implements Serializable {
 		this.latestIssue = latestIssue;
 	}
 
-    public String getPhysicalPath() {
-        return physicalPath;
-    }
+	public String getPhysicalPath() {
+		return this.physicalPath;
+	}
 
-    public void setPhysicalPath(String physicalPath) {
-        this.physicalPath = physicalPath;
-    }
+	public void setPhysicalPath(String physicalPath) {
+		this.physicalPath = physicalPath;
+	}
 
 	public List<Product> getSubProductList() {
-		return subProductList;
+		return this.subProductList;
 	}
 
 	public void setSubProductList(List<Product> subProductList) {
 		this.subProductList = subProductList;
 	}
-    
+
 }
