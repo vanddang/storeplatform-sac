@@ -123,6 +123,7 @@ public class DummySellerController {
 		sellerInfo.setSellerMainStatus("US010204");
 		sellerInfo.setSellerSubStatus("US010307");
 		responseVO.setLoginFailCount("2");
+		responseVO.setIsLoginSuccess("Y");
 		responseVO.setSellerMbr(sellerInfo);
 
 		return responseVO;
