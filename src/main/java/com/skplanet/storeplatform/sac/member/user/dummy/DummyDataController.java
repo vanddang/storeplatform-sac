@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
@@ -39,7 +40,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetSupportAomRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListAddtionalInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
@@ -58,7 +58,7 @@ import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
  * 
  * Updated on : 2014. 1. 2. Updated by : 심대진, 다모아 솔루션.
  */
-@RequestMapping(value = "/member/user")
+// @RequestMapping(value = "/member/user")
 @Controller
 public class DummyDataController {
 
@@ -92,7 +92,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateByAgreementRes
 	 */
-	@RequestMapping(value = "/createByAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByAgreementRes createByAgreement() {
 
@@ -113,7 +113,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateBySimpleRes
 	 */
-	@RequestMapping(value = "/createBySimple/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateBySimpleRes createBySimple() {
 
@@ -156,7 +156,7 @@ public class DummyDataController {
 	 * 
 	 * @return AuthorizeByIdRes
 	 */
-	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById() {
 
@@ -180,7 +180,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyRes
 	 */
-	@RequestMapping(value = "/modify/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRes modify() {
 
@@ -201,7 +201,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyPasswordRes
 	 */
-	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordRes modifyPassword() {
 
@@ -222,7 +222,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyEmailRes
 	 */
-	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailRes modifyEmail() {
 
@@ -243,7 +243,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateTermsAgreementRes
 	 */
-	@RequestMapping(value = "/createTermsAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateTermsAgreementRes createTermsAgreement() {
 
@@ -264,7 +264,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyTermsAgreementRes
 	 */
-	@RequestMapping(value = "/modifyTermsAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyTermsAgreementRes modifyTermsAgreement() {
 
@@ -285,7 +285,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateRealNameRes
 	 */
-	@RequestMapping(value = "/createRealName/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRealNameRes createRealName() {
 
@@ -306,6 +306,65 @@ public class DummyDataController {
 	 * 
 	 * @return ListDeviceRes
 	 */
+	// @RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/listDevice/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public ListDeviceRes listDevice() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.17.	휴대기기 목록 조회 #####");
+	// LOGGER.info("####################################################");
+	//
+	// ListDeviceRes res = new ListDeviceRes();
+	//
+	// try {
+	//
+	// /*
+	// * 휴대기기 부가정보 리스트
+	// */
+	// List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+	// DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+	// deviceExtraInfo.setExtraProfile("US011404");
+	// deviceExtraInfo.setExtraProfileValue("LGFL");
+	//
+	// deviceExtraInfoList.add(deviceExtraInfo);
+	//
+	// /*
+	// * 휴대기기정보 리스트
+	// */
+	// List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+	// DeviceInfo deviceInfo = new DeviceInfo();
+	//
+	// deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+	// deviceInfo.setDeviceKey("01011112222");
+	// deviceInfo.setDeviceId("01011112222");
+	// deviceInfo.setDeviceModelNo("LG-SH810");
+	// deviceInfo.setDeviceTelecom("SKT");
+	// deviceInfo.setImMngNum("");
+	// deviceInfo.setDeviceNickName("LG-SH810");
+	// deviceInfo.setIsPrimary("Y");
+	// deviceInfo.setIsAuthenticated("Y");
+	// deviceInfo.setAuthenticationDate("20131226103711");
+	// deviceInfo.setIsRecvSms("Y");
+	// deviceInfo.setNativeId("358362045580844");
+	// deviceInfo.setDeviceAccount("hkd@gmail.com");
+	// deviceInfo.setJoinId("US012301");
+	// deviceInfo.setOsVer("1.0");
+	// deviceInfo.setScVer("1.0");
+	// deviceInfo.setRooting("N");
+	// deviceInfo.setMakeComp("SAMSUNG");
+	//
+	// deviceInfoList.add(deviceInfo);
+	//
+	// res.setUserId("hdk");
+	// res.setUserKey("IW102158844420091030165015");
+	// res.setDeviceInfoList(deviceInfoList);
+	//
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	//
+	// return res;
+	// }
 	/*@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListDeviceRes listDevice() {
@@ -373,7 +432,10 @@ public class DummyDataController {
 	 * 
 	 * @return CreateDeviceRes
 	 */
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createDevice/v1", method = RequestMethod.POST)
+=======
 	/*@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
+>>>>>>> .r4749
 	@ResponseBody
 	public CreateDeviceRes createDevice() {
 
@@ -396,7 +458,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateOcbInformationRes
 	 */
-	@RequestMapping(value = "/createOcbInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateOcbInformationRes createOcbInformation() {
 
@@ -417,7 +479,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveOcbInformationRes
 	 */
-	@RequestMapping(value = "/removeOcbInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveOcbInformationRes removeOcbInformation() {
 
@@ -438,7 +500,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetOcbInformationRes
 	 */
-	@RequestMapping(value = "/getOcbInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOcbInformationRes getOcbInformation() {
 
@@ -492,7 +554,7 @@ public class DummyDataController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdRes searchId() {
 
@@ -513,7 +575,7 @@ public class DummyDataController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordRes searchPassword() {
 
@@ -536,7 +598,7 @@ public class DummyDataController {
 	 * 
 	 * @return DetailRes
 	 */
-	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRes detail() {
 
@@ -708,7 +770,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListTermsAgreementRes
 	 */
-	@RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListTermsAgreementRes listTermsAgreement() {
 
@@ -741,7 +803,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetSupportAomRes
 	 */
-	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/getSupportAom/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetSupportAomRes getSupportAom() {
 
@@ -762,7 +824,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetProvisioningHistoryRes
 	 */
-	@RequestMapping(value = "/getProvisioningHistory/v1", method = RequestMethod.GET)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/getProvisioningHistory/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory() {
 
@@ -785,7 +847,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveDeviceRes
 	 */
-	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_DEV + "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveDeviceRes removeDevice() {
 
@@ -878,7 +940,7 @@ public class DummyDataController {
 	 * 
 	 * @return WithdrawRes
 	 */
-	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes withdraw() {
 
@@ -900,7 +962,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAddtionalInformationRes createAddtionalInformation() {
 
@@ -922,7 +984,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/removeAdditionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/removeAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveAddtionalInformationRes removeAddtionalInformation() {
 
@@ -944,7 +1006,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/listAdditionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListAddtionalInformationRes listAddtionalInformation() {
 
