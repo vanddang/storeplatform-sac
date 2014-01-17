@@ -113,6 +113,14 @@ public final class MemberConstants {
 	public static final String AUTH_CHNL_MOBILE_WEB = "104"; // 모바일웹
 	public static final String AUTH_CHNL_MOBILE_OPENAPI = "105"; // OPENAPI
 
+	/** 통합회원 로그인 상태코드 */
+	public static final String IM_USER_LOGIN_STATUS_NOMAL = "10";
+	public static final String IM_USER_LOGIN_STATUS_PAUSE = "20";
+
+	/** 통합회원 직권중지 상태코드 */
+	public static final String IM_USER_STOP_STATUS_NOMAL = "80";
+	public static final String IM_USER_STOP_STATUS_PAUSE = "90";
+
 	/**
 	 * 판매자 회원 상수들
 	 * 

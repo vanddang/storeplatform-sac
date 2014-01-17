@@ -129,13 +129,13 @@ public class LoginServiceImpl implements LoginService {
 		req.setDeviceModelNo(requestHeader.getDeviceHeader().getModel());
 		req.setOsVer(requestHeader.getDeviceHeader().getOsVersion());
 
-		logger.info("::::::::::: AuthorizeByMdnReq req : {} ", req.toString());
-
 		String deviceId = req.getDeviceId();
 		String userKey = null;
 		String userType = null;
 		String userMainStatus = null;
 		String userSubStatus = null;
+		String loginStatusCode = null;
+		String stopStatusCode = null;
 		AuthorizeByMdnRes res = new AuthorizeByMdnRes();
 
 		/* 모번호 조회 */
@@ -146,20 +146,26 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 회원 상태 확인 */
 		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("회원정보 없음.");
+			throw new RuntimeException("회원정보 없음.");
 		}
 
 		userKey = schUserRes.getUserMbr().getUserKey();
 		userType = schUserRes.getUserMbr().getUserType();
 		userMainStatus = schUserRes.getUserMbr().getUserMainStatus();
 		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
+		loginStatusCode = schUserRes.getUserMbr().getLoginStatusCode();
+		stopStatusCode = schUserRes.getUserMbr().getStopStatusCode();
 
-		/* 탈퇴 회원 */
-		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)) {
+		/* 탈퇴 회원, 로그인 제한, 직권중지 인경우 */
+		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
+				|| StringUtil.equals(loginStatusCode, MemberConstants.IM_USER_LOGIN_STATUS_PAUSE)
+				|| StringUtil.equals(stopStatusCode, MemberConstants.IM_USER_STOP_STATUS_PAUSE)) {
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
+			res.setLoginStatusCode(loginStatusCode);
+			res.setStopStatusCode(stopStatusCode);
 			return res;
 		}
 
@@ -181,6 +187,8 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
+			res.setLoginStatusCode(loginStatusCode);
+			res.setStopStatusCode(stopStatusCode);
 
 		} else {
 
@@ -200,6 +208,8 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserType(userType);
 				res.setUserMainStatus(userMainStatus);
 				res.setUserSubStatus(userSubStatus);
+				res.setLoginStatusCode(loginStatusCode);
+				res.setStopStatusCode(stopStatusCode);
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 
@@ -295,8 +305,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserSubStatus(userSubStatus);
 					res.setImIntSvcNo(imIdpReceiver.getResponseBody().getIm_int_svc_no());
 					//SC회원 콤포넌트의 코드값 셋팅
-					res.setLoginStatCd("");
-					res.setSubStatCd("");
+					//res.setLoginStatusCode(loginStatusCode);
+					//res.setStopStatusCode(stopStatusCode);
 
 				} else {
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
@@ -317,8 +327,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserType(userType);
 					res.setUserMainStatus(userMainStatus);
 					res.setUserSubStatus(userSubStatus);
-					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
-					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
+					//res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
+					//res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
@@ -360,8 +370,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserType(userType);
 					res.setUserMainStatus(userMainStatus);
 					res.setUserSubStatus(userSubStatus);
-					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
-					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
+					//res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
+					//res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_SUSPEND)) {
 
@@ -371,8 +381,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserType(userType);
 					res.setUserMainStatus(userMainStatus);
 					res.setUserSubStatus(userSubStatus);
-					res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
-					res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
+					//res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
+					//res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
 
 				} else {
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
