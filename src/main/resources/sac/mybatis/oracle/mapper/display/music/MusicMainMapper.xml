@@ -117,7 +117,7 @@
                                                       WHERE TENANT_ID = #{tenantId}
                                                         AND BATCH_ID = 'MELON_DP004904')
                     </if>                         
-                          AND C.MENU_ID LIKE #{menuId}||'%'
+                          AND P.TOP_MENU_ID = #{menuId}
                           AND PHI.USE_YN = 'Y'
                           AND PHI.MUSIC_SPRT_YN = 'Y'
                           AND TP.TENANT_ID = #{tenantId}
@@ -257,7 +257,7 @@
                                                        FROM TB_DP_BATCH_COMPT
                                                       WHERE TENANT_ID = #{tenantId}
                                                         AND BATCH_ID = 'MELON_DP004904')
-                          AND C.MENU_ID LIKE #{menuId}||'%'
+                          AND P.TOP_MENU_ID = #{menuId}
                           AND PHI.USE_YN = 'Y'
                           AND PHI.MUSIC_SPRT_YN = 'Y'
                           AND TP.TENANT_ID = #{tenantId}
