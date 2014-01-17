@@ -15,10 +15,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
@@ -260,22 +260,20 @@ public class DummySellerController {
 	 * 
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion() {
 
 		ListPasswordReminderQuestionRes responseVO = new ListPasswordReminderQuestionRes();
-		PwReminder pwReminderList = null;
+		SellerMbrPwdHint sellerMbrPwdHint = null;
 
-		List<PwReminder> myList = new ArrayList<PwReminder>();
+		List<SellerMbrPwdHint> myList = new ArrayList<SellerMbrPwdHint>();
 		for (int i = 0; i < 1; i++) {
-			pwReminderList = new PwReminder();
-			pwReminderList.setQuestionID("0001");
-			pwReminderList.setAnswerString("테스트");
-			pwReminderList.setQuestionMessage("테스트");
-			myList.add(pwReminderList);
+			sellerMbrPwdHint = new SellerMbrPwdHint();
+			sellerMbrPwdHint.setQuestionID("0001");
+			myList.add(sellerMbrPwdHint);
 		}
-		responseVO.setPwReminderList(myList);
+		responseVO.setSellerMbrPwdHintList(myList);
 		return responseVO;
 	}
 

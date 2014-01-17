@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
@@ -105,7 +106,7 @@ public class SellerSearchController {
 	 * </pre>
 	 * 
 	 * @param req
-	 * @return DetailAccountInformationRes
+	 * @return ListWithdrawalReasonRes
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -121,7 +122,7 @@ public class SellerSearchController {
 	 * </pre>
 	 * 
 	 * @param req
-	 * @return DetailAccountInformationRes
+	 * @return SearchIdRes
 	 */
 	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -137,5 +138,21 @@ public class SellerSearchController {
 		}
 
 		return this.sellerSearchService.searchId(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return ListPasswordReminderQuestionRes
+	 */
+	@RequestMapping(value = "/ListPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
+			@RequestHeader("Accept-Language") String language) throws Exception {
+		LOGGER.debug("------------------------------------language : {}", language);
+		return this.sellerSearchService.listPasswordReminderQuestion(header, language);
 	}
 }
