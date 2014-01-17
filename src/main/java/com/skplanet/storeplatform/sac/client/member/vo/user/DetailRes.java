@@ -6,10 +6,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
@@ -37,7 +37,7 @@ public class DetailRes extends CommonInfo {
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
 	/* 약관동의정보 리스트 */
-	private List<MbrClauseAgreeList> mbrClauseAgreeList;
+	private List<Agreement> agreementList;
 
 	public List<MbrAuth> getMbrAuthList() {
 		return this.mbrAuthList;
@@ -87,12 +87,12 @@ public class DetailRes extends CommonInfo {
 		this.userExtraInfoList = userExtraInfoList;
 	}
 
-	public List<MbrClauseAgreeList> getMbrClauseAgreeList() {
-		return this.mbrClauseAgreeList;
+	public List<Agreement> getAgreementList() {
+		return this.agreementList;
 	}
 
-	public void setMbrClauseAgreeList(List<MbrClauseAgreeList> mbrClauseAgreeList) {
-		this.mbrClauseAgreeList = mbrClauseAgreeList;
+	public void setAgreementList(List<Agreement> agreementList) {
+		this.agreementList = agreementList;
 	}
 
 	public static long getSerialversionuid() {
