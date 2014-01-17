@@ -35,6 +35,8 @@ public class Product extends CommonInfo implements Serializable {
 	 * 상품 ID
 	 */
 	private Identifier identifier;
+
+	private List<Identifier> identifierList;
 	/**
 	 * identifier 추가 기술
 	 */
@@ -453,6 +455,14 @@ public class Product extends CommonInfo implements Serializable {
 
 	public void setSubProductList(List<Product> subProductList) {
 		this.subProductList = subProductList;
+	}
+
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 }
