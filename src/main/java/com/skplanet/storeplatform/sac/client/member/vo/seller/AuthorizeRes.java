@@ -19,6 +19,8 @@ public class AuthorizeRes extends CommonInfo {
 	private SellerMbr sellerMbr;
 	/** 로그인 실패 횟수 . */
 	private String loginFailCount;
+	/** 로그인 성공 여부 */
+	private String isLoginSuccess;
 
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
@@ -28,18 +30,19 @@ public class AuthorizeRes extends CommonInfo {
 		this.sellerMbr = sellerMbr;
 	}
 
-	/**
-	 * @return the loginFailCount
-	 */
 	public String getLoginFailCount() {
 		return this.loginFailCount;
 	}
 
-	/**
-	 * @param loginFailCount
-	 *            the loginFailCount to set
-	 */
 	public void setLoginFailCount(String loginFailCount) {
 		this.loginFailCount = loginFailCount;
+	}
+
+	public String getIsLoginSuccess() {
+		return this.isLoginSuccess;
+	}
+
+	public void setIsLoginSuccess(String isLoginSuccess) {
+		this.isLoginSuccess = isLoginSuccess;
 	}
 }
