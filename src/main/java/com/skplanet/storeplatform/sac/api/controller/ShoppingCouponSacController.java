@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 
 @Controller
 @RequestMapping("/shopping")
-public class ShoppingCouponController {
+public class ShoppingCouponSacController {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private String ERR_MESSAGE;
@@ -56,7 +56,7 @@ public class ShoppingCouponController {
 	@Autowired
 	private CouponProcessService couponProcessService;
 
-	public ShoppingCouponController() {
+	public ShoppingCouponSacController() {
 		this.brandInfo = new DpBrandInfo();
 		this.catalogInfo = new DpCatalogInfo();
 		this.brandCatalogProdImgInfo = new BrandCatalogProdImgInfo();
