@@ -223,9 +223,8 @@
 		     , TB.PROD_NM
 		     , TB.CHAPTER
 		     , TB.PROD_BASE_DESC
-		     , TB.PROD_DTL_DESC
 		     , TB.PROD_GRD_CD
-		     , TB.ARTIST1_NM
+		     , TB.ARTIST1_NM 
 		     , TB.ARTIST2_NM
 		     , TB.ARTIST3_NM
 		     , TB.ISSUE_DAY
@@ -233,17 +232,19 @@
 		     , TB.AGENCY_NM
 		     , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
 		     , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-		     , ( CASE WHEN TB.EPSD_CNT   >   0 THEN 'store' END ) AS SUPPORT_STORE
-		     , ( CASE WHEN TB.STRM_EPSD_CNT   >   0 THEN 'play' END ) AS SUPPORT_PLAY
+		     , ( CASE WHEN TB.EPSD_CNT <![CDATA[ > ]]> 0 THEN 'store' END ) AS SUPPORT_STORE
+		     , ( CASE WHEN TB.STRM_EPSD_CNT <![CDATA[ > ]]> 0 THEN 'play' END ) AS SUPPORT_PLAY
 		     , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
-		     , CASE WHEN (TB.CHNL_PERIOD_AMT   >=   0  AND STRM_EPSD_CNT   >   0) THEN CHNL_PERIOD_AMT
+		     , CASE WHEN (TB.CHNL_PERIOD_AMT <![CDATA[ >= ]]> 0  AND STRM_EPSD_CNT  <![CDATA[ > ]]>  0) THEN CHNL_PERIOD_AMT
 		            ELSE CHNL_UNLMT_AMT END AS PROD_AMT
 		     , (SELECT PROD_NET_AMT FROM TB_DP_TENANT_PROD_PRICE WHERE PROD_ID = TB.PART_PROD_ID) AS PROD_NET_AMT
 		     , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
 		     , NVL(TB.PRCHS_CNT, 0) AS DWLD_CNT
+		     <![CDATA[
 		     , NVL((CASE WHEN (TB.AVG_EVLU_SCORE > 0 AND TB.AVG_EVLU_SCORE < 1) THEN 1
 		                 WHEN TB.AVG_EVLU_SCORE > 5 THEN 5
 		                 ELSE ROUND(TB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+		     ]]>
 		     , TB.FILE_PATH
 		     , TB.FILE_NM
 		  FROM (
@@ -275,7 +276,6 @@
 		              , F.ARTIST2_NM
 		              , F.ARTIST3_NM
 		              , F.PROD_BASE_DESC
-		              , F.PROD_DTL_DESC
 		              , H.CHNL_PERIOD_AMT
 		              , H.CHNL_UNLMT_AMT
 		              , H.PROD_NET_AMT 
@@ -324,10 +324,7 @@
 		           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
 		           AND M.IMG_CD = 'DP000108'           /* 이미지코드 */
 		           AND M.EXPO_ORD = 1                  /* 노출순서 */
-		           AND M.LANG_CD = 'ko'                /* ko : 한국어 */           
-		           -----------------------------------------------------------------------------
-		           -- INPUT PARAMETER
-		           -----------------------------------------------------------------------------           
+		           AND M.LANG_CD = 'ko'                /* ko : 한국어 */                  
 		           AND B.PROD_ID = #{prodId}      -- 채널 상품 ID 조회           
 		           --AND I.PART_PROD_ID = 'H090122408'   -- 에피소드 상품 ID 조회
 		           AND G.TENANT_ID = #{tenantId}             /* 테넌트ID */
