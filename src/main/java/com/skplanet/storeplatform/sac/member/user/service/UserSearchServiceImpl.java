@@ -34,8 +34,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementList
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
@@ -293,21 +293,21 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		// 약관동의목록정보 세팅
 		schAgreementListReq.setUserKey(userInfo.getUserKey());
-		List<MbrClauseAgreeList> mbrClauseAgreeList = new ArrayList<MbrClauseAgreeList>();
-		MbrClauseAgreeList mbrClause = this.mbrClauseAgreeList(schAgreementListReq);
-		mbrClauseAgreeList.add(mbrClause);
+		List<Agreement> agreementList = new ArrayList<Agreement>();
+		Agreement agreement = this.agreementList(schAgreementListReq);
+		agreementList.add(agreement);
 
 		result.setUserInfoList(userInfoList);
 		result.setMbrAuthList(mbrAuthList);
 		result.setMbrLglAgentList(mbrLglAgentList);
 		// result.setDeviceInfoList(listDeviceRes);
-		result.setMbrClauseAgreeList(mbrClauseAgreeList);
+		result.setAgreementList(agreementList);
 
 		logger.info("###### getUserInfoList : " + result.getUserInfoList());
 		logger.info("###### getMbrAuthList : " + result.getMbrAuthList());
 		logger.info("###### getMbrLglAgentList : " + result.getMbrLglAgentList());
 		logger.info("###### getDeviceInfoList : " + result.getDeviceInfoList());
-		logger.info("###### getMbrClauseAgreeList : " + result.getMbrClauseAgreeList());
+		logger.info("###### getAgreementList : " + result.getAgreementList());
 
 		return result;
 	}
@@ -453,11 +453,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	// 사용자 약관동의 세팅
-	public MbrClauseAgreeList mbrClauseAgreeList(SearchAgreementListRequest schAgreementListReq) throws Exception {
+	public Agreement agreementList(SearchAgreementListRequest schAgreementListReq) throws Exception {
 
 		// SC
 		SearchAgreementListResponse schAgreementListRes = this.userSCI.searchAgreementList(schAgreementListReq);
-		MbrClauseAgreeList mbrClauseAgree = new MbrClauseAgreeList();
+		Agreement agreement = new Agreement();
 
 		logger.info("###### schAgreementListRes : " + schAgreementListRes.getCommonResponse().getResultCode());
 		logger.info("###### schAgreementListRes : " + schAgreementListRes.getCommonResponse().getResultMessage());
@@ -466,14 +466,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			if (schAgreementListRes.getMbrClauseAgreeList() != null) {
 				for (MbrClauseAgree info : schAgreementListRes.getMbrClauseAgreeList()) {
-					mbrClauseAgree.setExtraAgreementID(StringUtil.setTrim(info.getExtraAgreementID()));
-					mbrClauseAgree.setExtraAgreementVersion(StringUtil.setTrim(info.getExtraAgreementVersion()));
-					mbrClauseAgree.setIsExtraAgreement(StringUtil.setTrim(info.getIsExtraAgreement()));
-					mbrClauseAgree.setIsMandatory(StringUtil.setTrim(info.getIsMandatory()));
-					mbrClauseAgree.setMemberKey(StringUtil.setTrim(info.getMemberKey()));
-					mbrClauseAgree.setRegDate(StringUtil.setTrim(info.getRegDate()));
-					mbrClauseAgree.setTenantID(StringUtil.setTrim(info.getTenantID()));
-					mbrClauseAgree.setUpdateDate(StringUtil.setTrim(info.getTenantID()));
+					agreement.setExtraAgreementId(StringUtil.setTrim(info.getExtraAgreementID()));
+					agreement.setExtraAgreementVersion(StringUtil.setTrim(info.getExtraAgreementVersion()));
+					agreement.setIsExtraAgreement(StringUtil.setTrim(info.getIsExtraAgreement()));
 				}
 			} else {
 				throw new RuntimeException("SearchAgreementList (약관동의 정보)가 없습니다.");
@@ -483,7 +478,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			throw new RuntimeException("SC 호출에러 Code : " + schAgreementListRes.getCommonResponse().getResultCode());
 		}
 
-		return mbrClauseAgree;
+		return agreement;
 	}
 
 	// 법정 대리인정보 세팅

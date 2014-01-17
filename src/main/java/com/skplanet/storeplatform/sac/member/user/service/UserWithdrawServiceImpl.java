@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -124,16 +125,21 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		// SC 컴포넌트에서 성공이 아닐때
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
-					+ schUserRes.getCommonResponse().getResultMessage());
+			throw new RuntimeException("[ SC Component 회원조회실패 : " + schUserRes.getCommonResponse().getResultCode()
+					+ "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		/* IDP 회원탈퇴 연동 */
 		IDPReceiverM idpReceiver = null;
+		ImIDPReceiverM imIdpReceiver = null;
+
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 			// 통합회원 OneId 사용자
 			if (MemberConstants.USER_TYPE_ONEID.equals(schUserRes.getUserMbr().getUserType())) {
-				// TXDisagreeUserIDP
+				// String key = (String) param.get("key");
+				// String user_auth_key = (String) param.get("user_auth_key");
+				// String term_reason_cd = (String) param.get("term_reason_cd");
+				// imIdpReceiver = this.imIdpService.discardUser(param);
 			}
 		} else {
 
@@ -142,8 +148,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				idpReceiver = this.idpService.secedeUser4Wap(deviceId);
 
 				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
-							+ idpReceiver.getResponseHeader().getResult_text());
+					throw new RuntimeException("[ IDP 모바일 회원삭제 실패 : " + idpReceiver.getResponseHeader().getResult()
+							+ "] " + idpReceiver.getResponseHeader().getResult_text());
 				}
 			} else if (MemberConstants.USER_TYPE_IDPID.equals(schUserRes.getUserMbr().getUserType())) {
 				// IDP 사용자
@@ -151,8 +157,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 						userId);
 
 				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
-							+ idpReceiver.getResponseHeader().getResult_text());
+					throw new RuntimeException("[ IDP 아이디 회원삭제 실패 : " + idpReceiver.getResponseHeader().getResult()
+							+ "] " + idpReceiver.getResponseHeader().getResult_text());
 				}
 			}
 
@@ -162,17 +168,22 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 		RemoveUserResponse removeUserResponse = new RemoveUserResponse();
 		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-			// TODO : Tenant API
-			removeUserRequest.setSecedeReasonCode(""); // 탈퇴사유 코드
-			removeUserRequest.setSecedeReasonMessage(""); // 탈퇴사유 내용
-			removeUserRequest.setSecedeTypeCode(""); // 탈퇴유형 코드
+
+			// TODO : Tenant API ========================== 임시 세팅 ==========================
+
+			removeUserRequest.setSecedeReasonCode("US010412"); // 탈퇴사유 코드 : 컨텐츠 부족
+			removeUserRequest.setSecedeReasonMessage("탈퇴사유 테스트"); // 탈퇴사유 내용 :
+			removeUserRequest.setSecedeTypeCode("US010705"); // 탈퇴유형 코드 : 가입승인만료
+
+			// TODO : Tenant API ========================== 임시 세팅 ==========================
+
 			removeUserRequest.setUserKey(schUserRes.getUserMbr().getUserKey()); // 사용자 키
 			removeUserResponse = this.userSCI.remove(removeUserRequest);
 
 			// SC Component Remove Fail
 			if (!StringUtil
 					.equals(removeUserResponse.getCommonResponse().getResultCode(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
+				throw new RuntimeException("[ SC 회원삭제 실패 : " + idpReceiver.getResponseHeader().getResult() + "] "
 						+ idpReceiver.getResponseHeader().getResult_text());
 			}
 			// SC Component Remove Success

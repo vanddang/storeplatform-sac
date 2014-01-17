@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchServiceImpl;
@@ -42,22 +42,17 @@ public class ListTermsAgreementController extends ParameterExceptionHandling {
 
 	// @RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MbrClauseAgreeList listTermsAgreement(SearchAgreementListRequest req, SacRequestHeader sacHeader)
-			throws Exception {
+	public Agreement listTermsAgreement(SearchAgreementListRequest req, SacRequestHeader sacHeader) throws Exception {
 		logger.info("####################################################");
 		logger.info("##### 5.1.10. 약관 동의 목록 조회 #####");
 		logger.info("####################################################");
 
-		MbrClauseAgreeList res = new MbrClauseAgreeList();
+		Agreement res = new Agreement();
 
 		SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest();
 		schAgreementListReq.setUserKey(req.getUserKey());
 
 		// TODO : commonRequest setting
-
-		List<MbrClauseAgreeList> mbrClauseAgreeList = new ArrayList<MbrClauseAgreeList>();
-		MbrClauseAgreeList mbrClause = this.svc.mbrClauseAgreeList(schAgreementListReq);
-		mbrClauseAgreeList.add(mbrClause);
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
@@ -65,7 +60,12 @@ public class ListTermsAgreementController extends ParameterExceptionHandling {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
-		res = this.svc.mbrClauseAgreeList(schAgreementListReq);
+		List<Agreement> agreementList = new ArrayList<Agreement>();
+		Agreement agreement = new Agreement();
+		agreement = this.svc.agreementList(schAgreementListReq);
+		agreementList.add(agreement);
+
+		res = this.svc.agreementList(schAgreementListReq);
 
 		return res;
 	}
