@@ -492,8 +492,6 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType());
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 			deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
-			//deviceInfo.setNativeId(req.getNativeId());
-			//deviceInfo.setRooting(req.getRooting());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVerOrg());
@@ -599,7 +597,7 @@ public class LoginServiceImpl implements LoginService {
 			for (int i = 0; i < arrImSiteCode.length; i++) {
 
 				String[] arrImSiteCode2 = arrImSiteCode[0].split("\\,");
-				if (arrImSiteCode2[0].equals("41100")) {
+				if (arrImSiteCode2[0].equals(MemberConstants.SSO_SST_CD_TSTORE)) {
 					joinTstore = true;
 					break;
 				}
