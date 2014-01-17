@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.sac.other.uaps.repository.UAPSRepository;
 
 /**
@@ -40,4 +41,8 @@ public class UAPSServiceImpl implements UAPSService {
 		return this.uapsRepository.getOpmdChild(deviceId, type);
 	}
 
+	@Override
+	public UserRes getMapping(String deviceId, String type) {
+		return this.uapsRepository.getMapping(deviceId, type);
+	}
 }

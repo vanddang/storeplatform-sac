@@ -49,7 +49,24 @@ public class UAPSRepositorySampleImpl implements UAPSRepository {
 
 	@Override
 	public UserRes getMapping(String deviceId, String type) {
-		return null;
+		UserRes userRes = new UserRes();
+		userRes.setResultCode(0);
+		userRes.setCharge("");
+		userRes.setClientID("");
+		userRes.setClientIDYN("Y");
+		userRes.setImsi("");
+		userRes.setMdn("");
+		userRes.setMin("");
+		userRes.setServiceCD(new String[] {});
+		userRes.setSvcMngNum("");
+		userRes.setServiceID("");
+		userRes.setPauseYN("Y");
+		userRes.setPauseReceiveYN("Y");
+		userRes.setPpsYN("Y");
+		userRes.setChildSvcNum("");
+		userRes.setMvnoCD("");
+		userRes.setDeviceModel("");
+		return userRes;
 	}
 
 	@Override

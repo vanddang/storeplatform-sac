@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.sac.other.uaps.service.UAPSService;
 
 /**
@@ -66,4 +67,23 @@ public class UAPSController {
 	public OpmdChildRes getOpmdChild(@RequestParam String deviceId, @RequestParam String type) {
 		return this.uapsService.getOpmdChild(deviceId, type);
 	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 고객정보 조회.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            deviceId
+	 * @param type
+	 *            type
+	 * @return UserRes
+	 */
+	@RequestMapping(value = "/getMapping/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public UserRes getMapping(@RequestParam String deviceId, @RequestParam String type) {
+		return this.uapsService.getMapping(deviceId, type);
+	}
+
 }

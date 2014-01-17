@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.other.uaps.service;
 
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdChildRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 
 /**
  * 
@@ -45,5 +46,19 @@ public interface UAPSService {
 	 * @return OpmdChildRes
 	 */
 	public OpmdChildRes getOpmdChild(String deviceId, String type);
+
+	/**
+	 * 
+	 * <pre>
+	 * 고객정보 조회.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 *            deviceId
+	 * @param type
+	 *            type
+	 * @return UserRes
+	 */
+	public UserRes getMapping(String deviceId, String type);
 
 }
