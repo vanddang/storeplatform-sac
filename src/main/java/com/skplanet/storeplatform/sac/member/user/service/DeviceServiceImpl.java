@@ -355,7 +355,7 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setTenantID(tenantId);
 
 		/* 휴대기기 주요정보 확인 */
-		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
+		deviceInfo = this.setCheckMajorDeviceInfo(tenantId, deviceInfo);
 
 		/* 1. 휴대기기 정보 등록 요청 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -447,7 +447,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo deviceInfo) throws Exception {
+	public void mergeDeviceInfo(String systemId, String tenantId, DeviceInfo deviceInfo) throws Exception {
 
 		logger.info("################ mergeDeviceInfo start ##################");
 
@@ -458,7 +458,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(systemId);
-		commonRequest.setTenantID(tenanId);
+		commonRequest.setTenantID(tenantId);
 
 		String deviceId = deviceInfo.getDeviceId();
 
@@ -480,7 +480,7 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
-		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
+		deviceInfo = this.setCheckMajorDeviceInfo(tenantId, deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
@@ -671,7 +671,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * (com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public DeviceInfo setCheckMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception {
+	public DeviceInfo setCheckMajorDeviceInfo(String tenantId, DeviceInfo deviceInfo) throws Exception {
 
 		/* SKT 통신사인 경우 서비스 관리번호 조회 */
 		String imMngNum = "";
@@ -693,7 +693,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 미지원 단말 예외 처리 */
 		if (deviceInfo.getDeviceModelNo() != null) {
-			String uacd = this.commService.getUaCode(deviceInfo.getDeviceModelNo());
+			String uacd = this.commService.getUaCode(tenantId, deviceInfo.getDeviceModelNo());
 			if (uacd == null) {
 				deviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE);
 				deviceInfo.setDeviceTelecom(MemberConstants.NOT_SUPPORT_HP_CORP);

@@ -149,7 +149,8 @@ public class CreateDeviceTest {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey("US201401161859405900000107");
-		deviceInfo.setDeviceId("01048088874");
+		//deviceInfo.setDeviceId("01048088874");
+		deviceInfo.setDeviceId("01066786220");
 		deviceInfo.setDeviceIdType("msisdn ");
 		deviceInfo.setDeviceTelecom("US012101");
 		deviceInfo.setNativeId("358362045580844");
@@ -158,7 +159,7 @@ public class CreateDeviceTest {
 		deviceInfo.setIsPrimary("N");
 		deviceInfo.setDeviceNickName("SHP-110S(임시)");
 
-		deviceInfo.setDotoriAuthDate(DateUtil.getToday());
+		deviceInfo.setDotoriAuthDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 		deviceInfo.setDotoriAuthYn("Y");
 		deviceInfo.setOsVer("1.0");
 		deviceInfo.setScVer("1.0");

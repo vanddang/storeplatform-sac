@@ -68,7 +68,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DeviceInfo setCheckMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception;
+	public DeviceInfo setCheckMajorDeviceInfo(String tenantId, DeviceInfo deviceInfo) throws Exception;
 
 	/**
 	 * 휴대기기 대표단말 설정
