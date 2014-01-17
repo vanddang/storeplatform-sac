@@ -53,12 +53,12 @@ public class AuthorizeByIdRes extends CommonInfo {
 	/**
 	 * 로그인 상태코드
 	 */
-	private String loginStatCd;
+	private String loginStatusCode;
 
 	/**
 	 * 직권중지 상태코드
 	 */
-	private String subStatCd;
+	private String stopStatusCode;
 
 	/**
 	 * 통합아이디 관리번호
@@ -129,20 +129,20 @@ public class AuthorizeByIdRes extends CommonInfo {
 		this.imIntSvcNo = imIntSvcNo;
 	}
 
-	public String getLoginStatCd() {
-		return this.loginStatCd;
+	public String getLoginStatusCode() {
+		return this.loginStatusCode;
 	}
 
-	public void setLoginStatCd(String loginStatCd) {
-		this.loginStatCd = loginStatCd;
+	public void setLoginStatusCode(String loginStatusCode) {
+		this.loginStatusCode = loginStatusCode;
 	}
 
-	public String getSubStatCd() {
-		return this.subStatCd;
+	public String getStopStatusCode() {
+		return this.stopStatusCode;
 	}
 
-	public void setSubStatCd(String subStatCd) {
-		this.subStatCd = subStatCd;
+	public void setStopStatusCode(String stopStatusCode) {
+		this.stopStatusCode = stopStatusCode;
 	}
 
 }
