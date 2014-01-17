@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
@@ -90,7 +89,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateByAgreementRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByAgreementRes createByAgreement() {
 
@@ -111,7 +110,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateBySimpleRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateBySimpleRes createBySimple() {
 
@@ -176,7 +175,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modify/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRes modify() {
 
@@ -197,7 +196,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyPasswordRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyPasswordRes modifyPassword() {
 
@@ -218,7 +217,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyEmailRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyEmail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyEmailRes modifyEmail() {
 
@@ -239,7 +238,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateTermsAgreementRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createTermsAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateTermsAgreementRes createTermsAgreement() {
 
@@ -260,7 +259,7 @@ public class DummyDataController {
 	 * 
 	 * @return ModifyTermsAgreementRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyTermsAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modifyTermsAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyTermsAgreementRes modifyTermsAgreement() {
 
@@ -281,7 +280,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateRealNameRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/reateRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRealNameRes createRealName() {
 
@@ -436,7 +435,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateOcbInformationRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createOcbInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateOcbInformationRes createOcbInformation() {
 
@@ -457,7 +456,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveOcbInformationRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/removeOcbInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/removeOcbInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveOcbInformationRes removeOcbInformation() {
 
@@ -478,7 +477,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetOcbInformationRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/getOcbInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/getOcbInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetOcbInformationRes getOcbInformation() {
 
@@ -532,7 +531,7 @@ public class DummyDataController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/searchId/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchIdRes searchId() {
 
@@ -553,7 +552,7 @@ public class DummyDataController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/searchPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordRes searchPassword() {
 
@@ -576,7 +575,7 @@ public class DummyDataController {
 	 * 
 	 * @return DetailRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRes detail() {
 
@@ -743,7 +742,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListTermsAgreementRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/listTermsAgreement/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListTermsAgreementRes listTermsAgreement() {
 
@@ -771,7 +770,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetSupportAomRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/getSupportAom/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/getSupportAom/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetSupportAomRes getSupportAom() {
 
@@ -792,7 +791,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetProvisioningHistoryRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/getProvisioningHistory/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetProvisioningHistoryRes getProvisioningHistory() {
 
@@ -815,7 +814,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveDeviceRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/removeDevice/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveDeviceRes removeDevice() {
 
@@ -908,7 +907,7 @@ public class DummyDataController {
 	 * 
 	 * @return WithdrawRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/withdraw/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes withdraw() {
 
@@ -930,7 +929,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateAddtionalInformationRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAddtionalInformationRes createAddtionalInformation() {
 
@@ -952,7 +951,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveAddtionalInformationRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/removeAdditionalInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/removeAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveAddtionalInformationRes removeAddtionalInformation() {
 
@@ -974,7 +973,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/listAdditionalInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/member/user/listAdditionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListAddtionalInformationRes listAddtionalInformation() {
 
