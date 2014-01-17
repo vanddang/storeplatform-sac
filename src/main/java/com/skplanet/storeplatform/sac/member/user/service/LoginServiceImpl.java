@@ -471,7 +471,8 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVer());
-			deviceInfo.setUacd(this.commService.getUaCode(req.getDeviceModelNo()));
+			String uacd = this.commService.getUaCode(req.getDeviceModelNo());
+			deviceInfo.setUacd(uacd == null ? MemberConstants.NOT_SUPPORT_HP_UACODE : uacd);
 		} else if (obj instanceof AuthorizeByIdReq) {
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
@@ -482,7 +483,8 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVerOrg());
-			deviceInfo.setUacd(this.commService.getUaCode(req.getDeviceModelNo()));
+			String uacd = this.commService.getUaCode(req.getDeviceModelNo());
+			deviceInfo.setUacd(uacd == null ? MemberConstants.NOT_SUPPORT_HP_UACODE : uacd);
 		}
 
 		this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
