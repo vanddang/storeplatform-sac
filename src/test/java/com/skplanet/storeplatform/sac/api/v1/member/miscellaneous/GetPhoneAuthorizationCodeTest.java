@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 
 /**
- * Calss 설명
+ * 휴대폰 인증 SMS 발송 JUnit Test.
  * 
  * Updated on : 2014. 1. 17. Updated by : 김다슬, 인크로스.
  */
@@ -44,8 +44,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAut
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class GetPhoneAuthorizationCode {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GetPhoneAuthorizationCode.class);
+public class GetPhoneAuthorizationCodeTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GetPhoneAuthorizationCodeTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -71,7 +71,8 @@ public class GetPhoneAuthorizationCode {
 	@Test
 	public void simpleTest() {
 		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
+			// 개발 TEST URL 맵핑되어 있음.
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/dev/getPhoneAuthorizationCode/v1")
 					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 						@Override
@@ -80,11 +81,48 @@ public class GetPhoneAuthorizationCode {
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
 							request.setUserPhone("01012344241");
-							request.setUserTelecom("US001201"); // SKT
+							request.setUserTelecom("SKT");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetPhoneAuthorizationCode.class, new SuccessCallback() {
+					}).success(GetPhoneAuthorizationCodeTest.class, new SuccessCallback() {
+
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+							LOGGER.debug("response param : {} ", response.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 실패 CASE
+	 * 유효하지 않은 통신사 정보 전달.
+	 * </pre>
+	 */
+	@Test
+	public void invalidTelecomTest() {
+		try {
+			// 개발 TEST URL 맵핑되어 있음.
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/dev/getPhoneAuthorizationCode/v1")
+					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+						@Override
+						public Object requestBody() {
+							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
+							request.setSrcId("US004504"); // 휴대폰 인증 SMS
+							request.setTeleSvcId("0"); // 단건 발송
+							request.setUserPhone("01012344241");
+							request.setUserTelecom("AAA");
+							LOGGER.debug("request param : {}", request.toString());
+							return request;
+						}
+					}).success(GetPhoneAuthorizationCodeTest.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
