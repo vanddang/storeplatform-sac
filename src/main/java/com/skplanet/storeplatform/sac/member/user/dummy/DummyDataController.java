@@ -31,7 +31,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
@@ -135,7 +134,8 @@ public class DummyDataController {
 	 * @return AuthorizeByMdnRes
 	 */
 	/*
-	 * @RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
+	 * @RequestMapping(value = "/authorizeByMdn/v1", method =
+	 * RequestMethod.POST)
 	 * 
 	 * @ResponseBody public AuthorizeByMdnRes authorizeByMdn() {
 	 * 
@@ -143,8 +143,10 @@ public class DummyDataController {
 	 * LOGGER.info("##### 5.1.4. 모바일 전용 회원 인증 (MDN 인증) #####");
 	 * LOGGER.info("####################################################");
 	 * 
-	 * AuthorizeByMdnRes res = new AuthorizeByMdnRes(); res.setUserKey("IW102158844420091030165015");
-	 * res.setUserType("US011501"); res.setUserMainStatus("US010201"); res.setUserSubStatus("US010301");
+	 * AuthorizeByMdnRes res = new AuthorizeByMdnRes();
+	 * res.setUserKey("IW102158844420091030165015");
+	 * res.setUserType("US011501"); res.setUserMainStatus("US010201");
+	 * res.setUserSubStatus("US010301");
 	 * 
 	 * return res; }
 	 */
@@ -365,65 +367,58 @@ public class DummyDataController {
 	//
 	// return res;
 	// }
-	/*@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ListDeviceRes listDevice() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.17.	휴대기기 목록 조회 #####");
-		LOGGER.info("####################################################");
-
-		ListDeviceRes res = new ListDeviceRes();
-
-		try {
-
-			
-			 * 휴대기기 부가정보 리스트
-			 
-			List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-			deviceExtraInfo.setExtraProfile("US011404");
-			deviceExtraInfo.setExtraProfileValue("LGFL");
-
-			deviceExtraInfoList.add(deviceExtraInfo);
-
-			
-			 * 휴대기기정보 리스트
-			 
-			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-			DeviceInfo deviceInfo = new DeviceInfo();
-
-			deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-			deviceInfo.setDeviceKey("01011112222");
-			deviceInfo.setDeviceId("01011112222");
-			deviceInfo.setDeviceModelNo("LG-SH810");
-			deviceInfo.setDeviceTelecom("SKT");
-			deviceInfo.setImMngNum("");
-			deviceInfo.setDeviceNickName("LG-SH810");
-			deviceInfo.setIsPrimary("Y");
-			deviceInfo.setIsAuthenticated("Y");
-			deviceInfo.setAuthenticationDate("20131226103711");
-			deviceInfo.setIsRecvSms("Y");
-			deviceInfo.setNativeId("358362045580844");
-			deviceInfo.setDeviceAccount("hkd@gmail.com");
-			deviceInfo.setJoinId("US012301");
-			deviceInfo.setOsVer("1.0");
-			deviceInfo.setScVer("1.0");
-			deviceInfo.setRooting("N");
-			deviceInfo.setMakeComp("SAMSUNG");
-
-			deviceInfoList.add(deviceInfo);
-
-			res.setUserId("hdk");
-			res.setUserKey("IW102158844420091030165015");
-			res.setDeviceInfoList(deviceInfoList);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return res;
-	}*/
+	/*
+	 * @RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public ListDeviceRes listDevice() {
+	 * 
+	 * LOGGER.info("####################################################");
+	 * LOGGER.info("##### 5.1.17.	휴대기기 목록 조회 #####");
+	 * LOGGER.info("####################################################");
+	 * 
+	 * ListDeviceRes res = new ListDeviceRes();
+	 * 
+	 * try {
+	 * 
+	 * 
+	 * 휴대기기 부가정보 리스트
+	 * 
+	 * List<DeviceExtraInfo> deviceExtraInfoList = new
+	 * ArrayList<DeviceExtraInfo>(); DeviceExtraInfo deviceExtraInfo = new
+	 * DeviceExtraInfo(); deviceExtraInfo.setExtraProfile("US011404");
+	 * deviceExtraInfo.setExtraProfileValue("LGFL");
+	 * 
+	 * deviceExtraInfoList.add(deviceExtraInfo);
+	 * 
+	 * 
+	 * 휴대기기정보 리스트
+	 * 
+	 * List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>(); DeviceInfo
+	 * deviceInfo = new DeviceInfo();
+	 * 
+	 * deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+	 * deviceInfo.setDeviceKey("01011112222");
+	 * deviceInfo.setDeviceId("01011112222");
+	 * deviceInfo.setDeviceModelNo("LG-SH810");
+	 * deviceInfo.setDeviceTelecom("SKT"); deviceInfo.setImMngNum("");
+	 * deviceInfo.setDeviceNickName("LG-SH810"); deviceInfo.setIsPrimary("Y");
+	 * deviceInfo.setIsAuthenticated("Y");
+	 * deviceInfo.setAuthenticationDate("20131226103711");
+	 * deviceInfo.setIsRecvSms("Y"); deviceInfo.setNativeId("358362045580844");
+	 * deviceInfo.setDeviceAccount("hkd@gmail.com");
+	 * deviceInfo.setJoinId("US012301"); deviceInfo.setOsVer("1.0");
+	 * deviceInfo.setScVer("1.0"); deviceInfo.setRooting("N");
+	 * deviceInfo.setMakeComp("SAMSUNG");
+	 * 
+	 * deviceInfoList.add(deviceInfo);
+	 * 
+	 * res.setUserId("hdk"); res.setUserKey("IW102158844420091030165015");
+	 * res.setDeviceInfoList(deviceInfoList);
+	 * 
+	 * } catch (Exception e) { e.printStackTrace(); }
+	 * 
+	 * return res; }
+	 */
 
 	/**
 	 * <pre>
@@ -432,24 +427,24 @@ public class DummyDataController {
 	 * 
 	 * @return CreateDeviceRes
 	 */
-	@RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createDevice/v1", method = RequestMethod.POST)
-=======
-	/*@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
->>>>>>> .r4749
-	@ResponseBody
-	public CreateDeviceRes createDevice() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.18.	휴대기기 등록 #####");
-		LOGGER.info("####################################################");
-
-		CreateDeviceRes res = new CreateDeviceRes();
-		res.setDeviceId("01011112222");
-		res.setDeviceKey("01011112222");
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}*/
+	/*
+	 * @RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL +
+	 * "/createDevice/v1", method = RequestMethod.POST)
+	 * 
+	 * @RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public CreateDeviceRes createDevice() {
+	 * 
+	 * LOGGER.info("####################################################");
+	 * LOGGER.info("##### 5.1.18.	휴대기기 등록 #####");
+	 * LOGGER.info("####################################################");
+	 * 
+	 * CreateDeviceRes res = new CreateDeviceRes();
+	 * res.setDeviceId("01011112222"); res.setDeviceKey("01011112222");
+	 * res.setUserKey("IW102158844420091030165015");
+	 * 
+	 * return res; }
+	 */
 
 	/**
 	 * <pre>
