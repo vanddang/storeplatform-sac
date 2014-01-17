@@ -9,13 +9,19 @@
  */
 package com.skplanet.storeplatform.sac.runtime.extend;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -42,8 +48,11 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 
 	@Override
 	public String search(Map<String, Object> headerMap) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+				.getRequest();
 		String interfaceId = RuntimeContextHolder.getRuntimeContext().getInterfaceId();
 		String requestUrl = (String) headerMap.get("http_requestUrl");
+		String requestMethod = (String) headerMap.get("http_requestMethod");
 		String prefix = interfaceId.substring(1, 3);
 		UriComponents from = UriComponentsBuilder.fromHttpUrl(requestUrl).build();
 		UriComponentsBuilder to;
@@ -59,7 +68,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 				if (rootPathList.size() <= pathSegments.size()) {
 					for (int i = 0; i < rootPathList.size(); i++) {
 						if (!StringUtils.equals(rootPathList.get(i), pathSegments.get(i))) {
-							throw new RuntimeException("root path not match");
+							throw new RuntimeException("SAC 서버 루트 Path가 불일치하여 오류가 발생하였습니다.");
 						}
 					}
 					for (String path : rootPathList) {
@@ -72,13 +81,25 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 						}
 					}
 				} else {
-					throw new RuntimeException("root path not match");
+					throw new RuntimeException("SAC 서버 루트 Path가 설정 파일보다 Depth");
 				}
 			} else {
 				to.path("/" + this.servletPath + from.getPath());
 			}
-			to.query(from.getQuery());
+
+			if (StringUtils.equals(requestMethod, "GET")) {
+				if (!StringUtils.isEmpty(request.getQueryString())) {
+					String queryString = null;
+					try {
+						queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
+					} catch (UnsupportedEncodingException e) {
+						throw new RuntimeException("Controller URL 생성시 Decoding 오류가 발생하였습니다.", e);
+					}
+					to.query(queryString);
+				}
+			}
 		}
+		// 컨트롤러 전송시에는 한글이 깨지면 안됨으로 위에서 Decoding을 시킴.
 		return to.build().toUriString();
 	}
 }
