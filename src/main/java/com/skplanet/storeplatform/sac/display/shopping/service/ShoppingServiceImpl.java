@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -120,7 +121,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 상품 정보 (상품ID)
 					product = new Product();
 					identifier = new Identifier();
-					identifier.setType("catalog");
+					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 					identifier.setText(ShoppingDto.getCatagoryId());
 
 					// 메뉴 정보
@@ -164,7 +165,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// contributor
 					contributor = new Contributor();
 					identifier1 = new Identifier();
-					identifier1.setType("brand");
+					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
 					identifier1.setText(ShoppingDto.getBrandId());
 					contributor.setName(ShoppingDto.getBrandName());
 					contributor.setIdentifier(identifier1);

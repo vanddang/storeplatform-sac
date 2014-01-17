@@ -1,35 +1,26 @@
 package com.skplanet.storeplatform.sac.api.controller;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
+import com.skplanet.storeplatform.external.client.shopping.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
+import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
-import com.skplanet.storeplatform.sac.api.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.service.CouponItemService;
 import com.skplanet.storeplatform.sac.api.service.CouponProcessService;
@@ -37,12 +28,8 @@ import com.skplanet.storeplatform.sac.api.service.ShoppingCouponService;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
-import com.skplanet.storeplatform.sac.api.vo.CouponParameterInfo;
-import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
-import com.skplanet.storeplatform.sac.api.vo.DpCouponInfo;
-import com.skplanet.storeplatform.sac.api.vo.DpItemInfo;
 
 @Controller
 @RequestMapping("/shopping")
@@ -56,12 +43,13 @@ public class ShoppingCouponController {
 	public final DpCatalogInfo catalogInfo;
 	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
 	private CouponContainer containers;
-	private List<CouponResponseInfo> couponList = null;
-	private CouponResponseInfo couponInfo = null;
+	private List<CouponRes> couponList = null;
+	public CouponRes couponRes;
 	public String response;
 
 	@Autowired
 	private ShoppingCouponService shoppingCouponService;
+
 	@Autowired
 	private CouponItemService couponItemService;
 
@@ -72,28 +60,29 @@ public class ShoppingCouponController {
 		this.brandInfo = new DpBrandInfo();
 		this.catalogInfo = new DpCatalogInfo();
 		this.brandCatalogProdImgInfo = new BrandCatalogProdImgInfo();
+		this.couponRes = new CouponRes();
 	}
 
-	@RequestMapping(value = "/api/couponInterface", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/couponInterface/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CouponResponseInfo apiCouponInterface(CouponParameterInfo couponParameterInfo) {
-		CouponResponseInfo responseVO = null;
+	public CouponRes apiCouponInterface(@RequestBody CouponReq couponReq) {
+
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("apiCouponInterface Controller started!!");
 		this.log.debug("----------------------------------------------------------------");
 
 		try {
-			this.dePloy(couponParameterInfo);
+			this.dePloy(couponReq);
 			this.log.info("log:" + this.response);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return responseVO;
+		return this.couponRes;
 
 	}
 
-	public boolean dePloy(CouponParameterInfo couponParameterInfo) throws Exception {
+	public boolean dePloy(CouponReq couponReq) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
 
@@ -109,22 +98,22 @@ public class ShoppingCouponController {
 			// 04.이력저장
 			// 05.업무처리:return값 있음
 			// 06.응답 및 처리결과이력 update
-			// this.log.info("<CouponControl> dePloy...txID = " + couponParameterInfo.getTxId());
-			// this.log.info("<CouponControl> dePloy...txTYPE = " + couponParameterInfo.getTxType());
-			// this.log.info("<CouponControl> dePloy...XML = " + couponParameterInfo.getRData());
+			this.log.debug("<CouponControl> dePloy...txID = " + couponReq.getTxId());
+			this.log.debug("<CouponControl> dePloy...txTYPE = " + couponReq.getTxType());
+			this.log.debug("<CouponControl> dePloy...XML = " + couponReq.getRData());
 
 			map = new HashMap<String, String>();
-			map.put("TX_ID", couponParameterInfo.getTxId());
+			map.put("TX_ID", couponReq.getTxId());
 
-			result = this.doValidParameter1(couponParameterInfo); // 기본적인 validation 확인 및 parameter 정보 setting
+			result = this.doValidParameter1(couponReq); // 기본적인 validation 확인 및 parameter 정보 setting
 
 			if (result) {
 				boolean success = false;
-				switch (TX_TYPE_CODE.get(couponParameterInfo.getTxType())) {
+				switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
 
 				case BD:
 					// brand 작업을 호출한다.
-					result = this.doValidParameterBD(couponParameterInfo); // 기본적인 validation 확인 및 parameter 정보 setting
+					result = this.doValidParameterBD(couponReq); // 기본적인 validation 확인 및 parameter 정보 setting
 					IcmsJobPrint.printBrand(this.brandInfo, "브랜드");
 					if (result) {
 						success = this.insertBrandInfo(this.brandInfo);
@@ -142,7 +131,7 @@ public class ShoppingCouponController {
 				case CT:
 					// 카달로그 작업을 호출한다.
 
-					result = this.doValidParameterCT(couponParameterInfo); // 기본적인 validation 확인 및 parameter 정보 setting
+					result = this.doValidParameterCT(couponReq); // 기본적인 validation 확인 및 parameter 정보 setting
 					IcmsJobPrint.printCatalog(this.catalogInfo, "카달로그");
 					if (result) {
 						success = this.insertCatalogInfo(this.catalogInfo);
@@ -158,10 +147,11 @@ public class ShoppingCouponController {
 					}
 					break;
 				case CP:
-					// XML 전문 Parsing
-					result = this.parserXML(couponParameterInfo);
+					// 쿠폰 정보 작업을 호출한다
+
+					result = this.doValidParameterCP(couponReq);
 					if (result) {
-						success = this.insertCouponInfo(this.containers, couponParameterInfo);
+						success = this.insertCouponInfo(this.containers, couponReq);
 					}
 
 					if (success) {
@@ -177,7 +167,7 @@ public class ShoppingCouponController {
 					break;
 				case ST:
 					// 쿠폰 상태 변경 호출한다
-					success = this.updateForCouponStatus(couponParameterInfo);
+					success = this.updateForCouponStatus(couponReq);
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -190,7 +180,7 @@ public class ShoppingCouponController {
 					break;
 				case LS:
 					// 특가 상품 목록 조회 작업을 호출한다.
-					String[] couponCodes = couponParameterInfo.getCouponCode().split(",");
+					String[] couponCodes = couponReq.getCouponCode().split(",");
 					this.couponList = this.getSpecialProductList(couponCodes);
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -198,13 +188,13 @@ public class ShoppingCouponController {
 					break;
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
-					this.couponInfo = this.getSpecialProductDetail(couponParameterInfo.getCouponCode());
-					if (this.couponInfo.getRCode().equals("")) {
+					this.couponRes = this.getSpecialProductDetail(couponReq.getCouponCode());
+					if (this.couponRes.getRCode().equals("")) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 					} else {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", this.couponInfo.getRCode());
+						map.put("ERROR_CODE", this.couponRes.getRCode());
 					}
 
 					break;
@@ -215,14 +205,14 @@ public class ShoppingCouponController {
 					break;
 				}
 
-				this.sendResponseData(couponParameterInfo, map);
+				this.sendResponseData(couponReq, map);
 
 			} else {
 				// Error Messag 를 작성한다.
 				map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 				map.put("ERROR_MSG", this.getERR_MESSAGE());
-				this.sendResponseData(couponParameterInfo, map);
+				this.sendResponseData(couponReq, map);
 			}
 
 		} catch (CouponException ex) {
@@ -235,7 +225,7 @@ public class ShoppingCouponController {
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
 			map.put("ERROR_MSG", ex.getMessage());
 			map.put("ERROR_VALUE", ex.getErr_value());
-			this.sendResponseData(couponParameterInfo, map);
+			this.sendResponseData(couponReq, map);
 			result = false;
 
 		} catch (Exception e) {
@@ -244,7 +234,7 @@ public class ShoppingCouponController {
 			map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 			map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_SERVICE_STOP);
 			map.put("ERROR_MSG", e.getMessage());
-			this.sendResponseData(couponParameterInfo, map);
+			this.sendResponseData(couponReq, map);
 			result = false;
 		}
 
@@ -284,8 +274,8 @@ public class ShoppingCouponController {
 	 *            containers, String txType
 	 * @response boolean
 	 */
-	public boolean insertCouponInfo(CouponContainer containers, CouponParameterInfo couponParameterInfo) {
-		boolean result = this.couponProcessService.insertCouponInfo(containers, couponParameterInfo);
+	public boolean insertCouponInfo(CouponContainer containers, CouponReq couponReq) {
+		boolean result = this.couponProcessService.insertCouponInfo(containers, couponReq);
 		return result;
 
 	}
@@ -293,12 +283,12 @@ public class ShoppingCouponController {
 	/**
 	 * 상품 상태 변경한다.
 	 * 
-	 * @param CouponParameterInfo
-	 *            couponParameterInfo
+	 * @param CouponReq
+	 *            couponReq
 	 * @response boolean
 	 */
-	public boolean updateForCouponStatus(CouponParameterInfo couponParameterInfo) {
-		boolean result = this.couponProcessService.updateForCouponStatus(couponParameterInfo);
+	public boolean updateForCouponStatus(CouponReq couponReq) {
+		boolean result = this.couponProcessService.updateForCouponStatus(couponReq);
 		return result;
 
 	}
@@ -308,10 +298,10 @@ public class ShoppingCouponController {
 	 * 
 	 * @param String
 	 *            [] couponCodes
-	 * @response List<CouponResponseInfo>
+	 * @response List<CouponRes>
 	 */
-	public List<CouponResponseInfo> getSpecialProductList(String[] couponCodes) {
-		List<CouponResponseInfo> result = this.couponProcessService.getSpecialProductList(couponCodes);
+	public List<CouponRes> getSpecialProductList(String[] couponCodes) {
+		List<CouponRes> result = this.couponProcessService.getSpecialProductList(couponCodes);
 		return result;
 
 	}
@@ -321,30 +311,30 @@ public class ShoppingCouponController {
 	 * 
 	 * @param String
 	 *            couponCode
-	 * @response CouponResponseInfo
+	 * @response CouponRes
 	 */
-	public CouponResponseInfo getSpecialProductDetail(String couponCode) {
-		CouponResponseInfo result = this.couponProcessService.getSpecialProductDetail(couponCode);
+	public CouponRes getSpecialProductDetail(String couponCode) {
+		CouponRes result = this.couponProcessService.getSpecialProductDetail(couponCode);
 		return result;
 
 	}
 
-	public boolean doValidParameter1(CouponParameterInfo couponParameterInfo) {
+	public boolean doValidParameter1(CouponReq couponReq) {
 		this.log.info("<CouponControl> doValidParameter1...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
 
 		try {
 
-			if (couponParameterInfo == null) {
+			if (couponReq == null) {
 				result = false;
 				sb.append("Parameter정보가 없습니다.");
 			}
-			if (!couponParameterInfo.checkTX_ID()) {
+			if (!couponReq.checkTX_ID()) {
 				result = false;
 				sb.append("TX_ID 형식에 맞지 않습니다. [22자리]\n");
 			}
-			if (!couponParameterInfo.checkTX_TYPE()) {
+			if (!couponReq.checkTX_TYPE()) {
 				result = false;
 				sb.append("TX_TYPE 형식에 맞지 않습니다. [2자리]\n");
 			}
@@ -367,17 +357,17 @@ public class ShoppingCouponController {
 
 	}
 
-	public boolean doValidParameterBD(CouponParameterInfo couponParameterInfo) {
+	public boolean doValidParameterBD(CouponReq couponReq) {
 		this.log.info("<CouponControl> doValidParameterBD...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
 		try {
-			this.brandInfo.setBrandNm(couponParameterInfo.getBrandName());
-			this.brandInfo.setDpCatNo(couponParameterInfo.getBrandCategory());
-			this.brandInfo.setBrandId(couponParameterInfo.getBrandCode());
-			this.brandInfo.setBrandImgPath(couponParameterInfo.getBrandImage());
-			this.brandInfo.setCudType(couponParameterInfo.getCudType());
-			this.brandInfo.setTxType(couponParameterInfo.getTxType());
+			this.brandInfo.setBrandNm(couponReq.getBrandName());
+			this.brandInfo.setDpCatNo(couponReq.getBrandCategory());
+			this.brandInfo.setBrandId(couponReq.getBrandCode());
+			this.brandInfo.setBrandImgPath(couponReq.getBrandImage());
+			this.brandInfo.setCudType(couponReq.getCudType());
+			this.brandInfo.setTxType(couponReq.getTxType());
 			if (this.brandInfo.getBrandId().equals("") || this.brandInfo.getBrandId() == null) {
 				result = false;
 				sb.append("브랜드 ID는 null을가질수 없습니다.");
@@ -414,21 +404,21 @@ public class ShoppingCouponController {
 
 	}
 
-	public boolean doValidParameterCT(CouponParameterInfo couponParameterInfo) {
+	public boolean doValidParameterCT(CouponReq couponReq) {
 		this.log.info("<CouponControl> doValidParameterCT...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
 		try {
-			this.catalogInfo.setCudType(couponParameterInfo.getCudType());
-			this.catalogInfo.setCatalogId(couponParameterInfo.getCatalogCode());
-			this.catalogInfo.setDpCatNo(couponParameterInfo.getCatalogCategory());
-			this.catalogInfo.setBrandId(couponParameterInfo.getBrandCode());
-			this.catalogInfo.setCatalogDesc(couponParameterInfo.getCatalogDescription());
-			this.catalogInfo.setCatalogNm(couponParameterInfo.getCatalogName());
-			this.catalogInfo.setTopImgPath(couponParameterInfo.getCatalogImage1());
-			this.catalogInfo.setDtlImgPath(couponParameterInfo.getCatalogImage2());
-			this.catalogInfo.setIntroText(couponParameterInfo.getIntro_text());
-			this.catalogInfo.setCatalogTag(couponParameterInfo.getTag());
+			this.catalogInfo.setCudType(couponReq.getCudType());
+			this.catalogInfo.setCatalogId(couponReq.getCatalogCode());
+			this.catalogInfo.setDpCatNo(couponReq.getCatalogCategory());
+			this.catalogInfo.setBrandId(couponReq.getBrandCode());
+			this.catalogInfo.setCatalogDesc(couponReq.getCatalogDescription());
+			this.catalogInfo.setCatalogNm(couponReq.getCatalogName());
+			this.catalogInfo.setTopImgPath(couponReq.getCatalogImage1());
+			this.catalogInfo.setDtlImgPath(couponReq.getCatalogImage2());
+			this.catalogInfo.setIntroText(couponReq.getIntro_text());
+			this.catalogInfo.setCatalogTag(couponReq.getTag());
 
 			if (this.catalogInfo.getCatalogNm().equals("") || this.catalogInfo.getCatalogNm() == null) {
 				result = false;
@@ -489,7 +479,7 @@ public class ShoppingCouponController {
 	}
 
 	// 쇼핑쿠폰 API 응답은 XML 으로 전송한다.
-	private boolean sendResponseData(CouponParameterInfo couponParameterInfo, Map<String, String> map) {
+	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map) {
 		this.log.info("<CouponControl> sendResponseData...");
 
 		boolean success = false;
@@ -506,73 +496,94 @@ public class ShoppingCouponController {
 			if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals(""))
 				xmlSb.append("[" + map.get("ERROR_VALUE") + "]");
 			xmlSb.append("]]></rMsg>");
-			xmlSb.append("<txId><![CDATA[" + couponParameterInfo.getTxId() + "]]></txId>");
+			xmlSb.append("<txId><![CDATA[" + couponReq.getTxId() + "]]></txId>");
 
-			if (couponParameterInfo.checkTX_TYPE()) {
+			this.log.debug("----------------------------------------------------------------");
+			this.couponRes.setRCode(map.get("ERROR_CODE"));
+			this.couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
+			if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals("")) {
+				this.couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG"))
+						+ map.get("ERROR_VALUE"));
+			}
+			this.couponRes.setTxId(couponReq.getTxId());
+			this.log.debug("----------------------------------------------------------------");
 
-				switch (TX_TYPE_CODE.get(couponParameterInfo.getTxType())) {
+			if (couponReq.checkTX_TYPE()) {
+
+				switch (TX_TYPE_CODE.get(couponReq.getTxType())) {
 
 				case BD:
 					xmlSb.append("<rData>");
-					xmlSb.append("<brandCode><![CDATA[" + couponParameterInfo.getBrandCode() + "]]></brandCode>");
+					xmlSb.append("<brandCode><![CDATA[" + couponReq.getBrandCode() + "]]></brandCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", couponParameterInfo.getBrandCode());
-
+					map.put("COMMON_CODE", couponReq.getBrandCode());
+					this.couponRes.setBrandCode(couponReq.getBrandCode());
 					break;
 				case CT:
 					xmlSb.append("<rData>");
-					xmlSb.append("<catalogCode><![CDATA[" + couponParameterInfo.getCatalogCode() + "]]></catalogCode>");
+					xmlSb.append("<catalogCode><![CDATA[" + couponReq.getCatalogCode() + "]]></catalogCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", couponParameterInfo.getCatalogCode());
+					map.put("COMMON_CODE", couponReq.getCatalogCode());
+					this.couponRes.setCatalogCode(couponReq.getCatalogCode());
 					break;
 				case CP:
 					xmlSb.append("<rData>");
-					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponParameterInfo.getCouponCode(), "")
+					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
 							+ "]]></couponCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", StringUtil.nvl(couponParameterInfo.getCouponCode(), "")); // 상품추가/수정시에는 xml
-																									 // 전문에 couponcode
-																									 // 가포함되어 마지막에 , put
-																									 // 해준다.
+					map.put("COMMON_CODE", StringUtil.nvl(couponReq.getCouponCode(), "")); // 상품추가/수정시에는 xml
+																						   // 전문에 couponcode
+																						   // 가포함되어 마지막에 , put
+																						   // 해준다.
+					this.couponRes.setCouponCode(couponReq.getCouponCode());
 					break;
 				case ST:
 					xmlSb.append("<rData>");
-					xmlSb.append("<couponCode><![CDATA[" + couponParameterInfo.getCouponCode() + "]]></couponCode>");
+					xmlSb.append("<couponCode><![CDATA[" + couponReq.getCouponCode() + "]]></couponCode>");
 					xmlSb.append("</rData>");
-					map.put("COMMON_CODE", couponParameterInfo.getCouponCode());
+					map.put("COMMON_CODE", couponReq.getCouponCode());
+					this.couponRes.setCouponCode(couponReq.getCouponCode());
 				case AT:
 					break;
 				case LS:
 					xmlSb.append("<rData>");
 					xmlSb.append("<eventList><![CDATA[");
 					String seperator_comma = "";
+					String eventList = "";
 					int j = 0;
 					if (this.couponList != null) {
-						for (CouponResponseInfo couponInfo : this.couponList) {
+						for (CouponRes couponInfo : this.couponList) {
 							if (j > 0)
 								seperator_comma = ",";
 							xmlSb.append(seperator_comma + couponInfo.getCouponCode() + ":" + couponInfo.getSpecialYN());
+							eventList = eventList + seperator_comma + couponInfo.getCouponCode() + ":"
+									+ couponInfo.getSpecialYN();
+
 							j++;
 						}
 					}
 					xmlSb.append("]]></eventList>");
 					xmlSb.append("</rData>");
+
+					this.couponRes.setEventList(eventList);
+
 					break;
 				case DT:
 					xmlSb.append("<rData>");
-					if (this.couponInfo == null)
-						this.couponInfo = new CouponResponseInfo();
-					xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponParameterInfo.getCouponCode(), "")
-							+ "]]></couponCode>");
-					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventName(), "")
+					if (this.couponRes == null)
+						xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
+								+ "]]></couponCode>");
+					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(this.couponRes.getEventName(), "")
 							+ "]]></eventName>");
-					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventStartDate(), "")
+					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventStartDate(), "")
 							+ "]]></eventStartDate>");
-					xmlSb.append("<eventEndDate><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventEndDate(), "")
+					xmlSb.append("<eventEndDate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventEndDate(), "")
 							+ "]]></eventEndDate>");
-					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(this.couponInfo.getEventDcRate(), "")
+					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventDcRate(), "")
 							+ "]]></eventDcRate>");
 					xmlSb.append("</rData>");
+					this.couponRes.setCouponCode(couponReq.getCouponCode());
+
 					break;
 				default:
 					xmlSb.append("");
@@ -593,239 +604,62 @@ public class ShoppingCouponController {
 		return success;
 	}
 
-	private boolean parserXML(CouponParameterInfo couponParameterInfo) throws ParserConfigurationException,
-			SAXException, IOException {
-
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	private boolean doValidParameterCP(CouponReq couponReq) {
+		String couponProdId = "";
+		String itemProdId = "";
 		boolean result = true;
-		StringBuffer sb = new StringBuffer();
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = null;
-			ByteArrayInputStream in = new ByteArrayInputStream(couponParameterInfo.getRData().getBytes());
-			doc = builder.parse(in);
+		DpCouponInfo couponInfo = couponReq.getDpCouponInfo(); // 쿠폰 정보
+		List<DpItemInfo> itemInfoList = couponReq.getDpItemInfo();
 
-			Element root = doc.getDocumentElement();
+		if ("C".equalsIgnoreCase(couponReq.getCudType())) {
+			couponProdId = this.couponItemService.couponGenerateId(); // 쿠폰 ID 생성
+		} else if ("U".equalsIgnoreCase(couponReq.getCudType())) {
+			couponProdId = this.couponItemService.getGenerateId(couponInfo.getCouponCode()); // 기존 쿠폰 가져오기
+		}
+		if (StringUtils.isBlank(couponProdId)) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "[COUPON_PRODUCT_ID]를 생성하지 못했습니다.",
+					"");
+		}
+		couponInfo.setProdId(couponProdId);
 
-			Node chNode = null;
-			String chNodeNm = "";
-			Map hashMap = new HashMap<String, String>();
-
-			List<List<Map<String, String>>> list = new ArrayList<List<Map<String, String>>>(); // 전체 List
-			List<Map<String, String>> contentList = new ArrayList<Map<String, String>>(); // 쿠폰 정보 Map의 List
-			List<Map<String, String>> itemList = new ArrayList<Map<String, String>>(); // 단품 정보 Map의 List
-			List[] contentLists = { contentList, itemList };
-
-			// 쿠폰목록, 단품 목록의 순서로 List로 미리 저장
-			list.add(contentList);
-			list.add(itemList);
-
-			for (chNode = root.getFirstChild(); chNode != null; chNode = chNode.getNextSibling()) {
-
-				if (chNode.getNodeType() == Node.ELEMENT_NODE) {
-					chNodeNm = StringUtil.setTrim(chNode.getNodeName().trim());
-					if (!StringUtils.equals(chNodeNm, "items")) {
-						// MAIN_CONTENT
-
-						String nodeName = chNode.getNodeName();
-						String sContext = chNode.getTextContent().trim();
-						// this.log.info("[ nodeName = " + nodeName + "] : " + sContext);
-
-						// <br> 태그 먼저 처리 - 삭제되기 전에
-						if (true)
-							sContext = StringUtil.changeTag(sContext, "<br>", "\r\n");
-
-						// 태그 삭제하기
-						if (true) {
-
-							// a 태그 제외 삭제
-							if (!true)
-								sContext = StringUtil.replaceAllTagsExceptA(sContext, "");
-							// 모든 태그 삭제
-							else
-								sContext = StringUtil.replaceAllTags(sContext, "");
-						}
-						hashMap.put(nodeName, sContext);
-					}
-				}
-
-				int subContentCount = 0;
-
-				if (StringUtils.equals(chNodeNm, "items")) {
-
-					for (Node bodyNode = chNode.getFirstChild(); bodyNode != null; bodyNode = bodyNode.getNextSibling()) {
-						chNodeNm = StringUtil.setTrim(bodyNode.getNodeName().trim());
-						if (StringUtils.equals(chNodeNm, "item")) {
-							// SUB_CONTENT
-
-							NodeList subContentNodes = bodyNode.getChildNodes();
-							Map itemHashMap = new HashMap<String, String>();
-							for (int i = 0; i < subContentNodes.getLength(); i++) {
-								Node node = subContentNodes.item(i);
-
-								if (node.getNodeType() == Node.ELEMENT_NODE) {
-									String nodeName = node.getNodeName();
-									String sContext = node.getTextContent().trim();
-
-									itemHashMap.put(nodeName, sContext);
-									// this.log.info("[ nodeName = " + nodeName + "] : " + sContext);
-								}
-							} // end for
-
-							itemList.add(subContentCount, itemHashMap);
-							subContentCount++;
-
-						} // end if
-					} // end for
-
-				}
-
+		int kk = 0;
+		for (DpItemInfo itemInfo : itemInfoList) {
+			if ("C".equalsIgnoreCase(couponReq.getCudType())) {
+				itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
+				itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
+			} else if ("U".equalsIgnoreCase(couponReq.getCudType())) {
+				itemProdId = this.couponItemService.getGenerateId(itemInfo.getItemCode()); // 기존 아이템 ID 가져오기
+				itemInfo.setProdId(itemProdId);
 			}
-			contentLists[0].add(hashMap);
-			DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
-			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
-			String couponProdId = "";
-			String srcCouponContentId = "";
-			for (int i = 0; i < 1; i++) { // 쿠폰 정보 Add
-				List<Map<String, String>> mapList = list.get(i);
-				for (Map<String, String> map : mapList) {
-					for (Map.Entry<String, String> entry : map.entrySet()) {
-						if (entry.getKey().equals("couponCode")) {
-							srcCouponContentId = entry.getValue();
-						}
-						if (!this.invoke(couponInfo, "set" + entry.getKey().substring(0, 1).toUpperCase()
-								+ entry.getKey().substring(1), new Object[] { entry.getValue() })) { //
-							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "매핑 실패 ["
-									+ entry.getKey() + ":" + entry.getValue() + "]이 형식이 잘못 됐습니다.", "");
-						}
-					}
-				}
-			}
-			System.out.println("srcCouponContentId::" + srcCouponContentId);
-			if ("C".equalsIgnoreCase(couponParameterInfo.getCudType())) {
-				couponProdId = this.couponItemService.couponGenerateId(); // 쿠폰 ID 생성
-			} else if ("U".equalsIgnoreCase(couponParameterInfo.getCudType())) {
-				couponProdId = this.couponItemService.getGenerateId(srcCouponContentId); // 기존 쿠폰 가져오기
-			}
-			if (StringUtils.isBlank(couponProdId)) {
+			if (StringUtils.isBlank(itemProdId)) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-						"[COUPON_PRODUCT_ID]를 생성하지 못했습니다.", "");
+						"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
 			}
-			couponInfo.setProdId(couponProdId);
+			kk++;
+		}
 
-			int kk = 0;
-			String itemProdId = "";
-			String srcItemContentId = "";
-			for (int i = 1; i < list.size(); i++) { // 아이템 정보 List Add
-				List<Map<String, String>> mapList = list.get(i);
-				for (Map<String, String> map : mapList) {
-					DpItemInfo itemInfo = new DpItemInfo();
-					for (Map.Entry<String, String> entry : map.entrySet()) {
-						if (entry.getKey().equals("itemCode")) {
-							srcItemContentId = entry.getValue();
-						}
-						if (!this.invoke(itemInfo, "set" + entry.getKey().substring(0, 1).toUpperCase()
-								+ entry.getKey().substring(1), new Object[] { entry.getValue() })) { // itemInfo VO에 값
-																									 // 셋팅
-							throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "매핑 실패 ["
-									+ entry.getKey() + ":" + entry.getKey() + "]이 형식이 잘못 됐습니다.", "");
-						}
-
-					}
-					if ("C".equalsIgnoreCase(couponParameterInfo.getCudType())) {
-						itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
-						itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
-					} else if ("U".equalsIgnoreCase(couponParameterInfo.getCudType())) {
-						System.out.println(":::::::::::" + i + ":::::::::::::" + itemProdId);
-						itemProdId = this.couponItemService.getGenerateId(srcItemContentId); // 기존 아이템 ID 가져오기
-						itemInfo.setProdId(itemProdId);
-					}
-					if (StringUtils.isBlank(itemProdId)) {
-						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
-								"[ITEM_PRODUCT_ID]를 생성하지 못했습니다.", "");
-					}
-
-					itemInfoList.add(itemInfo);
-					kk++;
-				}
-			}
-
-			if (!this.doValidateCouponInfo(couponInfo)) {
+		if (!this.doValidateCouponInfo(couponInfo)) {
+			result = false;
+		}
+		for (int i = 0; i < itemInfoList.size(); i++) {
+			if (!this.doValidateItemInfo(itemInfoList.get(i))) {
 				result = false;
 			}
-			for (int i = 0; i < itemInfoList.size(); i++) {
-				if (!this.doValidateItemInfo(itemInfoList.get(i))) {
-					result = false;
-				}
-				break;
-			}
-			this.containers = new CouponContainer();
-			this.containers.setDpCouponInfo(couponInfo);
-			this.containers.setDpItemInfo(itemInfoList);
-			this.log.info("<<<<< MetaDefXMLParser.makeContentXMLMap >>>>> END");
-
-			return result;
-		} catch (CouponException e) {
-			this.log.error("파싱처리중 예외 발생", e);
-			sb.append(e.getMessage() + "\n");
-			result = false;
-			this.setERR_MESSAGE(sb.toString());
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
-			return result;
-		} catch (ParserConfigurationException e) {
-			this.log.error("파싱처리중 예외 발생", e);
-			sb.append(e.getMessage() + "\n");
-			result = false;
-			this.setERR_MESSAGE(sb.toString());
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
-			return result;
-		} catch (SAXException e) {
-			this.log.error("파싱처리중 예외 발생", e);
-			sb.append(e.getMessage() + "\n");
-			result = false;
-			this.setERR_MESSAGE(sb.toString());
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
-			return result;
+			break;
 		}
+		this.containers = new CouponContainer();
+		this.containers.setDpCouponInfo(couponInfo);
+		this.containers.setDpItemlist(itemInfoList);
+		this.log.info("<<<<< MetaDefXMLParser.makeContentXMLMap >>>>> END");
 
-	}
-
-	/**
-	 * 특정 클래스의 내용을 invoke
-	 * 
-	 * @param obj
-	 *            Method Invoke할 오브젝트
-	 * @param methodName
-	 *            Method Name
-	 * @param objList
-	 *            Parameter Object List
-	 * @return
-	 */
-	public boolean invoke(Object obj, String methodName, Object[] objList) {
-		Method[] methods = obj.getClass().getMethods();
-		boolean result = false;
-
-		for (int i = 0; i < methods.length; i++) {
-			if (methods[i].getName().equals(methodName)) {
-				try {
-					if (methods[i].getReturnType().getName().equals("void")) {
-						result = true;
-						methods[i].invoke(obj, objList);
-					}
-				} catch (IllegalAccessException lae) {
-					System.out.println("LAE : " + lae.getMessage());
-				} catch (InvocationTargetException ite) {
-					System.out.println("ITE : " + ite.getMessage());
-				}
-			}
-		}
 		return result;
+
 	}
 
 	/**
 	 * 쿠폰 정보 유효성 체크
 	 * 
-	 * @param DpCouponInfo
+	 * @param CouponInfo
 	 *            couponInfo
 	 * @return boolean
 	 */
@@ -998,7 +832,7 @@ public class ShoppingCouponController {
 	/**
 	 * 쿠폰 정보 유효성 체크
 	 * 
-	 * @param DpCouponInfo
+	 * @param CouponInfo
 	 *            couponInfo
 	 * @return boolean
 	 */

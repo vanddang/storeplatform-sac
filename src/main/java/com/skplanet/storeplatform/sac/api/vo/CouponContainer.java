@@ -11,8 +11,10 @@ package com.skplanet.storeplatform.sac.api.vo;
 
 import java.util.List;
 
-public class CouponContainer {
+import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
+import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
 
+public class CouponContainer {
 	private DpCouponInfo dpCouponInfo;
 	private List<DpItemInfo> dpItemlist;
 
@@ -24,12 +26,12 @@ public class CouponContainer {
 		this.dpCouponInfo = dpCouponInfo;
 	}
 
-	public List<DpItemInfo> getDpItemInfo() {
+	public List<DpItemInfo> getDpItemlist() {
 		return this.dpItemlist;
 	}
 
-	public void setDpItemInfo(List<DpItemInfo> dpItemInfo) {
-		this.dpItemlist = dpItemInfo;
+	public void setDpItemlist(List<DpItemInfo> dpItemlist) {
+		this.dpItemlist = dpItemlist;
 	}
 
 }

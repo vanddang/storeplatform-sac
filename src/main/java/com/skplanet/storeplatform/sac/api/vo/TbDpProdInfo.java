@@ -28,6 +28,9 @@ public class TbDpProdInfo {
 	private String drmYn; // DRM_여부
 	private String drmSetCd; // DRM_설정_코드
 	private String drmSetValue; // DRM_설정_값
+	private String contentsTypeCd; // 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104)
+	private String metaClsfCd; // 메타_구분_코드(CT28)
+	private String topMenuId; // 상위메뉴아이디
 	private String regId; // 등록_ID
 	private String regDt; // 등록_일시
 	private String updId; // 수정_ID
@@ -55,6 +58,14 @@ public class TbDpProdInfo {
 
 	public void setSellerMbrNo(String sellerMbrNo) {
 		this.sellerMbrNo = sellerMbrNo;
+	}
+
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
+	}
+
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
 	}
 
 	public String getSvcGrpCd() {
@@ -175,6 +186,22 @@ public class TbDpProdInfo {
 
 	public void setDrmSetValue(String drmSetValue) {
 		this.drmSetValue = drmSetValue;
+	}
+
+	public String getContentsTypeCd() {
+		return this.contentsTypeCd;
+	}
+
+	public void setContentsTypeCd(String contentsTypeCd) {
+		this.contentsTypeCd = contentsTypeCd;
+	}
+
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	public String getRegId() {

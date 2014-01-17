@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
 </head>
 <body >
-	<form name='af' action='/internal/shopping/api/couponInterface' method=get>
+	<form name='af' action='http://localhost:8210/inbound/shopping/api/coupon' method=get>
 		TX TYPE : <select name='txType' >
 					<option value="bd">브랜드상품(bd)</option>
 					<option value="ct">카탈로그상품(ct)</option>

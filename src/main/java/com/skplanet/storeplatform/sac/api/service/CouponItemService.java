@@ -3,7 +3,7 @@ package com.skplanet.storeplatform.sac.api.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
@@ -113,13 +113,13 @@ public interface CouponItemService {
 	 * 특가 상품 목록 조회 한다.
 	 * </pre>
 	 */
-	public List<CouponResponseInfo> getSpecialProductList(String[] couponCodes);
+	public List<CouponRes> getSpecialProductList(String[] couponCodes);
 
 	/**
 	 * <pre>
 	 * 특가 상품 상세 조회 한다.
 	 * </pre>
 	 */
-	public CouponResponseInfo getSpecialProductDetail(String couponCode);
+	public CouponRes getSpecialProductDetail(String couponCode);
 
 }

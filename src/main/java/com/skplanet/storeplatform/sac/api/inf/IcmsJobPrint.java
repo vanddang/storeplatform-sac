@@ -145,7 +145,6 @@ public class IcmsJobPrint {
 			debugMsg.append("samplUrl = " + info.getSamplUrl() + " \n");
 			debugMsg.append("saleYn = " + info.getSaleYn() + " \n");
 			debugMsg.append("contentsOrdrCd = " + info.getContentsOrdrCd() + " \n");
-			debugMsg.append("metaClsfCd = " + info.getMetaClsfCd() + " \n");
 
 			debugMsg.append("mgzinSubscripCd = " + info.getMgzinSubscripCd() + " \n");
 			debugMsg.append("mmMaxSaleQty = " + info.getMmMaxSaleQty() + " \n");

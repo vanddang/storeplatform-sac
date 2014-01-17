@@ -11,13 +11,11 @@ package com.skplanet.storeplatform.sac.api.vo;
 
 public class TbDpShpgProdInfo {
 	private String prodId; // 상품_ID
-	private String contentsTypeCd; // 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104)
 	private long epsdCnt; // 에피소드_수
 	private String chnlCompNm; // 채널_회사_명
 	private String samplUrl; // 샘플_URL
 	private String saleYn; // 판매_여부
 	private String contentsOrdrCd; // 컨텐츠_오더_코드(D)
-	private String metaClsfCd; // 메타_구분_코드(CT28)
 	private String mgzinSubscripCd; // 매거진_구독_코드
 	private long mmMaxSaleQty; // 월_최대_판매_수량
 	private long dayMaxSaleQty; // 일_최대_판매_수량
@@ -44,14 +42,6 @@ public class TbDpShpgProdInfo {
 
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
-	}
-
-	public String getContentsTypeCd() {
-		return this.contentsTypeCd;
-	}
-
-	public void setContentsTypeCd(String contentsTypeCd) {
-		this.contentsTypeCd = contentsTypeCd;
 	}
 
 	public long getEpsdCnt() {
@@ -92,14 +82,6 @@ public class TbDpShpgProdInfo {
 
 	public void setContentsOrdrCd(String contentsOrdrCd) {
 		this.contentsOrdrCd = contentsOrdrCd;
-	}
-
-	public String getMetaClsfCd() {
-		return this.metaClsfCd;
-	}
-
-	public void setMetaClsfCd(String metaClsfCd) {
-		this.metaClsfCd = metaClsfCd;
 	}
 
 	public String getMgzinSubscripCd() {

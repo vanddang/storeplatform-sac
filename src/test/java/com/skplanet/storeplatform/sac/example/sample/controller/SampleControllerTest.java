@@ -38,10 +38,10 @@ public class SampleControllerTest {
 	@Test
 	public void testDetail() throws Exception {
 		this.mvc.perform(get("/sample/detail?no=17").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().contentType("application/json;charset=UTF-8"))
-		.andExpect(jsonPath("$.id").value("#17"));
+				.andDo(print()).andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andExpect(jsonPath("$.id").value("#17"));
+		System.out.println("+++++++++++");
 	}
 
 }

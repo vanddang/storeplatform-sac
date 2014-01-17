@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
-import com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
@@ -332,15 +332,15 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * </pre>
 	 */
 	@Override
-	public List<CouponResponseInfo> getSpecialProductList(String[] couponCodes) {
-		List<CouponResponseInfo> list = new ArrayList<CouponResponseInfo>();
+	public List<CouponRes> getSpecialProductList(String[] couponCodes) {
+		List<CouponRes> list = new ArrayList<CouponRes>();
 
 		try {
 
 			for (String couponCode : couponCodes) {
 				couponCode = couponCode.trim();
 				int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_INFO", couponCode);
-				CouponResponseInfo crinfo = new CouponResponseInfo();
+				CouponRes crinfo = new CouponRes();
 				crinfo.setCouponCode(couponCode);
 				if (cnt > 0)
 					crinfo.setSpecialYN("Y");
@@ -364,23 +364,22 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public CouponResponseInfo getSpecialProductDetail(String couponCode) {
+	public CouponRes getSpecialProductDetail(String couponCode) {
 
-		CouponResponseInfo info = null;
+		CouponRes info = null;
 
 		try {
 			int cnt = (Integer) this.commonDAO.queryForObject("Coupon.GET_COUPON_INFO", couponCode);
 			if (cnt > 0) {
-				info = (CouponResponseInfo) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL",
-						couponCode);
+				info = (CouponRes) this.commonDAO.queryForObject("Coupon.GET_SPECIAL_PRODUCT_DETAIL", couponCode);
 				if (info == null) {
-					info = new CouponResponseInfo();
+					info = new CouponRes();
 					info.setRCode(CouponConstants.COUPON_IF_ERROR_CODE_NOT_SPECIAL);
 				} else
 					info.setRCode("");
 			} else {
 
-				info = new CouponResponseInfo();
+				info = new CouponRes();
 				info.setRCode(CouponConstants.COUPON_IF_ERROR_CODE_COUPONCODE);
 
 			}

@@ -42,6 +42,9 @@
             ,USE_PERIOD_UNIT_CD     /* 사용_기간_단위_코드 */
             ,USE_PERIOD             /* 사용_기간 */
             ,DRM_YN                 /* DRM_여부 */
+            ,META_CLSF_CD           /* 메타_구분_코드(CT28) */
+            ,CONTENTS_TYPE_CD       /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
+            ,TOP_MENU_ID            /* 상위메뉴아이디 (DP28) */
             ,REG_ID                 /* 등록_ID */
             ,REG_DT                 /* 등록_일시 */
             ,UPD_ID                 /* 수정_ID */
@@ -58,6 +61,9 @@
             ,#{usePeriodUnitCd}
             ,#{usePeriod}
             ,#{drmYn}
+            ,#{metaClsfCd}
+            ,#{contentsTypeCd}
+            ,#{topMenuId}
             ,#{regId}
             ,sysdate
             ,#{updId}
@@ -79,8 +85,11 @@
             ,USE_PERIOD_UNIT_CD= NVL(#{usePeriodUnitCd},USE_PERIOD_UNIT_CD)    /* 사용_기간_단위_코드 */
             ,USE_PERIOD        = NVL(#{usePeriod},USE_PERIOD)                  /* 사용_기간 */
             ,DRM_YN            = NVL(#{drmYn},DRM_YN)                          /* DRM_여부 */
+            ,META_CLSF_CD      = NVL(#{metaClsfCd},META_CLSF_CD)               /* 메타_구분_코드(CT28) */
+            ,CONTENTS_TYPE_CD  = NVL(#{contentsTypeCd},CONTENTS_TYPE_CD)       /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
+            ,TOP_MENU_ID       = NVL(#{topMenuId},TOP_MENU_ID)                 /* 상위메뉴아이디 (DP28) */
             ,UPD_ID            = NVL(#{updId},UPD_ID)                          /* 수정_ID */
-            ,UPD_DT            = sysdate                                      /* 수정_일시 */
+            ,UPD_DT            = sysdate                                       /* 수정_일시 */
         where 1=1
          AND PROD_ID = #{prodId}
     </update>    
@@ -90,12 +99,10 @@
       /* CouponMapper.xml, insertTbDpShpgProdInfo, SAC : 김형식 , 2013-01-08 */
         insert into TB_DP_SHPG_PROD(
              PROD_ID                      /* 상품_ID */
-            ,CONTENTS_TYPE_CD             /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
             ,EPSD_CNT                     /* 에피소드_수 */
             ,CHNL_COMP_NM                 /* 채널_회사_명 */
             ,SALE_YN                      /* 판매_여부 */
             ,CONTENTS_ORDR_CD             /* 컨텐츠_오더_코드(D) */
-            ,META_CLSF_CD                 /* 메타_구분_코드(CT28) */
             ,MM_MAX_SALE_QTY              /* 월_최대_판매_수량 */
             ,DAY_MAX_SALE_QTY             /* 일_최대_판매_수량 */
             ,MM_MBR_MAX_PRCHS_QTY         /* 월_회원_최대_구매_수량 */
@@ -116,12 +123,10 @@
             ,UPD_DT                       /* 수정_일시 */
         ) values (
              #{prodId}
-            ,#{contentsTypeCd}
             ,#{epsdCnt}
             ,#{chnlCompNm}
             ,#{saleYn}
             ,#{contentsOrdrCd}
-            ,#{metaClsfCd}
             ,#{mmMaxSaleQty}
             ,#{dayMaxSaleQty}
             ,#{mmMbrMaxPrchsQty}
@@ -147,12 +152,10 @@
      /* CouponMapper.xml, updateTbDpShpgProdInfo, SAC : 김형식 , 2013-01-08 */
         update TB_DP_SHPG_PROD
         set
-             CONTENTS_TYPE_CD        = NVL(#{contentsTypeCd},CONTENTS_TYPE_CD)                  /* 컨텐츠_타입_코드(PD0057, PD0073, PD0093, PD0104) */
-            ,EPSD_CNT                = NVL(#{epsdCnt},EPSD_CNT)                                 /* 에피소드_수 */
+             EPSD_CNT                = NVL(#{epsdCnt},EPSD_CNT)                                 /* 에피소드_수 */
             ,CHNL_COMP_NM            = NVL(#{chnlCompNm},CHNL_COMP_NM)                          /* 채널_회사_명 */
             ,SALE_YN                 = NVL(#{saleYn},SALE_YN)                                   /* 판매_여부 */
             ,CONTENTS_ORDR_CD        = NVL(#{contentsOrdrCd},CONTENTS_ORDR_CD)                  /* 컨텐츠_오더_코드(D) */
-            ,META_CLSF_CD            = NVL(#{metaClsfCd},META_CLSF_CD)                          /* 메타_구분_코드(CT28) */
             ,MM_MAX_SALE_QTY         = NVL(#{mmMaxSaleQty},MM_MAX_SALE_QTY)                     /* 월_최대_판매_수량 */
             ,DAY_MAX_SALE_QTY        = NVL(#{dayMaxSaleQty},DAY_MAX_SALE_QTY)                   /* 일_최대_판매_수량 */
             ,MM_MBR_MAX_PRCHS_QTY    = NVL(#{mmMbrMaxPrchsQty},MM_MBR_MAX_PRCHS_QTY)            /* 월_회원_최대_구매_수량 */
@@ -529,7 +532,7 @@
         FROM   TB_DP_SPRC_PROD A
               ,TB_DP_SHPG_PROD B
         WHERE A.PROD_ID = B.PROD_ID
-          AND A.PROD_ID =  #{prodId}
+          AND B.SRC_CONTENT_ID =  #{prodId}
           AND A.EXPO_YN = 'Y' 
     </select>
     
@@ -539,11 +542,11 @@
         SELECT 
             COUNT(PROD_ID) as CNT
         FROM TB_DP_SHPG_PROD
-        WHERE PROD_ID = #{prodId}
+        WHERE SRC_CONTENT_ID = #{prodId}
     </select>
     
     <!--특가 상품 상세 조회-->
-    <select id="GET_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.sac.api.vo.CouponResponseInfo" parameterType="String">
+    <select id="GET_SPECIAL_PRODUCT_DETAIL" resultType="com.skplanet.storeplatform.external.client.shopping.vo.CouponRes" parameterType="String">
        /* CouponMapper.xml, GET_SPECIAL_PRODUCT_DETAIL, SAC : 김형식 , 2013-01-08 */
 		SELECT 
 			   A.PROD_ID as couponCode
@@ -553,8 +556,10 @@
 			  ,A.SPRC_DC_RATE as eventDcRate 
 		FROM   TB_DP_SPRC_PROD A
 		      ,TB_DP_PROD_DESC B
+		      ,TB_DP_SHPG_PROD C
 		WHERE A.PROD_ID = B.PROD_ID
-		  AND A.PROD_ID =  #{prodId}
+		  AND A.PROD_ID = C.PROD_ID
+		  AND C.SRC_CONTENT_ID =  #{prodId}
 		  AND A.EXPO_YN = 'Y' 
 		  AND ROWNUM =1
     </select>    
