@@ -453,8 +453,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String deviceId = req.getDeviceId();
 
-		logger.info("::::::::::::: mergeDeviceInfo req : {} " + req.toString());
-
 		if (deviceId == null) {
 			throw new Exception("deviceId is null 기기정보 수정 불가");
 		}
@@ -472,13 +470,8 @@ public class DeviceServiceImpl implements DeviceService {
 		schDeviceReq.setUserKey(req.getUserKey());
 		schDeviceReq.setKeySearchList(keySearchList);
 
-		logger.info(" param : {}" + schDeviceReq.toString());
-
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
-
-		logger.info("::::::::::::: userMbrDevice 조회결과 : {} " + userMbrDevice.toString());
-		logger.info("::::::::::::: userMbrDevice Detail 조회결과 : {} " + userMbrDevice.getUserMbrDeviceDetail().toString());
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
@@ -506,13 +499,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
 
 				// 폰정보 조회 (deviceModelNo)
-				Device deviceDTO = this.commService.getPhoneInfo(deviceModelNo);
+				Device device = this.commService.getPhoneInfo(deviceModelNo);
 
 				// OMD 단말이 아닐 경우만
-				if (!MemberConstants.DEVICE_TELECOM_OMD.equals(deviceDTO.getCmntCompCd())) {
+				if (!MemberConstants.DEVICE_TELECOM_OMD.equals(device.getCmntCompCd())) {
 
 					IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
@@ -543,7 +536,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (nativeId != null) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
 
 				if (!nativeId.equals(userMbrDevice.getNativeID())) {
 					logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
@@ -555,6 +548,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 				// 루팅 단말이고 OPMD 단말이 아닌 경우만 nativeId 체크
 				if ("Y".equals(rooting) && !isOpmd) {
+
+					//ICAS연동
 					Map<String, String> mapIcas = null;
 
 					String paramType = null;
@@ -565,7 +560,7 @@ public class DeviceServiceImpl implements DeviceService {
 					} else {
 						paramType = "13";
 					}
-					logger.info("::::  rooting device :::: deviceType {}, paramType {}", req.getDeviceIdType(), paramType);
+					logger.info("::::  ICAS 연동 :::: deviceType {}, paramType {}", req.getDeviceIdType(), paramType);
 					if (!this.commService.getMappingInfo(deviceId, paramType).getMvnoCD().equals("0")) { // MVNO
 						mapIcas = this.commService.getMvService(deviceId);
 					} else {
@@ -573,20 +568,24 @@ public class DeviceServiceImpl implements DeviceService {
 					}
 
 					if (mapIcas.get("RESULT_CODE").equals("0")) {
+
+						// ICAS의 IMEI와 단말 IMEI값 불일치 시 로그인 실패
 						if (!mapIcas.get("IMEI_NUM").equals(nativeId)) {
 							throw new Exception("로그인에 실패하였습니다.(오류코드 4204).");
 						}
 					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
-						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다.");
+						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); //ICAS 조회된 회선정보 없음
 					}
 				}
 			} else { // 타사
 
 				if (userMbrDevice.getNativeID() == null || userMbrDevice.getNativeID().equals("")) {
+					// DB에 저장된 IMEI 값이 없는 경우 최초 인증으로 보고 IMEI 수집
 					logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 					userMbrDevice.setNativeID(nativeId);
 				} else {
 					if (rooting.equals("Y") && !nativeId.equals(userMbrDevice.getNativeID())) {
+						// 루팅된 단말 & DB의 IMEI와 단말 IMEI값 불일치
 						throw new Exception("로그인에 실패하였습니다.(오류코드 4204)");
 					}
 				}
@@ -801,16 +800,15 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
-		if (deviceInfo.getOsVer() != null) {
+		//OS버전과 샵클버전 모두 NULL이 아닐경우에만 처리한다.
+		if (deviceInfo.getOsVer() != null && deviceInfo.getScVer() != null) {
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOsVer());
 			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
 			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 			userMbrDeviceDetailList.add(userMbrDeviceDetail);
-		}
 
-		if (deviceInfo.getScVer() != null) {
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getScVer());
