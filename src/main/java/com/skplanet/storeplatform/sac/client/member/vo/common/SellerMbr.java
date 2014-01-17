@@ -31,7 +31,7 @@ public class SellerMbr extends CommonInfo {
 	private String isBizRegistered;
 	private String isBizTaxable;
 	private String isDeductible;
-	private String isForeign;
+	private String isDomestic;
 	private String isParent;
 	private String isRealName;
 	private String isRecvEmail;
@@ -226,12 +226,12 @@ public class SellerMbr extends CommonInfo {
 		this.isDeductible = isDeductible;
 	}
 
-	public String getIsForeign() {
-		return this.isForeign;
+	public String getIsDomestic() {
+		return this.isDomestic;
 	}
 
-	public void setIsForeign(String isForeign) {
-		this.isForeign = isForeign;
+	public void setIsDomestic(String isDomestic) {
+		this.isDomestic = isDomestic;
 	}
 
 	public String getIsParent() {
