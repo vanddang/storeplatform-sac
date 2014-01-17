@@ -14,6 +14,12 @@ import java.net.URISyntaxException;
 
 import com.skplanet.storeplatform.external.client.search.vo.TstoreSearchReq;
 
+/**
+ * 
+ * Search Common
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
+ */
 public class SearchCommon {
 
 	public static final String Q = "pc매니저";
@@ -27,6 +33,14 @@ public class SearchCommon {
 	public static final String REL = "Y";
 	public static final String UVKEY = "38a942103867f40b7f421c9b3c3b4443";
 
+	/**
+	 * 
+	 * <pre>
+	 * 검색 URI 생성.
+	 * </pre>
+	 * 
+	 * @return URI
+	 */
 	public static URI getURI() {
 		try {
 			return new URI(
@@ -36,6 +50,14 @@ public class SearchCommon {
 		}
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * TstoreSearchReq VO 생성.
+	 * </pre>
+	 * 
+	 * @return TstoreSearchReq
+	 */
 	public static TstoreSearchReq getTstoreSearchReq() {
 		TstoreSearchReq tstoreSearchReq = new TstoreSearchReq();
 		tstoreSearchReq.setQ(Q);

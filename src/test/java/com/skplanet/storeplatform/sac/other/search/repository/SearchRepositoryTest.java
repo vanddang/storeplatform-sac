@@ -11,8 +11,6 @@ package com.skplanet.storeplatform.sac.other.search.repository;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.net.URISyntaxException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ import com.skplanet.storeplatform.sac.other.search.common.SearchCommon;
 
 /**
  * 
- * 검색 외부연동 SCI 테스트
+ * Search Repository Test
  * 
  * Updated on : 2014. 1. 6. Updated by : 김현일, 인크로스
  */
@@ -41,8 +39,15 @@ public class SearchRepositoryTest {
 	@Autowired
 	private SearchRepository searchRepository;
 
+	/**
+	 * 
+	 * <pre>
+	 * Search Repository 검색 기능 테스트.
+	 * </pre>
+	 * 
+	 */
 	@Test
-	public void testSearch() throws URISyntaxException {
+	public void testSearch() {
 		// URL 복사해서 넣기.
 		TstoreSearchRes result = this.searchRepository.search(SearchCommon.getTstoreSearchReq());
 		assertNotNull(result);

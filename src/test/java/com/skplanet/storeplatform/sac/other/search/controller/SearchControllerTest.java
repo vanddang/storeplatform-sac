@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.sac.other.search.common.SearchCommon;
 
 /**
  * 
- * 검색 컨트롤러 클래스 테스트
+ * Search Controller Test
  * 
  * Updated on : 2014. 1. 6. Updated by : 김현일, 인크로스
  */
@@ -51,11 +51,26 @@ public class SearchControllerTest {
 
 	private MockMvc mvc;
 
+	/**
+	 * 
+	 * <pre>
+	 * 초기화.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Search Controller 검색 기능 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void testSearch() throws Exception {
 		this.mvc.perform(
