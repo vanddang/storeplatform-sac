@@ -8,7 +8,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrPwd;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
@@ -23,19 +23,29 @@ public class DetailInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<ExtraRight> extraRightList;
+	/** 판매자 키. */
+	private String sellerKey; // INSD_SELLERMBR_NO
 
-	MbrAuth mbrAuth;
+	/** 판매자 정보 Value Object. */
+	private SellerMbr sellerMbr;
 
-	List<MbrClauseAgreeList> mbrClauseAgreeList;
+	/** 비밀번호 Value Object. */
+	private MbrPwd mbrPwd; // PW변경일시 ( TB_US_SELLERMBR_PWD 테이블에서 가져오기)
 
-	MbrLglAgent mbrLglAgent;
+	/** 실명인증 Value Object. */
+	private MbrAuth mbrAuth;
 
-	MbrPwd mbrPwd;
+	/** 법정대리인 Value Object. */
+	private MbrLglAgent mbrLglAgent;
 
-	private String sellerKey;
+	/** 약관동의 Value Object 목록. */
+	private List<MbrClauseAgree> mbrClauseAgreeList; // 이용약관 TB_US_SELLERMBR_CLAUSE_AGREE
 
-	SellerMbr sellerMbr;
+	/** 판매자 멀티미디어정보 Value Object 목록. */
+	private List<ExtraRight> extraRightList; // US_판매자회원_멀티미디어_권한 TB_US_SELLERMBR_MULTIMDA_AUTH (bp 사인경우만)
+
+	/** 판매자 비밀번호 보안질문 확인 Value Object 목록. */
+	// private List<PWReminder> pWReminderList;
 
 	public List<ExtraRight> getExtraRightList() {
 		return this.extraRightList;
@@ -53,11 +63,11 @@ public class DetailInformationRes extends CommonInfo {
 		this.mbrAuth = mbrAuth;
 	}
 
-	public List<MbrClauseAgreeList> getMbrClauseAgreeList() {
+	public List<MbrClauseAgree> getMbrClauseAgreeList() {
 		return this.mbrClauseAgreeList;
 	}
 
-	public void setMbrClauseAgreeList(List<MbrClauseAgreeList> mbrClauseAgreeList) {
+	public void setMbrClauseAgreeList(List<MbrClauseAgree> mbrClauseAgreeList) {
 		this.mbrClauseAgreeList = mbrClauseAgreeList;
 	}
 
