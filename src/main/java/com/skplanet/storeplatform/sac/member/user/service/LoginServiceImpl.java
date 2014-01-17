@@ -160,6 +160,10 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
 				|| StringUtil.equals(loginStatusCode, MemberConstants.IM_USER_LOGIN_STATUS_PAUSE)
 				|| StringUtil.equals(stopStatusCode, MemberConstants.IM_USER_STOP_STATUS_PAUSE)) {
+
+			/* 로그인 실패이력 저장 */
+			this.insertloginHistory(deviceId, "", "N", userType);
+
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
@@ -180,7 +184,7 @@ public class LoginServiceImpl implements LoginService {
 			this.mergeDeviceInfo(userKey, req);
 
 			/* 로그인 성공이력 저장 */
-			this.insertloginHistory(deviceId, null, "Y", userType);
+			this.insertloginHistory(deviceId, "", "Y", userType);
 
 			/* 로그인 결과 */
 			res.setUserKey(userKey);
@@ -201,7 +205,7 @@ public class LoginServiceImpl implements LoginService {
 				this.mergeDeviceInfo(userKey, req);
 
 				/* 로그인 성공이력 저장 */
-				this.insertloginHistory(deviceId, null, "Y", userType);
+				this.insertloginHistory(deviceId, "", "Y", userType);
 
 				/* 로그인 결과 */
 				res.setUserKey(userKey);
@@ -218,7 +222,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else { //무선회원 인증 실패
 
-				this.insertloginHistory(deviceId, null, "N", userType);
+				this.insertloginHistory(deviceId, "", "N", userType);
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			}
@@ -283,6 +287,10 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
 				|| StringUtil.equals(loginStatusCode, MemberConstants.IM_USER_LOGIN_STATUS_PAUSE)
 				|| StringUtil.equals(stopStatusCode, MemberConstants.IM_USER_STOP_STATUS_PAUSE)) {
+
+			/* 로그인 실패이력 저장 */
+			this.insertloginHistory(userId, userPw, "N", userType);
+
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
@@ -471,8 +479,6 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVer());
-			String uacd = this.commService.getUaCode(req.getDeviceModelNo());
-			deviceInfo.setUacd(uacd == null ? MemberConstants.NOT_SUPPORT_HP_UACODE : uacd);
 		} else if (obj instanceof AuthorizeByIdReq) {
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
@@ -483,8 +489,6 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVerOrg());
-			String uacd = this.commService.getUaCode(req.getDeviceModelNo());
-			deviceInfo.setUacd(uacd == null ? MemberConstants.NOT_SUPPORT_HP_UACODE : uacd);
 		}
 
 		this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
@@ -504,14 +508,13 @@ public class LoginServiceImpl implements LoginService {
 		LoginUserRequest loginReq = new LoginUserRequest();
 		loginReq.setCommonRequest(commonRequest);
 		loginReq.setUserID(userId);
-		if (userPw != null) {
-			loginReq.setUserPW(userPw);
-		}
+		loginReq.setUserPW(userPw);
 		loginReq.setIsSuccess(isSuccess);
 		loginReq.setIsOneID("Y");
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
 			loginReq.setIsMobile("Y");
 		}
+		//SC버젼, IP 추가 예정
 
 		LoginUserResponse loginRes = this.userSCI.loginUser(loginReq);
 		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {

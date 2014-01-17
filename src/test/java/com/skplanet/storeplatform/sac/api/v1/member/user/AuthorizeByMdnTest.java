@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -54,6 +55,8 @@ public class AuthorizeByMdnTest {
 
 	@Autowired
 	private LoginService loginService;
+	@Autowired
+	MemberCommonComponent commService; // 회원 공통 서비스
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -127,7 +130,7 @@ public class AuthorizeByMdnTest {
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 		req.setDeviceId("01020284280");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("US001201");
+		req.setDeviceTelecom("US012101");
 		req.setNativeId("358362045580842");
 		req.setRooting("N");
 		req.setDeviceAccount("vanddang333@gmail.com");
@@ -140,5 +143,6 @@ public class AuthorizeByMdnTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 }

@@ -47,8 +47,7 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class AuthorizeByIdTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AuthorizeByIdTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthorizeByIdTest.class);
 
 	@Autowired
 	private LoginService loginService;
@@ -68,9 +67,7 @@ public class AuthorizeByIdTest {
 
 		try {
 
-			new TestCaseTemplate(this.mockMvc)
-					.url("/dev/member/user/authorizeById/v1")
-					.httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mockMvc).url("/dev/member/user/authorizeById/v1").httpMethod(HttpMethod.POST)
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
@@ -80,7 +77,7 @@ public class AuthorizeByIdTest {
 							req.setDeviceId("01073215212");
 							// req.setDeviceId("01088870008");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom("KT");
+							req.setDeviceTelecom("US012101");
 							req.setDeviceAccount("vanddang@gmail.com");
 							req.setScVer("1.0");
 
@@ -90,8 +87,7 @@ public class AuthorizeByIdTest {
 						}
 					}).success(AuthorizeByIdRes.class, new SuccessCallback() {
 						@Override
-						public void success(Object result,
-								HttpStatus httpStatus, RunMode runMode) {
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							AuthorizeByIdRes res = (AuthorizeByIdRes) result;
 							logger.info("response param : {}", res.toString());
 						}
@@ -112,7 +108,7 @@ public class AuthorizeByIdTest {
 		req.setUserId("hdk");
 		req.setUserPw("123qwe");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("KT");
+		req.setDeviceTelecom("US012101");
 		req.setDeviceAccount("vanddang@gmail.com");
 		req.setScVer("1.0");
 

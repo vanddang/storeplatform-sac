@@ -40,7 +40,8 @@ public interface DeviceService {
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception;
 
 	/**
-	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
+	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
+	 * 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param systemId
 	 * @param tenanId
@@ -48,8 +49,7 @@ public interface DeviceService {
 	 * @param deviceInfo
 	 * @throws Exception
 	 */
-	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo)
-			throws Exception;
+	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
 
 	/**
 	 * 기기정보 merge
@@ -62,6 +62,15 @@ public interface DeviceService {
 	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception;
 
 	/**
+	 * 단말 주요정보 셋팅(SKT 통신사인 경우 서비스 관리번호 조회, 미지원 단말 예외 처리, IOS 이북 보관함 지원 uuid 셋팅)
+	 * 
+	 * @param deviceInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public DeviceInfo setCheckMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception;
+
+	/**
 	 * 휴대기기 대표단말 설정
 	 * 
 	 * @param headerVo
@@ -69,8 +78,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req)
-			throws Exception;
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 삭제

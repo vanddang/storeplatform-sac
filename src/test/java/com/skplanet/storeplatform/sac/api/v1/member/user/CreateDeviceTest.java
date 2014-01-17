@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -100,7 +102,7 @@ public class CreateDeviceTest {
 							deviceInfo.setIsPrimary("N");
 							deviceInfo.setDeviceNickName("SHP-110S(임시)");
 
-							deviceInfo.setDotoriAuthDate(DateUtil.getToday());
+							deviceInfo.setDotoriAuthDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 							deviceInfo.setDotoriAuthYn("Y");
 							deviceInfo.setOsVer("1.0");
 							deviceInfo.setScVer("1.0");

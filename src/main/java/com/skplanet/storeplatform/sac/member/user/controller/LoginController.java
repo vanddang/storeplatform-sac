@@ -50,7 +50,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/member/user/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @RequestBody AuthorizeByMdnReq req) throws Exception {
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) throws Exception {
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 

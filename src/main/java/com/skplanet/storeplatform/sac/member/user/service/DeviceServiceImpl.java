@@ -9,12 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -148,6 +146,10 @@ public class DeviceServiceImpl implements DeviceService {
 					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
+		if (schUserRes.getUserMbr() == null) {
+			throw new RuntimeException("회원정보 없음.");
+		}
+
 		if (req.getRegMaxCnt() == 0
 				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
 						.getRegMaxCnt())) {
@@ -156,11 +158,11 @@ public class DeviceServiceImpl implements DeviceService {
 
 		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
 		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
-		req.getDeviceInfo().setAuthenticationDate(DateUtil.getToday()); // 인증일자
+		req.getDeviceInfo().setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss")); // 인증일자
 		req.getDeviceInfo().setIsAuthenticated("Y"); // 인증여부
 		req.getDeviceInfo().setIsUsed("Y"); // 사용여부
 
-		/* 기등록된 회원의 휴대기기 정보 처리 */
+		/* 휴대기기 등록 처리 */
 		this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
 
 		/* sc회원 컴포넌트 휴대기기 목록 조회 */
@@ -225,9 +227,9 @@ public class DeviceServiceImpl implements DeviceService {
 				param.put("user_mdn", userPhoneStr);
 				param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 			}
-			Date dtCur = new Date();
-			param.put("modify_req_date", new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
-			param.put("modify_req_time", new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
+
+			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
+			param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
 
 			ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
 			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
@@ -352,8 +354,9 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenantId);
 
-		/* 1. 휴대기기 정보 등록 요청 */
+		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
 
+		/* 1. 휴대기기 정보 등록 요청 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setIsNew("Y");
@@ -443,7 +446,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception {
+	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo deviceInfo) throws Exception {
 
 		logger.info("################ mergeDeviceInfo start ##################");
 
@@ -451,7 +454,9 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenanId);
 
-		String deviceId = req.getDeviceId();
+		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
+
+		String deviceId = deviceInfo.getDeviceId();
 
 		if (deviceId == null) {
 			throw new Exception("deviceId is null 기기정보 수정 불가");
@@ -467,7 +472,7 @@ public class DeviceServiceImpl implements DeviceService {
 		keySearchList.add(key);
 
 		schDeviceReq.setCommonRequest(commonRequest);
-		schDeviceReq.setUserKey(req.getUserKey());
+		schDeviceReq.setUserKey(deviceInfo.getUserKey());
 		schDeviceReq.setKeySearchList(keySearchList);
 
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(schDeviceReq);
@@ -478,15 +483,15 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 기기정보 필드 */
-		String deviceModelNo = req.getDeviceModelNo(); // 단말모델코드
-		String nativeId = req.getNativeId(); // nativeId(imei)
-		String deviceAccount = req.getDeviceAccount(); // gmailAddr
-		String imMngNum = req.getImMngNum(); // SKT 서비스 관리번호
-		String deviceTelecom = req.getDeviceTelecom(); // 통신사코드
-		String deviceNickName = req.getDeviceNickName(); // 휴대폰닉네임
-		String isPrimary = req.getIsPrimary(); // 대표폰 여부
-		String isRecvSms = req.getIsRecvSms(); // sms 수신여부
-		String rooting = req.getRooting(); // rooting 여부
+		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
+		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
+		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
+		String imMngNum = deviceInfo.getImMngNum(); // SKT 서비스 관리번호
+		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
+		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
+		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
+		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
+		String rooting = deviceInfo.getRooting(); // rooting 여부
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
@@ -519,7 +524,7 @@ public class DeviceServiceImpl implements DeviceService {
 								idpModelId = "SSO0";
 							}
 
-							req.setUacd(idpModelId);
+							deviceInfo.setUacd(idpModelId);
 						}
 
 					} else {
@@ -553,14 +558,14 @@ public class DeviceServiceImpl implements DeviceService {
 					Map<String, String> mapIcas = null;
 
 					String paramType = null;
-					if (req.getDeviceIdType().equals("msisdn")) {
+					if (deviceInfo.getDeviceIdType().equals("msisdn")) {
 						paramType = "11";
-					} else if (req.getDeviceIdType().equals("uuid")) {
+					} else if (deviceInfo.getDeviceIdType().equals("uuid")) {
 						paramType = "12";
 					} else {
 						paramType = "13";
 					}
-					logger.info("::::  ICAS 연동 :::: deviceType {}, paramType {}", req.getDeviceIdType(), paramType);
+					logger.info("::::  ICAS 연동 :::: deviceType {}, paramType {}", deviceInfo.getDeviceIdType(), paramType);
 					if (!this.commService.getMappingInfo(deviceId, paramType).getMvnoCD().equals("0")) { // MVNO
 						mapIcas = this.commService.getMvService(deviceId);
 					} else {
@@ -638,7 +643,7 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
 		/* 휴대기기 부가정보 */
-		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(req));
+		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -656,6 +661,44 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("################ mergeDeviceInfo end ##################");
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * setCheckMajorDeviceInfo
+	 * (com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 */
+	@Override
+	public DeviceInfo setCheckMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception {
+
+		/* SKT 통신사인 경우 서비스 관리번호 조회 */
+		String imMngNum = "";
+		if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceInfo.getDeviceTelecom())) {
+			IDPReceiverM idpReceiver = this.idpService.findProfileForWap(deviceInfo.getDeviceId());
+			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+				imMngNum = idpReceiver.getResponseBody().getSvc_mng_num();
+			} else {
+				throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "]" + idpReceiver.getResponseHeader().getResult_text());
+			}
+		}
+		deviceInfo.setImMngNum(imMngNum);
+
+		/* 미지원 단말 예외 처리 */
+		String uacd = this.commService.getUaCode(deviceInfo.getDeviceModelNo());
+		if (uacd == null) {
+			deviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE);
+			deviceInfo.setDeviceTelecom(MemberConstants.NOT_SUPPORT_HP_CORP);
+		} else {
+			deviceInfo.setUacd(uacd);
+		}
+
+		/* IOS 이북 보관함 지원 uuid 셋팅 */
+		if (MemberConstants.DEVICE_ID_TYPE_UUID.equals(deviceInfo.getDeviceIdType())) {
+			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_IOS);
+		}
+		return deviceInfo;
 	}
 
 	/**
