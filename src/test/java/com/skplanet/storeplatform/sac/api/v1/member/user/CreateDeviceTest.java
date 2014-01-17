@@ -74,7 +74,7 @@ public class CreateDeviceTest {
 		try {
 
 			new TestCaseTemplate(this.mockMvc)
-					.url("/dev/member/user/createDevice/v1")
+					.url("/member/user/createDevice/v1")
 					.httpMethod(HttpMethod.POST)
 					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 					.addHeaders("Accept", "application/json")
