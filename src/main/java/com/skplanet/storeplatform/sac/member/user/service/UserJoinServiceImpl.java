@@ -143,8 +143,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * TODO 필수 항목으로 변경내용 확인 필요.
 			 */
-			userMbr.setLoginStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
-			userMbr.setStopStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
+			userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
+			userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 			userMbr.setIsParent(req.getIsParent());
@@ -367,8 +367,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * TODO 필수 항목으로 변경내용 확인 필요.
 			 */
-			userMbr.setLoginStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
-			userMbr.setStopStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
+			userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
+			userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getUserId());
 			userMbr.setUserTelecom(req.getDeviceTelecom());
