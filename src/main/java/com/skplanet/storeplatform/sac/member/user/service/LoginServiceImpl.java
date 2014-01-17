@@ -506,10 +506,9 @@ public class LoginServiceImpl implements LoginService {
 			loginReq.setUserPW(userPw);
 		}
 		loginReq.setIsSuccess(isSuccess);
+		loginReq.setIsOneID("Y");
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
 			loginReq.setIsMobile("Y");
-		} else {
-			loginReq.setIsOneID("Y");
 		}
 
 		LoginUserResponse loginRes = this.userSCI.loginUser(loginReq);
