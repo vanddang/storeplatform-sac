@@ -27,6 +27,12 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 
+/**
+ * 
+ * Calss 설명
+ * 
+ * Updated on : 2014. 1. 17. Updated by : Lee, Jung suk, incross.
+ */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,7 +40,7 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
 public class SetLoginConditionTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SetLoginConditionTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SetLoginConditionTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -54,7 +60,9 @@ public class SetLoginConditionTest {
 
 	/**
 	 * <pre>
-	 * 로그인 상태정보 배포
+	 * 로그인 상태정보 배포.
+	 * 성공 Case
+	 * 로그인 상태 정보 : 가능
 	 * </pre>
 	 */
 	@Test
@@ -83,7 +91,7 @@ public class SetLoginConditionTest {
 
 						req.setReqParam(resultMap);
 
-						logger.info("request param : {}", req.toString());
+						LOGGER.info("request param : {}", req.toString());
 						return req;
 					}
 				}).success(ProvisioningRes.class, new SuccessCallback() {
@@ -92,12 +100,19 @@ public class SetLoginConditionTest {
 						ProvisioningRes res = (ProvisioningRes) result;
 						// res.get
 						// assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
+	/**
+	 * <pre>
+	 * 로그인 상태정보 배포.
+	 * 성공 Case
+	 * 로그인 상태 정보 : 불가능
+	 * </pre>
+	 */
 	@Test
 	public void setLoginCondition02() {
 
@@ -124,7 +139,7 @@ public class SetLoginConditionTest {
 
 						req.setReqParam(resultMap);
 
-						logger.info("request param : {}", req.toString());
+						LOGGER.info("request param : {}", req.toString());
 						return req;
 					}
 				}).success(ProvisioningRes.class, new SuccessCallback() {
@@ -133,7 +148,7 @@ public class SetLoginConditionTest {
 						ProvisioningRes res = (ProvisioningRes) result;
 						// res.get
 						// assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
+						LOGGER.info("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
