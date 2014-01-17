@@ -215,14 +215,23 @@
                           SELECT 
                                 B.CATALOG_ID 
                                ,C.CATALOG_NM 
+                               ,C.CATALOG_DESC
                                ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
                                ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                                ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
                                ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
+                               ,CASE WHEN N.SPRC_DC_RATE IS NOT NULL THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
                                ,A.BRAND_ID  
                                ,A.BRAND_NM  
                                ,D.MENU_ID  
-                               ,F.MENU_NM   
+                               ,F.MENU_NM
+                               ,J.TOP_MENU_ID   
+                               ,(SELECT MENU_NM
+                                   FROM TB_DP_MENU_CATEGORY_DESC
+                                  WHERE MENU_ID = J.TOP_MENU_ID
+                                    AND LANG_CD = 'ko'
+                                    AND ROWNUM = 1
+                                ) AS UP_MENU_NM                                   
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                                ,CASE WHEN (SYSDATE - 7)    <![CDATA[ <= ]]>  I.REG_DT THEN 'Y' ELSE 'N' END AS NEW_YN  
                                ,I.REG_DT 
