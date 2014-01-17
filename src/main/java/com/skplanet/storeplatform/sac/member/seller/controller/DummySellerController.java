@@ -135,7 +135,7 @@ public class DummySellerController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchIdRes searchId() {
 
@@ -832,7 +832,7 @@ public class DummySellerController {
 	 * 
 	 * @return ListWithdrawalReasonRes
 	 */
-	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListWithdrawalReasonRes listWithdrawalReason() {
 
