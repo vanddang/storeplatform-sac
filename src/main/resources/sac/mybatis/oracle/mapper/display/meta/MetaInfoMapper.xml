@@ -243,7 +243,9 @@
                                ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
-                               ,L.APPLY_END_DT    
+                               ,L.APPLY_END_DT 
+                               ,N.SPRC_APPLY_START_DT
+                               ,N.SPRC_APPLY_END_DT   
                                ,DECODE(I.PROD_CASE_CD
                                      , 'DP006301', 'giftcard'
                                      , 'DP006302', 'exchange'
@@ -276,6 +278,8 @@
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
+                                      , B1.SPRC_APPLY_START_DT
+                                      , B1.SPRC_APPLY_END_DT
                                    FROM  TB_DP_PROD_CATALOG_MAPG A1
                                         ,TB_DP_SPRC_PROD B1
                                    WHERE 1=1
@@ -283,7 +287,7 @@
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
-                                  )                        N
+                                  ) N
                         WHERE 1=1
                         AND A.BRAND_ID = B.BRAND_ID
                         AND B.CATALOG_ID = C.CATALOG_ID
