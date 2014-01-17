@@ -27,8 +27,8 @@ import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.LogInUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.LogInUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -163,9 +163,9 @@ public class LoginServiceImpl implements LoginService {
 			return res;
 		}
 
-		/* 모바일회원인경우 변동성 체크, SC콤포넌트 변동성 회원 여부 필드 확인필요!! */
-		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
-			//this.volatileMemberPoc(deviceId, userKey);
+		/* 변동성 회원인 경우 */
+		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE) && StringUtil.equals(schUserRes.getIsChangeSubject(), "Y")) {
+			this.volatileMemberPoc(deviceId, userKey);
 		}
 
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
@@ -174,7 +174,7 @@ public class LoginServiceImpl implements LoginService {
 			this.mergeDeviceInfo(userKey, req);
 
 			/* 로그인 성공이력 저장 */
-			this.insertloginHistory(deviceId, null, "Y");
+			this.insertloginHistory(deviceId, null, "Y", userType);
 
 			/* 로그인 결과 */
 			res.setUserKey(userKey);
@@ -193,7 +193,7 @@ public class LoginServiceImpl implements LoginService {
 				this.mergeDeviceInfo(userKey, req);
 
 				/* 로그인 성공이력 저장 */
-				this.insertloginHistory(deviceId, null, "Y");
+				this.insertloginHistory(deviceId, null, "Y", userType);
 
 				/* 로그인 결과 */
 				res.setUserKey(userKey);
@@ -208,7 +208,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else { //무선회원 인증 실패
 
-				this.insertloginHistory(deviceId, null, "N");
+				this.insertloginHistory(deviceId, null, "N", userType);
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			}
@@ -311,7 +311,7 @@ public class LoginServiceImpl implements LoginService {
 
 					this.mergeDeviceInfo(userKey, req);
 
-					this.insertloginHistory(userId, userPw, "Y");
+					this.insertloginHistory(userId, userPw, "Y", userType);
 
 					res.setUserKey(userKey);
 					res.setUserType(userType);
@@ -322,7 +322,7 @@ public class LoginServiceImpl implements LoginService {
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-					this.insertloginHistory(userId, userPw, "N");
+					this.insertloginHistory(userId, userPw, "N", userType);
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
 							+ imIdpReceiver.getResponseHeader().getResult_text());
 
@@ -389,7 +389,7 @@ public class LoginServiceImpl implements LoginService {
 
 				this.mergeDeviceInfo(userKey, req);
 
-				this.insertloginHistory(userId, userPw, "Y");
+				this.insertloginHistory(userId, userPw, "Y", userType);
 
 				res.setUserKey(userKey);
 				res.setUserType(userType);
@@ -398,7 +398,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-				this.insertloginHistory(userId, userPw, "N");
+				this.insertloginHistory(userId, userPw, "N", userType);
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
@@ -503,17 +503,21 @@ public class LoginServiceImpl implements LoginService {
 	 * @return
 	 * @throws Exception
 	 */
-	public LogInUserResponse insertloginHistory(String userId, String userPw, String isSuccess) throws Exception {
-		LogInUserRequest loginReq = new LogInUserRequest();
+	public LoginUserResponse insertloginHistory(String userId, String userPw, String isSuccess, String userType) throws Exception {
+		LoginUserRequest loginReq = new LoginUserRequest();
 		loginReq.setCommonRequest(commonRequest);
 		loginReq.setUserID(userId);
 		if (userPw != null) {
 			loginReq.setUserPW(userPw);
 		}
 		loginReq.setIsSuccess(isSuccess);
-		loginReq.setIsOneID("Y");
+		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
+			loginReq.setIsMobile("Y");
+		} else {
+			loginReq.setIsOneID("Y");
+		}
 
-		LogInUserResponse loginRes = this.userSCI.logInUser(loginReq);
+		LoginUserResponse loginRes = this.userSCI.loginUser(loginReq);
 		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			throw new Exception("[" + loginRes.getCommonResponse().getResultCode() + "] " + loginRes.getCommonResponse().getResultMessage());
 		}
