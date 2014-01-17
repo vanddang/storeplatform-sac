@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Miscellaneous">
 
+    <!-- 다음 시퀀스 조회 -->
+    <select id="getNexValueForSvcAuth" resultType="String">
+       SELECT 
+           SQ_CM_SVC_AUTH.NEXTVAL
+       FROM
+           DUAL
+    </select>
+
 	<!-- UA 코드 정보 조회 -->
 	<select id="getUaCode" parameterType="String" resultType="String">
 		/* MiscellaneousMapper.xml, getUaCode, SAC : 김다슬 , 2014-01-09 */
@@ -13,124 +21,57 @@
 		  DEVICE_MODEL_CD = #{deviceModelNo}
 	</select>
 	
-	<!-- 휴대폰 SMS 인증 - 재인증 여부 확인 -->
-	<select id="getPhoneAuthYn" parameterType="String" resultType="HashMap">
-	   /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-15 */
-	   SELECT 
-	       AUTH_COMPT_YN, AUTH_VALUE
-	   FROM
-	       TB_CM_SVC_AUTH
-	   WHERE
-	       MBR_NO = #{userKey}
+	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인 -->
+	<select id="getPhoneAuthYn" parameterType="HashMap" resultType="HashMap">
+	   /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
+       SELECT 
+           AUTH_SEQ,
+           AUTH_SIGN,
+           AUTH_VALUE,
+           TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyymmddhh24miss') AS AUTH_VALUE_CREATE_DT,
+           AUTH_COMPT_YN
+       FROM
+           TB_CM_SVC_AUTH
+       WHERE
+           AUTH_TYPE_CD = #{authTypeCd}
+           and AUTH_SIGN = #{authSign}
+           and AUTH_VALUE = #{authValue}
 	</select>
 	
-    <!-- 휴대폰 SMS 인증 코드 저장 / 삭제 예정 -->
-    <insert id="insertPhoneAuthCode"
-        parameterType="HashMap">
-        /* MiscellaneousMapper.xml, insertPhoneAuthCode, SAC : 김다슬 , 2014-01-14 */
+    <!-- 휴대폰 SMS 인증 코드 정보 저장 -->
+    <insert id="insertPhoneAuthCode" parameterType="HashMap">
+        /* MiscellaneousMapper.xml, insertPhoneAuthCode, SAC : 김다슬 , 2014-01-16 */
         INSERT INTO
             TB_CM_SVC_AUTH(
-                MBR_NO,
+                AUTH_SEQ,
                 TENANT_ID,
-                AUTH_TYPE_CD, /* 인증 타입 (SMS or Email) */
+                AUTH_TYPE_CD, /* 인증 타입 (CM010901:SMS, CM010902:Email) */
                 AUTH_SIGN, /* 인증 Signature */
                 AUTH_VALUE, /* 인증 코드 */
                 AUTH_VALUE_CREATE_DT, /* 인증 코드 생성 일자 */
+                AUTH_COMPT_YN, /* 인증 여부 - 초기화 */
                 REG_ID,
                 REG_DT,
                 UPD_ID,
                 UPD_DT
             )
             VALUES(
-               #{mbr_no},
+               #{auth_seq},
                #{tenant_id},
-               'CM010901', /* SMS 인증 코드ID */
+               #{authTypeCd},
                #{auth_sign},
                #{auth_value},
-               #{auth_value_create_dt},
+               SYSDATE,
+               'N',
                'admin',
                SYSDATE,
                'admin',
                SYSDATE
             )
     </insert>
-    <!-- 휴대폰 SMS 인증 코드 수정 -->
-    <insert id="updatePhoneAuthCode"
-        parameterType="HashMap">
-        /* MiscellaneousMapper.xml, updatePhoneAuthCode, SAC : 김다슬 , 2014-01-14 */
-        UPDATE 
-            TB_CM_SVC_AUTH
-        SET
-            AUTH_SIGN = #{auth_sign},
-            AUTH_VALUE = #{auth_value},
-            AUTH_VALUE_CREATE_DT = #{auth_value_create_dt},
-            UPD_ID = 'admin',
-            UPD_DT = SYSDATE
-        WHERE 
-            MBR_NO = #{mbr_no}    
-    </insert>
     
-    <update id="mergeIntoPhoneAuthCode" parameterType="HashMap">
-    /* MiscellaneousMapper.xml, mergeIntoPhoneAuthCode, SAC : 김다슬 , 2014-01-15 */
-    MERGE INTO
-        TB_CM_SVC_AUTH
-    USING DUAL
-    WHEN 
-        AUTH_VALUE 
-    THEN 
-        UPDATE SET
-            AUTH_SIGN = #{auth_sign},
-            AUTH_VALUE = #{auth_value},
-            AUTH_VALUE_CREATE_DT = #{auth_value_create_dt},
-            UPD_ID = 'admin',
-            UPD_DT = SYSDATE
-        WHERE 
-            MBR_NO = #{mbr_no}    
-    WHEN 
-        NOT AUTH_VALUE
-    THEN
-        INSERT
-        (
-	        MBR_NO
-	        TENANT_ID,
-	        AUTH_TYPE_CD, /* 인증 타입 (SMS or Email) */
-	        AUTH_SIGN, /* 인증 Signature */
-	        AUTH_VALUE, /* 인증 코드 */
-	        AUTH_VALUE_CREATE_DT, /* 인증 코드 생성 일자 */
-	        REG_ID,
-	        REG_DT,
-	        UPD_ID,
-	        UPD_DT
-         )
-         VALUES
-         (
-            #{mbr_no},
-            #{tenant_id},
-            'CM010901', /* SMS 인증 코드ID */
-            #{auth_sign},
-            #{auth_value},
-            #{auth_value_create_dt},
-            'admin',
-            SYSDATE,
-            'admin',
-            SYSDATE
-            )
-    </update>
-    
-    <select id="confirmPhoneAuthCode" parameterType="String" resultType="HashMap">
-    /* MiscellaneousMapper.xml, confirmPhoneAuthCode, SAC : 김다슬 , 2014-01-16 */
-    SELECT 
-        AUTH_COMPT_YN,  
-        AUTH_SIGN, 
-        AUTH_VALUE,
-        TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyymmddhh24miss') AS AUTH_VALUE_CREATE_DT
-    FROM 
-        TB_CM_SVC_AUTH
-    WHERE
-        MBR_NO = #{userKey}
-    </select>
-    
-    <update id="updatePhoneAuthYn" parameterType="HashMap">
+    <!--  휴대폰 SMS 인증 여부 업데이트(인증성공) -->
+    <update id="updatePhoneAuthYn" parameterType="String">
     /* MiscellaneousMapper.xml, updatePhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
     UPDATE 
         TB_CM_SVC_AUTH
@@ -139,6 +80,7 @@
        UPD_ID = 'admin',
        UPD_DT = SYSDATE
     WHERE 
-       MBR_NO = #{userKey}    
+       AUTH_SEQ = #{authSeq}    
     </update>
+    
 </mapper>

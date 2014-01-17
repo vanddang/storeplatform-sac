@@ -22,17 +22,17 @@ public interface MiscellaneousRepository {
 
 	/**
 	 * <pre>
-	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 재인증 여부 확인.
+	 * 휴휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인.
 	 * </pre>
 	 * 
 	 * @param userKey
 	 * @return String
 	 */
-	public Map<String, String> getPhoneAuthYn(String userKey);
+	public Map getPhoneAuthYn(Map<String, String> requestMap);
 
 	/**
 	 * <pre>
-	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 저장 / 삭제 예정 - 아래 merge method로 대체  예정.
+	 * 휴대폰 SMS 인증 코드 정보 저장.
 	 * </pre>
 	 * 
 	 * @param phoneAuthCodeInfo
@@ -41,35 +41,7 @@ public interface MiscellaneousRepository {
 
 	/**
 	 * <pre>
-	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 저장 / 삭제 예정 - 아래 merge method로 대체 예정.
-	 * </pre>
-	 * 
-	 * @param phoneAuthCodeInfo
-	 */
-	public void updatePhoneAuthCode(Map<String, String> phoneAuthCodeInfo);
-
-	/**
-	 * <pre>
-	 * 휴대폰 인증 SMS 발송 - 휴대폰 SMS 인증 코드 정보 Merge Into.
-	 * </pre>
-	 * 
-	 * @param phoneAuthCodeInfo
-	 */
-	public void mergeIntoPhoneAuthCode(Map<String, String> phoneAuthCodeInfo);
-
-	/**
-	 * <pre>
-	 * 휴대폰 인증 코드 정보 확인.
-	 * </pre>
-	 * 
-	 * @param userKey
-	 * @return Map
-	 */
-	public Map<String, String> confirmPhoneAuthCode(String userKey);
-
-	/**
-	 * <pre>
-	 * 휴대폰 인증 코드 확인 - 인증 여부 Update.
+	 * 휴대폰 SMS 인증 여부 업데이트(인증성공).
 	 * </pre>
 	 * 
 	 * @param userKey

@@ -263,7 +263,7 @@ public class DummyDataController {
 	 * @param GetUaCodeReq
 	 * @return GetUaCodeRes
 	 */
-	@RequestMapping(value = "/getUaCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dev/getUaCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetUaCodeRes getUaCode() {
 
@@ -284,7 +284,7 @@ public class DummyDataController {
 	 * @param GetOpmdReq
 	 * @return GetOpmdRes
 	 */
-	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/dev/getOpmd/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetOpmdRes getOpmd() {
 

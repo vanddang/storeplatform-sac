@@ -26,6 +26,8 @@ import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -37,6 +39,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
@@ -166,14 +169,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 						if (uaCode != null) {
 							response.setUaCd(uaCode);
 						} else {
-							throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
+							LOGGER.info("deviceId에 해당하는 UA 코드 없음.");
 						}
 					}
-				} else if (deviceModelNo == null) {
-					throw new Exception("userKey와 deviceId에 해당하는 deviceModelNo 없음.");
 				} else {
-					throw new Exception("[" + searchDeviceResult.getCommonResponse().getResultCode() + "] "
-							+ searchDeviceResult.getCommonResponse().getResultMessage());
+					LOGGER.info("SC 회원 API 조회 실패.");
+					throw new StorePlatformException(ErrorMessageBuilder.create().defaultMessage("SC 회원 API 조회 실패")
+							.build());
+					// throw new Exception("[" + searchDeviceResult.getCommonResponse().getResultCode() + "] "
+					// + searchDeviceResult.getCommonResponse().getResultMessage());
 				}
 
 			} else {
@@ -187,10 +191,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			if (uaCode != null) {
 				response.setUaCd(uaCode);
 			} else {
-				throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
+				LOGGER.info("deviceModelNo에 해당하는 UA 코드 없음.");
 			}
 		}
-
 		return response;
 	}
 
@@ -201,62 +204,61 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String authCode = "";
 		/** TODO 1. 휴대폰 인증 코드 생성 */
 		Random random = new Random();
-		for (int i = 0; i < 6; i++) {
-			authCode += random.nextInt(9); // 0~9 사이의 난수 발생
-		}
+		authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
 		LOGGER.debug("###### >> authCode :" + authCode);
 
 		/** TODO 2. 인증 Signautre 생성 - guid 형식 */
 
-		String authSign = UUID.randomUUID().toString();
+		String authSign = UUID.randomUUID().toString().replace("-", "");
 		LOGGER.debug("###### >> authSign : " + authSign);
 
-		/** userPhone을 통해 userKey값을 조회 - getUserKey Function 호출 */
-		String userKey = this.getUserKey(commonRequest, request.getUserPhone());
-		if (userKey == null) {
-			throw new Exception("휴대폰번호에 해당하는 userKey 없음.");
-		}
+		// /** userPhone을 통해 userKey값을 조회 - getUserKey Function 호출 */
+		// String userKey = this.getUserKey(commonRequest, request.getUserPhone());
+		// if (userKey == null) {
+		// throw new Exception("휴대폰번호에 해당하는 userKey 없음.");
+		// }
 
-		/** 해당 회원이 인증되었는지 여부 확인 DB(auth_compt_yn) */
-		HashMap<String, String> resultMap = new HashMap<String, String>();
-		resultMap = (HashMap<String, String>) this.repository.getPhoneAuthYn(userKey);
-		if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
-			throw new Exception("이미 인증된 회원 입니다.");
-		} else {
-			/** 기존 인증된 회원이 아닌경우 생성된 인증코드를 DB에 저장 */
-			// 인증 코드 등록 일자 생성
-			String createDate = DateUtil.getDateString(new Date(), "yyyymmddhhmmss");
-			LOGGER.debug("현재 Date : " + createDate);
+		// /** 해당 회원이 인증되었는지 여부 확인 DB(auth_compt_yn) */
+		// HashMap<String, String> resultMap = new HashMap<String, String>();
+		// resultMap = (HashMap<String, String>) this.repository.getPhoneAuthYn(userKey);
+		// if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
+		// throw new Exception("이미 인증된 회원 입니다.");
+		// } else {
+		// /** 기존 인증된 회원이 아닌경우 생성된 인증코드를 DB에 저장 */
+		// 인증 코드 등록 일자 생성
+		String createDate = DateUtil.getDateString(new Date(), "yyyymmddhhmmss");
+		LOGGER.debug("현재 Date : " + createDate);
 
-			/** Request 파라미터를 Map에 셋팅 */
-			HashMap<String, String> phoneAuthCodeInfo = new HashMap<String, String>();
-			phoneAuthCodeInfo.put("mbr_no", userKey);
-			phoneAuthCodeInfo.put("tenant_id", commonRequest.getTenantID());
-			phoneAuthCodeInfo.put("auth_sign", authSign);
-			phoneAuthCodeInfo.put("auth_value", authCode);
-			phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
-			phoneAuthCodeInfo.put("reg_dt", createDate.toString());
+		/** Request 파라미터를 Map에 셋팅 */
+		HashMap<String, String> phoneAuthCodeInfo = new HashMap<String, String>();
+		// phoneAuthCodeInfo.put("mbr_no", userKey);
+		phoneAuthCodeInfo.put("tenant_id", commonRequest.getTenantID());
+		phoneAuthCodeInfo.put("authTypeCd", "CM010901");
+		phoneAuthCodeInfo.put("auth_sign", authSign);
+		phoneAuthCodeInfo.put("auth_value", authCode);
+		// phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
+		// phoneAuthCodeInfo.put("reg_dt", createDate.toString());
 
-			/** 인증코드 정보가 있으면 update, 없으면 insert 처리함. */
-			// this.repository.mergeIntoPhoneAuthCode(phoneAuthCodeInfo);
-			if (resultMap.get("AUTH_VALUE") == null) {
-				phoneAuthCodeInfo.put("mbr_no", userKey);
-				phoneAuthCodeInfo.put("tenant_id", commonRequest.getTenantID());
-				phoneAuthCodeInfo.put("auth_sign", authSign);
-				phoneAuthCodeInfo.put("auth_value", authCode);
-				phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
-				phoneAuthCodeInfo.put("reg_dt", createDate.toString());
-				this.repository.insertPhoneAuthCode(phoneAuthCodeInfo);
-			} else {
-				phoneAuthCodeInfo.put("auth_sign", authSign);
-				phoneAuthCodeInfo.put("auth_value", authCode);
-				phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
-				phoneAuthCodeInfo.put("mbr_no", userKey);
-				this.repository.updatePhoneAuthCode(phoneAuthCodeInfo);
-			}
-		}
+		// /** 인증코드 정보가 있으면 update, 없으면 insert 처리함. */
+		// // this.repository.mergeIntoPhoneAuthCode(phoneAuthCodeInfo);
+		// if (resultMap.get("AUTH_VALUE") == null) {
+		// phoneAuthCodeInfo.put("mbr_no", userKey);
+		// phoneAuthCodeInfo.put("tenant_id", commonRequest.getTenantID());
+		// phoneAuthCodeInfo.put("auth_sign", authSign);
+		// phoneAuthCodeInfo.put("auth_value", authCode);
+		// phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
+		// phoneAuthCodeInfo.put("reg_dt", createDate.toString());
+		this.repository.insertPhoneAuthCode(phoneAuthCodeInfo);
+		// } else {
+		// phoneAuthCodeInfo.put("auth_sign", authSign);
+		// phoneAuthCodeInfo.put("auth_value", authCode);
+		// phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
+		// phoneAuthCodeInfo.put("mbr_no", userKey);
+		// this.repository.updatePhoneAuthCode(phoneAuthCodeInfo);
+		// }
+		// }
 
-		/** External Comp.에 SMS 발송 요청 */
+		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
 		smsReq.setDeviceTelecom(request.getUserTelecom());
@@ -281,55 +283,76 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public String confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) throws Exception {
+	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request)
+			throws Exception {
+		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
 		String signature = request.getPhoneSign();
 		long timeToLive = Long.parseLong(request.getTimeToLive()); // Tenant 정책에 따라 변경되는 인증번호 생존 시간.
 		String userPhone = request.getUserPhone();
 
-		/** 1. userPhone으로 회원 Key 조회 (mbr_no) -> getUserKey Function 호출 */
-		String userKey = this.getUserKey(commonRequest, request.getUserPhone());
-		if (userKey == null) {
-			throw new Exception("휴대폰번호에 해당하는 userKey 없음.");
-		}
-		/** 2. userKey(mbr_no)로 DB(TB_CM_SVC_AUTH) 조회 */
+		// /** 1. userPhone으로 회원 Key 조회 (mbr_no) -> getUserKey Function 호출 */
+		// String userKey = this.getUserKey(commonRequest, request.getUserPhone());
+		// if (userKey == null) {
+		// throw new Exception("휴대폰번호에 해당하는 userKey 없음.");
+		// }
+		// /** 2. userKey(mbr_no)로 DB(TB_CM_SVC_AUTH) 조회 */
+		// Map<String, String> resultMap = new HashMap<String, String>();
+		// resultMap = this.repository.confirmPhoneAuthCode(userKey);
+		// if (resultMap == null) {
+		// throw new Exception("회원에 대한 인증 정보가 없습니다.");
+		// } else if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
+		// throw new Exception("이미 인증된 회원입니다.");
+		// }
+
+		Map<String, String> requestMap = new HashMap<String, String>();
+		requestMap.put("authTypeCd", "CM010901");
+		requestMap.put("authSign", signature);
+		requestMap.put("authValue", authCode);
+
 		Map<String, String> resultMap = new HashMap<String, String>();
-		resultMap = this.repository.confirmPhoneAuthCode(userKey);
-		if (resultMap == null) {
-			throw new Exception("회원에 대한 인증 정보가 없습니다.");
-		} else if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
-			throw new Exception("이미 인증된 회원입니다.");
-		}
-		/** 3. DB와 Request의 authCode와 signature를 비교 */
-		if (resultMap.get("AUTH_VALUE").equals(authCode) && resultMap.get("AUTH_SIGN").equals(signature)) {
-			/** 인증유효 시간 만료여부 확인 (현재시간 - 인증코드 생성일자) < timeToLive */
-			String nowDate = DateUtil.getDateString(new Date(), "yyyyMMddHHmmss");
-			LOGGER.debug(">>> nowDate : " + nowDate);
-			long endTime = Long.parseLong(nowDate);
+		resultMap = this.repository.getPhoneAuthYn(requestMap);
 
-			LOGGER.debug("############################# 1");
-			String createDate = resultMap.get("AUTH_VALUE_CREATE_DT"); // 여기가 에러남..
-			LOGGER.debug("############################# 2 >> " + createDate);
-			long startTime = Long.parseLong(createDate.toString());
-			LOGGER.debug("endTime(system current time) : " + endTime);
-			LOGGER.debug("startTime(db create time): " + startTime);
-
-			long confirmTime = endTime - startTime; // 사용자가 인증코드 입력까지 걸린 분
-
-			if (confirmTime > timeToLive) {
-				throw new Exception("인증 시간이 만료된 인증 코드입니다.");
-			}
-
-			/** 인증유효 시간 내에 인증 요청 - 인증여부 "Y"로 Update. */
-			this.repository.updatePhoneAuthYn(userKey);
-
-		} else if (!resultMap.get("AUTH_VALUE").equals(authCode)) {
-			throw new Exception("인증 코드 불일치.");
-		} else {
-			throw new Exception("인증 Signature 불일치.");
+		if (resultMap == null || resultMap.size() == 0) {
+			throw new Exception("인증 코드가 일치 하지 않습니다.");
 		}
 
-		return userPhone;
+		if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
+			throw new Exception("기인증된 인증 코드 입니다.");
+		}
+
+		// /** 3. DB와 Request의 authCode와 signature를 비교 */
+		// if (resultMap.get("AUTH_VALUE").equals(authCode) && resultMap.get("AUTH_SIGN").equals(signature)) {
+		/** 인증유효 시간 만료여부 확인 (현재시간 - 인증코드 생성일자) < timeToLive */
+		String nowDate = DateUtil.getDateString(new Date(), "yyyyMMddHHmmss");
+		LOGGER.debug(">>> nowDate : " + nowDate);
+		long endTime = Long.parseLong(nowDate);
+
+		LOGGER.debug("############################# 1");
+		String createDate = resultMap.get("AUTH_VALUE_CREATE_DT"); // 여기가 에러남..
+		LOGGER.debug("############################# 2 >> " + createDate);
+		long startTime = Long.parseLong(createDate.toString());
+		LOGGER.debug("endTime(system current time) : " + endTime);
+		LOGGER.debug("startTime(db create time): " + startTime);
+
+		long confirmTime = endTime - startTime; // 사용자가 인증코드 입력까지 걸린 분
+
+		if (confirmTime > timeToLive) {
+			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
+		}
+
+		/** 인증유효 시간 내에 인증 요청 - 인증여부 "Y"로 Update. */
+		this.repository.updatePhoneAuthYn(String.valueOf(resultMap.get("AUTH_SEQ")));
+
+		// } else if (!resultMap.get("AUTH_VALUE").equals(authCode)) {
+		// res.setIsAuth("N");
+		// throw new Exception("인증 코드 불일치.");
+		// } else {
+		// res.setIsAuth("N");
+		// throw new Exception("인증 Signature 불일치.");
+		// }
+		res.setUserPhone(userPhone);
+		return res;
 	}
 
 	@Override
