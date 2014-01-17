@@ -199,6 +199,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 					deviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
 					// this.idpReceiverM.getResponseBody().getModel_id(); // OMD_UA_CD (AS-IS 로직 TBL_OMD_PHONE_INFO 뒤져서
 					// 존재하면 데이타를 세팅했다.)
+					// /**
+					// * OMD 단말정보 조회
+					// *
+					// * TODO 모바일 전용회원에서만 IDP 연동후에 내려주는 uacd 값을 가지고 조회했으며 세팅도 했다. (적용 여부 논의 해야 할듯...)
+					// */
+					// if (this.repository.getOmdCount("") > 0) {
+					// majorDeviceInfo.setOmdUacd("");
+					// }
 
 				} else {
 
@@ -283,12 +291,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	@Override
 	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
-
-		this.mcc.setCheckMajorDeviceInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
-
-		if (true) {
-			throw new Exception();
-		}
 
 		CreateByAgreementRes response = new CreateByAgreementRes();
 
@@ -421,6 +423,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+		}
+
+		this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		if (true) {
+			throw new Exception("ㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇ");
 		}
 
 		/**

@@ -64,65 +64,63 @@ public class CreateByAgreementTest {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-	// /**
-	// * <pre>
-	// * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 ]].
-	// * </pre>
-	// *
-	// * @throws Exception
-	// * Exception
-	// */
-	// @Test
-	// public void createByAgreementDevice() throws Exception {
-	//
-	// new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH +
-	// "/createByAgreement/v1").httpMethod(HttpMethod.POST)
-	// .addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-	// .addHeaders("Accept", "application/json")
-	// .addHeaders("x-planet-device-info",
-	// "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
-	// .requestBody(new RequestBodySetter() {
-	// @Override
-	// public Object requestBody() {
-	//
-	// CreateByAgreementReq reqJson = new CreateByAgreementReq();
-	// reqJson.setDeviceId("01020284280");
-	// reqJson.setDeviceIdType("msisdn");
-	// reqJson.setUserId("test1234");
-	// reqJson.setDeviceTelecom("US001201");
-	// reqJson.setJoinId("US002903");
-	//
-	// // 동의 정보
-	// List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-	// AgreementInfo agreement1 = new AgreementInfo();
-	// agreement1.setExtraAgreementId("US010607");
-	// agreement1.setExtraAgreementVersion("0.1");
-	// agreement1.setIsExtraAgreement("Y");
-	// AgreementInfo agreement2 = new AgreementInfo();
-	// agreement2.setExtraAgreementId("US010608");
-	// agreement2.setExtraAgreementVersion("0.1");
-	// agreement2.setIsExtraAgreement("Y");
-	// AgreementInfo agreement3 = new AgreementInfo();
-	// agreement3.setExtraAgreementId("US010609");
-	// agreement3.setExtraAgreementVersion("0.1");
-	// agreement3.setIsExtraAgreement("Y");
-	// agreementList.add(agreement1);
-	// agreementList.add(agreement2);
-	// agreementList.add(agreement3);
-	// reqJson.setAgreementList(agreementList);
-	//
-	// return reqJson;
-	// }
-	// }).success(CreateByAgreementRes.class, new SuccessCallback() {
-	// @Override
-	// public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-	// CreateByAgreementRes res = (CreateByAgreementRes) result;
-	// assertThat(res.getUserKey(), notNullValue());
-	// System.out.println(res.toString());
-	// }
-	// }, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-	//
-	// }
+	/**
+	 * <pre>
+	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 ]].
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void createByAgreementDevice() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByAgreementReq reqJson = new CreateByAgreementReq();
+						reqJson.setDeviceId("01076771470");
+						reqJson.setDeviceIdType("msisdn");
+						reqJson.setUserId("test1234");
+						reqJson.setDeviceTelecom("US001201");
+						reqJson.setJoinId("US002903");
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByAgreementRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByAgreementRes res = (CreateByAgreementRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
 
 	/**
 	 * <pre>
@@ -132,7 +130,7 @@ public class CreateByAgreementTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Test
+	// @Test
 	public void createByAgreementId() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)

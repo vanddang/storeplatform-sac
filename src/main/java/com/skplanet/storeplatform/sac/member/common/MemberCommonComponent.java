@@ -324,7 +324,7 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * UA 코드정보, SKT 통합관리번호, .
+	 * DB 정보 기준.
 	 * </pre>
 	 * 
 	 * @param model
@@ -335,12 +335,33 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             MajorDeviceInfo
 	 */
-	public MajorDeviceInfo setCheckMajorDeviceInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
+
+		LOGGER.info("#### DB 정보 기준으로 단말 정보 데이타를 세팅한다.");
+		LOGGER.info("#### DB 정보 기준으로 단말 정보 데이타를 세팅한다.");
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
 		/**
-		 * 폰정보 조회 (Phone ModelCode)
+		 * SKT 가입자이면서 MSISDN 타입일 경우에만 UAPS 연동 하여 (SKT 서비스가입번호를 세팅한다.)
+		 */
+		if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+
+			/**
+			 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
+			 */
+			UserRes userRes = this.getMappingInfo(deviceId, "mdn");
+			if (userRes.getResultCode() == 0) {
+				LOGGER.debug("## UAPS 연동 정보 : {}", userRes.toString());
+				majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
+			} else {
+				throw new RuntimeException("UAPS 연동 실패~!!!!");
+			}
+
+		}
+
+		/**
+		 * 폰정보 조회후 단말 정보 세팅.
 		 */
 		Device deviceDTO = this.getPhoneInfo(model);
 		if (deviceDTO == null) {
@@ -355,45 +376,18 @@ public class MemberCommonComponent {
 
 		} else {
 
-			// UA코드 setting
-			if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
-
-				/**
-				 * SKT 가입자이면서 MSISDN 타입일 경우에만 UAPS 연동 하여 (SKT 서비스가입번호와 UACD를 세팅한다.)
-				 */
-				if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
-					UserRes userRes = this.getMappingInfo(deviceId, "mdn");
-					if (userRes.getResultCode() == 0) {
-						LOGGER.debug("## UAPS UA 코드             : {}", userRes.getDeviceModel());
-						LOGGER.debug("## UAPS SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
-						majorDeviceInfo.setDeviceModelNo(userRes.getDeviceModel());
-						majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
-					}
-
-				}
-
-				/**
-				 * OMD 단말정보 조회
-				 * 
-				 * TODO 모바일 전용회원에서만 IDP 연동후에 내려주는 uacd 값을 가지고 조회했으며 세팅도 했다. (적용 여부 논의 해야 할듯...)
-				 */
-				if (this.repository.getOmdCount("") > 0) {
-					majorDeviceInfo.setOmdUacd("");
-				}
-
-			} else {
-
-				/**
-				 * DB 정보로 uacd를 세팅한다.
-				 */
-				LOGGER.debug("## DB UA 코드 : {}", deviceDTO.getUaCd());
-				majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
-
-			}
-
-			majorDeviceInfo.setDeviceTelecom(deviceTelecom); // 이동 통신사
+			majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
 			majorDeviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
 			majorDeviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
+
+			/**
+			 * 미지원 단말 예외처리. (UA 코드 여부에 따라 이동통신사 코드 변경)
+			 */
+			if (StringUtils.equals(deviceDTO.getUaCd(), MemberConstants.NOT_SUPPORT_HP_UACODE)) {
+				majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
+			} else {
+				majorDeviceInfo.setDeviceTelecom(deviceTelecom); // 이동 통신사
+			}
 
 			/**
 			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
