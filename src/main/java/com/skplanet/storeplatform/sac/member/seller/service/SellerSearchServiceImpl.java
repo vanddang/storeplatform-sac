@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
@@ -189,11 +189,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 					}
 
 				// 약관동의목록
-				List<MbrClauseAgreeList> mList = new ArrayList<MbrClauseAgreeList>();
-				MbrClauseAgreeList mbrClauseAgreeList = null;
+				List<MbrClauseAgree> mList = new ArrayList<MbrClauseAgree>();
+				MbrClauseAgree mbrClauseAgreeList = null;
 				if (schRes.getMbrClauseAgreeList() != null)
 					for (int i = 0; i < schRes.getMbrClauseAgreeList().size(); i++) {
-						mbrClauseAgreeList = new MbrClauseAgreeList();
+						mbrClauseAgreeList = new MbrClauseAgree();
 						mbrClauseAgreeList.setExtraAgreementID(schRes.getMbrClauseAgreeList().get(i)
 								.getExtraAgreementID());
 						mbrClauseAgreeList.setExtraAgreementVersion(schRes.getMbrClauseAgreeList().get(i)

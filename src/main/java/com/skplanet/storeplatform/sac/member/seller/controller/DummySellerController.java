@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
@@ -294,10 +294,10 @@ public class DummySellerController {
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
 
 		// 약관동의목록
-		List<MbrClauseAgreeList> mList = new ArrayList<MbrClauseAgreeList>();
-		MbrClauseAgreeList mbrClauseAgreeList = null;
+		List<MbrClauseAgree> mList = new ArrayList<MbrClauseAgree>();
+		MbrClauseAgree mbrClauseAgreeList = null;
 		for (int i = 0; i < 1; i++) {
-			mbrClauseAgreeList = new MbrClauseAgreeList();
+			mbrClauseAgreeList = new MbrClauseAgree();
 			mbrClauseAgreeList.setExtraAgreementID("US004901");
 			mbrClauseAgreeList.setExtraAgreementVersion("1.0");
 			mbrClauseAgreeList.setIsExtraAgreement("Y");
