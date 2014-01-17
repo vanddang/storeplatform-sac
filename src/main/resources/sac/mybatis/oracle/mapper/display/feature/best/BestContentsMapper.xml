@@ -127,7 +127,7 @@
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND C.LANG_CD = 'ko'                      /* ko : 한국어 */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
-                                           AND E.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
+                                           AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                                            AND F.LANG_CD = 'ko'                      /* ko : 한국어 */
                                            AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
