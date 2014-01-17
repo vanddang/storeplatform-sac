@@ -22,7 +22,7 @@
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인 -->
-	<select id="getPhoneAuthYn" parameterType="HashMap" resultType="HashMap">
+	<select id="getPhoneAuthYn" parameterType="ServiceAuthDTO" resultType="ServiceAuthDTO">
 	   /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
        SELECT 
            AUTH_SEQ,
@@ -39,7 +39,7 @@
 	</select>
 	
     <!-- 휴대폰 SMS 인증 코드 정보 저장 -->
-    <insert id="insertPhoneAuthCode" parameterType="HashMap">
+    <insert id="insertPhoneAuthCode" parameterType="ServiceAuthDTO">
         /* MiscellaneousMapper.xml, insertPhoneAuthCode, SAC : 김다슬 , 2014-01-16 */
         INSERT INTO
             TB_CM_SVC_AUTH(
@@ -56,11 +56,11 @@
                 UPD_DT
             )
             VALUES(
-               #{auth_seq},
-               #{tenant_id},
+               #{authSeq},
+               #{tenantId},
                #{authTypeCd},
-               #{auth_sign},
-               #{auth_value},
+               #{authSign},
+               #{authValue},
                SYSDATE,
                'N',
                'admin',

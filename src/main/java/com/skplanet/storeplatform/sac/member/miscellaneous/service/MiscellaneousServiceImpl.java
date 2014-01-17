@@ -47,9 +47,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.miscellaneous.repository.MiscellaneousRepository;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO;
 
 /**
  * 
@@ -79,15 +81,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Autowired
 	private MiscellaneousRepository repository; // 기타 기능 Repository.
 
-	private static final String SYSTEMID = "S001";
-	private static final String TENANTID = "S01";
 	private static CommonRequest commonRequest;
-
-	static {
-		commonRequest = new CommonRequest();
-		commonRequest.setSystemID(SYSTEMID);
-		commonRequest.setTenantID(TENANTID);
-	}
 
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
@@ -121,10 +115,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetUaCodeRes getUaCode(GetUaCodeReq req) throws Exception {
+	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq req) throws Exception {
 		String deviceModelNo = req.getDeviceModelNo();
 		String msisdn = req.getMsisdn();
 		String userKey = "";
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		GetUaCodeRes response = new GetUaCodeRes();
 		LOGGER.debug("########### GetUaCodeReq {}", req);
@@ -137,12 +135,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			if (validation.equals("Y")) {
 
 				/** 2. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
+
 				userKey = this.getUserKey(commonRequest, msisdn);
 
 				/** 3. SC 회원 Request 생성 */
 				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
-				/** 4. 임시 공통헤더 생성 주입 및 Request 파라미터 셋팅 */
+				/** 4. 공통헤더 Request 파라미터 셋팅 */
 				searchDeviceRequest.setCommonRequest(commonRequest);
 
 				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
@@ -200,63 +199,28 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(GetPhoneAuthorizationCodeReq request)
 			throws Exception {
-		int authCodeLength = 6; // 인증 코드의 자리수
 		String authCode = "";
-		/** TODO 1. 휴대폰 인증 코드 생성 */
+		/* 1. 휴대폰 인증 코드 생성 */
 		Random random = new Random();
 		authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
 		LOGGER.debug("###### >> authCode :" + authCode);
 
-		/** TODO 2. 인증 Signautre 생성 - guid 형식 */
-
+		/* 2. 인증 Signautre 생성 - guid 형식 */
 		String authSign = UUID.randomUUID().toString().replace("-", "");
 		LOGGER.debug("###### >> authSign : " + authSign);
 
-		// /** userPhone을 통해 userKey값을 조회 - getUserKey Function 호출 */
-		// String userKey = this.getUserKey(commonRequest, request.getUserPhone());
-		// if (userKey == null) {
-		// throw new Exception("휴대폰번호에 해당하는 userKey 없음.");
-		// }
-
-		// /** 해당 회원이 인증되었는지 여부 확인 DB(auth_compt_yn) */
-		// HashMap<String, String> resultMap = new HashMap<String, String>();
-		// resultMap = (HashMap<String, String>) this.repository.getPhoneAuthYn(userKey);
-		// if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
-		// throw new Exception("이미 인증된 회원 입니다.");
-		// } else {
-		// /** 기존 인증된 회원이 아닌경우 생성된 인증코드를 DB에 저장 */
 		// 인증 코드 등록 일자 생성
 		String createDate = DateUtil.getDateString(new Date(), "yyyymmddhhmmss");
 		LOGGER.debug("현재 Date : " + createDate);
 
-		/** Request 파라미터를 Map에 셋팅 */
-		HashMap<String, String> phoneAuthCodeInfo = new HashMap<String, String>();
-		// phoneAuthCodeInfo.put("mbr_no", userKey);
-		phoneAuthCodeInfo.put("tenant_id", commonRequest.getTenantID());
-		phoneAuthCodeInfo.put("authTypeCd", "CM010901");
-		phoneAuthCodeInfo.put("auth_sign", authSign);
-		phoneAuthCodeInfo.put("auth_value", authCode);
-		// phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
-		// phoneAuthCodeInfo.put("reg_dt", createDate.toString());
+		/* DB에 저장할 파라미터 셋팅 */
+		ServiceAuthDTO serviceAuthInfo = new ServiceAuthDTO();
+		serviceAuthInfo.setTenantId(commonRequest.getTenantID());
+		serviceAuthInfo.setAuthTypeCd("CM010901");
+		serviceAuthInfo.setAuthSign(authSign);
+		serviceAuthInfo.setAuthValue(authCode);
 
-		// /** 인증코드 정보가 있으면 update, 없으면 insert 처리함. */
-		// // this.repository.mergeIntoPhoneAuthCode(phoneAuthCodeInfo);
-		// if (resultMap.get("AUTH_VALUE") == null) {
-		// phoneAuthCodeInfo.put("mbr_no", userKey);
-		// phoneAuthCodeInfo.put("tenant_id", commonRequest.getTenantID());
-		// phoneAuthCodeInfo.put("auth_sign", authSign);
-		// phoneAuthCodeInfo.put("auth_value", authCode);
-		// phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
-		// phoneAuthCodeInfo.put("reg_dt", createDate.toString());
-		this.repository.insertPhoneAuthCode(phoneAuthCodeInfo);
-		// } else {
-		// phoneAuthCodeInfo.put("auth_sign", authSign);
-		// phoneAuthCodeInfo.put("auth_value", authCode);
-		// phoneAuthCodeInfo.put("auth_value_create_dt", createDate.toString());
-		// phoneAuthCodeInfo.put("mbr_no", userKey);
-		// this.repository.updatePhoneAuthCode(phoneAuthCodeInfo);
-		// }
-		// }
+		this.repository.insertPhoneAuthCode(serviceAuthInfo);
 
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
@@ -267,13 +231,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
 		smsReq.setMsg(authCode);
 		Map<String, String> map = new HashMap<String, String>();
-		// map = this.messageSCI.smsSend(smsReq); //URL 404 에러남.
+		LOGGER.debug("##############################################");
+		// map = this.messageSCI.smsSend(smsReq); // URL 404 에러남.
+		LOGGER.debug("##############################################");
 		// String sendResult = map.get("resultStatus");
 		String sendResult = "success";
 
-		/** TODO 6. 결과 Response */
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
-		/** SMS 발송 성공 여부를 확인 */
+
+		/* SMS 발송 성공 여부를 확인 */
 		if (sendResult.equals("success")) {
 			response.setPhoneSign(authSign);
 		} else {
@@ -287,70 +253,46 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throws Exception {
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
-		String signature = request.getPhoneSign();
+		String authSign = request.getPhoneSign();
 		long timeToLive = Long.parseLong(request.getTimeToLive()); // Tenant 정책에 따라 변경되는 인증번호 생존 시간.
 		String userPhone = request.getUserPhone();
 
-		// /** 1. userPhone으로 회원 Key 조회 (mbr_no) -> getUserKey Function 호출 */
-		// String userKey = this.getUserKey(commonRequest, request.getUserPhone());
-		// if (userKey == null) {
-		// throw new Exception("휴대폰번호에 해당하는 userKey 없음.");
-		// }
-		// /** 2. userKey(mbr_no)로 DB(TB_CM_SVC_AUTH) 조회 */
-		// Map<String, String> resultMap = new HashMap<String, String>();
-		// resultMap = this.repository.confirmPhoneAuthCode(userKey);
-		// if (resultMap == null) {
-		// throw new Exception("회원에 대한 인증 정보가 없습니다.");
-		// } else if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
-		// throw new Exception("이미 인증된 회원입니다.");
-		// }
+		/* DB에 저장할 파라미터 셋팅 */
+		ServiceAuthDTO serviceAuthInfo = new ServiceAuthDTO();
+		serviceAuthInfo.setAuthTypeCd("CM010901");
+		serviceAuthInfo.setAuthSign(authSign);
+		serviceAuthInfo.setAuthValue(authCode);
 
-		Map<String, String> requestMap = new HashMap<String, String>();
-		requestMap.put("authTypeCd", "CM010901");
-		requestMap.put("authSign", signature);
-		requestMap.put("authValue", authCode);
+		ServiceAuthDTO resultInfo = this.repository.getPhoneAuthYn(serviceAuthInfo);
 
-		Map<String, String> resultMap = new HashMap<String, String>();
-		resultMap = this.repository.getPhoneAuthYn(requestMap);
-
-		if (resultMap == null || resultMap.size() == 0) {
+		if (resultInfo == null) {
 			throw new Exception("인증 코드가 일치 하지 않습니다.");
 		}
 
-		if (resultMap.get("AUTH_COMPT_YN").equals("Y")) {
+		if (resultInfo.getAuthComptYn().equals("Y")) {
 			throw new Exception("기인증된 인증 코드 입니다.");
 		}
 
-		// /** 3. DB와 Request의 authCode와 signature를 비교 */
-		// if (resultMap.get("AUTH_VALUE").equals(authCode) && resultMap.get("AUTH_SIGN").equals(signature)) {
-		/** 인증유효 시간 만료여부 확인 (현재시간 - 인증코드 생성일자) < timeToLive */
+		/* 인증유효 시간 만료여부 확인 (현재시간 - 인증코드 생성일자) < timeToLive */
 		String nowDate = DateUtil.getDateString(new Date(), "yyyyMMddHHmmss");
 		LOGGER.debug(">>> nowDate : " + nowDate);
 		long endTime = Long.parseLong(nowDate);
 
-		LOGGER.debug("############################# 1");
-		String createDate = resultMap.get("AUTH_VALUE_CREATE_DT"); // 여기가 에러남..
-		LOGGER.debug("############################# 2 >> " + createDate);
+		String createDate = resultInfo.getAuthValueCreateDt();
 		long startTime = Long.parseLong(createDate.toString());
-		LOGGER.debug("endTime(system current time) : " + endTime);
-		LOGGER.debug("startTime(db create time): " + startTime);
+		LOGGER.debug("endTime(system current time) : {}", endTime);
+		LOGGER.debug("startTime(db create time): {}", startTime);
 
 		long confirmTime = endTime - startTime; // 사용자가 인증코드 입력까지 걸린 분
 
 		if (confirmTime > timeToLive) {
+			LOGGER.debug("confirmTime : {}", confirmTime);
 			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
-		/** 인증유효 시간 내에 인증 요청 - 인증여부 "Y"로 Update. */
-		this.repository.updatePhoneAuthYn(String.valueOf(resultMap.get("AUTH_SEQ")));
+		/* 인증유효 시간 내에 인증 요청 - 인증여부 "Y"로 Update. */
+		this.repository.updatePhoneAuthYn(String.valueOf(resultInfo.getAuthSeq()));
 
-		// } else if (!resultMap.get("AUTH_VALUE").equals(authCode)) {
-		// res.setIsAuth("N");
-		// throw new Exception("인증 코드 불일치.");
-		// } else {
-		// res.setIsAuth("N");
-		// throw new Exception("인증 Signature 불일치.");
-		// }
 		res.setUserPhone(userPhone);
 		return res;
 	}
@@ -360,13 +302,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String waterMarkImageUrl = "";
 		String waterMarkImageSign = "";
 		IDPReceiverM idpReciver = new IDPReceiverM();
-		/** 1. IDP 연동해서 waterMarkImage URL과 Signature 받기 */
+		/* 1. IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 		idpReciver = this.idpService.warterMarkImageUrl();
 		waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
 		waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
 		LOGGER.debug("####### >> idpReciver {} ", idpReciver);
 
-		/** TODO 2. 파일 시스템으로 부터 이미지 파일 읽기 */
+		/* 2. 파일 시스템으로 부터 이미지 파일 읽기 */
 		File file = new File(waterMarkImageUrl);
 		FileInputStream imageStream = new FileInputStream(file);
 		byte ImageData[] = new byte[(int) file.length()];

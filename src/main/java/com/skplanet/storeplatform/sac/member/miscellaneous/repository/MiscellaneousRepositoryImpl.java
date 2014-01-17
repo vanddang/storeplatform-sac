@@ -1,14 +1,12 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.repository;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO;
 
 /**
  * 
@@ -28,15 +26,14 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	}
 
 	@Override
-	public void insertPhoneAuthCode(Map<String, String> phoneAuthCodeInfo) {
-		phoneAuthCodeInfo.put("auth_seq",
-				(String) this.commonDao.queryForObject("Miscellaneous.getNexValueForSvcAuth", null));
-		this.commonDao.insert("Miscellaneous.insertPhoneAuthCode", phoneAuthCodeInfo);
+	public void insertPhoneAuthCode(ServiceAuthDTO serviceAuthInfo) {
+		serviceAuthInfo.setAuthSeq((String) this.commonDao.queryForObject("Miscellaneous.getNexValueForSvcAuth", null));
+		this.commonDao.insert("Miscellaneous.insertPhoneAuthCode", serviceAuthInfo);
 	}
 
 	@Override
-	public Map getPhoneAuthYn(Map<String, String> requestMap) {
-		return (HashMap) this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", requestMap);
+	public ServiceAuthDTO getPhoneAuthYn(ServiceAuthDTO serviceAuthInfo) {
+		return (ServiceAuthDTO) this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo);
 	}
 
 	@Override

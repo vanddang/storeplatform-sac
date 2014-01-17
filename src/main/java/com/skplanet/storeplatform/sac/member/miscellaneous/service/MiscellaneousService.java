@@ -9,6 +9,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 
@@ -27,7 +28,7 @@ public interface MiscellaneousService {
 	 * @return GetUaCodeRes
 	 * @throws Exception
 	 */
-	public GetUaCodeRes getUaCode(GetUaCodeReq request) throws Exception;
+	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq request) throws Exception;
 
 	/**
 	 * <pre>

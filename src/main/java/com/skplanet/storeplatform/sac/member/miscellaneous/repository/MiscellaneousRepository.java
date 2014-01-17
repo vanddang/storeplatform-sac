@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.repository;
 
-import java.util.Map;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO;
 
 /**
  * 
@@ -22,22 +22,24 @@ public interface MiscellaneousRepository {
 
 	/**
 	 * <pre>
-	 * 휴휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인.
+	 * 휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인.
 	 * </pre>
 	 * 
-	 * @param userKey
-	 * @return String
+	 * @param ServiceAuthDTO
+	 *            : serviceAuthInfo
+	 * @return ServiceAuthDTO
 	 */
-	public Map getPhoneAuthYn(Map<String, String> requestMap);
+	public ServiceAuthDTO getPhoneAuthYn(ServiceAuthDTO serviceAuthInfo);
 
 	/**
 	 * <pre>
 	 * 휴대폰 SMS 인증 코드 정보 저장.
 	 * </pre>
 	 * 
-	 * @param phoneAuthCodeInfo
+	 * @param ServiceAuthDTO
+	 *            : serviceAuthInfo
 	 */
-	public void insertPhoneAuthCode(Map<String, String> phoneAuthCodeInfo);
+	public void insertPhoneAuthCode(ServiceAuthDTO serviceAuthInfo);
 
 	/**
 	 * <pre>

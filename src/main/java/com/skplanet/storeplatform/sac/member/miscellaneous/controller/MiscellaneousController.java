@@ -53,7 +53,7 @@ public class MiscellaneousController {
 
 		LOGGER.debug("#################  UA 코드 정보 조회 - START ######################");
 
-		GetUaCodeRes response = this.service.getUaCode(request);
+		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
 
 		LOGGER.debug("#################  UA 코드 정보 조회 -  END #######################");
 		return response;

@@ -34,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
@@ -103,10 +104,13 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String getUaCode(String deviceModelNo) throws Exception { // 2014. 01. 14. 김다슬, 인크로스. 추가
+	public String getUaCode(String tenantId, String deviceModelNo) throws Exception { // 2014. 01. 14. 김다슬, 인크로스. 추가
 		GetUaCodeReq request = new GetUaCodeReq();
 		request.setDeviceModelNo(deviceModelNo);
-		return this.miscellaneousService.getUaCode(request).getUaCd();
+
+		SacRequestHeader requestHeader = new SacRequestHeader();
+		requestHeader.getTenantHeader().setTenantId(tenantId);
+		return this.miscellaneousService.getUaCode(requestHeader, request).getUaCd();
 	}
 
 	/**
@@ -172,7 +176,8 @@ public class MemberCommonComponent {
 	 * @param deviceInfo
 	 * @throws Exception
 	 */
-	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
+	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
+			throws Exception {
 		this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, deviceInfo);
 	}
 
