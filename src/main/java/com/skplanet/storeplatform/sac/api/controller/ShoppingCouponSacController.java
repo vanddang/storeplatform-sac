@@ -98,9 +98,9 @@ public class ShoppingCouponSacController {
 			// 04.이력저장
 			// 05.업무처리:return값 있음
 			// 06.응답 및 처리결과이력 update
-			this.log.debug("<CouponControl> dePloy...txID = " + couponReq.getTxId());
-			this.log.debug("<CouponControl> dePloy...txTYPE = " + couponReq.getTxType());
-			this.log.debug("<CouponControl> dePloy...XML = " + couponReq.getRData());
+			// this.log.debug("<CouponControl> dePloy...txID = " + couponReq.getTxId());
+			// this.log.debug("<CouponControl> dePloy...txTYPE = " + couponReq.getTxType());
+			// this.log.debug("<CouponControl> dePloy...XML = " + couponReq.getRData());
 
 			map = new HashMap<String, String>();
 			map.put("TX_ID", couponReq.getTxId());
