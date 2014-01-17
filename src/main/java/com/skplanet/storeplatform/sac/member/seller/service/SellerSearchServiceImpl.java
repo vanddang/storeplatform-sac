@@ -67,29 +67,11 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
 
 		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			checkDuplicationSellerRequest.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			checkDuplicationSellerRequest.setCommonRequest(commonRequest);
-		}
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		checkDuplicationSellerRequest.setCommonRequest(commonRequest);
 
-		/**
-		 * 검색 조건 타입 <br>
-		 * INSD_USERMBR_NO : 내부 사용자 키 <br>
-		 * MBR_ID : 사용자 ID <br>
-		 * INSD_SELLERMBR_NO : 내부 판매자 키 <br>
-		 * SELLERMBR_ID : 판매자 ID <br>
-		 * USERMBR_NO : 통합서비스 키 <br>
-		 * INSD_DEVICE_ID : 내부 기기 키 <br>
-		 * DEVICE_ID : 기기 ID <br>
-		 * EMAIL_ADDR : 사용자 이메일 <br>
-		 * EMAIL : 판매자 이메일 <br>
-		 * TEL_NO : 사용자 연락처 <br>
-		 * WILS_TEL_NO : 판매자 연락처
-		 */
 		KeySearch keySearch = new KeySearch();
 		if ("id".equals(req.getKeyType())) {
 			keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
