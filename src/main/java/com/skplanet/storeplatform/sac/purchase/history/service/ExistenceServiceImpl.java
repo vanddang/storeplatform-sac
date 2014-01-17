@@ -33,11 +33,11 @@ public class ExistenceServiceImpl implements ExistenceService {
 	private ExistenceSCI existenceSCI;
 
 	/**
-	 * 선물수신확인 체크.
+	 * 기구매 체크 SAC Service.
 	 * 
-	 * @param GiftReceiveRequest
-	 *            선물수신확인 체크
-	 * @return GiftReceiveResponse
+	 * @param existenceRequest
+	 *            기구매 체크 SAC
+	 * @return List<ExistenceResponse>
 	 */
 	@Override
 	public List<ExistenceResponse> getExist(ExistenceRequest existenceRequest) {

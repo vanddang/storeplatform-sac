@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.purchase.history.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
@@ -46,37 +46,49 @@ public class ExistenceController {
 	/**
 	 * 기구매 체크 SAC.
 	 * 
-	 * @param ExistenceRequest
+	 * @param existenceReq
 	 *            기구매 체크 SAC
-	 * @return List<ExistenceResponse>
+	 * @return List<ExistenceRes>
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListRes getExist(@RequestBody ExistenceReq existenceReq) {
-
-		ExistenceRequest req = this.reqConvert(existenceReq);
-		List<ExistenceResponse> existenceResponse = new ArrayList<ExistenceResponse>();
-		existenceResponse = this.existenceService.getExist(req);
+	public List<ExistenceRes> getExist(@RequestBody ExistenceReq existenceReq) {
 
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
-		res = this.resConvert(existenceResponse);
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		ExistenceListRes existenceListRes = new ExistenceListRes();
+		// 필수값 체크
+		if (StringUtils.isBlank(existenceReq.getTenantId())) {
+			return res;
+		}
+		if (StringUtils.isBlank(existenceReq.getInsdUsermbrNo())) {
+			return res;
+		}
+		for (int i = 0; i < existenceReq.getExistenceList().size(); i++) {
+			if (StringUtils.isBlank(existenceReq.getExistenceList().get(i).getProdId())) {
+				return res;
+			}
+		}
 
-		existenceListRes.setExistenceRes(res);
-		return existenceListRes;
+		ExistenceRequest req = this.reqConvert(existenceReq);
+
+		return this.resConvert(this.existenceService.getExist(req));
 	}
 
+	/**
+	 * reqConvert.
+	 * 
+	 * @param existenceReq
+	 *            reqConvert
+	 * @return ExistenceRequest
+	 */
 	private ExistenceRequest reqConvert(ExistenceReq existenceReq) {
+
 		ExistenceRequest req = new ExistenceRequest();
 		List<ExistenceList> list = new ArrayList<ExistenceList>();
 
 		req.setTenantId(existenceReq.getTenantId());
 		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
+		req.setPrchsId(existenceReq.getPrchsId());
 		int size = existenceReq.getExistenceList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
@@ -90,17 +102,25 @@ public class ExistenceController {
 		return req;
 	}
 
+	/**
+	 * resConvert.
+	 * 
+	 * @param existenceResponseList
+	 *            resConvert
+	 * @return List<ExistenceRes>
+	 */
 	private List<ExistenceRes> resConvert(List<ExistenceResponse> existenceResponseList) {
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 		int size = existenceResponseList.size();
 		this.logger.debug("@@@@@@resConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
-			ExistenceRes ExistenceRes = new ExistenceRes();
-			ExistenceRes.setPrchsId(existenceResponseList.get(i).getPrchsId());
-			ExistenceRes.setProdId(existenceResponseList.get(i).getProdId());
-			res.add(ExistenceRes);
+			ExistenceRes existenceRes = new ExistenceRes();
+			existenceRes.setPrchsId(existenceResponseList.get(i).getPrchsId());
+			existenceRes.setProdId(existenceResponseList.get(i).getProdId());
+			res.add(existenceRes);
 		}
 
 		return res;
 	}
+
 }

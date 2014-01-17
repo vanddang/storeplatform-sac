@@ -22,11 +22,11 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
 public interface ExistenceService {
 
 	/**
-	 * 선물수신확인 체크.
+	 * 기구매 체크 SAC Service.
 	 * 
-	 * @param ExistenceRequest
-	 *            선물수신확인 체크
-	 * @return ExistenceResponse
+	 * @param existenceRequest
+	 *            기구매 체크 SAC
+	 * @return List<ExistenceResponse>
 	 */
 	public List<ExistenceResponse> getExist(ExistenceRequest existenceRequest);
 

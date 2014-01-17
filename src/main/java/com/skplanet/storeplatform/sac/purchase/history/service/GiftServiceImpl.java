@@ -35,7 +35,7 @@ public class GiftServiceImpl implements GiftService {
 	/**
 	 * 선물수신확인 체크.
 	 * 
-	 * @param GiftReceiveRequest
+	 * @param giftReceiveRequest
 	 *            선물수신확인 체크
 	 * @return GiftReceiveResponse
 	 */
@@ -51,7 +51,7 @@ public class GiftServiceImpl implements GiftService {
 	/**
 	 * 선물수신.
 	 * 
-	 * @param GiftConfirmRequest
+	 * @param giftConfirmRequest
 	 *            선물수신
 	 * @return GiftConfirmResponse
 	 */

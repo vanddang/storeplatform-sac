@@ -41,7 +41,7 @@ public class GiftController {
 	/**
 	 * 선물수신확인 체크 SAC.
 	 * 
-	 * @param GiftReceiveReq
+	 * @param giftReceiveReq
 	 *            선물수신확인 체크 SAC
 	 * @return GiftReceiveRes
 	 */
@@ -60,7 +60,7 @@ public class GiftController {
 	/**
 	 * 선물수신.
 	 * 
-	 * @param GiftConfirmReq
+	 * @param giftConfirmReq
 	 *            선물수신
 	 * @return GiftConfirmRes
 	 */
@@ -76,6 +76,13 @@ public class GiftController {
 		return res;
 	}
 
+	/**
+	 * reqConvert.
+	 * 
+	 * @param giftConfirmReq
+	 *            reqConvert
+	 * @return GiftConfirmRequest
+	 */
 	private GiftConfirmRequest reqConvert(GiftConfirmReq giftConfirmReq) {
 		GiftConfirmRequest req = new GiftConfirmRequest();
 
@@ -90,6 +97,13 @@ public class GiftController {
 		return req;
 	}
 
+	/**
+	 * resConvert.
+	 * 
+	 * @param giftComfirmResponse
+	 *            resConvert
+	 * @return GiftConfirmRes
+	 */
 	private GiftConfirmRes resConvert(GiftConfirmResponse giftComfirmResponse) {
 		GiftConfirmRes res = new GiftConfirmRes();
 		res.setPrchsId(giftComfirmResponse.getPrchsId());
@@ -99,6 +113,13 @@ public class GiftController {
 		return res;
 	}
 
+	/**
+	 * reqConvert.
+	 * 
+	 * @param giftReceiveReq
+	 *            reqConvert
+	 * @return GiftReceiveRequest
+	 */
 	private GiftReceiveRequest reqConvert(GiftReceiveReq giftReceiveReq) {
 		GiftReceiveRequest req = new GiftReceiveRequest();
 
@@ -113,6 +134,13 @@ public class GiftController {
 		return req;
 	}
 
+	/**
+	 * resConvert.
+	 * 
+	 * @param giftReceiveResponse
+	 *            resConvert
+	 * @return GiftReceiveRes
+	 */
 	private GiftReceiveRes resConvert(GiftReceiveResponse giftReceiveResponse) {
 		GiftReceiveRes res = new GiftReceiveRes();
 		res.setRecvDt(giftReceiveResponse.getRecvDt());

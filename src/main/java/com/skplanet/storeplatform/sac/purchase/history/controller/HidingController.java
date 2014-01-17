@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScList;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.HidingSacService;
@@ -46,30 +45,28 @@ public class HidingController {
 	/**
 	 * 기구매 체크 SAC.
 	 * 
-	 * @param ExistenceRequest
+	 * @param hidingReq
 	 *            기구매 체크 SAC
-	 * @return List<ExistenceResponse>
+	 * @return List<HidingRes>
 	 */
 	@RequestMapping(value = "/history/hiding/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HidingListRes modifyHiding(@RequestBody HidingReq hidingReq) {
+	public List<HidingRes> modifyHiding(@RequestBody HidingReq hidingReq) {
 
 		HidingRequest req = this.reqConvert(hidingReq);
 		List<HidingResponse> hidingResponse = new ArrayList<HidingResponse>();
 		hidingResponse = this.hidingSacService.modifyHiding(req);
 
-		List<HidingRes> res = new ArrayList<HidingRes>();
-		res = this.resConvert(hidingResponse);
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		this.logger.debug("@@@@@@@@@@@@@" + res.size());
-		HidingListRes hidingListRes = new HidingListRes();
-
-		hidingListRes.setHidingRes(res);
-		return hidingListRes;
+		return this.resConvert(hidingResponse);
 	}
 
+	/**
+	 * reqConvert.
+	 * 
+	 * @param hidingReq
+	 *            reqConvert
+	 * @return HidingRequest
+	 */
 	private HidingRequest reqConvert(HidingReq hidingReq) {
 		HidingRequest req = new HidingRequest();
 		List<HidingScList> list = new ArrayList<HidingScList>();
@@ -93,6 +90,13 @@ public class HidingController {
 		return req;
 	}
 
+	/**
+	 * resConvert.
+	 * 
+	 * @param hidingResponseList
+	 *            resConvert
+	 * @return List<HidingRes>
+	 */
 	private List<HidingRes> resConvert(List<HidingResponse> hidingResponseList) {
 		List<HidingRes> res = new ArrayList<HidingRes>();
 		int size = hidingResponseList.size();

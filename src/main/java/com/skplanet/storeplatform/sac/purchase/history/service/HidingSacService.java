@@ -24,7 +24,7 @@ public interface HidingSacService {
 	/**
 	 * 구매내역 숨김처리.
 	 * 
-	 * @param HidingRequest
+	 * @param hidingRequest
 	 *            구매내역 숨김처리
 	 * @return HidingResponse
 	 */
