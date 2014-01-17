@@ -93,7 +93,7 @@ public class ExistenceController {
 		req.setTenantId(existenceReq.getTenantId());
 		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
-		req.setPrchsId(existenceReq.getPrchsId());
+		// req.setPrchsId(existenceReq.getPrchsId());
 		int size = existenceReq.getExistenceList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@{} ", size);
 		for (int i = 0; i < size; i++) {

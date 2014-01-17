@@ -133,6 +133,7 @@ public class CategoryController {
 		this.logger.debug("searchSpecificProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		return this.categorySpecificService.getSpecificProductList(req, header);
+		CategorySpecificRes res = this.categorySpecificService.getSpecificProductList(req, header);
+		return res;
 	}
 }
