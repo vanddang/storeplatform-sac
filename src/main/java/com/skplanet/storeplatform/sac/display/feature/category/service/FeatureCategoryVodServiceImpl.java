@@ -294,7 +294,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				source = new Source();
 				sourceList = new ArrayList<Source>();
 				source.setType("thumbnail");
-
 				source.setMediaType(DisplayCommonUtil.getMimeType(vodDto.getImgPath()));
 				source.setUrl(vodDto.getImgPath());
 				sourceList.add(source);

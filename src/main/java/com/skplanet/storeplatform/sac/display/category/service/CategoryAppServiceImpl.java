@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryAppDTO;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 
 /**
  * CategoryApp Service 인터페이스(CoreStoreBusiness) 구현체
@@ -210,7 +211,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				source = new Source();
 				sourceList = new ArrayList<Source>();
 				source.setType("thumbnail");
-				source.setMediaType("image/png");
+				source.setMediaType(DisplayCommonUtil.getMimeType(categoryAppDTO.getImgPath()));
 				source.setUrl(categoryAppDTO.getImgPath());
 				sourceList.add(source);
 				product.setSourceList(sourceList);
