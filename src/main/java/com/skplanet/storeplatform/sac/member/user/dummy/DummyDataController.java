@@ -306,7 +306,7 @@ public class DummyDataController {
 	 * 
 	 * @return ListDeviceRes
 	 */
-	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ListDeviceRes listDevice() {
 
@@ -318,9 +318,9 @@ public class DummyDataController {
 
 		try {
 
-			/*
+			
 			 * 휴대기기 부가정보 리스트
-			 */
+			 
 			List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 			deviceExtraInfo.setExtraProfile("US011404");
@@ -328,9 +328,9 @@ public class DummyDataController {
 
 			deviceExtraInfoList.add(deviceExtraInfo);
 
-			/*
+			
 			 * 휴대기기정보 리스트
-			 */
+			 
 			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
 			DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -364,7 +364,7 @@ public class DummyDataController {
 		}
 
 		return res;
-	}
+	}*/
 
 	/**
 	 * <pre>
@@ -373,7 +373,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateDeviceRes
 	 */
-	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateDeviceRes createDevice() {
 
@@ -387,7 +387,7 @@ public class DummyDataController {
 		res.setUserKey("IW102158844420091030165015");
 
 		return res;
-	}
+	}*/
 
 	/**
 	 * <pre>

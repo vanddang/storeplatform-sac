@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-@RequestMapping(value = "/dev/member/user")
+@RequestMapping(value = "/member/user")
 @Controller
 public class DeviceController {
 
