@@ -219,10 +219,19 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
-			support.setText(FeatureConstant.convertAppSupport(
-					StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""),
-					StringUtil.nvl(recommendAdminDTO.getDrmYn(), "")));
-			supportList.add(support);
+			
+			if( "PD012301".equals(recommendAdminDTO.getPartParentClsfCd())){
+				support = new Support();	
+				support.setType("iab");
+				support.setText("Y");
+				supportList.add(support);
+			}
+			if( "Y".equals(recommendAdminDTO.getDrmYn())){
+				support = new Support();	
+				support.setType("drm");
+				support.setText("Y");
+				supportList.add(support);
+			}
 
 			product.setSupportList(supportList);
 			product.setMenuList(menuList);

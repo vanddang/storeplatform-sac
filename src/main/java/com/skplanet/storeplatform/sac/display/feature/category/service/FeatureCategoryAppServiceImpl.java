@@ -345,9 +345,21 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
-			support.setText(FeatureConstant.convertAppSupport(StringUtil.nvl(categoryAppDTO.getPartParentClsfCd(), ""),
-					StringUtil.nvl(categoryAppDTO.getDrmYn(), "")));
-			supportList.add(support);
+			//support.setText(FeatureConstant.convertAppSupport(StringUtil.nvl(categoryAppDTO.getPartParentClsfCd(), ""),
+			//		StringUtil.nvl(categoryAppDTO.getDrmYn(), "")));
+			
+			if( "PD012301".equals(categoryAppDTO.getPartParentClsfCd())){
+				support = new Support();	
+				support.setType("iab");
+				support.setText("Y");
+				supportList.add(support);
+			}
+			if( "Y".equals(categoryAppDTO.getDrmYn())){
+				support = new Support();	
+				support.setType("drm");
+				support.setText("Y");
+				supportList.add(support);
+			}
 
 			product.setSupportList(supportList);
 			product.setMenuList(menuList);
