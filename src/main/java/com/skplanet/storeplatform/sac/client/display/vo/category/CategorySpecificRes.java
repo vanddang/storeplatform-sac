@@ -10,6 +10,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class CategorySpecificRes extends CommonInfo {
+	private static final long serialVersionUID = 1L;
+
 	private CommonResponse commonResponse;
 	private List<Product> productList;
 
