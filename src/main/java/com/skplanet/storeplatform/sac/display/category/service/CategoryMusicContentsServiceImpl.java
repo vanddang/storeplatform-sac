@@ -153,7 +153,9 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				Music music = new Music();
 
 				Product product = new Product();
+				List<Identifier> identifierList = new ArrayList<Identifier>();
 				Identifier identifier = new Identifier();
+
 				// App app = new App();
 				Accrual accrual = new Accrual();
 				// Rights rights = new Rights();
@@ -163,12 +165,15 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				Contributor contributor = new Contributor();
 				com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
 
-				product.setId(mapperVO.getEpsdProdId()); // 에피소드 상품 ID
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD); // 에피소드 상품 ID
+				identifier.setText(mapperVO.getEpsdProdId());
+				identifierList.add(identifier);
 
-				// 상품ID
+				// 채널 상품 ID
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD); // 채널 상품 ID
 				identifier.setText(mapperVO.getChnlProdId());
+				identifierList.add(identifier);
 
 				/*
 				 * Menu(메뉴정보) Id, Name, Type
@@ -234,7 +239,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				 */
 				price.setText(Integer.valueOf(mapperVO.getProdAmt()));
 
-				product.setIdentifier(identifier);
+				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setAccrual(accrual);
 				product.setTitle(title);
