@@ -19,13 +19,13 @@ public class ShoppingDTO {
 	private int totalCount;
 	private String catagoryId;
 	private String catagoryName;
-	private String prodNetAmt;
-	private String prodAmt;
-	private String dcRate;
-	private String dcAmt;
+	private Integer prodNetAmt;
+	private Integer prodAmt;
+	private Double dcRate;
+	private Integer dcAmt;
 	private String dlvProdYn;
-	private String dwldQty;
-	private String prchsQty;
+	private Integer dwldQty;
+	private Integer prchsQty;
 	private String expoOrd;
 
 	private String brandId;
@@ -69,35 +69,35 @@ public class ShoppingDTO {
 		this.catagoryName = catagoryName;
 	}
 
-	public String getProdNetAmt() {
+	public Integer getProdNetAmt() {
 		return this.prodNetAmt;
 	}
 
-	public void setProdNetAmt(String prodNetAmt) {
+	public void setProdNetAmt(Integer prodNetAmt) {
 		this.prodNetAmt = prodNetAmt;
 	}
 
-	public String getProdAmt() {
+	public Integer getProdAmt() {
 		return this.prodAmt;
 	}
 
-	public void setProdAmt(String prodAmt) {
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getDcRate() {
+	public Double getDcRate() {
 		return this.dcRate;
 	}
 
-	public void setDcRate(String dcRate) {
+	public void setDcRate(Double dcRate) {
 		this.dcRate = dcRate;
 	}
 
-	public String getDcAmt() {
+	public Integer getDcAmt() {
 		return this.dcAmt;
 	}
 
-	public void setDcAmt(String dcAmt) {
+	public void setDcAmt(Integer dcAmt) {
 		this.dcAmt = dcAmt;
 	}
 
@@ -109,19 +109,19 @@ public class ShoppingDTO {
 		this.dlvProdYn = dlvProdYn;
 	}
 
-	public String getDwldQty() {
+	public Integer getDwldQty() {
 		return this.dwldQty;
 	}
 
-	public void setDwldQty(String dwldQty) {
+	public void setDwldQty(Integer dwldQty) {
 		this.dwldQty = dwldQty;
 	}
 
-	public String getPrchsQty() {
+	public Integer getPrchsQty() {
 		return this.prchsQty;
 	}
 
-	public void setPrchsQty(String prchsQty) {
+	public void setPrchsQty(Integer prchsQty) {
 		this.prchsQty = prchsQty;
 	}
 

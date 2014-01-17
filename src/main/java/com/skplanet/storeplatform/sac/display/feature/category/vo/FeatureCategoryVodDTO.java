@@ -34,9 +34,9 @@ public class FeatureCategoryVodDTO {
 	private String agencyNm;
 	private String hdvYn;
 	private String dolbySprtYn;
-	private String prodAmt;
-	private String paticpersCnt;
-	private String prchsCnt;
+	private Integer prodAmt;
+	private Integer paticpersCnt;
+	private Integer prchsCnt;
 	private Double avgEvluScore;
 	private String imgPath;
 	private String topMenuNm;
@@ -193,27 +193,27 @@ public class FeatureCategoryVodDTO {
 		this.dolbySprtYn = dolbySprtYn;
 	}
 
-	public String getProdAmt() {
+	public Integer getProdAmt() {
 		return this.prodAmt;
 	}
 
-	public void setProdAmt(String prodAmt) {
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getPaticpersCnt() {
+	public Integer getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
-	public void setPaticpersCnt(String paticpersCnt) {
+	public void setPaticpersCnt(Integer paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
-	public String getPrchsCnt() {
+	public Integer getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
-	public void setPrchsCnt(String prchsCnt) {
+	public void setPrchsCnt(Integer prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 

@@ -93,7 +93,7 @@ public class ThemeZoneServiceImpl implements ThemeZoneService {
 				Source source = new Source();
 				source.setUrl("http://<<BASE>>/image/bb.jpg");
 				source.setType("thmubnail");
-				source.setSize("128");
+				source.setSize(128);
 				source.setMediaType("image/jpeg");
 
 				Menu menu = new Menu();
@@ -123,7 +123,7 @@ public class ThemeZoneServiceImpl implements ThemeZoneService {
 				source = new Source();
 				source.setUrl("http://<<BASE>>/image/bb.jpg");
 				source.setType("thmubnail");
-				source.setSize("128");
+				source.setSize(128);
 				source.setMediaType("image/jpeg");
 				sourceList.add(source);
 

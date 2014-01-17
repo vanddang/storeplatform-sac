@@ -42,12 +42,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProductDTO;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
-import com.skplanet.storeplatform.sac.display.meta.vo.EbookComicMetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.MusicMetaInfo;
+import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoGenerateProxyService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo;
 
 @Service
 @Transactional
@@ -57,6 +55,9 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private MetaInfoGenerateProxyService metaInfoGenerateProxyService;
 
 	@Override
 	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
@@ -85,19 +86,20 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		if (req.getDummy() == null) {
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 			if (prodIdList == null || prodIdList.size() == 0) {
-				// TODO osm1021 에러 처리
+				// TODO osm1021 에러 처리 추가 필요
 			} else if (prodIdList.size() > 50) {
-				// TODO osm1021 에러 처리
+				// TODO osm1021 에러 처리 추가 필요
 			}
 
-			List<CategorySpecificProductDTO> svcGrpCdList = this.commonDAO.queryForList(
-					"CategorySpecificProduct.selectProductInfoList", prodIdList, CategorySpecificProductDTO.class);
+			List<CategorySpecificProduct> svcGrpCdList = this.commonDAO.queryForList(
+					"CategorySpecificProduct.selectProductInfoList", prodIdList, CategorySpecificProduct.class);
 
-			for (CategorySpecificProductDTO productDTO : svcGrpCdList) {
-				String prodId = productDTO.getProdId();
-				String svcGrpCd = productDTO.getSvcGrpCd();
-				String svcTypeCd = productDTO.getSvcTypeCd();
-				String topMenuId = productDTO.getTopMenuId();
+			for (CategorySpecificProduct categorySpecificProduct : svcGrpCdList) {
+				String prodId = categorySpecificProduct.getProdId();
+				String svcGrpCd = categorySpecificProduct.getSvcGrpCd();
+				String svcTypeCd = categorySpecificProduct.getSvcTypeCd();
+				String topMenuId = categorySpecificProduct.getTopMenuId();
+				String contentsTypeCd = categorySpecificProduct.getContentsTypeCd();
 
 				// TODO osm1021 더미 데이터 꼭 삭제할것
 				Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -115,203 +117,67 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				// DP000204 : 폰꾸미기
 				// DP000201 : 애플리캐이션
 
+				// APP 상품의 경우
+				if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+					MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", productBasicInfo,
+							MetaInfo.class);
+					if (retMetaInfo != null) {
+						product = this.metaInfoGenerateProxyService.generateAppProductProxy(retMetaInfo);
+						productList.add(product);
+					}
+				}
 				// 멀티미디어 타입일 경우
-				if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+				else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 
 					productBasicInfo.setProdId(prodId);
 					productBasicInfo.setTenantId(tenantId);
 
 					// VOD 상품의 경우
 					if (DisplayConstants.DP_VOD_TOP_MENU_ID.equals(topMenuId)) {
-						VODMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", productBasicInfo,
-								VODMetaInfo.class);
+						MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo",
+								productBasicInfo, MetaInfo.class);
 
-						if (retDto != null) {
-							product = new Product();
+						if (retMetaInfo != null) {
+							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+								product = this.metaInfoGenerateProxyService.generateMovieProductProxy(retMetaInfo);
+							} else {
+								product = this.metaInfoGenerateProxyService
+										.generateBroadCastingProductProxy(retMetaInfo);
+							}
 
-							// 상품 정보 (상품ID)
-							identifier = new Identifier();
-							identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-							identifier.setText(retDto.getProdId());
-							product.setIdentifier(identifier);
-
-							// 상품 지원 정보
-							support = new Support();
-							supportList = new ArrayList<Support>();
-							support.setType("hd");
-							support.setText(retDto.getHdvYn());
-							supportList.add(support);
-							product.setSupportList(supportList);
-
-							// 메뉴 정보
-							// menu = new Menu();
-							// menuList = new ArrayList<Menu>();
-							// menu.setType("topClass");
-							// menu.setId(retDto.getTopMenuId());
-							// menu.setName(retDto.getTopMenuNm());
-							// menuList.add(menu);
-
-							menu = new Menu();
-							menuList = new ArrayList<Menu>();
-							menu.setId(retDto.getMenuId());
-							System.out.println(retDto.getMenuNm());
-							menu.setName(retDto.getMenuNm());
-							menuList.add(menu);
-
-							menu = new Menu();
-							menu.setType("metaClass");
-							menu.setId(retDto.getMetaClsfCd());
-							menuList.add(menu);
-							product.setMenuList(menuList);
-
-							// 저작자 정보
-							contributor = new Contributor();
-							contributor.setArtist(retDto.getArtist1Nm());
-							contributor.setDirector(retDto.getArtist2Nm());
-
-							date = new Date();
-							date.setText(retDto.getIssueDay());
-							contributor.setDate(date);
-							product.setContributor(contributor);
-
-							// 평점 정보
-							accrual = new Accrual();
-							accrual.setDownloadCount(retDto.getPrchsCnt());
-							accrual.setScore(retDto.getAvgEvluScore());
-							accrual.setVoterCount(retDto.getPaticpersCnt());
-							product.setAccrual(accrual);
-
-							// 이용권한 정보
-							rights = new Rights();
-							rights.setGrade(retDto.getProdGrdCd());
-							product.setRights(rights);
-
-							// 상품 정보 (상품명)
-							title = new Title();
-							title.setPrefix(retDto.getVodTitlNm());
-							title.setText(retDto.getProdNm());
-							product.setTitle(title);
-
-							// 이미지 정보
-							source = new Source();
-							sourceList = new ArrayList<Source>();
-							source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-							source.setMediaType(DisplayCommonUtil.getMimeType(retDto.getFileNm()));
-							source.setUrl(retDto.getFilePath() + retDto.getFileNm());
-							sourceList.add(source);
-							product.setSourceList(sourceList);
-
-							// 상품 정보 (상품설명)
-							product.setProductExplain(retDto.getProdBaseDesc());
-
-							// 상품 정보 (상품가격)
-							price = new Price();
-							price.setText(retDto.getProdAmt());
-							product.setPrice(price);
-
-							// 데이터 매핑
 							productList.add(product);
 						}
 					}
 					// Ebook / Comic 상품의 경우
 					else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-						EbookComicMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo",
-								productBasicInfo, EbookComicMetaInfo.class);
+						MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo",
+								productBasicInfo, MetaInfo.class);
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+							product = this.metaInfoGenerateProxyService.generateEbookProductProxy(retMetaInfo);
+						} else {
+							product = this.metaInfoGenerateProxyService.generateComicProductProxy(retMetaInfo);
+						}
+
+						productList.add(product);
 					}
 					// 음원 상품의 경우
 					else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
-						MusicMetaInfo retDTO = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo",
-								productBasicInfo, MusicMetaInfo.class);
+						MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo",
+								productBasicInfo, MetaInfo.class);
+						product = this.metaInfoGenerateProxyService.generateMusicProductProxy(retMetaInfo);
+						productList.add(product);
 					}
 				}
 				// 쇼핑 상품의 경우
 				else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					MusicMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
-							MusicMetaInfo.class);
-				}
-				// APP 상품의 경우
-				else if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					VODMetaInfo retDto = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", productBasicInfo,
-							VODMetaInfo.class);
-					if (retDto != null) {
-						product = new Product();
-						identifier = new Identifier();
-						rights = new Rights();
-						title = new Title();
-						source = new Source();
-						app = new App();
-						price = new Price();
-						accrual = new Accrual();
-						menu = new Menu();
-						support = new Support();
-
-						sourceList = new ArrayList<Source>();
-						menuList = new ArrayList<Menu>();
-						supportList = new ArrayList<Support>();
-
-						// Identifier 설정
-						identifier.setText(prodId);
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-
-						// Title 설정
-						title.setText(retDto.getProdNm());
-
-						// APP 설정
-						// app.setAid(retDto.getAid());
-						// app.setPackageName(retDto.getApkPkgNm());
-						// app.setVersionCode(retDto.getApkVer());
-						// app.setVersion(retDto.getProdVer());
-						//
-						// // Price 설정
-						// price.setText(retDto.getProdAmt());
-						//
-						// // supported hardware 정보
-						//
-						// support = new Support();
-						// support.setType("drm");
-						// support.setText(retDto.getDrmYn());
-						// supportList.add(support);
-						//
-						// support = new Support();
-						// support.setType("inApp");
-						// support.setText(retDto.getPartParentClsfCd());
-						// supportList.add(support);
-						// product.setSupportList(supportList);
-						//
-						// accrual.setVoterCount(retDto.getPaticpersCnt());
-						// accrual.setDownloadCount(retDto.getPrchsCnt());
-						// accrual.setScore(retDto.getAvgEvluScore());
-						//
-						// source.setMediaType(DisplayCommonUtil.getMimeType(retDto.getImgPath()));
-						// source.setUrl(retDto.getImgPath());
-						// source.setType("thumbnail");
-						// sourceList.add(source);
-						//
-						// rights.setGrade(retDto.getProdGrdCd());
-						//
-						// menu.setId(retDto.getMenuId());
-						// menu.setName(retDto.getMenuNm());
-						// menuList.add(menu);
-						//
-						// product.setIdentifier(identifier);
-						// product.setApp(app);
-						// product.setAccrual(accrual);
-						// product.setProductExplain(retDto.getProdBaseDesc());
-						// product.setPrice(price);
-						//
-						// product.setRights(rights);
-						// product.setTitle(title);
-						// product.setSourceList(sourceList);
-						// product.setMenuList(menuList);
-						// product.setSupportList(supportList);
-						// productList.add(product);
-					}
+					MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
+							MetaInfo.class);
 				}
 			}
 			res.setProductList(productList);
-		} else { // TODO osm1021 Dummy data 작업이 종료되면 삭제할것
-
+		} else {
+			// TODO osm1021 Dummy data 작업이 종료되면 삭제할것
 			productList = new ArrayList<Product>();
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
@@ -360,8 +226,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				/*
 				 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 				 */
-				accrual.setVoterCount("14305");
-				accrual.setDownloadCount("513434");
+				accrual.setVoterCount(14305);
+				accrual.setDownloadCount(513434);
 				accrual.setScore(4.8);
 
 				/*
@@ -449,8 +315,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				/*
 				 * Accrual - voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 				 */
-				accrual.setVoterCount("51");
-				accrual.setDownloadCount("5932");
+				accrual.setVoterCount(51);
+				accrual.setDownloadCount(5932);
 				accrual.setScore(3.8);
 
 				/*
@@ -537,8 +403,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 				// 상품 정보 (상품가격)
 				price = new Price();
-				price.setFixedPrice("17500");
-				price.setDiscountRate("10");
+				price.setFixedPrice(17500);
+				price.setDiscountRate(10d);
 				price.setText(15750);
 
 				// 이미지 정보
@@ -550,7 +416,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 				// 다운로드 수
 				accrual = new Accrual();
-				accrual.setDownloadCount("6229");
+				accrual.setDownloadCount(6229);
 
 				// 이용권한 정보
 				rights = new Rights();
@@ -580,10 +446,10 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				product.setContributor(contributor);
 				productList.add(product);
 			}
+			commonResponse.setTotalCount(productList.size());
+			res.setCommonResponse(commonResponse);
+			res.setProductList(productList);
 		}
-		commonResponse.setTotalCount(productList.size());
-		res.setCommonResponse(commonResponse);
-		res.setProductList(productList);
 		return res;
 	}
 }

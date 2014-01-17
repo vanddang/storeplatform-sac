@@ -17,8 +17,8 @@ package com.skplanet.storeplatform.sac.display.feature.recommend.vo;
 public class RecommendAdminDTO {
 
 	private int totalCount;
-	private String dwldCnt;
-	private String prchsCnt;
+	private Integer dwldCnt;
+	private Integer prchsCnt;
 	private String topMenuId;
 	private String menuId;
 	private String topMenuNm;
@@ -27,163 +27,210 @@ public class RecommendAdminDTO {
 	private String aid;
 	private String prodNm;
 	private String prodBaseDesc;
-	private String prodAmt;
+	private Integer prodAmt;
 	private String prodGrdCd;
 	private String partParentClsfCd;
 	private String drmYn;
 	private String apkPkgNm;
 	private String apkVer;
-	private String fileSize;
+	private Integer fileSize;
 	private String prodVer;
 	private String filePath;
 	private String verMajor;
 	private String verMinor;
 	private String fileNm;
-	private String avgEvluScore;
-	
+	private Double avgEvluScore;
+
 	public int getTotalCount() {
-		return totalCount;
+		return this.totalCount;
 	}
+
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
-	public String getDwldCnt() {
-		return dwldCnt;
+
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
-	public void setDwldCnt(String dwldCnt) {
+
+	public Integer getDwldCnt() {
+		return this.dwldCnt;
+	}
+
+	public void setDwldCnt(Integer dwldCnt) {
 		this.dwldCnt = dwldCnt;
 	}
-	public String getPrchsCnt() {
-		return prchsCnt;
+
+	public Integer getPrchsCnt() {
+		return this.prchsCnt;
 	}
-	public void setPrchsCnt(String prchsCnt) {
+
+	public void setPrchsCnt(Integer prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
-	public String getTopMenuId() {
-		return topMenuId;
-	}
+
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}
+
 	public String getMenuId() {
-		return menuId;
+		return this.menuId;
 	}
+
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
+
 	public String getProdId() {
-		return prodId;
+		return this.prodId;
 	}
+
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
 	}
+
 	public String getAid() {
-		return aid;
+		return this.aid;
 	}
+
 	public void setAid(String aid) {
 		this.aid = aid;
 	}
+
 	public String getProdNm() {
-		return prodNm;
+		return this.prodNm;
 	}
+
 	public void setProdNm(String prodNm) {
 		this.prodNm = prodNm;
 	}
+
 	public String getProdBaseDesc() {
-		return prodBaseDesc;
+		return this.prodBaseDesc;
 	}
+
 	public void setProdBaseDesc(String prodBaseDesc) {
 		this.prodBaseDesc = prodBaseDesc;
 	}
-	public String getProdAmt() {
-		return prodAmt;
-	}
-	public void setProdAmt(String prodAmt) {
-		this.prodAmt = prodAmt;
-	}
+
 	public String getProdGrdCd() {
-		return prodGrdCd;
+		return this.prodGrdCd;
 	}
+
 	public void setProdGrdCd(String prodGrdCd) {
 		this.prodGrdCd = prodGrdCd;
 	}
+
 	public String getPartParentClsfCd() {
-		return partParentClsfCd;
+		return this.partParentClsfCd;
 	}
+
 	public void setPartParentClsfCd(String partParentClsfCd) {
 		this.partParentClsfCd = partParentClsfCd;
 	}
+
 	public String getDrmYn() {
-		return drmYn;
+		return this.drmYn;
 	}
+
 	public void setDrmYn(String drmYn) {
 		this.drmYn = drmYn;
 	}
+
 	public String getApkPkgNm() {
-		return apkPkgNm;
+		return this.apkPkgNm;
 	}
+
 	public void setApkPkgNm(String apkPkgNm) {
 		this.apkPkgNm = apkPkgNm;
 	}
+
 	public String getApkVer() {
-		return apkVer;
+		return this.apkVer;
 	}
+
 	public void setApkVer(String apkVer) {
 		this.apkVer = apkVer;
 	}
-	public String getFileSize() {
-		return fileSize;
+
+	public Integer getProdAmt() {
+		return this.prodAmt;
 	}
-	public void setFileSize(String fileSize) {
+
+	public void setProdAmt(Integer prodAmt) {
+		this.prodAmt = prodAmt;
+	}
+
+	public Integer getFileSize() {
+		return this.fileSize;
+	}
+
+	public void setFileSize(Integer fileSize) {
 		this.fileSize = fileSize;
 	}
+
 	public String getProdVer() {
-		return prodVer;
+		return this.prodVer;
 	}
+
 	public void setProdVer(String prodVer) {
 		this.prodVer = prodVer;
 	}
+
 	public String getFilePath() {
-		return filePath;
+		return this.filePath;
 	}
+
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
+
 	public String getTopMenuNm() {
-		return topMenuNm;
+		return this.topMenuNm;
 	}
+
 	public void setTopMenuNm(String topMenuNm) {
 		this.topMenuNm = topMenuNm;
 	}
+
 	public String getMenuNm() {
-		return menuNm;
+		return this.menuNm;
 	}
+
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
 	}
+
 	public String getVerMajor() {
-		return verMajor;
+		return this.verMajor;
 	}
+
 	public void setVerMajor(String verMajor) {
 		this.verMajor = verMajor;
 	}
+
 	public String getVerMinor() {
-		return verMinor;
+		return this.verMinor;
 	}
+
 	public void setVerMinor(String verMinor) {
 		this.verMinor = verMinor;
 	}
+
 	public String getFileNm() {
-		return fileNm;
+		return this.fileNm;
 	}
+
 	public void setFileNm(String fileNm) {
 		this.fileNm = fileNm;
 	}
-	public String getAvgEvluScore() {
-		return avgEvluScore;
+
+	public Double getAvgEvluScore() {
+		return this.avgEvluScore;
 	}
-	public void setAvgEvluScore(String avgEvluScore) {
+
+	public void setAvgEvluScore(Double avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
-	
+
 }

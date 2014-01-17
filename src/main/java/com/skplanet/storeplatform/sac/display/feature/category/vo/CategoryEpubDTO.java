@@ -17,8 +17,8 @@ package com.skplanet.storeplatform.sac.display.feature.category.vo;
 public class CategoryEpubDTO {
 
 	private int totalCount;
-	private String dwldCnt;
-	private String prchsCnt;
+	private Integer dwldCnt;
+	private Integer prchsCnt;
 	private String topMenuId;
 	private String menuId;
 	private String topMenuNm;
@@ -27,8 +27,8 @@ public class CategoryEpubDTO {
 	private String metaClsfCd;
 	private String prodNm;
 	private String prodBaseDesc;
-	private String prodAmt;
-	private String prodNetAmt;
+	private Integer prodAmt;
+	private Integer prodNetAmt;
 	private String artist1Nm;
 	private String artist2Nm;
 	private String artist3Nm;
@@ -40,165 +40,215 @@ public class CategoryEpubDTO {
 	private String strmEpsdCnt;
 	private String captionYn;
 	private String drmYn;
-	private String fileSize;
+	private Integer fileSize;
 	private String filePath;
+
 	public int getTotalCount() {
-		return totalCount;
+		return this.totalCount;
 	}
+
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
 	}
-	public String getDwldCnt() {
-		return dwldCnt;
-	}
-	public void setDwldCnt(String dwldCnt) {
-		this.dwldCnt = dwldCnt;
-	}
-	public String getPrchsCnt() {
-		return prchsCnt;
-	}
-	public void setPrchsCnt(String prchsCnt) {
-		this.prchsCnt = prchsCnt;
-	}
+
 	public String getTopMenuId() {
-		return topMenuId;
+		return this.topMenuId;
 	}
+
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}
+
 	public String getMenuId() {
-		return menuId;
+		return this.menuId;
 	}
+
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
+
 	public String getProdId() {
-		return prodId;
+		return this.prodId;
 	}
+
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
 	}
+
 	public String getMetaClsfCd() {
-		return metaClsfCd;
+		return this.metaClsfCd;
 	}
+
 	public void setMetaClsfCd(String metaClsfCd) {
 		this.metaClsfCd = metaClsfCd;
 	}
+
 	public String getProdNm() {
-		return prodNm;
+		return this.prodNm;
 	}
+
 	public void setProdNm(String prodNm) {
 		this.prodNm = prodNm;
 	}
+
 	public String getProdBaseDesc() {
-		return prodBaseDesc;
+		return this.prodBaseDesc;
 	}
+
 	public void setProdBaseDesc(String prodBaseDesc) {
 		this.prodBaseDesc = prodBaseDesc;
 	}
-	public String getProdAmt() {
-		return prodAmt;
+
+	public Integer getProdAmt() {
+		return this.prodAmt;
 	}
-	public void setProdAmt(String prodAmt) {
+
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
-	public String getProdNetAmt() {
-		return prodNetAmt;
+
+	public Integer getProdNetAmt() {
+		return this.prodNetAmt;
 	}
-	public void setProdNetAmt(String prodNetAmt) {
+
+	public void setProdNetAmt(Integer prodNetAmt) {
 		this.prodNetAmt = prodNetAmt;
 	}
+
 	public String getArtist1Nm() {
-		return artist1Nm;
+		return this.artist1Nm;
 	}
+
 	public void setArtist1Nm(String artist1Nm) {
 		this.artist1Nm = artist1Nm;
 	}
+
 	public String getArtist2Nm() {
-		return artist2Nm;
+		return this.artist2Nm;
 	}
+
 	public void setArtist2Nm(String artist2Nm) {
 		this.artist2Nm = artist2Nm;
 	}
+
 	public String getArtist3Nm() {
-		return artist3Nm;
+		return this.artist3Nm;
 	}
+
 	public void setArtist3Nm(String artist3Nm) {
 		this.artist3Nm = artist3Nm;
 	}
+
 	public String getProdGrdCd() {
-		return prodGrdCd;
+		return this.prodGrdCd;
 	}
+
 	public void setProdGrdCd(String prodGrdCd) {
 		this.prodGrdCd = prodGrdCd;
 	}
+
 	public String getChnlCompNm() {
-		return chnlCompNm;
+		return this.chnlCompNm;
 	}
+
 	public void setChnlCompNm(String chnlCompNm) {
 		this.chnlCompNm = chnlCompNm;
 	}
+
 	public String getIssueDay() {
-		return issueDay;
+		return this.issueDay;
 	}
+
 	public void setIssueDay(String issueDay) {
 		this.issueDay = issueDay;
 	}
+
 	public String getBookPageCnt() {
-		return bookPageCnt;
+		return this.bookPageCnt;
 	}
+
 	public void setBookPageCnt(String bookPageCnt) {
 		this.bookPageCnt = bookPageCnt;
 	}
+
 	public String getEpsdCnt() {
-		return epsdCnt;
+		return this.epsdCnt;
 	}
+
 	public void setEpsdCnt(String epsdCnt) {
 		this.epsdCnt = epsdCnt;
 	}
+
 	public String getStrmEpsdCnt() {
-		return strmEpsdCnt;
+		return this.strmEpsdCnt;
 	}
+
 	public void setStrmEpsdCnt(String strmEpsdCnt) {
 		this.strmEpsdCnt = strmEpsdCnt;
 	}
+
 	public String getCaptionYn() {
-		return captionYn;
+		return this.captionYn;
 	}
+
 	public void setCaptionYn(String captionYn) {
 		this.captionYn = captionYn;
 	}
+
 	public String getDrmYn() {
-		return drmYn;
+		return this.drmYn;
 	}
+
 	public void setDrmYn(String drmYn) {
 		this.drmYn = drmYn;
 	}
-	public String getFileSize() {
-		return fileSize;
+
+	public Integer getDwldCnt() {
+		return this.dwldCnt;
 	}
-	public void setFileSize(String fileSize) {
+
+	public void setDwldCnt(Integer dwldCnt) {
+		this.dwldCnt = dwldCnt;
+	}
+
+	public Integer getPrchsCnt() {
+		return this.prchsCnt;
+	}
+
+	public void setPrchsCnt(Integer prchsCnt) {
+		this.prchsCnt = prchsCnt;
+	}
+
+	public Integer getFileSize() {
+		return this.fileSize;
+	}
+
+	public void setFileSize(Integer fileSize) {
 		this.fileSize = fileSize;
 	}
+
 	public String getFilePath() {
-		return filePath;
+		return this.filePath;
 	}
+
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
+
 	public String getTopMenuNm() {
-		return topMenuNm;
+		return this.topMenuNm;
 	}
+
 	public void setTopMenuNm(String topMenuNm) {
 		this.topMenuNm = topMenuNm;
 	}
+
 	public String getMenuNm() {
-		return menuNm;
+		return this.menuNm;
 	}
+
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
 	}
-	
-	
-	
+
 }

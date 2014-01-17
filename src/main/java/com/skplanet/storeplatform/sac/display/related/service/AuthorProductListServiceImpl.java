@@ -58,8 +58,8 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 	 * RelatedProductRequest requestVO)
 	 */
 	@Override
-	public AuthorProductListRes searchAuthorProductList(RelatedProductReq requestVO)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public AuthorProductListRes searchAuthorProductList(RelatedProductReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 1;
 
@@ -121,8 +121,8 @@ public class AuthorProductListServiceImpl implements AuthorProductListService {
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setVoterCount("1");
-				accrual.setDownloadCount("3");
+				accrual.setVoterCount(1);
+				accrual.setDownloadCount(3);
 				accrual.setScore(4.0);
 
 				rights.setGrade("1");

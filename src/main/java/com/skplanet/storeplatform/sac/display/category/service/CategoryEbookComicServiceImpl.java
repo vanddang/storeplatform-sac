@@ -36,7 +36,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
 /**
  * CategoryEbookComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -46,7 +45,7 @@ import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 @Service
 @Transactional
 public class CategoryEbookComicServiceImpl implements CategoryEbookComicService {
-	private transient Logger logger = LoggerFactory.getLogger(ProductCommonServiceImpl.class);
+	private transient Logger logger = LoggerFactory.getLogger(CategoryEbookComicServiceImpl.class);
 
 	@Autowired
 	@Qualifier("sac")
@@ -122,9 +121,9 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 
 				// 평점 정보
 				accrual = new Accrual();
-				accrual.setDownloadCount("10");
+				accrual.setDownloadCount(10);
 				accrual.setScore(4.5);
-				accrual.setVoterCount("123");
+				accrual.setVoterCount(123);
 				product.setAccrual(accrual);
 
 				// 이용권한 정보
@@ -151,7 +150,7 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 
 				// 상품 정보 (상품가격)
 				price = new Price();
-				price.setFixedPrice("8100");
+				price.setFixedPrice(8100);
 				price.setText(8100);
 				product.setPrice(price);
 
@@ -201,9 +200,9 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 
 				// 평점 정보
 				accrual = new Accrual();
-				accrual.setDownloadCount("3");
+				accrual.setDownloadCount(3);
 				accrual.setScore(4.0);
-				accrual.setVoterCount("18");
+				accrual.setVoterCount(18);
 				product.setAccrual(accrual);
 
 				// 이용권한 정보
@@ -230,7 +229,7 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 
 				// 상품 정보 (상품가격)
 				price = new Price();
-				price.setFixedPrice("8100");
+				price.setFixedPrice(8100);
 				price.setText(8100);
 				product.setPrice(price);
 

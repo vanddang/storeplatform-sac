@@ -58,8 +58,8 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 	 * RelatedProductRequest requestVO)
 	 */
 	@Override
-	public RelatedProductListRes searchArtistProductList(RelatedProductReq requestVO)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public RelatedProductListRes searchArtistProductList(RelatedProductReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 1;
 
@@ -115,7 +115,7 @@ public class ArtistProductListServiceImpl implements ArtistProductListService {
 				 * source mediaType, size, type, url
 				 */
 				source.setMediaType("image/png");
-				source.setSize("128");
+				source.setSize(128);
 				source.setType("thumbNail");
 				source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PMUSIC/201312/29/0002074441/10/0003894669/10/10_0002074441_200_200_1701_200x200_R130x130.PNG");
 				sourceList.add(source);

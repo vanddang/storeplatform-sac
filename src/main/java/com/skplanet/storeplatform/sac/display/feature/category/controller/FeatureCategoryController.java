@@ -28,12 +28,11 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryAppService;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService;
-import com.skplanet.storeplatform.sac.product.service.ProductCommonServiceImpl;
 
 @Controller
 @RequestMapping("/display/feature/category")
 public class FeatureCategoryController {
-	private transient Logger logger = LoggerFactory.getLogger(ProductCommonServiceImpl.class);
+	private transient Logger logger = LoggerFactory.getLogger(FeatureCategoryController.class);
 
 	@Autowired
 	private FeatureCategoryVodService featureCategoryVodService;
@@ -77,10 +76,10 @@ public class FeatureCategoryController {
 		FeatureCategoryAppRes responseVO;
 
 		if ("".equals(StringUtil.nvl(requestVO.getDummy(), ""))) {
-			
-			responseVO = categoryAppService.searchMenuAppList(requestVO, header);
+
+			responseVO = this.categoryAppService.searchMenuAppList(requestVO, header);
 		} else {
-			//임시 저장
+			// 임시 저장
 			// 시작점 ROW Default 세팅
 			if (requestVO.getOffset() == 0) {
 				requestVO.setOffset(1);
@@ -93,12 +92,12 @@ public class FeatureCategoryController {
 			requestVO.setDeviceModelCd("SHW-M180L");
 			requestVO.setLangCd("ko");
 			requestVO.setMenuId(StringUtil.nvl(requestVO.getMenuId(), "DP01"));
-			//Dummy 요청 일 경우
-			responseVO = categoryAppService.searchAppList(requestVO);
+			// Dummy 요청 일 경우
+			responseVO = this.categoryAppService.searchAppList(requestVO);
 		}
 		return responseVO;
 	}
-	
+
 	/**
 	 * <pre>
 	 * Feature Epub 카테고리 상품 조회.
@@ -111,10 +110,10 @@ public class FeatureCategoryController {
 	@ResponseBody
 	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header) {
 
-		if ( requestVO.getCount() == 0 )
+		if (requestVO.getCount() == 0)
 			requestVO.setCount(10);
 		FeatureCategoryEpubRes responseVO;
-		responseVO = categoryEpubService.searchEpubList(requestVO);
+		responseVO = this.categoryEpubService.searchEpubList(requestVO);
 		return responseVO;
 	}
 }

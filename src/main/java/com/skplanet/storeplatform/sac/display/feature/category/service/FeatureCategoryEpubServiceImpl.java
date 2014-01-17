@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubRes;
@@ -52,21 +51,26 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-	
-	/* (non-Javadoc)
-	 * @see com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
 	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO) {
 		// TODO Auto-generated method stub
-		//공통 응답 변수 선언
+		// 공통 응답 변수 선언
 		int totalCount = 0;
 		FeatureCategoryEpubRes responseVO = null;
 		CommonResponse commonResponse = null;
 
-		List<CategoryEpubDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy",requestVO, CategoryEpubDTO.class);
+		List<CategoryEpubDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy",
+				requestVO, CategoryEpubDTO.class);
 		List<Product> listVO = new ArrayList<Product>();
-		
+
 		CategoryEpubDTO categoryEpubDTO;
 		Product product;
 		Identifier identifier;
@@ -79,14 +83,14 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		Support support;
 		Menu menu;
 		Contributor contributor;
-		
+
 		// Response VO를 만들기위한 생성자
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
-		
-		for (int i = 0 ; resultList != null && i < resultList.size(); i++ ) {
-			
+
+		for (int i = 0; resultList != null && i < resultList.size(); i++) {
+
 			categoryEpubDTO = resultList.get(i);
 			product = new Product();
 			identifier = new Identifier();
@@ -98,21 +102,21 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			price = new Price();
 			support = new Support();
 			contributor = new Contributor();
-			
+
 			// 상품ID
 			identifier = new Identifier();
-			
+
 			// Response VO를 만들기위한 생성자
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
-			
+
 			totalCount = categoryEpubDTO.getTotalCount();
-			
+
 			identifier.setType("channel");
 			identifier.setText(categoryEpubDTO.getProdId());
 			title.setText(categoryEpubDTO.getProdNm());
-			
+
 			menu = new Menu();
 			menu.setId(categoryEpubDTO.getTopMenuId());
 			menu.setName(categoryEpubDTO.getTopMenuNm());
@@ -121,7 +125,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			menu = new Menu();
 			menu.setId(categoryEpubDTO.getMenuId());
 			menu.setName(categoryEpubDTO.getMenuNm());
-			//menu.setType("");
+			// menu.setType("");
 			menuList.add(menu);
 			menu = new Menu();
 			menu.setId(categoryEpubDTO.getMetaClsfCd());
@@ -129,26 +133,26 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			menu.setType("metaClass");
 			menuList.add(menu);
 
-			if ( "CT20".equals(categoryEpubDTO.getMetaClsfCd()) )
-					book.setType("serial");
+			if ("CT20".equals(categoryEpubDTO.getMetaClsfCd()))
+				book.setType("serial");
 			book.setTotalPages(categoryEpubDTO.getBookPageCnt());
-			if ( "CT20".equals(categoryEpubDTO.getMetaClsfCd()) )
-				if ( "Y".equals(categoryEpubDTO.getCaptionYn()) )
+			if ("CT20".equals(categoryEpubDTO.getMetaClsfCd()))
+				if ("Y".equals(categoryEpubDTO.getCaptionYn()))
 					book.setStatus("completed");
 				else
 					book.setStatus("continue");
-			log.debug("setStatus");
+			this.log.debug("setStatus");
 
-			if ( Integer.parseInt(categoryEpubDTO.getStrmEpsdCnt()) > 0 )
+			if (Integer.parseInt(categoryEpubDTO.getStrmEpsdCnt()) > 0)
 				support.setText("play");
 			support.setText(StringUtil.nvl(support.getText(), "") + "|");
-			if ( Integer.parseInt(categoryEpubDTO.getEpsdCnt()) > 0 )
+			if (Integer.parseInt(categoryEpubDTO.getEpsdCnt()) > 0)
 				support.setText(support.getText() + "store");
-			log.debug("setText");
+			this.log.debug("setText");
 			supportList.add(support);
 			book.setSupportList(supportList);
 			product.setBook(book);
-			log.debug("setBook");
+			this.log.debug("setBook");
 			contributor.setName(categoryEpubDTO.getArtist1Nm());
 			contributor.setCompany(categoryEpubDTO.getChnlCompNm());
 			if (!"".equals(StringUtil.nvl(categoryEpubDTO.getIssueDay(), ""))) {
@@ -157,36 +161,35 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 				date.setText(categoryEpubDTO.getIssueDay());
 				contributor.setDate(date);
 			}
-			log.debug("setCompany");
-			
+			this.log.debug("setCompany");
 
 			accrual.setVoterCount(categoryEpubDTO.getPrchsCnt());
 			accrual.setDownloadCount(categoryEpubDTO.getDwldCnt());
 			accrual.setScore(3.3);
-			log.debug("accrual");
+			this.log.debug("accrual");
 			/*
 			 * Rights grade
 			 */
 			rights.setGrade(categoryEpubDTO.getProdGrdCd());
-			
+
 			source.setMediaType("image/jpeg");
 			source.setSize(categoryEpubDTO.getFileSize());
 			source.setType("thumbNail");
 			source.setUrl(categoryEpubDTO.getFilePath());
 			sourceList.add(source);
-			log.debug("sourceList");
+			this.log.debug("sourceList");
 			/*
 			 * Price text
 			 */
-			price.setText(Integer.parseInt(categoryEpubDTO.getProdAmt()));
+			price.setText(categoryEpubDTO.getProdAmt());
 			price.setFixedPrice(categoryEpubDTO.getProdNetAmt());
-			log.debug("price");
-			//product = new Product();
+			this.log.debug("price");
+			// product = new Product();
 			product.setIdentifier(identifier);
 			product.setTitle(title);
-			//support.setText(categoryEpubDTO.getDrmYn() + "|" + categoryEpubDTO.getPartParentClsfCd());
-			//supportList.add(support);
-			//product.setSupportList(supportList);
+			// support.setText(categoryEpubDTO.getDrmYn() + "|" + categoryEpubDTO.getPartParentClsfCd());
+			// supportList.add(support);
+			// product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
 			product.setAccrual(accrual);
@@ -202,7 +205,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		responseVO = new FeatureCategoryEpubRes();
 		commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(totalCount);
-		log.debug(String.valueOf(listVO.size()));
+		this.log.debug(String.valueOf(listVO.size()));
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(listVO);
 		return responseVO;

@@ -35,11 +35,11 @@ public class BestAppDTO {
 	private int prodAmt;
 	private String apkVerCd;
 	private int avgEvluScore;
-	private String dwldCnt;
-	private String paticpersCnt;
+	private Integer dwldCnt;
+	private Integer paticpersCnt;
 	private String imgPath;
 	private String imgNm;
-	private String imgSize;
+	private Integer imgSize;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -201,22 +201,6 @@ public class BestAppDTO {
 		this.avgEvluScore = avgEvluScore;
 	}
 
-	public String getDwldCnt() {
-		return this.dwldCnt;
-	}
-
-	public void setDwldCnt(String dwldCnt) {
-		this.dwldCnt = dwldCnt;
-	}
-
-	public String getPaticpersCnt() {
-		return this.paticpersCnt;
-	}
-
-	public void setPaticpersCnt(String paticpersCnt) {
-		this.paticpersCnt = paticpersCnt;
-	}
-
 	public String getImgPath() {
 		return this.imgPath;
 	}
@@ -233,11 +217,27 @@ public class BestAppDTO {
 		this.imgNm = imgNm;
 	}
 
-	public String getImgSize() {
+	public Integer getDwldCnt() {
+		return this.dwldCnt;
+	}
+
+	public void setDwldCnt(Integer dwldCnt) {
+		this.dwldCnt = dwldCnt;
+	}
+
+	public Integer getPaticpersCnt() {
+		return this.paticpersCnt;
+	}
+
+	public void setPaticpersCnt(Integer paticpersCnt) {
+		this.paticpersCnt = paticpersCnt;
+	}
+
+	public Integer getImgSize() {
 		return this.imgSize;
 	}
 
-	public void setImgSize(String imgSize) {
+	public void setImgSize(Integer imgSize) {
 		this.imgSize = imgSize;
 	}
 

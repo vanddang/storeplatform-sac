@@ -58,8 +58,8 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 	 * RelatedProductRequest requestVO)
 	 */
 	@Override
-	public RelatedProductListRes searchSimilarProductList(RelatedProductReq requestVO)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public RelatedProductListRes searchSimilarProductList(RelatedProductReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 1;
 
@@ -92,7 +92,7 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 				// App
 				app.setAid("OA00254239");
 				app.setPackageName("net.hwado.paid.PDFGenerator");
-				app.setSize("1280765");
+				app.setSize(1280765);
 				app.setVersionCode("1");
 				app.setVersion("1.0");
 
@@ -120,7 +120,7 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 				 * source mediaType, size, type, url
 				 */
 				source.setMediaType("image/png");
-				source.setSize("0");
+				source.setSize(0);
 				source.setType("thumbNail");
 				source.setUrl("http://wap.tstore.co.kr/images/IF1423022570420091207142717/0000254239/thumbnail/0000254239_130_130_0_91.PNG");
 				sourceList.add(source);
@@ -128,8 +128,8 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setDownloadCount("246");
-				accrual.setVoterCount("2");
+				accrual.setDownloadCount(246);
+				accrual.setVoterCount(2);
 				accrual.setScore(3);
 
 				rights.setGrade("0");

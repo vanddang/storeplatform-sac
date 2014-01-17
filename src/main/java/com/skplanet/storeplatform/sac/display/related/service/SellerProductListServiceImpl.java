@@ -58,8 +58,8 @@ public class SellerProductListServiceImpl implements SellerProductListService {
 	 * RelatedProductRequest requestVO)
 	 */
 	@Override
-	public RelatedProductListRes searchSellerProductList(RelatedProductReq requestVO)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public RelatedProductListRes searchSellerProductList(RelatedProductReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 5;
 
@@ -112,7 +112,7 @@ public class SellerProductListServiceImpl implements SellerProductListService {
 				// App
 				app.setAid("OW00001215");
 				app.setPackageName("");
-				app.setSize("");
+				app.setSize(1111);
 				app.setVersionCode("");
 				app.setVersion("1.0");
 
@@ -127,8 +127,8 @@ public class SellerProductListServiceImpl implements SellerProductListService {
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setDownloadCount("38694");
-				accrual.setVoterCount("120");
+				accrual.setDownloadCount(38694);
+				accrual.setVoterCount(120);
 				accrual.setScore(4.6);
 
 				rights.setGrade("0");

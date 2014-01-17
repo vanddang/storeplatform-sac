@@ -312,8 +312,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 			/*
 			 * Accrual - voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 			 */
-			accrual.setVoterCount("51");
-			accrual.setDownloadCount("5932");
+			accrual.setVoterCount(51);
+			accrual.setDownloadCount(5932);
 			accrual.setScore(3.8);
 
 			/*

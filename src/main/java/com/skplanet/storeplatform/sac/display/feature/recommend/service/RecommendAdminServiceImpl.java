@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -33,18 +32,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.FeatureConstant;
-import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryAppDTO;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO;
 
 /**
@@ -61,33 +54,41 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
-	
+
 	@Autowired
 	private DisplayCommonService displayCommonService;
-	
-	/* (non-Javadoc)
-	 * @see com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String,
+	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
 	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
-				
-		//공통 응답 변수 선언
+
+		// 공통 응답 변수 선언
 		int totalCount = 0;
 		RecommendAdminRes responseVO = null;
 		CommonResponse commonResponse = null;
 		List<RecommendAdminDTO> resultList = null;
 		List<Product> listVO = new ArrayList<Product>();
-		
+
 		// 헤더값 세팅
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setLangCd("ko");
-		
-		if (StringUtils.isEmpty(requestVO.getTenantId())) requestVO.setTenantId("S01");
-		if (StringUtils.isEmpty(requestVO.getDeviceModelCd())) requestVO.setDeviceModelCd("SHW-M180L");
-		if (StringUtils.isEmpty(requestVO.getListId())) requestVO.setListId("ADM000000012");
-		if (StringUtils.isEmpty(requestVO.getTopMenuId())) requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
+
+		if (StringUtils.isEmpty(requestVO.getTenantId()))
+			requestVO.setTenantId("S01");
+		if (StringUtils.isEmpty(requestVO.getDeviceModelCd()))
+			requestVO.setDeviceModelCd("SHW-M180L");
+		if (StringUtils.isEmpty(requestVO.getListId()))
+			requestVO.setListId("ADM000000012");
+		if (StringUtils.isEmpty(requestVO.getTopMenuId()))
+			requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())) {
@@ -110,7 +111,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		}
 
 		// 배치완료 기준일시 조회
-		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(), requestVO.getListId());
+		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
+				requestVO.getListId());
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
@@ -123,9 +125,10 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			return responseVO;
 		}
 		requestVO.setStdDt(stdDt);
-		
-		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList",requestVO, RecommendAdminDTO.class);
-		
+
+		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList", requestVO,
+				RecommendAdminDTO.class);
+
 		RecommendAdminDTO recommendAdminDTO;
 		Product product;
 		Identifier identifier;
@@ -137,15 +140,15 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		Price price;
 		Support support;
 		Menu menu;
-		
+
 		// Response VO를 만들기위한 생성자
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
 
-		for (int i = 0 ; resultList != null && i < resultList.size(); i++ ) {
-			
+		for (int i = 0; resultList != null && i < resultList.size(); i++) {
+
 			recommendAdminDTO = resultList.get(i);
 			product = new Product();
 			identifier = new Identifier();
@@ -156,21 +159,21 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			source = new Source();
 			price = new Price();
 			support = new Support();
-			
+
 			// 상품ID
 			identifier = new Identifier();
-			
+
 			// Response VO를 만들기위한 생성자
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
-			
+
 			totalCount = recommendAdminDTO.getTotalCount();
 
 			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 			identifier.setText(recommendAdminDTO.getProdId());
 			title.setText(recommendAdminDTO.getProdNm());
-			
+
 			menu = new Menu();
 			menu.setId(recommendAdminDTO.getTopMenuId());
 			menu.setName(recommendAdminDTO.getTopMenuNm());
@@ -179,28 +182,29 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			menu = new Menu();
 			menu.setId(recommendAdminDTO.getMenuId());
 			menu.setName(recommendAdminDTO.getMenuNm());
-			//menu.setType("");
+			// menu.setType("");
 			menuList.add(menu);
-			
+
 			app.setAid(recommendAdminDTO.getAid());
 			app.setPackageName(recommendAdminDTO.getApkPkgNm());
 			app.setVersionCode(recommendAdminDTO.getApkVer());
-			//app.setVersion(recommendAdminDTO.getProdVer());
-			app.setVersion(FeatureConstant.convertProdVer(recommendAdminDTO.getVerMajor(), recommendAdminDTO.getVerMinor()));
+			// app.setVersion(recommendAdminDTO.getProdVer());
+			app.setVersion(FeatureConstant.convertProdVer(recommendAdminDTO.getVerMajor(),
+					recommendAdminDTO.getVerMinor()));
 			product.setApp(app);
-			
+
 			accrual.setVoterCount(recommendAdminDTO.getPrchsCnt());
 			accrual.setDownloadCount(recommendAdminDTO.getDwldCnt());
-			accrual.setDownloadCount(recommendAdminDTO.getAvgEvluScore());
-			//accrual.setScore(3.3);
+			accrual.setScore(recommendAdminDTO.getAvgEvluScore());
+			// accrual.setScore(3.3);
 
 			/*
 			 * Rights grade
 			 */
-			//rights.setGrade(recommendAdminDTO.getProdGrdCd());
+			// rights.setGrade(recommendAdminDTO.getProdGrdCd());
 			rights.setGrade(FeatureConstant.convertProdGrdCd(recommendAdminDTO.getProdGrdCd()));
-			
-			//source.setMediaType("");
+
+			// source.setMediaType("");
 			source.setSize(recommendAdminDTO.getFileSize());
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setUrl(recommendAdminDTO.getFilePath());
@@ -209,14 +213,17 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			/*
 			 * Price text
 			 */
-			price.setText(Integer.parseInt(recommendAdminDTO.getProdAmt()));
+			price.setText(recommendAdminDTO.getProdAmt());
 
 			product.setIdentifier(identifier);
 			product.setTitle(title);
-			//support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" + StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
-			support.setText(FeatureConstant.convertAppSupport(StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""), StringUtil.nvl(recommendAdminDTO.getDrmYn(), "")));
+			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
+			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
+			support.setText(FeatureConstant.convertAppSupport(
+					StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""),
+					StringUtil.nvl(recommendAdminDTO.getDrmYn(), "")));
 			supportList.add(support);
-			
+
 			product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
@@ -228,11 +235,11 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 
 			listVO.add(product);
 		}
-		
+
 		responseVO = new RecommendAdminRes();
 		commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(totalCount);
-		
+
 		responseVO.setCommonResponse(commonResponse);
 		responseVO.setProductList(listVO);
 		return responseVO;

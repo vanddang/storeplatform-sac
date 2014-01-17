@@ -304,7 +304,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 				// 상품 정보 (상품가격)
 				price = new Price();
-				price.setText(Integer.parseInt(vodDto.getProdAmt()));
+				price.setText(vodDto.getProdAmt());
 				product.setPrice(price);
 
 				// 데이터 매핑

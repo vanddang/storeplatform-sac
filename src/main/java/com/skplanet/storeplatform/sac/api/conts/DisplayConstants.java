@@ -125,6 +125,7 @@ public class DisplayConstants {
 	 * 영화
 	 */
 	public static final String DP_MOVIE_TOP_MENU_ID = "DP17";
+
 	/**
 	 * TV 방송
 	 */
@@ -160,8 +161,13 @@ public class DisplayConstants {
 	public static final String DP_THUMNAIL_SOURCE = "thumbnail";
 
 	public static final String DP_MENU_TOPCLASS_TYPE = "topClass";
+	public static final String DP_META_CLASS_MENU_TYPE = "metaClass";
 
 	public static final String DP_MUSIC_SERVICE_MP3 = "mp3";
 	public static final String DP_MUSIC_SERVICE_BELL = "bell";
 	public static final String DP_MUSIC_SERVICE_RING = "ring";
+
+	// ////////////////////////////////////// supported hardware 정보 //////////////////////////////////////////
+	public static final String DP_DRM_SUPPORT_NM = "drm";
+	public static final String DP_IN_APP_SUPPORT_NM = "inApp";
 }

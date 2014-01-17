@@ -40,8 +40,8 @@ public class BestContentsDTO {
 	private String hdvYn;
 	private String dolbySprtYn;
 	private int prodAmt;
-	private String paticpersCnt;
-	private String dwldCnt;
+	private Integer paticpersCnt;
+	private Integer dwldCnt;
 	private int avgEvluScore;
 	private String imgPath;
 	private String upMenuNm;
@@ -255,19 +255,19 @@ public class BestContentsDTO {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getPaticpersCnt() {
+	public Integer getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
-	public void setPaticpersCnt(String paticpersCnt) {
+	public void setPaticpersCnt(Integer paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
-	public String getDwldCnt() {
+	public Integer getDwldCnt() {
 		return this.dwldCnt;
 	}
 
-	public void setDwldCnt(String dwldCnt) {
+	public void setDwldCnt(Integer dwldCnt) {
 		this.dwldCnt = dwldCnt;
 	}
 

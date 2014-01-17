@@ -248,8 +248,8 @@ public class BestAppServiceImpl implements BestAppService {
 				/*
 				 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 				 */
-				accrual.setVoterCount("14305");
-				accrual.setDownloadCount("513434");
+				accrual.setVoterCount(14305);
+				accrual.setDownloadCount(513434);
 				accrual.setScore(4.8);
 
 				/*
@@ -335,8 +335,8 @@ public class BestAppServiceImpl implements BestAppService {
 			/*
 			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
 			 */
-			accrual.setVoterCount("14305");
-			accrual.setDownloadCount("513434");
+			accrual.setVoterCount(14305);
+			accrual.setDownloadCount(513434);
 			accrual.setScore(4.8);
 
 			/*

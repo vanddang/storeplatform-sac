@@ -30,10 +30,10 @@ public class CategoryEbookComicDTO {
 	private String prodVer;
 	private String apkPkgNm;
 	private String apkVer;
-	private String apkFileSize;
+	private Integer apkFileSize;
 	private String imgPath;
-	private String paticpersCnt;
-	private String prchsCnt;
+	private Integer paticpersCnt;
+	private Integer prchsCnt;
 	private Double avgEvluScore;
 	private String upMenuNm;
 
@@ -157,14 +157,6 @@ public class CategoryEbookComicDTO {
 		this.apkVer = apkVer;
 	}
 
-	public String getApkFileSize() {
-		return this.apkFileSize;
-	}
-
-	public void setApkFileSize(String apkFileSize) {
-		this.apkFileSize = apkFileSize;
-	}
-
 	public String getImgPath() {
 		return this.imgPath;
 	}
@@ -173,19 +165,27 @@ public class CategoryEbookComicDTO {
 		this.imgPath = imgPath;
 	}
 
-	public String getPaticpersCnt() {
+	public Integer getApkFileSize() {
+		return this.apkFileSize;
+	}
+
+	public void setApkFileSize(Integer apkFileSize) {
+		this.apkFileSize = apkFileSize;
+	}
+
+	public Integer getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
-	public void setPaticpersCnt(String paticpersCnt) {
+	public void setPaticpersCnt(Integer paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
-	public String getPrchsCnt() {
+	public Integer getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
-	public void setPrchsCnt(String prchsCnt) {
+	public void setPrchsCnt(Integer prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 

@@ -381,7 +381,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 				totalCount = mapperVO.getTotalCount(); // 메뉴 목록 총 조회수
 
-				source.setSize(Integer.toString(mapperVO.getFileSize()));
+				source.setSize(mapperVO.getFileSize());
 				source.setUrl(mapperVO.getFilePos());
 				category.setId(mapperVO.getMenuId());
 				category.setName(mapperVO.getMenuNm());

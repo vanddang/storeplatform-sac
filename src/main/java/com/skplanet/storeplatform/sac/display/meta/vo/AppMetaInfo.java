@@ -1,15 +1,15 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
 public class AppMetaInfo {
-	private int totalCount;
 	private String topMenuId;
+	private String topMenuNm;
 	private String menuId;
 	private String menuNm;
 	private String prodId;
 	private String aid;
 	private String prodNm;
 	private String prodBaseDesc;
-	private String prodAmt;
+	private Integer prodAmt;
 	private String prodGrdCd;
 	private String partParentClsfCd;
 	private String drmYn;
@@ -21,15 +21,7 @@ public class AppMetaInfo {
 	private String paticpersCnt;
 	private String prchsCnt;
 	private Double avgEvluScore;
-	private String topMenuNm;
-
-	public int getTotalCount() {
-		return this.totalCount;
-	}
-
-	public void setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
-	}
+	private String upMenuNm;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -87,11 +79,11 @@ public class AppMetaInfo {
 		this.prodBaseDesc = prodBaseDesc;
 	}
 
-	public String getProdAmt() {
+	public Integer getProdAmt() {
 		return this.prodAmt;
 	}
 
-	public void setProdAmt(String prodAmt) {
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
@@ -189,6 +181,14 @@ public class AppMetaInfo {
 
 	public void setTopMenuNm(String topMenuNm) {
 		this.topMenuNm = topMenuNm;
+	}
+
+	public String getUpMenuNm() {
+		return this.upMenuNm;
+	}
+
+	public void setUpMenuNm(String upMenuNm) {
+		this.upMenuNm = upMenuNm;
 	}
 
 }

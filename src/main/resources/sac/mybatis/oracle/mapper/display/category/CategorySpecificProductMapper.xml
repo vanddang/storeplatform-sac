@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CategorySpecificProduct">
 	<!-- 상품별 서비스 그룹 코드 조회-->
-	<select id="selectProductInfoList" resultType="CategorySpecificProductDTO">
+	<select id="selectProductInfoList" resultType="CategorySpecificProduct">
 	 SELECT 
 	       PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID
       FROM TB_DP_PROD
@@ -15,7 +15,7 @@
     </select>
     
     <!-- APP 상품 조회 -->
-    <select id="selectApp" resultType="CategorySpecificProductDTO" parameterType="hashMap">
+    <select id="selectApp" resultType="CategorySpecificProduct" parameterType="hashMap">
         SELECT  /* CategoryMapper.XML, selectCategoryAppList, seung min Oh, 2014-01-07 */
                 JA.UP_MENU_ID
               , JA.MENU_ID
@@ -108,7 +108,7 @@
           
     </select>
     
-    <select id="selectVOD" resultType="CategorySpecificProductDTO" parameterType="hashMap">
+    <select id="selectVOD" resultType="CategorySpecificProduct" parameterType="hashMap">
        SELECT  /* selectFeatureMovieList.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
                 LA.UP_MENU_ID
               , LA.TOP_MENU_ID

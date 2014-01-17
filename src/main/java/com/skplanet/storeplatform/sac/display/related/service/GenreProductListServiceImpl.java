@@ -58,8 +58,8 @@ public class GenreProductListServiceImpl implements GenreProductListService {
 	 * RelatedProductRequest requestVO)
 	 */
 	@Override
-	public RelatedProductListRes searchGenreProductList(RelatedProductReq requestVO)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public RelatedProductListRes searchGenreProductList(RelatedProductReq requestVO) throws JsonGenerationException,
+			JsonMappingException, IOException, Exception {
 
 		int totalCount = 1;
 
@@ -112,7 +112,7 @@ public class GenreProductListServiceImpl implements GenreProductListService {
 				// App
 				app.setAid("OA00299542");
 				app.setPackageName("com.skmnc.smartaddr");
-				app.setSize("4092866");
+				app.setSize(4092866);
 				app.setVersionCode("14");
 				app.setVersion("1.8");
 
@@ -127,8 +127,8 @@ public class GenreProductListServiceImpl implements GenreProductListService {
 				/*
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
-				accrual.setDownloadCount("38694");
-				accrual.setVoterCount("120");
+				accrual.setDownloadCount(38694);
+				accrual.setVoterCount(120);
 				accrual.setScore(4.6);
 
 				rights.setGrade("0");

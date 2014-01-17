@@ -140,7 +140,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					price = new Price();
 					price.setFixedPrice(ShoppingDto.getProdNetAmt());
 					price.setDiscountRate(ShoppingDto.getDcRate());
-					price.setText(Integer.parseInt(ShoppingDto.getProdAmt()));
+					price.setText(ShoppingDto.getProdAmt());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
@@ -250,10 +250,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
-				price.setFixedPrice("1000");
-				price.setDiscountRate("0");
-				price.setDiscountPrice("0");
-				price.setText(Integer.parseInt("1000"));
+				price.setFixedPrice(1000);
+				price.setDiscountRate(0d);
+				price.setDiscountPrice(0);
+				price.setText(1000);
 
 				// 이미지 정보
 				source.setType("thumbnail");
@@ -261,7 +261,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				sourceList.add(source);
 				// contributor
 
-				acc.setDownloadCount("6229");
+				acc.setDownloadCount(6229);
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
@@ -390,7 +390,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					price = new Price();
 					price.setFixedPrice(ShoppingDto.getProdNetAmt());
 					price.setDiscountRate(ShoppingDto.getDcRate());
-					price.setText(Integer.parseInt(ShoppingDto.getProdAmt()));
+					price.setText(ShoppingDto.getProdAmt());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
@@ -500,10 +500,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
-				price.setFixedPrice("1000");
-				price.setDiscountRate("0");
-				price.setDiscountPrice("0");
-				price.setText(Integer.parseInt("1000"));
+				price.setFixedPrice(1000);
+				price.setDiscountRate(0d);
+				price.setDiscountPrice(0);
+				price.setText(1000);
 
 				// 이미지 정보
 				source.setType("thumbnail");
@@ -511,7 +511,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				sourceList.add(source);
 				// contributor
 
-				acc.setDownloadCount("6229");
+				acc.setDownloadCount(6229);
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
@@ -650,7 +650,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					price = new Price();
 					price.setFixedPrice(ShoppingDto.getProdNetAmt());
 					price.setDiscountRate(ShoppingDto.getDcRate());
-					price.setText(Integer.parseInt(ShoppingDto.getProdAmt()));
+					price.setText(ShoppingDto.getProdAmt());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
@@ -760,10 +760,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
-				price.setFixedPrice("1000");
-				price.setDiscountRate("0");
-				price.setDiscountPrice("0");
-				price.setText(Integer.parseInt("1000"));
+				price.setFixedPrice(1000);
+				price.setDiscountRate(0d);
+				price.setDiscountPrice(0);
+				price.setText(1000);
 
 				// 이미지 정보
 				source.setType("thumbnail");
@@ -771,7 +771,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				sourceList.add(source);
 				// contributor
 
-				acc.setDownloadCount("6229");
+				acc.setDownloadCount(6229);
 
 				// 이용권한 정보
 				date.setType("duration/salePeriod");
@@ -900,10 +900,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("기획전  상품  조회");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -911,7 +911,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1023,10 +1023,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("특정 기획전에 대한 상품 리스트");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1034,7 +1034,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1146,10 +1146,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("브랜드샵 - 메인");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1157,7 +1157,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1269,10 +1269,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("특정 브랜드샵");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1280,7 +1280,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1392,10 +1392,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("쇼핑테마");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1403,7 +1403,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1515,10 +1515,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("특정 테마 리스트");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1526,7 +1526,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1638,10 +1638,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("특정 카탈로그에 대한 다른 상품 리스트");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1649,7 +1649,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1761,10 +1761,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("특정 브랜드");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1772,7 +1772,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");
@@ -1884,10 +1884,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			title.setText("핫식스 캔 250ml");
 			// 상품 정보 (상품가격)
 
-			price.setFixedPrice("1000");
-			price.setDiscountRate("0");
-			price.setDiscountPrice("0");
-			price.setText(Integer.parseInt("1000"));
+			price.setFixedPrice(1000);
+			price.setDiscountRate(0d);
+			price.setDiscountPrice(0);
+			price.setText(1000);
 
 			// 이미지 정보
 			source.setType("thumbnail");
@@ -1895,7 +1895,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			sourceList.add(source);
 			// contributor
 
-			acc.setDownloadCount("6229");
+			acc.setDownloadCount(6229);
 
 			// 이용권한 정보
 			date.setText("20130820190000/20131231235959");

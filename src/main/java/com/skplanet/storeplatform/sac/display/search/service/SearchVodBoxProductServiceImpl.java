@@ -34,8 +34,8 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo;
 
 @Service
 @Transactional
@@ -102,7 +102,7 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 			List<Support> supportList = null;
 
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-				VODMetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
+				MetaInfo retMetaInfo = this.metaInfoService.getVODMetaInfo(productBasicInfo);
 
 				product = new Product();
 

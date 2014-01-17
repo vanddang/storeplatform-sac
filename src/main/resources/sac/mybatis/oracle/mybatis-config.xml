@@ -45,7 +45,7 @@
         
         <!-- 전시 상품 공통 -->
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
-        <typeAlias alias="ProductCommonDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCommonDTO" />
+        <typeAlias alias="ProductCommonDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCommonDTO" /> 
         
         <!-- 일반카테고리 앱 상품 조회 -->
         <typeAlias alias="CategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq" />
@@ -76,7 +76,7 @@
         <typeAlias alias="DeviceProfileDTO"  type="com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO" />
         
         <!--  특정 상품 조회 -->
-        <typeAlias alias="CategorySpecificProductDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProductDTO" />
+        <typeAlias alias="CategorySpecificProduct"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct" />
         
         <!-- feature app 카테고리 상품 조회 -->
         <typeAlias alias="FeatureCategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq" />
@@ -108,11 +108,7 @@
         
         <!-- 상품 meta 정보 조회 -->
         <typeAlias alias="ProductBasicInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo" />
-        <typeAlias alias="AppMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.AppMetaInfo" />
-        <typeAlias alias="EbookComicMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.EbookComicMetaInfo" />
-        <typeAlias alias="MusicMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.MusicMetaInfo" />
-        <typeAlias alias="ShoppingMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ShoppingMetaInfo" />
-        <typeAlias alias="VODMetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo" />
+        <typeAlias alias="MetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo" />
         
     </typeAliases>
 </configuration>

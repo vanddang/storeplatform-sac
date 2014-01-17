@@ -88,7 +88,7 @@ public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 				title.setText("게임빌 브랜드샵");
 
 				source.setMediaType("image/jpeg");
-				source.setSize("26636");
+				source.setSize(26636);
 				source.setType("thumbnail");
 				source.setUrl("http://.../image.jpg");
 				sourceList.add(source);
@@ -110,7 +110,7 @@ public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 				source = new Source();
 				source.setUrl("http://<<BASE>>/image/bb.jpg");
 				source.setType("thmubnail");
-				source.setSize("128");
+				source.setSize(128);
 				source.setMediaType("image/jpeg");
 
 				menu = new Menu();
@@ -145,12 +145,12 @@ public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 				source = new Source();
 				source.setUrl("http://<<BASE>>/image/bb.jpg");
 				source.setType("thmubnail");
-				source.setSize("128");
+				source.setSize(128);
 				source.setMediaType("image/jpeg");
 				sourceList.add(source);
 
 				price.setText(1000);
-				accrual.setVoterCount("2");
+				accrual.setVoterCount(2);
 				accrual.setScore(4.2);
 				rights.setGrade("0");
 

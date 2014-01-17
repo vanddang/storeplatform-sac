@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.display.category.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class CategorySpecificProductDTO extends CommonInfo {
+public class CategorySpecificProduct extends CommonInfo {
 
 	private String prodId;
 	private String svcGrpCd;

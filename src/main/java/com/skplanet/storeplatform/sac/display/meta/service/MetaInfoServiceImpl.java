@@ -8,12 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.display.meta.vo.AppMetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.EbookComicMetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.MusicMetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.ShoppingMetaInfo;
-import com.skplanet.storeplatform.sac.display.meta.vo.VODMetaInfo;
 
 @Service
 @Transactional
@@ -25,29 +21,28 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	private CommonDAO commonDAO;
 
 	@Override
-	public VODMetaInfo getVODMetaInfo(ProductBasicInfo productBasicInfo) {
-		return this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", productBasicInfo, VODMetaInfo.class);
+	public MetaInfo getAppMetaInfo(ProductBasicInfo productBasicInfo) {
+		return this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", productBasicInfo, MetaInfo.class);
 	}
 
 	@Override
-	public MusicMetaInfo getMusicMetaInfo(ProductBasicInfo productBasicInfo) {
-		return this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo, MusicMetaInfo.class);
+	public MetaInfo getMusicMetaInfo(ProductBasicInfo productBasicInfo) {
+		return this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo, MetaInfo.class);
 	}
 
 	@Override
-	public EbookComicMetaInfo getEbookComidMetaInfo(ProductBasicInfo productBasicInfo) {
-		return this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo", productBasicInfo,
-				EbookComicMetaInfo.class);
+	public MetaInfo getVODMetaInfo(ProductBasicInfo productBasicInfo) {
+		return this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", productBasicInfo, MetaInfo.class);
 	}
 
 	@Override
-	public AppMetaInfo getAppMetaInfo(ProductBasicInfo productBasicInfo) {
-		return this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", productBasicInfo, AppMetaInfo.class);
+	public MetaInfo getEbookComidMetaInfo(ProductBasicInfo productBasicInfo) {
+		return this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo", productBasicInfo, MetaInfo.class);
 	}
 
 	@Override
-	public ShoppingMetaInfo getShoppingMetaInfo(ProductBasicInfo productBasicInfo) {
-		return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", productBasicInfo, ShoppingMetaInfo.class);
+	public MetaInfo getShoppingMetaInfo(ProductBasicInfo productBasicInfo) {
+		return this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", productBasicInfo, MetaInfo.class);
 	}
 
 }

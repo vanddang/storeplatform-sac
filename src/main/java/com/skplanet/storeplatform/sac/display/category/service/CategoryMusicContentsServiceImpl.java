@@ -193,7 +193,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				 * source mediaType, size, type, url
 				 */
 				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePos()));
-				source.setSize(Integer.toString(mapperVO.getFileSize()));
+				source.setSize(mapperVO.getFileSize());
 				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 				source.setUrl(mapperVO.getFilePos());
 				sourceList.add(source);

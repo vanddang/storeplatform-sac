@@ -27,7 +27,7 @@ public class CategoryWebtoonDTO {
 	private String prodGrdCd;
 	private String avgScore;
 	private String prodAmt;
-	private String partCnt;
+	private Integer partCnt;
 	private String seriallyWkdy;
 	private String iconYn;
 	private String updDt;
@@ -127,11 +127,11 @@ public class CategoryWebtoonDTO {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getPartCnt() {
+	public Integer getPartCnt() {
 		return this.partCnt;
 	}
 
-	public void setPartCnt(String partCnt) {
+	public void setPartCnt(Integer partCnt) {
 		this.partCnt = partCnt;
 	}
 
