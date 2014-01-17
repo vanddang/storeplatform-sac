@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
+package com.skplanet.storeplatform.sac.other.uaps.controller;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.skplanet.storeplatform.sac.other.uaps.common.UAPSCommon;
+
+/**
+ * 
+ * UAPS Controller Test
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
+ */
+@ActiveProfiles(value = "local")
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@WebAppConfiguration
+@TransactionConfiguration
+@Transactional
+public class UAPSControllerTest {
+
+	@Autowired
+	private WebApplicationContext wac;
+
+	private MockMvc mvc;
+
+	/**
+	 * 
+	 * <pre>
+	 * 초기화.
+	 * </pre>
+	 */
+	@Before
+	public void before() {
+		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * UAPS Controller 고객정보 조회 기능 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void testGetMapping() throws Exception {
+		this.mvc.perform(
+				get("/other/uaps/getMapping/v1").contentType(MediaType.APPLICATION_JSON)
+						.param("deviceId", UAPSCommon.DEVICE_ID).param("type", UAPSCommon.TYPE)).andDo(print())
+				.andExpect(status().isOk()).andExpect(jsonPath("$.resultCode", is(0)));
+	}
+}
