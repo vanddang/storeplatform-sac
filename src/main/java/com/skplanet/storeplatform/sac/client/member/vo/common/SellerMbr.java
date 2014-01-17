@@ -14,72 +14,226 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class SellerMbr extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	private String approveDate;
-	private String bizGrade;
-	private String bizKindCd;
-	private String bizRegNumber;
-	private String bizUnregReason;
-	private String ceoBirthDay;
-	private String ceoName;
-	private String charger;
-	private String cordedTelephone;
-	private String cordedTelephoneCountry;
-	private String customerEmail;
-	private String customerPhone;
-	private String customerPhoneCountry;
-	private String isAccountReal;
-	private String isBizRegistered;
-	private String isBizTaxable;
-	private String isDeductible;
-	private String isDomestic;
-	private String isParent;
-	private String isRealName;
-	private String isRecvEmail;
-	private String isRecvSMS;
-	private String marketCode;
-	private String marketStatus;
-	private String memo;
-	private String parentSellerKey;
-	private String regDate;
-	private String repEmail;
-	private String repFax;
-	private String repFaxArea;
-	private String repPhone;
-	private String repPhoneArea;
-	private String rightProfileList;
-	private String secedeDate;
-	private String secedePathCd;
-	private String secedeReasonCode;
-	private String secedeReasonMessage;
-	private String sellerAddress;
-	private String sellerBirthDay;
-	private String sellerBizCategory;
-	private String sellerBizCorpNumber;
-	private String sellerBizNumber;
-	private String sellerBizType;
-	private String sellerCategory;
-	private String sellerCity;
-	private String sellerClass;
-	private String sellerCompany;
-	private String sellerCountry;
-	private String sellerDetailAddress;
-	private String sellerEmail;
-	private String sellerID;
-	private String sellerKey;
-	private String sellerLanguage;
-	private String sellerMainStatus;
-	private String sellerName;
-	private String sellerNickName;
-	private String sellerPhone;
-	private String sellerPhoneCountry;
-	private String sellerSex;
-	private String sellerSSNumber;
-	private String sellerState;
-	private String sellerSubStatus;
-	private String sellerTelecom;
-	private String sellerZip;
+	/** Tenant id. */
 	private String tenantID;
-	private String vendorCode;
+
+	/** 판매자 키. */
+	private String sellerKey; // INSD_SELLERMBR_NO
+
+	/** 판매자 ID. */
+	private String sellerID;
+
+	/** 상위 판매자 키. */
+	private String parentSellerKey; // UP_INSD_SELLERMBR_NO 상위 판매자키
+
+	/**
+	 * 판매자 구분 코드.
+	 * 
+	 * @see com.skplanet.storeplatform.member.common.code.SellerTypeCode
+	 */
+	private String sellerClass;
+
+	/**
+	 * 판매자 분류 코드.
+	 * 
+	 * @see com.skplanet.storeplatform.member.common.code.SellerClassCode
+	 */
+	private String sellerCategory;
+
+	/**
+	 * 판매자 메인상태 코드.
+	 * 
+	 * @see com.skplanet.storeplatform.member.common.code.MainStateCode
+	 */
+	private String sellerMainStatus;
+
+	/**
+	 * 판매자 서브상태 코드.
+	 * 
+	 * @see com.skplanet.storeplatform.member.common.code.SubStateCode
+	 */
+	private String sellerSubStatus;
+
+	/** 로그인 상태 코드. */
+	private String loginStatusCode; // LOGIN_STATUS_CD
+
+	/** 직권중지 상태 코드. */
+	private String stopStatusCode; // OFAUTH_STOP_STATUS_CD
+
+	/** 국내판매자 여부. */
+	private String isDomestic; // ICTRY_SELLERMBR_YN 내국인인지 외국인인지
+
+	/** 국가 코드. */
+	private String sellerCountry; // NATION_CD
+
+	/** 언어 코드. */
+	private String sellerLanguage; // LANG_CD
+
+	/** 등록일시. */
+	private String regDate; // ENTRY_DAY 가입일 등록일시 DEFAULT SYSDATE 로 사용하겠음
+
+	/** 탈퇴일시. */
+	private String secedeDate; // BOLTER_DAY 탈퇴일
+
+	/** 탈퇴사유 코드. */
+	private String secedeReasonCode;
+
+	/** 탈퇴사유 메시지. */
+	private String secedeReasonMessage;
+
+	/** 승인일시. */
+	private String approveDate; // APPR_DAY 승인일
+
+	/** 판매자명. */
+	private String sellerName; // MBR_NM 회원명
+
+	/** 담당자명. */
+	private String charger; // CHRGPERS_NM 담당자 명
+
+	/** 판매자 Email. */
+	private String sellerEmail;
+
+	/** Email 수신여부. */
+	private String isRecvEmail; // EMAIL_RECV_YN
+
+	/** 유선 국가번호. */
+	private String cordedTelephoneCountry; // WIRE_NATION_NO 유선국가번호 sellerPhoneCountry > cordedTelephoneCountry 변경했다
+
+	/** 유선 전화번호. */
+	private String cordedTelephone; // WIRE_TEL_NO 유선전화번호
+
+	/** 무선 국가번호. */
+	private String sellerPhoneCountry; // WILS_NATION_NO // 무선 국가 번호
+
+	/** 무선 전화번호. */
+	private String sellerPhone; // WILS_TEL_NO 무선 전화번호
+
+	/** SMS 수신여부. */
+	private String isRecvSMS; // SMS_RECV_YN
+
+	/** 실명인증여부. */
+	private String isRealName; // REALNM_AUTH_YN 실명인증여부
+
+	/** 성별. */
+	private String sellerSex; // SEX
+
+	/** 우편번호. */
+	private String sellerZip; // ZIP 우편번호
+
+	/** 주소. */
+	private String sellerAddress; // ADDR 주소
+
+	/** 상세주소. */
+	private String sellerDetailAddress; // DTL_ADDR 상세주소
+
+	/** 도시. */
+	private String sellerCity; // FR_CITY 외국도시
+
+	/** 지역. */
+	private String sellerState; // FR_AREA 외국지역
+
+	/** 벤더코드. */
+	private String vendorCode; // // VENDOR_CD 벤더코드
+
+	/** 회사명. */
+	private String sellerCompany;
+
+	/** 쇼핑 노출명. */
+	private String sellerNickName; // SHPG_EXPO_NM 쇼핑 노출명
+
+	/** 주민번호. */
+	private String sellerSSNumber; // CTZ_REG_NO 주민번호
+
+	/** 사업자 등록번호. */
+	private String sellerBizNumber;
+
+	/** 사업자 종류 코드. */
+	private String bizKindCd; // BIZ_KIND_CD 사업자 종류 코드
+
+	/** 법인등록번호. */
+	private String sellerBizCorpNumber; // CORP_REG_NO 법인등록번호
+
+	/** 업태명. */
+	private String sellerBizCategory; // COND_NM 업태명 업태 업태
+
+	/** 업종명. */
+	private String sellerBizType; // INDT_NM 업종명 종목 종목
+
+	/** 대표전화 국가번호. */
+	private String repPhoneArea; // REP_TEL_NATION_NO 대표전화 국가 번호
+
+	/** 대표전화번호. */
+	private String repPhone; // REP_TEL_NO 대표전화번호
+
+	/** 대표팩스 국가번호. */
+	private String repFaxArea; // FAX_NATION_NO 대표팩스번호 국가코드
+
+	/** 대표팩스번호. */
+	private String repFax; // FAX_NO 대표팩스번호
+
+	/** 대표 Email. */
+	private String repEmail; // REP_EMAIL 대표이메일
+
+	/** 통신판매업 신고여부. */
+	private String isBizRegistered; // MSALBIZ_DECL_YN 통신판매업 신고 여부
+
+	/** 통신판매업 신고번호. */
+	private String bizRegNumber; // MSALBIZ_DECL_NO 통신판매업 신고 번호
+
+	/** 통신판매업 미신고 사유코드. */
+	private String bizUnregReason; // MSALBIZ_UNDECL_REASON_CD 통신판매업 미신고 사유 코드
+
+	/** 간이 과세여부. */
+	private String isBizTaxable; // EASY_TXN_YN 간이 과세 여부 ##### 전환 쪽에서 사용
+
+	/** 심의 등급코드. */
+	private String bizGrade; // DELIB_GRD_CD 심의 등급코드 ##### 전환 쪽에서 사용
+
+	/** 자동 차감 가능 대상여부. */
+	private String isDeductible; // AUTO_DED_POSB_TARGET_YN 자동 차감 가능 대상 여부 ##### 전환 쪽에서 사용
+
+	/** 입점 상점코드. */
+	private String marketCode; // LNCHG_MALL_CD 입점 상점코드 ##### 전환 쪽에서 사용
+
+	/** 입점 회원 상태코드. */
+	private String marketStatus; // LNCHG_MBR_STATUS_CD 입점 회원 상태코드 ##### 전환 쪽에서 사용
+
+	/** 탈퇴 경로코드. */
+	private String secedePathCd; // ENTRY_BOLTER_PATH_CD 가입 퇄퇴 경로 코드 ##### 전환 쪽에서 사용
+
+	/** 고객 대응 Email. */
+	private String customerEmail; // CUST_CORS_EMAIL 고객 대응 이메일
+
+	/** 고객 대응 전화 국가번호. */
+	private String customerPhoneCountry; // CUST_CORS_TEL_NATION_NO
+
+	/** 고객 대응 전화번호. */
+	private String customerPhone; // CUST_CORS_TEL_NO //고객응대 전화번호
+
+	/** 통신사 코드. */
+	private String sellerTelecom; // MNO_CD 통신사 코드
+
+	/** 생년월일. */
+	private String sellerBirthDay; // BIRTH 생년월일 DB 에 없음?
+
+	/** 법정대리인 동의여부. */
+	private String isParent; // LGL_AGENT_AGREE_YN 법정대리인 동의여무 DB 에 컬럼 추가해야함(처리된듯)
+
+	/** 계좌 인증여부. */
+	private String isAccountReal; // ACCT_AUTH_YN 계좌 인증여부 컬럼
+
+	/** CEO명. */
+	private String ceoName; // CEO_NM
+
+	/** CEO 생년월일. */
+	private String ceoBirthDay; // CEO_BIRTH
+
+	/** 서브계정 권한. */
+	private String rightProfileList; // 서브계정 권한
+
+	/** 서브계정 설명. */
+	private String subSellerMemo; // SUB_ACCT_DESC 서브계정에서 사용 아직 db table 컬럼 추가안됨
+
 	private String sellerId;
 
 	public String getSellerId() {
@@ -280,14 +434,6 @@ public class SellerMbr extends CommonInfo {
 
 	public void setMarketStatus(String marketStatus) {
 		this.marketStatus = marketStatus;
-	}
-
-	public String getMemo() {
-		return this.memo;
-	}
-
-	public void setMemo(String memo) {
-		this.memo = memo;
 	}
 
 	public String getParentSellerKey() {
@@ -616,6 +762,30 @@ public class SellerMbr extends CommonInfo {
 
 	public void setVendorCode(String vendorCode) {
 		this.vendorCode = vendorCode;
+	}
+
+	public String getLoginStatusCode() {
+		return this.loginStatusCode;
+	}
+
+	public void setLoginStatusCode(String loginStatusCode) {
+		this.loginStatusCode = loginStatusCode;
+	}
+
+	public String getStopStatusCode() {
+		return this.stopStatusCode;
+	}
+
+	public void setStopStatusCode(String stopStatusCode) {
+		this.stopStatusCode = stopStatusCode;
+	}
+
+	public String getSubSellerMemo() {
+		return this.subSellerMemo;
+	}
+
+	public void setSubSellerMemo(String subSellerMemo) {
+		this.subSellerMemo = subSellerMemo;
 	}
 
 }
