@@ -11,7 +11,7 @@
 			, ST.PRCHS_CNT
 			, NVL(
 				( 
-					CASE WHEN ( ST.AVG_EVLU_SCORE > 0 AND ST.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
+					CASE WHEN ( ST.AVG_EVLU_SCORE <![CDATA[>]]> 0 AND ST.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
                     	WHEN ST.AVG_EVLU_SCORE > 5 THEN 5
                     	ELSE ROUND( ST.AVG_EVLU_SCORE , 1 )
                     END ) 
@@ -82,10 +82,21 @@
 						AND SC.SUB_CONTENTS_ID = DV.SUB_CONTENTS_ID
 						AND DV.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
 						AND CD.DEVICE_MODEL_CD = #{deviceModelCd}
+						AND TO_CHAR(LP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+		                AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
+						<if test='prodGradeCd != null and prodGradeCd != ""'>
+		                AND P1.PROD_GRD_CD = #{prodGradeCd}          /* 상품등급코드 */
+                        </if>
+                        <if test='prodCharge == "Y"'>
+		                AND P1.PROD_CHRG_YN = 'Y'       /* 유료 */
+                        </if>
+                        <if test='prodCharge == "N"'>
+		                AND P1.PROD_CHRG_YN = 'N'       /* 무료 */
+                        </if>
 						ORDER BY LP.EXPO_ORD , PS.PROD_NM
 					) T_PROD
 				) R_PROD
-				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count})
+				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 			) F_PROD LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS ST
 		ON F_PROD.PROD_ID = ST.PROD_ID
 		AND F_PROD.TENANT_ID = ST.TENANT_ID

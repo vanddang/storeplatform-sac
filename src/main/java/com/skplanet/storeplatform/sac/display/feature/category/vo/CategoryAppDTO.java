@@ -39,6 +39,7 @@ public class CategoryAppDTO {
 	private String verMajor;
 	private String verMinor;
 	private String fileNm;
+	private String avgEvluScore;
 	
 	public String getVerMajor() {
 		return verMajor;
@@ -177,6 +178,12 @@ public class CategoryAppDTO {
 	}
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
+	}
+	public String getAvgEvluScore() {
+		return avgEvluScore;
+	}
+	public void setAvgEvluScore(String avgEvluScore) {
+		this.avgEvluScore = avgEvluScore;
 	}
 	
 	

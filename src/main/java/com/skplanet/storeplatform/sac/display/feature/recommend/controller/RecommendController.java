@@ -39,20 +39,10 @@ public class RecommendController {
 
 	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
-
-		// this.logger.info(requestVO.toString());
-		if (requestVO.getCount() == 0)
-			requestVO.setCount(10);
-		// 임시 저장
-		requestVO.setTenantId("S01");
-		requestVO.setDeviceModelCd("SHW-M180L");
-		requestVO.setLangCd("ko");
-		requestVO.setListId("ADM000000012");
-		requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
+	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header) {
 
 		RecommendAdminRes responseVO;
-		responseVO = this.recommendAdminService.searchAdminList(requestVO);
+		responseVO = this.recommendAdminService.searchAdminList(requestVO, header);
 		return responseVO;
 	}
 }

@@ -10,7 +10,8 @@
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 
@@ -28,5 +29,18 @@ public interface FeatureCategoryAppService {
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
 	FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO);
+	
+	/**
+	 * <pre>
+	 * Feature 탑카테고리 App 상품 리스트 조 회 - 최신
+	 * </pre>
+	 * 
+	 * @param
+	 * 
+	 * @return 운영자 추천 전체 카테고리 상품 리스트
+	 */
+	FeatureCategoryAppRes searchMenuAppList(FeatureCategoryAppReq requestVO, SacRequestHeader header);
 
+	
+	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
@@ -61,25 +62,59 @@ public class FeatureCategoryController {
 		return this.featureCategoryVodService.searchVodList(req, header);
 	}
 
+	/**
+	 * <pre>
+	 * Feature App 카테고리 상품 조회.
+	 * </pre>
+	 * 
+	 * @param FeatureCategoryAppReq
+	 * @return FeatureCategoryAppRes
+	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO) {
+	public FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO, SacRequestHeader header) {
 
-		if (requestVO.getCount() == 0)
-			requestVO.setCount(10);
 		FeatureCategoryAppRes responseVO;
-		responseVO = this.categoryAppService.searchAppList(requestVO);
+
+		if ("".equals(StringUtil.nvl(requestVO.getDummy(), ""))) {
+			
+			responseVO = categoryAppService.searchMenuAppList(requestVO, header);
+		} else {
+			//임시 저장
+			// 시작점 ROW Default 세팅
+			if (requestVO.getOffset() == 0) {
+				requestVO.setOffset(1);
+			}
+			// 페이지당 노출될 ROW 개수 Default 세팅
+			if (requestVO.getCount() == 0) {
+				requestVO.setCount(20);
+			}
+			requestVO.setTenantId("S01");
+			requestVO.setDeviceModelCd("SHW-M180L");
+			requestVO.setLangCd("ko");
+			requestVO.setMenuId(StringUtil.nvl(requestVO.getMenuId(), "DP01"));
+			//Dummy 요청 일 경우
+			responseVO = categoryAppService.searchAppList(requestVO);
+		}
 		return responseVO;
 	}
-
+	
+	/**
+	 * <pre>
+	 * Feature Epub 카테고리 상품 조회.
+	 * </pre>
+	 * 
+	 * @param FeatureCategoryEpubReq
+	 * @return FeatureCategoryEpubRes
+	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO) {
+	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header) {
 
-		if (requestVO.getCount() == 0)
+		if ( requestVO.getCount() == 0 )
 			requestVO.setCount(10);
 		FeatureCategoryEpubRes responseVO;
-		responseVO = this.categoryEpubService.searchEpubList(requestVO);
+		responseVO = categoryEpubService.searchEpubList(requestVO);
 		return responseVO;
 	}
 }

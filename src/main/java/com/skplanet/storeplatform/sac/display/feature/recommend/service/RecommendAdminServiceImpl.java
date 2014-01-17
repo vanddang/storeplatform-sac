@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -38,7 +41,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Serv
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.FeatureConstant;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryAppDTO;
 import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO;
 
 /**
@@ -56,19 +62,69 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 	
+	@Autowired
+	private DisplayCommonService displayCommonService;
+	
 	/* (non-Javadoc)
 	 * @see com.skplanet.storeplatform.sac.product.service.TotalRecommendService#searchTotalRecommendList(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO) {
+	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
+				
 		//공통 응답 변수 선언
 		int totalCount = 0;
 		RecommendAdminRes responseVO = null;
 		CommonResponse commonResponse = null;
-		
-		List<RecommendAdminDTO> resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList",requestVO, RecommendAdminDTO.class);
+		List<RecommendAdminDTO> resultList = null;
 		List<Product> listVO = new ArrayList<Product>();
+		
+		// 헤더값 세팅
+		requestVO.setTenantId(header.getTenantHeader().getTenantId());
+		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
+		requestVO.setLangCd("ko");
+		
+		if (StringUtils.isEmpty(requestVO.getTenantId())) requestVO.setTenantId("S01");
+		if (StringUtils.isEmpty(requestVO.getDeviceModelCd())) requestVO.setDeviceModelCd("SHW-M180L");
+		if (StringUtils.isEmpty(requestVO.getListId())) requestVO.setListId("ADM000000012");
+		if (StringUtils.isEmpty(requestVO.getTopMenuId())) requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("필수 파라미터 부족");
+			this.log.debug("----------------------------------------------------------------");
+
+			responseVO = new RecommendAdminRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
+		// 시작점 ROW Default 세팅
+		if (requestVO.getOffset() == 0) {
+			requestVO.setOffset(1);
+		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (requestVO.getCount() == 0) {
+			requestVO.setCount(20);
+		}
+
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(), requestVO.getListId());
+
+		// 기준일시 체크
+		if (StringUtils.isEmpty(stdDt)) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("배치완료 기준일시 정보 누락");
+			this.log.debug("----------------------------------------------------------------");
+
+			responseVO = new RecommendAdminRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+		requestVO.setStdDt(stdDt);
+		
+		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList",requestVO, RecommendAdminDTO.class);
 		
 		RecommendAdminDTO recommendAdminDTO;
 		Product product;
@@ -111,7 +167,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			
 			totalCount = recommendAdminDTO.getTotalCount();
 
-			identifier.setType("episode");
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 			identifier.setText(recommendAdminDTO.getProdId());
 			title.setText(recommendAdminDTO.getProdNm());
 			
@@ -146,7 +202,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			
 			//source.setMediaType("");
 			source.setSize(recommendAdminDTO.getFileSize());
-			source.setType("thumbNail");
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setUrl(recommendAdminDTO.getFilePath());
 			sourceList.add(source);
 
