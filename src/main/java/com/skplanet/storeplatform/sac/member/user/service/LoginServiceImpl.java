@@ -256,6 +256,8 @@ public class LoginServiceImpl implements LoginService {
 		String userType = null;
 		String userMainStatus = null;
 		String userSubStatus = null;
+		String loginStatusCode = null;
+		String stopStatusCode = null;
 
 		/* 모번호 조회 */
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
@@ -272,20 +274,23 @@ public class LoginServiceImpl implements LoginService {
 		userType = schUserRes.getUserMbr().getUserType();
 		userMainStatus = schUserRes.getUserMbr().getUserMainStatus();
 		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
-
+		loginStatusCode = schUserRes.getUserMbr().getLoginStatusCode();
+		stopStatusCode = schUserRes.getUserMbr().getStopStatusCode();
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
-		/* 탈퇴 / 정지상태 회원 */
+		/* 탈퇴회원, 정지상태 회원, 로그인 제한, 직권중지 인경우 */
 		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
-				|| StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)) {
+				|| StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
+				|| StringUtil.equals(loginStatusCode, MemberConstants.IM_USER_LOGIN_STATUS_PAUSE)
+				|| StringUtil.equals(stopStatusCode, MemberConstants.IM_USER_STOP_STATUS_PAUSE)) {
 			res.setUserKey(userKey);
 			res.setUserType(userType);
 			res.setUserMainStatus(userMainStatus);
 			res.setUserSubStatus(userSubStatus);
+			res.setLoginStatusCode(loginStatusCode);
+			res.setStopStatusCode(stopStatusCode);
 			return res;
 		}
-
-		/* 로그인 상태코드, 직원중지 상태코드 체크 */
 
 		/* 회원 인증 요청 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
@@ -304,9 +309,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserMainStatus(userMainStatus);
 					res.setUserSubStatus(userSubStatus);
 					res.setImIntSvcNo(imIdpReceiver.getResponseBody().getIm_int_svc_no());
-					//SC회원 콤포넌트의 코드값 셋팅
-					//res.setLoginStatusCode(loginStatusCode);
-					//res.setStopStatusCode(stopStatusCode);
+					res.setLoginStatusCode(loginStatusCode);
+					res.setStopStatusCode(stopStatusCode);
 
 				} else {
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
@@ -327,8 +331,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserType(userType);
 					res.setUserMainStatus(userMainStatus);
 					res.setUserSubStatus(userSubStatus);
-					//res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
-					//res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
+					res.setLoginStatusCode(loginStatusCode);
+					res.setStopStatusCode(stopStatusCode);
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
@@ -362,27 +366,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserSubStatus(userSubStatus);
 					res.setJoinSiteCd(joinSstCd);
 					res.setJoinSiteNm(joinSstNm);
-
-				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_LOGIN_RESTRICT)) {
-
-					this.mergeDeviceInfo(userKey, req);
-
-					res.setUserType(userType);
-					res.setUserMainStatus(userMainStatus);
-					res.setUserSubStatus(userSubStatus);
-					//res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
-					//res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
-
-				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_SUSPEND)) {
-
-					this.mergeDeviceInfo(userKey, req);
-
-					res.setUserKey(userKey);
-					res.setUserType(userType);
-					res.setUserMainStatus(userMainStatus);
-					res.setUserSubStatus(userSubStatus);
-					//res.setLoginStatCd(imIdpReceiver.getResponseBody().getLogin_status_code());
-					//res.setSubStatCd(imIdpReceiver.getResponseBody().getSus_status_code());
+					res.setLoginStatusCode(loginStatusCode);
+					res.setStopStatusCode(stopStatusCode);
 
 				} else {
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
@@ -405,6 +390,8 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserType(userType);
 				res.setUserMainStatus(userMainStatus);
 				res.setUserSubStatus(userSubStatus);
+				res.setLoginStatusCode(loginStatusCode);
+				res.setStopStatusCode(stopStatusCode);
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
