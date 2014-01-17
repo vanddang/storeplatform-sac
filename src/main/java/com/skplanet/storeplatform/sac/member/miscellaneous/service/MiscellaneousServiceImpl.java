@@ -81,9 +81,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Autowired
 	private MiscellaneousRepository repository; // 기타 기능 Repository.
 
-	// 해당 부분은 테스트를 위해서 사용했던 부분으로 사용처리 ( 변수는 Global사용금지)
-	// private static CommonRequest commonRequest;
-
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
 		String msisdn = req.getMsisdn();
@@ -121,7 +118,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String msisdn = req.getMsisdn();
 		String userKey = "";
 
-		/* VO 는 항상 new로 생성해야 한다. */
 		CommonRequest commonRequest = new CommonRequest();
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -213,10 +209,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String authSign = UUID.randomUUID().toString().replace("-", "");
 		LOGGER.debug("###### >> authSign : " + authSign);
 
-		// 인증 코드 등록 일자 생성
-		String createDate = DateUtil.getDateString(new Date(), "yyyymmddhhmmss");
-		LOGGER.debug("현재 Date : " + createDate);
-
 		/* DB에 저장할 파라미터 셋팅 */
 		ServiceAuthDTO serviceAuthInfo = new ServiceAuthDTO();
 		serviceAuthInfo.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -229,19 +221,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
-		// US001201 1)내부에서 SKT, KT, LGT 변환작업 필요. (임과장님한테 문의해보기)
-		// 2)테넌트에서 부터 파라미터를 SKT, KT, LGT로 받는다.
-		smsReq.setCarrier("SKT");
+		smsReq.setDeviceTelecom("SKT"); // Carrier로 파라미터명 변경 예정 ( 테넌트에서 부터 파라미터를 SKT, KT, LGT로 받는다. )
 		smsReq.setSendMdn(request.getUserPhone());
 		smsReq.setRecvMdn(request.getUserPhone());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
 		smsReq.setMsg(authCode);
 		Map<String, String> map = new HashMap<String, String>();
-		LOGGER.debug("##############################################");
-		map = this.messageSCI.smsSend(smsReq); // URL 404 에러남.
-		LOGGER.debug("##############################################");
-		String sendResult = map.get("resultStatus");
-		// String sendResult = "success";
+
+		// External Comp. SMS 발송 기능 현재 작업중.###########################
+		// map = this.messageSCI.smsSend(smsReq);
+		// String sendResult = map.get("resultStatus");
+		// External Comp. SMS 발송 기능 현재 작업중.###########################
+		String sendResult = "success";
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
 

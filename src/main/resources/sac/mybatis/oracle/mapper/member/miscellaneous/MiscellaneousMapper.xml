@@ -2,14 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Miscellaneous">
 
-    <!-- 다음 시퀀스 조회 -->
-    <select id="getNexValueForSvcAuth" resultType="String">
-       SELECT 
-           SQ_CM_SVC_AUTH.NEXTVAL
-       FROM
-           DUAL
-    </select>
-
 	<!-- UA 코드 정보 조회 -->
 	<select id="getUaCode" parameterType="String" resultType="String">
 		/* MiscellaneousMapper.xml, getUaCode, SAC : 김다슬 , 2014-01-09 */
@@ -56,7 +48,7 @@
                 UPD_DT
             )
             VALUES(
-               #{authSeq},
+               SQ_CM_SVC_AUTH.NEXTVAL,
                #{tenantId},
                #{authTypeCd},
                #{authSign},

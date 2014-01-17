@@ -91,7 +91,6 @@ public class MiscellaneousController {
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Valid @RequestBody GetPhoneAuthorizationCodeReq request) throws Exception {
 
-		// 서비스에 헤더값 세팅.
 		GetPhoneAuthorizationCodeRes response = this.service.getPhoneAuthorizationCode(requestHeader, request);
 
 		return response;
