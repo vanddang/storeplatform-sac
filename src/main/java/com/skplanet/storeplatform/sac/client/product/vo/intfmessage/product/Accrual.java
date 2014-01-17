@@ -26,15 +26,15 @@ public class Accrual extends CommonInfo implements Serializable {
 	/**
 	 * 참여자수
 	 */
-	private String voterCount;
+	private Integer voterCount;
 	/**
 	 * 다운로드수
 	 */
-	private String downloadCount;
+	private Integer downloadCount;
 	/**
 	 * 평점
 	 */
-	private double score;
+	private Double score;
 	/**
 	 * 지난순위
 	 */
@@ -42,7 +42,7 @@ public class Accrual extends CommonInfo implements Serializable {
 	/**
 	 * 사용 후기 전체 개수
 	 */
-	private String feedbackTotal;
+	private Integer feedbackTotal;
 	/**
 	 * 변동 순위, 하락은 음수로 표현한다.
 	 */
@@ -53,19 +53,11 @@ public class Accrual extends CommonInfo implements Serializable {
 	 */
 	private String explain;
 
-	public String getVoterCount() {
-		return this.voterCount;
-	}
-
-	public void setVoterCount(String voterCount) {
-		this.voterCount = voterCount;
-	}
-
-	public String getDownloadCount() {
+	public Integer getDownloadCount() {
 		return this.downloadCount;
 	}
 
-	public void setDownloadCount(String downloadCount) {
+	public void setDownloadCount(Integer downloadCount) {
 		this.downloadCount = downloadCount;
 	}
 
@@ -85,11 +77,19 @@ public class Accrual extends CommonInfo implements Serializable {
 		this.lastRank = lastRank;
 	}
 
-	public String getFeedbackTotal() {
+	public Integer getVoterCount() {
+		return this.voterCount;
+	}
+
+	public void setVoterCount(Integer voterCount) {
+		this.voterCount = voterCount;
+	}
+
+	public Integer getFeedbackTotal() {
 		return this.feedbackTotal;
 	}
 
-	public void setFeedbackTotal(String feedbackTotal) {
+	public void setFeedbackTotal(Integer feedbackTotal) {
 		this.feedbackTotal = feedbackTotal;
 	}
 
@@ -99,6 +99,10 @@ public class Accrual extends CommonInfo implements Serializable {
 
 	public void setChangeRank(String changeRank) {
 		this.changeRank = changeRank;
+	}
+
+	public void setScore(Double score) {
+		this.score = score;
 	}
 
 	public String getExplain() {

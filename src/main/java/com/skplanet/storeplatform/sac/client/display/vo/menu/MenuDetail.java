@@ -38,7 +38,7 @@ public class MenuDetail extends CommonInfo {
 	private String lnbFileSize = "";
 	private String bodyFilePath = "";
 	private String bodyFileName = "";
-	private String bodyFileSize = "";
+	private Integer bodyFileSize;
 	private String mainOnFilePath = "";
 	private String mainOnFileName = "";
 	private String mainOffFilePath = "";
@@ -191,11 +191,11 @@ public class MenuDetail extends CommonInfo {
 		this.bodyFileName = bodyFileName;
 	}
 
-	public String getBodyFileSize() {
+	public Integer getBodyFileSize() {
 		return this.bodyFileSize;
 	}
 
-	public void setBodyFileSize(String bodyFileSize) {
+	public void setBodyFileSize(Integer bodyFileSize) {
 		this.bodyFileSize = bodyFileSize;
 	}
 

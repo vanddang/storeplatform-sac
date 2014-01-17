@@ -47,7 +47,7 @@ public class App extends CommonInfo implements Serializable {
 	/**
 	 * 용량 (byte단위)
 	 */
-	private String size;
+	private Integer size;
 	/**
 	 * 상품 등록일자
 	 */
@@ -105,11 +105,11 @@ public class App extends CommonInfo implements Serializable {
 		this.version = version;
 	}
 
-	public String getSize() {
+	public Integer getSize() {
 		return this.size;
 	}
 
-	public void setSize(String size) {
+	public void setSize(Integer size) {
 		this.size = size;
 	}
 
