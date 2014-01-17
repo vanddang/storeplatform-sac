@@ -73,7 +73,6 @@ public class ShoppingCouponSacController {
 
 		try {
 			this.dePloy(couponReq);
-			this.log.info("log:" + this.response);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
