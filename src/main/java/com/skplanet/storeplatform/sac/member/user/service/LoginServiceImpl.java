@@ -158,8 +158,8 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 탈퇴 회원, 로그인 제한, 직권중지 인경우 */
 		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
-				|| StringUtil.equals(loginStatusCode, MemberConstants.IM_USER_LOGIN_STATUS_PAUSE)
-				|| StringUtil.equals(stopStatusCode, MemberConstants.IM_USER_STOP_STATUS_PAUSE)) {
+				|| StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+				|| StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
 			/* 로그인 실패이력 저장 */
 			this.insertloginHistory(deviceId, "", "N", userType);
@@ -285,8 +285,8 @@ public class LoginServiceImpl implements LoginService {
 		/* 탈퇴회원, 정지상태 회원, 로그인 제한, 직권중지 인경우 */
 		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
 				|| StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_PAUSE)
-				|| StringUtil.equals(loginStatusCode, MemberConstants.IM_USER_LOGIN_STATUS_PAUSE)
-				|| StringUtil.equals(stopStatusCode, MemberConstants.IM_USER_STOP_STATUS_PAUSE)) {
+				|| StringUtil.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
+				|| StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
 			/* 로그인 실패이력 저장 */
 			this.insertloginHistory(userId, userPw, "N", userType);
@@ -331,10 +331,6 @@ public class LoginServiceImpl implements LoginService {
 
 				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
-					/*
-					 * ID로그인은 휴대기기 정보가 optional이므로 무조건 머지를 할 순 없다. 정책 확인이
-					 * 필요하다!!!
-					 */
 					this.mergeDeviceInfo(userKey, req);
 
 					this.insertloginHistory(userId, userPw, "Y", userType);
@@ -471,7 +467,8 @@ public class LoginServiceImpl implements LoginService {
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
 
-		if (obj instanceof AuthorizeByMdnReq) {
+		if (obj instanceof AuthorizeByMdnReq) { //mdn인증
+
 			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 			req = (AuthorizeByMdnReq) obj;
 			deviceInfo.setDeviceId(req.getDeviceId());
@@ -483,19 +480,25 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVer());
-		} else if (obj instanceof AuthorizeByIdReq) {
+			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+
+		} else if (obj instanceof AuthorizeByIdReq) { //id인증
+
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
-			deviceInfo.setDeviceId(req.getDeviceId());
-			deviceInfo.setDeviceIdType(req.getDeviceIdType());
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
-			deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
-			deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			deviceInfo.setScVer(req.getScVer());
-			deviceInfo.setOsVer(req.getOsVerOrg());
+			if (req.getDeviceId() != null) { //deviceId가 파라메터로 넘어왔을경우에만 휴대기기 정보 merge 요청
+				deviceInfo.setDeviceId(req.getDeviceId());
+				deviceInfo.setDeviceIdType(req.getDeviceIdType());
+				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+				deviceInfo.setDeviceModelNo(req.getDeviceModelNo());
+				deviceInfo.setDeviceAccount(req.getDeviceAccount());
+				deviceInfo.setScVer(req.getScVer());
+				deviceInfo.setOsVer(req.getOsVerOrg());
+				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+			}
+
 		}
 
-		this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
 	}
 
 	/**

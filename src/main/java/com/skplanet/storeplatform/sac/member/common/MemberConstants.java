@@ -114,12 +114,12 @@ public final class MemberConstants {
 	public static final String AUTH_CHNL_MOBILE_OPENAPI = "US011205"; // OPENAPI
 
 	/** 통합회원 로그인 상태코드 */
-	public static final String IM_USER_LOGIN_STATUS_NOMAL = "10"; // 로그인 가능
-	public static final String IM_USER_LOGIN_STATUS_PAUSE = "20"; // 로그인 제한
+	public static final String USER_LOGIN_STATUS_NOMAL = "10"; // 로그인 가능
+	public static final String USER_LOGIN_STATUS_PAUSE = "20"; // 로그인 제한
 
 	/** 통합회원 직권중지 상태코드 */
-	public static final String IM_USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
-	public static final String IM_USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
+	public static final String USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
+	public static final String USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
 
 	/**
 	 * 판매자 회원 상수들

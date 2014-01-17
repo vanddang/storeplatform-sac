@@ -355,7 +355,7 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setTenantID(tenantId);
 
 		/* 휴대기기 주요정보 확인 */
-		deviceInfo = this.setCheckMajorDeviceInfo(tenantId, deviceInfo);
+		//deviceInfo = this.setCheckMajorDeviceInfo(tenantId, deviceInfo);
 
 		/* 1. 휴대기기 정보 등록 요청 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -480,7 +480,7 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
-		deviceInfo = this.setCheckMajorDeviceInfo(tenantId, deviceInfo);
+		//deviceInfo = this.setCheckMajorDeviceInfo(tenantId, deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
