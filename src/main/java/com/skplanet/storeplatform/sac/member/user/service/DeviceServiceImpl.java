@@ -907,7 +907,6 @@ public class DeviceServiceImpl implements DeviceService {
 			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
 		}
 
-		logger.info(":::::: getConverterUserMbrDeviceDetailList : {}", userMbrDeviceDetailList.toString());
 		return userMbrDeviceDetailList;
 
 	}
