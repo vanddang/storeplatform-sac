@@ -71,7 +71,10 @@ public class AuthorizeTest {
 					public Object requestBody() {
 						AuthorizeReq req = new AuthorizeReq();
 						req.setSellerId("qatestqwe");
-						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
+						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=11");
+						// req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=324234234");
+						// loginSellerRequest.setSellerID("tattermedia");
+						// loginSellerRequest.setSellerPW("FR21R/X4xRkrVm598w+JK4oW++/bqXP2+qMAZcg7/Cg=");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}

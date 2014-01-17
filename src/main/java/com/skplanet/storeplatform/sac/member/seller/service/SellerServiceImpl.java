@@ -56,30 +56,32 @@ public class SellerServiceImpl implements SellerService {
 		CreateSellerRequest createSellerRequest = new CreateSellerRequest();
 
 		/** 실명인증정보 생성 및 주입 [시작]. */
-		MbrAuth mbrAuth = new MbrAuth();
-		// 실명인증여부
-		mbrAuth.setIsRealName(req.getIsRealName());
-		// CI
-		mbrAuth.setCi(req.getSellerCI());
-		// DI
-		mbrAuth.setDi(req.getSellerDI());
-		// 인증방법코드
-		mbrAuth.setRealNameMethod(req.getRealNameMethod());
-		// 통신사 코드
-		mbrAuth.setTelecom(req.getSellerTelecom());
-		// 무선 전화번호
-		mbrAuth.setPhone(req.getSellerPhone());
-		// 생년월일
-		mbrAuth.setBirthDay(req.getSellerBirthDay());
-		// 성별
-		mbrAuth.setSex(req.getSellerSex());
-		// 회원명
-		mbrAuth.setName(req.getSellerName());
-		// 실명 인증사이트
-		mbrAuth.setRealNameSite(req.getRealNameSystemId());
-		// 실명 인증 일시
-		mbrAuth.setRealNameDate(req.getRealNameDate());
-		// createSellerRequest.setMbrAuth(mbrAuth);
+		if ("Y".equals(req.getIsRealName())) {
+			MbrAuth mbrAuth = new MbrAuth();
+			// 실명인증여부
+			mbrAuth.setIsRealName(req.getIsRealName());
+			// CI
+			mbrAuth.setCi(req.getSellerCI());
+			// DI
+			mbrAuth.setDi(req.getSellerDI());
+			// 인증방법코드
+			mbrAuth.setRealNameMethod(req.getRealNameMethod());
+			// 통신사 코드
+			mbrAuth.setTelecom(req.getSellerTelecom());
+			// 무선 전화번호
+			mbrAuth.setPhone(req.getSellerPhone());
+			// 생년월일
+			mbrAuth.setBirthDay(req.getSellerBirthDay());
+			// 성별
+			mbrAuth.setSex(req.getSellerSex());
+			// 회원명
+			mbrAuth.setName(req.getSellerName());
+			// 실명 인증사이트
+			mbrAuth.setRealNameSite(req.getRealNameSystemId());
+			// 실명 인증 일시
+			mbrAuth.setRealNameDate(req.getRealNameDate());
+			createSellerRequest.setMbrAuth(mbrAuth);
+		}
 		/** 실명인증정보 생성 및 주입 [끝]. */
 
 		/** 약관동의 정보 리스트 주입 - [시작]. */
@@ -120,6 +122,7 @@ public class SellerServiceImpl implements SellerService {
 		// 판매자 회원 PW
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberPW(req.getSellerPW());
+		createSellerRequest.setMbrPwd(mbrPwd);
 		// sellerMbr.setSellerPW(req.getSellerPW());
 		SellerMbr sellerMbr = new SellerMbr();
 		// 판매자 회원 ID
@@ -184,6 +187,11 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		// 법인등록번호
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
+
+		// TODO 임시
+		sellerMbr.setLoginStatusCode("10");
+		sellerMbr.setStopStatusCode("80");
+
 		createSellerRequest.setSellerMbr(new SellerMbr());
 		/** 판매자 회원 정보 생성 및 주입 - [끝]. */
 
@@ -278,9 +286,9 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("logInSellerResponse Messge : {}", logInSellerResponse.getCommonResponse().getResultMessage());
 
 		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
-		if (!MemberConstants.RESULT_SUCCES.equals(logInSellerResponse.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(logInSellerResponse.getCommonResponse().getResultMessage());
-		}
+		// if (!MemberConstants.RESULT_SUCCES.equals(logInSellerResponse.getCommonResponse().getResultCode())) {
+		// throw new RuntimeException(logInSellerResponse.getCommonResponse().getResultMessage());
+		// }
 
 		AuthorizeRes res = new AuthorizeRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;

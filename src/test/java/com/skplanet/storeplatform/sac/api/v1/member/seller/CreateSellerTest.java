@@ -80,7 +80,7 @@ public class CreateSellerTest {
 						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
-						req.setSellerId("seller_test");
+						req.setSellerId("seller_test1111");
 						req.setSellerPW("awdawe123dw2");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
@@ -91,6 +91,10 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
+
+						req.setIsRealName("N");
+						req.setSellerName("김삼순");
+						req.setSellerCI("1231323123");
 
 						// 약관정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
