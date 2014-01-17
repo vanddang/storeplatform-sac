@@ -21,7 +21,17 @@ public class FeatureCategoryEpubReq {
 	private String tenantId; // 메뉴ID
 	private String langCd; // 메뉴ID
 	private String deviceModelCd; // 메뉴ID
+	private String stdDt; // 배치일자
 	
+	//Dummy Data용
+	private String dummy; // 메뉴ID
+	
+	public String getDummy() {
+		return dummy;
+	}
+	public void setDummy(String dummy) {
+		this.dummy = dummy;
+	}
 	public String getListId() {
 		return listId;
 	}
@@ -84,6 +94,12 @@ public class FeatureCategoryEpubReq {
 	}
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
+	}
+	public String getStdDt() {
+		return stdDt;
+	}
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 	

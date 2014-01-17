@@ -20,6 +20,7 @@ public class RecommendAdminReq {
 	private String tenantId; // 메뉴ID
 	private String langCd; // 메뉴ID
 	private String deviceModelCd; // 메뉴ID
+	private String stdDt; // 배치일자
 	
 	public String getListId() {
 		return listId;
@@ -77,6 +78,12 @@ public class RecommendAdminReq {
 	}
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
+	}
+	public String getStdDt() {
+		return stdDt;
+	}
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 }
