@@ -331,6 +331,10 @@ public class LoginServiceImpl implements LoginService {
 
 				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
+					/*
+					 * ID로그인은 휴대기기 정보가 optional이므로 무조건 머지를 할 순 없다. 정책 확인이
+					 * 필요하다!!!
+					 */
 					this.mergeDeviceInfo(userKey, req);
 
 					this.insertloginHistory(userId, userPw, "Y", userType);

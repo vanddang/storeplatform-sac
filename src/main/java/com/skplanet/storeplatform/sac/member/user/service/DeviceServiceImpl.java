@@ -354,6 +354,7 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenantId);
 
+		/* 휴대기기 주요정보 확인 */
 		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
 
 		/* 1. 휴대기기 정보 등록 요청 */
@@ -450,27 +451,24 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("################ mergeDeviceInfo start ##################");
 
+		if (deviceInfo.getDeviceId() == null) {
+
+			throw new Exception("deviceId is null 기기정보 수정 불가");
+		}
+
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenanId);
 
-		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
-
 		String deviceId = deviceInfo.getDeviceId();
-
-		if (deviceId == null) {
-			throw new Exception("deviceId is null 기기정보 수정 불가");
-		}
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
-
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 		key.setKeyString(deviceId);
 		keySearchList.add(key);
-
 		schDeviceReq.setCommonRequest(commonRequest);
 		schDeviceReq.setUserKey(deviceInfo.getUserKey());
 		schDeviceReq.setKeySearchList(keySearchList);
@@ -481,6 +479,8 @@ public class DeviceServiceImpl implements DeviceService {
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
+
+		deviceInfo = this.setCheckMajorDeviceInfo(deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
@@ -675,10 +675,16 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* SKT 통신사인 경우 서비스 관리번호 조회 */
 		String imMngNum = "";
-		if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceInfo.getDeviceTelecom())) {
+		if (deviceInfo.getDeviceTelecom() != null && MemberConstants.DEVICE_TELECOM_SKT.equals(deviceInfo.getDeviceTelecom())) {
 			IDPReceiverM idpReceiver = this.idpService.findProfileForWap(deviceInfo.getDeviceId());
 			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 				imMngNum = idpReceiver.getResponseBody().getSvc_mng_num();
+
+				/* OMD 단말여부 확인 */
+				if (false) {
+					deviceInfo.setOmdUacd(idpReceiver.getResponseBody().getModel_id());
+				}
+
 			} else {
 				throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "]" + idpReceiver.getResponseHeader().getResult_text());
 			}
@@ -686,18 +692,23 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setImMngNum(imMngNum);
 
 		/* 미지원 단말 예외 처리 */
-		String uacd = this.commService.getUaCode(deviceInfo.getDeviceModelNo());
-		if (uacd == null) {
-			deviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE);
-			deviceInfo.setDeviceTelecom(MemberConstants.NOT_SUPPORT_HP_CORP);
-		} else {
-			deviceInfo.setUacd(uacd);
+		if (deviceInfo.getDeviceModelNo() != null) {
+			String uacd = this.commService.getUaCode(deviceInfo.getDeviceModelNo());
+			if (uacd == null) {
+				deviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE);
+				deviceInfo.setDeviceTelecom(MemberConstants.NOT_SUPPORT_HP_CORP);
+				deviceInfo.setOmpSupportYn("N");
+			} else {
+				deviceInfo.setUacd(uacd);
+				deviceInfo.setOmpSupportYn("Y");
+			}
 		}
 
 		/* IOS 이북 보관함 지원 uuid 셋팅 */
-		if (MemberConstants.DEVICE_ID_TYPE_UUID.equals(deviceInfo.getDeviceIdType())) {
+		if (deviceInfo.getDeviceIdType() != null && MemberConstants.DEVICE_ID_TYPE_UUID.equals(deviceInfo.getDeviceIdType())) {
 			deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_IOS);
 		}
+
 		return deviceInfo;
 	}
 
