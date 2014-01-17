@@ -161,7 +161,7 @@ public class DummySellerController {
 			sellerMbrRes.setIsBizRegistered("N");
 			sellerMbrRes.setIsBizTaxable("Y");
 			sellerMbrRes.setIsDeductible("");
-			sellerMbrRes.setIsForeign("Y");
+			sellerMbrRes.setIsDomestic("Y");
 			sellerMbrRes.setIsParent("");
 			sellerMbrRes.setIsRealName("Y");
 			sellerMbrRes.setIsRecvEmail("Y");
@@ -331,7 +331,7 @@ public class DummySellerController {
 		sellerMbr.setIsBizRegistered("N");
 		sellerMbr.setIsBizTaxable("Y");
 		sellerMbr.setIsDeductible("");
-		sellerMbr.setIsForeign("Y");
+		sellerMbr.setIsDomestic("Y");
 		sellerMbr.setIsParent("");
 		sellerMbr.setIsRealName("Y");
 		sellerMbr.setIsRecvEmail("Y");
@@ -464,7 +464,7 @@ public class DummySellerController {
 		sellerMbr.setIsBizRegistered("N");
 		sellerMbr.setIsBizTaxable("Y");
 		sellerMbr.setIsDeductible("");
-		sellerMbr.setIsForeign("Y");
+		sellerMbr.setIsDomestic("Y");
 		sellerMbr.setIsParent("");
 		sellerMbr.setIsRealName("Y");
 		sellerMbr.setIsRecvEmail("Y");
