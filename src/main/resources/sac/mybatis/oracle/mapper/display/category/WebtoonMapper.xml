@@ -23,6 +23,8 @@
                       ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
                       ,CASE WHEN (SYSDATE - UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
                       ,UPD_DT as updDt                                    /* 수정일 */
+                      ,DECODE(COMPT_YN,'Y','completed','N','continue',NULL,'continue') as comptYn    /* 완결여부 */
+                      ,''       as prefix                                 /* prefix */
                       ,CHAPTER as chapter                                 /* 챕터 */
                       ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
                       ,ARTIST2_NM as artist2Nm                            /* 아티스트2 */
@@ -43,6 +45,7 @@
                               ,SERIALLY_WKDY
                               ,D.UPD_DT
                               ,E.CHAPTER
+                              ,E.COMPT_YN
                               ,I.PROD_AMT
                               ,F.ARTIST1_NM
                               ,F.ARTIST2_NM
@@ -159,6 +162,8 @@
                       ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
                       ,CASE WHEN (SYSDATE - UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
                       ,UPD_DT as updDt                                    /* 수정일 */
+                      ,DECODE(COMPT_YN,'Y','completed','N','continue',NULL,'continue') as comptYn    /* 완결여부 */
+                      ,''        as prefix                                 /* prefix */
                       ,CHAPTER as chapter                                 /* 챕터 */
                       ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
                       ,ARTIST2_NM as artist2Nm                            /* 아티스트2 */
@@ -179,6 +184,7 @@
                               ,SERIALLY_WKDY
                               ,D.UPD_DT
                               ,E.CHAPTER
+                              ,E.COMPT_YN
                               ,I.PROD_AMT
                               ,F.ARTIST1_NM
                               ,F.ARTIST2_NM

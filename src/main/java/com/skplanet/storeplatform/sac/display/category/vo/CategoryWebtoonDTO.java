@@ -32,6 +32,8 @@ public class CategoryWebtoonDTO {
 	private String iconYn;
 	private String updDt;
 	private String chapter;
+	private String comptYn;
+	private String preFix;
 	private String artist1Nm;
 	private String artist2Nm;
 	private String artist3Nm;
@@ -157,6 +159,14 @@ public class CategoryWebtoonDTO {
 		this.updDt = updDt;
 	}
 
+	public String getComptYn() {
+		return this.comptYn;
+	}
+
+	public void setComptYn(String comptYn) {
+		this.comptYn = comptYn;
+	}
+
 	public String getChapter() {
 		return this.chapter;
 	}
@@ -195,5 +205,13 @@ public class CategoryWebtoonDTO {
 
 	public void setFilePos(String filePos) {
 		this.filePos = filePos;
+	}
+
+	public String getPreFix() {
+		return this.preFix;
+	}
+
+	public void setPreFix(String preFix) {
+		this.preFix = preFix;
 	}
 }

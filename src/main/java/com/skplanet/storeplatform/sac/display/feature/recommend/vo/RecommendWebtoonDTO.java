@@ -31,7 +31,9 @@ public class RecommendWebtoonDTO {
 	private String seriallyWkdy;
 	private String iconYn;
 	private String updDt;
+	private String comptYn;
 	private String chapter;
+	private String preFix;
 	private String artist1Nm;
 	private String artist2Nm;
 	private String artist3Nm;
@@ -149,12 +151,28 @@ public class RecommendWebtoonDTO {
 		this.iconYn = iconYn;
 	}
 
+	public String getComptYn() {
+		return this.comptYn;
+	}
+
+	public void setComptYn(String comptYn) {
+		this.comptYn = comptYn;
+	}
+
 	public String getUpdDt() {
 		return this.updDt;
 	}
 
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
+	}
+
+	public String getPreFix() {
+		return this.preFix;
+	}
+
+	public void setPreFix(String preFix) {
+		this.preFix = preFix;
 	}
 
 	public String getChapter() {

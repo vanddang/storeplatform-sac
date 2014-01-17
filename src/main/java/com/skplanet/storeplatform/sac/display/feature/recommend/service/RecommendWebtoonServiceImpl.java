@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -29,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
@@ -103,6 +105,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			Title title = null;
 			Source source = null;
 			Price price = null;
+			Book book = null;
 			Contributor contributor = null;
 			Accrual accrual = null;
 			Date date = null;
@@ -117,7 +120,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
-				identifier.setType("episode");
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				identifier.setText(webtoonDto.getProdId());
 
 				// 메뉴 정보
@@ -141,9 +144,13 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				accrual = new Accrual();
 				accrual.setScore(Double.parseDouble(webtoonDto.getAvgScore()));
 
+				// 완료 여부
+				book = new Book();
+				book.setStatus(webtoonDto.getComptYn());
+
 				// 상품 정보 (상품명)
 				title = new Title();
-				title.setPrefix(webtoonDto.getIconYn());
+				title.setPrefix(webtoonDto.getPreFix());
 				title.setText(webtoonDto.getProdNm());
 
 				// 이미지 정보
@@ -155,7 +162,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 
 				// 업데이트 날짜
 				date = new Date();
-				date.setType("date/reg");
+				date.setType("date/upt");
 				date.setText(webtoonDto.getUpdDt());
 
 				// 데이터 매핑
@@ -164,6 +171,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				product.setContributor(contributor);
 				product.setAccrual(accrual);
 				product.setTitle(title);
+				product.setBook(book);
 				product.setRights(rights);
 				product.setSourceList(sourceList);
 				product.setPrice(price);
