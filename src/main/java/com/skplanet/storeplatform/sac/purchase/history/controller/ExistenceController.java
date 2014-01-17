@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
@@ -52,25 +53,29 @@ public class ExistenceController {
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public List<ExistenceRes> getExist(@RequestBody ExistenceReq existenceReq) {
+	public ExistenceListRes getExist(@RequestBody ExistenceReq existenceReq) {
 
+		// ExistenceListRes res = new ExistenceListRes();
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
+		ExistenceListRes existenceListRes = new ExistenceListRes();
 		// 필수값 체크
 		if (StringUtils.isBlank(existenceReq.getTenantId())) {
-			return res;
+			this.logger.debug("@@@@@@getTenantId@@@@@@@{}", existenceReq.getTenantId());
+			return existenceListRes;
 		}
 		if (StringUtils.isBlank(existenceReq.getInsdUsermbrNo())) {
-			return res;
+			this.logger.debug("@@@@@@getInsdUsermbrNo@@@@@@@{}", existenceReq.getInsdUsermbrNo());
+			return existenceListRes;
 		}
-		for (int i = 0; i < existenceReq.getExistenceList().size(); i++) {
-			if (StringUtils.isBlank(existenceReq.getExistenceList().get(i).getProdId())) {
-				return res;
-			}
-		}
-
 		ExistenceRequest req = this.reqConvert(existenceReq);
+		List<ExistenceResponse> existenceResponse = new ArrayList<ExistenceResponse>();
+		existenceResponse = this.existenceService.getExist(req);
 
-		return this.resConvert(this.existenceService.getExist(req));
+		res = this.resConvert(existenceResponse);
+		this.logger.debug("@@@@@@@@@@@@@{} ", res.size());
+
+		existenceListRes.setExistenceListRes(res);
+		return existenceListRes;
 	}
 
 	/**
@@ -90,7 +95,7 @@ public class ExistenceController {
 		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
 		req.setPrchsId(existenceReq.getPrchsId());
 		int size = existenceReq.getExistenceList().size();
-		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
+		this.logger.debug("@@@@@@reqConvert@@@@@@@{} ", size);
 		for (int i = 0; i < size; i++) {
 			ExistenceList existenceList = new ExistenceList();
 			existenceList.setProdId(existenceReq.getExistenceList().get(i).getProdId());
@@ -112,11 +117,12 @@ public class ExistenceController {
 	private List<ExistenceRes> resConvert(List<ExistenceResponse> existenceResponseList) {
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 		int size = existenceResponseList.size();
-		this.logger.debug("@@@@@@resConvert@@@@@@@" + size);
+		this.logger.debug("@@@@@@resConvert@@@@@@@{} ", size);
 		for (int i = 0; i < size; i++) {
 			ExistenceRes existenceRes = new ExistenceRes();
 			existenceRes.setPrchsId(existenceResponseList.get(i).getPrchsId());
 			existenceRes.setProdId(existenceResponseList.get(i).getProdId());
+
 			res.add(existenceRes);
 		}
 
