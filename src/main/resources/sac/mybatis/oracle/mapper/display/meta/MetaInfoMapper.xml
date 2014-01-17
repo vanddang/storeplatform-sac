@@ -107,6 +107,102 @@
 	</select>
 	
 	<select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
+         SELECT MCI.RANK_CHG_CNT
+              , MCI.RANK_CHG_CLSF_CD
+              , MCI.ARTIST_ID
+              , CP.PROD_ID AS CHNL_PROD_ID
+              , CP.PART_PROD_ID AS EPSD_PROD_ID
+              , C.MENU_ID
+              , CD.MENU_NM
+              , CD.MENU_DESC
+              , C.TOP_MENU_ID
+              , CD2.MENU_NM AS TOP_MENU_NM
+              , CD2.MENU_DESC AS TOP_MENU_DESC
+              , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
+              , PD.PROD_NM
+              , PD.PROD_DTL_DESC
+              , TPP.PROD_AMT
+              , P.PROD_GRD_CD
+              , PD.ARTIST1_NM
+              , PD.ARTIST2_NM
+              , PD.ARTIST3_NM                        
+              , MP.CHNL_COMP_NM
+              , MP.AGENCY_NM
+              , MP.ISSUE_DAY
+              , MP.BELL_SPRT_YN
+              , MP.COLORRING_SPRT_YN
+              , PI.FILE_PATH
+              , PI.FILE_NM
+              , PI.FILE_SIZE
+           FROM TB_DP_MULTIMDA_PROD MP
+              , TB_DP_MUSIC_CHART MCI
+              , TB_DP_PROD P
+              , TB_DP_PROD_DESC PD
+              , TB_DP_PROD_RSHP CP
+              , TB_DP_TENANT_PROD TP
+              , TB_DP_TENANT_PROD_PRICE TPP
+              , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+              , TB_DP_MENU_CATEGORY C
+              , TB_DP_MENU_CATEGORY_DESC CD
+              , TB_DP_MENU_CATEGORY_DESC CD2
+              , TB_DP_MULTIMDA_PROD MP2
+              , TB_DP_PROD P2
+              , TB_DP_TENANT_PROD TP2
+              , TB_DP_PROD_IMG PI
+          WHERE MP.PROD_ID = CP.PART_PROD_ID
+            AND P.PROD_ID = CP.PART_PROD_ID
+            AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
+            AND CPM.PROD_ID = CP.PART_PROD_ID
+            AND C.MENU_ID = CPM.MENU_ID
+            AND CD.MENU_ID = C.MENU_ID
+            AND CD2.MENU_ID = C.TOP_MENU_ID
+            AND CD2.LANG_CD = CD.LANG_CD
+            AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
+            AND P2.META_CLSF_CD = P.META_CLSF_CD
+            AND TP2.PROD_ID = P2.PROD_ID
+            AND TP2.TENANT_ID = TP.TENANT_ID
+            AND TP2.PROD_STATUS_CD = TP.PROD_STATUS_CD
+            AND TP2.EXPO_YN = TP.EXPO_YN
+            AND MP2.PROD_ID = P2.PROD_ID
+            AND TP.PROD_ID = P.PROD_ID
+            AND TPP.PROD_ID = TP.PROD_ID
+            AND TPP.TENANT_ID = TP.TENANT_ID
+            AND PD.PROD_ID = P.PROD_ID
+            AND PI.PROD_ID = CP.PROD_ID
+         -----------------------------------------------------------------------------
+         -- 차트 정보 조건절 START
+         -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
+         -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
+         ----------------------------------------------------------------------------- 
+            AND MCI.CHART_CLSF_CD = 'DP004901' -- 멜론 TOP 100
+            AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
+                                         FROM TB_DP_BATCH_COMPT
+                                        WHERE TENANT_ID = TP.TENANT_ID
+                                          AND BATCH_ID = 'MELON_DP004901') -- 멜론 TOP 100
+         -----------------------------------------------------------------------------
+         -- 차트 정보 조건절 END
+         ----------------------------------------------------------------------------- 
+            AND TP.PROD_STATUS_CD = 'PD000403'   -- 판매중
+            AND TP.EXPO_YN = 'Y'                 -- 노출 여부
+            AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
+            AND P.META_CLSF_CD = 'CT25'          -- 통합 뮤직
+            AND CPM.USE_YN = 'Y'
+            AND C.USE_YN = 'Y'
+            AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
+         -----------------------------------------------------------------------------
+         -- INPUT PARAMETER
+         ----------------------------------------------------------------------------- 
+         <if test='prodType == "episode"'>
+            AND CP.PART_PROD_ID = #{prodId} -- EPISODE PROD ID
+         </if>
+         <if test='prodType == "channel"'>
+            AND CP.PROD_ID = #{prodId} -- CHANNEL PROD ID
+         </if>
+            AND C.MENU_ID LIKE #{menuId}||'%'
+            AND PI.IMG_CD = #{imageCd}
+            AND TP.TENANT_ID = #{tenantId}
+            AND PD.LANG_CD = #{langCd}
+            AND CD.LANG_CD = #{langCd}
 	</select>
 	<select id="getEbookComidMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
     </select>
