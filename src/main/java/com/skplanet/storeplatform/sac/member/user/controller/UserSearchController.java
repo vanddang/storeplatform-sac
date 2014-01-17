@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.user.service.UserSelectService;
+import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
  * 회원 조회 서비스 Controller
@@ -33,12 +33,12 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSelectService;
  */
 @RequestMapping(value = "/member/user")
 @Controller
-public class UserSelectController extends ParameterExceptionHandling {
+public class UserSearchController extends ParameterExceptionHandling {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserSelectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserSearchController.class);
 
 	@Autowired
-	private UserSelectService svc;
+	private UserSearchService svc;
 
 	@Autowired
 	private HeaderInfo headerInfo;

@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgreeList;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
-import com.skplanet.storeplatform.sac.member.user.service.UserSelectServiceImpl;
+import com.skplanet.storeplatform.sac.member.user.service.UserSearchServiceImpl;
 
 /**
  * Store 약관동의 목록조회 서비스 Controller
@@ -38,7 +38,7 @@ public class ListTermsAgreementController extends ParameterExceptionHandling {
 	private static final Logger logger = LoggerFactory.getLogger(ListTermsAgreementController.class);
 
 	@Autowired
-	private UserSelectServiceImpl svc;
+	private UserSearchServiceImpl svc;
 
 	// @RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -52,7 +52,8 @@ public class ListTermsAgreementController extends ParameterExceptionHandling {
 
 		SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest();
 		schAgreementListReq.setUserKey(req.getUserKey());
-		schAgreementListReq.setCommonRequest(this.svc.commonRequest());
+
+		// TODO : commonRequest setting
 
 		List<MbrClauseAgreeList> mbrClauseAgreeList = new ArrayList<MbrClauseAgreeList>();
 		MbrClauseAgreeList mbrClause = this.svc.mbrClauseAgreeList(schAgreementListReq);
