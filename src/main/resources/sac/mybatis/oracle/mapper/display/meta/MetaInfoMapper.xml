@@ -222,7 +222,6 @@
 		     , TB.VOD_TITL_NM
 		     , TB.PROD_NM
 		     , TB.CHAPTER
-		     , TB.PROD_NM AS PROD_DTL_NM
 		     , TB.PROD_BASE_DESC
 		     , TB.PROD_DTL_DESC
 		     , TB.PROD_GRD_CD
@@ -329,9 +328,9 @@
 		           -----------------------------------------------------------------------------
 		           -- INPUT PARAMETER
 		           -----------------------------------------------------------------------------           
-		           AND B.PROD_ID = 'H090122405'      -- 채널 상품 ID 조회           
+		           AND B.PROD_ID = #{prodId}      -- 채널 상품 ID 조회           
 		           --AND I.PART_PROD_ID = 'H090122408'   -- 에피소드 상품 ID 조회
-		           AND G.TENANT_ID = 'S01'             /* 테넌트ID */
+		           AND G.TENANT_ID = #{tenantId}             /* 테넌트ID */
 		
 		       ) TB
 		   WHERE TB.RN = 1      	
