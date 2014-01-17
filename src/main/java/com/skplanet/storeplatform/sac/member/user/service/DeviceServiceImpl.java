@@ -368,20 +368,23 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 2.휴대기기 정보 등록완료 */
 		if (StringUtil.equals(createDeviceRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
-			/* 3. 구매이력 이관 여부 확인 [기존 회원 key, 신규 회원 key] */
-			if (false) {
+			/* 3. 기등록된 회원이 존재하는지 확인 */
+			if (createDeviceRes.getPreviousUserKey() != null) {
 
-				/* 4. 구매이관 대상인 경우 구매이력 이관요청 */
+				String previousUserKey = createDeviceRes.getPreviousUserKey();
+				String nowUserKey = createDeviceRes.getUserKey();
+
+				/* 4. 구매이력 이관요청 */
 
 				/* 5. 약관 이관 처리 */
 				SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
 				schAgreeListReq.setCommonRequest(commonRequest);
-				schAgreeListReq.setUserKey("기존 회원 key");
+				schAgreeListReq.setUserKey(previousUserKey);
 				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
 				if (schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 					UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
 					updAgreeReq.setCommonRequest(commonRequest);
-					updAgreeReq.setUserKey("신규 회원 key");
+					updAgreeReq.setUserKey(nowUserKey);
 					updAgreeReq.setMbrClauseAgreeList(schAgreeListRes.getMbrClauseAgreeList());
 					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
 
@@ -636,8 +639,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
-		/** SC컴포넌트 에러로 임시로 값을 넘기지 않음!!! */
-		userMbrDevice.setAuthenticationDate("");
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(req));
 
