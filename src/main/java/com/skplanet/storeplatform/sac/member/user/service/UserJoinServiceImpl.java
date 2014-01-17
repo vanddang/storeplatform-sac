@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
@@ -114,13 +115,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 
 			/**
-			 * SC 공통정보 setting
+			 * 공통 정보 setting
 			 */
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-			createUserRequest.setCommonRequest(commonRequest);
-			LOGGER.info("## SC Request commonRequest : {}", createUserRequest.getCommonRequest().toString());
+			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+			/**
+			 * 이용약관 정보 setting
+			 */
+			createUserRequest.setMbrClauseAgree(this.getAgreementInfo(req.getAgreementList()));
+
+			/**
+			 * 법정대리인 setting.
+			 */
+			createUserRequest.setMbrLglAgent(this.getMbrLglAgent(req));
 
 			/**
 			 * SC 사용자 기본정보 setting
@@ -133,11 +140,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
+			userMbr.setUserID(msisdn); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
 			/**
-			 * TODO 모바일 전용 회원일 경우는 SC 에서 자체적으로 만들어서 넣기로함. (임과장님 확인 내용.) 현재 SC 필수 항목이라 넣고있음. 추후 넣지않도록 빼야함.
+			 * TODO 필수 항목으로 변경내용 확인 필요.
 			 */
-			userMbr.setUserID(msisdn);
-
+			userMbr.setLoginStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
+			userMbr.setStopStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 			userMbr.setIsParent(req.getIsParent());
@@ -145,44 +153,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserBirthDay(req.getOwnBirth());
 			createUserRequest.setUserMbr(userMbr);
 			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
-
-			/**
-			 * SC 이용약관 정보 setting
-			 */
-			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
-			for (AgreementInfo info : req.getAgreementList()) {
-				MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
-				mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
-				mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
-				mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
-				mbrClauseAgree.setRegDate(DateUtil.getToday());
-				mbrClauseAgreeList.add(mbrClauseAgree);
-			}
-			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
-			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
-
-			/**
-			 * SC 법정대리인 정보 setting
-			 */
-			if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
-
-				MbrLglAgent mbrLglAgent = new MbrLglAgent();
-				mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
-				mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
-				mbrLglAgent.setParentName(req.getParentName()); // 법정대리인 이름
-				mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계
-				mbrLglAgent.setParentDate(req.getParentDate()); // 법정대리인 동의일시
-				mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 Email
-				mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
-				mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 통신사 코드
-				mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
-				mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
-				mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
-				mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
-				createUserRequest.setMbrLglAgent(mbrLglAgent);
-				LOGGER.info("## SC Request mbrLglAgent : {}", createUserRequest.getMbrLglAgent().toString());
-
-			}
 
 			/**
 			 * SC 사용자 가입요청
@@ -360,28 +330,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 
 			/**
-			 * SC 공통정보 setting
+			 * 공통 정보 setting
 			 */
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-			createUserRequest.setCommonRequest(commonRequest);
-			LOGGER.info("## SC Request commonRequest : {}", createUserRequest.getCommonRequest().toString());
+			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
 
 			/**
-			 * SC 이용약관 정보 setting
+			 * 이용약관 정보 setting
 			 */
-			List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
-			for (AgreementInfo info : req.getAgreementList()) {
-				MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
-				mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
-				mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
-				mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
-				mbrClauseAgree.setRegDate(DateUtil.getToday());
-				mbrClauseAgreeList.add(mbrClauseAgree);
-			}
-			createUserRequest.setMbrClauseAgree(mbrClauseAgreeList);
-			LOGGER.info("## SC Request mbrClauseAgreeList : {}", createUserRequest.getMbrClauseAgree().toString());
+			createUserRequest.setMbrClauseAgree(this.getAgreementInfo(req.getAgreementList()));
 
 			/**
 			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
@@ -404,6 +360,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+			/**
+			 * TODO 필수 항목으로 변경내용 확인 필요.
+			 */
+			userMbr.setLoginStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
+			userMbr.setStopStatusCode(MemberConstants.IM_USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getUserId());
 			userMbr.setUserTelecom(req.getDeviceTelecom());
@@ -606,6 +567,99 @@ public class UserJoinServiceImpl implements UserJoinService {
 			return false;
 		}
 
+	}
+
+	/**
+	 * <pre>
+	 * SC 공통정보 setting.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @return CommonRequest
+	 */
+	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		LOGGER.info("## SC Request 공통 정보 : {}", commonRequest.toString());
+
+		return commonRequest;
+	}
+
+	/**
+	 * <pre>
+	 * SC 이용약관 정보 setting.
+	 * </pre>
+	 * 
+	 * @param agreementList
+	 *            List<AgreementInfo>
+	 * @return List<MbrClauseAgree>
+	 */
+	private List<MbrClauseAgree> getAgreementInfo(List<AgreementInfo> agreementList) {
+
+		List<MbrClauseAgree> mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+		for (AgreementInfo info : agreementList) {
+			MbrClauseAgree mbrClauseAgree = new MbrClauseAgree();
+			mbrClauseAgree.setExtraAgreementID(info.getExtraAgreementId());
+			mbrClauseAgree.setExtraAgreementVersion(info.getExtraAgreementVersion());
+			mbrClauseAgree.setIsExtraAgreement(info.getIsExtraAgreement());
+			mbrClauseAgree.setRegDate(DateUtil.getToday());
+			mbrClauseAgreeList.add(mbrClauseAgree);
+		}
+
+		LOGGER.info("## SC Request 이용약관 정보 : {}", mbrClauseAgreeList.toString());
+
+		return mbrClauseAgreeList;
+	}
+
+	/**
+	 * <pre>
+	 * SC 법정대리인 정보 setting.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            CreateByMdnReq
+	 * @return MbrLglAgent
+	 */
+	private MbrLglAgent getMbrLglAgent(CreateByMdnReq req) {
+
+		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
+
+			mbrLglAgent.setIsParent(req.getIsParent()); // 법정대리인 동의 여부
+			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod()); // 법정대리인 인증방법코드
+			mbrLglAgent.setParentName(req.getParentName()); // 법정대리인 이름
+			mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계
+			mbrLglAgent.setParentDate(req.getParentDate()); // 법정대리인 동의일시
+			mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 Email
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay()); // 법정대리인 생년월일
+			mbrLglAgent.setParentTelecom(req.getParentTelecom()); // 법정대리인 통신사 코드
+			mbrLglAgent.setParentMDN(req.getParentPhone()); // 법정대리인 전화번호
+			mbrLglAgent.setParentCI(req.getParentCi()); // 법정대리인 CI
+			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate()); // 법정대리인 인증 일시
+			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
+			LOGGER.info("## SC Request 법정대리인 정보 : {}", mbrLglAgent.toString());
+
+		}
+
+		return mbrLglAgent;
+
+	}
+
+	private void createUser(Object obj) throws Exception {
+
+		if (obj instanceof CreateByMdnReq) {
+			LOGGER.debug("CreateByMdnReq");
+		} else if (obj instanceof CreateByAgreementReq) {
+			LOGGER.debug("CreateByAgreementReq");
+		} else if (obj instanceof CreateBySimpleReq) {
+			LOGGER.debug("CreateBySimpleReq");
+		}
+
+		if (true)
+			throw new Exception();
 	}
 
 }
