@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 
 /**
  * Password 보안 질문 조회
@@ -18,14 +18,26 @@ public class ListPasswordReminderQuestionRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<PwReminder> pwReminderList;
+	/** 비밀번호 힌트 Value Object 목록. */
+	private List<SellerMbrPwdHint> sellerMbrPwdHintList;
 
-	public List<PwReminder> getPwReminderList() {
-		return this.pwReminderList;
+	/** 언어 코드. */
+	private String languageCode;
+
+	public List<SellerMbrPwdHint> getSellerMbrPwdHintList() {
+		return this.sellerMbrPwdHintList;
 	}
 
-	public void setPwReminderList(List<PwReminder> pwReminderList) {
-		this.pwReminderList = pwReminderList;
+	public void setSellerMbrPwdHintList(List<SellerMbrPwdHint> sellerMbrPwdHintList) {
+		this.sellerMbrPwdHintList = sellerMbrPwdHintList;
+	}
+
+	public String getLanguageCode() {
+		return this.languageCode;
+	}
+
+	public void setLanguageCode(String languageCode) {
+		this.languageCode = languageCode;
 	}
 
 }
