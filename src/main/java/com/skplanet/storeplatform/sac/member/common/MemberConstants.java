@@ -101,25 +101,25 @@ public final class MemberConstants {
 	/** DeviceIdType 정의. */
 	public static final String DEVICE_ID_TYPE_MSISDN = "msisdn";
 	public static final String DEVICE_ID_TYPE_UUID = "uuid";
-	public static final String DEVICE_ID_TYPE_MACADDRESS = "macaddress";
+	public static final String DEVICE_ID_TYPE_MACADDRESS = "mac";
 
 	/** 통합회원. */
 	public static final String SSO_SST_CD_TSTORE = "41100";
 
-	/** 실명인증 사이트 코드 (realNameSite). TODO "US0054" --> 공통코드로 정의되는지 확인해 봐야함. */
-	public static final String AUTH_CHNL_WEB = "101"; // 웹
-	public static final String AUTH_CHNL_MOBILE_2X = "102"; // MobileClient2.X
-	public static final String AUTH_CHNL_MOBILE_3X = "103"; // MobileClient3.X\
-	public static final String AUTH_CHNL_MOBILE_WEB = "104"; // 모바일웹
-	public static final String AUTH_CHNL_MOBILE_OPENAPI = "105"; // OPENAPI
+	/** 실명인증 사이트 코드 (realNameSite). */
+	public static final String AUTH_CHNL_WEB = "US011201"; // 웹
+	public static final String AUTH_CHNL_MOBILE_2X = "US011202"; // MobileClient2.X
+	public static final String AUTH_CHNL_MOBILE_3X = "US011203"; // MobileClient3.X\
+	public static final String AUTH_CHNL_MOBILE_WEB = "US011204"; // 모바일웹
+	public static final String AUTH_CHNL_MOBILE_OPENAPI = "US011205"; // OPENAPI
 
 	/** 통합회원 로그인 상태코드 */
-	public static final String IM_USER_LOGIN_STATUS_NOMAL = "10"; //로그인 가능
-	public static final String IM_USER_LOGIN_STATUS_PAUSE = "20"; //로그인 제한
+	public static final String IM_USER_LOGIN_STATUS_NOMAL = "10"; // 로그인 가능
+	public static final String IM_USER_LOGIN_STATUS_PAUSE = "20"; // 로그인 제한
 
 	/** 통합회원 직권중지 상태코드 */
-	public static final String IM_USER_STOP_STATUS_NOMAL = "80"; //직권중지 해제
-	public static final String IM_USER_STOP_STATUS_PAUSE = "90"; //직권중지 설정
+	public static final String IM_USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
+	public static final String IM_USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
 
 	/**
 	 * 판매자 회원 상수들

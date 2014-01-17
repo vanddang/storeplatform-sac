@@ -37,5 +37,13 @@
         WHERE REP_DEVICE_YN = 'Y'
         AND DEVICE_MODEL_CD = #{deviceModelCd}
     </select>
+
+    <!-- OMD 단말여부 확인 -->
+    <select id="getOmdCount" parameterType="String" resultType="Integer">
+        SELECT /* MemberCommonMapper.xml, getOmdCount, SAC : 심대진 , 2014-01-17 */
+               COUNT(1)
+          FROM TB_CM_OMD_DEVICE
+         WHERE UA_CD = #{uacd}
+    </select>
     
 </mapper>

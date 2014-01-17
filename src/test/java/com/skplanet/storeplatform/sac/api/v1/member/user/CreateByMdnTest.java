@@ -108,7 +108,7 @@ public class CreateByMdnTest {
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 						reqJson.setParentRealNameDate(DateUtil.getToday());
-						reqJson.setParentRealNameSite("101");
+						reqJson.setParentRealNameSite("US011203"); // shop client 3.0
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();

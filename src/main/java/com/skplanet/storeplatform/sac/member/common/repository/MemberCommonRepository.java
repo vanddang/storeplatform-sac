@@ -39,4 +39,17 @@ public interface MemberCommonRepository {
 	 */
 	public Device getPhoneInfo(String deviceModelCd) throws Exception;
 
+	/**
+	 * <pre>
+	 * OMD 단말여부 확인.
+	 * </pre>
+	 * 
+	 * @param uacd
+	 *            String
+	 * @return int
+	 * @throws Exception
+	 *             Exception
+	 */
+	public int getOmdCount(String uacd) throws Exception;
+
 }

@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
-import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
@@ -158,7 +157,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 가입요청
 			 */
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-
 			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
@@ -219,8 +217,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 				/**
 				 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.)
 				 */
-				if (StringUtil.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_UUID)) {
-					if (!StringUtil.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_IOS)) {
+				if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_UUID)) {
+					if (!StringUtils.equals(req.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_IOS)) {
 						LOGGER.warn("###############################################################################");
 						LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
 						LOGGER.warn("###############################################################################");
@@ -285,6 +283,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	@Override
 	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
+
+		this.mcc.setCheckMajorDeviceInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+
+		if (true) {
+			throw new Exception();
+		}
 
 		CreateByAgreementRes response = new CreateByAgreementRes();
 
@@ -379,7 +383,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 가입요청
 			 */
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-
 			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
@@ -645,6 +648,48 @@ public class UserJoinServiceImpl implements UserJoinService {
 		}
 
 		return mbrLglAgent;
+
+	}
+
+	/**
+	 * <pre>
+	 * 휴대기기 등록 submodule 호출.
+	 * 필수 값 - (userKey, deviceTelecom, deviceId, deviceIdType, joinId, imei, imMngNum, isRecvSms, 헤더(systemId, tenantId, model))
+	 * </pre>
+	 * 
+	 * @param req
+	 * @param systemId
+	 * @param tenantId
+	 * @throws Exception
+	 *             void
+	 */
+	private void createDevicesSubmodule(DeviceInfo req, SacRequestHeader sacHeader) throws Exception {
+
+		LOGGER.info("## 단말 등록정보 : {}", req.toString());
+
+		/**
+		 * 휴대기기 등록정보 setting
+		 */
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+		deviceInfo.setDeviceId(req.getDeviceId());
+		deviceInfo.setDeviceIdType(req.getDeviceIdType());
+		deviceInfo.setJoinId(req.getJoinId());
+		deviceInfo.setNativeId(req.getNativeId());
+		deviceInfo.setImMngNum(req.getImMngNum()); // 서브 모듈에서..
+		deviceInfo.setIsRecvSms(req.getIsRecvSms());
+		deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel());
+		deviceInfo.setIsPrimary(MemberConstants.USE_Y);
+		deviceInfo.setIsAuthenticated(MemberConstants.USE_Y);
+		deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss"));
+		deviceInfo.setIsUsed(MemberConstants.USE_Y);
+		LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
+
+		try {
+			this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), req.getUserKey(), deviceInfo);
+		} catch (Exception e) {
+			throw new RuntimeException("## 휴대기기 등록실패!!!! submodule ERROR");
+		}
 
 	}
 

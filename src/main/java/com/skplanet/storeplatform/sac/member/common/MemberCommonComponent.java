@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
@@ -321,4 +322,95 @@ public class MemberCommonComponent {
 		return this.icasSCI.getMvService(msisdn);
 	}
 
+	/**
+	 * <pre>
+	 * UA 코드정보, SKT 통합관리번호, .
+	 * </pre>
+	 * 
+	 * @param model
+	 * @param deviceTelecom
+	 * @param deviceId
+	 * @param deviceIdType
+	 * @return
+	 * @throws Exception
+	 *             MajorDeviceInfo
+	 */
+	public MajorDeviceInfo setCheckMajorDeviceInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
+
+		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
+
+		/**
+		 * 폰정보 조회 (Phone ModelCode)
+		 */
+		Device deviceDTO = this.getPhoneInfo(model);
+		if (deviceDTO == null) {
+
+			/**
+			 * 미지원 단말 setting
+			 */
+			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
+			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
+			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
+			majorDeviceInfo.setDeviceNickName(MemberConstants.NOT_SUPPORT_HP_MODEL_NM); // 기기명
+
+		} else {
+
+			// UA코드 setting
+			if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
+
+				/**
+				 * SKT 가입자이면서 MSISDN 타입일 경우에만 UAPS 연동 하여 (SKT 서비스가입번호와 UACD를 세팅한다.)
+				 */
+				if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+					UserRes userRes = this.getMappingInfo(deviceId, "mdn");
+					if (userRes.getResultCode() == 0) {
+						LOGGER.debug("## UAPS UA 코드             : {}", userRes.getDeviceModel());
+						LOGGER.debug("## UAPS SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
+						majorDeviceInfo.setDeviceModelNo(userRes.getDeviceModel());
+						majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
+					}
+
+				}
+
+				/**
+				 * OMD 단말정보 조회
+				 * 
+				 * TODO 모바일 전용회원에서만 IDP 연동후에 내려주는 uacd 값을 가지고 조회했으며 세팅도 했다. (적용 여부 논의 해야 할듯...)
+				 */
+				if (this.repository.getOmdCount("") > 0) {
+					majorDeviceInfo.setOmdUacd("");
+				}
+
+			} else {
+
+				/**
+				 * DB 정보로 uacd를 세팅한다.
+				 */
+				LOGGER.debug("## DB UA 코드 : {}", deviceDTO.getUaCd());
+				majorDeviceInfo.setUacd(deviceDTO.getUaCd()); // UA 코드
+
+			}
+
+			majorDeviceInfo.setDeviceTelecom(deviceTelecom); // 이동 통신사
+			majorDeviceInfo.setDeviceModelNo(deviceDTO.getDeviceModelCd()); // 기기 모델 번호
+			majorDeviceInfo.setDeviceNickName(deviceDTO.getModelNm()); // 기기명
+
+			/**
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 */
+			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
+				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
+					LOGGER.warn("###############################################################################");
+					LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
+					LOGGER.warn("###############################################################################");
+				}
+			}
+
+		}
+
+		LOGGER.info("## 단말 주요정보 : {}", majorDeviceInfo.toString());
+
+		return majorDeviceInfo;
+
+	}
 }
