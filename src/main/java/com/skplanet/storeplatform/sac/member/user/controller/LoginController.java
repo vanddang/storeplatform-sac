@@ -32,7 +32,6 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-@RequestMapping(value = "/member/user")
 @Controller
 public class LoginController {
 
@@ -49,9 +48,9 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) throws Exception {
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @RequestBody AuthorizeByMdnReq req) throws Exception {
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
@@ -66,7 +65,7 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) throws Exception {
 
