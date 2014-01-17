@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -121,6 +124,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
 			schUserRes = this.userSCI.searchUser(schUserReq);
+		} else {
+			throw new RuntimeException("파라미터 없음 userId, userAuthKey, deviceId");
 		}
 
 		// SC 컴포넌트에서 성공이 아닐때
@@ -134,50 +139,88 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		ImIDPReceiverM imIdpReceiver = null;
 
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
-			// 통합회원 OneId 사용자
-			if (MemberConstants.USER_TYPE_ONEID.equals(schUserRes.getUserMbr().getUserType())) {
-				// String key = (String) param.get("key");
-				// String user_auth_key = (String) param.get("user_auth_key");
-				// String term_reason_cd = (String) param.get("term_reason_cd");
-				// imIdpReceiver = this.imIdpService.discardUser(param);
-			}
-		} else {
+			// 가입여부 체크
+			// imIdpReceiver = this.imIdpService.checkIdStatusIdpIm(schUserRes.getUserMbr().getUserID());
+			// 회원여부 조회
+			imIdpReceiver = this.imIdpService.userInfoIdpSearchServer(schUserRes.getUserMbr().getImSvcNo());
 
-			if (MemberConstants.USER_TYPE_MOBILE.equals(schUserRes.getUserMbr().getUserType())) {
-				// 모바일 사용자
-				idpReceiver = this.idpService.secedeUser4Wap(deviceId);
+			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+				throw new RuntimeException("[ ImIDP 가입여부 체크 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
+			} else {
+				// 통합회원 OneId 사용자
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("key", schUserRes.getUserMbr().getUserKey());
+				param.put("user_auth_kery", req.getUserAuthKey());
+				// param.put("term_reason_cd", "1"); // 1=IM통합서비스번호, 2=IM통합ID
 
-				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					throw new RuntimeException("[ IDP 모바일 회원삭제 실패 : " + idpReceiver.getResponseHeader().getResult()
-							+ "] " + idpReceiver.getResponseHeader().getResult_text());
-				}
-			} else if (MemberConstants.USER_TYPE_IDPID.equals(schUserRes.getUserMbr().getUserType())) {
-				// IDP 사용자
-				idpReceiver = this.idpService.secedeUser(userAuthKey, IDPConstants.IDP_PARAM_KEY_SECEDE_KEY_TYPE_ID,
-						userId);
+				imIdpReceiver = this.imIdpService.discardUser(param);
 
-				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					throw new RuntimeException("[ IDP 아이디 회원삭제 실패 : " + idpReceiver.getResponseHeader().getResult()
-							+ "] " + idpReceiver.getResponseHeader().getResult_text());
+				if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+					throw new RuntimeException("[ ImIDP 회원해지 실패 : " + imIdpReceiver.getResponseHeader().getResult()
+							+ "] " + imIdpReceiver.getResponseHeader().getResult_text());
 				}
 			}
 
 		}
 
-		/* IDP 연동결과 성공이면 SC회원 탈퇴 */
+		else if (schUserRes.getUserMbr().getImSvcNo() == null
+				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+			// 모바일 인증
+			idpReceiver = this.idpService.authForWap(deviceId);
+			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+				// 인증 OK --> 모바일 해지
+				idpReceiver = this.idpService.secedeUser4Wap(deviceId);
+				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+					throw new RuntimeException("IDP 모바일 회원해지 실패 : [" + deviceId + "] result code : ["
+							+ idpReceiver.getResponseHeader().getResult() + "] + result message : ["
+							+ idpReceiver.getResponseHeader().getResult_text() + "]");
+				}
+			} else {
+				throw new RuntimeException("무선 가입 상태 아님 : [" + deviceId + "] result code : ["
+						+ idpReceiver.getResponseHeader().getResult() + "] + result message : ["
+						+ idpReceiver.getResponseHeader().getResult_text() + "]");
+			}
+
+		}
+
+		else if (schUserRes.getUserMbr().getImSvcNo() == null
+				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+			// 서비스 가입여부 체크 (이메일)
+			idpReceiver = this.idpService.alredyJoinCheckByEmail(schUserRes.getUserMbr().getUserEmail());
+
+			// 이메일 가입여부 체크 등록되어 있지 않으면 resultCode : Success
+			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+				// IDP 사용자 해지 userAuthKey, keyType(1:userId 2:userKey)
+				idpReceiver = this.idpService.secedeUser(userAuthKey, "1", schUserRes.getUserMbr().getUserID());
+				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+					throw new RuntimeException("[ IDP 아이디 회원해지 실패 : " + idpReceiver.getResponseHeader().getResult()
+							+ "] " + idpReceiver.getResponseHeader().getResult_text());
+				}
+			} else {
+				throw new RuntimeException("서비스 가입 상태 아님 : [" + schUserRes.getUserMbr().getUserEmail()
+						+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "] + result message : ["
+						+ idpReceiver.getResponseHeader().getResult_text() + "]");
+			}
+
+		}
+
 		RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 		RemoveUserResponse removeUserResponse = new RemoveUserResponse();
+
+		// TODO : Tenant API ========================== 임시 세팅 ==========================
+
+		removeUserRequest.setCommonRequest(commonRequest);
+		removeUserRequest.setSecedeReasonCode("US010411"); // 탈퇴사유 코드 : 임시
+		removeUserRequest.setSecedeReasonMessage("돈독이 오름"); // 임시
+		removeUserRequest.setSecedeTypeCode("US010705"); // 탈퇴유형 코드 : 임시
+
+		// TODO : Tenant API ========================== 임시 세팅 ==========================
+
+		removeUserRequest.setUserKey(schUserRes.getUserMbr().getUserKey()); // 사용자 키
+		/* IDP 연동결과 성공이면 SC회원 탈퇴 */
 		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
-			// TODO : Tenant API ========================== 임시 세팅 ==========================
-
-			removeUserRequest.setSecedeReasonCode("US010412"); // 탈퇴사유 코드 : 컨텐츠 부족
-			removeUserRequest.setSecedeReasonMessage("탈퇴사유 테스트"); // 탈퇴사유 내용 :
-			removeUserRequest.setSecedeTypeCode("US010705"); // 탈퇴유형 코드 : 가입승인만료
-
-			// TODO : Tenant API ========================== 임시 세팅 ==========================
-
-			removeUserRequest.setUserKey(schUserRes.getUserMbr().getUserKey()); // 사용자 키
 			removeUserResponse = this.userSCI.remove(removeUserRequest);
 
 			// SC Component Remove Fail
@@ -191,8 +234,21 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 				withdrawRes.setUserKey(schUserRes.getUserKey());
 			}
 		}
+		/* ImIDP 연동결과 성공이면 SC회원 탈퇴 */
+		else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+			removeUserResponse = this.userSCI.remove(removeUserRequest);
 
+			// SC Component Remove Fail
+			if (!StringUtil
+					.equals(removeUserResponse.getCommonResponse().getResultCode(), IDPConstants.IDP_RES_CODE_OK)) {
+				throw new RuntimeException("[ SC 회원삭제 실패 : " + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
+			}
+			// SC Component Remove Success
+			else {
+				withdrawRes.setUserKey(schUserRes.getUserKey());
+			}
+		}
 		return withdrawRes;
 	}
-
 }

@@ -46,6 +46,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
@@ -105,22 +106,22 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		if (userKey != null && !"".equals(userKey)) {
 			KeySearch keySchUserKey = new KeySearch();
-			keySchUserKey.setKeyType("INSD_USERMBR_NO");
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			keySchUserKey.setKeyString(userKey);
 			keySchList.add(keySchUserKey);
 		} else if (userId != null && !"".equals(userId)) {
 			KeySearch keySchUserId = new KeySearch();
-			keySchUserId.setKeyType("MBR_ID");
+			keySchUserId.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			keySchUserId.setKeyString(userId);
 			keySchList.add(keySchUserId);
 		} else if (deviceId != null && !"".equals(deviceId)) {
 			KeySearch keySchDeviceId = new KeySearch();
-			keySchDeviceId.setKeyType("INSD_DEVICE_ID");
+			keySchDeviceId.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			keySchDeviceId.setKeyString(deviceId);
 			keySchList.add(keySchDeviceId);
 		} else if (deviceKey != null && !"".equals(deviceKey)) {
 			KeySearch keySchDeviceKey = new KeySearch();
-			keySchDeviceKey.setKeyType("DEVICE_ID");
+			keySchDeviceKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
 			keySchDeviceKey.setKeyString(deviceKey);
 			keySchList.add(keySchDeviceKey);
 		}
