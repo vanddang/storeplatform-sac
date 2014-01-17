@@ -80,7 +80,7 @@ public class ExistTest {
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : userId
 	 * </pre>
 	 */
-	// @Test
+	@Test
 	public void existUserId() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -104,7 +104,7 @@ public class ExistTest {
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceId
 	 * </pre>
 	 */
-	// @Test
+	@Test
 	public void existDeviceId() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -129,7 +129,7 @@ public class ExistTest {
 	 * 회원 가입 여부 조회 (ID/MDN 기반) Parameter : deviceKey
 	 * </pre>
 	 */
-	// @Test
+	@Test
 	public void existDeviceKey() {
 		new TestCaseTemplate(this.mockMvc).url("/member/user/exist/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
