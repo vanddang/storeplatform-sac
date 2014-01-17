@@ -106,12 +106,13 @@
 		   AND LA.PROD_ID = LB.PROD_ID(+)
 	</select>
 	
-	<select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
+    <select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
          SELECT MCI.RANK_CHG_CNT
               , MCI.RANK_CHG_CLSF_CD
               , MCI.ARTIST_ID
               , CP.PROD_ID AS CHNL_PROD_ID
               , CP.PART_PROD_ID AS EPSD_PROD_ID
+              , TP.PROD_STATUS_CD
               , C.MENU_ID
               , CD.MENU_NM
               , CD.MENU_DESC
@@ -169,28 +170,29 @@
             AND TPP.TENANT_ID = TP.TENANT_ID
             AND PD.PROD_ID = P.PROD_ID
             AND PI.PROD_ID = CP.PROD_ID
+--            AND TP.PROD_STATUS_CD = 'PD000403'   -- 판매중
+--            AND TP.EXPO_YN = 'Y'                 -- 노출 여부
+            AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
+            AND P.META_CLSF_CD = 'CT25'          -- 통합 뮤직
+--            AND CPM.USE_YN = 'Y'
+--            AND C.USE_YN = 'Y'
+            AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
+            AND C.MENU_ID LIKE 'DP16%'
+         -----------------------------------------------------------------------------
+         -- INPUT PARAMETER
+         ----------------------------------------------------------------------------- 
          -----------------------------------------------------------------------------
          -- 차트 정보 조건절 START
          -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
-         -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
+         -- ( 최신     음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
          ----------------------------------------------------------------------------- 
-            AND MCI.CHART_CLSF_CD = 'DP004901' -- 멜론 TOP 100
+            AND MCI.CHART_CLSF_CD = #{chartClsfCd}
             AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
                                          FROM TB_DP_BATCH_COMPT
                                         WHERE TENANT_ID = TP.TENANT_ID
-                                          AND BATCH_ID = 'MELON_DP004901') -- 멜론 TOP 100
+                                          AND BATCH_ID = 'MELON_'||#{chartClsfCd})
          -----------------------------------------------------------------------------
          -- 차트 정보 조건절 END
-         ----------------------------------------------------------------------------- 
-            AND TP.PROD_STATUS_CD = 'PD000403'   -- 판매중
-            AND TP.EXPO_YN = 'Y'                 -- 노출 여부
-            AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
-            AND P.META_CLSF_CD = 'CT25'          -- 통합 뮤직
-            AND CPM.USE_YN = 'Y'
-            AND C.USE_YN = 'Y'
-            AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
-         -----------------------------------------------------------------------------
-         -- INPUT PARAMETER
          ----------------------------------------------------------------------------- 
          <if test='prodType == "episode"'>
             AND CP.PART_PROD_ID = #{prodId} -- EPISODE PROD ID
@@ -198,12 +200,11 @@
          <if test='prodType == "channel"'>
             AND CP.PROD_ID = #{prodId} -- CHANNEL PROD ID
          </if>
-            AND C.MENU_ID LIKE #{menuId}||'%'
             AND PI.IMG_CD = #{imageCd}
             AND TP.TENANT_ID = #{tenantId}
             AND PD.LANG_CD = #{langCd}
             AND CD.LANG_CD = #{langCd}
-	</select>
+    </select>
 	<select id="getEbookComidMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
     </select>
 	<select id="getAppMetaInfo" parameterType="ProductBasicInfo" resultType="VODMetaInfo">
