@@ -183,6 +183,11 @@ public class DeviceInfo extends CommonInfo {
 	private String dotoriAuthYn;
 
 	/**
+	 * omd UACD
+	 */
+	private String omdUacd;
+
+	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
 	 */
 	private List<DeviceExtraInfo> userDeviceExtraInfo;
@@ -457,6 +462,14 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setAppStatisticsYn(String appStatisticsYn) {
 		this.appStatisticsYn = appStatisticsYn;
+	}
+
+	public String getOmdUacd() {
+		return this.omdUacd;
+	}
+
+	public void setOmdUacd(String omdUacd) {
+		this.omdUacd = omdUacd;
 	}
 
 }
