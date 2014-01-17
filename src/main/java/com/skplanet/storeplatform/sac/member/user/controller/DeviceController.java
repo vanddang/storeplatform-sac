@@ -104,8 +104,8 @@ public class DeviceController {
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
 
-		if (userKey.equals("") || deviceKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족");
+		if (userKey.equals("") && deviceKey.equals("")) {
+			throw new RuntimeException("필수요청 파라메터 부족");
 		}
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
@@ -132,9 +132,9 @@ public class DeviceController {
 																		 // 조회설정
 
 		if (userId.equals("") || userKey.equals("") || isMainDevice.equals("")) {
-			throw new Exception("필수요청 파라메터 부족");
+			throw new RuntimeException("필수요청 파라메터 부족");
 		} else if ("".equals(isMainDevice) || "N".equals(isMainDevice)) {
-			throw new Exception("대표단말 조회값이 없거나 'N' 입니다.");
+			throw new RuntimeException("대표단말 조회값이 없거나 'N' 입니다.");
 		}
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, req);
