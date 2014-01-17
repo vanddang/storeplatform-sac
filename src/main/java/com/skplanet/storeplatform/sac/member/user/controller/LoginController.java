@@ -66,7 +66,7 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	/* @RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST) */
+	@RequestMapping(value = "/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) throws Exception {
 

@@ -144,13 +144,14 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
+			throw new RuntimeException("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (req.getRegMaxCnt() == 0
 				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
 						.getRegMaxCnt())) {
-			throw new Exception("등록 가능한 단말개수가 초과되었습니다.");
+			throw new RuntimeException("등록 가능한 단말개수가 초과되었습니다.");
 		}
 
 		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
@@ -230,7 +231,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
 			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
+				throw new RuntimeException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
 			}
 
 		} else {
@@ -243,7 +245,8 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+				throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
 			}
 
 		}
@@ -359,10 +362,6 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setTenantId(tenantId);
 		createDeviceReq.setUserMbrDevice(this.getConverterUserMbrDeviceInfo(deviceInfo));
 
-		logger.info(":::::::::::: deviceInfo :::::::::::::: {}", deviceInfo.toString());
-		logger.info(":::::::::::: createDeviceReq :::::::::::::: {}", createDeviceReq.toString());
-		logger.info(":::::::::::: UserMbrDevice :::::::::::::: {}", createDeviceReq.getUserMbrDevice().toString());
-
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 2.휴대기기 정보 등록완료 */
@@ -389,11 +388,11 @@ public class DeviceServiceImpl implements DeviceService {
 					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
 
 					if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-						throw new Exception("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
+						throw new RuntimeException("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
 								+ updAgreeRes.getCommonResponse().getResultMessage());
 					}
 				} else {
-					throw new Exception("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
+					throw new RuntimeException("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
 							+ schAgreeListRes.getCommonResponse().getResultMessage());
 				}
 
@@ -409,7 +408,7 @@ public class DeviceServiceImpl implements DeviceService {
 				SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 				if (!schUserRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-					throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					throw new RuntimeException("[" + schUserRes.getCommonResponse().getResultCode() + "] "
 							+ schUserRes.getCommonResponse().getResultMessage());
 				}
 
@@ -420,7 +419,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
 						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							throw new Exception("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
+							throw new RuntimeException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
 									+ idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
@@ -429,7 +428,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 		} else {
-			throw new Exception("[" + createDeviceRes.getCommonResponse().getResultCode() + "] "
+			throw new RuntimeException("[" + createDeviceRes.getCommonResponse().getResultCode() + "] "
 					+ createDeviceRes.getCommonResponse().getResultMessage());
 		}
 
