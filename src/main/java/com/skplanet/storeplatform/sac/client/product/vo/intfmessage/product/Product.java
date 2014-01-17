@@ -72,10 +72,6 @@ public class Product extends CommonInfo implements Serializable {
 	/**
 	 * resource 정보
 	 */
-	private Source source;
-	/**
-	 * resource 정보
-	 */
 	private List<Source> sourceList;
 	/**
 	 * > short : 한 줄 설명 > long : 상세 설명
@@ -249,14 +245,6 @@ public class Product extends CommonInfo implements Serializable {
 
 	public void setPacketFee(String packetFee) {
 		this.packetFee = packetFee;
-	}
-
-	public Source getSource() {
-		return this.source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
 	}
 
 	public List<Source> getSourceList() {
