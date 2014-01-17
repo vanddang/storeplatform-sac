@@ -6,6 +6,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
@@ -44,5 +45,13 @@ public interface SellerSearchService {
 	 * @throws Exception
 	 */
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception;
+
+	/**
+	 * Password 보안 질문 조회.
+	 * 
+	 * @throws Exception
+	 */
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header, String language)
+			throws Exception;
 
 }

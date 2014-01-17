@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSelle
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
@@ -29,12 +31,14 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
@@ -420,6 +424,61 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchIdRes response = new SearchIdRes();
 		response.setSellerMbr(this.sellerMbrList(schRes.getSellerMbr()));// 판매자 정보 리스트
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 조회.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return ListPasswordReminderQuestionRes
+	 */
+	@Override
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header, String language)
+			throws Exception {
+
+		SearchPwdHintListResponse schRes = new SearchPwdHintListResponse();
+		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
+
+		schReq.setLanguageCode(language);
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
+		schRes = this.sellerSCI.searchPwdHintList(schReq);
+
+		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
+		SellerMbrPwdHint sellerMbrPwdHint = null;
+		if (schRes.getSellerMbrPwdHintList() != null)
+			for (int i = 0; i < schRes.getSellerMbrPwdHintList().size(); i++) {
+				sellerMbrPwdHint = new SellerMbrPwdHint();
+				sellerMbrPwdHint.setDisplayOrder(schRes.getSellerMbrPwdHintList().get(i).getDisplayOrder());
+				sellerMbrPwdHint.setIsDisplay(schRes.getSellerMbrPwdHintList().get(i).getIsDisplay());
+				sellerMbrPwdHint.setLanguageCode(schRes.getSellerMbrPwdHintList().get(i).getLanguageCode());
+				sellerMbrPwdHint.setQuestionDescription(schRes.getSellerMbrPwdHintList().get(i)
+						.getQuestionDescription());
+				sellerMbrPwdHint.setQuestionID(schRes.getSellerMbrPwdHintList().get(i).getQuestionID());
+				sellerMbrPwdHint.setQuestionName(schRes.getSellerMbrPwdHintList().get(i).getQuestionName());
+				sellerMbrPwdHint.setRegDate(schRes.getSellerMbrPwdHintList().get(i).getRegDate());
+				sellerMbrPwdHint.setRegID(schRes.getSellerMbrPwdHintList().get(i).getRegID());
+				sellerMbrPwdHint.setUpdateDate(schRes.getSellerMbrPwdHintList().get(i).getUpdateDate());
+				sellerMbrPwdHint.setUpdateID(schRes.getSellerMbrPwdHintList().get(i).getUpdateID());
+				sList.add(sellerMbrPwdHint);
+			}
+
+		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
+		response.setSellerMbrPwdHintList(sList);
+		response.setLanguageCode(schRes.getLanguageCode());
 
 		return response;
 
