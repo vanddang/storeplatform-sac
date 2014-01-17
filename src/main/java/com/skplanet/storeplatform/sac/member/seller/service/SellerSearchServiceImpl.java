@@ -457,7 +457,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrRes.setIsBizRegistered(sellerMbr.get(i).getIsBizRegistered());
 				sellerMbrRes.setIsBizTaxable(sellerMbr.get(i).getIsBizTaxable());
 				sellerMbrRes.setIsDeductible(sellerMbr.get(i).getIsDeductible());
-				sellerMbrRes.setIsForeign(sellerMbr.get(i).getIsForeign());
+				// sellerMbrRes.setIsForeign(sellerMbr.get(i).getIsForeign());
 				sellerMbrRes.setIsParent(sellerMbr.get(i).getIsParent());
 				sellerMbrRes.setIsRealName(sellerMbr.get(i).getIsRealName());
 				sellerMbrRes.setIsRecvEmail(sellerMbr.get(i).getIsRecvEmail());
@@ -539,7 +539,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
 			sellerMbrRes.setIsBizTaxable(sellerMbr.getIsBizTaxable());
 			sellerMbrRes.setIsDeductible(sellerMbr.getIsDeductible());
-			sellerMbrRes.setIsForeign(sellerMbr.getIsForeign());
+			// sellerMbrRes.setIsForeign(sellerMbr.getIsForeign());
 			sellerMbrRes.setIsParent(sellerMbr.getIsParent());
 			sellerMbrRes.setIsRealName(sellerMbr.getIsRealName());
 			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());

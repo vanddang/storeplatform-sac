@@ -12,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.LogInSellerRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.LogInSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
@@ -116,13 +117,13 @@ public class SellerServiceImpl implements SellerService {
 		/** 보안질문 리스트 주입 - [끝]. */
 
 		/** 판매자 회원 정보 생성 및 주입 - [시작]. */
+		// 판매자 회원 PW
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberPW(req.getSellerPW());
+		// sellerMbr.setSellerPW(req.getSellerPW());
 		SellerMbr sellerMbr = new SellerMbr();
-
 		// 판매자 회원 ID
 		sellerMbr.setSellerID(req.getSellerId());
-		// TODO SC 공통 비밀번호 객체로 변경 할수 있음 - 2014.01.16.
-		// 판매자 회원 PW
-		sellerMbr.setSellerPW(req.getSellerPW());
 		// 판매자구분코드
 		sellerMbr.setSellerClass(req.getSellerClass());
 		// 판매자 분류코드
@@ -163,8 +164,8 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerCity(req.getSellerCity());
 		// 지역
 		sellerMbr.setSellerState(req.getSellerState());
-		// 외국인 여부
-		sellerMbr.setIsForeign(req.getIsForeign());
+		// 국내판매자 여부
+		sellerMbr.setIsDomestic(req.getIsForeign()); // ***
 		// 실명인증여부
 		sellerMbr.setIsRealName(req.getIsRealName());
 		// 국가코드
@@ -259,18 +260,18 @@ public class SellerServiceImpl implements SellerService {
 	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) {
 
 		/** 1. SC회원 Req 생성 및 주입 */
-		LogInSellerRequest logInSellerRequest = new LogInSellerRequest();
-		logInSellerRequest.setSellerID(req.getSellerId());
-		logInSellerRequest.setSellerPW(req.getSellerPW());
+		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
+		loginSellerRequest.setSellerID(req.getSellerId());
+		loginSellerRequest.setSellerPW(req.getSellerPW());
 
 		/** TODO 2. 테스트용 if 헤더 셋팅 */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		logInSellerRequest.setCommonRequest(commonRequest);
+		loginSellerRequest.setCommonRequest(commonRequest);
 
 		/** 3. SC-로그인인증 Call */
-		LogInSellerResponse logInSellerResponse = this.sellerSCI.logInSeller(logInSellerRequest);
+		LoginSellerResponse logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
 		// Response Debug
 		LOGGER.info("logInSellerResponse Code : {}", logInSellerResponse.getCommonResponse().getResultCode());

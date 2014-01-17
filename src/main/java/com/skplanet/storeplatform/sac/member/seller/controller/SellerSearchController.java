@@ -28,7 +28,7 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
  * Updated on : 2014. 1. 8. Updated by : 김경복, 부르칸.
  */
 @Controller
-@RequestMapping(value = "/dev/member/seller")
+@RequestMapping(value = "/member/seller")
 public class SellerSearchController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSearchController.class);

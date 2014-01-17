@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
  * Updated on : 2014. 1. 7. Updated by : 김경복, 부르칸.
  */
 @Controller
-@RequestMapping(value = "/dev/member/seller")
+@RequestMapping(value = "/member/seller")
 public class SellerController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerController.class);
@@ -52,7 +52,6 @@ public class SellerController {
 		// TODO Exception (01/17이후 적용)
 		if (result.hasErrors()) {
 			throw new RuntimeException("parameter error~~~");
-
 		}
 		return this.sellerService.createSeller(header, req);
 	}

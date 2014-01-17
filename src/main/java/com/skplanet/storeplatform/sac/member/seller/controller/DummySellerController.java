@@ -269,8 +269,9 @@ public class DummySellerController {
 		List<PwReminder> myList = new ArrayList<PwReminder>();
 		for (int i = 0; i < 1; i++) {
 			pwReminderList = new PwReminder();
-			pwReminderList.setPwReminderCode("TA01");
-			pwReminderList.setPwReminderQ("test");
+			pwReminderList.setQuestionID("0001");
+			pwReminderList.setAnswerString("테스트");
+			pwReminderList.setQuestionMessage("테스트");
 			myList.add(pwReminderList);
 		}
 		responseVO.setPwReminderList(myList);
@@ -632,7 +633,7 @@ public class DummySellerController {
 	 * 
 	 * @return LockAccountRes
 	 */
-	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public LockAccountRes lockAccount() {
 		return new LockAccountRes("user1");
@@ -814,7 +815,7 @@ public class DummySellerController {
 	 * 
 	 * @return WithdrawRes
 	 */
-	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public WithdrawRes withdraw() {
 
