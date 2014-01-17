@@ -207,6 +207,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
 				 */
 				accrual.setChangeRank(mapperVO.getRankChgCnt());
+				accrual.setScore(0.0); // 값이 없을 경우 오류 발생 - 임시로 추가
 
 				/*
 				 * Contributor name : 제작자 또는 저자 이름 album : 앨범명
