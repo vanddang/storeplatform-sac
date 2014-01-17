@@ -55,9 +55,15 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
 @Service
-public class UserSelectServiceImpl implements UserSelectService {
+public class UserSearchServiceImpl implements UserSearchService {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserSelectServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserSearchServiceImpl.class);
+
+	private static CommonRequest commonRequest;
+
+	static {
+		commonRequest = new CommonRequest();
+	}
 
 	@Autowired
 	private UserSCI userSCI;
@@ -85,6 +91,10 @@ public class UserSelectServiceImpl implements UserSelectService {
 	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) throws Exception {
 		ExistRes result = new ExistRes();
 		SearchUserRequest schUserReq = new SearchUserRequest();
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
 		String userId = StringUtil.setTrim(req.getUserId());
@@ -118,7 +128,7 @@ public class UserSelectServiceImpl implements UserSelectService {
 		// 회원정보 세팅
 		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
 		schUserReq.setKeySearchList(keySchList);
-		schUserReq.setCommonRequest(this.commonRequest());
+		schUserReq.setCommonRequest(commonRequest);
 		UserInfo userInfo = this.userInfo(schUserReq);
 		userInfoList.add(userInfo);
 
@@ -205,8 +215,12 @@ public class UserSelectServiceImpl implements UserSelectService {
 	 * 회원 정보 조회
 	 */
 	@Override
-	public DetailRes detail(DetailReq req) throws Exception {
+	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) throws Exception {
 		DetailRes result = new DetailRes();
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		List<KeySearch> keySchList = new ArrayList<KeySearch>();
 
@@ -245,11 +259,11 @@ public class UserSelectServiceImpl implements UserSelectService {
 		schDeviceListReq.setKeySearchList(keySchList);
 
 		// 공통헤더 세팅
-		schUserReq.setCommonRequest(this.commonRequest());
-		schUserExtraInfoReq.setCommonRequest(this.commonRequest());
-		schDeviceListReq.setCommonRequest(this.commonRequest());
-		schDeviceReq.setCommonRequest(this.commonRequest());
-		schAgreementListReq.setCommonRequest(this.commonRequest());
+		schUserReq.setCommonRequest(commonRequest);
+		schUserExtraInfoReq.setCommonRequest(commonRequest);
+		schDeviceListReq.setCommonRequest(commonRequest);
+		schDeviceReq.setCommonRequest(commonRequest);
+		schAgreementListReq.setCommonRequest(commonRequest);
 
 		// 사용자 기본정보 세팅
 		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
@@ -513,22 +527,4 @@ public class UserSelectServiceImpl implements UserSelectService {
 		return mbrLglAgent;
 	}
 
-	/**
-	 * <pre>
-	 * TODO SC회원 전달용 공통헤더
-	 * </pre>
-	 * 
-	 * @return
-	 */
-	public CommonRequest commonRequest() {
-		/** TODO 임시 공통헤더 생성 주입 */
-		CommonRequest commonRequest = new CommonRequest();
-		// S001(ShopClient), S002(WEB), S003(OpenAPI)
-		commonRequest.setSystemID("S001");
-		// TODO SC회원 문의?? - Reamine ID생성 규칙과 다름
-		// T01(T-Store), T02(A-Store), T03(B-Store)
-		commonRequest.setTenantID("S01");
-
-		return commonRequest;
-	}
 }

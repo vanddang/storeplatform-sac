@@ -96,6 +96,10 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		String userId = req.getUserId();
 		String deviceId = req.getDeviceId();
 
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
 		/* SC 회원 정보 조회 Request Setting */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		SearchUserResponse schUserRes = new SearchUserResponse();

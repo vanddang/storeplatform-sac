@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * 
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
-public interface UserSelectService {
+public interface UserSearchService {
 
 	/**
 	 * <pre>
@@ -44,6 +44,6 @@ public interface UserSelectService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DetailRes detail(DetailReq req) throws Exception;
+	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) throws Exception;
 
 }

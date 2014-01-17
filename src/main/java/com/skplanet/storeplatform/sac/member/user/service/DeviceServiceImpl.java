@@ -913,6 +913,10 @@ public class DeviceServiceImpl implements DeviceService {
 		String userKey = req.getUserKey();
 		String deviceKey = req.getDeviceKey();
 
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
 		/* SC 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
