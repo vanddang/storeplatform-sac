@@ -29,6 +29,7 @@ public class ExistenceReq extends CommonInfo implements Serializable {
 	private String tenantId; // Tenant ID
 	private String insdUsermbrNo; // 회원번호
 	private String insdDeviceId; // 디바이스 번호
+	private String prchsId; // 구매ID
 	private List<ExistenceList> existenceList; // 기구매 상품 리스트
 
 	/**
@@ -74,6 +75,21 @@ public class ExistenceReq extends CommonInfo implements Serializable {
 	 */
 	public void setInsdDeviceId(String insdDeviceId) {
 		this.insdDeviceId = insdDeviceId;
+	}
+
+	/**
+	 * @return the prchsId
+	 */
+	public String getPrchsId() {
+		return this.prchsId;
+	}
+
+	/**
+	 * @param prchsId
+	 *            the prchsId to set
+	 */
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 
 	/**
