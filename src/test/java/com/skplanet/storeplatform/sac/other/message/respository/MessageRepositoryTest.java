@@ -45,6 +45,12 @@ public class MessageRepositoryTest {
 	@Autowired
 	private MessageRepository messageRepository;
 
+	/**
+	 * 
+	 * <pre>
+	 * Message Reposiory SMS 전송 기능 테스트.
+	 * </pre>
+	 */
 	@Test
 	public void testSmsSend() {
 		Map<String, String> resultMap = this.messageRepository.smsSend(MessageCommon.getSmsSendReq());

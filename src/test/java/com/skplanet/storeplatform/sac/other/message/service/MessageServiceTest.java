@@ -25,6 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.other.message.common.MessageCommon;
 
+/**
+ * 
+ * Message Service Test
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -34,6 +40,12 @@ public class MessageServiceTest {
 	@Autowired
 	private MessageService messageService;
 
+	/**
+	 * 
+	 * <pre>
+	 * Message Service SMS 전송 기능 테스트.
+	 * </pre>
+	 */
 	@Test
 	public void testSmsSend() {
 		Map<String, String> result = this.messageService.smsSend(MessageCommon.getSmsSendReq());

@@ -12,8 +12,22 @@ package com.skplanet.storeplatform.sac.other.message.common;
 import com.skplanet.storeplatform.external.client.message.vo.EmailSendReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 
+/**
+ * 
+ * Message Common
+ * 
+ * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
+ */
 public class MessageCommon {
 
+	/**
+	 * 
+	 * <pre>
+	 * SmsSendReq VO 생성.
+	 * </pre>
+	 * 
+	 * @return SmsSendReq
+	 */
 	public static SmsSendReq getSmsSendReq() {
 		SmsSendReq smsSendReq = new SmsSendReq();
 		smsSendReq.setSrcId("OR00401");
@@ -23,10 +37,21 @@ public class MessageCommon {
 		smsSendReq.setRecvMdn("0101231234");
 		smsSendReq.setMsg("test message");
 		smsSendReq.setCallbackUrl("test");
-		smsSendReq.setResvDtTm(null);
+		smsSendReq.setResvDtTm("20140115094931");
+		smsSendReq.setInterfaceId("9");
+		smsSendReq.setCampaignId("111111111");
+		smsSendReq.setSendOrder("9");
 		return smsSendReq;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * EmailSendReq VO 생성.
+	 * </pre>
+	 * 
+	 * @return EmailSendReq
+	 */
 	public static EmailSendReq getEmailSendReq() {
 		EmailSendReq emailSendReq = new EmailSendReq();
 		emailSendReq.setTemplateId(0);

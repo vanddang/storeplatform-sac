@@ -56,11 +56,26 @@ public class MessageControllerTest {
 
 	private MockMvc mvc;
 
+	/**
+	 * 
+	 * <pre>
+	 * 초기화.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Message Controller SMS 전송 기능 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void testSmsSend() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
