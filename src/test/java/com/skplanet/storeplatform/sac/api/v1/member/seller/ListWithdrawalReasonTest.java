@@ -24,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 
 @ActiveProfiles(value = "local")
@@ -59,8 +60,9 @@ public class ListWithdrawalReasonTest {
 	@Test
 	public void ListWithdrawalReason() {
 
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/listWithdrawalReason/v1").httpMethod(HttpMethod.GET)
-				.addHeaders("Accept-Language", "ko").success(ListWithdrawalReasonRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/listWithdrawalReason/v1")
+				.httpMethod(HttpMethod.GET).addHeaders("Accept-Language", "ko")
+				.success(ListWithdrawalReasonRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ListWithdrawalReasonRes res = (ListWithdrawalReasonRes) result;

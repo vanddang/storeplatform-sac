@@ -24,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 
 @ActiveProfiles(value = "local")
@@ -60,7 +61,8 @@ public class DetailInformationTest {
 	public void detailInformationFull() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH
+						+ "/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -81,7 +83,8 @@ public class DetailInformationTest {
 	public void detailInformationSellerKey() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH
+						+ "/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -102,7 +105,8 @@ public class DetailInformationTest {
 	public void detailInformationAid() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH
+						+ "/detailInformation/v1?sellerKey=&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -122,7 +126,8 @@ public class DetailInformationTest {
 	@Test
 	public void detailInformationEmpty() {
 
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/seller/detailInformation/v1?sellerKey=&aid=&keyType=")
+		new TestCaseTemplate(this.mockMvc)
+				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=&keyType=")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
