@@ -27,7 +27,8 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 
 	@Override
 	public void insertPhoneAuthCode(ServiceAuthDTO serviceAuthInfo) {
-		serviceAuthInfo.setAuthSeq((String) this.commonDao.queryForObject("Miscellaneous.getNexValueForSvcAuth", null));
+		// serviceAuthInfo.setAuthSeq((String) this.commonDao.queryForObject("Miscellaneous.getNexValueForSvcAuth",
+		// null));
 		this.commonDao.insert("Miscellaneous.insertPhoneAuthCode", serviceAuthInfo);
 	}
 

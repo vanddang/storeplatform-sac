@@ -56,8 +56,8 @@ public interface MiscellaneousService {
 	 * @return GetPhoneAuthorizationCodeRes
 	 * @throws Exception
 	 */
-	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(GetPhoneAuthorizationCodeReq request)
-			throws Exception;
+	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader requestHeader,
+			GetPhoneAuthorizationCodeReq request) throws Exception;
 
 	/**
 	 * <pre>
