@@ -302,6 +302,7 @@ public class SellerServiceImpl implements SellerService {
 			res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 			res.setSellerMbr(sellerMbr);
 		}
+		res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
 		res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 		return res;
 	}
