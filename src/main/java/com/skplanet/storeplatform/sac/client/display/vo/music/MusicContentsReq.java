@@ -42,6 +42,10 @@ public class MusicContentsReq extends CommonInfo {
 
 	private int count = 100; // 페이지당 노출 ROW 수
 
+	private String chartClsfCd;
+
+	private String batchId;
+
 	public String getFilteredBy() {
 		return this.filteredBy;
 	}
@@ -128,6 +132,22 @@ public class MusicContentsReq extends CommonInfo {
 
 	public void setDpi(String dpi) {
 		this.dpi = dpi;
+	}
+
+	public String getChartClsfCd() {
+		return this.chartClsfCd;
+	}
+
+	public void setChartClsfCd(String chartClsfCd) {
+		this.chartClsfCd = chartClsfCd;
+	}
+
+	public String getBatchId() {
+		return this.batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
 	}
 
 }
