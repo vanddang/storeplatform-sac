@@ -667,7 +667,7 @@ public class DummySellerController {
 	public CreateSubsellerRes createSubseller() {
 
 		CreateSubsellerRes responseVO = new CreateSubsellerRes();
-		responseVO.setSellerKey("User1");
+		responseVO.setSubSellerKey("User1");
 
 		return responseVO;
 	}
