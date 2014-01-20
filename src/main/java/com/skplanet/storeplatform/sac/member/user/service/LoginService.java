@@ -17,9 +17,12 @@ public interface LoginService {
 	 * 모바일 전용 회원 인증 (MDN 인증)
 	 * 
 	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            AuthorizeByMdnReq
+	 * @return AuthorizeByMdnRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) throws Exception;
 
@@ -27,9 +30,12 @@ public interface LoginService {
 	 * ID 기반 회원 인증 (One ID, IDP 회원)
 	 * 
 	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            AuthorizeByIdReq
+	 * @return AuthorizeByIdRes
 	 * @throws Exception
+	 *             AuthorizeByIdRes
 	 */
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) throws Exception;
 }

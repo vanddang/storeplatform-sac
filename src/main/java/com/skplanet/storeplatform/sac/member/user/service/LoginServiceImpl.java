@@ -431,13 +431,18 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 
-	 * SC콤포넌트 회원정보 조회
+	 * SC회원콤포넌트 회원 정보 조회
 	 * 
 	 * @param keyType
+	 *            조회타입
+	 * 
 	 * @param keyValue
-	 * @return
+	 *            조회값
+	 * 
+	 * @return SearchUserResponse
+	 * 
 	 * @throws Exception
+	 *             Exception
 	 */
 	public SearchUserResponse searchUserInfo(String keyType, String keyValue) throws Exception {
 		SearchUserRequest schUserReq = new SearchUserRequest();
@@ -467,8 +472,11 @@ public class LoginServiceImpl implements LoginService {
 	 * 휴대기기정보 merge
 	 * 
 	 * @param userKey
+	 *            사용자 key
 	 * @param obj
+	 *            요청객체
 	 * @throws Exception
+	 *             Exception
 	 */
 	public void mergeDeviceInfo(String userKey, Object obj) throws Exception {
 
@@ -514,10 +522,14 @@ public class LoginServiceImpl implements LoginService {
 	 * SC콤포넌트 로그인 이력저장
 	 * 
 	 * @param userId
+	 *            사용자아이디
 	 * @param userPw
+	 *            사용자패스워드
 	 * @param isSuccess
-	 * @return
+	 *            로그인 성공유무
+	 * @return LoginUserResponse
 	 * @throws Exception
+	 *             LoginUserResponse
 	 */
 	public LoginUserResponse insertloginHistory(String userId, String userPw, String isSuccess, String userType) throws Exception {
 		LoginUserRequest loginReq = new LoginUserRequest();
@@ -542,8 +554,11 @@ public class LoginServiceImpl implements LoginService {
 	 * 변동성 회원 처리
 	 * 
 	 * @param deviceId
+	 *            디바이스 아이디
 	 * @param userKey
+	 *            사용자키
 	 * @throws Exception
+	 *             Exception
 	 */
 	public void volatileMemberPoc(String deviceId, String userKey) throws Exception {
 
@@ -592,7 +607,8 @@ public class LoginServiceImpl implements LoginService {
 	 * 통합회원 티스토어 가입여부 확인
 	 * 
 	 * @param imSiteCode
-	 * @return
+	 *            통합아이디 가입사이트 리스트
+	 * @return boolean
 	 */
 	public boolean isExistAgreeSiteTstore(String imSiteCode) {
 

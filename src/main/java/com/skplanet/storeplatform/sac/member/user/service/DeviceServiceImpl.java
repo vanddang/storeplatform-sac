@@ -643,6 +643,8 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 부가정보 */
+
+		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());//부가정보 등록시 셋팅할 deviceKey
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
@@ -749,13 +751,15 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (list.size() > 0) {
 			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-			deviceExtraInfo = new DeviceExtraInfo();
 		}
 
 		for (UserMbrDeviceDetail deviceDetail : list) {
-
+			deviceExtraInfo = new DeviceExtraInfo();
 			deviceExtraInfo.setExtraProfile(deviceDetail.getExtraProfile());
 			deviceExtraInfo.setExtraProfileValue(deviceDetail.getExtraProfileValue());
+			deviceExtraInfo.setDeviceKey(deviceDetail.getDeviceKey());
+			deviceExtraInfo.setTenentId(deviceDetail.getTenantID());
+			deviceExtraInfo.setUserKey(deviceDetail.getUserKey());
 			deviceExtraInfoList.add(deviceExtraInfo);
 		}
 
@@ -809,105 +813,76 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (deviceInfo.getOmpDownloaderYn() != null) {
 			logger.info("[ompDownloaderYn] {}", deviceInfo.getOmpDownloaderYn());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpDownloaderYn());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN,
+					deviceInfo.getOmpDownloaderYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getStandByScreenYn() != null) {
 			logger.info("[standByScreenYn] {}", deviceInfo.getStandByScreenYn());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getStandByScreenYn());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN,
+					deviceInfo.getStandByScreenYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getUacd() != null) {
 			logger.info("[uacd] {}", deviceInfo.getUacd());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getUacd());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUacd(), deviceInfo));
 		}
 
 		if (deviceInfo.getOmpSupportYn() != null) {
 			logger.info("[ompSupportYn] {}", deviceInfo.getOmpSupportYn());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpSupportYn());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN,
+					deviceInfo.getOmpSupportYn(), deviceInfo));
 		}
 
 		// OS버전과 샵클버전 모두 NULL이 아닐경우에만 처리한다.
 		if (deviceInfo.getOsVer() != null && deviceInfo.getScVer() != null) {
 			logger.info("[osVer] {}", deviceInfo.getOsVer());
 			logger.info("[scVer] {}", deviceInfo.getScVer());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOsVer());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getScVer());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OSVERSION, deviceInfo.getOsVer(),
+					deviceInfo));
+
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_SCVERSION, deviceInfo.getScVer(),
+					deviceInfo));
 		}
 
 		if (deviceInfo.getAppStatisticsYn() != null) {
 			logger.info("[appStatisticsYn] {}", deviceInfo.getAppStatisticsYn());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getAppStatisticsYn());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN,
+					deviceInfo.getAppStatisticsYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getDotoriAuthDate() != null) {
 			logger.info("[dotoriAuthDate] {}", deviceInfo.getDotoriAuthDate());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthDate());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE,
+					deviceInfo.getDotoriAuthDate(), deviceInfo));
 		}
 
 		if (deviceInfo.getDotoriAuthYn() != null) {
 			logger.info("[dotoriAuthYn] {}", deviceInfo.getDotoriAuthYn());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthYn());
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN,
+					deviceInfo.getDotoriAuthYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getRooting() != null) {
 			logger.info("[rooting] {}", deviceInfo.getRooting());
-			userMbrDeviceDetail = new UserMbrDeviceDetail();
-			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getRooting());
-			userMbrDeviceDetailList.add(userMbrDeviceDetail);
-			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getRooting(),
+					deviceInfo));
 		}
 
 		return userMbrDeviceDetailList;
 
+	}
+
+	public UserMbrDeviceDetail getConverterUserMbrDeviceDetail(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
+		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
+		userMbrDeviceDetail.setExtraProfile(extraProfile);
+		userMbrDeviceDetail.setExtraProfileValue(extraProfileValue);
+		userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+		userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
+		userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
+
+		return userMbrDeviceDetail;
 	}
 
 	/**
