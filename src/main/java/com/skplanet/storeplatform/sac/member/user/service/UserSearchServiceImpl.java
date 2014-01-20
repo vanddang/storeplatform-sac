@@ -267,9 +267,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		schAgreementListReq.setCommonRequest(commonRequest);
 
 		// 사용자 기본정보 세팅
-		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
 		UserInfo userInfo = this.userInfo(schUserReq);
-		userInfoList.add(userInfo);
 
 		// 사용자 부가정보 리스트 세팅
 		schUserExtraInfoReq.setUserKey(userInfo.getUserKey());
@@ -298,13 +296,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 		Agreement agreement = this.agreementList(schAgreementListReq);
 		agreementList.add(agreement);
 
-		result.setUserInfoList(userInfoList);
+		result.setUserInfo(userInfo);
 		result.setMbrAuthList(mbrAuthList);
 		result.setMbrLglAgentList(mbrLglAgentList);
 		// result.setDeviceInfoList(listDeviceRes);
 		result.setAgreementList(agreementList);
 
-		logger.info("###### getUserInfoList : " + result.getUserInfoList());
+		logger.info("###### getUserInfoList : " + result.getUserInfo());
 		logger.info("###### getMbrAuthList : " + result.getMbrAuthList());
 		logger.info("###### getMbrLglAgentList : " + result.getMbrLglAgentList());
 		logger.info("###### getDeviceInfoList : " + result.getDeviceInfoList());
