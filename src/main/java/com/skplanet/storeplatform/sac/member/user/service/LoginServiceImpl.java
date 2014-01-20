@@ -335,18 +335,13 @@ public class LoginServiceImpl implements LoginService {
 
 					this.insertloginHistory(userId, userPw, "Y", userType);
 
+					res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
 					res.setUserKey(userKey);
 					res.setUserType(userType);
 					res.setUserMainStatus(userMainStatus);
 					res.setUserSubStatus(userSubStatus);
 					res.setLoginStatusCode(loginStatusCode);
 					res.setStopStatusCode(stopStatusCode);
-
-				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
-
-					this.insertloginHistory(userId, userPw, "N", userType);
-					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-							+ imIdpReceiver.getResponseHeader().getResult_text());
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
@@ -368,6 +363,7 @@ public class LoginServiceImpl implements LoginService {
 						joinSstNm = mapSiteCd.get(joinSstCd);
 					}
 
+					res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
 					res.setUserKey(userKey);
 					res.setUserType(userType);
 					res.setUserMainStatus(userMainStatus);
@@ -376,6 +372,12 @@ public class LoginServiceImpl implements LoginService {
 					res.setJoinSiteNm(joinSstNm);
 					res.setLoginStatusCode(loginStatusCode);
 					res.setStopStatusCode(stopStatusCode);
+
+				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+
+					this.insertloginHistory(userId, userPw, "N", userType);
+					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+							+ imIdpReceiver.getResponseHeader().getResult_text());
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
@@ -389,7 +391,7 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		} else { //One ID가 아닌경우
+		} else { //기존 IDP 계정인 경우
 
 			IDPReceiverM idpReceiver = this.idpService.userAuthForId(userId, userPw);
 
@@ -399,6 +401,7 @@ public class LoginServiceImpl implements LoginService {
 
 				this.insertloginHistory(userId, userPw, "Y", userType);
 
+				res.setUserAuthKey(idpReceiver.getResponseBody().getUser_auth_key());
 				res.setUserKey(userKey);
 				res.setUserType(userType);
 				res.setUserMainStatus(userMainStatus);
@@ -491,7 +494,7 @@ public class LoginServiceImpl implements LoginService {
 
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
-			if (req.getDeviceId() != null) { //deviceId가 파라메터로 넘어왔을경우에만 휴대기기 정보 merge 요청
+			if (req.getDeviceId() != null) { //deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 merge 요청
 				deviceInfo.setDeviceId(req.getDeviceId());
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
@@ -586,14 +589,14 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 미동의회원 구분
+	 * 통합회원 티스토어 가입여부 확인
 	 * 
 	 * @param imSiteCode
 	 * @return
 	 */
 	public boolean isExistAgreeSiteTstore(String imSiteCode) {
 
-		boolean joinTstore = false;
+		boolean agreeJoinTstore = false;
 		if (imSiteCode != null && !imSiteCode.equals("")) {
 
 			String[] arrImSiteCode = imSiteCode.split("\\|");
@@ -601,13 +604,15 @@ public class LoginServiceImpl implements LoginService {
 
 				String[] arrImSiteCode2 = arrImSiteCode[0].split("\\,");
 				if (arrImSiteCode2[0].equals(MemberConstants.SSO_SST_CD_TSTORE)) {
-					joinTstore = true;
+					agreeJoinTstore = true;
 					break;
 				}
 			}
+		} else {
+			agreeJoinTstore = true;
 		}
 
-		return joinTstore;
+		return agreeJoinTstore;
 	}
 
 }
