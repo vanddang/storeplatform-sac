@@ -12,9 +12,6 @@ package com.skplanet.storeplatform.sac.api.v1.member.user;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +31,11 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 
 /**
- * ID 회원 약관 동의 가입 (One ID 회원) 테스트.
+ * ID 회원 간편 가입 (IDP 회원) 테스트.
  * 
  * Updated on : 2014. 1. 13. Updated by : 심대진, 다모아 솔루션.
  */
@@ -47,7 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class CreateByAgreementTest {
+public class CreateBySimpleTest {
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -66,16 +62,16 @@ public class CreateByAgreementTest {
 
 	/**
 	 * <pre>
-	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 ]].
+	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 포함 ]].
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Test
-	public void createByAgreementDevice() throws Exception {
+	// @Test
+	public void createBySimpleDevice() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
@@ -83,31 +79,15 @@ public class CreateByAgreementTest {
 					@Override
 					public Object requestBody() {
 
-						CreateByAgreementReq reqJson = new CreateByAgreementReq();
+						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 						reqJson.setDeviceId("01076771470");
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setUserId("planetoneuser2560");
+						reqJson.setUserPw("123456");
+						reqJson.setUserEmail("tlaeo00@naver.com");
 						reqJson.setDeviceTelecom("US001201");
-						reqJson.setJoinId("US002903");
-
-						// 동의 정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement1 = new AgreementInfo();
-						agreement1.setExtraAgreementId("US010607");
-						agreement1.setExtraAgreementVersion("0.1");
-						agreement1.setIsExtraAgreement("Y");
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement1);
-						agreementList.add(agreement2);
-						agreementList.add(agreement3);
-						reqJson.setAgreementList(agreementList);
+						reqJson.setJoinId("US012304");
+						reqJson.setIsRecvSms("Y");
 
 						return reqJson;
 					}
@@ -124,47 +104,31 @@ public class CreateByAgreementTest {
 
 	/**
 	 * <pre>
-	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 미포함 ]].
+	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 미포함 ]].
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
-	// @Test
-	public void createByAgreementId() throws Exception {
+	@Test
+	public void createBySimpleId() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 
-						CreateByAgreementReq reqJson = new CreateByAgreementReq();
-						reqJson.setUserId("tstore_oneid");
+						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 						reqJson.setDeviceId("");
 						reqJson.setDeviceIdType("");
+						reqJson.setUserId("planetoneuser2560");
+						reqJson.setUserPw("123456");
+						reqJson.setUserEmail("tlaeo00@naver.com");
 						reqJson.setDeviceTelecom("");
 						reqJson.setJoinId("");
-
-						// 동의 정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement1 = new AgreementInfo();
-						agreement1.setExtraAgreementId("US010601");
-						agreement1.setExtraAgreementVersion("0.1");
-						agreement1.setIsExtraAgreement("Y");
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010602");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010603");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("N");
-						agreementList.add(agreement1);
-						agreementList.add(agreement2);
-						agreementList.add(agreement3);
-						reqJson.setAgreementList(agreementList);
+						reqJson.setIsRecvSms("");
 
 						return reqJson;
 					}
