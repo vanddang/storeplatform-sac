@@ -274,7 +274,13 @@ public class IcmsJobPrint {
 
 			debugMsg.append("################################### TbDpProdOpt INFO [" + title
 					+ "] TbDpProdOpt INFO #################################### \n");
-			debugMsg.append("regId = " + info.getRegId() + " \n");
+			debugMsg.append("chnlProdId = " + info.getChnlProdId() + " \n");
+			debugMsg.append("epsdProdId = " + info.getEpsdProdId() + " \n");
+			debugMsg.append("expoOrd = " + info.getExpoOrd() + " \n");
+			debugMsg.append("expoYn = " + info.getExpoYn() + " \n");
+			debugMsg.append("opt1Nm = " + info.getOpt1Nm() + " \n");
+			debugMsg.append("opt2Nm = " + info.getOpt2Nm() + " \n");
+
 			debugMsg.append("################################### TbDpProdRshpInfo INFO [" + title
 					+ "] TbDpProdOpt INFO #################################### \n");
 
