@@ -13,10 +13,36 @@ import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyReq;
 import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyRes;
 import com.skplanet.storeplatform.external.client.interpark.vo.Purchase;
 
+/**
+ * 
+ * Interpark Service
+ * 
+ * Updated on : 2014. 1. 20. Updated by : 김현일, 인크로스.
+ */
 public interface InterparkService {
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @return boolean
+	 */
 	boolean createOrder(Purchase req);
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @return AuthKeyRes
+	 */
 	AuthKeyRes getAuthKey(AuthKeyReq req);
 
 }

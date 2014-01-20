@@ -26,6 +26,12 @@ import com.skplanet.storeplatform.sac.client.other.vo.interpark.GetAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.other.vo.interpark.GetAuthKeyRes;
 import com.skplanet.storeplatform.sac.other.interpark.service.InterparkService;
 
+/**
+ * 
+ * Interpark Controller
+ * 
+ * Updated on : 2014. 1. 20. Updated by : 김현일, 인크로스.
+ */
 @Controller
 @RequestMapping(value = "/other/interpark")
 public class InterparkController {
@@ -33,6 +39,16 @@ public class InterparkController {
 	@Autowired
 	private InterparkService service;
 
+	/**
+	 * 
+	 * <pre>
+	 * 주문정보 전송.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @return CreateOrderRes
+	 */
 	@RequestMapping(value = "/createOrder/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateOrderRes createOrder(@RequestBody CreateOrderReq req) {
@@ -45,6 +61,16 @@ public class InterparkController {
 		}
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param i
+	 *            i
+	 * @return Purchase
+	 */
 	private Purchase convert(CreateOrderReq i) {
 		Purchase o = new Purchase();
 		o.setRevOrdNo(i.getRevOrdNo());
@@ -57,6 +83,16 @@ public class InterparkController {
 		return o;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @return GetAuthKeyRes
+	 */
 	@RequestMapping(value = "/getAuthKey/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetAuthKeyRes getAuthKey(@ModelAttribute GetAuthKeyReq req) {
@@ -66,6 +102,16 @@ public class InterparkController {
 		return res;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param i
+	 *            i
+	 * @return AuthKeyReq
+	 */
 	private AuthKeyReq convert(GetAuthKeyReq i) {
 		AuthKeyReq o = new AuthKeyReq();
 		o.setType(i.getType());
@@ -74,6 +120,16 @@ public class InterparkController {
 		return o;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param i
+	 *            i
+	 * @return GetAuthKeyRes
+	 */
 	private GetAuthKeyRes convert(AuthKeyRes i) {
 		GetAuthKeyRes o = new GetAuthKeyRes();
 		o.setCertKey(i.getCertKey());

@@ -8,6 +8,12 @@ import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyReq;
 import com.skplanet.storeplatform.external.client.interpark.vo.AuthKeyRes;
 import com.skplanet.storeplatform.external.client.interpark.vo.Purchase;
 
+/**
+ * 
+ * Interpark Repository 구현체
+ * 
+ * Updated on : 2014. 1. 20. Updated by : 김현일, 인크로스.
+ */
 @Component
 public class InterparkRepositoryImpl implements InterparkRepository {
 
