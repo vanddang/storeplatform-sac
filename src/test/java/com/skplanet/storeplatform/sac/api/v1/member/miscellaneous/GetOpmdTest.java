@@ -74,7 +74,7 @@ public class GetOpmdTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetOpmdTest.class, new SuccessCallback() {
+					}).success(GetOpmdRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -108,7 +108,7 @@ public class GetOpmdTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetOpmdTest.class, new SuccessCallback() {
+					}).success(GetOpmdRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -143,7 +143,7 @@ public class GetOpmdTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetOpmdTest.class, new SuccessCallback() {
+					}).success(GetOpmdRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

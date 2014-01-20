@@ -74,7 +74,7 @@ public class GetUaCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetUaCodeTest.class, new SuccessCallback() {
+					}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -107,7 +107,7 @@ public class GetUaCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetUaCodeTest.class, new SuccessCallback() {
+					}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -141,7 +141,7 @@ public class GetUaCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetUaCodeTest.class, new SuccessCallback() {
+					}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -199,7 +199,7 @@ public class GetUaCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetUaCodeTest.class, new SuccessCallback() {
+					}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -233,7 +233,7 @@ public class GetUaCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetUaCodeTest.class, new SuccessCallback() {
+					}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -267,7 +267,7 @@ public class GetUaCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetUaCodeTest.class, new SuccessCallback() {
+					}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

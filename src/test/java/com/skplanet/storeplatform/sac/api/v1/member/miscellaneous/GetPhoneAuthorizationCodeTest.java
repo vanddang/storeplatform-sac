@@ -85,7 +85,7 @@ public class GetPhoneAuthorizationCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetPhoneAuthorizationCodeTest.class, new SuccessCallback() {
+					}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -122,7 +122,7 @@ public class GetPhoneAuthorizationCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetPhoneAuthorizationCodeTest.class, new SuccessCallback() {
+					}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
