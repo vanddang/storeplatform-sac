@@ -308,11 +308,9 @@ public class IDPServiceImpl implements IDPService {
 		}
 
 		/*
-		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) &&
-		 * !"".equals(user_id)) { try { sn_auth_key = makeSnAuthKey(user_name,
-		 * user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch
-		 * (Exception e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } } else { is_rname_auth = "N"; } }
+		 * if ("Y".equals(is_rname_auth)) { if (!"".equals(user_name) && !"".equals(user_id)) { try { sn_auth_key =
+		 * makeSnAuthKey(user_name, user_id); logger.info("sn_auth_key : "+sn_auth_key); } catch (Exception e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } } else { is_rname_auth = "N"; } }
 		 */
 
 		// sendData.setSp_id(Constants.OMP_IDP_SP_ID);
@@ -422,4 +420,22 @@ public class IDPServiceImpl implements IDPService {
 
 		return this.repository.sendIDP(sendData);
 	}
+
+	@Override
+	public IDPReceiverM simpleJoin(Map<String, Object> param) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SIMPLE_JOIN);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_id((String) param.get("user_id"));
+		sendData.setUser_passwd((String) param.get("user_passwd"));
+		sendData.setUser_email((String) param.get("user_email"));
+		sendData.setUser_phone((String) param.get("user_phone"));
+		sendData.setPhone_auth_key((String) param.get("phone_auth_key"));
+
+		return this.repository.sendIDP(sendData);
+	}
+
 }

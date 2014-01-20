@@ -337,28 +337,7 @@ public class MemberCommonComponent {
 	 */
 	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
 
-		LOGGER.info("#### DB 정보 기준으로 단말 정보 데이타를 세팅한다.");
-		LOGGER.info("#### DB 정보 기준으로 단말 정보 데이타를 세팅한다.");
-
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
-
-		/**
-		 * SKT 가입자이면서 MSISDN 타입일 경우에만 UAPS 연동 하여 (SKT 서비스가입번호를 세팅한다.)
-		 */
-		if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
-
-			/**
-			 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
-			 */
-			UserRes userRes = this.getMappingInfo(deviceId, "mdn");
-			if (userRes.getResultCode() == 0) {
-				LOGGER.debug("## UAPS 연동 정보 : {}", userRes.toString());
-				majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
-			} else {
-				throw new RuntimeException("UAPS 연동 실패~!!!!");
-			}
-
-		}
 
 		/**
 		 * 폰정보 조회후 단말 정보 세팅.
@@ -398,6 +377,34 @@ public class MemberCommonComponent {
 					LOGGER.warn("##### UUID 일때는 무조건 이동통신사 코드를 IOS로 줘야 한다. AI-IS 로직 반영.... #####");
 					LOGGER.warn("###############################################################################");
 				}
+			}
+
+		}
+
+		/**
+		 * SKT 가입자이면서 MSISDN 타입일 경우에만 UAPS 연동 하여 (SKT 서비스가입번호를 세팅한다.)
+		 */
+		if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+
+			/**
+			 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
+			 */
+			UserRes userRes = this.getMappingInfo(deviceId, "mdn");
+			if (userRes.getResultCode() == 0) {
+				LOGGER.debug("## UAPS 연동 정보 : {}", userRes.toString());
+				majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
+			} else {
+				throw new RuntimeException("UAPS 연동 실패~!!!!");
+			}
+
+			/**
+			 * OMD 단말 setting.
+			 */
+			if (this.repository.getOmdCount(model) > 0) {
+
+				LOGGER.info("## OMD 단말 setting.");
+				majorDeviceInfo.setOmdUacd(model);
+
 			}
 
 		}

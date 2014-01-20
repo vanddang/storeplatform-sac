@@ -138,12 +138,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
-			userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-			/**
-			 * TODO 필수 항목으로 변경내용 확인 필요.
-			 */
-			userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
-			userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
+			// userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+			// /**
+			// * TODO 필수 항목으로 변경내용 확인 필요.
+			// */
+			// userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
+			// userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 			userMbr.setIsParent(req.getIsParent());
@@ -484,6 +484,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		CreateBySimpleRes response = new CreateBySimpleRes();
 
+		/**
+		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
+		 */
 		this.checkDuplicateId(req.getUserId());
 
 		return response;
@@ -498,6 +501,54 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+
+		/**
+		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
+		 */
+		this.checkDuplicateId(req.getUserId());
+
+		/**
+		 * 단말등록시 필요한 기본 정보 세팅.
+		 */
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+
+		/**
+		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
+		 */
+		StringBuffer sbUserPhone = new StringBuffer();
+		sbUserPhone.append(req.getDeviceId());
+		sbUserPhone.append(",");
+		sbUserPhone.append(majorDeviceInfo.getImMngNum());
+		sbUserPhone.append(",");
+		sbUserPhone.append(majorDeviceInfo.getUacd());
+		sbUserPhone.append(",");
+		sbUserPhone.append(this.mcc.convertDeviceTelecom(majorDeviceInfo.getDeviceTelecom()));
+		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
+
+		/**
+		 * IDP - 간편회원가입
+		 */
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("user_id", URLEncoder.encode(req.getUserId(), "UTF-8"));
+		param.put("user_passwd", URLEncoder.encode(req.getUserPw(), "UTF-8"));
+		param.put("user_email", URLEncoder.encode(req.getUserEmail(), "UTF-8"));
+		param.put("user_phone", sbUserPhone.toString());
+		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
+		LOGGER.info("## param : {}", param.entrySet());
+		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
+		LOGGER.info("## Im Result Code   : {}", simpleJoinInfo.getResponseHeader().getResult());
+		LOGGER.info("## Im Result Text   : {}", simpleJoinInfo.getResponseHeader().getResult_text());
+
+		if (StringUtils.equals(simpleJoinInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+
+			LOGGER.debug("######################## 가입 성공");
+
+		} else {
+
+			LOGGER.info("## IDP - 간편회원가입 실패~!!!");
+			throw new RuntimeException("IDP - 간편회원가입 실패");
+
+		}
 
 		return response;
 	}
@@ -741,15 +792,44 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	}
 
+	/**
+	 * <pre>
+	 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
+	 * </pre>
+	 * 
+	 * @param userId
+	 *            유저 아이디
+	 * @throws Exception
+	 *             Exception
+	 */
 	private void checkDuplicateId(String userId) throws Exception {
 
-		LOGGER.info("ID 중복확인 =================================");
+		LOGGER.info("## ID 중복확인 =================================");
 		/**
 		 * (IDP 연동) IDP - ID 중복확인
 		 */
 		IDPReceiverM checkDupIdInfo = this.idpService.checkDupID(URLEncoder.encode(userId, "UTF-8"));
-		LOGGER.info("## join4Wap - Result Code : {}", checkDupIdInfo.getResponseHeader().getResult());
-		LOGGER.info("## join4Wap - Result Text : {}", checkDupIdInfo.getResponseHeader().getResult_text());
+		LOGGER.info("## checkDupID - Result Code : {}", checkDupIdInfo.getResponseHeader().getResult());
+		LOGGER.info("## checkDupID - Result Text : {}", checkDupIdInfo.getResponseHeader().getResult_text());
+
+		if (StringUtils.equals(checkDupIdInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+
+			/**
+			 * 해지 후 6개월이내 동일한 ID로 가입요청 불가
+			 * 
+			 * TODO 테이블이 이관되어있지 않아서 확인 요청함. 처리 완료되면 SC 연동하여 처리 할것. (SC API 요청해야함.)
+			 */
+			// if (count > 0) {
+			//
+			// throw new RuntimeException("해지 후 6개월이내 동일한 ID로 가입요청 불가");
+			//
+			// }
+
+		} else {
+
+			// throw new RuntimeException(checkDupIdInfo.getResponseHeader().getResult_text());
+
+		}
 
 	}
 
