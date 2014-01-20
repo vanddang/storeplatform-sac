@@ -13,6 +13,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -67,5 +69,35 @@ public interface UserJoinService {
 	 *             Exception
 	 */
 	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 미포함 ]].
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateBySimpleReq
+	 * @return CreateBySimpleRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * ID 회원 간편 가입 (IDP 회원) [[ 단말정보 포함 ]].
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            CreateBySimpleReq
+	 * @return CreateBySimpleRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) throws Exception;
 
 }

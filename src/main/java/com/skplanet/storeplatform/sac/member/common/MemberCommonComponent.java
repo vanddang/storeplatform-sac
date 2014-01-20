@@ -407,4 +407,35 @@ public class MemberCommonComponent {
 		return majorDeviceInfo;
 
 	}
+
+	/**
+	 * <pre>
+	 * 이동통신사 Converting.
+	 * </pre>
+	 * 
+	 * @param deviceTelecom
+	 *            이동통신사
+	 * @return String
+	 * @throws Exception
+	 *             Exception
+	 */
+	public String convertDeviceTelecom(String deviceTelecom) throws Exception {
+		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
+			return MemberConstants.NM_DEVICE_TELECOM_SKT;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_KT)) {
+			return MemberConstants.NM_DEVICE_TELECOM_KT;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_LGT)) {
+			return MemberConstants.NM_DEVICE_TELECOM_LGT;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_OMD)) {
+			return MemberConstants.NM_DEVICE_TELECOM_OMD;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_NSH)) {
+			return MemberConstants.NM_DEVICE_TELECOM_NSH;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_NON)) {
+			return MemberConstants.NM_DEVICE_TELECOM_NON;
+		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
+			return MemberConstants.NM_DEVICE_TELECOM_IOS;
+		} else {
+			throw new RuntimeException("Convert Device Telecom Exception!!!");
+		}
+	}
 }
