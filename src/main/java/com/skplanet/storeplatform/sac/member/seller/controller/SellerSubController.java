@@ -33,7 +33,7 @@ public class SellerSubController {
 
 	/**
 	 * <pre>
-	 * 5.2.18.	서브계정 등록.
+	 * 5.2.18.	서브계정 등록/수정.
 	 * </pre>
 	 * 
 	 * @param req

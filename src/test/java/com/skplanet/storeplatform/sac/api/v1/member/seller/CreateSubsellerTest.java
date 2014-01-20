@@ -28,7 +28,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 
 /**
- * 판매자 서브계정 등록
+ * 판매자 서브계정 등록/수정
  * 
  * Updated on : 2014. 1. 20. Updated by : 한서구, 부르칸.
  */

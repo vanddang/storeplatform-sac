@@ -6,7 +6,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface SellerSubService {
 
-	/** 판매자 서브계정 등록. */
+	/** 판매자 서브계정 등록/수정. */
 	public CreateSubsellerRes createSubseller(SacRequestHeader header, CreateSubsellerReq req);
 
 }

@@ -25,7 +25,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
-	 * 판매자 서브계정 등록.
+	 * 판매자 서브계정 등록/수정.
 	 * </pre>
 	 * 
 	 * @param CreateSubsellerReq
