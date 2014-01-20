@@ -18,11 +18,42 @@ public class ConfirmCaptchaReq extends CommonInfo {
 	/**
 	 * 인증 코드 (사용자가 입력한 Captcha 문자)
 	 */
+
 	private String authCode;
 
 	/**
 	 * 인증 코드 확인을 위한 Signature
 	 */
 	private String imageSign;
+
+	/**
+	 * @return the authCode
+	 */
+	public String getAuthCode() {
+		return this.authCode;
+	}
+
+	/**
+	 * @param authCode
+	 *            the authCode to set
+	 */
+	public void setAuthCode(String authCode) {
+		this.authCode = authCode;
+	}
+
+	/**
+	 * @return the imageSign
+	 */
+	public String getImageSign() {
+		return this.imageSign;
+	}
+
+	/**
+	 * @param imageSign
+	 *            the imageSign to set
+	 */
+	public void setImageSign(String imageSign) {
+		this.imageSign = imageSign;
+	}
 
 }
