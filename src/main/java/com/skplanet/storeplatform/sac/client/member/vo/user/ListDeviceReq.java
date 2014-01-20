@@ -34,11 +34,6 @@ public class ListDeviceReq extends CommonInfo {
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String isMainDevice;
 
-	/**
-	 * 기기 Key
-	 */
-	private String deviceKey;
-
 	public String getUserId() {
 		return this.userId;
 	}
@@ -61,14 +56,6 @@ public class ListDeviceReq extends CommonInfo {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
-	}
-
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
 	}
 
 	public String getIsMainDevice() {
