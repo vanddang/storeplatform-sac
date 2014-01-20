@@ -326,17 +326,34 @@ public class BestAppReq extends CommonInfo {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param offset
-	 *            offset
+	 * @param count
+	 *            count
 	 */
 	public void setCount(String count) {
 		this.count = count;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getDummy() {
 		return this.dummy;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param dummy
+	 *            dummy
+	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
 	}

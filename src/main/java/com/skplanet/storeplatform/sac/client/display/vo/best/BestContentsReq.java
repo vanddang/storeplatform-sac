@@ -254,8 +254,8 @@ public class BestContentsReq extends CommonInfo {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            b2bprod String b2bprod
+	 * @param b2bprod
+	 *            b2bprod
 	 */
 	public void setB2bprod(String b2bprod) {
 		this.b2bprod = b2bprod;
@@ -279,8 +279,8 @@ public class BestContentsReq extends CommonInfo {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param String
-	 *            hdv String hdv
+	 * @param hdv
+	 *            String hdv
 	 */
 	public void setHdv(String hdv) {
 		this.hdv = hdv;
@@ -379,17 +379,34 @@ public class BestContentsReq extends CommonInfo {
 	 * method 설명.
 	 * </pre>
 	 * 
-	 * @param offset
-	 *            offset
+	 * @param count
+	 *            count
 	 */
 	public void setCount(String count) {
 		this.count = count;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
 	public String getDummy() {
 		return this.dummy;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param dummy
+	 *            dummy
+	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
 	}
