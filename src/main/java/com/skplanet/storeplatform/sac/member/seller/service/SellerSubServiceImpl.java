@@ -94,9 +94,8 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		schReq.setSellerKey(req.getSellerKey());
 		// 최종 vo 에 값 셋팅
-		List<String> removeKeyList;
-		removeKeyList = new ArrayList<String>();
-		removeKeyList.add("US201312311522096210000038");
+		List<String> removeKeyList = new ArrayList<String>();
+		removeKeyList = req.getSubSellerKey();
 		schReq.setSubSeller(removeKeyList);
 
 		schRes = this.sellerSCI.removeSubSeller(schReq);
