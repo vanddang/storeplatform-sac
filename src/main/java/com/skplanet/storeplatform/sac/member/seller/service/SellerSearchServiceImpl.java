@@ -16,6 +16,9 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
@@ -32,6 +35,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -462,6 +467,57 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		response.setSellerMbrPwdHintList(sList);
 		response.setLanguageCode(schRes.getLanguageCode());
 
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 확인.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return CheckPasswordReminderQuestionRes
+	 */
+	@Override
+	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
+			CheckPasswordReminderQuestionReq req) throws Exception {
+
+		CheckPasswordReminderSellerResponse schRes = new CheckPasswordReminderSellerResponse();
+		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
+		schReq.setSellerID(req.getSellerID());
+
+		/** 보안질문 리스트 주입 - [시작]. */
+		List<PWReminder> pWReminderList = null;
+		if (req.getpWReminderList() != null) {
+			pWReminderList = new ArrayList<PWReminder>();
+			for (int i = 0; i < req.getpWReminderList().size(); i++) {
+				PWReminder pwReminder = new PWReminder();
+				pwReminder.setAnswerString(req.getpWReminderList().get(i).getAnswerString());
+				pwReminder.setQuestionID(req.getpWReminderList().get(i).getQuestionID());
+				pwReminder.setQuestionMessage(req.getpWReminderList().get(i).getQuestionMessage());
+				pwReminder.setSellerID(req.getpWReminderList().get(i).getSellerID());
+				pWReminderList.add(pwReminder);
+			}
+			schReq.setpWReminderList(pWReminderList);
+		}
+		/** 보안질문 리스트 주입 - [끝]. */
+
+		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
+
+		CheckPasswordReminderQuestionRes response = new CheckPasswordReminderQuestionRes();
+		response.setIsCorrect(schRes.getIsCorrect());
 		return response;
 
 	}
