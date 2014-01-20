@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.util;
 
 import java.io.BufferedReader;
@@ -8,6 +17,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * 쇼핑 쿠폰용 CSV 파싱 Class
+ * 
+ * Updated on : 2014. 01. 20. Updated by : 김형식, SK 플래닛
+ */
 public class CSVReader implements Closeable, Iterable<String[]> {
 	private final BufferedReader br;
 
