@@ -1,27 +1,28 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
+import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
+import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
+import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
@@ -37,24 +38,31 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.common.constant.Const;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.miscellaneous.repository.MiscellaneousRepository;
-import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
 /**
  * 
- * 기타 기느능 관련 인터페이스 구현체
+ * 기타 기능 관련 인터페이스 구현체
  * 
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
  */
@@ -79,6 +87,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private MiscellaneousRepository repository; // 기타 기능 Repository.
+
+	@Autowired
+	private ImageSCI imageSCI;
 
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
@@ -182,9 +193,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			} else {
 				throw new Exception("유효하지 않은 휴대폰 번호.");
 			}
-		}
-		/** deviceModelNo 가 파라미터로 들어온 경우 */
-		else if (deviceModelNo != null) {
+		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.repository.getUaCode(deviceModelNo);
 			if (uaCode != null) {
@@ -211,7 +220,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.debug("###### >> authSign : " + authSign);
 
 		/* DB에 저장할 파라미터 셋팅 */
-		ServiceAuthDTO serviceAuthInfo = new ServiceAuthDTO();
+		ServiceAuth serviceAuthInfo = new ServiceAuth();
 		serviceAuthInfo.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 		serviceAuthInfo.setAuthTypeCd("CM010901");
 		serviceAuthInfo.setAuthSign(authSign);
@@ -222,17 +231,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
-		smsReq.setCarrier("SKT"); // Carrier로 파라미터명 변경 예정 ( 테넌트에서 부터 파라미터를 SKT, KT, LGT로 받는다. )
+		smsReq.setCarrier("SKT"); // 테넌트에서 파라미터를 SKT, KT, LGT로 받는다.
 		smsReq.setSendMdn(request.getUserPhone());
 		smsReq.setRecvMdn(request.getUserPhone());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
 		smsReq.setMsg(authCode);
+		Map<String, String> map = new HashMap<String, String>();
 
-		// External Comp. SMS 발송 기능 현재 작업중.###########################
-		// SmsSendRes smsSendRes = this.messageSCI.smsSend(smsReq);
-		// String sendResult = smsSendRes.getResultStatus();
-		// External Comp. SMS 발송 기능 현재 작업중.###########################
-		String sendResult = "success";
+		/* External Comp. SMS 발송 기능 */
+		SmsSendRes smsSendRes = this.messageSCI.smsSend(smsReq);
+		String sendResult = smsSendRes.getResultStatus();
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
 
@@ -255,12 +263,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String userPhone = request.getUserPhone();
 
 		/* DB에 저장할 파라미터 셋팅 */
-		ServiceAuthDTO serviceAuthInfo = new ServiceAuthDTO();
+		ServiceAuth serviceAuthInfo = new ServiceAuth();
 		serviceAuthInfo.setAuthTypeCd("CM010901");
 		serviceAuthInfo.setAuthSign(authSign);
 		serviceAuthInfo.setAuthValue(authCode);
 
-		ServiceAuthDTO resultInfo = this.repository.getPhoneAuthYn(serviceAuthInfo);
+		ServiceAuth resultInfo = this.repository.getPhoneAuthYn(serviceAuthInfo);
 
 		if (resultInfo == null) {
 			throw new Exception("인증 코드가 일치 하지 않습니다.");
@@ -299,63 +307,112 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String waterMarkImageUrl = "";
 		String waterMarkImageSign = "";
 		IDPReceiverM idpReciver = new IDPReceiverM();
-		/* 1. IDP 연동해서 waterMarkImage URL과 Signature 받기 */
+		GetCaptchaRes response = new GetCaptchaRes();
+
+		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 		idpReciver = this.idpService.warterMarkImageUrl();
 		waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
 		waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
-		LOGGER.debug("####### >> idpReciver {} ", idpReciver);
 
-		/* 2. 파일 시스템으로 부터 이미지 파일 읽기 */
-		File file = new File(waterMarkImageUrl);
-		FileInputStream imageStream = new FileInputStream(file);
-		byte ImageData[] = new byte[(int) file.length()];
-		imageStream.read(ImageData);
+		LOGGER.debug("####### >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
+		LOGGER.debug("####### >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
 
-		/** TODO 3. 이미지 Byte Array를 String으로 Converting */
-		String imageDataString = encodeImage(ImageData);
+		HTTP_PROTOCOL protocol;
+		HTTP_METHOD method;
+		String urlPath;
 
-		LOGGER.debug("################## Captcha 문자 발급 Servie 시작 ######################");
-		URL imageUrl = new URL(waterMarkImageUrl);
-		Image image = ImageIO.read(imageUrl);
-		LOGGER.debug("######## >> imageString {}", image);
-		byte[] waterMarkImageByte = waterMarkImageUrl.getBytes();
+		if (StringUtils.substring(waterMarkImageUrl, 0, 4).equals("https")) {
+			protocol = HTTP_PROTOCOL.HTTPS;
+			method = HTTP_METHOD.POST;
+			urlPath = StringUtils.substring(waterMarkImageUrl, 5);
+		} else {
+			protocol = HTTP_PROTOCOL.HTTP;
+			method = HTTP_METHOD.GET;
+			urlPath = StringUtils.substring(waterMarkImageUrl, 4);
+		}
 
-		/** LOGGER */
+		LOGGER.debug("Protocol : {}, Method : {}, UrlPath : {}", protocol, method, urlPath);
 
-		/** TODO 5. 결과 Response */
-		GetCaptchaRes response = new GetCaptchaRes();
+		ImageReq req = new ImageReq();
+		req.setMethod(method); // GET or POST
+		req.setProtocol(protocol); // HTTP or HTTPS
+		req.setUrlPath(urlPath);
+		ImageRes res = this.imageSCI.convert(req);
 
-		// response.setImageData(waterMarkImageByte.toString());
+		String waterMarkImageString = res.getImgData();
+		LOGGER.debug("WaterMark ImageString : {}", waterMarkImageString);
+
+		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능 - file형태로 확인.
+		// <img alt="Embedded Image" src="data:image/png;base64,???"/>
+
+		response.setImageData(waterMarkImageString);
 		response.setImageSign(waterMarkImageSign);
-
-		LOGGER.debug("################## Captcha 문자 발급 Servie 끝 ######################");
 
 		return response;
 	}
 
-	/**
-	 * <pre>
-	 * Encodes the byte array info base64 String.
-	 * </pre>
-	 * 
-	 * @param imageByteArray
-	 * @return
-	 */
-	public static String encodeImage(byte[] imageByteArray) {
-		return Base64.encodeBase64URLSafeString(imageByteArray);
+	@Override
+	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) throws Exception {
+
+		/* IDP 호출 ( Request 파라미터 전달 ) */
+		IDPReceiverM idpReciver = new IDPReceiverM();
+		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(), "");
+
+		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
+
+		if (idpReciver.getResponseHeader().getResult().equals(Const.IDP_SUCCESS)) {
+			LOGGER.debug("IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
+					idpReciver.getResponseHeader().getResult_text());
+		} else {
+			LOGGER.info("IDP 호출 오류. resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
+					idpReciver.getResponseHeader().getResult_text());
+		}
+		// ##################### 테스트 필요함 ################################ //
+		return response;
 	}
 
-	// /**
-	// * <pre>
-	// * method 설명.
-	// * </pre>
-	// *
-	// * @param imageDataString
-	// * @return
-	// */
-	// public static byte[] decodeImage(String imageDataString) {
-	// return Base64.decodeBase64(imageDataString);
-	// }
+	@Override
+	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(GetEmailAuthorizationCodeReq request)
+			throws Exception {
+
+		/** TODO 1. 기존에 인증된 회원인지 여부 확인 */
+		String mbrNo = request.getUserKey();
+		String isAuthEmail = this.repository.getEmailAuthYn(mbrNo);
+
+		if (isAuthEmail.equals("Y")) {
+			throw new Exception("기존 인증된 회원입니다.");
+		}
+		// ##################### 이 중간 부분 진행 해야함 ########################### //
+		/*
+		 * 1. else 문 안에 LOGGER.debug("인증대상"); 2. 아래의 TODO 2~ 부터 else문 안에 넣기. 3. repository.getEmailAuthYn 부분 xml 쿼리 구현 및
+		 * Phone관련 repository와 합쳐서 메소드명 변경하기.
+		 */
+		// ##################### 이 중간 부분 진행 해야함 ########################### //
+		/** TODO 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
+		String authCode = UUID.randomUUID().toString().replace("-", "");
+
+		/** TODO 3. DB에 저장 - 인증번호, 회원Key, 인증 Email 주소 */
+		ServiceAuth serviceAuthInfo = new ServiceAuth();
+		serviceAuthInfo.setAuthEmail(request.getUserEmail());
+		serviceAuthInfo.setMbrNo(mbrNo);
+		this.repository.insertPhoneAuthCode(serviceAuthInfo);
+
+		/** TODO 4. 인증코드 Response */
+		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
+
+		return null;
+	}
+
+	@Override
+	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
+			throws Exception {
+		/** TODO 1. 인증 코드 받아오기 */
+		/** TODO 2. 인증 코드 DB 확인 비교 */
+		/** TODO 3. 확인된 결과 값 Response */
+
+		return null;
+
+	}
 
 	/**
 	 * 
@@ -366,7 +423,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return Y/N
+	 *            String
+	 * @return String
 	 */
 	public String mdnValidation(String mdn) {
 		String validation = "N";
@@ -387,9 +445,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param commonReq
+	 *            CommonRequest
 	 * @param msisdn
-	 * @return
+	 *            String
+	 * @return String
 	 * @throws Exception
+	 *             Exception
 	 */
 	public String getUserKey(CommonRequest commonReq, String msisdn) throws Exception {
 		String userKey = "";
