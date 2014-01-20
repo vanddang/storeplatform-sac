@@ -168,7 +168,7 @@
                  WHERE MENU_ID = P.MENU_ID
                    AND LANG_CD = #{langCd}) AS MENU_NM 
              , P.CHNL_PROD_ID
-             , CONCAT('episode:', P.EPSD_PROD_ID ) AS EPSD_PROD_ID
+             , P.EPSD_PROD_ID
              , P.OUTSD_CONTENTS_ID
              , P.PROD_NM
              , DECODE( P.PROD_GRD_CD
