@@ -41,7 +41,7 @@
     
             
         <!-- 휴대폰 SMS 인증 / 이메일 인증  -->
-        <typeAlias alias="ServiceAuthDTO" type="com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO"/>
+        <typeAlias alias="ServiceAuth" type="com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth"/>
         
         <!-- 전시 상품 공통 -->
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />

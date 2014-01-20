@@ -14,7 +14,7 @@
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인 -->
-	<select id="getPhoneAuthYn" parameterType="ServiceAuthDTO" resultType="ServiceAuthDTO">
+	<select id="getPhoneAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
 	   /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
        SELECT 
            AUTH_SEQ,
@@ -30,16 +30,24 @@
            and AUTH_VALUE = #{authValue}
 	</select>
 	
-    <!-- 휴대폰 SMS 인증 코드 정보 저장 -->
-    <insert id="insertPhoneAuthCode" parameterType="ServiceAuthDTO">
+    <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 -->
+    <insert id="insertPhoneAuthCode" parameterType="ServiceAuth">
         /* MiscellaneousMapper.xml, insertPhoneAuthCode, SAC : 김다슬 , 2014-01-16 */
         INSERT INTO
             TB_CM_SVC_AUTH(
                 AUTH_SEQ,
+                <if test="mbrNo !=null">
+                MBR_NO,
+                </if>
                 TENANT_ID,
                 AUTH_TYPE_CD, /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+                <if test="authSign !=null">
                 AUTH_SIGN, /* 인증 Signature */
+                </if>
                 AUTH_VALUE, /* 인증 코드 */
+                <if test="authEmail !=null">
+                AUTH_EMAIL,
+                </if>
                 AUTH_VALUE_CREATE_DT, /* 인증 코드 생성 일자 */
                 AUTH_COMPT_YN, /* 인증 여부 - 초기화 */
                 REG_ID,
@@ -49,10 +57,18 @@
             )
             VALUES(
                SQ_CM_SVC_AUTH.NEXTVAL,
+               <if test="mbrNo !=null">
+               #{mbrNo},
+               </if>
                #{tenantId},
                #{authTypeCd},
+               <if test="authSign !=null">
                #{authSign},
+               </if>
                #{authValue},
+               <if test="authEmail !=null">
+               #{authEmail},
+               </if>
                SYSDATE,
                'N',
                'admin',
