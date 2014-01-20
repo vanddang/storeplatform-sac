@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
-import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonReq;
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 구매 취소 요청 상세 VO.
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelReqDetail extends PurchaseCommonReq {
+public class PurchaseCancelReqDetail extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
