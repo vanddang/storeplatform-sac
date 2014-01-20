@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSubService;
 
@@ -37,7 +39,7 @@ public class SellerSubController {
 	 * </pre>
 	 * 
 	 * @param req
-	 * @return CreateRes
+	 * @return CreateSubsellerRes
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
@@ -48,6 +50,25 @@ public class SellerSubController {
 			throw new RuntimeException("parameter error~~~");
 		}
 		return this.sellerSubService.createSubseller(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.20.	서브계정 삭제.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return RemoveSubsellerRes
+	 */
+	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Valid RemoveSubsellerReq req,
+			BindingResult result) {
+		// TODO Exception (01/17이후 적용)
+		if (result.hasErrors()) {
+			throw new RuntimeException("parameter error~~~");
+		}
+		return this.sellerSubService.removeSubseller(header, req);
 	}
 
 }

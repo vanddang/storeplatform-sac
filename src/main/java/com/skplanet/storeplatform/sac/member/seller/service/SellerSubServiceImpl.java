@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,12 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 @Service
@@ -57,6 +64,46 @@ public class SellerSubServiceImpl implements SellerSubService {
 		CreateSubsellerRes response = new CreateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSubSellerKey());
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 서브계정 삭제.
+	 * </pre>
+	 * 
+	 * @param RemoveSubsellerReq
+	 * @return RemoveSubsellerRes
+	 */
+	@Override
+	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, RemoveSubsellerReq req) {
+
+		RemoveSubSellerResponse schRes = new RemoveSubSellerResponse();
+		RemoveSubSellerRequest schReq = new RemoveSubSellerRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
+		schReq.setSellerKey(req.getSellerKey());
+		// 최종 vo 에 값 셋팅
+		List<String> removeKeyList;
+		removeKeyList = new ArrayList<String>();
+		removeKeyList.add("US201312311522096210000038");
+		schReq.setSubSeller(removeKeyList);
+
+		schRes = this.sellerSCI.removeSubSeller(schReq);
+
+		RemoveSubsellerRes response = new RemoveSubsellerRes();
+
+		response.setRemoveCnt(schRes.getDeletedNumber());
 
 		return response;
 	}
