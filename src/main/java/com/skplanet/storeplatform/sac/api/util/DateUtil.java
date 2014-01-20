@@ -419,7 +419,7 @@ public class DateUtil {
 
 	public static void main(String[] args) {
 		try {
-			// System.out.println(getLastDayOfMonth("20040101"));
+			// log.info(getLastDayOfMonth("20040101"));
 		} catch (Exception e) {
 
 		}

@@ -49,7 +49,7 @@ public class ImageResizing {
 
 			byte[] data = new byte[fis.available()];
 
-			// System.out.println(fis.available());
+			// log.info(fis.available());
 
 			fis.read(data);
 

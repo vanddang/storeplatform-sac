@@ -564,5 +564,20 @@
 		  AND ROWNUM =1
     </select>    
         
+    <!--  쿠폰 판매상태 여부 상태값  -->
+    <select id="SELECT_COUPON_VALID_STATUS" resultType="String" parameterType="com.skplanet.storeplatform.external.client.shopping.vo.CouponReq">
+       /* CouponMapper.xml, SELECT_COUPON_VALID_STATUS, SAC : 김형식 , 2013-01-08 */
+        SELECT 
+               PROD_STATUS_CD 
+        FROM   TB_DP_TENANT_PROD 
+        WHERE 1=1
+        <if test='upType == "0"'>
+          AND PROD_ID =#{newCouponId}
+        </if>
+        <if test='upType == "1"'>
+          AND PROD_ID =#{newItemId}
+        </if>
+          AND EXPO_YN = 'Y' 
+    </select>           
     
 </mapper>

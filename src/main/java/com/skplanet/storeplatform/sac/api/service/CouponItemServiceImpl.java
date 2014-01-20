@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
@@ -315,7 +318,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "Coupon.updateDPcouponCNT 실패",
 						null);
 			}
-			if (!StringUtils.equalsIgnoreCase(upType, "0")) {
+			if (!StringUtils.equalsIgnoreCase(upType, "1")) {
 				this.commonDAO.update("Coupon.updateDPYNStatus", couponCode);
 			}
 		} catch (CouponException e) {
@@ -390,6 +393,50 @@ public class CouponItemServiceImpl implements CouponItemService {
 		}
 
 		return info;
+	}
+
+	@Override
+	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList) {
+		ArrayList<String> result = new ArrayList<String>();
+		Calendar now = Calendar.getInstance();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String resultStatus = "";
+
+		for (CouponReq couponCd : couponList) {
+
+			resultStatus = (String) this.commonDAO.queryForObject("Coupon.SELECT_COUPON_VALID_STATUS", couponCd);
+			if (!resultStatus.equals(couponCd.getCoupnStatus())) { // 있으면 기존 상태랑 비교한후 다르면 업데이트 한다.
+				// 쿠폰 판매상태 변경
+				if (couponCd.getUpType().equals("0")) {
+					result.add("C::" + sf.format(now.getTime()) + ">>>>쿠폰코드::::" + couponCd.getCouponCode()
+							+ ">>>변경 상태:::" + couponCd.getCoupnStatus());
+				} else if (couponCd.getUpType().equals("1")) {
+					result.add("I::" + sf.format(now.getTime()) + ">>>>아이템 코드::::" + couponCd.getItemCode()
+							+ ">>>변경 상태:::" + couponCd.getCoupnStatus());
+				}
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("prodId", couponCd.getNewCouponId());
+				map.put("dpStatusCode", couponCd.getCoupnStatus());
+				map.put("upType", couponCd.getUpType());
+				map.put("itemCode", couponCd.getNewItemId());
+
+				// if (this.commonDAO.update("Coupon.updateDPCouponStatus", map) <= 0) {
+				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+				// "Coupon.updateDPCouponStatus 실패", null);
+				// }
+				// if (this.commonDAO.update("Coupon.updateDPCouponItemCNT", couponCd.getNewCouponId()) <= 0) {
+				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+				// "Coupon.updateDPcouponItemCNT 실패", null);
+				// }
+				// if (this.commonDAO.update("Coupon.updateDPCouponCNT", couponCd.getNewCouponId()) <= 0) {
+				// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC,
+				// "Coupon.updateDPcouponCNT 실패", null);
+				// }
+				// this.commonDAO.update("Coupon.updateDPYNStatus", couponCd.getNewCouponId());
+
+			}
+		}
+		return result;
 	}
 
 }

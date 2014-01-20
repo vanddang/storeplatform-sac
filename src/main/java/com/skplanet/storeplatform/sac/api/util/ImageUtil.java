@@ -19,7 +19,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 쇼핑상품 이미지 유틸
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
  */
 public class ImageUtil {
 
-	private final static Logger log = Logger.getLogger(ImageUtil.class);;
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * 이미지의 크기를 조절한다.
@@ -47,15 +48,16 @@ public class ImageUtil {
 			String directoryName) {
 		try {
 			if (inImgfle.isFile()) {
-				// System.out.println("소스 파일이 존재한다.");
+				// log.info("소스 파일이 존재한다.");
 			} else {
-				log.info("소스 파일이 존재하지 않는다.");
+
+				// this.log.debug("소스 파일이 존재하지 않는다.");
 				return false;
 			}
 
 			File outputfile = new File(out_file);
 			if (outputfile.exists() == true) {
-				log.info("변경하려는 파일과 동일한 파일이 존재하여 삭제합나디. 파일명 [" + outputfile.getName() + "]");
+				// this.log.info("변경하려는 파일과 동일한 파일이 존재하여 삭제합나디. 파일명 [" + outputfile.getName() + "]");
 				outputfile.delete();
 			}
 
@@ -69,7 +71,7 @@ public class ImageUtil {
 			ImageResizing imgResize = new ImageResizing();
 			boolean isOk = false;
 			isOk = imgResize.ImageResizing(inImgfle.getPath(), out_file, targetWidth, targetHeight);
-			// System.out.println("isOk::::"+isOk);
+			// log.info("isOk::::"+isOk);
 
 			if (!isOk) {
 				return false;

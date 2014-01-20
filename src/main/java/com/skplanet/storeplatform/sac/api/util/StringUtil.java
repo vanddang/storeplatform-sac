@@ -64,19 +64,19 @@ public class StringUtil extends StringUtils {
 	 * <pre>
 	 * (예)
 	 *  String str = "abcd";
-	 *  System.out.println(StringUtil.fitString(str,6));
+	 *  log.info(StringUtil.fitString(str,6));
 	 *  출력 = "abcd  "
 	 * 
 	 *  String str = "abcd";
-	 *  System.out.println(StringUtil.fitString(str,3));
+	 *  log.info(StringUtil.fitString(str,3));
 	 *  출력 = "abc"
 	 * 
 	 *  String str = "가나다라";
-	 *  System.out.println(StringUtil.fitString(str,6));
+	 *  log.info(StringUtil.fitString(str,6));
 	 *  출력 = "가나다"
 	 * 
 	 *  String str = "가나다라";
-	 *  System.out.println(StringUtil.fitString(str,3));
+	 *  log.info(StringUtil.fitString(str,3));
 	 *  출력 = "???"
 	 * </pre>
 	 * 
@@ -97,7 +97,7 @@ public class StringUtil extends StringUtils {
 	 * <pre>
 	 * (예)
 	 *  String str = "abcd";
-	 *  System.out.println(StringUtil.fitString(str,6,StringUtil.RIGHT));
+	 *  log.info(StringUtil.fitString(str,6,StringUtil.RIGHT));
 	 *  출력 = "  abcd"
 	 * </pre>
 	 * 
@@ -789,8 +789,8 @@ public class StringUtil extends StringUtils {
 	 * 
 	 * ex) String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
 	 * "<sqlmap><simplexml>TestValue</simplexml> </sqlmap>"; String tmp = StringUtil.extractTagValue(xml, "simplexml");
-	 * System.out.println("TMP=" + tmp);
-	 * -------------------------------------------------------------------------------- ===> TMP=TestValue
+	 * log.info("TMP=" + tmp); -------------------------------------------------------------------------------- ===>
+	 * TMP=TestValue
 	 * 
 	 * 
 	 * @param tagName

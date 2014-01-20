@@ -36,4 +36,11 @@ public interface CouponProcessService {
 	 */
 	public CouponRes getSpecialProductDetail(String couponCode);
 
+	/**
+	 * <pre>
+	 * 쿠폰(아이템) Batch 처리 호출 메소드 (수동 호출용)
+	 * </pre>
+	 */
+	public void CouponStateUpdateStart(String nowTime);
+
 }

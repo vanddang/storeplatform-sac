@@ -1,10 +1,24 @@
 package com.skplanet.storeplatform.sac.api.service;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +30,7 @@ import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
+import com.skplanet.storeplatform.sac.api.util.CSVReader;
 import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
@@ -26,26 +41,36 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 @Service
 @Transactional
 public class CouponProcessServiceImpl implements CouponProcessService {
-	private final static Logger log = Logger.getLogger(CouponProcessServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final boolean result = true;
 	private String errorCode = "";
 	private String message = "";
-
+	private final int BUFFER_SIZE = 1024 * 8;
+	private String mbrNo = "";
+	private String compNm = "";
 	@Autowired
 	private CouponItemService couponItemService;
 
 	@Autowired
 	private BrandCatalogService brandCatalogService;
 
+	@Autowired
+	private SellerSearchService sellerSearchService;
+
 	@Override
 	public boolean insertCouponInfo(CouponContainer containers, CouponReq couponReq) {
 
 		// 호출
-		log.info("■■■■■ processForCouponCSP ■■■■■");
+		this.log.info("■■■■■ processForCouponCSP ■■■■■");
 		// 상품 추가/수정 작업을 호출한다.
 		DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
 		couponInfo = containers.getDpCouponInfo();
@@ -65,11 +90,11 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// 1. Validation Check
 
 			// COUPON 기본정보 등록상태확인
-			log.info("■■■■■ validateContentInfo 시작 ■■■■■");
+			this.log.info("■■■■■ validateContentInfo 시작 ■■■■■");
 			if (!this.validateCouponInfo(couponInfo)) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
-			log.info("■■■■■ validateContentInfo 패스 ■■■■■");
+			this.log.info("■■■■■ validateContentInfo 패스 ■■■■■");
 
 			// TB_DP_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpProdInfoValue 시작 ■■■■■");
@@ -127,16 +152,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
 
-			System.out.println("::::::" + tbDpTenantProdPriceList.size());
-			// log
-
-			log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■");
+			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■");
 
 		} else {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "containers is NULL!!", null);
 		}
 		// watch.stop();
-		log.info("◆◆◆ to TimeString... 전체 처리 완료:  ◆◆◆");
+		this.log.info("◆◆◆ to TimeString... 전체 처리 완료:  ◆◆◆");
 		return this.result;
 	}// End processForCouponCSP
 
@@ -188,7 +210,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// ////////////////// Coupon 정보 S////////////////////////////
 			dp.setProdId(couponInfo.getProdId());
 			dp.setProdChrgYn("N");
-			dp.setSellerMbrNo("IF1023541432620111207152255");
+			dp.setSellerMbrNo(this.mbrNo);
 			dp.setSvcGrpCd(CouponConstants.CUPON_SVC_GRP_CD); // "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
 			dp.setSvcTypeCd(CouponConstants.CHNL_TP_CD_CUPON); // "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
 			dp.setProdGrdCd(CouponConstants.AGE_RESTRICTIONS_DEFAULT_COMMON_CODE); // PD004401 전체 이용가
@@ -222,7 +244,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				} else { // 유료
 					dp.setProdChrgYn("Y");
 				}
-				dp.setSellerMbrNo("IF1023541432620111207152255");
+				dp.setSellerMbrNo(this.mbrNo);
 				dp.setSvcGrpCd(CouponConstants.CUPON_SVC_GRP_CD); // "DP000206"; // MALL 구분 코드(쇼핑쿠폰)
 				dp.setSvcTypeCd(CouponConstants.CHNL_TP_CD_CUPON); // "DP001117"; // 채널 타입 코드(쇼핑쿠폰)
 				dp.setProdGrdCd(CouponConstants.AGE_RESTRICTIONS_DEFAULT_COMMON_CODE); // PD004401 전체 이용가
@@ -282,7 +304,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dsp.setProdId(couponInfo.getProdId());
 
 			dsp.setEpsdCnt(0);//
-			dsp.setChnlCompNm("GTSOFT");
+			dsp.setChnlCompNm(this.compNm);
 			if (couponInfo.getCoupnStatus().equals("3")) { // 2:판매대기 3:판매중 4:판매중지 5:판매금지
 				dsp.setSaleYn("Y");
 			} else {
@@ -334,7 +356,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dsp = new TbDpShpgProdInfo();
 				dsp.setProdId(itemInfo.getProdId());
 				dsp.setEpsdCnt(itemCnt);// 판매중인 아이템 수만 count
-				dsp.setChnlCompNm("GTSOFT");
+				dsp.setChnlCompNm(this.compNm);
 				if (itemInfo.getItemStatus().equals("3")) { // 2:판매대기 3:판매중 4:판매중지 5:판매금지
 					dsp.setSaleYn("Y");
 				} else {
@@ -760,16 +782,34 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return Boolean result @
 	 */
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
-		log.info("■■■■■ validateBusinessPartner ■■■■■");
+		this.log.info("■■■■■ validateBusinessPartner ■■■■■");
+		SacRequestHeader header = new SacRequestHeader();
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setTenantId(CouponConstants.TENANT_ID);
+		header.setTenantHeader(tenantHeader);
 
-		// UserMember mbrInfo = cpContentDAO.getUserMemberInfo(cInfo.getCreateId());
-		if (true) {
-			// if (mbrInfo != null) {
-			// if (StringUtils.isBlank(mbrInfo.getCompNm())) {
-			// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", mbrInfo.getMbrId());
-			// }
-		} else {
-			return false;
+		DetailInformationReq req = new DetailInformationReq();
+		DetailInformationRes res = new DetailInformationRes();
+		try {
+			req.setSellerKey(couponInfo.getBpId());
+			req.setKeyType("SELLERMBR_ID");
+			res = this.sellerSearchService.detailInformation(header, req);
+			if (res != null) {
+				if (StringUtils.isBlank(res.getSellerMbr().getSellerName())) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+							couponInfo.getBpId());
+				}
+
+				this.compNm = res.getSellerMbr().getSellerCompany();
+				this.mbrNo = res.getSellerMbr().getSellerKey();
+			} else {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+						couponInfo.getBpId());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
+
 		}
 		return true;
 	}// End validateBusinessPartner
@@ -785,7 +825,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private boolean validateCatalog(DpCouponInfo couponInfo) {
 		String catalogID = this.brandCatalogService.getCreateCatalogId(couponInfo.getStoreCatalogCode());
 		if (StringUtils.isNotBlank(catalogID)) {
-			log.info("validateCatalog ■■■ catalogID : " + catalogID + "■■■");
+			this.log.info("validateCatalog ■■■ catalogID : " + catalogID + "■■■");
 			couponInfo.setStoreCatalogCode(catalogID);
 		} else {
 			return false;
@@ -802,7 +842,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	@Override
 	public boolean updateForCouponStatus(CouponReq couponReq) {
 		// 호출
-		log.info("■■■■■ processForCouponStatus ■■■■■");
+		this.log.info("■■■■■ processForCouponStatus ■■■■■");
 		if (couponReq != null && StringUtils.isNotBlank(couponReq.getCouponCode())
 				&& StringUtils.isNotBlank(couponReq.getCoupnStatus())) {
 
@@ -811,8 +851,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			String itemCode = couponReq.getItemCode();
 			String upType = couponReq.getUpType(); // 0=상품상태변경, 1=단품상태변경, 2=상품+단품상태 모두 변경
 
-			log.debug("===========================\n" + "couponCode : " + couponCode + "/n" + "itemCode : " + itemCode
-					+ "/n" + "upType : " + upType + "/n" + "coupnStatus : " + coupnStatus + "/n"
+			this.log.debug("===========================\n" + "couponCode : " + couponCode + "/n" + "itemCode : "
+					+ itemCode + "/n" + "upType : " + upType + "/n" + "coupnStatus : " + coupnStatus + "/n"
 					+ "===========================");
 
 			String dpStatusCode = "";
@@ -850,7 +890,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			} catch (Exception e) {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
 			} finally {
-				log.info("■■■■■ DB Transaction END ■■■■■");
+				this.log.info("■■■■■ DB Transaction END ■■■■■");
 			}
 
 		} else {
@@ -891,13 +931,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	@Override
 	public List<CouponRes> getSpecialProductList(String[] couponCodes) {
-		log.info("<<<<< CouponContentService >>>>> getSpecialProductList...");
+		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductList...");
 		List<CouponRes> list = null;
 		try {
 			list = this.couponItemService.getSpecialProductList(couponCodes);
 
 		} catch (CouponException e) {
-			log.error(e);
 			throw e;
 
 		}
@@ -913,15 +952,230 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 */
 	@Override
 	public CouponRes getSpecialProductDetail(String couponCode) {
-		log.info("<<<<< CouponContentService >>>>> getSpecialProductDetail...");
+		this.log.info("<<<<< CouponContentService >>>>> getSpecialProductDetail...");
 		CouponRes info = null;
 		try {
 			info = this.couponItemService.getSpecialProductDetail(couponCode);
 		} catch (CouponException e) {
-			log.error(e);
 			throw e;
 
 		}
 		return info;
 	}
+
+	@Override
+	public void CouponStateUpdateStart(String nowTime) {
+		this.log.debug("<<<<< BatchProductSaleStatService.couponStateUpdateStart CREATE >>>>>");
+		this.log.info("nowTime:::" + nowTime);
+
+		String lineSeparator = System.getProperty("line.separator");
+		StringBuffer sb = new StringBuffer();
+		boolean isOk = false;
+		boolean flag = true;
+
+		ArrayList<CouponReq> couponList = new ArrayList<CouponReq>();
+		ArrayList<String> resultList = new ArrayList<String>();
+
+		CSVReader reader = null;
+		// 파일명을 위한 날짜
+		Calendar now = Calendar.getInstance();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHHmmss");
+		StringBuffer strFirstValueTot = new StringBuffer();
+
+		try {
+
+			this.log.info(" 쿠폰(아이템) 상태변경 배치 작업 시작 ");
+			// String url = prop.getString("omp.bp.shopping.coupon.batch.url") + nowTime; // 호출 URL
+			// String url = "http://api.coupon.itopping.co.kr/Bp/getCouponStatusList?scrRange=date&scrDate=" + nowTime;
+			String url = "http://api.coupon.itopping.co.kr/Bp/getCouponStatusList?scrRange=date&scrDate=20131015";
+			// 운영 URL
+			// String url ="http://api.coupon.tstore.co.kr/Bp/getCouponStatusList?scrRange=date&scrDate="+nowTime;
+			this.log.info("호출 URL :::::: " + url);
+
+			this.log.debug("■■■■■ 파일디렉토리 설정 S  ■■■■■");
+			String downDir = this.makeFileDirectory();
+			this.log.debug("■■■■■ 파일디렉토리 설정 E  ■■■■■");
+
+			this.log.debug("■■■■■ 파일명 설정 S  ■■■■■");
+			String fileName = "sync_" + sf.format(now.getTime());
+			fileName = "sync_20140120131746";
+			String fileNameCsv = fileName.replaceAll("-", "") + ".csv";
+			String fileNameLog = fileName.replaceAll("-", "") + ".log";
+			this.log.debug("■■■■■ 파일명 설정 E  ■■■■■");
+
+			// 다운로드 호출
+			this.log.debug("■■■■■ 파일 다운로드 시작 ■■■■■");
+			// this.fileUrlReadAndDownload(url, fileNameCsv, downDir);
+			this.log.debug("■■■■■ 파일 다운로드 끝 ■■■■■");
+
+			this.log.info("■■■■■ read CSV 시작 ■■■■■");
+			reader = new CSVReader(new InputStreamReader(new FileInputStream(downDir + File.separator + fileNameCsv),
+					"UTF-8"), '\t');
+			String[] nextLine = null;
+			String nonContentId = "";
+			String nonItemId = "";
+			String itemCode = "";
+			String newItemId = "";
+
+			while ((nextLine = reader.readNext()) != null) {
+				CouponReq info = new CouponReq();
+
+				if (nextLine[0].toString().equals("1")) {
+					info.setUpType("0"); // 0=상품상태변경, 1=단품상태변경
+				} else {
+					info.setUpType("1"); // 0=상품상태변경, 1=단품상태변경
+				}
+
+				String newCouponId = this.couponItemService.getGenerateId(nextLine[1].toString());
+				if (StringUtils.isBlank(newCouponId)) { // content_id 값이 없으면 log에 남기기
+					nonContentId = "nonContentId::" + sf.format(now.getTime()) + ">>>>쿠폰코드::::"
+							+ nextLine[1].toString();
+					strFirstValueTot.append(nonContentId + lineSeparator);
+					flag = false;
+				}
+				if ((StringUtils.equalsIgnoreCase(info.getUpType(), "1"))) { // 1=단품상태변경 item 값은 필수
+					info.setItemCode(nextLine[2].toString()); // 아이템 코드
+					newItemId = this.couponItemService.getGenerateId(nextLine[2].toString());
+					if (StringUtils.isBlank(newItemId)) {
+						nonItemId = "nonItemId::" + sf.format(now.getTime()) + ">>>>아이템코드::::" + nextLine[2].toString();
+						strFirstValueTot.append(nonItemId + lineSeparator);
+						flag = false;
+					}
+				}
+				if (flag) {
+					info.setCouponCode(nextLine[1].toString()); // 쿠폰 코드
+					info.setCoupnStatus(this.getDPStatusCode(nextLine[3].toString())); // 2:판매대기 , 3:판매중 , 4:판매중지
+																					   // ,5:판매금지
+					info.setNewCouponId(newCouponId);
+					info.setItemCode(nextLine[2].toString()); // 아이템 코드
+					info.setNewItemId(newItemId);
+					couponList.add(info);
+				}
+			}
+
+			reader.close();
+			this.log.info("■■■■■ read CSV 끝 ■■■■■");
+			this.log.info("■■■■■ couponList.size() ■■■■■" + couponList.size());
+
+			resultList = this.couponItemService.updateBatchForCouponStatus(couponList);
+
+			File logFile = new File(downDir, fileNameLog);
+
+			for (String resultCd : resultList) {
+				strFirstValueTot.append(resultCd + lineSeparator);
+			}
+			isOk = this.writeStringBufferMy(logFile, strFirstValueTot); // log 파일 쌓기
+
+			if (!isOk) {
+				this.log.info(" (쿠폰(아이템) 상태 판매대기 -> 판매중 상태 전환 오류 ( " + nowTime + ")");
+				sb.append(" (쿠폰(아이템) 상태 판매대기 -> 판매중 상태 전환 오류 ( " + nowTime + ")");
+			} else {
+				sb.append(" (쿠폰(아이템) 상태 변경 성공");
+			}
+
+			this.log.info(" 쿠폰(아이템) 상태변경 배치 작업 종료 ");
+		} catch (Exception e) {
+			this.log.error("couponStateUpdateStart 생성 중 예외 발생 - (쿠폰(아이템) 상태변경 Batch 처리에러 )" + e.getMessage());
+
+		}
+
+	}
+
+	/**
+	 * File Directory Create
+	 */
+	private String makeFileDirectory() {
+
+		String fullPath = "";
+
+		try {
+			String filePath = "/log/omp/coupon/";
+
+			File dir = new File(filePath);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+
+			fullPath = dir.getPath();
+		} catch (Exception e) {
+			this.log.info("ERROR make File Directory : " + e);
+		}
+
+		return fullPath;
+	}
+
+	/**
+	 * fileAddress에서 파일을 읽어, 다운로드 디렉토리에 다운로드
+	 * 
+	 * @param fileAddress
+	 * @param fileName
+	 * @param downloadDir
+	 */
+	private void fileUrlReadAndDownload(String fileAddress, String fileName, String downloadDir) {
+
+		OutputStream outStream = null;
+		URLConnection uCon = null;
+
+		InputStream is = null;
+		try {
+
+			this.log.debug("□□□□□□□□□ Download Start □□□□□□□□□");
+
+			URL Url;
+			byte[] buf;
+			int byteRead;
+			int byteWritten = 0;
+			Url = new URL(fileAddress);
+			outStream = new BufferedOutputStream(new FileOutputStream(downloadDir + File.separator + fileName));
+			this.log.debug("□□□□□□□□□ Download Start □□□□□□□□□" + downloadDir + File.separator + fileName);
+
+			uCon = Url.openConnection();
+			is = uCon.getInputStream();
+
+			buf = new byte[this.BUFFER_SIZE];
+			while ((byteRead = is.read(buf)) != -1) {
+				outStream.write(buf, 0, byteRead);
+				byteWritten += byteRead;
+			}
+			this.log.info("File name : " + fileName);
+			this.log.debug("□□□□□□□□□ Download End □□□□□□□□□");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				is.close();
+				outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * writeStringBufferMy log 파일 만들기
+	 * 
+	 * @param File
+	 * @param StringBuffer
+	 */
+
+	private boolean writeStringBufferMy(File file, StringBuffer sb) throws Exception {
+		boolean result = true;
+		FileOutputStream fos = new FileOutputStream(file);
+		OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+		int length = sb.length();
+		int bt = 1000;
+		for (int i = 0; i < length;) {
+			int end = i + bt;
+			if (end > length) {
+				end = length;
+			}
+			osw.write(sb.substring(i, end));
+			i = end;
+		}
+		osw.close();
+		fos.close();
+		return result;
+	}
+
 }

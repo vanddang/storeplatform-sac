@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.api.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
@@ -121,5 +122,14 @@ public interface CouponItemService {
 	 * </pre>
 	 */
 	public CouponRes getSpecialProductDetail(String couponCode);
+
+	/**
+	 * 쿠폰(아이템) 판매상태 변경
+	 * 
+	 * @param info
+	 * @return
+	 * @throws InfraException
+	 */
+	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList);
 
 }

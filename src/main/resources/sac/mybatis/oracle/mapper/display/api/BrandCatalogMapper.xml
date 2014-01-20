@@ -71,9 +71,9 @@
     <select id="ID_GEN_SELECT_CATALOG_ID" resultType="String">
        /* BrandCatalogMapper.xml, ID_GEN_SELECT_CATALOG_ID, SAC : 김형식 , 2013-12-30 */
         SELECT 
-          'CT000'||(MAX(SUBSTR(CATALOG_ID,3,8))+1)
+          'CL'||(MAX(SUBSTR(CATALOG_ID,3,8))+1)
         FROM TB_DP_SHPG_CATALOG A
-        WHERE CATALOG_ID LIKE 'CT%'  
+        WHERE CATALOG_ID LIKE 'CL%'  
     </select>    
     
     <!--카탈로그ID 조회-->

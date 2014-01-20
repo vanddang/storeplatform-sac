@@ -9,10 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.api.util;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BasicCodes {
-	private static Logger log = Logger.getLogger(BasicCodes.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private static BasicCodes instance = null;
 
 	/** 예외 메시지용 */
@@ -51,9 +52,9 @@ public class BasicCodes {
 	public synchronized static BasicCodes getInstance() {
 		if (instance == null) {
 			instance = new BasicCodes();
-			log.debug("BasicCodes Instance Create");
+			// log.debug("BasicCodes Instance Create");
 		}
-		log.debug("BasicCodes Instance is not null");
+		// log.debug("BasicCodes Instance is not null");
 		return instance;
 	}
 }
