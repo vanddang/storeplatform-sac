@@ -463,19 +463,28 @@
            WHERE TB.RN = 1 
     </select>
     <select id="getShoppingMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
-       SELECT  * 
+                   SELECT  * 
                    FROM (
                           SELECT 
                                 B.CATALOG_ID 
                                ,C.CATALOG_NM 
+                               ,C.CATALOG_DESC
                                ,NVL(L.PROD_NET_AMT, 0) AS PROD_NET_AMT 
                                ,NVL(L.PROD_AMT, 0) AS PROD_AMT 
                                ,NVL(N.SPRC_DC_RATE, L.DC_RATE) AS DC_RATE
                                ,NVL(N.SPRC_PRICE, L.PROD_AMT) AS DC_AMT
+                               ,CASE WHEN N.SPRC_DC_RATE IS NOT NULL THEN 'Y' ELSE 'N'END AS SPECIAL_SALE_YN
                                ,A.BRAND_ID  
                                ,A.BRAND_NM  
                                ,D.MENU_ID  
-                               ,F.MENU_NM   
+                               ,F.MENU_NM
+                               ,J.TOP_MENU_ID   
+                               ,(SELECT MENU_NM
+                                   FROM TB_DP_MENU_CATEGORY_DESC
+                                  WHERE MENU_ID = J.TOP_MENU_ID
+                                    AND LANG_CD = 'ko'
+                                    AND ROWNUM = 1
+                                ) AS TOP_MENU_NM                                   
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
                                ,CASE WHEN (SYSDATE - 7)    <![CDATA[ <= ]]>  I.REG_DT THEN 'Y' ELSE 'N' END AS NEW_YN  
                                ,I.REG_DT 
@@ -486,26 +495,32 @@
                                ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
-                               ,L.APPLY_END_DT    
+                               ,L.APPLY_END_DT 
+                               ,N.SPRC_APPLY_START_DT
+                               ,N.SPRC_APPLY_END_DT   
                                ,DECODE(I.PROD_CASE_CD
                                      , 'DP006301', 'giftcard'
                                      , 'DP006302', 'exchange'
                                      , 'DP006303', 'delivery' ) PROD_CASE_CD
                                ,J.PROD_CHRG_YN
                                ,I.B2B_PROD_YN
+                               ,PI.FILE_PATH
+                               ,PI.FILE_NM
+                               ,PI.FILE_SIZE                               
                           FROM 
-                                  TB_DP_SHPG_BRAND A
-                                 ,TB_DP_SHPG_CATALOG B
-                                 ,TB_DP_SHPG_CATALOG_DESC C
-                                 ,TB_DP_MENU_SHPG_MAPG D
-                                 ,TB_DP_MENU_CATEGORY E
+                                  TB_DP_SHPG_BRAND         A
+                                 ,TB_DP_SHPG_CATALOG       B
+                                 ,TB_DP_SHPG_CATALOG_DESC  C
+                                 ,TB_DP_MENU_SHPG_MAPG     D
+                                 ,TB_DP_MENU_CATEGORY      E
                                  ,TB_DP_MENU_CATEGORY_DESC F 
-                                 ,TB_DP_PROD_CATALOG_MAPG G 
-                                 ,TB_DP_PROD_RSHP H
-                                 ,TB_DP_SHPG_PROD I
-                                 ,TB_DP_PROD J
-                                 ,TB_DP_TENANT_PROD K
-                                 ,TB_DP_TENANT_PROD_PRICE L
+                                 ,TB_DP_PROD_CATALOG_MAPG  G 
+                                 ,TB_DP_PROD_RSHP          H
+                                 ,TB_DP_SHPG_PROD          I
+                                 ,TB_DP_PROD               J
+                                 ,TB_DP_TENANT_PROD        K
+                                 ,TB_DP_TENANT_PROD_PRICE  L
+                                 ,TB_DP_PROD_IMG           PI
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
                                      FROM TB_DP_TENANT_PROD_STATS 
@@ -515,6 +530,8 @@
                                         B1.PROD_ID
                                       , B1.SPRC_DC_RATE
                                       , B1.SPRC_PRICE
+                                      , B1.SPRC_APPLY_START_DT
+                                      , B1.SPRC_APPLY_END_DT
                                    FROM  TB_DP_PROD_CATALOG_MAPG A1
                                         ,TB_DP_SPRC_PROD B1
                                    WHERE 1=1
@@ -522,7 +539,7 @@
                                      AND B1.EXPO_YN ='Y'
                                      AND B1.CPN_ID IS NOT NULL
                                      AND SYSDATE BETWEEN  B1.SPRC_APPLY_START_DT AND B1.SPRC_APPLY_END_DT 
-                                  )N
+                                  ) N
                         WHERE 1=1
                         AND A.BRAND_ID = B.BRAND_ID
                         AND B.CATALOG_ID = C.CATALOG_ID
@@ -535,6 +552,9 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND C.CATALOG_ID = PI.PROD_ID
+                        AND PI.IMG_CD =#{imageCd}
+                        AND PI.EXPO_ORD ='1'
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)
                       <if test='contentsTypeCd == "PD002501"'>
@@ -543,18 +563,20 @@
                       <if test='contentsTypeCd == "PD002502"'>
                         AND H.PART_PROD_ID = #{prodId}
                       </if>
-                        AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/         
-                        AND C.LANG_CD= #{lang}          /* ko : 한국어 */
-                        AND F.LANG_CD= #{lang}          /* ko : 한국어 */
+                        
+                        AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                        AND PI.LANG_CD= #{langCd}                /* ko : 한국어 */         
+                        AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
+                        AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
-                        AND NVL(I.B2B_PROD_YN, 'N') != 'Y'
+                        AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]>  'Y'
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
                    ) 
-                 WHERE NO =1
+                 WHERE NO =1   
     </select>
  </mapper>
