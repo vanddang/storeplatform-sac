@@ -1015,29 +1015,31 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new RuntimeException("[ SC 디바이스 조회결과가 없습니다.");
 		} else {
 			/* DeviceKey로 다시 조회 */
-			listDeviceReq.setDeviceKey(listDeviceIdRes.getDeviceInfoList().get(0).getDeviceKey());
+
+			for (DeviceInfo deviceInfo : listDeviceIdRes.getDeviceInfoList()) {
+				listDeviceReq.setDeviceKey(deviceInfo.getDeviceKey());
+				listDeviceReq.setDeviceId(null);
+				listDeviceReq.setUserId(null);
+				listDeviceReq.setUserKey(null);
+			}
+
 			listDeviceKeyRes = this.listDevice(requestHeader, listDeviceReq);
 		}
 
-		List<DeviceInfo> deviceInfoList = listDeviceKeyRes.getDeviceInfoList();
 		List<DeviceInfo> deviceModifyList = new ArrayList<DeviceInfo>();
 
-		if (deviceInfoList.size() > 0) {
-			for (DeviceInfo deviceInfo : deviceInfoList) {
+		if (listDeviceKeyRes.getDeviceInfoList().size() > 0) {
+			for (DeviceInfo deviceInfo : listDeviceKeyRes.getDeviceInfoList()) {
 
 				/* 삭제요청한 휴대기기를 제외하고 리스트로 담는다. */
 				if (!req.getDeviceId().equals(deviceInfo.getDeviceId())) {
 					DeviceInfo info = deviceInfo;
-					logger.info("###### 전체목록 : " + deviceInfo.toString());
 					deviceModifyList.add(info);
 				}
 
-				logger.info("###### 디바이스 목록 : " + deviceModifyList.toString());
-				logger.info("###### 삭제요청 디바이스 : " + req.getDeviceId());
-				for (DeviceInfo testInfo : deviceModifyList) {
-					logger.info("###### 삭제요청제외 디바이스 : " + testInfo.toString());
-				}
 			}
+			logger.info("###### 디바이스 목록 : " + deviceModifyList.toString());
+			logger.info("###### 삭제요청 디바이스 : " + req.getDeviceId());
 
 		}
 
