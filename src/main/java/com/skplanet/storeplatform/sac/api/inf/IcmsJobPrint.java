@@ -10,7 +10,8 @@
 
 package com.skplanet.storeplatform.sac.api.inf;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ServiceException;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
@@ -26,7 +27,7 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
 public class IcmsJobPrint {
 
-	private final static Logger log = Logger.getLogger(IcmsJobPrint.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static boolean printBrand(DpBrandInfo info, String title) throws Exception {
 
@@ -45,13 +46,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### BRAND INFO [" + title
 					+ "] BRAND INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■printBrand()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■printBrand()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			// throw new ServiceException("printBrand  Fail", e);
 		}
 
@@ -79,13 +80,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### CATALOG INFO [" + title
 					+ "] CATALOG INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■printCatalog()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■printCatalog()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("printCatalog  Fail", e);
 		}
 
@@ -118,13 +119,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpProdInfo INFO [" + title
 					+ "] TbDpProdInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpProdInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpProdInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpProdInfo  Fail", e);
 		}
 
@@ -168,13 +169,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpShpgProdInfo INFO [" + title
 					+ "] TbDpShpgProdInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpShpgProdInfo  Fail", e);
 		}
 
@@ -198,13 +199,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpProdDescInfo INFO [" + title
 					+ "] TbDpProdDescInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpShpgProdInfo  Fail", e);
 		}
 
@@ -225,13 +226,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpProdRshpInfo INFO [" + title
 					+ "] TbDpProdRshpInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpProdRshpInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpProdRshpInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpProdRshpInfo  Fail", e);
 		}
 
@@ -252,13 +253,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpProdCatalogMapgInfo INFO [" + title
 					+ "] TbDpProdCatalogMapgInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpProdCatalogMapgInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpProdCatalogMapgInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpProdCatalogMapgInfo  Fail", e);
 		}
 
@@ -277,13 +278,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpProdRshpInfo INFO [" + title
 					+ "] TbDpProdOpt INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpProdRshpInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpProdRshpInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpProdOpt  Fail", e);
 		}
 
@@ -309,13 +310,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpTenantProdInfo INFO [" + title
 					+ "] TbDpTenantProdInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpShpgProdInfo  Fail", e);
 		}
 
@@ -346,13 +347,13 @@ public class IcmsJobPrint {
 			debugMsg.append("################################### TbDpTenantProdPriceInfo INFO [" + title
 					+ "] TbDpTenantProdPriceInfo INFO #################################### \n");
 
-			System.out.println(debugMsg.toString());
+			// this.log.debug(debugMsg.toString());
 			debugMsg.setLength(0);
 			debugMsg = null;
 
 		} catch (Exception e) {
-			log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
-			log.debug(e);
+			// this.log.error("■■■■■TbDpShpgProdInfo()■■■■■ : " + e.getMessage());
+			// this.log.debug(e);
 			throw new ServiceException("TbDpShpgProdInfo  Fail", e);
 		}
 
