@@ -606,7 +606,7 @@ public class DummyDataController {
 		deviceInfo.setDeviceType("");
 		deviceInfo.setDeviceModelNo("LG-SH810");
 		deviceInfo.setImMngNum("");
-		deviceInfo.setDeviceTelecom("SKT");
+		deviceInfo.setDeviceTelecom("US001201");
 		deviceInfo.setDeviceNickName("LG-SH810");
 		deviceInfo.setIsPrimary("Y");
 		deviceInfo.setIsAuthenticated("Y");
@@ -640,7 +640,7 @@ public class DummyDataController {
 		userInfo.setIsImChanged("Y");
 		userInfo.setImRegDat("20121126");
 		userInfo.setUserId("hkd");
-		userInfo.setUserTelecom("SKT");
+		userInfo.setUserTelecom("US001201");
 		userInfo.setUserPhoneCountry("82");
 		userInfo.setUserPhone("01011112222");
 		userInfo.setIsRecvSMS("N");
