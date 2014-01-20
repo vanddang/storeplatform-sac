@@ -40,9 +40,9 @@ public class ExistenceServiceImpl implements ExistenceService {
 	 * @return List<ExistenceResponse>
 	 */
 	@Override
-	public List<ExistenceResponse> getExist(ExistenceRequest existenceRequest) {
+	public List<ExistenceResponse> listExist(ExistenceRequest existenceRequest) {
 
-		return this.existenceSCI.getExist(existenceRequest);
+		return this.existenceSCI.listExist(existenceRequest);
 	}
 
 }

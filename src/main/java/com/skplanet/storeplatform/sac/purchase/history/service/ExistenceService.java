@@ -28,6 +28,6 @@ public interface ExistenceService {
 	 *            기구매 체크 SAC
 	 * @return List<ExistenceResponse>
 	 */
-	public List<ExistenceResponse> getExist(ExistenceRequest existenceRequest);
+	public List<ExistenceResponse> listExist(ExistenceRequest existenceRequest);
 
 }

@@ -53,7 +53,7 @@ public class ExistenceController {
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListRes getExist(@RequestBody ExistenceReq existenceReq) {
+	public ExistenceListRes listExist(@RequestBody ExistenceReq existenceReq) {
 
 		// ExistenceListRes res = new ExistenceListRes();
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
@@ -69,7 +69,7 @@ public class ExistenceController {
 		}
 		ExistenceRequest req = this.reqConvert(existenceReq);
 		List<ExistenceResponse> existenceResponse = new ArrayList<ExistenceResponse>();
-		existenceResponse = this.existenceService.getExist(req);
+		existenceResponse = this.existenceService.listExist(req);
 
 		res = this.resConvert(existenceResponse);
 		this.logger.debug("@@@@@@@@@@@@@{} ", res.size());
@@ -93,14 +93,16 @@ public class ExistenceController {
 		req.setTenantId(existenceReq.getTenantId());
 		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
-		// req.setPrchsId(existenceReq.getPrchsId());
-		int size = existenceReq.getExistenceList().size();
-		this.logger.debug("@@@@@@reqConvert@@@@@@@{} ", size);
-		for (int i = 0; i < size; i++) {
-			ExistenceList existenceList = new ExistenceList();
-			existenceList.setProdId(existenceReq.getExistenceList().get(i).getProdId());
-			existenceList.setTenantProdGrpCd(existenceReq.getExistenceList().get(i).getTenantProdGrpCd());
-			list.add(existenceList);
+		req.setPrchsId(existenceReq.getPrchsId());
+		if (existenceReq.getExistenceList() != null) {
+			int size = existenceReq.getExistenceList().size();
+			this.logger.debug("@@@@@@reqConvert@@@@@@@{} ", size);
+			for (int i = 0; i < size; i++) {
+				ExistenceList existenceList = new ExistenceList();
+				existenceList.setProdId(existenceReq.getExistenceList().get(i).getProdId());
+				existenceList.setTenantProdGrpCd(existenceReq.getExistenceList().get(i).getTenantProdGrpCd());
+				list.add(existenceList);
+			}
 		}
 		req.setExistenceList(list);
 
