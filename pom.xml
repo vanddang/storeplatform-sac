@@ -28,6 +28,7 @@
             </plugin> 	
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <!-- 
                 <configuration> 
                     <excludes>
                         <exclude>**/api/**</exclude> 
@@ -35,6 +36,7 @@
                         <exclude>**/sac/**</exclude>
                     </excludes>  
                 </configuration>
+                 -->
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
