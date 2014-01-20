@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
 /**
  * 
@@ -26,13 +26,13 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	}
 
 	@Override
-	public void insertPhoneAuthCode(ServiceAuthDTO serviceAuthInfo) {
+	public void insertPhoneAuthCode(ServiceAuth serviceAuthInfo) {
 		this.commonDao.insert("Miscellaneous.insertPhoneAuthCode", serviceAuthInfo);
 	}
 
 	@Override
-	public ServiceAuthDTO getPhoneAuthYn(ServiceAuthDTO serviceAuthInfo) {
-		return (ServiceAuthDTO) this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo);
+	public ServiceAuth getPhoneAuthYn(ServiceAuth serviceAuthInfo) {
+		return (ServiceAuth) this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo);
 	}
 
 	@Override
@@ -40,4 +40,8 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 		this.commonDao.update("Miscellaneous.updatePhoneAuthYn", authSeq);
 	}
 
+	@Override
+	public String getEmailAuthYn(String mbrNo) {
+		return null;
+	}
 }

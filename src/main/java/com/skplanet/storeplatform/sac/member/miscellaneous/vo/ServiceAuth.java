@@ -7,8 +7,9 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 17. Updated by : 김다슬, 인크로스.
  */
-public class ServiceAuthDTO extends CommonInfo {
-	private static final long serialVersionUid = 1L;
+public class ServiceAuth extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 시퀀스.
@@ -21,7 +22,7 @@ public class ServiceAuthDTO extends CommonInfo {
 	private String mbrNo;
 
 	/**
-	 * Tenant ID
+	 * 테넌트 아이디.
 	 */
 	private String tenantId;
 

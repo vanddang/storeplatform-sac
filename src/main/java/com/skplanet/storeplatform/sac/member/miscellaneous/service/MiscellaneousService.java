@@ -1,8 +1,14 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
@@ -25,8 +31,13 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param request
+	 *            GetUaCodeReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return GetUaCodeRes
 	 * @throws Exception
+	 *             Exception
+	 * 
 	 */
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq request) throws Exception;
 
@@ -38,10 +49,12 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param request
+	 *            GetOpmdReq
 	 * @return GetOpmdRes
 	 * @throws Exception
+	 *             Exception
 	 */
-	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception;
+	public GetOpmdRes getOpmd(GetOpmdReq request) throws Exception;
 
 	/**
 	 * <pre>
@@ -53,8 +66,12 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param request
+	 *            GetPhoneAuthorizationCodeReq
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @return GetPhoneAuthorizationCodeRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader requestHeader,
 			GetPhoneAuthorizationCodeReq request) throws Exception;
@@ -65,8 +82,10 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param request
+	 *            ConfirmPhoneAuthorizationCodeReq
 	 * @return ConfirmPhoneAuthorizationCodeRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request)
 			throws Exception;
@@ -76,9 +95,48 @@ public interface MiscellaneousService {
 	 * Captcha 문자 발급.
 	 * </pre>
 	 * 
-	 * @param req
 	 * @return GetCaptchaRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public GetCaptchaRes getCaptcha() throws Exception;
+
+	/**
+	 * <pre>
+	 * Captcha 문자 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ConfirmCaptchaReq
+	 * @return ConfirmCaptchaRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) throws Exception;
+
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 생성.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetPhoneAuthorizationCodeReq
+	 * @return GetEmailAuthorizationCodeRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(GetEmailAuthorizationCodeReq request)
+			throws Exception;
+
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
+			throws Exception;
 }

@@ -6,15 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
@@ -43,9 +46,13 @@ public class MiscellaneousController {
 	 * UA 코드 정보 조회.
 	 * </pre>
 	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param request
+	 *            GetUaCodeReq
 	 * @return GetUaCodeRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/getUaCode/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -64,14 +71,17 @@ public class MiscellaneousController {
 	 * OPMD 모회선 번호 조회.
 	 * </pre>
 	 * 
-	 * @param msisdn
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param request
+	 *            GetOpmdReq
 	 * @return GetOpmdRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Valid @RequestBody GetOpmdReq request,
-			BindingResult errors) throws Exception {
+	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Valid @RequestBody GetOpmdReq request) throws Exception {
 		GetOpmdRes response = this.service.getOpmd(request);
 
 		return response;
@@ -82,11 +92,15 @@ public class MiscellaneousController {
 	 * 휴대폰 인증 SMS 발송.
 	 * </pre>
 	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param request
+	 *            GetPhoneAuthorizationCodeReq
 	 * @return GetPhoneAuthorizationCodeRes
 	 * @throws Exception
+	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/getPhoneAuthorizationCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/getPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Valid @RequestBody GetPhoneAuthorizationCodeReq request) throws Exception {
@@ -102,11 +116,15 @@ public class MiscellaneousController {
 	 * 휴대폰 인증 코드 확인.
 	 * </pre>
 	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param request
+	 *            ConfirmPhoneAuthorizationCodeReq
 	 * @return ConfirmPhoneAuthorizationCodeRes
 	 * @throws Exception
+	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/confirmPhoneAutorizationCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/confirmPhoneAutorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Valid @RequestBody ConfirmPhoneAuthorizationCodeReq request) throws Exception {
@@ -119,11 +137,12 @@ public class MiscellaneousController {
 
 	/**
 	 * <pre>
-	 * Captcha 문자 발급. - 기능 잠시 보류. ( 휴대폰 인증 부터 개발 예정 2014-01-14)
+	 * Captcha 문자 발급.
 	 * </pre>
 	 * 
 	 * @return GetCaptchaRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/dev/getCaptcha/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -135,4 +154,35 @@ public class MiscellaneousController {
 		LOGGER.debug("######## Captcha 문자 발급 Controller 종료 ##############");
 		return res;
 	}
+
+	/**
+	 * <pre>
+	 * Captcha 문자 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ConfirmCaptchaReq
+	 * @return ConfirmCaptchaRes
+	 */
+	@RequestMapping(value = "/dev/confirmCaptcha/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ConfirmCaptchaRes confirmCaptcha(@RequestBody ConfirmCaptchaReq request) {
+		return null;
+	}
+
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 생성.
+	 * </pre>
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(
+			@Valid @RequestBody GetEmailAuthorizationCodeReq request) {
+
+		return null;
+
+	}
+
 }

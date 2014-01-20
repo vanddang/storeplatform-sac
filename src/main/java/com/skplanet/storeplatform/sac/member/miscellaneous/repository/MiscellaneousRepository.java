@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.repository;
 
-import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuthDTO;
+import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
 /**
  * 
@@ -16,6 +16,7 @@ public interface MiscellaneousRepository {
 	 * </pre>
 	 * 
 	 * @param deviceModelNo
+	 *            String
 	 * @return String
 	 */
 	public String getUaCode(String deviceModelNo);
@@ -25,28 +26,40 @@ public interface MiscellaneousRepository {
 	 * 휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인.
 	 * </pre>
 	 * 
-	 * @param ServiceAuthDTO
-	 *            : serviceAuthInfo
+	 * @param serviceAuthInfo
+	 *            ServiceAuthDTO
 	 * @return ServiceAuthDTO
 	 */
-	public ServiceAuthDTO getPhoneAuthYn(ServiceAuthDTO serviceAuthInfo);
+	public ServiceAuth getPhoneAuthYn(ServiceAuth serviceAuthInfo);
 
 	/**
 	 * <pre>
 	 * 휴대폰 SMS 인증 코드 정보 저장.
 	 * </pre>
 	 * 
-	 * @param ServiceAuthDTO
-	 *            : serviceAuthInfo
+	 * @param serviceAuthInfo
+	 *            ServiceAuthDTO
 	 */
-	public void insertPhoneAuthCode(ServiceAuthDTO serviceAuthInfo);
+	public void insertPhoneAuthCode(ServiceAuth serviceAuthInfo);
 
 	/**
 	 * <pre>
 	 * 휴대폰 SMS 인증 여부 업데이트(인증성공).
 	 * </pre>
 	 * 
-	 * @param userKey
+	 * @param authSeq
+	 *            String
 	 */
-	public void updatePhoneAuthYn(String userKey);
+	public void updatePhoneAuthYn(String authSeq);
+
+	/**
+	 * <pre>
+	 * 회원 Key값으로 이메일 인증 여부 조회.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            String
+	 * @return String
+	 */
+	public String getEmailAuthYn(String mbrNo);
 }
