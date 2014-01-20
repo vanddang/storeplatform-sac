@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
+import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
@@ -65,7 +65,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
 
 	@Autowired
-	private UAPSSCI uapsSCI; // UAPS 연동 Interface.
+	private UapsSCI uapsSCI; // UAPS 연동 Interface.
 
 	@Autowired
 	private UserSCI userSCI; // 회원 Component 사용자 기능 Interface.

@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
-import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
+import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
@@ -64,7 +64,7 @@ public class MemberCommonComponent {
 	private UserSearchServiceImpl userSelectService;
 
 	@Autowired
-	private UAPSSCI uapsSCI;
+	private UapsSCI uapsSCI;
 
 	@Autowired
 	private UserSCI userSCI;
