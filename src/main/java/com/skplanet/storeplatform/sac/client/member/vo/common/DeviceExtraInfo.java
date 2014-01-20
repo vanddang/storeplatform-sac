@@ -21,6 +21,21 @@ public class DeviceExtraInfo extends CommonInfo {
 	 */
 	private String extraProfileValue;
 
+	/**
+	 * 테넌트 아이디
+	 */
+	private String tenentId;
+
+	/**
+	 * 사용자 키
+	 */
+	private String userKey;
+
+	/**
+	 * 휴대기기 키
+	 */
+	private String deviceKey;
+
 	public String getExtraProfile() {
 		return this.extraProfile;
 	}
@@ -35,6 +50,30 @@ public class DeviceExtraInfo extends CommonInfo {
 
 	public void setExtraProfileValue(String extraProfileValue) {
 		this.extraProfileValue = extraProfileValue;
+	}
+
+	public String getTenentId() {
+		return this.tenentId;
+	}
+
+	public void setTenentId(String tenentId) {
+		this.tenentId = tenentId;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }
