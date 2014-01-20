@@ -27,7 +27,7 @@ public class Menu extends CommonInfo implements Serializable {
 	private String id; // 전시 메뉴ID type에 따른 ID
 	private String name; // 전시 메뉴ID에 따른 이름
 	private String type; // 전시 메뉴 타입
-	private int count; // 전시 메뉴 상품수
+	private Integer count; // 전시 메뉴 상품수
 	private Source source; // 전시 메뉴의 graphic resource가 있을 경우 정의
 
 	public String getId() {
@@ -54,11 +54,11 @@ public class Menu extends CommonInfo implements Serializable {
 		this.type = type;
 	}
 
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 
