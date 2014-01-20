@@ -68,7 +68,7 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	// @Test
+	@Test
 	public void createBySimpleDevice() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createBySimple/v1").httpMethod(HttpMethod.POST)
@@ -82,8 +82,8 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 						reqJson.setDeviceId("01076771470");
 						reqJson.setDeviceIdType("msisdn");
-						reqJson.setUserId("planetoneuser2560");
-						reqJson.setUserPw("123456");
+						reqJson.setUserId("!@#$ASDTRYRTYsdfdsfdsgdfyer");
+						reqJson.setUserPw("!@#abcd1234");
 						reqJson.setUserEmail("tlaeo00@naver.com");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US012304");
@@ -110,7 +110,7 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Test
+	// @Test
 	public void createBySimpleId() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createBySimple/v1").httpMethod(HttpMethod.POST)
@@ -123,7 +123,7 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 						reqJson.setDeviceId("");
 						reqJson.setDeviceIdType("");
-						reqJson.setUserId("planetoneuser2560");
+						reqJson.setUserId("planetoneuser256000");
 						reqJson.setUserPw("123456");
 						reqJson.setUserEmail("tlaeo00@naver.com");
 						reqJson.setDeviceTelecom("");
