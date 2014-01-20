@@ -62,15 +62,6 @@ public interface DeviceService {
 	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception;
 
 	/**
-	 * 단말 주요정보 셋팅(SKT 통신사인 경우 서비스 관리번호 조회, 미지원 단말 예외 처리, IOS 이북 보관함 지원 uuid 셋팅)
-	 * 
-	 * @param deviceInfo
-	 * @return
-	 * @throws Exception
-	 */
-	public DeviceInfo setCheckMajorDeviceInfo(String tenantId, DeviceInfo deviceInfo) throws Exception;
-
-	/**
 	 * 휴대기기 대표단말 설정
 	 * 
 	 * @param headerVo

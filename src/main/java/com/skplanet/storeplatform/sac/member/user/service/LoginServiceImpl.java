@@ -384,7 +384,7 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		} else {
+		} else { //One ID가 아닌경우
 
 			IDPReceiverM idpReceiver = this.idpService.userAuthForId(userId, userPw);
 
