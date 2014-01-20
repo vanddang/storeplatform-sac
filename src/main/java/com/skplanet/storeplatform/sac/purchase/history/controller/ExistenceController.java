@@ -94,6 +94,7 @@ public class ExistenceController {
 		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
 		req.setPrchsId(existenceReq.getPrchsId());
+		// 삼품리스트가 없을시 제외
 		if (existenceReq.getExistenceList() != null) {
 			int size = existenceReq.getExistenceList().size();
 			this.logger.debug("@@@@@@reqConvert@@@@@@@{} ", size);

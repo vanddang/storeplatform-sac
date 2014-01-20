@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScList;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.HidingSacService;
@@ -51,13 +52,17 @@ public class HidingController {
 	 */
 	@RequestMapping(value = "/history/hiding/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public List<HidingRes> modifyHiding(@RequestBody HidingReq hidingReq) {
+	public HidingListRes modifyHiding(@RequestBody HidingReq hidingReq) {
 
 		HidingRequest req = this.reqConvert(hidingReq);
 		List<HidingResponse> hidingResponse = new ArrayList<HidingResponse>();
-		hidingResponse = this.hidingSacService.modifyHiding(req);
+		List<HidingRes> hidingRes = new ArrayList<HidingRes>();
 
-		return this.resConvert(hidingResponse);
+		hidingResponse = this.hidingSacService.modifyHiding(req);
+		HidingListRes hidingListRes = new HidingListRes();
+		hidingRes = this.resConvert(hidingResponse);
+		hidingListRes.setHidingRes(hidingRes);
+		return hidingListRes;
 	}
 
 	/**
