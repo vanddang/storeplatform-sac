@@ -143,4 +143,156 @@ public class CreateByMdnTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 필수 약관 미동의 사용자.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	// @Test
+	public void errorTestCase1() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByMdnReq reqJson = new CreateByMdnReq();
+						reqJson.setDeviceId("01088870008");
+						reqJson.setDeviceIdType("msisdn");
+						reqJson.setDeviceTelecom("US001201");
+						reqJson.setImei("A0000031648EE9");
+						reqJson.setJoinId("US002903");
+						reqJson.setIsRecvSms("Y");
+						reqJson.setOwnBirth("20020328");
+
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
+
+						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setParentRealNameMethod("US011101");
+						reqJson.setParentName("홍길동");
+						reqJson.setParentType("F");
+						reqJson.setParentDate(DateUtil.getToday());
+						reqJson.setParentEmail("hkd@aaaa.com");
+						reqJson.setParentBirthDay("19700331");
+						reqJson.setParentTelecom("US001201");
+						reqJson.setParentPhone("01088889999");
+						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+						reqJson.setParentRealNameDate(DateUtil.getToday());
+						reqJson.setParentRealNameSite("US011203"); // shop client 3.0
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByMdnRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByMdnRes res = (CreateByMdnRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 기가입 사용자 사용자.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	// @Test
+	public void errorTestCase2() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByMdnReq reqJson = new CreateByMdnReq();
+						reqJson.setDeviceId("01088870008");
+						reqJson.setDeviceIdType("msisdn");
+						reqJson.setDeviceTelecom("US001201");
+						reqJson.setImei("A0000031648EE9");
+						reqJson.setJoinId("US002903");
+						reqJson.setIsRecvSms("Y");
+						reqJson.setOwnBirth("20020328");
+
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
+
+						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setParentRealNameMethod("US011101");
+						reqJson.setParentName("홍길동");
+						reqJson.setParentType("F");
+						reqJson.setParentDate(DateUtil.getToday());
+						reqJson.setParentEmail("hkd@aaaa.com");
+						reqJson.setParentBirthDay("19700331");
+						reqJson.setParentTelecom("US001201");
+						reqJson.setParentPhone("01088889999");
+						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+						reqJson.setParentRealNameDate(DateUtil.getToday());
+						reqJson.setParentRealNameSite("US011203"); // shop client 3.0
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByMdnRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByMdnRes res = (CreateByMdnRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
 }
