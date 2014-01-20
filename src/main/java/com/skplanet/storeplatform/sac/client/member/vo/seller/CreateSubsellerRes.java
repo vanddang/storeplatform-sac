@@ -15,14 +15,15 @@ public class CreateSubsellerRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String sellerKey;
+	/** 서브계정 키. */
+	private String subSellerKey; // INSD_SELLERMBR_NO
 
-	public String getSellerKey() {
-		return this.sellerKey;
+	public String getSubSellerKey() {
+		return this.subSellerKey;
 	}
 
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
+	public void setSubSellerKey(String subSellerKey) {
+		this.subSellerKey = subSellerKey;
 	}
 
 }
