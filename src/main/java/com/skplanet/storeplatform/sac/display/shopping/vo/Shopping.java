@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.display.shopping.vo;
  * 
  * Updated on : 2013. 01. 07. Updated by : 김형식, SK 플래닛.
  */
-public class ShoppingDTO {
+public class Shopping {
 
 	private int totalCount;
 	private String catagoryId;

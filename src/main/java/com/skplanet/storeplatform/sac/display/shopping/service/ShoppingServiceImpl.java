@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.shopping.vo.ShoppingDTO;
+import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
 
 /**
  * ShoppingList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -91,11 +91,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setStdDt(stdDt);
 
 			Integer totalCount = 0;
-			List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.getFeatureProductList", req,
-					ShoppingDTO.class);
+			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getFeatureProductList", req,
+					Shopping.class);
 
 			if (resultList != null) {
-				ShoppingDTO ShoppingDto = new ShoppingDTO();
+				Shopping ShoppingDto = new Shopping();
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
@@ -341,11 +341,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 
 			Integer totalCount = 0;
-			List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req,
-					ShoppingDTO.class);
+			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req,
+					Shopping.class);
 
 			if (resultList != null) {
-				ShoppingDTO ShoppingDto = new ShoppingDTO();
+				Shopping ShoppingDto = new Shopping();
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
@@ -601,11 +601,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 
 			Integer totalCount = 0;
-			List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req,
-					ShoppingDTO.class);
+			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req,
+					Shopping.class);
 
 			if (resultList != null) {
-				ShoppingDTO ShoppingDto = new ShoppingDTO();
+				Shopping ShoppingDto = new Shopping();
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
