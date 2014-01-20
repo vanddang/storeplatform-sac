@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.api.controller;
 
 import java.text.SimpleDateFormat;
@@ -42,7 +51,6 @@ public class ShoppingCouponSacController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private String ERR_MESSAGE;
 	private String ERR_CODE;
-	private String PARAMETER_STR;
 	public final DpBrandInfo brandInfo;
 	public final DpCatalogInfo catalogInfo;
 	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
@@ -67,6 +75,11 @@ public class ShoppingCouponSacController {
 		this.couponRes = new CouponRes();
 	}
 
+	/**
+	 * ShoppingCouponSacController
+	 * <p/>
+	 * Updated on : 2014. 01. 06 Updated by : 김형식, SK 플래닛.
+	 */
 	@RequestMapping(value = "/api/couponInterface/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CouponRes apiCouponInterface(@RequestBody CouponReq couponReq) {
@@ -695,8 +708,8 @@ public class ShoppingCouponSacController {
 	/**
 	 * 쿠폰 정보 유효성 체크
 	 * 
-	 * @param CouponInfo
-	 *            couponInfo
+	 * @param couponInfo
+	 * 
 	 * @return boolean
 	 */
 	public boolean doValidateCouponInfo(DpCouponInfo couponInfo) {
@@ -1044,14 +1057,6 @@ public class ShoppingCouponSacController {
 
 	public void setERR_CODE(String eRR_CODE) {
 		this.ERR_CODE = eRR_CODE;
-	}
-
-	public String getPARAMETER_STR() {
-		return this.PARAMETER_STR;
-	}
-
-	public void setPARAMETER_STR(String pARAMETER_STR) {
-		this.PARAMETER_STR = pARAMETER_STR;
 	}
 
 	public String getReponse() {

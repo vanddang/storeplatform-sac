@@ -11,6 +11,11 @@ package com.skplanet.storeplatform.sac.api.conts;
 
 import com.skplanet.storeplatform.external.client.shopping.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
 
+/**
+ * 쇼핑 쿠폰용 상수 Class
+ * 
+ * Updated on : 2014. 01. 02. Updated by : 김형식, SK 플래닛
+ */
 public class CouponConstants {
 
 	// 쇼핑쿠폰 전문
@@ -178,9 +183,9 @@ public class CouponConstants {
 	/**
 	 * 4091 error code 가 아닌 경우에는 아리와 같은 메세지로 쇼핑쿠폰에 전송함.
 	 * 
-	 * @param code
-	 * @param errorMsg
-	 * @return
+	 * @param @code
+	 * @param @errorMsg
+	 * @return @String
 	 */
 	public static String getCouponErrorMsg(String code, String errorMsg) {
 		return (code == null) ? "null" : (code.equals(COUPON_IF_ERROR_CODE_OK)) ? "정상" : (code
