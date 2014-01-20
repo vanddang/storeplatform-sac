@@ -96,25 +96,22 @@ public class MenuListServiceImpl implements MenuListService {
 
 				totalCount = mapperVO.getTotalCount();
 
-				menu.setBodyFileName(mapperVO.getBodyFileName());
+				menu.setBodyFileName(mapperVO.getBodyFileNm());
 				menu.setBodyFilePath(mapperVO.getBodyFilePath());
 				menu.setBodyFileSize(mapperVO.getBodyFileSize());
 				menu.setExpoOrd(mapperVO.getExpoOrd());
 				menu.setInfrMenuYn(mapperVO.getInfrMenuYn());
-				menu.setLnbFileName(mapperVO.getLnbFileName());
-				menu.setLnbFilePath(mapperVO.getLnbFilePath());
-				menu.setLnbFileSize(mapperVO.getLnbFileSize());
-				menu.setMainOffFileName(mapperVO.getMainOffFileName());
+				menu.setMainOffFileName(mapperVO.getMainOffFileNm());
 				menu.setMainOffFilePath(mapperVO.getMainOffFilePath());
-				menu.setMainOnFileName(mapperVO.getMainOnFileName());
+				menu.setMainOnFileName(mapperVO.getMainOnFileNm());
 				menu.setMenuDepth(mapperVO.getMenuDepth());
 				menu.setMenuDesc(mapperVO.getMenuDesc());
 				menu.setMenuEngName(mapperVO.getMenuEngNm());
 				menu.setMenuId(mapperVO.getMenuId());
 				menu.setMenuName(mapperVO.getMenuNm());
-				menu.setRankFileName(mapperVO.getRankFileName());
+				menu.setRankFileName(mapperVO.getRankFileNm());
 				menu.setRankFilePath(mapperVO.getRankFilePath());
-				menu.setSearchFileName(mapperVO.getSearchFileName());
+				menu.setSearchFileName(mapperVO.getSearchFileNm());
 				menu.setSearchFilePath(mapperVO.getSearchFilePath());
 				menu.setSystemId(mapperVO.getSystemId());
 				menu.setTargetUrl(mapperVO.getTargetUrl());
@@ -190,25 +187,22 @@ public class MenuListServiceImpl implements MenuListService {
 
 			totalCount = mapperVO.getTotalCount();
 
-			menu.setBodyFileName(mapperVO.getBodyFileName());
+			menu.setBodyFileName(mapperVO.getBodyFileNm());
 			menu.setBodyFilePath(mapperVO.getBodyFilePath());
 			menu.setBodyFileSize(mapperVO.getBodyFileSize());
 			menu.setExpoOrd(mapperVO.getExpoOrd());
 			menu.setInfrMenuYn(mapperVO.getInfrMenuYn());
-			menu.setLnbFileName(mapperVO.getLnbFileName());
-			menu.setLnbFilePath(mapperVO.getLnbFilePath());
-			menu.setLnbFileSize(mapperVO.getLnbFileSize());
-			menu.setMainOffFileName(mapperVO.getMainOffFileName());
+			menu.setMainOffFileName(mapperVO.getMainOffFileNm());
 			menu.setMainOffFilePath(mapperVO.getMainOffFilePath());
-			menu.setMainOnFileName(mapperVO.getMainOnFileName());
+			menu.setMainOnFileName(mapperVO.getMainOnFileNm());
 			menu.setMenuDepth(mapperVO.getMenuDepth());
 			menu.setMenuDesc(mapperVO.getMenuDesc());
 			menu.setMenuEngName(mapperVO.getMenuEngNm());
 			menu.setMenuId(mapperVO.getMenuId());
 			menu.setMenuName(mapperVO.getMenuNm());
-			menu.setRankFileName(mapperVO.getRankFileName());
+			menu.setRankFileName(mapperVO.getRankFileNm());
 			menu.setRankFilePath(mapperVO.getRankFilePath());
-			menu.setSearchFileName(mapperVO.getSearchFileName());
+			menu.setSearchFileName(mapperVO.getSearchFileNm());
 			menu.setSearchFilePath(mapperVO.getSearchFilePath());
 			menu.setSystemId(mapperVO.getSystemId());
 			menu.setTargetUrl(mapperVO.getTargetUrl());

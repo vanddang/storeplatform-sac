@@ -64,10 +64,11 @@
                            , 'Y'
                            , SUM( P.CAT_PROD_CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
                            , P.CAT_PROD_CNT ) AS CAT_PROD_CNT
-                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
-                                             ORDER BY C.MENU_DEPTH
+                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 2, 5 )
+                                             ORDER BY C.MENU_ID
+                                                    , C.MENU_DEPTH 
                                                     , C.EXPO_ORD
-                                                    , C.MENU_NM ) AS CAT_PRIOR
+                                                    ) AS CAT_PRIOR
                     FROM        
                    ( 
                     SELECT M.MENU_ID
@@ -87,7 +88,6 @@
                        AND TM.TENANT_ID = #{tenantId}
                        AND TM.SYSTEM_ID = #{systemId}
                        AND M.MENU_ID LIKE #{menuId}||'%'
-                       /* AND M.MENU_DEPTH >= 1 */
                        AND M.USE_YN = 'Y'
                        AND D.LANG_CD = #{langCd}
                        AND TM.USE_YN = 'Y'
@@ -115,7 +115,7 @@
                       AND SH.PROD_ID = P.PROD_ID
                       AND PHI.DEVICE_MODEL_CD = #{deviceModelCd}
                       AND TP.PROD_STATUS_CD = 'PD000403'
-                      AND (C.TOP_MENU_ID = #{menuId} OR C.MENU_ID = #{menuId})
+                      AND P.TOP_MENU_ID = #{menuId}
                       AND PHI.USE_YN = 'Y'
                       AND C.USE_YN = 'Y'
                       AND PHI.MUSIC_SPRT_YN = 'Y'  
@@ -135,7 +135,7 @@
                     SELECT
                           NVL( COUNT(*), 0 ) AS CAT_PROD_CNT
                         , 'DP16003001' AS MENU_ID
-                     FROM TB_DP_MULTIMDA_PROD_0108_01 MP
+                     FROM TB_DP_MULTIMDA_PROD MP
                         , TB_DP_PROD P
                         , TB_DP_PROD_RSHP SP                      
                         , TB_DP_TENANT_PROD TP
@@ -154,7 +154,7 @@
                       AND SH.PROD_ID = P.PROD_ID
                       AND PHI.DEVICE_MODEL_CD = #{deviceModelCd}
                       AND TP.PROD_STATUS_CD = 'PD000403'
-                      AND (C.TOP_MENU_ID = #{menuId} OR C.MENU_ID = #{menuId})
+                      AND P.TOP_MENU_ID = #{menuId}
                       AND PHI.USE_YN = 'Y'
                       AND C.USE_YN = 'Y'
                       AND PHI.MUSIC_SPRT_YN = 'Y'  
@@ -185,11 +185,11 @@
 		         , SUM( C.MENU_PROD_CNT ) OVER ( ) AS TOTAL_PROD_CNT
 		         , C.MENU_ID
 		         , C.MENU_NM
-		         , C.INFR_MENU_YN AS SUB_YN
+		         , C.INFR_MENU_YN
 		         , C.MENU_DEPTH
 		         , C.FILE_POS
 		         , C.FILE_SIZE
-		         , C.MENU_DESC AS MENU_DESC
+		         , C.MENU_DESC
 		         , NVL(C.MENU_PROD_CNT, 0) AS MENU_PROD_CNT         
 		      FROM
 		         (
@@ -206,10 +206,11 @@
 		                       , 'Y'
 		                       , SUM( P.MENU_PROD_CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
 		                       , P.MENU_PROD_CNT ) AS MENU_PROD_CNT
-		               , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
-		                                         ORDER BY C.MENU_DEPTH
-		                                                , C.EXPO_ORD
-		                                                , C.MENU_NM ) AS CAT_PRIOR
+	                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 2, 5 )
+	                                             ORDER BY C.MENU_ID
+	                                                    , C.MENU_DEPTH 
+	                                                    , C.EXPO_ORD
+	                                                    ) AS CAT_PRIOR
 		                FROM        
 		               ( 
 		                SELECT M.MENU_ID
@@ -229,7 +230,6 @@
 	                       AND TM.TENANT_ID = #{tenantId}
 	                       AND TM.SYSTEM_ID = #{systemId}
 	                       AND M.MENU_ID LIKE #{menuId}||'%'
-	                       /* AND M.MENU_DEPTH >= 1 */
 	                       AND M.USE_YN = 'Y'
 	                       AND D.LANG_CD = #{langCd}
 	                       AND TM.USE_YN = 'Y'
@@ -342,120 +342,102 @@
     <!-- EBOOK/Comic 상세 카테고리 조회-->
     <select id="getEBookComicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
         /* MenuCategoryMapper.xml, getEBookDetailCategoryList, JuYoungYun, 2014-01-10 */
-    	SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
-             , MENU_ID
-             , MENU_NM
-             , MENU_DESC
-             , MENU_DEPTH
-             , INFR_MENU_YN AS SUB_YN
-             , MENU_PROD_CNT
-             , SUM( MENU_PROD_CNT ) OVER () AS TOTAL_PROD_CNT
-             , FILE_POS
-             , FILE_SIZE
+        SELECT COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
+             , C.MENU_ID
+             , C.MENU_NM
+             , C.MENU_DESC
+             , C.MENU_DEPTH
+             , C.INFR_MENU_YN
+             , C.UP_MENU_ID
+             , C.EXPO_ORD
+             , C.FILE_POS
+             , C.FILE_SIZE
+             , DECODE( C.INFR_MENU_YN
+                     , 'Y'
+                     , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
+                     , P.CNT ) AS MENU_PROD_CNT
           FROM
-             (
-              SELECT C.MENU_ID
-                   , C.MENU_NM
-                   , C.MENU_DESC
-                   , C.MENU_DEPTH
-                   , C.INFR_MENU_YN
-                   , C.UP_MENU_ID
-                   , C.EXPO_ORD
-                   , C.FILE_POS
-                   , C.FILE_SIZE
-                   , DECODE( C.INFR_MENU_YN
-                           , 'Y'
-                           , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
-                           , P.CNT ) AS MENU_PROD_CNT
-                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
-                                             ORDER BY C.MENU_DEPTH
-                                                    , C.EXPO_ORD
-                                                    , C.MENU_NM ) AS CAT_PRIOR
-                FROM
-                (
-                    SELECT M.MENU_ID
-                         , D.MENU_NM
-                         , D.MENU_DESC
-                         , TM.EXPO_ORD
-                         , M.MENU_DEPTH
-                         , M.UP_MENU_ID
-                         , M.INFR_MENU_YN
-                         , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
-                         , TM.BODY_FILE_SIZE AS FILE_SIZE
-                      FROM TB_DP_MENU_CATEGORY M
-                          ,TB_DP_MENU_CATEGORY_DESC D
-                          ,TB_DP_TENANT_MENU TM
-                     WHERE M.MENU_ID = D.MENU_ID
-                       AND TM.TENANT_MENU_ID = M.MENU_ID
-                       AND TM.TENANT_ID = #{tenantId}
-                       AND TM.SYSTEM_ID = #{systemId}
-                       AND M.MENU_ID LIKE #{menuId}||'%'
-                       AND M.USE_YN = 'Y'
-                       AND D.LANG_CD = 'ko'
-                       AND TM.USE_YN = 'Y'
-                    )  C
-                    ,
+          (
+              SELECT M.MENU_ID
+                   , D.MENU_NM
+                   , D.MENU_DESC
+                   , TM.EXPO_ORD
+                   , M.MENU_DEPTH
+                   , M.UP_MENU_ID
+                   , M.INFR_MENU_YN
+                   , CONCAT( TM.BODY_FILE_PATH, TM.BODY_FILE_NM ) AS FILE_POS
+                   , TM.BODY_FILE_SIZE AS FILE_SIZE
+                FROM TB_DP_MENU_CATEGORY M
+                    ,TB_DP_MENU_CATEGORY_DESC D
+                    ,TB_DP_TENANT_MENU TM
+               WHERE M.MENU_ID = D.MENU_ID
+                 AND TM.TENANT_MENU_ID = M.MENU_ID
+                 AND TM.TENANT_ID = #{tenantId}
+                 AND TM.SYSTEM_ID = #{systemId}
+                 AND M.MENU_ID LIKE #{menuId}||'%'
+                 AND M.USE_YN = 'Y'
+                 AND D.LANG_CD = 'ko'
+                 AND TM.USE_YN = 'Y'
+              )  C
+              ,
+              (
+               SELECT MENU_ID
+                    , COUNT(*) AS CNT
+                 FROM
                     (
-                     SELECT MENU_ID
-                          , COUNT(*) AS CNT
-                       FROM
-                          (
-                            SELECT C.MENU_ID
-                                 , CP.PROD_ID AS CHNL_PROD_ID
-                              FROM TB_DP_PROD P
-                                 , TB_DP_PROD_RSHP CP
-                                 , TB_DP_TENANT_PROD TP
-                                 , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-                                 , TB_DP_MENU_CATEGORY C
-                                 , (SELECT SH.PROD_ID
-                                         , PI.EBOOK_SPRT_YN
-                                         , PI.MAGAZINE_SPRT_YN
-                                         , PI.COMIC_SPRT_YN
-                                      FROM TB_DP_SPRT_DEVICE SH
-                                         , TB_CM_DEVICE PI 
-                                     WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
-                                       AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
-                                       AND PI.USE_YN = 'Y') SHI  
-                                 , TB_DP_PROD P2
-                                 , TB_DP_TENANT_PROD TP2
-                                 , TB_DP_MULTIMDA_PROD PM
-                             WHERE P.PROD_ID = CP.PROD_ID -- CHENAL PROD
-                               AND TP.PROD_ID = CP.PROD_ID
-                               AND TP2.PROD_ID = CP.PART_PROD_ID
-                               AND MP.PROD_ID = P.PROD_ID
-                               AND PM.PROD_ID = CP.PROD_ID
-                               AND MP.MENU_ID = C.MENU_ID
-                               AND CP.PART_PROD_ID = SHI.PROD_ID
-                               AND CP.PART_PROD_ID = P2.PROD_ID
-                               AND C.MENU_ID LIKE #{menuId}||'%'
-                               AND C.USE_YN = 'Y'
-                            <if test='menuId == "DP13"'>
-                               AND DECODE( SHI.EBOOK_SPRT_YN
-                                          , 'Y'
-                                          , DECODE( P.META_CLSF_CD
-                                                  , 'CT24' -- 잡지
-                                                  , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                  , 'CT26' -- 인터렉티브 잡지
-                                                  , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
-                                                  , 1 )
-                                          , 0 ) = 1
-							</if>
-							<if test='menuId == "DP14"'>
-                               AND SHI.COMIC_SPRT_YN = 'Y'
-                            </if>
-                               AND P.SVC_GRP_CD = 'DP000203' -- 멀티미디어
-                               AND P2.SVC_GRP_CD = 'DP000203' -- 멀티미디어
-                               AND TP.PROD_STATUS_CD = 'PD000403'
-                               AND TP.EXPO_YN = 'Y'
-                               AND TP2.PROD_STATUS_CD = 'PD000403' 
-                               AND TP2.EXPO_YN = 'Y'
-                           )
-                       GROUP BY MENU_ID
-                      ) P
-                  WHERE C.MENU_ID = P.MENU_ID(+)
-              )
---        WHERE MENU_PROD_CNT > 0
-          ORDER BY CAT_PRIOR
+                      SELECT C.MENU_ID
+                           , CP.PROD_ID AS CHNL_PROD_ID
+                        FROM TB_DP_PROD P
+                           , TB_DP_PROD_RSHP CP
+                           , TB_DP_TENANT_PROD TP
+                           , TB_DP_MENU_CATEGORY_PROD_MAPG MP
+                           , TB_DP_MENU_CATEGORY C
+                           , (SELECT SH.PROD_ID
+                                   , PI.EBOOK_SPRT_YN
+                                   , PI.MAGAZINE_SPRT_YN
+                                   , PI.COMIC_SPRT_YN
+                                FROM TB_DP_SPRT_DEVICE SH
+                                   , TB_CM_DEVICE PI 
+                               WHERE SH.DEVICE_MODEL_CD = PI.DEVICE_MODEL_CD
+                                 AND PI.DEVICE_MODEL_CD = #{deviceModelCd}
+                                 AND PI.USE_YN = 'Y') SHI  
+                           , TB_DP_PROD P2
+                           , TB_DP_TENANT_PROD TP2
+                           , TB_DP_MULTIMDA_PROD PM
+                       WHERE P.PROD_ID = CP.PROD_ID -- CHENAL PROD
+                         AND TP.PROD_ID = CP.PROD_ID
+                         AND TP2.PROD_ID = CP.PART_PROD_ID
+                         AND MP.PROD_ID = P.PROD_ID
+                         AND PM.PROD_ID = CP.PROD_ID
+                         AND MP.MENU_ID = C.MENU_ID
+                         AND CP.PART_PROD_ID = SHI.PROD_ID
+                         AND CP.PART_PROD_ID = P2.PROD_ID
+                         AND C.MENU_ID LIKE #{menuId}||'%'
+                         AND C.USE_YN = 'Y'
+                    <if test='menuId == "DP13"'>
+                         AND DECODE( SHI.EBOOK_SPRT_YN
+                                    , 'Y'
+                                    , DECODE( P.META_CLSF_CD
+                                            , 'CT24' -- 잡지
+                                            , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                            , 'CT26' -- 인터렉티브 잡지
+                                            , DECODE( SHI.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+                                            , 1 )
+                                    , 0 ) = 1
+					</if>
+					<if test='menuId == "DP14"'>
+                         AND SHI.COMIC_SPRT_YN = 'Y'
+                    </if>
+                         AND P.SVC_GRP_CD = 'DP000203' -- 멀티미디어
+                         AND P2.SVC_GRP_CD = 'DP000203' -- 멀티미디어
+                         AND TP.PROD_STATUS_CD = 'PD000403'
+                         AND TP.EXPO_YN = 'Y'
+                         AND TP2.PROD_STATUS_CD = 'PD000403' 
+                         AND TP2.EXPO_YN = 'Y'
+                     )
+                 GROUP BY MENU_ID
+                ) P
+            WHERE C.MENU_ID = P.MENU_ID(+)
     </select>
 
 
@@ -536,7 +518,7 @@
              , MENU_NM
              , MENU_DESC
              , MENU_DEPTH
-             , INFR_MENU_YN AS SUB_YN
+             , INFR_MENU_YN
              , MENU_PROD_CNT
              , SUM( MENU_PROD_CNT ) OVER () AS TOTAL_PROD_CNT
              , FILE_POS
@@ -556,10 +538,11 @@
                            , 'Y'
                            , SUM( P.CNT ) OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 ) )
                            , P.CNT ) AS MENU_PROD_CNT
-                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 0, 7 )
-                                             ORDER BY C.MENU_DEPTH
+                   , ROW_NUMBER() OVER ( PARTITION BY SUBSTR( C.MENU_ID, 2, 5 )
+                                             ORDER BY C.MENU_ID
+                                                    , C.MENU_DEPTH 
                                                     , C.EXPO_ORD
-                                                    , C.MENU_NM ) AS CAT_PRIOR
+                                                    ) AS CAT_PRIOR
                 FROM
                 (
                     SELECT M.MENU_ID

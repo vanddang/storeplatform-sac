@@ -21,8 +21,8 @@ public class MenuDetailDTO {
 	private String tenantId = ""; // tenant id
 	private String menuId = ""; // menu id
 	private String systemId = ""; // system id
-	private String menuNm = ""; // menu name
-	private String menuEngNm = ""; // menu English name
+	private String menuNm = ""; // menu Nm
+	private String menuEngNm = ""; // menu English Nm
 	private String menuDesc = ""; // menu description
 	private String menuDepth = ""; // menu depth
 	private String infrMenuYn = "";
@@ -30,19 +30,16 @@ public class MenuDetailDTO {
 	private String expoOrd = "";
 	private String targetUrl = "";
 	private String searchFilePath = "";
-	private String searchFileName = "";
-	private String lnbFilePath = "";
-	private String lnbFileName = "";
-	private String lnbFileSize = "";
+	private String searchFileNm = "";
 	private String bodyFilePath = "";
-	private String bodyFileName = "";
+	private String bodyFileNm = "";
 	private Integer bodyFileSize;
 	private String mainOnFilePath = "";
-	private String mainOnFileName = "";
+	private String mainOnFileNm = "";
 	private String mainOffFilePath = "";
-	private String mainOffFileName = "";
+	private String mainOffFileNm = "";
 	private String rankFilePath = "";
-	private String rankFileName = "";
+	private String rankFileNm = "";
 	private String useYn = "";
 
 	public int getTotalCount() {
@@ -149,36 +146,12 @@ public class MenuDetailDTO {
 		this.searchFilePath = searchFilePath;
 	}
 
-	public String getSearchFileName() {
-		return this.searchFileName;
+	public String getSearchFileNm() {
+		return this.searchFileNm;
 	}
 
-	public void setSearchFileName(String searchFileName) {
-		this.searchFileName = searchFileName;
-	}
-
-	public String getLnbFilePath() {
-		return this.lnbFilePath;
-	}
-
-	public void setLnbFilePath(String lnbFilePath) {
-		this.lnbFilePath = lnbFilePath;
-	}
-
-	public String getLnbFileName() {
-		return this.lnbFileName;
-	}
-
-	public void setLnbFileName(String lnbFileName) {
-		this.lnbFileName = lnbFileName;
-	}
-
-	public String getLnbFileSize() {
-		return this.lnbFileSize;
-	}
-
-	public void setLnbFileSize(String lnbFileSize) {
-		this.lnbFileSize = lnbFileSize;
+	public void setSearchFileNm(String searchFileNm) {
+		this.searchFileNm = searchFileNm;
 	}
 
 	public String getBodyFilePath() {
@@ -189,12 +162,12 @@ public class MenuDetailDTO {
 		this.bodyFilePath = bodyFilePath;
 	}
 
-	public String getBodyFileName() {
-		return this.bodyFileName;
+	public String getBodyFileNm() {
+		return this.bodyFileNm;
 	}
 
-	public void setBodyFileName(String bodyFileName) {
-		this.bodyFileName = bodyFileName;
+	public void setBodyFileNm(String bodyFileNm) {
+		this.bodyFileNm = bodyFileNm;
 	}
 
 	public Integer getBodyFileSize() {
@@ -213,12 +186,12 @@ public class MenuDetailDTO {
 		this.mainOnFilePath = mainOnFilePath;
 	}
 
-	public String getMainOnFileName() {
-		return this.mainOnFileName;
+	public String getMainOnFileNm() {
+		return this.mainOnFileNm;
 	}
 
-	public void setMainOnFileName(String mainOnFileName) {
-		this.mainOnFileName = mainOnFileName;
+	public void setMainOnFileNm(String mainOnFileNm) {
+		this.mainOnFileNm = mainOnFileNm;
 	}
 
 	public String getMainOffFilePath() {
@@ -229,12 +202,12 @@ public class MenuDetailDTO {
 		this.mainOffFilePath = mainOffFilePath;
 	}
 
-	public String getMainOffFileName() {
-		return this.mainOffFileName;
+	public String getMainOffFileNm() {
+		return this.mainOffFileNm;
 	}
 
-	public void setMainOffFileName(String mainOffFileName) {
-		this.mainOffFileName = mainOffFileName;
+	public void setMainOffFileNm(String mainOffFileNm) {
+		this.mainOffFileNm = mainOffFileNm;
 	}
 
 	public String getRankFilePath() {
@@ -245,12 +218,12 @@ public class MenuDetailDTO {
 		this.rankFilePath = rankFilePath;
 	}
 
-	public String getRankFileName() {
-		return this.rankFileName;
+	public String getRankFileNm() {
+		return this.rankFileNm;
 	}
 
-	public void setRankFileName(String rankFileName) {
-		this.rankFileName = rankFileName;
+	public void setRankFileNm(String rankFileNm) {
+		this.rankFileNm = rankFileNm;
 	}
 
 	public String getUseYn() {

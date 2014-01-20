@@ -20,7 +20,7 @@
                 SEARCH_FILE_NM       ,
                 BODY_FILE_PATH       ,
                 BODY_FILE_NM         ,
-                BODY_FILE_SIZE       ,
+                NVL(BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE,
                 MAIN_ON_FILE_PATH    ,
                 MAIN_ON_FILE_NM      ,
                 MAIN_OFF_FILE_PATH   ,
@@ -56,7 +56,7 @@
                SEARCH_FILE_NM       ,
                BODY_FILE_PATH       ,
                BODY_FILE_NM         ,
-               BODY_FILE_SIZE       ,
+               NVL(BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE,
                MAIN_ON_FILE_PATH    ,
                MAIN_ON_FILE_NM      ,
                MAIN_OFF_FILE_PATH   ,
@@ -82,7 +82,7 @@
                M.MENU_ID,
                T.MENU_NM,
                T.MENU_DESC,
-               T.BODY_FILE_SIZE
+               NVL(T.BODY_FILE_SIZE, 0) AS BODY_FILE_SIZE
           FROM TB_DP_TENANT_MENU T,
                TB_DP_MENU_CATEGORY M
          WHERE M.MENU_ID = T.TENANT_MENU_ID
