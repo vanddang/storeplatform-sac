@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -68,6 +69,9 @@ public class AuthorizeByMdnTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * 정상
+	 */
 	@Test
 	public void shouldAuthorizeByMdn() {
 
@@ -87,13 +91,58 @@ public class AuthorizeByMdnTest {
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 							req.setDeviceId("01020284280");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom("US001201");
-							req.setNativeId("358362045580842");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							req.setNativeId("3583620455808421");
 							req.setRooting("N");
 							req.setDeviceAccount("vanddang333@gmail.com");
 							req.setIsAutoUpdate("Y");
 							req.setScVer("1.0");
 
+							logger.info("request param : {}", req.toString());
+
+							return req;
+						}
+					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							logger.info("response param : {}", res.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 단말 정보 수정 여부 확인(shouldAuthorizeByMdn 실행 후 해야 확인 가능)
+	 */
+	@Test
+	public void shouldAuthorizeByMdn2() {
+
+		try {
+
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeByMdn/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110\",osVersion=\"1.1\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+					.requestBody(new RequestBodySetter() {
+						@Override
+						public Object requestBody() {
+
+							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
+							req.setDeviceId("01020284280");
+							req.setDeviceIdType("msisdn");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							req.setNativeId("358362045580842");
+							req.setRooting("Y");
+							req.setDeviceAccount("vanddang444@gmail.com");
+							req.setIsAutoUpdate("N");
+							req.setScVer("1.1");
 							logger.info("request param : {}", req.toString());
 
 							return req;
@@ -130,12 +179,13 @@ public class AuthorizeByMdnTest {
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 		req.setDeviceId("01020284280");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("US012101");
-		req.setNativeId("358362045580842");
-		req.setRooting("N");
-		req.setDeviceAccount("vanddang333@gmail.com");
-		req.setIsAutoUpdate("Y");
-		req.setScVer("1.0");
+		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+		//req.setNativeId("358362045580842");
+		req.setRooting("Y");
+		req.setDeviceAccount("vanddang444@gmail.com");
+		req.setIsAutoUpdate("N");
+		req.setScVer("1.1");
+		logger.info("request param : {}", req.toString());
 
 		try {
 			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(header, req);

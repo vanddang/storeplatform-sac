@@ -33,6 +33,10 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -62,12 +66,18 @@ public class AuthorizeByIdTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-	// @Test
+	@Test
 	public void shouldAuthorizeById() {
 
 		try {
 
-			new TestCaseTemplate(this.mockMvc).url("/dev/member/user/authorizeById/v1").httpMethod(HttpMethod.POST)
+			new TestCaseTemplate(this.mockMvc)
+					.url("/member/user/authorizeById/v1")
+					.httpMethod(HttpMethod.POST)
+					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+					.addHeaders("Accept", "application/json")
+					.addHeaders("x-planet-device-info",
+							"model=\"SHW-M110S\",osVersion=\"1.0\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 					.requestBody(new RequestBodySetter() {
 						@Override
 						public Object requestBody() {
@@ -75,12 +85,12 @@ public class AuthorizeByIdTest {
 							req.setDeviceModelNo("SHW-M250S");
 							req.setOsVerOrg("1.0");
 							req.setDeviceId("01073215212");
-							// req.setDeviceId("01088870008");
+							req.setUserId("hdk");
+							req.setUserPw("123qwe");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom("US012101");
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setDeviceAccount("vanddang@gmail.com");
 							req.setScVer("1.0");
-
 							logger.info("request param : {}", req.toString());
 
 							return req;
@@ -101,19 +111,32 @@ public class AuthorizeByIdTest {
 
 	@Test
 	public void shouldAuthorizeByIdService() {
+		TenantHeader tenantHeader = new TenantHeader();
+		tenantHeader.setSystemId("S001");
+		tenantHeader.setTenantId("S01");
+
+		DeviceHeader deviceHeader = new DeviceHeader();
+		//deviceHeader.setModel("SHW-M440S");
+		deviceHeader.setModel("SHW-M110S");
+		deviceHeader.setOsVersion("1.0");
+
+		SacRequestHeader header = new SacRequestHeader();
+		header.setDeviceHeader(deviceHeader);
+		header.setTenantHeader(tenantHeader);
+
 		AuthorizeByIdReq req = new AuthorizeByIdReq();
 		req.setDeviceModelNo("SHW-M250S");
 		req.setOsVerOrg("1.0");
 		req.setDeviceId("01073215212");
-		req.setUserId("hdk");
-		req.setUserPw("123qwe");
+		req.setUserId("planetoneuser1688");
+		req.setUserPw("pw1357!@#$");
 		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom("US012101");
+		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 		req.setDeviceAccount("vanddang@gmail.com");
 		req.setScVer("1.0");
 
 		try {
-			AuthorizeByIdRes res = this.loginService.authorizeById(null, req);
+			AuthorizeByIdRes res = this.loginService.authorizeById(header, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
