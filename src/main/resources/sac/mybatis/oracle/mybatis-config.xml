@@ -96,7 +96,7 @@
 
        <!-- 쇼핑 상품 조회 -->                                                         
         <typeAlias alias="ShoppingReq"  type="com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq" />
-        <typeAlias alias="ShoppingDTO"  type="com.skplanet.storeplatform.sac.display.shopping.vo.ShoppingDTO" />
+        <typeAlias alias="Shopping"  type="com.skplanet.storeplatform.sac.display.shopping.vo.Shopping" />
         
         <!-- BEST 앱 상품 조회 -->
         <typeAlias alias="BestAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq" />
