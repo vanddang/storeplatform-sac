@@ -18,6 +18,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * 
+ * Interpark Controller Test
+ * 
+ * Updated on : 2014. 1. 20. Updated by : 김현일, 인크로스.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -29,23 +35,33 @@ public class InterparkControllerTest {
 
 	private MockMvc mvc;
 
+	/**
+	 * 
+	 * <pre>
+	 * 초기화.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Interpark Controller GetAuthKey 기능 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
 	@Test
 	public void testGetAuthkey() throws Exception {
 		this.mvc.perform(
 				get("/other/interpark/getAuthkey/v1")
-				.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-				.param("type", "order")
-				.param("revOrdNo", "00000000000000000001")
-				.param("ebFileNo", "100656")
-		)
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().contentType("application/json;charset=UTF-8"));
+						.accept(MediaType.parseMediaType("application/json;charset=UTF-8")).param("type", "order")
+						.param("revOrdNo", "00000000000000000001").param("ebFileNo", "100656")).andDo(print())
+				.andExpect(status().isOk()).andExpect(content().contentType("application/json;charset=UTF-8"));
 		// .andExpect(jsonPath("$.id").value("#17"));
 	}
 
