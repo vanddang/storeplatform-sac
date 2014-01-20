@@ -13,12 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.ResetPasswordSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.ResetPasswordSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
@@ -47,6 +50,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
@@ -486,16 +491,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		CheckPasswordReminderSellerResponse schRes = new CheckPasswordReminderSellerResponse();
 		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
-
 		schReq.setSellerID(req.getSellerID());
 
 		/** 보안질문 리스트 주입 - [시작]. */
@@ -514,10 +509,58 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
 
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
 		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
 
 		CheckPasswordReminderQuestionRes response = new CheckPasswordReminderQuestionRes();
 		response.setIsCorrect(schRes.getIsCorrect());
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * Password 찾기.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return SearchPasswordRes
+	 */
+	@Override
+	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception {
+
+		ResetPasswordSellerResponse schRes = new ResetPasswordSellerResponse();
+		ResetPasswordSellerRequest schReq = new ResetPasswordSellerRequest();
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberID(req.getSellerId()); // 셀러 id 를 넣어야한다.
+
+		schReq.setMbrPwd(mbrPwd);
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
+		schRes = this.sellerSCI.resetPasswordSeller(schReq);
+
+		SearchPasswordRes response = new SearchPasswordRes();
+		response.setNewPassword(schRes.getSellerPW());
+
 		return response;
 
 	}

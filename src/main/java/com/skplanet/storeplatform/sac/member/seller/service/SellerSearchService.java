@@ -12,6 +12,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface SellerSearchService {
@@ -63,5 +65,12 @@ public interface SellerSearchService {
 	 */
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			CheckPasswordReminderQuestionReq req) throws Exception;
+
+	/**
+	 * 판매자 회원 Password 찾기.
+	 * 
+	 * @throws Exception
+	 */
+	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception;
 
 }

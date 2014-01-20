@@ -26,6 +26,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
@@ -191,4 +193,26 @@ public class SellerSearchController {
 
 		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
+
+	/**
+	 * <pre>
+	 * 판매자 Password 찾기.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return SearchIdRes
+	 */
+	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception {
+
+		String sellerId = StringUtil.nvl(req.getSellerId(), "");
+
+		if (sellerId.equals("")) {
+			throw new Exception("필수 파라미터 미존재");
+		}
+
+		return this.sellerSearchService.searchPassword(header, req);
+	}
+
 }

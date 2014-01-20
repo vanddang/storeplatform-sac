@@ -224,7 +224,7 @@ public class DummySellerController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchPasswordRes searchPassword() {
 
