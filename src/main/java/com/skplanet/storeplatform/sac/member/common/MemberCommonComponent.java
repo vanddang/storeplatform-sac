@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
+import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -161,7 +162,10 @@ public class MemberCommonComponent {
 	 */
 	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
 		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
-		return this.uapsSCI.getMappingInfo(pReqParam, type);
+		UapsReq uapsReq = new UapsReq();
+		uapsReq.setDeviceId(pReqParam);
+		uapsReq.setType(type);
+		return this.uapsSCI.getMappingInfo(uapsReq);
 	}
 
 	/**
@@ -335,7 +339,8 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             MajorDeviceInfo
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType)
+			throws Exception {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 

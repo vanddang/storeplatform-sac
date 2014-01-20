@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
 import com.skplanet.storeplatform.external.client.uaps.sci.UAPSSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
@@ -93,7 +94,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			LOGGER.debug("############ >> msisdn {} ", msisdn);
 			/** 1) OPMD 모번호 조회 (UAPS 연동) */
 			OpmdRes opmdRes = new OpmdRes();
-			opmdRes = this.uapsSCI.getOpmdInfo(msisdn);
+			UapsReq uapsReq = new UapsReq();
+			uapsReq.setDeviceId(msisdn);
+			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 
 			LOGGER.debug("############ >> opmdRes {}", opmdRes);
 			/** 2) UAPS 연동 결과 확인 */
@@ -221,7 +224,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
-		smsReq.setDeviceTelecom("SKT"); // Carrier로 파라미터명 변경 예정 ( 테넌트에서 부터 파라미터를 SKT, KT, LGT로 받는다. )
+		smsReq.setCarrier("SKT"); // Carrier로 파라미터명 변경 예정 ( 테넌트에서 부터 파라미터를 SKT, KT, LGT로 받는다. )
 		smsReq.setSendMdn(request.getUserPhone());
 		smsReq.setRecvMdn(request.getUserPhone());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
