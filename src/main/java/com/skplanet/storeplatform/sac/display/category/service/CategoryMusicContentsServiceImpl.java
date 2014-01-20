@@ -86,9 +86,12 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		langCd = requestVO.getLangCd();
 		menuId = requestVO.getMenuId();
 		imageCd = requestVO.getImageCd(); // dpi 코드를 받아서 이미지 사이즈 코드를 알아내는 로직 추가 되어야 함.
+
+		// 헤더값 세팅
 		deviceModelCd = requestHeader.getDeviceHeader().getModel();
 		tenantId = requestHeader.getTenantHeader().getTenantId();
 		dpi = requestHeader.getDeviceHeader().getDpi();
+
 		offset = requestVO.getOffset(); // 시작점 ROW
 		count = requestVO.getCount(); // 페이지당 노출 ROW 수
 
@@ -131,12 +134,28 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			count = 100;
 			requestVO.setCount(count);
 		}
+
+		// 챠트구분, 배치ID 세팅
+		if (filteredBy.equals("top")) { // TOP 뮤직
+			requestVO.setChartClsfCd("DP004901");
+			requestVO.setBatchId("MELON_DP004901");
+		} else if (filteredBy.equals("recent")) { // 최신음악
+			requestVO.setChartClsfCd("DP004904");
+			requestVO.setBatchId("MELON_DP004904");
+		} else if (filteredBy.equals("genre")) { // 장르별
+			requestVO.setChartClsfCd("DP004905");
+			requestVO.setBatchId("MELON_DP004905");
+			if (orderedBy.equals("") || orderedBy == null) {
+				requestVO.setOrderedBy("popular");
+			}
+		}
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
 
 		List<Product> productList = new ArrayList<Product>();
 
-		List<MusicContentsDTO> resultList = this.commonDAO.queryForList(this.getStatementId(requestVO), requestVO,
+		List<MusicContentsDTO> resultList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
 				MusicContentsDTO.class);
 		if (resultList != null) {
 
@@ -267,16 +286,4 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		return responseVO;
 	}
 
-	private String getStatementId(MusicContentsReq requestVO) {
-
-		String statementId = "";
-		String filteredBy = requestVO.getFilteredBy();
-
-		if ("top".equals(filteredBy) || "recent".equals(filteredBy)) { // TOP 뮤직/ 최신순
-			statementId = "MusicMain.getMusicMainList";
-		} else { // 그외
-			statementId = "MusicMain.getMusicMainDummyList";
-		}
-		return statementId;
-	}
 }

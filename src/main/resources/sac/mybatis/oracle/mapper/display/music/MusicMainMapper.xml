@@ -101,23 +101,12 @@
                           AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
                           AND SH.PROD_ID = P.PROD_ID
                           AND SH.DEVICE_MODEL_CD = #{deviceModelCd}
-                    <!-- TOP Music -->
-                    <if test='filteredBy == "top"'>
-                          AND MCI.CHART_CLSF_CD = 'DP004901' -- 멜론 TOP 100
+                          AND MCI.CHART_CLSF_CD = #{chartClsfCd}
                           AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
                                                        FROM TB_DP_BATCH_COMPT
                                                       WHERE TENANT_ID = #{tenantId}
-                                                        AND BATCH_ID = 'MELON_DP004901') -- 멜론 TOP 100
-                    </if>
-                    <!-- 최신음악 -->
-                    <if test='filteredBy == "recent"'>
-                          AND MCI.CHART_CLSF_CD = 'DP004904'
-                          AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
-                                                       FROM TB_DP_BATCH_COMPT
-                                                      WHERE TENANT_ID = #{tenantId}
-                                                        AND BATCH_ID = 'MELON_DP004904')
-                    </if>                         
-                          AND P.TOP_MENU_ID = #{menuId}
+                                                        AND BATCH_ID = #{batchId} )                   
+                          AND C.MENU_ID LIKE #{menuId}||'%'
                           AND PHI.USE_YN = 'Y'
                           AND PHI.MUSIC_SPRT_YN = 'Y'
                           AND TP.TENANT_ID = #{tenantId}
@@ -136,13 +125,27 @@
                         ORDER BY
                     <!-- TOP Music -->
                     <if test='filteredBy == "top"'>
-                             MCI.RANK_CHG_CNT
+                             MCI.RANK_CHG_CNT, PD.PROD_NM
                     </if>
-                    <!-- 최신음악 -->
-                    <if test='filteredBy == "recent"'>
-                             MP.ISSUE_DAY DESC
+                    <!-- 최신음악, 장르별 -->
+                    <if test='filteredBy == "recent" || filteredBy == "genre"'>
+                        <!-- 인기도 -->
+                        <if test='orderedBy == "popular"'>
+                        MCI.NOW_RANK ASC, MP.ISSUE_DAY, PD.PROD_NM
+                        </if>
+                        <!-- 아티스트명 -->
+                        <if test='orderedBy == "artist"'>
+                        PD.ARTIST1_NM, PD.PROD_NM
+                        </if>
+                        <!-- 곡명 -->
+                        <if test='orderedBy == "title"'>
+                        PD.PROD_NM, PD.ARTIST1_NM
+                        </if>
+                        <!-- 음악 > 최신음악 -->
+                        <if test='orderedBy == null || orderedBy == ""'>
+                        MP.ISSUE_DAY DESC, PD.PROD_NM
+                        </if>
                     </if>
-                             , PD.PROD_NM
                        ) A
                   ) B
               WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
@@ -284,5 +287,5 @@
         WHERE PI.PROD_ID = P.CHNL_PROD_ID
           AND PI.IMG_CD = #{imageCd}
     </select>
-         
+    
 </mapper>
