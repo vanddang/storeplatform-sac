@@ -58,8 +58,9 @@ public class DeviceController {
 		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기ID(mdn,uuid)
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 내부 기기 key
 
-		if (userId.equals("") && userKey.equals("") && deviceId.equals("")) {
+		if (userId.equals("") && userKey.equals("") && deviceId.equals("") && deviceKey.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 

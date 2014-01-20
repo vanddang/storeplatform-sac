@@ -295,6 +295,9 @@ public class DeviceServiceImpl implements DeviceService {
 		} else if (req.getUserKey() != null) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
+		} else if (req.getDeviceKey() != null) {
+			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			key.setKeyString(req.getDeviceKey());
 		}
 
 		keySearchList.add(key);
