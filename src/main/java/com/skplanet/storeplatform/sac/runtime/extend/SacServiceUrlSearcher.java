@@ -13,7 +13,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +27,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.skplanet.storeplatform.framework.integration.bean.RuntimeContextHolder;
 import com.skplanet.storeplatform.framework.integration.enricher.ServiceUrlSearcher;
 
 /**
@@ -46,18 +47,22 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 	@Value("#{propertiesForSac['skp.common.server.rootPath']}")
 	private String rootPath;
 
+	@Resource(name = "propertiesForSac")
+	private Properties properties;
+
 	@Override
 	public String search(Map<String, Object> headerMap) {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 				.getRequest();
-		String interfaceId = RuntimeContextHolder.getRuntimeContext().getInterfaceId();
 		String requestUrl = (String) headerMap.get("http_requestUrl");
 		String requestMethod = (String) headerMap.get("http_requestMethod");
-		String prefix = interfaceId.substring(1, 3);
 		UriComponents from = UriComponentsBuilder.fromHttpUrl(requestUrl).build();
 		UriComponentsBuilder to;
-		if (prefix.equals("05")) {
-			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).query(from.getQuery());
+
+		String bypassPath = this.properties.getProperty(from.getPath(), "");
+
+		if (StringUtils.isNotEmpty(bypassPath)) {
+			to = UriComponentsBuilder.fromHttpUrl(this.externalBaseUrl).path(bypassPath);
 		} else {
 			to = UriComponentsBuilder.fromHttpUrl(this.localHost);
 			List<String> rootPathList = UriComponentsBuilder.newInstance().path(this.rootPath).build()
@@ -86,20 +91,19 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 			} else {
 				to.path("/" + this.servletPath + from.getPath());
 			}
-
-			if (StringUtils.equals(requestMethod, "GET")) {
-				if (!StringUtils.isEmpty(request.getQueryString())) {
-					String queryString = null;
-					try {
-						queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
-					} catch (UnsupportedEncodingException e) {
-						throw new RuntimeException("Controller URL 생성시 Decoding 오류가 발생하였습니다.", e);
-					}
-					to.query(queryString);
-				}
-			}
 		}
 		// 컨트롤러 전송시에는 한글이 깨지면 안됨으로 위에서 Decoding을 시킴.
+		if (StringUtils.equals(requestMethod, "GET")) {
+			if (!StringUtils.isEmpty(request.getQueryString())) {
+				String queryString = null;
+				try {
+					queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					throw new RuntimeException("Controller URL 생성시 Decoding 오류가 발생하였습니다.", e);
+				}
+				to.query(queryString);
+			}
+		}
 		return to.build().toUriString();
 	}
 }
