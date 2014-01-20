@@ -41,7 +41,6 @@ public class SampleControllerTest {
 				.andDo(print()).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andExpect(jsonPath("$.id").value("#17"));
-		System.out.println("+++++++++++");
 	}
 
 }
