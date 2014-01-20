@@ -6,9 +6,7 @@ import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -229,11 +227,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		smsReq.setRecvMdn(request.getUserPhone());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
 		smsReq.setMsg(authCode);
-		Map<String, String> map = new HashMap<String, String>();
 
 		// External Comp. SMS 발송 기능 현재 작업중.###########################
-		// map = this.messageSCI.smsSend(smsReq);
-		// String sendResult = map.get("resultStatus");
+		// SmsSendRes smsSendRes = this.messageSCI.smsSend(smsReq);
+		// String sendResult = smsSendRes.getResultStatus();
 		// External Comp. SMS 발송 기능 현재 작업중.###########################
 		String sendResult = "success";
 
