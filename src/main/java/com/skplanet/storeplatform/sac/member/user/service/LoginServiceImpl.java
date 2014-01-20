@@ -218,7 +218,7 @@ public class LoginServiceImpl implements LoginService {
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 
 				/* 미가입 회원인 경우 로그 님김 */
-				logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}", deviceId);
+				logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
 
 			} else { //무선회원 인증 실패
 
@@ -377,6 +377,11 @@ public class LoginServiceImpl implements LoginService {
 					res.setLoginStatusCode(loginStatusCode);
 					res.setStopStatusCode(stopStatusCode);
 
+				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+
+					/* 미존재 회원인 경우 로그 님김 */
+					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
+
 				} else {
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
 							+ imIdpReceiver.getResponseHeader().getResult_text());
@@ -409,7 +414,7 @@ public class LoginServiceImpl implements LoginService {
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 				/* 미존재 회원인 경우 로그 님김 */
-				logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}", userId);
+				logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
 
 			} else {
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
