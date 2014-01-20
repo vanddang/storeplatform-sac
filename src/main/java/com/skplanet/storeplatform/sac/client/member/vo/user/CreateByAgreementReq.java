@@ -43,6 +43,11 @@ public class CreateByAgreementReq extends CommonInfo {
 	private String joinId;
 
 	/**
+	 * Sms 수신 동의 여부.
+	 */
+	private String isRecvSms;
+
+	/**
 	 * 약관 동의 정보.
 	 */
 	private List<AgreementInfo> agreementList;
@@ -120,6 +125,21 @@ public class CreateByAgreementReq extends CommonInfo {
 	 */
 	public void setJoinId(String joinId) {
 		this.joinId = joinId;
+	}
+
+	/**
+	 * @return String : isRecvSms
+	 */
+	public String getIsRecvSms() {
+		return this.isRecvSms;
+	}
+
+	/**
+	 * @param isRecvSms
+	 *            String : the isRecvSms to set
+	 */
+	public void setIsRecvSms(String isRecvSms) {
+		this.isRecvSms = isRecvSms;
 	}
 
 	/**

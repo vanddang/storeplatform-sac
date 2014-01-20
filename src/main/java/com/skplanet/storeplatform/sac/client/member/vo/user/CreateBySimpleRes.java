@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [RESPONSE] 회원 간편 가입 (IDP 회원)
+ * [RESPONSE] ID 회원 간편 가입 (IDP 회원)
  * 
  * Updated on : 2014. 1. 6. Updated by : 심대진, 다모아 솔루션.
  */

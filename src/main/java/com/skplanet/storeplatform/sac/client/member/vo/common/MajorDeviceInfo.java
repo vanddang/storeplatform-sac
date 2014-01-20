@@ -37,7 +37,7 @@ public class MajorDeviceInfo extends CommonInfo {
 	private String deviceNickName;
 
 	/**
-	 * SKT 통합회원관리번호
+	 * SKT 회원관리번호
 	 */
 	private String imMngNum;
 
