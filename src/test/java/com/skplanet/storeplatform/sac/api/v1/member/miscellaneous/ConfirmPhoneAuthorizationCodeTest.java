@@ -66,8 +66,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	@Test
 	public void simpleTest() {
 		try {
-			// 개발 TEST URL 맵핑되어 있음.
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/dev/ConfirmPhoneAuthorizationCode/v1")
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 						@Override
@@ -104,8 +103,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	@Test
 	public void terminatedAuthCodeTest() {
 		try {
-			// 개발 TEST URL 맵핑되어 있음.
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/dev/ConfirmPhoneAuthorizationCode/v1")
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 						@Override

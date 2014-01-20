@@ -250,7 +250,7 @@ public class GetUaCodeTest {
 	/**
 	 * <pre>
 	 * 실패 CASE
-	 * DeviceHeader Tabel에 없는 DeviceModelNo가 넘어온 경우.(UA코드가 없는 경우)
+	 * DeviceHeader Tabel에 없는 DeviceModelNo가 넘어온 경우(UA코드가 없는 경우).
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
