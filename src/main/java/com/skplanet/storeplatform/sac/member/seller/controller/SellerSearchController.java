@@ -1,15 +1,21 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -154,5 +160,35 @@ public class SellerSearchController {
 			@RequestHeader("Accept-Language") String language) throws Exception {
 		LOGGER.debug("------------------------------------language : {}", language);
 		return this.sellerSearchService.listPasswordReminderQuestion(header, language);
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 확인.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return CheckPasswordReminderQuestionRes
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
+			@RequestBody @Valid CheckPasswordReminderQuestionReq req, BindingResult result) throws Exception {
+
+		String sellerId = StringUtil.nvl(req.getSellerID(), "");
+		String answerString = StringUtil.nvl(req.getpWReminderList().get(0).getAnswerString(), "");
+		String questionID = StringUtil.nvl(req.getpWReminderList().get(0).getQuestionID(), "");
+		String questionMessage = StringUtil.nvl(req.getpWReminderList().get(0).getQuestionMessage(), "");
+		String sellerIdList = StringUtil.nvl(req.getpWReminderList().get(0).getSellerID(), "");
+
+		if (sellerId.equals("") || sellerIdList.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+		if (answerString.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+		if (questionID.equals("") && questionMessage.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
+		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
 }
