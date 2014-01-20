@@ -134,7 +134,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					+ "] " + schUserRes.getCommonResponse().getResultMessage());
 		}
 
-		/* IDP 회원탈퇴 연동 */
+		if (schUserRes.getUserMbr() == null) {
+			throw new RuntimeException("회원정보 없음.");
+		}
+
+		/* IMIDP 회원탈퇴 연동 */
 		IDPReceiverM idpReceiver = null;
 		ImIDPReceiverM imIdpReceiver = null;
 
@@ -231,7 +235,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			}
 			// SC Component Remove Success
 			else {
-				withdrawRes.setUserKey(schUserRes.getUserKey());
+				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 		}
 		/* ImIDP 연동결과 성공이면 SC회원 탈퇴 */
@@ -246,7 +250,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			}
 			// SC Component Remove Success
 			else {
-				withdrawRes.setUserKey(schUserRes.getUserKey());
+				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 		}
 		return withdrawRes;

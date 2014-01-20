@@ -150,13 +150,13 @@ public class DeviceController {
 	@ResponseBody
 	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) throws Exception {
 
-		// String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String userId = StringUtil.nvl(req.getUserId(), "");
-		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
-		if (/* userAuthKey.equals("") || */userKey.equals("") && deviceKey.equals("") && userId.equals("") && deviceId.equals("")) {
+		req.setUserAuthKey(userAuthKey);
+		req.setDeviceId(deviceId);
+
+		if (userAuthKey.equals("") && deviceId.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 

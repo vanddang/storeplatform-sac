@@ -630,7 +630,6 @@ public class DummyDataController {
 		/*
 		 * 사용자 정보 리스트
 		 */
-		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUserExtraInfo(userExtraInfoList);
 		userInfo.setUserKey("IW102158844420091030165015");
@@ -667,8 +666,7 @@ public class DummyDataController {
 		userInfo.setIsParent("N");
 		userInfo.setIsRealName("N");
 		userInfo.setImSiteCode("");
-
-		userInfoList.add(userInfo);
+		userInfo.setUserExtraInfo(userExtraInfoList);
 
 		/*
 		 * 약관동의 리스트
@@ -725,7 +723,7 @@ public class DummyDataController {
 		mbrLglAgent.setSequence("");
 		mbrLglAgentList.add(mbrLglAgent);
 
-		res.setUserInfoList(userInfoList);
+		res.setUserInfo(userInfo);
 		res.setDeviceInfoList(deviceInfoList);
 		res.setAgreementList(agreementList);
 		res.setMbrAuthList(mbrAuthList);
