@@ -440,6 +440,8 @@
 							, PI.FILE_NM
 							, P1.UPD_DT
 							, LP.EXPO_ORD
+							, LP.EXPO_ORD_ALWAYS_YN
+							, LP.EXPO_ORD_SUB
 						FROM TB_DP_LIST_PROD LP
 						    , TB_DP_MENU_CATEGORY_PROD_MAPG MP
 						    , TB_DP_MENU_CATEGORY MN
@@ -489,7 +491,7 @@
             			</if>
 					) T_PROD
 					WHERE T_PROD.RN <![CDATA[<=]]> 2
-					ORDER BY T_PROD.EXPO_ORD , T_PROD.UPD_DT, T_PROD.PROD_NM
+					ORDER BY T_PROD.EXPO_ORD_ALWAYS_YN DESC, T_PROD.EXPO_ORD, T_PROD.EXPO_ORD_SUB
 				) R_PROD
 				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
 			) F_PROD LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS ST
@@ -588,7 +590,7 @@
             			<if test='prodCharge == "N"'>
 		        		AND P1.PROD_CHRG_YN = 'N'       /* 무료 */
             			</if>
-						ORDER BY LP.EXPO_ORD , PS.PROD_NM
+						ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB
 					) T_PROD
 				) R_PROD
 				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
@@ -688,7 +690,7 @@
             			<if test='prodCharge == "N"'>
 		        		AND P1.PROD_CHRG_YN = 'N'       /* 무료 */
             			</if>
-						ORDER BY LP.EXPO_ORD , PS.PROD_NM
+						ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB
 					) T_PROD
 				) R_PROD
 				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)

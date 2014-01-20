@@ -147,7 +147,7 @@
         SELECT *
           FROM (                        
                 SELECT  
-                       ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
+                       ROW_NUMBER()OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB ) AS RNUM       
                       ,COUNT(PROD_ID) OVER() AS totalCount
                       ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
                       ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
@@ -192,6 +192,9 @@
                               ,F.ARTIST2_NM
                               ,F.ARTIST3_NM
                               ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND ROWNUM=1) FILE_POS
+                              , L.EXPO_ORD
+                              , L.EXPO_ORD_ALWAYS_YN
+                              , L.EXPO_ORD_SUB
                         FROM  TB_DP_MENU_CATEGORY               A
                             , TB_DP_MENU_CATEGORY_PROD_MAPG     B
                             , TB_DP_MENU_CATEGORY_DESC          C
@@ -250,6 +253,8 @@
 								      , TDLP.MENU_ID
 								      , TDLP.PROD_ID
 								      , TDLP.EXPO_ORD
+				                      , TDLP.EXPO_ORD_ALWAYS_YN
+				                      , TDLP.EXPO_ORD_SUB
 								  FROM  
 								        TB_DP_LIST_PROD TDLP
 								       ,TB_DP_LIST TDL

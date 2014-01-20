@@ -4,7 +4,7 @@
 
     <!--운영자 추천 앱상품 조회-->
     <select id="selectRecommendAdminList" parameterType="FeatureRecommendAdminReq" resultType="FeatureRecommendAdminDTO">
-       /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
+       /* FeatureRecommendMapper.xml, selectRecommendAdminList, SAC : 서영배 , 2014-01-03 */
 		SELECT
 			F_PROD.*
 			, ST.DWLD_CNT
@@ -93,7 +93,7 @@
                         <if test='prodCharge == "N"'>
 		                AND P1.PROD_CHRG_YN = 'N'       /* 무료 */
                         </if>
-						ORDER BY LP.EXPO_ORD , PS.PROD_NM
+						ORDER BY LP.EXPO_ORD_ALWAYS_YN DESC, LP.EXPO_ORD, LP.EXPO_ORD_SUB
 					) T_PROD
 				) R_PROD
 				WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
