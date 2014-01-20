@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoonDTO;
+import com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoon;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -81,11 +81,11 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			req.setDeviceModelCd("SHV-E330SSO");
 		}
 
-		List<CategoryWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
-				CategoryWebtoonDTO.class);
+		List<CategoryWebtoon> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
+				CategoryWebtoon.class);
 
 		if (resultList != null) {
-			CategoryWebtoonDTO webtoonDto = new CategoryWebtoonDTO();
+			CategoryWebtoon webtoonDto = new CategoryWebtoon();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;

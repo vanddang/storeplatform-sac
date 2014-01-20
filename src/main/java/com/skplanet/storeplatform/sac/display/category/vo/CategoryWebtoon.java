@@ -7,18 +7,18 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.display.feature.recommend.vo;
+package com.skplanet.storeplatform.sac.display.category.vo;
 
 /**
  * 웹툰 DTO Default Value Object.
  * 
  * Updated on : 2013. 12. 22. Updated by : 김형식, SK 플래닛.
  */
-public class RecommendWebtoonDTO {
+public class CategoryWebtoon {
 
 	private int totalCount;
-	private String upMenuId;
 	private String upMenuName;
+	private String upMenuId;
 	private String menuId;
 	private String menuNm;
 	private String channelId;
@@ -27,12 +27,12 @@ public class RecommendWebtoonDTO {
 	private String prodGrdCd;
 	private String avgScore;
 	private String prodAmt;
-	private String partCnt;
+	private Integer partCnt;
 	private String seriallyWkdy;
 	private String iconYn;
 	private String updDt;
-	private String comptYn;
 	private String chapter;
+	private String comptYn;
 	private String preFix;
 	private String artist1Nm;
 	private String artist2Nm;
@@ -47,20 +47,20 @@ public class RecommendWebtoonDTO {
 		this.totalCount = totalCount;
 	}
 
-	public String getUpMenuId() {
-		return this.upMenuId;
-	}
-
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
-	}
-
 	public String getUpMenuName() {
 		return this.upMenuName;
 	}
 
 	public void setUpMenuName(String upMenuName) {
 		this.upMenuName = upMenuName;
+	}
+
+	public String getUpMenuId() {
+		return this.upMenuId;
+	}
+
+	public void setUpMenuId(String upMenuId) {
+		this.upMenuId = upMenuId;
 	}
 
 	public String getMenuId() {
@@ -127,11 +127,11 @@ public class RecommendWebtoonDTO {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getPartCnt() {
+	public Integer getPartCnt() {
 		return this.partCnt;
 	}
 
-	public void setPartCnt(String partCnt) {
+	public void setPartCnt(Integer partCnt) {
 		this.partCnt = partCnt;
 	}
 
@@ -151,14 +151,6 @@ public class RecommendWebtoonDTO {
 		this.iconYn = iconYn;
 	}
 
-	public String getComptYn() {
-		return this.comptYn;
-	}
-
-	public void setComptYn(String comptYn) {
-		this.comptYn = comptYn;
-	}
-
 	public String getUpdDt() {
 		return this.updDt;
 	}
@@ -167,12 +159,12 @@ public class RecommendWebtoonDTO {
 		this.updDt = updDt;
 	}
 
-	public String getPreFix() {
-		return this.preFix;
+	public String getComptYn() {
+		return this.comptYn;
 	}
 
-	public void setPreFix(String preFix) {
-		this.preFix = preFix;
+	public void setComptYn(String comptYn) {
+		this.comptYn = comptYn;
 	}
 
 	public String getChapter() {
@@ -213,5 +205,13 @@ public class RecommendWebtoonDTO {
 
 	public void setFilePos(String filePos) {
 		this.filePos = filePos;
+	}
+
+	public String getPreFix() {
+		return this.preFix;
+	}
+
+	public void setPreFix(String preFix) {
+		this.preFix = preFix;
 	}
 }

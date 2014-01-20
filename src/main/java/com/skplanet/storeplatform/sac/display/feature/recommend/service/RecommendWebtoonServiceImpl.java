@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoonDTO;
+import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -91,11 +91,11 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 		req.setStdDt(stdDt);
 
 		Integer totalCount = 0;
-		List<RecommendWebtoonDTO> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
-				RecommendWebtoonDTO.class);
+		List<RecommendWebtoon> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
+				RecommendWebtoon.class);
 
 		if (resultList != null) {
-			RecommendWebtoonDTO webtoonDto = new RecommendWebtoonDTO();
+			RecommendWebtoon webtoonDto = new RecommendWebtoon();
 
 			// Response VO를 만들기위한 생성자
 			Product product = null;
