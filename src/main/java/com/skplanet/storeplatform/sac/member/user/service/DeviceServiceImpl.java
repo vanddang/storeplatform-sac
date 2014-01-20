@@ -224,8 +224,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
 
-			param.put("cmd", "TXUpdateAdditionalUserInfoIDP");
-			param.put("key_type", "1"); // IM 통합서비스 번호
 			param.put("key", schUserRes.getUserMbr().getImSvcNo());
 			param.put("operation_mode", this.IDP_OPERATION_MODE);
 			if (userPhoneStr != null) {
