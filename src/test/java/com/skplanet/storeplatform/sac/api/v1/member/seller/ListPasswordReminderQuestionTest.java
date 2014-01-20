@@ -61,7 +61,7 @@ public class ListPasswordReminderQuestionTest {
 	public void ListPasswordReminderQuestion() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/ListPasswordReminderQuestion/v1")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/listPasswordReminderQuestion/v1")
 				.httpMethod(HttpMethod.GET).addHeaders("Accept-Language", "ko")
 				.success(ListPasswordReminderQuestionRes.class, new SuccessCallback() {
 					@Override
