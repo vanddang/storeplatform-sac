@@ -242,7 +242,7 @@ public class DummySellerController {
 	 * 
 	 * @return CheckPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion() {
 
