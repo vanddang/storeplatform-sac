@@ -131,7 +131,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			requestVO.setOffset(offset);
 		}
 		if (count <= 0) {
-			count = 100;
+			count = 20;
 			requestVO.setCount(count);
 		}
 
