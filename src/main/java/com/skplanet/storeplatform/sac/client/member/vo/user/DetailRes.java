@@ -33,7 +33,7 @@ public class DetailRes extends CommonInfo {
 	/* 휴대기기 부가정보 리스트 */
 	private List<DeviceExtraInfo> deviceExtraInfoList;
 	/* 사용자 정보 */
-	private List<UserInfo> userInfoList;
+	private UserInfo userInfo;
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfoList;
 	/* 약관동의정보 리스트 */
@@ -71,12 +71,12 @@ public class DetailRes extends CommonInfo {
 		this.deviceExtraInfoList = deviceExtraInfoList;
 	}
 
-	public List<UserInfo> getUserInfoList() {
-		return this.userInfoList;
+	public UserInfo getUserInfo() {
+		return this.userInfo;
 	}
 
-	public void setUserInfoList(List<UserInfo> userInfoList) {
-		this.userInfoList = userInfoList;
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 
 	public List<UserExtraInfo> getUserExtraInfoList() {
