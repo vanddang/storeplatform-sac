@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -53,5 +55,13 @@ public interface SellerSearchService {
 	 */
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header, String language)
 			throws Exception;
+
+	/**
+	 * Password 보안 질문 확인.
+	 * 
+	 * @throws Exception
+	 */
+	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
+			CheckPasswordReminderQuestionReq req) throws Exception;
 
 }
