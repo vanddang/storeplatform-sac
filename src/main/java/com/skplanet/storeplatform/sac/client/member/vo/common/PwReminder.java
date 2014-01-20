@@ -33,6 +33,28 @@ public class PwReminder extends CommonInfo {
 	@NotNull
 	private String questionMessage;
 
+	/** 판매자 키. */
+	private String sellerKey;
+
+	/** 판매자회원 ID. */
+	private String sellerID;
+
+	public String getSellerKey() {
+		return this.sellerKey;
+	}
+
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
+	}
+
+	public String getSellerID() {
+		return this.sellerID;
+	}
+
+	public void setSellerID(String sellerID) {
+		this.sellerID = sellerID;
+	}
+
 	public String getAnswerString() {
 		return this.answerString;
 	}
