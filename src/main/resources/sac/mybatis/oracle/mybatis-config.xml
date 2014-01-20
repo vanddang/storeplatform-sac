@@ -100,11 +100,11 @@
         
         <!-- BEST 앱 상품 조회 -->
         <typeAlias alias="BestAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq" />
-        <typeAlias alias="BestAppDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO" />
+        <typeAlias alias="BestApp"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestApp" />
 
         <!-- BEST 컨텐츠 상품 조회 -->
         <typeAlias alias="BestContentsReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq" />
-        <typeAlias alias="BestContentsDTO"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestContentsDTO" />
+        <typeAlias alias="BestContents"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestContents" />
         
         <!-- 상품 meta 정보 조회 -->
         <typeAlias alias="ProductBasicInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo" />
