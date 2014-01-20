@@ -148,7 +148,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/ListPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			@RequestHeader("Accept-Language") String language) throws Exception {
