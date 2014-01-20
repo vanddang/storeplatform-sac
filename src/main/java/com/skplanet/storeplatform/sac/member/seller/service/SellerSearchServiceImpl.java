@@ -456,15 +456,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
 				sellerMbrPwdHint.setDisplayOrder(schRes.getSellerMbrPwdHintList().get(i).getDisplayOrder());
 				sellerMbrPwdHint.setIsDisplay(schRes.getSellerMbrPwdHintList().get(i).getIsDisplay());
-				sellerMbrPwdHint.setLanguageCode(schRes.getSellerMbrPwdHintList().get(i).getLanguageCode());
+				// sellerMbrPwdHint.setLanguageCode(schRes.getSellerMbrPwdHintList().get(i).getLanguageCode());
 				sellerMbrPwdHint.setQuestionDescription(schRes.getSellerMbrPwdHintList().get(i)
 						.getQuestionDescription());
 				sellerMbrPwdHint.setQuestionID(schRes.getSellerMbrPwdHintList().get(i).getQuestionID());
 				sellerMbrPwdHint.setQuestionName(schRes.getSellerMbrPwdHintList().get(i).getQuestionName());
-				sellerMbrPwdHint.setRegDate(schRes.getSellerMbrPwdHintList().get(i).getRegDate());
-				sellerMbrPwdHint.setRegID(schRes.getSellerMbrPwdHintList().get(i).getRegID());
-				sellerMbrPwdHint.setUpdateDate(schRes.getSellerMbrPwdHintList().get(i).getUpdateDate());
-				sellerMbrPwdHint.setUpdateID(schRes.getSellerMbrPwdHintList().get(i).getUpdateID());
+				// sellerMbrPwdHint.setRegDate(schRes.getSellerMbrPwdHintList().get(i).getRegDate());
+				// sellerMbrPwdHint.setRegID(schRes.getSellerMbrPwdHintList().get(i).getRegID());
+				// sellerMbrPwdHint.setUpdateDate(schRes.getSellerMbrPwdHintList().get(i).getUpdateDate());
+				// sellerMbrPwdHint.setUpdateID(schRes.getSellerMbrPwdHintList().get(i).getUpdateID());
 				sList.add(sellerMbrPwdHint);
 			}
 
