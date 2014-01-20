@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BestContents">
     <!-- BEST 컨텐츠 상품 조회(movie, broadcast) -->
-    <select id="selectBestContentsVodList" parameterType="BestContentsReq" resultType="BestContentsDTO">
+    <select id="selectBestContentsVodList" parameterType="BestContentsReq" resultType="BestContents">
         SELECT  /* BestContentsMapper.xml, selectBestContentsVodList, 이석희, 2014-01-14 */
                 LA.TOTAL_COUNT
               , LA.RNUM
@@ -165,7 +165,7 @@
     </select>
     
     <!-- BEST 컨텐츠 상품 조회(ebook, comic) -->
-    <select id="selectBestContentsBookList" parameterType="BestContentsReq" resultType="BestContentsDTO">
+    <select id="selectBestContentsBookList" parameterType="BestContentsReq" resultType="BestContents">
         SELECT  /* BestContentsMapper.xml, selectBestContentsBookList, 이석희, 2014-01-14 */
                 LA.TOTAL_COUNT
               , LA.RNUM

@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
@@ -37,7 +38,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO;
+import com.skplanet.storeplatform.sac.display.feature.best.vo.BestApp;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -45,6 +46,7 @@ import com.skplanet.storeplatform.sac.display.feature.best.vo.BestAppDTO;
  * Updated on : 2013. 12. 19. Updated by : 이석희, SK 플래닛.
  */
 @Service
+@Transactional
 public class BestAppServiceImpl implements BestAppService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -94,7 +96,7 @@ public class BestAppServiceImpl implements BestAppService {
 		bestAppReq.setStdDt(stdDt);
 
 		// BEST 앱 상품 조회
-		List<BestAppDTO> appList = null;
+		List<BestApp> appList = null;
 
 		Product product = null;
 		Identifier identifier = null;
@@ -112,14 +114,14 @@ public class BestAppServiceImpl implements BestAppService {
 
 			if (!"ADM000000001".equals(bestAppReq.getListId())) {
 				// 추천, 인기(매출), 인기신규 상품 조회
-				appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, BestAppDTO.class);
+				appList = this.commonDAO.queryForList("BestApp.selectBestAppList", bestAppReq, BestApp.class);
 			} else {
 				// 신규 상품조회
-				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, BestAppDTO.class);
+				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, BestApp.class);
 			}
 
 			if (appList.size() != 0) {
-				Iterator<BestAppDTO> iterator = appList.iterator();
+				Iterator<BestApp> iterator = appList.iterator();
 				while (iterator.hasNext()) {
 					product = new Product();
 					identifier = new Identifier();
@@ -131,7 +133,7 @@ public class BestAppServiceImpl implements BestAppService {
 					title = new Title();
 					support = new Support();
 
-					BestAppDTO mapperVO = iterator.next();
+					BestApp mapperVO = iterator.next();
 
 					totalCount = mapperVO.getTotalCount();
 					commonResponse.setTotalCount(totalCount);

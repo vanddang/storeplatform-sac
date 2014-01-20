@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
@@ -43,6 +44,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
  */
 
 @Service
+@Transactional
 public class BestDownloadServiceImpl implements BestDownloadService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -160,8 +162,6 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				productList.add(product);
 
 			}
-		} else {
-			// dummy 호출이 아닐때
 		}
 		response.setCommonResponse(commonResponse);
 		response.setProductList(productList);

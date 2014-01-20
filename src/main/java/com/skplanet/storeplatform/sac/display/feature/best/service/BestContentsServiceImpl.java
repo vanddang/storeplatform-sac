@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
@@ -30,7 +31,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.best.vo.BestContentsDTO;
+import com.skplanet.storeplatform.sac.display.feature.best.vo.BestContents;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -38,6 +39,7 @@ import com.skplanet.storeplatform.sac.display.feature.best.vo.BestContentsDTO;
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 @Service
+@Transactional
 public class BestContentsServiceImpl implements BestContentsService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -92,21 +94,21 @@ public class BestContentsServiceImpl implements BestContentsService {
 		if (bestContentsReq.getDummy() == null) {
 			// dummy 호출이 아닐때
 			// BEST 앱 상품 조회
-			List<BestContentsDTO> contentsList = null;
+			List<BestContents> contentsList = null;
 
 			if ("movie".equals(bestContentsReq.getFiteredBy()) || "boardcast".equals(bestContentsReq.getFiteredBy())
 					|| "movie+broadcast".equals(bestContentsReq.getFiteredBy())) {
 				contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsVodList", bestContentsReq,
-						BestContentsDTO.class);
+						BestContents.class);
 			} else {
 				contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsBookList", bestContentsReq,
-						BestContentsDTO.class);
+						BestContents.class);
 			}
 
 			if (contentsList.size() != 0) {
-				Iterator<BestContentsDTO> iterator = contentsList.iterator();
+				Iterator<BestContents> iterator = contentsList.iterator();
 				while (iterator.hasNext()) {
-					BestContentsDTO mapperVO = iterator.next();
+					BestContents mapperVO = iterator.next();
 					Product product = new Product();
 					Identifier identifier = new Identifier();
 					Contributor contributor = new Contributor();

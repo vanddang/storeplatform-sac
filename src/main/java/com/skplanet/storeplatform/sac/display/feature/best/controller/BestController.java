@@ -39,18 +39,54 @@ public class BestController {
 	@Autowired
 	private BestDownloadService bestDownloadService;
 
+	/**
+	 * 
+	 * <pre>
+	 * BEST 앱 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestAppReq
+	 *            bestAppReq
+	 * @return BestAppRes
+	 */
 	@RequestMapping(value = "/display/feature/best/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestAppRes bestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq) {
 		return this.bestAppService.searchBestAppList(requestheader, bestAppReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * BEST 컨텐츠 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestContentsReq
+	 *            bestContentsReq
+	 * @return BestContentsRes
+	 */
 	@RequestMapping(value = "/display/feature/best/content/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestContentsRes bestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq) {
 		return this.bestContentsService.searchBestContentsList(requestheader, bestContentsReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * BEST 컨텐츠 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestDownloadReq
+	 *            bestDownloadReq
+	 * @return bestDownloadReq
+	 */
 	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BestDownloadRes bestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq) {

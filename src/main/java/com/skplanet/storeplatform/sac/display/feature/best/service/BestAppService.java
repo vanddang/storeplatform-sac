@@ -12,13 +12,16 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface BestAppService {
 	/**
+	 * 
 	 * <pre>
-	 * BEST 앱 리스트 조회
+	 * BEST 앱 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param BestAppRequestVO
-	 *            BEST 앱 상품 리스트 요청 Value Object
-	 * @return BEST 앱 상품 리스트
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestAppReq
+	 *            bestAppReq
+	 * @return BestAppRes
 	 */
 	BestAppRes searchBestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq);
 }

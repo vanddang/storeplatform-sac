@@ -12,13 +12,16 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 public interface BestDownloadService {
 	/**
+	 * 
 	 * <pre>
-	 * BEST 다운로드 리스트 조회
+	 * BEST 다운로드 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param BestContentsRequestVO
-	 *            BEST 다운로드 상품 리스트 요청 Value Object
-	 * @return BEST 다운로드 상품 리스트
+	 * @param requestheader
+	 *            requestheader
+	 * @param bestDownloadReq
+	 *            bestDownloadReq
+	 * @return BestDownloadRes
 	 */
 	BestDownloadRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq);
 }
