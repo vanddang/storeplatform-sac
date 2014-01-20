@@ -261,26 +261,6 @@ public class DeviceServiceImpl implements DeviceService {
 		return null;
 	}
 
-	public String converterTelecomCode(String code) {
-		String value = "";
-		if (code.equals(MemberConstants.DEVICE_TELECOM_SKT)) {
-			value = "SKT";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_KT)) {
-			value = "KTF";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_LGT)) {
-			value = "LGT";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_OMD)) {
-			value = "OMD";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NSH)) {
-			value = "NSH";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NON)) {
-			value = "NON";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_IOS)) {
-			value = "IOS";
-		}
-		return value;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -451,20 +431,6 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
-	}
-
-	public DeviceInfo setMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception {
-		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
-				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
-
-		deviceInfo.setImMngNum(majorDeviceInfo.getImMngNum() == null ? "" : majorDeviceInfo.getImMngNum()); // SKT 서비스 관리번호
-		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 기기 모델 번호
-		deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 기기명
-		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-		deviceInfo.setUacd(majorDeviceInfo.getUacd());// UA 코드
-		deviceInfo.setOmdUacd(majorDeviceInfo.getOmdUacd());// OMD UA코드
-
-		return deviceInfo;
 	}
 
 	/*
@@ -672,10 +638,10 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
-
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
+
+		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -693,6 +659,40 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("################ mergeDeviceInfo end ##################");
 
+	}
+
+	public String converterTelecomCode(String code) {
+		String value = "";
+		if (code.equals(MemberConstants.DEVICE_TELECOM_SKT)) {
+			value = "SKT";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_KT)) {
+			value = "KTF";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_LGT)) {
+			value = "LGT";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_OMD)) {
+			value = "OMD";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NSH)) {
+			value = "NSH";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NON)) {
+			value = "NON";
+		} else if (code.equals(MemberConstants.DEVICE_TELECOM_IOS)) {
+			value = "IOS";
+		}
+		return value;
+	}
+
+	public DeviceInfo setMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception {
+		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
+				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
+
+		deviceInfo.setImMngNum(majorDeviceInfo.getImMngNum() == null ? "" : majorDeviceInfo.getImMngNum()); // SKT 서비스 관리번호
+		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 기기 모델 번호
+		deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 기기명
+		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+		deviceInfo.setUacd(majorDeviceInfo.getUacd());// UA 코드
+		deviceInfo.setOmdUacd(majorDeviceInfo.getOmdUacd());// OMD UA코드
+
+		return deviceInfo;
 	}
 
 	/**
@@ -802,6 +802,7 @@ public class DeviceServiceImpl implements DeviceService {
 		UserMbrDeviceDetail userMbrDeviceDetail = null;
 
 		if (deviceInfo.getOmpDownloaderYn() != null) {
+			logger.info("[ompDownloaderYn] {}", deviceInfo.getOmpDownloaderYn());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpDownloaderYn());
@@ -811,6 +812,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getStandByScreenYn() != null) {
+			logger.info("[standByScreenYn] {}", deviceInfo.getStandByScreenYn());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getStandByScreenYn());
@@ -820,6 +822,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getUacd() != null) {
+			logger.info("[uacd] {}", deviceInfo.getUacd());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getUacd());
@@ -829,6 +832,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getOmpSupportYn() != null) {
+			logger.info("[ompSupportYn] {}", deviceInfo.getOmpSupportYn());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOmpSupportYn());
@@ -839,6 +843,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		// OS버전과 샵클버전 모두 NULL이 아닐경우에만 처리한다.
 		if (deviceInfo.getOsVer() != null && deviceInfo.getScVer() != null) {
+			logger.info("[osVer] {}", deviceInfo.getOsVer());
+			logger.info("[scVer] {}", deviceInfo.getScVer());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getOsVer());
@@ -855,6 +861,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getAppStatisticsYn() != null) {
+			logger.info("[appStatisticsYn] {}", deviceInfo.getAppStatisticsYn());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getAppStatisticsYn());
@@ -864,6 +871,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getDotoriAuthDate() != null) {
+			logger.info("[dotoriAuthDate] {}", deviceInfo.getDotoriAuthDate());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthDate());
@@ -873,6 +881,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getDotoriAuthYn() != null) {
+			logger.info("[dotoriAuthYn] {}", deviceInfo.getDotoriAuthYn());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getDotoriAuthYn());
@@ -882,6 +891,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (deviceInfo.getRooting() != null) {
+			logger.info("[rooting] {}", deviceInfo.getRooting());
 			userMbrDeviceDetail = new UserMbrDeviceDetail();
 			userMbrDeviceDetail.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
 			userMbrDeviceDetail.setExtraProfileValue(deviceInfo.getRooting());
