@@ -74,7 +74,7 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		reqMap.put("stdDt", stdDt);
 
 		// TODO osm1021 review TB_DP_MULTIMDA_PROD Table 삭제
-		reqMap.put("svgGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
+		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
 		reqMap.put("etcCd", DisplayConstants.DP_MOVIE_ETC_CD);
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);

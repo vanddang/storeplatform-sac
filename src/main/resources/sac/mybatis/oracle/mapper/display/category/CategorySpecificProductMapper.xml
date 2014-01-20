@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CategorySpecificProduct">
 	<!-- 상품별 서비스 그룹 코드 조회-->
-	<select id="selectProductInfoList" resultType="CategorySpecificProduct">
+	<select id="selectProductInfoList" resultType="ProductBasicInfo">
 	 SELECT 
 	       PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID
       FROM TB_DP_PROD

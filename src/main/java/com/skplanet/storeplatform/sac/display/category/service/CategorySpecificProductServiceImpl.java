@@ -42,7 +42,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoGenerateProxyService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -66,6 +65,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		CategorySpecificRes res = new CategorySpecificRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = null;
+		MetaInfo metaInfo = null;
 		List<Product> productList = new ArrayList<Product>();
 
 		if (req.getDummy() == null) {
@@ -76,88 +76,87 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				// TODO osm1021 에러 처리 추가 필요
 			}
 
-			List<CategorySpecificProduct> svcGrpCdList = this.commonDAO.queryForList(
-					"CategorySpecificProduct.selectProductInfoList", prodIdList, CategorySpecificProduct.class);
+			// 상품 기본 정보 List 조회
+			List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+					"CategorySpecificProduct.selectProductInfoList", prodIdList, ProductBasicInfo.class);
 
-			for (CategorySpecificProduct categorySpecificProduct : svcGrpCdList) {
-				String prodId = categorySpecificProduct.getProdId();
-				String svcGrpCd = categorySpecificProduct.getSvcGrpCd();
-				String svcTypeCd = categorySpecificProduct.getSvcTypeCd();
-				String topMenuId = categorySpecificProduct.getTopMenuId();
-				String contentsTypeCd = categorySpecificProduct.getContentsTypeCd();
-
-				// TODO osm1021 더미 데이터 꼭 삭제할것
+			if (productBasicInfoList != null) {
 				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("deviceModelCd", "SHV-E210S");
-				paramMap.put("prodId", prodId);
-				paramMap.put("tenantId", "S01");
+				paramMap.put("tenantHeader", header.getTenantHeader());
+				paramMap.put("deviceHeader", header.getDeviceHeader());
+				// TODO osm1021 더미 데이터 꼭 삭제할것
 				paramMap.put("imageCd", "DP000101");
+				paramMap.put("lang", "ko");
 
-				ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					String topMenuId = productBasicInfo.getTopMenuId();
+					String svcGrpCd = productBasicInfo.getSvcGrpCd();
+					paramMap.put("productBasicInfo", productBasicInfo);
+					// paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-				// 상품 SVC_GRP_CD 조회
-				// DP000203 : 멀티미디어
-				// DP000206 : Tstore 쇼핑
-				// DP000205 : 소셜쇼핑
-				// DP000204 : 폰꾸미기
-				// DP000201 : 애플리캐이션
+					// 상품 SVC_GRP_CD 조회
+					// DP000203 : 멀티미디어
+					// DP000206 : Tstore 쇼핑
+					// DP000205 : 소셜쇼핑
+					// DP000204 : 폰꾸미기
+					// DP000201 : 애플리캐이션
 
-				// APP 상품의 경우
-				if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", productBasicInfo,
-							MetaInfo.class);
-					if (retMetaInfo != null) {
-						product = this.metaInfoGenerateProxyService.generateAppProductProxy(retMetaInfo);
+					// APP 상품의 경우
+					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
+						if (metaInfo != null) {
+							product = this.metaInfoGenerateProxyService.generateAppProductProxy(metaInfo);
+						}
 						productList.add(product);
 					}
-				}
-				// 멀티미디어 타입일 경우
-				else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-
-					productBasicInfo.setProdId(prodId);
-					productBasicInfo.setTenantId(tenantId);
-
-					// VOD 상품의 경우
-					if (DisplayConstants.DP_VOD_TOP_MENU_ID.equals(topMenuId)) {
-						MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo",
-								productBasicInfo, MetaInfo.class);
-
-						if (retMetaInfo != null) {
-							if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-								product = this.metaInfoGenerateProxyService.generateMovieProductProxy(retMetaInfo);
-							} else {
-								product = this.metaInfoGenerateProxyService
-										.generateBroadCastingProductProxy(retMetaInfo);
+					// 멀티미디어 타입일 경우
+					else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						// VOD 상품의 경우
+						if (DisplayConstants.DP_VOD_TOP_MENU_ID.equals(topMenuId)) {
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", productBasicInfo,
+									MetaInfo.class);
+							if (metaInfo != null) {
+								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.metaInfoGenerateProxyService.generateMovieProductProxy(metaInfo);
+								} else {
+									product = this.metaInfoGenerateProxyService.generateTVProductProxy(metaInfo);
+								}
+								productList.add(product);
 							}
-
+						}
+						// Ebook / Comic 상품의 경우
+						else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo",
+									productBasicInfo, MetaInfo.class);
+							if (metaInfo != null) {
+								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
+									product = this.metaInfoGenerateProxyService.generateEbookProductProxy(metaInfo);
+								} else {
+									product = this.metaInfoGenerateProxyService.generateComicProductProxy(metaInfo);
+								}
+							}
+							productList.add(product);
+						}
+						// 음원 상품의 경우
+						else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
+									MetaInfo.class);
+							if (metaInfo != null) {
+								product = this.metaInfoGenerateProxyService.generateMusicProductProxy(metaInfo);
+								productList.add(product);
+							}
+						}
+					}
+					// 쇼핑 상품의 경우
+					else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
+								MetaInfo.class);
+						if (metaInfo != null) {
+							product = this.metaInfoGenerateProxyService.generateShoppingProductProxy(metaInfo);
 							productList.add(product);
 						}
 					}
-					// Ebook / Comic 상품의 경우
-					else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-							|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-						MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo",
-								productBasicInfo, MetaInfo.class);
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-							product = this.metaInfoGenerateProxyService.generateEbookProductProxy(retMetaInfo);
-						} else {
-							product = this.metaInfoGenerateProxyService.generateComicProductProxy(retMetaInfo);
-						}
-
-						productList.add(product);
-					}
-					// 음원 상품의 경우
-					else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
-						MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo",
-								productBasicInfo, MetaInfo.class);
-						product = this.metaInfoGenerateProxyService.generateMusicProductProxy(retMetaInfo);
-						productList.add(product);
-					}
-				}
-				// 쇼핑 상품의 경우
-				else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-					MetaInfo retMetaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
-							MetaInfo.class);
 				}
 			}
 			commonResponse.setTotalCount(productList.size());
@@ -316,8 +315,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		product.setPrice(price);
 		productList.add(product);
 
-		// product = this.generateShoppingProduct();
-		// productList.add(product);
+		product = this.generateShoppingProduct();
+		productList.add(product);
 
 		commonResponse.setTotalCount(productList.size());
 		res.setCommonResponse(commonResponse);

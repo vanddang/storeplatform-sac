@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -22,6 +23,8 @@ public interface MetaInfoGenerateProxyService {
 
 	public List<Menu> generateMenuList(MetaInfo metaInfo);
 
+	public List<Menu> generateAppMenuList(MetaInfo metaInfo);
+
 	public Source generateSource(MetaInfo metaInfo);
 
 	public List<Source> generateSourceList(MetaInfo metaInfo);
@@ -32,19 +35,27 @@ public interface MetaInfoGenerateProxyService {
 
 	public List<Support> generateAppSupportList(MetaInfo metaInfo);
 
+	public Map<String, Object> generateSupportList(MetaInfo metaInfo);
+
 	public App generateApp(MetaInfo metaInfo);
 
 	public Price generatePrice(MetaInfo metaInfo);
 
-	public Accrual generateAppAccrual(MetaInfo metaInfo);
+	public Accrual generateAccrual(MetaInfo metaInfo);
 
 	public Accrual generateMusicAccrual(MetaInfo metaInfo);
 
 	public Title generateTitle(MetaInfo metaInfo);
 
-	public Contributor generateMusicContributor(MetaInfo metaInfo);
+	public Contributor generateMovieContributor(MetaInfo metaInfo);
 
-	public Service generateService(MetaInfo metaInfo);
+	public Contributor generateTVContributor(MetaInfo metaInfo);
+
+	public Contributor generateEbookContributor(MetaInfo metaInfo);
+
+	public Contributor generateComicContributor(MetaInfo metaInfo);
+
+	public Contributor generateMusicContributor(MetaInfo metaInfo);
 
 	public Product generateAppProductProxy(MetaInfo metaInfo);
 
@@ -52,7 +63,7 @@ public interface MetaInfoGenerateProxyService {
 
 	public Product generateMovieProductProxy(MetaInfo metaInfo);
 
-	public Product generateBroadCastingProductProxy(MetaInfo metaInfo);
+	public Product generateTVProductProxy(MetaInfo metaInfo);
 
 	public Product generateEbookProductProxy(MetaInfo metaInfo);
 
@@ -64,6 +75,6 @@ public interface MetaInfoGenerateProxyService {
 
 	public List<Service> generateMusicServiceList(MetaInfo metaInfo);
 
-	public Music generateMusicProxy(List<Service> serviceList);
+	public Music generateMusicProxy(MetaInfo metaInfo);
 
 }

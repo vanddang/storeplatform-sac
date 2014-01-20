@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
+import java.util.Map;
+
 public class MetaInfo {
 	// ////////////////////////// 공통 변수 ////////////////////////////
 	private String topMenuId;
@@ -26,6 +28,7 @@ public class MetaInfo {
 	private String artist3Nm;
 	private Integer fileSize;
 	private String contentsTypeCd;
+	private Map<String, Object> supportList;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -254,6 +257,14 @@ public class MetaInfo {
 
 	public void setContentsTypeCd(String contentsTypeCd) {
 		this.contentsTypeCd = contentsTypeCd;
+	}
+
+	public Map<String, Object> getSupportList() {
+		return this.supportList;
+	}
+
+	public void setSupportList(Map<String, Object> supportList) {
+		this.supportList = supportList;
 	}
 
 	public String getAid() {

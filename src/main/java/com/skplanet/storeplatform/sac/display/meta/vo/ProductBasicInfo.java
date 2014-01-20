@@ -1,11 +1,15 @@
 package com.skplanet.storeplatform.sac.display.meta.vo;
 
-
 public class ProductBasicInfo {
 	private String tenantId;
 	private String menuId;
 	private String prodId;
 	private String partProdId;
+	private String svcGrpCd;
+	private String svcTypeCd;
+	private String contentsTypeCd;
+	private String metaClsfCd;
+	private String topMenuId;
 	private String expoOrd;
 
 	public String getTenantId() {
@@ -46,6 +50,46 @@ public class ProductBasicInfo {
 
 	public void setExpoOrd(String expoOrd) {
 		this.expoOrd = expoOrd;
+	}
+
+	public String getSvcGrpCd() {
+		return this.svcGrpCd;
+	}
+
+	public void setSvcGrpCd(String svcGrpCd) {
+		this.svcGrpCd = svcGrpCd;
+	}
+
+	public String getSvcTypeCd() {
+		return this.svcTypeCd;
+	}
+
+	public void setSvcTypeCd(String svcTypeCd) {
+		this.svcTypeCd = svcTypeCd;
+	}
+
+	public String getContentsTypeCd() {
+		return this.contentsTypeCd;
+	}
+
+	public void setContentsTypeCd(String contentsTypeCd) {
+		this.contentsTypeCd = contentsTypeCd;
+	}
+
+	public String getMetaClsfCd() {
+		return this.metaClsfCd;
+	}
+
+	public void setMetaClsfCd(String metaClsfCd) {
+		this.metaClsfCd = metaClsfCd;
+	}
+
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 }

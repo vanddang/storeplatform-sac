@@ -40,8 +40,8 @@
                      AND I.PART_PROD_ID = J.PROD_ID
                      AND I.PART_PROD_ID = K.PROD_ID(+)
                      AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                     <if test='svgGrpCd != null'>
-                     AND D.SVC_GRP_CD = #{svgGrpCd}             /* DP000203 : 멀티미디어 */
+                     <if test='svcGrpCd != null'>
+                     AND D.SVC_GRP_CD = #{svcGrpCd}             /* DP000203 : 멀티미디어 */
                      </if>
                      <if test='contentTypeCd != null'>
                      AND D.CONTENTS_TYPE_CD = #{contentTypeCd}       /* PD002501 : 채널타입 */

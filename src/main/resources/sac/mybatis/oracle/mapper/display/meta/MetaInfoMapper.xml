@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MetaInfo">
-    <select id="getAppMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
+    <select id="getAppMetaInfo" parameterType="Map" resultType="MetaInfo">
         SELECT 
-                TB.*
-              , TB.TOP_MENU_ID
+                TB.TOP_MENU_ID
               , TB.UP_MENU_ID
               , TB.MENU_ID
               , TB.MENU_NM
@@ -32,7 +31,7 @@
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = TB.TOP_MENU_ID
                     AND LANG_CD = 'ko'
-                    AND ROWNUM = 1) AS UP_MENU_NM
+                    AND ROWNUM = 1) AS TOP_MENU_NM
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
                       , A.MENU_ID
@@ -87,15 +86,11 @@
                    AND  G.PROD_ID = L.PROD_ID(+)
                    AND  A.USE_YN = 'Y'                  /* Y : 사용 (사용여부) */
                    AND  B.USE_YN = 'Y'                  /* Y : 사용 (사용여부) */
-                   <if test='lang != null'>
                    AND  C.LANG_CD = #{lang}                /* ko : 한국어 */
+                   <if test='productBasicInfo.svcGrpCd != null'>
+                   AND  D.SVC_GRP_CD = #{productBasicInfo.svcGrpCd}       /* DP000201 : 애플리캐이션 */
                    </if>
-                   <if test='svgGrpCd != null'>
-                   AND  D.SVC_GRP_CD = #{svgGrpCd}       /* DP000201 : 애플리캐이션 */
-                   </if>
-                   <if test='lang != null'>
                    AND  F.LANG_CD = #{lang}                /* ko : 한국어 */
-                   </if>
                    <if test='prodStatusCd != null'>
                    AND  G.PROD_STATUS_CD = #{prodStatusCd}   /* PD000403 : 판매중 */
                    </if>
@@ -103,16 +98,14 @@
                    AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND  K.IMG_CD = #{imageCd}           /* 이미지코드 */
                    AND  K.EXPO_ORD = 1                  /* 노출순서 */
-                   <if test='lang != null'>
                    AND  K.LANG_CD = #{lang}                /* ko : 한국어 */
-                   </if>
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    -----------------------------------------------------------------------------
                    <if test='menuId != null'>
-                   AND  A.MENU_ID = #{menuId}           /* 메뉴ID */
+                   AND  A.MENU_ID = #{productBasicInfo.menuId}           /* 메뉴ID */
                    </if>
-                   AND  B.PROD_ID = #{prodId}        /* 상품ID */
+                   AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
                    AND  G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
                    AND  I.DEVICE_MODEL_CD = #{deviceHeader.model} /* 단말모델코드 */
        ) TB
@@ -153,9 +146,9 @@
               , LA.FILE_NM
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
-                  WHERE MENU_ID = LA.UP_MENU_ID
+                  WHERE MENU_ID = LA.TOP_MENU_ID
                     AND LANG_CD = 'ko'
-                    AND ROWNUM = 1) AS UP_MENU_NM
+                    AND ROWNUM = 1) AS TOP_MENU_NM
           FROM (          
                             SELECT JA.*
                                   FROM (SELECT 'S01' AS TENANT_ID
@@ -211,12 +204,12 @@
                                            AND A.BASE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND C.LANG_CD = #{lang}                      /* ko : 한국어 */                                   
-                                           AND G.TENANT_ID = #{tenantId}
+                                           AND G.TENANT_ID = #{tenantHeader.tenantId}
                                            AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
-                                           AND K.IMG_CD = 'DP000101'                 
+                                           AND K.IMG_CD = #{imageCd}                 
                                            AND K.EXPO_ORD = '1'                 
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-                                           AND D.PROD_ID = #{prodId} 
+                                           AND D.PROD_ID = #{productBasicInfo.prodId} 
                                        ) JA 
                ) LA
              , TB_DP_TENANT_PROD_STATS LB
@@ -226,111 +219,116 @@
     
     <select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
     
-       SELECT MCI.RANK_CHG_CNT
-                            , MCI.RANK_CHG_CLSF_CD
-                            , MCI.ARTIST_ID
-                            , CP.PROD_ID AS CHNL_PROD_ID
-                            , CP.PART_PROD_ID AS EPSD_PROD_ID
-                            , C.MENU_ID
-                            , CD.MENU_NM
-                            , CD.MENU_DESC
-                            , C.TOP_MENU_ID
-                            , CD2.MENU_NM AS TOP_MENU_NM
-                            , CD2.MENU_DESC AS TOP_MENU_DESC
-                            , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
-                            , PD.PROD_NM
-                            , PD.PROD_DTL_DESC
-                            , TPP.PROD_AMT
-                            , P.PROD_GRD_CD
-                            , PD.ARTIST1_NM
-                            , PD.ARTIST2_NM
-                            , PD.ARTIST3_NM                        
-                            , MP.CHNL_COMP_NM
-                            , MP.AGENCY_NM
-                            , MP.ISSUE_DAY
-                            , MP.BELL_SPRT_YN
-                            , MP.COLORRING_SPRT_YN
-                            , PI.FILE_PATH
-                            , PI.FILE_NM
-                            , PI.FILE_SIZE
-                         FROM TB_DP_MULTIMDA_PROD MP
-                            , TB_DP_MUSIC_CHART MCI
-                            , TB_DP_PROD P
-                            , TB_DP_PROD_DESC PD
-                            , TB_DP_PROD_RSHP CP
-                            , TB_DP_TENANT_PROD TP
-                            , TB_DP_TENANT_PROD_PRICE TPP
-                            , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
-                            , TB_DP_MENU_CATEGORY C
-                            , TB_DP_MENU_CATEGORY_DESC CD
-                            , TB_DP_MENU_CATEGORY_DESC CD2
-                            , TB_DP_MULTIMDA_PROD MP2
-                            , TB_DP_PROD P2
-                            , TB_DP_TENANT_PROD TP2
-                            , TB_DP_PROD_IMG PI
-                        WHERE MP.PROD_ID = CP.PART_PROD_ID
-                          AND P.PROD_ID = CP.PART_PROD_ID
-                          AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
-                          AND CPM.PROD_ID = CP.PART_PROD_ID
-                          AND C.MENU_ID = CPM.MENU_ID
-                          AND CD.MENU_ID = C.MENU_ID
-                          AND CD2.MENU_ID = C.TOP_MENU_ID
-                          AND CD2.LANG_CD = CD.LANG_CD
-                          AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
-                          AND P2.META_CLSF_CD = P.META_CLSF_CD
-                          AND TP2.PROD_ID = P2.PROD_ID
-                          AND TP2.TENANT_ID = TP.TENANT_ID
-                          AND TP2.PROD_STATUS_CD = TP.PROD_STATUS_CD
-                          AND TP2.EXPO_YN = TP.EXPO_YN
-                          AND MP2.PROD_ID = P2.PROD_ID
-                          AND TP.PROD_ID = P.PROD_ID
-                          AND TPP.PROD_ID = TP.PROD_ID
-                          AND TPP.TENANT_ID = TP.TENANT_ID
-                          AND PD.PROD_ID = P.PROD_ID
-                          AND PI.PROD_ID = CP.PROD_ID
-                       -----------------------------------------------------------------------------
-                       -- 차트 정보 조건절 START
-                       -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
-                       -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
-                       ----------------------------------------------------------------------------- 
-                          AND MCI.CHART_CLSF_CD = #{chartClsfCd} -- 멜론 TOP 100
-                          AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
-                                                       FROM TB_DP_BATCH_COMPT
-                                                      WHERE TENANT_ID = TP.TENANT_ID
-                                                        AND BATCH_ID = 'MELON_DP004901') -- 멜론 TOP 100
-                       -----------------------------------------------------------------------------
-                       -- 차트 정보 조건절 END
-                       ----------------------------------------------------------------------------- 
-                          <if test='prodStatusCd != null'>
-                          AND TP.PROD_STATUS_CD = #{prodStatusCd}   -- 판매중
-                          </if>
-                          AND TP.EXPO_YN = 'Y'                 -- 노출 여부
-                          AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
-                          AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
-                          <if test='metaClsfCd != null'>
-                          AND P.META_CLSF_CD = #{metaClsfCd}          -- 통합 뮤직
-                          </if>
-                          AND CPM.USE_YN = 'Y'
-                          AND C.USE_YN = 'Y'
-                       -----------------------------------------------------------------------------
-                       -- INPUT PARAMETER
-                       ----------------------------------------------------------------------------- 
-                          --AND CP.PART_PROD_ID = 'H900064802' -- EPISODE PROD ID
-                          --AND CP.PROD_ID = 'H900064801'   -- CHANNEL PROD ID
-                          AND P.TOP_MENU_ID = #{topMenuId}
-                          AND PI.IMG_CD = #{imageCd}
-                          AND TP.TENANT_ID = #{tenantHeader.tenantId}
-                          AND PD.LANG_CD = #{lang}
-                          AND CD.LANG_CD = #{lang}
+       SELECT 
+              MCI.RANK_CHG_CNT
+            , MCI.RANK_CHG_CLSF_CD
+            , MCI.ARTIST_ID
+            , CP.PROD_ID AS CHNL_PROD_ID
+            , CP.PART_PROD_ID AS EPSD_PROD_ID
+            , C.MENU_ID
+            , CD.MENU_NM
+            , CD.MENU_DESC
+            , C.TOP_MENU_ID
+            , CD2.MENU_NM AS TOP_MENU_NM
+            , CD2.MENU_DESC AS TOP_MENU_DESC
+            , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
+            , PD.PROD_NM
+            , PD.PROD_DTL_DESC
+            , TPP.PROD_AMT
+            , P.PROD_GRD_CD
+            , PD.ARTIST1_NM
+            , PD.ARTIST2_NM
+            , PD.ARTIST3_NM                        
+            , MP.CHNL_COMP_NM
+            , MP.AGENCY_NM
+            , MP.ISSUE_DAY
+            , MP.BELL_SPRT_YN
+            , MP.COLORRING_SPRT_YN
+            , PI.FILE_PATH
+            , PI.FILE_NM
+            , PI.FILE_SIZE
+         FROM TB_DP_MULTIMDA_PROD MP
+            , TB_DP_MUSIC_CHART MCI
+            , TB_DP_PROD P
+            , TB_DP_PROD_DESC PD
+            , TB_DP_PROD_RSHP CP
+            , TB_DP_TENANT_PROD TP
+            , TB_DP_TENANT_PROD_PRICE TPP
+            , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
+            , TB_DP_MENU_CATEGORY C
+            , TB_DP_MENU_CATEGORY_DESC CD
+            , TB_DP_MENU_CATEGORY_DESC CD2
+            , TB_DP_MULTIMDA_PROD MP2
+            , TB_DP_PROD P2
+            , TB_DP_TENANT_PROD TP2
+            , TB_DP_PROD_IMG PI
+        WHERE MP.PROD_ID = CP.PART_PROD_ID
+          AND P.PROD_ID = CP.PART_PROD_ID
+          AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
+          AND CPM.PROD_ID = CP.PART_PROD_ID
+          AND C.MENU_ID = CPM.MENU_ID
+          AND CD.MENU_ID = C.MENU_ID
+          AND CD2.MENU_ID = C.TOP_MENU_ID
+          AND CD2.LANG_CD = CD.LANG_CD
+          AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
+          AND P2.META_CLSF_CD = P.META_CLSF_CD
+          AND TP2.PROD_ID = P2.PROD_ID
+          AND TP2.TENANT_ID = TP.TENANT_ID
+          AND TP2.PROD_STATUS_CD = TP.PROD_STATUS_CD
+          AND TP2.EXPO_YN = TP.EXPO_YN
+          AND MP2.PROD_ID = P2.PROD_ID
+          AND TP.PROD_ID = P.PROD_ID
+          AND TPP.PROD_ID = TP.PROD_ID
+          AND TPP.TENANT_ID = TP.TENANT_ID
+          AND PD.PROD_ID = P.PROD_ID
+          AND PI.PROD_ID = CP.PROD_ID
+       -----------------------------------------------------------------------------
+       -- 차트 정보 조건절 START
+       -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
+       -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
+       ----------------------------------------------------------------------------- 
+          AND MCI.CHART_CLSF_CD = #{chartClsfCd} -- 멜론 TOP 100
+          AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
+                                       FROM TB_DP_BATCH_COMPT
+                                      WHERE TENANT_ID = TP.TENANT_ID
+                                        AND BATCH_ID = 'MELON_DP004901') -- 멜론 TOP 100
+       -----------------------------------------------------------------------------
+       -- 차트 정보 조건절 END
+       ----------------------------------------------------------------------------- 
+          <if test='prodStatusCd != null'>
+          AND TP.PROD_STATUS_CD = #{prodStatusCd}   -- 판매중
+          </if>
+          AND TP.EXPO_YN = 'Y'                 -- 노출 여부
+          AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
+          AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
+          <if test='productBasicInfo.metaClsfCd != null'>
+          AND P.META_CLSF_CD = #{metaClsfCd}          -- 통합 뮤직
+          </if>
+          AND CPM.USE_YN = 'Y'
+          AND C.USE_YN = 'Y'
+       -----------------------------------------------------------------------------
+       -- INPUT PARAMETER
+       ----------------------------------------------------------------------------- 
+          <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+            AND CP.PROD_ID = #{productBasicInfo.prodId}
+          </if>
+          <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+            AND CP.PART_PROD_ID = #{productBasicInfo.prodId}
+          </if>
+          AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
+          AND PI.IMG_CD = #{imageCd}
+          AND TP.TENANT_ID = #{tenantHeader.tenantId}
+          AND PD.LANG_CD = #{lang}
+          AND CD.LANG_CD = #{lang}
        
     </select>
     <select id="getEbookComidMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
        SELECT TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
-                 WHERE MENU_ID = TB.UP_MENU_ID
+                 WHERE MENU_ID = TB.TOP_MENU_ID
                    AND LANG_CD = 'ko'
-                   AND ROWNUM = 1) AS UP_MENU_NM
+                   AND ROWNUM = 1) AS TOP_MENU_NM
              , TB.TOP_MENU_ID
              , TB.MENU_ID
              , TB.MENU_NM
@@ -463,7 +461,7 @@
            WHERE TB.RN = 1 
     </select>
     <select id="getShoppingMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
-                   SELECT  * 
+        SELECT  * 
                    FROM (
                           SELECT 
                                 B.CATALOG_ID 
