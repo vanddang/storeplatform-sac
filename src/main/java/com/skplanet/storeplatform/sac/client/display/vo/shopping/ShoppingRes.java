@@ -17,9 +17,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * 웹툰 리스트 조회 List Value Object.
- * 
- * Updated on : 2013. 11. 28. Updated by : 김형식, SK 플래닛.
+ * <pre>
+ * 쇼핑 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
  */
 public class ShoppingRes extends CommonInfo {
 	/**

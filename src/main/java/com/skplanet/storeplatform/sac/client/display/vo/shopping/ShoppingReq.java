@@ -12,10 +12,16 @@ package com.skplanet.storeplatform.sac.client.display.vo.shopping;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 웹툰 request Input Value Object.
- * 
- * Updated on : 2013. 12. 23. Updated by : 김형식, SK 플래닛.
+ * <pre>
+ * 쇼핑 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
  */
+
 public class ShoppingReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
