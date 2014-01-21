@@ -24,7 +24,9 @@ public interface CategoryService {
 	 * 
 	 * @param MenuReq
 	 *            requestVO
-	 * @return Menu 리스트
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return CategoryListRes
 	 */
 	public CategoryListRes searchTopCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
@@ -36,7 +38,9 @@ public interface CategoryService {
 	 * 
 	 * @param MenuReq
 	 *            requestVO
-	 * @return Menu 상세
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return CategoryDetailRes
 	 */
 	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
@@ -48,7 +52,9 @@ public interface CategoryService {
 	 * 
 	 * @param MenuReq
 	 *            requestVO
-	 * @return Menu 상세
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return CategoryDetailRes
 	 */
 	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
