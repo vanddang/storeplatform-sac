@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * 서브계정 목록 조회
  * 
- * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
+ * Updated on : 2014. 1. 20. Updated by : 한서구, 부르칸.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
 public class ListSubsellerReq extends CommonInfo {
