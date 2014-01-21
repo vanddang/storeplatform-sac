@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.member.idp.constant;
 /**
  * IdpConstants class
  * 
- * Updated on : 2014. 1. 8. Updated by : Lee, Jung suk, SK planet.
+ * Updated on : 2014. 1. 8. Updated by : Lee, Jung suk, incross.
  */
 public final class IdpConstants {
 
