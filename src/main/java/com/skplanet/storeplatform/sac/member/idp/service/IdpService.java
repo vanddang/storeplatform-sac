@@ -13,7 +13,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 통합회원전환생성정보를사이트에배포 
+	 * 통합회원전환생성정보를사이트에배포. 
 	 * - CMD : RXCreateUserIDP
 	 * </pre>
 	 * 
@@ -26,7 +26,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 회선 변경 정보 Provisioning (무선, 통합 회원)
+	 * 회선 변경 정보 Provisioning (무선, 통합 회원).
 	 * - CMD : changeMobileNumber
 	 * </pre>
 	 * 
@@ -39,7 +39,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 휴대폰소유변경정보배포
+	 * 휴대폰소유변경정보배포.
 	 * - CMD : RXInvalidUserTelNoIDP
 	 * </pre>
 	 * 
@@ -52,7 +52,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 로그인 상태정보배포
+	 * 로그인 상태정보배포.
 	 * - CMD : RXSetLoginConditionIDP
 	 * </pre>
 	 * 
@@ -65,7 +65,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 신규가입정보를 미동의 사이트에 배포
+	 * 신규가입정보를 미동의 사이트에 배포.
 	 * - CMD : RXCreateUserIdIDP
 	 * </pre>
 	 * 
@@ -78,7 +78,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 직권중지 상태정보 배포
+	 * 직권중지 상태정보 배포.
 	 * - CMD : RXSetSuspendUserIdIDP
 	 * </pre>
 	 * 
@@ -86,6 +86,35 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return ImResult
 	 */
+
 	public ImResult rXSetSuspendUserIdIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 실명변경 정보 배포.
+	 * - CMD : RXUpdateUserNameIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+
+	public ImResult rXUpdateUserNameIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 법정대리인 동의정보 변경 배포.
+	 * - CMD : RXUpdateGuardianInfoIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+
+	public ImResult rXUpdateGuardianInfoIDP(HashMap map);
 
 }

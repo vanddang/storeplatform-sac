@@ -11,12 +11,16 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -132,6 +136,7 @@ public class IdpServiceImpl implements IdpService {
 		ImResult imResult = new ImResult();
 
 		imResult.setResult(idpResult);
+		imResult.setCmd("RXInvalidUserTelNoIDP");
 		imResult.setResultText(idpResultText);
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 		imResult.setUserId(map.get("user_id").toString());
@@ -169,13 +174,7 @@ public class IdpServiceImpl implements IdpService {
 		updateUserVo.setKeySearchList(keySearchList);
 
 		String loginStatusCode = (String) map.get("login_status_code");
-		if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_RELEASE)) { // 로그인 가능
-			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_NORMAL);
-			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_NORMAL);
-		} else if (loginStatusCode.equals(idpConstant.LOGIN_STATUS_LOCK)) { // 로그인 제한
-			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
-			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_LOGIN_PAUSE);
-		}
+		updateUserVo.setLoginStatusCode(loginStatusCode);
 
 		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 
@@ -201,6 +200,7 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		ImResult imResult = new ImResult();
+		imResult.setCmd("RXSetLoginConditionIDP");
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
@@ -267,6 +267,7 @@ public class IdpServiceImpl implements IdpService {
 
 		// 회원이 존재 하지 않으면 FAIL값 return
 		ImResult imResult = new ImResult();
+		imResult.setCmd("RXCreateUserIdIDP");
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
@@ -297,19 +298,14 @@ public class IdpServiceImpl implements IdpService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("INTG_SVC_NO");
+		// keySearch.setKeyType("MBR_ID");
 		keySearch.setKeyString((String) map.get("im_int_svc_no"));
 
 		keySearchList.add(keySearch);
 		updateUserVo.setKeySearchList(keySearchList);
 
 		String susStatusCode = (String) map.get("sus_status_code");
-		if (susStatusCode.equals(idpConstant.SUS_STATUS_RELEASE)) { // 직권중지 해제
-			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_NORMAL);
-			updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_NORMAL);
-		} else if (susStatusCode.equals(idpConstant.SUS_STATUS_LOCK)) { // 직권중지
-			updateUserVo.setUserMainStatus(memberConstant.MAIN_STATUS_PAUSE);
-			// updateUserVo.setUserSubStatus(memberConstant.SUB_STATUS_AUTHORITY_PAUSE);
-		}
+		updateUserVo.setStopStatusCode(susStatusCode);
 
 		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
 
@@ -335,6 +331,7 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		ImResult imResult = new ImResult();
+		imResult.setCmd("RXSetSuspendUserIdIDP");
 		imResult.setResult(idpResult);
 		imResult.setResultText(idpResultText);
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
@@ -342,4 +339,167 @@ public class IdpServiceImpl implements IdpService {
 		return imResult;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 실명변경 정보 배포.
+	 * - CMD : RXUpdateUserNameIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+
+	@Override
+	public ImResult rXUpdateUserNameIDP(HashMap map) {
+		// 실명 인증 정보
+		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+		MemberConstants memberConstant = new MemberConstants();
+		IdpConstants idpConstant = new IdpConstants();
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		// 공통 헤더 세팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
+		updateRealNameRequest.setCommonRequest(commonRequest);
+
+		// 회원 조회
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		// keySearch.setKeyType("INTG_SVC_NO");
+		keySearch.setKeyType("MBR_ID");// 테스트
+		if (null != map.get("im_int_svc_no")) {
+			keySearch.setKeyString((String) map.get("im_int_svc_no"));
+		}
+		keySearchList.add(keySearch);
+		searchUserRequest.setKeySearchList(keySearchList);
+		searchUserRequest.setCommonRequest(commonRequest);
+		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+
+		if (searchUserRespnse.getUserMbr() != null) {
+
+			// 실명인증 대상 본인/법정대리인 여부
+			updateRealNameRequest.setIsOwn("OWN");// 본인
+			updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
+			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+
+			MbrAuth mbrAuth = new MbrAuth();
+			mbrAuth.setBirthDay(map.get("user_birthday").toString());
+			mbrAuth.setCi(map.get("user_ci").toString());
+			mbrAuth.setDi(map.get("user_di").toString());
+			mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
+			mbrAuth.setRealNameSite(map.get("rname_auth_sst_code").toString());
+			mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
+			mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
+			mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
+			mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
+			mbrAuth.setSex(map.get("user_sex").toString());
+			mbrAuth.setName(map.get("user_name").toString());
+			mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
+			// mbrAuth.setSequence(map.get("is_rname_auth").toString());
+			mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
+
+			updateRealNameRequest.setUserMbrAuth(mbrAuth);
+
+			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+			LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
+			if (updateRealNameResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			}
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("rXUpdateUserNameIDP");
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+
+		return imResult;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 법정대리인 동의정보 변경 배포.
+	 * - CMD : RXUpdateGuardianInfoIDP
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return ImResult
+	 */
+
+	@Override
+	public ImResult rXUpdateGuardianInfoIDP(HashMap map) {
+		// 실명 인증 정보
+		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+		MemberConstants memberConstant = new MemberConstants();
+		IdpConstants idpConstant = new IdpConstants();
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		// 공통 헤더 세팅
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
+		updateRealNameRequest.setCommonRequest(commonRequest);
+
+		// 회원 조회
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		// keySearch.setKeyType("INTG_SVC_NO");
+		keySearch.setKeyType("MBR_ID"); // 테스트
+		if (null != map.get("im_int_svc_no")) {
+			keySearch.setKeyString((String) map.get("im_int_svc_no"));
+		}
+		keySearchList.add(keySearch);
+		searchUserRequest.setKeySearchList(keySearchList);
+		searchUserRequest.setCommonRequest(commonRequest);
+		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+
+		if (searchUserRespnse.getUserMbr() != null) {
+
+			// 실명인증 대상 본인/법정대리인 여부
+			updateRealNameRequest.setIsOwn("PARENT");// 법정대리인
+			updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
+			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+
+			MbrLglAgent mbrLglAgent = new MbrLglAgent();
+			mbrLglAgent.setParentBirthDay(map.get("parent_birthday").toString());
+			if (map.get("parent_rname_auth_key") != null) {
+				mbrLglAgent.setParentCI(map.get("parent_rname_auth_key").toString());
+			}
+			mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
+			mbrLglAgent.setParentRealNameSite(map.get("parent_approve_sst_code").toString());
+			if (map.get("parent_approve_date").toString().length() == 8)
+				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString() + "000000");
+			mbrLglAgent.setParentName(map.get("parent_name").toString());
+			mbrLglAgent.setParentType(map.get("parent_type").toString());
+			mbrLglAgent.setParentRealNameMethod(map.get("parent_rname_auth_type").toString());
+			mbrLglAgent.setParentEmail(map.get("parent_email").toString());
+
+			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
+
+			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+			LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
+			if (updateRealNameResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			}
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("RXUpdateGuardianInfoIDP");
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+
+		return imResult;
+	}
 }
