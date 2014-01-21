@@ -53,7 +53,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
-import com.skplanet.storeplatform.sac.common.constant.Const;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
@@ -363,14 +362,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				request.getSignData());
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 
-		if (idpReciver.getResponseHeader().getResult().equals(Const.IDP_SUCCESS)) {
+		if (idpReciver.getResponseHeader().getResult().equals("1000")) {
 			LOGGER.debug("IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
 					idpReciver.getResponseHeader().getResult_text());
 		} else {
 			LOGGER.info("IDP 호출 오류. resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
 					idpReciver.getResponseHeader().getResult_text());
 		}
-		// ##################### 테스트 필요함 ################################ //
 		return response;
 	}
 
