@@ -7,6 +7,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
@@ -31,6 +33,19 @@ public interface DeviceService {
 	 *             Exception
 	 */
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) throws Exception;
+
+	/**
+	 * 휴대기기 수정
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyDeviceReq
+	 * @return ModifyDeviceRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 목록 조회

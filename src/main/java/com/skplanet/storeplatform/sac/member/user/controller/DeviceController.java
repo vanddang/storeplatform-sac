@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
@@ -48,9 +50,12 @@ public class DeviceController {
 	 * 휴대기기 목록조회
 	 * 
 	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            ListDeviceReq
+	 * @return ListDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -74,15 +79,80 @@ public class DeviceController {
 	 * 휴대기기 등록
 	 * 
 	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            CreateDeviceReq
+	 * @return CreateDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) throws Exception {
 
+		/* 휴대기기 정보 필수 파라메터 체크 */
+		DeviceInfo deviceInfo = req.getDeviceInfo();
+		if (StringUtil.nvl(deviceInfo.getDeviceId(), "").equals("")) {
+			throw new Exception("deviceId는 필수 파라미터 입니다.");
+		}
+
+		if (StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
+			throw new Exception("deviceIdType는 필수 파라미터 입니다.");
+		}
+
+		if (StringUtil.nvl(deviceInfo.getDeviceTelecom(), "").equals("")) {
+			throw new Exception("deviceTelecom는 필수 파라미터 입니다.");
+		}
+
+		if (StringUtil.nvl(deviceInfo.getIsPrimary(), "").equals("")) {
+			throw new Exception("isPrimary는 필수 파라미터 입니다.");
+		}
+
+		if (StringUtil.nvl(deviceInfo.getIsAuthenticated(), "").equals("")) {
+			throw new Exception("isAuthenticate는 필수 파라미터 입니다.");
+		}
+
+		if (StringUtil.nvl(deviceInfo.getIsUsed(), "").equals("")) {
+			throw new Exception("isUsed는 필수 파라미터 입니다.");
+		}
+
+		if (StringUtil.nvl(deviceInfo.getAuthenticationDate(), "").equals("")) {
+			throw new Exception("authenticationDate는 필수 파라미터 입니다.");
+		}
+
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, (CreateDeviceReq) ConvertMapperUtil.convertObject(req));
+
+		return res;
+	}
+
+	/**
+	 * 휴대기기 수정
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            ModifyDeviceReq
+	 * @return ModifyDeviceRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	@RequestMapping(value = "/modifyDevice/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) throws Exception {
+
+		/* 휴대기기 정보 수정 필수 파라메터 체크 */
+		DeviceInfo deviceInfo = req.getDeviceInfo();
+
+		//ICAS연동시 필요한 deviceIdType 체크
+		if (!StringUtil.nvl(deviceInfo.getNativeId(), "").equals("") && StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
+			throw new Exception("deviceIdType는 필수 파라미터 입니다.");
+		}
+
+		deviceInfo.setUserKey(req.getUserKey());
+		deviceInfo.setDeviceKey(req.getDeviceKey());
+		req.setDeviceInfo(deviceInfo);
+
+		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, (ModifyDeviceReq) ConvertMapperUtil.convertObject(req));
 
 		return res;
 	}

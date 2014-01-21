@@ -59,6 +59,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
@@ -133,6 +135,8 @@ public class DeviceServiceImpl implements DeviceService {
 		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
 
 		String userKey = req.getUserKey();
+		String deviceId = req.getDeviceInfo().getDeviceId();
+		String deviceKey = null;
 
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
@@ -161,7 +165,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 등록 처리 */
-		this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
+		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
 
 		/* sc회원 컴포넌트 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
@@ -248,9 +252,33 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
+		CreateDeviceRes res = new CreateDeviceRes();
+		res.setDeviceId(deviceId);
+		res.setDeviceKey(deviceKey);
+		res.setUserKey(userKey);
+
 		logger.info("######################## DeviceServiceImpl createDevice start ############################");
 
-		return null;
+		return res;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#modifyDevice
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq)
+	 */
+	@Override
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req) throws Exception {
+
+		this.mergeDeviceInfo(requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(), req.getDeviceInfo());
+
+		/* IDP 수정된 정보 업데이트 */
+
+		ModifyDeviceRes res = new ModifyDeviceRes();
+		return res;
 	}
 
 	/*
@@ -447,23 +475,26 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("################ mergeDeviceInfo start ##################");
 
-		if (deviceInfo.getDeviceId() == null) {
-
-			throw new Exception("deviceId is null 기기정보 수정 불가");
-		}
-
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenantId);
 
+		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
+		String deviceKey = deviceInfo.getDeviceKey();
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		key.setKeyString(deviceId);
+
+		if (deviceKey != null) {
+			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			key.setKeyString(deviceInfo.getDeviceKey());
+		} else if (deviceId != null) {
+			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+			key.setKeyString(deviceId);
+		}
 		keySearchList.add(key);
 		schDeviceReq.setCommonRequest(commonRequest);
 		schDeviceReq.setUserKey(deviceInfo.getUserKey());
@@ -650,7 +681,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
 		createDeviceReq.setCommonRequest(commonRequest);
-		createDeviceReq.setUserKey(schDeviceRes.getUserKey());
+		createDeviceReq.setUserKey(userKey);
 		createDeviceReq.setIsNew("N");
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
