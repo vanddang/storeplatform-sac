@@ -127,7 +127,6 @@ public class DummySellerController {
 		responseVO.setLoginFailCount("2");
 		responseVO.setIsLoginSuccess("Y");
 		responseVO.setSellerMbr(sellerInfo);
-
 		return responseVO;
 	}
 

@@ -80,7 +80,7 @@ public class CreateSellerTest {
 						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
-						req.setSellerId("seller_test1111");
+						req.setSellerId("seller_test1234");
 						req.setSellerPW("awdawe123dw2");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
@@ -111,7 +111,7 @@ public class CreateSellerTest {
 						pwReminder.setQuestionID("Q123");
 						pwReminder.setQuestionMessage("qwdwd");
 						pwReminders.add(pwReminder);
-						req.setPWReminderList(pwReminders);
+						req.setPwReminderList(pwReminders);
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;

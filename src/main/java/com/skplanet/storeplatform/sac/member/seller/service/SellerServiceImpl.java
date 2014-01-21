@@ -70,6 +70,8 @@ public class SellerServiceImpl implements SellerService {
 			mbrAuth.setCi(req.getSellerCI());
 			// DI
 			mbrAuth.setDi(req.getSellerDI());
+			//
+			mbrAuth.setMemberCategory(req.getSellerCategory());
 			// 인증방법코드
 			mbrAuth.setRealNameMethod(req.getRealNameMethod());
 			// 통신사 코드
@@ -87,6 +89,7 @@ public class SellerServiceImpl implements SellerService {
 			// 실명 인증 일시
 			mbrAuth.setRealNameDate(req.getRealNameDate());
 			createSellerRequest.setMbrAuth(mbrAuth);
+
 		}
 		/** 실명인증정보 생성 및 주입 [끝]. */
 
@@ -111,13 +114,13 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 보안질문 리스트 주입 - [시작]. */
 		List<PWReminder> pWReminderList = null;
-		if (req.getPWReminderList() != null) {
+		if (req.getPwReminderList() != null) {
 			pWReminderList = new ArrayList<PWReminder>();
-			for (int i = 0; i < req.getPWReminderList().size(); i++) {
+			for (int i = 0; i < req.getPwReminderList().size(); i++) {
 				PWReminder pwReminder = new PWReminder();
-				pwReminder.setAnswerString(req.getPWReminderList().get(i).getAnswerString());
-				pwReminder.setQuestionID(req.getPWReminderList().get(i).getQuestionID());
-				pwReminder.setQuestionMessage(req.getPWReminderList().get(i).getQuestionMessage());
+				pwReminder.setAnswerString(req.getPwReminderList().get(i).getAnswerString());
+				pwReminder.setQuestionID(req.getPwReminderList().get(i).getQuestionID());
+				pwReminder.setQuestionMessage(req.getPwReminderList().get(i).getQuestionMessage());
 				pWReminderList.add(pwReminder);
 			}
 			createSellerRequest.setPWReminderList(pWReminderList);
@@ -215,9 +218,8 @@ public class SellerServiceImpl implements SellerService {
 		CreateSellerResponse createSellerResponse = this.sellerSCI.createSeller(createSellerRequest);
 
 		// Debug
-		LOGGER.debug("[createSeller] - CreateSellerResponse CODE : {}, MESSAGE : {}"
-				+ createSellerResponse.getCommonResponse().getResultCode(), createSellerResponse.getCommonResponse()
-				.getResultMessage());
+		LOGGER.debug("[createSeller] - CreateSellerResponse CODE : {}, MESSAGE : {}", createSellerResponse
+				.getCommonResponse().getResultCode(), createSellerResponse.getCommonResponse().getResultMessage());
 
 		// TODO Exception 재정의 필요
 		if (!MemberConstants.RESULT_SUCCES.equals(createSellerResponse.getCommonResponse().getResultCode())) {
