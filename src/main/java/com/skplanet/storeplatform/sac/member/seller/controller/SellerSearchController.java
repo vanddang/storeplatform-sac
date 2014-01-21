@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import javax.validation.Valid;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,11 @@ public class SellerSearchController {
 
 	@Autowired
 	private SellerSearchService sellerSearchService;
+
+	/**
+	 * Data Binding.
+	 */
+	ObjectMapper objMapper = new ObjectMapper();
 
 	/**
 	 * <pre>
@@ -179,7 +185,7 @@ public class SellerSearchController {
 	public @ResponseBody
 	CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Valid CheckPasswordReminderQuestionReq req, BindingResult result) throws Exception {
-
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		String sellerId = StringUtil.nvl(req.getSellerID(), "");
 		String answerString = StringUtil.nvl(req.getpWReminderList().get(0).getAnswerString(), "");
 		String questionID = StringUtil.nvl(req.getpWReminderList().get(0).getQuestionID(), "");
@@ -207,7 +213,6 @@ public class SellerSearchController {
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception {
-
 		String sellerId = StringUtil.nvl(req.getSellerId(), "");
 
 		if (sellerId.equals("")) {
@@ -228,7 +233,6 @@ public class SellerSearchController {
 	@RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception {
-		LOGGER.debug("request param : {}", req.toString());
 
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 

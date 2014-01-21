@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import javax.validation.Valid;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,17 +38,24 @@ public class SellerSubController {
 	private SellerSubService sellerSubService;
 
 	/**
+	 * Data Binding.
+	 */
+	ObjectMapper objMapper = new ObjectMapper();
+
+	/**
 	 * <pre>
 	 * 5.2.18.	서브계정 등록/수정.
 	 * </pre>
 	 * 
 	 * @param req
 	 * @return CreateSubsellerRes
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Valid CreateSubsellerReq req,
-			BindingResult result) {
+			BindingResult result) throws Exception {
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		// TODO Exception (01/17이후 적용)
 		if (result.hasErrors()) {
 			throw new RuntimeException("parameter error~~~");
@@ -62,11 +70,13 @@ public class SellerSubController {
 	 * 
 	 * @param req
 	 * @return RemoveSubsellerRes
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Valid RemoveSubsellerReq req,
-			BindingResult result) {
+			BindingResult result) throws Exception {
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		// TODO Exception (01/17이후 적용)
 		if (result.hasErrors()) {
 			throw new RuntimeException("parameter error~~~");
@@ -81,11 +91,12 @@ public class SellerSubController {
 	 * 
 	 * @param req
 	 * @return ListSubsellerRes
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) throws Exception {
-		LOGGER.debug("request param : {}", req.toString());
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 
