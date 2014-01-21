@@ -540,6 +540,8 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsOneID("Y");
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
 			loginReq.setIsMobile("Y");
+		} else {
+			loginReq.setIsMobile("N");
 		}
 		// SC버젼, IP 추가 예정
 
