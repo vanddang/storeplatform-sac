@@ -516,10 +516,27 @@ public class BestApp {
 		this.apkVerCd = apkVerCd;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 평점.
+	 * </pre>
+	 * 
+	 * @return Double
+	 */
 	public Double getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 평점.
+	 * </pre>
+	 * 
+	 * @param avgEvluScore
+	 *            avgEvluScore
+	 */
 	public void setAvgEvluScore(Double avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
