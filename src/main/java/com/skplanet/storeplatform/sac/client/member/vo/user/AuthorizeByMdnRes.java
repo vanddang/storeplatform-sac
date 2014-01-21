@@ -26,6 +26,11 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String userType;
 
 	/**
+	 * 기기 Key
+	 */
+	private String deviceKey;
+
+	/**
 	 * 사용자 main 상태코드
 	 */
 	private String userMainStatus;
@@ -91,6 +96,14 @@ public class AuthorizeByMdnRes extends CommonInfo {
 
 	public void setStopStatusCode(String stopStatusCode) {
 		this.stopStatusCode = stopStatusCode;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }

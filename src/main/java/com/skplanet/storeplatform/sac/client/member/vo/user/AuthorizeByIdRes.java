@@ -26,6 +26,11 @@ public class AuthorizeByIdRes extends CommonInfo {
 	private String userAuthKey;
 
 	/**
+	 * 기기 Key
+	 */
+	private String deviceKey;
+
+	/**
 	 * 사용자 구분코드
 	 */
 	private String userType;
@@ -143,6 +148,14 @@ public class AuthorizeByIdRes extends CommonInfo {
 
 	public void setStopStatusCode(String stopStatusCode) {
 		this.stopStatusCode = stopStatusCode;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }
