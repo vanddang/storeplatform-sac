@@ -24,6 +24,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmail
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -215,4 +217,18 @@ public class SellerSearchController {
 		return this.sellerSearchService.searchPassword(header, req);
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
+	public @ResponseBody
+	SearchAuthKeyRes searchAuthKey(SacRequestHeader header, @Valid SearchAuthKeyReq req) {
+		return null;
+	}
 }

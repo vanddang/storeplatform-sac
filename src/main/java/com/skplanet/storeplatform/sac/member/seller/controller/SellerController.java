@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -123,4 +127,35 @@ public class SellerController {
 
 		return this.sellerService.withdraw(header, req);
 	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 생성/연장.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Valid CreateAuthKeyReq req) {
+		return null;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 폐기.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, @RequestBody @Valid AbrogationAuthKeyReq req) {
+		return null;
+	}
+
 }

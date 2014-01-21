@@ -21,10 +21,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConversionClassRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
@@ -43,6 +45,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifySubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
@@ -849,6 +852,51 @@ public class DummySellerController {
 		responseVO.setSecedeResonList(myList);
 
 		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원의 인증키 생성.
+	 * </pre>
+	 * 
+	 * @return CreateAuthKeyRes
+	 */
+//	@RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	CreateAuthKeyRes createAuthKey() {
+		CreateAuthKeyRes res = new CreateAuthKeyRes();
+		res.setSessionKey("IFAd12e2dad23Sd");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원의 인증키 조회.
+	 * </pre>
+	 * 
+	 * @return SearchAuthKeyRes
+	 */
+//	@RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
+	public @ResponseBody
+	SearchAuthKeyRes searchAuthKey() {
+		SearchAuthKeyRes res = new SearchAuthKeyRes();
+		res.setExpireDate("20141023");
+		res.setSessionKey("IWd12dawda2a23adwd");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 폐기.
+	 * </pre>
+	 * 
+	 * @return AbrogationAuthKeyRes
+	 */
+//	@RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.GET)
+	public @ResponseBody
+	AbrogationAuthKeyRes abrogationAuthKey() {
+		AbrogationAuthKeyRes res = new AbrogationAuthKeyRes();
+		return res;
 	}
 
 }
