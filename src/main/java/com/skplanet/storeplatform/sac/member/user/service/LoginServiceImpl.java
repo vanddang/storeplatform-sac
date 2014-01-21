@@ -178,13 +178,13 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 변동성 회원인 경우 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE) && StringUtil.equals(schUserRes.getIsChangeSubject(), "Y")) {
-			this.volatileMemberPoc(deviceId, userKey, req.getDeviceTelecom());
+			this.volatileMemberPoc(deviceId, userKey, null, req.getDeviceTelecom());
 		}
 
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
 			/* 단말정보 merge */
-			this.mergeDeviceInfo(userKey, req);
+			this.mergeDeviceInfo(userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
 			this.insertloginHistory(deviceId, "", "Y", userType);
@@ -206,7 +206,7 @@ public class LoginServiceImpl implements LoginService {
 			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 				/* 단말정보 merge */
-				this.mergeDeviceInfo(userKey, req);
+				this.mergeDeviceInfo(userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
 				this.insertloginHistory(deviceId, "", "Y", userType);
@@ -336,7 +336,7 @@ public class LoginServiceImpl implements LoginService {
 
 				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
-					this.mergeDeviceInfo(userKey, req);
+					this.mergeDeviceInfo(userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
 
 					this.insertloginHistory(userId, userPw, "Y", userType);
 
@@ -403,7 +403,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
-				this.mergeDeviceInfo(userKey, req);
+				this.mergeDeviceInfo(userKey, idpReceiver.getResponseBody().getUser_auth_key(), req);
 
 				this.insertloginHistory(userId, userPw, "Y", userType);
 
@@ -519,12 +519,14 @@ public class LoginServiceImpl implements LoginService {
 	 * 
 	 * @param userKey
 	 *            사용자 key
+	 * @param userAuthKey
+	 *            사용자 인증key
 	 * @param obj
 	 *            요청객체
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void mergeDeviceInfo(String userKey, Object obj) throws Exception {
+	public void mergeDeviceInfo(String userKey, String userAuthKey, Object obj) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
@@ -542,7 +544,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVer());
-			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), null, deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
 
@@ -556,7 +558,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 				deviceInfo.setScVer(req.getScVer());
 				deviceInfo.setOsVer(req.getOsVerOrg());
-				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userAuthKey, deviceInfo);
 			}
 
 		}
@@ -605,12 +607,14 @@ public class LoginServiceImpl implements LoginService {
 	 *            디바이스 아이디
 	 * @param userKey
 	 *            사용자키
+	 * @param userAuthKey
+	 *            사용자 인증키
 	 * @param deviceTelecom
 	 *            통신사코드
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void volatileMemberPoc(String deviceId, String userKey, String deviceTelecom) throws Exception {
+	public void volatileMemberPoc(String deviceId, String userKey, String userAuthKey, String deviceTelecom) throws Exception {
 
 		logger.info("########## volatileMember process start #########");
 
@@ -642,7 +646,7 @@ public class LoginServiceImpl implements LoginService {
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setDeviceId(deviceId);
 			deviceInfo.setImMngNum(imMngNum);
-			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userAuthKey, deviceInfo);
 
 		} else {
 
