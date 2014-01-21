@@ -505,7 +505,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				pwReminder.setSellerID(req.getpWReminderList().get(i).getSellerID());
 				pWReminderList.add(pwReminder);
 			}
-			schReq.setpWReminderList(pWReminderList);
+			schReq.setPWReminderList(pWReminderList);
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
 
