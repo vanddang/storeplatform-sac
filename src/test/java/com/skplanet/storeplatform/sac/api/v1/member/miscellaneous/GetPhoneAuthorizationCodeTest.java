@@ -71,7 +71,6 @@ public class GetPhoneAuthorizationCodeTest {
 	@Test
 	public void simpleTest() {
 		try {
-			// 개발 TEST URL 맵핑되어 있음.
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
 					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
@@ -108,7 +107,6 @@ public class GetPhoneAuthorizationCodeTest {
 	@Test
 	public void invalidTelecomTest() {
 		try {
-			// 개발 TEST URL 맵핑되어 있음.
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
 					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
