@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 
 @Service
 @Transactional
@@ -65,6 +66,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSubSellerEmail(req.getSubSellerEmail());
 
 		schRes = this.sellerSCI.createSubSeller(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		CreateSubsellerRes response = new CreateSubsellerRes();
 
@@ -104,6 +108,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSubSeller(removeKeyList);
 
 		schRes = this.sellerSCI.removeSubSeller(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		RemoveSubsellerRes response = new RemoveSubsellerRes();
 
@@ -138,6 +145,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchSubSellerList(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		ListSubsellerRes response = new ListSubsellerRes();
 		response.setSellerID(schRes.getSellerID());

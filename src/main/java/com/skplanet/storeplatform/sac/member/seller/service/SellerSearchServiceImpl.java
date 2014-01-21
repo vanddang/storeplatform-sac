@@ -167,7 +167,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				schReq.setKeySearchList(list);
 
 				schRes = this.sellerSCI.searchSeller(schReq);
-
+				if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+					throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+				}
 				// 판매자 멀티미디어정보
 				List<ExtraRight> eList = new ArrayList<ExtraRight>();
 				ExtraRight extraRightList = null;
@@ -262,7 +264,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchAccountSeller(schReq);
-
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 		// 판매자 문서정보
 		List<Document> dList = new ArrayList<Document>();
 		Document document = null;
@@ -418,6 +422,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		if (reqStat)
 			schRes = this.sellerSCI.searchIDSeller(schReq);
 
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
+
 		SearchIdRes response = new SearchIdRes();
 		response.setSellerMbr(this.sellerMbrList(schRes.getSellerMbr()));// 판매자 정보 리스트
 
@@ -452,6 +460,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 
 		schRes = this.sellerSCI.searchPwdHintList(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
 		SellerMbrPwdHint sellerMbrPwdHint = null;
@@ -524,6 +535,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 
 		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		CheckPasswordReminderQuestionRes response = new CheckPasswordReminderQuestionRes();
 		response.setIsCorrect(schRes.getIsCorrect());
@@ -561,6 +575,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 
 		schRes = this.sellerSCI.resetPasswordSeller(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		SearchPasswordRes response = new SearchPasswordRes();
 		response.setNewPassword(schRes.getSellerPW());
@@ -596,6 +613,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchLoginInfo(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		SearchAuthKeyRes response = new SearchAuthKeyRes();
 		response.setSessionKey(schRes.getLoginInfo().getSessionKey());
