@@ -23,7 +23,6 @@ public class BestDownloadReq extends CommonInfo {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String listId; // 리스트 Id
-	private String imageSizeCd; // 이미지 사이즈 코드
 	private String menuId; // 메뉴 Id
 	private String fiteredBy; // 카테고리 유형
 	private String b2bprod; // B2B 상품구분
@@ -37,7 +36,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * tenantId.
 	 * </pre>
 	 * 
 	 * @return String
@@ -49,7 +48,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * tenantId.
 	 * </pre>
 	 * 
 	 * @param tenantId
@@ -62,7 +61,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시스템Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -74,7 +73,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시스템Id.
 	 * </pre>
 	 * 
 	 * @param systemId
@@ -87,7 +86,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 단말모델코드.
 	 * </pre>
 	 * 
 	 * @return String
@@ -99,7 +98,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 단말모델코드.
 	 * </pre>
 	 * 
 	 * @param deviceModelCd
@@ -112,7 +111,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 언어코드.
 	 * </pre>
 	 * 
 	 * @return String
@@ -124,7 +123,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 언어코드.
 	 * </pre>
 	 * 
 	 * @param langCd
@@ -137,7 +136,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 리스트 Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -149,7 +148,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 리스트 Id.
 	 * </pre>
 	 * 
 	 * @param listId
@@ -162,32 +161,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getImageSizeCd() {
-		return this.imageSizeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param imageSizeCd
-	 *            imageSizeCd
-	 */
-	public void setImageSizeCd(String imageSizeCd) {
-		this.imageSizeCd = imageSizeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
+	 * 메뉴 Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -199,7 +173,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 메뉴 Id.
 	 * </pre>
 	 * 
 	 * @param menuId
@@ -212,7 +186,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 카테고리 유형.
 	 * </pre>
 	 * 
 	 * @return String
@@ -224,7 +198,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 카테고리 유형.
 	 * </pre>
 	 * 
 	 * @param fiteredBy
@@ -237,7 +211,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * B2B 상품구분.
 	 * </pre>
 	 * 
 	 * @return String
@@ -249,7 +223,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * B2B 상품구분.
 	 * </pre>
 	 * 
 	 * @param b2bprod
@@ -262,7 +236,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * HDV 지원구분.
 	 * </pre>
 	 * 
 	 * @return String
@@ -274,11 +248,11 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * HDV 지원구분.
 	 * </pre>
 	 * 
 	 * @param hdv
-	 *            hdv
+	 *            String hdv
 	 */
 	public void setHdv(String hdv) {
 		this.hdv = hdv;
@@ -287,7 +261,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * drm 지원구분.
 	 * </pre>
 	 * 
 	 * @return String
@@ -299,7 +273,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * drm 지원구분.
 	 * </pre>
 	 * 
 	 * @param drm
@@ -312,7 +286,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 상품 이용등급 코드.
 	 * </pre>
 	 * 
 	 * @return String
@@ -324,7 +298,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 상품 이용등급 코드.
 	 * </pre>
 	 * 
 	 * @param prodGradeCd
@@ -337,7 +311,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시작점 ROW.
 	 * </pre>
 	 * 
 	 * @return String
@@ -349,7 +323,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시작점 ROW.
 	 * </pre>
 	 * 
 	 * @param offset
@@ -362,7 +336,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 페이지당 노출 ROW 수.
 	 * </pre>
 	 * 
 	 * @return String
@@ -374,7 +348,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 페이지당 노출 ROW 수.
 	 * </pre>
 	 * 
 	 * @param count
@@ -387,7 +361,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * dummy data check.
 	 * </pre>
 	 * 
 	 * @return String
@@ -399,7 +373,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * dummy data check.
 	 * </pre>
 	 * 
 	 * @param dummy
