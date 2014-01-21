@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -40,6 +41,7 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
  * Updated on : 2014. 1. 8. Updated by : 임재호, 인크로스.
  */
 @Service
+@Transactional
 public class IdpServiceImpl implements IdpService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(IdpServiceImpl.class);
