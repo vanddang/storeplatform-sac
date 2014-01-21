@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.common;
 
-import javax.validation.constraints.NotNull;
-
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
@@ -20,17 +18,14 @@ public class PwReminder extends CommonInfo {
 
 	/** 보안질문 답변. */
 	@NotBlank
-	@NotNull
 	private String answerString;
 
 	/** 보안질문 ID. */
 	@NotBlank
-	@NotNull
 	private String questionID;
 
 	/** 보안질문 직접입력 값. */
 	@NotBlank
-	@NotNull
 	private String questionMessage;
 
 	/** 판매자 키. */
@@ -38,22 +33,6 @@ public class PwReminder extends CommonInfo {
 
 	/** 판매자회원 ID. */
 	private String sellerID;
-
-	public String getSellerKey() {
-		return this.sellerKey;
-	}
-
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
-
-	public String getSellerID() {
-		return this.sellerID;
-	}
-
-	public void setSellerID(String sellerID) {
-		this.sellerID = sellerID;
-	}
 
 	public String getAnswerString() {
 		return this.answerString;
@@ -78,4 +57,21 @@ public class PwReminder extends CommonInfo {
 	public void setQuestionMessage(String questionMessage) {
 		this.questionMessage = questionMessage;
 	}
+
+	public String getSellerKey() {
+		return this.sellerKey;
+	}
+
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
+	}
+
+	public String getSellerID() {
+		return this.sellerID;
+	}
+
+	public void setSellerID(String sellerID) {
+		this.sellerID = sellerID;
+	}
+
 }

@@ -2,43 +2,35 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
-@SuppressWarnings("serial")
 public class CreateReq extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
+
 	/** 판매자 구분코드. */
-	@NotNull
 	@NotBlank
 	private String sellerClass;
 	/** 판매자 분류코드. */
-	@NotNull
 	@NotBlank
 	private String sellerCategory;
 	/** 판매자 main 상태코드. */
-	@NotNull
 	@NotBlank
 	private String sellerMainStatus;
 	/** 판매자 sub 상태코드. */
-	@NotNull
 	@NotBlank
 	private String sellerSubStatus;
 	/** 판매자 ID. */
-	@NotNull
 	@NotBlank
 	private String sellerId;
 	/** 판매자 PW. */
-	@NotNull
 	@NotBlank
 	private String sellerPW;
 	/** 이동통신사. */
-	@NotNull
 	@NotBlank
 	private String sellerTelecom;
 	/** 전화번호 국가코드. */
@@ -46,13 +38,11 @@ public class CreateReq extends CommonInfo {
 	/** 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
-	@NotNull
 	@NotBlank
 	private String isRecvSMS;
 	/** 판매자 이메일. */
 	private String sellerEmail;
 	/** 이메일수신 여부. */
-	@NotNull
 	@NotBlank
 	private String isRecvEmail;
 	/** 판매자 이름. */
@@ -60,7 +50,6 @@ public class CreateReq extends CommonInfo {
 	/** 노출 이름. */
 	private String sellerNickName;
 	/** 판매자 성별. */
-	@NotNull
 	@NotBlank
 	private String sellerSex;
 	/** 판매자 생년월일. */
@@ -78,15 +67,12 @@ public class CreateReq extends CommonInfo {
 	/** (외국인)주. */
 	private String sellerState;
 	/** 국가코드. */
-	@NotNull
 	@NotBlank
 	private String sellerCountry;
 	/** 언어코드. */
-	@NotNull
 	@NotBlank
 	private String sellerLanguage;
 	/** 식별코드. */
-	@NotNull
 	@NotBlank
 	private String isForeign;
 	/** 실명인증 여부. */
@@ -94,12 +80,11 @@ public class CreateReq extends CommonInfo {
 	/** 실명인증 일시 */
 	private String realNameDate;
 	/** CI. */
+	@NotBlank
 	private String sellerCI;
 	/** DI. */
 	private String sellerDI;
 	/** 실명인증수단 코드. */
-	// @NotNull
-	// @NotBlank
 	private String realNameMethod;
 	/** 실명인증사이트 코드. */
 	private String realNameSystemId;
@@ -119,7 +104,7 @@ public class CreateReq extends CommonInfo {
 	/** 약관 정보들. */
 	private List<AgreementInfo> agreementList;
 	/** 보안질문 정보들. */
-	private List<PwReminder> PWReminderList;
+	private List<PwReminder> pwReminderList;
 
 	public String getSellerClass() {
 		return this.sellerClass;
@@ -425,11 +410,12 @@ public class CreateReq extends CommonInfo {
 		this.agreementList = agreementList;
 	}
 
-	public List<PwReminder> getPWReminderList() {
-		return this.PWReminderList;
+	public List<PwReminder> getPwReminderList() {
+		return this.pwReminderList;
 	}
 
-	public void setPWReminderList(List<PwReminder> pWReminderList) {
-		this.PWReminderList = pWReminderList;
+	public void setPwReminderList(List<PwReminder> pwReminderList) {
+		this.pwReminderList = pwReminderList;
 	}
+
 }
