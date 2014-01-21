@@ -1,7 +1,8 @@
 package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
@@ -9,8 +10,34 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
-public class GetIndividualPolicyReq extends IndividualPolicyInfo {
+
+public class GetIndividualPolicyReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 정책 코드.
+	 */
+	@NotEmpty(message = "policyCode should not be empty")
+	private String policyCode;
+	/**
+	 * 확인할 정책의 key값.
+	 */
+	@NotEmpty(message = "key should not be empty")
+	private String key;
+
+	public String getPolicyCode() {
+		return this.policyCode;
+	}
+
+	public void setPolicyCode(String policyCode) {
+		this.policyCode = policyCode;
+	}
+
+	public String getKey() {
+		return this.key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 }
