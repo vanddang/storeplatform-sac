@@ -141,20 +141,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceId = req.getDeviceInfo().getDeviceId();
 		String deviceKey = null;
 
-		/* 동일한 정보로 등록 요청시 체크 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
-		listDeviceReq.setUserKey(userKey);
-		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
-		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
-		if (deviceInfoList != null) {
-			for (DeviceInfo deviceInfo : deviceInfoList) {
-				if (deviceInfo.getDeviceId().equals(deviceId)) {
-					throw new RuntimeException("이미 등록된 휴대기기 입니다.");
-				}
-			}
-		}
-
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
@@ -175,10 +161,24 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new RuntimeException("회원정보 없음.");
 		}
 
-		if (req.getRegMaxCnt() == 0
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
-						.getRegMaxCnt())) {
+		if (req.getRegMaxCnt().equals("0")
+				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= Integer
+						.parseInt(req.getRegMaxCnt()))) {
 			throw new RuntimeException("등록 가능한 단말개수가 초과되었습니다.");
+		}
+
+		/* 동일한 정보로 등록 요청시 체크 */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
+		listDeviceReq.setUserKey(userKey);
+		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
+		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
+		if (deviceInfoList != null) {
+			for (DeviceInfo deviceInfo : deviceInfoList) {
+				if (deviceInfo.getDeviceId().equals(deviceId)) {
+					throw new RuntimeException("이미 등록된 휴대기기 입니다.");
+				}
+			}
 		}
 
 		/* 휴대기기 등록 처리 */

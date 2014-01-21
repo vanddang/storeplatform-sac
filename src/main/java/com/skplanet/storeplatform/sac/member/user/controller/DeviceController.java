@@ -120,7 +120,7 @@ public class DeviceController {
 			throw new Exception("authenticationDate는 필수 파라미터 입니다.");
 		}
 
-		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, (CreateDeviceReq) ConvertMapperUtil.convertObject(req));
+		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
 
 		return res;
 	}
