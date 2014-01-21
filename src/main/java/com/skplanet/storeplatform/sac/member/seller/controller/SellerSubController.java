@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -69,6 +72,27 @@ public class SellerSubController {
 			throw new RuntimeException("parameter error~~~");
 		}
 		return this.sellerSubService.removeSubseller(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.21.	서브계정 목록 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return ListSubsellerRes
+	 */
+	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) throws Exception {
+		LOGGER.debug("request param : {}", req.toString());
+
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+
+		if (sellerKey.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
+		return this.sellerSubService.listSubseller(header, req);
 	}
 
 }
