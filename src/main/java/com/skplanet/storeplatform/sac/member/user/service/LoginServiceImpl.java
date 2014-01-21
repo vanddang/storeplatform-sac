@@ -113,8 +113,7 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
-	 * authorizeByMdn
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeByMdn
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
 	 */
@@ -220,7 +219,7 @@ public class LoginServiceImpl implements LoginService {
 				/* 미가입 회원인 경우 로그 님김 */
 				logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
 
-			} else { //무선회원 인증 실패
+			} else { // 무선회원 인증 실패
 
 				this.insertloginHistory(deviceId, "", "N", userType);
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
@@ -238,8 +237,7 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
 	 */
@@ -303,9 +301,9 @@ public class LoginServiceImpl implements LoginService {
 		/* 회원 인증 요청 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
-			if (!this.isExistAgreeSiteTstore(schUserRes.getUserMbr().getImSiteCode())) { //서비스 이용동의 간편 가입 대상 확인
+			if (!this.isExistAgreeSiteTstore(schUserRes.getUserMbr().getImSiteCode())) { // 서비스 이용동의 간편 가입 대상 확인
 
-				//통합서비스 관리번호 조회
+				// 통합서비스 관리번호 조회
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("key_type", "2");
 				param.put("key", userId);
@@ -391,7 +389,7 @@ public class LoginServiceImpl implements LoginService {
 
 			}
 
-		} else { //기존 IDP 계정인 경우
+		} else { // 기존 IDP 계정인 경우
 
 			IDPReceiverM idpReceiver = this.idpService.userAuthForId(userId, userPw);
 
@@ -483,7 +481,7 @@ public class LoginServiceImpl implements LoginService {
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
 
-		if (obj instanceof AuthorizeByMdnReq) { //mdn인증
+		if (obj instanceof AuthorizeByMdnReq) { // mdn인증
 
 			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 			req = (AuthorizeByMdnReq) obj;
@@ -498,11 +496,11 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setOsVer(req.getOsVer());
 			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
 
-		} else if (obj instanceof AuthorizeByIdReq) { //id인증
+		} else if (obj instanceof AuthorizeByIdReq) { // id인증
 
 			AuthorizeByIdReq req = new AuthorizeByIdReq();
 			req = (AuthorizeByIdReq) obj;
-			if (req.getDeviceId() != null) { //deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 merge 요청
+			if (req.getDeviceId() != null) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 merge 요청
 				deviceInfo.setDeviceId(req.getDeviceId());
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
@@ -541,7 +539,7 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
 			loginReq.setIsMobile("Y");
 		}
-		//SC버젼, IP 추가 예정
+		// SC버젼, IP 추가 예정
 
 		LoginUserResponse loginRes = this.userSCI.loginUser(loginReq);
 		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
@@ -565,7 +563,7 @@ public class LoginServiceImpl implements LoginService {
 		logger.info("########## volatileMember process start #########");
 
 		/* 1. 무선회원 가입 */
-		IDPReceiverM idpReceiver = this.idpService.join4Wap(deviceId);
+		IDPReceiverM idpReceiver = this.idpService.join4Wap(deviceId, "SKT");
 		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 			String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
