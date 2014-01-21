@@ -37,7 +37,7 @@ public interface IDPService {
 	public IDPReceiverM authForWap(String mdn) throws Exception;
 
 	/** 모바일 회원가입. */
-	public IDPReceiverM join4Wap(String mdn) throws Exception;
+	public IDPReceiverM join4Wap(String mdn, String mdnCorp) throws Exception;
 
 	/** 사용자 해지. */
 	public IDPReceiverM secedeUser4Wap(String mdn) throws Exception;

@@ -169,14 +169,14 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM join4Wap(String mdn) throws Exception {
+	public IDPReceiverM join4Wap(String mdn, String mdnCorp) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
 		sendData.setCmd(IDPConstants.IDP_REQ_CMD_JOIN_FOR_WAP);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setMdn_corp(IDPConstants.IDP_PARAM_KEY_USER_MDN_TYPE_SKT);
+		sendData.setMdn_corp(mdnCorp);
 		sendData.setUser_mdn(mdn);
 
 		return this.repository.sendIDP(sendData);
