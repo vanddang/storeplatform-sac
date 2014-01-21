@@ -20,7 +20,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
@@ -721,34 +720,19 @@ public class DummySellerController {
 	public ListSubsellerRes listSubseller() {
 
 		ListSubsellerRes responseVO = new ListSubsellerRes();
-		responseVO.setMasSellerKey("IF1023511101420120615164319");
-		responseVO.setSubSellerListSize(1);
+		responseVO.setSellerKey("IF1023511101420120615164319");
+		responseVO.setSubAccountCount(1);
 
-		SubSeller subSellerList = null;
-		List<SubSeller> myList = new ArrayList<SubSeller>();
-
-		SellerRight sellerRightList = null;
-		List<SellerRight> myList2 = new ArrayList<SellerRight>();
+		SellerMbr subSellerList = null;
+		List<SellerMbr> myList = new ArrayList<SellerMbr>();
 
 		for (int i = 0; i < 1; i++) {
-			subSellerList = new SubSeller();
+			subSellerList = new SellerMbr();
 			subSellerList.setSellerKey("IF1023511101420120615162000");
 			subSellerList.setSellerId("signtest_subid01");
-			subSellerList.setSellerPw("123qwe");
 			subSellerList.setSellerEmail("signtest_subid01@yopmail.com");
 			subSellerList.setSellerPhoneCountry("102");
 			subSellerList.setSellerPhone("0101231234");
-			subSellerList.setSellerMemo("signtest의 서브계정01 메모");
-			subSellerList.setLastLoginDttm("201312101006");
-
-			for (int ii = 0; ii < 1; ii++) {
-				sellerRightList = new SellerRight();
-				sellerRightList.setRightProfile("DE0101");
-				sellerRightList.setRightProfileValue("상품현황");
-				myList2.add(sellerRightList);
-			}
-			subSellerList.setSellerRightList(myList2);
-
 			myList.add(subSellerList);
 
 		}
@@ -861,7 +845,7 @@ public class DummySellerController {
 	 * 
 	 * @return CreateAuthKeyRes
 	 */
-//	@RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateAuthKeyRes createAuthKey() {
 		CreateAuthKeyRes res = new CreateAuthKeyRes();
@@ -876,7 +860,7 @@ public class DummySellerController {
 	 * 
 	 * @return SearchAuthKeyRes
 	 */
-//	@RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
 	public @ResponseBody
 	SearchAuthKeyRes searchAuthKey() {
 		SearchAuthKeyRes res = new SearchAuthKeyRes();
@@ -892,7 +876,7 @@ public class DummySellerController {
 	 * 
 	 * @return AbrogationAuthKeyRes
 	 */
-//	@RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.GET)
 	public @ResponseBody
 	AbrogationAuthKeyRes abrogationAuthKey() {
 		AbrogationAuthKeyRes res = new AbrogationAuthKeyRes();
