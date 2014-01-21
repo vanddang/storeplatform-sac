@@ -109,7 +109,7 @@ public class UserJoinController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/member/user/createByAgreement/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, SacRequestHeader sacHeader) throws Exception {
 

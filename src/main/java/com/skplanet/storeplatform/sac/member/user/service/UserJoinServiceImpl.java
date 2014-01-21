@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,6 +171,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
+			response.setDeviceKey(createUserResponse.getUserKey());
 
 		} else if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
 			LOGGER.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
@@ -301,6 +303,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
+			response.setDeviceKey(createUserResponse.getUserKey());
 
 		} else {
 
@@ -342,9 +345,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		StringBuffer sbUserPhone = new StringBuffer();
 		sbUserPhone.append(req.getDeviceId());
 		sbUserPhone.append(",");
-		sbUserPhone.append(majorDeviceInfo.getImMngNum());
+		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getImMngNum()));
 		sbUserPhone.append(",");
-		sbUserPhone.append(majorDeviceInfo.getUacd());
+		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getUacd()));
 		sbUserPhone.append(",");
 		sbUserPhone.append(this.mcc.convertDeviceTelecom(majorDeviceInfo.getDeviceTelecom()));
 		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
@@ -446,6 +449,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
+			response.setDeviceKey(createUserResponse.getUserKey());
 
 		} else {
 
@@ -467,6 +471,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
 		 */
 		this.checkDuplicateId(req.getUserId());
+
+		/**
+		 * 결과 세팅
+		 */
+		response.setUserKey("122323434534634");
+		response.setDeviceKey("122323434534634");
 
 		return response;
 	}
@@ -528,6 +538,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new RuntimeException("IDP - 간편회원가입 실패");
 
 		}
+
+		/**
+		 * 결과 세팅
+		 */
+		response.setUserKey("122323434534634");
+		response.setDeviceKey("122323434534634");
 
 		return response;
 	}

@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
@@ -82,26 +81,26 @@ public class DummyDataController {
 	// return res;
 	// }
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return CreateByAgreementRes
-	 */
-	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateByAgreementRes createByAgreement() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
-		LOGGER.info("####################################################");
-
-		CreateByAgreementRes res = new CreateByAgreementRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return CreateByAgreementRes
+	// */
+	// @RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateByAgreementRes createByAgreement() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
+	// LOGGER.info("####################################################");
+	//
+	// CreateByAgreementRes res = new CreateByAgreementRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
