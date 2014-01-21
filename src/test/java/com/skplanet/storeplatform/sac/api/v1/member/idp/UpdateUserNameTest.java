@@ -31,16 +31,16 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
  * 
  * Calss 설명
  * 
- * Updated on : 2014. 1. 17. Updated by : 이정숙, 인크로스
+ * Updated on : 2014. 1. 17. Updated by : Lee, Jung suk, incross.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class InvalidUserTelNoTest {
+public class UpdateUserNameTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(InvalidUserTelNoTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateUserNameTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -59,29 +59,43 @@ public class InvalidUserTelNoTest {
 	}
 
 	/**
+	 * 
+	 * 
 	 * <pre>
-	 * 휴대폰소유변경정보배포.
-	 * 성공 Case
+	 * 실명변경 정보 배포.
 	 * </pre>
 	 */
 	@Test
-	public void invalidUserTelNo01() {
+	public void updateUserName01() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						ProvisioningReq req = new ProvisioningReq();
-						req.setCmd("RXInvalidUserTelNoIDP");
+						req.setCmd("RXUpdateUserNameIDP");
 						HashMap resultMap = new HashMap();
+
 						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
+						resultMap.put("trx_no", "1111");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", " 2222222");
-						resultMap.put("user_id", "wap_4236");
-						resultMap.put("user_tn", "01011112222");
-						resultMap.put("is_user_tn_own", "Y");
+						resultMap.put("im_int_svc_no", "shop_3940");
+						resultMap.put("user_name", "홍길동");
+						resultMap.put("user_birthday", "19750212");
+						resultMap.put("user_sex", "M");
+						resultMap.put("is_rname_auth", "Y");
+
+						resultMap.put("rname_auth_sst_code", "1111");
+						resultMap.put("rname_auth_type_cd", "R");
+						resultMap
+								.put("user_ci",
+										"sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
+						resultMap.put("user_di", "MC0GCCqGSIb3DQIJAyEAfWou0NPTinxWZBT+zJkd3jFIfVXwnZLzCRkO/KQfGCE=");
+						resultMap.put("rname_auth_date", "20130122162853");
+						resultMap.put("rname_auth_mns_code", "9");
+						resultMap.put("rname_auth_mbr_code", "10");
 						resultMap.put("modify_sst_code", "20100");
 						resultMap.put("modify_req_date", "20130423");
 						resultMap.put("modify_req_time", "112030");
@@ -104,31 +118,30 @@ public class InvalidUserTelNoTest {
 	}
 
 	/**
+	 * 
 	 * <pre>
-	 * 휴대폰소유변경정보배포.
-	 * 실패 Case
-	 * user id 정보가 없을 경우
+	 * 실명변경 정보 배포02.
 	 * </pre>
 	 */
 	@Test
-	public void invalidUserTelNo02() {
+	public void setSuspendUserId02() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						ProvisioningReq req = new ProvisioningReq();
-						req.setCmd("RXInvalidUserTelNoIDP");
+						req.setCmd("RXSetSuspendUserIdIDP");
 						HashMap resultMap = new HashMap();
 
 						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
+						resultMap.put("trx_no", "1111");
+						resultMap.put("sp_id", "1111");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", " 2222222");
-						// resultMap.put("user_id", "test");
-						resultMap.put("user_tn", "01011112222");
-						resultMap.put("is_user_tn_own", "Y");
+						resultMap.put("im_int_svc_no", "1000011112");
+						resultMap.put("sus_status_code", "90");
 						resultMap.put("modify_sst_code", "20100");
 						resultMap.put("modify_req_date", "20130423");
 						resultMap.put("modify_req_time", "112030");

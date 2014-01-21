@@ -47,17 +47,23 @@ public class SetSuspendUserIdTest {
 
 	private MockMvc mockMvc;
 
-	/*
+	/**
 	 * 
-	 * <pre> method 설명. </pre>
+	 * <pre>
+	 * method 설명.
+	 * </pre>
 	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-	/*
-	 * <pre> 직권중지 상태정보 배포01 </pre>
+	/**
+	 * 
+	 * 
+	 * <pre>
+	 * 직권중지 상태정보 배포01.
+	 * </pre>
 	 */
 	@Test
 	public void setSuspendUserId01() {
@@ -99,8 +105,11 @@ public class SetSuspendUserIdTest {
 
 	}
 
-	/*
-	 * <pre> 직권중지 상태정보 배포02 </pre>
+	/**
+	 * 
+	 * <pre>
+	 * 직권중지 상태정보 배포02.
+	 * </pre>
 	 */
 	@Test
 	public void setSuspendUserId02() {
