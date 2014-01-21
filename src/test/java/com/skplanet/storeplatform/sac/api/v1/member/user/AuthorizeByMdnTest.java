@@ -163,6 +163,16 @@ public class AuthorizeByMdnTest {
 	@Test
 	public void shouldAuthorizeByMdnService() {
 
+		/*{
+			"deviceId" : "01020284280",
+			"deviceIdType" : "msisdn",
+			"deviceTelecom" : "US012101",
+			"nativeId" : "358362045580844",
+			"rooting" : "N",
+			"deviceAccount" : "test@gmail.com",
+			"isAutoUpdate" : "Y",
+			"scVer" : "1.0"
+			}*/
 		TenantHeader tenantHeader = new TenantHeader();
 		tenantHeader.setSystemId("S001");
 		tenantHeader.setTenantId("S01");

@@ -131,10 +131,7 @@ public class CreateDeviceTest {
 
 	@Test
 	public void shouldCreateDeviceService() {
-		/*
-		 * INSERT INTO TB_US_USERMBR_DEVICE 할떄 java.sql.SQLException: ORA-01861:
-		 * 리터럴이 형식 문자열과 일치하지 않음 발생
-		 */
+
 		TenantHeader tenantHeader = new TenantHeader();
 		tenantHeader.setSystemId("S001");
 		tenantHeader.setTenantId("S01");
@@ -163,6 +160,9 @@ public class CreateDeviceTest {
 		deviceInfo.setIsRecvSms("Y");
 		deviceInfo.setIsPrimary("N");
 		deviceInfo.setDeviceNickName("SHP-110S(임시)");
+		deviceInfo.setIsUsed("Y");
+		deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+		deviceInfo.setIsAuthenticated("Y");
 
 		deviceInfo.setDotoriAuthDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 		deviceInfo.setDotoriAuthYn("Y");

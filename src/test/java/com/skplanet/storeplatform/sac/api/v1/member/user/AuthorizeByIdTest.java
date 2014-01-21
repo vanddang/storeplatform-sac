@@ -128,8 +128,8 @@ public class AuthorizeByIdTest {
 		req.setDeviceModelNo("SHW-M250S");
 		req.setOsVerOrg("1.0");
 		req.setDeviceId("01073215212");
-		req.setUserId("planetoneuser1688");
-		req.setUserPw("pw1357!@#$");
+		req.setUserId("watermin0927");
+		req.setUserPw("1qaz2wsx");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 		req.setDeviceAccount("vanddang@gmail.com");
