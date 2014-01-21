@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 
 /**
  * [REQUEST] 모바일 전용 회원 가입 (MDN 회원 가입)
@@ -20,32 +21,16 @@ public class CreateByMdnReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 기기 ID (mdn, uuid).
+	 * 기기 ID
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceId;
 
 	/**
-	 * “msisdn” or “uuid” 문자열.
+	 * 기기 ID 타입
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String deviceIdType;
-
-	/**
-	 * 기기 고유 아이디.
-	 */
-	private String imei;
-
-	/**
-	 * Sms 수신 동의 여부.
-	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String isRecvSms;
-
-	/**
-	 * 본인의 생년월일.
-	 */
-	private String ownBirth;
 
 	/**
 	 * 이동 통신사.
@@ -54,9 +39,34 @@ public class CreateByMdnReq extends CommonInfo {
 	private String deviceTelecom;
 
 	/**
+	 * 기기고유 ID (imei).
+	 */
+	private String nativeId;
+
+	/**
+	 * 기기 계정 (Gmail).
+	 */
+	private String deviceAccount;
+
+	/**
 	 * 가입 채널 코드.
 	 */
 	private String joinId;
+
+	/**
+	 * SMS 수신 여부.
+	 */
+	private String isRecvSms;
+
+	/**
+	 * 본인의 생년월일.
+	 */
+	private String ownBirth;
+
+	/**
+	 * 사용자 단말 부가 정보 리스트.
+	 */
+	private List<DeviceExtraInfo> deviceExtraInfoList;
 
 	/**
 	 * 약관동의 정보.
@@ -157,18 +167,63 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : imei
+	 * @return String : deviceTelecom
 	 */
-	public String getImei() {
-		return this.imei;
+	public String getDeviceTelecom() {
+		return this.deviceTelecom;
 	}
 
 	/**
-	 * @param imei
-	 *            String : the imei to set
+	 * @param deviceTelecom
+	 *            String : the deviceTelecom to set
 	 */
-	public void setImei(String imei) {
-		this.imei = imei;
+	public void setDeviceTelecom(String deviceTelecom) {
+		this.deviceTelecom = deviceTelecom;
+	}
+
+	/**
+	 * @return String : nativeId
+	 */
+	public String getNativeId() {
+		return this.nativeId;
+	}
+
+	/**
+	 * @param nativeId
+	 *            String : the nativeId to set
+	 */
+	public void setNativeId(String nativeId) {
+		this.nativeId = nativeId;
+	}
+
+	/**
+	 * @return String : deviceAccount
+	 */
+	public String getDeviceAccount() {
+		return this.deviceAccount;
+	}
+
+	/**
+	 * @param deviceAccount
+	 *            String : the deviceAccount to set
+	 */
+	public void setDeviceAccount(String deviceAccount) {
+		this.deviceAccount = deviceAccount;
+	}
+
+	/**
+	 * @return String : joinId
+	 */
+	public String getJoinId() {
+		return this.joinId;
+	}
+
+	/**
+	 * @param joinId
+	 *            String : the joinId to set
+	 */
+	public void setJoinId(String joinId) {
+		this.joinId = joinId;
 	}
 
 	/**
@@ -202,33 +257,18 @@ public class CreateByMdnReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : deviceTelecom
+	 * @return List<DeviceExtraInfo> : deviceExtraInfoList
 	 */
-	public String getDeviceTelecom() {
-		return this.deviceTelecom;
+	public List<DeviceExtraInfo> getDeviceExtraInfoList() {
+		return this.deviceExtraInfoList;
 	}
 
 	/**
-	 * @param deviceTelecom
-	 *            String : the deviceTelecom to set
+	 * @param deviceExtraInfoList
+	 *            List<DeviceExtraInfo> : the deviceExtraInfoList to set
 	 */
-	public void setDeviceTelecom(String deviceTelecom) {
-		this.deviceTelecom = deviceTelecom;
-	}
-
-	/**
-	 * @return String : joinId
-	 */
-	public String getJoinId() {
-		return this.joinId;
-	}
-
-	/**
-	 * @param joinId
-	 *            String : the joinId to set
-	 */
-	public void setJoinId(String joinId) {
-		this.joinId = joinId;
+	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
+		this.deviceExtraInfoList = deviceExtraInfoList;
 	}
 
 	/**
