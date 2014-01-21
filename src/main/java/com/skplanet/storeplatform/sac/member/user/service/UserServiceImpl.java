@@ -125,9 +125,9 @@ public class UserServiceImpl implements UserService {
 			for (DeviceInfo deviceInfo : deviceInfoList) {
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getImMngNum());
+				sbUserPhone.append(deviceInfo.getImMngNum() == null ? "" : deviceInfo.getImMngNum());
 				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getUacd());
+				sbUserPhone.append(deviceInfo.getUacd() == null ? "" : deviceInfo.getUacd());
 				sbUserPhone.append(",");
 				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
 				sbUserPhone.append("|");
