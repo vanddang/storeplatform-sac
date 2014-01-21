@@ -41,7 +41,7 @@ public class BestContents {
 	private int prodAmt;
 	private Integer paticpersCnt;
 	private Integer dwldCnt;
-	private int avgEvluScore;
+	private Double avgEvluScore;
 	private String imgPath;
 	private String upMenuNm;
 
@@ -704,28 +704,11 @@ public class BestContents {
 		this.dwldCnt = dwldCnt;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 평점.
-	 * </pre>
-	 * 
-	 * @return int
-	 */
-	public int getAvgEvluScore() {
+	public Double getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 평점.
-	 * </pre>
-	 * 
-	 * @param avgEvluScore
-	 *            avgEvluScore
-	 */
-	public void setAvgEvluScore(int avgEvluScore) {
+	public void setAvgEvluScore(Double avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
 

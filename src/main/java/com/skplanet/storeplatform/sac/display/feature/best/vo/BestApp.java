@@ -34,7 +34,7 @@ public class BestApp {
 	private String menuNesc;
 	private int prodAmt;
 	private String apkVerCd;
-	private int avgEvluScore;
+	private Double avgEvluScore;
 	private Integer dwldCnt;
 	private Integer paticpersCnt;
 	private String imgPath;
@@ -516,28 +516,11 @@ public class BestApp {
 		this.apkVerCd = apkVerCd;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 평점.
-	 * </pre>
-	 * 
-	 * @return int
-	 */
-	public int getAvgEvluScore() {
+	public Double getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * 평점.
-	 * </pre>
-	 * 
-	 * @param avgEvluScore
-	 *            avgEvluScore
-	 */
-	public void setAvgEvluScore(int avgEvluScore) {
+	public void setAvgEvluScore(Double avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
 
