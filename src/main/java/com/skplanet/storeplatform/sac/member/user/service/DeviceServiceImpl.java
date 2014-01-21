@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -110,9 +109,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private UserSearchService userSearchService;
-
-	@Autowired
-	private UapsSCI uapsSCI;
 
 	@Value("#{propertiesForSac['idp.im.request.operation']}")
 	public String IDP_OPERATION_MODE;
