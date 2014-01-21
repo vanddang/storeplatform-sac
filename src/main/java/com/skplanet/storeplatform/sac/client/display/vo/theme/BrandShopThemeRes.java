@@ -32,26 +32,77 @@ public class BrandShopThemeRes extends CommonInfo {
 
 	private List<Product> productList;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            commonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Layout.
+	 * </pre>
+	 * 
+	 * @return Layout
+	 */
 	public Layout getLayout() {
 		return this.layout;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Layout.
+	 * </pre>
+	 * 
+	 * @param layout
+	 *            layout
+	 */
 	public void setLayout(Layout layout) {
 		this.layout = layout;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 List.
+	 * </pre>
+	 * 
+	 * @return productList
+	 */
 	public List<Product> getProductList() {
 		return this.productList;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 상품 List.
+	 * </pre>
+	 * 
+	 * @param productList
+	 *            productList
+	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}

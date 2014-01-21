@@ -27,7 +27,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * menu Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -39,7 +39,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * menu Id.
 	 * </pre>
 	 * 
 	 * @param menuId
@@ -52,7 +52,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 브랜드샵 Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -64,7 +64,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 브랜드샵 Id.
 	 * </pre>
 	 * 
 	 * @param brandshopId
@@ -77,7 +77,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 정렬방식.
 	 * </pre>
 	 * 
 	 * @return String
@@ -89,7 +89,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 정렬방식.
 	 * </pre>
 	 * 
 	 * @param orderedBy
@@ -102,7 +102,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시작점 ROW.
 	 * </pre>
 	 * 
 	 * @return String
@@ -114,7 +114,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시작점 ROW.
 	 * </pre>
 	 * 
 	 * @param offset
@@ -127,7 +127,7 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 페이지당 노출될 ROW 개수.
 	 * </pre>
 	 * 
 	 * @return String
@@ -139,11 +139,11 @@ public class BrandShopThemeReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 페이지당 노출될 ROW 개수.
 	 * </pre>
 	 * 
-	 * @param offset
-	 *            offset
+	 * @param count
+	 *            count
 	 */
 	public void setCount(String count) {
 		this.count = count;

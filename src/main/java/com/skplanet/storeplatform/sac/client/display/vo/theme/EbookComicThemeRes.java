@@ -27,18 +27,52 @@ public class EbookComicThemeRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private Layout layout;
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 공통 Response.
+	 * </pre>
+	 * 
+	 * @param commonResponse
+	 *            commonResponse
+	 */
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Layout.
+	 * </pre>
+	 * 
+	 * @return Layout
+	 */
 	public Layout getLayout() {
 		return this.layout;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * Layout.
+	 * </pre>
+	 * 
+	 * @param layout
+	 *            layout
+	 */
 	public void setLayout(Layout layout) {
 		this.layout = layout;
 	}

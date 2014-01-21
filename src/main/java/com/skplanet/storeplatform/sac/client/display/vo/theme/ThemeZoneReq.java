@@ -21,14 +21,13 @@ public class ThemeZoneReq extends CommonInfo {
 	private String listId; // 리스트 Id
 	private String menuId; // 메뉴Id
 	private String themezoneId; // 테마존 Id
-	private String imageSizeCd; // 이미지 사이즈 코드
 	private String offset; // 시작점 ROW
 	private String count; // 페이지당 노출 ROW 수
 
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 리스트 ID.
 	 * </pre>
 	 * 
 	 * @return String
@@ -40,7 +39,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 리스트 ID.
 	 * </pre>
 	 * 
 	 * @param listId
@@ -53,7 +52,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * Menu Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -65,7 +64,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * Menu Id.
 	 * </pre>
 	 * 
 	 * @param menuId
@@ -78,7 +77,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 테마존 Id.
 	 * </pre>
 	 * 
 	 * @return String
@@ -90,7 +89,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 테마존 Id.
 	 * </pre>
 	 * 
 	 * @param themezoneId
@@ -103,32 +102,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getImageSizeCd() {
-		return this.imageSizeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param imageSizeCd
-	 *            imageSizeCd
-	 */
-	public void setImageSizeCd(String imageSizeCd) {
-		this.imageSizeCd = imageSizeCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * method 설명.
+	 * 시작점 ROW.
 	 * </pre>
 	 * 
 	 * @return String
@@ -140,7 +114,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 시작점 ROW.
 	 * </pre>
 	 * 
 	 * @param offset
@@ -153,7 +127,7 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 페이지당 노출될 ROW 개수.
 	 * </pre>
 	 * 
 	 * @return String
@@ -165,11 +139,11 @@ public class ThemeZoneReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 페이지당 노출될 ROW 개수.
 	 * </pre>
 	 * 
-	 * @param offset
-	 *            offset
+	 * @param count
+	 *            count
 	 */
 	public void setCount(String count) {
 		this.count = count;
