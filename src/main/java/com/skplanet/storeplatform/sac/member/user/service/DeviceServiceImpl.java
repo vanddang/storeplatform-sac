@@ -116,7 +116,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#createDevice
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq)
 	 */
@@ -128,9 +129,10 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
+		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
 
 		String userKey = req.getUserKey();
-		String deviceId = req.getDeviceInfo().getDeviceId();
 
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
@@ -153,16 +155,10 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (req.getRegMaxCnt() == 0
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr()
-						.getDeviceCount()) >= req.getRegMaxCnt())) {
+				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= req
+						.getRegMaxCnt())) {
 			throw new RuntimeException("등록 가능한 단말개수가 초과되었습니다.");
 		}
-
-		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
-		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
-		req.getDeviceInfo().setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss")); // 인증일자
-		req.getDeviceInfo().setIsAuthenticated("Y"); // 인증여부
-		req.getDeviceInfo().setIsUsed("Y"); // 사용여부
 
 		/* 휴대기기 등록 처리 */
 		this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
@@ -260,7 +256,8 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#listDevice
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq)
 	 */
@@ -333,12 +330,12 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# insertDeviceInfo(java.lang.String,
-	 * java.lang.String, java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * insertDeviceInfo(java.lang.String, java.lang.String, java.lang.String,
+	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public void insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
-			throws Exception {
+	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
 
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo start ############################");
 
@@ -419,32 +416,34 @@ public class DeviceServiceImpl implements DeviceService {
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
-								IDPConstants.IDP_RES_CODE_OK)) {
-							throw new RuntimeException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId()
-									+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
+						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+							throw new RuntimeException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
+									+ idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
 				}
 
 			}
 
+			logger.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
+
+			return createDeviceRes.getDeviceKey();
 		} else {
 			throw new RuntimeException("[" + createDeviceRes.getCommonResponse().getResultCode() + "] "
 					+ createDeviceRes.getCommonResponse().getResultMessage());
 		}
 
-		logger.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# mergeDeviceInfo(java.lang.String,
-	 * java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
+	 * mergeDeviceInfo(java.lang.String, java.lang.String,
+	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public void mergeDeviceInfo(String systemId, String tenantId, DeviceInfo deviceInfo) throws Exception {
+	public String mergeDeviceInfo(String systemId, String tenantId, DeviceInfo deviceInfo) throws Exception {
 
 		logger.info("################ mergeDeviceInfo start ##################");
 
@@ -474,8 +473,7 @@ public class DeviceServiceImpl implements DeviceService {
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
-					+ schDeviceRes.getCommonResponse().getResultMessage());
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
 		/* 휴대기기 주요정보 확인 */
@@ -564,8 +562,7 @@ public class DeviceServiceImpl implements DeviceService {
 					} else {
 						paramType = "13";
 					}
-					logger.info("::::  ICAS 연동 :::: deviceType {}, paramType {}", deviceInfo.getDeviceIdType(),
-							paramType);
+					logger.info("::::  ICAS 연동 :::: deviceType {}, paramType {}", deviceInfo.getDeviceIdType(), paramType);
 					if (!this.commService.getMappingInfo(deviceId, paramType).getMvnoCD().equals("0")) { // MVNO
 						mapIcas = this.commService.getMvService(deviceId);
 					} else {
@@ -580,9 +577,9 @@ public class DeviceServiceImpl implements DeviceService {
 						}
 					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
 						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
-																												  // 조회된
-																												  // 회선정보
-																												  // 없음
+																													// 조회된
+																													// 회선정보
+																													// 없음
 					}
 				}
 			} else { // 타사
@@ -645,7 +642,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 휴대기기 부가정보 */
 
-		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());// 부가정보 등록시 셋팅할 deviceKey
+		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());//부가정보 등록시 셋팅할 deviceKey
 		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
@@ -666,11 +663,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("################ mergeDeviceInfo end ##################");
 
+		return createDeviceRes.getDeviceKey();
+
 	}
 
 	public DeviceInfo setMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception {
-		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(),
-				deviceInfo.getDeviceTelecom(), deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
+				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
 
 		deviceInfo.setImMngNum(majorDeviceInfo.getImMngNum() == null ? "" : majorDeviceInfo.getImMngNum()); // SKT서비스관리번호
 		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 기기 모델 번호
@@ -678,7 +677,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUacd(majorDeviceInfo.getUacd());// UA 코드
 		deviceInfo.setOmdUacd(majorDeviceInfo.getOmdUacd());// OMD UA코드
 		if (deviceInfo.getDeviceNickName() == null) {
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 기기명
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 기기명	
 		}
 
 		return deviceInfo;
@@ -712,8 +711,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
 
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
-			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice
-					.getUserMbrDeviceDetail()));
+			deviceInfo.setUserDeviceExtraInfo(this.getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		}
 
 		return deviceInfo;
@@ -795,26 +793,25 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (deviceInfo.getOmpDownloaderYn() != null) {
 			logger.info("[ompDownloaderYn] {}", deviceInfo.getOmpDownloaderYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(
-					MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN, deviceInfo.getOmpDownloaderYn(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN,
+					deviceInfo.getOmpDownloaderYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getStandByScreenYn() != null) {
 			logger.info("[standByScreenYn] {}", deviceInfo.getStandByScreenYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(
-					MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN, deviceInfo.getStandByScreenYn(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN,
+					deviceInfo.getStandByScreenYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getUacd() != null) {
 			logger.info("[uacd] {}", deviceInfo.getUacd());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_UACD,
-					deviceInfo.getUacd(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUacd(), deviceInfo));
 		}
 
 		if (deviceInfo.getOmpSupportYn() != null) {
 			logger.info("[ompSupportYn] {}", deviceInfo.getOmpSupportYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(
-					MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN, deviceInfo.getOmpSupportYn(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN,
+					deviceInfo.getOmpSupportYn(), deviceInfo));
 		}
 
 		// OS버전과 샵클버전 모두 NULL이 아닐경우에만 처리한다.
@@ -822,43 +819,42 @@ public class DeviceServiceImpl implements DeviceService {
 			logger.info("[osVer] {}", deviceInfo.getOsVer());
 			logger.info("[scVer] {}", deviceInfo.getScVer());
 
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OSVERSION,
-					deviceInfo.getOsVer(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OSVERSION, deviceInfo.getOsVer(),
+					deviceInfo));
 
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_SCVERSION,
-					deviceInfo.getScVer(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_SCVERSION, deviceInfo.getScVer(),
+					deviceInfo));
 		}
 
 		if (deviceInfo.getAppStatisticsYn() != null) {
 			logger.info("[appStatisticsYn] {}", deviceInfo.getAppStatisticsYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(
-					MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN, deviceInfo.getAppStatisticsYn(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN,
+					deviceInfo.getAppStatisticsYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getDotoriAuthDate() != null) {
 			logger.info("[dotoriAuthDate] {}", deviceInfo.getDotoriAuthDate());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(
-					MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE, deviceInfo.getDotoriAuthDate(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE,
+					deviceInfo.getDotoriAuthDate(), deviceInfo));
 		}
 
 		if (deviceInfo.getDotoriAuthYn() != null) {
 			logger.info("[dotoriAuthYn] {}", deviceInfo.getDotoriAuthYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(
-					MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN, deviceInfo.getDotoriAuthYn(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN,
+					deviceInfo.getDotoriAuthYn(), deviceInfo));
 		}
 
 		if (deviceInfo.getRooting() != null) {
 			logger.info("[rooting] {}", deviceInfo.getRooting());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_ROOTING_YN,
-					deviceInfo.getRooting(), deviceInfo));
+			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getRooting(),
+					deviceInfo));
 		}
 
 		return userMbrDeviceDetailList;
 
 	}
 
-	public UserMbrDeviceDetail getConverterUserMbrDeviceDetail(String extraProfile, String extraProfileValue,
-			DeviceInfo deviceInfo) {
+	public UserMbrDeviceDetail getConverterUserMbrDeviceDetail(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
 		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 		userMbrDeviceDetail.setExtraProfile(extraProfile);
 		userMbrDeviceDetail.setExtraProfileValue(extraProfileValue);
@@ -877,8 +873,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req)
-			throws Exception {
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) throws Exception {
 
 		SetMainDeviceRequest setMainDeviceRequest = new SetMainDeviceRequest();
 		SetMainDeviceRes setMainDeviceRes = new SetMainDeviceRes();
@@ -905,8 +900,8 @@ public class DeviceServiceImpl implements DeviceService {
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
 			if (!res.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				throw new RuntimeException("result_code : [" + res.getCommonResponse().getResultCode()
-						+ "] result_message : [" + res.getCommonResponse().getResultMessage() + "]");
+				throw new RuntimeException("result_code : [" + res.getCommonResponse().getResultCode() + "] result_message : ["
+						+ res.getCommonResponse().getResultMessage() + "]");
 			} else {
 				setMainDeviceRes.setDeviceKey(req.getDeviceKey());
 			}
@@ -1059,8 +1054,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 				idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
 				if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					throw new RuntimeException("IDP secedeForWap fail mdn : [" + req.getDeviceId()
-							+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
+					throw new RuntimeException("IDP secedeForWap fail mdn : [" + req.getDeviceId() + "] result code : ["
+							+ idpReceiver.getResponseHeader().getResult() + "]");
 				}
 			}
 
@@ -1077,8 +1072,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
 			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-				throw new RuntimeException("[ 디바이스삭제 IMIDP 연동결과 : " + imIdpReceiver.getResponseHeader().getResult()
-						+ "] " + imIdpReceiver.getResponseHeader().getResult_text());
+				throw new RuntimeException("[ 디바이스삭제 IMIDP 연동결과 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
 			} else {
 				removeDeviceRes = this.deviceSCI.removeDevice(removeDeviceReq);
 			}
@@ -1117,8 +1112,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			autopayRetireMap.put("svcMngNum", listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum());
 			autopayRetireMap.put("mdn", req.getDeviceId());
-			logger.info("[부분유료화 월정액해지처리] svcMngNum = [" + listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum()
-					+ "]");
+			logger.info("[부분유료화 월정액해지처리] svcMngNum = [" + listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum() + "]");
 			logger.info("[부분유료화 월정액해지처리] mdn = [" + req.getDeviceId() + "]");
 			// modifyConsumerInfoservice.autopayRetire(autopayRetireMap);
 		}

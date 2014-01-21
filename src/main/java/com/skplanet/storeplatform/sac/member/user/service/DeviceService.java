@@ -22,20 +22,26 @@ public interface DeviceService {
 	/**
 	 * 휴대기기 등록
 	 * 
-	 * @param headerVo
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            CreateDeviceReq
+	 * @return CreateDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 목록 조회
 	 * 
-	 * @param headerVo
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            ListDeviceReq
+	 * @return ListDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception;
 
@@ -44,40 +50,57 @@ public interface DeviceService {
 	 * 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param systemId
+	 *            String
 	 * @param tenanId
+	 *            String
 	 * @param userKey
+	 *            String
 	 * @param deviceInfo
+	 *            DeviceInfo
+	 * @return deviceKey String
 	 * @throws Exception
+	 *             Exception
 	 */
-	public void insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
+	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
 
 	/**
 	 * 기기정보 merge
 	 * 
 	 * @param systemId
+	 *            String
 	 * @param tenanId
+	 *            String
 	 * @param req
+	 *            DeviceInfo
+	 * @return deviceKey String
 	 * @throws Exception
+	 *             Exception
 	 */
-	public void mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception;
+	public String mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception;
 
 	/**
 	 * 휴대기기 대표단말 설정
 	 * 
-	 * @param headerVo
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            SetMainDeviceReq
+	 * @return SetMainDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 삭제
 	 * 
-	 * @param headerVo
-	 * @param RemoveDeviceReq
-	 * @return
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveDeviceReq
+	 * @return List<DeviceInfo>
 	 * @throws Exception
+	 *             Exception
 	 */
 	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
 

@@ -39,7 +39,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -193,6 +196,7 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserSubStatus(userSubStatus);
 			res.setLoginStatusCode(loginStatusCode);
 			res.setStopStatusCode(stopStatusCode);
+			res.setDeviceKey(this.getLoginDeviceKey(MemberConstants.KEY_TYPE_DEVICE_ID, deviceId));
 
 		} else {
 
@@ -214,6 +218,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserSubStatus(userSubStatus);
 				res.setLoginStatusCode(loginStatusCode);
 				res.setStopStatusCode(stopStatusCode);
+				res.setDeviceKey(this.getLoginDeviceKey(MemberConstants.KEY_TYPE_DEVICE_ID, deviceId));
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 
@@ -342,6 +347,7 @@ public class LoginServiceImpl implements LoginService {
 					res.setUserSubStatus(userSubStatus);
 					res.setLoginStatusCode(loginStatusCode);
 					res.setStopStatusCode(stopStatusCode);
+					res.setDeviceKey(this.getLoginDeviceKey(MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey));
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
 
@@ -408,6 +414,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserSubStatus(userSubStatus);
 				res.setLoginStatusCode(loginStatusCode);
 				res.setStopStatusCode(stopStatusCode);
+				res.setDeviceKey(this.getLoginDeviceKey(MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey));
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
@@ -428,6 +435,45 @@ public class LoginServiceImpl implements LoginService {
 		logger.info("######################## LoginServiceImpl authorizeById end ############################");
 
 		return res;
+	}
+
+	/**
+	 * 로그인한 deviceId의 deviceKey 조회
+	 * 
+	 * @param keyType
+	 *            조회타입
+	 * 
+	 * @param keyValue
+	 *            조회값
+	 * @return deviceKey String
+	 * @throws Exception
+	 *             Exception
+	 */
+	public String getLoginDeviceKey(String keyType, String keyValue) throws Exception {
+
+		String deviceKey = null;
+
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		if (StringUtil.equals(keyType, MemberConstants.KEY_TYPE_DEVICE_ID)) {
+			listDeviceReq.setDeviceId(keyValue);
+			listDeviceReq.setIsMainDevice("N");
+		} else if (StringUtil.equals(keyType, MemberConstants.KEY_TYPE_INSD_USERMBR_NO)) {
+			listDeviceReq.setUserKey(keyValue);
+			listDeviceReq.setIsMainDevice("Y");
+		}
+
+		SacRequestHeader requestHeader = new SacRequestHeader();
+		TenantHeader tenant = new TenantHeader();
+		tenant.setSystemId(commonRequest.getSystemID());
+		tenant.setTenantId(commonRequest.getTenantID());
+		requestHeader.setTenantHeader(tenant);
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+
+		if (listDeviceRes.getDeviceInfoList() != null && listDeviceRes.getDeviceInfoList().size() == 1) {
+			deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();
+		}
+		return deviceKey;
+
 	}
 
 	/**
