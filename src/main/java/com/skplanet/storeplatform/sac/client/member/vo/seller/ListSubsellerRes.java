@@ -6,8 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SubSeller;
+import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
  * 서브계정 목록 조회
@@ -19,43 +18,48 @@ public class ListSubsellerRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String masSellerKey;
-	private int subSellerListSize;
+	/** 판매자 ID. */
+	private String sellerID;
 
-	public String getMasSellerKey() {
-		return this.masSellerKey;
+	/** 판매자 키. */
+	private String sellerKey; // INSD_SELLERMBR_NO
+
+	/** 서브계정 카운트. */
+	private int subAccountCount;
+
+	/** 서브계정 Value Object 목록. */
+	private List<SellerMbr> subSellerList;
+
+	public String getSellerID() {
+		return this.sellerID;
 	}
 
-	public void setMasSellerKey(String masSellerKey) {
-		this.masSellerKey = masSellerKey;
+	public void setSellerID(String sellerID) {
+		this.sellerID = sellerID;
 	}
 
-	public int getSubSellerListSize() {
-		return this.subSellerListSize;
+	public String getSellerKey() {
+		return this.sellerKey;
 	}
 
-	public void setSubSellerListSize(int subSellerListSize) {
-		this.subSellerListSize = subSellerListSize;
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
 	}
 
-	List<SubSeller> subSellerList;
+	public int getSubAccountCount() {
+		return this.subAccountCount;
+	}
 
-	public List<SubSeller> getSubSellerList() {
+	public void setSubAccountCount(int subAccountCount) {
+		this.subAccountCount = subAccountCount;
+	}
+
+	public List<SellerMbr> getSubSellerList() {
 		return this.subSellerList;
 	}
 
-	public void setSubSellerList(List<SubSeller> subSellerList) {
+	public void setSubSellerList(List<SellerMbr> subSellerList) {
 		this.subSellerList = subSellerList;
-	}
-
-	List<SellerRight> sellerRightList;
-
-	public List<SellerRight> getSellerRightList() {
-		return this.sellerRightList;
-	}
-
-	public void setSellerRightList(List<SellerRight> sellerRightList) {
-		this.sellerRightList = sellerRightList;
 	}
 
 }
