@@ -754,66 +754,21 @@ public class DeviceServiceImpl implements DeviceService {
 	 */
 	public List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) {
 
-		List<UserMbrDeviceDetail> userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
+		List<UserMbrDeviceDetail> userMbrDeviceDetailList = null;
 		UserMbrDeviceDetail userMbrDeviceDetail = null;
 
-		if (deviceInfo.getOmpDownloaderYn() != null) {
-			logger.info("[ompDownloaderYn] {}", deviceInfo.getOmpDownloaderYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OMPDOWNLOADER_YN,
-					deviceInfo.getOmpDownloaderYn(), deviceInfo));
+		if (deviceInfo.getUserDeviceExtraInfo().size() > 0) {
+			userMbrDeviceDetailList = new ArrayList<UserMbrDeviceDetail>();
 		}
 
-		if (deviceInfo.getStandByScreenYn() != null) {
-			logger.info("[standByScreenYn] {}", deviceInfo.getStandByScreenYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_STANDBYSCREEN_YN,
-					deviceInfo.getStandByScreenYn(), deviceInfo));
-		}
-
-		if (deviceInfo.getUacd() != null) {
-			logger.info("[uacd] {}", deviceInfo.getUacd());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUacd(), deviceInfo));
-		}
-
-		if (deviceInfo.getOmpSupportYn() != null) {
-			logger.info("[ompSupportYn] {}", deviceInfo.getOmpSupportYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OMPSUPPORT_YN,
-					deviceInfo.getOmpSupportYn(), deviceInfo));
-		}
-
-		// OS버전과 샵클버전 모두 NULL이 아닐경우에만 처리한다.
-		if (deviceInfo.getOsVer() != null && deviceInfo.getScVer() != null) {
-			logger.info("[osVer] {}", deviceInfo.getOsVer());
-			logger.info("[scVer] {}", deviceInfo.getScVer());
-
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_OSVERSION, deviceInfo.getOsVer(),
-					deviceInfo));
-
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_SCVERSION, deviceInfo.getScVer(),
-					deviceInfo));
-		}
-
-		if (deviceInfo.getAppStatisticsYn() != null) {
-			logger.info("[appStatisticsYn] {}", deviceInfo.getAppStatisticsYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_APPSTATISTICS_YN,
-					deviceInfo.getAppStatisticsYn(), deviceInfo));
-		}
-
-		if (deviceInfo.getDotoriAuthDate() != null) {
-			logger.info("[dotoriAuthDate] {}", deviceInfo.getDotoriAuthDate());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE,
-					deviceInfo.getDotoriAuthDate(), deviceInfo));
-		}
-
-		if (deviceInfo.getDotoriAuthYn() != null) {
-			logger.info("[dotoriAuthYn] {}", deviceInfo.getDotoriAuthYn());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN,
-					deviceInfo.getDotoriAuthYn(), deviceInfo));
-		}
-
-		if (deviceInfo.getRooting() != null) {
-			logger.info("[rooting] {}", deviceInfo.getRooting());
-			userMbrDeviceDetailList.add(this.getConverterUserMbrDeviceDetail(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getRooting(),
-					deviceInfo));
+		for (DeviceExtraInfo deviceExtraInfo : deviceInfo.getUserDeviceExtraInfo()) {
+			userMbrDeviceDetail = new UserMbrDeviceDetail();
+			userMbrDeviceDetail.setExtraProfile(deviceExtraInfo.getExtraProfile());
+			userMbrDeviceDetail.setExtraProfileValue(deviceExtraInfo.getExtraProfileValue());
+			userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
+			userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
+			userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
+			userMbrDeviceDetailList.add(userMbrDeviceDetail);
 		}
 
 		return userMbrDeviceDetailList;
