@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -52,7 +53,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) throws Exception {
 
-		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
+		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, (AuthorizeByMdnReq) ConvertMapperUtil.convertObject(req));
 
 		return res;
 	}
@@ -69,7 +70,7 @@ public class LoginController {
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) throws Exception {
 
-		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
+		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, (AuthorizeByIdReq) ConvertMapperUtil.convertObject(req));
 
 		return res;
 	}
