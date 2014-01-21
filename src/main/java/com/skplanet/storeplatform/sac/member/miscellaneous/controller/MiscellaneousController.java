@@ -124,7 +124,7 @@ public class MiscellaneousController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/confirmPhoneAutorizationCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/confirmPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Valid @RequestBody ConfirmPhoneAuthorizationCodeReq request) throws Exception {
@@ -154,12 +154,12 @@ public class MiscellaneousController {
 
 	/**
 	 * <pre>
-	 * Captcha 문자 확인.
+	 * Captcha 문자 인증.
 	 * </pre>
 	 * 
 	 * @param request
 	 *            ConfirmCaptchaReq
-	 * @return ConfirmCaptchaRes
+	 * @return ConfirmCaptchaRes - 인증 성공:null, 인증 실패:Exception
 	 * @throws Exception
 	 *             Exception
 	 */
@@ -167,7 +167,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public ConfirmCaptchaRes confirmCaptcha(@RequestBody ConfirmCaptchaReq request) throws Exception {
 		ConfirmCaptchaRes res = this.service.confirmCaptcha(request);
-		return null;
+		return res;
 	}
 
 	/**
@@ -178,11 +178,15 @@ public class MiscellaneousController {
 	 * @param request
 	 *            GetEmailAuthorizationCodeReq
 	 * @return GetEmailAuthorizationCodeRes
+	 * @throws Exception
+	 *             Exception
 	 */
+	@RequestMapping(value = "/dev/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
+	@ResponseBody
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(
-			@Valid @RequestBody GetEmailAuthorizationCodeReq request) {
-
-		return null;
+			@Valid @RequestBody GetEmailAuthorizationCodeReq request) throws Exception {
+		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(request);
+		return res;
 
 	}
 
