@@ -16,8 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -36,8 +41,11 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 
 /**
  * 모바일 전용 회원 가입 (MDN 회원 가입)
@@ -48,7 +56,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CreateByMdnTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(CreateByMdnTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -69,90 +80,14 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
-	 * 모바일 전용 회원 가입 (MDN 회원 가입).
-	 * </pre>
-	 * 
-	 * @throws Exception
-	 *             Exception
-	 */
-	// @Test
-	public void createByMdn() throws Exception {
-
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.addHeaders("Accept", "application/json")
-				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-
-						CreateByMdnReq reqJson = new CreateByMdnReq();
-						reqJson.setDeviceId("01088870008");
-						reqJson.setDeviceIdType("msisdn");
-						reqJson.setDeviceTelecom("US001201");
-						reqJson.setImei("A0000031648EE9");
-						reqJson.setJoinId("US002903");
-						reqJson.setIsRecvSms("Y");
-						reqJson.setOwnBirth("20020328");
-
-						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
-
-						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
-						reqJson.setParentRealNameMethod("US011101");
-						reqJson.setParentName("홍길동");
-						reqJson.setParentType("F");
-						reqJson.setParentDate(DateUtil.getToday());
-						reqJson.setParentEmail("hkd@aaaa.com");
-						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US001201");
-						reqJson.setParentPhone("01088889999");
-						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
-						reqJson.setParentRealNameDate(DateUtil.getToday());
-						reqJson.setParentRealNameSite("US011203"); // shop client 3.0
-
-						// 동의 정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement1 = new AgreementInfo();
-						agreement1.setExtraAgreementId("US010607");
-						agreement1.setExtraAgreementVersion("0.1");
-						agreement1.setIsExtraAgreement("Y");
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-
-						agreementList.add(agreement1);
-						agreementList.add(agreement2);
-						agreementList.add(agreement3);
-						reqJson.setAgreementList(agreementList);
-
-						return reqJson;
-					}
-				}).success(CreateByMdnRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateByMdnRes res = (CreateByMdnRes) result;
-						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 모바일 전용 회원 가입 (UUID 회원 가입).
+	 * MDN 회원 가입 테스트.
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
 	@Test
-	public void createByUuid() throws Exception {
+	public void test1_createByMdn() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -163,17 +98,28 @@ public class CreateByMdnTest {
 					public Object requestBody() {
 
 						CreateByMdnReq reqJson = new CreateByMdnReq();
-						reqJson.setDeviceId("87021BY43NQ");
-						reqJson.setDeviceIdType("uuid");
-						reqJson.setDeviceTelecom("US001207");
-						reqJson.setImei("A0000031648EE9");
-						reqJson.setJoinId("US002903");
-						reqJson.setIsRecvSms("Y");
-						reqJson.setOwnBirth("20020328");
 
-						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
+						// 단말 정보
+						reqJson.setDeviceId("01076771470"); // 기기 ID
+						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US001201"); // 통신사
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setOwnBirth("20020328"); // 본인의 생년월일
+
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
 
 						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 						reqJson.setParentRealNameMethod("US011101");
 						reqJson.setParentName("홍길동");
 						reqJson.setParentType("F");
@@ -213,7 +159,7 @@ public class CreateByMdnTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByMdnRes res = (CreateByMdnRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
+						LOGGER.debug(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -221,14 +167,15 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
-	 * 필수 약관 미동의 사용자.
+	 * UUID 회원 가입 테스트.
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
-	// @Test
-	public void errorTestCase1() throws Exception {
+	@Ignore
+	@Test
+	public void test2_createByUuid() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -239,17 +186,24 @@ public class CreateByMdnTest {
 					public Object requestBody() {
 
 						CreateByMdnReq reqJson = new CreateByMdnReq();
-						reqJson.setDeviceId("01088870008");
-						reqJson.setDeviceIdType("msisdn");
-						reqJson.setDeviceTelecom("US001201");
-						reqJson.setImei("A0000031648EE9");
-						reqJson.setJoinId("US002903");
-						reqJson.setIsRecvSms("Y");
-						reqJson.setOwnBirth("20020328");
 
-						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
+						// 단말 정보
+						reqJson.setDeviceId("550e8400e29b41d4a716446655440000"); // 기기 ID
+						reqJson.setDeviceIdType("uuid"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US001201"); // 통신사 (uuid 일경우 ISO 고정)
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setOwnBirth("20020328"); // 본인의 생년월일
+
+						// 단말 부가 정보
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
 
 						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 						reqJson.setParentRealNameMethod("US011101");
 						reqJson.setParentName("홍길동");
 						reqJson.setParentType("F");
@@ -289,7 +243,7 @@ public class CreateByMdnTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByMdnRes res = (CreateByMdnRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
+						LOGGER.debug(res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -297,14 +251,15 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
-	 * 기가입 사용자 사용자.
+	 * MAC 회원 가입 테스트.
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
-	// @Test
-	public void errorTestCase2() throws Exception {
+	@Ignore
+	@Test
+	public void test3_createByMac() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -315,17 +270,24 @@ public class CreateByMdnTest {
 					public Object requestBody() {
 
 						CreateByMdnReq reqJson = new CreateByMdnReq();
-						reqJson.setDeviceId("01088870008");
-						reqJson.setDeviceIdType("msisdn");
-						reqJson.setDeviceTelecom("US001201");
-						reqJson.setImei("A0000031648EE9");
-						reqJson.setJoinId("US002903");
-						reqJson.setIsRecvSms("Y");
-						reqJson.setOwnBirth("20020328");
 
-						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
+						// 단말 정보
+						reqJson.setDeviceId("B102E3010201"); // 기기 ID
+						reqJson.setDeviceIdType("mac"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US001201"); // 통신사 (uuid 일경우 ISO 고정)
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setOwnBirth("20020328"); // 본인의 생년월일
+
+						// 단말 부가 정보
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
 
 						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 						reqJson.setParentRealNameMethod("US011101");
 						reqJson.setParentName("홍길동");
 						reqJson.setParentType("F");
@@ -365,7 +327,115 @@ public class CreateByMdnTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateByMdnRes res = (CreateByMdnRes) result;
 						assertThat(res.getUserKey(), notNullValue());
-						System.out.println(res.toString());
+						LOGGER.debug(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 필수 약관 미동의 사용자 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Ignore
+	@Test
+	public void test4_errorTestCase1() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByMdnReq reqJson = new CreateByMdnReq();
+
+						// 단말 정보
+						reqJson.setDeviceId("01076771470"); // 기기 ID
+						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US001201"); // 통신사
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setOwnBirth("20020328"); // 본인의 생년월일
+
+						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
+						reqJson.setParentRealNameMethod("US011101");
+						reqJson.setParentName("홍길동");
+						reqJson.setParentType("F");
+						reqJson.setParentDate(DateUtil.getToday());
+						reqJson.setParentEmail("hkd@aaaa.com");
+						reqJson.setParentBirthDay("19700331");
+						reqJson.setParentTelecom("US001201");
+						reqJson.setParentPhone("01088889999");
+						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
+						reqJson.setParentRealNameDate(DateUtil.getToday());
+						reqJson.setParentRealNameSite("US011203"); // shop client 3.0
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("N");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("N");
+
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByMdnRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByMdnRes res = (CreateByMdnRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						LOGGER.debug(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 탈퇴 (MDN).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             void
+	 */
+	@Test
+	public void test5_withdrawMdn() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/withdraw/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						WithdrawReq req = new WithdrawReq();
+						req.setDeviceId("01076771470");
+						return req;
+					}
+				}).success(WithdrawRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						WithdrawRes res = (WithdrawRes) result;
+						assertThat(res.getUserKey(), notNullValue());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 
@@ -72,8 +74,9 @@ public class CreateByAgreementTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
-	public void createByAgreementDevice() throws Exception {
+	public void test_1createByAgreementDevice() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -84,11 +87,27 @@ public class CreateByAgreementTest {
 					public Object requestBody() {
 
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
-						reqJson.setDeviceId("01076771470");
-						reqJson.setDeviceIdType("msisdn");
-						reqJson.setUserId("planetoneuser2560");
-						reqJson.setDeviceTelecom("US001201");
-						reqJson.setJoinId("US002903");
+
+						// 사용자 아이디
+						reqJson.setUserId("sacuser01");
+
+						// 단말 정보
+						reqJson.setDeviceId("01089913467"); // 기기 ID
+						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US001201"); // 통신사
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
@@ -130,8 +149,8 @@ public class CreateByAgreementTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	// @Test
-	public void createByAgreementId() throws Exception {
+	@Test
+	public void test_2createByAgreementId() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -141,26 +160,33 @@ public class CreateByAgreementTest {
 					public Object requestBody() {
 
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
-						reqJson.setUserId("tstore_oneid");
-						reqJson.setDeviceId("");
-						reqJson.setDeviceIdType("");
-						reqJson.setDeviceTelecom("");
-						reqJson.setJoinId("");
+
+						// 사용자 아이디
+						reqJson.setUserId("tlaeo00");
+
+						// 단말 정보
+						reqJson.setDeviceId(""); // 기기 ID
+						reqJson.setDeviceIdType(""); // 기기 ID 타입
+						reqJson.setDeviceTelecom(""); // 통신사
+						reqJson.setNativeId(""); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount(""); // 기기 계정 (Gmail)
+						reqJson.setJoinId(""); // 가입채널코드
+						reqJson.setIsRecvSms(""); // SMS 수신 여부
 
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreement1 = new AgreementInfo();
-						agreement1.setExtraAgreementId("US010601");
+						agreement1.setExtraAgreementId("US010607");
 						agreement1.setExtraAgreementVersion("0.1");
 						agreement1.setIsExtraAgreement("Y");
 						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010602");
+						agreement2.setExtraAgreementId("US010608");
 						agreement2.setExtraAgreementVersion("0.1");
 						agreement2.setIsExtraAgreement("Y");
 						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010603");
+						agreement3.setExtraAgreementId("US010609");
 						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("N");
+						agreement3.setIsExtraAgreement("Y");
 						agreementList.add(agreement1);
 						agreementList.add(agreement2);
 						agreementList.add(agreement3);

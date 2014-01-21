@@ -82,8 +82,8 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 						reqJson.setDeviceId("01076771470");
 						reqJson.setDeviceIdType("msisdn");
-						reqJson.setUserId("!@#$ASDTRYRTYsdfdsfdsgdfyer");
-						reqJson.setUserPw("!@#abcd1234");
+						reqJson.setUserId("watermin0927");
+						reqJson.setUserPw("123qwe");
 						reqJson.setUserEmail("tlaeo00@naver.com");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setJoinId("US012304");
