@@ -41,8 +41,15 @@ public final class PurchaseConstants {
 	public static final String NETWORK_TYPE_3G = "DP004403"; // 3G
 
 	/** 결제상태코드. */
-	public static final String PAYMENT_STATUS_PLAM = "OR000701";
-	public static final String PAYMENT_STATUS_CANCEL = "OR000702";
-	public static final String PAYMENT_STATUS_COMPT = "OR000703";
+	public static final String PAYMENT_STATUS_PLAM = "OR000701"; // 결제예정
+	public static final String PAYMENT_STATUS_CANCEL = "OR000702"; // 결제취소
+	public static final String PAYMENT_STATUS_COMPT = "OR000703"; // 결제완료
+
+	/** 구매상품타입_보유상품. */
+	public static final String PRCHS_PROD_TYPE_OWN = "OR020201"; // 보유상품
+	/** 구매상품타입_미보유상품. */
+	public static final String PRCHS_PROD_TYPE_SEND = "OR020202"; // 미보유상품
+	/** 구매상품타입_정액제상품. */
+	public static final String PRCHS_PROD_TYPE_FIX = "OR020203"; // 정액제상품
 
 }
