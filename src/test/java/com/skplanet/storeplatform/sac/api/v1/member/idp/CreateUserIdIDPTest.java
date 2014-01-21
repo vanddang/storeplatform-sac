@@ -94,44 +94,4 @@ public class CreateUserIdIDPTest {
 
 	}
 
-	@Test
-	public void createUserIdIDPTest02() {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						ProvisioningReq req = new ProvisioningReq();
-						req.setCmd("RXCreateUserIdIDP");
-						HashMap resultMap = new HashMap();
-
-						resultMap.put("systemID", "S001");
-						resultMap.put("tenantID", "S01");
-						resultMap.put("sp_id", "90000");
-						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", " 2222222");
-						// resultMap.put("user_id", "test");
-						resultMap.put("user_tn", "01011112222");
-						resultMap.put("is_user_tn_own", "Y");
-						resultMap.put("modify_sst_code", "20100");
-						resultMap.put("modify_req_date", "20130423");
-						resultMap.put("modify_req_time", "112030");
-
-						req.setReqParam(resultMap);
-
-						logger.info("request param : {}", req.toString());
-						return req;
-					}
-				}).success(ProvisioningRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ProvisioningRes res = (ProvisioningRes) result;
-						// res.get
-						// assertThat(res.getSellerKey(), notNullValue());
-						logger.info("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
 }
