@@ -162,7 +162,7 @@ public class CreateByAgreementTest {
 						// 단말 정보
 						reqJson.setDeviceId("01089913467"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US001203"); // 통신사
+						reqJson.setDeviceTelecom("US012103"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -237,7 +237,7 @@ public class CreateByAgreementTest {
 						// 단말 정보
 						reqJson.setDeviceId("550e8400e29b41d4a716446655440000"); // 기기 ID
 						reqJson.setDeviceIdType("uuid"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US001207"); // 통신사
+						reqJson.setDeviceTelecom("US012107"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
