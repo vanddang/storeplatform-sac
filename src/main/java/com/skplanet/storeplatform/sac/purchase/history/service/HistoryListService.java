@@ -9,9 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 구매내역 Interface
@@ -21,18 +23,22 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
 public interface HistoryListService {
 
 	/**
-	 * 구매내역조회
+	 * 구매내역 조회 기능을 제공한다.
 	 * 
 	 * @param request
-	 * @return
+	 *            구매내역요청
+	 * @param requestHeader
+	 *            공통헤더정보
+	 * @return HistoryListResponse
 	 */
-	public HistoryListRes list(HistoryListReq request);
+	public HistoryListRes list(HistoryListReq request, SacRequestHeader requestHeader);
 
 	/**
-	 * 구매건수조회
+	 * 구매내역건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
-	 * @return
+	 *            구매내역요청
+	 * @return HistoryListResponse
 	 */
-	public HistoryCountRes count(HistoryListReq request);
+	public HistoryCountRes count(HistoryCountReq request);
 }

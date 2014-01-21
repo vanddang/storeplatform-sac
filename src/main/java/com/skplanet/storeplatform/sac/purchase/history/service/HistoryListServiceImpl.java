@@ -22,10 +22,17 @@ import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryList;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.History;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
+import com.skplanet.storeplatform.sac.purchase.common.PurchaseConstants;
 
 /**
  * 구매내역 Implements
@@ -36,24 +43,37 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
 @Transactional
 public class HistoryListServiceImpl implements HistoryListService {
 
-	private static final Logger logger = LoggerFactory.getLogger(HistoryListServiceImpl.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private HistorySCI historySci;
 
+	@Autowired
+	private CategorySpecificProductService productService;
+
 	/**
-	 * 구매내역조회
+	 * 구매내역 조회 기능을 제공한다.
 	 * 
 	 * @param request
-	 * @return
+	 *            구매내역요청
+	 * @param requestHeader
+	 *            공통헤더정보
+	 * @return HistoryListResponse
 	 */
 	@Override
-	public HistoryListRes list(HistoryListReq request) {
+	public HistoryListRes list(HistoryListReq request, SacRequestHeader requestHeader) {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
 		HistoryListRequest scRequest = new HistoryListRequest();
 		HistoryListResponse scResponse = new HistoryListResponse();
+
+		// SAC Response VO
+		HistoryListRes response = new HistoryListRes();
+		List<History> sacHistoryList = new ArrayList<History>();
+		History history = new History();
+
+		String prodArray = "";
 
 		// SC Request Set
 		scRequest.setTenantId(request.getTenantId());
@@ -69,13 +89,24 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setOffset(request.getOffset());
 		scRequest.setCount(request.getCount());
 
-		// SC Call
-		scResponse = this.historySci.listHistory(scRequest);
+		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
+			this.logger.debug("##### 보유상품조회");
+			// SC Call
+			scResponse = this.historySci.listHistory(scRequest);
 
-		// SAC Response VO
-		HistoryListRes response = new HistoryListRes();
-		List<History> sacHistoryList = new ArrayList<History>();
-		History history = new History();
+		} else if (PurchaseConstants.PRCHS_PROD_TYPE_SEND.equals(request.getPrchsProdType())) {
+			this.logger.debug("##### 미보유상품조회");
+			// SC Call
+			scResponse = this.historySci.sendListHistory(scRequest);
+
+		} else if (PurchaseConstants.PRCHS_PROD_TYPE_FIX.equals(request.getPrchsProdType())) {
+			this.logger.debug("##### 구매권한상품조회");
+			// SC Call
+			scResponse = this.historySci.authListHistory(scRequest);
+		} else {
+			// 오류처리... 잘못된 요청
+			return response;
+		}
 
 		// SC객체를 SAC객체로 맵핑작업
 		List<HistoryList> scHistoryList = scResponse.getHistoryList();
@@ -112,8 +143,46 @@ public class HistoryListServiceImpl implements HistoryListService {
 			history.setDwldStartDt(obj.getDwldStartDt());
 			history.setDwldExprDt(obj.getDwldExprDt());
 
+			history.setPaymentStartDt(obj.getPaymentStartDt());
+			history.setPaymentEndDt(obj.getPaymentEndDt());
+			history.setAfterPaymentDt(obj.getAfterPaymentDt());
+
+			history.setClosedCd(obj.getClosedCd());
+			history.setClosedDt(obj.getClosedDt());
+			history.setClosedReasonCd(obj.getClosedReasonCd());
+			history.setClosedReqPathCd(obj.getClosedReqPathCd());
+
 			sacHistoryList.add(history);
+
+			// 상품정보 조회를 위한 상품ID 셋팅
+			prodArray = prodArray + history.getProdId() + "+";
 		}
+
+		CategorySpecificReq productReq = new CategorySpecificReq();
+		productReq.setList(prodArray);
+
+		// TODO : 테스트용 데이터 받기
+		productReq.setDummy("dummy");
+
+		// 상품정보조회
+		CategorySpecificRes productRes = this.productService.getSpecificProductList(productReq, requestHeader);
+
+		List<Product> resProdList = productRes.getProductList();
+
+		for (History obj : sacHistoryList) {
+
+			for (Product product : resProdList) {
+
+				if (obj.getProdId().equals(product.getIdentifier().getText())) {
+					// obj.setProduct(product); //
+					obj.setProdNm(product.getTitle().getText());
+					obj.setGrade(product.getRights().getGrade());
+					break;
+				}
+			}
+		}
+
+		this.logger.debug("prodList ==== " + resProdList.toString());
 
 		response.setHistoryList(sacHistoryList);
 		response.setTotalCnt(sacHistoryList.size());
@@ -123,13 +192,14 @@ public class HistoryListServiceImpl implements HistoryListService {
 	}
 
 	/**
-	 * 구매건수조회
+	 * 구매내역건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
-	 * @return
+	 *            구매내역요청
+	 * @return HistoryListResponse
 	 */
 	@Override
-	public HistoryCountRes count(HistoryListReq request) {
+	public HistoryCountRes count(HistoryCountReq request) {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO

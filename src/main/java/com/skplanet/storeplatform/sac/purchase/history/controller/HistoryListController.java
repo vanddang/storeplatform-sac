@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
@@ -32,32 +35,47 @@ import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListServic
 @RequestMapping(value = "/purchase/history")
 public class HistoryListController {
 
-	private static final Logger logger = LoggerFactory.getLogger(HistoryListController.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private HistoryListService historyListService;
 
 	/**
-	 * 구매내역 조회
+	 * 구매내역 조회 기능을 제공한다.
 	 * 
 	 * @param request
-	 * @return
+	 *            구매내역요청
+	 * @param requestHeader
+	 *            공통헤더정보
+	 * @return HistoryListResponse
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HistoryListRes list(@RequestBody HistoryListReq request) {
-		return this.historyListService.list(request);
+	public HistoryListRes list(@RequestBody HistoryListReq request, SacRequestHeader requestHeader) {
+
+		// tenantID, systemId Set
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		request.setTenantId(tenantHeader.getTenantId());
+		request.setSystemId(tenantHeader.getSystemId());
+		this.logger.debug("TenantHeader :: " + tenantHeader.toString());
+
+		return this.historyListService.list(request, requestHeader);
 	}
 
 	/**
-	 * 구매내역 건수 조회
+	 * 구매내역건수 조회 기능을 제공한다.
 	 * 
 	 * @param request
-	 * @return
+	 *            구매내역요청
+	 * @param requestHeader
+	 *            공통헤더정보
+	 * @return HistoryListResponse
 	 */
 	@RequestMapping(value = "/count/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HistoryCountRes count(@RequestBody HistoryListReq request) {
+	public HistoryCountRes count(@RequestBody HistoryCountReq request, SacRequestHeader requestHeader) {
+
 		return this.historyListService.count(request);
 	}
+
 }
