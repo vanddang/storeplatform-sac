@@ -57,7 +57,7 @@ public interface MiscellaneousRepository {
 	 * 회원 Key값으로 이메일 인증 여부 조회.
 	 * </pre>
 	 * 
-	 * @param userKey
+	 * @param mbrNo
 	 *            String
 	 * @return String
 	 */

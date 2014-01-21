@@ -148,10 +148,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetCaptchaRes getCaptcha() throws Exception {
 
-		LOGGER.debug("######## Captcha 문자 발급 Controller 시작 ##############");
-
 		GetCaptchaRes res = this.service.getCaptcha();
-		LOGGER.debug("######## Captcha 문자 발급 Controller 종료 ##############");
 		return res;
 	}
 
@@ -163,10 +160,13 @@ public class MiscellaneousController {
 	 * @param request
 	 *            ConfirmCaptchaReq
 	 * @return ConfirmCaptchaRes
+	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/dev/confirmCaptcha/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ConfirmCaptchaRes confirmCaptcha(@RequestBody ConfirmCaptchaReq request) {
+	public ConfirmCaptchaRes confirmCaptcha(@RequestBody ConfirmCaptchaReq request) throws Exception {
+		ConfirmCaptchaRes res = this.service.confirmCaptcha(request);
 		return null;
 	}
 
@@ -176,7 +176,8 @@ public class MiscellaneousController {
 	 * </pre>
 	 * 
 	 * @param request
-	 * @return
+	 *            GetEmailAuthorizationCodeReq
+	 * @return GetEmailAuthorizationCodeRes
 	 */
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(
 			@Valid @RequestBody GetEmailAuthorizationCodeReq request) {

@@ -306,6 +306,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetCaptchaRes getCaptcha() throws Exception {
 		String waterMarkImageUrl = "";
 		String waterMarkImageSign = "";
+		String waterMarkImageString = "";
 		IDPReceiverM idpReciver = new IDPReceiverM();
 		GetCaptchaRes response = new GetCaptchaRes();
 
@@ -313,40 +314,42 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		idpReciver = this.idpService.warterMarkImageUrl();
 		waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
 		waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
+		String signData = idpReciver.getResponseBody().getSign_data();
 
-		LOGGER.debug("####### >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
-		LOGGER.debug("####### >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
+		LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
+		LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
 
-		HTTP_PROTOCOL protocol;
-		HTTP_METHOD method;
-		String urlPath;
+		if (waterMarkImageUrl != null) {
+			HTTP_PROTOCOL protocol = null;
+			HTTP_METHOD method = null;
+			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
 
-		if (StringUtils.substring(waterMarkImageUrl, 0, 4).equals("https")) {
-			protocol = HTTP_PROTOCOL.HTTPS;
-			method = HTTP_METHOD.POST;
-			urlPath = StringUtils.substring(waterMarkImageUrl, 5);
-		} else {
-			protocol = HTTP_PROTOCOL.HTTP;
-			method = HTTP_METHOD.GET;
-			urlPath = StringUtils.substring(waterMarkImageUrl, 4);
+			if (waterMarkImageUrl.substring(0, 5).equals("https")) {
+				protocol = HTTP_PROTOCOL.HTTPS;
+				method = HTTP_METHOD.POST;
+			} else {
+				protocol = HTTP_PROTOCOL.HTTP;
+				method = HTTP_METHOD.GET;
+			}
+
+			LOGGER.debug("## >> Protocol : {}, Method : {}, UrlPath : {}", protocol, method, urlPath);
+
+			ImageReq req = new ImageReq();
+			req.setMethod(method); // GET or POST
+			req.setProtocol(protocol); // HTTP or HTTPS
+			req.setUrlPath(urlPath);
+			ImageRes res = this.imageSCI.convert(req);
+
+			waterMarkImageString = res.getImgData();
+			LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
 		}
 
-		LOGGER.debug("Protocol : {}, Method : {}, UrlPath : {}", protocol, method, urlPath);
-
-		ImageReq req = new ImageReq();
-		req.setMethod(method); // GET or POST
-		req.setProtocol(protocol); // HTTP or HTTPS
-		req.setUrlPath(urlPath);
-		ImageRes res = this.imageSCI.convert(req);
-
-		String waterMarkImageString = res.getImgData();
-		LOGGER.debug("WaterMark ImageString : {}", waterMarkImageString);
-
-		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능 - file형태로 확인.
+		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능
 		// <img alt="Embedded Image" src="data:image/png;base64,???"/>
 
 		response.setImageData(waterMarkImageString);
 		response.setImageSign(waterMarkImageSign);
+		response.setSignData(signData);
 
 		return response;
 	}
@@ -356,8 +359,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* IDP 호출 ( Request 파라미터 전달 ) */
 		IDPReceiverM idpReciver = new IDPReceiverM();
-		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(), "");
-
+		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
+				request.getSignData());
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 
 		if (idpReciver.getResponseHeader().getResult().equals(Const.IDP_SUCCESS)) {

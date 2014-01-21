@@ -134,8 +134,10 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @param request
-	 * @return
+	 *            ConfirmEmailAuthorizationCodeReq
+	 * @return ConfirmEmailAuthorizationCodeRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
 			throws Exception;
