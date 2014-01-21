@@ -107,6 +107,9 @@ public class DeviceServiceImpl implements DeviceService {
 	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private IDPRepository idpRepository;
 
 	@Autowired
@@ -138,6 +141,20 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceId = req.getDeviceInfo().getDeviceId();
 		String deviceKey = null;
 
+		/* 동일한 정보로 등록 요청시 체크 */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
+		listDeviceReq.setUserKey(userKey);
+		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
+		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
+		if (deviceInfoList != null) {
+			for (DeviceInfo deviceInfo : deviceInfoList) {
+				if (deviceInfo.getDeviceId().equals(deviceId)) {
+					throw new RuntimeException("이미 등록된 휴대기기 입니다.");
+				}
+			}
+		}
+
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
@@ -167,90 +184,8 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 휴대기기 등록 처리 */
 		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
 
-		/* sc회원 컴포넌트 휴대기기 목록 조회 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
-		listDeviceReq.setUserKey(userKey);
-		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
-
-		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
-		String userPhoneStr = null;
-		if (deviceInfoList != null) {
-			StringBuffer sbUserPhone = new StringBuffer();
-			for (DeviceInfo deviceInfo : deviceInfoList) {
-				sbUserPhone.append(deviceInfo.getDeviceId());
-				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getImMngNum());
-				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getUacd());
-				sbUserPhone.append(",");
-				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
-				sbUserPhone.append("|");
-			}
-			userPhoneStr = sbUserPhone.toString();
-			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
-		}
-
-		/* IDP 휴대기기 정보 등록 요청 */
-		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("user_auth_key", req.getUserAuthKey());
-
-		UserMbr userMbr = schUserRes.getUserMbr();
-		if (userMbr.getUserSex() != null) {
-			param.put("user_sex", userMbr.getUserSex());
-		}
-		if (userMbr.getUserBirthDay() != null) {
-			param.put("user_birthday", userMbr.getUserBirthDay());
-		}
-		if (userMbr.getUserZip() != null) {
-			param.put("user_zipcode", userMbr.getUserZip());
-		}
-		if (userMbr.getUserAddress() != null) {
-			param.put("user_address", userMbr.getUserAddress());
-		}
-		if (userMbr.getUserDetailAddress() != null) {
-			param.put("user_address2", userMbr.getUserDetailAddress());
-		}
-		if (userMbr.getUserPhone() != null) {
-			param.put("user_tel", userMbr.getUserPhone());
-		}
-		if (userMbr.getUserPhoneCountry() != null) {
-			param.put("is_foreign", (userMbr.getUserPhoneCountry().equals("82") ? "N" : "Y"));
-		}
-
-		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
-
-			param.put("key", schUserRes.getUserMbr().getImSvcNo());
-			param.put("operation_mode", this.IDP_OPERATION_MODE);
-			if (userPhoneStr != null) {
-				param.put("user_mdn", userPhoneStr);
-				param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-			}
-
-			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
-			param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
-
-			ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
-			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-				throw new RuntimeException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-						+ imIdpReceiver.getResponseHeader().getResult_text());
-			}
-
-		} else {
-
-			param.put("key_type", "2");
-			param.put("key", schUserRes.getUserMbr().getImMbrNo());
-			if (userPhoneStr != null) {
-				param.put("user_phone", userPhoneStr);
-				param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-			}
-			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
-						+ idpReceiver.getResponseHeader().getResult_text());
-			}
-
-		}
+		/* 변경된 정보 idp 연동 */
+		this.userService.modifyProfileIdp(requestHeader, userKey, req.getUserAuthKey());
 
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId(deviceId);
@@ -275,8 +210,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		this.mergeDeviceInfo(requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(), req.getDeviceInfo());
 
-		/* IDP 수정된 정보 업데이트 */
-
+		/* 변경된 정보 idp 연동 */
+		this.userService.modifyProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 		ModifyDeviceRes res = new ModifyDeviceRes();
 		return res;
 	}
