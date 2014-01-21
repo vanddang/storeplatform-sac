@@ -88,7 +88,7 @@ public class UserWithdrawTest {
 						reqJson.setDeviceId("01076771470");
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setDeviceTelecom("US001201");
-						reqJson.setImei("A0000031648EE9");
+						reqJson.setNativeId("A0000031648EE9");
 						reqJson.setJoinId("US002903");
 						reqJson.setIsRecvSms("Y");
 						reqJson.setOwnBirth("20020328");
