@@ -559,7 +559,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schRes = this.sellerSCI.resetPasswordSeller(schReq);
 
 		SearchPasswordRes response = new SearchPasswordRes();
-		response.setNewPassword("임시패스워드");
+		response.setNewPassword(schRes.getSellerPW());
 
 		return response;
 
