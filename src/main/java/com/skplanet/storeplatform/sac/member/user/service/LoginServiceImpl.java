@@ -113,7 +113,8 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService# authorizeByMdn
+	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#
+	 * authorizeByMdn
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq)
 	 */
@@ -174,7 +175,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 변동성 회원인 경우 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE) && StringUtil.equals(schUserRes.getIsChangeSubject(), "Y")) {
-			this.volatileMemberPoc(deviceId, userKey);
+			this.volatileMemberPoc(deviceId, userKey, req.getDeviceTelecom());
 		}
 
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
@@ -237,7 +238,8 @@ public class LoginServiceImpl implements LoginService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.LoginService#authorizeById
 	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
 	 * com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq)
 	 */
@@ -555,15 +557,17 @@ public class LoginServiceImpl implements LoginService {
 	 *            디바이스 아이디
 	 * @param userKey
 	 *            사용자키
+	 * @param deviceTelecom
+	 *            통신사코드
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void volatileMemberPoc(String deviceId, String userKey) throws Exception {
+	public void volatileMemberPoc(String deviceId, String userKey, String deviceTelecom) throws Exception {
 
 		logger.info("########## volatileMember process start #########");
 
 		/* 1. 무선회원 가입 */
-		IDPReceiverM idpReceiver = this.idpService.join4Wap(deviceId, "SKT");
+		IDPReceiverM idpReceiver = this.idpService.join4Wap(deviceId, this.commService.convertDeviceTelecom(deviceTelecom));
 		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 			String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호

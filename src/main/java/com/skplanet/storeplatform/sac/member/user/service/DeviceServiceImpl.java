@@ -189,7 +189,7 @@ public class DeviceServiceImpl implements DeviceService {
 				sbUserPhone.append(",");
 				sbUserPhone.append(deviceInfo.getUacd());
 				sbUserPhone.append(",");
-				sbUserPhone.append(this.converterTelecomCode(deviceInfo.getDeviceTelecom()));
+				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
 				sbUserPhone.append("|");
 			}
 			userPhoneStr = sbUserPhone.toString();
@@ -667,26 +667,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	}
 
-	public String converterTelecomCode(String code) {
-		String value = "";
-		if (code.equals(MemberConstants.DEVICE_TELECOM_SKT)) {
-			value = "SKT";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_KT)) {
-			value = "KTF";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_LGT)) {
-			value = "LGT";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_OMD)) {
-			value = "OMD";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NSH)) {
-			value = "NSH";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NON)) {
-			value = "NON";
-		} else if (code.equals(MemberConstants.DEVICE_TELECOM_IOS)) {
-			value = "IOS";
-		}
-		return value;
-	}
-
 	public DeviceInfo setMajorDeviceInfo(DeviceInfo deviceInfo) throws Exception {
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
 				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
@@ -1028,7 +1008,7 @@ public class DeviceServiceImpl implements DeviceService {
 				sbUserPhone.append(",");
 				sbUserPhone.append(deviceInfo.getUacd());
 				sbUserPhone.append(",");
-				sbUserPhone.append(this.converterTelecomCode(deviceInfo.getDeviceTelecom()));
+				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
 				sbUserPhone.append("|");
 
 			}
