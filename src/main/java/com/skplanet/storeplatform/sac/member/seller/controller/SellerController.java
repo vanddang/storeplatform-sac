@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import javax.validation.Valid;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,11 @@ public class SellerController {
 
 	@Autowired
 	private SellerService sellerService;
+
+	/**
+	 * Data Binding.
+	 */
+	ObjectMapper objMapper = new ObjectMapper();
 
 	/**
 	 * <pre>
@@ -115,7 +121,7 @@ public class SellerController {
 	public @ResponseBody
 	WithdrawRes withdraw(SacRequestHeader header, @RequestBody WithdrawReq req) throws Exception {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
-		LOGGER.debug("request param : {}", req.toString());
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
 		String secedeReasonCode = StringUtil.nvl(req.getSecedeReasonCode(), "");
 		String secedeReasonMessage = StringUtil.nvl(req.getSecedeReasonMessage(), "");
@@ -141,6 +147,7 @@ public class SellerController {
 	public @ResponseBody
 	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Valid CreateAuthKeyReq req) throws Exception {
 
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 		String ipAddress = StringUtil.nvl(req.getIpAddress(), "");
 		if (sellerKey.equals("") || ipAddress.equals("")) {
