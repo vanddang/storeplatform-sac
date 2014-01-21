@@ -131,6 +131,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		schUserReq.setCommonRequest(commonRequest);
 		UserInfo userInfo = this.userInfo(schUserReq);
 
+		logger.info("###### userInfo Request : {}", schUserReq);
+		logger.info("###### userInfo Response : {}", userInfo);
+
 		if ("".equals(userInfo) || userInfo == null) {
 			throw new RuntimeException("SC 회원조회 실패 : 해당 회원이 없음");
 		} else {

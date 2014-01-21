@@ -70,14 +70,14 @@ public class UserSearchController extends ParameterExceptionHandling {
 			// throw new RuntimeException("입력된 [ deviceId ] 파라미터가 없습니다.");
 		}
 
-		logger.info("###### 입력된 queryString Value : " + String.valueOf(paramCnt));
+		logger.info("###### ExistReq : {}", req.toString());
 
 		if (paramCnt > 0) {
 			res = this.svc.exist(sacHeader, req);
 		} else {
 			throw new RuntimeException("입력된 파라미터가 없습니다.");
 		}
-		logger.info("Response : {}", res.toString());
+		logger.info("Final Response : {}", res.toString());
 
 		return res;
 	}

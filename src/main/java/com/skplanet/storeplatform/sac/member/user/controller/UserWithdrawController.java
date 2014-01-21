@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class UserWithdrawController extends ParameterExceptionHandling {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserWithdrawController.class);
 
+	ObjectMapper objMapper = new ObjectMapper();
+
 	@Autowired
 	private UserWithdrawService svc;
 
@@ -56,11 +59,14 @@ public class UserWithdrawController extends ParameterExceptionHandling {
 		req.setUserAuthKey(userAuthKey);
 		req.setUserId(userId);
 
+		logger.info("###### 1. UserWithdraw Request : {}", req.toString());
+
 		if (userId.equals("") && userAuthKey.equals("") && deviceId.equals("")) {
 			throw new Exception("필수요청 파라메터 부족");
 		}
 
 		res = this.svc.withdraw(sacHeader, req);
+		logger.info("####### Final Response : {}", res.toString());
 
 		return res;
 	}
