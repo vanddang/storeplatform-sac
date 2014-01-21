@@ -61,11 +61,11 @@ public class Accrual extends CommonInfo implements Serializable {
 		this.downloadCount = downloadCount;
 	}
 
-	public double getScore() {
+	public Double getScore() {
 		return this.score;
 	}
 
-	public void setScore(double score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 
@@ -99,10 +99,6 @@ public class Accrual extends CommonInfo implements Serializable {
 
 	public void setChangeRank(String changeRank) {
 		this.changeRank = changeRank;
-	}
-
-	public void setScore(Double score) {
-		this.score = score;
 	}
 
 	public String getExplain() {
