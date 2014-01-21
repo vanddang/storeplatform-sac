@@ -319,6 +319,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("::::::::::::::::::::::::::::::::: insertDeviceInfo deviceInfo :::::::::::::::::::::::::::::::::::::");
 		logger.info(deviceInfo.toString());
+		logger.info(deviceInfo.getUserDeviceExtraInfo().toString());
 		logger.info("::::::::::::::::::::::::::::::::: insertDeviceInfo deviceInfo :::::::::::::::::::::::::::::::::::::");
 
 		createDeviceReq.setUserMbrDevice(this.getConverterUserMbrDeviceInfo(deviceInfo));
