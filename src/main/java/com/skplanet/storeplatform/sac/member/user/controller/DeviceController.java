@@ -240,11 +240,14 @@ public class DeviceController {
 			throw new RuntimeException("필수요청 파라메터 부족");
 		}
 
+		logger.info("###### removeDevice Request : {}", req.toString());
+
 		req.setUserAuthKey(userAuthKey);
 		req.setDeviceId(deviceId);
 
 		List<DeviceInfo> res = this.deviceService.removeDevice(requestHeader, req);
 
+		logger.info("###### removeDevice Response : {}", res.toString());
 		return res;
 	}
 }

@@ -161,8 +161,8 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (req.getRegMaxCnt().equals("0")
-				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= Integer
-						.parseInt(req.getRegMaxCnt()))) {
+				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr()
+						.getDeviceCount()) >= Integer.parseInt(req.getRegMaxCnt()))) {
 			throw new RuntimeException("등록 가능한 단말개수가 초과되었습니다.");
 		}
 
@@ -181,11 +181,12 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 등록 처리 */
-		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
-		
+		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey,
+				req.getDeviceInfo());
+
 		/* 변경된 정보 idp 연동 */
 		this.userService.modifyProfileIdp(requestHeader, userKey, req.getUserAuthKey());
-		
+
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId(deviceId);
 		res.setDeviceKey(deviceKey);
@@ -777,7 +778,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 	}
 
-	public UserMbrDeviceDetail getConverterUserMbrDeviceDetail(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
+	public UserMbrDeviceDetail getConverterUserMbrDeviceDetail(String extraProfile, String extraProfileValue,
+			DeviceInfo deviceInfo) {
 		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 		userMbrDeviceDetail.setExtraProfile(extraProfile);
 		userMbrDeviceDetail.setExtraProfileValue(extraProfileValue);
