@@ -94,7 +94,7 @@ public class SacServiceUrlSearcher implements ServiceUrlSearcher {
 		}
 		// 컨트롤러 전송시에는 한글이 깨지면 안됨으로 위에서 Decoding을 시킴.
 		if (StringUtils.equals(requestMethod, "GET")) {
-			if (!StringUtils.isEmpty(request.getQueryString())) {
+			if (StringUtils.isNotEmpty(request.getQueryString())) {
 				String queryString = null;
 				try {
 					queryString = URLDecoder.decode(request.getQueryString(), "UTF-8");
