@@ -3,7 +3,7 @@
 <mapper namespace="Webtoon">
     <!-- 웹툰 상품 리스트 조회-->
     <select id="getWebtoonList" parameterType="CategoryWebtoonReq" resultType="CategoryWebtoon">
-       /* WebtoonMapper.xml.getWebtoonList, sac: kim Hyung Sik , 2013-12-26 */
+       /* WebtoonMapper.xml.getWebtoonList, 웹툰 상품 리스트 조회, 김형식/SK플래닛 , 2013-12-26 */
         SELECT *
           FROM (                        
                 SELECT  
@@ -143,7 +143,7 @@
     
     <!-- 운영자 웹툰 상품 리스트 조회-->
     <select id="getAdminWebtoonList" parameterType="RecommendWebtoonReq" resultType="RecommendWebtoon">
-        /* WebtoonMapper.xml.getAdminWebtoonList, sac: kim Hyung Sik , 2013-12-26 */
+        /* WebtoonMapper.xml.getAdminWebtoonList, 운영자 웹툰 상품 리스트 조회, 김형식/SK플래닛 , 2013-12-26 */
         SELECT *
           FROM (                        
                 SELECT  

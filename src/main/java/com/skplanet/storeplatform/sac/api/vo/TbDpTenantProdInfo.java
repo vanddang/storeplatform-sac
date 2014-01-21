@@ -8,7 +8,16 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
-
+/**
+ * <pre>
+ * 전처리 상품 테넌트 상품 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class TbDpTenantProdInfo {
 	private String prodId; //
 	private String tenantId; //

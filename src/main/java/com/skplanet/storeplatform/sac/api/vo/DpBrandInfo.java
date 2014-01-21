@@ -9,7 +9,16 @@
  */
 
 package com.skplanet.storeplatform.sac.api.vo;
-
+/**
+ * <pre>
+ * 전처리 브랜드 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class DpBrandInfo extends BrandCatalogProdImgInfo {
 
 	private String brandId; // TB_DP_SHPG_BRAND.BRAND_ID

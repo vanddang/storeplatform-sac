@@ -59,9 +59,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 쇼핑 추천/인기 상품 리스트 조회.
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
@@ -318,9 +315,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 쇼핑 신규 상품 조회 .
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req) {
@@ -341,8 +335,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 
 			Integer totalCount = 0;
-			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req,
-					Shopping.class);
+			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req, Shopping.class);
 
 			if (resultList != null) {
 				Shopping ShoppingDto = new Shopping();
@@ -568,9 +561,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 *  쇼핑 세부카테고리  상품 조회 .
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
@@ -601,8 +591,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 
 			Integer totalCount = 0;
-			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req,
-					Shopping.class);
+			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req, Shopping.class);
 
 			if (resultList != null) {
 				Shopping ShoppingDto = new Shopping();
@@ -828,9 +817,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 특가 상품 리스트 조회.
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
@@ -842,9 +828,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 기획전  상품  조회.
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
@@ -965,9 +948,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 특정 기획전에 대한 상품 리스트 조회.
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1088,9 +1068,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 브랜드샵 - 메인 리스트 조회.
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req) {
@@ -1211,9 +1188,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 특정 브랜드샵 상품 리스트
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1334,9 +1308,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 쇼핑테마 리스트상품 리스트
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req) {
@@ -1457,9 +1428,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 특정 테마 리스트상품 리스트
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1580,9 +1548,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 *   특정 카탈로그에 대한 다른 상품 리스트
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1703,9 +1668,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 특정 브랜드에 대한 다른 상품 리스트
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req) {
@@ -1826,9 +1788,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * <pre>
 	 * 쇼핑상세
 	 * </pre>
-	 * 
-	 * @param ShoppingReq
-	 * @return ShoppingRes 리스트
 	 */
 	@Override
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {

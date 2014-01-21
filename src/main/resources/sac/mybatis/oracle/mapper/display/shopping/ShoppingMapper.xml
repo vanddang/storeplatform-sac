@@ -4,7 +4,7 @@
 
     <!-- 쇼핑/인기 추천 상품 리스트 조회-->
     <select id="getFeatureProductList" parameterType="ShoppingReq" resultType="Shopping">
-       /* ShoppingMapper.xml.getFeatureProductList, sac: kim Hyung Sik , 2014-01-07 */
+       /* ShoppingMapper.xml.getFeatureProductList,쇼핑/인기 추천 상품 리스트 조회, 김형식/SK플래닛 , 2014-01-07 */
         SELECT *
          FROM ( 
              SELECT 
@@ -166,7 +166,7 @@
     
     <!-- 최신 상품 리스트 조회-->
     <select id="getNewProductList" parameterType="ShoppingReq" resultType="Shopping">
-       /* ShoppingMapper.xml.getNewProductList, sac: kim Hyung Sik , 2014-01-07 */
+       /* ShoppingMapper.xml.getNewProductList,최신 상품 리스트 조회, 김형식/SK플래닛 , 2014-01-07 */
         SELECT *
          FROM ( 
              SELECT 
@@ -307,7 +307,7 @@
     
     <!-- 쇼핑 세부카테고리  상품 조회-->
     <select id="getSubProductList" parameterType="ShoppingReq" resultType="Shopping">
-       /* ShoppingMapper.xml.getSubProductList, sac: kim Hyung Sik , 2014-01-07 */
+       /* ShoppingMapper.xml.getSubProductList,쇼핑 세부카테고리 상품 조회, 김형식/SK플래닛 , 2014-01-07 */
         SELECT *
          FROM ( 
              SELECT 

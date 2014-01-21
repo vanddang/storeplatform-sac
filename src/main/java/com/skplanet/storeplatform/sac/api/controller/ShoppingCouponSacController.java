@@ -44,6 +44,11 @@ import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 
+/**
+ * 쇼핑 컨트롤러
+ * 
+ * Updated on : 2014-01-20 Updated by : 김형식, SK플래닛.
+ */
 @Controller
 @RequestMapping("/shopping")
 public class ShoppingCouponSacController {
@@ -76,9 +81,13 @@ public class ShoppingCouponSacController {
 	}
 
 	/**
-	 * ShoppingCouponSacController
-	 * <p/>
-	 * Updated on : 2014. 01. 06 Updated by : 김형식, SK 플래닛.
+	 * <pre>
+	 * 쇼핑쿠폰 전처리– POST.
+	 * </pre>
+	 * 
+	 * @param CouponReq
+	 *            couponReq
+	 * @return CouponRes
 	 */
 	@RequestMapping(value = "/api/couponInterface/v1", method = RequestMethod.POST)
 	@ResponseBody

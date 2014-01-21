@@ -8,7 +8,16 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
-
+/**
+ * <pre>
+ * 전처리 상품 옵션 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class TbDpProdOpt {
 	private String chnlProdId; // 채널_상품_ID
 	private String epsdProdId; // 에피소드_상품_ID

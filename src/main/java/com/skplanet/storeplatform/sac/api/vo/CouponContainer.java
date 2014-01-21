@@ -13,7 +13,16 @@ import java.util.List;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpItemInfo;
-
+/**
+ * <pre>
+ * 전처리 쿠폰 아이템 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class CouponContainer {
 	private DpCouponInfo dpCouponInfo;
 	private List<DpItemInfo> dpItemlist;

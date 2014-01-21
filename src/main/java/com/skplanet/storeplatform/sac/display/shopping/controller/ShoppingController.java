@@ -13,6 +13,12 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
+/**
+ * 쇼핑 컨트롤러
+ * 
+ * Updated on : 2014-01-20 Updated by : 김형식, SK플래닛.
+ */
+
 @Controller
 @RequestMapping("/display/shopping")
 public class ShoppingController {
@@ -21,6 +27,15 @@ public class ShoppingController {
 	@Autowired
 	private ShoppingService shoppingService;
 
+	/**
+	 * <pre>
+	 * 쇼핑 추천/인기 상품 리스트 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
 	@RequestMapping(value = "/featureProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
@@ -31,6 +46,15 @@ public class ShoppingController {
 
 	}
 
+	/**
+	 * <pre>
+	 * 쇼핑 신규 상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
 	@RequestMapping(value = "/category/newProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req) {
@@ -41,6 +65,15 @@ public class ShoppingController {
 
 	}
 
+	/**
+	 * <pre>
+	 * 쇼핑 세부카테고리  상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
 	@RequestMapping(value = "/category/subProductList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {

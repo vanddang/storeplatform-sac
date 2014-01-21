@@ -8,7 +8,16 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
-
+/**
+ * <pre>
+ * 전처리 상품상태 정보 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class TbDpProdDescInfo {
 	private String prodId; //
 	private String langCd; //

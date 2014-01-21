@@ -15,11 +15,18 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
+/**
+ * <pre>
+ * 쿠폰아이템 서비스 인터페이스
+ * </pre>
+ * 
+ * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
+ */
 public interface CouponItemService {
 
 	/**
 	 * <pre>
-	 * 쿠폰ID 생성
+	 * 쿠폰ID 생성.
 	 * </pre>
 	 */
 	public String couponGenerateId();
@@ -125,10 +132,6 @@ public interface CouponItemService {
 
 	/**
 	 * 쿠폰(아이템) 판매상태 변경
-	 * 
-	 * @param info
-	 * @return
-	 * @throws InfraException
 	 */
 	public ArrayList<String> updateBatchForCouponStatus(ArrayList<CouponReq> couponList);
 

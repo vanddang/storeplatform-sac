@@ -11,7 +11,16 @@
 package com.skplanet.storeplatform.sac.api.except;
 
 import com.skplanet.storeplatform.sac.api.vo.ERROR_DATA;
-
+/**
+ * <pre>
+ * 전처리 쿠폰 Exception Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class CouponException extends RuntimeException {
 	private ERROR_DATA error_data;
 	private String request_time;

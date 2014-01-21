@@ -8,7 +8,16 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
-
+/**
+ * <pre>
+ * 전처리 브랜드 카탈로그 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class BrandCatalogProdImgInfo {
 
 	private String prodId; // 브랜드,카탈로그id

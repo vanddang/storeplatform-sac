@@ -9,7 +9,16 @@ package com.skplanet.storeplatform.sac.api.vo;
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-
+/**
+ * <pre>
+ * 전처리 카탈로그 매핑 Value Object
+ * </pre>
+ *
+ * Created on : 2014-01-02
+ * Created by : 김형식, SK플래닛
+ * Last Updated on : 2014-01-02
+ * Last Updated by : 김형식, SK플래닛
+ */
 public class TbDpProdCatalogMapgInfo {
 	private String prodId; // 상품_ID
 	private String catalogId; // 카탈로그_ID
