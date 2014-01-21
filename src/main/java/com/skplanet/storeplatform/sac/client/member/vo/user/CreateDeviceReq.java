@@ -30,7 +30,7 @@ public class CreateDeviceReq extends CommonInfo {
 	 * 최대 등록 가능한 휴대기기 수
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private Integer regMaxCnt;
+	private String regMaxCnt;
 
 	/**
 	 * 사용자 단말 정보
@@ -53,11 +53,11 @@ public class CreateDeviceReq extends CommonInfo {
 		this.userKey = userKey;
 	}
 
-	public Integer getRegMaxCnt() {
+	public String getRegMaxCnt() {
 		return this.regMaxCnt;
 	}
 
-	public void setRegMaxCnt(Integer regMaxCnt) {
+	public void setRegMaxCnt(String regMaxCnt) {
 		this.regMaxCnt = regMaxCnt;
 	}
 
