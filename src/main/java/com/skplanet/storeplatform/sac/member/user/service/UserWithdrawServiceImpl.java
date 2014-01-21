@@ -223,9 +223,13 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		if (schUserRes.getUserMbr() == null) {
 			throw new RuntimeException("회원정보 없음.");
+		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
+			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
+					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
 		}
-
+		
 		return schUserRes;
+
 	}
 
 	/**
