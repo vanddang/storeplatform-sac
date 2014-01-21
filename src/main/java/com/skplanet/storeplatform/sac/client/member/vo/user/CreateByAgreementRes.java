@@ -21,6 +21,11 @@ public class CreateByAgreementRes extends CommonInfo {
 	private String userKey;
 
 	/**
+	 * 단말 고유키.
+	 */
+	private String deviceKey;
+
+	/**
 	 * @return String : userKey
 	 */
 	public String getUserKey() {
@@ -33,6 +38,21 @@ public class CreateByAgreementRes extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return String : deviceKey
+	 */
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	/**
+	 * @param deviceKey
+	 *            String : the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }
