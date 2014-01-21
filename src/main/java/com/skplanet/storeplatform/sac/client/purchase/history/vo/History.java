@@ -13,6 +13,7 @@ public class History extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	// 구매정보
 	private String tenantId;
 	private String systemId;
 	private String prchsId;
@@ -46,9 +47,35 @@ public class History extends CommonInfo implements Serializable {
 	private String cpnPublishCd;
 	private String cpnDlvUrl;
 	private String etcSeq;
-	private String prodNm;
-	private String prodImgUrl;
 	private String frProdId;
+
+	// 상품정보
+	// private Product product;
+
+	private String prodNm; // 상품명
+	// private String prodImgUrl;
+	//
+	// private List<Menu> menuList;
+	// private List<Source> sourceList;
+	//
+	//
+	// private String menuId; // 메뉴ID
+	// private String menuName; // 메뉴명
+	//
+	private String grade; // 이용등급
+	//
+	// // 앱정보
+	// private String packageName; // 패키지명
+	// private String versionCode; // 패키지 버전 코드
+
+	// 자동결제정보
+	private String paymentStartDt; // 결제시작일시
+	private String paymentEndDt; // 결제종료일시
+	private String afterPaymentDt; // 이후결제일시
+	private String closedCd; // 해지코드
+	private String closedDt; // 해지일시
+	private String closedReasonCd; // 해지사유코드
+	private String closedReqPathCd; // 해지요청경로
 
 	/**
 	 * @return the tenantId
@@ -546,6 +573,21 @@ public class History extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * @return the frProdId
+	 */
+	public String getFrProdId() {
+		return this.frProdId;
+	}
+
+	/**
+	 * @param frProdId
+	 *            the frProdId to set
+	 */
+	public void setFrProdId(String frProdId) {
+		this.frProdId = frProdId;
+	}
+
+	/**
 	 * @return the prodNm
 	 */
 	public String getProdNm() {
@@ -561,33 +603,123 @@ public class History extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the prodImgUrl
+	 * @return the grade
 	 */
-	public String getProdImgUrl() {
-		return this.prodImgUrl;
+	public String getGrade() {
+		return this.grade;
 	}
 
 	/**
-	 * @param prodImgUrl
-	 *            the prodImgUrl to set
+	 * @param grade
+	 *            the grade to set
 	 */
-	public void setProdImgUrl(String prodImgUrl) {
-		this.prodImgUrl = prodImgUrl;
+	public void setGrade(String grade) {
+		this.grade = grade;
 	}
 
 	/**
-	 * @return the frProdId
+	 * @return the paymentStartDt
 	 */
-	public String getFrProdId() {
-		return this.frProdId;
+	public String getPaymentStartDt() {
+		return this.paymentStartDt;
 	}
 
 	/**
-	 * @param frProdId
-	 *            the frProdId to set
+	 * @param paymentStartDt
+	 *            the paymentStartDt to set
 	 */
-	public void setFrProdId(String frProdId) {
-		this.frProdId = frProdId;
+	public void setPaymentStartDt(String paymentStartDt) {
+		this.paymentStartDt = paymentStartDt;
+	}
+
+	/**
+	 * @return the paymentEndDt
+	 */
+	public String getPaymentEndDt() {
+		return this.paymentEndDt;
+	}
+
+	/**
+	 * @param paymentEndDt
+	 *            the paymentEndDt to set
+	 */
+	public void setPaymentEndDt(String paymentEndDt) {
+		this.paymentEndDt = paymentEndDt;
+	}
+
+	/**
+	 * @return the afterPaymentDt
+	 */
+	public String getAfterPaymentDt() {
+		return this.afterPaymentDt;
+	}
+
+	/**
+	 * @param afterPaymentDt
+	 *            the afterPaymentDt to set
+	 */
+	public void setAfterPaymentDt(String afterPaymentDt) {
+		this.afterPaymentDt = afterPaymentDt;
+	}
+
+	/**
+	 * @return the closedCd
+	 */
+	public String getClosedCd() {
+		return this.closedCd;
+	}
+
+	/**
+	 * @param closedCd
+	 *            the closedCd to set
+	 */
+	public void setClosedCd(String closedCd) {
+		this.closedCd = closedCd;
+	}
+
+	/**
+	 * @return the closedDt
+	 */
+	public String getClosedDt() {
+		return this.closedDt;
+	}
+
+	/**
+	 * @param closedDt
+	 *            the closedDt to set
+	 */
+	public void setClosedDt(String closedDt) {
+		this.closedDt = closedDt;
+	}
+
+	/**
+	 * @return the closedReasonCd
+	 */
+	public String getClosedReasonCd() {
+		return this.closedReasonCd;
+	}
+
+	/**
+	 * @param closedReasonCd
+	 *            the closedReasonCd to set
+	 */
+	public void setClosedReasonCd(String closedReasonCd) {
+		this.closedReasonCd = closedReasonCd;
+	}
+
+	/**
+	 * @return the closedReqPathCd
+	 */
+	public String getClosedReqPathCd() {
+		return this.closedReqPathCd;
+	}
+
+	/**
+	 * @param closedReqPathCd
+	 *            the closedReqPathCd to set
+	 */
+	public void setClosedReqPathCd(String closedReqPathCd) {
+		this.closedReqPathCd = closedReqPathCd;
 	}
 
 }

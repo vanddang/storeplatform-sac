@@ -2,6 +2,11 @@ package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+/**
+ * 구매내역 조회 요청 VO
+ * 
+ * Updated on : 2013. 12. 13. Updated by : ntels_yjw
+ */
 public class HistoryListReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
