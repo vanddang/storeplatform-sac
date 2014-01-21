@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -34,8 +36,8 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -89,36 +91,64 @@ public class CreateDeviceTest {
 
 							CreateDeviceReq req = new CreateDeviceReq();
 							req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-							req.setUserKey("US201401161859405900000107");
-							req.setRegMaxCnt(5);
+							req.setUserKey("US201401161113423010000110");
+							req.setRegMaxCnt("5");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
-							deviceInfo.setUserKey("US201401161859405900000107");
-							deviceInfo.setDeviceId("01048088874");
+							deviceInfo.setUserKey("US201401161113423010000110");
+							deviceInfo.setDeviceId("01048088876");
 							deviceInfo.setDeviceIdType("msisdn ");
-							deviceInfo.setDeviceTelecom("US012101");
+							deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							deviceInfo.setIsPrimary("N");
+							deviceInfo.setIsAuthenticated("Y");
+							deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+							deviceInfo.setIsUsed("Y");
 							deviceInfo.setNativeId("358362045580844");
 							deviceInfo.setDeviceAccount("vanddang@gmail.com");
 							deviceInfo.setIsRecvSms("Y");
-							deviceInfo.setIsPrimary("N");
 							deviceInfo.setDeviceNickName("SHP-110S(임시)");
 
-							deviceInfo.setDotoriAuthDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-							deviceInfo.setDotoriAuthYn("Y");
-							deviceInfo.setOsVer("1.0");
-							deviceInfo.setScVer("1.0");
-							deviceInfo.setRooting("N");
-							deviceInfo.setUacd("uacd");
+							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+							deviceExtraInfo.setExtraProfileValue(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+							deviceExtraInfoList.add(deviceExtraInfo);
 
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
+							deviceExtraInfo.setExtraProfileValue("Y");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+							deviceExtraInfo.setExtraProfileValue("N");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+							deviceExtraInfo.setExtraProfileValue("uacd");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
 							req.setDeviceInfo(deviceInfo);
 							logger.info("request param : {}", req.toString());
 
 							return req;
 						}
-					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+					}).success(CreateDeviceRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							CreateDeviceRes res = (CreateDeviceRes) result;
 							logger.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -147,31 +177,56 @@ public class CreateDeviceTest {
 		CreateDeviceReq req = new CreateDeviceReq();
 		req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
 		req.setUserKey("US201401161113423010000110");
-		req.setRegMaxCnt(5);
+		req.setRegMaxCnt("5");
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey("US201401161113423010000110");
-		//deviceInfo.setDeviceId("01048088874");
-		deviceInfo.setDeviceId("01066786220");
-		deviceInfo.setDeviceIdType("msisdn");
-		deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+		deviceInfo.setDeviceId("01048088876");
+		deviceInfo.setDeviceIdType("msisdn ");
+		deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+		deviceInfo.setIsPrimary("N");
+		deviceInfo.setIsAuthenticated("Y");
+		deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+		deviceInfo.setIsUsed("Y");
 		deviceInfo.setNativeId("358362045580844");
 		deviceInfo.setDeviceAccount("vanddang@gmail.com");
 		deviceInfo.setIsRecvSms("Y");
-		deviceInfo.setIsPrimary("N");
 		deviceInfo.setDeviceNickName("SHP-110S(임시)");
-		deviceInfo.setIsUsed("Y");
-		deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		deviceInfo.setIsAuthenticated("Y");
 
-		deviceInfo.setDotoriAuthDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		deviceInfo.setDotoriAuthYn("Y");
-		deviceInfo.setOsVer("1.0");
-		deviceInfo.setScVer("1.0");
-		deviceInfo.setRooting("N");
-		deviceInfo.setUacd("uacd");
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
+		deviceExtraInfo.setExtraProfileValue(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
+		deviceExtraInfoList.add(deviceExtraInfo);
 
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
+		deviceExtraInfo.setExtraProfileValue("Y");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+		deviceExtraInfo.setExtraProfileValue("1.0");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+		deviceExtraInfo.setExtraProfileValue("1.0");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+		deviceExtraInfo.setExtraProfileValue("N");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+		deviceExtraInfo.setExtraProfileValue("uacd");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
 		req.setDeviceInfo(deviceInfo);
+		logger.info("request param : {}", req.toString());
 		try {
 
 			CreateDeviceRes res = this.deviceService.createDevice(header, req);

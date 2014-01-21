@@ -22,7 +22,6 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -73,19 +72,19 @@ public class ListDeviceTest {
 						public Object requestBody() {
 
 							ListDeviceReq req = new ListDeviceReq();
-							//req.setUserKey("US201401161113423010000110");
+							req.setUserKey("US201401161113423010000110");
 							//req.setDeviceId("01020284280");
 							//req.setDeviceKey("DE201401161113425370000050");
-							req.setUserId("01020284280");
-							req.setIsMainDevice("Y");//N인경우 모든 휴대기기 조회 되어야 하는데 대표기기는 제외된다. SC회원 콤포넌트 확인 필요
+							//req.setUserId("01020284280");
+							req.setIsMainDevice("N");
 							logger.info("request param : {}", req.toString());
 
 							return req;
 						}
-					}).success(AuthorizeByMdnRes.class, new SuccessCallback() {
+					}).success(ListDeviceRes.class, new SuccessCallback() {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							AuthorizeByMdnRes res = (AuthorizeByMdnRes) result;
+							ListDeviceRes res = (ListDeviceRes) result;
 							logger.info("response param : {}", res.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
