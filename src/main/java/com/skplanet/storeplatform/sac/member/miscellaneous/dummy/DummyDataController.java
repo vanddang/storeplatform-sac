@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.dummy;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
@@ -204,11 +208,16 @@ public class DummyDataController {
 		LOGGER.info("####################################################");
 
 		GetIndividualPolicyRes response = new GetIndividualPolicyRes();
-
-		response.setPolicyCode("restrictMdn");
-		response.setKey("01088902431");
-		response.setValue("Y");
-
+		List<IndividualPolicyInfo> policyInfos = new ArrayList<IndividualPolicyInfo>();
+		IndividualPolicyInfo policyInfo = null;
+		for (int i = 0; i < 3; i++) {
+			policyInfo = new IndividualPolicyInfo();
+			policyInfo.setKey("010231" + i);
+			policyInfo.setPolicyCode("restrictMdn_0" + i);
+			policyInfo.setValue("test_0" + i);
+			policyInfos.add(policyInfo);
+		}
+		response.setPolicyList(policyInfos);
 		return response;
 	}
 

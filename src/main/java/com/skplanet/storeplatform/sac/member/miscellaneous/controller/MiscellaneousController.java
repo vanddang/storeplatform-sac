@@ -15,15 +15,21 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCapt
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 
@@ -190,4 +196,50 @@ public class MiscellaneousController {
 
 	}
 
+	/**
+	 * <pre>
+	 * 5.3.8. 사용자별 정책 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return GetIndividualPolicyRes
+	 */
+	// @RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, @RequestBody @Valid GetIndividualPolicyReq req) {
+		return this.service.getIndividualPolicy(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.3.9. 사용자별 정책 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return CreateIndividualPolicyRes
+	 */
+	// @RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header,
+			@RequestBody @Valid CreateIndividualPolicyReq req) {
+		return this.service.createIndividualPolicy(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.3.10. 사용자별 정책 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return RemoveIndividualPolicyRes
+	 */
+	// @RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header,
+			@RequestBody @Valid RemoveIndividualPolicyReq req) {
+		return this.service.removeIndividualPolicy(header, req);
+	}
 }
