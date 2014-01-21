@@ -127,27 +127,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		// 회원정보 세팅
-		List<UserInfo> userInfoList = new ArrayList<UserInfo>();
 		schUserReq.setKeySearchList(keySchList);
 		schUserReq.setCommonRequest(commonRequest);
 		UserInfo userInfo = this.userInfo(schUserReq);
-		userInfoList.add(userInfo);
 
 		if ("".equals(userInfo) || userInfo == null) {
 			throw new RuntimeException("SC 회원조회 실패 : 해당 회원이 없음");
 		} else {
-			for (UserInfo info : userInfoList) {
-				userInfo.setImSvcNo(info.getImSvcNo());
-				userInfo.setUserKey(info.getUserKey());
-				userInfo.setUserType(info.getUserType());
-				userInfo.setUserId(info.getUserId());
-				userInfo.setIsRealName(info.getIsRealName());
-				userInfo.setIsParent(info.getIsParent());
-				userInfo.setUserEmail(info.getUserEmail());
-				userInfo.setUserMainStatus(info.getUserMainStatus());
-				userInfo.setUserSubStatus(info.getUserSubStatus());
-			}
-
 			result.setUserKey(userInfo.getUserKey());
 			result.setUserType(userInfo.getUserType());
 			result.setUserId(userInfo.getUserId());
