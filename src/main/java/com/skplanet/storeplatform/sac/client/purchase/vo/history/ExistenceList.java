@@ -23,9 +23,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class ExistenceList extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/** 상품ID */
+
 	private String prodId; // 상품 ID
-	/** 상품 소유 속성 */
 	private String tenantProdGrpCd; // 테넌트상품분류코드
 
 	/**
