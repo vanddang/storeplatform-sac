@@ -6,11 +6,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 
 /**
- * [REQUEST] 휴대기기 등록
+ * [REQUEST] 휴대기기 수정
  * 
- * Updated on : 2014. 1. 6. Updated by : 반범진. 지티소프트.
+ * Updated on : 2014. 1. 21. Updated by : 반범진. 지티소프트.
  */
-public class CreateDeviceReq extends CommonInfo {
+public class ModifyDeviceReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,10 +27,10 @@ public class CreateDeviceReq extends CommonInfo {
 	private String userKey;
 
 	/**
-	 * 최대 등록 가능한 휴대기기 수
+	 * 기기 Key
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private Integer regMaxCnt;
+	private String deviceKey;
 
 	/**
 	 * 사용자 단말 정보
@@ -53,12 +53,12 @@ public class CreateDeviceReq extends CommonInfo {
 		this.userKey = userKey;
 	}
 
-	public Integer getRegMaxCnt() {
-		return this.regMaxCnt;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
-	public void setRegMaxCnt(Integer regMaxCnt) {
-		this.regMaxCnt = regMaxCnt;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	public DeviceInfo getDeviceInfo() {

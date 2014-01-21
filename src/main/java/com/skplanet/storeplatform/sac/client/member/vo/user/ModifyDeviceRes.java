@@ -6,12 +6,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * [RESPONSE] 휴대기기 등록
+ * [RESPONSE] 휴대기기 수정
  * 
- * Updated on : 2014. 1. 6. Updated by : 반범진. 지티소프트.
+ * Updated on : 2014. 1. 21. Updated by : 반범진. 지티소프트.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class CreateDeviceRes extends CommonInfo {
+public class ModifyDeviceRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
