@@ -90,6 +90,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
+		 * 단말등록시 필요한 기본 정보 세팅.
+		 */
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+
+		/**
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
@@ -100,7 +105,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * (IDP 연동) 무선회원 가입
 		 */
-		IDPReceiverM join4WapInfo = this.idpService.join4Wap(req.getDeviceId());
+		IDPReceiverM join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
 		LOGGER.info("## join4Wap - Result Code : {}", join4WapInfo.getResponseHeader().getResult());
 		LOGGER.info("## join4Wap - Result Text : {}", join4WapInfo.getResponseHeader().getResult_text());
 
@@ -139,11 +144,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-			// /**
-			// * TODO 필수 항목으로 변경내용 확인 필요.
-			// */
-			// userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
-			// userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 			userMbr.setIsParent(req.getIsParent());
@@ -166,11 +166,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 				throw new RuntimeException("사용자 회원 가입 실패");
 
 			}
-
-			/**
-			 * 단말등록시 필요한 기본 정보 세팅.
-			 */
-			MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 			/**
 			 * 휴대기기 등록.
@@ -283,11 +278,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-			/**
-			 * TODO 필수 항목으로 변경내용 확인 필요.
-			 */
-			userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
-			userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getUserId());
 			userMbr.setUserTelecom(req.getDeviceTelecom());
