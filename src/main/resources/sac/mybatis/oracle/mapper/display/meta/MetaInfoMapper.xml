@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="MetaInfo">
+     <resultMap id="AppMetaInfoMap" type="MetaInfo" autoMapping="true">
+	     <association property="support" javaType="java.util.HashMap">
+	             <result column="DRM_YN" property="drm" />
+	             <result column="PART_PARENT_CLSF_CD" property="iab" />
+	     </association>
+	 </resultMap>
     <select id="getAppMetaInfo" parameterType="Map" resultType="MetaInfo">
         SELECT 
                 TB.TOP_MENU_ID
@@ -13,8 +19,9 @@
               , TB.PROD_BASE_DESC
               , TB.PROD_AMT
               , TB.PROD_GRD_CD
-              , TB.PART_PARENT_CLSF_CD
+              , DECODE( TB.PART_PARENT_CLSF_CD, 'PD012301', 'Y', 'N' ) AS PART_PARENT_CLSF_CD
               , TB.DRM_YN
+              , TB.CONTENTS_TYPE_CD
               , TB.VER_MAJOR || '.' || TB.VER_MINOR AS PROD_VER
               , TB.APK_PKG_NM
               , TB.APK_VER
@@ -42,6 +49,7 @@
                       , D.PROD_GRD_CD
                       , D.DRM_YN
                       , D.REG_DT
+                      , D.CONTENTS_TYPE_CD
                       , E.AID
                       , E.VER_MAJOR
                       , E.VER_MINOR
@@ -118,8 +126,9 @@
               , LA.MENU_NM
               , LA.MENU_DESC
               , LA.META_CLSF_CD
+              , LA.CONTENTS_TYPE_CD
               , LA.PROD_ID
-        --      , LA.PART_PROD_ID
+              , LA.PART_PROD_ID
               , LA.VOD_TITL_NM
               , LA.PROD_NM
               , LA.PROD_BASE_DESC
@@ -156,12 +165,13 @@
                                              , B.UP_MENU_ID
                                              , B.TOP_MENU_ID
                                              , A.PROD_ID
-                                        --     , I.PART_PROD_ID
+                                             , I.PART_PROD_ID
                                              , C.MENU_NM
                                              , C.MENU_DESC
                                              , D.PROD_GRD_CD
                                              , D.USE_PERIOD_UNIT_CD
                                              , D.META_CLSF_CD
+                                             , D.CONTENTS_TYPE_CD
                                              , E.VOD_TITL_NM
                                              , E.STRM_EPSD_CNT
                                              , E.ISSUE_DAY
@@ -187,8 +197,8 @@
                                              , TB_DP_PROD_DESC         F
                                              , TB_DP_TENANT_PROD       G
                                              , TB_DP_TENANT_PROD_PRICE H                                     
-                                        --   , TB_DP_PROD_RSHP         I
-                                        --   , TB_DP_PROD              J
+                                             , TB_DP_PROD_RSHP         I
+                                             , TB_DP_PROD              J
                                              , TB_DP_PROD_IMG          K
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND A.MENU_ID = C.MENU_ID
@@ -197,9 +207,9 @@
                                            AND D.PROD_ID = F.PROD_ID                                   
                                            AND D.PROD_ID = G.PROD_ID
                                            AND D.PROD_ID = H.PROD_ID
-                                       --    AND A.PROD_ID = I.PROD_ID                                   
-                                       --    AND I.PART_PROD_ID = J.PROD_ID
-                                       --    AND I.PROD_ID = K.PROD_ID
+                                           AND A.PROD_ID = I.PROD_ID                                   
+                                           AND I.PART_PROD_ID = J.PROD_ID
+                                           AND I.PROD_ID = K.PROD_ID
                                            AND D.PROD_ID = K.PROD_ID 
                                            AND A.BASE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
@@ -209,7 +219,12 @@
                                            AND K.IMG_CD = #{imageCd}                 
                                            AND K.EXPO_ORD = '1'                 
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                                           <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
                                            AND D.PROD_ID = #{productBasicInfo.prodId} 
+                                           </if>
+                                           <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                                           AND I.PART_PROD_ID = #{productBasicInfo.prodId}
+                                           </if>
                                        ) JA 
                ) LA
              , TB_DP_TENANT_PROD_STATS LB
@@ -218,7 +233,6 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
-    
        SELECT 
               MCI.RANK_CHG_CNT
             , MCI.RANK_CHG_CLSF_CD
@@ -236,6 +250,7 @@
             , PD.PROD_DTL_DESC
             , TPP.PROD_AMT
             , P.PROD_GRD_CD
+            , P.CONTENTS_TYPE_CD
             , PD.ARTIST1_NM
             , PD.ARTIST2_NM
             , PD.ARTIST3_NM                        
@@ -287,11 +302,10 @@
        -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
        -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
        ----------------------------------------------------------------------------- 
-          AND MCI.CHART_CLSF_CD = #{chartClsfCd} -- 멜론 TOP 100
-          AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
-                                       FROM TB_DP_BATCH_COMPT
-                                      WHERE TENANT_ID = TP.TENANT_ID
-                                        AND BATCH_ID = 'MELON_DP004901') -- 멜론 TOP 100
+          <if test='productBasicInfo.menuId != null'>
+          AND MCI.CHART_CLSF_CD = #{productBasicInfo.menuId} -- 멜론 TOP 100
+          </if>
+           AND MCI.RANK_START_DAY = #{stdDt}
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 END
        ----------------------------------------------------------------------------- 
@@ -302,7 +316,7 @@
           AND P2.CONTENTS_TYPE_CD = 'PD002501' -- 채널
           AND P.CONTENTS_TYPE_CD = 'PD002502'  -- 에피소드
           <if test='productBasicInfo.metaClsfCd != null'>
-          AND P.META_CLSF_CD = #{metaClsfCd}          -- 통합 뮤직
+          AND P.META_CLSF_CD = #{productBasicInfo.metaClsfCd}          -- 통합 뮤직
           </if>
           AND CPM.USE_YN = 'Y'
           AND C.USE_YN = 'Y'
@@ -313,7 +327,7 @@
             AND CP.PROD_ID = #{productBasicInfo.prodId}
           </if>
           <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-            AND CP.PART_PROD_ID = #{productBasicInfo.prodId}
+            AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
           </if>
           AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
           AND PI.IMG_CD = #{imageCd}
@@ -322,7 +336,7 @@
           AND CD.LANG_CD = #{lang}
        
     </select>
-    <select id="getEbookComidMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
+    <select id="getEbookComicMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
        SELECT TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
@@ -334,6 +348,7 @@
              , TB.MENU_NM
              , TB.MENU_DESC
              , TB.META_CLSF_CD
+             , TB.CONTENTS_TYPE_CD
              , TB.PROD_ID
              , TB.PART_PROD_ID
              , TB.VOD_TITL_NM
@@ -387,6 +402,7 @@
                       , D.PROD_GRD_CD
                       , D.USE_PERIOD_UNIT_CD
                       , D.META_CLSF_CD
+                      , D.CONTENTS_TYPE_CD
                       , E.VOD_TITL_NM
                       , E.STRM_EPSD_CNT
                       , E.ISSUE_DAY
@@ -439,23 +455,29 @@
                    AND I.PART_PROD_ID   = L.PROD_ID
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                   AND C.LANG_CD = 'ko'                      /* ko : 한국어 */
+                   AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-                   AND F.LANG_CD = 'ko'                      /* ko : 한국어 */
-                   AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
+                   AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
+                    <if test='prodStatusCd != null'>
+                   AND G.PROD_STATUS_CD = #{prodStatusCd}         /* PD000403 : 판매중 */
+                   </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                    AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
-                   AND M.IMG_CD = 'DP000108'           /* 이미지코드 */
+                   AND M.IMG_CD = #{imageCd}             /* 이미지코드 */
                    AND M.EXPO_ORD = 1                  /* 노출순서 */
-                   AND M.LANG_CD = 'ko'                /* ko : 한국어 */           
+                   AND M.LANG_CD = #{lang}                /* ko : 한국어 */           
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
-                   -----------------------------------------------------------------------------           
-                   AND B.PROD_ID = #{prodId}      -- 채널 상품 ID 조회           
-                   --AND I.PART_PROD_ID = 'H090122408'   -- 에피소드 상품 ID 조회
-                   AND G.TENANT_ID = #{tenantId}             /* 테넌트ID */
+                   ----------------------------------------------------------------------------- 
+                   <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                        AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회             
+                      </if>
+                      <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                        AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+                      </if>
+                   AND G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
         
                ) TB
            WHERE TB.RN = 1 
@@ -491,7 +513,8 @@
                                ,H.PART_PROD_ID  
                                ,I.DLV_PROD_YN
                                ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
-                               ,J.PROD_GRD_CD   
+                               ,J.PROD_GRD_CD
+                               ,J.CONTENTS_TYPE_CD
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT 
                                ,N.SPRC_APPLY_START_DT

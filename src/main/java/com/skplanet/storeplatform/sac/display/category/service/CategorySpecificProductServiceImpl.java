@@ -42,9 +42,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoGenerateProxyService;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacadeService;
 
 @Service
 @Transactional
@@ -56,7 +57,10 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private MetaInfoGenerateProxyService metaInfoGenerateProxyService;
+	private ResponseInfoGenerateFacadeService responseInfoGenerateFacadeService;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	@Override
 	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
@@ -85,15 +89,15 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				paramMap.put("tenantHeader", header.getTenantHeader());
 				paramMap.put("deviceHeader", header.getDeviceHeader());
 				// TODO osm1021 더미 데이터 꼭 삭제할것
-				paramMap.put("imageCd", "DP000101");
+				paramMap.put("imageCd", "DP006206");
 				paramMap.put("lang", "ko");
 
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 					String topMenuId = productBasicInfo.getTopMenuId();
 					String svcGrpCd = productBasicInfo.getSvcGrpCd();
 					paramMap.put("productBasicInfo", productBasicInfo);
-					// paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
+					// paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 					// 상품 SVC_GRP_CD 조회
 					// DP000203 : 멀티미디어
 					// DP000206 : Tstore 쇼핑
@@ -105,21 +109,23 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
-							product = this.metaInfoGenerateProxyService.generateAppProductProxy(metaInfo);
+							product = this.responseInfoGenerateFacadeService.generateAppProduct(metaInfo);
+							productList.add(product);
 						}
-						productList.add(product);
+
 					}
 					// 멀티미디어 타입일 경우
 					else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						// VOD 상품의 경우
-						if (DisplayConstants.DP_VOD_TOP_MENU_ID.equals(topMenuId)) {
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", productBasicInfo,
+						// 영화/방송 상품의 경우
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.metaInfoGenerateProxyService.generateMovieProductProxy(metaInfo);
+									product = this.responseInfoGenerateFacadeService.generateMovieProduct(metaInfo);
 								} else {
-									product = this.metaInfoGenerateProxyService.generateTVProductProxy(metaInfo);
+									product = this.responseInfoGenerateFacadeService.generateBroadcastProduct(metaInfo);
 								}
 								productList.add(product);
 							}
@@ -127,34 +133,48 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 						// Ebook / Comic 상품의 경우
 						else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo",
-									productBasicInfo, MetaInfo.class);
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
+									MetaInfo.class);
 							if (metaInfo != null) {
 								if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)) {
-									product = this.metaInfoGenerateProxyService.generateEbookProductProxy(metaInfo);
+									product = this.responseInfoGenerateFacadeService.generateEbookProduct(metaInfo);
 								} else {
-									product = this.metaInfoGenerateProxyService.generateComicProductProxy(metaInfo);
+									product = this.responseInfoGenerateFacadeService.generateComicProduct(metaInfo);
 								}
+								productList.add(product);
 							}
-							productList.add(product);
+
 						}
 						// 음원 상품의 경우
 						else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
+							// 배치완료 기준일시 조회
+							// TODO osm1021 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
+							String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId,
+									"MELON_DP004901");
+							// paramMap.put("stdDt", stdDt);
+
+							productBasicInfo.setMenuId("DP004901");
+							// TODO osm1021 dummy data 꼭 삭제할것
+							paramMap.put("stdDt", "20110806");
+							paramMap.put("imageCd", "DP000102");
+
+							metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap,
 									MetaInfo.class);
+
 							if (metaInfo != null) {
-								product = this.metaInfoGenerateProxyService.generateMusicProductProxy(metaInfo);
+								product = this.responseInfoGenerateFacadeService.generateMusicProduct(metaInfo);
 								productList.add(product);
 							}
 						}
+						// TODO osm1021 episode ID로 조회할 경우 channel ID도 MenuList에 추가한다.
 					}
 					// 쇼핑 상품의 경우
 					else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", productBasicInfo,
-								MetaInfo.class);
+						metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
-							product = this.metaInfoGenerateProxyService.generateShoppingProductProxy(metaInfo);
+							product = this.responseInfoGenerateFacadeService.generateShoppingProduct(metaInfo);
 							productList.add(product);
+							// TODO osm1021 episode ID로 조회할 경우 catalog ID도 MenuList에 추가한다.
 						}
 					}
 				}

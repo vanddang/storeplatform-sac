@@ -4,13 +4,13 @@
 	<!-- 상품별 서비스 그룹 코드 조회-->
 	<select id="selectProductInfoList" resultType="ProductBasicInfo">
 	 SELECT 
-	       PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID
+	       PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID,PROD_ID AS PART_PROD_ID
       FROM TB_DP_PROD
       <if test = "list !=null">
       WHERE PROD_ID IN  
            <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
                 #{item}
-           </foreach>  
+           </foreach>
       </if>
     </select>
     

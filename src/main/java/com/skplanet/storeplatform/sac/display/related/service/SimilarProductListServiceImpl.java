@@ -130,7 +130,7 @@ public class SimilarProductListServiceImpl implements SimilarProductListService 
 				 */
 				accrual.setDownloadCount(246);
 				accrual.setVoterCount(2);
-				accrual.setScore(3);
+				accrual.setScore(3.0);
 
 				rights.setGrade("0");
 

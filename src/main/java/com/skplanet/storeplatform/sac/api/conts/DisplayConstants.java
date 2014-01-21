@@ -169,5 +169,5 @@ public class DisplayConstants {
 
 	// ////////////////////////////////////// supported hardware 정보 //////////////////////////////////////////
 	public static final String DP_DRM_SUPPORT_NM = "drm";
-	public static final String DP_IN_APP_SUPPORT_NM = "inApp";
+	public static final String DP_IN_APP_SUPPORT_NM = "iab";
 }
