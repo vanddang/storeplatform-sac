@@ -227,7 +227,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
 					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
 		}
-		
+
 		return schUserRes;
 
 	}
