@@ -47,7 +47,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -88,11 +87,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-
-		/**
-		 * 단말등록시 필요한 기본 정보 세팅.
-		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -170,7 +164,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			this.createDeviceSubmodule(req, sacHeader, majorDeviceInfo, createUserResponse.getUserKey());
+			this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
 
 			/**
 			 * 결과 세팅
@@ -236,7 +230,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 
 		 * TODO 통합 IDP 연동 가능한 테스트 ID가 없어서 무조건 성공으로 하드코딩함.
 		 */
-		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), "1000X000")) {
 
 			LOGGER.info("## IDP 연동 성공 ==============================================");
 
@@ -273,7 +267,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserName(profileInfo.getResponseBody().getUser_name());
 			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday());
 			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
-			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // 통합 서비스 관리 번호
+			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // OneID 통합서비스 관리번호
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
@@ -376,7 +370,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 
 		 * TODO 하드코딩 바꾸기.
 		 */
-		if (StringUtils.equals(ImIDPConstants.IDP_RES_CODE_OK, "1000X000")) {
+		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), "1000X000")) {
 
 			LOGGER.info("## IDP 연동 성공 ==============================================");
 
@@ -418,11 +412,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-			/**
-			 * TODO 필수 항목으로 변경내용 확인 필요.
-			 */
-			userMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL); // 통합회원 로그인 상태코드
-			userMbr.setStopStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE); // 통합회원 직권중지 상태코드
 			userMbr.setImRegDate(DateUtil.getToday());
 			userMbr.setUserID(req.getUserId());
 			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom());
@@ -451,7 +440,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			this.createDeviceSubmodule(req, sacHeader, majorDeviceInfo, createUserResponse.getUserKey());
+			this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
 
 			/**
 			 * 결과 세팅
@@ -694,21 +683,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 	/**
 	 * <pre>
 	 * 휴대기기 등록 submodule 호출.
-	 * 필수 값 - (userKey, deviceTelecom, deviceId, deviceIdType, joinId, imei, imMngNum, isRecvSms, 헤더(systemId, tenantId, model))
+	 * 필수 값 - (UA 코드, OMD UA 코드, 이동 통신사, 단말 모델, 단말명, SKT 회원관리번호)
 	 * </pre>
 	 * 
 	 * @param obj
 	 *            (CreateByMdnReq, CreateByAgreementReq, CreateBySimpleReq)
 	 * @param sacHeader
 	 *            SacRequestHeader
-	 * @param majorDeviceInfo
-	 *            MajorDeviceInfo
 	 * @param userKey
 	 *            사용자 등록키
 	 * @throws Exception
 	 *             Exception
 	 */
-	private void createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, MajorDeviceInfo majorDeviceInfo, String userKey) throws Exception {
+	private void createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -719,17 +706,19 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
-			deviceInfo.setIsPrimary(MemberConstants.USE_Y);
-			deviceInfo.setDeviceId(req.getDeviceId());
-			deviceInfo.setDeviceIdType(req.getDeviceIdType());
-			deviceInfo.setJoinId(req.getJoinId());
-			deviceInfo.setNativeId(req.getImei());
-			deviceInfo.setImMngNum(majorDeviceInfo.getImMngNum());
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel());
-			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y);
-			deviceInfo.setAuthenticationDate(DateUtil.getToday());
-			deviceInfo.setIsUsed(MemberConstants.USE_Y);
-			deviceInfo.setIsRecvSms(req.getIsRecvSms());
+			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
+			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+			deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
+			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
+			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
+			deviceInfo.setAuthenticationDate(DateUtil.getToday()); // 인증 일시
+			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
+
+			// 단말 부가 정보 리스트
+			deviceInfo.setUserDeviceExtraInfo(req.getDeviceExtraInfoList());
 			LOGGER.info("## deviceInfo : {}", deviceInfo.toString());
 
 		} else if (obj instanceof CreateByAgreementReq) {
@@ -739,11 +728,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
-			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceId(req.getDeviceId()); // (msisdn, uuid, mac)
-			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // (msisdn, uuid, mac)
+			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
-			deviceInfo.setImMngNum(majorDeviceInfo.getImMngNum()); // SKT 서비스 관리 번호
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
@@ -759,11 +746,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
-			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceId(req.getDeviceId()); // (msisdn, uuid, mac)
-			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // (msisdn, uuid, mac)
+			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
+			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
-			deviceInfo.setImMngNum(majorDeviceInfo.getImMngNum()); // SKT 서비스 관리 번호
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
