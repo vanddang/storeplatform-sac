@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.member.seller.service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -32,4 +34,11 @@ public interface SellerService {
 	 * @throws Exception
 	 */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception;
+
+	/**
+	 * 판매자 회원 인증키 생성/연장.
+	 * 
+	 * @throws Exception
+	 */
+	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) throws Exception;
 }

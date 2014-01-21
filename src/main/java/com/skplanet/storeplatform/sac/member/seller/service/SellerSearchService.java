@@ -10,6 +10,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmail
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -72,5 +74,12 @@ public interface SellerSearchService {
 	 * @throws Exception
 	 */
 	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception;
+
+	/**
+	 * 판매자 회원 인증키 조회.
+	 * 
+	 * @throws Exception
+	 */
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception;
 
 }

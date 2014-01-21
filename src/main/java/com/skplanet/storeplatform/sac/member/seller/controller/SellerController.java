@@ -139,8 +139,15 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Valid CreateAuthKeyReq req) {
-		return null;
+	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Valid CreateAuthKeyReq req) throws Exception {
+
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+		String ipAddress = StringUtil.nvl(req.getIpAddress(), "");
+		if (sellerKey.equals("") || ipAddress.equals("")) {
+			throw new Exception("필수 파라미터 미존재");
+		}
+
+		return this.sellerService.createAuthKey(header, req);
 	}
 
 	/**

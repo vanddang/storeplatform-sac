@@ -26,6 +26,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSelle
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
@@ -48,6 +50,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmail
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -560,6 +564,42 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchPasswordRes response = new SearchPasswordRes();
 		response.setNewPassword(schRes.getSellerPW());
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 조회.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return SearchAuthKeyRes
+	 */
+	@Override
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception {
+
+		SearchLoginInfoResponse schRes = new SearchLoginInfoResponse();
+		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+
+		schReq.setSellerKey(req.getSellerKey());
+
+		schRes = this.sellerSCI.searchLoginInfo(schReq);
+
+		SearchAuthKeyRes response = new SearchAuthKeyRes();
+		response.setSessionKey(schRes.getLoginInfo().getSessionKey());
+		response.setExpireDate(schRes.getLoginInfo().getExpireDate());
 
 		return response;
 

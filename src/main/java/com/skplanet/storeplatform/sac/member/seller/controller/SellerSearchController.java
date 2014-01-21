@@ -219,16 +219,22 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
-	 * 판매자 회원 인증키 조회.
+	 * 5.2.27.	판매자 회원 인증키 조회.
 	 * </pre>
 	 * 
-	 * @param header
 	 * @param req
-	 * @return
+	 * @return SearchAuthKeyRes
 	 */
 	@RequestMapping(value = "/searchAuthKey/v1", method = RequestMethod.GET)
-	public @ResponseBody
-	SearchAuthKeyRes searchAuthKey(SacRequestHeader header, @Valid SearchAuthKeyReq req) {
-		return null;
+	@ResponseBody
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception {
+		LOGGER.debug("request param : {}", req.toString());
+
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+
+		if (sellerKey.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
+		return this.sellerSearchService.searchAuthKey(header, req);
 	}
 }

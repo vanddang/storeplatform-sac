@@ -16,16 +16,21 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
@@ -33,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.RandomString;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 
 /**
@@ -332,6 +338,43 @@ public class SellerServiceImpl implements SellerService {
 		schRes = this.sellerSCI.removeSeller(schReq);
 
 		WithdrawRes response = new WithdrawRes();
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 생성/연장.
+	 * </pre>
+	 * 
+	 * @param CreateAuthKeyReq
+	 * @return CreateAuthKeyRes
+	 */
+	@Override
+	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) throws Exception {
+
+		UpdateLoginInfoResponse schRes = new UpdateLoginInfoResponse();
+		UpdateLoginInfoRequest schReq = new UpdateLoginInfoRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		schReq.setCommonRequest(commonRequest);
+
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setSellerKey(req.getSellerKey());
+		loginInfo.setIpAddress(req.getIpAddress());
+		loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomString.getString(10));
+		loginInfo.setRegDate(req.getExpireDate());
+
+		schReq.setLoginInfo(loginInfo);
+
+		schRes = this.sellerSCI.updateLoginInfo(schReq);
+
+		CreateAuthKeyRes response = new CreateAuthKeyRes();
+
+		// response.setSessionKey(schRes.g)
 
 		return response;
 	}
