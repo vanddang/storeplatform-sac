@@ -10,14 +10,16 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.EbookComicThemeRes
  */
 
 public interface EbookComicThemeService {
+
 	/**
+	 * 
 	 * <pre>
-	 * Ebook/코믹 테마 리스트 조회
+	 * Ebook/코믹 테마 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param BestAppRequestVO
-	 *            Ebook/코믹 테마 상품 리스트 요청 Value Object
-	 * @return Ebook/코믹 테마 상품 리스트
+	 * @param ebookComicThemeReq
+	 *            ebookComicThemeReq
+	 * @return BrandShopThemeRes
 	 */
 	EbookComicThemeRes searchEbookComicThemeList(EbookComicThemeReq ebookComicThemeReq);
 }

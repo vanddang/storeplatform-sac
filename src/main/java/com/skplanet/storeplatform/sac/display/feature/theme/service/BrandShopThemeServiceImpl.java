@@ -15,6 +15,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.theme.BrandShopThemeReq;
@@ -37,6 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
  */
 
 @Service
+@Transactional
 public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 	@Autowired
 	@Qualifier("sac")
@@ -50,7 +52,7 @@ public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 	 * .storeplatform.sac.client.product.vo.EbookComicThemeRequestVO)
 	 */
 	@Override
-	public BrandShopThemeRes searchBrandShopThemeList(BrandShopThemeReq BrandShopThemeRequest) {
+	public BrandShopThemeRes searchBrandShopThemeList(BrandShopThemeReq brandShopThemeRequest) {
 		BrandShopThemeRes response = new BrandShopThemeRes();
 
 		List<Product> productList = new ArrayList<Product>();
@@ -69,7 +71,7 @@ public class BrandShopThemeServiceImpl implements BrandShopThemeService {
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(10);
-		if ("".equals(BrandShopThemeRequest.getBrandshopId()) || BrandShopThemeRequest.getBrandshopId() == null) {
+		if ("".equals(brandShopThemeRequest.getBrandshopId()) || brandShopThemeRequest.getBrandshopId() == null) {
 			for (int i = 1; i <= 1; i++) {
 
 				// 상품ID

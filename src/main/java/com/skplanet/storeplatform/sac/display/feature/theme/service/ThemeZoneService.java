@@ -11,13 +11,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.ThemeZoneRes;
 
 public interface ThemeZoneService {
 	/**
+	 * 
 	 * <pre>
-	 * Ebook/코믹 테마 리스트 조회
+	 * 테마존 테마 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param BestAppRequestVO
-	 *            Ebook/코믹 테마 상품 리스트 요청 Value Object
-	 * @return Ebook/코믹 테마 상품 리스트
+	 * @param themeZoneReq
+	 *            themeZoneReq
+	 * @return BrandShopThemeRes
 	 */
 	ThemeZoneRes searchThemeZoneList(ThemeZoneReq themeZoneReq);
 }

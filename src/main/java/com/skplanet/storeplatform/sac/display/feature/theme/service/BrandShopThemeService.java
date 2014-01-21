@@ -11,13 +11,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.theme.BrandShopThemeRes;
 
 public interface BrandShopThemeService {
 	/**
+	 * 
 	 * <pre>
-	 * Ebook/코믹 테마 리스트 조회
+	 * 브랜드샵 테마 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param BestAppRequestVO
-	 *            Ebook/코믹 테마 상품 리스트 요청 Value Object
-	 * @return Ebook/코믹 테마 상품 리스트
+	 * @param brandShopThemeReq
+	 *            brandShopThemeReq
+	 * @return BrandShopThemeRes
 	 */
 	BrandShopThemeRes searchBrandShopThemeList(BrandShopThemeReq brandShopThemeReq);
 }

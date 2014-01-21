@@ -38,18 +38,48 @@ public class ThemeController {
 	@Autowired
 	private BrandShopThemeService brandShopThemeService;
 
+	/**
+	 * 
+	 * <pre>
+	 * Ebook/Comic 테마 상품 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param ebookComicThemeReq
+	 *            ebookComicThemeReq
+	 * @return EbookComicThemeRes
+	 */
 	@RequestMapping(value = "/display/feature/theme/ebookComicThemeList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public EbookComicThemeRes ebookComicThemeList(EbookComicThemeReq ebookComicThemeReq) {
 		return this.ebookComicThemeService.searchEbookComicThemeList(ebookComicThemeReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 테마존 테마 상품 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param themeZoneReq
+	 *            themeZoneReq
+	 * @return ThemeZoneRes
+	 */
 	@RequestMapping(value = "/display/feature/theme/ThemeZoneList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ThemeZoneRes ThemeZoneList(ThemeZoneReq themeZoneReq) {
+	public ThemeZoneRes themeZoneList(ThemeZoneReq themeZoneReq) {
 		return this.themeZoneService.searchThemeZoneList(themeZoneReq);
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 브랜드샵 테마 상품 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param brandShopThemeReq
+	 *            brandShopThemeReq
+	 * @return BrandShopThemeRes
+	 */
 	@RequestMapping(value = "/display/feature/theme/brandShopThemeList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public BrandShopThemeRes brandShopThemeList(BrandShopThemeReq brandShopThemeReq) {
