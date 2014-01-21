@@ -27,6 +27,11 @@ public class ConfirmCaptchaReq extends CommonInfo {
 	private String imageSign;
 
 	/**
+	 * 인증 코드 확인을 위한 Signature Data
+	 */
+	private String signData;
+
+	/**
 	 * @return the authCode
 	 */
 	public String getAuthCode() {
@@ -54,6 +59,21 @@ public class ConfirmCaptchaReq extends CommonInfo {
 	 */
 	public void setImageSign(String imageSign) {
 		this.imageSign = imageSign;
+	}
+
+	/**
+	 * @return the signData
+	 */
+	public String getSignData() {
+		return this.signData;
+	}
+
+	/**
+	 * @param signData
+	 *            the signData to set
+	 */
+	public void setSignData(String signData) {
+		this.signData = signData;
 	}
 
 }

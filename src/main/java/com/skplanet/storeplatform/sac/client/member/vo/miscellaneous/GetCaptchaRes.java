@@ -25,20 +25,54 @@ public class GetCaptchaRes extends CommonInfo {
 	 */
 	private String imageSign;
 
+	/**
+	 * 인증 코드 확인을 위한 Signature Data
+	 */
+	private String signData;
+
+	/**
+	 * @return the imageData
+	 */
 	public String getImageData() {
 		return this.imageData;
 	}
 
+	/**
+	 * @param imageData
+	 *            the imageData to set
+	 */
 	public void setImageData(String imageData) {
 		this.imageData = imageData;
 	}
 
+	/**
+	 * @return the imageSign
+	 */
 	public String getImageSign() {
 		return this.imageSign;
 	}
 
+	/**
+	 * @param imageSign
+	 *            the imageSign to set
+	 */
 	public void setImageSign(String imageSign) {
 		this.imageSign = imageSign;
+	}
+
+	/**
+	 * @return the signData
+	 */
+	public String getSignData() {
+		return this.signData;
+	}
+
+	/**
+	 * @param signData
+	 *            the signData to set
+	 */
+	public void setSignData(String signData) {
+		this.signData = signData;
 	}
 
 }
