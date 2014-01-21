@@ -219,6 +219,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			throw new RuntimeException("[ SC Component 회원조회실패 : " + schUserRes.getCommonResponse().getResultCode()
 					+ "] " + schUserRes.getCommonResponse().getResultMessage());
+		} else {
+			logger.info("[ SC Component 회원조회 성공 : " + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (schUserRes.getUserMbr() == null) {
@@ -226,9 +229,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
 			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
 					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
+		} else {
+			return schUserRes;
 		}
-
-		return schUserRes;
 
 	}
 
@@ -245,6 +248,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			throw new RuntimeException("[ ImIDP 가입여부 체크 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
 					+ imIdpReceiver.getResponseHeader().getResult_text());
 		} else {
+			logger.info("[ ImIDP 가입여부 성공 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
+					+ imIdpReceiver.getResponseHeader().getResult_text());
+
 			// 통합회원 OneId 사용자
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("key", schUserRes.getUserMbr().getUserKey());
@@ -255,6 +261,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 				throw new RuntimeException("[ ImIDP 회원해지 실패 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
+			} else {
+				logger.info("[ ImIDP 회원해지 성공 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
 						+ imIdpReceiver.getResponseHeader().getResult_text());
 			}
 		}
@@ -275,6 +284,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 			// 인증 OK --> 모바일 해지
 			idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
+
+			logger.info("무선 가입 성공 : [" + req.getDeviceId() + "] result code : ["
+					+ idpReceiver.getResponseHeader().getResult() + "] + result message : ["
+					+ idpReceiver.getResponseHeader().getResult_text() + "]");
+
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 				throw new RuntimeException("IDP 모바일 회원해지 실패 : [" + req.getDeviceId() + "] result code : ["
 						+ idpReceiver.getResponseHeader().getResult() + "] + result message : ["
@@ -298,12 +312,18 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		// 모바일 인증
 		IDPReceiverM idpReceiver = this.idpService.alredyJoinCheckByEmail(schUserRes.getUserMbr().getUserEmail());
 
+		logger.info("[ IDP 모바일 인증 성공 : " + idpReceiver.getResponseHeader().getResult() + "] "
+				+ idpReceiver.getResponseHeader().getResult_text());
+
 		// 이메일 가입여부 체크 등록되어 있지 않으면 resultCode : Success
 		if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 			// IDP 사용자 해지 userAuthKey, keyType(1:userId 2:userKey)
 			idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr().getUserID());
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 				throw new RuntimeException("[ IDP 아이디 회원해지 실패 : " + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
+			} else {
+				logger.info("[ IDP 아이디 회원해지 성공 : " + idpReceiver.getResponseHeader().getResult() + "] "
 						+ idpReceiver.getResponseHeader().getResult_text());
 			}
 		} else {
@@ -349,6 +369,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 		// SC Component Remove Success
 		else {
+			logger.info("[ IDP -> SC 회원삭제 성공 : " + removeUserResponse.getCommonResponse().getResultCode() + "] "
+					+ removeUserResponse.getCommonResponse().getResultMessage());
 			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 		}
 
