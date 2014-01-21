@@ -31,6 +31,13 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
+import com.skplanet.storeplatform.member.client.common.vo.RemovePolicyRequest;
+import com.skplanet.storeplatform.member.client.common.vo.RemovePolicyResponse;
+import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
+import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
+import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyRequest;
+import com.skplanet.storeplatform.member.client.common.vo.UpdatePolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
@@ -44,15 +51,22 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmai
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
@@ -487,4 +501,139 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		return userKey;
 	}
 
+	/**
+	 * <pre>
+	 * 5.3.8. 사용자별 정책 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return GetIndividualPolicyRes
+	 */
+	@Override
+	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, GetIndividualPolicyReq req) {
+		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+		policyRequest.setLimitPolicyCode(req.getPolicyCode());
+		policyRequest.setLimitPolicyKey(req.getKey());
+
+		/** 2. 공통 파라미터 생성 및 주입. */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		policyRequest.setCommonRequest(commonRequest);
+
+		/** 3. SC회원[searchPolicyList] Call. */
+		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+
+		// TODO 실패 처리
+		if (MemberConstants.RESULT_FAIL.equals(policyResponse.getCommonResponse().getResultCode())) {
+			LOGGER.debug("[IndividualPolicyService] - getIndividualPolicy CODE {}, MESSAGE {} ", policyResponse
+					.getCommonResponse().getResultCode(), policyResponse.getCommonResponse().getResultMessage());
+		}
+
+		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		GetIndividualPolicyRes res = new GetIndividualPolicyRes();
+		List<IndividualPolicyInfo> policyInfos = null;
+		IndividualPolicyInfo policyInfo = null;
+		if (policyResponse.getLimitTargetList().size() > 0) {
+			policyInfos = new ArrayList<IndividualPolicyInfo>();
+			for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
+				policyInfo = new IndividualPolicyInfo();
+				policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
+				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
+				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+				policyInfos.add(policyInfo);
+			}
+		}
+		res.setPolicyList(policyInfos);
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 5.3.9. 사용자별 정책 등록/수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return CreateIndividualPolicyRes
+	 */
+	@Override
+	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req) {
+
+		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
+		List<LimitTarget> limitTargets = new ArrayList<LimitTarget>();
+		LimitTarget limitTarget = new LimitTarget();
+		limitTarget.setLimitPolicyCode(req.getPolicyCode());
+		limitTarget.setLimitPolicyKey(req.getKey());
+		limitTarget.setPolicyApplyValue(req.getValue());
+		updatePolicyRequest.setLimitTargetList(limitTargets);
+
+		/** 2. 공통 파라미터 생성 및 주입. */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		updatePolicyRequest.setCommonRequest(commonRequest);
+
+		/** 3. SC회원[updatePolicy] Call. */
+		UpdatePolicyResponse updatePolicyResponse = this.userSCI.updatePolicy(updatePolicyRequest);
+
+		// TODO 실패 처리
+		if (MemberConstants.RESULT_FAIL.equals(updatePolicyResponse.getCommonResponse().getResultCode())) {
+			LOGGER.debug("[IndividualPolicyService] - createIndividualPolicy CODE {}, MESSAGE {} ",
+					updatePolicyResponse.getCommonResponse().getResultCode(), updatePolicyResponse.getCommonResponse()
+							.getResultMessage());
+		}
+
+		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
+		// TODO SC회원에서 결과로 정책 코드가 안넘어옴
+		// res.setPolicyCode(updatePolicyResponse.get)
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 5.3.10. 사용자별 정책 삭제.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return RemoveIndividualPolicyRes
+	 */
+	@Override
+	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req) {
+
+		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
+		RemovePolicyRequest removePolicyRequest = new RemovePolicyRequest();
+		List<String> limitTargetNoList = new ArrayList<String>();
+		limitTargetNoList.add(req.getKey());
+		removePolicyRequest.setLimitTargetNoList(limitTargetNoList);
+
+		/** 2. 공통 파라미터 생성 및 주입. */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		removePolicyRequest.setCommonRequest(commonRequest);
+
+		/** 3. SC회원[updatePolicy] Call. */
+		RemovePolicyResponse removePolicyResponse = this.userSCI.removePolicy(removePolicyRequest);
+
+		// TODO 실패 처리
+		if (MemberConstants.RESULT_FAIL.equals(removePolicyResponse.getCommonResponse().getResultCode())) {
+			LOGGER.debug("[IndividualPolicyService] - removeIndividualPolicy CODE {}, MESSAGE {} ",
+					removePolicyResponse.getCommonResponse().getResultCode(), removePolicyResponse.getCommonResponse()
+							.getResultMessage());
+		}
+
+		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
+		RemoveIndividualPolicyRes res = new RemoveIndividualPolicyRes();
+		// TODO SC회원에서 결과로 정책 코드가 안넘어옴
+		// res.setPolicyCode(removePolicyResponse.get)
+
+		return res;
+	}
 }
