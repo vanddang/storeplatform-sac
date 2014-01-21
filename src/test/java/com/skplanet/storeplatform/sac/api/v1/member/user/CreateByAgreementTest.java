@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -49,6 +51,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CreateByAgreementTest {
 
 	@Autowired
@@ -68,7 +71,7 @@ public class CreateByAgreementTest {
 
 	/**
 	 * <pre>
-	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 ]].
+	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 미포함 ]].
 	 * </pre>
 	 * 
 	 * @throws Exception
@@ -76,9 +79,74 @@ public class CreateByAgreementTest {
 	 */
 	@Ignore
 	@Test
-	public void test_1createByAgreementDevice() throws Exception {
+	public void test1_createByAgreementId() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByAgreementReq reqJson = new CreateByAgreementReq();
+
+						// 사용자 아이디
+						reqJson.setUserId("tlaeo00");
+
+						// 단말 정보
+						reqJson.setDeviceId(""); // 기기 ID
+						reqJson.setDeviceIdType(""); // 기기 ID 타입
+						reqJson.setDeviceTelecom(""); // 통신사
+						reqJson.setNativeId(""); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount(""); // 기기 계정 (Gmail)
+						reqJson.setJoinId(""); // 가입채널코드
+						reqJson.setIsRecvSms(""); // SMS 수신 여부
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByAgreementRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByAgreementRes res = (CreateByAgreementRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 MDN ]].
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Ignore
+	@Test
+	public void test2_createByAgreementDeviceMdn() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
@@ -94,7 +162,7 @@ public class CreateByAgreementTest {
 						// 단말 정보
 						reqJson.setDeviceId("01089913467"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US001201"); // 통신사
+						reqJson.setDeviceTelecom("US001203"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -143,16 +211,92 @@ public class CreateByAgreementTest {
 
 	/**
 	 * <pre>
-	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 미포함 ]].
+	 * ID 회원 약관 동의 가입 (One ID 회원) [[ 단말정보 포함 UUID ]].
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
-	public void test_2createByAgreementId() throws Exception {
+	public void test3_createByAgreementDeviceUuid() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByAgreementReq reqJson = new CreateByAgreementReq();
+
+						// 사용자 아이디
+						reqJson.setUserId("sacuser01");
+
+						// 단말 정보
+						reqJson.setDeviceId("550e8400e29b41d4a716446655440000"); // 기기 ID
+						reqJson.setDeviceIdType("uuid"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US001207"); // 통신사
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByAgreementRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByAgreementRes res = (CreateByAgreementRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 약관 미동의 테스트.
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Ignore
+	@Test
+	public void test4_errorTestCase() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -184,7 +328,7 @@ public class CreateByAgreementTest {
 						agreement2.setExtraAgreementVersion("0.1");
 						agreement2.setIsExtraAgreement("Y");
 						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementId("US010601");
 						agreement3.setExtraAgreementVersion("0.1");
 						agreement3.setIsExtraAgreement("Y");
 						agreementList.add(agreement1);

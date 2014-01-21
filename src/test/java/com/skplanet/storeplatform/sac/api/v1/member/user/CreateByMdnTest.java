@@ -86,6 +86,7 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test1_createByMdn() throws Exception {
 
@@ -190,7 +191,7 @@ public class CreateByMdnTest {
 						// 단말 정보
 						reqJson.setDeviceId("550e8400e29b41d4a716446655440000"); // 기기 ID
 						reqJson.setDeviceIdType("uuid"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US001201"); // 통신사 (uuid 일경우 ISO 고정)
+						reqJson.setDeviceTelecom("US001207"); // 통신사 (uuid 일경우 ISO 고정)
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -341,9 +342,8 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
-	public void test4_errorTestCase1() throws Exception {
+	public void test4_errorTestCase() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -420,6 +420,7 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             void
 	 */
+	@Ignore
 	@Test
 	public void test5_withdrawMdn() throws Exception {
 
@@ -428,7 +429,7 @@ public class CreateByMdnTest {
 					@Override
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId("01076771470");
+						req.setDeviceId("550e8400e29b41d4a716446655440000");
 						return req;
 					}
 				}).success(WithdrawRes.class, new SuccessCallback() {
