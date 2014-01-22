@@ -5,7 +5,7 @@ import java.util.Map;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 
 /**
- * Calss 설명
+ * OneID 관련 API 기능 항목들
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
