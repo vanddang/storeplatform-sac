@@ -138,14 +138,14 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("tlaeowlsuser3"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserId("tlaeowlsuser5"); // 대문자 ID는 가입 불가 IDP 정책.
 						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("tlaeowlsuser3@yahoo.co.kr");
+						reqJson.setUserEmail("tlaeowlsuser5@yahoo.co.kr");
 
 						// 단말 정보
 						reqJson.setDeviceId("0101234567"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012103"); // 통신사
+						reqJson.setDeviceTelecom("US012102"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("sacuser01@yopmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
