@@ -129,6 +129,9 @@ public class Component extends CommonInfo implements Serializable {
 	 */
 	private String base;
 
+	private String useYn; // 사용여부 (for download Seed App 정보)
+	private String caseRefCd; // 유형참조코드(for download Seed App 정보)
+
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
@@ -319,5 +322,57 @@ public class Component extends CommonInfo implements Serializable {
 
 	public void setBase(String base) {
 		this.base = base;
+	}
+
+	private Component component;
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용여부 (for download Seed App 정보).
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getUseYn() {
+		return this.useYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용여부 (for download Seed App 정보).
+	 * </pre>
+	 * 
+	 * @param useYn
+	 *            useYn
+	 */
+	public void setUseYn(String useYn) {
+		this.useYn = useYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 유형참조코드(for download Seed App 정보).
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getCaseRefCd() {
+		return this.caseRefCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 유형참조코드(for download Seed App 정보).
+	 * </pre>
+	 * 
+	 * @param caseRefCd
+	 *            caseRefCd
+	 */
+	public void setCaseRefCd(String caseRefCd) {
+		this.caseRefCd = caseRefCd;
 	}
 }
