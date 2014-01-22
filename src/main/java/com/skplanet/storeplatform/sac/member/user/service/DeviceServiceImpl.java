@@ -239,6 +239,8 @@ public class DeviceServiceImpl implements DeviceService {
 				req.getUserKey(), req.getUserAuthKey());
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
+		res.setDeviceKey(req.getDeviceKey());
+		res.setUserKey(req.getUserKey());
 		return res;
 	}
 
