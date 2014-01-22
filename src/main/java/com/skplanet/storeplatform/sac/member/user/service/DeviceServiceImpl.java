@@ -135,7 +135,13 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
-		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
+		/* 헤더로 받는 부가 속성 정보(os버젼) */
+		List<DeviceExtraInfo> userDeviceExtraInfo = req.getDeviceInfo().getUserDeviceExtraInfo();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+		deviceExtraInfo.setExtraProfileValue(requestHeader.getDeviceHeader().getOsVersion());
+		userDeviceExtraInfo.add(deviceExtraInfo);
+		req.getDeviceInfo().setUserDeviceExtraInfo(userDeviceExtraInfo);
 
 		String userKey = req.getUserKey();
 		String deviceId = req.getDeviceInfo().getDeviceId();
@@ -215,7 +221,15 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 		req.getDeviceInfo().setDeviceModelNo(requestHeader.getDeviceHeader().getModel()); // 단말모델
-		req.getDeviceInfo().setOsVer(requestHeader.getDeviceHeader().getOsVersion());// os버젼
+
+		/* 헤더로 받는 부가 속성 정보(os버젼) */
+		List<DeviceExtraInfo> userDeviceExtraInfo = req.getDeviceInfo().getUserDeviceExtraInfo();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
+		deviceExtraInfo.setExtraProfileValue(requestHeader.getDeviceHeader().getOsVersion());
+		userDeviceExtraInfo.add(deviceExtraInfo);
+		req.getDeviceInfo().setUserDeviceExtraInfo(userDeviceExtraInfo);
+
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
@@ -509,16 +523,14 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
-		deviceInfo = this.getConverterDeviceInfo(userMbrDevice);
-
 		/* 휴대기기 주요정보 확인 */
-		//deviceInfo = this.setMajorDeviceInfo(deviceInfo);
+		deviceInfo = this.setMajorDeviceInfo(deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
-		String imMngNum = deviceInfo.getImMngNum(); // SKT 서비스 관리번호
+		//String imMngNum = deviceInfo.getImMngNum(); // SKT 서비스 관리번호
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
@@ -556,7 +568,7 @@ public class DeviceServiceImpl implements DeviceService {
 								idpModelId = "SSO0";
 							}
 
-							deviceInfo.setUacd(idpModelId);
+							//deviceInfo.setUacd(idpModelId);
 						}
 
 					} else {
@@ -640,12 +652,15 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (imMngNum != null && !imMngNum.equals(userMbrDevice.getImMngNum())) {
-
-			logger.info("[imMngNum] {} -> {}", userMbrDevice.getImMngNum(), imMngNum);
-			userMbrDevice.setImMngNum(imMngNum);
-
-		}
+		/*
+		 * if (imMngNum != null &&
+		 * !imMngNum.equals(userMbrDevice.getImMngNum())) {
+		 * 
+		 * logger.info("[imMngNum] {} -> {}", userMbrDevice.getImMngNum(),
+		 * imMngNum); userMbrDevice.setImMngNum(imMngNum);
+		 * 
+		 * }
+		 */
 
 		if (deviceTelecom != null && !deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
 
@@ -677,6 +692,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 휴대기기 부가정보 */
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());// 부가정보 등록시 셋팅할 deviceKey
+		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
@@ -685,12 +701,7 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setUserKey(userKey);
 		createDeviceReq.setIsNew("N");
-		createDeviceReq.setUserMbrDevice(this.getConverterUserMbrDeviceInfo(deviceInfo));
-
-		logger.info("device merge CreateDeviceRequest : {}", createDeviceReq.toString());
-		logger.info("device merge CreateDeviceRequest UserMbrDevice : {}", createDeviceReq.getUserMbrDevice().toString());
-		logger.info("device merge CreateDeviceRequest UserMbrDevice UserMbrDeviceDetail : {}", createDeviceReq.getUserMbrDevice()
-				.getUserMbrDeviceDetail().toString());
+		createDeviceReq.setUserMbrDevice(userMbrDevice);
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
@@ -717,26 +728,35 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getUserDeviceExtraInfo();
-		if (deviceExtraInfoList == null)
-			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 
-		if (majorDeviceInfo.getImMngNum() != null) {
-			deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(), deviceInfo));
-		}
+		for (DeviceExtraInfo info : deviceExtraInfoList) {
 
-		if (majorDeviceInfo.getUacd() != null) {
-			deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
-		}
+			if (info.getExtraProfileValue().equals(MemberConstants.DEVICE_EXTRA_IMMNGNUM)) {
+				if (majorDeviceInfo.getImMngNum() != null) {
+					deviceExtraInfoList.remove(info);
+					deviceExtraInfoList
+							.add(this.addDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(), deviceInfo));
+				}
 
-		if (majorDeviceInfo.getOmdUacd() != null) {
-			deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(), deviceInfo));
+			} else if (info.getExtraProfileValue().equals(MemberConstants.DEVICE_EXTRA_UACD)) {
+				if (majorDeviceInfo.getUacd() != null) {
+					deviceExtraInfoList.remove(info);
+					deviceExtraInfoList.add(this.addDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
+				}
+
+			} else if (info.getExtraProfileValue().equals(MemberConstants.DEVICE_EXTRA_OMDUACD)) {
+				if (majorDeviceInfo.getOmdUacd() != null) {
+					deviceExtraInfoList.remove(info);
+					deviceExtraInfoList.add(this.addDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(), deviceInfo));
+				}
+			}
 		}
 
 		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
 		return deviceInfo;
 	}
 
-	public DeviceExtraInfo getDeviceExtraInfo(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
+	public DeviceExtraInfo addDeviceExtraInfo(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
 		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 		deviceExtraInfo.setExtraProfile(extraProfile);
 		deviceExtraInfo.setExtraProfileValue(extraProfileValue);
@@ -753,8 +773,9 @@ public class DeviceServiceImpl implements DeviceService {
 	 * 
 	 * @param userMbrDevice
 	 * @return
+	 * @throws Exception
 	 */
-	public DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) {
+	public DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
@@ -762,7 +783,6 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
 		deviceInfo.setTenantId(userMbrDevice.getTenantID());
 		deviceInfo.setDeviceModelNo(userMbrDevice.getDeviceModelNo());
-		deviceInfo.setImMngNum(userMbrDevice.getImMngNum());
 		deviceInfo.setDeviceTelecom(userMbrDevice.getDeviceTelecom());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setIsPrimary(userMbrDevice.getIsPrimary());
@@ -788,7 +808,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param list
 	 * @return
 	 */
-	public List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list) {
+	public List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list) throws Exception {
 
 		List<DeviceExtraInfo> deviceExtraInfoList = null;
 		DeviceExtraInfo deviceExtraInfo = null;
@@ -817,7 +837,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param deviceInfo
 	 * @return
 	 */
-	public UserMbrDevice getConverterUserMbrDeviceInfo(DeviceInfo deviceInfo) {
+	public UserMbrDevice getConverterUserMbrDeviceInfo(DeviceInfo deviceInfo) throws Exception {
 
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setUserKey(deviceInfo.getUserKey());
@@ -825,7 +845,6 @@ public class DeviceServiceImpl implements DeviceService {
 		userMbrDevice.setDeviceID(deviceInfo.getDeviceId());
 		userMbrDevice.setTenantID(deviceInfo.getTenantId());
 		userMbrDevice.setDeviceModelNo(deviceInfo.getDeviceModelNo());
-		userMbrDevice.setImMngNum(deviceInfo.getImMngNum());
 		userMbrDevice.setDeviceTelecom(deviceInfo.getDeviceTelecom());
 		userMbrDevice.setDeviceNickName(deviceInfo.getDeviceNickName());
 		userMbrDevice.setIsPrimary(deviceInfo.getIsPrimary());
@@ -849,7 +868,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param list
 	 * @return
 	 */
-	public List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) {
+	public List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) throws Exception {
 
 		List<UserMbrDeviceDetail> userMbrDeviceDetailList = null;
 		UserMbrDeviceDetail userMbrDeviceDetail = null;
