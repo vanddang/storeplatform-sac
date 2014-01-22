@@ -61,9 +61,10 @@ public class DeviceController {
 	@ResponseBody
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
 
-		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String userId = StringUtil.nvl(req.getUserId(), "");
 		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), "");
-		if (!userId.equals("") && isMainDevice.equals("")) {
+		if ((!userKey.equals("") && isMainDevice.equals("")) || (!userId.equals("") && isMainDevice.equals(""))) {
 			throw new Exception("필수 파라미터 입니다.[isMainDevice]");
 		}
 

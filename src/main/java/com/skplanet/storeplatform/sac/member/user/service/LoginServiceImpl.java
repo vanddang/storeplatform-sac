@@ -607,6 +607,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceId(req.getDeviceId());
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
+				deviceInfo.setNativeId(req.getNativeId());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 				deviceInfo.setUserDeviceExtraInfo(userDeviceExtraInfo);
 				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
