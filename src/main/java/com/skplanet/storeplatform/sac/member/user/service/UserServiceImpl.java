@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -70,12 +71,12 @@ public class UserServiceImpl implements UserService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void modifyProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) throws Exception {
+	public void modifyProfileIdp(String systemId, String tenantId, String userKey, String userAuthKey) throws Exception {
 
 		/* 회원정보 조회 */
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		commonRequest.setSystemID(systemId);
+		commonRequest.setTenantID(tenantId);
 
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
@@ -116,6 +117,11 @@ public class UserServiceImpl implements UserService {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
 		listDeviceReq.setUserKey(userKey);
+
+		SacRequestHeader requestHeader = new SacRequestHeader();
+		TenantHeader tenant = new TenantHeader();
+		tenant.setSystemId(systemId);
+		tenant.setTenantId(tenantId);
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
 		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();

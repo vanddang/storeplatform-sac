@@ -102,6 +102,9 @@ public class LoginServiceImpl implements LoginService {
 	MemberCommonComponent commService; // 회원 공통 서비스
 
 	@Autowired
+	private UserService userService;
+
+	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
 
 	@Autowired
@@ -262,6 +265,7 @@ public class LoginServiceImpl implements LoginService {
 		String userId = req.getUserId();
 		String userPw = req.getUserPw();
 		String userKey = null;
+		String userMbrNo = null;
 		String userType = null;
 		String userMainStatus = null;
 		String userSubStatus = null;
@@ -280,6 +284,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		userKey = schUserRes.getUserMbr().getUserKey();
+		userMbrNo = schUserRes.getUserMbr().getImMbrNo();
 		userType = schUserRes.getUserMbr().getUserType();
 		userMainStatus = schUserRes.getUserMbr().getUserMainStatus();
 		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
@@ -519,6 +524,8 @@ public class LoginServiceImpl implements LoginService {
 	 * 
 	 * @param userKey
 	 *            사용자 key
+	 * @param userMbrNo
+	 *            idp에서 발급한 키
 	 * @param userAuthKey
 	 *            사용자 인증key
 	 * @param obj
@@ -544,7 +551,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setScVer(req.getScVer());
 			deviceInfo.setOsVer(req.getOsVer());
-			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), null, deviceInfo);
+			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
 
@@ -558,7 +565,8 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 				deviceInfo.setScVer(req.getScVer());
 				deviceInfo.setOsVer(req.getOsVerOrg());
-				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userAuthKey, deviceInfo);
+				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+				this.userService.modifyProfileIdp(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, userAuthKey);
 			}
 
 		}
@@ -646,7 +654,10 @@ public class LoginServiceImpl implements LoginService {
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setDeviceId(deviceId);
 			deviceInfo.setImMngNum(imMngNum);
-			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userAuthKey, deviceInfo);
+			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+
+			/* 4. 변경된 정보 IDP 연동 */
+			this.userService.modifyProfileIdp(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, userAuthKey);
 
 		} else {
 

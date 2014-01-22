@@ -85,15 +85,13 @@ public interface DeviceService {
 	 *            String
 	 * @param tenanId
 	 *            String
-	 * @param userAuthKey
-	 *            String
 	 * @param req
 	 *            DeviceInfo
 	 * @return deviceKey String
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String mergeDeviceInfo(String systemId, String tenanId, String userAuthKey, DeviceInfo req) throws Exception;
+	public String mergeDeviceInfo(String systemId, String tenanId, DeviceInfo req) throws Exception;
 
 	/**
 	 * 휴대기기 대표단말 설정

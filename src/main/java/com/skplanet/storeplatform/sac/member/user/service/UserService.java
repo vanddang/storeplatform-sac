@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 사용자 공통 서비스
@@ -29,5 +28,5 @@ public interface UserService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void modifyProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) throws Exception;
+	public void modifyProfileIdp(String systemId, String tenantId, String userKey, String userAuthKey) throws Exception;
 }
