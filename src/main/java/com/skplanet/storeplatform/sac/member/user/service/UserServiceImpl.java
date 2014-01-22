@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private DeviceService deviceService;
 
+	@Autowired
 	private IDPService idpService;
 
 	@Autowired
