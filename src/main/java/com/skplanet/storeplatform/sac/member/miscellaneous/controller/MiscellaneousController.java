@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +61,11 @@ public class MiscellaneousController {
 	 */
 	@RequestMapping(value = "/getUaCode/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @RequestBody GetUaCodeReq request) throws Exception {
-
-		LOGGER.debug("#################  UA 코드 정보 조회 - START ######################");
+	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request)
+			throws Exception {
 
 		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
 
-		LOGGER.debug("#################  UA 코드 정보 조회 -  END #######################");
 		return response;
 	}
 
@@ -88,7 +84,8 @@ public class MiscellaneousController {
 	 */
 	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Valid @RequestBody GetOpmdReq request) throws Exception {
+	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request)
+			throws Exception {
 		GetOpmdRes response = this.service.getOpmd(request);
 
 		return response;
@@ -110,8 +107,7 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/getPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
-			@Valid @RequestBody GetPhoneAuthorizationCodeReq request) throws Exception {
-
+			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) throws Exception {
 		GetPhoneAuthorizationCodeRes response = this.service.getPhoneAuthorizationCode(requestHeader, request);
 
 		return response;
@@ -134,7 +130,7 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/confirmPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
-			@Valid @RequestBody ConfirmPhoneAuthorizationCodeReq request) throws Exception {
+			@Validated @RequestBody ConfirmPhoneAuthorizationCodeReq request) throws Exception {
 
 		ConfirmPhoneAuthorizationCodeRes response = this.service.confirmPhoneAutorizationCode(request);
 
@@ -151,7 +147,7 @@ public class MiscellaneousController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/getCaptcha/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/getCaptcha/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetCaptchaRes getCaptcha() throws Exception {
 
@@ -170,9 +166,9 @@ public class MiscellaneousController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/confirmCaptcha/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/confirmCaptcha/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ConfirmCaptchaRes confirmCaptcha(@RequestBody ConfirmCaptchaReq request) throws Exception {
+	public ConfirmCaptchaRes confirmCaptcha(@Validated @RequestBody ConfirmCaptchaReq request) throws Exception {
 		ConfirmCaptchaRes res = this.service.confirmCaptcha(request);
 		return res;
 	}
@@ -191,7 +187,7 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/dev/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(
-			@Valid @RequestBody GetEmailAuthorizationCodeReq request) throws Exception {
+			@Validated @RequestBody GetEmailAuthorizationCodeReq request) throws Exception {
 		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(request);
 		return res;
 

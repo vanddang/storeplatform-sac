@@ -1,10 +1,7 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -12,6 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
@@ -44,7 +43,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
@@ -68,7 +66,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualP
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.miscellaneous.repository.MiscellaneousRepository;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
@@ -103,6 +101,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private ImageSCI imageSCI;
+
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor; // Message Properties
 
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
@@ -223,14 +224,28 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetPhoneAuthorizationCodeReq request) throws Exception {
 		String authCode = "";
-		/* 1. 휴대폰 인증 코드 생성 */
+		/* 휴대폰 인증 코드 생성 */
 		Random random = new Random();
 		authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
-		LOGGER.debug("###### >> authCode :" + authCode);
+		if (authCode.length() < 6) {
+			LOGGER.debug("## 변경 전 인증번호 : {}", authCode);
+			int loop = 6 - authCode.length();
+			for (int i = 0; i < loop; i++) { // 첫째자리수가 0으로 시작할 경우 "0"값을 앞에 추가.
+				authCode = "0" + authCode;
+			}
+			LOGGER.debug("## 변경 후 인증번호 : {}", authCode);
+		}
+		LOGGER.debug("## 인증번호 생성 >> authCode : {}", authCode);
+		Object[] object = new Object[1];
+		object[0] = authCode;
 
-		/* 2. 인증 Signautre 생성 - guid 형식 */
+		String smsAuthMessage = this.messageSourceAccessor.getMessage("smsAuthMessage", object,
+				LocaleContextHolder.getLocale());
+		LOGGER.debug("## SmsAuthMessage : {}", smsAuthMessage);
+
+		/* 인증 Signautre 생성 - guid 형식 */
 		String authSign = UUID.randomUUID().toString().replace("-", "");
-		LOGGER.debug("###### >> authSign : " + authSign);
+		LOGGER.debug("## 인증Sign 생성 >> authSign : {}", authSign);
 
 		/* DB에 저장할 파라미터 셋팅 */
 		ServiceAuth serviceAuthInfo = new ServiceAuth();
@@ -239,29 +254,31 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setAuthSign(authSign);
 		serviceAuthInfo.setAuthValue(authCode);
 
-		this.repository.insertPhoneAuthCode(serviceAuthInfo);
+		LOGGER.info("## TB_CM_SVC_AUTH INSERT Parameter : {}", serviceAuthInfo);
+		this.repository.insertServiceAuthCode(serviceAuthInfo);
 
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
-		smsReq.setCarrier("SKT"); // 테넌트에서 파라미터를 SKT, KT, LGT로 받는다.
-		smsReq.setSendMdn(request.getUserPhone());
-		smsReq.setRecvMdn(request.getUserPhone());
+		smsReq.setCarrier(request.getCarrier()); // 테넌트에서 파라미터를 SKT, KT, LGT로 받는다.
+		smsReq.setSendMdn(request.getSendMdn());
+		smsReq.setRecvMdn(request.getRecvMdn());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
-		smsReq.setMsg(authCode);
-		Map<String, String> map = new HashMap<String, String>();
+		smsReq.setMsg(smsAuthMessage);
 
+		LOGGER.info("## EC - SMS 발송 요청 Request : {}", smsReq);
 		/* External Comp. SMS 발송 기능 */
 		SmsSendRes smsSendRes = this.messageSCI.smsSend(smsReq);
-		String sendResult = smsSendRes.getResultStatus();
+		LOGGER.info("## EC - SMS 발송 결과 Response : {}", smsSendRes);
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
 
 		/* SMS 발송 성공 여부를 확인 */
-		if (sendResult.equals("success")) {
+		if (smsSendRes.getResultStatus().equals("success")) {
+			LOGGER.info("## EC - SMS 발송 성공.");
 			response.setPhoneSign(authSign);
 		} else {
-			throw new Exception("External Component SMS 전송 오류.[" + sendResult + "]");
+			throw new Exception("## EC SMS 전송 오류.[" + smsSendRes.getResultStatus() + "]");
 		}
 		return response;
 	}
@@ -291,24 +308,28 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new Exception("기인증된 인증 코드 입니다.");
 		}
 
-		/* 인증유효 시간 만료여부 확인 (현재시간 - 인증코드 생성일자) < timeToLive */
-		String nowDate = DateUtil.getDateString(new Date(), "yyyyMMddHHmmss");
-		LOGGER.debug(">>> nowDate : " + nowDate);
-		long endTime = Long.parseLong(nowDate);
+		/* 인증유효 시간 만료여부 확인 */
+		String nowDate = resultInfo.getCurrDt();
+		LOGGER.debug("## current time : " + nowDate);
+		String[] nowDateToken = StringUtil.split(nowDate, "-");
+
+		// long endTime = Long.parseLong(nowDate);
 
 		String createDate = resultInfo.getAuthValueCreateDt();
-		long startTime = Long.parseLong(createDate.toString());
-		LOGGER.debug("endTime(system current time) : {}", endTime);
-		LOGGER.debug("startTime(db create time): {}", startTime);
+		LOGGER.debug("## create time : {}", createDate);
+		String[] createDateToken = StringUtil.split(createDate, "-");
 
-		long confirmTime = endTime - startTime; // 사용자가 인증코드 입력까지 걸린 분
-
-		if (confirmTime > timeToLive) {
-			LOGGER.debug("confirmTime : {}", confirmTime);
+		int liveTime[] = new int[6];
+		// 0:년, 1:월, 2:일, 3:시, 4:분, 5:초
+		for (int i = 0; i < 6; i++) {
+			liveTime[i] = (Integer.parseInt(nowDateToken[i]) - Integer.parseInt(createDateToken[i]));
+		}
+		LOGGER.debug("## nowDate - createDate = {}", liveTime);
+		if ((liveTime[0] != 0 && liveTime[1] != 0 && liveTime[2] != 0 && liveTime[3] != 0)
+				|| (liveTime[4]) + (liveTime[5] / 60) > timeToLive) {
 			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
-		/* 인증유효 시간 내에 인증 요청 - 인증여부 "Y"로 Update. */
 		this.repository.updatePhoneAuthYn(String.valueOf(resultInfo.getAuthSeq()));
 
 		res.setUserPhone(userPhone);
@@ -389,8 +410,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			LOGGER.info("IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
 					idpReciver.getResponseHeader().getResult_text());
 		} else {
-			LOGGER.info("IDP 호출 오류. resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
-					idpReciver.getResponseHeader().getResult_text());
+			throw new Exception("IDP 호출 오류.resultCode : {" + idpReciver.getResponseHeader().getResult()
+					+ "}, resultMessage : {" + idpReciver.getResponseHeader().getResult_text() + "}");
 		}
 		LOGGER.info("## Captcha 문자 인증 Service 종료.");
 		return response;

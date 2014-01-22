@@ -77,6 +77,11 @@ public class ServiceAuth extends CommonInfo {
 	private String updDt;
 
 	/**
+	 * 현재 시간.
+	 */
+	private String currDt;
+
+	/**
 	 * @return the authSeq
 	 */
 	public String getAuthSeq() {
@@ -270,4 +275,20 @@ public class ServiceAuth extends CommonInfo {
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
 	}
+
+	/**
+	 * @return the currDt
+	 */
+	public String getCurrDt() {
+		return this.currDt;
+	}
+
+	/**
+	 * @param currDt
+	 *            the currDt to set
+	 */
+	public void setCurrDt(String currDt) {
+		this.currDt = currDt;
+	}
+
 }

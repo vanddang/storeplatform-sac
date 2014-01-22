@@ -21,6 +21,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
@@ -104,31 +107,28 @@ public class DummyDataController {
 		return response;
 	}
 
-	// 기능 개발 완료로 인한 주석처리 2014-01-17
-	// /**
-	// * <pre>
-	// * 5.3.4. 휴대폰 인증 SMS 발송.
-	// * </pre>
-	// *
-	// * @param GetPhoneAuthorizationCodeReq
-	// * @return GetPhoneAuthorizationCodeRes
-	// */
-	// @RequestMapping(value = "/getPhoneAuthorizationCode/v1", method = RequestMethod.POST)
-	// @ResponseBody
-	// public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode() {
-	//
-	// LOGGER.info("####################################################");
-	// LOGGER.info("####### 5.3.4. 휴대폰 인증 SMS 발송   #################");
-	// LOGGER.info("####################################################");
-	//
-	// GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
-	// response.setPhoneSign("N1w0EfuCzwfCNjxPdvSHYjUjTtszi47I7rkpbeV0");
-	//
-	// return response;
-	// }
-	//
+	/**
+	 * <pre>
+	 * 5.3.4. 휴대폰 인증 SMS 발송.
+	 * </pre>
+	 * 
+	 * @param GetPhoneAuthorizationCodeReq
+	 * @return GetPhoneAuthorizationCodeRes
+	 */
+	// @RequestMapping(value = "/getPhoneAuthorizationCode/v1", method = RequestMethod.POST) //주석 2014-01-17
+	@ResponseBody
+	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode() {
 
-	// 기능 개발 완료로 인한 주석처리 2014-01-17
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 5.3.4. 휴대폰 인증 SMS 발송   #################");
+		LOGGER.info("####################################################");
+
+		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
+		response.setPhoneSign("N1w0EfuCzwfCNjxPdvSHYjUjTtszi47I7rkpbeV0");
+
+		return response;
+	}
+
 	/**
 	 * <pre>
 	 * 5.3.5. 휴대폰 인증 코드 확인.
@@ -136,7 +136,7 @@ public class DummyDataController {
 	 * 
 	 * @return ConfirmPhoneAuthorizationCodeRes
 	 */
-	@RequestMapping(value = "/dev/confirmPhoneAuthorizationCode/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/confirmPhoneAuthorizationCode/v1", method = RequestMethod.POST) //주석 2014-01-17
 	@ResponseBody
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAuthorizationCode() {
 
@@ -266,51 +266,49 @@ public class DummyDataController {
 		return response;
 	}
 
-	// 기능 개발 완료로 인한 주석처리 2014-01-17
-	// /**
-	// * <pre>
-	// * 5.3.11. UA 코드 정보 조회.
-	// * </pre>
-	// *
-	// * @param GetUaCodeReq
-	// * @param GetUaCodeReq
-	// * @return GetUaCodeRes
-	// */
-	// @RequestMapping(value = "/getUaCode/v1", method = RequestMethod.POST)
-	// @ResponseBody
-	// public GetUaCodeRes getUaCode() {
-	//
-	// LOGGER.info("####################################################");
-	// LOGGER.info("####### 5.3.11. UA 코드 정보 조회     #################");
-	// LOGGER.info("####################################################");
-	//
-	// GetUaCodeRes response = new GetUaCodeRes();
-	// response.setUaCd("SSI8");
-	// return response;
-	// }
+	/**
+	 * <pre>
+	 * 5.3.11. UA 코드 정보 조회.
+	 * </pre>
+	 * 
+	 * @param GetUaCodeReq
+	 * @param GetUaCodeReq
+	 * @return GetUaCodeRes
+	 */
+	// @RequestMapping(value = "/getUaCode/v1", method = RequestMethod.POST)//주석 2014-01-17
+	@ResponseBody
+	public GetUaCodeRes getUaCode() {
 
-	// 기능 개발 완료로 인한 주석처리 2014-01-17
-	// /**
-	// * <pre>
-	// * 5.3.12. OPMD 모회선 번호 조회.
-	// * </pre>
-	// *
-	// * @param GetOpmdReq
-	// * @return GetOpmdRes
-	// */
-	// @RequestMapping(value = "/getOpmd/v1", method = RequestMethod.POST)
-	// @ResponseBody
-	// public GetOpmdRes getOpmd() {
-	//
-	// LOGGER.info("####################################################");
-	// LOGGER.info("####### 5.3.12. OPMD 모회선 번호 조회 ################");
-	// LOGGER.info("####################################################");
-	//
-	// GetOpmdRes response = new GetOpmdRes();
-	// response.setMsisdn("01023451102");
-	//
-	// return response;
-	// }
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 5.3.11. UA 코드 정보 조회     #################");
+		LOGGER.info("####################################################");
+
+		GetUaCodeRes response = new GetUaCodeRes();
+		response.setUaCd("SSI8");
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 5.3.12. OPMD 모회선 번호 조회.
+	 * </pre>
+	 * 
+	 * @param GetOpmdReq
+	 * @return GetOpmdRes
+	 */
+	// @RequestMapping(value = "/getOpmd/v1", method = RequestMethod.POST) //주석 2014-01-17
+	@ResponseBody
+	public GetOpmdRes getOpmd() {
+
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 5.3.12. OPMD 모회선 번호 조회 ################");
+		LOGGER.info("####################################################");
+
+		GetOpmdRes response = new GetOpmdRes();
+		response.setMsisdn("01023451102");
+
+		return response;
+	}
 
 	/**
 	 * <pre>
@@ -383,7 +381,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetCaptchaRes
 	 */
-	@RequestMapping(value = "/getCaptcha/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/getCaptcha/v1", method = RequestMethod.GET) //주석 2014-01-21
 	@ResponseBody
 	public GetCaptchaRes getCaptcha() {
 
@@ -405,7 +403,7 @@ public class DummyDataController {
 	 * 
 	 * @return ConfirmCaptchaRes
 	 */
-	@RequestMapping(value = "/confirmCaptcha/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/confirmCaptcha/v1", method = RequestMethod.GET) //주석 2014-01-22
 	@ResponseBody
 	public ConfirmCaptchaRes confirmCaptcha() {
 
