@@ -3,6 +3,9 @@ package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +29,7 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq.PolicyCode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 
 /**
@@ -73,8 +77,15 @@ public class GetIndividualPolicyTest {
 						@Override
 						public Object requestBody() {
 							GetIndividualPolicyReq request = new GetIndividualPolicyReq();
-							request.setKey("");
-							request.setPolicyCode("");
+							PolicyCode policyCode = null;
+							List<PolicyCode> policyCodeList = new ArrayList<GetIndividualPolicyReq.PolicyCode>();
+							for (int i = 0; i < 3; i++) {
+								policyCode = new PolicyCode();
+								policyCode.setPolicyCode(String.valueOf(i + 3));
+								policyCodeList.add(policyCode);
+							}
+							request.setPolicyCodeList(policyCodeList);
+							request.setKey("53");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
