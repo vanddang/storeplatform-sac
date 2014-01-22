@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +68,7 @@ public class AuthorizeByIdTest {
 	}
 
 	@Test
-	public void shouldAuthorizeById() {
+	public void shouldAuthorizeById() throws Exception {
 
 		try {
 
@@ -82,8 +83,6 @@ public class AuthorizeByIdTest {
 						@Override
 						public Object requestBody() {
 							AuthorizeByIdReq req = new AuthorizeByIdReq();
-							req.setDeviceModelNo("SHW-M250S");
-							req.setOsVerOrg("1.0");
 							req.setDeviceId("01073215212");
 							req.setUserId("watermin0927");
 							req.setUserPw("1qaz2wsx");
@@ -91,7 +90,14 @@ public class AuthorizeByIdTest {
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setDeviceAccount("vanddang@gmail.com");
 							req.setScVer("1.0");
-							logger.info("request param : {}", req.toString());
+
+							ObjectMapper objMapper = new ObjectMapper();
+
+							try {
+								logger.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
 							return req;
 						}
@@ -125,17 +131,18 @@ public class AuthorizeByIdTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByIdReq req = new AuthorizeByIdReq();
-		req.setDeviceModelNo("SHW-M250S");
-		req.setOsVerOrg("1.0");
 		req.setDeviceId("01073215212");
 		req.setUserId("watermin0927");
-		req.setUserPw("1qaz2wsx");
+		req.setUserPw("!qaz2wsx");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 		req.setDeviceAccount("vanddang@gmail.com");
 		req.setScVer("1.0");
 
 		try {
+			ObjectMapper objMapper = new ObjectMapper();
+			logger.info("Request : {}", objMapper.writeValueAsString(req));
+
 			AuthorizeByIdRes res = this.loginService.authorizeById(header, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {

@@ -181,9 +181,9 @@ public class CreateDeviceTest {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey("US201401161113423010000110");
-		deviceInfo.setDeviceId("01048088876");
+		deviceInfo.setDeviceId("01048088880");
 		deviceInfo.setDeviceIdType("msisdn ");
-		deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+		deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 		deviceInfo.setIsPrimary("N");
 		deviceInfo.setIsAuthenticated("Y");
 		deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
@@ -192,6 +192,7 @@ public class CreateDeviceTest {
 		deviceInfo.setDeviceAccount("vanddang@gmail.com");
 		deviceInfo.setIsRecvSms("Y");
 		deviceInfo.setDeviceNickName("SHP-110S(임시)");
+		deviceInfo.setTenantId("S01");
 
 		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
@@ -217,11 +218,6 @@ public class CreateDeviceTest {
 		deviceExtraInfo = new DeviceExtraInfo();
 		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
 		deviceExtraInfo.setExtraProfileValue("N");
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-		deviceExtraInfo.setExtraProfileValue("uacd");
 		deviceExtraInfoList.add(deviceExtraInfo);
 
 		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);

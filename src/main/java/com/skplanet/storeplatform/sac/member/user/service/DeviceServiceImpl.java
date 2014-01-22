@@ -324,6 +324,41 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.member.user.service.DeviceService#searchDevice
+	 * (com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) throws Exception {
+
+		logger.info("######################## DeviceServiceImpl searchDevice start ############################");
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setCommonRequest(commonRequest);
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(keyType);
+		key.setKeyString(keyString);
+		keySearchList.add(key);
+
+		searchDeviceRequest.setUserKey(userKey);
+		searchDeviceRequest.setKeySearchList(keySearchList);
+		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+		logger.info("######################## DeviceServiceImpl searchDevice start ############################");
+
+		return this.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
 	 * insertDeviceInfo(java.lang.String, java.lang.String, java.lang.String,
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
@@ -651,6 +686,11 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setUserKey(userKey);
 		createDeviceReq.setIsNew("N");
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
+
+		logger.info("device merge CreateDeviceRequest : {}", createDeviceReq.toString());
+		logger.info("device merge CreateDeviceRequest UserMbrDevice : {}", createDeviceReq.getUserMbrDevice().toString());
+		logger.info("device merge CreateDeviceRequest UserMbrDevice UserMbrDeviceDetail : {}", createDeviceReq.getUserMbrDevice()
+				.getUserMbrDeviceDetail().toString());
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {

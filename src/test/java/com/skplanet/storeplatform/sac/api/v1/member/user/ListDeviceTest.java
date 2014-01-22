@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +78,14 @@ public class ListDeviceTest {
 							//req.setDeviceKey("DE201401161113425370000050");
 							//req.setUserId("01020284280");
 							req.setIsMainDevice("N");
-							logger.info("request param : {}", req.toString());
+
+							ObjectMapper objMapper = new ObjectMapper();
+
+							try {
+								logger.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
 							return req;
 						}
@@ -105,10 +113,10 @@ public class ListDeviceTest {
 		header.setTenantHeader(tenantHeader);
 
 		ListDeviceReq req = new ListDeviceReq();
-		//req.setUserKey("US201401161113423010000110");
+		req.setUserKey("US201401161113423010000110");
 		//req.setDeviceId("01020284280");
 		//req.setDeviceKey("DE201401161113425370000050");
-		req.setUserId("01020284280");
+		//req.setUserId("01020284280");
 		req.setIsMainDevice("Y");
 		try {
 			ListDeviceRes res = this.deviceService.listDevice(header, req);
