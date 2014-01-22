@@ -58,6 +58,11 @@ public class Device extends CommonInfo implements Serializable {
 	private String modelExplain;
 
 	/**
+	 * 폰 타입
+	 */
+	private String phoneType;
+
+	/**
 	 * 지원가능한 SK Planet 서비스 정보
 	 */
 	private List<Service> serviceList;
@@ -174,6 +179,14 @@ public class Device extends CommonInfo implements Serializable {
 
 	public void setServices(Map<String, Object> services) {
 		this.services = services;
+	}
+
+	public String getPhoneType() {
+		return this.phoneType;
+	}
+
+	public void setPhoneType(String phoneType) {
+		this.phoneType = phoneType;
 	}
 
 }
