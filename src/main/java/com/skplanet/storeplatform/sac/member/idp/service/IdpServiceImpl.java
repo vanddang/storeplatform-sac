@@ -278,7 +278,7 @@ public class IdpServiceImpl implements IdpService {
 		UserMbr getUserMbr = searchUserResponse.getUserMbr();
 		MbrAuth getMbrAuth = searchUserResponse.getMbrAuth();
 
-		if (hashMap.get("im_reg_date").toString() != null) {
+		if (hashMap.get("im_reg_date") != null) {
 			getUserMbr.setImRegDate(hashMap.get("im_reg_date").toString());
 		}
 
