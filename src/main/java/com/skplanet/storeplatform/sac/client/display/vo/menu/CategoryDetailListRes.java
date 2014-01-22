@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
  * 카테고리 조회 Value Object. 최대 중-세 카테고리 정보 표현 Updated on : 2013. 12. 20. Updated by : 윤주영, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class CategoryDetail2ListRes extends CommonInfo implements CategoryDetailRes {
+public class CategoryDetailListRes extends CommonInfo {
 
 	private static final long serialVersionUID = 111231231122L;
 
@@ -30,35 +30,29 @@ public class CategoryDetail2ListRes extends CommonInfo implements CategoryDetail
 
 	private Menu category;
 
-	private List<Menu> categoryList;
+	private List<Object> categoryList;
 
-	@Override
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
 	}
 
-	@Override
 	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
-	@Override
 	public Menu getCategory() {
 		return this.category;
 	}
 
-	@Override
 	public void setCategory(Menu category) {
 		this.category = category;
 	}
 
-	@Override
-	public List<Menu> getCategoryList() {
+	public List<Object> getCategoryList() {
 		return this.categoryList;
 	}
 
-	@Override
-	public void setCategoryList(List categoryList) {
+	public void setCategoryList(List<Object> categoryList) {
 		this.categoryList = categoryList;
 	}
 

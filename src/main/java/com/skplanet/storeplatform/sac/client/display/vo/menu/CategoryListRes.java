@@ -16,7 +16,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 
 /**
  * 카테고리 리스트 조회 List Value Object.
@@ -30,7 +29,7 @@ public class CategoryListRes extends CommonInfo {
 
 	private CommonResponse commonResponse;
 
-	private List<Menu> categoryList;
+	private List<Object> categoryList;
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
@@ -40,11 +39,11 @@ public class CategoryListRes extends CommonInfo {
 		this.commonResponse = commonResponse;
 	}
 
-	public List<Menu> getCategoryList() {
+	public List<Object> getCategoryList() {
 		return this.categoryList;
 	}
 
-	public void setCategoryList(List<Menu> categoryList) {
+	public void setCategoryList(List<Object> categoryList) {
 		this.categoryList = categoryList;
 	}
 }

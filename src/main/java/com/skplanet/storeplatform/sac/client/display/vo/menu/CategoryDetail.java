@@ -21,7 +21,7 @@ public class CategoryDetail {
 
 	private Menu category;
 
-	private List<Menu> subCategoryList;
+	private List<Object> subCategoryList;
 
 	public Menu getCategory() {
 		return this.category;
@@ -31,11 +31,11 @@ public class CategoryDetail {
 		this.category = category;
 	}
 
-	public List<Menu> getSubCategoryList() {
+	public List<Object> getSubCategoryList() {
 		return this.subCategoryList;
 	}
 
-	public void setSubCategoryList(List<Menu> subCategoryList) {
+	public void setSubCategoryList(List<Object> subCategoryList) {
 		this.subCategoryList = subCategoryList;
 	}
 
