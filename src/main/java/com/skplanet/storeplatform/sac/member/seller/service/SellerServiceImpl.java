@@ -387,7 +387,7 @@ public class SellerServiceImpl implements SellerService {
 
 		CreateAuthKeyRes response = new CreateAuthKeyRes();
 
-		// response.setSessionKey(schRes.g)
+		response.setSessionKey(loginInfo.getSessionKey());
 
 		return response;
 	}
@@ -424,7 +424,7 @@ public class SellerServiceImpl implements SellerService {
 
 		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
 
-		// response.setSessionKey(schRes.g)
+		response.setSellerKey(loginInfo.getSellerKey());
 
 		return response;
 	}
