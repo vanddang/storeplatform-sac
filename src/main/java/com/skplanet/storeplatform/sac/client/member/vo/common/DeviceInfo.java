@@ -133,61 +133,6 @@ public class DeviceInfo extends CommonInfo {
 	private String TenantId;
 
 	/**
-	 * SKT 통합회원관리번호
-	 */
-	private String imMngNum;
-
-	/**
-	 * OMP DOWNLOADER 설치 여부
-	 */
-	private String ompDownloaderYn;
-
-	/**
-	 * 대기화면 설정 여부
-	 */
-	private String standByScreenYn;
-
-	/**
-	 * uacd
-	 */
-	private String uacd;
-
-	/**
-	 * OMP 지원 단말 여부
-	 */
-	private String ompSupportYn;
-
-	/**
-	 * OS 버젼
-	 */
-	private String osVer;
-
-	/**
-	 * SC 버젼
-	 */
-	private String scVer;
-
-	/**
-	 * 앱 사용통계 사용여부
-	 */
-	private String appStatisticsYn;
-
-	/**
-	 * 도토리 인증일 : YYYYMMDDHH24MISS
-	 */
-	private String dotoriAuthDate;
-
-	/**
-	 * 도토리 인증여부 : Y/N
-	 */
-	private String dotoriAuthYn;
-
-	/**
-	 * omd UACD
-	 */
-	private String omdUacd;
-
-	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
 	 */
 	private List<DeviceExtraInfo> userDeviceExtraInfo;
@@ -288,28 +233,12 @@ public class DeviceInfo extends CommonInfo {
 		this.joinId = joinId;
 	}
 
-	public String getOsVer() {
-		return this.osVer;
-	}
-
-	public void setOsVer(String osVer) {
-		this.osVer = osVer;
-	}
-
 	public String getMakeComp() {
 		return this.makeComp;
 	}
 
 	public void setMakeComp(String makeComp) {
 		this.makeComp = makeComp;
-	}
-
-	public String getUacd() {
-		return this.uacd;
-	}
-
-	public void setUacd(String uacd) {
-		this.uacd = uacd;
 	}
 
 	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
@@ -324,16 +253,8 @@ public class DeviceInfo extends CommonInfo {
 		return this.isUsed;
 	}
 
-	public String getImMngNum() {
-		return this.imMngNum;
-	}
-
 	public void setIsUsed(String isUsed) {
 		this.isUsed = isUsed;
-	}
-
-	public void setImMngNum(String imMngNum) {
-		this.imMngNum = imMngNum;
 	}
 
 	public String getUpdateDate() {
@@ -366,30 +287,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getScVer() {
-		return this.scVer;
-	}
-
-	public void setScVer(String scVer) {
-		this.scVer = scVer;
-	}
-
-	public String getDotoriAuthDate() {
-		return this.dotoriAuthDate;
-	}
-
-	public void setDotoriAuthDate(String dotoriAuthDate) {
-		this.dotoriAuthDate = dotoriAuthDate;
-	}
-
-	public String getDotoriAuthYn() {
-		return this.dotoriAuthYn;
-	}
-
-	public void setDotoriAuthYn(String dotoriAuthYn) {
-		this.dotoriAuthYn = dotoriAuthYn;
 	}
 
 	public String getRooting() {
@@ -430,46 +327,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	public String getOmpDownloaderYn() {
-		return this.ompDownloaderYn;
-	}
-
-	public void setOmpDownloaderYn(String ompDownloaderYn) {
-		this.ompDownloaderYn = ompDownloaderYn;
-	}
-
-	public String getStandByScreenYn() {
-		return this.standByScreenYn;
-	}
-
-	public void setStandByScreenYn(String standByScreenYn) {
-		this.standByScreenYn = standByScreenYn;
-	}
-
-	public String getOmpSupportYn() {
-		return this.ompSupportYn;
-	}
-
-	public void setOmpSupportYn(String ompSupportYn) {
-		this.ompSupportYn = ompSupportYn;
-	}
-
-	public String getAppStatisticsYn() {
-		return this.appStatisticsYn;
-	}
-
-	public void setAppStatisticsYn(String appStatisticsYn) {
-		this.appStatisticsYn = appStatisticsYn;
-	}
-
-	public String getOmdUacd() {
-		return this.omdUacd;
-	}
-
-	public void setOmdUacd(String omdUacd) {
-		this.omdUacd = omdUacd;
 	}
 
 }
