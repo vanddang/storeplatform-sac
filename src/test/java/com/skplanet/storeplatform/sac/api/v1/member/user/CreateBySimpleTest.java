@@ -76,6 +76,7 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void createBySimpleId() throws Exception {
 
@@ -123,7 +124,6 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void createBySimpleDevice() throws Exception {
 
@@ -138,9 +138,9 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("idpsimplemember"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserId("idpsimplemember8"); // 대문자 ID는 가입 불가 IDP 정책.
 						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("idpsimplemember@naver.com");
+						reqJson.setUserEmail("idpsimplemember8@naver.com");
 
 						// 단말 정보
 						reqJson.setDeviceId("01048088874"); // 기기 ID
