@@ -29,8 +29,8 @@ public class BestDownloadReq extends CommonInfo {
 	private String hdv; // HDV 지원구분
 	private String drm; // drm 지원구분
 	private String prodGradeCd; // 상품등급코드
-	private String offset; // 시작점 ROW
-	private String count; // 페이지당 노출 ROW 수
+	private Integer offset; // 시작점 ROW
+	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy;
 
 	/**
@@ -316,7 +316,7 @@ public class BestDownloadReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getOffset() {
+	public Integer getOffset() {
 		return this.offset;
 	}
 
@@ -329,7 +329,7 @@ public class BestDownloadReq extends CommonInfo {
 	 * @param offset
 	 *            offset
 	 */
-	public void setOffset(String offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
@@ -341,7 +341,7 @@ public class BestDownloadReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
@@ -354,7 +354,7 @@ public class BestDownloadReq extends CommonInfo {
 	 * @param count
 	 *            count
 	 */
-	public void setCount(String count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 

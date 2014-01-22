@@ -28,8 +28,8 @@ public class BestAppReq extends CommonInfo {
 	private String drm; // drm 여부
 	private String prodGradeCd; // 상품등급코드
 	private String menuId; // 메뉴 Id
-	private String offset; // 시작점 ROW
-	private String count; // 페이지당 노출 ROW 수
+	private Integer offset; // 시작점 ROW
+	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy; // dummy data check
 
 	/**
@@ -265,7 +265,7 @@ public class BestAppReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getOffset() {
+	public Integer getOffset() {
 		return this.offset;
 	}
 
@@ -278,7 +278,7 @@ public class BestAppReq extends CommonInfo {
 	 * @param offset
 	 *            offset
 	 */
-	public void setOffset(String offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
@@ -290,7 +290,7 @@ public class BestAppReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
@@ -303,7 +303,7 @@ public class BestAppReq extends CommonInfo {
 	 * @param count
 	 *            count
 	 */
-	public void setCount(String count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 
