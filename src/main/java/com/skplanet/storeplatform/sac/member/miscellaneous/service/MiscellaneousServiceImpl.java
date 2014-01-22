@@ -521,9 +521,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, GetIndividualPolicyReq req) {
+		// key(30), code(10), value(100)
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
-		policyRequest.setLimitPolicyCode(req.getPolicyCode());
+		List<String> codeList = new ArrayList<String>();
+		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
+			codeList.add(req.getPolicyCodeList().get(i).getPolicyCode());
+		}
+		policyRequest.setLimitPolicyCodeList(codeList);
 		policyRequest.setLimitPolicyKey(req.getKey());
 
 		/** 2. 공통 파라미터 생성 및 주입. */
@@ -620,7 +625,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		RemovePolicyRequest removePolicyRequest = new RemovePolicyRequest();
 		List<String> limitTargetNoList = new ArrayList<String>();
 		limitTargetNoList.add(req.getKey());
-		removePolicyRequest.setLimitTargetNoList(limitTargetNoList);
+		// removePolicyRequest.setLimitTargetNoList(limitTargetNoList);
 
 		/** 2. 공통 파라미터 생성 및 주입. */
 		CommonRequest commonRequest = new CommonRequest();
