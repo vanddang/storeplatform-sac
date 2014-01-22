@@ -203,7 +203,7 @@ public class IdpServiceImpl implements IdpService {
 					searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 				}
 
-				map.put("im_reg_date", DateUtil.getToday() + DateUtil.getTime()); // 전환가입일을 셋팅
+				map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
 				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 						searchUserResponse));
