@@ -20,6 +20,8 @@ public class HistoryCountReq extends CommonInfo {
 	private String startDt;
 	private String endDt;
 
+	private String tenantProdGrpCd;
+
 	private List<HistoryProductList> productList;
 
 	private String prchsProdType;
@@ -40,6 +42,21 @@ public class HistoryCountReq extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the tenantProdGrpCd
+	 */
+	public String getTenantProdGrpCd() {
+		return this.tenantProdGrpCd;
+	}
+
+	/**
+	 * @param tenantProdGrpCd
+	 *            the tenantProdGrpCd to set
+	 */
+	public void setTenantProdGrpCd(String tenantProdGrpCd) {
+		this.tenantProdGrpCd = tenantProdGrpCd;
 	}
 
 	/**
