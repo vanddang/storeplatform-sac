@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,7 +19,6 @@ public class ListDeviceReq extends CommonInfo {
 	/**
 	 * 사용자 Key
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userKey;
 
 	/**
