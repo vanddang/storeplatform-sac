@@ -354,8 +354,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             MajorDeviceInfo
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType)
-			throws Exception {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
@@ -368,6 +367,7 @@ public class MemberCommonComponent {
 			/**
 			 * 미지원 단말 setting
 			 */
+			LOGGER.info("## 미지원 단말 세팅.");
 			majorDeviceInfo.setUacd(MemberConstants.NOT_SUPPORT_HP_UACODE); // UA 코드
 			majorDeviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_NSH); // 이동 통신사
 			majorDeviceInfo.setDeviceModelNo(MemberConstants.NOT_SUPPORT_HP_MODEL_CD); // 기기 모델 번호
@@ -411,7 +411,8 @@ public class MemberCommonComponent {
 			 */
 			UserRes userRes = this.getMappingInfo(deviceId, "mdn");
 			if (userRes.getResultCode() == 0) {
-				LOGGER.debug("## UAPS 연동 정보 : {}", userRes.toString());
+				// LOGGER.debug("## UAPS 연동 : {}", userRes.toString());
+				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
 				majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
 			} else {
 				throw new RuntimeException("UAPS 연동 실패~!!!!");
