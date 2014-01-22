@@ -525,6 +525,8 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXCreateUserIdIDP(HashMap map) {
 
+		LOGGER.debug("rXCreateUserIdIDP ------- Testing Start");
+
 		// Service Method이름은 Provisioning 및 Rx 기능의 'cmd' 값과 동일 해야 함.
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
@@ -537,16 +539,21 @@ public class IdpServiceImpl implements IdpService {
 		commonRequest.setSystemID((String) map.get("systemID"));
 		commonRequest.setTenantID((String) map.get("tenantID"));
 		searchUserRequest.setCommonRequest(commonRequest);
+		LOGGER.debug("rXCreateUserIdIDP ------- CommonRequest setting");
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("MBR_ID");
+		LOGGER.debug("rXCreateUserIdIDP ------- get user_id");
+		LOGGER.debug("rXCreateUserIdIDP ------- user_id = " + map.get("user_id").toString());
 		if (null != map.get("user_id")) {
 			keySearch.setKeyString((String) map.get("user_id"));
 		}
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
 		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+
+		LOGGER.debug("rXCreateUserIdIDP ------- searchUser");
 
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
@@ -571,6 +578,7 @@ public class IdpServiceImpl implements IdpService {
 			}
 		}
 
+		LOGGER.debug("rXCreateUserIdIDP ------- return value setting");
 		// 회원이 존재 하지 않으면 FAIL값 return
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXCreateUserIdIDP");
