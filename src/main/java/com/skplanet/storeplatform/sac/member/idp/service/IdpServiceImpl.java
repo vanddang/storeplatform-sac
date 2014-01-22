@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.member.common.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 
@@ -689,7 +689,8 @@ public class IdpServiceImpl implements IdpService {
 		if (searchUserRespnse.getUserMbr() != null) {
 
 			// 실명인증 대상 본인/법정대리인 여부
-			updateRealNameRequest.setIsOwn("OWN");// 본인
+			// 본인
+			updateRealNameRequest.setIsOwn("OWN");
 			updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
 			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
 
@@ -706,7 +707,6 @@ public class IdpServiceImpl implements IdpService {
 			mbrAuth.setSex(map.get("user_sex").toString());
 			mbrAuth.setName(map.get("user_name").toString());
 			mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
-			// mbrAuth.setSequence(map.get("is_rname_auth").toString());
 			mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
 
 			updateRealNameRequest.setUserMbrAuth(mbrAuth);
@@ -772,7 +772,8 @@ public class IdpServiceImpl implements IdpService {
 		if (searchUserRespnse.getUserMbr() != null) {
 
 			// 실명인증 대상 본인/법정대리인 여부
-			updateRealNameRequest.setIsOwn("PARENT");// 법정대리인
+			// 법정대리인
+			updateRealNameRequest.setIsOwn("PARENT");
 			updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
 			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
 
@@ -783,8 +784,11 @@ public class IdpServiceImpl implements IdpService {
 			}
 			mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
 			mbrLglAgent.setParentRealNameSite(map.get("parent_approve_sst_code").toString());
-			if (map.get("parent_approve_date").toString().length() == 8)
+			if (map.get("parent_approve_date").toString().length() == 8) {
 				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString() + "000000");
+			} else if (map.get("parent_approve_date").toString().length() > 8) {
+				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString());
+			}
 			mbrLglAgent.setParentName(map.get("parent_name").toString());
 			mbrLglAgent.setParentType(map.get("parent_type").toString());
 			mbrLglAgent.setParentRealNameMethod(map.get("parent_rname_auth_type").toString());
