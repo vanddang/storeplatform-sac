@@ -6,6 +6,14 @@ package com.skplanet.storeplatform.sac.purchase.common;
  * Updated on : 2014. 1. 9. Updated by : 양주원, 엔텔스.
  */
 public final class PurchaseConstants {
+	// ================================================================================================
+	// TODO:: 임시 코드 영역
+
+	// 구매유형코드: 구매 / 선물 - OR0017S / OR0017G 사용 결정 필요
+	public static final String PRCHS_CASE_PURCHASE_CD = "OR0017S"; // 구매
+	public static final String PRCHS_CASE_GIFT_CD = "OR0017G"; // 선물
+
+	// ================================================================================================
 
 	/** 사용 여부 Y N. **/
 	public static final String USE_Y = "Y"; // Y
