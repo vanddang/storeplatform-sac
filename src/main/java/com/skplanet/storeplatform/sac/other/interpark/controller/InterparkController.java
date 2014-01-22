@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.other.vo.interpark.CreateOrderReq;
-import com.skplanet.storeplatform.sac.client.other.vo.interpark.CreateOrderRes;
-import com.skplanet.storeplatform.sac.client.other.vo.interpark.GetAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.other.vo.interpark.GetAuthKeyRes;
+import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderReq;
+import com.skplanet.storeplatform.external.client.interpark.vo.CreateOrderRes;
+import com.skplanet.storeplatform.external.client.interpark.vo.GetAuthKeyReq;
+import com.skplanet.storeplatform.external.client.interpark.vo.GetAuthKeyRes;
 
 /**
  * 
