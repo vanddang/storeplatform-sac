@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.util.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
@@ -45,15 +44,18 @@ public class LoginController {
 	 * 모바일 전용 회원 인증 (MDN 인증)
 	 * 
 	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            AuthorizeByMdnReq
+	 * @return AuthorizeByMdnRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/member/user/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) throws Exception {
 
-		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, (AuthorizeByMdnReq) ConvertMapperUtil.convertObject(req));
+		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
 		return res;
 	}
@@ -62,15 +64,18 @@ public class LoginController {
 	 * ID 기반 회원 인증 (One ID, IDP 회원)
 	 * 
 	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            AuthorizeByIdReq
+	 * @return AuthorizeByIdRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/member/user/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) throws Exception {
 
-		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, (AuthorizeByIdReq) ConvertMapperUtil.convertObject(req));
+		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
 
 		return res;
 	}
