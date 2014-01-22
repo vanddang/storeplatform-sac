@@ -837,7 +837,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -857,7 +858,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= ## CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
@@ -876,7 +878,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= ## CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
-			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
