@@ -66,7 +66,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualP
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.miscellaneous.repository.MiscellaneousRepository;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
