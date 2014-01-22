@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
@@ -113,7 +113,7 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/category/subCategory/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchDetailCategoryList start !!");
@@ -155,7 +155,7 @@ public class MenuController {
 	 */
 	@RequestMapping(value = "/category/sub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryDetailRes searchDetailMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public CategoryDetailListRes searchDetailMenuList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("MenuController.searchSubCategoryList start !!");

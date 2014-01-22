@@ -27,9 +27,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail2ListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetail3ListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -92,7 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
-			List<Menu> listVO = new ArrayList<Menu>();
+			List<Object> listVO = new ArrayList<Object>();
 
 			Iterator<MenuDetailDTO> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
@@ -137,7 +135,7 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
@@ -156,7 +154,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		menuId = requestVO.getMenuId();
 
-		CategoryDetailRes responseVO = null;
+		CategoryDetailListRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -181,8 +179,8 @@ public class CategoryServiceImpl implements CategoryService {
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
-			List<Menu> listVO = new ArrayList<Menu>();
-			List<CategoryDetail> detailListVO = new ArrayList<CategoryDetail>();
+			List<Object> listVO = new ArrayList<Object>();
+			List<Object> detailListVO = new ArrayList<Object>();
 
 			boolean tg = false;
 			int count = 0;
@@ -193,12 +191,7 @@ public class CategoryServiceImpl implements CategoryService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
 
-			if (threeDepth) {
-				responseVO = new CategoryDetail3ListRes();
-			} else {
-				responseVO = new CategoryDetail2ListRes();
-			}
-
+			responseVO = new CategoryDetailListRes();
 			Iterator<MenuDetailDTO> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
 				MenuDetailDTO mapperVO = iterator.next();
@@ -210,7 +203,7 @@ public class CategoryServiceImpl implements CategoryService {
 				source = new Source();
 
 				totalCount = mapperVO.getTotalCount();
-				this.log.debug("totalCount : " + totalCount);
+				// this.log.debug("totalCount : " + totalCount);
 
 				source.setSize(mapperVO.getBodyFileSize());
 				category.setId(mapperVO.getMenuId());
@@ -229,7 +222,7 @@ public class CategoryServiceImpl implements CategoryService {
 								detailListVO.add(categoryDetail);
 
 								categoryDetail = new CategoryDetail();
-								listVO = new ArrayList<Menu>();
+								listVO = new ArrayList<Object>();
 
 								tg = true;
 							}
@@ -267,9 +260,6 @@ public class CategoryServiceImpl implements CategoryService {
 						count++;
 
 						if (count >= totalCount) {
-							/*
-							 * categoryDetail.setSubCategoryList(listVO); detailListVO.add(categoryDetail);
-							 */
 							responseVO.setCategoryList(listVO);
 						}
 					}
@@ -299,7 +289,7 @@ public class CategoryServiceImpl implements CategoryService {
 	 * requestVO)
 	 */
 	@Override
-	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public CategoryDetailListRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		int totalCount = 0;
@@ -322,7 +312,7 @@ public class CategoryServiceImpl implements CategoryService {
 		menuId = requestVO.getMenuId();
 		langCd = requestVO.getLangCd();
 
-		CategoryDetailRes responseVO = null;
+		CategoryDetailListRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		if (null == tenantId || "".equals(tenantId)) {
@@ -351,8 +341,8 @@ public class CategoryServiceImpl implements CategoryService {
 			// Response VO를 만들기위한 생성자
 			Menu category = null;
 			Source source = null;
-			List<Menu> listVO = new ArrayList<Menu>();
-			List<CategoryDetail> detailListVO = new ArrayList<CategoryDetail>();
+			List<Object> listVO = new ArrayList<Object>();
+			List<Object> detailListVO = new ArrayList<Object>();
 
 			boolean tg = false;
 			int count = 0;
@@ -363,11 +353,7 @@ public class CategoryServiceImpl implements CategoryService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
 
-			if (threeDepth) {
-				responseVO = new CategoryDetail3ListRes();
-			} else {
-				responseVO = new CategoryDetail2ListRes();
-			}
+			responseVO = new CategoryDetailListRes();
 
 			Iterator<MenuCategoryDTO> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
@@ -399,7 +385,7 @@ public class CategoryServiceImpl implements CategoryService {
 								detailListVO.add(categoryDetail);
 
 								categoryDetail = new CategoryDetail();
-								listVO = new ArrayList<Menu>();
+								listVO = new ArrayList<Object>();
 
 								tg = true;
 							}

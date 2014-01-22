@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryDetailListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.CategoryListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -42,7 +42,7 @@ public interface CategoryService {
 	 *            requestHeader
 	 * @return CategoryDetailRes
 	 */
-	public CategoryDetailRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public CategoryDetailListRes searchDetailCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 
 	/**
@@ -56,6 +56,6 @@ public interface CategoryService {
 	 *            requestHeader
 	 * @return CategoryDetailRes
 	 */
-	public CategoryDetailRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
+	public CategoryDetailListRes searchSubCategoryList(MenuReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 }
