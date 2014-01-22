@@ -17,16 +17,22 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 휴대폰 번호.
+	 * 발신자 휴대폰 번호.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String userPhone;
+	private String sendMdn;
 
 	/**
-	 * 통신사 코드.
+	 * 수신자 휴대폰 번호.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String userTelecom;
+	private String recvMdn;
+
+	/**
+	 * 통신사명.
+	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String carrier;
 
 	/**
 	 * 요청측ID.
@@ -41,31 +47,48 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	private String teleSvcId;
 
 	/**
-	 * @return String : deviceId
+	 * @return the sendMdn
 	 */
-	public String getUserPhone() {
-		return this.userPhone;
+	public String getSendMdn() {
+		return this.sendMdn;
 	}
 
 	/**
-	 * @param userPhone
+	 * @param sendMdn
+	 *            the sendMdn to set
 	 */
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
+	public void setSendMdn(String sendMdn) {
+		this.sendMdn = sendMdn;
 	}
 
 	/**
-	 * @return String : userTelecom
+	 * @return the recvMdn
 	 */
-	public String getUserTelecom() {
-		return this.userTelecom;
+	public String getRecvMdn() {
+		return this.recvMdn;
 	}
 
 	/**
-	 * @param userTelecom
+	 * @param recvMdn
+	 *            the recvMdn to set
 	 */
-	public void setUserTelecom(String userTelecom) {
-		this.userTelecom = userTelecom;
+	public void setRecvMdn(String recvMdn) {
+		this.recvMdn = recvMdn;
+	}
+
+	/**
+	 * @return the carrier
+	 */
+	public String getCarrier() {
+		return this.carrier;
+	}
+
+	/**
+	 * @param carrier
+	 *            the carrier to set
+	 */
+	public void setCarrier(String carrier) {
+		this.carrier = carrier;
 	}
 
 	/**
