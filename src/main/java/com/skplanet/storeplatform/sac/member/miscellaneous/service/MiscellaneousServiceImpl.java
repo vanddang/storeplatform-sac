@@ -418,7 +418,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setMbrNo(mbrNo);
 		serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
-		this.repository.insertServiceAuthCode(serviceAuthInfo);
+		// TODO 빌드 에러로 인한 임시 주석 - 20140122
+		// this.repository.insertServiceAuthCode(serviceAuthInfo);
 
 		/** 4. 인증코드 Response */
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
