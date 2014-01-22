@@ -17,7 +17,7 @@ package com.skplanet.storeplatform.sac.common.constant;
  * Updated on : 2014. 1. 22.
  * Updated by : 서대영, SK 플래닛.
  */
-public class SacConstants {
+public class CommonConstants {
 
 	/**
 	 * 요청 헤더 상수 - 인증키
