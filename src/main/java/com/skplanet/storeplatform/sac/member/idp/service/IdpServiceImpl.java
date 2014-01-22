@@ -68,13 +68,13 @@ public class IdpServiceImpl implements IdpService {
 
 		boolean siteCodeCheck = false;
 
-		LOGGER.debug("JOIN_SST_LIST START");
+		// LOGGER.debug("JOIN_SST_LIST START");
 
 		String joinSiteTotalList = map.get("join_sst_list").toString(); // 이용동의사이트정보
 		// example info list : 41100,null,20130923,212917,tstore000001741|90300,null,20130917,113426,null
-		LOGGER.debug("replace before:" + joinSiteTotalList);
+		// LOGGER.debug("replace before:" + joinSiteTotalList);
 		joinSiteTotalList = joinSiteTotalList.replaceAll(" ", "");
-		LOGGER.debug("replace after:" + joinSiteTotalList);
+		// LOGGER.debug("replace after:" + joinSiteTotalList);
 
 		String[] tempSplit = joinSiteTotalList.split("\\|");
 		for (int i = 0; i < tempSplit.length; i++) {
@@ -112,7 +112,7 @@ public class IdpServiceImpl implements IdpService {
 
 		if ("null".equals(oldId) || "".equals(oldId)) { // 신규가입경우 기존 Tstore에 없던 회원가입요청시 전환가입 대상자중 Tstore 미가입자로 Tstore에
 														// 가입이 안되어있는경우는 신규가입으로 판단
-
+			LOGGER.debug("신규가입 정보 입력 시작");
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 
 			// 공통으로 사용되는 요청정보
@@ -169,7 +169,7 @@ public class IdpServiceImpl implements IdpService {
 
 			createUserRequest.setMbrAuth(mbrAuth); // 실명인증
 			CreateUserResponse create = this.userSCI.create(createUserRequest); // 가입정보 등록
-
+			LOGGER.debug("신규가입 정보 입력 완료");
 			responseResult = create.getCommonResponse().getResultCode();
 			responseResultText = create.getCommonResponse().getResultMessage();
 			responseImIntSvcNo = map.get("im_int_svc_no").toString();
@@ -181,6 +181,7 @@ public class IdpServiceImpl implements IdpService {
 			commonRequest.setSystemID(map.get("systemID").toString());
 
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
+				LOGGER.debug("전환가입 정보 입력 시작");
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
@@ -207,13 +208,14 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 						searchUserResponse));
-
+				LOGGER.debug("전환가입 정보 입력 완료");
 				responseResult = updateUserResponse.getCommonResponse().getResultCode();
 				responseResultText = updateUserResponse.getCommonResponse().getResultMessage();
 				responseImIntSvcNo = map.get("im_int_svc_no").toString();
 				responseUserId = map.get("user_id").toString();
 
 			} else if (!userId.equals(oldId)) { // 변경가입, 변경전환
+				LOGGER.debug("변경가입,변경전환 정보 입력 시작");
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 				KeySearch keySearch = new KeySearch();
@@ -238,7 +240,7 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 						searchUserResponse));
-
+				LOGGER.debug("변경가입,변경전환 정보 입력 완료");
 				responseResult = updateUserResponse.getCommonResponse().getResultCode();
 				responseResultText = updateUserResponse.getCommonResponse().getResultMessage();
 				responseImIntSvcNo = map.get("im_int_svc_no").toString();
