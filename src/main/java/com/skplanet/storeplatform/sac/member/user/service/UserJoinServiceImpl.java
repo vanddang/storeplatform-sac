@@ -165,13 +165,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
+			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
 
 			/**
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
-			response.setDeviceKey(createUserResponse.getUserKey());
+			response.setDeviceKey(deviceKey);
 
 		} else if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
 			LOGGER.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
@@ -443,13 +443,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
+			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
 
 			/**
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
-			response.setDeviceKey(createUserResponse.getUserKey());
+			response.setDeviceKey(deviceKey);
 
 		} else {
 
@@ -711,7 +711,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	private void createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey) throws Exception {
+	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -775,11 +775,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		}
 
-		try {
-			this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
-		} catch (Exception e) {
-			throw new RuntimeException("## 휴대기기 등록실패!!!! submodule ERROR");
-		}
+		/**
+		 * 휴대기기 등록 모듈 호출.
+		 */
+		String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
+		LOGGER.info("## 휴대기기 등록 DeviceKey : {}", deviceKey);
+		return deviceKey;
 
 	}
 
