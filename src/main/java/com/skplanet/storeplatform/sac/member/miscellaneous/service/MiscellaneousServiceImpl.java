@@ -25,8 +25,6 @@ import com.skplanet.storeplatform.external.client.message.vo.SmsSendRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
-import com.skplanet.storeplatform.framework.core.exception.ErrorMessageBuilder;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -43,6 +41,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
@@ -186,22 +185,31 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				if (StringUtil.equals(searchDeviceResult.getCommonResponse().getResultCode(),
 						MemberConstants.RESULT_SUCCES)) {
 					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
-					LOGGER.debug("######## >>>>>>>>> deviceModelNo {}: ", deviceModelNo);
+					LOGGER.debug("## Response deviceModelNo {}: ", deviceModelNo);
 					if (deviceModelNo != null) {
-						// DB 접속(TB_CM_DEVICE) - UaCode 조회
-						String uaCode = this.repository.getUaCode(deviceModelNo);
+						LOGGER.debug("## UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
+								.getUserMbrDeviceDetail());
+						String uaCode = null;
+						boolean isUaCode = false;
+						List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
+								.getUserMbrDeviceDetail();
+						LOGGER.info("## SC 회원  DeviceMapper.searchDeviceList에서 UA Code 확인.");
+						for (int i = 0; i < deviceDetails.size(); i++) {
+							isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404");// UA코드 인지 여부
+							if (isUaCode) {
+								uaCode = deviceDetails.get(i).getExtraProfileValue();
+							}
+						}
 						if (uaCode != null) {
 							response.setUaCd(uaCode);
+							LOGGER.info("## UA Code : {}", uaCode);
 						} else {
 							LOGGER.info("deviceId에 해당하는 UA 코드 없음.");
 						}
 					}
 				} else {
-					LOGGER.info("SC 회원 API 조회 실패.");
-					throw new StorePlatformException(ErrorMessageBuilder.create().defaultMessage("SC 회원 API 조회 실패")
-							.build());
-					// throw new Exception("[" + searchDeviceResult.getCommonResponse().getResultCode() + "] "
-					// + searchDeviceResult.getCommonResponse().getResultMessage());
+					throw new Exception("SC 회원 API 조회 실패[" + searchDeviceResult.getCommonResponse().getResultCode()
+							+ "] " + searchDeviceResult.getCommonResponse().getResultMessage());
 				}
 
 			} else {
