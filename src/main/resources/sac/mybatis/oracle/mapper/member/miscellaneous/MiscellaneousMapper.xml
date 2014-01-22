@@ -78,6 +78,56 @@
             )
     </insert>
     
+    <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 ////// insertPhoneAuthCode 없애고 insertServiceAuthCode이거로 대체 예정 -->
+    <insert id="insertServiceAuthCode" parameterType="ServiceAuth">
+        /* MiscellaneousMapper.xml, insertServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
+        INSERT INTO
+            TB_CM_SVC_AUTH(
+                AUTH_SEQ,
+                <if test="mbrNo !=null">
+                MBR_NO,
+                </if>
+                TENANT_ID,
+                AUTH_TYPE_CD, /* 인증 타입 (CM010901:SMS, CM010902:Email) */
+                <if test="authSign !=null">
+                AUTH_SIGN, /* 인증 Signature */
+                </if>
+                AUTH_VALUE, /* 인증 코드 */
+                <if test="authEmail !=null">
+                AUTH_EMAIL, /* Email 인증일 경우 수신자 Email 주소 포함 */
+                </if>
+                AUTH_VALUE_CREATE_DT, /* 인증 코드 생성 일자 */
+                AUTH_COMPT_YN, /* 인증 여부 - 초기화 */
+                REG_ID,
+                REG_DT,
+                UPD_ID,
+                UPD_DT
+            )
+            VALUES(
+               SQ_CM_SVC_AUTH.NEXTVAL,
+               <if test="mbrNo !=null">
+               #{mbrNo},
+               </if>
+               <if test="tenantId !=null">
+               #{tenantId},
+               </if>
+               #{authTypeCd},
+               <if test="authSign !=null">
+               #{authSign},
+               </if>
+               #{authValue},
+               <if test="authEmail !=null">
+               #{authEmail},
+               </if>
+               SYSDATE,
+               'N',
+               'admin',
+               SYSDATE,
+               'admin',
+               SYSDATE
+            )
+    </insert>
+    
     <!--  휴대폰 SMS 인증 여부 업데이트(인증성공) -->
     <update id="updatePhoneAuthYn" parameterType="String">
     /* MiscellaneousMapper.xml, updatePhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
