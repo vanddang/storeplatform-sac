@@ -26,8 +26,9 @@
         <property name="componentId" value="SAC" />  
         <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
         <property name="errorHandler">
-            <bean class="com.skplanet.storeplatform.framework.core.proxy.WebApplicationResponseErrorHandler">
-                  <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
+            <bean class="com.skplanet.storeplatform.framework.web.bind.StorePlatformResponseErrorHandler">
+                <property name="componentId" value="SAC" />
+                <property name="messageConverters" ref="messageConvertersForComponentIfInvoker" /> 
             </bean> 
         </property>
     </bean>  

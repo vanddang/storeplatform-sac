@@ -42,6 +42,29 @@
         </mvc:message-converters> 
     </mvc:annotation-driven>   
      
+    <!-- defined interceptors -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.skplanet.storeplatform.framework.web.interceptor.ReferenceLocaleChangeInterceptor">
+                <property name="serviceLanguage" value="#{propertiesForSac['skp.common.service.language']}" />
+                <property name="defaultLanguage" value="#{propertiesForSac['skp.common.default.language']}" />
+                <property name="paramName" value="selectLanguage" />
+            </bean>
+        </mvc:interceptor>  
+        <!-- set "x-sac-result-code" of response header   -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.skplanet.storeplatform.framework.web.interceptor.SacResultCodeHeaderInterceptor"/>
+        </mvc:interceptor>
+        <!-- defined request logging  -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.skplanet.storeplatform.framework.web.interceptor.RequestLoggingInterceptor"/>
+        </mvc:interceptor>
+        <!-- defined request logging  -->
+    </mvc:interceptors>     
+     
     <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="favorPathExtension" value="false" />
         <property name="favorParameter" value="false" />
@@ -75,7 +98,9 @@
     <!-- locale resolver -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />    
         
-    <bean class="com.skplanet.storeplatform.framework.web.bind.GlobalControllerExceptionHandler" />
+    <bean class="com.skplanet.storeplatform.framework.web.bind.GlobalControllerExceptionHandler" >
+         <property name="componentId" value="SAC" />
+    </bean>
     
     <bean class="com.skplanet.storeplatform.framework.web.bind.LoggingExceptionResolver" />
     
@@ -87,10 +112,7 @@
                 <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                     <property name="supportedMediaTypes" value="application/json; charset=UTF-8" />
                     <property name="prettyPrint" value="true" />
-                </bean>
-                <bean class="com.skplanet.storeplatform.framework.web.converter.ProtobufHttpMessageConverter">
-                      <property name="supportedMediaTypes" value="application/x-protobuf; charset=UTF-8" />
-                </bean>   
+                </bean> 
             </list>
         </property>
     </bean>     

@@ -25,7 +25,7 @@
 		class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
 		<property name="inboundHeaderNames"
 			value="x-sac-guid, x-sac-auth-tenant-key, x-sac-auth-signature, x-sac-auth-timestamp, x-sac-auth-nonce, x-sac-interface_id, x-sac-device-info, x-sac-network-info, HTTP_REQUEST_HEADERS" />
-		<property name="outboundHeaderNames" value="HTTP_RESPONSE_HEADERS" />
+        <property name="outboundHeaderNames" value="x-sac-result-code, HTTP_RESPONSE_HEADERS" /> 
 	</bean>
 
 
