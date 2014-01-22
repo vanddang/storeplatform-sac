@@ -1,8 +1,11 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 
 /**
  * [REQUEST] 모바일 전용 회원 인증(MDN 인증)
@@ -37,34 +40,19 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private String nativeId;
 
 	/**
-	 * 루팅 여부(Y/N)
-	 */
-	private String rooting;
-
-	/**
-	 * Gmail 주소
+	 * 기기 계정(Gmail 주소)
 	 */
 	private String deviceAccount;
 
 	/**
-	 * Gmail 주소
-	 */
-	private String deviceModelNo;
-
-	/**
-	 * 자동 업데이트 여부(Y/N)
+	 * 자동 업데이트 여부
 	 */
 	private String isAutoUpdate;
 
 	/**
-	 * 삽클 버전
+	 * 휴대기기 부가정보 리스트
 	 */
-	private String scVer;
-
-	/**
-	 * 오리지널 OS 버전
-	 */
-	private String osVer;
+	private List<DeviceExtraInfo> userDeviceExtraInfo;
 
 	public String getDeviceId() {
 		return this.deviceId;
@@ -82,14 +70,6 @@ public class AuthorizeByMdnReq extends CommonInfo {
 		this.nativeId = nativeId;
 	}
 
-	public String getRooting() {
-		return this.rooting;
-	}
-
-	public void setRooting(String rooting) {
-		this.rooting = rooting;
-	}
-
 	public String getDeviceAccount() {
 		return this.deviceAccount;
 	}
@@ -98,44 +78,12 @@ public class AuthorizeByMdnReq extends CommonInfo {
 		this.deviceAccount = deviceAccount;
 	}
 
-	public String getDeviceModelNo() {
-		return this.deviceModelNo;
-	}
-
-	public void setDeviceModelNo(String deviceModelNo) {
-		this.deviceModelNo = deviceModelNo;
-	}
-
-	public String getIsAutoUpdate() {
-		return this.isAutoUpdate;
-	}
-
-	public void setIsAutoUpdate(String isAutoUpdate) {
-		this.isAutoUpdate = isAutoUpdate;
-	}
-
 	public String getDeviceTelecom() {
 		return this.deviceTelecom;
 	}
 
 	public void setDeviceTelecom(String deviceTelecom) {
 		this.deviceTelecom = deviceTelecom;
-	}
-
-	public String getScVer() {
-		return this.scVer;
-	}
-
-	public void setScVer(String scVer) {
-		this.scVer = scVer;
-	}
-
-	public String getOsVer() {
-		return this.osVer;
-	}
-
-	public void setOsVer(String osVer) {
-		this.osVer = osVer;
 	}
 
 	public static long getSerialversionuid() {
@@ -148,6 +96,22 @@ public class AuthorizeByMdnReq extends CommonInfo {
 
 	public void setDeviceIdType(String deviceIdType) {
 		this.deviceIdType = deviceIdType;
+	}
+
+	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
+		return this.userDeviceExtraInfo;
+	}
+
+	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
+		this.userDeviceExtraInfo = userDeviceExtraInfo;
+	}
+
+	public String getIsAutoUpdate() {
+		return this.isAutoUpdate;
+	}
+
+	public void setIsAutoUpdate(String isAutoUpdate) {
+		this.isAutoUpdate = isAutoUpdate;
 	}
 
 }

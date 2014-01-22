@@ -1,10 +1,12 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 
 /**
  * [REQUEST] ID 기반 회원 인증 (One ID, IDP 회원)
@@ -14,16 +16,6 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * 기기 ID
-	 */
-	private String deviceId;
-
-	/**
-	 * 기기 ID 타입 (msisdn, uuid, macaddress)
-	 */
-	private String deviceIdType;
 
 	/**
 	 * 사용자 아이디
@@ -38,29 +30,29 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	private String userPw;
 
 	/**
-	 * OS 버전
+	 * 기기 ID
 	 */
-	private String osVer;
+	private String deviceId;
 
 	/**
-	 * 삽클 버전
+	 * 기기 ID 타입 (msisdn, uuid, macaddress)
 	 */
-	private String scVer;
+	private String deviceIdType;
 
 	/**
-	 * Gmail 주소
+	 * 기기 계정(Gmail)
 	 */
 	private String deviceAccount;
-
-	/**
-	 * 기기 모델 번호
-	 */
-	private String deviceModelNo;
 
 	/**
 	 * 이동 통신사
 	 */
 	private String deviceTelecom;
+
+	/**
+	 * 휴대기기 부가정보 리스트
+	 */
+	private List<DeviceExtraInfo> userDeviceExtraInfo;
 
 	public String getDeviceId() {
 		return this.deviceId;
@@ -86,36 +78,12 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 		this.userPw = userPw;
 	}
 
-	public String getOsVer() {
-		return this.osVer;
-	}
-
-	public void setOsVer(String osVer) {
-		this.osVer = osVer;
-	}
-
-	public String getScVer() {
-		return this.scVer;
-	}
-
-	public void setScVer(String scVer) {
-		this.scVer = scVer;
-	}
-
 	public String getDeviceAccount() {
 		return this.deviceAccount;
 	}
 
 	public void setDeviceAccount(String deviceAccount) {
 		this.deviceAccount = deviceAccount;
-	}
-
-	public String getDeviceModelNo() {
-		return this.deviceModelNo;
-	}
-
-	public void setDeviceModelNo(String deviceModelNo) {
-		this.deviceModelNo = deviceModelNo;
 	}
 
 	public String getDeviceTelecom() {
@@ -132,6 +100,14 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 
 	public void setDeviceIdType(String deviceIdType) {
 		this.deviceIdType = deviceIdType;
+	}
+
+	public List<DeviceExtraInfo> getUserDeviceExtraInfo() {
+		return this.userDeviceExtraInfo;
+	}
+
+	public void setUserDeviceExtraInfo(List<DeviceExtraInfo> userDeviceExtraInfo) {
+		this.userDeviceExtraInfo = userDeviceExtraInfo;
 	}
 
 }
