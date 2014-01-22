@@ -667,17 +667,27 @@ public class DeviceServiceImpl implements DeviceService {
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
 				deviceInfo.getDeviceId(), deviceInfo.getDeviceIdType());
 
-		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo()); // 기기 모델 번호
-		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+		deviceInfo.setDeviceModelNo(majorDeviceInfo.getDeviceModelNo());
+		deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom());
 		if (deviceInfo.getDeviceNickName() == null) {
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 기기명
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 		}
 
 		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getUserDeviceExtraInfo();
+		if (deviceExtraInfoList == null)
+			deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 
-		deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(), deviceInfo));
-		deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
-		deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(), deviceInfo));
+		if (majorDeviceInfo.getImMngNum() != null) {
+			deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(), deviceInfo));
+		}
+
+		if (majorDeviceInfo.getUacd() != null) {
+			deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
+		}
+
+		if (majorDeviceInfo.getOmdUacd() != null) {
+			deviceExtraInfoList.add(this.getDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(), deviceInfo));
+		}
 
 		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
 		return deviceInfo;

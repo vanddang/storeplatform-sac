@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
 		TenantHeader tenant = new TenantHeader();
 		tenant.setSystemId(systemId);
 		tenant.setTenantId(tenantId);
+		requestHeader.setTenantHeader(tenant);
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
 		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
