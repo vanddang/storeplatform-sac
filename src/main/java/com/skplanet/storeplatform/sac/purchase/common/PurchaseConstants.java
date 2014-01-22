@@ -60,4 +60,11 @@ public final class PurchaseConstants {
 	/** 구매상품타입_정액제상품. */
 	public static final String PRCHS_PROD_TYPE_FIX = "OR020203"; // 정액제상품
 
+	/**
+	 * 자동 구매 해지 상태 코드
+	 */
+	public static final String AUTO_PRCHS_CLOSE_RESERVE = "OR020101";
+	public static final String AUTO_PRCHS_CLOSE_RESERVE_CANCEL = "OR020102";
+	public static final String AUTO_PRCHS_CLOSE = "OR020103";
+
 }
