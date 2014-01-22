@@ -148,20 +148,6 @@ public class MenuDetail extends CommonInfo {
 		this.searchFileName = searchFileName;
 	}
 
-	/*
-	 * public String getLnbFilePath() { return this.lnbFilePath; }
-	 * 
-	 * public void setLnbFilePath(String lnbFilePath) { this.lnbFilePath = lnbFilePath; }
-	 * 
-	 * public String getLnbFileName() { return this.lnbFileName; }
-	 * 
-	 * public void setLnbFileName(String lnbFileName) { this.lnbFileName = lnbFileName; }
-	 * 
-	 * public String getLnbFileSize() { return this.lnbFileSize; }
-	 * 
-	 * public void setLnbFileSize(String lnbFileSize) { this.lnbFileSize = lnbFileSize; }
-	 */
-
 	public String getBodyFilePath() {
 		return this.bodyFilePath;
 	}
