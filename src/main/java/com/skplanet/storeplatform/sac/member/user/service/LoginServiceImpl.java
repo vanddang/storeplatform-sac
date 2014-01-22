@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -571,6 +572,9 @@ public class LoginServiceImpl implements LoginService {
 			List<DeviceExtraInfo> userDeviceExtraInfo = req.getUserDeviceExtraInfo();
 
 			/* 헤더로 받는 부가 속성 정보(os버젼) */
+			DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, requestHeader.getDeviceHeader().getOsVersion(),
+					req.getUserDeviceExtraInfo());
+
 			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 			deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
 			deviceExtraInfo.setExtraProfileValue(requestHeader.getDeviceHeader().getOsVersion());
