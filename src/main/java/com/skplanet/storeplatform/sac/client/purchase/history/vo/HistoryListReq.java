@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -18,7 +20,9 @@ public class HistoryListReq extends CommonInfo {
 	private String startDt;
 	private String endDt;
 	private String tenantProdGrpCd;
-	private String prodId;
+
+	private List<HistoryProductList> productList;
+
 	private String prchsProdType;
 	private String hidingYn;
 	private String prchsStatusCd;
@@ -133,18 +137,18 @@ public class HistoryListReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the prodId
+	 * @return the productList
 	 */
-	public String getProdId() {
-		return this.prodId;
+	public List<HistoryProductList> getProductList() {
+		return this.productList;
 	}
 
 	/**
-	 * @param prodId
-	 *            the prodId to set
+	 * @param productList
+	 *            the productList to set
 	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
+	public void setProductList(List<HistoryProductList> productList) {
+		this.productList = productList;
 	}
 
 	/**

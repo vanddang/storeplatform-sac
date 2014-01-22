@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -17,8 +19,9 @@ public class HistoryCountReq extends CommonInfo {
 	private String insdDeviceId;
 	private String startDt;
 	private String endDt;
-	private String tenantProdGrpCd;
-	private String prodId;
+
+	private List<HistoryProductList> productList;
+
 	private String prchsProdType;
 	private String hidingYn;
 	private String prchsStatusCd;
@@ -115,33 +118,18 @@ public class HistoryCountReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the tenantProdGrpCd
+	 * @return the productList
 	 */
-	public String getTenantProdGrpCd() {
-		return this.tenantProdGrpCd;
+	public List<HistoryProductList> getProductList() {
+		return this.productList;
 	}
 
 	/**
-	 * @param tenantProdGrpCd
-	 *            the tenantProdGrpCd to set
+	 * @param productList
+	 *            the productList to set
 	 */
-	public void setTenantProdGrpCd(String tenantProdGrpCd) {
-		this.tenantProdGrpCd = tenantProdGrpCd;
-	}
-
-	/**
-	 * @return the prodId
-	 */
-	public String getProdId() {
-		return this.prodId;
-	}
-
-	/**
-	 * @param prodId
-	 *            the prodId to set
-	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
+	public void setProductList(List<HistoryProductList> productList) {
+		this.productList = productList;
 	}
 
 	/**
