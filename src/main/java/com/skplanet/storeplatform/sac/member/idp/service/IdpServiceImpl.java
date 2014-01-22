@@ -548,9 +548,9 @@ public class IdpServiceImpl implements IdpService {
 			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 			updateMbrOneIDRequest.setCommonRequest(commonRequest);
 			MbrOneID mbrOneID = new MbrOneID();
-			mbrOneID.setIntgMbrCaseCode((String) map.get("im_int_svc_no"));
+			mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
 			// 통합회원 유형 코드
-			mbrOneID.setIntgSvcNumber((String) map.get("im_mem_type_cd"));
+			mbrOneID.setIntgMbrCaseCode((String) map.get("im_mem_type_cd"));
 			mbrOneID.setUserID((String) map.get("user_id"));
 			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
@@ -668,7 +668,7 @@ public class IdpServiceImpl implements IdpService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		// keySearch.setKeyType("INTG_SVC_NO");
-		keySearch.setKeyType("MBR_ID");// 테스트
+		keySearch.setKeyType("MBR_ID");
 		if (null != map.get("im_int_svc_no")) {
 			keySearch.setKeyString((String) map.get("im_int_svc_no"));
 		}
