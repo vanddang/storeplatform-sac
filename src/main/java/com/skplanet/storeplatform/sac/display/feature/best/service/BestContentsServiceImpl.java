@@ -85,8 +85,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 		}
 
 		int count = 0;
-		count = Integer.parseInt(bestContentsReq.getOffset()) + Integer.parseInt(bestContentsReq.getCount()) - 1;
-		bestContentsReq.setCount(Integer.toString(count));
+		count = bestContentsReq.getOffset() + bestContentsReq.getCount() - 1;
+		bestContentsReq.setCount(count);
 
 		String stdDt = this.commonService.getBatchStandardDateString("S01", bestContentsReq.getListId());
 		bestContentsReq.setStdDt(stdDt);

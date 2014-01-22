@@ -89,8 +89,8 @@ public class BestAppServiceImpl implements BestAppService {
 		}
 
 		int count = 0;
-		count = Integer.parseInt(bestAppReq.getOffset()) + Integer.parseInt(bestAppReq.getCount()) - 1;
-		bestAppReq.setCount(Integer.toString(count));
+		count = bestAppReq.getOffset() + bestAppReq.getCount() - 1;
+		bestAppReq.setCount(count);
 
 		String stdDt = this.commonService.getBatchStandardDateString("S01", bestAppReq.getListId());
 		bestAppReq.setStdDt(stdDt);
