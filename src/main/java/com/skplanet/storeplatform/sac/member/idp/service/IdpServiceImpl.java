@@ -209,6 +209,7 @@ public class IdpServiceImpl implements IdpService {
 				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 						searchUserResponse));
 				LOGGER.debug("전환가입 정보 입력 완료");
+				// TO DO... 전시,구매,기타에서 사용되는 회원ID, 회원USER_KEY 등을 변경할수 있는 API 호출 추가 로직 대기중...
 				responseResult = updateUserResponse.getCommonResponse().getResultCode();
 				responseResultText = updateUserResponse.getCommonResponse().getResultMessage();
 				responseImIntSvcNo = map.get("im_int_svc_no").toString();
@@ -241,6 +242,8 @@ public class IdpServiceImpl implements IdpService {
 				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 						searchUserResponse));
 				LOGGER.debug("변경가입,변경전환 정보 입력 완료");
+
+				// TO DO... 전시,구매,기타에서 사용되는 회원ID, 회원USER_KEY 등을 변경할수 있는 API 호출 추가 로직 대기중...
 				responseResult = updateUserResponse.getCommonResponse().getResultCode();
 				responseResultText = updateUserResponse.getCommonResponse().getResultMessage();
 				responseImIntSvcNo = map.get("im_int_svc_no").toString();
