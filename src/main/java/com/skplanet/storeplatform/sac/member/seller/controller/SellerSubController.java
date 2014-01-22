@@ -1,13 +1,12 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import javax.validation.Valid;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,7 +52,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Valid CreateSubsellerReq req,
+	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
 			BindingResult result) throws Exception {
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		// TODO Exception (01/17이후 적용)
@@ -74,7 +73,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Valid RemoveSubsellerReq req,
+	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req,
 			BindingResult result) throws Exception {
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		// TODO Exception (01/17이후 적용)
