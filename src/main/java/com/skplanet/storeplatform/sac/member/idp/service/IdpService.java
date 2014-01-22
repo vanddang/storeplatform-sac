@@ -117,4 +117,14 @@ public interface IdpService {
 
 	public ImResult rXUpdateGuardianInfoIDP(HashMap map);
 
+	/**
+	 * 
+	 * <pre>
+	 * 활성화된 통합 ID 가입자 상태정보 배포.
+	 * </pre>
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ImResult rXActivateUserIdIDP(HashMap map);
 }

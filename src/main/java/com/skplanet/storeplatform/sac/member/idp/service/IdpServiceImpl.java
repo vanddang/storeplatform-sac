@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.MemberConstants;
 import com.skplanet.storeplatform.sac.member.idp.constant.IdpConstants;
 import com.skplanet.storeplatform.sac.member.idp.vo.ImResult;
 
@@ -49,6 +49,14 @@ public class IdpServiceImpl implements IdpService {
 	@Autowired
 	private UserSCI userSCI;
 
+	/*
+	 * 
+	 * <pre> 통합회원 전환생성정보를 사이트에 배포 - CMD : RXCreateUserIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
 	@Override
 	public ImResult rXCreateUserIDP(HashMap map) {
 		// System.out.println("rXCreateUserIDP ------- ");
@@ -254,6 +262,7 @@ public class IdpServiceImpl implements IdpService {
 
 		ImResult imResult = new ImResult();
 
+		imResult.setCmd("RXCreateUserIDP");
 		imResult.setResult(responseResult);
 		imResult.setResultText(responseResultText);
 		imResult.setImIntSvcNo(responseImIntSvcNo);
@@ -798,5 +807,41 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 
 		return imResult;
+	}
+
+	/*
+	 * 
+	 * <pre> 활성화된통합 ID 가입자상태정보배포 - CMD : RXCreateUserIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXActivateUserIdIDP(HashMap map) {
+		LOGGER.debug("rXActivateUserIdIDP ------- Start");
+
+		String spId = map.get("sp_id").toString(); // 서비스 사이트 코드
+		String targetSstCode = map.get("target_sst_cd").toString(); // 대상 서비스 사이트 코드
+		String imIntSvcNo = map.get("im_int_svc_no").toString();
+		String userId = map.get("user_id").toString();
+		String userStatusCode = map.get("user_status_code").toString();
+		String isEmailAuth = map.get("is_email_auth").toString();
+
+		LOGGER.debug("rXActivateUserIdIDP ------- End");
+		String responseResult = "";
+		String responseResultText = "";
+		String responseImIntSvcNo = "";
+		String responseUserId = "";
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("RXActivateUserIdIDP");
+		imResult.setResult(responseResult);
+		imResult.setResultText(responseResultText);
+		imResult.setImIntSvcNo(responseImIntSvcNo);
+		imResult.setUserId(responseUserId);
+
+		return imResult;
+
 	}
 }
