@@ -22,6 +22,9 @@ public class GetIndividualPolicyReq extends CommonInfo {
 	@NotBlank(message = "key should not be empty")
 	private String key;
 
+	/**
+	 * 정책 코드리스트.
+	 */
 	private List<PolicyCode> policyCodeList;
 
 	public String getKey() {
@@ -40,7 +43,16 @@ public class GetIndividualPolicyReq extends CommonInfo {
 		this.policyCodeList = policyCodeList;
 	}
 
-	public static class PolicyCode {
+	/**
+	 * 정책 코드.
+	 * 
+	 * Updated on : 2014. 1. 22. Updated by : 김경복, 부르칸.
+	 */
+	public static class PolicyCode extends CommonInfo {
+
+		private static final long serialVersionUID = 1L;
+
+		/** 정책 코드. */
 		@NotBlank(message = "key should not be empty")
 		public String policyCode;
 
