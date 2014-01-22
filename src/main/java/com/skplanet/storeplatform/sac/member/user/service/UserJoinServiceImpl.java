@@ -36,6 +36,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
@@ -90,6 +91,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
+		 * 단말등록시 필요한 기본 정보 세팅.
+		 */
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+
+		/**
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
@@ -139,7 +145,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 			userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-			userMbr.setDeviceCount("1"); // 휴대기기 등록 COUNT (AI-IS 로직 반영).
 			userMbr.setUserTelecom(req.getDeviceTelecom()); // 이동 통신사
 			userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
@@ -164,7 +169,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
+			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 			/**
 			 * 결과 세팅
@@ -322,17 +327,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
+		 * 단말등록시 필요한 기본 정보 세팅.
+		 */
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+
+		/**
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
 			LOGGER.error("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
-
-		/**
-		 * 단말등록시 필요한 기본 정보 세팅.
-		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -412,7 +417,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			userMbr.setDeviceCount("1"); // 휴대기기 등록 COUNT (AI-IS 로직 반영).
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // Email 수신여부 (AI-IS 로직 반영).
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
@@ -437,7 +441,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
+			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 			/**
 			 * 결과 세팅
@@ -612,7 +616,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			userMbr.setDeviceCount("1"); // 휴대기기 등록 COUNT (AI-IS 로직 반영).
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
@@ -637,7 +640,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 휴대기기 등록.
 			 */
-			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
+			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
 
 			/**
 			 * 결과 세팅
@@ -815,19 +818,24 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            SacRequestHeader
 	 * @param userKey
 	 *            사용자 등록키
+	 * @param majorDeviceInfo
+	 *            단말 주요 정보
 	 * @throws Exception
 	 *             Exception
 	 */
-	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey) throws Exception {
+	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey, MajorDeviceInfo majorDeviceInfo) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 
+		/**
+		 * Request Type 별로 분기하여 단말정보를 setting 한다. (가입처리에 대한 모든 휴대기기 등록을 모듈화)
+		 */
 		if (obj instanceof CreateByMdnReq) {
 
 			/**
 			 * 모바일 전용 회원 가입
 			 */
-			LOGGER.info("======================= CreateByMdnReq");
+			LOGGER.info("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
@@ -840,17 +848,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday()); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
-
-			// 단말 부가 정보 리스트
-			deviceInfo.setUserDeviceExtraInfo(req.getDeviceExtraInfoList());
-			LOGGER.info("## deviceInfo : {}", deviceInfo.toString());
+			deviceInfo.setUserDeviceExtraInfo(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateByAgreementReq) {
 
 			/**
 			 * 약관동의 가입
 			 */
-			LOGGER.info("======================= CreateByAgreementReq");
+			LOGGER.info("======================= ## CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
@@ -862,14 +867,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
-			LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
+			deviceInfo.setUserDeviceExtraInfo(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		} else if (obj instanceof CreateBySimpleReq) {
 
 			/**
 			 * 간편 가입
 			 */
-			LOGGER.info("======================= CreateBySimpleReq");
+			LOGGER.info("======================= ## CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
 			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
@@ -881,16 +886,77 @@ public class UserJoinServiceImpl implements UserJoinService {
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
 			deviceInfo.setIsUsed(MemberConstants.USE_Y); // 사용여부
-			LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
+			deviceInfo.setUserDeviceExtraInfo(this.getDeviceExtra(req.getDeviceExtraInfoList(), majorDeviceInfo)); // 단말부가정보
 
 		}
 
+		try {
+
+			/**
+			 * 휴대기기 등록 모듈 호출.
+			 */
+			LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
+			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
+			LOGGER.info("## 휴대기기 등록 DeviceKey : {}", deviceKey);
+			return deviceKey;
+
+		} catch (Exception e) {
+			throw new RuntimeException("## 휴대기기 등록 실패 ================");
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 단말 부가정보 setting.
+	 * </pre>
+	 * 
+	 * @param deviceExtraInfoList
+	 *            List<DeviceExtraInfo>
+	 * @param majorDeviceInfo
+	 *            MajorDeviceInfo
+	 * @return List<DeviceExtraInfo>
+	 */
+	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList, MajorDeviceInfo majorDeviceInfo) {
+
+		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList.toString());
+
 		/**
-		 * 휴대기기 등록 모듈 호출.
+		 * SKT 회원관리번호 추가.
 		 */
-		String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
-		LOGGER.info("## 휴대기기 등록 DeviceKey : {}", deviceKey);
-		return deviceKey;
+		if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getImMngNum()), "")) {
+			LOGGER.info("## SKT 회원관리번호 추가.");
+			DeviceExtraInfo imMngNum = new DeviceExtraInfo();
+			imMngNum.setExtraProfile(MemberConstants.DEVICE_EXTRA_IMMNGNUM);
+			imMngNum.setExtraProfileValue(majorDeviceInfo.getImMngNum());
+			deviceExtraInfoList.add(imMngNum);
+		}
+
+		/**
+		 * UA 코드 추가.
+		 */
+		if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getUacd()), "")) {
+			LOGGER.info("## UA 코드 추가.");
+			DeviceExtraInfo uacd = new DeviceExtraInfo();
+			uacd.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
+			uacd.setExtraProfileValue(majorDeviceInfo.getUacd());
+			deviceExtraInfoList.add(uacd);
+		}
+
+		/**
+		 * OMD UA 코드 추가.
+		 */
+		if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getOmdUacd()), "")) {
+			LOGGER.info("## OMD UA 코드 추가.");
+			DeviceExtraInfo omdUacd = new DeviceExtraInfo();
+			omdUacd.setExtraProfile(MemberConstants.DEVICE_EXTRA_OMDUACD);
+			omdUacd.setExtraProfileValue(majorDeviceInfo.getOmdUacd());
+			deviceExtraInfoList.add(omdUacd);
+		}
+
+		LOGGER.info("## 세팅후 deviceExtraInfoList : {}", deviceExtraInfoList.toString());
+
+		return deviceExtraInfoList;
 
 	}
 
@@ -929,7 +995,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} else {
 
-			// throw new RuntimeException(checkDupIdInfo.getResponseHeader().getResult_text());
+			throw new RuntimeException(checkDupIdInfo.getResponseHeader().getResult_text());
 
 		}
 
