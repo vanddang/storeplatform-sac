@@ -38,9 +38,20 @@ public interface MiscellaneousRepository {
 	 * </pre>
 	 * 
 	 * @param serviceAuthInfo
-	 *            ServiceAuthDTO
+	 *            ServiceAuth
 	 */
 	public void insertPhoneAuthCode(ServiceAuth serviceAuthInfo);
+
+	/**
+	 * <pre>
+	 * 서비스별 인증코드 정보 저장 ( Email, SMS ).
+	 * insertPhoneAuthCode 삭제 후 대체 예정
+	 * </pre>
+	 * 
+	 * @param serviceAuthInfo
+	 *            ServiceAuth
+	 */
+	public void insertServiceAuthCode(ServiceAuth serviceAuthInfo);
 
 	/**
 	 * <pre>

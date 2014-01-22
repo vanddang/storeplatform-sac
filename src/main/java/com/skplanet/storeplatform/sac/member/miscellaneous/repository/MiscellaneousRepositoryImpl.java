@@ -44,4 +44,9 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	public String getEmailAuthYn(String mbrNo) {
 		return null;
 	}
+
+	@Override
+	public void insertServiceAuthCode(ServiceAuth serviceAuthInfo) {
+		this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
+	}
 }
