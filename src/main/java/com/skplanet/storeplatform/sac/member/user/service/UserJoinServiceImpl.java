@@ -132,18 +132,17 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 기본정보 setting
 			 */
 			UserMbr userMbr = new UserMbr();
-			userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key());
+			userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key()); // MBR_NO
+			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE);
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-			userMbr.setImRegDate(DateUtil.getToday());
+			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 			userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
-			userMbr.setUserTelecom(req.getDeviceTelecom());
-			userMbr.setIsParent(req.getIsParent());
-			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
-			userMbr.setUserBirthDay(req.getOwnBirth());
+			userMbr.setDeviceCount("1"); // 휴대기기 등록 COUNT (AI-IS 로직 반영).
+			userMbr.setUserTelecom(req.getDeviceTelecom()); // 이동 통신사
+			userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
+			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
 			createUserRequest.setUserMbr(userMbr);
 			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
@@ -264,23 +263,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 기본정보 setting
 			 */
 			UserMbr userMbr = new UserMbr();
-			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email());
-			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn());
-			userMbr.setUserName(profileInfo.getResponseBody().getUser_name());
-			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday());
+			userMbr.setUserID(req.getUserId()); // 사용자 아이디
+			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
+			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호
+			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
+			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
 			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
 			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // OneID 통합서비스 관리번호
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-			userMbr.setImRegDate(DateUtil.getToday());
-			userMbr.setUserID(req.getUserId());
-			userMbr.setUserTelecom(req.getDeviceTelecom());
-			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // AI-IS 로직 반영.
-			userMbr.setIsParent(MemberConstants.USE_N); // AI-IS 로직 반영.
-			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
+			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
+			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 			createUserRequest.setUserMbr(userMbr);
 			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
@@ -303,7 +299,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
-			response.setDeviceKey(createUserResponse.getUserKey());
 
 		} else {
 
@@ -405,23 +400,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 기본정보 setting
 			 */
 			UserMbr userMbr = new UserMbr();
-			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email());
-			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn());
-			userMbr.setUserName(profileInfo.getResponseBody().getUser_name());
-			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday());
+			userMbr.setUserID(req.getUserId()); // 사용자 아이디
+			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
+			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호
+			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
+			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
 			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
 			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // 통합 서비스 관리 번호
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // OneId 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-			userMbr.setImRegDate(DateUtil.getToday());
-			userMbr.setUserID(req.getUserId());
-			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom());
-			userMbr.setDeviceCount("1"); // AI-IS 로직 반영.
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // AI-IS 로직 반영.
-			userMbr.setIsParent(MemberConstants.USE_N); // AI-IS 로직 반영.
-			userMbr.setRegDate(DateUtil.getToday() + DateUtil.getTime());
+			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			userMbr.setDeviceCount("1"); // 휴대기기 등록 COUNT (AI-IS 로직 반영).
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // Email 수신여부 (AI-IS 로직 반영).
+			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
+			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 			createUserRequest.setUserMbr(userMbr);
 			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
@@ -471,6 +465,74 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
 		 */
 		this.checkDuplicateId(req.getUserId());
+
+		/**
+		 * IDP - 간편회원가입
+		 */
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("user_id", URLEncoder.encode(req.getUserId(), "UTF-8"));
+		param.put("user_passwd", URLEncoder.encode(req.getUserPw(), "UTF-8"));
+		param.put("user_email", URLEncoder.encode(req.getUserEmail(), "UTF-8"));
+		LOGGER.info("## param : {}", param.entrySet());
+
+		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
+		LOGGER.info("## Im Result Code   : {}", simpleJoinInfo.getResponseHeader().getResult());
+		LOGGER.info("## Im Result Text   : {}", simpleJoinInfo.getResponseHeader().getResult_text());
+
+		if (StringUtils.equals(simpleJoinInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+
+			LOGGER.info("## IDP 간편가입 연동 성공 ==============================================");
+			LOGGER.info("## MBR_NO : {}", simpleJoinInfo.getResponseBody().getUser_key());
+
+			CreateUserRequest createUserRequest = new CreateUserRequest();
+
+			/**
+			 * 공통 정보 setting
+			 */
+			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+			/**
+			 * SC 사용자 기본정보 setting
+			 */
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserID(req.getUserId()); // 사용자 아이디
+			userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
+			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
+			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+			createUserRequest.setUserMbr(userMbr);
+			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
+
+			/**
+			 * SC 사용자 가입요청
+			 */
+			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
+			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
+
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+				LOGGER.info("## 간편 가입 실패 ===========================");
+				throw new RuntimeException("사용자 회원 가입 실패");
+
+			}
+
+			/**
+			 * 결과 세팅
+			 */
+			response.setUserKey(createUserResponse.getUserKey());
+
+		} else {
+
+			LOGGER.info("## IDP - 간편회원가입 실패~!!!");
+			throw new RuntimeException("IDP - 간편회원가입 실패");
+
+		}
 
 		/**
 		 * 결과 세팅
