@@ -102,6 +102,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
+		/**
+		 * 모번호 조회 (989 일 경우만)
+		 */
+		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+
 		/* SC 회원 존재 여부 */
 		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
 
@@ -189,11 +194,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		String deviceId = req.getDeviceId();
 
 		logger.info("###### 2. SearchUser Request : {}", req.toString());
-
-		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		SearchUserResponse schUserRes = new SearchUserResponse();
