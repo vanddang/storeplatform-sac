@@ -181,6 +181,9 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 		}
 
+		/* 휴대기기 주요정보 확인 */
+		req.setDeviceInfo(this.setMajorDeviceInfo(req.getDeviceInfo()));
+
 		/* 휴대기기 등록 처리 */
 		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
 
@@ -371,9 +374,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(systemId);
 		commonRequest.setTenantID(tenantId);
-
-		/* 휴대기기 주요정보 확인 */
-		deviceInfo = this.setMajorDeviceInfo(deviceInfo);
 
 		/* 1. 휴대기기 정보 등록 요청 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
