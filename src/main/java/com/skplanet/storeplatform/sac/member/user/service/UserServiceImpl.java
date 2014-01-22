@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -131,11 +132,15 @@ public class UserServiceImpl implements UserService {
 		if (deviceInfoList != null) {
 			StringBuffer sbUserPhone = new StringBuffer();
 			for (DeviceInfo deviceInfo : deviceInfoList) {
+
+				String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, deviceInfo.getUserDeviceExtraInfo());
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUserDeviceExtraInfo());
+
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");
-				//sbUserPhone.append(deviceInfo.getImMngNum() == null ? "" : deviceInfo.getImMngNum());
+				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
 				sbUserPhone.append(",");
-				//sbUserPhone.append(deviceInfo.getUacd() == null ? "" : deviceInfo.getUacd());
+				sbUserPhone.append(uacd == null ? "" : uacd);
 				sbUserPhone.append(",");
 				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
 				sbUserPhone.append("|");
