@@ -113,12 +113,14 @@ public class ListDeviceTest {
 		header.setTenantHeader(tenantHeader);
 
 		ListDeviceReq req = new ListDeviceReq();
-		req.setUserKey("US201401161113423010000110");
-		//req.setDeviceId("01020284280");
+		req.setUserKey("US2014012217211685500003231");
+		req.setDeviceId("01066786220");
 		//req.setDeviceKey("DE201401161113425370000050");
 		//req.setUserId("01020284280");
-		req.setIsMainDevice("Y");
+		//req.setIsMainDevice("Y");
 		try {
+			ObjectMapper objMapper = new ObjectMapper();
+			logger.info("Request : {}", objMapper.writeValueAsString(req));
 			ListDeviceRes res = this.deviceService.listDevice(header, req);
 			logger.info("::: res : {}", res.toString());
 		} catch (Exception e) {
