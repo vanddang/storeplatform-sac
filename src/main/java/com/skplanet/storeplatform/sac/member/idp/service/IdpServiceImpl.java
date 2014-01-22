@@ -823,7 +823,7 @@ public class IdpServiceImpl implements IdpService {
 
 	/*
 	 * 
-	 * <pre> 활성화된통합 ID 가입자상태정보배포 - CMD : RXCreateUserIDP . </pre>
+	 * <pre> 활성화된통합 ID 가입자상태정보배포 - CMD : RXActivateUserIdIDP . </pre>
 	 * 
 	 * @param map Request로 받은 Parameter Map
 	 * 
@@ -845,6 +845,24 @@ public class IdpServiceImpl implements IdpService {
 		String responseResultText = "";
 		String responseImIntSvcNo = "";
 		String responseUserId = "";
+
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setTenantID(map.get("tenantID").toString());
+		commonRequest.setSystemID(map.get("systemID").toString());
+
+		searchUserRequest.setCommonRequest(commonRequest);
+
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType("SVC_MANG_NO");
+		keySearch.setKeyString(map.get("im_int_svc_no").toString()); // 통합 서비스 번호
+		List<KeySearch> keySearchList = new ArrayList();
+		keySearchList.add(keySearch);
+
+		searchUserRequest.setKeySearchList(keySearchList);
+
+		SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXActivateUserIdIDP");
