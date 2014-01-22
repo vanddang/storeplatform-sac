@@ -150,7 +150,7 @@ public class IdpServiceImpl implements IdpService {
 
 			// 실명인증정보
 			MbrAuth mbrAuth = new MbrAuth();
-			mbrAuth.setIsRealName(map.get("is_rname_auth").toString()); // 실명 인증 여부
+			mbrAuth.setIsRealName("N"); // 실명 인증 여부 신규가입인경우 Tstore에서 실명인증을 받아야 구매할수 있으므로 초기값 셋팅
 			mbrAuth.setCi(map.get("user_ci").toString()); // CI
 			mbrAuth.setDi(map.get("user_di").toString()); // DI
 			mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString()); // AUTH_MTD_CD 인증방법코드
@@ -309,7 +309,6 @@ public class IdpServiceImpl implements IdpService {
 		getUserMbr.setUserState(hashMap.get("user_area_name").toString()); // (외국인)주
 		getUserMbr.setUserCountry(hashMap.get("user_nation_code").toString()); // 사용자 국가 코드
 		// getUserMbr.setImSiteCode("Y"); // OneID 이용동의 사이트 정보
-		getUserMbr.setIsRealName(hashMap.get("is_rname_auth").toString()); // 실명인증 여부
 		getUserMbr.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
 
 		// 실명인증정보
