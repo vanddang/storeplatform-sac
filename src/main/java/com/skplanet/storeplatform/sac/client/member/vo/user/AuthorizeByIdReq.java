@@ -38,9 +38,9 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	private String userPw;
 
 	/**
-	 * 오리지널 OS 버전
+	 * OS 버전
 	 */
-	private String osVerOrg;
+	private String osVer;
 
 	/**
 	 * 삽클 버전
@@ -86,12 +86,12 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 		this.userPw = userPw;
 	}
 
-	public String getOsVerOrg() {
-		return this.osVerOrg;
+	public String getOsVer() {
+		return this.osVer;
 	}
 
-	public void setOsVerOrg(String osVerOrg) {
-		this.osVerOrg = osVerOrg;
+	public void setOsVer(String osVer) {
+		this.osVer = osVer;
 	}
 
 	public String getScVer() {
