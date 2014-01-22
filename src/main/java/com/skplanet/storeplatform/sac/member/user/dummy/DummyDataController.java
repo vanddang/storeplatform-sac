@@ -604,7 +604,7 @@ public class DummyDataController {
 		deviceInfo.setDeviceId("01011112222");
 		deviceInfo.setDeviceType("");
 		deviceInfo.setDeviceModelNo("LG-SH810");
-		deviceInfo.setImMngNum("");
+		// deviceInfo.setImMngNum("");
 		deviceInfo.setDeviceTelecom("US001201");
 		deviceInfo.setDeviceNickName("LG-SH810");
 		deviceInfo.setIsPrimary("Y");
