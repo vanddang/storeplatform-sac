@@ -3,6 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,11 +50,21 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * Initialize parameter before JUnit Test.
 	 * </pre>
 	 */
 	@Before
 	public void before() {
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+	}
+
+	/**
+	 * <pre>
+	 * Restoration parameter after JUnit Test.
+	 * </pre>
+	 */
+	@After
+	public void after() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
@@ -96,7 +107,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * 실패 CASE
+	 * Exception.
 	 * 기존 인증된 인증 코드.
 	 * </pre>
 	 */

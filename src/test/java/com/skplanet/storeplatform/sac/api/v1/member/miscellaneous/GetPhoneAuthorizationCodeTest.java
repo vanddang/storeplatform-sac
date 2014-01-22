@@ -79,8 +79,9 @@ public class GetPhoneAuthorizationCodeTest {
 							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
-							request.setUserPhone("01012344241");
-							request.setUserTelecom("SKT");
+							request.setSendMdn("01012344241");
+							request.setRecvMdn("01012344241");
+							request.setCarrier("SKT");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
@@ -115,8 +116,9 @@ public class GetPhoneAuthorizationCodeTest {
 							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
-							request.setUserPhone("01012344241");
-							request.setUserTelecom("AAA");
+							request.setSendMdn("01012344241");
+							request.setRecvMdn("011");
+							request.setCarrier("");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
