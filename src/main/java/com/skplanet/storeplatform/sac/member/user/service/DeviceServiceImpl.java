@@ -509,8 +509,10 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
+		deviceInfo = this.getConverterDeviceInfo(userMbrDevice);
+
 		/* 휴대기기 주요정보 확인 */
-		deviceInfo = this.setMajorDeviceInfo(deviceInfo);
+		//deviceInfo = this.setMajorDeviceInfo(deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
@@ -674,9 +676,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 부가정보 */
-
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());// 부가정보 등록시 셋팅할 deviceKey
-		userMbrDevice.setUserMbrDeviceDetail(this.getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
@@ -685,7 +685,7 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setCommonRequest(commonRequest);
 		createDeviceReq.setUserKey(userKey);
 		createDeviceReq.setIsNew("N");
-		createDeviceReq.setUserMbrDevice(userMbrDevice);
+		createDeviceReq.setUserMbrDevice(this.getConverterUserMbrDeviceInfo(deviceInfo));
 
 		logger.info("device merge CreateDeviceRequest : {}", createDeviceReq.toString());
 		logger.info("device merge CreateDeviceRequest UserMbrDevice : {}", createDeviceReq.getUserMbrDevice().toString());
