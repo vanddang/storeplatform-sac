@@ -74,12 +74,12 @@ public class InvalidUserTelNoTest {
 						ProvisioningReq req = new ProvisioningReq();
 						req.setCmd("RXInvalidUserTelNoIDP");
 						HashMap resultMap = new HashMap();
-						resultMap.put("systemID", "S001");
+						resultMap.put("systemID", "W");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", " 2222222");
-						resultMap.put("user_id", "wap_4236");
+						resultMap.put("im_int_svc_no", "100000003925");
+						resultMap.put("user_id", "tstoreoneid1002");
 						resultMap.put("user_tn", "01011112222");
 						resultMap.put("is_user_tn_own", "Y");
 						resultMap.put("modify_sst_code", "20100");

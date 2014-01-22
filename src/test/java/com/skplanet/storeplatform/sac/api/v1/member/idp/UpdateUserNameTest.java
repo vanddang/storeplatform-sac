@@ -81,8 +81,8 @@ public class UpdateUserNameTest {
 						resultMap.put("sp_id", "90000");
 						resultMap.put("trx_no", "1111");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "shop_3940");
-						resultMap.put("user_name", "홍길동");
+						resultMap.put("im_int_svc_no", "tstoreoneid1002");
+						resultMap.put("user_name", "김형식");
 						resultMap.put("user_birthday", "19750212");
 						resultMap.put("user_sex", "M");
 						resultMap.put("is_rname_auth", "Y");
