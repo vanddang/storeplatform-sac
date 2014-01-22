@@ -48,12 +48,12 @@ public class MetaInfo {
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
-	private String mp3Sprt;
-	private String bellSprt;
-	private String ringSprt;
+	private String mp3SprtYn;
+	private String bellSprtYn;
+	private String colorringSprtYn;
 
 	// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
-	private String dcRate;
+	private Double dcRate;
 	private String dcAmt;
 	private String dlvProdYn;
 	private String dwldQty;
@@ -66,6 +66,8 @@ public class MetaInfo {
 	private String regDt;
 	private String applyStartDt;
 	private String applyEndDt;
+	private String prodCaseCd;
+	private Integer prodNetAmt;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -371,35 +373,35 @@ public class MetaInfo {
 		this.rankChgCnt = rankChgCnt;
 	}
 
-	public String getMp3Sprt() {
-		return this.mp3Sprt;
+	public String getMp3SprtYn() {
+		return this.mp3SprtYn;
 	}
 
-	public void setMp3Sprt(String mp3Sprt) {
-		this.mp3Sprt = mp3Sprt;
+	public void setMp3SprtYn(String mp3SprtYn) {
+		this.mp3SprtYn = mp3SprtYn;
 	}
 
-	public String getBellSprt() {
-		return this.bellSprt;
+	public String getBellSprtYn() {
+		return this.bellSprtYn;
 	}
 
-	public void setBellSprt(String bellSprt) {
-		this.bellSprt = bellSprt;
+	public void setBellSprtYn(String bellSprtYn) {
+		this.bellSprtYn = bellSprtYn;
 	}
 
-	public String getRingSprt() {
-		return this.ringSprt;
+	public String getColorringSprtYn() {
+		return this.colorringSprtYn;
 	}
 
-	public void setRingSprt(String ringSprt) {
-		this.ringSprt = ringSprt;
+	public void setColorringSprtYn(String colorringSprtYn) {
+		this.colorringSprtYn = colorringSprtYn;
 	}
 
-	public String getDcRate() {
+	public Double getDcRate() {
 		return this.dcRate;
 	}
 
-	public void setDcRate(String dcRate) {
+	public void setDcRate(Double dcRate) {
 		this.dcRate = dcRate;
 	}
 
@@ -497,6 +499,22 @@ public class MetaInfo {
 
 	public void setApplyEndDt(String applyEndDt) {
 		this.applyEndDt = applyEndDt;
+	}
+
+	public String getProdCaseCd() {
+		return this.prodCaseCd;
+	}
+
+	public void setProdCaseCd(String prodCaseCd) {
+		this.prodCaseCd = prodCaseCd;
+	}
+
+	public Integer getProdNetAmt() {
+		return this.prodNetAmt;
+	}
+
+	public void setProdNetAmt(Integer prodNetAmt) {
+		this.prodNetAmt = prodNetAmt;
 	}
 
 }

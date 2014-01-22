@@ -16,6 +16,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -45,7 +46,7 @@ public class ResponseInfoGenerateFacadeServiceImpl implements ResponseInfoGenera
 	private ComicInfoGenerateService comicService;
 
 	@Autowired
-	ShoppingInfoGenerateService shoppingService;
+	private ShoppingInfoGenerateService shoppingService;
 
 	@Override
 	public Product generateAppProduct(MetaInfo metaInfo) {
@@ -241,7 +242,6 @@ public class ResponseInfoGenerateFacadeServiceImpl implements ResponseInfoGenera
 		product.setAccrual(accrual);
 		product.setRights(rights);
 		product.setContributor(contributor);
-		// TODO osm1021 productExplain 설정 필요
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		return product;
 	}
@@ -249,7 +249,76 @@ public class ResponseInfoGenerateFacadeServiceImpl implements ResponseInfoGenera
 	@Override
 	public Product generateShoppingProduct(MetaInfo metaInfo) {
 		Product product = new Product();
+		Identifier identifier = this.commonService.generateIdentifier(metaInfo);
+		// Title 생성
+		Title title = this.commonService.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.shoppingService.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonService.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonService.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.shoppingService.generateAccrual(metaInfo);
+		// Rights 생성
+		Rights rights = this.shoppingService.generateRights(metaInfo);
+		// Shopping용 Contributor 생성
+		Contributor contributor = this.shoppingService.generateContributor(metaInfo);
+		// SalesOption 생성
+		SalesOption salesOption = this.shoppingService.generateSalesOption(metaInfo);
+
+		product.setIdentifier(identifier);
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setSalesOption(salesOption);
 		return product;
+	}
+
+	@Override
+	public Product generateSpecificAppProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product generateSpecificMusicProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product generateSpecificMovieProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product generateSpecificBroadcastProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product generateSpecificEbookProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product generateSpecificComicProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product generateSpecificShoppingProduct(MetaInfo metaInfo) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

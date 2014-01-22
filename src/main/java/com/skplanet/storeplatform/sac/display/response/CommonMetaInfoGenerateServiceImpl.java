@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 @Service
 @Transactional
 public class CommonMetaInfoGenerateServiceImpl implements CommonMetaInfoGenerateService {
+
 	@Override
 	public Identifier generateIdentifier(MetaInfo metaInfo) {
 		String contentsTypeCd = metaInfo.getContentsTypeCd();

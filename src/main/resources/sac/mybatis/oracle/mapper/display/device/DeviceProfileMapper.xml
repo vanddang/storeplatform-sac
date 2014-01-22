@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="DeviceProfile">
 	<!-- 특정 단말 정보 조회-->
-	<resultMap id="deviceProfileMap" type="DeviceProfileDTO" autoMapping="true">
+	<resultMap id="deviceProfileMap" type="DeviceProfile" autoMapping="true">
        <association property="servicesMap" javaType="java.util.HashMap">
              <result column="EBOOK_SPRT_YN" property="ebook" />
              <result column="COMIC_SPRT_YN" property="comic" />
@@ -58,7 +58,8 @@
 		          WHERE CD_ID = LCD_SIZE_CD)
 		          AS LCD_SIZE_NM                                                                    /*LCD_크기_명 */
 		      ,CMNT_COMP_CD                                                                         /*통신회사 코드 */
-		      ,REP_DEVICE_YN                                                                        /*대표_기기_여부 */
+		      ,REP_DEVICE_YN  
+		      ,DEVICE_TYPE_CD                                                                      /*대표_기기_여부 */
 		  FROM TB_CM_DEVICE
 		 WHERE USE_YN = 'Y'
 		 <!-- 

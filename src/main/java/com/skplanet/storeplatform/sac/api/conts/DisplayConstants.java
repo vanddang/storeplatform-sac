@@ -170,4 +170,37 @@ public class DisplayConstants {
 	// ////////////////////////////////////// supported hardware 정보 //////////////////////////////////////////
 	public static final String DP_DRM_SUPPORT_NM = "drm";
 	public static final String DP_IN_APP_SUPPORT_NM = "iab";
+
+	/**
+	 * Shopping Rights Type 정보
+	 */
+	public static final String DP_SHOPPING_RIGHTS_TYPE_NM = "duration/salePeriod";
+
+	/**
+	 * 채널-에피스도 상품 관계 코드
+	 */
+	public static final String DP_CHANNEL_EPISHODE_RELATIONSHIP_CD = "DP010802";
+
+	/**
+	 * 폰 타입 코드
+	 */
+	public static final String DP_PHONE_DEVICE_TYPE_CD = "PD011502";
+
+	public static final String DP_PHONE_DEVICE_TYPE_NM = "phone";
+
+	/**
+	 * 태블릿 타입 코드
+	 */
+	public static final String DP_TABLET_DEVICE_TYPE_CD = "PD011503";
+
+	public static final String DP_TABLET_DEVICE_TYPE_NM = "tablet";
+
+	/**
+	 * OMD 단말 타입
+	 */
+	public static final String DP_OMD_TYPE_CD = "US001204";
+
+	public static final String DP_OMD_TYPE_NM = "omd";
+
+	public static final String DP_OMD_NORMAL_NM = "normal";
 }

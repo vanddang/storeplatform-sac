@@ -237,8 +237,8 @@
               MCI.RANK_CHG_CNT
             , MCI.RANK_CHG_CLSF_CD
             , MCI.ARTIST_ID
-            , CP.PROD_ID AS CHNL_PROD_ID
-            , CP.PART_PROD_ID AS EPSD_PROD_ID
+            , CP.PROD_ID 
+            , CP.PART_PROD_ID
             , C.MENU_ID
             , CD.MENU_NM
             , CD.MENU_DESC
@@ -251,12 +251,14 @@
             , TPP.PROD_AMT
             , P.PROD_GRD_CD
             , P.CONTENTS_TYPE_CD
+            , P.META_CLSF_CD
             , PD.ARTIST1_NM
             , PD.ARTIST2_NM
             , PD.ARTIST3_NM                        
             , MP.CHNL_COMP_NM
             , MP.AGENCY_NM
             , MP.ISSUE_DAY
+            , 'Y' AS MP3_SPRT_YN
             , MP.BELL_SPRT_YN
             , MP.COLORRING_SPRT_YN
             , PI.FILE_PATH
@@ -498,7 +500,8 @@
                                ,A.BRAND_NM  
                                ,D.MENU_ID  
                                ,F.MENU_NM
-                               ,J.TOP_MENU_ID   
+                               ,J.TOP_MENU_ID
+                               ,J.META_CLSF_CD  
                                ,(SELECT MENU_NM
                                    FROM TB_DP_MENU_CATEGORY_DESC
                                   WHERE MENU_ID = J.TOP_MENU_ID
@@ -545,7 +548,7 @@
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
                                      FROM TB_DP_TENANT_PROD_STATS 
-                                    WHERE TENANT_ID = #{tenantId}    /* INPUT 테넌트ID */
+                                    WHERE TENANT_ID = #{tenantHeader.tenantId}    /* INPUT 테넌트ID */
                                    ) M
                                  ,(SELECT 
                                         B1.PROD_ID
@@ -578,17 +581,17 @@
                         AND PI.EXPO_ORD ='1'
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)
-                      <if test='contentsTypeCd == "PD002501"'>
-                        AND B.CATALOG_ID = #{prodId}          
+                      <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
+                        AND B.CATALOG_ID = #{productBasicInfo.prodId}          
                       </if>
-                      <if test='contentsTypeCd == "PD002502"'>
-                        AND H.PART_PROD_ID = #{prodId}
+                      <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                        AND H.PART_PROD_ID = #{productBasicInfo.prodId}
                       </if>
                         
                         AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
-                        AND PI.LANG_CD= #{langCd}                /* ko : 한국어 */         
-                        AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
-                        AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
+                        AND PI.LANG_CD= #{lang}                /* ko : 한국어 */         
+                        AND C.LANG_CD= #{lang}          /* ko : 한국어 */
+                        AND F.LANG_CD= #{lang}          /* ko : 한국어 */
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
                         AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */

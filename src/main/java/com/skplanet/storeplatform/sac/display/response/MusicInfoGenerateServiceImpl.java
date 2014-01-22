@@ -34,11 +34,11 @@ public class MusicInfoGenerateServiceImpl implements MusicInfoGenerateService {
 	public Music generateMusic(MetaInfo metaInfo) {
 		Music music = new Music();
 		List<Service> serviceList = new ArrayList<Service>();
-		Service service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_MP3, metaInfo.getMp3Sprt());
+		Service service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_MP3, metaInfo.getMp3SprtYn());
 		serviceList.add(service);
-		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_BELL, metaInfo.getBellSprt());
+		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_BELL, metaInfo.getBellSprtYn());
 		serviceList.add(service);
-		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_RING, metaInfo.getRingSprt());
+		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_RING, metaInfo.getColorringSprtYn());
 		serviceList.add(service);
 		music.setServiceList(serviceList);
 		return music;
@@ -48,11 +48,11 @@ public class MusicInfoGenerateServiceImpl implements MusicInfoGenerateService {
 	// TODO osm1021 현재 사용하지 않음 추후 필요없으면 삭제 필요
 	public List<Service> generateServiceList(MetaInfo metaInfo) {
 		List<Service> serviceList = new ArrayList<Service>();
-		Service service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_MP3, metaInfo.getMp3Sprt());
+		Service service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_MP3, metaInfo.getMp3SprtYn());
 		serviceList.add(service);
-		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_BELL, metaInfo.getBellSprt());
+		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_BELL, metaInfo.getBellSprtYn());
 		serviceList.add(service);
-		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_RING, metaInfo.getRingSprt());
+		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_RING, metaInfo.getColorringSprtYn());
 		serviceList.add(service);
 		return serviceList;
 	}

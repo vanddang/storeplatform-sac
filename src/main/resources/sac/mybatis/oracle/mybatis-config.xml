@@ -73,7 +73,7 @@
         
          <!-- 특정 단말 조회 -->
         <typeAlias alias="DeviceProfileRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq" />
-        <typeAlias alias="DeviceProfileDTO"  type="com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO" />
+        <typeAlias alias="DeviceProfile"  type="com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile" />
         
         <!--  특정 상품 조회 -->
         <typeAlias alias="CategorySpecificProduct"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct" />

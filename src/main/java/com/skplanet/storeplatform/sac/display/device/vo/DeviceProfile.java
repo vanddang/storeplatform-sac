@@ -13,7 +13,7 @@ import java.util.Map;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class DeviceProfileDTO extends CommonInfo {
+public class DeviceProfile extends CommonInfo {
 	private String deviceModelCd;
 	private String makeCompNm;
 	private String modelNm;
@@ -39,6 +39,7 @@ public class DeviceProfileDTO extends CommonInfo {
 	private String repDeviceYn;
 	private Map<String, Object> servicesMap;
 	private Map<String, Object> supportedHardwareMap;
+	private String deviceTypeCd;
 
 	public String getDeviceModelCd() {
 		return this.deviceModelCd;
@@ -238,6 +239,14 @@ public class DeviceProfileDTO extends CommonInfo {
 
 	public void setSupportedHardwareMap(Map<String, Object> supportedHardwareMap) {
 		this.supportedHardwareMap = supportedHardwareMap;
+	}
+
+	public String getDeviceTypeCd() {
+		return this.deviceTypeCd;
+	}
+
+	public void setDeviceTypeCd(String deviceTypeCd) {
+		this.deviceTypeCd = deviceTypeCd;
 	}
 
 }

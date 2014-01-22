@@ -72,6 +72,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		MetaInfo metaInfo = null;
 		List<Product> productList = new ArrayList<Product>();
 
+		System.out.println();
 		if (req.getDummy() == null) {
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 			if (prodIdList == null || prodIdList.size() == 0) {
@@ -107,6 +108,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						// TODO osm1021 더미 데이터 꼭 삭제할것
+						paramMap.put("imageCd", "DP000101");
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacadeService.generateAppProduct(metaInfo);
@@ -117,6 +120,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 					// 멀티미디어 타입일 경우
 					else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						// 영화/방송 상품의 경우
+						// TODO osm1021 더미 데이터 꼭 삭제할것
+						paramMap.put("imageCd", "DP000101");
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
@@ -170,7 +175,11 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 					}
 					// 쇼핑 상품의 경우
 					else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
-						metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap, MetaInfo.class);
+						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+						// TODO osm1021 더미 데이터 꼭 삭제할것
+						paramMap.put("imageCd", "DP0001B4");
+						metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
+								MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacadeService.generateShoppingProduct(metaInfo);
 							productList.add(product);

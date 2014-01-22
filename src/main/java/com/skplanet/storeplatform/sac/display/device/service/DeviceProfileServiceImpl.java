@@ -19,12 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Device;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfileDTO;
+import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
 
 /**
  * DeviceProfileService Service 인터페이스(CoreStoreBusiness) 구현체
@@ -52,35 +53,36 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 
 		CommonResponse commonResponse = new CommonResponse();
 		DeviceProfileRes deviceProfileResponse = new DeviceProfileRes();
-		DeviceProfileDTO deviceProfileDTO = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile",
-				requestVO, DeviceProfileDTO.class);
+		DeviceProfile deviceProfile = this.commonDAO.queryForObject("DeviceProfile.selectDeviceProfile", requestVO,
+				DeviceProfile.class);
 
 		// DeviceHeader Profile 조회
 		Device device = new Device();
-		if (deviceProfileDTO != null) {
-			Map<String, Object> supportedHardwareMap = deviceProfileDTO.getSupportedHardwareMap();
+		if (deviceProfile != null) {
+			Map<String, Object> supportedHardwareMap = deviceProfile.getSupportedHardwareMap();
 			String dpi = header.getDeviceHeader().getDpi();
 			// dpi 세팅
 			supportedHardwareMap.put("dpi", dpi);
 
-			String sComp = deviceProfileDTO.getCmntCompCd();
+			String sComp = deviceProfile.getCmntCompCd();
 			StringBuilder sb = new StringBuilder();
 
-			sb.append(deviceProfileDTO.getDeviceModelCd());
+			sb.append(deviceProfile.getMakeCompNm());
 			sb.append("/");
-			sb.append(deviceProfileDTO.getMakeCompNm());
+			sb.append(deviceProfile.getDeviceModelCd());
 
 			device.setIdentifier(sb.toString());
 			// OMD 여부
-			device.setModel(deviceProfileDTO.getDeviceModelCd());
-			device.setType("US001204".equals(sComp) ? "omd" : "normal");
-			device.setManufacturer(deviceProfileDTO.getMakeCompNm());
-			device.setPlatform(deviceProfileDTO.getVmTypeNm());
-			device.setUaCd(deviceProfileDTO.getUaCd());
+			device.setModel(deviceProfile.getDeviceModelCd());
+			device.setType(DisplayConstants.DP_OMD_TYPE_CD.equals(sComp) ? DisplayConstants.DP_OMD_TYPE_NM : DisplayConstants.DP_OMD_NORMAL_NM);
+			device.setManufacturer(deviceProfile.getMakeCompNm());
+			device.setPlatform(deviceProfile.getVmTypeNm());
+			device.setUaCd(deviceProfile.getUaCd());
 
-			device.setServices(deviceProfileDTO.getServicesMap());
+			device.setServices(deviceProfile.getServicesMap());
 			device.setSupportedHardware(supportedHardwareMap);
-			device.setModelExplain(deviceProfileDTO.getModelNm());
+			device.setModelExplain(deviceProfile.getModelNm());
+			device.setPhoneType(DisplayConstants.DP_PHONE_DEVICE_TYPE_CD.equals(deviceProfile.getDeviceTypeCd()) ? DisplayConstants.DP_PHONE_DEVICE_TYPE_NM : DisplayConstants.DP_TABLET_DEVICE_TYPE_NM);
 
 			commonResponse.setTotalCount(1);
 		} else { // 미지원단말
