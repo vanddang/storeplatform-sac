@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -134,14 +135,15 @@ public class CreateDeviceTest {
 							deviceExtraInfo.setExtraProfileValue("N");
 							deviceExtraInfoList.add(deviceExtraInfo);
 
-							deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_UACD);
-							deviceExtraInfo.setExtraProfileValue("uacd");
-							deviceExtraInfoList.add(deviceExtraInfo);
-
 							deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
 							req.setDeviceInfo(deviceInfo);
-							logger.info("request param : {}", req.toString());
+
+							try {
+								ObjectMapper objMapper = new ObjectMapper();
+								logger.info("Request : {}", objMapper.writeValueAsString(req));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 
 							return req;
 						}
@@ -222,9 +224,10 @@ public class CreateDeviceTest {
 
 		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
 		req.setDeviceInfo(deviceInfo);
-		logger.info("request param : {}", req.toString());
-		try {
 
+		try {
+			ObjectMapper objMapper = new ObjectMapper();
+			logger.info("Request : {}", objMapper.writeValueAsString(req));
 			CreateDeviceRes res = this.deviceService.createDevice(header, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {
