@@ -22,6 +22,7 @@ import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryList;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResponse;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -30,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProductList;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -82,10 +84,18 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
 		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
-		scRequest.setProdId(request.getProdId());
-		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
+		List<String> prodList = new ArrayList<String>();
+		if (request.getProductList() != null && request.getProductList().size() > 0) {
+			for (HistoryProductList obj : request.getProductList()) {
+				if (!StringUtil.isEmpty(obj.getProdId())) {
+					prodList.add(obj.getProdId());
+				}
+			}
+		}
+		scRequest.setProductList(prodList);
+		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setOffset(request.getOffset());
 		scRequest.setCount(request.getCount());
 
@@ -207,15 +217,15 @@ public class HistoryListServiceImpl implements HistoryListService {
 		int scResponse = 0;
 
 		// SC Request Set
-		scRequest.setTenantId(request.getTenantId());
-		scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
-		scRequest.setStartDt(request.getStartDt());
-		scRequest.setEndDt(request.getEndDt());
-		scRequest.setPrchsProdType(request.getPrchsProdType());
-		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
-		scRequest.setProdId(request.getProdId());
-		scRequest.setHidingYn(request.getHidingYn());
-		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
+		// scRequest.setTenantId(request.getTenantId());
+		// scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
+		// scRequest.setStartDt(request.getStartDt());
+		// scRequest.setEndDt(request.getEndDt());
+		// scRequest.setPrchsProdType(request.getPrchsProdType());
+		// scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+		// scRequest.setProdId(request.getProdId());
+		// scRequest.setHidingYn(request.getHidingYn());
+		// scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
 		// SC Call
 		scResponse = this.historySci.getHistoryCount(scRequest);
