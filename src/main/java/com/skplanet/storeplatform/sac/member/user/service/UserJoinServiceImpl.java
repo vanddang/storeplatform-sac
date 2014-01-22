@@ -475,10 +475,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("user_email", URLEncoder.encode(req.getUserEmail(), "UTF-8"));
 		LOGGER.info("## param : {}", param.entrySet());
 
+		/**
+		 * IDP 간편회원 가입 연동
+		 */
 		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
 		LOGGER.info("## Im Result Code   : {}", simpleJoinInfo.getResponseHeader().getResult());
 		LOGGER.info("## Im Result Text   : {}", simpleJoinInfo.getResponseHeader().getResult_text());
-
 		if (StringUtils.equals(simpleJoinInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
 
 			LOGGER.info("## IDP 간편가입 연동 성공 ==============================================");
@@ -534,12 +536,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		}
 
-		/**
-		 * 결과 세팅
-		 */
-		response.setUserKey("122323434534634");
-		response.setDeviceKey("122323434534634");
-
 		return response;
 	}
 
@@ -549,14 +545,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 		CreateBySimpleRes response = new CreateBySimpleRes();
 
 		/**
-		 * 모번호 조회 (989 일 경우만)
-		 */
-		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-
-		/**
 		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
 		 */
 		this.checkDuplicateId(req.getUserId());
+
+		/**
+		 * 모번호 조회 (989 일 경우만)
+		 */
+		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
@@ -569,7 +565,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		StringBuffer sbUserPhone = new StringBuffer();
 		sbUserPhone.append(req.getDeviceId());
 		sbUserPhone.append(",");
-		sbUserPhone.append(majorDeviceInfo.getImMngNum());
+		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getImMngNum()));
 		sbUserPhone.append(",");
 		sbUserPhone.append(majorDeviceInfo.getUacd());
 		sbUserPhone.append(",");
@@ -577,7 +573,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## sbUserPhone : {}", sbUserPhone.toString());
 
 		/**
-		 * IDP - 간편회원가입
+		 * IDP - 간편회원가입 setting
 		 */
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("user_id", URLEncoder.encode(req.getUserId(), "UTF-8"));
@@ -586,13 +582,68 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("user_phone", sbUserPhone.toString());
 		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		LOGGER.info("## param : {}", param.entrySet());
+
+		/**
+		 * IDP 간편 회원가입 연동
+		 */
 		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
 		LOGGER.info("## Im Result Code   : {}", simpleJoinInfo.getResponseHeader().getResult());
 		LOGGER.info("## Im Result Text   : {}", simpleJoinInfo.getResponseHeader().getResult_text());
-
 		if (StringUtils.equals(simpleJoinInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
 
-			LOGGER.debug("######################## 가입 성공");
+			LOGGER.info("## IDP 간편가입 연동 성공 ==============================================");
+			LOGGER.info("## MBR_NO : {}", simpleJoinInfo.getResponseBody().getUser_key());
+
+			CreateUserRequest createUserRequest = new CreateUserRequest();
+
+			/**
+			 * 공통 정보 setting
+			 */
+			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+			/**
+			 * SC 사용자 기본정보 setting
+			 */
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserID(req.getUserId()); // 사용자 아이디
+			userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
+			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			userMbr.setDeviceCount("1"); // 휴대기기 등록 COUNT (AI-IS 로직 반영).
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
+			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+			createUserRequest.setUserMbr(userMbr);
+			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
+
+			/**
+			 * SC 사용자 가입요청
+			 */
+			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
+			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
+
+			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+				LOGGER.info("## 간편 가입 실패 ===========================");
+				throw new RuntimeException("사용자 회원 가입 실패");
+
+			}
+
+			/**
+			 * 휴대기기 등록.
+			 */
+			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey());
+
+			/**
+			 * 결과 세팅
+			 */
+			response.setUserKey(createUserResponse.getUserKey());
+			response.setDeviceKey(deviceKey);
 
 		} else {
 
@@ -600,12 +651,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new RuntimeException("IDP - 간편회원가입 실패");
 
 		}
-
-		/**
-		 * 결과 세팅
-		 */
-		response.setUserKey("122323434534634");
-		response.setDeviceKey("122323434534634");
 
 		return response;
 	}
@@ -784,12 +829,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
+			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday()); // 인증 일시
@@ -806,11 +852,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
+			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
@@ -824,11 +871,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
+			deviceInfo.setDeviceTelecom(req.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
 			deviceInfo.setAuthenticationDate(DateUtil.getToday("yyyyMMddHHmmss")); // 인증 일시
