@@ -83,10 +83,11 @@ public class GetIndividualPolicyTest {
 								policyCode = new PolicyCode();
 								policyCode.setPolicyCode(String.valueOf(i + 3));
 								policyCodeList.add(policyCode);
+								LOGGER.debug("policyCode[{}], \n{}", i, policyCode.toString());
 							}
 							request.setPolicyCodeList(policyCodeList);
 							request.setKey("53");
-							LOGGER.debug("request param : {}", request.toString());
+							LOGGER.debug("## request param ## \n{}", request.toString());
 							return request;
 						}
 					}).success(GetIndividualPolicyRes.class, new SuccessCallback() {
@@ -95,7 +96,8 @@ public class GetIndividualPolicyTest {
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetIndividualPolicyRes response = (GetIndividualPolicyRes) result;
 							assertThat(response.getPolicyList(), notNullValue());
-							LOGGER.debug("response param : {} ", response.getPolicyList().toString());
+							// assertThat(response.getPolicyList().get(0).getKey(), is("53"));
+							LOGGER.debug("## response param ## \n{} ", response.getPolicyList().toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -205,9 +206,10 @@ public class MiscellaneousController {
 	 * @param req
 	 * @return GetIndividualPolicyRes
 	 */
-	// @RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, @RequestBody @Valid GetIndividualPolicyReq req) {
+	GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header,
+			@RequestBody @Validated GetIndividualPolicyReq req) {
 		return this.service.getIndividualPolicy(header, req);
 	}
 
@@ -220,10 +222,10 @@ public class MiscellaneousController {
 	 * @param req
 	 * @return CreateIndividualPolicyRes
 	 */
-	// @RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header,
-			@RequestBody @Valid CreateIndividualPolicyReq req) {
+			@RequestBody @Validated CreateIndividualPolicyReq req) {
 		return this.service.createIndividualPolicy(header, req);
 	}
 
@@ -236,10 +238,10 @@ public class MiscellaneousController {
 	 * @param req
 	 * @return RemoveIndividualPolicyRes
 	 */
-	// @RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header,
-			@RequestBody @Valid RemoveIndividualPolicyReq req) {
+			@RequestBody @Validated RemoveIndividualPolicyReq req) {
 		return this.service.removeIndividualPolicy(header, req);
 	}
 }

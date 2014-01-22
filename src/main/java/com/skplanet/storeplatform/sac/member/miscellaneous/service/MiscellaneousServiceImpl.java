@@ -522,13 +522,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	@Override
 	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header, GetIndividualPolicyReq req) {
-		// key(30), code(10), value(100)
+
+		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
+
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
 		List<String> codeList = new ArrayList<String>();
 		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
 			codeList.add(req.getPolicyCodeList().get(i).getPolicyCode());
 		}
+
+		LOGGER.debug("==>>[SC] codeList.toString() : {}", codeList.toString());
+
 		policyRequest.setLimitPolicyCodeList(codeList);
 		policyRequest.setLimitPolicyKey(req.getKey());
 
@@ -538,8 +543,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
 		policyRequest.setCommonRequest(commonRequest);
 
+		LOGGER.debug("==>>[SC] commonRequest.toString() : {}", commonRequest.toString());
+		LOGGER.debug("==>>[SC] SearchPolicyRequest.toString() : {}", policyRequest.toString());
+
 		/** 3. SC회원[searchPolicyList] Call. */
 		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+
+		// Debug
+		LOGGER.info("[UserSCI.searchPolicyList()] - Response CODE : {}, MESSAGE : {}", policyResponse
+				.getCommonResponse().getResultCode(), policyResponse.getCommonResponse().getResultMessage());
 
 		// TODO 실패 처리
 		if (MemberConstants.RESULT_FAIL.equals(policyResponse.getCommonResponse().getResultCode())) {
@@ -559,9 +571,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
 				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
 				policyInfos.add(policyInfo);
+
+				LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", i, policyInfo.toString());
 			}
 		}
 		res.setPolicyList(policyInfos);
+
+		LOGGER.debug("==>>[SAC] GetIndividualPolicyRes.toString() : {}", res.toString());
+
 		return res;
 	}
 
@@ -577,6 +594,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header, CreateIndividualPolicyReq req) {
 
+		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
+
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		UpdatePolicyRequest updatePolicyRequest = new UpdatePolicyRequest();
 		List<LimitTarget> limitTargets = new ArrayList<LimitTarget>();
@@ -584,7 +603,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		limitTarget.setLimitPolicyCode(req.getPolicyCode());
 		limitTarget.setLimitPolicyKey(req.getKey());
 		limitTarget.setPolicyApplyValue(req.getValue());
+		limitTarget.setRegID(req.getRegId());
+
+		limitTargets.add(limitTarget);
 		updatePolicyRequest.setLimitTargetList(limitTargets);
+
+		LOGGER.debug("==>>[SC] LimitTarget.toString() : {}", limitTarget.toString());
 
 		/** 2. 공통 파라미터 생성 및 주입. */
 		CommonRequest commonRequest = new CommonRequest();
@@ -592,8 +616,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
 		updatePolicyRequest.setCommonRequest(commonRequest);
 
+		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
+		LOGGER.debug("==>>[SC] UpdatePolicyRequest.toString() : {}", updatePolicyRequest.toString());
+
 		/** 3. SC회원[updatePolicy] Call. */
 		UpdatePolicyResponse updatePolicyResponse = this.userSCI.updatePolicy(updatePolicyRequest);
+
+		// Debug
+		LOGGER.info("[UserSCI.updatePolicy()] - Response CODE : {}, MESSAGE : {}", updatePolicyResponse
+				.getCommonResponse().getResultCode(), updatePolicyResponse.getCommonResponse().getResultMessage());
 
 		// TODO 실패 처리
 		if (MemberConstants.RESULT_FAIL.equals(updatePolicyResponse.getCommonResponse().getResultCode())) {
@@ -604,9 +635,15 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
-		// TODO SC회원에서 결과로 정책 코드가 안넘어옴
-		// res.setPolicyCode(updatePolicyResponse.get)
 
+		if (updatePolicyResponse.getLimitTargetList().size() > 0) {
+			res.setKey(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyKey());
+			res.setPolicyCode(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyCode());
+			res.setValue(updatePolicyResponse.getLimitTargetList().get(0).getPolicyApplyValue());
+		}
+
+		LOGGER.debug("==>>[SAC] CreateIndividualPolicyRes.toString() : {}", res.toString());
+		LOGGER.debug("###### MiscellaneousServiceImpl.createIndividualPolicy [START] ######");
 		return res;
 	}
 
@@ -622,20 +659,35 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header, RemoveIndividualPolicyReq req) {
 
+		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [START] ######");
+
 		/** 1. SC회원[UserSCI] Req 생성 및 주입 시작. */
 		RemovePolicyRequest removePolicyRequest = new RemovePolicyRequest();
-		List<String> limitTargetNoList = new ArrayList<String>();
-		limitTargetNoList.add(req.getKey());
-		// removePolicyRequest.setLimitTargetNoList(limitTargetNoList);
+		List<LimitTarget> limitTargetList = new ArrayList<LimitTarget>();
+		LimitTarget limitTarget = new LimitTarget();
+		limitTarget.setLimitPolicyCode(req.getPolicyCode());
+		limitTarget.setLimitPolicyKey(req.getKey());
+
+		limitTargetList.add(limitTarget);
+
+		LOGGER.debug("==>>[SC] limitTarget.toString() : {}", limitTarget.toString());
 
 		/** 2. 공통 파라미터 생성 및 주입. */
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+
 		removePolicyRequest.setCommonRequest(commonRequest);
+		removePolicyRequest.setLimitTargetList(limitTargetList);
+
+		LOGGER.debug("==>>[SC] RemovePolicyRequest.toString() : {}", removePolicyRequest.toString());
 
 		/** 3. SC회원[updatePolicy] Call. */
 		RemovePolicyResponse removePolicyResponse = this.userSCI.removePolicy(removePolicyRequest);
+
+		// Debug
+		LOGGER.info("[UserSCI.removePolicy()] - Response CODE : {}, MESSAGE : {}", removePolicyResponse
+				.getCommonResponse().getResultCode(), removePolicyResponse.getCommonResponse().getResultMessage());
 
 		// TODO 실패 처리
 		if (MemberConstants.RESULT_FAIL.equals(removePolicyResponse.getCommonResponse().getResultCode())) {
@@ -646,9 +698,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		RemoveIndividualPolicyRes res = new RemoveIndividualPolicyRes();
-		// TODO SC회원에서 결과로 정책 코드가 안넘어옴
-		// res.setPolicyCode(removePolicyResponse.get)
+		res.setPolicyCode(removePolicyResponse.getLimitPolicyCodeList().get(0));
+		res.setKey(removePolicyResponse.getLimitPolicyCodeList().get(0));
 
+		LOGGER.debug("==>>[SAC] RemoveIndividualPolicyRes.toString() : {}", res.toString());
+		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [END] ######");
 		return res;
 	}
 }

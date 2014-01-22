@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -73,10 +74,12 @@ public class CreateIndividualPolicyTest {
 						@Override
 						public Object requestBody() {
 							CreateIndividualPolicyReq request = new CreateIndividualPolicyReq();
-							request.setKey("");
-							request.setPolicyCode("");
-							request.setValue("");
-							LOGGER.debug("request param : {}", request.toString());
+							// key(30), code(10), value(100)
+							request.setKey("010123456");
+							request.setPolicyCode("8");
+							request.setValue("Y");
+							request.setRegId("test");
+							LOGGER.debug("## request param ## \n{}", request.toString());
 							return request;
 						}
 					}).success(CreateIndividualPolicyRes.class, new SuccessCallback() {
@@ -85,7 +88,10 @@ public class CreateIndividualPolicyTest {
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							CreateIndividualPolicyRes response = (CreateIndividualPolicyRes) result;
 							assertThat(response.getPolicyCode(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
+							assertThat(response.getPolicyCode(), is("8"));
+							assertThat(response.getKey(), is("010123456"));
+							assertThat(response.getValue(), is("Y"));
+							LOGGER.debug("## response param ## \n{} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

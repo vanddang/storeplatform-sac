@@ -199,7 +199,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetIndividualPolicyRes
 	 */
-	@RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetIndividualPolicyRes getIndividualPolicy() {
 
@@ -228,7 +228,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateIndividualPolicyRes
 	 */
-	@RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateIndividualPolicyRes createIndividualPolicy() {
 
@@ -238,6 +238,8 @@ public class DummyDataController {
 
 		CreateIndividualPolicyRes response = new CreateIndividualPolicyRes();
 		response.setPolicyCode("restrictMdn");
+		response.setKey("a@a.com");
+		response.setValue("test");
 
 		return response;
 	}
@@ -249,7 +251,7 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveIndividualPolicyRes
 	 */
-	@RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveIndividualPolicyRes removeIndividualPolicy() {
 
@@ -259,6 +261,7 @@ public class DummyDataController {
 
 		RemoveIndividualPolicyRes response = new RemoveIndividualPolicyRes();
 		response.setPolicyCode("restrictEmail");
+		response.setKey("010123");
 
 		return response;
 	}

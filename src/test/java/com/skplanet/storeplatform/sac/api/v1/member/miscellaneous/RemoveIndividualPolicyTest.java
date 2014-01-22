@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -73,9 +74,9 @@ public class RemoveIndividualPolicyTest {
 						@Override
 						public Object requestBody() {
 							RemoveIndividualPolicyReq request = new RemoveIndividualPolicyReq();
-							request.setKey("");
-							request.setPolicyCode("");
-							LOGGER.debug("request param : {}", request.toString());
+							request.setKey("010123456");
+							request.setPolicyCode("8");
+							LOGGER.debug("request param : \n{}", request.toString());
 							return request;
 						}
 					}).success(RemoveIndividualPolicyRes.class, new SuccessCallback() {
@@ -84,7 +85,8 @@ public class RemoveIndividualPolicyTest {
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							RemoveIndividualPolicyRes response = (RemoveIndividualPolicyRes) result;
 							assertThat(response.getPolicyCode(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
+							assertThat(response.getPolicyCode(), is("8"));
+							LOGGER.debug("response param : \n{} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
