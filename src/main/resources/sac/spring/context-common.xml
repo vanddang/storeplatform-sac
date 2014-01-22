@@ -32,9 +32,11 @@
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
-            <list merge="true"><value>classpath:messages/messages</value></list>
+            <list merge="true"><value>classpath:/sac/messages/messages</value></list>
         </property>
         <property name="defaultEncoding" value="utf-8" />
         <property name="cacheSeconds" value="60"/>
     </bean> 
+    
+    
 </beans>
