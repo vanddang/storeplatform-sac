@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -22,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -177,7 +176,7 @@ public class DeviceController {
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
-		logger.info("###### modifyRepresentationDevice Respone : {}", res.toString());
+		logger.info("###### Final modifyRepresentationDevice Respone : {}", res.toString());
 
 		return res;
 	}
@@ -204,9 +203,9 @@ public class DeviceController {
 			throw new RuntimeException("대표단말 조회값이 없거나 'N' 입니다.");
 		}
 
-		logger.info("###### detailRepresentationDevice Request : {}", req.toString());
+		logger.info("###### Start detailRepresentationDevice Request : {}", req.toString());
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, req);
-		logger.info("###### detailRepresentationDevice Respone : {}", res.toString());
+		logger.info("###### Fianl detailRepresentationDevice Respone : {}", res.toString());
 		return res;
 	}
 
@@ -220,7 +219,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/dev/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public List<DeviceInfo> removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req) throws Exception {
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req)
+			throws Exception {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
@@ -229,14 +229,14 @@ public class DeviceController {
 			throw new RuntimeException("필수요청 파라메터 부족");
 		}
 
-		logger.info("###### removeDevice Request : {}", req.toString());
+		logger.info("###### Start removeDevice Request : {}", req.toString());
 
 		req.setUserAuthKey(userAuthKey);
 		req.setDeviceId(deviceId);
 
-		List<DeviceInfo> res = this.deviceService.removeDevice(requestHeader, req);
+		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);
 
-		logger.info("###### removeDevice Response : {}", res.toString());
+		logger.info("###### Final removeDevice Response : {}", res.toString());
 		return res;
 	}
 }
