@@ -98,7 +98,7 @@ public final class MemberConstants {
 	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011409"; // 도토리 인증일
 	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011410"; // 도토리 인증여부
 	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011411"; // 임베디드 여부
-	public static final String DEVICE_EXTRA_OMPUACE = "US011412"; // OMD UA코드
+	public static final String DEVICE_EXTRA_OMDUACD = "US011412"; // OMD UA코드
 	public static final String DEVICE_EXTRA_ROOTING_YN = "US011413"; // 루팅 여부
 
 	/** 미지원 단말. */
