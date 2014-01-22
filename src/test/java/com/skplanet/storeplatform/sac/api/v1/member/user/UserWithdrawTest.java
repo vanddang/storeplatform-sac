@@ -85,7 +85,7 @@ public class UserWithdrawTest {
 					public Object requestBody() {
 
 						CreateByMdnReq reqJson = new CreateByMdnReq();
-						reqJson.setDeviceId("01076771470");
+						reqJson.setDeviceId("01088870008");
 						reqJson.setDeviceIdType("msisdn");
 						reqJson.setDeviceTelecom("US001201");
 						reqJson.setNativeId("A0000031648EE9");
@@ -154,7 +154,7 @@ public class UserWithdrawTest {
 					@Override
 					public Object requestBody() {
 						WithdrawReq req = new WithdrawReq();
-						req.setDeviceId("01076771470");
+						req.setDeviceId("01088870008");
 						logger.debug("request param : {}", req.toString());
 						return req;
 					}
