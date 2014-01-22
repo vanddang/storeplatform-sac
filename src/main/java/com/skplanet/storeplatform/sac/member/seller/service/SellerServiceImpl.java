@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
@@ -27,6 +29,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
@@ -382,6 +386,43 @@ public class SellerServiceImpl implements SellerService {
 		}
 
 		CreateAuthKeyRes response = new CreateAuthKeyRes();
+
+		// response.setSessionKey(schRes.g)
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 인증키 폐기.
+	 * </pre>
+	 * 
+	 * @param AbrogationAuthKeyReq
+	 * @return AbrogationAuthKeyRes
+	 */
+	@Override
+	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) throws Exception {
+
+		RemoveLoginInfoResponse schRes = new RemoveLoginInfoResponse();
+		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		schReq.setCommonRequest(commonRequest);
+
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setSellerKey(req.getSellerKey());
+		loginInfo.setIpAddress(req.getIpAddress());
+		schReq.setLoginInfo(loginInfo);
+
+		schRes = this.sellerSCI.removeLoginInfo(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
+
+		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
 
 		// response.setSessionKey(schRes.g)
 

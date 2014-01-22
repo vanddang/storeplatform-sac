@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import javax.validation.Valid;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +107,7 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	WithdrawRes withdraw(SacRequestHeader header, @RequestBody WithdrawReq req) throws Exception {
+	WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) throws Exception {
 		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
@@ -131,11 +129,12 @@ public class SellerController {
 	 * 
 	 * @param header
 	 * @param req
-	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Valid CreateAuthKeyReq req) throws Exception {
+	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Validated CreateAuthKeyReq req)
+			throws Exception {
 
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
@@ -154,12 +153,21 @@ public class SellerController {
 	 * 
 	 * @param header
 	 * @param req
-	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, @RequestBody @Valid AbrogationAuthKeyReq req) {
-		return null;
+	AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, @RequestBody @Validated AbrogationAuthKeyReq req)
+			throws Exception {
+
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+		String ipAddress = StringUtil.nvl(req.getIpAddress(), "");
+		if (sellerKey.equals("") || ipAddress.equals("")) {
+			throw new Exception("필수 파라미터 미존재");
+		}
+
+		return this.sellerService.abrogationAuthKey(header, req);
 	}
 
 }

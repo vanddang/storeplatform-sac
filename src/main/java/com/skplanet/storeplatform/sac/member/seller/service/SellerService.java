@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
@@ -41,4 +43,11 @@ public interface SellerService {
 	 * @throws Exception
 	 */
 	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) throws Exception;
+
+	/**
+	 * 판매자 회원 인증키 폐기.
+	 * 
+	 * @throws Exception
+	 */
+	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) throws Exception;
 }
