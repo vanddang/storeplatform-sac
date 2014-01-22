@@ -403,20 +403,27 @@ public class MemberCommonComponent {
 		}
 
 		/**
-		 * SKT 가입자이면서 MSISDN 타입일 경우에만 UAPS 연동 하여 (SKT 서비스가입번호를 세팅한다.)
+		 * SKT 가입자일 경우 처리
 		 */
-		if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 
 			/**
-			 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
+			 * MDN 일경우만 UAPS 연동 하여 (SKT 서비스가입번호를 세팅한다.)
 			 */
-			UserRes userRes = this.getMappingInfo(deviceId, "mdn");
-			if (userRes.getResultCode() == 0) {
-				// LOGGER.debug("## UAPS 연동 : {}", userRes.toString());
-				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
-				majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
-			} else {
-				throw new RuntimeException("UAPS 연동 실패~!!!!");
+			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+
+				/**
+				 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
+				 */
+				UserRes userRes = this.getMappingInfo(deviceId, "mdn");
+				if (userRes.getResultCode() == 0) {
+					// LOGGER.debug("## UAPS 연동 : {}", userRes.toString());
+					LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
+					majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
+				} else {
+					throw new RuntimeException("UAPS 연동 실패~!!!!");
+				}
+
 			}
 
 			/**
