@@ -376,7 +376,7 @@ public class SellerServiceImpl implements SellerService {
 		loginInfo.setSellerKey(req.getSellerKey());
 		loginInfo.setIpAddress(req.getIpAddress());
 		loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomString.getString(10));
-		loginInfo.setRegDate(req.getExpireDate());
+		loginInfo.setExpireDate(req.getExpireDate());
 
 		schReq.setLoginInfo(loginInfo);
 
