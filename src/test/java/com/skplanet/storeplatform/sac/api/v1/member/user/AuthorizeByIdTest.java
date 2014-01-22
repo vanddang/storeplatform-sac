@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +35,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -89,11 +93,17 @@ public class AuthorizeByIdTest {
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setDeviceAccount("vanddang@gmail.com");
-							req.setScVer("1.0");
 
-							ObjectMapper objMapper = new ObjectMapper();
+							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							req.setUserDeviceExtraInfo(deviceExtraInfoList);
 
 							try {
+								ObjectMapper objMapper = new ObjectMapper();
 								logger.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -131,13 +141,15 @@ public class AuthorizeByIdTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByIdReq req = new AuthorizeByIdReq();
-		req.setDeviceId("01073215212");
-		req.setUserId("watermin0927");
-		req.setUserPw("!qaz2wsx");
-		req.setDeviceIdType("msisdn");
-		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-		req.setDeviceAccount("vanddang@gmail.com");
-		req.setScVer("1.0");
+		req.setUserId("tlaeowlsuser1");
+		req.setUserPw("abcd1234");
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+		deviceExtraInfo.setExtraProfileValue("1.0");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		req.setUserDeviceExtraInfo(deviceExtraInfoList);
 
 		try {
 			ObjectMapper objMapper = new ObjectMapper();

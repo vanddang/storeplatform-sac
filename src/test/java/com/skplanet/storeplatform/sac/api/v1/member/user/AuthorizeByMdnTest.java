@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +35,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -94,14 +98,24 @@ public class AuthorizeByMdnTest {
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setNativeId("358362045580842");
-							req.setRooting("N");
-							req.setDeviceAccount("vanddang@gmail.com");
 							req.setIsAutoUpdate("N");
-							req.setScVer("1.1");
+							req.setDeviceAccount("vanddang@gmail.com");
 
-							ObjectMapper objMapper = new ObjectMapper();
+							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							deviceExtraInfo = new DeviceExtraInfo();
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+							deviceExtraInfo.setExtraProfileValue("N");
+							deviceExtraInfoList.add(deviceExtraInfo);
+
+							req.setUserDeviceExtraInfo(deviceExtraInfoList);
 
 							try {
+								ObjectMapper objMapper = new ObjectMapper();
 								logger.info("Request : {}", objMapper.writeValueAsString(req));
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -142,14 +156,27 @@ public class AuthorizeByMdnTest {
 		req.setDeviceId("01020284280");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
-		//req.setNativeId("358362045580842");
-		req.setRooting("Y");
+		req.setNativeId("358362045580842");
 		req.setDeviceAccount("vanddang444@gmail.com");
 		req.setIsAutoUpdate("N");
-		req.setScVer("1.1");
-		logger.info("request param : {}", req.toString());
+
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
+		deviceExtraInfo.setExtraProfileValue("1.0");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+		deviceExtraInfo.setExtraProfileValue("N");
+		deviceExtraInfoList.add(deviceExtraInfo);
+
+		req.setUserDeviceExtraInfo(deviceExtraInfoList);
 
 		try {
+			ObjectMapper objMapper = new ObjectMapper();
+			logger.info("Request : {}", objMapper.writeValueAsString(req));
+
 			AuthorizeByMdnRes res = this.loginService.authorizeByMdn(header, req);
 			logger.info("res : {} " + res.toString());
 		} catch (Exception e) {
