@@ -108,11 +108,6 @@ public class DeviceInfo extends CommonInfo {
 	private String makeComp;
 
 	/**
-	 * 루팅 여부 : Y/N
-	 */
-	private String rooting;
-
-	/**
 	 * 수정 일시
 	 */
 	private String updateDate;
@@ -287,14 +282,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public String getRooting() {
-		return this.rooting;
-	}
-
-	public void setRooting(String rooting) {
-		this.rooting = rooting;
 	}
 
 	public String getNativeId() {
