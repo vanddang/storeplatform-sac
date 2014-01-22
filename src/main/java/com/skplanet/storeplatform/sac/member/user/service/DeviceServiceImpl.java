@@ -235,8 +235,11 @@ public class DeviceServiceImpl implements DeviceService {
 
 		this.mergeDeviceInfo(requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(), req.getDeviceInfo());
 
-		this.userService.modifyProfileIdp(requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
-				req.getUserKey(), req.getUserAuthKey());
+		/* userAuthKey가 넘오온 경우만 업데이트 처리 */
+		if (req.getUserAuthKey() != null) {
+			this.userService.modifyProfileIdp(requestHeader.getTenantHeader().getSystemId(), requestHeader.getTenantHeader().getTenantId(),
+					req.getUserKey(), req.getUserAuthKey());
+		}
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
 		res.setDeviceKey(req.getDeviceKey());

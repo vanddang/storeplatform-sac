@@ -181,7 +181,7 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 변동성 회원인 경우 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE) && StringUtil.equals(schUserRes.getIsChangeSubject(), "Y")) {
-			this.volatileMemberPoc(deviceId, userKey, null, req.getDeviceTelecom());
+			this.volatileMemberPoc(deviceId, userKey, req.getDeviceTelecom());
 		}
 
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
@@ -474,6 +474,9 @@ public class LoginServiceImpl implements LoginService {
 		requestHeader.setTenantHeader(tenant);
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
+		logger.info("::::::::::::::: listDeviceReq : {}", listDeviceReq.toString());
+		logger.info("::::::::::::::: device List : {}", listDeviceRes.getDeviceInfoList().size());
+
 		if (listDeviceRes.getDeviceInfoList() != null && listDeviceRes.getDeviceInfoList().size() == 1) {
 			deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();
 		}
@@ -615,14 +618,12 @@ public class LoginServiceImpl implements LoginService {
 	 *            디바이스 아이디
 	 * @param userKey
 	 *            사용자키
-	 * @param userAuthKey
-	 *            사용자 인증키
 	 * @param deviceTelecom
 	 *            통신사코드
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void volatileMemberPoc(String deviceId, String userKey, String userAuthKey, String deviceTelecom) throws Exception {
+	public void volatileMemberPoc(String deviceId, String userKey, String deviceTelecom) throws Exception {
 
 		logger.info("########## volatileMember process start #########");
 
@@ -655,9 +656,6 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceId(deviceId);
 			deviceInfo.setImMngNum(imMngNum);
 			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
-
-			/* 4. 변경된 정보 IDP 연동 */
-			this.userService.modifyProfileIdp(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, userAuthKey);
 
 		} else {
 
