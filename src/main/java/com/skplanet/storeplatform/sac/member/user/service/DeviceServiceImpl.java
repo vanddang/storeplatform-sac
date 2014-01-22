@@ -1037,9 +1037,9 @@ public class DeviceServiceImpl implements DeviceService {
 			for (DeviceInfo deviceInfo : deviceModifyList) {
 				sbUserPhone.append(deviceInfo.getDeviceId());
 				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getImMngNum());
+				//sbUserPhone.append(deviceInfo.getImMngNum());
 				sbUserPhone.append(",");
-				sbUserPhone.append(deviceInfo.getUacd());
+				//sbUserPhone.append(deviceInfo.getUacd());
 				sbUserPhone.append(",");
 				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
 				sbUserPhone.append("|");
@@ -1149,9 +1149,9 @@ public class DeviceServiceImpl implements DeviceService {
 			// 필링크 부분유료화 월정액 해지처리
 			HashMap<String, String> autopayRetireMap = new HashMap<String, String>();
 
-			autopayRetireMap.put("svcMngNum", listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum());
+			//autopayRetireMap.put("svcMngNum", listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum());
 			autopayRetireMap.put("mdn", req.getDeviceId());
-			logger.info("[부분유료화 월정액해지처리] svcMngNum = [" + listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum() + "]");
+			//logger.info("[부분유료화 월정액해지처리] svcMngNum = [" + listDeviceIdRes.getDeviceInfoList().get(0).getImMngNum() + "]");
 			logger.info("[부분유료화 월정액해지처리] mdn = [" + req.getDeviceId() + "]");
 			// modifyConsumerInfoservice.autopayRetire(autopayRetireMap);
 		}
