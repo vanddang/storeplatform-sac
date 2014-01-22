@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.purchase.common;
+package com.skplanet.storeplatform.sac.purchase.constant;
 
 /**
  * 구매 관련 상수
