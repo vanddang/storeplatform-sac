@@ -323,16 +323,22 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		IDPReceiverM idpReciver = new IDPReceiverM();
 		GetCaptchaRes response = new GetCaptchaRes();
 
+		LOGGER.info("## Captcha 문자 발급 Service 시작.");
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
+
+		LOGGER.info("## IDP Service 호출.");
 		idpReciver = this.idpService.warterMarkImageUrl();
 		waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
 		waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
 		String signData = idpReciver.getResponseBody().getSign_data();
 
+		LOGGER.info("## IDP Service 결과.");
 		LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
 		LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
+		LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
 
 		if (waterMarkImageUrl != null) {
+			LOGGER.info("## waterMarkImageUrl 정상 발급.");
 			HTTP_PROTOCOL protocol = null;
 			HTTP_METHOD method = null;
 			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
@@ -345,7 +351,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				method = HTTP_METHOD.GET;
 			}
 
-			LOGGER.debug("## >> Protocol : {}, Method : {}, UrlPath : {}", protocol, method, urlPath);
+			LOGGER.debug("## Request to ImageSCI >> Protocol : {}, Method : {}, UrlPath : {}", protocol, method,
+					urlPath);
 
 			ImageReq req = new ImageReq();
 			req.setMethod(method); // GET or POST
@@ -364,12 +371,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setImageSign(waterMarkImageSign);
 		response.setSignData(signData);
 
+		LOGGER.info("## Captcha 문자 발급 Service 종료.");
 		return response;
 	}
 
 	@Override
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) throws Exception {
 
+		LOGGER.info("## Captcha 문자 인증 Service 시작.");
 		/* IDP 호출 ( Request 파라미터 전달 ) */
 		IDPReceiverM idpReciver = new IDPReceiverM();
 		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
@@ -377,12 +386,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 
 		if (idpReciver.getResponseHeader().getResult().equals("1000")) {
-			LOGGER.debug("IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
+			LOGGER.info("IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
 					idpReciver.getResponseHeader().getResult_text());
 		} else {
 			LOGGER.info("IDP 호출 오류. resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
 					idpReciver.getResponseHeader().getResult_text());
 		}
+		LOGGER.info("## Captcha 문자 인증 Service 종료.");
 		return response;
 	}
 
@@ -390,32 +400,31 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(GetEmailAuthorizationCodeReq request)
 			throws Exception {
 
-		/** TODO 1. 기존에 인증된 회원인지 여부 확인 */
+		/** 1. 기존에 인증된 회원인지 여부 확인 */
 		String mbrNo = request.getUserKey();
 		String isAuthEmail = this.repository.getEmailAuthYn(mbrNo);
 
 		if (isAuthEmail.equals("Y")) {
 			throw new Exception("기존 인증된 회원입니다.");
 		}
-		// ##################### 이 중간 부분 진행 해야함 ########################### //
-		/*
-		 * 1. else 문 안에 LOGGER.debug("인증대상"); 2. 아래의 TODO 2~ 부터 else문 안에 넣기. 3. repository.getEmailAuthYn 부분 xml 쿼리 구현 및
-		 * Phone관련 repository와 합쳐서 메소드명 변경하기.
-		 */
-		// ##################### 이 중간 부분 진행 해야함 ########################### //
-		/** TODO 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
+
+		/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
 		String authCode = UUID.randomUUID().toString().replace("-", "");
 
-		/** TODO 3. DB에 저장 - 인증번호, 회원Key, 인증 Email 주소 */
+		/** TODO 3. DB에 저장 - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
 		ServiceAuth serviceAuthInfo = new ServiceAuth();
-		serviceAuthInfo.setAuthEmail(request.getUserEmail());
+		serviceAuthInfo.setAuthTypeCd("CM010902");
+		serviceAuthInfo.setAuthValueCreateDt(authCode);
 		serviceAuthInfo.setMbrNo(mbrNo);
-		this.repository.insertPhoneAuthCode(serviceAuthInfo);
+		serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
-		/** TODO 4. 인증코드 Response */
+		this.repository.insertServiceAuthCode(serviceAuthInfo);
+
+		/** 4. 인증코드 Response */
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
+		response.setEmailAuthCode(authCode);
 
-		return null;
+		return response;
 	}
 
 	@Override
