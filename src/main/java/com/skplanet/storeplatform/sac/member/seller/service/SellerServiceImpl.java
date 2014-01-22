@@ -43,7 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.RandomString;
-import com.skplanet.storeplatform.sac.member.common.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의

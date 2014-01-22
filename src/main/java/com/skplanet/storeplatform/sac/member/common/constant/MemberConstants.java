@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.member.common;
+package com.skplanet.storeplatform.sac.member.common.constant;
 
 /**
  * 회원 관련 상수
