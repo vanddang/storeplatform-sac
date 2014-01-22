@@ -289,18 +289,30 @@ public class DeviceServiceImpl implements DeviceService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
+		ListDeviceRes res = new ListDeviceRes();
+
 		if (req.getDeviceId() != null) {
-			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			key.setKeyString(req.getDeviceId());
+			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
+			res.setUserId(deviceInfo.getUserId());
+			res.setUserKey(deviceInfo.getUserKey());
+			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+			deviceInfoList.add(deviceInfo);
+			res.setDeviceInfoList(deviceInfoList);
+			return res;
+		} else if (req.getDeviceKey() != null) {
+			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
+			res.setUserId(deviceInfo.getUserId());
+			res.setUserKey(deviceInfo.getUserKey());
+			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+			deviceInfoList.add(deviceInfo);
+			res.setDeviceInfoList(deviceInfoList);
+			return res;
 		} else if (req.getUserId() != null) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			key.setKeyString(req.getUserId());
 		} else if (req.getUserKey() != null) {
 			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
 			key.setKeyString(req.getUserKey());
-		} else if (req.getDeviceKey() != null) {
-			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			key.setKeyString(req.getDeviceKey());
 		}
 
 		keySearchList.add(key);
@@ -319,7 +331,6 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* response 셋팅 */
-		ListDeviceRes res = new ListDeviceRes();
 		res.setUserId(schDeviceListRes.getUserID());
 		res.setUserKey(schDeviceListRes.getUserKey());
 
@@ -368,9 +379,22 @@ public class DeviceServiceImpl implements DeviceService {
 		searchDeviceRequest.setKeySearchList(keySearchList);
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
+		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "]" + schDeviceRes.getCommonResponse().getResultMessage());
+		}
+
+		if (schDeviceRes.getUserMbrDevice() == null) {
+			throw new Exception("휴대기기 정보가 없습니다.");
+		}
+
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+		deviceInfo.setUserId(schDeviceRes.getUserID());
+		deviceInfo.setUserKey(schDeviceRes.getUserKey());
+
 		logger.info("######################## DeviceServiceImpl searchDevice start ############################");
 
-		return DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+		return deviceInfo;
 	}
 
 	/*
