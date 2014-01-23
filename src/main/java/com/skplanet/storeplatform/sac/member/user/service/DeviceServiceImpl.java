@@ -567,6 +567,10 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
 		String isRecvSms = deviceInfo.getIsRecvSms(); // sms 수신여부
+		String isAuthenticate = deviceInfo.getIsAuthenticated(); // 인증여부
+		String authenticationDate = deviceInfo.getAuthenticationDate(); // 인증일자
+		String isUsed = deviceInfo.getIsUsed(); // 사용여부
+
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getUserDeviceExtraInfo()); // rooting 여부
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
@@ -716,6 +720,27 @@ public class DeviceServiceImpl implements DeviceService {
 
 			logger.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
+
+		}
+
+		if (isAuthenticate != null && !isAuthenticate.equals(userMbrDevice.getIsAuthenticated())) {
+
+			logger.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticate);
+			userMbrDevice.setIsAuthenticated(isAuthenticate);
+
+		}
+
+		if (authenticationDate != null && !authenticationDate.equals(userMbrDevice.getAuthenticationDate())) {
+
+			logger.info("[authenticationDate] {} -> {}", userMbrDevice.getAuthenticationDate(), authenticationDate);
+			userMbrDevice.setAuthenticationDate(authenticationDate);
+
+		}
+
+		if (isUsed != null && !isUsed.equals(userMbrDevice.getIsUsed())) {
+
+			logger.info("[isUsed] {} -> {}", userMbrDevice.getIsUsed(), isUsed);
+			userMbrDevice.setIsUsed(isUsed);
 
 		}
 
