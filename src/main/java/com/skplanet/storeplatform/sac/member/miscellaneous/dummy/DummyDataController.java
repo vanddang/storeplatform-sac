@@ -157,7 +157,7 @@ public class DummyDataController {
 	 * 
 	 * @return GetEmailAuthorizationCodeRes
 	 */
-	@RequestMapping(value = "/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode() {
 
@@ -177,7 +177,7 @@ public class DummyDataController {
 	 * 
 	 * @return ConfirmEmailAuthorizationCodeRes
 	 */
-	@RequestMapping(value = "/confirmEmailAuthorizationCode/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/confirmEmailAuthorizationCode/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode() {
 

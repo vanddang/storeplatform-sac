@@ -74,7 +74,7 @@ public class ConfirmEmailAuthorizationCodeTest {
 						@Override
 						public Object requestBody() {
 							ConfirmEmailAuthorizationCodeReq request = new ConfirmEmailAuthorizationCodeReq();
-							request.setEmailAuthCode("");
+							request.setEmailAuthCode("a597e5bfb4b94b1ba2cbef5");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}

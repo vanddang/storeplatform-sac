@@ -65,8 +65,7 @@ public class GetEmailAuthorizationCodeTest {
 	@Test
 	public void simpleTest() {
 		try {
-			// TEST URL 맵핑되어있음. Commit시 수정할 것.
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/dev/getEmailAuthorizationCode/v1")
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getEmailAuthorizationCode/v1")
 					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 						@Override

@@ -186,7 +186,7 @@ public class MiscellaneousController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(
 			@Validated @RequestBody GetEmailAuthorizationCodeReq request) throws Exception {
@@ -206,7 +206,7 @@ public class MiscellaneousController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/confirmEmailAuthorizationCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/confirmEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(
 			@Validated @RequestBody ConfirmEmailAuthorizationCodeReq request) throws Exception {
