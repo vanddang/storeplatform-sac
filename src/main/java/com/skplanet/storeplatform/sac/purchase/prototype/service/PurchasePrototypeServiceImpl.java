@@ -21,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.purchase.client.prototype.sci.PurchasePrototypeSCI;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.CheckPurchaseRequest;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.CheckPurchaseResponse;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.OwnProduct;
-import com.skplanet.storeplatform.purchase.client.prototype.vo.ProductOwnType;
+import com.skplanet.storeplatform.purchase.client.prototype.vo.ProductOwnInfo;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.Purchase;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.PurchaseHistoryRequest;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.PurchaseHistoryResponse;
@@ -147,21 +146,19 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 		sciReq.setDeviceNo(paramVO.getDeviceNo());
 		sciReq.setPrchsId(paramVO.getPrchsId());
 
-		List<ProductOwnType> prodList = new ArrayList<ProductOwnType>();
-		String prodOwnType = null;
+		List<ProductOwnInfo> productOwnInfoList = new ArrayList<ProductOwnInfo>();
 		for (String prodId : paramVO.getProdIdList()) {
-			prodOwnType = this.getOwnType(prodId); // 상품소유타입 조회 : id | mdn 기반
-			prodList.add(new ProductOwnType(prodId, prodOwnType));
+			productOwnInfoList.add(new ProductOwnInfo(prodId, this.getOwnType(prodId))); // 상품소유타입 조회 : id | mdn 기반
 		}
-		sciReq.setProdList(prodList);
+		sciReq.setProductOwnInfoList(productOwnInfoList);
 
 		// 기구매체크
 		CheckPurchaseResponse checkPurchaseResponse = this.purchaseSCI.checkOwnProduct(sciReq);
 
 		// RES
 		List<CheckPurchase> checkPurchaseList = new ArrayList<CheckPurchase>();
-		for (OwnProduct ownProduct : checkPurchaseResponse.getOwnProductList()) {
-			checkPurchaseList.add(new CheckPurchase(ownProduct.getProdId(), ownProduct.getPrchsId()));
+		for (ProductOwnInfo productOwnInfo : checkPurchaseResponse.getProductOwnInfoList()) {
+			checkPurchaseList.add(new CheckPurchase(productOwnInfo.getProdId(), productOwnInfo.getPrchsId()));
 		}
 
 		CheckPurchaseRes res = new CheckPurchaseRes();
@@ -174,7 +171,7 @@ public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 	/**
 	 * 
 	 * <pre>
-	 * 상품의 소유타입(id/mdn 기반) 조회.
+	 * [Prototype] 상품의 소유타입(id/mdn 기반) 조회.
 	 * </pre>
 	 * 
 	 * @param prodId
