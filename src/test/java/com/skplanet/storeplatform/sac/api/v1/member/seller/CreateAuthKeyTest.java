@@ -72,7 +72,7 @@ public class CreateAuthKeyTest {
 
 						req.setIpAddress("127.0.0.1");
 						req.setSellerKey("IF1023501629320130913143329");
-						req.setExpireDate("20141023");
+						req.setExpireDate("20130102150000");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
