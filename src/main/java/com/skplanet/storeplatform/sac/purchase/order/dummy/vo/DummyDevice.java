@@ -13,12 +13,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * Dummy 회원정보
+ * Dummy 디바이스 정보
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class DummyMember extends CommonInfo {
-
+public class DummyDevice extends CommonInfo {
 	private static final long serialVersionUID = 201401101L;
 
 	private String tenantId; // 테넌트 ID
@@ -27,11 +26,10 @@ public class DummyMember extends CommonInfo {
 	private String userId; // 회원 ID
 	private String deviceKey; // 내부 디바이스 ID
 	private String deviceId; // MDN, MAC 등등
-	private String userTypeCd; // 사용자 구분 코드: US011501-기기 사용자, US011502-IDP 사용자, US011503-OneID 사용자, null-Tstore 회원 아님
-	private String userStatusCd; // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입, US010705-전환,
-								 // US010706 : 탈퇴 - US010707-승인대기
-	private Integer age; // 연령
-	private Boolean bLogin; // 로그인 여부
+	private String deviceIdType; // 기기 ID 타입 (msisdn, uuid, macaddress)
+	private String deviceType; // 기기 타입 코드
+	private String deviceModelNo; // 기기 모델 번호
+	private String deviceTelecom; // 통신사 코드
 
 	/**
 	 * @return the tenantId
@@ -124,63 +122,63 @@ public class DummyMember extends CommonInfo {
 	}
 
 	/**
-	 * @return the userTypeCd
+	 * @return the deviceIdType
 	 */
-	public String getUserTypeCd() {
-		return this.userTypeCd;
+	public String getDeviceIdType() {
+		return this.deviceIdType;
 	}
 
 	/**
-	 * @param userTypeCd
-	 *            the userTypeCd to set
+	 * @param deviceIdType
+	 *            the deviceIdType to set
 	 */
-	public void setUserTypeCd(String userTypeCd) {
-		this.userTypeCd = userTypeCd;
+	public void setDeviceIdType(String deviceIdType) {
+		this.deviceIdType = deviceIdType;
 	}
 
 	/**
-	 * @return the userStatusCd
+	 * @return the deviceType
 	 */
-	public String getUserStatusCd() {
-		return this.userStatusCd;
+	public String getDeviceType() {
+		return this.deviceType;
 	}
 
 	/**
-	 * @param userStatusCd
-	 *            the userStatusCd to set
+	 * @param deviceType
+	 *            the deviceType to set
 	 */
-	public void setUserStatusCd(String userStatusCd) {
-		this.userStatusCd = userStatusCd;
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
 	}
 
 	/**
-	 * @return the age
+	 * @return the deviceModelNo
 	 */
-	public Integer getAge() {
-		return this.age;
+	public String getDeviceModelNo() {
+		return this.deviceModelNo;
 	}
 
 	/**
-	 * @param age
-	 *            the age to set
+	 * @param deviceModelNo
+	 *            the deviceModelNo to set
 	 */
-	public void setAge(Integer age) {
-		this.age = age;
+	public void setDeviceModelNo(String deviceModelNo) {
+		this.deviceModelNo = deviceModelNo;
 	}
 
 	/**
-	 * @return the bLogin
+	 * @return the deviceTelecom
 	 */
-	public Boolean getbLogin() {
-		return this.bLogin;
+	public String getDeviceTelecom() {
+		return this.deviceTelecom;
 	}
 
 	/**
-	 * @param bLogin
-	 *            the bLogin to set
+	 * @param deviceTelecom
+	 *            the deviceTelecom to set
 	 */
-	public void setbLogin(Boolean bLogin) {
-		this.bLogin = bLogin;
+	public void setDeviceTelecom(String deviceTelecom) {
+		this.deviceTelecom = deviceTelecom;
 	}
 
 }

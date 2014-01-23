@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 public class CheckerManager {
-	private final Map<String, List<PurchasePreChecker>> checkerMap = new HashMap<String, List<PurchasePreChecker>>();
+	private final Map<String, List<PurchaseOrderChecker>> checkerMap = new HashMap<String, List<PurchaseOrderChecker>>();
 
 	/**
 	 */
@@ -31,10 +31,10 @@ public class CheckerManager {
 		//
 		// ##### 순서 중요 #####
 		//
-		List<PurchasePreChecker> checkerList = new ArrayList<PurchasePreChecker>();
-		checkerList.add(new MemberChecker()); // 회원 적합성
-		checkerList.add(new ProductChecker()); // 상품 적합성
-		checkerList.add(new ValidationChecker()); // 구매 적합성
+		List<PurchaseOrderChecker> checkerList = new ArrayList<PurchaseOrderChecker>();
+		// checkerList.add(new MemberChecker()); // 회원 적합성
+		// checkerList.add(new ProductChecker()); // 상품 적합성
+		// checkerList.add(new ValidationChecker()); // 구매 적합성
 		checkerList.add(new BlockChecker()); // 구매 차단 여부
 		checkerList.add(new TestMdnChecker()); // Test MDN
 		checkerList.add(new SktTestChecker()); // SKT 시험폰
@@ -57,7 +57,7 @@ public class CheckerManager {
 	 *            제한체크 타입
 	 * @return 제한체크 목록
 	 */
-	public List<PurchasePreChecker> getCheckerList(String type) {
+	public List<PurchaseOrderChecker> getCheckerList(String type) {
 		if (StringUtils.isEmpty(type)) {
 			type = "BASIC";
 		}

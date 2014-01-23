@@ -7,48 +7,36 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.purchase.order.service;
+package com.skplanet.storeplatform.sac.purchase.order.precheck;
 
-import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
  * 
- * 구매 서비스 인터페이스
+ * 구매 전처리 체크
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
-public interface PurchaseService {
-
+public interface PurchaseOrderChecker {
 	/**
-	 * 
 	 * <pre>
-	 * 구매 전처리.
+	 * 체크 대상 여부 확인.
 	 * </pre>
 	 * 
 	 * @param purchaseInfo
 	 *            구매요청 정보
+	 * @return 체크대상여부: true-체크대상, false-체크대상 아님
 	 */
-	public void checkPurchase(PrePurchaseInfo purchaseInfo);
+	public boolean isTarget(PurchaseOrder purchaseInfo);
 
 	/**
-	 * 
 	 * <pre>
-	 * 무료구매 처리.
+	 * 구매 전처리 체크 및 필요한 정보 세팅.
 	 * </pre>
 	 * 
 	 * @param purchaseInfo
 	 *            구매요청 정보
+	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
 	 */
-	public void freePurchase(PrePurchaseInfo purchaseInfo);
-
-	/**
-	 * 
-	 * <pre>
-	 * 유료구매 - 결제Page 준비작업.
-	 * </pre>
-	 * 
-	 * @param purchaseInfo
-	 *            구매요청 정보
-	 */
-	public void setPaymentPageInfo(PrePurchaseInfo purchaseInfo);
+	public boolean checkAndSetInfo(PurchaseOrder purchaseInfo);
 }

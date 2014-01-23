@@ -15,10 +15,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.PurchaseProduct;
-import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyProductServiceImpl;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReqProduct;
+import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyDisplayServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
  * 
@@ -26,10 +26,10 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
-public class ProductChecker implements PurchasePreChecker {
+public class ProductChecker implements PurchaseOrderChecker {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private final DummyProductServiceImpl dummyService = new DummyProductServiceImpl();
+	private final DummyDisplayServiceImpl dummyService = new DummyDisplayServiceImpl();
 
 	/**
 	 * <pre>
@@ -41,7 +41,7 @@ public class ProductChecker implements PurchasePreChecker {
 	 * @return 체크대상여부: true-체크대상, false-체크대상 아님
 	 */
 	@Override
-	public boolean isTarget(PrePurchaseInfo purchaseInfo) {
+	public boolean isTarget(PurchaseOrder purchaseInfo) {
 		return true;
 	}
 
@@ -55,17 +55,18 @@ public class ProductChecker implements PurchasePreChecker {
 	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
 	 */
 	@Override
-	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
+	public boolean checkAndSetInfo(PurchaseOrder purchaseInfo) {
 		this.logger.debug("PRCHS,DUMMY,PRODUCT,START," + purchaseInfo);
 
-		// 상품 정보 조회 : 테넌트ID, 상품ID, 디바이스모델코드
+		// 상품 정보 조회 : 테넌트ID, 시스템ID, 상품ID, 디바이스모델코드
 		// tenantId, String prodId, String deviceModelCd
 		String tenantId = purchaseInfo.getTenantId();
+		String systemId = purchaseInfo.getSystemId();
 		String deviceModelCd = purchaseInfo.getDeviceModelCd();
 
 		List<DummyProduct> prodList = new ArrayList<DummyProduct>();
-		for (PurchaseProduct product : purchaseInfo.getCreatePurchaseReq().getProductList()) {
-			prodList.add(this.dummyService.getProductInfo(tenantId, product.getProdId(), deviceModelCd));
+		for (CreatePurchaseReqProduct product : purchaseInfo.getCreatePurchaseReq().getProductList()) {
+			prodList.add(this.dummyService.getProductInfo(tenantId, systemId, product.getProdId(), deviceModelCd));
 		}
 
 		purchaseInfo.setProductList(prodList);

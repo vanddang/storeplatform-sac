@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyAdminServiceImpl;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
  * 
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
-public class ShoppingLimitChecker implements PurchasePreChecker {
+public class ShoppingLimitChecker implements PurchaseOrderChecker {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static final String SHOPPING_CD = "";
@@ -38,9 +38,9 @@ public class ShoppingLimitChecker implements PurchasePreChecker {
 	 * @return 체크대상여부: true-체크대상, false-체크대상 아님
 	 */
 	@Override
-	public boolean isTarget(PrePurchaseInfo purchaseInfo) {
+	public boolean isTarget(PurchaseOrder purchaseInfo) {
 		// 유료결제 && 쇼핑상품
-		return (purchaseInfo.getRealTotAmt() > 0 && SHOPPING_CD.equals(""));
+		return (purchaseInfo.getRealTotAmt() > 0 && SHOPPING_CD.startsWith(""));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class ShoppingLimitChecker implements PurchasePreChecker {
 	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
 	 */
 	@Override
-	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
+	public boolean checkAndSetInfo(PurchaseOrder purchaseInfo) {
 		this.logger.debug("PRCHS,DUMMY,SHOPLIMIT,START," + purchaseInfo);
 
 		this.dummyService.getShoppingLimit();

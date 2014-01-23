@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyMemberServiceImpl;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
  * 
@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
-public class BlockChecker implements PurchasePreChecker {
+public class BlockChecker implements PurchaseOrderChecker {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyMemberServiceImpl dummyService = new DummyMemberServiceImpl();
@@ -36,7 +36,7 @@ public class BlockChecker implements PurchasePreChecker {
 	 * @return 체크대상여부: true-체크대상, false-체크대상 아님
 	 */
 	@Override
-	public boolean isTarget(PrePurchaseInfo purchaseInfo) {
+	public boolean isTarget(PurchaseOrder purchaseInfo) {
 		// 유료결제
 		return (purchaseInfo.getRealTotAmt() > 0);
 	}
@@ -51,14 +51,14 @@ public class BlockChecker implements PurchasePreChecker {
 	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
 	 */
 	@Override
-	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
+	public boolean checkAndSetInfo(PurchaseOrder purchaseInfo) {
 		this.logger.debug("PRCHS,DUMMY,BLOCK,START," + purchaseInfo);
 
 		// 구매 차단 여부 조회 : 테넌트ID, 내부회원NO, 디바이스ID
-		if (this.dummyService.isBlock(purchaseInfo.getTenantId(), purchaseInfo.getInsdUsermbrNo(),
-				purchaseInfo.getInsdDeviceId())) {
+		if (this.dummyService.isBlock(purchaseInfo.getTenantId(), purchaseInfo.getUserKey(),
+				purchaseInfo.getDeviceKey())) {
 
-			purchaseInfo.setbBlock(true);
+			purchaseInfo.getPolicyInfo().setbBlock(true);
 			return false;
 		}
 

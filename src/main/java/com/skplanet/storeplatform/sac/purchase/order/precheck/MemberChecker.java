@@ -12,9 +12,10 @@ package com.skplanet.storeplatform.sac.purchase.order.precheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyMemberServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
+import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
  * 
@@ -22,7 +23,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PrePurchaseInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
-public class MemberChecker implements PurchasePreChecker {
+public class MemberChecker implements PurchaseOrderChecker {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final DummyMemberServiceImpl dummyService = new DummyMemberServiceImpl();
@@ -37,7 +38,7 @@ public class MemberChecker implements PurchasePreChecker {
 	 * @return 체크대상여부: true-체크대상, false-체크대상 아님
 	 */
 	@Override
-	public boolean isTarget(PrePurchaseInfo purchaseInfo) {
+	public boolean isTarget(PurchaseOrder purchaseInfo) {
 		return true;
 	}
 
@@ -51,20 +52,20 @@ public class MemberChecker implements PurchasePreChecker {
 	 * @return 체크진행 여부: true-체크진행 계속, false-체크진행 중지
 	 */
 	@Override
-	public boolean checkAndSetInfo(PrePurchaseInfo purchaseInfo) {
+	public boolean checkAndSetInfo(PurchaseOrder purchaseInfo) {
 		this.logger.debug("PRCHS,DUMMY,MEMBER,START," + purchaseInfo);
 
-		// 회원 정보 조회 : 테넌트ID, 내부회원NO, 디바이스ID
-		DummyMember member = this.dummyService.getMemberInfo(purchaseInfo.getTenantId(),
-				purchaseInfo.getInsdUsermbrNo(), purchaseInfo.getInsdDeviceId());
+		// 회원 정보 조회 : 테넌트ID, 시스템ID, 내부회원NO, 디바이스ID
+		DummyMember member = this.dummyService.getUserInfo(purchaseInfo.getTenantId(), purchaseInfo.getSystemId(),
+				purchaseInfo.getUserKey(), purchaseInfo.getDeviceKey());
 
 		this.logger.debug("DUMMY,MEMBER," + member);
 		purchaseInfo.setPurchaseMember(member);
 
-		// if( "선물발신코드".equals(purchaseInfo.getCreatePurchaseReq().getPrchsCaseCd()) ) {
-		if (purchaseInfo.getCreatePurchaseReq().getPrchsCaseCd() != null) {
-			member = this.dummyService.getMemberInfo(purchaseInfo.getRecvTenantId(),
-					purchaseInfo.getRecvInsdUsermbrNo(), purchaseInfo.getRecvInsdDeviceId());
+		// 선물 경우 - 수신자 정보 조회
+		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseInfo.getPrchsCaseCd())) {
+			member = this.dummyService.getUserInfo(purchaseInfo.getRecvTenantId(), purchaseInfo.getSystemId(),
+					purchaseInfo.getRecvUserKey(), purchaseInfo.getRecvDeviceKey());
 
 			this.logger.debug("DUMMY,MEMBER,RECV," + member);
 			purchaseInfo.setRecvMember(member);

@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class DummyProductServiceImpl {
+public class DummyDisplayServiceImpl {
 	/**
 	 * 
 	 * <pre>
@@ -25,14 +25,16 @@ public class DummyProductServiceImpl {
 	 * </pre>
 	 * 
 	 * @param tenantId
-	 *            테넌트ID
+	 *            테넌트 ID
+	 * @param systemId
+	 *            시스템 ID
 	 * @param prodId
-	 *            상품ID
+	 *            상품 ID
 	 * @param deviceModelCd
-	 *            단말모델코드
-	 * @return Dummy 상품정보
+	 *            단말 모델 코드
+	 * @return Dummy 상품 정보
 	 */
-	public DummyProduct getProductInfo(String tenantId, String prodId, String deviceModelCd) {
+	public DummyProduct getProductInfo(String tenantId, String systemId, String prodId, String deviceModelCd) {
 		DummyProduct dummy = new DummyProduct();
 		dummy.setProdId(prodId);
 		dummy.setProdAmt(0.0);

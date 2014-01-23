@@ -24,47 +24,28 @@ public class DummyMemberServiceImpl {
 	 * </pre>
 	 * 
 	 * @param tenantId
-	 *            테넌트ID
-	 * @param insdUsermbrNo
+	 *            테넌트 ID
+	 * @param systemId
+	 *            시스템 ID
+	 * @param userKey
 	 *            내부 회원 NO
-	 * @param insdDeviceId
+	 * @param deviceKey
 	 *            내부 디바이스 ID
 	 * @return Dummy 회원정보
 	 */
-	public DummyMember getMemberInfo(String tenantId, String insdUsermbrNo, String insdDeviceId) {
+	public DummyMember getUserInfo(String tenantId, String systemId, String userKey, String deviceKey) {
 		DummyMember dummy = new DummyMember();
 		dummy.setTenantId(tenantId);
-		dummy.setInsdUsermbrNo(insdUsermbrNo);
-		dummy.setInsdDeviceId(insdDeviceId);
-		dummy.setMdn("01046353524");
+		dummy.setSystemId(systemId);
+		dummy.setUserKey(userKey);
+		dummy.setUserId("testid01");
+		dummy.setDeviceKey(deviceKey);
+		dummy.setDeviceId("01046353524");
+		dummy.setUserTypeCd("US011501"); // 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자 -
+										 // null : Tstore 회원 아님
+		dummy.setUserStatusCd("US010701"); // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입,
+										   // US010705-전환, US010706 : 탈퇴 - US010707-승인대기
 		dummy.setAge(20);
-		dummy.setbAvailableMember(true);
-		dummy.setbLogin(true);
-
-		return dummy;
-	}
-
-	/**
-	 * <pre>
-	 * 단말 정보 조회.
-	 * </pre>
-	 * 
-	 * @param tenantId
-	 *            테넌트ID
-	 * @param insdUsermbrNo
-	 *            내부 회원 NO
-	 * @param insdDeviceId
-	 *            내부 디바이스 ID
-	 * @return Dummy 단말정보
-	 */
-	public DummyMember getDeviceInfo(String tenantId, String insdUsermbrNo, String insdDeviceId) {
-		DummyMember dummy = new DummyMember();
-		dummy.setTenantId(tenantId);
-		dummy.setInsdUsermbrNo(insdUsermbrNo);
-		dummy.setInsdDeviceId(insdDeviceId);
-		dummy.setMdn("01046353524");
-		dummy.setAge(20);
-		dummy.setbAvailableMember(true);
 		dummy.setbLogin(true);
 
 		return dummy;
