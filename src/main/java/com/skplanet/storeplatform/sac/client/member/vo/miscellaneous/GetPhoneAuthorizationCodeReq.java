@@ -19,7 +19,6 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 발신자 휴대폰 번호.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String sendMdn;
 
 	/**
