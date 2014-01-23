@@ -42,9 +42,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
-import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
@@ -75,11 +74,9 @@ public class CreateDeviceTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
-	@After
-	public void after() {
-		//휴대기기 삭제
-
-	}
+	String userAuthKey = "114127c7ef42667669819dad5df8d820c";
+	String userKey = "US201401231758478870000470";
+	String mdn = "01012341235";
 
 	@Test
 	public void shouldCreateDevice() {
@@ -98,15 +95,15 @@ public class CreateDeviceTest {
 						public Object requestBody() {
 
 							CreateDeviceReq req = new CreateDeviceReq();
-							req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-							req.setUserKey("US201401161113423010000110");
+							req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
+							req.setUserKey(CreateDeviceTest.this.userKey);
 							req.setRegMaxCnt("5");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
-							deviceInfo.setUserKey("US201401161113423010000110");
-							deviceInfo.setDeviceId("01048088876");
+							deviceInfo.setUserKey(CreateDeviceTest.this.userKey);
+							deviceInfo.setDeviceId(CreateDeviceTest.this.mdn);
 							deviceInfo.setDeviceIdType("msisdn ");
-							deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 							deviceInfo.setIsPrimary("N");
 							deviceInfo.setIsAuthenticated("Y");
 							deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
@@ -163,78 +160,25 @@ public class CreateDeviceTest {
 		}
 	}
 
-	@Test
-	public void shouldCreateDeviceService() {
+	@After
+	public void after() {
+		//휴대기기 삭제
+		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+			@Override
+			public Object requestBody() {
+				RemoveDeviceReq req = new RemoveDeviceReq();
+				req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
+				req.setDeviceId(CreateDeviceTest.this.mdn);
+				logger.debug("request param : {}", req.toString());
+				return req;
+			}
+		}).success(RemoveDeviceRes.class, new SuccessCallback() {
+			@Override
+			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+				RemoveDeviceRes res = (RemoveDeviceRes) result;
+				logger.debug("response param : {}", res.toString());
+			}
+		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		TenantHeader tenantHeader = new TenantHeader();
-		tenantHeader.setSystemId("S001");
-		tenantHeader.setTenantId("S01");
-
-		DeviceHeader deviceHeader = new DeviceHeader();
-		deviceHeader.setModel("SHW-M220L");
-		deviceHeader.setOsVersion("1.0");
-
-		SacRequestHeader header = new SacRequestHeader();
-		header.setDeviceHeader(deviceHeader);
-		header.setTenantHeader(tenantHeader);
-
-		CreateDeviceReq req = new CreateDeviceReq();
-		req.setUserAuthKey("114127c7ef42667669819dad5df8d820c");
-		req.setUserKey("US201401161113423010000110");
-		req.setRegMaxCnt("5");
-
-		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setUserKey("US201401161113423010000110");
-		deviceInfo.setDeviceId("01048088880");
-		deviceInfo.setDeviceIdType("msisdn ");
-		deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-		deviceInfo.setIsPrimary("N");
-		deviceInfo.setIsAuthenticated("Y");
-		deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		deviceInfo.setIsUsed("Y");
-		deviceInfo.setNativeId("358362045580844");
-		deviceInfo.setDeviceAccount("vanddang@gmail.com");
-		deviceInfo.setIsRecvSms("Y");
-		deviceInfo.setDeviceNickName("SHP-110S(임시)");
-		deviceInfo.setTenantId("S01");
-
-		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_DATE);
-		deviceExtraInfo.setExtraProfileValue(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_DODORYAUTH_YN);
-		deviceExtraInfo.setExtraProfileValue("Y");
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
-		deviceExtraInfo.setExtraProfileValue("1.0");
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-		deviceExtraInfo.setExtraProfileValue("1.0");
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
-		deviceExtraInfo.setExtraProfileValue("N");
-		deviceExtraInfoList.add(deviceExtraInfo);
-
-		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-		req.setDeviceInfo(deviceInfo);
-
-		try {
-			ObjectMapper objMapper = new ObjectMapper();
-			logger.info("Request : {}", objMapper.writeValueAsString(req));
-			CreateDeviceRes res = this.deviceService.createDevice(header, req);
-			logger.info("res : {} " + res.toString());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
