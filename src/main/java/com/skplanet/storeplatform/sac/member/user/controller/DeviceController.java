@@ -60,11 +60,18 @@ public class DeviceController {
 	@ResponseBody
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
 
-		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String userId = StringUtil.nvl(req.getUserId(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), "");
-		if ((!userKey.equals("") && isMainDevice.equals("")) || (!userId.equals("") && isMainDevice.equals(""))) {
-			throw new Exception("필수 파라미터 입니다.[isMainDevice]");
+
+		if (!userId.equals("") && isMainDevice.equals("")) {
+			logger.info(":::: 1");
+			throw new Exception("isMainDevice 필수 파라미터 입니다.");
+		}
+
+		if (deviceId.equals("") && deviceKey.equals("") && isMainDevice.equals("")) {
+			throw new Exception("isMainDevice 필수 파라미터 입니다.");
 		}
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtil.convertObject(req));
@@ -90,31 +97,31 @@ public class DeviceController {
 		/* 휴대기기 정보 필수 파라메터 체크 */
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 		if (StringUtil.nvl(deviceInfo.getDeviceId(), "").equals("")) {
-			throw new Exception("deviceId는 필수 파라미터 입니다.");
+			throw new Exception("deviceId 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
-			throw new Exception("deviceIdType는 필수 파라미터 입니다.");
+			throw new Exception("deviceIdType 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getDeviceTelecom(), "").equals("")) {
-			throw new Exception("deviceTelecom는 필수 파라미터 입니다.");
+			throw new Exception("deviceTelecom 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsPrimary(), "").equals("")) {
-			throw new Exception("isPrimary는 필수 파라미터 입니다.");
+			throw new Exception("isPrimary 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsAuthenticated(), "").equals("")) {
-			throw new Exception("isAuthenticate는 필수 파라미터 입니다.");
+			throw new Exception("isAuthenticate 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsUsed(), "").equals("")) {
-			throw new Exception("isUsed는 필수 파라미터 입니다.");
+			throw new Exception("isUsed 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getAuthenticationDate(), "").equals("")) {
-			throw new Exception("authenticationDate는 필수 파라미터 입니다.");
+			throw new Exception("authenticationDate 필수 파라미터 입니다.");
 		}
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
@@ -142,7 +149,7 @@ public class DeviceController {
 
 		// ICAS연동시 필요한 deviceIdType 체크
 		if (!StringUtil.nvl(deviceInfo.getNativeId(), "").equals("") && StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
-			throw new Exception("deviceIdType는 필수 파라미터 입니다.");
+			throw new Exception("deviceIdType 필수 파라미터 입니다.");
 		}
 
 		deviceInfo.setUserKey(req.getUserKey());
@@ -219,8 +226,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/dev/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req)
-			throws Exception {
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req) throws Exception {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
