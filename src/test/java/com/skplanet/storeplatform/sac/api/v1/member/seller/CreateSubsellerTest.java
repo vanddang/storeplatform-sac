@@ -68,7 +68,7 @@ public class CreateSubsellerTest {
 						CreateSubsellerReq req = new CreateSubsellerReq();
 
 						req.setSellerKey("IF1023501437920130904104346");
-						req.setSubSellerID("ID323R425");
+						req.setSubSellerID("ID323R427");
 						req.setSubSellerPW("12312312");
 						req.setSubSellerMemo("test");
 						req.setSubSellerEmail("ID1@qqq.com");
