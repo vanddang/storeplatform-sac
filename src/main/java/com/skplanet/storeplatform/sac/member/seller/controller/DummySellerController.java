@@ -19,7 +19,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
-import com.skplanet.storeplatform.sac.client.member.vo.common.SellerRight;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
@@ -752,26 +751,13 @@ public class DummySellerController {
 	public DetailSubsellerRes detailSubseller() {
 
 		DetailSubsellerRes responseVO = new DetailSubsellerRes();
-		responseVO.setMasSellerKey("IF1023511101420120615164319");
-		responseVO.setSellerKey("IF1023511101420120615162000");
-		responseVO.setSellerId("signtest_subid01");
-		responseVO.setSellerPw("123qwe");
-		responseVO.setSellerEmail("signtest_subid01@yopmail.com");
-		responseVO.setSellerPhoneCountry("112");
-		responseVO.setSellerPhone("0101231234");
-		responseVO.setSellerMemo("signtest의 서브계정01 메모");
-		responseVO.setLastLoginDttm("201312301006");
+		SellerMbr sellerInfo = new SellerMbr();
 
-		SellerRight sellerRightList = null;
-		List<SellerRight> myList = new ArrayList<SellerRight>();
-		for (int ii = 0; ii < 1; ii++) {
-			sellerRightList = new SellerRight();
-			sellerRightList.setRightProfile("DE0101");
-			sellerRightList.setRightProfileValue("상품현황");
-			myList.add(sellerRightList);
-		}
-
-		responseVO.setSellerRightList(myList);
+		sellerInfo.setSellerId("user1");
+		sellerInfo.setSellerKey("IF1023599819420120111013407");
+		sellerInfo.setSellerMainStatus("US010704");
+		sellerInfo.setSellerSubStatus("US010301");
+		responseVO.setSellerMbr(sellerInfo);
 
 		return responseVO;
 	}
