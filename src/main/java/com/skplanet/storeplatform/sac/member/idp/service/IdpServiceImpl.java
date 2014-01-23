@@ -64,7 +64,7 @@ public class IdpServiceImpl implements IdpService {
 		 * map 정보중 리턴값중 이용동의 사이트정보의 old_id 값 null을 판단 신규가입 , 전환가입/변경가입/변경전환 분기처리
 		 */
 
-		LOGGER.debug("rXCreateUserIDP ------- Testing");
+		LOGGER.debug("rXCreateUserIDP ------- Start");
 
 		String isParentApprove = ""; // 법정 대리인 동의 여부
 		String userId = "";
@@ -134,11 +134,11 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setTenantID(commonRequest.getTenantID()); // 테넌트 ID
 			userMbr.setSystemID(commonRequest.getSystemID()); // 테넌트의 시스템 ID
 
-			userMbr.setUserKey(map.get("user_key").toString()); // 사용자 Key
-			userMbr.setImMbrNo(""); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키 USERMBR_NO
+			userMbr.setUserKey(""); // 사용자 Key
+			userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키 USERMBR_NO
 			userMbr.setUserType(map.get("user_type").toString()); // * 사용자 구분 코드
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상으로 판단 20140117
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 사용자 서브 상태 코드
+			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
+			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
 			userMbr.setImSvcNo(map.get("im_int_svc_no").toString()); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
 			userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 : C,
 																		 // 변경전환 : H
@@ -268,6 +268,8 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setImIntSvcNo(responseImIntSvcNo);
 		imResult.setUserId(responseUserId);
 
+		LOGGER.debug("rXCreateUserIDP ------- End");
+
 		return imResult;
 	}
 
@@ -299,10 +301,11 @@ public class IdpServiceImpl implements IdpService {
 		getUserMbr.setTenantID(commonRequest.getTenantID()); // 테넌트 ID
 		getUserMbr.setSystemID(commonRequest.getSystemID()); // 테넌트의 시스템 ID
 
-		getUserMbr.setImMbrNo(""); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스 키 USERMBR_NO
+		getUserMbr.setImMbrNo(searchUserResponse.getUserMbr().getImMbrNo()); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스
+																			 // 키 USERMBR_NO
 		getUserMbr.setUserType(hashMap.get("user_type").toString()); // 사용자 구분 코드
-		getUserMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상으로 판단 20140117
-		getUserMbr.setUserSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING); // 사용자 서브 상태 코드
+		getUserMbr.setUserMainStatus(searchUserResponse.getUserMbr().getUserMainStatus()); // 사용자 메인 상태 코드
+		getUserMbr.setUserSubStatus(searchUserResponse.getUserMbr().getUserSubStatus()); // 사용자 서브 상태 코드
 
 		getUserMbr.setImSvcNo(hashMap.get("im_int_svc_no").toString()); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호.
 		getUserMbr.setIsImChanged(hashMap.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 :
@@ -840,7 +843,6 @@ public class IdpServiceImpl implements IdpService {
 		String userStatusCode = map.get("user_status_code").toString();
 		String isEmailAuth = map.get("is_email_auth").toString();
 
-		LOGGER.debug("rXActivateUserIdIDP ------- End");
 		String responseResult = "";
 		String responseResultText = "";
 		String responseImIntSvcNo = "";
@@ -855,7 +857,7 @@ public class IdpServiceImpl implements IdpService {
 		searchUserRequest.setCommonRequest(commonRequest);
 
 		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType("SVC_MANG_NO");
+		keySearch.setKeyType("INTG_SVC_NO");
 		keySearch.setKeyString(map.get("im_int_svc_no").toString()); // 통합 서비스 번호
 		List<KeySearch> keySearchList = new ArrayList();
 		keySearchList.add(keySearch);
@@ -864,13 +866,46 @@ public class IdpServiceImpl implements IdpService {
 
 		SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
+		if (searchUserResponse.getUserMbr() != null) { // 통합서비스 번호로 조회한 회원정보가 있을경우만 로직처리
+
+			// 조회되어진 사용자의 상태값이 정상이 아닌경우에 사용자 상태변경 정상 상태로 TB_US_USERMBR 데이터를 수정함
+			if (!MemberConstants.MAIN_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserMainStatus())
+					|| !MemberConstants.SUB_STATUS_NORMAL.equals(searchUserResponse.getUserMbr().getUserSubStatus())) {
+				UpdateStatusUserRequest updateStatusUserRequest = new UpdateStatusUserRequest();
+
+				updateStatusUserRequest.setCommonRequest(commonRequest);
+
+				updateStatusUserRequest.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+				updateStatusUserRequest.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+
+				KeySearch updateKeySearch = new KeySearch();
+				updateKeySearch.setKeyType("INSD_USERMBR_NO");
+				updateKeySearch.setKeyString(searchUserResponse.getUserMbr().getUserKey()); // 내부사용자 회원번호
+
+				List<KeySearch> updateKeySearchList = new ArrayList();
+				updateKeySearchList.add(keySearch);
+
+				updateStatusUserRequest.setKeySearchList(updateKeySearchList);
+
+				this.userSCI.updateStatus(updateStatusUserRequest);
+
+			}
+
+			// TO DO ... 이하 API 호출구현되면 로직 처리
+			// 이메일 인증시 모바일 인증여부 Y 업데이트
+			// 가입 아이디에 신규 단말 추가시 캐쉬 지급 처리 핸드폰 디바이스 관련
+			// 기존 모바일회원과 웹아이디회원 실명인증 정보처리
+			// DEVICE관련 & 구매내역이관 모바일 회원 탈퇴처리
+
+		}
+
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXActivateUserIdIDP");
 		imResult.setResult(responseResult);
 		imResult.setResultText(responseResultText);
 		imResult.setImIntSvcNo(responseImIntSvcNo);
 		imResult.setUserId(responseUserId);
-
+		LOGGER.debug("rXActivateUserIdIDP ------- End");
 		return imResult;
 
 	}
