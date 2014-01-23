@@ -78,8 +78,6 @@ public class CreateSellerTest {
 
 						req.setSellerClass("US010101");
 						req.setSellerCategory("US011301");
-						req.setSellerMainStatus("US010201");
-						req.setSellerSubStatus("US010301");
 						req.setSellerId("seller_test1234");
 						req.setSellerPW("awdawe123dw2");
 						req.setSellerTelecom("US001201");
