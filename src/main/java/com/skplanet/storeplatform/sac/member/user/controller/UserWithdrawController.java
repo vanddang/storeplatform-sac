@@ -62,7 +62,7 @@ public class UserWithdrawController extends ParameterExceptionHandling {
 		logger.info("###### Start UserWithdraw Request : {}", req.toString());
 
 		if (userId.equals("") && userAuthKey.equals("") && deviceId.equals("")) {
-			throw new Exception("필수요청 파라메터 부족");
+			throw new RuntimeException("필수요청 파라메터 부족");
 		}
 
 		res = this.svc.withdraw(sacHeader, req);
