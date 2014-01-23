@@ -102,6 +102,15 @@ public class CreateByAgreementTest {
 						reqJson.setJoinId(""); // 가입채널코드
 						reqJson.setIsRecvSms(""); // SMS 수신 여부
 
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
+
 						// 동의 정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreement1 = new AgreementInfo();
