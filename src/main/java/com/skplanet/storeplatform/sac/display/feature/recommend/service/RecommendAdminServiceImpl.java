@@ -128,7 +128,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		requestVO.setStdDt(stdDt);
 
 		// topMenuId 배열로 변경
-		String[] topMenuIdArr = requestVO.getTopMenuId().split(",");
+		String[] topMenuIdArr = requestVO.getTopMenuId().split("+");
 		requestVO.setTopMenuIdArr(topMenuIdArr);
 
 		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList", requestVO,
