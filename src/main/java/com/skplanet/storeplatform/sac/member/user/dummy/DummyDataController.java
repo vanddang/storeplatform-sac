@@ -42,11 +42,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveAddtionalInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -811,19 +809,19 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveDeviceRes
 	 */
-	@RequestMapping(value = "/member/user/removeDevice/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public RemoveDeviceRes removeDevice() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.19.	휴대기기 삭제. #####");
-		LOGGER.info("####################################################");
-
-		RemoveDeviceRes res = new RemoveDeviceRes();
-		res.setDeviceKey("01011112222");
-
-		return res;
-	}
+	// @RequestMapping(value = "/member/user/removeDevice/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public RemoveDeviceRes removeDevice() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.19.	휴대기기 삭제. #####");
+	// LOGGER.info("####################################################");
+	//
+	// RemoveDeviceRes res = new RemoveDeviceRes();
+	// res.setDeviceKey("01011112222");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -897,27 +895,27 @@ public class DummyDataController {
 	// return res;
 	// }
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return WithdrawRes
-	 */
-	@RequestMapping(value = "/member/user/withdraw/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public WithdrawRes withdraw() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.22.	회원 탈퇴. #####");
-		LOGGER.info("####################################################");
-
-		WithdrawRes res = new WithdrawRes();
-
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return WithdrawRes
+	// */
+	// @RequestMapping(value = "/member/user/withdraw/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public WithdrawRes withdraw() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.22.	회원 탈퇴. #####");
+	// LOGGER.info("####################################################");
+	//
+	// WithdrawRes res = new WithdrawRes();
+	//
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
