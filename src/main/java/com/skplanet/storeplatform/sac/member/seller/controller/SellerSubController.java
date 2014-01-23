@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -103,6 +105,28 @@ public class SellerSubController {
 			throw new Exception("필수 파라미터 미존재");
 
 		return this.sellerSubService.listSubseller(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.22.	서브계정 상세 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return DetailSubsellerRes
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) throws Exception {
+		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
+
+		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
+
+		if (sellerKey.equals(""))
+			throw new Exception("필수 파라미터 미존재");
+
+		return this.sellerSubService.detailSubseller(header, req);
 	}
 
 }

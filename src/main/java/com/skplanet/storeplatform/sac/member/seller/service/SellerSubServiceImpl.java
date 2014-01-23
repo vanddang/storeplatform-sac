@@ -17,9 +17,13 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerListResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSubSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -160,6 +164,42 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	/**
 	 * <pre>
+	 * 서브계정 상세 조회.
+	 * </pre>
+	 * 
+	 * @param DetailSubsellerReq
+	 * @return DetailSubsellerRes
+	 */
+	@Override
+	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
+
+		SearchSubSellerResponse schRes = new SearchSubSellerResponse();
+		SearchSubSellerRequest schReq = new SearchSubSellerRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		if (header.getTenantHeader() == null) {
+			schReq.setCommonRequest(this.imsiCommonRequest());
+		} else {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+			schReq.setCommonRequest(commonRequest);
+		}
+		schReq.setSellerKey(req.getSellerKey());
+
+		schRes = this.sellerSCI.searchSubSeller(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
+
+		DetailSubsellerRes response = new DetailSubsellerRes();
+		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
+
+		return response;
+	}
+
+	/**
+	 * <pre>
 	 * TODO 임시 SC회원 전달용 공통헤더.
 	 * </pre>
 	 * 
@@ -260,6 +300,86 @@ public class SellerSubServiceImpl implements SellerSubService {
 			}
 
 		return sList;
+	}
+
+	/**
+	 * <pre>
+	 * TODO 판매자 정보.
+	 * </pre>
+	 * 
+	 * @return
+	 */
+	private SellerMbr sellerMbr(com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr) {
+		// 판매자 정보
+		SellerMbr sellerMbrRes = new SellerMbr();
+		if (sellerMbr != null) {
+			sellerMbrRes.setApproveDate(sellerMbr.getApproveDate());
+			sellerMbrRes.setBizGrade(sellerMbr.getBizGrade());
+			sellerMbrRes.setBizKindCd(sellerMbr.getBizKindCd());
+			sellerMbrRes.setBizRegNumber(sellerMbr.getBizRegNumber());
+			sellerMbrRes.setBizUnregReason(sellerMbr.getBizUnregReason());
+			sellerMbrRes.setCeoBirthDay(sellerMbr.getCeoBirthDay());
+			sellerMbrRes.setCeoName(sellerMbr.getCeoName());
+			sellerMbrRes.setCharger(sellerMbr.getCharger());
+			sellerMbrRes.setCordedTelephone(sellerMbr.getCordedTelephone());
+			sellerMbrRes.setCordedTelephoneCountry(sellerMbr.getCordedTelephoneCountry());
+			sellerMbrRes.setCustomerEmail(sellerMbr.getCustomerEmail());
+			sellerMbrRes.setCustomerPhone(sellerMbr.getCustomerPhone());
+			sellerMbrRes.setCustomerPhoneCountry(sellerMbr.getCustomerPhoneCountry());
+			sellerMbrRes.setIsAccountReal(sellerMbr.getIsAccountReal());
+			sellerMbrRes.setIsBizRegistered(sellerMbr.getIsBizRegistered());
+			sellerMbrRes.setIsBizTaxable(sellerMbr.getIsBizTaxable());
+			sellerMbrRes.setIsDeductible(sellerMbr.getIsDeductible());
+			sellerMbrRes.setIsDomestic(sellerMbr.getIsDomestic());
+			sellerMbrRes.setIsParent(sellerMbr.getIsParent());
+			sellerMbrRes.setIsRealName(sellerMbr.getIsRealName());
+			sellerMbrRes.setIsRecvEmail(sellerMbr.getIsRecvEmail());
+			sellerMbrRes.setIsRecvSMS(sellerMbr.getIsRecvSMS());
+			sellerMbrRes.setMarketCode(sellerMbr.getMarketCode());
+			sellerMbrRes.setMarketStatus(sellerMbr.getMarketStatus());
+			sellerMbrRes.setParentSellerKey(sellerMbr.getParentSellerKey());
+			sellerMbrRes.setRegDate(sellerMbr.getRegDate());
+			sellerMbrRes.setRepEmail(sellerMbr.getRepEmail());
+			sellerMbrRes.setRepFax(sellerMbr.getRepFax());
+			sellerMbrRes.setRepFaxArea(sellerMbr.getRepFaxArea());
+			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
+			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
+			sellerMbrRes.setRightProfileList(sellerMbr.getRightProfileList());
+			sellerMbrRes.setSecedeDate(sellerMbr.getSecedeDate());
+			sellerMbrRes.setSecedePathCd(sellerMbr.getSecedePathCd());
+			sellerMbrRes.setSecedeReasonCode(sellerMbr.getSecedeReasonCode());
+			sellerMbrRes.setSecedeReasonMessage(sellerMbr.getSecedeReasonMessage());
+			sellerMbrRes.setSellerAddress(sellerMbr.getSellerAddress());
+			sellerMbrRes.setSellerBirthDay(sellerMbr.getSellerBirthDay());
+			sellerMbrRes.setSellerBizCategory(sellerMbr.getSellerBizCategory());
+			sellerMbrRes.setSellerBizCorpNumber(sellerMbr.getSellerBizCorpNumber());
+			sellerMbrRes.setSellerBizNumber(sellerMbr.getSellerBizNumber());
+			sellerMbrRes.setSellerBizType(sellerMbr.getSellerBizType());
+			sellerMbrRes.setSellerCategory(sellerMbr.getSellerCategory());
+			sellerMbrRes.setSellerCity(sellerMbr.getSellerCity());
+			sellerMbrRes.setSellerClass(sellerMbr.getSellerClass());
+			sellerMbrRes.setSellerCompany(sellerMbr.getSellerCompany());
+			sellerMbrRes.setSellerCountry(sellerMbr.getSellerCountry());
+			sellerMbrRes.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
+			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
+			sellerMbrRes.setSellerID(sellerMbr.getSellerID());
+			sellerMbrRes.setSellerKey(sellerMbr.getSellerKey());
+			sellerMbrRes.setSellerLanguage(sellerMbr.getSellerLanguage());
+			sellerMbrRes.setSellerMainStatus(sellerMbr.getSellerMainStatus());
+			sellerMbrRes.setSellerName(sellerMbr.getSellerName());
+			sellerMbrRes.setSellerNickName(sellerMbr.getSellerNickName());
+			sellerMbrRes.setSellerPhone(sellerMbr.getSellerPhone());
+			sellerMbrRes.setSellerPhoneCountry(sellerMbr.getSellerPhoneCountry());
+			sellerMbrRes.setSellerSex(sellerMbr.getSellerSex());
+			sellerMbrRes.setSellerSSNumber(sellerMbr.getSellerSSNumber());
+			sellerMbrRes.setSellerState(sellerMbr.getSellerState());
+			sellerMbrRes.setSellerSubStatus(sellerMbr.getSellerSubStatus());
+			sellerMbrRes.setSellerTelecom(sellerMbr.getSellerTelecom());
+			sellerMbrRes.setSellerZip(sellerMbr.getSellerZip());
+			sellerMbrRes.setTenantID(sellerMbr.getTenantID());
+			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
+		}
+		return sellerMbrRes;
 	}
 
 }
