@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 
 /**
  * Interface Message Rights.Play Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -34,18 +34,25 @@ public class Play extends CommonInfo implements Serializable {
 	private String durationUsagePeriodUI; // 이용기간의 UI 표시
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
 
+	/*
+	 * Play()
+	 */
 	public Play() {
 		super();
 	}
 
-
+	/**
+	 * 
+	 * @param support
+	 * @param price
+	 * @param date
+	 */
 	public Play(String support, Price price, Date date) {
 		super();
 		this.support = support;
 		this.price = price;
 		this.date = date;
 	}
-
 
 	/**
 	 * @return Identifier
