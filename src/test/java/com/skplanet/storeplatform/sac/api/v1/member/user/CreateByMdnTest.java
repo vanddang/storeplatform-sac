@@ -80,12 +80,13 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
-	 * MDN 회원 가입 테스트.
+	 * MDN 회원 가입 테스트(법정대리인).
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test1_createByMdn() throws Exception {
 
@@ -167,6 +168,94 @@ public class CreateByMdnTest {
 
 	/**
 	 * <pre>
+	 * MDN 회원 가입 테스트(법정대리인 없이).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Ignore
+	@Test
+	public void test2_createByMdn() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateByMdnReq reqJson = new CreateByMdnReq();
+
+						// 단말 정보
+						reqJson.setDeviceId("01012346470"); // 기기 ID
+						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
+						reqJson.setDeviceTelecom("US012102"); // 통신사
+						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
+						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
+						reqJson.setJoinId("US002903"); // 가입채널코드
+						reqJson.setIsRecvSms("Y"); // SMS 수신 여부
+						reqJson.setOwnBirth("19820328"); // 본인의 생년월일
+
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("US011407");
+						deviceExtraInfo.setExtraProfileValue("3.0");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
+
+						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
+						reqJson.setIsParent("N"); // 법정대리인정보 등록 여부.
+						reqJson.setParentRealNameMethod("");
+						reqJson.setParentName("");
+						reqJson.setParentType("");
+						reqJson.setParentDate("");
+						reqJson.setParentEmail("");
+						reqJson.setParentBirthDay("");
+						reqJson.setParentTelecom("");
+						reqJson.setParentPhone("");
+						reqJson.setParentCi("");
+						reqJson.setParentRealNameDate("");
+						reqJson.setParentRealNameSite(""); // shop client 3.0
+
+						// 동의 정보
+						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
+						AgreementInfo agreement1 = new AgreementInfo();
+						agreement1.setExtraAgreementId("US010607");
+						agreement1.setExtraAgreementVersion("0.1");
+						agreement1.setIsExtraAgreement("Y");
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+
+						agreementList.add(agreement1);
+						agreementList.add(agreement2);
+						agreementList.add(agreement3);
+						reqJson.setAgreementList(agreementList);
+
+						return reqJson;
+					}
+				}).success(CreateByMdnRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateByMdnRes res = (CreateByMdnRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						LOGGER.debug(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
 	 * UUID 회원 가입 테스트.
 	 * </pre>
 	 * 
@@ -175,7 +264,7 @@ public class CreateByMdnTest {
 	 */
 	@Ignore
 	@Test
-	public void test2_createByUuid() throws Exception {
+	public void test3_createByUuid() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -259,7 +348,7 @@ public class CreateByMdnTest {
 	 */
 	@Ignore
 	@Test
-	public void test3_createByMac() throws Exception {
+	public void test4_createByMac() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -343,7 +432,7 @@ public class CreateByMdnTest {
 	 */
 	@Ignore
 	@Test
-	public void test4_errorTestCase() throws Exception {
+	public void test5_errorTestCase() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -420,8 +509,9 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             void
 	 */
+	@Ignore
 	@Test
-	public void test5_withdrawMdn() throws Exception {
+	public void test6_withdrawMdn() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/withdraw/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
