@@ -24,6 +24,8 @@ public class TenantHeader extends CommonInfo {
 
 	private String systemId;
 
+	private String langCd;
+
 	public TenantHeader() {
 		super();
 	}
@@ -42,6 +44,14 @@ public class TenantHeader extends CommonInfo {
 
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
+	}
+
+	public String getLangCd() {
+		return langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
 	}
 
 }

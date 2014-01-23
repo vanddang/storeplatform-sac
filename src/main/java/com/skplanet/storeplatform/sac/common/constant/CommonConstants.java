@@ -39,6 +39,14 @@ public class CommonConstants {
 	 */
 	public static final String HEADER_AUTH_NONCE = "x-sac-auth-nonce";
 
+	/**
+	 * 요청 헤더 상수 - 시스템 아이디
+	 */
+	public static final String HEADER_SYSTEM_ID = "x-sac-system-id";
 
+	/**
+	 * 요청 헤더 상수 - 지원 다국어
+	 */
+	public static final String HEADER_ACCEPT_LANGUATE = "accept-language";
 
 }

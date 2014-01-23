@@ -24,6 +24,7 @@ public class HeaderController {
 		TenantRes res = new TenantRes();
 		res.setTenantId(header.getTenantId());
 		res.setSystemId(header.getSystemId());
+		res.setLangCd(header.getLangCd());
 		return res;
 	}
 
