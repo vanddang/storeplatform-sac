@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserWithdrawService;
  * 
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
-@RequestMapping(value = "/dev/member/user")
+@RequestMapping(value = "/member/user")
 @Controller
 public class UserWithdrawController extends ParameterExceptionHandling {
 
