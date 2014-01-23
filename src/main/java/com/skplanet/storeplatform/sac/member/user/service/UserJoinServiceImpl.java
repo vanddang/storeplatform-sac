@@ -28,12 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -1016,51 +1013,51 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	}
 
-	/**
-	 * <pre>
-	 * 사용자 아이디 중복 체크.
-	 * </pre>
-	 * 
-	 * @param userId
-	 *            사용자 아이디
-	 * @param sacHeader
-	 *            공통 헤더
-	 * @throws Exception
-	 *             익셉션
-	 */
-	private void checkDuplicationId(String userId, SacRequestHeader sacHeader) throws Exception {
-
-		CheckDuplicationRequest checkDuplicationRequest = new CheckDuplicationRequest();
-
-		/**
-		 * 공통 정보 setting
-		 */
-		checkDuplicationRequest.setCommonRequest(this.getCommonRequest(sacHeader));
-
-		/**
-		 * 검색 조건 setting
-		 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-		keySchUserKey.setKeyString(userId);
-		keySearchList.add(keySchUserKey);
-		checkDuplicationRequest.setKeySearchList(keySearchList);
-
-		/**
-		 * ID가 중복 체크 SC 연동.
-		 */
-		CheckDuplicationResponse res = this.userSCI.checkDuplication(checkDuplicationRequest);
-
-		/**
-		 * SC 연동결과가 성공이고 ID 존재 여부가 N 이면 에러를 발생 한다.
-		 */
-		if (StringUtils.equals(res.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			if (StringUtils.equals(res.getIsRegistered(), MemberConstants.USE_N)) {
-				throw new RuntimeException("## (" + userId + ") 이미 존재 하는 ID 입니다.");
-			}
-		}
-
-	}
+	// /**
+	// * <pre>
+	// * 사용자 아이디 중복 체크.
+	// * </pre>
+	// *
+	// * @param userId
+	// * 사용자 아이디
+	// * @param sacHeader
+	// * 공통 헤더
+	// * @throws Exception
+	// * 익셉션
+	// */
+	// private void checkDuplicationId(String userId, SacRequestHeader sacHeader) throws Exception {
+	//
+	// CheckDuplicationRequest checkDuplicationRequest = new CheckDuplicationRequest();
+	//
+	// /**
+	// * 공통 정보 setting
+	// */
+	// checkDuplicationRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+	//
+	// /**
+	// * 검색 조건 setting
+	// */
+	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+	// KeySearch keySchUserKey = new KeySearch();
+	// keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+	// keySchUserKey.setKeyString(userId);
+	// keySearchList.add(keySchUserKey);
+	// checkDuplicationRequest.setKeySearchList(keySearchList);
+	//
+	// /**
+	// * ID가 중복 체크 SC 연동.
+	// */
+	// CheckDuplicationResponse res = this.userSCI.checkDuplication(checkDuplicationRequest);
+	//
+	// /**
+	// * SC 연동결과가 성공이고 ID 존재 여부가 N 이면 에러를 발생 한다.
+	// */
+	// if (StringUtils.equals(res.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+	// if (StringUtils.equals(res.getIsRegistered(), MemberConstants.USE_N)) {
+	// throw new RuntimeException("## (" + userId + ") 이미 존재 하는 ID 입니다.");
+	// }
+	// }
+	//
+	// }
 
 }
