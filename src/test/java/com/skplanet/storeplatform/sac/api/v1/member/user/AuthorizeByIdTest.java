@@ -87,19 +87,18 @@ public class AuthorizeByIdTest {
 						@Override
 						public Object requestBody() {
 							AuthorizeByIdReq req = new AuthorizeByIdReq();
-							req.setDeviceId("01073215212");
-							req.setUserId("watermin0927");
-							req.setUserPw("1qaz2wsx");
+							req.setDeviceId("01066786220");
+							req.setUserId("tlaeowlsuser1");
+							req.setUserPw("abcd1234");
 							req.setDeviceIdType("msisdn");
-							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
+							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 							req.setDeviceAccount("vanddang@gmail.com");
 
 							List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 							DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-							deviceExtraInfo.setExtraProfileValue("1.0");
+							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+							deviceExtraInfo.setExtraProfileValue("N");
 							deviceExtraInfoList.add(deviceExtraInfo);
-
 							req.setUserDeviceExtraInfo(deviceExtraInfoList);
 
 							try {
@@ -141,16 +140,19 @@ public class AuthorizeByIdTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByIdReq req = new AuthorizeByIdReq();
+		req.setDeviceId("01066786220");
 		req.setUserId("tlaeowlsuser1");
 		req.setUserPw("abcd1234");
-		/*List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
-		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
-		deviceExtraInfo.setExtraProfileValue("1.0");
-		deviceExtraInfoList.add(deviceExtraInfo);
+		req.setDeviceIdType("msisdn");
+		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
+		req.setDeviceAccount("vanddang@gmail.com");
 
+		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_ROOTING_YN);
+		deviceExtraInfo.setExtraProfileValue("N");
+		deviceExtraInfoList.add(deviceExtraInfo);
 		req.setUserDeviceExtraInfo(deviceExtraInfoList);
-*/
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
 			logger.info("Request : {}", objMapper.writeValueAsString(req));

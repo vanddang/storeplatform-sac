@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,6 +75,12 @@ public class CreateDeviceTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 	}
 
+	@After
+	public void after() {
+		//휴대기기 삭제
+
+	}
+
 	@Test
 	public void shouldCreateDevice() {
 
@@ -122,11 +129,6 @@ public class CreateDeviceTest {
 
 							deviceExtraInfo = new DeviceExtraInfo();
 							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_OSVERSION);
-							deviceExtraInfo.setExtraProfileValue("1.0");
-							deviceExtraInfoList.add(deviceExtraInfo);
-
-							deviceExtraInfo = new DeviceExtraInfo();
-							deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
 							deviceExtraInfo.setExtraProfileValue("1.0");
 							deviceExtraInfoList.add(deviceExtraInfo);
 
