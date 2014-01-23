@@ -143,14 +143,14 @@ public class AuthorizeByIdTest {
 		AuthorizeByIdReq req = new AuthorizeByIdReq();
 		req.setUserId("tlaeowlsuser1");
 		req.setUserPw("abcd1234");
-		List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
+		/*List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>();
 		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 		deviceExtraInfo.setExtraProfile(MemberConstants.DEVICE_EXTRA_SCVERSION);
 		deviceExtraInfo.setExtraProfileValue("1.0");
 		deviceExtraInfoList.add(deviceExtraInfo);
 
 		req.setUserDeviceExtraInfo(deviceExtraInfoList);
-
+*/
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
 			logger.info("Request : {}", objMapper.writeValueAsString(req));
