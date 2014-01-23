@@ -64,6 +64,14 @@ public class DeviceUtil {
 	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue, List<DeviceExtraInfo> deviceExtraInfoList) {
 
 		if (deviceExtraInfoList != null) {
+
+			for (DeviceExtraInfo info : deviceExtraInfoList) {
+				if (info.getExtraProfile().equals(extraProfile)) {
+					deviceExtraInfoList.remove(info);
+					break;
+				}
+			}
+
 			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 			deviceExtraInfo.setExtraProfile(extraProfile);
 			deviceExtraInfo.setExtraProfileValue(extraProfileValue);
