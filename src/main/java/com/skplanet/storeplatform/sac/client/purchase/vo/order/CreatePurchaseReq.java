@@ -38,7 +38,7 @@ public class CreatePurchaseReq extends CommonInfo {
 	private String recvTenantId; // 수신자 테넌트 ID
 	private String recvInsdUsermbrNo; // 수신자 내부 회원 번호
 	private String recvInsdDeviceId; // 수신자 내부 디바이스 ID
-	private List<PurchaseProduct> productList; // 구매할 상품 리스트
+	private List<CreatePurchaseReqProduct> productList; // 구매할 상품 리스트
 
 	/**
 	 * @return the tenantId
@@ -283,7 +283,7 @@ public class CreatePurchaseReq extends CommonInfo {
 	/**
 	 * @return the productList
 	 */
-	public List<PurchaseProduct> getProductList() {
+	public List<CreatePurchaseReqProduct> getProductList() {
 		return this.productList;
 	}
 
@@ -291,7 +291,7 @@ public class CreatePurchaseReq extends CommonInfo {
 	 * @param productList
 	 *            the productList to set
 	 */
-	public void setProductList(List<PurchaseProduct> productList) {
+	public void setProductList(List<CreatePurchaseReqProduct> productList) {
 		this.productList = productList;
 	}
 

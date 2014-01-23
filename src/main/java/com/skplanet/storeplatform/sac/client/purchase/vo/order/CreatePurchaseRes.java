@@ -21,6 +21,7 @@ public class CreatePurchaseRes extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
 	private String resultType; // 결과 타입: payment-결제Page 요청 진행, free-무료구매 완료
+	private String prchsId; // 구매ID
 	private String paymentPageUrl; // 결제Page URL
 	private String paymentPageParam; // 결제Page 요청 파라미터
 
@@ -37,6 +38,21 @@ public class CreatePurchaseRes extends CommonInfo {
 	 */
 	public void setResultType(String resultType) {
 		this.resultType = resultType;
+	}
+
+	/**
+	 * @return the prchsId
+	 */
+	public String getPrchsId() {
+		return this.prchsId;
+	}
+
+	/**
+	 * @param prchsId
+	 *            the prchsId to set
+	 */
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 
 	/**
