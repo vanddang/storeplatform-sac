@@ -333,7 +333,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
 		if (!schDeviceListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 			if (schDeviceListRes.getCommonResponse().getResultCode().equals("9999")) {
-				throw new Exception("유대기기 목록정보가 없습니다.");
+				throw new Exception("휴대기기 목록정보가 없습니다.");
 			} else {
 				throw new Exception("[" + schDeviceListRes.getCommonResponse().getResultCode() + "]"
 						+ schDeviceListRes.getCommonResponse().getResultMessage());
