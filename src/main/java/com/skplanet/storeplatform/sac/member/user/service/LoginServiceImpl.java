@@ -189,7 +189,7 @@ public class LoginServiceImpl implements LoginService {
 			this.mergeDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
-			this.insertloginHistory(requestHeader, deviceId, "", "Y", userType, deviceId);
+			this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
 
 			/* 로그인 결과 */
 			res.setUserKey(userKey);
@@ -211,7 +211,7 @@ public class LoginServiceImpl implements LoginService {
 				this.mergeDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
-				this.insertloginHistory(requestHeader, deviceId, "", "Y", userType, deviceId);
+				this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
 
 				/* 로그인 결과 */
 				res.setUserKey(userKey);
@@ -230,7 +230,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else { // 무선회원 인증 실패
 
-				this.insertloginHistory(requestHeader, deviceId, "", "N", userType, deviceId);
+				this.insertloginHistory(requestHeader, deviceId, "", "N", "Y", deviceId);
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			}
@@ -299,7 +299,7 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
 			/* 로그인 실패이력 저장 */
-			this.insertloginHistory(requestHeader, userId, userPw, "N", userType, req.getIpAddress());
+			this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
 
 			res.setUserKey(userKey);
 			res.setUserType(userType);
@@ -344,7 +344,7 @@ public class LoginServiceImpl implements LoginService {
 
 					this.mergeDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
 
-					this.insertloginHistory(requestHeader, userId, userPw, "Y", userType, req.getIpAddress());
+					this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
 					res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
 					res.setUserKey(userKey);
@@ -387,7 +387,7 @@ public class LoginServiceImpl implements LoginService {
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-					this.insertloginHistory(requestHeader, userId, userPw, "N", userType, req.getIpAddress());
+					this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
 							+ imIdpReceiver.getResponseHeader().getResult_text());
 
@@ -412,7 +412,7 @@ public class LoginServiceImpl implements LoginService {
 
 				this.mergeDeviceInfo(requestHeader, userKey, idpReceiver.getResponseBody().getUser_auth_key(), req);
 
-				this.insertloginHistory(requestHeader, userId, userPw, "Y", userType, req.getIpAddress());
+				this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
 				res.setUserAuthKey(idpReceiver.getResponseBody().getUser_auth_key());
 				res.setUserKey(userKey);
@@ -425,7 +425,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-				this.insertloginHistory(requestHeader, userId, userPw, "N", userType, req.getIpAddress());
+				this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
@@ -614,15 +614,15 @@ public class LoginServiceImpl implements LoginService {
 	 *            사용자패스워드
 	 * @param isSuccess
 	 *            로그인 성공유무
-	 * @param userType
-	 *            사용자타입
+	 * @param isMobile
+	 *            MDN 로그인 유무
 	 * @param ipAddress
 	 *            클라이언트 ip
 	 * @return LoginUserResponse
 	 * @throws Exception
 	 *             LoginUserResponse
 	 */
-	public LoginUserResponse insertloginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String userType,
+	public LoginUserResponse insertloginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String isMobile,
 			String ipAddress) throws Exception {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -634,11 +634,7 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setUserPW(userPw);
 		loginReq.setIsSuccess(isSuccess);
 		loginReq.setIsOneID("Y");
-		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_MOBILE)) {
-			loginReq.setIsMobile("Y");
-		} else {
-			loginReq.setIsMobile("N");
-		}
+		loginReq.setIsMobile(isMobile);
 		//loginReq.setScVersion(requestHeader.getDeviceHeader().getPkgVersion());//헤더에서 제공해줄 예정
 		loginReq.setIpAddress(ipAddress);
 
