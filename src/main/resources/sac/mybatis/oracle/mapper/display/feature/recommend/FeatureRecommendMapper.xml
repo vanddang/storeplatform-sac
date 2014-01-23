@@ -64,6 +64,10 @@
 						AND P1.PROD_ID = PS.PROD_ID
 						AND PS.LANG_CD = #{langCd}
 						AND MN.TOP_MENU_ID = #{topMenuId}
+						AND MN.TOP_MENU_ID IN
+						<foreach collection="topMenuIdArr" item="topMenuId" index="index" open="(" close=")" separator=",">
+			                #{topMenuId}
+			            </foreach>
 						AND MN.MENU_ID = MP.MENU_ID
 						AND MP.PROD_ID = P1.PROD_ID
 						AND TP.PROD_ID = P1.PROD_ID

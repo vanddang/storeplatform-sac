@@ -91,7 +91,8 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
 
 		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())) {
+		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())
+				|| StringUtils.isEmpty(requestVO.getTopMenuId())) {
 			this.log.debug("----------------------------------------------------------------");
 			this.log.debug("필수 파라미터 부족");
 			this.log.debug("----------------------------------------------------------------");
@@ -125,6 +126,10 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			return responseVO;
 		}
 		requestVO.setStdDt(stdDt);
+
+		// topMenuId 배열로 변경
+		String[] topMenuIdArr = requestVO.getTopMenuId().split(",");
+		requestVO.setTopMenuIdArr(topMenuIdArr);
 
 		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList", requestVO,
 				RecommendAdminDTO.class);
@@ -219,15 +224,15 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
-			
-			if( "PD012301".equals(recommendAdminDTO.getPartParentClsfCd())){
-				support = new Support();	
+
+			if ("PD012301".equals(recommendAdminDTO.getPartParentClsfCd())) {
+				support = new Support();
 				support.setType("iab");
 				support.setText("Y");
 				supportList.add(support);
 			}
-			if( "Y".equals(recommendAdminDTO.getDrmYn())){
-				support = new Support();	
+			if ("Y".equals(recommendAdminDTO.getDrmYn())) {
+				support = new Support();
 				support.setType("drm");
 				support.setText("Y");
 				supportList.add(support);
