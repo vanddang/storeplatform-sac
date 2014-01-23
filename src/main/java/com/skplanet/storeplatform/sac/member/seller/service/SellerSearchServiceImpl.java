@@ -155,7 +155,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				keySearch.setKeyString(sellerDTO.getSellerKey());
 			}
 		} else {
-			keySearch.setKeyString("");
+			throw new Exception("필수 파라미터 미존재");
 		}
 
 		DetailInformationRes response = new DetailInformationRes();
