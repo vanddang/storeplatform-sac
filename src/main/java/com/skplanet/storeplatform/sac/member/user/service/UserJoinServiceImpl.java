@@ -49,6 +49,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -238,7 +239,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 
 		 * TODO 통합 IDP 연동 가능한 테스트 ID가 없어서 무조건 성공으로 하드코딩함.
 		 */
-		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), "1000X000")) {
+		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
 			LOGGER.info("## IDP 연동 성공 ==============================================");
 

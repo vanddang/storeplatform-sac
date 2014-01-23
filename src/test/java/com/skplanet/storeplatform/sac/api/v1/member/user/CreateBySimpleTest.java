@@ -76,10 +76,11 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void createBySimpleId() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createBySimple/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
@@ -132,11 +133,10 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void createBySimpleDevice() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createBySimple/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
@@ -147,9 +147,9 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("tlaeowlsuser6"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserId("tlaeowlsuser7"); // 대문자 ID는 가입 불가 IDP 정책.
 						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("tlaeowlsuser6@yahoo.co.kr");
+						reqJson.setUserEmail("tlaeowlsuser7@yahoo.co.kr");
 
 						// 단말 정보
 						reqJson.setDeviceId("0101234567"); // 기기 ID

@@ -27,7 +27,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
@@ -100,26 +99,26 @@ public class DummyDataController {
 	// return res;
 	// }
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return CreateBySimpleRes
-	 */
-	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateBySimpleRes createBySimple() {
-
-		LOGGER.info("#############################################");
-		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
-		LOGGER.info("#############################################");
-
-		CreateBySimpleRes res = new CreateBySimpleRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return CreateBySimpleRes
+	// */
+	// @RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateBySimpleRes createBySimple() {
+	//
+	// LOGGER.info("#############################################");
+	// LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
+	// LOGGER.info("#############################################");
+	//
+	// CreateBySimpleRes res = new CreateBySimpleRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>

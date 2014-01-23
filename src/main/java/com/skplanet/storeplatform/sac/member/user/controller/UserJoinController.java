@@ -173,7 +173,7 @@ public class UserJoinController {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@RequestMapping(value = "/dev/member/user/createBySimple/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateBySimpleRes createBySimple(@Valid @RequestBody CreateBySimpleReq req, SacRequestHeader sacHeader) throws Exception {
 

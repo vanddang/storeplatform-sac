@@ -77,7 +77,6 @@ public class CreateByAgreementTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test1_createByAgreementId() throws Exception {
 
@@ -91,7 +90,7 @@ public class CreateByAgreementTest {
 						CreateByAgreementReq reqJson = new CreateByAgreementReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("tlaeo00");
+						reqJson.setUserId("tlaeo003");
 
 						// 단말 정보
 						reqJson.setDeviceId(""); // 기기 ID
