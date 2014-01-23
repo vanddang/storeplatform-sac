@@ -17,6 +17,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -127,6 +129,22 @@ public class SellerSubController {
 			throw new Exception("필수 파라미터 미존재");
 
 		return this.sellerSubService.detailSubseller(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.23 판매자 회원 서브계정 ID 중복 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return DuplicateByIdEmailRes
+	 */
+	@RequestMapping(value = "/duplicateBySubsellerId/v1", method = RequestMethod.GET)
+	private @ResponseBody
+	DuplicateByIdEmailRes duplicateBySubsellerId(SacRequestHeader header, DuplicateByIdEmailReq req) throws Exception {
+		// Req Debug
+		LOGGER.debug("req : {}", req);
+		return this.sellerSubService.duplicateBySubsellerId(header, req);
 	}
 
 }

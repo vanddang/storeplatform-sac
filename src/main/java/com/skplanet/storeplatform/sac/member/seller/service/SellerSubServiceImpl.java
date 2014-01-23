@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSubSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSubSellerRequest;
@@ -24,6 +27,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -194,6 +199,49 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		DetailSubsellerRes response = new DetailSubsellerRes();
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
+
+		return response;
+	}
+
+	@Override
+	public DuplicateByIdEmailRes duplicateBySubsellerId(SacRequestHeader header, DuplicateByIdEmailReq req)
+			throws Exception {
+
+		/** SC회원 시작 */
+		/** 1. ID/Email Req 생성 및 주입 */
+		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
+		keySearch.setKeyString(req.getKeyString());
+		List<KeySearch> keySearchs = new ArrayList<KeySearch>();
+		keySearchs.add(keySearch);
+
+		checkDuplicationSellerRequest.setKeySearchList(keySearchs);
+
+		/** 3. SC회원(ID/Email중복) Call */
+		CheckDuplicationSellerResponse checkDuplicationSellerResponse = this.sellerSCI
+				.checkDuplicationSeller(checkDuplicationSellerRequest);
+
+		// Response Debug
+		LOGGER.info("checkDuplicationSellerResponse Code : {}", checkDuplicationSellerResponse.getCommonResponse()
+				.getResultCode());
+		LOGGER.info("checkDuplicationSellerResponse Messge : {}", checkDuplicationSellerResponse.getCommonResponse()
+				.getResultMessage());
+
+		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
+		if (!MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
+		}
+
+		/** 4. TenantRes Response 생성 및 주입 */
+		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes(checkDuplicationSellerResponse.getIsRegistered());
 
 		return response;
 	}

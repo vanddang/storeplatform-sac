@@ -237,4 +237,5 @@ public class SellerSearchController {
 
 		return this.sellerSearchService.searchAuthKey(header, req);
 	}
+
 }
