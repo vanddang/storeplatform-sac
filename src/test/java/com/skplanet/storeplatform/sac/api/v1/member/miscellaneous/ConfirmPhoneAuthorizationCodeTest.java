@@ -30,6 +30,7 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 
 /**
@@ -93,7 +94,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
-					}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
+					}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
