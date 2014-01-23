@@ -61,14 +61,14 @@ public class CreateSubsellerTest {
 	@Test
 	public void createSubseller() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH + "/createSubseller/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						CreateSubsellerReq req = new CreateSubsellerReq();
 
 						req.setSellerKey("IF1023501437920130904104346");
-						req.setSubSellerID("ID323R427");
+						req.setSubSellerID("ID323R411");
 						req.setSubSellerPW("12312312");
 						req.setSubSellerMemo("test");
 						req.setSubSellerEmail("ID1@qqq.com");

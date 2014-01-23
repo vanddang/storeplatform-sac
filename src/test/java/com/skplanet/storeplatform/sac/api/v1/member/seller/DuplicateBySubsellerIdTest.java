@@ -65,7 +65,7 @@ public class DuplicateBySubsellerIdTest {
 	@Test
 	public void duplicateBySubsellerId() {
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH + "/duplicateBySubsellerId/v1?keyString=ID323R427")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateBySubsellerId/v1?keyString=ID323R427")
 				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
