@@ -62,7 +62,7 @@ public class DetailInformationTest {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url(MemberTestConstant.PREFIX_SELLER_PATH
-						+ "/detailInformation/v1?sellerKey=IF1023501437920130904104346&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
+						+ "/detailInformation/v1?sellerKey=IF1023501437920130904104346&aid=OA00049881")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -105,8 +105,7 @@ public class DetailInformationTest {
 	public void detailInformationAid() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
-						+ "/detailInformation/v1?sellerKey=&aid=OA00049881&keyType=INSD_SELLERMBR_NO")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=OA00049881")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -127,7 +126,7 @@ public class DetailInformationTest {
 	public void detailInformationEmpty() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=&keyType=")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
