@@ -684,8 +684,8 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		// keySearch.setKeyType("INTG_SVC_NO");
-		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyType("INTG_SVC_NO");
+		// keySearch.setKeyType("MBR_ID");
 		if (null != map.get("im_int_svc_no")) {
 			keySearch.setKeyString((String) map.get("im_int_svc_no"));
 		}
@@ -767,8 +767,8 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
-		// keySearch.setKeyType("INTG_SVC_NO");
-		keySearch.setKeyType("MBR_ID"); // 테스트
+		keySearch.setKeyType("INTG_SVC_NO");
+		// keySearch.setKeyType("MBR_ID");
 		if (null != map.get("im_int_svc_no")) {
 			keySearch.setKeyString((String) map.get("im_int_svc_no"));
 		}
