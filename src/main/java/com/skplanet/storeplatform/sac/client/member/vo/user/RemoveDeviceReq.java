@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -25,7 +24,6 @@ public class RemoveDeviceReq extends CommonInfo {
 	private String deviceId;
 
 	/* 사용자 권한 Key */
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userAuthKey;
 
 	/* 사용자 아이디 */

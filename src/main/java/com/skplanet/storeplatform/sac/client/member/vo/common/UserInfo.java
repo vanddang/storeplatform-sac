@@ -11,6 +11,56 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class UserInfo extends CommonInfo {
 	/*
+	 * 사용자 휴대기기 등록 대수.
+	 */
+	private String deviceCount;
+
+	/*
+	 * 외부(IDP)에서 할당된 사용자 Key.
+	 */
+	private String imMbrNo;
+
+	/*
+	 * OneID 전환 가입일.
+	 */
+	private String imRegDate;
+
+	/*
+	 * 통합포인트 사용 여부.
+	 */
+	private String isMemberPoint;
+
+	/*
+	 * 로그인 상태 코드.
+	 */
+	private String loginStatusCode;
+
+	/*
+	 * 등록일시.
+	 */
+	private String regDate;
+
+	/*
+	 * 탈퇴일자.
+	 */
+	private String secedeDate;
+
+	/*
+	 * 탈퇴 사유 코드(탈퇴 GROUP CODE : US0104).
+	 */
+	private String secedeReasonCode;
+
+	/*
+	 * 탈퇴사유 설명
+	 */
+	private String secedeReasonMessage;
+
+	/*
+	 * 직권중지 상태 코드.
+	 */
+	private String stopStatusCode;
+
+	/*
 	 * 사용자 Key
 	 */
 	private String userKey;
@@ -194,6 +244,86 @@ public class UserInfo extends CommonInfo {
 
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfo;
+
+	public String getDeviceCount() {
+		return this.deviceCount;
+	}
+
+	public void setDeviceCount(String deviceCount) {
+		this.deviceCount = deviceCount;
+	}
+
+	public String getImMbrNo() {
+		return this.imMbrNo;
+	}
+
+	public void setImMbrNo(String imMbrNo) {
+		this.imMbrNo = imMbrNo;
+	}
+
+	public String getImRegDate() {
+		return this.imRegDate;
+	}
+
+	public void setImRegDate(String imRegDate) {
+		this.imRegDate = imRegDate;
+	}
+
+	public String getIsMemberPoint() {
+		return this.isMemberPoint;
+	}
+
+	public void setIsMemberPoint(String isMemberPoint) {
+		this.isMemberPoint = isMemberPoint;
+	}
+
+	public String getLoginStatusCode() {
+		return this.loginStatusCode;
+	}
+
+	public void setLoginStatusCode(String loginStatusCode) {
+		this.loginStatusCode = loginStatusCode;
+	}
+
+	public String getRegDate() {
+		return this.regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
+	public String getSecedeDate() {
+		return this.secedeDate;
+	}
+
+	public void setSecedeDate(String secedeDate) {
+		this.secedeDate = secedeDate;
+	}
+
+	public String getSecedeReasonCode() {
+		return this.secedeReasonCode;
+	}
+
+	public void setSecedeReasonCode(String secedeReasonCode) {
+		this.secedeReasonCode = secedeReasonCode;
+	}
+
+	public String getSecedeReasonMessage() {
+		return this.secedeReasonMessage;
+	}
+
+	public void setSecedeReasonMessage(String secedeReasonMessage) {
+		this.secedeReasonMessage = secedeReasonMessage;
+	}
+
+	public String getStopStatusCode() {
+		return this.stopStatusCode;
+	}
+
+	public void setStopStatusCode(String stopStatusCode) {
+		this.stopStatusCode = stopStatusCode;
+	}
 
 	public String getUserKey() {
 		return this.userKey;
