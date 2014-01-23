@@ -37,10 +37,12 @@ public class DeviceUtil {
 
 		String extraProfileValue = null;
 
-		for (DeviceExtraInfo info : deviceExtraInfoList) {
+		if (deviceExtraInfoList != null) {
+			for (DeviceExtraInfo info : deviceExtraInfoList) {
 
-			if (info.getExtraProfile().equals(extraProfile)) {
-				extraProfileValue = info.getExtraProfileValue();
+				if (info.getExtraProfile().equals(extraProfile)) {
+					extraProfileValue = info.getExtraProfileValue();
+				}
 			}
 		}
 
@@ -59,18 +61,19 @@ public class DeviceUtil {
 	 *            휴대기기 부가속성 리스트
 	 * @return deviceExtraInfoList List<DeviceExtraInfo>
 	 */
-	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue,
-			List<DeviceExtraInfo> deviceExtraInfoList) {
+	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue, List<DeviceExtraInfo> deviceExtraInfoList) {
 
-		for (DeviceExtraInfo info : deviceExtraInfoList) {
+		if (deviceExtraInfoList != null) {
+			for (DeviceExtraInfo info : deviceExtraInfoList) {
 
-			if (info.getExtraProfile().equals(extraProfile)) {
-				deviceExtraInfoList.remove(info);
-				DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-				deviceExtraInfo.setExtraProfile(extraProfile);
-				deviceExtraInfo.setExtraProfileValue(extraProfileValue);
-				deviceExtraInfoList.add(deviceExtraInfo);
-				extraProfileValue = info.getExtraProfileValue();
+				if (info.getExtraProfile().equals(extraProfile)) {
+					deviceExtraInfoList.remove(info);
+					DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+					deviceExtraInfo.setExtraProfile(extraProfile);
+					deviceExtraInfo.setExtraProfileValue(extraProfileValue);
+					deviceExtraInfoList.add(deviceExtraInfo);
+					extraProfileValue = info.getExtraProfileValue();
+				}
 			}
 		}
 
@@ -88,8 +91,7 @@ public class DeviceUtil {
 	 *            DeviceInfo 객체
 	 * @return deviceExtraInfo DeviceExtraInfo
 	 */
-	public static DeviceExtraInfo addDeviceExtraInfo(String extraProfile, String extraProfileValue,
-			DeviceInfo deviceInfo) {
+	public static DeviceExtraInfo addDeviceExtraInfo(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
 		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 		deviceExtraInfo.setExtraProfile(extraProfile);
 		deviceExtraInfo.setExtraProfileValue(extraProfileValue);
@@ -111,10 +113,7 @@ public class DeviceUtil {
 	 *            DeviceInfo 객체
 	 * @return userMbrDeviceDetail UserMbrDeviceDetail
 	 */
-	// public UserMbrDeviceDetail getConverterUserMbrDeviceDetail(String extraProfile, String extraProfileValue,
-	// DeviceInfo deviceInfo) {
-	public static UserMbrDeviceDetail addUserMbrDeviceDetailInfo(String extraProfile, String extraProfileValue,
-			DeviceInfo deviceInfo) {
+	public static UserMbrDeviceDetail addUserMbrDeviceDetailInfo(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
 		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
 		userMbrDeviceDetail.setExtraProfile(extraProfile);
 		userMbrDeviceDetail.setExtraProfileValue(extraProfileValue);
@@ -138,7 +137,6 @@ public class DeviceUtil {
 	public static DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
-		deviceInfo.setImMngNum(userMbrDevice.getImMngNum());
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
 		deviceInfo.setDeviceId(userMbrDevice.getDeviceID());
@@ -171,8 +169,7 @@ public class DeviceUtil {
 	 *            SC회원 휴대기기 부가정보 리스트
 	 * @return List<DeviceExtraInfo> SAC회원 휴대기기 부가정보 리스트
 	 */
-	public static List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list)
-			throws Exception {
+	public static List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list) throws Exception {
 
 		List<DeviceExtraInfo> deviceExtraInfoList = null;
 		DeviceExtraInfo deviceExtraInfo = null;
