@@ -17,6 +17,7 @@ public class DetailRepresentationDeviceReq extends CommonInfo {
 
 	private String userId;
 	private String userKey;
+	private String deviceKey;
 
 	public String getUserId() {
 		return this.userId;
@@ -36,6 +37,14 @@ public class DetailRepresentationDeviceReq extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }
