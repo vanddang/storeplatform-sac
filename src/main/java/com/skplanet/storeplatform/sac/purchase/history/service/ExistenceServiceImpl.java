@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -43,8 +44,17 @@ public class ExistenceServiceImpl implements ExistenceService {
 	 */
 	@Override
 	public List<ExistenceResponse> listExist(ExistenceRequest existenceRequest) {
+		List<ExistenceResponse> existenceListResponse = new ArrayList<ExistenceResponse>();
+		List<ExistenceResponse> resultList = new ArrayList<ExistenceResponse>();
+		resultList = this.existenceSCI.listExist(existenceRequest);
+		this.logger.debug("SAC size : {}", resultList.size());
+		for (int i = 0; i < resultList.size(); i++) {
+			this.logger.debug("resultList.get(i).getStatusCd() : {}", resultList.get(i).getStatusCd());
+			if (resultList.get(i).getStatusCd() != null && resultList.get(i).getStatusCd().equals("OR000301")) {
+				existenceListResponse.add(resultList.get(i));
+			}
+		}
 
-		return this.existenceSCI.listExist(existenceRequest);
+		return existenceListResponse;
 	}
-
 }

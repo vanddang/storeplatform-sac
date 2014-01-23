@@ -54,7 +54,6 @@ public class ExistenceController {
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistenceListRes listExist(@RequestBody ExistenceReq existenceReq) {
-
 		// ExistenceListRes res = new ExistenceListRes();
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 		ExistenceListRes existenceListRes = new ExistenceListRes();
