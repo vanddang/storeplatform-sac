@@ -806,6 +806,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSite()); // 법정대리인 실명인증사이트 코드
 			LOGGER.info("## SC Request 법정대리인 정보 : {}", mbrLglAgent.toString());
 
+		} else {
+
+			LOGGER.info("## SC Request 법정대리인 정보 없음 처리.");
+			mbrLglAgent = null;
+
 		}
 
 		return mbrLglAgent;
