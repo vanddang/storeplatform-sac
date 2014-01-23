@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,6 +69,9 @@ public class GetCaptchaTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetCaptchaRes res = (GetCaptchaRes) result;
+						assertThat(res.getImageData(), notNullValue());
+						assertThat(res.getImageSign(), notNullValue());
+						assertThat(res.getSignData(), notNullValue());
 						LOGGER.info("response :{}", res.getImageData());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

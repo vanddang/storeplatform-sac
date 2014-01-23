@@ -166,7 +166,7 @@ public class GetUaCodeTest {
 	 * 2. 010/011/016/017/018
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void requestInvalidMsisdnTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -186,7 +186,7 @@ public class GetUaCodeTest {
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void requestNonDbMsisdnTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
@@ -220,7 +220,7 @@ public class GetUaCodeTest {
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void requestNonTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
@@ -254,7 +254,7 @@ public class GetUaCodeTest {
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void responseNonUaCodeTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)

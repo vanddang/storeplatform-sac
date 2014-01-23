@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,8 +82,8 @@ public class GetPhoneAuthorizationCodeTest {
 							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
-							request.setSendMdn("01012344241");
-							request.setRecvMdn("01012344241");
+							request.setSendMdn("01020284280");
+							request.setRecvMdn("1599-0110");
 							request.setCarrier("SKT");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
@@ -90,6 +93,7 @@ public class GetPhoneAuthorizationCodeTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+							assertThat(response.getPhoneSign(), notNullValue());
 							LOGGER.debug("response param : {} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -105,7 +109,7 @@ public class GetPhoneAuthorizationCodeTest {
 	 * 유효하지 않은 통신사 정보 전달.
 	 * </pre>
 	 */
-	@Test
+	// @Test
 	public void invalidTelecomTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
@@ -116,9 +120,9 @@ public class GetPhoneAuthorizationCodeTest {
 							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
-							request.setSendMdn("01012344241");
+							request.setSendMdn("01020284280");
 							request.setRecvMdn("011");
-							request.setCarrier("");
+							request.setCarrier("A");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;
 						}
@@ -127,6 +131,7 @@ public class GetPhoneAuthorizationCodeTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+							assertThat(response.getPhoneSign(), notNullValue());
 							LOGGER.debug("response param : {} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

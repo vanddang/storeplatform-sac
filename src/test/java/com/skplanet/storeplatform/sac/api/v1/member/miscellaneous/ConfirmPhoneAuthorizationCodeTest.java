@@ -3,6 +3,9 @@
  */
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,6 +98,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+							assertThat(response.getPhoneSign(), notNullValue());
 							LOGGER.debug("response param : {} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -111,7 +115,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	 * 기존 인증된 인증 코드.
 	 * </pre>
 	 */
-	@Test
+	// @Test(expected = Exception.class)
 	public void terminatedAuthCodeTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
@@ -132,6 +136,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+							assertThat(response.getPhoneSign(), notNullValue());
 							LOGGER.debug("response param : {} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

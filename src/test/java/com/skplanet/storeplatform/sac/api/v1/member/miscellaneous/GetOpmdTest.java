@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,40 +60,6 @@ public class GetOpmdTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 정상 msisdn이 Request Parameter로 넘어온 경우.
-	 * </pre>
-	 * 
-	 */
-	@Test
-	public void requestMsisdnTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
-
-						@Override
-						public Object requestBody() {
-							GetOpmdReq request = new GetOpmdReq();
-							request.setMsisdn("01020284222");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetOpmdRes.class, new SuccessCallback() {
-
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetOpmdRes response = (GetOpmdRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * <pre>
-	 * 성공 CASE
 	 * 정상 989로 시작하는 MDN이 Request로 올 경우.
 	 * </pre>
 	 * 
@@ -113,6 +82,7 @@ public class GetOpmdTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetOpmdRes response = (GetOpmdRes) result;
+							assertThat(response.getMsisdn(), notNullValue());
 							LOGGER.debug("response param : {} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -124,7 +94,42 @@ public class GetOpmdTest {
 
 	/**
 	 * <pre>
-	 * 실패 CASE
+	 * 성공 CASE
+	 * 정상 msisdn이 Request Parameter로 넘어온 경우.
+	 * </pre>
+	 * 
+	 */
+	@Test
+	public void requestMsisdnTest() {
+		try {
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
+					.requestBody(new RequestBodySetter() {
+
+						@Override
+						public Object requestBody() {
+							GetOpmdReq request = new GetOpmdReq();
+							request.setMsisdn("01020284222");
+							LOGGER.debug("request param : {}", request.toString());
+							return request;
+						}
+					}).success(GetOpmdRes.class, new SuccessCallback() {
+
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							GetOpmdRes response = (GetOpmdRes) result;
+							assertThat(response.getMsisdn(), notNullValue());
+							LOGGER.debug("response param : {} ", response.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 성공 CASE
 	 * 유효하지 않은 MDN이 Request로 넘어온 경우.
 	 * msisdn 외 다른 값(MAC-Address, Wifi, ... )이 오면 모번호 조회 하지 않고 그 값 그대로 내려줌.
 	 * </pre>
@@ -148,6 +153,7 @@ public class GetOpmdTest {
 						@Override
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetOpmdRes response = (GetOpmdRes) result;
+							assertThat(response.getMsisdn(), notNullValue());
 							LOGGER.debug("response param : {} ", response.toString());
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
