@@ -139,7 +139,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 기본정보 setting
 			 */
 			UserMbr userMbr = new UserMbr();
-			userMbr.setUserTelecom(req.getDeviceTelecom()); // 이동 통신사
 			userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key()); // MBR_NO
 			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
@@ -273,7 +272,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserID(req.getUserId()); // 사용자 아이디
 			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
-			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호
+			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
 			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
 			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
 			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
@@ -410,9 +409,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserID(req.getUserId()); // 사용자 아이디
-			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
-			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호
+			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
 			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
 			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
 			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
@@ -616,7 +614,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserID(req.getUserId()); // 사용자 아이디
-			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
