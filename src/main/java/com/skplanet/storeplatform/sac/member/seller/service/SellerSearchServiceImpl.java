@@ -690,7 +690,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrRes.setSellerCountry(sellerMbr.get(i).getSellerCountry());
 				sellerMbrRes.setSellerDetailAddress(sellerMbr.get(i).getSellerDetailAddress());
 				sellerMbrRes.setSellerEmail(sellerMbr.get(i).getSellerEmail());
-				sellerMbrRes.setSellerID(sellerMbr.get(i).getSellerID());
+				sellerMbrRes.setSellerId(sellerMbr.get(i).getSellerID());
 				sellerMbrRes.setSellerKey(sellerMbr.get(i).getSellerKey());
 				sellerMbrRes.setSellerLanguage(sellerMbr.get(i).getSellerLanguage());
 				sellerMbrRes.setSellerMainStatus(sellerMbr.get(i).getSellerMainStatus());
@@ -772,7 +772,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setSellerCountry(sellerMbr.getSellerCountry());
 			sellerMbrRes.setSellerDetailAddress(sellerMbr.getSellerDetailAddress());
 			sellerMbrRes.setSellerEmail(sellerMbr.getSellerEmail());
-			sellerMbrRes.setSellerID(sellerMbr.getSellerID());
+			sellerMbrRes.setSellerId(sellerMbr.getSellerID());
 			sellerMbrRes.setSellerKey(sellerMbr.getSellerKey());
 			sellerMbrRes.setSellerLanguage(sellerMbr.getSellerLanguage());
 			sellerMbrRes.setSellerMainStatus(sellerMbr.getSellerMainStatus());

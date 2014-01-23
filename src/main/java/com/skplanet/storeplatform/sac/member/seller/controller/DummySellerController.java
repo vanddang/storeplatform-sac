@@ -194,7 +194,7 @@ public class DummySellerController {
 			sellerMbrRes.setSellerCountry("");
 			sellerMbrRes.setSellerDetailAddress("123123");
 			sellerMbrRes.setSellerEmail("signtest@yopmail.com");
-			sellerMbrRes.setSellerID("signtest");
+			sellerMbrRes.setSellerId("signtest");
 			sellerMbrRes.setSellerKey("IF102158942020090723111912");
 			sellerMbrRes.setSellerLanguage("US004301");
 			sellerMbrRes.setSellerMainStatus("US010205");
@@ -362,7 +362,7 @@ public class DummySellerController {
 		sellerMbr.setSellerCountry("");
 		sellerMbr.setSellerDetailAddress("123123");
 		sellerMbr.setSellerEmail("signtest@yopmail.com");
-		sellerMbr.setSellerID("signtest");
+		sellerMbr.setSellerId("signtest");
 		sellerMbr.setSellerKey("IF102158942020090723111912");
 		sellerMbr.setSellerLanguage("US004301");
 		sellerMbr.setSellerMainStatus("US010205");
@@ -495,7 +495,7 @@ public class DummySellerController {
 		sellerMbr.setSellerCountry("");
 		sellerMbr.setSellerDetailAddress("123123");
 		sellerMbr.setSellerEmail("signtest@yopmail.com");
-		sellerMbr.setSellerID("signtest");
+		sellerMbr.setSellerId("signtest");
 		sellerMbr.setSellerKey("IF102158942020090723111912");
 		sellerMbr.setSellerLanguage("US004301");
 		sellerMbr.setSellerMainStatus("US010205");
