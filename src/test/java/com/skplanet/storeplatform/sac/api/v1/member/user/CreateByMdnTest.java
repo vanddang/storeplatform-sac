@@ -476,15 +476,20 @@ public class CreateByMdnTest {
 						AgreementInfo agreement2 = new AgreementInfo();
 						agreement2.setExtraAgreementId("US010608");
 						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("N");
+						agreement2.setIsExtraAgreement("Y");
 						AgreementInfo agreement3 = new AgreementInfo();
 						agreement3.setExtraAgreementId("US010609");
 						agreement3.setExtraAgreementVersion("0.1");
 						agreement3.setIsExtraAgreement("N");
+						AgreementInfo agreement4 = new AgreementInfo();
+						agreement4.setExtraAgreementId("US010601");
+						agreement4.setExtraAgreementVersion("0.1");
+						agreement4.setIsExtraAgreement("N");
 
 						agreementList.add(agreement1);
 						agreementList.add(agreement2);
 						agreementList.add(agreement3);
+						agreementList.add(agreement4);
 						reqJson.setAgreementList(agreementList);
 
 						return reqJson;
