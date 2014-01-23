@@ -15,75 +15,105 @@ public class RecommendAdminReq {
 	private String topMenuId; // 메뉴ID
 	private int offset; // offset
 	private int count; // count
-	
-	//common req 전까지 임시
+
+	// common req 전까지 임시
 	private String tenantId; // 메뉴ID
 	private String langCd; // 메뉴ID
 	private String deviceModelCd; // 메뉴ID
 	private String stdDt; // 배치일자
-	
+
+	private String[] topMenuIdArr;
+
 	public String getListId() {
-		return listId;
+		return this.listId;
 	}
+
 	public void setListId(String listId) {
 		this.listId = listId;
 	}
+
 	public String getProdCharge() {
-		return prodCharge;
+		return this.prodCharge;
 	}
+
 	public void setProdCharge(String prodCharge) {
 		this.prodCharge = prodCharge;
 	}
+
 	public String getProdGradeCd() {
-		return prodGradeCd;
+		return this.prodGradeCd;
 	}
+
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
 	}
+
 	public String getTopMenuId() {
-		return topMenuId;
+		return this.topMenuId;
 	}
+
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}
+
 	public int getOffset() {
-		return offset;
+		return this.offset;
 	}
+
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
+
 	public int getCount() {
-		return count;
+		return this.count;
 	}
+
 	public void setCount(int count) {
 		this.count = count;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
+
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
 	public String getLangCd() {
-		return langCd;
+		return this.langCd;
 	}
+
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
+
 	public String getDeviceModelCd() {
-		return deviceModelCd;
+		return this.deviceModelCd;
 	}
+
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
+
 	public String getStdDt() {
-		return stdDt;
+		return this.stdDt;
 	}
+
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
+	}
+
+	public String[] getTopMenuIdArr() {
+		return this.topMenuIdArr;
+	}
+
+	public void setTopMenuIdArr(String[] topMenuIdArr) {
+		this.topMenuIdArr = topMenuIdArr;
 	}
 
 }
