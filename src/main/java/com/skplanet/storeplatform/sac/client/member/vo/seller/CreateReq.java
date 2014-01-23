@@ -18,12 +18,6 @@ public class CreateReq extends CommonInfo {
 	/** 판매자 분류코드. */
 	@NotBlank
 	private String sellerCategory;
-	/** 판매자 main 상태코드. */
-	@NotBlank
-	private String sellerMainStatus;
-	/** 판매자 sub 상태코드. */
-	@NotBlank
-	private String sellerSubStatus;
 	/** 판매자 ID. */
 	@NotBlank
 	private String sellerId;
@@ -120,22 +114,6 @@ public class CreateReq extends CommonInfo {
 
 	public void setSellerCategory(String sellerCategory) {
 		this.sellerCategory = sellerCategory;
-	}
-
-	public String getSellerMainStatus() {
-		return this.sellerMainStatus;
-	}
-
-	public void setSellerMainStatus(String sellerMainStatus) {
-		this.sellerMainStatus = sellerMainStatus;
-	}
-
-	public String getSellerSubStatus() {
-		return this.sellerSubStatus;
-	}
-
-	public void setSellerSubStatus(String sellerSubStatus) {
-		this.sellerSubStatus = sellerSubStatus;
 	}
 
 	public String getSellerId() {
