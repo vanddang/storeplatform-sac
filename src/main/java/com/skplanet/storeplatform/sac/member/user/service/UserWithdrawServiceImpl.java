@@ -190,9 +190,12 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			throw new RuntimeException("3. SC Member Search Fail : " + schUserRes.getCommonResponse().getResultCode()
 					+ ", " + schUserRes.getCommonResponse().getResultMessage());
+		} else if (schUserRes == null) {
+			throw new RuntimeException("회원정보 없음.");
 		} else {
 			logger.info("회원정보조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
 					schUserRes.getCommonResponse().getResultMessage());
+			logger.info("회원정보조회 SC Member Search Success Response {}: ", schUserRes.toString());
 			logger.info("회원정보조회 SC Member Search Success Response {}: ", schUserRes.getUserMbr().toString());
 		}
 
