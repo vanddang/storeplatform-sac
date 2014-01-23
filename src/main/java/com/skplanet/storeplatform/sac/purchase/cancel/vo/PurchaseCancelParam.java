@@ -9,6 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.purchase.cancel.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReq;
+import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReqDetail;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
 
 /**
@@ -19,5 +25,40 @@ import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
 public class PurchaseCancelParam extends PurchaseCommonParam {
 
 	private static final long serialVersionUID = 1L;
+
+	private List<PurchaseCancelParamDetail> prchsCancelParamDetailList;
+
+	public PurchaseCancelParam() {
+		super();
+	}
+
+	public PurchaseCancelParam(SacRequestHeader sacRequestHeader) {
+		super(sacRequestHeader);
+	}
+
+	public PurchaseCancelParam(SacRequestHeader sacRequestHeader, PurchaseCancelReq purchaseCancelReq) {
+		super(sacRequestHeader, purchaseCancelReq);
+
+		this.prchsCancelParamDetailList = new ArrayList<PurchaseCancelParamDetail>();
+		for (PurchaseCancelReqDetail purchaseCancelReqDetail : purchaseCancelReq.getPrchsCancelReqList()) {
+			PurchaseCancelParamDetail purchaseCancelParamDetail = new PurchaseCancelParamDetail(purchaseCancelReqDetail);
+			this.prchsCancelParamDetailList.add(purchaseCancelParamDetail);
+		}
+	}
+
+	/**
+	 * @return the prchsCancelParamDetailList
+	 */
+	public List<PurchaseCancelParamDetail> getPrchsCancelParamDetailList() {
+		return this.prchsCancelParamDetailList;
+	}
+
+	/**
+	 * @param prchsCancelParamDetailList
+	 *            the prchsCancelParamDetailList to set
+	 */
+	public void setPrchsCancelParamDetailList(List<PurchaseCancelParamDetail> prchsCancelParamDetailList) {
+		this.prchsCancelParamDetailList = prchsCancelParamDetailList;
+	}
 
 }

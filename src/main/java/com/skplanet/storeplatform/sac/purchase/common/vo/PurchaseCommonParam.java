@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.purchase.common.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonReq;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 구매 공통 Parameter VO.
@@ -20,8 +22,56 @@ public class PurchaseCommonParam extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	private String tenantId;
+	private String systemId;
 	private String userKey;
 	private String deviceKey;
+
+	public PurchaseCommonParam() {
+
+	}
+
+	public PurchaseCommonParam(SacRequestHeader sacRequestHeader) {
+		this.tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+		this.systemId = sacRequestHeader.getTenantHeader().getSystemId();
+	}
+
+	public PurchaseCommonParam(SacRequestHeader sacRequestHeader, PurchaseCommonReq purchaseCommonReq) {
+		this.tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+		this.systemId = sacRequestHeader.getTenantHeader().getSystemId();
+		this.userKey = purchaseCommonReq.getUserKey();
+		this.deviceKey = purchaseCommonReq.getDeviceKey();
+	}
+
+	/**
+	 * @return the tenantId
+	 */
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	/**
+	 * @param tenantId
+	 *            the tenantId to set
+	 */
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
+	}
 
 	/**
 	 * @return the userKey

@@ -10,7 +10,10 @@
 package com.skplanet.storeplatform.sac.purchase.cancel.service;
 
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParam;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParamDetail;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResult;
+import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResultDetail;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
 
 /**
  * 구매 취소 Service Interface.
@@ -19,6 +22,29 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResult;
  */
 public interface PurchaseCancelService {
 
-	public PurchaseCancelResult cancelPurchase(PurchaseCancelParam purchaseCancelParam);
+	/**
+	 * <pre>
+	 * 구매 리스트 취소 요청.
+	 * </pre>
+	 * 
+	 * @param purchaseCancelParam
+	 *            구매 취소 요청 LIST VO.
+	 * @return PurchaseCancelResult
+	 */
+	public PurchaseCancelResult cancelPurchaseList(PurchaseCancelParam purchaseCancelParam);
+
+	/**
+	 * <pre>
+	 * 구매 취소 요청 처리.
+	 * </pre>
+	 * 
+	 * @param purchaseCommonParam
+	 *            구매 취소 요청 공통 VO.
+	 * @param purchaseCancelParamDetail
+	 *            구매 취소 요청 VO.
+	 * @return PurchaseCancelResultDetail
+	 */
+	public PurchaseCancelResultDetail cancelPurchaseItem(PurchaseCommonParam purchaseCommonParam,
+			PurchaseCancelParamDetail purchaseCancelParamDetail);
 
 }
