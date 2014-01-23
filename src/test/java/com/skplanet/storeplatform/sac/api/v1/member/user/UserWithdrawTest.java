@@ -149,7 +149,7 @@ public class UserWithdrawTest {
 	@Test
 	public void buserWithdraw() {
 
-		new TestCaseTemplate(this.mockMvc).url("/dev/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mockMvc).url("/member/user/withdraw/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
