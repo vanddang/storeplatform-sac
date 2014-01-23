@@ -150,39 +150,6 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 
 		return withdrawRes;
 
-		// if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-		//
-		// removeUserResponse = this.userSCI.remove(removeUserRequest);
-		//
-		// // SC Component Remove Fail
-		// if (!StringUtil.equals(removeUserResponse.getCommonResponse().getResultCode(),
-		// MemberConstants.RESULT_SUCCES)) {
-		// throw new RuntimeException("[ IDP -> SC 회원삭제 실패 : "
-		// + removeUserResponse.getCommonResponse().getResultCode() + "] "
-		// + removeUserResponse.getCommonResponse().getResultMessage());
-		// }
-		// // SC Component Remove Success
-		// else {
-		// withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
-		// }
-		// }
-		// /* ImIDP 연동결과 성공이면 SC회원 탈퇴 */
-		// else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-		// removeUserResponse = this.userSCI.remove(removeUserRequest);
-		//
-		// // SC Component Remove Fail
-		// if (!StringUtil.equals(removeUserResponse.getCommonResponse().getResultCode(),
-		// MemberConstants.RESULT_SUCCES)) {
-		// throw new RuntimeException("[ ImIDP -> SC 회원삭제 실패 : "
-		// + removeUserResponse.getCommonResponse().getResultCode() + "] "
-		// + removeUserResponse.getCommonResponse().getResultMessage());
-		// }
-		// // SC Component Remove Success
-		// else {
-		// withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
-		// }
-		// }
-
 	}
 
 	/**
