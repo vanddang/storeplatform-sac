@@ -189,7 +189,7 @@ public class CreateByMdnTest {
 						CreateByMdnReq reqJson = new CreateByMdnReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01012346470"); // 기기 ID
+						reqJson.setDeviceId("01002346470"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
 						reqJson.setDeviceTelecom("US012102"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
@@ -430,8 +430,7 @@ public class CreateByMdnTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void test5_errorTestCase() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
