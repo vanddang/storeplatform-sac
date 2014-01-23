@@ -161,7 +161,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		if (keySearch.getKeyString() != null)
 			if (!keySearch.getKeyString().equals("")) {
 
-				keySearch.setKeyType(req.getKeyType());
+				keySearch.setKeyType("INSD_SELLERMBR_NO");
 				List<KeySearch> list = new ArrayList<KeySearch>();
 				list.add(keySearch);
 				schReq.setKeySearchList(list);

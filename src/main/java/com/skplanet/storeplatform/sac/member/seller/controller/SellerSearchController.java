@@ -82,12 +82,8 @@ public class SellerSearchController {
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
 		LOGGER.debug("request param : {}", req.toString());
 
-		String keyType = StringUtil.nvl(req.getKeyType(), "");
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 		String aid = StringUtil.nvl(req.getAid(), "");
-
-		if (keyType.equals(""))
-			throw new Exception("필수 파라미터 미존재");
 
 		if (sellerKey.equals("") && aid.equals(""))
 			throw new Exception("필수 파라미터 미존재");
