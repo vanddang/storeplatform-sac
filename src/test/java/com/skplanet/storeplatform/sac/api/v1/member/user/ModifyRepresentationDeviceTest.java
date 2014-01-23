@@ -86,4 +86,55 @@ public class ModifyRepresentationDeviceTest {
 
 	}
 
+	/**
+	 * userKey, deviceKey is Null
+	 */
+	@Test(expected = RuntimeException.class)
+	public void modifyRepresentationDeviceError1() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/modifyRepresentationDevice/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SetMainDeviceReq req = new SetMainDeviceReq();
+						req.setUserKey("");
+						req.setDeviceKey("");
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(SetMainDeviceRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SetMainDeviceRes res = (SetMainDeviceRes) result;
+						assertThat(res.getDeviceKey(), notNullValue());
+						LOGGER.debug("response param : {}", res.getDeviceKey());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * userKey, deviceKey is not Equal
+	 */
+	@Test(expected = RuntimeException.class)
+	public void modifyRepresentationDeviceError2() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/modifyRepresentationDevice/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SetMainDeviceReq req = new SetMainDeviceReq();
+						req.setUserKey("US20140122172116855000032311");
+						req.setDeviceKey("DE20140123041318654000019311");
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(SetMainDeviceRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SetMainDeviceRes res = (SetMainDeviceRes) result;
+						assertThat(res.getDeviceKey(), notNullValue());
+						LOGGER.debug("response param : {}", res.getDeviceKey());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
 }

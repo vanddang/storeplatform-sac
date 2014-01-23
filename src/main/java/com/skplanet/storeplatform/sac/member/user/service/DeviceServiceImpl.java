@@ -833,7 +833,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (listRes.getDeviceInfoList() == null) {
-			throw new Exception("대표단말 정보가 없습니다.");
+			throw new RuntimeException("대표단말 정보가 없습니다.");
 		} else if (listRes.getDeviceInfoList().size() == 1 && listRes.getDeviceInfoList() != null) {
 			for (DeviceInfo info : listRes.getDeviceInfoList()) {
 				DeviceInfo addData = new DeviceInfo();
@@ -865,9 +865,9 @@ public class DeviceServiceImpl implements DeviceService {
 				res.setUserDeviceInfo(addData);
 			}
 		} else if (listRes.getDeviceInfoList().size() > 1) {
-			throw new Exception("조회된 리스트가 1개 이상 입니다.");
+			throw new RuntimeException("조회된 리스트가 1개 이상 입니다.");
 		} else {
-			throw new Exception("대표단말 조회에서 알수 없는 오류 발생");
+			throw new RuntimeException("대표단말 조회에서 알수 없는 오류 발생");
 		}
 
 		logger.info("###### Start detailRepresentationDevice Request : {}", req.toString());
@@ -906,7 +906,7 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("###### 2. exist Respone : {}", existRes.toString());
 
 		if (existRes == null) {
-			throw new Exception("회원정보 없음.");
+			throw new RuntimeException("회원정보 없음.");
 		}
 
 		if (existRes.getUserKey() != null) {
