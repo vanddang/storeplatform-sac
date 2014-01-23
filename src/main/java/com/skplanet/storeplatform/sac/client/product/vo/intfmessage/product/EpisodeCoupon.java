@@ -25,11 +25,11 @@ public class EpisodeCoupon extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 실제 coupon id
+	 * 실제 coupon id.
 	 */
 	private String identifier;
 	/**
-	 * 쿠폰상태 use : 사용 notUse : 사용안함 cancel : 취소 expired : 유효기간만료
+	 * 쿠폰상태 use : 사용 notUse : 사용안함 cancel : 취소 expired : 유효기간만료.
 	 */
 	private String status;
 

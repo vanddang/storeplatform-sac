@@ -26,11 +26,11 @@ public class SupportedHardware extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 해상도(720*1280)
+	 * 해상도(720*1280).
 	 */
 	private String resolution;
 	/**
-	 * DPI
+	 * DPI.
 	 */
 	private String dpi;
 

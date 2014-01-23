@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class Distributor extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 배포자 ID
+	 * 배포자 ID.
 	 */
 	private String identifier;
 	/*
@@ -33,35 +33,35 @@ public class Distributor extends CommonInfo implements Serializable {
 	 */
 	private String type;
 	/**
-	 * 이름 또는 회사명(SK Planet)
+	 * 이름 또는 회사명(SK Planet).
 	 */
 	private String name;
 	/**
-	 * 닉네임 또는 회사명 별칭(SK 플래닛)
+	 * 닉네임 또는 회사명 별칭(SK 플래닛).
 	 */
 	private String nickName;
 	/**
-	 * 전화번호
+	 * 전화번호.
 	 */
 	private String tel;
 	/**
-	 * 이메일
+	 * 이메일.
 	 */
 	private String email;
 	/**
-	 * 국가명
+	 * 국가명.
 	 */
 	private String country;
 	/**
-	 * 주소
+	 * 주소.
 	 */
 	private String address;
 	/**
-	 * 판매자 등록 번호
+	 * 판매자 등록 번호.
 	 */
 	private String regNo;
 	/**
-	 * 판매처
+	 * 판매처.
 	 */
 	private String company;
 

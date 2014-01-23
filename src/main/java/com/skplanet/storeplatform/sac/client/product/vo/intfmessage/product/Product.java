@@ -32,148 +32,148 @@ public class Product extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 상품 ID
+	 * 상품 ID.
 	 */
 	private Identifier identifier;
 
 	private List<Identifier> identifierList;
 	/**
-	 * identifier 추가 기술
+	 * identifier 추가 기술.
 	 */
 	private String id;
 	/**
-	 * 지원 매체
+	 * 지원 매체.
 	 */
 	private List<Support> supportList;
 	/**
-	 * 지원 언어
+	 * 지원 언어.
 	 */
 	private String lang;
 	/**
-	 * 신규상품/마감상품 설정 > new : 신규상품 > closing : 마감임박
+	 * 신규상품/마감상품 설정 > new : 신규상품 > closing : 마감임박.
 	 */
 	private String status;
 	/**
-	 * title Message(상품명)
+	 * title Message(상품명).
 	 */
 	private Title title;
 	/**
-	 * 가격정보
+	 * 가격정보.
 	 */
 	private Price price;
 	/**
-	 * > Code : 대분류, 소분류 카테고리코드 > name : shoppingStore > type(option) : 대분류 카테고리시 topClass > categoryExplian : 카테고리 설명
+	 * > Code : 대분류, 소분류 카테고리코드 > name : shoppingStore > type(option) : 대분류 카테고리시 topClass > categoryExplian : 카테고리 설명.
 	 */
 	private List<Menu> menuList;
 	/**
-	 * * 패킷과금 타입 > paid : 일반 과금상품(PD000601) > library : 라이브러리(PD000602) > vm : VM(PD000603) > free : 일반 비과금상품(PD000604)
-	 * > paid-rss : RSS 과금상품(PD000605) > free-rss : RSS 비과금상품(PD000606)
+	 * * 패킷과금 타입 > paid : 일반 과금상품(PD000601) > library : 라이브러리(PD000602) > vm : VM(PD000603) > free : 일반 비과금상품(PD000604).
+	 * > paid-rss : RSS 과금상품(PD000605) > free-rss : RSS 비과금상품(PD000606).
 	 */
 	private String packetFee;
 
 	/**
-	 * resource 정보
+	 * resource 정보.
 	 */
 	private List<Source> sourceList;
 	/**
-	 * > short : 한 줄 설명 > long : 상세 설명
+	 * > short : 한 줄 설명 > long : 상세 설명.
 	 */
 	private String requestType;
 	/**
-	 * 상품설명
+	 * 상품설명.
 	 */
 	private String productExplain;
 	/**
-	 * 목차정보(ebook일 경우)
+	 * 목차정보(ebook일 경우).
 	 */
 	private String tableOfContents;
 	/**
-	 * 작가소개(ebook일 경우)
+	 * 작가소개(ebook일 경우).
 	 */
 	private String aboutWriter;
 	/**
-	 * 앱 추천사유 (앱코디 리스트인 경우)
+	 * 앱 추천사유 (앱코디 리스트인 경우).
 	 */
 	private String recommendedReason;
 	/**
-	 * Accrual
+	 * Accrual.
 	 */
 	private Accrual accrual;
 	/**
-	 * 권한 정보
+	 * 권한 정보.
 	 */
 	private Rights rights;
 	/**
-	 * 앱 정보
+	 * 앱 정보.
 	 */
 	private App app;
 	/**
-	 * 음악 부가 정보
+	 * 음악 부가 정보.
 	 */
 	private Music music;
 	/**
-	 * VOD 부가 정보
+	 * VOD 부가 정보.
 	 */
 	private Vod vod;
 	/**
-	 * VOD일경우 VOD 부가정보
+	 * VOD일경우 VOD 부가정보.
 	 */
 	private VideoInfo videoInfo;
 	/**
-	 * ebook,Comic일 경우 부가정보
+	 * ebook,Comic일 경우 부가정보.
 	 */
 	private Book book; //
 	/**
-	 * 이벤트 상품 정보
+	 * 이벤트 상품 정보.
 	 */
 	private Promotion promotion;
 	/**
-	 * 제작자 정보
+	 * 제작자 정보.
 	 */
 	private Contributor contributor;
 	/**
-	 * 제작사 또는 개발사 정보
+	 * 제작사 또는 개발사 정보.
 	 */
 	private Distributor distributor;
 	/**
-	 * 판매 option
+	 * 판매 option.
 	 */
 	private SalesOption salesOption;
 	/**
-	 * 구매 정보
+	 * 구매 정보.
 	 */
 	private Purchase purchase;
 	/**
-	 * 쿠폰 정보
+	 * 쿠폰 정보.
 	 */
 	private Coupon coupon;
 	/**
-	 * 날짜 정보
+	 * 날짜 정보.
 	 */
-	private Date date; //
+	private Date date;
 	/**
-	 * 이벤트 정보
+	 * 이벤트 정보.
 	 */
 	private Event event;
 	/**
-	 * 상품 선택 옵션 정보
+	 * 상품 선택 옵션 정보.
 	 */
 	private SelectOption selectOption;
 	/**
-	 * Restrict 유형 > ota : 네트워크 제한 > sales : 판매 중지
+	 * Restrict 유형 > ota : 네트워크 제한 > sales : 판매 중지.
 	 */
 	private String restrictType;
 	/**
-	 * ebook의 최신호 정보
+	 * ebook의 최신호 정보.
 	 */
 	private String latestIssue;
 	/**
-	 * 물리 파일 경로
+	 * 물리 파일 경로.
 	 */
 	private String physicalPath;
 
 	/**
-	 * 하위 상품 목록
+	 * 하위 상품 목록.
 	 */
 	private List<Product> subProductList;
 

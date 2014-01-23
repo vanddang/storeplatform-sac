@@ -35,17 +35,17 @@ public class Component extends CommonInfo implements Serializable {
 	private Identifier identifier;
 
 	/**
-	 * identifier 추가 기술
+	 * identifier 추가 기술.
 	 */
 	private String id;
 
 	/**
-	 * 지원 매체
+	 * 지원 매체.
 	 */
 	private String support;
 
 	/**
-	 * 지원 언어
+	 * 지원 언어.
 	 */
 	private String lang;
 	/**
@@ -54,96 +54,103 @@ public class Component extends CommonInfo implements Serializable {
 	private String status;
 
 	/**
-	 * title Message(상품명)
+	 * title Message(상품명).
 	 */
 	private Title title;
 
 	/**
-	 * 가격정보
+	 * 가격정보.
 	 */
 	private Price price;
 	/**
-	 * > Code : 대분류, 소분류 카테고리코드 > name : shoppingStore > type(option) : 대분류 카테고리시 topClass > categoryExplian : 카테고리 설명
+	 * > Code : 대분류, 소분류 카테고리코드 > name : shoppingStore > type(option) : 대분류 카테고리시 topClass > categoryExplian : 카테고리 설명.
 	 */
 	private Menu menuList;
 	/**
-	 * 패킷과금 타입 > paid : 일반 과금상품(PD000601) > library : 라이브러리(PD000602) > vm : VM(PD000603) > free : 일반 비과금상품(PD000604) >
-	 * paid-rss : RSS 과금상품(PD000605) > free-rss : RSS 비과금상품(PD000606)
+	 * 패킷과금 타입 > paid : 일반 과금상품(PD000601) > library : 라이브러리(PD000602) > vm : VM(PD000603) > free : 일반 비과금상품(PD000604) >.
+	 * paid-rss : RSS 과금상품(PD000605) > free-rss : RSS 비과금상품(PD000606).
 	 */
 	private String packetFee;
 	/**
-	 * resource 정보
+	 * resource 정보.
 	 */
 	private Source source;
 	/**
-	 * > short : 한 줄 설명 > long : 상세 설명
+	 * > short : 한 줄 설명 > long : 상세 설명.
 	 */
 	private String requestType;
 
 	/**
-	 * 목차정보(ebook일 경우)
+	 * 목차정보(ebook일 경우).
 	 */
 	private String tableOfContents;
 
-	/*
-	 * 작가소개(ebook일 경우)
+	/**
+	 * 작가소개(ebook일 경우).
 	 */
 	private String aboutWriter;
-	/*
-	 * Accrual
+	/**
+	 * Accrual.
 	 */
 	private Accrual accrual;
 	/**
-	 * 권한 정보
+	 * 권한 정보.
 	 */
 	private Rights rights;
 
 	/**
-	 * 앱 정보
+	 * 앱 정보.
 	 */
 	private App app;
 
 	/**
-	 * 음악 부가 정보
+	 * 음악 부가 정보.
 	 */
 	private Music music;
 
 	/**
-	 * VOD 부가 정보
+	 * VOD 부가 정보.
 	 */
 	private Vod vod;
 
-	/*
-	 * VOD일경우 VOD 부가정보
+	/**
+	 * VOD일경우 VOD 부가정보.
 	 */
 	private VideoInfo videoInfo;
 
 	/**
-	 * ebook,Comic일 경우 부가정보
+	 * ebook,Comic일 경우 부가정보.
 	 */
 	private Book book;
 	/**
-	 * 이벤트 상품 정보
+	 * 이벤트 상품 정보.
 	 */
 	private Promotion promotion;
 
 	/**
-	 * Contributor message
+	 * Contributor message.
 	 */
 	private Contributor contributor;
 
 	/**
-	 * distributor message
+	 * distributor message.
 	 */
 	private Distributor distributor;
 
 	/**
-	 * 기본URL
+	 * 기본URL.
 	 */
 	private String base;
 
-	private String useYn; // 사용여부 (for download Seed App 정보)
-	private String caseRefCd; // 유형참조코드(for download Seed App 정보)
+	/**
+	 * 사용여부 (for download Seed App 정보).
+	 */
+	private String useYn; //
+
+	/**
+	 * 유형참조코드(for download Seed App 정보).
+	 */
+	private String caseRefCd; //
 
 	private Component component;
 

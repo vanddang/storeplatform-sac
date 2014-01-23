@@ -28,67 +28,67 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 public class Feedback extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 사용후기ID > feedback : 사용후기ID
+	 * 사용후기ID > feedback : 사용후기ID.
 	 */
 	private Identifier identifier;
 
 	/**
-	 * > seller : 판매자일 경우 > mine : 자신이 등록한 댓글 일 경우 > seller|mine : 모두 해당될때 > 그 외에는 whose를 넣지 않는다
+	 * > seller : 판매자일 경우 > mine : 자신이 등록한 댓글 일 경우 > seller|mine : 모두 해당될때 > 그 외에는 whose를 넣지 않는다.
 	 */
 	private String whose;
 
 	/**
-	 * 추천구분 > yes : 내가 추천한 feedback인 경우 > no : 내가 추천하지 않은 feedback인 경우
+	 * 추천구분 > yes : 내가 추천한 feedback인 경우 > no : 내가 추천하지 않은 feedback인 경우.
 	 */
 	private String recommend;
 
 	/**
-	 * 추천구분 Count type recommend : 추천수
+	 * 추천구분 Count type recommend : 추천수.
 	 */
 	private Count count;
 
 	/**
-	 * 평점
+	 * 평점.
 	 */
 	private double score;
 
 	/**
-	 * 별명
+	 * 별명.
 	 */
 	private String feedbackNickname;
 
 	/**
-	 * distributor message > company
+	 * distributor message > company.
 	 */
 	private Distributor distributor;
 
 	/**
-	 * title Message > text
+	 * title Message > text.
 	 */
 	private Title title;
 
 	/**
-	 * Feedback내용
+	 * Feedback내용.
 	 */
 	private String feedBackExplain;
 
 	/**
-	 * Date Message > type (date/reg) > text 등록일
+	 * Date Message > type (date/reg) > text 등록일.
 	 */
 	private Date date;
 
 	/**
-	 * Badge Message
+	 * Badge Message.
 	 */
 	private Badge badge;
 
 	/**
-	 * reply Message
+	 * reply Message.
 	 */
 	private Reply reply;
 
 	/**
-	 * Base URL
+	 * Base URL.
 	 */
 	private String base;
 

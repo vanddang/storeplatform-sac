@@ -31,61 +31,61 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Url;
 public class Coupon extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 쿠폰 ID
+	 * 쿠폰 ID.
 	 */
 	private Identifier identifier;
 	/**
-	 * 상태 > use: 사용 > notUse: 미사용 > cancel: 취소/환불 > expired: 기간만료
+	 * 상태 > use: 사용 > notUse: 미사용 > cancel: 취소/환불 > expired: 기간만료.
 	 */
 	private String status;
 	/**
-	 * show > yes|no
+	 * show > yes|no.
 	 */
 	private String show;
 	/**
-	 * kind > couponAll: 쿠폰전체대상 > couponLimited: 쿠폰한정판 > couponBuyer: 쿠폰구매자전체 > couponId: ID > couponMisisdn: 휴대폰번호 >
-	 * broadcastFreepass: 방송자동결제 > movieFreepass: 영화자동결제 > seriesFreepass: 시리즈 1회결제 > giftCoupon: 상품권 > directCoupon:
-	 * 교환권 > shippingCoupon: 배송상품 > rentalFreepass/ebook: 이북/코믹 전권 대여 > seriesFreepass/ebook: 이북/코믹 전권 소장
+	 * kind > couponAll: 쿠폰전체대상 > couponLimited: 쿠폰한정판 > couponBuyer: 쿠폰구매자전체 > couponId: ID > couponMisisdn: 휴대폰번호 >.
+	 * broadcastFreepass: 방송자동결제 > movieFreepass: 영화자동결제 > seriesFreepass: 시리즈 1회결제 > giftCoupon: 상품권 > directCoupon:.
+	 * 교환권 > shippingCoupon: 배송상품 > rentalFreepass/ebook: 이북/코믹 전권 대여 > seriesFreepass/ebook: 이북/코믹 전권 소장.
 	 */
 	private String kind;
 	/**
-	 * 쿠폰설명
+	 * 쿠폰설명.
 	 */
 	private String couponExplain;
 
 	/**
-	 * 배송지 입력 URL
+	 * 배송지 입력 URL.
 	 */
 	private Url url;
 	/**
-	 * 가격
+	 * 가격.
 	 */
 	private Price price;
 	/**
-	 * 유효기간(시작/만료일자)
+	 * 유효기간(시작/만료일자).
 	 */
 	private Date date;
 	/**
-	 * 쿠폰명/정액권명
+	 * 쿠폰명/정액권명.
 	 */
 	private Title title;
 
 	/**
-	 * 자동결제 지원 여부 > status
+	 * 자동결제 지원 여부 > status.
 	 */
 	private AutoPay autopay;
 
 	/**
-	 * 썸네일 또는 배너 이미지
+	 * 썸네일 또는 배너 이미지.
 	 */
 	private List<Source> sourceList;
 
 	/**
-	 * selectOption > T스토어 쇼핑상품(type:shoppingStore)인 경우 사용
+	 * selectOption > T스토어 쇼핑상품(type:shoppingStore)인 경우 사용.
 	 */
 	private SelectOption selectOption;
 	/**
-	 * 쿠폰 사용처 > type
+	 * 쿠폰 사용처 > type.
 	 */
 	private Coverage coverage;
 

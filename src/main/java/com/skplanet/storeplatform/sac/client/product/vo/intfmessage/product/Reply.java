@@ -26,19 +26,19 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 public class Reply extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Date Message > type (date/reg) > text
+	 * Date Message > type (date/reg) > text.
 	 */
 	private Date date;
 	/**
-	 * Title Message > text
+	 * Title Message > text.
 	 */
 	private Title title;
 	/**
-	 * 댓글내용
+	 * 댓글내용.
 	 */
 	private String replayContent;
 	/**
-	 * 댓글 작성자이름
+	 * 댓글 작성자이름.
 	 */
 	private String replyName;
 

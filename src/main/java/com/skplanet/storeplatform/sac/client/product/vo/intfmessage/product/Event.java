@@ -25,11 +25,11 @@ public class Event extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 이벤트 ID
+	 * 이벤트 ID.
 	 */
 	private String eventId;
 	/**
-	 * 이벤트 설명
+	 * 이벤트 설명.
 	 */
 	private String eventExplain;
 

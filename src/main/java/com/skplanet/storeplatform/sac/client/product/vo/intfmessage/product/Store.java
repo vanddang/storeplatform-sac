@@ -36,8 +36,8 @@ public class Store extends CommonInfo implements Serializable {
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
 	private Source source; // store의 source
 
-	/*
-	 * Store()
+	/**
+	 * Store().
 	 */
 	public Store() {
 	}
@@ -45,8 +45,11 @@ public class Store extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * @param support
+	 *            support
 	 * @param price
+	 *            price
 	 * @param date
+	 *            date
 	 */
 	public Store(String support, Price price, Date date) {
 		super();

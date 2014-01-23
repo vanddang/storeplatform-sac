@@ -28,53 +28,57 @@ public class Contributor extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 가수, 저자, 판매자, 브랜드 ID Identifier "type"을 아래와 같이 지정 > individual : 판매회원의 개발자ID > privateOperator : 개인사업자의 개발자ID >
-	 * corporation : 법인사업자의 개발자ID > foreigner : 외국인 개발자ID > brand : 브랜드ID
+	 * 가수, 저자, 판매자, 브랜드 ID Identifier "type"을 아래와 같이 지정 > individual : 판매회원의 개발자ID > privateOperator : 개인사업자의 개발자ID >.
+	 * corporation : 법인사업자의 개발자ID > foreigner : 외국인 개발자ID > brand : 브랜드ID.
 	 */
 	private Identifier identifier;
 	/**
-	 * 제작자 또는 저자 이름
+	 * 제작자 또는 저자 이름.
 	 */
 	private String name;
 	/**
-	 * 브랜드 이름
+	 * 브랜드 이름.
 	 */
 	private String brand;
 	/**
-	 * 그림작가
+	 * 그림작가.
 	 */
 	private String painter;
 	/**
-	 * 번역자
+	 * 번역자.
 	 */
 	private String translator;
 	/**
-	 * 일반적인 회사
+	 * 일반적인 회사.
 	 */
 	private String company;
 	/**
-	 * 출판사, 앨범 발매회사
+	 * 출판사, 앨범 발매회사.
 	 */
 	private String publisher;
 	/**
-	 * 소속사
+	 * 소속사.
 	 */
 	private String agency;
 	/**
-	 * 방송 채널
+	 * 방송 채널.
 	 */
 	private String channel;
 	/**
-	 * 감독
+	 * 감독.
 	 */
 	private String director;
 	/**
-	 * 출연자
+	 * 출연자.
 	 */
 	private String artist;
+	/**
+	 * 앨범명 .
+	 */
+	private String album;
 
 	/**
-	 * 앨범명 private String album; /** 국가명
+	 * 국가명.
 	 */
 	private String country;
 	/*
@@ -248,6 +252,21 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setArtist(String artist) {
 		this.artist = artist;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAlbum() {
+		return this.album;
+	}
+
+	/**
+	 * @param album
+	 *            album
+	 */
+	public void setAlbum(String album) {
+		this.album = album;
 	}
 
 	/**

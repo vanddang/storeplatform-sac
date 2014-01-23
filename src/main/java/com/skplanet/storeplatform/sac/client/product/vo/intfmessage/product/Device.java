@@ -27,59 +27,59 @@ public class Device extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 단말 식별자 - {제조사/모델명}test
+	 * 단말 식별자 - {제조사/모델명}test.
 	 */
 	private String identifier;
 	/**
-	 * 단말 타입 > OMD단말 : type="omd" > 미지원단말 : identifier="android_standard" type="restrict"
+	 * 단말 타입 > OMD단말 : type="omd" > 미지원단말 : identifier="android_standard" type="restrict".
 	 */
 	private String type;
 
 	/**
-	 * 미지원단말은 아래 정의 안함
+	 * 미지원단말은 아래 정의 안함.
 	 */
 	private String manufacturer; // 단말 제조사 정보
 	/**
-	 * 단말 모델명
+	 * 단말 모델명.
 	 */
 	private String model;
 
 	/**
-	 * UA CD
+	 * UA CD.
 	 */
 	private String uaCd;
 	/**
-	 * 단말 OS 플랫폼
+	 * 단말 OS 플랫폼.
 	 */
 	private String platform;
 	/**
-	 * 단말 모델 설명
+	 * 단말 모델 설명.
 	 */
 	private String modelExplain;
 
 	/**
-	 * 폰 타입
+	 * 폰 타입.
 	 */
 	private String phoneType;
 
 	/**
-	 * 지원가능한 SK Planet 서비스 정보
+	 * 지원가능한 SK Planet 서비스 정보.
 	 */
 	private List<Service> serviceList;
 
 	/**
-	 * 단말에서 지원가능한 하드웨어 정보
+	 * 단말에서 지원가능한 하드웨어 정보.
 	 */
 	// private SupportedHardware supportedHardware;
 	private Map<String, Object> supportedHardware;
 
 	/**
-	 * Binding Information
+	 * Binding Information.
 	 */
 	private BindingInfo bindingInfo;
 
 	/**
-	 * 휴대폰번호
+	 * 휴대폰번호.
 	 */
 	private String msisdn;
 

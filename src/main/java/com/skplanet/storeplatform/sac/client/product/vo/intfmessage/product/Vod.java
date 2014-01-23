@@ -32,8 +32,8 @@ public class Vod extends CommonInfo implements Serializable {
 	private List<VideoInfo> videoInfoList; // 화질별 video 정보 List
 	private VodExplain vodExplain; // vod 정보
 
-	/*
-	 * Vod()
+	/**
+	 * Vod().
 	 */
 	public Vod() {
 		super();
@@ -42,7 +42,9 @@ public class Vod extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * @param runningTime
+	 *            runningTime
 	 * @param videoInfo
+	 *            videoInfo
 	 */
 	public Vod(Time runningTime, VideoInfo videoInfo) {
 		super();

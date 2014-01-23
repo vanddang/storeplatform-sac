@@ -25,7 +25,7 @@ public class Service extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Service()
+	 * Service().
 	 */
 	public Service() {
 	}
@@ -33,7 +33,9 @@ public class Service extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * @param name
+	 *            name
 	 * @param type
+	 *            type
 	 */
 	public Service(String name, String type) {
 		this.name = name;
