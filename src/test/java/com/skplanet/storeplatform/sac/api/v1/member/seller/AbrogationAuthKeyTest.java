@@ -62,7 +62,7 @@ public class AbrogationAuthKeyTest {
 	@Test
 	public void abrogationAuthKey() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/abrogationAuthKey/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/removeAuthorizationKey/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

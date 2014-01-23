@@ -144,6 +144,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 
 		KeySearch keySearch = new KeySearch();
+
 		if (!req.getSellerKey().equals("") || !req.getAid().equals("")) {
 			if (!req.getSellerKey().equals("")) {
 				keySearch.setKeyString(req.getSellerKey());

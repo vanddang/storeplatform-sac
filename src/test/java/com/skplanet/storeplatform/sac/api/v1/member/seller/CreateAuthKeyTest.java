@@ -64,7 +64,7 @@ public class CreateAuthKeyTest {
 	@Test
 	public void createAuthKey() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/createAuthKey/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/createAuthorizationKey/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

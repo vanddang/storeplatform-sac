@@ -131,7 +131,7 @@ public class SellerController {
 	 * @param req
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/createAuthKey/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/createAuthorizationKey/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Validated CreateAuthKeyReq req)
 			throws Exception {
@@ -155,7 +155,7 @@ public class SellerController {
 	 * @param req
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/abrogationAuthKey/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, @RequestBody @Validated AbrogationAuthKeyReq req)
 			throws Exception {
