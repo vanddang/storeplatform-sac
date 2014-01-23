@@ -94,123 +94,229 @@ public class Banner extends CommonInfo implements Serializable {
 	 */
 	private String bannerId;
 
+	/**
+	 * @return String
+	 */
 	public String getBase() {
 		return this.base;
 	}
 
+	/**
+	 * @param base
+	 *            base
+	 */
 	public void setBase(String base) {
 		this.base = base;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSizeType() {
 		return this.sizeType;
 	}
 
+	/**
+	 * @param sizeType
+	 *            sizeType
+	 */
 	public void setSizeType(String sizeType) {
 		this.sizeType = sizeType;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return List<Identifier>
+	 */
 	public List<Identifier> getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(List<Identifier> identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
-	public Title getTitleName() {
-		return this.titleName;
-	}
-
-	public void setTitleName(Title titleName) {
-		this.titleName = titleName;
-	}
-
+	/**
+	 * @return String
+	 */
 	public String getCategory() {
 		return this.category;
 	}
 
+	/**
+	 * @param category
+	 *            category
+	 */
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
+	/**
+	 * @return BannerExplain
+	 */
 	public BannerExplain getBannerExplain() {
 		return this.bannerExplain;
 	}
 
+	/**
+	 * @param bannerExplain
+	 *            bannerExplain
+	 */
 	public void setBannerExplain(BannerExplain bannerExplain) {
 		this.bannerExplain = bannerExplain;
 	}
 
+	/**
+	 * @return Url
+	 */
 	public Url getUrl() {
 		return this.url;
 	}
 
+	/**
+	 * @param url
+	 *            url
+	 */
 	public void setUrl(Url url) {
 		this.url = url;
 	}
 
+	/**
+	 * @return List<Source>
+	 */
 	public List<Source> getSourceList() {
 		return this.sourceList;
 	}
 
+	/**
+	 * @param sourceList
+	 *            sourceList
+	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
 	}
 
+	/**
+	 * @return Music
+	 */
 	public Music getMusic() {
 		return this.music;
 	}
 
+	/**
+	 * @param music
+	 *            music
+	 */
 	public void setMusic(Music music) {
 		this.music = music;
 	}
 
+	/**
+	 * @return Preview
+	 */
 	public Preview getPreview() {
 		return this.preview;
 	}
 
+	/**
+	 * @param preview
+	 *            preview
+	 */
 	public void setPreview(Preview preview) {
 		this.preview = preview;
 	}
 
+	/**
+	 * @return List<Menu>
+	 */
 	public List<Menu> getMenuList() {
 		return this.menuList;
 	}
 
+	/**
+	 * @param menuList
+	 *            menuList
+	 */
 	public void setMenuList(List<Menu> menuList) {
 		this.menuList = menuList;
 	}
 
+	/**
+	 * @return Title
+	 */
+	public Title getTitleName() {
+		return this.titleName;
+	}
+
+	/**
+	 * @param titleName
+	 *            titleName
+	 */
+	public void setTitleName(Title titleName) {
+		this.titleName = titleName;
+	}
+
+	/**
+	 * @return String
+	 */
 	public String getThemeInfo() {
 		return this.themeInfo;
 	}
 
+	/**
+	 * @param themeInfo
+	 *            themeInfo
+	 */
 	public void setThemeInfo(String themeInfo) {
 		this.themeInfo = themeInfo;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getBannerId() {
 		return this.bannerId;
 	}
 
+	/**
+	 * @param bannerId
+	 *            bannerId
+	 */
 	public void setBannerId(String bannerId) {
 		this.bannerId = bannerId;
 	}
+
 }

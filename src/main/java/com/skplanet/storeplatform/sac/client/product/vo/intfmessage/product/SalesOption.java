@@ -40,99 +40,184 @@ public class SalesOption extends CommonInfo implements Serializable {
 	private String principleUsage; // 유의사항
 	private String refundUsage; // 구매취소/환불
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSatus() {
 		return this.satus;
 	}
 
+	/**
+	 * @param satus
+	 *            satus
+	 */
 	public void setSatus(String satus) {
 		this.satus = satus;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getBtob() {
 		return this.btob;
 	}
 
+	/**
+	 * @param btob
+	 *            btob
+	 */
 	public void setBtob(String btob) {
 		this.btob = btob;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getMaxMonthlySale() {
 		return this.maxMonthlySale;
 	}
 
+	/**
+	 * @param maxMonthlySale
+	 *            maxMonthlySale
+	 */
 	public void setMaxMonthlySale(String maxMonthlySale) {
 		this.maxMonthlySale = maxMonthlySale;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getMaxDailySale() {
 		return this.maxDailySale;
 	}
 
+	/**
+	 * @param maxDailySale
+	 *            maxDailySale
+	 */
 	public void setMaxDailySale(String maxDailySale) {
 		this.maxDailySale = maxDailySale;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getMaxMonthlyBuy() {
 		return this.maxMonthlyBuy;
 	}
 
+	/**
+	 * @param maxMonthlyBuy
+	 *            maxMonthlyBuy
+	 */
 	public void setMaxMonthlyBuy(String maxMonthlyBuy) {
 		this.maxMonthlyBuy = maxMonthlyBuy;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getMaxDailyBuy() {
 		return this.maxDailyBuy;
 	}
 
+	/**
+	 * @param maxDailyBuy
+	 *            maxDailyBuy
+	 */
 	public void setMaxDailyBuy(String maxDailyBuy) {
 		this.maxDailyBuy = maxDailyBuy;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getMaxOnceBuy() {
 		return this.maxOnceBuy;
 	}
 
+	/**
+	 * @param maxOnceBuy
+	 *            maxOnceBuy
+	 */
 	public void setMaxOnceBuy(String maxOnceBuy) {
 		this.maxOnceBuy = maxOnceBuy;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPlaceUsage() {
 		return this.placeUsage;
 	}
 
+	/**
+	 * @param placeUsage
+	 *            placeUsage
+	 */
 	public void setPlaceUsage(String placeUsage) {
 		this.placeUsage = placeUsage;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getRestrictUsage() {
 		return this.restrictUsage;
 	}
 
+	/**
+	 * @param restrictUsage
+	 *            restrictUsage
+	 */
 	public void setRestrictUsage(String restrictUsage) {
 		this.restrictUsage = restrictUsage;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPrincipleUsage() {
 		return this.principleUsage;
 	}
 
+	/**
+	 * @param principleUsage
+	 *            principleUsage
+	 */
 	public void setPrincipleUsage(String principleUsage) {
 		this.principleUsage = principleUsage;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getRefundUsage() {
 		return this.refundUsage;
 	}
 
+	/**
+	 * @param refundUsage
+	 *            refundUsage
+	 */
 	public void setRefundUsage(String refundUsage) {
 		this.refundUsage = refundUsage;
 	}
+
 }

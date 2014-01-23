@@ -88,120 +88,217 @@ public class Coupon extends CommonInfo implements Serializable {
 	 * 쿠폰 사용처 > type
 	 */
 	private Coverage coverage;
-	/**
-	 * 
-	 */
+
 	private List<EpisodeCoupon> episodeCouponList;
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * @param status
+	 *            status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getShow() {
 		return this.show;
 	}
 
+	/**
+	 * @param show
+	 *            show
+	 */
 	public void setShow(String show) {
 		this.show = show;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getKind() {
 		return this.kind;
 	}
 
+	/**
+	 * @param kind
+	 *            kind
+	 */
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getCouponExplain() {
 		return this.couponExplain;
 	}
 
+	/**
+	 * @param couponExplain
+	 *            couponExplain
+	 */
 	public void setCouponExplain(String couponExplain) {
 		this.couponExplain = couponExplain;
 	}
 
+	/**
+	 * @return Url
+	 */
 	public Url getUrl() {
 		return this.url;
 	}
 
+	/**
+	 * @param url
+	 *            url
+	 */
 	public void setUrl(Url url) {
 		this.url = url;
 	}
 
+	/**
+	 * @return Price
+	 */
 	public Price getPrice() {
 		return this.price;
 	}
 
+	/**
+	 * @param price
+	 *            price
+	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return AutoPay
+	 */
 	public AutoPay getAutopay() {
 		return this.autopay;
 	}
 
+	/**
+	 * @param autopay
+	 *            autopay
+	 */
 	public void setAutopay(AutoPay autopay) {
 		this.autopay = autopay;
 	}
 
+	/**
+	 * @return List<Source>
+	 */
 	public List<Source> getSourceList() {
 		return this.sourceList;
 	}
 
+	/**
+	 * @param sourceList
+	 *            sourceList
+	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
 	}
 
+	/**
+	 * @return SelectOption
+	 */
 	public SelectOption getSelectOption() {
 		return this.selectOption;
 	}
 
+	/**
+	 * @param selectOption
+	 *            selectOption
+	 */
 	public void setSelectOption(SelectOption selectOption) {
 		this.selectOption = selectOption;
 	}
 
+	/**
+	 * @return Coverage
+	 */
 	public Coverage getCoverage() {
 		return this.coverage;
 	}
 
+	/**
+	 * @param coverage
+	 *            coverage
+	 */
 	public void setCoverage(Coverage coverage) {
 		this.coverage = coverage;
 	}
 
+	/**
+	 * @return List<EpisodeCoupon>
+	 */
 	public List<EpisodeCoupon> getEpisodeCouponList() {
 		return this.episodeCouponList;
 	}
 
+	/**
+	 * @param episodeCouponList
+	 *            episodeCouponList
+	 */
 	public void setEpisodeCouponList(List<EpisodeCoupon> episodeCouponList) {
 		this.episodeCouponList = episodeCouponList;
 	}
+
 }

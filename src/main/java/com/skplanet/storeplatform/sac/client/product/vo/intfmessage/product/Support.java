@@ -31,19 +31,34 @@ public class Support extends CommonInfo implements Serializable {
 
 	private String text;
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getText() {
 		return this.text;
 	}
 
+	/**
+	 * @param text
+	 *            text
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
+
 }

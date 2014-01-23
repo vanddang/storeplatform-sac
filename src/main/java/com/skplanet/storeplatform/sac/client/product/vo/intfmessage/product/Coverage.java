@@ -28,11 +28,19 @@ public class Coverage extends CommonInfo implements Serializable {
 	 */
 	private String type;
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

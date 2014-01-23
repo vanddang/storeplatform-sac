@@ -30,27 +30,49 @@ public class SubSelectOption extends CommonInfo implements Serializable {
 	private Title subTitle; // 두번째 콤보에 들어갈 제목
 	private Price subPrice; // 두번째 콤보에 들어갈 가격
 
+	/**
+	 * @return String
+	 */
 	public String getSubId() {
 		return this.subId;
 	}
 
+	/**
+	 * @param subId
+	 *            subId
+	 */
 	public void setSubId(String subId) {
 		this.subId = subId;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getSubTitle() {
 		return this.subTitle;
 	}
 
+	/**
+	 * @param subTitle
+	 *            subTitle
+	 */
 	public void setSubTitle(Title subTitle) {
 		this.subTitle = subTitle;
 	}
 
+	/**
+	 * @return Price
+	 */
 	public Price getSubPrice() {
 		return this.subPrice;
 	}
 
+	/**
+	 * @param subPrice
+	 *            subPrice
+	 */
 	public void setSubPrice(Price subPrice) {
 		this.subPrice = subPrice;
 	}
+
 }

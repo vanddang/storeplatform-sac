@@ -24,29 +24,53 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class Service extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-    public Service() {}
+	/**
+	 * Service()
+	 */
+	public Service() {
+	}
 
-    public Service(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
+	/**
+	 * 
+	 * @param name
+	 * @param type
+	 */
+	public Service(String name, String type) {
+		this.name = name;
+		this.type = type;
+	}
 
 	private String name; // 서비스 정보 (bell | ring | mp3)
 	private String type; // 서비스 지원 or 제한 여부 (support, restict)
 
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
+
 }

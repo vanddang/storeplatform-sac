@@ -32,36 +32,65 @@ public class Vod extends CommonInfo implements Serializable {
 	private List<VideoInfo> videoInfoList; // 화질별 video 정보 List
 	private VodExplain vodExplain; // vod 정보
 
+	/*
+	 * Vod()
+	 */
 	public Vod() {
 		super();
 	}
 
+	/**
+	 * 
+	 * @param runningTime
+	 * @param videoInfo
+	 */
 	public Vod(Time runningTime, VideoInfo videoInfo) {
 		super();
 		this.runningTime = runningTime;
 		this.videoInfo = videoInfo;
 	}
 
+	/**
+	 * @return Time
+	 */
 	public Time getRunningTime() {
 		return this.runningTime;
 	}
 
+	/**
+	 * @param runningTime
+	 *            runningTime
+	 */
 	public void setRunningTime(Time runningTime) {
 		this.runningTime = runningTime;
 	}
 
+	/**
+	 * @return Chapter
+	 */
 	public Chapter getChapter() {
 		return this.chapter;
 	}
 
+	/**
+	 * @param chapter
+	 *            chapter
+	 */
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
 	}
 
+	/**
+	 * @return VideoInfo
+	 */
 	public VideoInfo getVideoInfo() {
 		return this.videoInfo;
 	}
 
+	/**
+	 * @param videoInfo
+	 *            videoInfo
+	 */
 	public void setVideoInfo(VideoInfo videoInfo) {
 		this.videoInfo = videoInfo;
 	}

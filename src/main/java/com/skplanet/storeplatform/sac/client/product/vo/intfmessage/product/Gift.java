@@ -31,27 +31,49 @@ public class Gift extends CommonInfo implements Serializable {
 	private String sender; // 발신자 전화번호
 	private String receiver; // 수신자 전화번호
 
+	/**
+	 * @return String
+	 */
 	public String getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * @param status
+	 *            status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSender() {
 		return this.sender;
 	}
 
+	/**
+	 * @param sender
+	 *            sender
+	 */
 	public void setSender(String sender) {
 		this.sender = sender;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getReceiver() {
 		return this.receiver;
 	}
 
+	/**
+	 * @param receiver
+	 *            receiver
+	 */
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
+
 }

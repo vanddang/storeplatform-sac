@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class EpisodeCoupon extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 실제 coupon id
 	 */
@@ -32,18 +33,32 @@ public class EpisodeCoupon extends CommonInfo implements Serializable {
 	 */
 	private String status;
 
+	/**
+	 * @return String
+	 */
 	public String getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * @param status
+	 *            status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}

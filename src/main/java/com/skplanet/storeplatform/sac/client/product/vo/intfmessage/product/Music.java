@@ -35,35 +35,64 @@ public class Music extends CommonInfo implements Serializable {
 	private List<Service> serviceList;
 	private Bell bell; // 컬러링/벨소리 부가 정보
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return List<Source>
+	 */
 	public List<Source> getSourceList() {
 		return this.sourceList;
 	}
 
+	/**
+	 * @param sourceList
+	 *            sourceList
+	 */
 	public void setSourceList(List<Source> sourceList) {
 		this.sourceList = sourceList;
 	}
 
+	/**
+	 * @return List<Service>
+	 */
 	public List<Service> getServiceList() {
 		return this.serviceList;
 	}
 
+	/**
+	 * @param serviceList
+	 *            serviceList
+	 */
 	public void setServiceList(List<Service> serviceList) {
 		this.serviceList = serviceList;
 	}
 
+	/**
+	 * @return Bell
+	 */
 	public Bell getBell() {
 		return this.bell;
 	}
 
+	/**
+	 * @param bell
+	 *            bell
+	 */
 	public void setBell(Bell bell) {
 		this.bell = bell;
 	}
+
 }

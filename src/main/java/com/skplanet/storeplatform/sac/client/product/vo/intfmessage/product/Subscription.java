@@ -31,27 +31,49 @@ public class Subscription extends CommonInfo implements Serializable {
 	private SubscriptionFee subscriptionFee; // 구독료 정보
 	private FreeIssuedBookInfo freeIssuedBookInfo; // 무료 발행호 정보
 
+	/**
+	 * @return String
+	 */
 	public String getDurationType() {
 		return this.durationType;
 	}
 
+	/**
+	 * @param durationType
+	 *            durationType
+	 */
 	public void setDurationType(String durationType) {
 		this.durationType = durationType;
 	}
 
+	/**
+	 * @return SubscriptionFee
+	 */
 	public SubscriptionFee getSubscriptionFee() {
 		return this.subscriptionFee;
 	}
 
+	/**
+	 * @param subscriptionFee
+	 *            subscriptionFee
+	 */
 	public void setSubscriptionFee(SubscriptionFee subscriptionFee) {
 		this.subscriptionFee = subscriptionFee;
 	}
 
+	/**
+	 * @return FreeIssuedBookInfo
+	 */
 	public FreeIssuedBookInfo getFreeIssuedBookInfo() {
 		return this.freeIssuedBookInfo;
 	}
 
+	/**
+	 * @param freeIssuedBookInfo
+	 *            freeIssuedBookInfo
+	 */
 	public void setFreeIssuedBookInfo(FreeIssuedBookInfo freeIssuedBookInfo) {
 		this.freeIssuedBookInfo = freeIssuedBookInfo;
 	}
+
 }

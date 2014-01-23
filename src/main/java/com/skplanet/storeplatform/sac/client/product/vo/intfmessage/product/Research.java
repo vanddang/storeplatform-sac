@@ -28,19 +28,34 @@ public class Research extends CommonInfo implements Serializable {
 	private String name; // boxOffice : 영화 집계
 	private Date date; // 영화 집계 기간
 
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
 }

@@ -36,26 +36,47 @@ public class SupportedHardware extends CommonInfo implements Serializable {
 
 	private List<Service> serviceList;
 
+	/**
+	 * @return String
+	 */
 	public String getResolution() {
 		return this.resolution;
 	}
 
+	/**
+	 * @param resolution
+	 *            resolution
+	 */
 	public void setResolution(String resolution) {
 		this.resolution = resolution;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getDpi() {
 		return this.dpi;
 	}
 
+	/**
+	 * @param dpi
+	 *            dpi
+	 */
 	public void setDpi(String dpi) {
 		this.dpi = dpi;
 	}
 
+	/**
+	 * @return List<Service>
+	 */
 	public List<Service> getServiceList() {
 		return this.serviceList;
 	}
 
+	/**
+	 * @param serviceList
+	 *            serviceList
+	 */
 	public void setServiceList(List<Service> serviceList) {
 		this.serviceList = serviceList;
 	}

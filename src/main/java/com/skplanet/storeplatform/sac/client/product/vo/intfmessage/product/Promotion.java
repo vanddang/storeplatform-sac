@@ -60,131 +60,244 @@ public class Promotion extends CommonInfo implements Serializable {
 	private Source source; // promotion resource 정보
 	private Url url; // externalUrl
 
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getReceiver() {
 		return this.receiver;
 	}
 
+	/**
+	 * @param receiver
+	 *            receiver
+	 */
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getOffering() {
 		return this.offering;
 	}
 
+	/**
+	 * @param offering
+	 *            offering
+	 */
 	public void setOffering(String offering) {
 		this.offering = offering;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getRef() {
 		return this.ref;
 	}
 
+	/**
+	 * @param ref
+	 *            ref
+	 */
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getOfferingExplain() {
 		return this.offeringExplain;
 	}
 
+	/**
+	 * @param offeringExplain
+	 *            offeringExplain
+	 */
 	public void setOfferingExplain(String offeringExplain) {
 		this.offeringExplain = offeringExplain;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getGuideEvent() {
 		return this.guideEvent;
 	}
 
+	/**
+	 * @param guideEvent
+	 *            guideEvent
+	 */
 	public void setGuideEvent(String guideEvent) {
 		this.guideEvent = guideEvent;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getGuideUsage() {
 		return this.guideUsage;
 	}
 
+	/**
+	 * @param guideUsage
+	 *            guideUsage
+	 */
 	public void setGuideUsage(String guideUsage) {
 		this.guideUsage = guideUsage;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPromotionExplain() {
 		return this.promotionExplain;
 	}
 
+	/**
+	 * @param promotionExplain
+	 *            promotionExplain
+	 */
 	public void setPromotionExplain(String promotionExplain) {
 		this.promotionExplain = promotionExplain;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getUsagePeriod() {
 		return this.usagePeriod;
 	}
 
+	/**
+	 * @param usagePeriod
+	 *            usagePeriod
+	 */
 	public void setUsagePeriod(String usagePeriod) {
 		this.usagePeriod = usagePeriod;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getReleaseDate() {
 		return this.releaseDate;
 	}
 
+	/**
+	 * @param releaseDate
+	 *            releaseDate
+	 */
 	public void setReleaseDate(String releaseDate) {
 		this.releaseDate = releaseDate;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getGiveaway() {
 		return this.giveaway;
 	}
 
+	/**
+	 * @param giveaway
+	 *            giveaway
+	 */
 	public void setGiveaway(String giveaway) {
 		this.giveaway = giveaway;
 	}
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
 
+	/**
+	 * @return Url
+	 */
 	public Url getUrl() {
 		return this.url;
 	}
 
+	/**
+	 * @param url
+	 *            url
+	 */
 	public void setUrl(Url url) {
 		this.url = url;
 	}
+
 }

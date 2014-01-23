@@ -24,43 +24,59 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class AutoPay extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 상품결제타입 > normal : 일반결제 > auto : 자동결제
-	 */
-	private String type;
-	/**
-	 * 자동결제여부 > enabled : 자동결제 > reservedCancellation : 해지예약 > disabled : 해지완료
-	 */
-	private String status;
-	/**
-	 * 일시
-	 */
-	private Date date;
 
+	private String type; // 상품결제타입 > normal : 일반결제 > auto : 자동결제
+	private String status; // 자동결제여부 > enabled : 자동결제 > reservedCancellation : 해지예약 > disabled : 해지완료
+	private Date date; // 일시
+
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * @param status
+	 *            status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return long
+	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

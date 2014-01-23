@@ -42,34 +42,62 @@ public class Reply extends CommonInfo implements Serializable {
 	 */
 	private String replyName;
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getReplayContent() {
 		return this.replayContent;
 	}
 
+	/**
+	 * @param replayContent
+	 *            replayContent
+	 */
 	public void setReplayContent(String replayContent) {
 		this.replayContent = replayContent;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getReplyName() {
 		return this.replyName;
 	}
 
+	/**
+	 * @param replyName
+	 *            replyName
+	 */
 	public void setReplyName(String replyName) {
 		this.replyName = replyName;
 	}

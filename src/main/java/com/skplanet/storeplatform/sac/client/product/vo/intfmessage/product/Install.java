@@ -32,18 +32,32 @@ public class Install extends CommonInfo implements Serializable {
 	 */
 	private String upgrade;
 
+	/**
+	 * @return String
+	 */
 	public String getCaller() {
 		return this.caller;
 	}
 
+	/**
+	 * @param caller
+	 *            caller
+	 */
 	public void setCaller(String caller) {
 		this.caller = caller;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getUpgrade() {
 		return this.upgrade;
 	}
 
+	/**
+	 * @param upgrade
+	 *            upgrade
+	 */
 	public void setUpgrade(String upgrade) {
 		this.upgrade = upgrade;
 	}

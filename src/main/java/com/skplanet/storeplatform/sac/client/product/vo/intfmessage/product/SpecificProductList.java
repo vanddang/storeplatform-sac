@@ -29,19 +29,34 @@ public class SpecificProductList extends CommonInfo implements Serializable {
 	private CommonResponse commonRes;
 	private List<Product> productList;
 
+	/**
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonRes() {
 		return this.commonRes;
 	}
 
+	/**
+	 * @param commonRes
+	 *            commonRes
+	 */
 	public void setCommonRes(CommonResponse commonRes) {
 		this.commonRes = commonRes;
 	}
 
+	/**
+	 * @return List<Product>
+	 */
 	public List<Product> getProductList() {
 		return this.productList;
 	}
 
+	/**
+	 * @param productList
+	 *            productList
+	 */
 	public void setProductList(List<Product> productList) {
 		this.productList = productList;
 	}
+
 }

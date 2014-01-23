@@ -33,19 +33,34 @@ public class SubscriptionFee extends CommonInfo implements Serializable {
 	 */
 	private List<Time> time;
 
+	/**
+	 * @return Price
+	 */
 	public Price getPrice() {
 		return this.price;
 	}
 
+	/**
+	 * @param price
+	 *            price
+	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
+	/**
+	 * @return List<Time>
+	 */
 	public List<Time> getTime() {
 		return this.time;
 	}
 
+	/**
+	 * @param time
+	 *            time
+	 */
 	public void setTime(List<Time> time) {
 		this.time = time;
 	}
+
 }

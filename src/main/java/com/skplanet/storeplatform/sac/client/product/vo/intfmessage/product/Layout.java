@@ -34,43 +34,79 @@ public class Layout extends CommonInfo implements Serializable {
 	private Source source; // 베너 resource 정보
 	private Menu menu; // 메뉴 정보
 
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return List<Banner>
+	 */
 	public List<Banner> getBannerList() {
 		return this.bannerList;
 	}
 
+	/**
+	 * @param bannerList
+	 *            bannerList
+	 */
 	public void setBannerList(List<Banner> bannerList) {
 		this.bannerList = bannerList;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
 
+	/**
+	 * @return Menu
+	 */
 	public Menu getMenu() {
 		return this.menu;
 	}
 
+	/**
+	 * @param menu
+	 *            menu
+	 */
 	public void setMenu(Menu menu) {
 		this.menu = menu;
 	}
+
 }

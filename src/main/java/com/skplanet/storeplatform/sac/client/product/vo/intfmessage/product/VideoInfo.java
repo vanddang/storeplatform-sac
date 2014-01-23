@@ -36,67 +36,124 @@ public class VideoInfo extends CommonInfo implements Serializable {
 	private String btvcid; // BTV CID
 	private String size; // 파일사이즈
 
+	/**
+	 * @return String
+	 */
 	public String getScid() {
 		return this.scid;
 	}
 
+	/**
+	 * @param scid
+	 *            scid
+	 */
 	public void setScid(String scid) {
 		this.scid = scid;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPixel() {
 		return this.pixel;
 	}
 
+	/**
+	 * @param pixel
+	 *            pixel
+	 */
 	public void setPixel(String pixel) {
 		this.pixel = pixel;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPictureSize() {
 		return this.pictureSize;
 	}
 
+	/**
+	 * @param pictureSize
+	 *            pictureSize
+	 */
 	public void setPictureSize(String pictureSize) {
 		this.pictureSize = pictureSize;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(String source) {
 		this.source = source;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * @param version
+	 *            version
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getBtvcid() {
 		return this.btvcid;
 	}
 
+	/**
+	 * @param btvcid
+	 *            btvcid
+	 */
 	public void setBtvcid(String btvcid) {
 		this.btvcid = btvcid;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSize() {
 		return this.size;
 	}
 
+	/**
+	 * @param size
+	 *            size
+	 */
 	public void setSize(String size) {
 		this.size = size;
 	}
+
 }

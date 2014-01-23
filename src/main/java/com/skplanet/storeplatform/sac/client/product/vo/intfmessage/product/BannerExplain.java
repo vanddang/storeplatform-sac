@@ -23,27 +23,43 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class BannerExplain extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/**
+
+	/*
 	 * type이 추천리스트,브랜드샵,상황별추천일 경우
 	 */
 	private String id;
-	/**
+	/*
 	 * type이 내부연결일 경우
 	 */
+
 	private String url;
 
+	/**
+	 * @return String
+	 */
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * @param id
+	 *            id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getUrl() {
 		return this.url;
 	}
 
+	/**
+	 * @param url
+	 *            url
+	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}

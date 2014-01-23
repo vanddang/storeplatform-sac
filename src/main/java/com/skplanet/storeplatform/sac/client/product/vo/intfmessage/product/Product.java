@@ -177,292 +177,544 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private List<Product> subProductList;
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public List<Support> getSupportList() {
-		return this.supportList;
-	}
-
-	public void setSupportList(List<Support> supportList) {
-		this.supportList = supportList;
-	}
-
-	public String getLang() {
-		return this.lang;
-	}
-
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-
-	public String getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public Title getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(Title title) {
-		this.title = title;
-	}
-
-	public Price getPrice() {
-		return this.price;
-	}
-
-	public void setPrice(Price price) {
-		this.price = price;
-	}
-
-	public List<Menu> getMenuList() {
-		return this.menuList;
-	}
-
-	public void setMenuList(List<Menu> menuList) {
-		this.menuList = menuList;
-	}
-
-	public String getPacketFee() {
-		return this.packetFee;
-	}
-
-	public void setPacketFee(String packetFee) {
-		this.packetFee = packetFee;
-	}
-
-	public List<Source> getSourceList() {
-		return this.sourceList;
-	}
-
-	public void setSourceList(List<Source> sourceList) {
-		this.sourceList = sourceList;
-	}
-
-	public String getRequestType() {
-		return this.requestType;
-	}
-
-	public void setRequestType(String requestType) {
-		this.requestType = requestType;
-	}
-
-	public String getProductExplain() {
-		return this.productExplain;
-	}
-
-	public void setProductExplain(String productExplain) {
-		this.productExplain = productExplain;
-	}
-
-	public String getTableOfContents() {
-		return this.tableOfContents;
-	}
-
-	public void setTableOfContents(String tableOfContents) {
-		this.tableOfContents = tableOfContents;
-	}
-
-	public String getAboutWriter() {
-		return this.aboutWriter;
-	}
-
-	public void setAboutWriter(String aboutWriter) {
-		this.aboutWriter = aboutWriter;
-	}
-
-	public String getRecommendedReason() {
-		return this.recommendedReason;
-	}
-
-	public void setRecommendedReason(String recommendedReason) {
-		this.recommendedReason = recommendedReason;
-	}
-
-	public Accrual getAccrual() {
-		return this.accrual;
-	}
-
-	public void setAccrual(Accrual accrual) {
-		this.accrual = accrual;
-	}
-
-	public Rights getRights() {
-		return this.rights;
-	}
-
-	public void setRights(Rights rights) {
-		this.rights = rights;
-	}
-
-	public App getApp() {
-		return this.app;
-	}
-
-	public void setApp(App app) {
-		this.app = app;
-	}
-
-	public Music getMusic() {
-		return this.music;
-	}
-
-	public void setMusic(Music music) {
-		this.music = music;
-	}
-
-	public Vod getVod() {
-		return this.vod;
-	}
-
-	public void setVod(Vod vod) {
-		this.vod = vod;
-	}
-
-	public VideoInfo getVideoInfo() {
-		return this.videoInfo;
-	}
-
-	public void setVideoInfo(VideoInfo videoInfo) {
-		this.videoInfo = videoInfo;
-	}
-
-	public Book getBook() {
-		return this.book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
-	public Promotion getPromotion() {
-		return this.promotion;
-	}
-
-	public void setPromotion(Promotion promotion) {
-		this.promotion = promotion;
-	}
-
-	public Contributor getContributor() {
-		return this.contributor;
-	}
-
-	public void setContributor(Contributor contributor) {
-		this.contributor = contributor;
-	}
-
-	public Distributor getDistributor() {
-		return this.distributor;
-	}
-
-	public void setDistributor(Distributor distributor) {
-		this.distributor = distributor;
-	}
-
-	public SalesOption getSalesOption() {
-		return this.salesOption;
-	}
-
-	public void setSalesOption(SalesOption salesOption) {
-		this.salesOption = salesOption;
-	}
-
-	public Purchase getPurchase() {
-		return this.purchase;
-	}
-
-	public void setPurchase(Purchase purchase) {
-		this.purchase = purchase;
-	}
-
-	public Coupon getCoupon() {
-		return this.coupon;
-	}
-
-	public void setCoupon(Coupon coupon) {
-		this.coupon = coupon;
-	}
-
-	public Date getDate() {
-		return this.date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Event getEvent() {
-		return this.event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
-	}
-
-	public SelectOption getSelectOption() {
-		return this.selectOption;
-	}
-
-	public void setSelectOption(SelectOption selectOption) {
-		this.selectOption = selectOption;
-	}
-
-	public String getRestrictType() {
-		return this.restrictType;
-	}
-
-	public void setRestrictType(String restrictType) {
-		this.restrictType = restrictType;
-	}
-
-	public String getLatestIssue() {
-		return this.latestIssue;
-	}
-
-	public void setLatestIssue(String latestIssue) {
-		this.latestIssue = latestIssue;
-	}
-
-	public String getPhysicalPath() {
-		return this.physicalPath;
-	}
-
-	public void setPhysicalPath(String physicalPath) {
-		this.physicalPath = physicalPath;
-	}
-
-	public List<Product> getSubProductList() {
-		return this.subProductList;
-	}
-
-	public void setSubProductList(List<Product> subProductList) {
-		this.subProductList = subProductList;
-	}
-
+	/**
+	 * @return List<Identifier>
+	 */
 	public List<Identifier> getIdentifierList() {
 		return this.identifierList;
 	}
 
+	/**
+	 * @param identifierList
+	 *            identifierList
+	 */
 	public void setIdentifierList(List<Identifier> identifierList) {
 		this.identifierList = identifierList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getId() {
+		return this.id;
+	}
+
+	/**
+	 * @param id
+	 *            id
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return List<Support>
+	 */
+	public List<Support> getSupportList() {
+		return this.supportList;
+	}
+
+	/**
+	 * @param supportList
+	 *            supportList
+	 */
+	public void setSupportList(List<Support> supportList) {
+		this.supportList = supportList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getLang() {
+		return this.lang;
+	}
+
+	/**
+	 * @param lang
+	 *            lang
+	 */
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * @param status
+	 *            status
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return Title
+	 */
+	public Title getTitle() {
+		return this.title;
+	}
+
+	/**
+	 * @param title
+	 *            title
+	 */
+	public void setTitle(Title title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return Price
+	 */
+	public Price getPrice() {
+		return this.price;
+	}
+
+	/**
+	 * @param price
+	 *            price
+	 */
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+
+	/**
+	 * @return List<Menu>
+	 */
+	public List<Menu> getMenuList() {
+		return this.menuList;
+	}
+
+	/**
+	 * @param menuList
+	 *            menuList
+	 */
+	public void setMenuList(List<Menu> menuList) {
+		this.menuList = menuList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getPacketFee() {
+		return this.packetFee;
+	}
+
+	/**
+	 * @param packetFee
+	 *            packetFee
+	 */
+	public void setPacketFee(String packetFee) {
+		this.packetFee = packetFee;
+	}
+
+	/**
+	 * @return List<Source>
+	 */
+	public List<Source> getSourceList() {
+		return this.sourceList;
+	}
+
+	/**
+	 * @param sourceList
+	 *            sourceList
+	 */
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getRequestType() {
+		return this.requestType;
+	}
+
+	/**
+	 * @param requestType
+	 *            requestType
+	 */
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getProductExplain() {
+		return this.productExplain;
+	}
+
+	/**
+	 * @param productExplain
+	 *            productExplain
+	 */
+	public void setProductExplain(String productExplain) {
+		this.productExplain = productExplain;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getTableOfContents() {
+		return this.tableOfContents;
+	}
+
+	/**
+	 * @param tableOfContents
+	 *            tableOfContents
+	 */
+	public void setTableOfContents(String tableOfContents) {
+		this.tableOfContents = tableOfContents;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAboutWriter() {
+		return this.aboutWriter;
+	}
+
+	/**
+	 * @param aboutWriter
+	 *            aboutWriter
+	 */
+	public void setAboutWriter(String aboutWriter) {
+		this.aboutWriter = aboutWriter;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getRecommendedReason() {
+		return this.recommendedReason;
+	}
+
+	/**
+	 * @param recommendedReason
+	 *            recommendedReason
+	 */
+	public void setRecommendedReason(String recommendedReason) {
+		this.recommendedReason = recommendedReason;
+	}
+
+	/**
+	 * @return Accrual
+	 */
+	public Accrual getAccrual() {
+		return this.accrual;
+	}
+
+	/**
+	 * @param accrual
+	 *            accrual
+	 */
+	public void setAccrual(Accrual accrual) {
+		this.accrual = accrual;
+	}
+
+	/**
+	 * @return Rights
+	 */
+	public Rights getRights() {
+		return this.rights;
+	}
+
+	/**
+	 * @param rights
+	 *            rights
+	 */
+	public void setRights(Rights rights) {
+		this.rights = rights;
+	}
+
+	/**
+	 * @return App
+	 */
+	public App getApp() {
+		return this.app;
+	}
+
+	/**
+	 * @param app
+	 *            app
+	 */
+	public void setApp(App app) {
+		this.app = app;
+	}
+
+	/**
+	 * @return Music
+	 */
+	public Music getMusic() {
+		return this.music;
+	}
+
+	/**
+	 * @param music
+	 *            music
+	 */
+	public void setMusic(Music music) {
+		this.music = music;
+	}
+
+	/**
+	 * @return Vod
+	 */
+	public Vod getVod() {
+		return this.vod;
+	}
+
+	/**
+	 * @param vod
+	 *            vod
+	 */
+	public void setVod(Vod vod) {
+		this.vod = vod;
+	}
+
+	/**
+	 * @return VideoInfo
+	 */
+	public VideoInfo getVideoInfo() {
+		return this.videoInfo;
+	}
+
+	/**
+	 * @param videoInfo
+	 *            videoInfo
+	 */
+	public void setVideoInfo(VideoInfo videoInfo) {
+		this.videoInfo = videoInfo;
+	}
+
+	/**
+	 * @return Book
+	 */
+	public Book getBook() {
+		return this.book;
+	}
+
+	/**
+	 * @param book
+	 *            book
+	 */
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
+	/**
+	 * @return Promotion
+	 */
+	public Promotion getPromotion() {
+		return this.promotion;
+	}
+
+	/**
+	 * @param promotion
+	 *            promotion
+	 */
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
+	}
+
+	/**
+	 * @return Contributor
+	 */
+	public Contributor getContributor() {
+		return this.contributor;
+	}
+
+	/**
+	 * @param contributor
+	 *            contributor
+	 */
+	public void setContributor(Contributor contributor) {
+		this.contributor = contributor;
+	}
+
+	/**
+	 * @return Distributor
+	 */
+	public Distributor getDistributor() {
+		return this.distributor;
+	}
+
+	/**
+	 * @param distributor
+	 *            distributor
+	 */
+	public void setDistributor(Distributor distributor) {
+		this.distributor = distributor;
+	}
+
+	/**
+	 * @return SalesOption
+	 */
+	public SalesOption getSalesOption() {
+		return this.salesOption;
+	}
+
+	/**
+	 * @param salesOption
+	 *            salesOption
+	 */
+	public void setSalesOption(SalesOption salesOption) {
+		this.salesOption = salesOption;
+	}
+
+	/**
+	 * @return Purchase
+	 */
+	public Purchase getPurchase() {
+		return this.purchase;
+	}
+
+	/**
+	 * @param purchase
+	 *            purchase
+	 */
+	public void setPurchase(Purchase purchase) {
+		this.purchase = purchase;
+	}
+
+	/**
+	 * @return Coupon
+	 */
+	public Coupon getCoupon() {
+		return this.coupon;
+	}
+
+	/**
+	 * @param coupon
+	 *            coupon
+	 */
+	public void setCoupon(Coupon coupon) {
+		this.coupon = coupon;
+	}
+
+	/**
+	 * @return Date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * @param date
+	 *            date
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return Event
+	 */
+	public Event getEvent() {
+		return this.event;
+	}
+
+	/**
+	 * @param event
+	 *            event
+	 */
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
+	/**
+	 * @return SelectOption
+	 */
+	public SelectOption getSelectOption() {
+		return this.selectOption;
+	}
+
+	/**
+	 * @param selectOption
+	 *            selectOption
+	 */
+	public void setSelectOption(SelectOption selectOption) {
+		this.selectOption = selectOption;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getRestrictType() {
+		return this.restrictType;
+	}
+
+	/**
+	 * @param restrictType
+	 *            restrictType
+	 */
+	public void setRestrictType(String restrictType) {
+		this.restrictType = restrictType;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getLatestIssue() {
+		return this.latestIssue;
+	}
+
+	/**
+	 * @param latestIssue
+	 *            latestIssue
+	 */
+	public void setLatestIssue(String latestIssue) {
+		this.latestIssue = latestIssue;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getPhysicalPath() {
+		return this.physicalPath;
+	}
+
+	/**
+	 * @param physicalPath
+	 *            physicalPath
+	 */
+	public void setPhysicalPath(String physicalPath) {
+		this.physicalPath = physicalPath;
+	}
+
+	/**
+	 * @return List<Product>
+	 */
+	public List<Product> getSubProductList() {
+		return this.subProductList;
+	}
+
+	/**
+	 * @param subProductList
+	 *            subProductList
+	 */
+	public void setSubProductList(List<Product> subProductList) {
+		this.subProductList = subProductList;
 	}
 
 }

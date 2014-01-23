@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 
 /**
  * Interface Message Rights.Store Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -36,8 +36,18 @@ public class Store extends CommonInfo implements Serializable {
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
 	private Source source; // store의 source
 
-	public Store() {}
+	/*
+	 * Store()
+	 */
+	public Store() {
+	}
 
+	/**
+	 * 
+	 * @param support
+	 * @param price
+	 * @param date
+	 */
 	public Store(String support, Price price, Date date) {
 		super();
 		this.support = support;
@@ -45,59 +55,109 @@ public class Store extends CommonInfo implements Serializable {
 		this.date = date;
 	}
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSupport() {
 		return this.support;
 	}
 
+	/**
+	 * @param support
+	 *            support
+	 */
 	public void setSupport(String support) {
 		this.support = support;
 	}
 
+	/**
+	 * @return Price
+	 */
 	public Price getPrice() {
 		return this.price;
 	}
 
+	/**
+	 * @param price
+	 *            price
+	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getDurationUsagePeriodUI() {
 		return this.durationUsagePeriodUI;
 	}
 
+	/**
+	 * @param durationUsagePeriodUI
+	 *            durationUsagePeriodUI
+	 */
 	public void setDurationUsagePeriodUI(String durationUsagePeriodUI) {
 		this.durationUsagePeriodUI = durationUsagePeriodUI;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getNetworkRestrict() {
 		return this.networkRestrict;
 	}
 
+	/**
+	 * @param networkRestrict
+	 *            networkRestrict
+	 */
 	public void setNetworkRestrict(String networkRestrict) {
 		this.networkRestrict = networkRestrict;
 	}
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
+
 }

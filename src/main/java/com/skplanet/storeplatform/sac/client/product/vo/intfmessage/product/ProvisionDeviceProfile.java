@@ -28,18 +28,32 @@ public class ProvisionDeviceProfile extends CommonInfo implements Serializable {
 	private CommonResponse commonRes;
 	private Device device;
 
+	/**
+	 * @return CommonResponse
+	 */
 	public CommonResponse getCommonRes() {
 		return this.commonRes;
 	}
 
+	/**
+	 * @param commonRes
+	 *            commonRes
+	 */
 	public void setCommonRes(CommonResponse commonRes) {
 		this.commonRes = commonRes;
 	}
 
+	/**
+	 * @return Device
+	 */
 	public Device getDevice() {
 		return this.device;
 	}
 
+	/**
+	 * @param device
+	 *            device
+	 */
 	public void setDevice(Device device) {
 		this.device = device;
 	}

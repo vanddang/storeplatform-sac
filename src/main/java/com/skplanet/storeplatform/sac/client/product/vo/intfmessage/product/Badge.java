@@ -22,17 +22,30 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Badge extends CommonInfo implements Serializable {
-	private static final long serialVersionUID = 1L;
-	/**
-	 * Facebook과 연동한 댓글인 경우 표기 > facebook
-	 */
-	private String name;
 
+	private static final long serialVersionUID = 1L;
+	private String name; // Facebook과 연동한 댓글인 경우 표기 > facebook
+
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	/**
+	 * @return long
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 }

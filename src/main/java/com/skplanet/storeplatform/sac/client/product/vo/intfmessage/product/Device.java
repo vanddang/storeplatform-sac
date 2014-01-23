@@ -85,108 +85,199 @@ public class Device extends CommonInfo implements Serializable {
 
 	private Map<String, Object> services;
 
-	public String getUaCd() {
-		return this.uaCd;
-	}
-
-	public void setUaCd(String uaCd) {
-		this.uaCd = uaCd;
-	}
-
+	/**
+	 * @return String
+	 */
 	public String getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getManufacturer() {
 		return this.manufacturer;
 	}
 
+	/**
+	 * @param manufacturer
+	 *            manufacturer
+	 */
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getModel() {
 		return this.model;
 	}
 
+	/**
+	 * @param model
+	 *            model
+	 */
 	public void setModel(String model) {
 		this.model = model;
 	}
 
+	/**
+	 * @return String
+	 */
+	public String getUaCd() {
+		return this.uaCd;
+	}
+
+	/**
+	 * @param uaCd
+	 *            uaCd
+	 */
+	public void setUaCd(String uaCd) {
+		this.uaCd = uaCd;
+	}
+
+	/**
+	 * @return String
+	 */
 	public String getPlatform() {
 		return this.platform;
 	}
 
+	/**
+	 * @param platform
+	 *            platform
+	 */
 	public void setPlatform(String platform) {
 		this.platform = platform;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getModelExplain() {
 		return this.modelExplain;
 	}
 
+	/**
+	 * @param modelExplain
+	 *            modelExplain
+	 */
 	public void setModelExplain(String modelExplain) {
 		this.modelExplain = modelExplain;
 	}
 
-	public List<Service> getServiceList() {
-		return this.serviceList;
-	}
-
-	public void setServiceList(List<Service> serviceList) {
-		this.serviceList = serviceList;
-	}
-
-	public Map<String, Object> getSupportedHardware() {
-		return this.supportedHardware;
-	}
-
-	public void setSupportedHardware(Map<String, Object> supportedHardware) {
-		this.supportedHardware = supportedHardware;
-	}
-
-	public BindingInfo getBindingInfo() {
-		return this.bindingInfo;
-	}
-
-	public void setBindingInfo(BindingInfo bindingInfo) {
-		this.bindingInfo = bindingInfo;
-	}
-
-	public String getMsisdn() {
-		return this.msisdn;
-	}
-
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
-	}
-
-	public Map<String, Object> getServices() {
-		return this.services;
-	}
-
-	public void setServices(Map<String, Object> services) {
-		this.services = services;
-	}
-
+	/**
+	 * @return String
+	 */
 	public String getPhoneType() {
 		return this.phoneType;
 	}
 
+	/**
+	 * @param phoneType
+	 *            phoneType
+	 */
 	public void setPhoneType(String phoneType) {
 		this.phoneType = phoneType;
+	}
+
+	/**
+	 * @return List<Service>
+	 */
+	public List<Service> getServiceList() {
+		return this.serviceList;
+	}
+
+	/**
+	 * @param serviceList
+	 *            serviceList
+	 */
+	public void setServiceList(List<Service> serviceList) {
+		this.serviceList = serviceList;
+	}
+
+	/**
+	 * @return Map<String,Object>
+	 */
+	public Map<String, Object> getSupportedHardware() {
+		return this.supportedHardware;
+	}
+
+	/**
+	 * @param supportedHardware
+	 *            supportedHardware
+	 */
+	public void setSupportedHardware(Map<String, Object> supportedHardware) {
+		this.supportedHardware = supportedHardware;
+	}
+
+	/**
+	 * @return BindingInfo
+	 */
+	public BindingInfo getBindingInfo() {
+		return this.bindingInfo;
+	}
+
+	/**
+	 * @param bindingInfo
+	 *            bindingInfo
+	 */
+	public void setBindingInfo(BindingInfo bindingInfo) {
+		this.bindingInfo = bindingInfo;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getMsisdn() {
+		return this.msisdn;
+	}
+
+	/**
+	 * @param msisdn
+	 *            msisdn
+	 */
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
+	}
+
+	/**
+	 * @return Map<String,Object>
+	 */
+	public Map<String, Object> getServices() {
+		return this.services;
+	}
+
+	/**
+	 * @param services
+	 *            services
+	 */
+	public void setServices(Map<String, Object> services) {
+		this.services = services;
 	}
 
 }

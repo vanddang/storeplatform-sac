@@ -27,19 +27,34 @@ public class VodExplain extends CommonInfo implements Serializable {
 	private String saleDateInfo; // BP가 직접 등록하는 방송일/개봉년도 정보
 	private String text; // 날짜
 
+	/**
+	 * @return String
+	 */
 	public String getSaleDateInfo() {
 		return this.saleDateInfo;
 	}
 
+	/**
+	 * @param saleDateInfo
+	 *            saleDateInfo
+	 */
 	public void setSaleDateInfo(String saleDateInfo) {
 		this.saleDateInfo = saleDateInfo;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getText() {
 		return this.text;
 	}
 
+	/**
+	 * @param text
+	 *            text
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
+
 }

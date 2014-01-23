@@ -33,43 +33,79 @@ public class SelectOption extends CommonInfo implements Serializable {
 	private Price price; // 선택옵션 가격
 	private List<SubSelectOption> subSelectOptionList; // 두번째 옵션 리스트
 
+	/**
+	 * @return String
+	 */
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * @param id
+	 *            id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getIndex() {
 		return this.index;
 	}
 
+	/**
+	 * @param index
+	 *            index
+	 */
 	public void setIndex(String index) {
 		this.index = index;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return Price
+	 */
 	public Price getPrice() {
 		return this.price;
 	}
 
+	/**
+	 * @param price
+	 *            price
+	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
+	/**
+	 * @return List<SubSelectOption>
+	 */
 	public List<SubSelectOption> getSubSelectOptionList() {
 		return this.subSelectOptionList;
 	}
 
+	/**
+	 * @param subSelectOptionList
+	 *            subSelectOptionList
+	 */
 	public void setSubSelectOptionList(List<SubSelectOption> subSelectOptionList) {
 		this.subSelectOptionList = subSelectOptionList;
 	}
+
 }

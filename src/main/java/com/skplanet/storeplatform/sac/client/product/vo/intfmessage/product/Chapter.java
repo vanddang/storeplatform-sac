@@ -27,19 +27,34 @@ public class Chapter extends CommonInfo implements Serializable {
 	private String unit; // 회차
 	private String text; // 회차의 수
 
+	/**
+	 * @return String
+	 */
 	public String getUnit() {
 		return this.unit;
 	}
 
+	/**
+	 * @param unit
+	 *            unit
+	 */
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getText() {
 		return this.text;
 	}
 
+	/**
+	 * @param text
+	 *            text
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}
+
 }

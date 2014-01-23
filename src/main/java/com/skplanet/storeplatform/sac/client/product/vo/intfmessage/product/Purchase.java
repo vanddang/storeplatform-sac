@@ -45,107 +45,199 @@ public class Purchase extends CommonInfo implements Serializable {
 	private Count count; // 구매 건수
 	private Identifier channelIdentifier; // 채널 ID
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getState() {
 		return this.state;
 	}
 
+	/**
+	 * @param state
+	 *            state
+	 */
 	public void setState(String state) {
 		this.state = state;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getShow() {
 		return this.show;
 	}
 
+	/**
+	 * @param show
+	 *            show
+	 */
 	public void setShow(String show) {
 		this.show = show;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getToken() {
 		return this.token;
 	}
 
+	/**
+	 * @param token
+	 *            token
+	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPurchaser() {
 		return this.purchaser;
 	}
 
+	/**
+	 * @param purchaser
+	 *            purchaser
+	 */
 	public void setPurchaser(String purchaser) {
 		this.purchaser = purchaser;
 	}
 
+	/**
+	 * @return Price
+	 */
 	public Price getPrice() {
 		return this.price;
 	}
 
+	/**
+	 * @param price
+	 *            price
+	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return Rights
+	 */
 	public Rights getRights() {
 		return this.rights;
 	}
 
+	/**
+	 * @param rights
+	 *            rights
+	 */
 	public void setRights(Rights rights) {
 		this.rights = rights;
 	}
 
+	/**
+	 * @return Gift
+	 */
 	public Gift getGift() {
 		return this.gift;
 	}
 
+	/**
+	 * @param gift
+	 *            gift
+	 */
 	public void setGift(Gift gift) {
 		this.gift = gift;
 	}
 
+	/**
+	 * @return Coupon
+	 */
 	public Coupon getCoupon() {
 		return this.coupon;
 	}
 
+	/**
+	 * @param coupon
+	 *            coupon
+	 */
 	public void setCoupon(Coupon coupon) {
 		this.coupon = coupon;
 	}
 
+	/**
+	 * @return AutoPay
+	 */
 	public AutoPay getAutoPay() {
 		return this.autoPay;
 	}
 
+	/**
+	 * @param autoPay
+	 *            autoPay
+	 */
 	public void setAutoPay(AutoPay autoPay) {
 		this.autoPay = autoPay;
 	}
 
+	/**
+	 * @return Count
+	 */
 	public Count getCount() {
 		return this.count;
 	}
 
+	/**
+	 * @param count
+	 *            count
+	 */
 	public void setCount(Count count) {
 		this.count = count;
 	}
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getChannelIdentifier() {
 		return this.channelIdentifier;
 	}
 
+	/**
+	 * @param channelIdentifier
+	 *            channelIdentifier
+	 */
 	public void setChannelIdentifier(Identifier channelIdentifier) {
 		this.channelIdentifier = channelIdentifier;
 	}
+
 }

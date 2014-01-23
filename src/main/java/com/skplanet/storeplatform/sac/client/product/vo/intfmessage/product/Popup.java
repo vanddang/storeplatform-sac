@@ -32,43 +32,79 @@ public class Popup extends CommonInfo implements Serializable {
 	private Price price; // 선택옵션 가격
 	private SelectOption selectOption; // child 옵션
 
+	/**
+	 * @return String
+	 */
 	public String getId() {
 		return this.id;
 	}
 
+	/**
+	 * @param id
+	 *            id
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getLayout() {
 		return this.layout;
 	}
 
+	/**
+	 * @param layout
+	 *            layout
+	 */
 	public void setLayout(String layout) {
 		this.layout = layout;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return Price
+	 */
 	public Price getPrice() {
 		return this.price;
 	}
 
+	/**
+	 * @param price
+	 *            price
+	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
+	/**
+	 * @return SelectOption
+	 */
 	public SelectOption getSelectOption() {
 		return this.selectOption;
 	}
 
+	/**
+	 * @param selectOption
+	 *            selectOption
+	 */
 	public void setSelectOption(SelectOption selectOption) {
 		this.selectOption = selectOption;
 	}
+
 }

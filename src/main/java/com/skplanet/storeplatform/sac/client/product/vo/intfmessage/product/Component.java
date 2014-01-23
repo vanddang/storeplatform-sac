@@ -28,18 +28,22 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Component extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/**
+
+	/*
 	 * 상품 ID
 	 */
 	private Identifier identifier;
+
 	/**
 	 * identifier 추가 기술
 	 */
 	private String id;
+
 	/**
 	 * 지원 매체
 	 */
 	private String support;
+
 	/**
 	 * 지원 언어
 	 */
@@ -48,10 +52,12 @@ public class Component extends CommonInfo implements Serializable {
 	 * 
 	 */
 	private String status;
+
 	/**
 	 * title Message(상품명)
 	 */
 	private Title title;
+
 	/**
 	 * 가격정보
 	 */
@@ -73,15 +79,17 @@ public class Component extends CommonInfo implements Serializable {
 	 * > short : 한 줄 설명 > long : 상세 설명
 	 */
 	private String requestType;
+
 	/**
 	 * 목차정보(ebook일 경우)
 	 */
 	private String tableOfContents;
-	/**
+
+	/*
 	 * 작가소개(ebook일 경우)
 	 */
 	private String aboutWriter;
-	/**
+	/*
 	 * Accrual
 	 */
 	private Accrual accrual;
@@ -89,19 +97,23 @@ public class Component extends CommonInfo implements Serializable {
 	 * 권한 정보
 	 */
 	private Rights rights;
+
 	/**
 	 * 앱 정보
 	 */
 	private App app;
+
 	/**
 	 * 음악 부가 정보
 	 */
 	private Music music;
+
 	/**
 	 * VOD 부가 정보
 	 */
 	private Vod vod;
-	/**
+
+	/*
 	 * VOD일경우 VOD 부가정보
 	 */
 	private VideoInfo videoInfo;
@@ -114,6 +126,7 @@ public class Component extends CommonInfo implements Serializable {
 	 * 이벤트 상품 정보
 	 */
 	private Promotion promotion;
+
 	/**
 	 * Contributor message
 	 */
@@ -131,198 +144,6 @@ public class Component extends CommonInfo implements Serializable {
 
 	private String useYn; // 사용여부 (for download Seed App 정보)
 	private String caseRefCd; // 유형참조코드(for download Seed App 정보)
-
-	public Identifier getIdentifier() {
-		return this.identifier;
-	}
-
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
-	}
-
-	public String getId() {
-		return this.id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getSupport() {
-		return this.support;
-	}
-
-	public void setSupport(String support) {
-		this.support = support;
-	}
-
-	public String getLang() {
-		return this.lang;
-	}
-
-	public void setLang(String lang) {
-		this.lang = lang;
-	}
-
-	public String getStatus() {
-		return this.status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public Title getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(Title title) {
-		this.title = title;
-	}
-
-	public Price getPrice() {
-		return this.price;
-	}
-
-	public void setPrice(Price price) {
-		this.price = price;
-	}
-
-	public Menu getMenuList() {
-		return this.menuList;
-	}
-
-	public void setMenuList(Menu menuList) {
-		this.menuList = menuList;
-	}
-
-	public String getPacketFee() {
-		return this.packetFee;
-	}
-
-	public void setPacketFee(String packetFee) {
-		this.packetFee = packetFee;
-	}
-
-	public Source getSource() {
-		return this.source;
-	}
-
-	public void setSource(Source source) {
-		this.source = source;
-	}
-
-	public String getRequestType() {
-		return this.requestType;
-	}
-
-	public void setRequestType(String requestType) {
-		this.requestType = requestType;
-	}
-
-	public String getTableOfContents() {
-		return this.tableOfContents;
-	}
-
-	public void setTableOfContents(String tableOfContents) {
-		this.tableOfContents = tableOfContents;
-	}
-
-	public String getAboutWriter() {
-		return this.aboutWriter;
-	}
-
-	public void setAboutWriter(String aboutWriter) {
-		this.aboutWriter = aboutWriter;
-	}
-
-	public Accrual getAccrual() {
-		return this.accrual;
-	}
-
-	public void setAccrual(Accrual accrual) {
-		this.accrual = accrual;
-	}
-
-	public Rights getRights() {
-		return this.rights;
-	}
-
-	public void setRights(Rights rights) {
-		this.rights = rights;
-	}
-
-	public App getApp() {
-		return this.app;
-	}
-
-	public void setApp(App app) {
-		this.app = app;
-	}
-
-	public Music getMusic() {
-		return this.music;
-	}
-
-	public void setMusic(Music music) {
-		this.music = music;
-	}
-
-	public Vod getVod() {
-		return this.vod;
-	}
-
-	public void setVod(Vod vod) {
-		this.vod = vod;
-	}
-
-	public VideoInfo getVideoInfo() {
-		return this.videoInfo;
-	}
-
-	public void setVideoInfo(VideoInfo videoInfo) {
-		this.videoInfo = videoInfo;
-	}
-
-	public Book getBook() {
-		return this.book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
-	}
-
-	public Promotion getPromotion() {
-		return this.promotion;
-	}
-
-	public void setPromotion(Promotion promotion) {
-		this.promotion = promotion;
-	}
-
-	public Contributor getContributor() {
-		return this.contributor;
-	}
-
-	public void setContributor(Contributor contributor) {
-		this.contributor = contributor;
-	}
-
-	public Distributor getDistributor() {
-		return this.distributor;
-	}
-
-	public void setDistributor(Distributor distributor) {
-		this.distributor = distributor;
-	}
-
-	public String getBase() {
-		return this.base;
-	}
-
-	public void setBase(String base) {
-		this.base = base;
-	}
 
 	private Component component;
 
@@ -361,6 +182,381 @@ public class Component extends CommonInfo implements Serializable {
 	 */
 	public String getCaseRefCd() {
 		return this.caseRefCd;
+	}
+
+	/**
+	 * @return Identifier
+	 */
+	public Identifier getIdentifier() {
+		return this.identifier;
+	}
+
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
+	public void setIdentifier(Identifier identifier) {
+		this.identifier = identifier;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getId() {
+		return this.id;
+	}
+
+	/**
+	 * @param id
+	 *            id
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSupport() {
+		return this.support;
+	}
+
+	/**
+	 * @param support
+	 *            support
+	 */
+	public void setSupport(String support) {
+		this.support = support;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getLang() {
+		return this.lang;
+	}
+
+	/**
+	 * @param lang
+	 *            lang
+	 */
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getStatus() {
+		return this.status;
+	}
+
+	/**
+	 * @param status
+	 *            status
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return Title
+	 */
+	public Title getTitle() {
+		return this.title;
+	}
+
+	/**
+	 * @param title
+	 *            title
+	 */
+	public void setTitle(Title title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return Price
+	 */
+	public Price getPrice() {
+		return this.price;
+	}
+
+	/**
+	 * @param price
+	 *            price
+	 */
+	public void setPrice(Price price) {
+		this.price = price;
+	}
+
+	/**
+	 * @return Menu
+	 */
+	public Menu getMenuList() {
+		return this.menuList;
+	}
+
+	/**
+	 * @param menuList
+	 *            menuList
+	 */
+	public void setMenuList(Menu menuList) {
+		this.menuList = menuList;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getPacketFee() {
+		return this.packetFee;
+	}
+
+	/**
+	 * @param packetFee
+	 *            packetFee
+	 */
+	public void setPacketFee(String packetFee) {
+		this.packetFee = packetFee;
+	}
+
+	/**
+	 * @return Source
+	 */
+	public Source getSource() {
+		return this.source;
+	}
+
+	/**
+	 * @param source
+	 *            source
+	 */
+	public void setSource(Source source) {
+		this.source = source;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getRequestType() {
+		return this.requestType;
+	}
+
+	/**
+	 * @param requestType
+	 *            requestType
+	 */
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getTableOfContents() {
+		return this.tableOfContents;
+	}
+
+	/**
+	 * @param tableOfContents
+	 *            tableOfContents
+	 */
+	public void setTableOfContents(String tableOfContents) {
+		this.tableOfContents = tableOfContents;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAboutWriter() {
+		return this.aboutWriter;
+	}
+
+	/**
+	 * @param aboutWriter
+	 *            aboutWriter
+	 */
+	public void setAboutWriter(String aboutWriter) {
+		this.aboutWriter = aboutWriter;
+	}
+
+	/**
+	 * @return Accrual
+	 */
+	public Accrual getAccrual() {
+		return this.accrual;
+	}
+
+	/**
+	 * @param accrual
+	 *            accrual
+	 */
+	public void setAccrual(Accrual accrual) {
+		this.accrual = accrual;
+	}
+
+	/**
+	 * @return Rights
+	 */
+	public Rights getRights() {
+		return this.rights;
+	}
+
+	/**
+	 * @param rights
+	 *            rights
+	 */
+	public void setRights(Rights rights) {
+		this.rights = rights;
+	}
+
+	/**
+	 * @return App
+	 */
+	public App getApp() {
+		return this.app;
+	}
+
+	/**
+	 * @param app
+	 *            app
+	 */
+	public void setApp(App app) {
+		this.app = app;
+	}
+
+	/**
+	 * @return Music
+	 */
+	public Music getMusic() {
+		return this.music;
+	}
+
+	/**
+	 * @param music
+	 *            music
+	 */
+	public void setMusic(Music music) {
+		this.music = music;
+	}
+
+	/**
+	 * @return Vod
+	 */
+	public Vod getVod() {
+		return this.vod;
+	}
+
+	/**
+	 * @param vod
+	 *            vod
+	 */
+	public void setVod(Vod vod) {
+		this.vod = vod;
+	}
+
+	/**
+	 * @return VideoInfo
+	 */
+	public VideoInfo getVideoInfo() {
+		return this.videoInfo;
+	}
+
+	/**
+	 * @param videoInfo
+	 *            videoInfo
+	 */
+	public void setVideoInfo(VideoInfo videoInfo) {
+		this.videoInfo = videoInfo;
+	}
+
+	/**
+	 * @return Book
+	 */
+	public Book getBook() {
+		return this.book;
+	}
+
+	/**
+	 * @param book
+	 *            book
+	 */
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
+	/**
+	 * @return Promotion
+	 */
+	public Promotion getPromotion() {
+		return this.promotion;
+	}
+
+	/**
+	 * @param promotion
+	 *            promotion
+	 */
+	public void setPromotion(Promotion promotion) {
+		this.promotion = promotion;
+	}
+
+	/**
+	 * @return Contributor
+	 */
+	public Contributor getContributor() {
+		return this.contributor;
+	}
+
+	/**
+	 * @param contributor
+	 *            contributor
+	 */
+	public void setContributor(Contributor contributor) {
+		this.contributor = contributor;
+	}
+
+	/**
+	 * @return Distributor
+	 */
+	public Distributor getDistributor() {
+		return this.distributor;
+	}
+
+	/**
+	 * @param distributor
+	 *            distributor
+	 */
+	public void setDistributor(Distributor distributor) {
+		this.distributor = distributor;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getBase() {
+		return this.base;
+	}
+
+	/**
+	 * @param base
+	 *            base
+	 */
+	public void setBase(String base) {
+		this.base = base;
+	}
+
+	/**
+	 * @return Component
+	 */
+	public Component getComponent() {
+		return this.component;
+	}
+
+	/**
+	 * @param component
+	 *            component
+	 */
+	public void setComponent(Component component) {
+		this.component = component;
 	}
 
 	/**

@@ -41,51 +41,94 @@ public class Bell extends CommonInfo implements Serializable {
 	private String rsIsuAmtAdd; // rsIsuAmtAdd ex) “+0100A” or “-0100A”
 	private Source source; // Image URL
 
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getQuality() {
 		return this.quality;
 	}
 
+	/**
+	 * @param quality
+	 *            quality
+	 */
 	public void setQuality(String quality) {
 		this.quality = quality;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            type
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getRnPid() {
 		return this.rnPid;
 	}
 
+	/**
+	 * @param rnPid
+	 *            rnPid
+	 */
 	public void setRnPid(String rnPid) {
 		this.rnPid = rnPid;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getRsIsuAmtAdd() {
 		return this.rsIsuAmtAdd;
 	}
 
+	/**
+	 * @param rsIsuAmtAdd
+	 *            rsIsuAmtAdd
+	 */
 	public void setRsIsuAmtAdd(String rsIsuAmtAdd) {
 		this.rsIsuAmtAdd = rsIsuAmtAdd;
 	}
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
+
 }

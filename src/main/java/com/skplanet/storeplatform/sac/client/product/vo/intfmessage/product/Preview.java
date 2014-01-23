@@ -27,10 +27,17 @@ public class Preview extends CommonInfo implements Serializable {
 
 	private Source source;
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}

@@ -23,6 +23,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Event extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 이벤트 ID
 	 */
@@ -32,24 +33,34 @@ public class Event extends CommonInfo implements Serializable {
 	 */
 	private String eventExplain;
 
+	/**
+	 * @return String
+	 */
 	public String getEventId() {
 		return this.eventId;
 	}
 
+	/**
+	 * @param eventId
+	 *            eventId
+	 */
 	public void setEventId(String eventId) {
 		this.eventId = eventId;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getEventExplain() {
 		return this.eventExplain;
 	}
 
+	/**
+	 * @param eventExplain
+	 *            eventExplain
+	 */
 	public void setEventExplain(String eventExplain) {
 		this.eventExplain = eventExplain;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 }

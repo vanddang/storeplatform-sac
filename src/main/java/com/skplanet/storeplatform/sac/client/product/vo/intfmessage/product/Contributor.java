@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Contributor extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
+
 	/**
 	 * 가수, 저자, 판매자, 브랜드 ID Identifier "type"을 아래와 같이 지정 > individual : 판매회원의 개발자ID > privateOperator : 개인사업자의 개발자ID >
 	 * corporation : 법인사업자의 개발자ID > foreigner : 외국인 개발자ID > brand : 브랜드ID
@@ -71,139 +72,225 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 출연자
 	 */
 	private String artist;
+
 	/**
-	 * 앨범명
-	 */
-	private String album;
-	/**
-	 * 국가명
+	 * 앨범명 private String album; /** 국가명
 	 */
 	private String country;
-	/**
+	/*
 	 * 이미지url
-	 */
-	private Source source;
+	 */private Source source;
 	/**
 	 * 앨범 출시 일 등 날짜를 기입할 경우 사용한다.
 	 */
 	private Date date;
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * @param name
+	 *            name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getBrand() {
 		return this.brand;
 	}
 
+	/**
+	 * @param brand
+	 *            brand
+	 */
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPainter() {
 		return this.painter;
 	}
 
+	/**
+	 * @param painter
+	 *            painter
+	 */
 	public void setPainter(String painter) {
 		this.painter = painter;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getTranslator() {
 		return this.translator;
 	}
 
+	/**
+	 * @param translator
+	 *            translator
+	 */
 	public void setTranslator(String translator) {
 		this.translator = translator;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getCompany() {
 		return this.company;
 	}
 
+	/**
+	 * @param company
+	 *            company
+	 */
 	public void setCompany(String company) {
 		this.company = company;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getPublisher() {
 		return this.publisher;
 	}
 
+	/**
+	 * @param publisher
+	 *            publisher
+	 */
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getAgency() {
 		return this.agency;
 	}
 
+	/**
+	 * @param agency
+	 *            agency
+	 */
 	public void setAgency(String agency) {
 		this.agency = agency;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getChannel() {
 		return this.channel;
 	}
 
+	/**
+	 * @param channel
+	 *            channel
+	 */
 	public void setChannel(String channel) {
 		this.channel = channel;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getDirector() {
 		return this.director;
 	}
 
+	/**
+	 * @param director
+	 *            director
+	 */
 	public void setDirector(String director) {
 		this.director = director;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getArtist() {
 		return this.artist;
 	}
 
+	/**
+	 * @param artist
+	 *            artist
+	 */
 	public void setArtist(String artist) {
 		this.artist = artist;
 	}
 
-	public String getAlbum() {
-		return this.album;
-	}
-
-	public void setAlbum(String album) {
-		this.album = album;
-	}
-
+	/**
+	 * @return String
+	 */
 	public String getCountry() {
 		return this.country;
 	}
 
+	/**
+	 * @param country
+	 *            country
+	 */
 	public void setCountry(String country) {
 		this.country = country;
 	}
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}

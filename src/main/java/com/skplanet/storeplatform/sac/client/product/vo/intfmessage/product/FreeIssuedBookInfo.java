@@ -40,67 +40,124 @@ public class FreeIssuedBookInfo extends CommonInfo implements Serializable {
 	private Date date; // 예상 정기구독 시작 ~ 종료일
 	private Source source; // 무료 발행호 이미지
 
+	/**
+	 * @return Identifier
+	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
 	}
 
+	/**
+	 * @param identifier
+	 *            identifier
+	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getScid() {
 		return this.scid;
 	}
 
+	/**
+	 * @param scid
+	 *            scid
+	 */
 	public void setScid(String scid) {
 		this.scid = scid;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * @param version
+	 *            version
+	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getStatus() {
 		return this.status;
 	}
 
+	/**
+	 * @param status
+	 *            status
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	/**
+	 * @return Title
+	 */
 	public Title getTitle() {
 		return this.title;
 	}
 
+	/**
+	 * @param title
+	 *            title
+	 */
 	public void setTitle(Title title) {
 		this.title = title;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getFreeIssuedBookExplain() {
 		return this.freeIssuedBookExplain;
 	}
 
+	/**
+	 * @param freeIssuedBookExplain
+	 *            freeIssuedBookExplain
+	 */
 	public void setFreeIssuedBookExplain(String freeIssuedBookExplain) {
 		this.freeIssuedBookExplain = freeIssuedBookExplain;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return Source
+	 */
 	public Source getSource() {
 		return this.source;
 	}
 
+	/**
+	 * @param source
+	 *            source
+	 */
 	public void setSource(Source source) {
 		this.source = source;
 	}
+
 }

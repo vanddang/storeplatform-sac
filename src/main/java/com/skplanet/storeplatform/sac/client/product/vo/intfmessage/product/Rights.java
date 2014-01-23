@@ -36,83 +36,154 @@ public class Rights extends CommonInfo implements Serializable {
 	private String durationUsagePeriodView; // 전시를 목적으로 추가 이용 기간을 표기할 경우 사용한다.
 	private String subscription; // 정기구독정보
 
+	/**
+	 * @return String
+	 */
 	public String getAllow() {
 		return this.allow;
 	}
 
+	/**
+	 * @param allow
+	 *            allow
+	 */
 	public void setAllow(String allow) {
 		this.allow = allow;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getDeny() {
 		return this.deny;
 	}
 
+	/**
+	 * @param deny
+	 *            deny
+	 */
 	public void setDeny(String deny) {
 		this.deny = deny;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getGrade() {
 		return this.grade;
 	}
 
+	/**
+	 * @param grade
+	 *            grade
+	 */
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
 
+	/**
+	 * @return Preview
+	 */
 	public Preview getPreview() {
 		return this.preview;
 	}
 
+	/**
+	 * @param preview
+	 *            preview
+	 */
 	public void setPreview(Preview preview) {
 		this.preview = preview;
 	}
 
+	/**
+	 * @return Play
+	 */
 	public Play getPlay() {
 		return this.play;
 	}
 
+	/**
+	 * @param play
+	 *            play
+	 */
 	public void setPlay(Play play) {
 		this.play = play;
 	}
 
+	/**
+	 * @return Store
+	 */
 	public Store getStore() {
 		return this.store;
 	}
 
+	/**
+	 * @param store
+	 *            store
+	 */
 	public void setStore(Store store) {
 		this.store = store;
 	}
 
+	/**
+	 * @return Date
+	 */
 	public Date getDate() {
 		return this.date;
 	}
 
+	/**
+	 * @param date
+	 *            date
+	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getAdditionalUsagePeriod() {
 		return this.additionalUsagePeriod;
 	}
 
+	/**
+	 * @param additionalUsagePeriod
+	 *            additionalUsagePeriod
+	 */
 	public void setAdditionalUsagePeriod(String additionalUsagePeriod) {
 		this.additionalUsagePeriod = additionalUsagePeriod;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getDurationUsagePeriodView() {
 		return this.durationUsagePeriodView;
 	}
 
+	/**
+	 * @param durationUsagePeriodView
+	 *            durationUsagePeriodView
+	 */
 	public void setDurationUsagePeriodView(String durationUsagePeriodView) {
 		this.durationUsagePeriodView = durationUsagePeriodView;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getSubscription() {
 		return this.subscription;
 	}
 
+	/**
+	 * @param subscription
+	 *            subscription
+	 */
 	public void setSubscription(String subscription) {
 		this.subscription = subscription;
 	}
+
 }

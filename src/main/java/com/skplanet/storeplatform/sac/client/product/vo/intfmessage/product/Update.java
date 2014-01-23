@@ -11,10 +11,10 @@ package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 
 /**
  * Interface Message History.Update Value Object.
@@ -24,22 +24,37 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Update extends CommonInfo implements Serializable {
 
-    private Date date;    // 업데이트 날짜
-    private String updateExplain;   // 업데이트 변경 내용
+	private Date date; // 업데이트 날짜
+	private String updateExplain; // 업데이트 변경 내용
 
-    public Date getDate() {
-        return date;
-    }
+	/**
+	 * @return Date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+	/**
+	 * @param date
+	 *            date
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
-    public String getUpdateExplain() {
-        return updateExplain;
-    }
+	/**
+	 * @return String
+	 */
+	public String getUpdateExplain() {
+		return this.updateExplain;
+	}
 
-    public void setUpdateExplain(String updateExplain) {
-        this.updateExplain = updateExplain;
-    }
+	/**
+	 * @param updateExplain
+	 *            updateExplain
+	 */
+	public void setUpdateExplain(String updateExplain) {
+		this.updateExplain = updateExplain;
+	}
+
 }

@@ -26,11 +26,19 @@ public class History extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<Update> update;
 
-    public List<Update> getUpdate() {
-        return update;
-    }
+	/**
+	 * @return List<Update>
+	 */
+	public List<Update> getUpdate() {
+		return this.update;
+	}
 
-    public void setUpdate(List<Update> update) {
-        this.update = update;
-    }
+	/**
+	 * @param update
+	 *            update
+	 */
+	public void setUpdate(List<Update> update) {
+		this.update = update;
+	}
+
 }
