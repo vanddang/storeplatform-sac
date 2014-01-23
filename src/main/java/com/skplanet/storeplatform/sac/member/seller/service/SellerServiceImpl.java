@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,9 +58,6 @@ public class SellerServiceImpl implements SellerService {
 
 	@Autowired
 	private SellerSCI sellerSCI;
-
-	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
 
 	@Override
 	public CreateRes createSeller(SacRequestHeader header, CreateReq req) {
@@ -262,8 +258,6 @@ public class SellerServiceImpl implements SellerService {
 
 	@Override
 	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) {
-
-		LOGGER.debug(this.messageSourceAccessor.getMessage("typeMismatch"));
 
 		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
 		/** 1. SC회원 Req 생성 및 주입. */
