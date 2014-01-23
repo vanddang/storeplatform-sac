@@ -76,7 +76,6 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void createBySimpleId() throws Exception {
 
@@ -90,9 +89,9 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("idpsimplemember2"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserId("idpsimple1"); // 대문자 ID는 가입 불가 IDP 정책.
 						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("idpsimplemember2@naver.com");
+						reqJson.setUserEmail("idpsimple1@naver.com");
 
 						// 단말 정보
 						reqJson.setDeviceId(""); // 기기 ID
@@ -102,6 +101,15 @@ public class CreateBySimpleTest {
 						reqJson.setDeviceAccount(""); // 기기 계정 (Gmail)
 						reqJson.setJoinId(""); // 가입채널코드
 						reqJson.setIsRecvSms(""); // SMS 수신 여부
+
+						// 단말 부가 정보 리스트
+						List<DeviceExtraInfo> deviceExtraList = new ArrayList<DeviceExtraInfo>();
+						DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
+						deviceExtraInfo.setExtraProfile("");
+						deviceExtraInfo.setExtraProfileValue("");
+
+						deviceExtraList.add(deviceExtraInfo);
+						reqJson.setDeviceExtraInfoList(deviceExtraList);
 
 						return reqJson;
 					}
@@ -124,6 +132,7 @@ public class CreateBySimpleTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void createBySimpleDevice() throws Exception {
 
@@ -138,9 +147,9 @@ public class CreateBySimpleTest {
 						CreateBySimpleReq reqJson = new CreateBySimpleReq();
 
 						// 사용자 아이디
-						reqJson.setUserId("tlaeowlsuser5"); // 대문자 ID는 가입 불가 IDP 정책.
+						reqJson.setUserId("tlaeowlsuser6"); // 대문자 ID는 가입 불가 IDP 정책.
 						reqJson.setUserPw("abcd1234");
-						reqJson.setUserEmail("tlaeowlsuser5@yahoo.co.kr");
+						reqJson.setUserEmail("tlaeowlsuser6@yahoo.co.kr");
 
 						// 단말 정보
 						reqJson.setDeviceId("0101234567"); // 기기 ID

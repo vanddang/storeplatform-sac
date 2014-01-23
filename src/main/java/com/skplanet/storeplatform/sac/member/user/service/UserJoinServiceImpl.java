@@ -138,14 +138,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 기본정보 setting
 			 */
 			UserMbr userMbr = new UserMbr();
+			userMbr.setUserTelecom(req.getDeviceTelecom()); // 이동 통신사
 			userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key()); // MBR_NO
 			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-			userMbr.setUserTelecom(req.getDeviceTelecom()); // 이동 통신사
 			userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
 			createUserRequest.setUserMbr(userMbr);
@@ -280,6 +282,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 			createUserRequest.setUserMbr(userMbr);
@@ -406,6 +409,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserID(req.getUserId()); // 사용자 아이디
+			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
 			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호
 			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
@@ -416,8 +420,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // Email 수신여부 (AI-IS 로직 반영).
+			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 			createUserRequest.setUserMbr(userMbr);
@@ -508,6 +512,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 			createUserRequest.setUserMbr(userMbr);
@@ -610,13 +615,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			UserMbr userMbr = new UserMbr();
 			userMbr.setUserID(req.getUserId()); // 사용자 아이디
+			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
 			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
 			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setUserTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
 			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
 			createUserRequest.setUserMbr(userMbr);
@@ -837,12 +843,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= ## CreateByMdnReq");
 			CreateByMdnReq req = (CreateByMdnReq) obj;
-			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
+			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setNativeId(req.getNativeId()); // 기기 IMEI
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
@@ -858,12 +866,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= ## CreateByAgreementReq");
 			CreateByAgreementReq req = (CreateByAgreementReq) obj;
-			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
+			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
@@ -878,12 +888,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("======================= ## CreateBySimpleReq");
 			CreateBySimpleReq req = (CreateBySimpleReq) obj;
-			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
-			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
-			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
 			deviceInfo.setDeviceId(req.getDeviceId()); // 기기 ID
 			deviceInfo.setDeviceIdType(req.getDeviceIdType()); // 기기 ID 타입
 			deviceInfo.setJoinId(req.getJoinId()); // 가입 채널 코드
+			deviceInfo.setDeviceTelecom(majorDeviceInfo.getDeviceTelecom()); // 이동 통신사
+			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName()); // 단말명
+			deviceInfo.setDeviceModelNo(sacHeader.getDeviceHeader().getModel()); // 단말 모델
+			deviceInfo.setDeviceAccount(req.getDeviceAccount()); // 기기 계정 (Gmail)
+			deviceInfo.setNativeId(req.getNativeId()); // 기기고유 ID (imei)
 			deviceInfo.setIsRecvSms(req.getIsRecvSms()); // SMS 수신 여부
 			deviceInfo.setIsPrimary(MemberConstants.USE_Y); // 대표폰 여부
 			deviceInfo.setIsAuthenticated(MemberConstants.USE_Y); // 인증 여부
