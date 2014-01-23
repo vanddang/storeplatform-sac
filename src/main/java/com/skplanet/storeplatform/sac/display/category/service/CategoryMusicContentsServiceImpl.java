@@ -194,6 +194,12 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 				identifier.setText(mapperVO.getChnlProdId());
 				identifierList.add(identifier);
 
+				// SONG ID
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD); // SONG ID
+				identifier.setText(mapperVO.getOutsdContentsId());
+				identifierList.add(identifier);
+
 				/*
 				 * Menu(메뉴정보) Id, Name, Type
 				 */
