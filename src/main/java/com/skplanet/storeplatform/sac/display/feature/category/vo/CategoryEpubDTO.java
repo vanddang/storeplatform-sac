@@ -16,25 +16,32 @@ package com.skplanet.storeplatform.sac.display.feature.category.vo;
  */
 public class CategoryEpubDTO {
 
-	private int totalCount;
-	private Integer dwldCnt;
-	private Integer prchsCnt;
 	private String topMenuId;
 	private String menuId;
-	private String topMenuNm;
-	private String menuNm;
-	private String prodId;
 	private String metaClsfCd;
+	private String prodId;
 	private String prodNm;
 	private String prodBaseDesc;
 	private Integer prodAmt;
 	private Integer prodNetAmt;
+	private String prodGrdCd;
 	private String artist1Nm;
 	private String artist2Nm;
 	private String artist3Nm;
-	private String prodGrdCd;
 	private String chnlCompNm;
 	private String issueDay;
+	private String bookType;
+	private Integer bookCount;
+	private String supportStore;
+	private String supportPlay;
+	private String bookStatus;
+	private int totalCount;
+	private Integer paticpersCnt;
+	private Integer prchsCnt;
+	private Double avgEvluScore;
+	private Integer dwldCnt;
+	private String topMenuNm;
+	private String menuNm;
 	private String bookPageCnt;
 	private String epsdCnt;
 	private String strmEpsdCnt;
@@ -249,6 +256,62 @@ public class CategoryEpubDTO {
 
 	public void setMenuNm(String menuNm) {
 		this.menuNm = menuNm;
+	}
+
+	public Integer getPaticpersCnt() {
+		return this.paticpersCnt;
+	}
+
+	public void setPaticpersCnt(Integer paticpersCnt) {
+		this.paticpersCnt = paticpersCnt;
+	}
+
+	public String getBookType() {
+		return this.bookType;
+	}
+
+	public void setBookType(String bookType) {
+		this.bookType = bookType;
+	}
+
+	public Integer getBookCount() {
+		return this.bookCount;
+	}
+
+	public void setBookCount(Integer bookCount) {
+		this.bookCount = bookCount;
+	}
+
+	public String getSupportStore() {
+		return this.supportStore;
+	}
+
+	public void setSupportStore(String supportStore) {
+		this.supportStore = supportStore;
+	}
+
+	public String getSupportPlay() {
+		return this.supportPlay;
+	}
+
+	public void setSupportPlay(String supportPlay) {
+		this.supportPlay = supportPlay;
+	}
+
+	public String getBookStatus() {
+		return this.bookStatus;
+	}
+
+	public void setBookStatus(String bookStatus) {
+		this.bookStatus = bookStatus;
+	}
+
+	public Double getAvgEvluScore() {
+		return this.avgEvluScore;
+	}
+
+	public void setAvgEvluScore(Double avgEvluScore) {
+		this.avgEvluScore = avgEvluScore;
 	}
 
 }

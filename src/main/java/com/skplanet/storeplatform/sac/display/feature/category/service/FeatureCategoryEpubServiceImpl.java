@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.feature.category.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryEpubDTO;
 
 /**
@@ -45,12 +48,16 @@ import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryEpubDT
 @org.springframework.stereotype.Service
 @Transactional
 public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubService {
+	private transient Logger logger = LoggerFactory.getLogger(FeatureCategoryEpubServiceImpl.class);
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private DisplayCommonService displayCommonService;
 
 	/*
 	 * (non-Javadoc)
@@ -60,15 +67,112 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO) {
+	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 		// 공통 응답 변수 선언
 		int totalCount = 0;
 		FeatureCategoryEpubRes responseVO = null;
 		CommonResponse commonResponse = null;
 
-		List<CategoryEpubDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy",
-				requestVO, CategoryEpubDTO.class);
+		String topMenuId = requestVO.getTopMenuId();
+		String listId = requestVO.getListId();
+
+		List<CategoryEpubDTO> resultList;
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(topMenuId) || StringUtils.isEmpty(listId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("필수 파라미터 부족");
+			this.logger.debug("----------------------------------------------------------------");
+
+			responseVO = new FeatureCategoryEpubRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
+		// 메뉴ID 유효값 체크 DP13 : 이북, DP14 : 만화
+		if (!"DP13".equals(topMenuId) && !"DP14".equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("유효하지않은 탑메뉴ID");
+			this.logger.debug("----------------------------------------------------------------");
+
+			responseVO = new FeatureCategoryEpubRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
+		// 리스트ID 유효값 체크
+		if (!"ADM000000013".equals(listId) && !"ADM000000002".equals(listId) && !"RNK000000002".equals(listId)
+				&& !"RNK000000006".equals(listId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("유효하지않은 리스트ID");
+			this.logger.debug("----------------------------------------------------------------");
+
+			responseVO = new FeatureCategoryEpubRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
+		// 시작점 ROW Default 세팅
+		if (requestVO.getOffset() == null) {
+			requestVO.setOffset(1);
+		}
+		// 페이지당 노출될 ROW 개수 Default 세팅
+		if (requestVO.getCount() == null) {
+			requestVO.setCount(20);
+		}
+
+		// 헤더값 세팅
+		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
+		requestVO.setTenantId(header.getTenantHeader().getTenantId());
+		// requestVO.setImageCd("DP000101");
+
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(), listId);
+
+		// 기준일시 체크
+		if (StringUtils.isEmpty(stdDt)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("배치완료 기준일시 정보 누락");
+			this.logger.debug("----------------------------------------------------------------");
+
+			responseVO = new FeatureCategoryEpubRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+		requestVO.setStdDt(stdDt);
+
+		// ADM000000013 : 운영자 추천, ADM000000002 : 신규 만화, RNK000000002 : 신규 이북, RNK000000006 : 인기코믹/인기도서
+		if (listId.equals("ADM000000013")) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("만화/이북 > 추천 > Tstore 추천 조회");
+			this.logger.debug("----------------------------------------------------------------");
+
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList", requestVO,
+					CategoryEpubDTO.class);
+		} else if (listId.equals("ADM000000002")) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("만화 > 최신 조회");
+			this.logger.debug("----------------------------------------------------------------");
+
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy", requestVO,
+					CategoryEpubDTO.class);
+		} else if (listId.equals("RNK000000002")) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("eBook > 최신 > 일반/장르 조회");
+			this.logger.debug("----------------------------------------------------------------");
+
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy", requestVO,
+					CategoryEpubDTO.class);
+		} else {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("만화/이북 > 추천 > 인기만화/인기도서 조회");
+			this.logger.debug("----------------------------------------------------------------");
+
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy", requestVO,
+					CategoryEpubDTO.class);
+		}
+
 		List<Product> listVO = new ArrayList<Product>();
 
 		CategoryEpubDTO categoryEpubDTO;
@@ -133,22 +237,13 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			menu.setType("metaClass");
 			menuList.add(menu);
 
-			if ("CT20".equals(categoryEpubDTO.getMetaClsfCd()))
-				book.setType("serial");
+			book.setType(categoryEpubDTO.getBookType());
 			book.setTotalPages(categoryEpubDTO.getBookPageCnt());
-			if ("CT20".equals(categoryEpubDTO.getMetaClsfCd()))
-				if ("Y".equals(categoryEpubDTO.getCaptionYn()))
-					book.setStatus("completed");
-				else
-					book.setStatus("continue");
-			this.log.debug("setStatus");
 
-			if (Integer.parseInt(categoryEpubDTO.getStrmEpsdCnt()) > 0)
-				support.setText("play");
-			support.setText(StringUtil.nvl(support.getText(), "") + "|");
-			if (Integer.parseInt(categoryEpubDTO.getEpsdCnt()) > 0)
-				support.setText(support.getText() + "store");
-			this.log.debug("setText");
+			book.setStatus(categoryEpubDTO.getBookStatus());
+
+			support.setText(categoryEpubDTO.getSupportPlay());
+
 			supportList.add(support);
 			book.setSupportList(supportList);
 			product.setBook(book);

@@ -113,7 +113,7 @@ public class FeatureCategoryController {
 		if (requestVO.getCount() == 0)
 			requestVO.setCount(10);
 		FeatureCategoryEpubRes responseVO;
-		responseVO = this.categoryEpubService.searchEpubList(requestVO);
+		responseVO = this.categoryEpubService.searchEpubList(requestVO, header);
 		return responseVO;
 	}
 }
