@@ -116,7 +116,7 @@ public class SellerSubController {
 	 * @return DetailSubsellerRes
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) throws Exception {
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
