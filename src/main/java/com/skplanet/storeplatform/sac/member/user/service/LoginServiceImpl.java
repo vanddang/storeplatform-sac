@@ -691,10 +691,11 @@ public class LoginServiceImpl implements LoginService {
 				throw new Exception("[" + updUserRes.getCommonResponse().getResultCode() + "] " + updUserRes.getCommonResponse().getResultMessage());
 			}
 
-			/* 3. 휴대기기 정보 수정 */
+			/* 3. imMngNum 부가속성 추가 */
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setDeviceId(deviceId);
-			//deviceInfo.setImMngNum(imMngNum);
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, imMngNum,
+					deviceInfo.getUserDeviceExtraInfo()));
 			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
 
 		} else {
