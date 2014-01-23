@@ -700,7 +700,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		for (Clause sortInfo : dbAgreementList) {
 			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
 		}
-		LOGGER.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);
+		LOGGER.info("## 필수약관목록 : {}", sortDbAgreeInfo);
 
 		/**
 		 * 요청 약관 목록 조회 sorting
@@ -716,11 +716,24 @@ public class UserJoinServiceImpl implements UserJoinService {
 		// sorting data setting
 		StringBuffer sortAgreeInfo = new StringBuffer();
 		for (AgreementInfo info : agreementList) {
-			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 약관 동의한것만 비교대상으로 세팅
-				sortAgreeInfo.append(info.getExtraAgreementId());
+
+			/**
+			 * 약관 동의한것만 비교대상으로 세팅.
+			 */
+			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) {
+
+				/**
+				 * 필수 약관에 포함되는 것만 비교대상으로 세팅.
+				 */
+				for (Clause sortInfo : dbAgreementList) {
+					if (StringUtils.equals(sortInfo.getClauseItemCd(), info.getExtraAgreementId())) {
+						sortAgreeInfo.append(info.getExtraAgreementId());
+					}
+				}
+
 			}
 		}
-		LOGGER.info("## DB 요청약관목록 : {}", sortAgreeInfo);
+		LOGGER.info("## 요청약관목록 : {}", sortAgreeInfo);
 
 		/**
 		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
