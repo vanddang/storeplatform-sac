@@ -160,9 +160,9 @@ public class SellerServiceImpl implements SellerService {
 		// 판매자 분류코드
 		sellerMbr.setSellerCategory(req.getSellerCategory());
 		// 판매자 main 상태 코드
-		sellerMbr.setSellerMainStatus(req.getSellerMainStatus());
+		sellerMbr.setSellerMainStatus(MemberConstants.MAIN_STATUS_WATING);
 		// 판매자 sub 상태 코드
-		sellerMbr.setSellerSubStatus(req.getSellerSubStatus());
+		sellerMbr.setSellerSubStatus(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING);
 		// 통신사 코드
 		sellerMbr.setSellerTelecom(req.getSellerTelecom());
 		// 무선 국가번호
