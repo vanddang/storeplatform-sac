@@ -778,7 +778,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	/**
 	 * 해당 업체가 존재 하는지 체크 한다.
 	 * 
-	 * @param ContentInfo
+	 * @param couponInfo
 	 * @return Boolean result @
 	 */
 	private boolean validateBusinessPartner(DpCouponInfo couponInfo) {
@@ -792,7 +792,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		DetailInformationRes res = new DetailInformationRes();
 		try {
 			req.setSellerKey(couponInfo.getBpId());
-			req.setKeyType("SELLERMBR_ID");
+			// req.setKeyType("SELLERMBR_ID");
 			res = this.sellerSearchService.detailInformation(header, req);
 			if (res != null) {
 				if (StringUtils.isBlank(res.getSellerMbr().getSellerName())) {
