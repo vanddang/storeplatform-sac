@@ -31,6 +31,18 @@
            and AUTH_VALUE = #{authValue}
 	</select>
 	
+	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
+    <update id="updateServiceAuthYn" parameterType="String">
+    /* MiscellaneousMapper.xml, updateServiceAuthYn, SAC : 김다슬 , 2014-01-16 */
+    UPDATE 
+        TB_CM_SVC_AUTH
+    SET
+       AUTH_COMPT_YN = 'Y',
+       UPD_ID = 'admin',
+       UPD_DT = SYSDATE
+    WHERE 
+       AUTH_SEQ = #{authSeq}    
+    </update>
     
     <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 -->
     <insert id="insertServiceAuthCode" parameterType="ServiceAuth">
@@ -41,7 +53,9 @@
                 <if test="mbrNo !=null">
                 MBR_NO,
                 </if>
+                <if test="tenantId !=null">
                 TENANT_ID,
+                </if>
                 AUTH_TYPE_CD, /* 인증 타입 (CM010901:SMS, CM010902:Email) */
                 <if test="authSign !=null">
                 AUTH_SIGN, /* 인증 Signature */
@@ -82,17 +96,30 @@
             )
     </insert>
     
-    <!--  휴대폰 SMS 인증 여부 업데이트(인증성공) -->
-    <update id="updatePhoneAuthYn" parameterType="String">
-    /* MiscellaneousMapper.xml, updatePhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
-    UPDATE 
+    
+    <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)-->
+    <select id="getEmailAuthYn" parameterType="String" resultType="String">
+    /* MiscellaneousMapper.xml, getEmailAuthYn, SAC : 김다슬 , 2014-01-23 */
+    SELECT 
+        AUTH_COMPT_YN 
+    FROM 
         TB_CM_SVC_AUTH
-    SET
-       AUTH_COMPT_YN = 'Y',
-       UPD_ID = 'admin',
-       UPD_DT = SYSDATE
-    WHERE 
-       AUTH_SEQ = #{authSeq}    
-    </update>
+    WHERE
+        MBR_NO = #{mbrNo}
+    </select>
+    
+    <!-- 이메일 인증코드 정보 확인 -->
+    <select id="getEmailAuthInfo" parameterType="String" resultType="ServiceAuth">
+    /* MiscellaneousMapper.xml, getEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
+    SELECT 
+        AUTH_SEQ,
+        MBR_NO,
+        AUTH_EMAIL
+    FROM 
+        TB_CM_SVC_AUTH
+    WHERE
+        AUTH_VALUE = #{authValue}
+    </select>
+    
     
 </mapper>
