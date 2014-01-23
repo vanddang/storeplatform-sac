@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 
@@ -66,14 +65,13 @@ public class ModifyRepresentationDeviceTest {
 	 */
 	@Test
 	public void modifyRepresentationDevice() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/modifyRepresentationDevice/v1")
+		new TestCaseTemplate(this.mockMvc).url("/member/user/modifyRepresentationDevice/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						SetMainDeviceReq req = new SetMainDeviceReq();
-						req.setUserKey("IF1023002708420090928145937");
-						req.setDeviceKey("01088902431");
+						req.setUserKey("US201401221721168550000323");
+						req.setDeviceKey("DE201401230413186540000193");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
