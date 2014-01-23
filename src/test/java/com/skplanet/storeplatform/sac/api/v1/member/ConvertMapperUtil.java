@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.api.v1.member;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -34,5 +35,19 @@ public class ConvertMapperUtil {
 			e.printStackTrace();
 		}
 		return returnStr;
+	}
+
+	public static void main(String[] args) {
+		boolean flag = false;
+		String id = "id";
+		String email = "email";
+
+		String patternRegex = "^id|^email";
+
+		flag = Pattern.matches(patternRegex, id);
+		System.out.println(flag);
+		flag = Pattern.matches(patternRegex, email);
+		System.out.println(flag);
+
 	}
 }

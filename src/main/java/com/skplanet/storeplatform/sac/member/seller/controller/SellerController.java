@@ -54,10 +54,11 @@ public class SellerController {
 	 * 
 	 * @param req
 	 * @return CreateRes
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) {
+	CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) throws Exception {
 
 		return this.sellerService.createSeller(header, req);
 	}
@@ -69,13 +70,12 @@ public class SellerController {
 	 * 
 	 * @param LockAccountReq
 	 * @return LockAccountRes : JSON
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req, BindingResult result) {
-
-		LOGGER.debug("### 5.2.16. 판매자회원 계정 잠금 [lockAccount] START ###");
-		LOGGER.debug("request param : {}", req.toString());
+	LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req, BindingResult result)
+			throws Exception {
 		return this.sellerService.lockAccount(header, req);
 	}
 
@@ -86,13 +86,11 @@ public class SellerController {
 	 * 
 	 * @param AuthorizeReq
 	 * @return AuthorizeRes : JSON
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) {
-
-		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
-		LOGGER.debug("request param : {}", req.toString());
+	AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) throws Exception {
 		return this.sellerService.authorize(header, req);
 	}
 

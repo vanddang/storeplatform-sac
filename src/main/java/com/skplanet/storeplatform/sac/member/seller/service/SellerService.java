@@ -22,13 +22,13 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface SellerService {
 
 	/** 판매자 회원 가입. */
-	public CreateRes createSeller(SacRequestHeader header, CreateReq req);
+	public CreateRes createSeller(SacRequestHeader header, CreateReq req) throws Exception;
 
 	/** 판매자 회원 계정 잠금. */
-	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req);
+	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) throws Exception;
 
 	/** 판매자 회원 인증. */
-	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req);
+	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) throws Exception;
 
 	/**
 	 * 판매자 회원 탈퇴.

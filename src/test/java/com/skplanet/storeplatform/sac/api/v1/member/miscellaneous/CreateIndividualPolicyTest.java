@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 
@@ -79,7 +80,8 @@ public class CreateIndividualPolicyTest {
 							request.setPolicyCode("8");
 							request.setValue("Y");
 							request.setRegId("test");
-							LOGGER.debug("## request param ## \n{}", request.toString());
+							LOGGER.debug(ConvertMapperUtil.convertObjectToJson(request));
+
 							return request;
 						}
 					}).success(CreateIndividualPolicyRes.class, new SuccessCallback() {

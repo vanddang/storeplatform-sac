@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -28,6 +29,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq.PolicyCode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
@@ -83,11 +85,10 @@ public class GetIndividualPolicyTest {
 								policyCode = new PolicyCode();
 								policyCode.setPolicyCode(String.valueOf(i + 3));
 								policyCodeList.add(policyCode);
-								LOGGER.debug("policyCode[{}], \n{}", i, policyCode.toString());
 							}
 							request.setPolicyCodeList(policyCodeList);
 							request.setKey("53");
-							LOGGER.debug("## request param ## \n{}", request.toString());
+							LOGGER.debug("request JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
 							return request;
 						}
 					}).success(GetIndividualPolicyRes.class, new SuccessCallback() {
@@ -96,8 +97,8 @@ public class GetIndividualPolicyTest {
 						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 							GetIndividualPolicyRes response = (GetIndividualPolicyRes) result;
 							assertThat(response.getPolicyList(), notNullValue());
-							// assertThat(response.getPolicyList().get(0).getKey(), is("53"));
-							LOGGER.debug("## response param ## \n{} ", response.getPolicyList().toString());
+							assertThat(response.getPolicyList().get(0).getKey(), is("53"));
+							LOGGER.debug("response JSON : \n{}", ConvertMapperUtil.convertObjectToJson(response));
 						}
 					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

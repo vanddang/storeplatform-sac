@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.api.v1.member.seller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
@@ -97,11 +99,25 @@ public class CreateSellerTest {
 						// 약관정보
 						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
 						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("a");
-						agreement.setExtraAgreementVersion("a");
-						agreement.setIsExtraAgreement("a");
+						agreement.setExtraAgreementId("US010607");
+						agreement.setExtraAgreementVersion("0.1");
+						agreement.setIsExtraAgreement("Y");
 						agreementList.add(agreement);
+
+						AgreementInfo agreement2 = new AgreementInfo();
+						agreement2.setExtraAgreementId("US010608");
+						agreement2.setExtraAgreementVersion("0.1");
+						agreement2.setIsExtraAgreement("Y");
+						agreementList.add(agreement2);
+
+						AgreementInfo agreement3 = new AgreementInfo();
+						agreement3.setExtraAgreementId("US010609");
+						agreement3.setExtraAgreementVersion("0.1");
+						agreement3.setIsExtraAgreement("Y");
+						agreementList.add(agreement3);
+
 						req.setAgreementList(agreementList);
+
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
@@ -111,7 +127,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug("request param : {}", req.toString());
+						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -119,6 +135,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						CreateRes res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
+						assertEquals(res.getSellerMbr().getSellerId(), "seller_test1234");
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

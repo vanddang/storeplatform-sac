@@ -1,8 +1,11 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
+import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -43,7 +47,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.RandomString;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의
@@ -59,11 +65,18 @@ public class SellerServiceImpl implements SellerService {
 	@Autowired
 	private SellerSCI sellerSCI;
 
+	@Autowired
+	private MemberCommonComponent component;
+
 	@Override
-	public CreateRes createSeller(SacRequestHeader header, CreateReq req) {
+	public CreateRes createSeller(SacRequestHeader header, CreateReq req) throws Exception {
+
+		if (this.checkAgree(req.getAgreementList(), header.getTenantHeader().getTenantId())) {
+			LOGGER.error("## 필수 약관 미동의");
+			return null;
+		}
 
 		LOGGER.debug("############ SellerServiceImpl.createSeller() [START] ############");
-
 		/** 1. SC회원 Req 생성 및 주입. */
 		CreateSellerRequest createSellerRequest = new CreateSellerRequest();
 
@@ -220,12 +233,7 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 판매자 회원 정보 생성 및 주입 - [끝]. */
 
-		/** 2. SC 공통 헤더 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		createSellerRequest.setCommonRequest(commonRequest);
-		LOGGER.debug("==>>[SC] CreateSellerRequest.CommonRequest.toString() : {}", commonRequest.toString());
+		createSellerRequest.setCommonRequest(this.getCommonRequest(header));
 
 		LOGGER.debug("==>>[SC] CreateSellerRequest.toString() : {}", createSellerRequest.toString());
 
@@ -233,12 +241,13 @@ public class SellerServiceImpl implements SellerService {
 		CreateSellerResponse createSellerResponse = this.sellerSCI.createSeller(createSellerRequest);
 
 		// Debug
-		LOGGER.info("[SC -createSeller()] - Response CODE : {}, MESSAGE : {}", createSellerResponse.getCommonResponse()
-				.getResultCode(), createSellerResponse.getCommonResponse().getResultMessage());
+		LOGGER.info("[SellerSCI.createSeller()] - Response CODE : {}, MESSAGE : {}", createSellerResponse
+				.getCommonResponse().getResultCode(), createSellerResponse.getCommonResponse().getResultMessage());
 
 		// TODO Exception 재정의 필요
 		if (!MemberConstants.RESULT_SUCCES.equals(createSellerResponse.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(createSellerResponse.getCommonResponse().getResultMessage());
+			LOGGER.error(createSellerResponse.getCommonResponse().getResultMessage());
+			return null;
 		}
 
 		// 결과 리턴 객체 생성 및 주입
@@ -257,7 +266,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) {
+	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) throws Exception {
 
 		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -267,11 +276,7 @@ public class SellerServiceImpl implements SellerService {
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_LOGIN_PAUSE);
 
 		/** 2. 공통 헤더 생성 및 주입. */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		updateStatusSellerRequest.setCommonRequest(commonRequest);
-		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
+		updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
 
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
@@ -280,7 +285,7 @@ public class SellerServiceImpl implements SellerService {
 				.updateStatusSeller(updateStatusSellerRequest);
 
 		// Response Debug
-		LOGGER.info("[SC-updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
+		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
 				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
 
 		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
@@ -297,7 +302,7 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) {
+	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) throws Exception {
 
 		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
 
@@ -307,24 +312,20 @@ public class SellerServiceImpl implements SellerService {
 		loginSellerRequest.setSellerPW(req.getSellerPW());
 
 		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		loginSellerRequest.setCommonRequest(commonRequest);
 
-		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
+		loginSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
 		/** 3. SC-로그인인증 Call */
 		LoginSellerResponse logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
 
 		// Response Debug
-		LOGGER.info("[SC-loginSeller()] - Response CODE : {}, MESSGE : {}", logInSellerResponse.getCommonResponse()
-				.getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
+		LOGGER.info("[SellerSCI.loginSeller()] - Response CODE : {}, MESSGE : {}", logInSellerResponse
+				.getCommonResponse().getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
 
 		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
-		// if (!MemberConstants.RESULT_SUCCES.equals(logInSellerResponse.getCommonResponse().getResultCode())) {
-		// throw new RuntimeException(logInSellerResponse.getCommonResponse().getResultMessage());
-		// }
+		if (!MemberConstants.RESULT_SUCCES.equals(logInSellerResponse.getCommonResponse().getResultCode())) {
+
+		}
 
 		AuthorizeRes res = new AuthorizeRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
@@ -457,18 +458,67 @@ public class SellerServiceImpl implements SellerService {
 		return response;
 	}
 
-	/**
-	 * <pre>
-	 * SC SellerMbr To SAC SellerInfo.
-	 * </pre>
-	 * 
-	 * @param sellerInfo
-	 * @return SellerInfo
-	 */
-	private SellerMbr converterSACToSCSellerMbr(SellerMbr sellerMbr) {
-		SellerMbr sellerInfo = new SellerMbr();
-		// sellerMbr.set
-		return sellerInfo;
+	private CommonRequest getCommonRequest(SacRequestHeader header) {
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
+		return commonRequest;
 	}
 
+	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) throws Exception {
+
+		/**
+		 * DB 약관 목록 조회 sorting
+		 */
+		List<Clause> dbAgreementList = this.component.getMandAgreeList(tenantId);
+		if (dbAgreementList.size() == 0) {
+			LOGGER.info("## 체크할 필수 약관이 존재 하지 않습니다.");
+			return false;
+		}
+		Comparator<Clause> dbComparator = new Comparator<Clause>() {
+			@Override
+			public int compare(Clause value1, Clause value2) {
+				return value1.getClauseItemCd().compareTo(value2.getClauseItemCd());
+			}
+		};
+		Collections.sort(dbAgreementList, dbComparator);
+
+		// sorting data setting
+		StringBuffer sortDbAgreeInfo = new StringBuffer();
+		for (Clause sortInfo : dbAgreementList) {
+			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
+		}
+		LOGGER.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);
+
+		/**
+		 * 요청 약관 목록 조회 sorting
+		 */
+		Comparator<AgreementInfo> comparator = new Comparator<AgreementInfo>() {
+			@Override
+			public int compare(AgreementInfo o1, AgreementInfo o2) {
+				return o1.getExtraAgreementId().compareTo(o2.getExtraAgreementId());
+			}
+		};
+		Collections.sort(agreementList, comparator);
+
+		// sorting data setting
+		StringBuffer sortAgreeInfo = new StringBuffer();
+		for (AgreementInfo info : agreementList) {
+			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 약관 동의한것만 비교대상으로 세팅
+				sortAgreeInfo.append(info.getExtraAgreementId());
+			}
+		}
+		LOGGER.info("## DB 요청약관목록 : {}", sortAgreeInfo);
+
+		/**
+		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
+		 */
+		if (!StringUtils.equals(sortDbAgreeInfo.toString(), sortAgreeInfo.toString())) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
 }
