@@ -21,7 +21,7 @@ public class SellerMbr extends CommonInfo {
 	private String sellerKey; // INSD_SELLERMBR_NO
 
 	/** 판매자 ID. */
-	private String sellerID;
+	private String sellerId;
 
 	/** 상위 판매자 키. */
 	private String parentSellerKey; // UP_INSD_SELLERMBR_NO 상위 판매자키
@@ -233,8 +233,6 @@ public class SellerMbr extends CommonInfo {
 
 	/** 서브계정 설명. */
 	private String subSellerMemo; // SUB_ACCT_DESC 서브계정에서 사용 아직 db table 컬럼 추가안됨
-
-	private String sellerId;
 
 	public String getSellerId() {
 		return this.sellerId;
@@ -634,14 +632,6 @@ public class SellerMbr extends CommonInfo {
 
 	public void setSellerEmail(String sellerEmail) {
 		this.sellerEmail = sellerEmail;
-	}
-
-	public String getSellerID() {
-		return this.sellerID;
-	}
-
-	public void setSellerID(String sellerID) {
-		this.sellerID = sellerID;
 	}
 
 	public String getSellerKey() {
