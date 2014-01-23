@@ -60,11 +60,11 @@ public class DetailRepresentationDeviceTest {
 
 	/**
 	 * <pre>
-	 * 대표단말 정보조회.
+	 * 대표단말 정보조회 userId & userAuthKey.
 	 * </pre>
 	 */
 	@Test
-	public void detailRepresentationDevice() throws Exception {
+	public void detailRepresentationDevice1() throws Exception {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -73,6 +73,62 @@ public class DetailRepresentationDeviceTest {
 						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
 						req.setUserId("tstore44");
 						req.setUserKey("IF1023002708420090928145937");
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
+						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
+						LOGGER.debug("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 대표단말 정보조회 userKey
+	 * </pre>
+	 */
+	@Test
+	public void detailRepresentationDevice2() throws Exception {
+
+		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
+						req.setUserKey("IF1023002708420090928145937");
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
+						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
+						LOGGER.debug("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 대표단말 정보조회 DeviceKey.
+	 * </pre>
+	 */
+	@Test
+	public void detailRepresentationDevice3() throws Exception {
+
+		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
+						req.setDeviceKey("DE201401220152138270000145");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}

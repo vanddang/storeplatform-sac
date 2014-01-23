@@ -535,7 +535,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
-		//String deviceKey = deviceInfo.getDeviceKey();
+		// String deviceKey = deviceInfo.getDeviceKey();
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
@@ -827,6 +827,18 @@ public class DeviceServiceImpl implements DeviceService {
 
 			logger.info("### userKey Req : {}", listReq.toString());
 			logger.info("### userKey Res : {}", listRes.toString());
+		} else if (req.getDeviceKey() != null) {
+			RemoveDeviceReq deviceReq = new RemoveDeviceReq();
+			deviceReq.setDeviceKey(req.getDeviceKey());
+			UserInfo userInfo = this.searchUser(requestHeader, deviceReq);
+
+			listReq.setDeviceKey(req.getDeviceKey());
+			listReq.setUserKey(userInfo.getUserKey());
+			listReq.setIsMainDevice("Y");
+			listRes = this.listDevice(requestHeader, listReq);
+
+			logger.info("### userKey Req : {}", listReq.toString());
+			logger.info("### userKey Res : {}", listRes.toString());
 		}
 
 		if (listRes.getDeviceInfoList() == null) {
@@ -949,24 +961,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* SC 회원 정보 여부 */
 		UserInfo userInfo = this.searchUser(requestHeader, req);
 
-		/* 대표기기 여부 */
-		DetailRepresentationDeviceReq detailRepresentationDeviceReq = new DetailRepresentationDeviceReq();
-		detailRepresentationDeviceReq.setUserKey(userInfo.getUserKey());
-
-		ListDeviceRes listRes = new ListDeviceRes();
-		ListDeviceReq listReq = new ListDeviceReq();
-
-		listReq.setUserKey(userInfo.getUserKey());
-		listReq.setIsMainDevice("Y");
-		listRes = this.listDevice(requestHeader, listReq);
-
-		logger.info("### userKey Req : {}", listReq.toString());
-		logger.info("### userKey Res : {}", listRes.toString());
-
-		if (listRes.getDeviceInfoList() != null) {
-			throw new Exception("대표단말 입니다.");
-		}
-
 		/* 삭제요청한 디바이스 아이디로 디바이스 키 추출 */
 		ListDeviceRes schDeviceListKeyResponse = this.searchDeviceKeyResponse(requestHeader, userInfo, req);
 
@@ -978,6 +972,25 @@ public class DeviceServiceImpl implements DeviceService {
 			removeDeviceRes.setDeviceKey(schDeviceListKeyResponse.getDeviceInfoList().get(0).getDeviceKey());
 		} else {
 			throw new Exception("####### 디바이스 아이디로 검색한 디바이스 키가 없습니다.");
+		}
+
+		/* 대표기기 여부 */
+		DetailRepresentationDeviceReq detailRepresentationDeviceReq = new DetailRepresentationDeviceReq();
+		detailRepresentationDeviceReq.setDeviceKey(removeDeviceRes.getDeviceKey());
+
+		ListDeviceRes listRes = new ListDeviceRes();
+		ListDeviceReq listReq = new ListDeviceReq();
+
+		listReq.setUserKey(userInfo.getUserKey());
+		listReq.setDeviceKey(detailRepresentationDeviceReq.getDeviceKey());
+		listReq.setIsMainDevice("N");
+		listRes = this.listDevice(requestHeader, listReq);
+
+		logger.info("### userKey Req : {}", listReq.toString());
+		logger.info("### userKey Res : {}", listRes.toString());
+
+		if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
+			throw new RuntimeException("대표단말 입니다.");
 		}
 
 		/* 휴대기기 목록 세팅 : 삭제대상 디바이스는 제외시킴 */
@@ -1078,6 +1091,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		SearchUserResponse schUserRes = new SearchUserResponse();
@@ -1092,36 +1106,77 @@ public class DeviceServiceImpl implements DeviceService {
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
 
-			logger.info("###### 회원조회 searchUser Request : {}", schUserReq.toString());
 			schUserRes = this.userSCI.searchUser(schUserReq);
-			logger.info("###### 회원조회 searchUser Responset : {}", schUserRes.toString());
+
+			// SC 컴포넌트에서 성공이 아닐때
+			if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+				throw new RuntimeException("3. SC Member Search Fail : "
+						+ schUserRes.getCommonResponse().getResultCode() + ", "
+						+ schUserRes.getCommonResponse().getResultMessage());
+			} else if (schUserRes.getUserMbr() == null) {
+				throw new RuntimeException("회원정보 없음.");
+			} else {
+				logger.info("회원조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
+						schUserRes.getCommonResponse().getResultMessage());
+
+				logger.info("회원조회 SC Member Search Success Response {}: ", schUserRes.getUserMbr().toString());
+			}
+
+			logger.info("###### 회원조회 searchUser Request : {}", schUserReq.toString());
+			logger.info("###### 회원조회 searchUser Response : {}", schUserRes.toString());
 		} else if (!userId.equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
 			key.setKeyString(userId);
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
 
-			logger.info("###### 회원조회 searchUser Request : {}", schUserReq.toString());
 			schUserRes = this.userSCI.searchUser(schUserReq);
-			logger.info("###### 회원조회 searchUser Responset : {}", schUserRes.toString());
+
+			// SC 컴포넌트에서 성공이 아닐때
+			if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+				throw new RuntimeException("3. SC Member Search Fail : "
+						+ schUserRes.getCommonResponse().getResultCode() + ", "
+						+ schUserRes.getCommonResponse().getResultMessage());
+			} else if (schUserRes.getUserMbr() == null) {
+				throw new RuntimeException("회원정보 없음.");
+			} else {
+				logger.info("회원조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
+						schUserRes.getCommonResponse().getResultMessage());
+
+				logger.info("회원조회 SC Member Search Success Response {}: ", schUserRes.getUserMbr().toString());
+			}
+
+			logger.info("###### 회원조회 searchUser Request : {}", schUserReq.toString());
+			logger.info("###### 회원조회 searchUser Response : {}", schUserRes.toString());
+		} else if (!deviceKey.equals("")) {
+			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			key.setKeyString(deviceKey);
+			keySearchList.add(key);
+			schUserReq.setKeySearchList(keySearchList);
+
+			schUserRes = this.userSCI.searchUser(schUserReq);
+
+			// SC 컴포넌트에서 성공이 아닐때
+			if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+				throw new RuntimeException("3. SC Member Search Fail : "
+						+ schUserRes.getCommonResponse().getResultCode() + ", "
+						+ schUserRes.getCommonResponse().getResultMessage());
+			} else if (schUserRes.getUserMbr() == null) {
+				throw new RuntimeException("회원정보 없음.");
+			} else {
+				logger.info("회원조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
+						schUserRes.getCommonResponse().getResultMessage());
+
+				logger.info("회원조회 SC Member Search Success Response {}: ", schUserRes.getUserMbr().toString());
+			}
+
+			logger.info("###### 회원조회 searchUser Request : {}", schUserReq.toString());
+			logger.info("###### 회원조회 searchUser Response : {}", schUserRes.toString());
 		} else {
 			throw new Exception("파라미터 없음 userId, userAuthKey, deviceId");
 		}
 
-		// SC 컴포넌트에서 성공이 아닐때
-		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new RuntimeException("3. SC Member Search Fail : " + schUserRes.getCommonResponse().getResultCode()
-					+ ", " + schUserRes.getCommonResponse().getResultMessage());
-		} else {
-			logger.info("회원조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
-					schUserRes.getCommonResponse().getResultMessage());
-
-			logger.info("회원조회 SC Member Search Success Response {}: ", schUserRes.getUserMbr().toString());
-		}
-
-		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("회원정보 없음.");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
+		if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
 			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
 					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
 		} else {
@@ -1229,9 +1284,19 @@ public class DeviceServiceImpl implements DeviceService {
 		schDeviceListKeyRequest.setDeviceId(req.getDeviceId());
 		schDeviceListKeyRequest.setIsMainDevice("N");
 
-		logger.info("###### 디바이스 목록에서 키 추출 listDevice From DeviceKey Request : ", schDeviceListKeyRequest);
+		logger.info("###### 디바이스 목록에서 키 추출 listDevice From DeviceKey Request : {}", schDeviceListKeyRequest.toString());
 		ListDeviceRes schDeviceListKeyResponse = this.listDevice(requestHeader, schDeviceListKeyRequest);
-		logger.info("###### 디바이스 목록에서 키 추출 listDevice From DeviceKey Response : ", schDeviceListKeyResponse);
+		if (schDeviceListKeyResponse.getDeviceInfoList().size() == 0
+				&& schDeviceListKeyResponse.getDeviceInfoList().size() > 1) {
+			throw new RuntimeException("디바이스 키 추출 리스트 사이즈가 0이거나 1이상 입니다.");
+		} else {
+			logger.info("###### 디바이스 목록에서 키 추출 : {}", schDeviceListKeyResponse.getDeviceInfoList().size());
+			logger.info("###### 디바이스 목록에서 키 추출 : {}", schDeviceListKeyResponse.getDeviceInfoList().get(0)
+					.getDeviceKey());
+			logger.info("###### 디바이스 목록에서 키 추출 listDevice From DeviceKey Response : {}", schDeviceListKeyResponse
+					.getDeviceInfoList().toString());
+
+		}
 
 		return schDeviceListKeyResponse;
 	}

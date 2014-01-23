@@ -190,8 +190,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			throw new RuntimeException("3. SC Member Search Fail : " + schUserRes.getCommonResponse().getResultCode()
 					+ ", " + schUserRes.getCommonResponse().getResultMessage());
-		} else if (schUserRes.getUserKey() == null) {
-			throw new RuntimeException("회원정보 없음.");
+		} else if (schUserRes.getUserMbr().getUserKey() == null) {
+			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr().getUserKey()");
 		} else {
 			logger.info("회원정보조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
 					schUserRes.getCommonResponse().getResultMessage());
@@ -200,7 +200,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		}
 
 		if (schUserRes.getUserMbr() == null) {
-			throw new RuntimeException("회원정보 없음.");
+			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr()");
 		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
 			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
 					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
