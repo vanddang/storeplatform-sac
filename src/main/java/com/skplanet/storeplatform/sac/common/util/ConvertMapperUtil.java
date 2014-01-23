@@ -1,8 +1,13 @@
 package com.skplanet.storeplatform.sac.common.util;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Convert Mapper Util
@@ -50,5 +55,28 @@ public class ConvertMapperUtil {
 			e.printStackTrace();
 		}
 		return returnObj;
+	}
+
+	/**
+	 * <pre>
+	 * Object To JSON.
+	 * </pre>
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static String convertObjectToJson(Object obj) {
+		String returnStr = "";
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			returnStr = mapper.writeValueAsString(obj);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return returnStr;
 	}
 }
