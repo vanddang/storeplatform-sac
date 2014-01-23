@@ -13,94 +13,117 @@ public class FeatureCategoryEpubReq {
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
 	private String topMenuId; // 메뉴ID
-	private int offset; // offset
-	private int count; // count
+	private Integer offset; // offset
+	private Integer count; // count
 	private String filteredBy; // 필터 조건
-	
-	//common req 전까지 임시
+
+	// common req 전까지 임시
 	private String tenantId; // 메뉴ID
 	private String langCd; // 메뉴ID
 	private String deviceModelCd; // 메뉴ID
 	private String stdDt; // 배치일자
-	
-	//Dummy Data용
+
+	// Dummy Data용
 	private String dummy; // 메뉴ID
-	
+
 	public String getDummy() {
-		return dummy;
+		return this.dummy;
 	}
+
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
 	}
+
 	public String getListId() {
-		return listId;
+		return this.listId;
 	}
+
 	public void setListId(String listId) {
 		this.listId = listId;
 	}
+
 	public String getProdCharge() {
-		return prodCharge;
+		return this.prodCharge;
 	}
+
 	public void setProdCharge(String prodCharge) {
 		this.prodCharge = prodCharge;
 	}
+
 	public String getProdGradeCd() {
-		return prodGradeCd;
+		return this.prodGradeCd;
 	}
+
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
 	}
+
 	public String getTopMenuId() {
-		return topMenuId;
+		return this.topMenuId;
 	}
+
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
 	}
-	public int getOffset() {
-		return offset;
+
+	public Integer getOffset() {
+		return this.offset;
 	}
-	public void setOffset(int offset) {
+
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
-	public int getCount() {
-		return count;
+
+	public Integer getCount() {
+		return this.count;
 	}
-	public void setCount(int count) {
+
+	public void setCount(Integer count) {
 		this.count = count;
 	}
+
 	public String getFilteredBy() {
-		return filteredBy;
+		return this.filteredBy;
 	}
+
 	public void setFilteredBy(String filteredBy) {
 		this.filteredBy = filteredBy;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
+
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
 	public String getLangCd() {
-		return langCd;
+		return this.langCd;
 	}
+
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
+
 	public String getDeviceModelCd() {
-		return deviceModelCd;
+		return this.deviceModelCd;
 	}
+
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
+
 	public String getStdDt() {
-		return stdDt;
+		return this.stdDt;
 	}
+
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
 	}
 
-	
 }
