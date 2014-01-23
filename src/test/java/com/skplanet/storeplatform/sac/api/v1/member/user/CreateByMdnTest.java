@@ -100,7 +100,7 @@ public class CreateByMdnTest {
 						CreateByMdnReq reqJson = new CreateByMdnReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01012346489"); // 기기 ID
+						reqJson.setDeviceId("01012346480"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
 						reqJson.setDeviceTelecom("US012102"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
@@ -121,7 +121,7 @@ public class CreateByMdnTest {
 						// 법정 대리인 정보 (isParent 값이 Y 일경우 등록 된다.)
 						reqJson.setIsParent("Y"); // 법정대리인정보 등록 여부.
 						reqJson.setParentRealNameMethod("US011101");
-						reqJson.setParentName("홍길동");
+						reqJson.setParentName("심대진");
 						reqJson.setParentType("F");
 						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
