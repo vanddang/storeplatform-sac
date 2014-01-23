@@ -535,17 +535,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
-		String deviceKey = deviceInfo.getDeviceKey();
+		//String deviceKey = deviceInfo.getDeviceKey();
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceKey != null) {
-			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			key.setKeyString(deviceInfo.getDeviceKey());
-		} else if (deviceId != null) {
+		if (deviceId != null) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
