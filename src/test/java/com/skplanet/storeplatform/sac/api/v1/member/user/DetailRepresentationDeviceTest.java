@@ -25,7 +25,6 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 
@@ -67,15 +66,13 @@ public class DetailRepresentationDeviceTest {
 	@Test
 	public void detailRepresentationDevice() throws Exception {
 
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/detailRepresentationDevice/v1")
+		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						ListDeviceReq req = new ListDeviceReq();
 						req.setUserId("tstore44");
 						req.setUserKey("IF1023002708420090928145937");
-						req.setIsMainDevice("Y");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
