@@ -2,8 +2,6 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
-import javax.validation.constraints.Pattern;
-
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -108,7 +106,6 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 법정대리인 생년월일
 	 */
-	@Pattern(regexp = "^([0-9]{4})([0-9]{2})([0-9]{2})", message = "유효한 생년월일이 아닙니다.")
 	private String parentBirthDay;
 
 	/**
