@@ -5,10 +5,12 @@ import java.util.List;
 
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyDeviceReq;
@@ -155,7 +157,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public SearchUserResponse searchUser(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
+	public UserInfo searchUser(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
 
 	/**
 	 * 휴대기기 목록 세팅 : 삭제요청 디바이스를 제외하고 리스트로 세팅
@@ -170,8 +172,8 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req,
-			SearchUserResponse schUserRes) throws Exception;
+	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo)
+			throws Exception;
 
 	/**
 	 * 휴대기기 디바이스 키 추출
@@ -180,8 +182,8 @@ public interface DeviceService {
 	 * @param schUserRes
 	 * @return
 	 */
-	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, SearchUserResponse schUserRes,
-			RemoveDeviceReq req) throws Exception;
+	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req)
+			throws Exception;
 
 	/**
 	 * IDP 연동 데이터 세팅
@@ -200,7 +202,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, SearchUserResponse schUserRes) throws Exception;
+	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, UserInfo userInfo) throws Exception;
 
 	/**
 	 * ImIdp 디바이스 업데이트(삭제대상 제외)
@@ -214,8 +216,8 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param,
-			SearchUserResponse schUserRes, String userPhoneStr) throws Exception;
+	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo,
+			String userPhoneStr) throws Exception;
 
 	/**
 	 * 
@@ -228,6 +230,19 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public RemoveDeviceResponse removeDeviceSC(SearchUserResponse schUserRes, RemoveDeviceRes removeDeviceRes)
-			throws Exception;
+	public RemoveDeviceResponse removeDeviceSC(UserInfo userInfo, RemoveDeviceRes removeDeviceRes) throws Exception;
+
+	/**
+	 * 대표단말 조회
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 * @param req
+	 * @return
+	 */
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader,
+			DetailRepresentationDeviceReq req) throws Exception;
 }
