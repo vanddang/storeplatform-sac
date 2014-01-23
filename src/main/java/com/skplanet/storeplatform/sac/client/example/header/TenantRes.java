@@ -10,6 +10,8 @@ public class TenantRes extends CommonInfo {
 
 	private String systemId;
 
+	private String langCd;
+
 	public TenantRes() {
 		super();
 	}
@@ -28,6 +30,14 @@ public class TenantRes extends CommonInfo {
 
 	public void setSystemId(String systemId) {
 		this.systemId = systemId;
+	}
+
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
 	}
 
 }
