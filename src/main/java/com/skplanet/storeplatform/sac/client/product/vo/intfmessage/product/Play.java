@@ -34,8 +34,8 @@ public class Play extends CommonInfo implements Serializable {
 	private String durationUsagePeriodUI; // 이용기간의 UI 표시
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
 
-	/*
-	 * Play()
+	/**
+	 * Play().
 	 */
 	public Play() {
 		super();
@@ -44,8 +44,11 @@ public class Play extends CommonInfo implements Serializable {
 	/**
 	 * 
 	 * @param support
+	 *            support
 	 * @param price
+	 *            price
 	 * @param date
+	 *            date
 	 */
 	public Play(String support, Price price, Date date) {
 		super();
