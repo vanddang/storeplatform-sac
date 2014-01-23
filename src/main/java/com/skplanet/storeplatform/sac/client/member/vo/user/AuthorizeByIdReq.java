@@ -55,6 +55,11 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	private String nativeId;
 
 	/**
+	 * 클라이언트 ip
+	 */
+	private String ipAddress;
+
+	/**
 	 * 휴대기기 부가정보 리스트
 	 */
 	private List<DeviceExtraInfo> userDeviceExtraInfo;
@@ -121,6 +126,14 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 
 	public void setNativeId(String nativeId) {
 		this.nativeId = nativeId;
+	}
+
+	public String getIpAddress() {
+		return this.ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 
 }
