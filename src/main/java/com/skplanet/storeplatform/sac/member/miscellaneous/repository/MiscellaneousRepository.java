@@ -45,13 +45,13 @@ public interface MiscellaneousRepository {
 
 	/**
 	 * <pre>
-	 * 휴대폰 SMS 인증 여부 업데이트(인증성공).
+	 * 휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공).
 	 * </pre>
 	 * 
 	 * @param authSeq
 	 *            String
 	 */
-	public void updatePhoneAuthYn(String authSeq);
+	public void updateServiceAuthYn(String authSeq);
 
 	/**
 	 * <pre>
@@ -63,4 +63,14 @@ public interface MiscellaneousRepository {
 	 * @return String
 	 */
 	public String getEmailAuthYn(String mbrNo);
+
+	/**
+	 * <pre>
+	 * 이메일 인증코드 정보 조회.
+	 * </pre>
+	 * 
+	 * @param authSign
+	 * @return
+	 */
+	public ServiceAuth getEmailAuthInfo(String authSign);
 }

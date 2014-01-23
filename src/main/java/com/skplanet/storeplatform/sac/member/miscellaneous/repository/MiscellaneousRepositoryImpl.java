@@ -26,22 +26,28 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	}
 
 	@Override
-	public ServiceAuth getPhoneAuthYn(ServiceAuth serviceAuthInfo) {
+	public ServiceAuth getPhoneAuthYn(ServiceAuth serviceAuthInfo) { // confirmPhoneAuthCode
 		return (ServiceAuth) this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo);
 	}
 
 	@Override
-	public void updatePhoneAuthYn(String authSeq) {
-		this.commonDao.update("Miscellaneous.updatePhoneAuthYn", authSeq);
-	}
-
-	@Override
-	public String getEmailAuthYn(String mbrNo) {
-		return null;
+	public void updateServiceAuthYn(String authSeq) {
+		this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 	}
 
 	@Override
 	public void insertServiceAuthCode(ServiceAuth serviceAuthInfo) {
 		this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
+	}
+
+	@Override
+	public String getEmailAuthYn(String mbrNo) { // confirmEmailAuthYn
+		return (String) this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo);
+	}
+
+	@Override
+	public ServiceAuth getEmailAuthInfo(String authValue) {
+
+		return (ServiceAuth) this.commonDao.queryForObject("Miscellaneous.getEmailAuthInfo", authValue);
 	}
 }

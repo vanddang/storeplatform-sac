@@ -113,26 +113,27 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
-			LOGGER.debug("############ >> msisdn {} ", msisdn);
 			/** 1) OPMD 모번호 조회 (UAPS 연동) */
 			OpmdRes opmdRes = new OpmdRes();
 			UapsReq uapsReq = new UapsReq();
 			uapsReq.setDeviceId(msisdn);
+			LOGGER.info("## UAPS 연동 시작.");
+			LOGGER.info("## Request : {}", uapsReq);
 			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 
-			LOGGER.debug("############ >> opmdRes {}", opmdRes);
+			LOGGER.info("## UAPS 연동 종료.");
+			LOGGER.info("## Response {}", opmdRes);
 			/** 2) UAPS 연동 결과 확인 */
 			if (opmdRes.getResultCode() == 0) {
-				LOGGER.debug("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
-				LOGGER.debug("##### OPMD MDN {}", opmdRes.getOpmdMdn());
+				LOGGER.info("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
 				res.setMsisdn(opmdRes.getMobileMdn());
 			} else {
-				throw new RuntimeException("UAPS 연동 오류" + opmdRes.getResultCode());
+				throw new Exception("UAPS 연동 오류.[" + opmdRes.getResultCode() + "]");
 			}
 		} else {
 			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
 			res.setMsisdn(msisdn);
-			LOGGER.debug("OPMD 번호 아님, Request값 그대로 내려줌.");
+			LOGGER.info("OPMD 번호 아님, Request값 그대로 내려줌.");
 		}
 		return res;
 	}
@@ -195,7 +196,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 								.getUserMbrDeviceDetail();
 						LOGGER.info("## SC 회원  DeviceMapper.searchDeviceList에서 UA Code 확인.");
 						for (int i = 0; i < deviceDetails.size(); i++) {
-							isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404");// UA코드 인지 여부
+							isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
 							if (isUaCode) {
 								uaCode = deviceDetails.get(i).getExtraProfileValue();
 							}
@@ -205,7 +206,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 							LOGGER.info("## UA Code : {}", uaCode);
 						} else {
 							LOGGER.info("deviceId에 해당하는 UA 코드 없음.");
+							throw new Exception("deviceId에 해당하는 UA 코드 없음.");
 						}
+					} else {
+						throw new Exception("deviceId에 해당하는 UA 코드 없음.");
 					}
 				} else {
 					throw new Exception("SC 회원 API 조회 실패[" + searchDeviceResult.getCommonResponse().getResultCode()
@@ -222,6 +226,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				response.setUaCd(uaCode);
 			} else {
 				LOGGER.info("deviceModelNo에 해당하는 UA 코드 없음.");
+				throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
 			}
 		}
 		return response;
@@ -232,6 +237,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader sacRequestHeader,
 			GetPhoneAuthorizationCodeReq request) throws Exception {
 		String authCode = "";
+		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
+		;
+		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
+		String messageText = "auth.message.";
+		String messageSender = "auth.message.sendNum.";
+
 		/* 휴대폰 인증 코드 생성 */
 		Random random = new Random();
 		authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
@@ -247,9 +258,21 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		Object[] object = new Object[1];
 		object[0] = authCode;
 
-		String smsAuthMessage = this.messageSourceAccessor.getMessage("smsAuthMessage", object,
-				LocaleContextHolder.getLocale());
-		LOGGER.debug("## SmsAuthMessage : {}", smsAuthMessage);
+		if (tenantId.equals("S01")) { // 티스토어
+			messageText += "tstore";
+			messageSender += "tstore";
+		} else if (tenantId.equals("S00") && systemId.equals("S00-01001")) { // 개발자
+			messageText += "default";
+			messageSender += "default";
+		} else { // default
+			messageText += "default";
+			messageSender += "default";
+		}
+
+		messageText = this.messageSourceAccessor.getMessage(messageText, object, LocaleContextHolder.getLocale());
+		messageSender = this.messageSourceAccessor.getMessage(messageSender, object, LocaleContextHolder.getLocale());
+		LOGGER.debug("## messageText : {}", messageSender);
+		LOGGER.debug("## messageSender : {}", messageSender);
 
 		/* 인증 Signautre 생성 - guid 형식 */
 		String authSign = UUID.randomUUID().toString().replace("-", "");
@@ -269,10 +292,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		SmsSendReq smsReq = new SmsSendReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
 		smsReq.setCarrier(request.getCarrier()); // 테넌트에서 파라미터를 SKT, KT, LGT로 받는다.
-		smsReq.setSendMdn(request.getSendMdn());
+		smsReq.setSendMdn(messageSender);
 		smsReq.setRecvMdn(request.getRecvMdn());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
-		smsReq.setMsg(smsAuthMessage);
+		smsReq.setMsg(messageText);
 
 		LOGGER.info("## EC - SMS 발송 요청 Request : {}", smsReq);
 		/* External Comp. SMS 발송 기능 */
@@ -321,8 +344,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.debug("## current time : " + nowDate);
 		String[] nowDateToken = StringUtil.split(nowDate, "-");
 
-		// long endTime = Long.parseLong(nowDate);
-
 		String createDate = resultInfo.getAuthValueCreateDt();
 		LOGGER.debug("## create time : {}", createDate);
 		String[] createDateToken = StringUtil.split(createDate, "-");
@@ -338,7 +359,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
-		this.repository.updatePhoneAuthYn(String.valueOf(resultInfo.getAuthSeq()));
+		this.repository.updateServiceAuthYn(resultInfo.getAuthSeq());
 
 		res.setUserPhone(userPhone);
 		return res;
@@ -407,15 +428,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) throws Exception {
 
-		LOGGER.info("## Captcha 문자 인증 Service 시작.");
 		/* IDP 호출 ( Request 파라미터 전달 ) */
 		IDPReceiverM idpReciver = new IDPReceiverM();
+
+		LOGGER.info("## IDP Service 호출.");
 		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
 				request.getSignData());
+		LOGGER.info("## IDP Service 결과. Response{}", idpReciver);
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 
 		if (idpReciver.getResponseHeader().getResult().equals("1000")) {
-			LOGGER.info("IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
+			LOGGER.info("## IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
 					idpReciver.getResponseHeader().getResult_text());
 		} else {
 			throw new Exception("IDP 호출 오류.resultCode : {" + idpReciver.getResponseHeader().getResult()
@@ -432,27 +455,30 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 1. 기존에 인증된 회원인지 여부 확인 */
 		String mbrNo = request.getUserKey();
 		String isAuthEmail = this.repository.getEmailAuthYn(mbrNo);
-
-		if (isAuthEmail.equals("Y")) {
+		LOGGER.info("## 기존 인증회원 여부 : {}", isAuthEmail);
+		if (isAuthEmail != null && isAuthEmail.equals("Y")) {
 			throw new Exception("기존 인증된 회원입니다.");
 		}
 
 		/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
 		String authCode = UUID.randomUUID().toString().replace("-", "");
+		LOGGER.debug("## authCode : {}", authCode);
 
-		/** TODO 3. DB에 저장 - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
+		/** 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
 		ServiceAuth serviceAuthInfo = new ServiceAuth();
 		serviceAuthInfo.setAuthTypeCd("CM010902");
-		serviceAuthInfo.setAuthValueCreateDt(authCode);
+		serviceAuthInfo.setAuthValue(authCode);
 		serviceAuthInfo.setMbrNo(mbrNo);
+		serviceAuthInfo.setAuthSign("email"); // DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
 		serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
-		// TODO 빌드 에러로 인한 임시 주석 - 20140122
-		// this.repository.insertServiceAuthCode(serviceAuthInfo);
+		LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
+		this.repository.insertServiceAuthCode(serviceAuthInfo);
 
 		/** 4. 인증코드 Response */
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
+		LOGGER.info("## 이메일 인증 코드 생성 및 저장 완료. response : {}", response.getEmailAuthCode());
 
 		return response;
 	}
@@ -460,12 +486,24 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
 			throws Exception {
-		/** TODO 1. 인증 코드 받아오기 */
-		/** TODO 2. 인증 코드 DB 확인 비교 */
-		/** TODO 3. 확인된 결과 값 Response */
 
-		return null;
+		/** 1. 인증 코드로 DB 확인하여 , 회원 key, 회원 email 조회 */
+		LOGGER.info("## 인증코드 정보 조회. Request : {}", request);
+		ServiceAuth serviceAuthInfo = this.repository.getEmailAuthInfo(request.getEmailAuthCode());
+		LOGGER.info("## 인증코드 정보 조회. Response : {}", serviceAuthInfo);
 
+		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
+		if (serviceAuthInfo != null) {
+			this.repository.updateServiceAuthYn(serviceAuthInfo.getAuthSeq());
+			LOGGER.info("## 이메일 인증 완료.");
+		} else {
+			throw new Exception("유효하지 않은 인증코드 입니다.");
+		}
+		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
+		response.setUserEmail(serviceAuthInfo.getAuthEmail());
+		response.setUserKey(serviceAuthInfo.getMbrNo());
+
+		return response;
 	}
 
 	/**

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
@@ -191,6 +193,25 @@ public class MiscellaneousController {
 		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(request);
 		return res;
 
+	}
+
+	/**
+	 * <pre>
+	 * 이메일 인증 코드 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ConfirmEmailAuthorizationCodeReq
+	 * @return ConfirmEmailAuthorizationCodeRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	@RequestMapping(value = "/dev/confirmEmailAuthorizationCode/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(
+			@Validated @RequestBody ConfirmEmailAuthorizationCodeReq request) throws Exception {
+		ConfirmEmailAuthorizationCodeRes res = this.service.confirmEmailAuthorizationCode(request);
+		return res;
 	}
 
 	/**
