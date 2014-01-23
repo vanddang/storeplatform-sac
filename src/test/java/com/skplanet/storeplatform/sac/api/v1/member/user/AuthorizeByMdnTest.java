@@ -94,7 +94,7 @@ public class AuthorizeByMdnTest {
 						public Object requestBody() {
 
 							AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-							req.setDeviceId("01020284280");
+							req.setDeviceId("01090556567");
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 							req.setNativeId("358362045580842");
@@ -153,7 +153,7 @@ public class AuthorizeByMdnTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByMdnReq req = new AuthorizeByMdnReq();
-		req.setDeviceId("01020284280");
+		req.setDeviceId("01090556567");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_SKT);
 		req.setNativeId("358362045580842");
