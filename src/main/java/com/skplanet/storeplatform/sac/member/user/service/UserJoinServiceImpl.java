@@ -505,6 +505,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setUserEmail(req.getUserEmail()); // 사용자 이메일
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
 			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
@@ -614,6 +615,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+			userMbr.setUserEmail(req.getUserEmail()); // 사용자 이메일
 			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
 			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
 			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
