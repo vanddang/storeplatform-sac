@@ -1,11 +1,16 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
+/**
+ * 판매자 ID / Email 중복 체크
+ * 
+ * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
+ */
 public class DuplicateByIdEmailReq extends CommonInfo {
 
 	/**
@@ -13,11 +18,10 @@ public class DuplicateByIdEmailReq extends CommonInfo {
 	 */
 	private static final long serialVersionUID = 1L;
 	/** 검색구분 (id / email) */
-	@NotNull
 	@NotBlank
+	@Pattern(regexp = "^id|^email", message = "keyType is email or id  value is allowed.")
 	private String keyType;
 	/** 검색 값 */
-	@NotNull
 	@NotBlank
 	private String keyString;
 

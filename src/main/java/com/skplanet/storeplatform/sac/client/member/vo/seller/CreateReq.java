@@ -2,12 +2,20 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
+/**
+ * 판매자 회원 가입 Req
+ * 
+ * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
+ */
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class CreateReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
