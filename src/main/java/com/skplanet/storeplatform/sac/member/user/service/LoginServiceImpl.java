@@ -134,7 +134,6 @@ public class LoginServiceImpl implements LoginService {
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		String deviceId = req.getDeviceId();
-		String scVer = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, req.getUserDeviceExtraInfo());
 		String userKey = null;
 		String userType = null;
 		String userMainStatus = null;
@@ -168,7 +167,7 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
 			/* 로그인 실패이력 저장 */
-			this.insertloginHistory(requestHeader, deviceId, "", "N", userType, scVer);
+			this.insertloginHistory(requestHeader, deviceId, "", "N", userType, deviceId);
 
 			res.setUserKey(userKey);
 			res.setUserType(userType);
@@ -190,7 +189,7 @@ public class LoginServiceImpl implements LoginService {
 			this.mergeDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
-			this.insertloginHistory(requestHeader, deviceId, "", "Y", userType, scVer);
+			this.insertloginHistory(requestHeader, deviceId, "", "Y", userType, deviceId);
 
 			/* 로그인 결과 */
 			res.setUserKey(userKey);
@@ -212,7 +211,7 @@ public class LoginServiceImpl implements LoginService {
 				this.mergeDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
-				this.insertloginHistory(requestHeader, deviceId, "", "Y", userType, scVer);
+				this.insertloginHistory(requestHeader, deviceId, "", "Y", userType, deviceId);
 
 				/* 로그인 결과 */
 				res.setUserKey(userKey);
@@ -231,7 +230,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else { // 무선회원 인증 실패
 
-				this.insertloginHistory(requestHeader, deviceId, "", "N", userType, scVer);
+				this.insertloginHistory(requestHeader, deviceId, "", "N", userType, deviceId);
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			}
@@ -265,7 +264,6 @@ public class LoginServiceImpl implements LoginService {
 		String deviceId = req.getDeviceId();
 		String userId = req.getUserId();
 		String userPw = req.getUserPw();
-		String scVer = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, req.getUserDeviceExtraInfo());
 		String userKey = null;
 		String userType = null;
 		String userMainStatus = null;
@@ -301,7 +299,7 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
 			/* 로그인 실패이력 저장 */
-			this.insertloginHistory(requestHeader, userId, userPw, "N", userType, scVer);
+			this.insertloginHistory(requestHeader, userId, userPw, "N", userType, req.getIpAddress());
 
 			res.setUserKey(userKey);
 			res.setUserType(userType);
@@ -346,7 +344,7 @@ public class LoginServiceImpl implements LoginService {
 
 					this.mergeDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
 
-					this.insertloginHistory(requestHeader, userId, userPw, "Y", userType, scVer);
+					this.insertloginHistory(requestHeader, userId, userPw, "Y", userType, req.getIpAddress());
 
 					res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
 					res.setUserKey(userKey);
@@ -389,7 +387,7 @@ public class LoginServiceImpl implements LoginService {
 
 				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-					this.insertloginHistory(requestHeader, userId, userPw, "N", userType, scVer);
+					this.insertloginHistory(requestHeader, userId, userPw, "N", userType, req.getIpAddress());
 					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
 							+ imIdpReceiver.getResponseHeader().getResult_text());
 
@@ -414,7 +412,7 @@ public class LoginServiceImpl implements LoginService {
 
 				this.mergeDeviceInfo(requestHeader, userKey, idpReceiver.getResponseBody().getUser_auth_key(), req);
 
-				this.insertloginHistory(requestHeader, userId, userPw, "Y", userType, scVer);
+				this.insertloginHistory(requestHeader, userId, userPw, "Y", userType, req.getIpAddress());
 
 				res.setUserAuthKey(idpReceiver.getResponseBody().getUser_auth_key());
 				res.setUserKey(userKey);
@@ -427,7 +425,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
-				this.insertloginHistory(requestHeader, userId, userPw, "N", userType, scVer);
+				this.insertloginHistory(requestHeader, userId, userPw, "N", userType, req.getIpAddress());
 				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
@@ -618,14 +616,14 @@ public class LoginServiceImpl implements LoginService {
 	 *            로그인 성공유무
 	 * @param userType
 	 *            사용자타입
-	 * @param scVer
-	 *            샵클라이언트 버젼
+	 * @param ipAddress
+	 *            클라이언트 ip
 	 * @return LoginUserResponse
 	 * @throws Exception
 	 *             LoginUserResponse
 	 */
 	public LoginUserResponse insertloginHistory(SacRequestHeader requestHeader, String userId, String userPw, String isSuccess, String userType,
-			String scVer) throws Exception {
+			String ipAddress) throws Exception {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
@@ -641,8 +639,8 @@ public class LoginServiceImpl implements LoginService {
 		} else {
 			loginReq.setIsMobile("N");
 		}
-		//loginReq.setScVersion(scVer);
-		//loginReq.setIpAddress("");
+		//loginReq.setScVersion(requestHeader.getDeviceHeader().getPkgVersion());//헤더에서 제공해줄 예정
+		loginReq.setIpAddress(ipAddress);
 
 		LoginUserResponse loginRes = this.userSCI.loginUser(loginReq);
 		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
