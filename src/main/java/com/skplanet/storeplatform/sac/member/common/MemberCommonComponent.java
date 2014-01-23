@@ -344,16 +344,21 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
-	 * DB 정보 기준.
+	 * 휴대기기 등록시에 기본정보 setting.
 	 * </pre>
 	 * 
 	 * @param model
+	 *            단말 모델
 	 * @param deviceTelecom
+	 *            이동통신사
 	 * @param deviceId
+	 *            (msisdn or uuid or mac value)
 	 * @param deviceIdType
-	 * @return
+	 *            (msisdn or uuid or mac type)
+	 * @return MajorDeviceInfo
 	 * @throws Exception
-	 *             MajorDeviceInfo
+	 *             익셉션
+	 * 
 	 */
 	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
 

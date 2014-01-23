@@ -28,9 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -235,8 +238,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		/**
 		 * (통합 IDP 연동) 이용동의 가입 성공시....
-		 * 
-		 * TODO 통합 IDP 연동 가능한 테스트 ID가 없어서 무조건 성공으로 하드코딩함.
 		 */
 		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
@@ -372,14 +373,11 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## Im Result Text   : {}", agreeUserInfo.getResponseHeader().getResult_text());
 
 		/**
-		 * 이용동의 가입 성공시
-		 * 
-		 * TODO 하드코딩 바꾸기.
+		 * 이용동의 가입 성공시...
 		 */
-		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), "1000X000")) {
+		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
 			LOGGER.info("## IDP 연동 성공 ==============================================");
-
 			LOGGER.info("## Im user_key      : {}", agreeUserInfo.getResponseBody().getUser_key());
 			LOGGER.info("## Im im_int_svc_no : {}", agreeUserInfo.getResponseBody().getIm_int_svc_no());
 			LOGGER.info("## Im user_tn       : {}", agreeUserInfo.getResponseBody().getUser_tn());
@@ -1010,24 +1008,57 @@ public class UserJoinServiceImpl implements UserJoinService {
 		IDPReceiverM checkDupIdInfo = this.idpService.checkDupID(URLEncoder.encode(userId, "UTF-8"));
 		LOGGER.info("## checkDupID - Result Code : {}", checkDupIdInfo.getResponseHeader().getResult());
 		LOGGER.info("## checkDupID - Result Text : {}", checkDupIdInfo.getResponseHeader().getResult_text());
-
-		if (StringUtils.equals(checkDupIdInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-
-			/**
-			 * 해지 후 6개월이내 동일한 ID로 가입요청 불가
-			 * 
-			 * TODO 테이블이 이관되어있지 않아서 확인 요청함. 처리 완료되면 SC 연동하여 처리 할것. (SC API 요청해야함.)
-			 */
-			// if (count > 0) {
-			//
-			// throw new RuntimeException("해지 후 6개월이내 동일한 ID로 가입요청 불가");
-			//
-			// }
-
-		} else {
+		if (!StringUtils.equals(checkDupIdInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 			throw new RuntimeException(checkDupIdInfo.getResponseHeader().getResult_text());
 
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * 사용자 아이디 중복 체크.
+	 * </pre>
+	 * 
+	 * @param userId
+	 *            사용자 아이디
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @throws Exception
+	 *             익셉션
+	 */
+	private void checkDuplicationId(String userId, SacRequestHeader sacHeader) throws Exception {
+
+		CheckDuplicationRequest checkDuplicationRequest = new CheckDuplicationRequest();
+
+		/**
+		 * 공통 정보 setting
+		 */
+		checkDuplicationRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+		keySchUserKey.setKeyString(userId);
+		keySearchList.add(keySchUserKey);
+		checkDuplicationRequest.setKeySearchList(keySearchList);
+
+		/**
+		 * ID가 중복 체크 SC 연동.
+		 */
+		CheckDuplicationResponse res = this.userSCI.checkDuplication(checkDuplicationRequest);
+
+		/**
+		 * SC 연동결과가 성공이고 ID 존재 여부가 N 이면 에러를 발생 한다.
+		 */
+		if (StringUtils.equals(res.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			if (StringUtils.equals(res.getIsRegistered(), MemberConstants.USE_N)) {
+				throw new RuntimeException("## (" + userId + ") 이미 존재 하는 ID 입니다.");
+			}
 		}
 
 	}
