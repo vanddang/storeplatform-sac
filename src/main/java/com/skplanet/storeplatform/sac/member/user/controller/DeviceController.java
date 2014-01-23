@@ -156,7 +156,7 @@ public class DeviceController {
 		deviceInfo.setDeviceKey(req.getDeviceKey());
 		req.setDeviceInfo(deviceInfo);
 
-		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, (ModifyDeviceReq) ConvertMapperUtil.convertObject(req));
+		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
 
 		return res;
 	}
