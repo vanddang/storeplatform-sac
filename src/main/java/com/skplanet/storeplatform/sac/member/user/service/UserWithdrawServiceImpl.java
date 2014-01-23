@@ -176,12 +176,26 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
 			schUserRes = this.userSCI.searchUser(schUserReq);
+
+			logger.info("###### 회원 조회 데이터 : " + schUserRes.toString());
+			if (schUserRes.getUserKey() == null)
+				throw new RuntimeException("회원정보가 없습니다.");
+
+			logger.info("###### SearchUser.userID req : {}", schUserReq.toString());
+
 		} else if (!deviceId.equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
 			schUserRes = this.userSCI.searchUser(schUserReq);
+
+			logger.info("###### 회원 조회 데이터 : " + schUserRes.toString());
+			if (schUserRes.getUserKey() == null)
+				throw new RuntimeException("회원정보가 없습니다.");
+
+			logger.info("###### SearchUser.deviceId req : {}", schUserReq.toString());
+
 		} else {
 			throw new RuntimeException("파라미터 없음 userId, userAuthKey, deviceId");
 		}
@@ -192,19 +206,18 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 					+ ", " + schUserRes.getCommonResponse().getResultMessage());
 		} else if (schUserRes.getUserMbr().getUserKey() == null) {
 			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr().getUserKey()");
+		} else if (schUserRes.getUserMbr() == null) {
+			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr()");
+		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
+			throw new RuntimeException("탈퇴완료 회원 : SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
+		} else if (MemberConstants.MAIN_STATUS_SECEDE.equals(schUserRes.getUserMbr().getUserMainStatus())) {
+			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]");
 		} else {
 			logger.info("회원정보조회 SC Member Search Success : {}, {}", schUserRes.getCommonResponse().getResultCode(),
 					schUserRes.getCommonResponse().getResultMessage());
 			logger.info("회원정보조회 SC Member Search Success Response {}: ", schUserRes.toString());
 			logger.info("회원정보조회 SC Member Search Success Response {}: ", schUserRes.getUserMbr().toString());
-		}
 
-		if (schUserRes.getUserMbr() == null) {
-			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr()");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
-					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
-		} else {
 			return schUserRes;
 		}
 
