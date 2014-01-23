@@ -25,8 +25,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRepresentationDeviceRes;
 
 /**
  * Calss 설명
@@ -70,17 +70,17 @@ public class DetailRepresentationDeviceTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						ListDeviceReq req = new ListDeviceReq();
+						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
 						req.setUserId("tstore44");
 						req.setUserKey("IF1023002708420090928145937");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
-				}).success(ListDeviceRes.class, new SuccessCallback() {
+				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ListDeviceRes res = (ListDeviceRes) result;
-						assertThat(res.getDeviceInfoList(), notNullValue());
+						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
+						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
