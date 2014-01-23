@@ -68,22 +68,62 @@ public class GetPhoneAuthorizationCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 정상 파라미터 전달.
+	 * T Store SMS 발송.
+	 * 현재 Header값이 Dummy로 Setting되므로 변경 불가. ( 추후 .addHeaders("key", "value")로 처리하면됨. )
 	 * </pre>
 	 */
 	@Test
-	public void simpleTest() {
+	public void tstoreSmsSendTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					.addHeaders("Accept", "application/json").httpMethod(HttpMethod.POST)
+					.requestBody(new RequestBodySetter() {
 
 						@Override
 						public Object requestBody() {
 							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
-							request.setSendMdn("01020284280");
-							request.setRecvMdn("1599-0110");
+							request.setRecvMdn("01020284280");
+							request.setCarrier("SKT");
+							LOGGER.debug("request param : {}", request.toString());
+							return request;
+						}
+					}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
+
+						@Override
+						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
+							assertThat(response.getPhoneSign(), notNullValue());
+							LOGGER.debug("response param : {} ", response.toString());
+						}
+					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 성공 CASE
+	 * 개발자 사이트 SMS 발송.
+	 * 현재 Header값이 Dummy로 Setting되므로 변경 불가. ( 추후 .addHeaders("key", "value")로 처리하면됨. )
+	 * </pre>
+	 */
+	@Test
+	public void developerSmsSendTest() {
+		try {
+			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
+					.addHeaders("Accept", "application/json").httpMethod(HttpMethod.POST)
+					.requestBody(new RequestBodySetter() {
+
+						@Override
+						public Object requestBody() {
+							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
+							request.setSrcId("US004504"); // 휴대폰 인증 SMS
+							request.setTeleSvcId("0"); // 단건 발송
+							request.setRecvMdn("01020284280");
 							request.setCarrier("SKT");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;

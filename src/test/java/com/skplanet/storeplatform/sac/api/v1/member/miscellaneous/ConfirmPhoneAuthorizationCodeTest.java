@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
