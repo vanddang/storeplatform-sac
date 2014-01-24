@@ -60,8 +60,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req)
-			throws Exception {
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) throws Exception {
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
@@ -77,8 +76,7 @@ public class DeviceController {
 			throw new Exception("isMainDevice 필수 파라미터 입니다.");
 		}
 
-		ListDeviceRes res = this.deviceService.listDevice(requestHeader,
-				(ListDeviceReq) ConvertMapperUtil.convertObject(req));
+		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtil.convertObject(req));
 
 		return res;
 	}
@@ -96,8 +94,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req)
-			throws Exception {
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) throws Exception {
 
 		/* 휴대기기 정보 필수 파라메터 체크 */
 		DeviceInfo deviceInfo = req.getDeviceInfo();
@@ -147,21 +144,15 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req)
-			throws Exception {
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) throws Exception {
 
 		/* 휴대기기 정보 수정 필수 파라메터 체크 */
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		// ICAS연동시 필요한 deviceIdType 체크
-		if (!StringUtil.nvl(deviceInfo.getNativeId(), "").equals("")
-				&& StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
+		if (!StringUtil.nvl(deviceInfo.getNativeId(), "").equals("") && StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
 			throw new Exception("deviceIdType 필수 파라미터 입니다.");
 		}
-
-		deviceInfo.setUserKey(req.getUserKey());
-		deviceInfo.setDeviceKey(req.getDeviceKey());
-		req.setDeviceInfo(deviceInfo);
 
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
 
@@ -178,8 +169,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req)
-			throws Exception {
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) throws Exception {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
@@ -206,8 +196,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader,
-			@RequestBody DetailRepresentationDeviceReq req) throws Exception {
+	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req)
+			throws Exception {
 
 		logger.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
 
@@ -234,8 +224,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req)
-			throws Exception {
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req) throws Exception {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
