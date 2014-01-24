@@ -26,11 +26,6 @@ public class ModifyDeviceReq extends CommonInfo {
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userKey;
 
-	/**
-	 * 기기 Key
-	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String deviceKey;
 
 	/**
 	 * 사용자 단말 정보
@@ -53,13 +48,6 @@ public class ModifyDeviceReq extends CommonInfo {
 		this.userKey = userKey;
 	}
 
-	public String getDeviceKey() {
-		return this.deviceKey;
-	}
-
-	public void setDeviceKey(String deviceKey) {
-		this.deviceKey = deviceKey;
-	}
 
 	public DeviceInfo getDeviceInfo() {
 		return this.deviceInfo;
