@@ -17,16 +17,24 @@ public class UserExtraInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 부가정보 코드
+	 * 관리항목 코드
 	 */
 	private String extraProfile;
 
-	private String extraProfileCode;
-
-	/**
-	 * 부가정보 값
+	/*
+	 * 관리항목 값
 	 */
 	private String extraProfileValue;
+
+	/*
+	 * Tenant ID
+	 */
+	private String tenantId;
+
+	/*
+	 * 내부 회원 키
+	 */
+	private String userKey;
 
 	public String getExtraProfile() {
 		return this.extraProfile;
@@ -44,12 +52,24 @@ public class UserExtraInfo extends CommonInfo {
 		this.extraProfileValue = extraProfileValue;
 	}
 
-	public String getExtraProfileCode() {
-		return this.extraProfileCode;
+	public String getTenantId() {
+		return this.tenantId;
 	}
 
-	public void setExtraProfileCode(String extraProfileCode) {
-		this.extraProfileCode = extraProfileCode;
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }
