@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
@@ -29,7 +28,7 @@ public interface HistoryListService {
 	 *            구매내역요청
 	 * @param requestHeader
 	 *            공통헤더정보
-	 * @return HistoryListResponse
+	 * @return HistoryListRes
 	 */
 	public HistoryListRes list(HistoryListReq request, SacRequestHeader requestHeader);
 
@@ -38,7 +37,8 @@ public interface HistoryListService {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @return HistoryListResponse
+	 * @return HistoryCountRes
 	 */
-	public HistoryCountRes count(HistoryCountReq request);
+	public HistoryCountRes count(HistoryListReq request);
+
 }

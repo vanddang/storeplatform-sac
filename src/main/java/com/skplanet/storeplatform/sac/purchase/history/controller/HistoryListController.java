@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
@@ -73,7 +72,13 @@ public class HistoryListController {
 	 */
 	@RequestMapping(value = "/count/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HistoryCountRes count(@RequestBody HistoryCountReq request, SacRequestHeader requestHeader) {
+	public HistoryCountRes count(@RequestBody HistoryListReq request, SacRequestHeader requestHeader) {
+
+		// tenantID, systemId Set
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		request.setTenantId(tenantHeader.getTenantId());
+		request.setSystemId(tenantHeader.getSystemId());
+		this.logger.debug("TenantHeader :: " + tenantHeader.toString());
 
 		return this.historyListService.count(request);
 	}

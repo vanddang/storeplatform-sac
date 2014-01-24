@@ -19,22 +19,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryList;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProductCountList;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.History;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProductCount;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProductList;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * 구매내역 Implements
@@ -60,7 +61,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 *            구매내역요청
 	 * @param requestHeader
 	 *            공통헤더정보
-	 * @return HistoryListResponse
+	 * @return HistoryListRes
 	 */
 	@Override
 	public HistoryListRes list(HistoryListReq request, SacRequestHeader requestHeader) {
@@ -84,6 +85,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
 		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
 		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
 
 		List<String> prodList = new ArrayList<String>();
@@ -99,24 +101,27 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setOffset(request.getOffset());
 		scRequest.setCount(request.getCount());
 
-		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
-			this.logger.debug("##### 보유상품조회");
-			// SC Call
-			scResponse = this.historySci.listHistory(scRequest);
+		// SC Call
+		scResponse = this.historySci.listHistory(scRequest);
 
-		} else if (PurchaseConstants.PRCHS_PROD_TYPE_SEND.equals(request.getPrchsProdType())) {
-			this.logger.debug("##### 미보유상품조회");
-			// SC Call
-			scResponse = this.historySci.sendListHistory(scRequest);
-
-		} else if (PurchaseConstants.PRCHS_PROD_TYPE_FIX.equals(request.getPrchsProdType())) {
-			this.logger.debug("##### 구매권한상품조회");
-			// SC Call
-			scResponse = this.historySci.authListHistory(scRequest);
-		} else {
-			// 오류처리... 잘못된 요청
-			return response;
-		}
+		// if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
+		// this.logger.debug("##### 보유상품조회");
+		// // SC Call
+		// scResponse = this.historySci.listHistory(scRequest);
+		//
+		// } else if (PurchaseConstants.PRCHS_PROD_TYPE_SEND.equals(request.getPrchsProdType())) {
+		// this.logger.debug("##### 미보유상품조회");
+		// // SC Call
+		// scResponse = this.historySci.sendListHistory(scRequest);
+		//
+		// } else if (PurchaseConstants.PRCHS_PROD_TYPE_FIX.equals(request.getPrchsProdType())) {
+		// this.logger.debug("##### 구매권한상품조회");
+		// // SC Call
+		// scResponse = this.historySci.authListHistory(scRequest);
+		// } else {
+		// // 오류처리... 잘못된 요청
+		// return response;
+		// }
 
 		// SC객체를 SAC객체로 맵핑작업
 		List<HistoryList> scHistoryList = scResponse.getHistoryList();
@@ -124,6 +129,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			history = new History();
 
+			// 구매정보 set
 			history.setTenantId(obj.getTenantId());
 			history.setSystemId(obj.getSystemId());
 			history.setPrchsId(obj.getPrchsId());
@@ -153,10 +159,10 @@ public class HistoryListServiceImpl implements HistoryListService {
 			history.setDwldStartDt(obj.getDwldStartDt());
 			history.setDwldExprDt(obj.getDwldExprDt());
 
+			// 정액제 정보 set
 			history.setPaymentStartDt(obj.getPaymentStartDt());
 			history.setPaymentEndDt(obj.getPaymentEndDt());
 			history.setAfterPaymentDt(obj.getAfterPaymentDt());
-
 			history.setClosedCd(obj.getClosedCd());
 			history.setClosedDt(obj.getClosedDt());
 			history.setClosedReasonCd(obj.getClosedReasonCd());
@@ -195,7 +201,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		this.logger.debug("prodList ==== " + resProdList.toString());
 
 		response.setHistoryList(sacHistoryList);
-		response.setTotalCnt(sacHistoryList.size());
+		response.setTotalCnt(scResponse.getTotalCnt());
 
 		// logger.debug("list : {}", historyListRes);
 		return response;
@@ -206,32 +212,57 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @return HistoryListResponse
+	 * @return HistoryCountRes
 	 */
 	@Override
-	public HistoryCountRes count(HistoryCountReq request) {
+	public HistoryCountRes count(HistoryListReq request) {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
 		HistoryListRequest scRequest = new HistoryListRequest();
-		int scResponse = 0;
+		HistoryCountResponse scResponse = new HistoryCountResponse();
+
+		// SAC Response VO
+		HistoryCountRes response = new HistoryCountRes();
+		List<HistoryProductCount> sacProdList = new ArrayList<HistoryProductCount>();
+		HistoryProductCount historyProductCount = new HistoryProductCount();
 
 		// SC Request Set
-		// scRequest.setTenantId(request.getTenantId());
-		// scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
-		// scRequest.setStartDt(request.getStartDt());
-		// scRequest.setEndDt(request.getEndDt());
-		// scRequest.setPrchsProdType(request.getPrchsProdType());
-		// scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
-		// scRequest.setProdId(request.getProdId());
-		// scRequest.setHidingYn(request.getHidingYn());
-		// scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
+		scRequest.setTenantId(request.getTenantId());
+		scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
+		scRequest.setStartDt(request.getStartDt());
+		scRequest.setEndDt(request.getEndDt());
+		scRequest.setPrchsProdType(request.getPrchsProdType());
+		scRequest.setPrchsStatusCd(request.getPrchsStatusCd());
+		scRequest.setPrchsCaseCd(request.getPrchsCaseCd());
+		scRequest.setTenantProdGrpCd(request.getTenantProdGrpCd());
+
+		List<String> prodList = new ArrayList<String>();
+		if (request.getProductList() != null && request.getProductList().size() > 0) {
+			for (HistoryProductList obj : request.getProductList()) {
+				if (!StringUtil.isEmpty(obj.getProdId())) {
+					prodList.add(obj.getProdId());
+				}
+			}
+		}
+		scRequest.setProductList(prodList);
+		scRequest.setHidingYn(request.getHidingYn());
 
 		// SC Call
 		scResponse = this.historySci.getHistoryCount(scRequest);
 
-		HistoryCountRes response = new HistoryCountRes();
-		response.setTotalCnt(scResponse);
+		if (scResponse.getCntList() != null && scResponse.getCntList().size() > 0) {
+			for (HistoryProductCountList obj : scResponse.getCntList()) {
+				historyProductCount = new HistoryProductCount();
+				historyProductCount.setProdId(obj.getProdId());
+				historyProductCount.setProdCount(obj.getProdCount());
+
+				sacProdList.add(historyProductCount);
+			}
+		}
+
+		response.setTotalCnt(scResponse.getTotalCnt());
+		response.setCntList(sacProdList);
 
 		// logger.debug("list : {}", historyListRes);
 		return response;
