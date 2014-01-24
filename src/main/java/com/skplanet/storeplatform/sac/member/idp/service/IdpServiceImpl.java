@@ -888,7 +888,12 @@ public class IdpServiceImpl implements IdpService {
 
 				updateStatusUserRequest.setKeySearchList(updateKeySearchList);
 
-				this.userSCI.updateStatus(updateStatusUserRequest);
+				UpdateStatusUserResponse updateStatusUserResponse = this.userSCI.updateStatus(updateStatusUserRequest);
+
+				responseResult = updateStatusUserResponse.getCommonResponse().getResultCode();
+				responseResultText = updateStatusUserResponse.getCommonResponse().getResultMessage();
+				responseImIntSvcNo = map.get("im_int_svc_no").toString();
+				responseUserId = map.get("user_id").toString();
 
 			}
 
