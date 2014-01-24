@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,7 +51,7 @@ public class HistoryListController {
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HistoryListRes list(@RequestBody HistoryListReq request, SacRequestHeader requestHeader) {
+	public HistoryListRes list(@RequestBody @Validated HistoryListReq request, SacRequestHeader requestHeader) {
 
 		// tenantID, systemId Set
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
