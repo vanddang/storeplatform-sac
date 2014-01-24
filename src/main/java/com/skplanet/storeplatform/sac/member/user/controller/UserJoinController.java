@@ -30,7 +30,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
 /**
@@ -45,9 +44,6 @@ public class UserJoinController {
 
 	@Autowired
 	private UserJoinService svc;
-
-	@Autowired
-	private HeaderInfo headerInfo;
 
 	/**
 	 * Data Binding.
