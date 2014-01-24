@@ -10,16 +10,17 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class IndividualPolicyInfo extends CommonInfo {
 
+	private static final long serialVersionUID = 1L;
 	/**
-	 * 정책 코드
+	 * 정책 코드.
 	 */
 	private String policyCode;
 	/**
-	 * 확인할 정책의 key값
+	 * 확인할 정책의 key값.
 	 */
 	private String key;
 	/**
-	 * key값에 대한 value
+	 * key값에 대한 value.
 	 */
 	private String value;
 

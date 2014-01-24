@@ -6,7 +6,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * [REQUEST] 사용자별 정책 등록/수정
+ * 5.3.9. 사용자별 정책 등록/수정 [REQUEST]
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */

@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * [REQUEST] 사용자별 정책 삭제
+ * 5.3.10. 사용자별 정책 삭제 [REQUEST]
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */
@@ -17,12 +17,12 @@ public class RemoveIndividualPolicyReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 정책 코드
+	 * 정책 코드.
 	 */
 	@NotBlank
 	private String policyCode;
 	/**
-	 * 확인할 정책의 key값
+	 * 확인할 정책의 key값.
 	 */
 	@NotBlank
 	private String key;

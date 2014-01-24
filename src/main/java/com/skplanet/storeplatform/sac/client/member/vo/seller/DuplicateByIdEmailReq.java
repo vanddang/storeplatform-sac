@@ -7,21 +7,21 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자 ID / Email 중복 체크
+ * 5.2.2. 판매자 ID / Email 중복 체크 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
 public class DuplicateByIdEmailReq extends CommonInfo {
 
 	/**
-	 * Default SerialVersion
+	 * Default SerialVersion.
 	 */
 	private static final long serialVersionUID = 1L;
-	/** 검색구분 (id / email) */
+	/** 검색구분 (id / email). */
 	@NotBlank
 	@Pattern(regexp = "^id|^email", message = "keyType is email or id  value is allowed.")
 	private String keyType;
-	/** 검색 값 */
+	/** 검색 값. */
 	@NotBlank
 	private String keyString;
 

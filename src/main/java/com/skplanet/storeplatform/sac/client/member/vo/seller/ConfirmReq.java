@@ -1,21 +1,20 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 5.2.11. 판매자 회원 정산 정보 수정 [RESPONSE]
+ * 5.2.14. 판매자 회원 계정 승인 [REQUEST]
  * 
- * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
+ * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
-public class ModifyAccountInformationRes extends CommonInfo {
+public class ConfirmReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 판매자 회원 Key. */
+	/** 판매자 Key. */
+	@NotBlank
 	private String sellerKey;
 
 	public String getSellerKey() {
@@ -25,5 +24,4 @@ public class ModifyAccountInformationRes extends CommonInfo {
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
-
 }

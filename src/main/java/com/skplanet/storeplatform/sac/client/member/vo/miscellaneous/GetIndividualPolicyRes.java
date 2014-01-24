@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * [RESPONSE] 사용자별 정책 조회
+ * 5.3.8. 사용자별 정책 조회 [RESPONSE]
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */

@@ -1,40 +1,38 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
-import java.util.List;
-
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 /**
- * 5.2.1. 판매자 회원 가입 [REQUEST]
+ * 5.2.10. 판매자회원 기본정보 수정 [REQUEST]
  * 
- * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
+ * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
-public class CreateReq extends CommonInfo {
+public class ModifyInformationReq extends CommonInfo {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6272645047957208675L;
 
+	/** 판매자 key. */
+	@NotBlank
+	private String sellerKey;
 	/** 판매자 구분코드. */
 	@NotBlank
 	private String sellerClass;
 	/** 판매자 분류코드. */
 	@NotBlank
 	private String sellerCategory;
+	/** 판매자 main 상태코드. */
+	@NotBlank
+	private String sellerMainStatus;
+	/** 판매자 sub 상태코드. */
+	@NotBlank
+	private String sellerSubStatus;
 	/** 판매자 ID. */
-	@NotBlank
 	private String sellerId;
-	/** 판매자 PW. */
-	@NotBlank
-	private String sellerPW;
 	/** 이동통신사. */
 	@NotBlank
 	private String sellerTelecom;
@@ -55,8 +53,6 @@ public class CreateReq extends CommonInfo {
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
-	/** 노출 이름. */
-	private String sellerNickName;
 	/** 판매자 성별. */
 	@NotBlank
 	@Pattern(regexp = "^M|^F")
@@ -64,8 +60,6 @@ public class CreateReq extends CommonInfo {
 	/** 판매자 생년월일. */
 	@Size(max = 8)
 	private String sellerBirthDay;
-	/** 주민등록번호. */
-	private String sellerSSNumber;
 	/** 우편번호. */
 	private String sellerZip;
 	/** 거주지 주소. */
@@ -86,12 +80,44 @@ public class CreateReq extends CommonInfo {
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
 	private String isForeign;
-
-	/** 실명인증 일시 */
+	/** 법정대리인 동의여부. */
+	@NotBlank
+	@Pattern(regexp = "^Y|^N")
+	private String isParent;
+	/** 법정대리인 동의일시. */
+	private String parentDate;
+	/** 법정대리인 관계코드. */
+	@NotBlank
+	private String parentType;
+	/** 법정대리인 이름. */
+	private String parentName;
+	/** 법정대리인 생년월일. */
+	private String parentBirthDay;
+	/** 법정대리인 이메일. */
+	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
+	private String parentEmail;
+	/** 법정대리인 휴대폰 번호. */
+	private String parentMDN;
+	/** 법정대리인 이동통신사. */
+	@NotBlank
+	private String parentTelecom;
+	/** 법정대리인 실명인증 일시. */
+	private String parentRealNameDate;
+	/** 법정대리인 CI. */
+	private String parentCI;
+	/** 법정대리인 실명인증수단 코드. */
+	@NotBlank
+	private String parentRealNameMethod;
+	/** 법정대리인 실명인증 시스템 id. */
+	private String parentRealNameSystemId;
+	/** 실명인증 여부. */
+	@NotBlank
+	@Pattern(regexp = "^Y|^N")
+	private String isRealName;
+	/** 실명인증 일시. */
 	@Size(max = 14)
 	private String realNameDate;
 	/** CI. */
-	@NotBlank
 	private String sellerCI;
 	/** DI. */
 	private String sellerDI;
@@ -105,18 +131,20 @@ public class CreateReq extends CommonInfo {
 	private String sellerBizNumber;
 	/** 고객 응대 전화번호 국가코드. */
 	private String customerPhoneCountry;
-	/** 고객 전화번호. */
+	/** 고객 응대 전화번호. */
 	private String customerPhone;
 	/** 고객 응대 이메일. */
-	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String customerEmail;
-	/** 법인등록번호. */
-	private String sellerBizCorpNumber;
+	/** Flurry 정보. */
+	private String flurryInfo;
 
-	/** 약관 정보들. */
-	private List<AgreementInfo> agreementList;
-	/** 보안질문 정보들. */
-	private List<PwReminder> pwReminderList;
+	public String getSellerKey() {
+		return this.sellerKey;
+	}
+
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
+	}
 
 	public String getSellerClass() {
 		return this.sellerClass;
@@ -134,20 +162,28 @@ public class CreateReq extends CommonInfo {
 		this.sellerCategory = sellerCategory;
 	}
 
+	public String getSellerMainStatus() {
+		return this.sellerMainStatus;
+	}
+
+	public void setSellerMainStatus(String sellerMainStatus) {
+		this.sellerMainStatus = sellerMainStatus;
+	}
+
+	public String getSellerSubStatus() {
+		return this.sellerSubStatus;
+	}
+
+	public void setSellerSubStatus(String sellerSubStatus) {
+		this.sellerSubStatus = sellerSubStatus;
+	}
+
 	public String getSellerId() {
 		return this.sellerId;
 	}
 
 	public void setSellerId(String sellerId) {
 		this.sellerId = sellerId;
-	}
-
-	public String getSellerPW() {
-		return this.sellerPW;
-	}
-
-	public void setSellerPW(String sellerPW) {
-		this.sellerPW = sellerPW;
 	}
 
 	public String getSellerTelecom() {
@@ -206,14 +242,6 @@ public class CreateReq extends CommonInfo {
 		this.sellerName = sellerName;
 	}
 
-	public String getSellerNickName() {
-		return this.sellerNickName;
-	}
-
-	public void setSellerNickName(String sellerNickName) {
-		this.sellerNickName = sellerNickName;
-	}
-
 	public String getSellerSex() {
 		return this.sellerSex;
 	}
@@ -228,14 +256,6 @@ public class CreateReq extends CommonInfo {
 
 	public void setSellerBirthDay(String sellerBirthDay) {
 		this.sellerBirthDay = sellerBirthDay;
-	}
-
-	public String getSellerSSNumber() {
-		return this.sellerSSNumber;
-	}
-
-	public void setSellerSSNumber(String sellerSSNumber) {
-		this.sellerSSNumber = sellerSSNumber;
 	}
 
 	public String getSellerZip() {
@@ -300,6 +320,110 @@ public class CreateReq extends CommonInfo {
 
 	public void setIsForeign(String isForeign) {
 		this.isForeign = isForeign;
+	}
+
+	public String getIsParent() {
+		return this.isParent;
+	}
+
+	public void setIsParent(String isParent) {
+		this.isParent = isParent;
+	}
+
+	public String getParentDate() {
+		return this.parentDate;
+	}
+
+	public void setParentDate(String parentDate) {
+		this.parentDate = parentDate;
+	}
+
+	public String getParentType() {
+		return this.parentType;
+	}
+
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
+	}
+
+	public String getParentName() {
+		return this.parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	public String getParentBirthDay() {
+		return this.parentBirthDay;
+	}
+
+	public void setParentBirthDay(String parentBirthDay) {
+		this.parentBirthDay = parentBirthDay;
+	}
+
+	public String getParentEmail() {
+		return this.parentEmail;
+	}
+
+	public void setParentEmail(String parentEmail) {
+		this.parentEmail = parentEmail;
+	}
+
+	public String getParentMDN() {
+		return this.parentMDN;
+	}
+
+	public void setParentMDN(String parentMDN) {
+		this.parentMDN = parentMDN;
+	}
+
+	public String getParentTelecom() {
+		return this.parentTelecom;
+	}
+
+	public void setParentTelecom(String parentTelecom) {
+		this.parentTelecom = parentTelecom;
+	}
+
+	public String getParentRealNameDate() {
+		return this.parentRealNameDate;
+	}
+
+	public void setParentRealNameDate(String parentRealNameDate) {
+		this.parentRealNameDate = parentRealNameDate;
+	}
+
+	public String getParentCI() {
+		return this.parentCI;
+	}
+
+	public void setParentCI(String parentCI) {
+		this.parentCI = parentCI;
+	}
+
+	public String getParentRealNameMethod() {
+		return this.parentRealNameMethod;
+	}
+
+	public void setParentRealNameMethod(String parentRealNameMethod) {
+		this.parentRealNameMethod = parentRealNameMethod;
+	}
+
+	public String getParentRealNameSystemId() {
+		return this.parentRealNameSystemId;
+	}
+
+	public void setParentRealNameSystemId(String parentRealNameSystemId) {
+		this.parentRealNameSystemId = parentRealNameSystemId;
+	}
+
+	public String getIsRealName() {
+		return this.isRealName;
+	}
+
+	public void setIsRealName(String isRealName) {
+		this.isRealName = isRealName;
 	}
 
 	public String getRealNameDate() {
@@ -382,28 +506,12 @@ public class CreateReq extends CommonInfo {
 		this.customerEmail = customerEmail;
 	}
 
-	public String getSellerBizCorpNumber() {
-		return this.sellerBizCorpNumber;
+	public String getFlurryInfo() {
+		return this.flurryInfo;
 	}
 
-	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
-		this.sellerBizCorpNumber = sellerBizCorpNumber;
-	}
-
-	public List<AgreementInfo> getAgreementList() {
-		return this.agreementList;
-	}
-
-	public void setAgreementList(List<AgreementInfo> agreementList) {
-		this.agreementList = agreementList;
-	}
-
-	public List<PwReminder> getPwReminderList() {
-		return this.pwReminderList;
-	}
-
-	public void setPwReminderList(List<PwReminder> pwReminderList) {
-		this.pwReminderList = pwReminderList;
+	public void setFlurryInfo(String flurryInfo) {
+		this.flurryInfo = flurryInfo;
 	}
 
 }

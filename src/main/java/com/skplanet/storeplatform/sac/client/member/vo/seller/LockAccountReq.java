@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자 계정 잠금 Req
+ * 5.2.16. 판매자 계정 잠금 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
@@ -16,8 +16,8 @@ public class LockAccountReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	/** 판매자 회원 ID */
-	@NotBlank(message = "sellerId should not be empty")
+	/** 판매자 회원 ID. */
+	@NotBlank
 	private String sellerId;
 
 	public String getSellerId() {

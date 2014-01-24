@@ -5,7 +5,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 /**
  * 
- * [RESPONSE] 사용자별 정책 삭제
+ * 5.3.10. 사용자별 정책 삭제 [RESPONSE]
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */

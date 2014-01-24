@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자회원 계정 잠금
+ * 5.2.16. 판매자 계정 잠금 [RESPONSE]
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
@@ -24,7 +24,7 @@ public class LockAccountRes extends CommonInfo {
 		this.sellerId = sellerId;
 	}
 
-	/** 판매자 회원 ID */
+	/** 판매자 회원 ID. */
 	private String sellerId;
 
 	public String getSellerId() {

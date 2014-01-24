@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
- * 판매자회원 가입
+ * 5.2.1. 판매자 회원 가입 [RESPONSE]
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
@@ -16,7 +16,8 @@ public class CreateRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	SellerMbr sellerMbr;
+	/** 판매자 회원 정보. */
+	private SellerMbr sellerMbr;
 
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;

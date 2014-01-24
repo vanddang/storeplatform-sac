@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자회원 ID/이메일 중복 조회
+ * 5.2.2. 판매자 ID / Email 중복 체크 [RESPONSE]
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
@@ -24,7 +24,7 @@ public class DuplicateByIdEmailRes extends CommonInfo {
 		this.isRegistered = isRegistered;
 	}
 
-	/** 사용유무(Y/N) */
+	/** 사용유무(Y/N). */
 	private String isRegistered;
 
 	public String getIsRegistered() {

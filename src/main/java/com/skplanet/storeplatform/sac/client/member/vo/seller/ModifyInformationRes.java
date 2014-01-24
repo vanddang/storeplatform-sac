@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자회원 기본 정보 수정
+ * 5.2.10. 판매자회원 기본정보 수정 [RESPONSE]
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
@@ -15,7 +15,9 @@ public class ModifyInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/** 판매자 회원 Key. */
 	private String sellerKey;
+	/** 판매자 회원 Id. */
 	private String sellerId;
 
 	public String getSellerKey() {

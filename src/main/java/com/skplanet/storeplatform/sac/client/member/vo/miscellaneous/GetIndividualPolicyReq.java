@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * [REQUEST] 사용자별 정책 조회
+ * 5.3.8. 사용자별 정책 조회 [REQUEST]
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */
@@ -19,7 +19,7 @@ public class GetIndividualPolicyReq extends CommonInfo {
 	/**
 	 * 확인할 정책의 key값.
 	 */
-	@NotBlank(message = "key should not be empty")
+	@NotBlank
 	private String key;
 
 	/**
@@ -53,7 +53,7 @@ public class GetIndividualPolicyReq extends CommonInfo {
 		private static final long serialVersionUID = 1L;
 
 		/** 정책 코드. */
-		@NotBlank(message = "key should not be empty")
+		@NotBlank
 		public String policyCode;
 
 		public String getPolicyCode() {
