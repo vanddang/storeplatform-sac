@@ -138,7 +138,7 @@ public class BestAppServiceImpl implements BestAppService {
 					totalCount = mapperVO.getTotalCount();
 					commonResponse.setTotalCount(totalCount);
 
-					identifier.setType("episodeId");
+					identifier.setType("episode");
 					identifier.setText(mapperVO.getProdId());
 
 					supportList = new ArrayList<Support>();

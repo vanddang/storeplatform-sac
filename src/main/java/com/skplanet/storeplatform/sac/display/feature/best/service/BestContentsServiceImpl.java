@@ -68,6 +68,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 		CommonResponse commonResponse = new CommonResponse();
 
 		List<Product> productList = new ArrayList<Product>();
+		List<Identifier> identifierList = null;
 		List<Menu> menuList = null;
 		List<Source> sourceList = null;
 		List<Support> supportList = null;
@@ -93,9 +94,12 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 		if (bestContentsReq.getDummy() == null) {
 			// dummy 호출이 아닐때
-			// BEST 앱 상품 조회
+			// BEST 컨텐츠 상품 조회
 			List<BestContents> contentsList = null;
 
+			this.log.debug("########################################################");
+			this.log.debug("bestContentsReq.getFiteredBy()	:	" + bestContentsReq.getFiteredBy());
+			this.log.debug("########################################################");
 			if ("movie".equals(bestContentsReq.getFiteredBy()) || "boardcast".equals(bestContentsReq.getFiteredBy())
 					|| "movie+broadcast".equals(bestContentsReq.getFiteredBy())) {
 				contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsVodList", bestContentsReq,
@@ -122,7 +126,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 					// 상품ID
 					identifier = new Identifier();
-					identifier.setType("channelId");
+					identifier.setType("channel");
 					identifier.setText(mapperVO.getProdId());
 
 					supportList = new ArrayList<Support>();
@@ -239,6 +243,9 @@ public class BestContentsServiceImpl implements BestContentsService {
 					product.setBook(book);
 
 					productList.add(product);
+
+					commonResponse = new CommonResponse();
+					commonResponse.setTotalCount(mapperVO.getTotalCount());
 				}
 			} else {
 				commonResponse = new CommonResponse();
