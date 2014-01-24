@@ -73,7 +73,7 @@ public class IdpServiceImpl implements IdpService {
 		String responseResultText = "";
 		String responseImIntSvcNo = "";
 		String responseUserId = "";
-
+		IdpConstants idpConstant = new IdpConstants();
 		boolean siteCodeCheck = false;
 
 		// LOGGER.debug("JOIN_SST_LIST START");
@@ -262,12 +262,18 @@ public class IdpServiceImpl implements IdpService {
 		}
 
 		ImResult imResult = new ImResult();
-
 		imResult.setCmd("RXCreateUserIDP");
-		imResult.setResult(responseResult);
-		imResult.setResultText(responseResultText);
-		imResult.setImIntSvcNo(responseImIntSvcNo);
-		imResult.setUserId(responseUserId);
+		if (responseResult.equals("0000")) {
+			imResult.setResult(idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE);
+			imResult.setResultText(idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
+			imResult.setImIntSvcNo(responseImIntSvcNo);
+			imResult.setUserId(responseUserId);
+		} else {
+			imResult.setResult(idpConstant.IM_IDP_RESPONSE_FAIL_CODE);
+			imResult.setResultText(idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+			imResult.setImIntSvcNo(responseImIntSvcNo);
+			imResult.setUserId(responseUserId);
+		}
 
 		LOGGER.debug("rXCreateUserIDP ------- End");
 
@@ -849,6 +855,11 @@ public class IdpServiceImpl implements IdpService {
 		String responseImIntSvcNo = "";
 		String responseUserId = "";
 
+		responseImIntSvcNo = map.get("im_int_svc_no").toString();
+		responseUserId = map.get("user_id").toString();
+
+		IdpConstants idpConstant = new IdpConstants();
+
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 
 		CommonRequest commonRequest = new CommonRequest();
@@ -890,11 +901,8 @@ public class IdpServiceImpl implements IdpService {
 
 				UpdateStatusUserResponse updateStatusUserResponse = this.userSCI.updateStatus(updateStatusUserRequest);
 
-				responseResult = updateStatusUserResponse.getCommonResponse().getResultCode();
-				responseResultText = updateStatusUserResponse.getCommonResponse().getResultMessage();
-				responseImIntSvcNo = map.get("im_int_svc_no").toString();
-				responseUserId = map.get("user_id").toString();
-
+				responseResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				responseResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
 
 			// TO DO ... 이하 API 호출구현되면 로직 처리
@@ -903,6 +911,9 @@ public class IdpServiceImpl implements IdpService {
 			// 기존 모바일회원과 웹아이디회원 실명인증 정보처리
 			// DEVICE관련 & 구매내역이관 모바일 회원 탈퇴처리
 
+		} else {
+			responseResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+			responseResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
 
 		ImResult imResult = new ImResult();
