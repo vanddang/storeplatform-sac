@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveManagementResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateManagementResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -64,7 +66,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		/* 정상회원이면 SC 회원 부가 정보 등록/수정 호출 */
 		if (searchUser != null) {
-			res = this.modifyUserExtra(req);
+			res = this.modifyUserExtra(req, sacHeader);
 		}
 
 		return res;
@@ -92,12 +94,25 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		return res;
 	}
 
-	/* 회원부가정보 삭제 */
+	/**
+	 * 사용자 부가정보 삭제
+	 */
 	@Override
 	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
 			throws Exception {
 
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
 		UserExtraInfoRes res = new UserExtraInfoRes();
+
+		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
+		UserInfo searchUser = this.searchUser(req, sacHeader);
+
+		/* 정상회원이면 SC 회원 부가 정보 삭제 호출 */
+		if (searchUser != null) {
+			res = this.removeUserExtra(req, sacHeader);
+		}
 
 		return res;
 	}
@@ -119,9 +134,60 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		return extraRes;
 	}
 
+	/* SC API 회원부가정보 삭제 */
+	@Override
+	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+		UserExtraInfoRes res = new UserExtraInfoRes();
+		RemoveManagementRequest removeReq = new RemoveManagementRequest();
+		RemoveManagementResponse removeRes = new RemoveManagementResponse();
+
+		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
+
+		LOGGER.debug("###### 회원부가정보 삭제 Req : {}", req.getUserKey());
+		LOGGER.debug("###### 회원부가정보 삭제 Req : {}", req.getAddInfoList().toString());
+
+		for (UserExtraInfo info : req.getAddInfoList()) {
+			MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
+			ptcr.setExtraProfile(info.getExtraProfileCode());
+			ptcr.setExtraProfileValue(info.getExtraProfileValue());
+			ptcr.setUserKey(req.getUserKey());
+			ptcr.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+			ptcrList.add(ptcr);
+		}
+
+		removeReq.setUserKey(req.getUserKey());
+		removeReq.setMbrMangItemPtcr(ptcrList);
+		removeReq.setCommonRequest(commonRequest);
+
+		LOGGER.debug("###### 회원부가정보 삭제 SC API ptcrList Req : {}", ptcrList.toString());
+		LOGGER.debug("###### 회원부가정보 삭제 SC API update Req : {}", removeReq.getUserKey());
+		LOGGER.debug("###### 회원부가정보 삭제 SC API update Req : {}", removeReq.getMbrMangItemPtcr().toString());
+
+		removeRes = this.userSCI.removeManagement(removeReq);
+
+		if (StringUtils.equals(removeRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
+				&& removeRes.getUserKey() != null) {
+
+			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultCode());
+			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
+			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getUserKey());
+
+			res.setUserKey(removeRes.getUserKey());
+		} else {
+			LOGGER.debug("###### 회원부가정보 삭제 SC API Fail Res : {}", removeRes.getCommonResponse().getResultCode());
+			LOGGER.debug("###### 회원부가정보 삭제 SC API Fail Res : {}", removeRes.getCommonResponse().getResultMessage());
+
+			throw new RuntimeException("회원부가정보 삭제 SC API Fail : [" + removeRes.getCommonResponse().getResultCode()
+					+ "]" + "[" + removeRes.getCommonResponse().getResultMessage() + "]");
+		}
+
+		return res;
+	}
+
 	/* SC API 회원부가정보 등록/수정 */
 	@Override
-	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req) throws Exception {
+	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		UpdateManagementRequest updateReq = new UpdateManagementRequest();
 		UpdateManagementResponse updateRes = new UpdateManagementResponse();
@@ -136,7 +202,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 			ptcr.setExtraProfile(info.getExtraProfileCode());
 			ptcr.setExtraProfileValue(info.getExtraProfileValue());
 			ptcr.setUserKey(req.getUserKey());
-			ptcr.setTenantID(commonRequest.getTenantID());
+			ptcr.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 			ptcrList.add(ptcr);
 		}

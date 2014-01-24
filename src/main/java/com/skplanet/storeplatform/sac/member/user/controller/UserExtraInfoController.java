@@ -54,7 +54,7 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 		String extraProfileCode = "";
 		String extraProfilValue = "";
 
-		logger.debug("###### 회원부가정보 등록/수정 Req Object : {}", userKey);
+		logger.debug("###### 회원부가정보 등록/수정 Req Object : {}", req.getUserKey());
 		logger.debug("###### 회원부가정보 등록/수정 Req List : {}", req.getAddInfoList().toString());
 
 		for (UserExtraInfo infoReq : req.getAddInfoList()) {
@@ -74,6 +74,44 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 		}
 
 		res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
+
+		return res;
+	}
+
+	@RequestMapping(value = "/removeAdditionalInformation/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public UserExtraInfoRes removeAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader)
+			throws Exception {
+		logger.debug("####################################################");
+		logger.debug("##### 5.1.26. 회원 부가 정보 삭제 #####");
+		logger.debug("####################################################");
+
+		UserExtraInfoRes res = new UserExtraInfoRes();
+
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String extraProfileCode = "";
+		String extraProfilValue = "";
+
+		logger.debug("###### 회원부가정보 삭제 Req Object : {}", req.getUserKey());
+		logger.debug("###### 회원부가정보 삭제 Req List : {}", req.getAddInfoList().toString());
+
+		for (UserExtraInfo infoReq : req.getAddInfoList()) {
+			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileCode(), "");
+			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
+
+			if (extraProfileCode.equals("") && extraProfilValue.equals("")) {
+				throw new RuntimeException("회원 부가 삭제 extraProfileCode, extraProfilValue is Null" + "extraProfileCode ["
+						+ extraProfileCode + "]" + " [" + extraProfilValue + "]");
+			}
+		}
+
+		if (userKey.equals("")) {
+			throw new Exception("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+		} else if (req.getAddInfoList() == null) {
+			throw new Exception("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
+		}
+
+		res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
 
 		return res;
 	}

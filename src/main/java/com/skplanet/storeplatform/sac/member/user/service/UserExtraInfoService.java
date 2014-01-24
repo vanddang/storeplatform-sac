@@ -73,5 +73,15 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req) throws Exception;
+	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * 부가정보 삭제 SC API
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
 }
