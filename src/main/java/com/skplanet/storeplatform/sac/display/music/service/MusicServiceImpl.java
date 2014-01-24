@@ -102,9 +102,9 @@ public class MusicServiceImpl implements MusicService {
 
         music.setServiceList(new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service>(
                 Arrays.asList(
-                        new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service("mp3", "support"),
-                        new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service("bell", musicDetail.isBellSprtYn() ? "support" : "restricted"),
-                        new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service("ring", musicDetail.isColorringSprtYn() ? "support" : "restricted")
+                        new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service("mp3", "Y"),
+                        new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service("bell", musicDetail.isBellSprtYn() ? "Y" : "N"),
+                        new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service("ring", musicDetail.isColorringSprtYn() ? "Y" : "N")
                 )
         ));
 
