@@ -47,7 +47,7 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 /**
  * 휴대기기 관련 인터페이스 구현체
  * 
- * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
+ * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
 @Service
 @Transactional
