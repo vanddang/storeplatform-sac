@@ -33,6 +33,7 @@ public class CreateIndividualPolicyReq extends CommonInfo {
 	/**
 	 * 등록자.
 	 */
+	@NotBlank
 	private String regId;
 
 	public String getPolicyCode() {

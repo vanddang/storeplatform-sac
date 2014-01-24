@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import java.util.List;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
@@ -11,7 +14,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 /**
- * 판매자 회원 가입 Req
+ * 5.2.1. 판매자 회원 가입 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
@@ -41,11 +44,14 @@ public class CreateReq extends CommonInfo {
 	private String sellerPhone;
 	/** SMS 수신 여부. */
 	@NotBlank
+	@Pattern(regexp = "^Y|^N")
 	private String isRecvSMS;
 	/** 판매자 이메일. */
+	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String sellerEmail;
 	/** 이메일수신 여부. */
 	@NotBlank
+	@Pattern(regexp = "^Y|^N")
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
@@ -53,8 +59,10 @@ public class CreateReq extends CommonInfo {
 	private String sellerNickName;
 	/** 판매자 성별. */
 	@NotBlank
+	@Pattern(regexp = "^M|^F")
 	private String sellerSex;
 	/** 판매자 생년월일. */
+	@Size(max = 8)
 	private String sellerBirthDay;
 	/** 주민등록번호. */
 	private String sellerSSNumber;
@@ -76,10 +84,11 @@ public class CreateReq extends CommonInfo {
 	private String sellerLanguage;
 	/** 식별코드. */
 	@NotBlank
+	@Pattern(regexp = "^Y|^N")
 	private String isForeign;
-	/** 실명인증 여부. */
-	private String isRealName;
+
 	/** 실명인증 일시 */
+	@Size(max = 14)
 	private String realNameDate;
 	/** CI. */
 	@NotBlank
@@ -99,6 +108,7 @@ public class CreateReq extends CommonInfo {
 	/** 고객 전화번호. */
 	private String customerPhone;
 	/** 고객 응대 이메일. */
+	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String customerEmail;
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
@@ -290,14 +300,6 @@ public class CreateReq extends CommonInfo {
 
 	public void setIsForeign(String isForeign) {
 		this.isForeign = isForeign;
-	}
-
-	public String getIsRealName() {
-		return this.isRealName;
-	}
-
-	public void setIsRealName(String isRealName) {
-		this.isRealName = isRealName;
 	}
 
 	public String getRealNameDate() {
