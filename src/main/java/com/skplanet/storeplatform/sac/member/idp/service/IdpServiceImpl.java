@@ -632,7 +632,7 @@ public class IdpServiceImpl implements IdpService {
 		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
 		updateMbrOneIDRequest.setCommonRequest(commonRequest);
 		MbrOneID mbrOneID = new MbrOneID();
-		mbrOneID.setLoginStatusCode(susStatusCode);
+		mbrOneID.setStopStatusCode(susStatusCode);
 		mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
 		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
