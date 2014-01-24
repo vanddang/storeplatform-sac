@@ -546,8 +546,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * 
 	 * <pre>
 	 * 휴대폰번호 유효성 검사.
-	 * 1. 10자리 또는 11자리 인지 확인.
-	 * 2. 010/011/016/017/018 인지 확인
+	 * - 10자리 또는 11자리 인지 확인.
 	 * </pre>
 	 * 
 	 * @param mdn
@@ -557,12 +556,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public String mdnValidation(String mdn) {
 		String validation = "N";
 		if (mdn.length() == 10 | mdn.length() == 11) {
-			String temp = StringUtils.substring(mdn, 0, 3);
-			if (temp.equals("010") || temp.equals("011") || temp.equals("016") || temp.equals("017")
-					|| temp.equals("018")) {
-				validation = "Y";
-			}
-
+			validation = "Y";
 		}
 		return validation;
 	}
