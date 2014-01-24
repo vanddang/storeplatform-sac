@@ -33,6 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 /**
@@ -121,10 +122,12 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header,
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, SacRequestHeader requestHeader,
 			@RequestHeader("Accept-Language") String language) throws Exception {
-		LOGGER.debug("------------------------------------language : {}", language);
-		return this.sellerSearchService.listWithdrawalReason(header, language);
+		TenantHeader theader = requestHeader.getTenantHeader();
+
+		LOGGER.debug("------------------------------------language : {}", theader.getLangCd());
+		return this.sellerSearchService.listWithdrawalReason(header, theader.getLangCd());
 	}
 
 	/**
