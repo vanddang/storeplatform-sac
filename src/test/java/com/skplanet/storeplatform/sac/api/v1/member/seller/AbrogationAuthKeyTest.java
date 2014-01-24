@@ -69,7 +69,6 @@ public class AbrogationAuthKeyTest {
 						AbrogationAuthKeyReq req = new AbrogationAuthKeyReq();
 
 						req.setSellerKey("IF1023501629320130913143329");
-						req.setIpAddress("127.0.0.1");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
