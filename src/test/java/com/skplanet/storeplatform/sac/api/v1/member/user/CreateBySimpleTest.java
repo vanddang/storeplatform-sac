@@ -78,7 +78,7 @@ public class CreateBySimpleTest {
 	 */
 	@Ignore
 	@Test
-	public void createBySimpleId() throws Exception {
+	public void test1_createBySimpleId() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -134,7 +134,7 @@ public class CreateBySimpleTest {
 	 *             Exception
 	 */
 	@Test
-	public void createBySimpleDevice() throws Exception {
+	public void test2_createBySimpleDevice() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createBySimple/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
