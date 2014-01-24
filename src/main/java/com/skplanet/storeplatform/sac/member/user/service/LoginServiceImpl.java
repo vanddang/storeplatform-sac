@@ -462,10 +462,13 @@ public class LoginServiceImpl implements LoginService {
 
 		String deviceKey = null;
 
-		if (StringUtil.equals(keyType, MemberConstants.KEY_TYPE_DEVICE_ID)) {//mdn로그인 시에는 휴대기기 정보 단건조회
+		if (StringUtil.equals(keyType, MemberConstants.KEY_TYPE_DEVICE_ID)) {
+			/* mdn 로그인시에는 휴대기기 단건 조회 */
 			DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, keyType, keyString, userKey);
 			deviceKey = deviceInfo.getDeviceKey();
-		} else if (StringUtil.equals(keyType, MemberConstants.KEY_TYPE_INSD_USERMBR_NO)) {//id로그인 시에는 대표기기 단말 조회
+
+		} else if (StringUtil.equals(keyType, MemberConstants.KEY_TYPE_INSD_USERMBR_NO)) {
+			/* id 로그인시에는 대표휴대기기 조회 */
 			ListDeviceReq listDeviceReq = new ListDeviceReq();
 			listDeviceReq.setUserKey(keyString);
 			listDeviceReq.setIsMainDevice("Y");
