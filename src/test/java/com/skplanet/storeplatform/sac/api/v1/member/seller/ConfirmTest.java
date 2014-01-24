@@ -25,110 +25,130 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
 import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 
 /**
- * 5.2.16. 판매자 계정 잠금
+ * 5.2.14. 판매자 회원 계정 승인
  * 
- * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
+ * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class LockAccountTest {
+public class ConfirmTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LockAccountTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
 
 	private MockMvc mockMvc;
 
+	@Autowired
+	private SellerSCI sellerSCI;
+
 	/** [REQUEST]. */
-	private static LockAccountReq req;
+	private static ConfirmReq req;
+
 	/** [RESPONSE]. */
-	private static LockAccountRes res;
+	private static ConfirmRes res;
+
+	private static String caseType = "BAD";
 
 	/**
 	 * 
 	 * <pre>
-	 * Before method 설명.
+	 * TestCase 수행 전 실행 Method.
+	 * 인증 요청 [REQUEST] 객체 생성
 	 * </pre>
 	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		req = new LockAccountReq();
+		req = new ConfirmReq();
 	}
 
 	/**
 	 * <pre>
-	 * After method 설명.
+	 * TestCase 수행 후 실행 Method.
+	 * 인증 요청 결과 LOGGER 실행
 	 * </pre>
 	 */
 	@After
 	public void after() {
 		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtil.convertObjectToJson(res));
+		// TestCase [정상] Test일 경우만 회원 상태 원복
+		if ("NORMAL".equals(caseType)) {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID("S001");
+			commonRequest.setTenantID("S01");
+			UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+			updateStatusSellerRequest.setCommonRequest(commonRequest);
+			UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
+					.updateStatusSeller(updateStatusSellerRequest);
+			LOGGER.debug("[SellerSCI.updateStatusSeller] CODE : {}, MESSAGE : {}", updateStatusSellerResponse
+					.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse()
+					.getResultMessage());
+		}
 	}
 
 	/**
 	 * <pre>
-	 * 판매자 계정잠금.
+	 * 계정승인  - 정상(가가입 상태일경우).
 	 * </pre>
 	 */
 	@Test
-	public void lockAccount() {
-
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+	public void confirm() {
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerId("test_jun");
-						LOGGER.debug("request param : {}", req.toString());
+						req.setSellerKey("");
 						return req;
 					}
-				}).success(LockAccountRes.class, new SuccessCallback() {
+				}).success(ConfirmRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						res = (LockAccountRes) result;
-						assertThat(res.getSellerId(), notNullValue());
-						assertEquals(res.getSellerId(), req.getSellerId());
+						res = (ConfirmRes) result;
+						assertThat(res, notNullValue());
+						assertEquals(req.getSellerKey(), res.getSellerKey());
+						caseType = "NORMAL";
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 
 	/**
 	 * <pre>
-	 * 가입되지 않은 sellerId.
+	 * 계정 승인  - 회원 메인 상태가 가가입이 아닌경우.
 	 * </pre>
 	 */
 	@Test
-	public void lockAccountWrongId() {
-
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+	public void confirmBadStatus() {
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerId("asdawdwdwd");
-						LOGGER.debug("request param : {}", req.toString());
+						req.setSellerKey("");
 						return req;
 					}
-				}).success(LockAccountRes.class, new SuccessCallback() {
+				}).success(ConfirmRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						res = (LockAccountRes) result;
-						assertThat(res.getSellerId(), notNullValue());
-						assertEquals(res.getSellerId(), req.getSellerId());
+						res = (ConfirmRes) result;
+						assertThat(res, notNullValue());
+						assertEquals(req.getSellerKey(), res.getSellerKey());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 
 }

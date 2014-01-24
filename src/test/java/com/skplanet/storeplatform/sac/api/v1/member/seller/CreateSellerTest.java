@@ -43,7 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
- * 판매자 회원 가입
+ * 5.2.1. 판매자 회원 가입
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
@@ -63,8 +63,9 @@ public class CreateSellerTest {
 	@Autowired
 	private SellerSCI sellerSCI;
 
+	/** [REQUEST]. */
 	public static CreateReq req;
-
+	/** [RESPONSE]. */
 	public static CreateRes res;
 
 	/**

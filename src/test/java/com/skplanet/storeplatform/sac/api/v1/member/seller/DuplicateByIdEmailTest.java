@@ -1,8 +1,10 @@
 package com.skplanet.storeplatform.sac.api.v1.member.seller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,14 +23,17 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 
 /**
- * ID / Email 중복체크.
+ * 5.2.2. ID / Email 중복체크.
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
@@ -46,6 +51,12 @@ public class DuplicateByIdEmailTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static DuplicateByIdEmailReq req;
+
+	/** [RESPONSE]. */
+	private static DuplicateByIdEmailRes res;
+
 	/**
 	 * 
 	 * <pre>
@@ -55,6 +66,12 @@ public class DuplicateByIdEmailTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		req = new DuplicateByIdEmailReq();
+	}
+
+	@After
+	public void after() {
+		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtil.convertObjectToJson(res));
 	}
 
 	/**
@@ -64,15 +81,21 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateById() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=id&keyString=test_jun1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						req.setKeyType("id");
+						req.setKeyString("test_jun1");
+						return req;
+					}
+				}).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
+						res = (DuplicateByIdEmailRes) result;
 						assertThat(res.getIsRegistered(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+						assertEquals("Y", res.getIsRegistered());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -85,15 +108,21 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateByIdEmpty() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=id&keyString=")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						req.setKeyType("id");
+						req.setKeyString("test_jun112313");
+						return req;
+					}
+				}).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
+						res = (DuplicateByIdEmailRes) result;
 						assertThat(res.getIsRegistered(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+						assertEquals("Y", res.getIsRegistered());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -102,21 +131,25 @@ public class DuplicateByIdEmailTest {
 	/**
 	 * <pre>
 	 * 판매자 Email 중복체크.
-	 * TODO keyString 주입
 	 * </pre>
 	 */
 	@Test
 	public void duplicateByEmail() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
-						+ "/duplicateByIdEmail/v1?keyType=email&keyString=op_tabs_1001@gmail.com")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						req.setKeyType("email");
+						req.setKeyString("op_tabs_1001@gmail.com");
+						return req;
+					}
+				}).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
+						res = (DuplicateByIdEmailRes) result;
 						assertThat(res.getIsRegistered(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+						assertEquals("N", res.getIsRegistered());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -128,15 +161,21 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateByEmailEmpty() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=email&keyString=")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						req.setKeyType("email");
+						req.setKeyString("op_tabs_1001203@gmail.com");
+						return req;
+					}
+				}).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
+						res = (DuplicateByIdEmailRes) result;
 						assertThat(res.getIsRegistered(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+						assertEquals("N", res.getIsRegistered());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
