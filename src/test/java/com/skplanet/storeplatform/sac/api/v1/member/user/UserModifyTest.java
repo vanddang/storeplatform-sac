@@ -83,7 +83,8 @@ public class UserModifyTest {
 
 						ModifyReq reqJson = new ModifyReq();
 
-						reqJson.setUserKey("US201401241550022950000616");
+						// reqJson.setUserKey("US201401241550022950000616"); // One ID 회원
+						reqJson.setUserKey("US201401231555153430000447"); // 기존 IDP 회원
 
 						return reqJson;
 					}
