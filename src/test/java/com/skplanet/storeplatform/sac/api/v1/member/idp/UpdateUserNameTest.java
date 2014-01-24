@@ -76,12 +76,12 @@ public class UpdateUserNameTest {
 						req.setCmd("RXUpdateUserNameIDP");
 						HashMap resultMap = new HashMap();
 
-						resultMap.put("systemID", "S001");
+						resultMap.put("systemID", "W");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
 						resultMap.put("trx_no", "1111");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "tstoreoneid1002");
+						resultMap.put("im_int_svc_no", "100000003925");
 						resultMap.put("user_name", "김형식");
 						resultMap.put("user_birthday", "19750212");
 						resultMap.put("user_sex", "M");

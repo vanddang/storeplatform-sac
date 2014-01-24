@@ -83,7 +83,7 @@ public class SetSuspendUserIdTest {
 						resultMap.put("sp_id", "1111");
 						resultMap.put("target_sst_cd", "10100");
 						resultMap.put("im_int_svc_no", "100000003280");
-						resultMap.put("sus_status_code", "80");
+						resultMap.put("sus_status_code", "90");
 						resultMap.put("modify_sst_code", "20100");
 						resultMap.put("modify_req_date", "20130423");
 						resultMap.put("modify_req_time", "112030");

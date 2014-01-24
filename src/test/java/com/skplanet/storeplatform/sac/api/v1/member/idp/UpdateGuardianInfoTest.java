@@ -76,42 +76,24 @@ public class UpdateGuardianInfoTest {
 						req.setCmd("RXUpdateGuardianInfoIDP");
 						HashMap resultMap = new HashMap();
 
-						// cmd=RXUpdateGuardianInfoIDP&
-						// target_sst_cd=41100&
-						// parent_email=&
-						// is_parent_approve=Y
-						// &parent_rname_auth_key=14DPINETREEBUMOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1111
-						// &modify_req_time=131044
-						// &modify_req_date=20131021
-						// &im_int_svc_no=200000011586
-						// &parent_approve_sst_cd=90300
-						// &parent_type=0
-						// &sp_id=OMP10000
-						// &modify_sst_code=90300
-						// &parent_approve_date=20131021
-						// &parent_birthday=19701111
-						// &parent_rname_auth_type=1
-						// &parent_name=%EB%B6%80%EB%AA%A8%EB%8B%98
-						// &trx_no=900002013102113104418589
-
 						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
-						resultMap.put("sp_id", "90000");
-						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "tstoreoneid1002");
+						resultMap.put("sp_id", "OMP10000");
+						resultMap.put("target_sst_cd", "41100");
+						resultMap.put("im_int_svc_no", "100000003280");
 						resultMap.put("parent_type", "0");
-						resultMap.put("parent_rname_auth_type", "6");
-						resultMap.put("parent_name", "이정숙");
-						resultMap.put("parent_birthday", "20140612");
+						resultMap.put("parent_rname_auth_type", "1");
+						resultMap.put("parent_name", "김용석");
+						resultMap.put("parent_birthday", "19701111");
 
 						resultMap.put("parent_approve_sst_code", "1111");
 						resultMap.put("is_parent_approve", "N");
 						resultMap
 								.put("parent_rname_auth_key",
-										"sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
-						resultMap.put("parent_approve_date", "20130122");
+										"14DPINETREEBUMOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1111");
+						resultMap.put("parent_approve_date", "20131021");
 						resultMap.put("parent_email", "");
-						resultMap.put("modify_sst_code", "20100");
+						resultMap.put("modify_sst_code", "90300");
 						resultMap.put("modify_req_date", "20130423");
 						resultMap.put("modify_req_time", "112030");
 
