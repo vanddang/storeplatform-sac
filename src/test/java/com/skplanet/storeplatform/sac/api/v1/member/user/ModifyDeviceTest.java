@@ -95,7 +95,7 @@ public class ModifyDeviceTest {
 							ModifyDeviceReq req = new ModifyDeviceReq();
 							req.setUserAuthKey("263c4ed6240966f9d28b33650161c843fb37bed9");
 							req.setUserKey("US201401221721168550000323");
-							req.setDeviceKey("DE201401221008185490000164");
+							//req.setDeviceKey("DE201401221008185490000164");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
 							deviceInfo.setDeviceId("01066786220");
