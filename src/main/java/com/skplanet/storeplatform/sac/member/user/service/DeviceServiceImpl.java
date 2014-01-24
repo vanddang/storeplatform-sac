@@ -777,33 +777,27 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 		}
 
-		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getUserDeviceExtraInfo();
+		if (majorDeviceInfo.getImMngNum() != null) {
 
-		for (DeviceExtraInfo info : deviceExtraInfoList) {
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(),
+					deviceInfo.getUserDeviceExtraInfo()));
 
-			if (info.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_IMMNGNUM)) {
-				if (majorDeviceInfo.getImMngNum() != null) {
-					deviceExtraInfoList.remove(info);
-					deviceExtraInfoList.add(DeviceUtil.addDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(),
-							deviceInfo));
-				}
-
-			} else if (info.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)) {
-				if (majorDeviceInfo.getUacd() != null) {
-					deviceExtraInfoList.remove(info);
-					deviceExtraInfoList.add(DeviceUtil.addDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
-				}
-
-			} else if (info.getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_OMDUACD)) {
-				if (majorDeviceInfo.getOmdUacd() != null) {
-					deviceExtraInfoList.remove(info);
-					deviceExtraInfoList.add(DeviceUtil.addDeviceExtraInfo(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(),
-							deviceInfo));
-				}
-			}
 		}
 
-		deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
+		if (majorDeviceInfo.getUacd() != null) {
+
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(),
+					deviceInfo.getUserDeviceExtraInfo()));
+
+		}
+
+		if (majorDeviceInfo.getOmdUacd() != null) {
+
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(),
+					deviceInfo.getUserDeviceExtraInfo()));
+
+		}
+
 		return deviceInfo;
 	}
 

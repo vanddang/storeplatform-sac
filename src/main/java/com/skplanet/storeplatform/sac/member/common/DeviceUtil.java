@@ -42,6 +42,7 @@ public class DeviceUtil {
 
 				if (info.getExtraProfile().equals(extraProfile)) {
 					extraProfileValue = info.getExtraProfileValue();
+					break;
 				}
 			}
 		}
@@ -79,50 +80,6 @@ public class DeviceUtil {
 		}
 
 		return deviceExtraInfoList;
-	}
-
-	/**
-	 * 휴대기기 부가정보 객체에 값을 셋팅후 리턴
-	 * 
-	 * @param extraProfile
-	 *            기타 기기 부가속성 key
-	 * @param extraProfileValue
-	 *            기타 기기 부가속성 값
-	 * @param deviceInfo
-	 *            DeviceInfo 객체
-	 * @return deviceExtraInfo DeviceExtraInfo
-	 */
-	public static DeviceExtraInfo addDeviceExtraInfo(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
-		DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
-		deviceExtraInfo.setExtraProfile(extraProfile);
-		deviceExtraInfo.setExtraProfileValue(extraProfileValue);
-		deviceExtraInfo.setUserKey(deviceInfo.getUserKey());
-		deviceExtraInfo.setTenentId(deviceInfo.getTenantId());
-		deviceExtraInfo.setDeviceKey(deviceInfo.getDeviceKey());
-
-		return deviceExtraInfo;
-	}
-
-	/**
-	 * 휴대기기 부가정보 객체에 값을 셋팅후 리턴
-	 * 
-	 * @param extraProfile
-	 *            기타 기기 부가속성 key
-	 * @param extraProfileValue
-	 *            기타 기기 부가속성 값
-	 * @param deviceInfo
-	 *            DeviceInfo 객체
-	 * @return userMbrDeviceDetail UserMbrDeviceDetail
-	 */
-	public static UserMbrDeviceDetail addUserMbrDeviceDetailInfo(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
-		UserMbrDeviceDetail userMbrDeviceDetail = new UserMbrDeviceDetail();
-		userMbrDeviceDetail.setExtraProfile(extraProfile);
-		userMbrDeviceDetail.setExtraProfileValue(extraProfileValue);
-		userMbrDeviceDetail.setUserKey(deviceInfo.getUserKey());
-		userMbrDeviceDetail.setTenantID(deviceInfo.getTenantId());
-		userMbrDeviceDetail.setDeviceKey(deviceInfo.getDeviceKey());
-
-		return userMbrDeviceDetail;
 	}
 
 	/**
