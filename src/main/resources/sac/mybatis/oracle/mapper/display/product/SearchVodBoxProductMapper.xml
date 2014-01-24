@@ -11,6 +11,7 @@
                        , A.PROD_ID
                        , I.PART_PROD_ID
                        , A.EXPO_ORD
+                       , D.CONTENTS_TYPE_CD
                     FROM (SELECT  TENANT_ID
                                 , LIST_ID
                                 , MENU_ID
@@ -26,14 +27,12 @@
                          )                       A
                        , TB_DP_MENU_CATEGORY     B
                        , TB_DP_PROD              D
-                       , TB_DP_MULTIMDA_PROD     E
                        , TB_DP_TENANT_PROD       G
                        , TB_DP_PROD_RSHP         I
                        , TB_DP_PROD              J
                        , TB_DP_SPRT_DEVICE       K
                     WHERE A.MENU_ID = B.MENU_ID
                      AND A.PROD_ID = D.PROD_ID
-                     AND A.PROD_ID = E.PROD_ID
                      AND A.PROD_ID = G.PROD_ID
                      AND A.TENANT_ID = G.TENANT_ID
                      AND A.PROD_ID = I.PROD_ID

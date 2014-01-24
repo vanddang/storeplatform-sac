@@ -227,6 +227,7 @@
 						                      , TB_DP_TENANT_PROD_PRICE       H
 						                      , TB_DP_PROD_RSHP               I
 						                      , TB_DP_PROD                    J
+						                      , TB_DP_SPRT_DEVICE             K
 						                      , TB_DP_MULTIMDA_PROD           L
 						                      , TB_DP_PROD_IMG                M
 						                      , TB_DP_TENANT_PROD_STATS       N              
@@ -263,12 +264,15 @@
 						                   -- INPUT PARAMETER
 						                   ----------------------------------------------------------------------------- 
 						                   <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-						                        AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회             
+						                        AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회       
+						                        AND B.PROD_ID = K.PROD_ID(+)      
 						                      </if>
 						                      <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
 						                        AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+						                        AND I.PART_PROD_ID = K.PROD_ID(+)
 						                      </if>
 						                   AND G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
+						                   AND K.DEVICE_MODEL_CD(+) = #{deviceHeader.model}    /* 단말기 모델 코드 */
                                        ) JA 
                                       WHERE ROWNUM = 1
                ) LA
@@ -329,6 +333,7 @@
             , TB_DP_PROD P2
             , TB_DP_TENANT_PROD TP2
             , TB_DP_PROD_IMG PI
+            , TB_DP_SPRT_DEVICE             K
         WHERE MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
           AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
@@ -377,11 +382,14 @@
        ----------------------------------------------------------------------------- 
           <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
             AND CP.PROD_ID = #{productBasicInfo.prodId}
+            AND CP.PROD_ID = K.PROD_ID(+)    
           </if>
           <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
             AND CP.PART_PROD_ID = #{productBasicInfo.partProdId}
+            AND CP.PART_PROD_ID = K.PROD_ID(+)
           </if>
           AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
+          AND K.DEVICE_MODEL_CD(+) = #{deviceHeader.model}    /* 단말기 모델 코드 */
           AND PI.IMG_CD = #{imageCd}
           AND TP.TENANT_ID = #{tenantHeader.tenantId}
           AND PD.LANG_CD = #{lang}
@@ -495,6 +503,7 @@
                       , TB_DP_TENANT_PROD_PRICE       H
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J
+                      , TB_DP_SPRT_DEVICE             K
                       , TB_DP_MULTIMDA_PROD           L
                       , TB_DP_PROD_IMG                M
                       , TB_DP_TENANT_PROD_STATS       N              
@@ -531,13 +540,15 @@
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
                    <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                        AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회             
+                        AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회    
+                        AND B.PROD_ID = K.PROD_ID(+)             
                       </if>
                       <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                         AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+                        AND I.PART_PROD_ID = K.PROD_ID(+)
                       </if>
                    AND G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
-        
+                   AND K.DEVICE_MODEL_CD(+) = #{deviceHeader.model}    /* 단말기 모델 코드 */
                ) TB
            WHERE TB.RN = 1 
     </select>
@@ -660,6 +671,16 @@
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]>  'Y'
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
+                        AND NOT EXISTS (
+                            SELECT 1 
+                            FROM  TB_DP_SPRT_DEVICE DV  
+                                 ,TB_CM_DEVICE CM
+                            WHERE 1=1
+                              AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                              AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
+                              AND DV.DEVICE_MODEL_CD  = #{deviceHeader.model} 
+                              AND PROD_ID = G.PROD_ID
+                        )    
                    ) 
                  WHERE NO =1   
     </select>

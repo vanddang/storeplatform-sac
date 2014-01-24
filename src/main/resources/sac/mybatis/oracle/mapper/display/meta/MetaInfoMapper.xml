@@ -118,7 +118,7 @@
                    AND  I.DEVICE_MODEL_CD = #{deviceHeader.model} /* 단말모델코드 */
        ) TB
     </select>
-    <select id="getVODMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
+    <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT  /* MetaInfoMapper.xml, selectCategoryAppList, tae hee Lee, 2014-01-07 */
                 LA.UP_MENU_ID
               , LA.TOP_MENU_ID
@@ -231,7 +231,7 @@
            AND LA.PROD_ID = LB.PROD_ID(+)
     </select>
     
-    <select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
+    <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT 
               MCI.RANK_CHG_CNT
             , MCI.RANK_CHG_CLSF_CD
@@ -336,7 +336,7 @@
           AND CD.LANG_CD = #{lang}
        
     </select>
-    <select id="getEbookComicMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
+    <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
        SELECT TB.UP_MENU_ID
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
@@ -481,7 +481,7 @@
                ) TB
            WHERE TB.RN = 1 
     </select>
-    <select id="getShoppingMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
+    <select id="getShoppingMetaInfo" parameterType="Map" resultType="MetaInfo">
         SELECT  * 
                    FROM (
                           SELECT 
