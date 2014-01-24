@@ -75,7 +75,7 @@ public class MenuListServiceImpl implements MenuListService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -173,7 +173,7 @@ public class MenuListServiceImpl implements MenuListService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}

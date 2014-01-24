@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -161,7 +161,7 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -318,7 +318,7 @@ public class CategoryServiceImpl implements CategoryService {
 		if (null == tenantId || "".equals(tenantId)) {
 			requestVO.setTenantId("S01");
 		}
-		if (null == systemId || "".equals(systemId) || "S001".equals(systemId)) {
+		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
 			requestVO.setSystemId("test01");
 		}
 		if (null == deviceCd || "".equals(deviceCd)) {
