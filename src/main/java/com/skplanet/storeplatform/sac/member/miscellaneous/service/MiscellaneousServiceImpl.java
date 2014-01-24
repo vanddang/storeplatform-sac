@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import com.skplanet.storeplatform.external.client.message.vo.SmsSendRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -105,6 +107,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor; // Message Properties
+
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDao;
 
 	@Override
 	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
@@ -223,7 +229,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			}
 		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
-			String uaCode = this.repository.getUaCode(deviceModelNo);
+			String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
 			if (uaCode != null) {
 				response.setUaCd(uaCode);
 			} else {
@@ -287,7 +293,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setAuthValue(authCode);
 
 		LOGGER.info("## TB_CM_SVC_AUTH INSERT Parameter : {}", serviceAuthInfo);
-		this.repository.insertServiceAuthCode(serviceAuthInfo);
+		this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
 
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendReq smsReq = new SmsSendReq();
@@ -330,7 +336,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setAuthSign(authSign);
 		serviceAuthInfo.setAuthValue(authCode);
 
-		ServiceAuth resultInfo = this.repository.getPhoneAuthYn(serviceAuthInfo);
+		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo,
+				ServiceAuth.class);
 
 		if (resultInfo == null) {
 			throw new Exception("인증 코드가 일치 하지 않습니다.");
@@ -360,7 +367,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
-		this.repository.updateServiceAuthYn(resultInfo.getAuthSeq());
+		String authSeq = resultInfo.getAuthSeq();
+		this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 
 		res.setUserPhone(userPhone);
 		return res;
@@ -374,7 +382,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		IDPReceiverM idpReciver = new IDPReceiverM();
 		GetCaptchaRes response = new GetCaptchaRes();
 
-		LOGGER.info("## Captcha 문자 발급 Service 시작.");
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 
 		LOGGER.info("## IDP Service 호출.");
@@ -413,6 +420,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			waterMarkImageString = res.getImgData();
 			LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
+			LOGGER.info("## Captcha 문자 발급 완료.");
 		}
 
 		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능
@@ -422,7 +430,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		response.setImageSign(waterMarkImageSign);
 		response.setSignData(signData);
 
-		LOGGER.info("## Captcha 문자 발급 Service 종료.");
 		return response;
 	}
 
@@ -455,7 +462,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 1. 기존에 인증코드 발급된 회원인지 여부 확인 */
 		String mbrNo = request.getUserKey();
-		ServiceAuth serviceAuth = this.repository.getEmailAuthYn(mbrNo);
+		ServiceAuth serviceAuth = this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo,
+				ServiceAuth.class);
 		String isAuthEmail = serviceAuth.getAuthComptYn();
 		String authCode = serviceAuth.getAuthValue();
 		LOGGER.info("## 기존 인증회원 여부 : {}", isAuthEmail);
@@ -481,7 +489,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
 			LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
-			this.repository.insertServiceAuthCode(serviceAuthInfo);
+			this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
 		}
 
 		/** 4. 인증코드 Response */
@@ -498,12 +506,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 1. 인증 코드로 DB 확인하여 , 회원 key, 회원 email 조회 */
 		LOGGER.info("## 인증코드 정보 조회. Request : {}", request);
-		ServiceAuth serviceAuthInfo = this.repository.getEmailAuthInfo(request.getEmailAuthCode());
+		String authValue = request.getEmailAuthCode();
+		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.getEmailAuthInfo", authValue,
+				ServiceAuth.class);
 		LOGGER.info("## 인증코드 정보 조회. Response : {}", serviceAuthInfo);
 
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
 		if (serviceAuthInfo != null) {
-			this.repository.updateServiceAuthYn(serviceAuthInfo.getAuthSeq());
+			if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
+				throw new Exception("기존 인증된 회원입니다.");
+			}
+			String authSeq = serviceAuthInfo.getAuthSeq();
+			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 			LOGGER.info("## 이메일 인증 완료.");
 		} else {
 			throw new Exception("유효하지 않은 인증코드 입니다.");
