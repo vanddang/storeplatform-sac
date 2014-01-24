@@ -17,11 +17,6 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 발신자 휴대폰 번호.
-	 */
-	private String sendMdn;
-
-	/**
 	 * 수신자 휴대폰 번호.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
@@ -44,21 +39,6 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String teleSvcId;
-
-	/**
-	 * @return the sendMdn
-	 */
-	public String getSendMdn() {
-		return this.sendMdn;
-	}
-
-	/**
-	 * @param sendMdn
-	 *            the sendMdn to set
-	 */
-	public void setSendMdn(String sendMdn) {
-		this.sendMdn = sendMdn;
-	}
 
 	/**
 	 * @return the recvMdn
