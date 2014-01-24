@@ -21,11 +21,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 
 /**
  * 판매자 서브계정 ID 중복체크.
@@ -64,12 +66,22 @@ public class DuplicateBySubsellerIdTest {
 	 */
 	@Test
 	public void duplicateBySubsellerId() {
-		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateBySubsellerId/v1?keyString=ID323R42722")
-				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
+
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateBySubsellerId/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						DuplicateBySubsellerIdReq req = new DuplicateBySubsellerIdReq();
+
+						req.setKeyString("ID323R42722");
+
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(DuplicateBySubsellerIdRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DuplicateByIdEmailRes res = (DuplicateByIdEmailRes) result;
+						DuplicateBySubsellerIdRes res = (DuplicateBySubsellerIdRes) result;
 						assertThat(res.getIsRegistered(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
