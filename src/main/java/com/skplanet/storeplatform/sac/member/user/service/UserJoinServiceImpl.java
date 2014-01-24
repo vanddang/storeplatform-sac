@@ -190,7 +190,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## secedeUser4Wap - Result Code : {}", secedeUser4WapInfo.getResponseHeader().getResult());
 			LOGGER.info("## secedeUser4Wap - Result Text : {}", secedeUser4WapInfo.getResponseHeader().getResult_text());
 
-			throw new RuntimeException("IDP 무선회원 가입 실패");
+			throw new RuntimeException("## (기가입 상태) 이미 서비스에 등록한 MDN");
 
 		} else { // 기타
 
