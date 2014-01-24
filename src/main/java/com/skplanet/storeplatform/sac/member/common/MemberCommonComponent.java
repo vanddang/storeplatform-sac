@@ -198,7 +198,8 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
+	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
+			throws Exception {
 		return this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, deviceInfo);
 	}
 
@@ -261,33 +262,42 @@ public class MemberCommonComponent {
 			 * 사용자 정보
 			 */
 			if (schUserRes.getUserMbr() != null) {
-				userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
-				userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
-				userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-				userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
+				userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
+				userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
+				userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
+				userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
 				userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
 				userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-				userInfo.setImRegDat(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-				userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
-				userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
-				userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
-				userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-				userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
-				userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
-				userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
-				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
-				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
-				userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
-				userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
-				userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
-				userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
-				userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
-				userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-				userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
+				userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
 				userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
 				userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-				userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
+				userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
+				userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
+				userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
+				userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
+				userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
+				userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
+				userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
+				userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
+				userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
+				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
+				userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
+				userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
+				userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
+				userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
+				userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
+				userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
+				userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
+				userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
+				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
+				userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
+				userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
+				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+				userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
+				userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
+				userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
+				userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
+				userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
 			} else {
 				throw new RuntimeException("SearchUser.UserMbr (사용자정보) 데이터가 없습니다.");
 			}
@@ -360,7 +370,8 @@ public class MemberCommonComponent {
 	 *             익셉션
 	 * 
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType)
+			throws Exception {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
