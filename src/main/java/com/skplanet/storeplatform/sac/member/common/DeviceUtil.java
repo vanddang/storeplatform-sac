@@ -58,11 +58,13 @@ public class DeviceUtil {
 	 *            기타 기기 부가속성 key
 	 * @param extraProfileValue
 	 *            기타 기기 부가속성 값
-	 * @param deviceExtraInfoList
-	 *            휴대기기 부가속성 리스트
+	 * @param deviceInfo
+	 *            휴대기기 휴대기기 정보
 	 * @return deviceExtraInfoList List<DeviceExtraInfo>
 	 */
-	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue, List<DeviceExtraInfo> deviceExtraInfoList) {
+	public static List<DeviceExtraInfo> setDeviceExtraValue(String extraProfile, String extraProfileValue, DeviceInfo deviceInfo) {
+
+		List<DeviceExtraInfo> deviceExtraInfoList = deviceInfo.getUserDeviceExtraInfo();
 
 		if (deviceExtraInfoList != null) {
 
@@ -76,6 +78,9 @@ public class DeviceUtil {
 			DeviceExtraInfo deviceExtraInfo = new DeviceExtraInfo();
 			deviceExtraInfo.setExtraProfile(extraProfile);
 			deviceExtraInfo.setExtraProfileValue(extraProfileValue);
+			deviceExtraInfo.setTenentId(deviceInfo.getTenantId());
+			deviceExtraInfo.setDeviceKey(deviceInfo.getDeviceKey());
+			deviceExtraInfo.setUserKey(deviceInfo.getUserKey());
 			deviceExtraInfoList.add(deviceExtraInfo);
 		}
 

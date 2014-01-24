@@ -195,7 +195,10 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 주요정보 확인 */
-		req.setDeviceInfo(this.getDeviceMajorInfo(req.getDeviceInfo()));
+		DeviceInfo deviceInfo = req.getDeviceInfo();
+		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		deviceInfo.setUserKey(userKey);
+		req.setDeviceInfo(this.getDeviceMajorInfo(deviceInfo));
 
 		/* 휴대기기 등록 처리 */
 		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, req.getDeviceInfo());
@@ -522,7 +525,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
-		// String deviceKey = deviceInfo.getDeviceKey();
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
@@ -545,11 +547,16 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
+		// 부가정보 등록시 셋팅할 값들
+		//userKey는 담겨있음
+		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
+
 		/* deviceHeader 정보 셋팅 */
 		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, requestHeader.getDeviceHeader()
-				.getOsVersion(), deviceInfo.getUserDeviceExtraInfo()));
-		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, requestHeader.getDeviceHeader()
-				.getPkgVersion(), deviceInfo.getUserDeviceExtraInfo()));
+				.getOsVersion(), deviceInfo));
+		//		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, requestHeader.getDeviceHeader()
+		//				.getPkgVersion(), deviceInfo));
 
 		/* 휴대기기 주요정보 확인 */
 		//deviceInfo = this.getDeviceMajorInfo(deviceInfo);
@@ -602,7 +609,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 							//uacd 부가속성 추가
 							deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId,
-									deviceInfo.getUserDeviceExtraInfo()));
+									deviceInfo));
 						}
 
 					} else {
@@ -741,8 +748,9 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		/* 휴대기기 부가정보 */
-		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());// 부가정보 등록시 셋팅할 deviceKey
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
+
+		logger.info(":::::::::::::::::: userMbrDevice extra : {}", userMbrDevice.getUserMbrDeviceDetail());
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
@@ -780,21 +788,21 @@ public class DeviceServiceImpl implements DeviceService {
 		if (majorDeviceInfo.getImMngNum() != null) {
 
 			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(),
-					deviceInfo.getUserDeviceExtraInfo()));
+					deviceInfo));
 
 		}
 
 		if (majorDeviceInfo.getUacd() != null) {
 
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(),
-					deviceInfo.getUserDeviceExtraInfo()));
+			deviceInfo
+					.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
 
 		}
 
 		if (majorDeviceInfo.getOmdUacd() != null) {
 
 			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(),
-					deviceInfo.getUserDeviceExtraInfo()));
+					deviceInfo));
 
 		}
 

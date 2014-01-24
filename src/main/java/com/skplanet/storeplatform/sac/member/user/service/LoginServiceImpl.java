@@ -544,11 +544,9 @@ public class LoginServiceImpl implements LoginService {
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		DeviceInfo deviceInfo = new DeviceInfo();
-		String tenantId = requestHeader.getTenantHeader().getTenantId();
 		String model = requestHeader.getDeviceHeader().getModel(); //단말모델코드
 
 		deviceInfo.setUserKey(userKey);
-		deviceInfo.setTenantId(tenantId);
 		deviceInfo.setDeviceModelNo(model);
 
 		if (obj instanceof AuthorizeByMdnReq) { // mdn인증
@@ -561,7 +559,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 			deviceInfo.setNativeId(req.getNativeId());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
-
+			deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
 			this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
@@ -576,7 +574,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 				deviceInfo.setNativeId(req.getNativeId());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
-
+				deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
 				this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
 
 				/* 변경된 휴대기기 정보 IDP도 변경 */
@@ -679,8 +677,9 @@ public class LoginServiceImpl implements LoginService {
 			/* 3. imMngNum 부가속성 추가 */
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setDeviceId(deviceId);
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, imMngNum,
-					deviceInfo.getUserDeviceExtraInfo()));
+			deviceInfo.setUserKey(userKey);
+			deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, imMngNum, deviceInfo));
 			this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
 
 		} else {
