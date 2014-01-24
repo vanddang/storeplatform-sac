@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  * 
  * Updated on : 2014. 1. 21. Updated by : 홍길동, SK 플래닛.
  */
-public interface ResponseInfoGenerateFacadeService {
+public interface ResponseInfoGenerateFacade {
 
 	/**
 	 * <pre>

@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-public interface MusicInfoGenerateService {
+public interface MusicInfoGenerator {
 	public Accrual generateAccrual(MetaInfo metaInfo);
 
 	public Service generateService(String name, String type);

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -14,28 +15,37 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-@Service
-@Transactional
-public class CommonMetaInfoGenerateServiceImpl implements CommonMetaInfoGenerateService {
+@Component
+public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Override
+	public Identifier generateIdentifier(String type, String text) {
+		Identifier identifier = new Identifier();
+		identifier.setType(type);
+		identifier.setText(text);
+
+		return identifier;
+	}
 
 	@Override
 	public Identifier generateIdentifier(MetaInfo metaInfo) {
 		String contentsTypeCd = metaInfo.getContentsTypeCd();
-		Identifier identifier = new Identifier();
+		Identifier identifier = null;
 		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getProdId());
 		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)
 				&& DisplayConstants.DP_SHOPPING_COUPON_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
-			identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
+			identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD, metaInfo.getCatalogId());
 		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
-			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
 		}
-		identifier.setText(metaInfo.getProdId());
 		return identifier;
 	}
 
@@ -120,5 +130,47 @@ public class CommonMetaInfoGenerateServiceImpl implements CommonMetaInfoGenerate
 		Title title = new Title();
 		title.setText(metaInfo.getProdNm());
 		return title;
+	}
+
+	@Override
+	public List<Identifier> generateSpecificProductIdentifierList(MetaInfo metaInfo) {
+		String contentsTypeCd = metaInfo.getContentsTypeCd();
+		Identifier identifier = null;
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+
+		this.log.debug("##### generateSpecificProductIdentifierList contentsTypeCd : {}", contentsTypeCd);
+		// Episode ID 기준검색일 경우
+		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
+			this.log.debug("##### Episode & Channel Identifier setting");
+			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
+			identifierList.add(identifier);
+			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+			identifierList.add(identifier);
+		}
+		// Catalog ID 기준 검색일 경우
+		else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)
+				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			this.log.debug("##### Catalog & Episode Identifier setting");
+			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
+			identifierList.add(identifier);
+			identifier = this.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD, metaInfo.getCatalogId());
+			identifierList.add(identifier);
+		}
+		// Channel ID 기준 검색일 경우
+		else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
+			this.log.debug("##### Channel Identifier setting");
+			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+			identifierList.add(identifier);
+		}
+		return identifierList;
+	}
+
+	@Override
+	public Distributor generateDistributor(MetaInfo metaInfo) {
+		Distributor distributor = new Distributor();
+		distributor.setName(metaInfo.getExpoSellerNm());
+		distributor.setTel(metaInfo.getExpoSellerTelNo());
+		distributor.setEmail(metaInfo.getExpoSellerEmail());
+		return distributor;
 	}
 }

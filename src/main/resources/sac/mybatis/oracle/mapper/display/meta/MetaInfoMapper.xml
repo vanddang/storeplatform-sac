@@ -126,7 +126,6 @@
               , LA.MENU_NM
               , LA.MENU_DESC
               , LA.META_CLSF_CD
-              , LA.CONTENTS_TYPE_CD
               , LA.PROD_ID
               , LA.PART_PROD_ID
               , LA.VOD_TITL_NM
@@ -250,7 +249,6 @@
             , PD.PROD_DTL_DESC
             , TPP.PROD_AMT
             , P.PROD_GRD_CD
-            , P.CONTENTS_TYPE_CD
             , P.META_CLSF_CD
             , PD.ARTIST1_NM
             , PD.ARTIST2_NM
@@ -350,7 +348,6 @@
              , TB.MENU_NM
              , TB.MENU_DESC
              , TB.META_CLSF_CD
-             , TB.CONTENTS_TYPE_CD
              , TB.PROD_ID
              , TB.PART_PROD_ID
              , TB.VOD_TITL_NM
@@ -517,7 +514,6 @@
                                ,I.DLV_PROD_YN
                                ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
                                ,J.PROD_GRD_CD
-                               ,J.CONTENTS_TYPE_CD
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT 
                                ,N.SPRC_APPLY_START_DT

@@ -4,28 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-@Service
-@Transactional
-public class AppInfoGenerateServiceImpl implements AppInfoGenerateService {
+@Component
+public class AppInfoGeneratorImpl implements AppInfoGenerator {
 
 	@Autowired
-	private CommonMetaInfoGenerateService commonService;
+	private CommonMetaInfoGenerator commonGenerator;
 
 	@Override
 	public List<Support> generateSupportList(MetaInfo metaInfo) {
 		List<Support> supportList = new ArrayList<Support>();
-		Support support = this.commonService.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn());
+		Support support = this.commonGenerator.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getDrmYn());
 		supportList.add(support);
-		support = this.commonService.generateSupport(DisplayConstants.DP_IN_APP_SUPPORT_NM,
+		support = this.commonGenerator.generateSupport(DisplayConstants.DP_IN_APP_SUPPORT_NM,
 				metaInfo.getPartParentClsfCd());
 		supportList.add(support);
 		return supportList;
@@ -57,5 +56,15 @@ public class AppInfoGenerateServiceImpl implements AppInfoGenerateService {
 		menu.setName(metaInfo.getTopMenuNm());
 		menuList.add(menu);
 		return menuList;
+	}
+
+	@Override
+	public List<Identifier> generateAppIdentifierList(MetaInfo metaInfo) {
+		Identifier identifier = new Identifier();
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+		identifier.setText(metaInfo.getPartProdId());
+		identifierList.add(identifier);
+		return identifierList;
 	}
 }

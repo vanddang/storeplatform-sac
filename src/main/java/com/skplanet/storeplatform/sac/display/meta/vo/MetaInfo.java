@@ -29,6 +29,9 @@ public class MetaInfo {
 	private Integer fileSize;
 	private String contentsTypeCd;
 	private Map<String, Object> supportList;
+	private String expoSellerEmail;
+	private String expoSellerNm;
+	private String expoSellerTelNo;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -39,12 +42,23 @@ public class MetaInfo {
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
-	private String chapter;
+	private Integer chapter;
 	private String issueDay;
 	private String chnlCompNm;
 	private String agencyNm;
 	private String hdvYn;
 	private String dolbySprtYn;
+	private Integer epsdCnt;
+	private Integer strmEpsdCnt;
+	private String supportStore;
+	private String supportPlay;
+	private String bookType;
+	private Integer bookCount;
+	private String bookStatus;
+	/*
+	 * 완료 여부
+	 */
+	private String comptYn;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
@@ -68,6 +82,7 @@ public class MetaInfo {
 	private String applyEndDt;
 	private String prodCaseCd;
 	private Integer prodNetAmt;
+	private String catalogId;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -269,6 +284,30 @@ public class MetaInfo {
 		this.supportList = supportList;
 	}
 
+	public String getExpoSellerEmail() {
+		return this.expoSellerEmail;
+	}
+
+	public void setExpoSellerEmail(String expoSellerEmail) {
+		this.expoSellerEmail = expoSellerEmail;
+	}
+
+	public String getExpoSellerNm() {
+		return this.expoSellerNm;
+	}
+
+	public void setExpoSellerNm(String expoSellerNm) {
+		this.expoSellerNm = expoSellerNm;
+	}
+
+	public String getExpoSellerTelNo() {
+		return this.expoSellerTelNo;
+	}
+
+	public void setExpoSellerTelNo(String expoSellerTelNo) {
+		this.expoSellerTelNo = expoSellerTelNo;
+	}
+
 	public String getAid() {
 		return this.aid;
 	}
@@ -317,11 +356,11 @@ public class MetaInfo {
 		this.vodTitlNm = vodTitlNm;
 	}
 
-	public String getChapter() {
+	public Integer getChapter() {
 		return this.chapter;
 	}
 
-	public void setChapter(String chapter) {
+	public void setChapter(Integer chapter) {
 		this.chapter = chapter;
 	}
 
@@ -515,6 +554,78 @@ public class MetaInfo {
 
 	public void setProdNetAmt(Integer prodNetAmt) {
 		this.prodNetAmt = prodNetAmt;
+	}
+
+	public String getCatalogId() {
+		return this.catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+
+	public Integer getEpsdCnt() {
+		return this.epsdCnt;
+	}
+
+	public void setEpsdCnt(Integer epsdCnt) {
+		this.epsdCnt = epsdCnt;
+	}
+
+	public Integer getStrmEpsdCnt() {
+		return this.strmEpsdCnt;
+	}
+
+	public void setStrmEpsdCnt(Integer strmEpsdCnt) {
+		this.strmEpsdCnt = strmEpsdCnt;
+	}
+
+	public void setBookCount(Integer bookCount) {
+		this.bookCount = bookCount;
+	}
+
+	public String getSupportStore() {
+		return this.supportStore;
+	}
+
+	public void setSupportStore(String supportStore) {
+		this.supportStore = supportStore;
+	}
+
+	public String getSupportPlay() {
+		return this.supportPlay;
+	}
+
+	public void setSupportPlay(String supportPlay) {
+		this.supportPlay = supportPlay;
+	}
+
+	public String getBookType() {
+		return this.bookType;
+	}
+
+	public void setBookType(String bookType) {
+		this.bookType = bookType;
+	}
+
+	public Integer getBookCount() {
+		return this.bookCount;
+	}
+
+	public String getBookStatus() {
+		return this.bookStatus;
+	}
+
+	public void setBookStatus(String bookStatus) {
+		this.bookStatus = bookStatus;
+	}
+
+	public String getComptYn() {
+		return this.comptYn;
+	}
+
+	public void setComptYn(String comptYn) {
+		this.comptYn = comptYn;
 	}
 
 }

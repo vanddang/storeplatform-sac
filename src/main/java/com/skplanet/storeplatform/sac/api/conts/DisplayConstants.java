@@ -204,4 +204,21 @@ public class DisplayConstants {
 	public static final String DP_OMD_TYPE_NM = "omd";
 
 	public static final String DP_OMD_NORMAL_NM = "normal";
+
+	public static final String DP_EBOOK_SERIAL_NM = "serial";
+
+	public static final String DP_EBOOK_COMPLETED_NM = "completed";
+
+	public static final String DP_EBOOK_CONTINUE_NM = "continue";
+
+	/*
+	 * eBook 시리즈 메타 클래스 코드
+	 */
+	public static final String DP_SERIAL_META_CLASS_CD = "CT20";
+
+	public static final String DP_VOD_HD_SUPPORT_NM = "hd";
+
+	public static final String DP_EBOOK_STORE_SUPPORT_NM = "store";
+
+	public static final String DP_EBOOK_PLAY_SUPPORT_NM = "play";
 }

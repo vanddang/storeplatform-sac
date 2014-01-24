@@ -1,7 +1,6 @@
 package com.skplanet.storeplatform.sac.display.response;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -13,9 +12,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-@Service
-@Transactional
-public class ShoppingInfoGenerateServiceImpl implements ShoppingInfoGenerateService {
+@Component
+public class ShoppingInfoGeneratorImpl implements ShoppingInfoGenerator {
 
 	@Override
 	public Contributor generateContributor(MetaInfo metaInfo) {

@@ -3,7 +3,7 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
@@ -12,9 +12,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-@org.springframework.stereotype.Service
-@Transactional
-public class MusicInfoGenerateServiceImpl implements MusicInfoGenerateService {
+@Component
+public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 		Accrual accrual = new Accrual();
@@ -33,19 +32,11 @@ public class MusicInfoGenerateServiceImpl implements MusicInfoGenerateService {
 	@Override
 	public Music generateMusic(MetaInfo metaInfo) {
 		Music music = new Music();
-		List<Service> serviceList = new ArrayList<Service>();
-		Service service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_MP3, metaInfo.getMp3SprtYn());
-		serviceList.add(service);
-		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_BELL, metaInfo.getBellSprtYn());
-		serviceList.add(service);
-		service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_RING, metaInfo.getColorringSprtYn());
-		serviceList.add(service);
-		music.setServiceList(serviceList);
+		music.setServiceList(this.generateServiceList(metaInfo));
 		return music;
 	}
 
 	@Override
-	// TODO osm1021 현재 사용하지 않음 추후 필요없으면 삭제 필요
 	public List<Service> generateServiceList(MetaInfo metaInfo) {
 		List<Service> serviceList = new ArrayList<Service>();
 		Service service = this.generateService(DisplayConstants.DP_MUSIC_SERVICE_MP3, metaInfo.getMp3SprtYn());

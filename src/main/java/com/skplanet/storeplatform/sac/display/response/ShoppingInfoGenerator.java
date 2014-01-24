@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
-public interface ShoppingInfoGenerateService {
+public interface ShoppingInfoGenerator {
 	public Contributor generateContributor(MetaInfo metaInfo);
 
 	public SalesOption generateSalesOption(MetaInfo metaInfo);
