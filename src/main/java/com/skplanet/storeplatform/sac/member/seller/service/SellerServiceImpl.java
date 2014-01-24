@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CreateSellerRequest;
@@ -27,9 +29,15 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
@@ -37,12 +45,18 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -68,12 +82,23 @@ public class SellerServiceImpl implements SellerService {
 	@Autowired
 	private MemberCommonComponent component;
 
+	/**
+	 * <pre>
+	 * 5.2.1. 판매자 회원 가입.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return CreateRes
+	 * @throws Exception
+	 */
 	@Override
 	public CreateRes createSeller(SacRequestHeader header, CreateReq req) throws Exception {
 
 		if (this.checkAgree(req.getAgreementList(), header.getTenantHeader().getTenantId())) {
 			LOGGER.error("## 필수 약관 미동의");
-			return null;
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception("필수 약관 미동의");
 		}
 
 		LOGGER.debug("############ SellerServiceImpl.createSeller() [START] ############");
@@ -81,36 +106,34 @@ public class SellerServiceImpl implements SellerService {
 		CreateSellerRequest createSellerRequest = new CreateSellerRequest();
 
 		/** 실명인증정보 생성 및 주입 [시작]. */
-		if ("Y".equals(req.getIsRealName())) {
-			MbrAuth mbrAuth = new MbrAuth();
-			// 실명인증여부
-			mbrAuth.setIsRealName(req.getIsRealName());
-			// CI
-			mbrAuth.setCi(req.getSellerCI());
-			// DI
-			mbrAuth.setDi(req.getSellerDI());
-			//
-			mbrAuth.setMemberCategory(req.getSellerCategory());
-			// 인증방법코드
-			mbrAuth.setRealNameMethod(req.getRealNameMethod());
-			// 통신사 코드
-			mbrAuth.setTelecom(req.getSellerTelecom());
-			// 무선 전화번호
-			mbrAuth.setPhone(req.getSellerPhone());
-			// 생년월일
-			mbrAuth.setBirthDay(req.getSellerBirthDay());
-			// 성별
-			mbrAuth.setSex(req.getSellerSex());
-			// 회원명
-			mbrAuth.setName(req.getSellerName());
-			// 실명 인증사이트
-			mbrAuth.setRealNameSite(req.getRealNameSystemId());
-			// 실명 인증 일시
-			mbrAuth.setRealNameDate(req.getRealNameDate());
-			createSellerRequest.setMbrAuth(mbrAuth);
+		MbrAuth mbrAuth = new MbrAuth();
+		// 실명인증여부
+		mbrAuth.setIsRealName(MemberConstants.USE_Y);
+		// CI
+		mbrAuth.setCi(req.getSellerCI());
+		// DI
+		mbrAuth.setDi(req.getSellerDI());
+		//
+		mbrAuth.setMemberCategory(req.getSellerCategory());
+		// 인증방법코드
+		mbrAuth.setRealNameMethod(req.getRealNameMethod());
+		// 통신사 코드
+		mbrAuth.setTelecom(req.getSellerTelecom());
+		// 무선 전화번호
+		mbrAuth.setPhone(req.getSellerPhone());
+		// 생년월일
+		mbrAuth.setBirthDay(req.getSellerBirthDay());
+		// 성별
+		mbrAuth.setSex(req.getSellerSex());
+		// 회원명
+		mbrAuth.setName(req.getSellerName());
+		// 실명 인증사이트
+		mbrAuth.setRealNameSite(req.getRealNameSystemId());
+		// 실명 인증 일시
+		mbrAuth.setRealNameDate(req.getRealNameDate());
+		createSellerRequest.setMbrAuth(mbrAuth);
 
-			LOGGER.debug("==>>[SC] CreateSellerRequest.MbrAuth.toString() : {}", mbrAuth.toString());
-		}
+		LOGGER.debug("==>>[SC] CreateSellerRequest.MbrAuth.toString() : {}", mbrAuth.toString());
 
 		/** 실명인증정보 생성 및 주입 [끝]. */
 
@@ -207,7 +230,7 @@ public class SellerServiceImpl implements SellerService {
 		// 국내판매자 여부
 		sellerMbr.setIsDomestic(req.getIsForeign()); // ***
 		// 실명인증여부
-		sellerMbr.setIsRealName(req.getIsRealName());
+		sellerMbr.setIsRealName("Y");
 		// 국가코드
 		sellerMbr.setSellerCountry(req.getSellerCountry());
 		// 언어코드
@@ -244,10 +267,10 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("[SellerSCI.createSeller()] - Response CODE : {}, MESSAGE : {}", createSellerResponse
 				.getCommonResponse().getResultCode(), createSellerResponse.getCommonResponse().getResultMessage());
 
-		// TODO Exception 재정의 필요
 		if (!MemberConstants.RESULT_SUCCES.equals(createSellerResponse.getCommonResponse().getResultCode())) {
 			LOGGER.error(createSellerResponse.getCommonResponse().getResultMessage());
-			return null;
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception(createSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		// 결과 리턴 객체 생성 및 주입
@@ -265,10 +288,195 @@ public class SellerServiceImpl implements SellerService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 5.2.3. 판매자회원 인증.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return AuthorizeRes
+	 * @throws Exception
+	 */
+	@Override
+	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) throws Exception {
+
+		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
+
+		/** 1. SC회원 Req 생성 및 주입. */
+		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
+		loginSellerRequest.setSellerID(req.getSellerId());
+		loginSellerRequest.setSellerPW(req.getSellerPW());
+
+		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
+
+		// SC공통 헤더 정보 주입
+		loginSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+		/** 2. SC-로그인인증 Call. */
+		LoginSellerResponse logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
+
+		// Response Debug
+		LOGGER.info("[SellerSCI.loginSeller()] - Response CODE : {}, MESSGE : {}", logInSellerResponse
+				.getCommonResponse().getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
+
+		// 계정 잠금 해제 요청
+		if (req.getReleaseLock().equals(MemberConstants.USE_Y)) {
+			if (logInSellerResponse.getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_PAUSE)
+					&& logInSellerResponse.getSellerSubStatus().equals(MemberConstants.SUB_STATUS_LOGIN_PAUSE)) {
+				/** 2-1. SC회원 Req 생성 및 주입. */
+				UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+				updateStatusSellerRequest.setSellerID(req.getSellerId());
+				updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+				updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+
+				/** 2-2. 공통 헤더 생성 및 주입. */
+				updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+				LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
+
+				/** 2-3. SC회원 - 상태변경 Call. */
+				UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
+						.updateStatusSeller(updateStatusSellerRequest);
+
+				// Response Debug
+				LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}",
+						updateStatusSellerResponse.getCommonResponse().getResultCode(), updateStatusSellerResponse
+								.getCommonResponse().getResultMessage());
+
+				if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse()
+						.getResultCode())) {
+					// TODO [김경복] Exception 재정의 필요
+					throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
+				}
+			}
+		}
+
+		/** 2. SAC-[Response] 생성 및 주입. */
+		AuthorizeRes res = new AuthorizeRes();
+		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
+
+		if (logInSellerResponse != null) {
+			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
+			sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+			sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
+			sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
+			sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
+			res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+			res.setSellerMbr(sellerMbr);
+			LOGGER.debug("==>>[SAC] SellerMbr.toString() : {}", sellerMbr.toString());
+		}
+		res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
+		res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+
+		// Response Debug
+		LOGGER.debug("==>>[SAC] AuthorizeRes.toString() : {}", res.toString());
+		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.14. 판매자 회원 계정 승인.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ConfirmRes
+	 * @throws Exception
+	 */
+	@Override
+	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req) throws Exception {
+		LOGGER.debug("############ SellerServiceImpl.confirm() [START] ############");
+
+		/** 1. SC회원 정보조회[Req] 생성 및 주입 */
+		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
+		searchSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
+		keySearch.setKeyString(req.getSellerKey());
+		keySearchList.add(keySearch);
+		searchSellerRequest.setKeySearchList(keySearchList);
+
+		/** 1. SC-회원정보조회 생성 및 주입 */
+		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
+
+		if (!searchSellerResponse.getSellerMbr().getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_WATING)
+				&& !searchSellerResponse.getSellerMbr().getSellerSubStatus()
+						.equals(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING)) {
+			LOGGER.error("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			// TODO Exception 재정의 필요
+			throw new Exception("회원 메인 상태 :  " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
+		}
+
+		/** 1. SC회원 Req 생성 및 주입. */
+		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+		updateStatusSellerRequest.setSellerID(searchSellerResponse.getSellerMbr().getSellerID());
+		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+
+		/** 2. 공통 헤더 생성 및 주입. */
+		updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
+
+		/** 3. SC회원 - 상태변경 Call. */
+		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
+				.updateStatusSeller(updateStatusSellerRequest);
+
+		// Response Debug
+		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
+				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
+
+		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
+		}
+
+		/** 4. TenantRes Response 생성 및 주입 */
+		ConfirmRes res = new ConfirmRes();
+		res.setSellerKey(req.getSellerKey());
+		LOGGER.debug("==>>[SAC] ConfirmRes.toString() : {}", res.toString());
+		LOGGER.debug("############ SellerServiceImpl.confirm() [START] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.16 판매자 회원 계정 잠금.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return LockAccountRes
+	 * @throws Exception
+	 */
 	@Override
 	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) throws Exception {
 
 		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
+
+		// TODO [김경복 : 2014-01-23] 회원 조회 후 상태 체크 후 정상 회원만 계정잠금
+		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
+		searchSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
+		keySearch.setKeyString(req.getSellerId());
+		keySearchList.add(keySearch);
+		searchSellerRequest.setKeySearchList(keySearchList);
+
+		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
+
+		if (!searchSellerResponse.getSellerMbr().getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_NORMAL)) {
+			LOGGER.error("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception("회원의 메인상태 : " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
+		}
+
 		/** 1. SC회원 Req 생성 및 주입. */
 		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 		updateStatusSellerRequest.setSellerID(req.getSellerId());
@@ -288,9 +496,9 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
 				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
 
-		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
 		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(updateStatusSellerResponse.getCommonResponse().getResultMessage());
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		/** 4. TenantRes Response 생성 및 주입 */
@@ -301,50 +509,169 @@ public class SellerServiceImpl implements SellerService {
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * 5.2.10. 판매자 기본정보 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyInformationRes
+	 * @throws Exception
+	 */
 	@Override
-	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) throws Exception {
+	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) throws Exception {
 
-		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
+		// getCommonRequest
+		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		/** 1. SC회원 Req 생성 및 주입. */
+		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
 
-		/** 1. SC회원 Req 생성 및 주입 */
-		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
-		loginSellerRequest.setSellerID(req.getSellerId());
-		loginSellerRequest.setSellerPW(req.getSellerPW());
+		// 실명인증 정보
+		if (req.getIsRealName().equals("Y")) {
+			MbrAuth mbrAuth = new MbrAuth();
+			// 실명인증여부
+			mbrAuth.setIsRealName(req.getIsRealName());
+			// CI
+			mbrAuth.setCi(req.getSellerCI());
+			// DI
+			mbrAuth.setDi(req.getSellerDI());
+			//
+			mbrAuth.setMemberCategory(req.getSellerCategory());
+			// 인증방법코드
+			mbrAuth.setRealNameMethod(req.getRealNameMethod());
+			// 통신사 코드
+			mbrAuth.setTelecom(req.getSellerTelecom());
+			// 무선 전화번호
+			mbrAuth.setPhone(req.getSellerPhone());
+			// 생년월일
+			mbrAuth.setBirthDay(req.getSellerBirthDay());
+			// 성별
+			mbrAuth.setSex(req.getSellerSex());
+			// 회원명
+			mbrAuth.setName(req.getSellerName());
+			// 실명 인증사이트
+			mbrAuth.setRealNameSite(req.getRealNameSystemId());
 
-		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
+			updateSellerRequest.setMbrAuth(mbrAuth);
+		}
 
-		loginSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		// 법정 대리인 정보
+		if (req.getIsParent().equals(MemberConstants.USE_Y)) {
+			MbrLglAgent mbrLglAgent = new MbrLglAgent();
 
-		/** 3. SC-로그인인증 Call */
-		LoginSellerResponse logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
+			mbrLglAgent.setIsParent(req.getIsParent());
+			mbrLglAgent.setParentRealNameMethod(req.getParentRealNameMethod());
+			mbrLglAgent.setParentName(req.getParentName());
+			mbrLglAgent.setParentType(req.getParentType());
+			mbrLglAgent.setParentDate(req.getParentDate());
+			mbrLglAgent.setParentEmail(req.getParentEmail());
+			mbrLglAgent.setParentBirthDay(req.getParentBirthDay());
+			mbrLglAgent.setParentTelecom(req.getParentTelecom());
+			mbrLglAgent.setParentMDN(req.getParentMDN());
+			mbrLglAgent.setParentCI(req.getParentCI());
+			mbrLglAgent.setParentRealNameDate(req.getParentRealNameDate());
+			mbrLglAgent.setParentRealNameSite(req.getParentRealNameSystemId());
+			//
+			mbrLglAgent.setMemberKey(req.getSellerKey());
+
+			updateSellerRequest.setMbrLglAgent(mbrLglAgent);
+		}
+
+		// 판매자 정보
+		SellerMbr sellerMbr = new SellerMbr();
+		sellerMbr.setSellerKey(req.getSellerKey());
+		sellerMbr.setSellerClass(req.getSellerClass());
+		sellerMbr.setSellerCategory(req.getSellerCategory());
+		sellerMbr.setSellerMainStatus(req.getSellerMainStatus());
+		sellerMbr.setSellerSubStatus(req.getSellerSubStatus());
+		sellerMbr.setSellerID(req.getSellerId());
+		sellerMbr.setSellerTelecom(req.getSellerTelecom());
+		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
+		sellerMbr.setSellerPhone(req.getSellerPhone());
+		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
+		sellerMbr.setSellerEmail(req.getSellerEmail());
+		sellerMbr.setSellerName(req.getSellerName());
+		sellerMbr.setSellerSex(req.getSellerSex());
+		sellerMbr.setSellerBirthDay(req.getSellerBirthDay());
+		sellerMbr.setSellerZip(req.getSellerZip());
+		sellerMbr.setSellerAddress(req.getSellerAddress());
+		sellerMbr.setSellerDetailAddress(req.getSellerDetailAddress());
+		sellerMbr.setSellerCity(req.getSellerCity());
+		sellerMbr.setSellerState(req.getSellerState());
+		sellerMbr.setSellerCountry(req.getSellerCountry());
+		sellerMbr.setSellerLanguage(req.getSellerLanguage());
+		sellerMbr.setIsDomestic(req.getIsForeign());
+		sellerMbr.setIsParent(req.getIsParent());
+		sellerMbr.setSellerCompany(req.getSellerCompany());
+		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
+		sellerMbr.setCustomerPhoneCountry(req.getCustomerPhoneCountry());
+		sellerMbr.setCustomerPhone(req.getCustomerPhone());
+		sellerMbr.setCustomerEmail(req.getCustomerEmail());
+
+		updateSellerRequest.setSellerMbr(sellerMbr);
+
+		/** 2. 공통 헤더 생성 및 주입. */
+		updateSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+		/** 3. SC회원 - 상태변경 Call. */
+		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
 
 		// Response Debug
-		LOGGER.info("[SellerSCI.loginSeller()] - Response CODE : {}, MESSGE : {}", logInSellerResponse
-				.getCommonResponse().getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
+		LOGGER.info("[SellerSCI.upgradeSeller()] - Response CODE : {}, MESSGE : {}", updateSellerResponse
+				.getCommonResponse().getResultCode(), updateSellerResponse.getCommonResponse().getResultMessage());
 
-		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
-		if (!MemberConstants.RESULT_SUCCES.equals(logInSellerResponse.getCommonResponse().getResultCode())) {
-
+		if (!MemberConstants.RESULT_SUCCES.equals(updateSellerResponse.getCommonResponse().getResultCode())) {
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception(updateSellerResponse.getCommonResponse().getResultMessage());
 		}
 
-		AuthorizeRes res = new AuthorizeRes();
-		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
+		/** 4. TenantRes Response 생성 및 주입 */
+		ModifyInformationRes res = new ModifyInformationRes();
 
-		if (logInSellerResponse != null) {
-			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
-			sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
-			sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
-			sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
-			sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
-			res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
-			res.setSellerMbr(sellerMbr);
-			LOGGER.debug("==>>[SAC] SellerMbr.toString() : {}", sellerMbr.toString());
+		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.11. 판매자회원 정산 정보 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyAccountInformationRes
+	 * @throws Exception
+	 */
+	@Override
+	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req)
+			throws Exception {
+		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
+		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
+
+		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
+
+		/** 2. 공통 헤더 생성 및 주입. */
+		updateAccountSellerRequest.setCommonRequest(this.getCommonRequest(header));
+
+		/** 3. SC회원 - 정산정보수정변경 Call. */
+		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
+				.updateAccountSeller(updateAccountSellerRequest);
+
+		// Response Debug
+		LOGGER.info("[SellerSCI.upgradeSeller()] - Response CODE : {}, MESSGE : {}", updateAccountSellerResponse
+				.getCommonResponse().getResultCode(), updateAccountSellerResponse.getCommonResponse()
+				.getResultMessage());
+
+		if (!MemberConstants.RESULT_SUCCES.equals(updateAccountSellerResponse.getCommonResponse().getResultCode())) {
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception(updateAccountSellerResponse.getCommonResponse().getResultMessage());
 		}
-		res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
-		res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 
-		LOGGER.debug("==>>[SAC] AuthorizeRes.toString() : {}", res.toString());
-		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
+		/** 4. TenantRes Response 생성 및 주입 */
+		ModifyAccountInformationRes res = new ModifyAccountInformationRes();
+
+		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [END] ############");
 		return res;
 	}
 
@@ -457,6 +784,14 @@ public class SellerServiceImpl implements SellerService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * SC 공통 헤더 셋팅.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @return CommonRequest
+	 */
 	private CommonRequest getCommonRequest(SacRequestHeader header) {
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
@@ -465,6 +800,16 @@ public class SellerServiceImpl implements SellerService {
 		return commonRequest;
 	}
 
+	/**
+	 * <pre>
+	 * 필수 약관 체크.
+	 * </pre>
+	 * 
+	 * @param agreementList
+	 * @param tenantId
+	 * @return boolean
+	 * @throws Exception
+	 */
 	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) throws Exception {
 
 		/**
@@ -473,7 +818,8 @@ public class SellerServiceImpl implements SellerService {
 		List<Clause> dbAgreementList = this.component.getMandAgreeList(tenantId);
 		if (dbAgreementList.size() == 0) {
 			LOGGER.info("## 체크할 필수 약관이 존재 하지 않습니다.");
-			return false;
+			// TODO [김경복] Exception 재정의 필요
+			throw new Exception("## 체크할 필수 약관이 존재 하지 않습니다.");
 		}
 		Comparator<Clause> dbComparator = new Comparator<Clause>() {
 			@Override

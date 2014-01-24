@@ -598,7 +598,7 @@ public class DummySellerController {
 	 * 
 	 * @return ConfirmRes
 	 */
-	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmRes confirm() {
 

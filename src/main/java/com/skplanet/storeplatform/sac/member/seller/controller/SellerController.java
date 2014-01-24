@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
+import javax.validation.Valid;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,19 +19,25 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerService;
 
 /**
- * 판매자 회원 등록/수정/탈퇴 기능
+ * 판매자 회원 등록/수정/인증/탈퇴 기능
  * 
  * Updated on : 2014. 1. 7. Updated by : 김경복, 부르칸.
  */
@@ -59,8 +67,71 @@ public class SellerController {
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) throws Exception {
-
 		return this.sellerService.createSeller(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.3. 판매자 회원 인증.
+	 * </pre>
+	 * 
+	 * @param AuthorizeReq
+	 * @return AuthorizeRes : JSON
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) throws Exception {
+		return this.sellerService.authorize(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.10. 판매자 회원 기본정보 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyInformationRes
+	 * @throws Exception
+	 */
+	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	ModifyInformationRes modifyInformation(SacRequestHeader header, @RequestBody @Valid ModifyInformationReq req)
+			throws Exception {
+		return this.sellerService.modifyInformation(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.11. 판매자회원 정산 정보 수정.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ModifyAccountInformationRes
+	 */
+	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header,
+			@RequestBody @Valid ModifyAccountInformationReq req) throws Exception {
+		return this.sellerService.modifyAccountInformation(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.14. 판매자 회원 계정 승인.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return ConfirmRes
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) throws Exception {
+		return this.sellerService.confirm(header, req);
 	}
 
 	/**
@@ -77,21 +148,6 @@ public class SellerController {
 	LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req, BindingResult result)
 			throws Exception {
 		return this.sellerService.lockAccount(header, req);
-	}
-
-	/**
-	 * <pre>
-	 * 5.2.3. 판매자 회원 인증.
-	 * </pre>
-	 * 
-	 * @param AuthorizeReq
-	 * @return AuthorizeRes : JSON
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) throws Exception {
-		return this.sellerService.authorize(header, req);
 	}
 
 	/**

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,11 +62,9 @@ public class SellerSearchController {
 	 * @param req
 	 * @return DuplicateByIdEmailRes
 	 */
-	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.POST)
 	private @ResponseBody
-	DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req) {
-		// Req Debug
-		LOGGER.debug("req : {}", req);
+	DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, @RequestBody @Validated DuplicateByIdEmailReq req) {
 		return this.sellerSearchService.duplicateByIdEmail(header, req);
 	}
 
