@@ -39,7 +39,7 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @Controller
 public class DeviceController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserJoinController.class);
+	private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
 
 	@Autowired
 	private HeaderInfo headerInfo;
@@ -162,10 +162,13 @@ public class DeviceController {
 	/**
 	 * 휴대기기 대표단말 설정
 	 * 
-	 * @param headers
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            SetMainDeviceReq
+	 * @return SetMainDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -189,10 +192,13 @@ public class DeviceController {
 	/**
 	 * 휴대기기 대표단말 조회
 	 * 
-	 * @param headers
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            DetailRepresentationDeviceReq
+	 * @return DetailRepresentationDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -217,10 +223,13 @@ public class DeviceController {
 	/**
 	 * 휴대기기 단말 삭제
 	 * 
-	 * @param headers
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param req
-	 * @return
+	 *            RemoveDeviceReq
+	 * @return RemoveDeviceRes
 	 * @throws Exception
+	 *             Exception
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
