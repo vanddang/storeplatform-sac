@@ -240,7 +240,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			GetPhoneAuthorizationCodeReq request) throws Exception {
 		String authCode = "";
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
-		;
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		String messageText = "auth.message.";
 		String messageSender = "auth.message.sendNum.";
