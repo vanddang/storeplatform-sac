@@ -269,11 +269,26 @@ public class LoginServiceImpl implements LoginService {
 		String userSubStatus = null;
 		String loginStatusCode = null;
 		String stopStatusCode = null;
+		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 모번호 조회 */
 		if (deviceId != null) {
 			deviceId = this.commService.getOpmdMdnInfo(deviceId);
 		}
+
+		/* 서비스 이용동의 간편 가입 대상 확인 */
+		//		Map<String, Object> param = new HashMap<String, Object>();
+		//		param.put("key_type", "2");
+		//		param.put("key", userId);
+		//		ImIDPReceiverM imIdpReceiver = this.imIdpService.findJoinServiceListIDP(param);
+		//		if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+		//
+		//			/*	SC회원 원아이디 테이블 조회	(현재 API 미존재	*/
+		//			if("SC회원 콤포넌트 원아이디 테이블 내부키" ==  null){
+		//				res.setImIntSvcNo(imIdpReceiver.getResponseBody().getIm_int_svc_no());
+		//				return res;
+		//			}
+		//		}
 
 		/* 회원정보 조회 */
 		SearchUserResponse schUserRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
@@ -289,7 +304,6 @@ public class LoginServiceImpl implements LoginService {
 		userSubStatus = schUserRes.getUserMbr().getUserSubStatus();
 		loginStatusCode = schUserRes.getUserMbr().getLoginStatusCode();
 		stopStatusCode = schUserRes.getUserMbr().getStopStatusCode();
-		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 탈퇴회원, 정지상태 회원, 로그인 제한, 직권중지 인경우 */
 		if (StringUtil.equals(userMainStatus, MemberConstants.MAIN_STATUS_SECEDE)
@@ -312,95 +326,66 @@ public class LoginServiceImpl implements LoginService {
 		/* 회원 인증 요청 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
-			if (!this.isExistAgreeSiteTstore(schUserRes.getUserMbr().getImSiteCode())) { // 서비스 이용동의 간편 가입 대상 확인
+			ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
 
-				logger.info("::::: agreeJoinUser im_site_code : {}", schUserRes.getUserMbr().getImSiteCode());
-				// 통합서비스 관리번호 조회
-				Map<String, Object> param = new HashMap<String, Object>();
-				param.put("key_type", "2");
-				param.put("key", userId);
-				ImIDPReceiverM imIdpReceiver = this.imIdpService.findJoinServiceListIDP(param);
-				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+			if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
-					res.setUserKey(userKey);
-					res.setUserType(userType);
-					res.setUserMainStatus(userMainStatus);
-					res.setUserSubStatus(userSubStatus);
-					res.setImIntSvcNo(imIdpReceiver.getResponseBody().getIm_int_svc_no());
-					res.setLoginStatusCode(loginStatusCode);
-					res.setStopStatusCode(stopStatusCode);
+				this.mergeDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
 
-				} else {
-					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-							+ imIdpReceiver.getResponseHeader().getResult_text());
+				this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
+
+				res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
+				res.setUserKey(userKey);
+				res.setUserType(userType);
+				res.setUserMainStatus(userMainStatus);
+				res.setUserSubStatus(userSubStatus);
+				res.setLoginStatusCode(loginStatusCode);
+				res.setStopStatusCode(stopStatusCode);
+				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, null));
+
+			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
+
+				// 가가입 상태 - 가입신청 사이트 정보
+				String joinSst = imIdpReceiver.getResponseBody().getJoin_sst_list();
+				String joinSstCd = "";
+				String joinSstNm = "";
+
+				for (Entry<String, String> entry : mapSiteCd.entrySet()) {
+					if (StringUtil.contains(joinSst, entry.getKey())) {
+						joinSstCd = entry.getKey();
+						joinSstNm = entry.getValue();
+						break;
+					}
 				}
+
+				if (StringUtil.isEmpty(joinSstCd)) {
+					joinSstCd = "90000"; // One ID
+					joinSstNm = mapSiteCd.get(joinSstCd);
+				}
+
+				res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
+				res.setUserKey(userKey);
+				res.setUserType(userType);
+				res.setUserMainStatus(userMainStatus);
+				res.setUserSubStatus(userSubStatus);
+				res.setJoinSiteCd(joinSstCd);
+				res.setJoinSiteNm(joinSstNm);
+				res.setLoginStatusCode(loginStatusCode);
+				res.setStopStatusCode(stopStatusCode);
+
+			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+
+				this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
+				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
+
+			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+
+				/* 미존재 회원인 경우 로그 님김 */
+				logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
+				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
 
 			} else {
-
-				ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
-
-				if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-
-					this.mergeDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
-
-					this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
-
-					res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
-					res.setUserKey(userKey);
-					res.setUserType(userType);
-					res.setUserMainStatus(userMainStatus);
-					res.setUserSubStatus(userSubStatus);
-					res.setLoginStatusCode(loginStatusCode);
-					res.setStopStatusCode(stopStatusCode);
-					res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, null));
-
-				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
-
-					// 가가입 상태 - 가입신청 사이트 정보
-					String joinSst = imIdpReceiver.getResponseBody().getJoin_sst_list();
-					String joinSstCd = "";
-					String joinSstNm = "";
-
-					for (Entry<String, String> entry : mapSiteCd.entrySet()) {
-						if (StringUtil.contains(joinSst, entry.getKey())) {
-							joinSstCd = entry.getKey();
-							joinSstNm = entry.getValue();
-							break;
-						}
-					}
-
-					if (StringUtil.isEmpty(joinSstCd)) {
-						joinSstCd = "90000"; // One ID
-						joinSstNm = mapSiteCd.get(joinSstCd);
-					}
-
-					res.setUserAuthKey(imIdpReceiver.getResponseBody().getUser_auth_key());
-					res.setUserKey(userKey);
-					res.setUserType(userType);
-					res.setUserMainStatus(userMainStatus);
-					res.setUserSubStatus(userSubStatus);
-					res.setJoinSiteCd(joinSstCd);
-					res.setJoinSiteNm(joinSstNm);
-					res.setLoginStatusCode(loginStatusCode);
-					res.setStopStatusCode(stopStatusCode);
-
-				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
-
-					this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
-					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-							+ imIdpReceiver.getResponseHeader().getResult_text());
-
-				} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
-
-					/* 미존재 회원인 경우 로그 님김 */
-					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
-					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-							+ imIdpReceiver.getResponseHeader().getResult_text());
-				} else {
-					throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-							+ imIdpReceiver.getResponseHeader().getResult_text());
-				}
-
+				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
 			}
 
 		} else { // 기존 IDP 계정인 경우
@@ -692,34 +677,6 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		logger.info("########## volatileMember process end #########");
-	}
-
-	/**
-	 * 통합회원 티스토어 가입여부 확인
-	 * 
-	 * @param imSiteCode
-	 *            통합아이디 가입사이트 리스트
-	 * @return boolean
-	 */
-	public boolean isExistAgreeSiteTstore(String imSiteCode) {
-
-		boolean agreeJoinTstore = false;
-		if (imSiteCode != null && !imSiteCode.equals("")) {
-
-			String[] arrImSiteCode = imSiteCode.split("\\|");
-			for (int i = 0; i < arrImSiteCode.length; i++) {
-
-				String[] arrImSiteCode2 = arrImSiteCode[0].split("\\,");
-				if (arrImSiteCode2[0].equals(MemberConstants.SSO_SST_CD_TSTORE)) {
-					agreeJoinTstore = true;
-					break;
-				}
-			}
-		} else {
-			agreeJoinTstore = true;
-		}
-
-		return agreeJoinTstore;
 	}
 
 }
