@@ -59,7 +59,7 @@ public class PurchaseOrder extends CommonInfo {
 
 	private List<DummyProduct> productList = new ArrayList<DummyProduct>(); // 구매할 상품 정보 리스트
 
-	private PurchaseOrderPolicy policyInfo = new PurchaseOrderPolicy(); // 제한정책 정보
+	private PurchaseOrderPolicyCheckResult policyInfo = new PurchaseOrderPolicyCheckResult(); // 제한정책 정보
 
 	// ================================================================================================
 
@@ -451,7 +451,7 @@ public class PurchaseOrder extends CommonInfo {
 	/**
 	 * @return the policyInfo
 	 */
-	public PurchaseOrderPolicy getPolicyInfo() {
+	public PurchaseOrderPolicyCheckResult getPolicyInfo() {
 		return this.policyInfo;
 	}
 
@@ -459,7 +459,7 @@ public class PurchaseOrder extends CommonInfo {
 	 * @param policyInfo
 	 *            the policyInfo to set
 	 */
-	public void setPolicyInfo(PurchaseOrderPolicy policyInfo) {
+	public void setPolicyInfo(PurchaseOrderPolicyCheckResult policyInfo) {
 		this.policyInfo = policyInfo;
 	}
 

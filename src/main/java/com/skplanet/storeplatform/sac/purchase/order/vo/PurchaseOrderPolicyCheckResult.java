@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.purchase.order.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class PurchaseOrderPolicy extends CommonInfo {
+public class PurchaseOrderPolicyCheckResult extends CommonInfo {
 	private static final long serialVersionUID = 201401221L;
 
 	private boolean bBlock; // 구매 차단 여부
