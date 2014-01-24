@@ -557,10 +557,10 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, requestHeader.getDeviceHeader()
 					.getOsVersion(), deviceInfo));
 		}
-		if (requestHeader.getDeviceHeader().getPkgVersion() != null) {
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, requestHeader.getDeviceHeader()
-					.getPkgVersion(), deviceInfo));
-		}
+		//		if (requestHeader.getDeviceHeader().getPkgVersion() != null) {
+		//			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, requestHeader.getDeviceHeader()
+		//					.getPkgVersion(), deviceInfo));
+		//		}
 
 		/* 휴대기기 주요정보 확인 */
 		//deviceInfo = this.getDeviceMajorInfo(deviceInfo);
@@ -753,8 +753,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
-
-		logger.info(":::::::::::::::::: userMbrDevice extra : {}", userMbrDevice.getUserMbrDeviceDetail());
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
