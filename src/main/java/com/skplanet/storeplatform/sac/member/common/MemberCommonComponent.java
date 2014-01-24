@@ -211,15 +211,13 @@ public class MemberCommonComponent {
 	 *            검색 조건 타입
 	 * @param keyValue
 	 *            검색 조건 값
-	 * @param systemId
-	 *            시스템 아이디
-	 * @param tenantId
-	 *            테넌트 아이디
-	 * @return UserInfo
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @return UserInfo Value Object
 	 * @throws Exception
 	 *             Exception
 	 */
-	public UserInfo getUserBaseInfo(String keyType, String keyValue, String systemId, String tenantId) throws Exception {
+	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) throws Exception {
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -241,8 +239,8 @@ public class MemberCommonComponent {
 		 */
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(systemId);
-		commonRequest.setTenantID(tenantId);
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 		searchUserRequest.setKeySearchList(keySearchList);
 
