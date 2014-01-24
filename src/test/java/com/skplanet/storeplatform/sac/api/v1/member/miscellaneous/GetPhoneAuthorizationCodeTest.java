@@ -76,6 +76,7 @@ public class GetPhoneAuthorizationCodeTest {
 	public void tstoreSmsSendTest() {
 		try {
 			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
+					.addHeaders("x-sac-system-id", "S00-01001").addHeaders("x-sac-tenant-id", "S00")
 					.addHeaders("Accept", "application/json").httpMethod(HttpMethod.POST)
 					.requestBody(new RequestBodySetter() {
 
@@ -160,8 +161,6 @@ public class GetPhoneAuthorizationCodeTest {
 							GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 							request.setSrcId("US004504"); // 휴대폰 인증 SMS
 							request.setTeleSvcId("0"); // 단건 발송
-							request.setSendMdn("01020284280");
-							request.setRecvMdn("011");
 							request.setCarrier("A");
 							LOGGER.debug("request param : {}", request.toString());
 							return request;

@@ -27,8 +27,8 @@
            TB_CM_SVC_AUTH
        WHERE
            AUTH_TYPE_CD = #{authTypeCd}
-           and AUTH_SIGN = #{authSign}
-           and AUTH_VALUE = #{authValue}
+           AND AUTH_SIGN = #{authSign}
+           AND AUTH_VALUE = #{authValue}
 	</select>
 	
 	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
@@ -98,15 +98,16 @@
     
     
     <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)-->
-    <select id="getEmailAuthYn" parameterType="String" resultType="ServiceAuth">
+    <select id="getEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
     /* MiscellaneousMapper.xml, getEmailAuthYn, SAC : 김다슬 , 2014-01-23 */
     SELECT 
         AUTH_COMPT_YN,
-        AUTH_VALUE 
+        AUTH_VALUE
     FROM 
         TB_CM_SVC_AUTH
     WHERE
-        MBR_NO = #{mbrNo}
+        MBR_NO = #{mbrNo} 
+        AND AUTH_EMAIL = #{authEmail}
     </select>
     
     <!-- 이메일 인증코드 정보 확인 -->
@@ -115,7 +116,8 @@
     SELECT 
         AUTH_SEQ,
         MBR_NO,
-        AUTH_EMAIL
+        AUTH_EMAIL,
+        AUTH_COMPT_YN
     FROM 
         TB_CM_SVC_AUTH
     WHERE
