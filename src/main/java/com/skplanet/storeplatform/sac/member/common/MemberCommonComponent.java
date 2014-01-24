@@ -27,15 +27,20 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.repository.MemberCommonRepository;
@@ -218,6 +223,7 @@ public class MemberCommonComponent {
 	 *             Exception
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) throws Exception {
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId());
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -247,58 +253,127 @@ public class MemberCommonComponent {
 		/**
 		 * SC 사용자 회원 기본정보를 조회
 		 */
+		UserInfo userInfo = new UserInfo();
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
-		UserInfo userInfo = new UserInfo();
-		if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-			/**
-			 * 사용자 정보
-			 */
-			if (schUserRes.getUserMbr() != null) {
-				userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
-				userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
-				userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-				userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
-				userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
-				userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-				userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
-				userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
-				userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-				userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-				userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
-				userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
-				userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
-				userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-				userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
-				userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-				userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
-				userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
-				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
-				userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
-				userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-				userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
-				userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
-				userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
-				userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
-				userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
-				userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
-				userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-				userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
-				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
-				userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
-				userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
-				userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
-				userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
-				userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
-			} else {
-				throw new RuntimeException("SearchUser.UserMbr (사용자정보) 데이터가 없습니다.");
-			}
-
+		if (schUserRes.getUserMbr() == null) {
+			throw new RuntimeException("######## 사용자 기본정보 조회 : 사용자 데이터 없음");
+		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
+				&& schUserRes.getUserMbr() != null) {
+			userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
+			userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
+			userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
+			userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
+			userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
+			userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
+			userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
+			userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
+			userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
+			userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
+			userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
+			userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
+			userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
+			userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
+			userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
+			userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
+			userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
+			userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
+			userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
+			userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
+			userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
+			userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
+			userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
+			userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
+			userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
+			userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
+			userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
+			userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
+			userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
+			userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
+			userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
+			userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
+			userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
+			userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
+			userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
+			userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
+		} else {
+			LOGGER.debug("###### 사용자 기본 정보 조회 오류 : {}", searchUserRequest.toString());
+			LOGGER.debug("###### 사용자 기본 정보 조회 오류 : {}", schUserRes.getUserMbr().toString());
+			LOGGER.debug("###### 사용자 기본 정보 조회 오류 : {}", schUserRes.getCommonResponse().toString());
+			throw new RuntimeException("사용자 기본 정보 조회 오류");
 		}
 
 		return userInfo;
+	}
+
+	/**
+	 * <pre>
+	 * 회원 부가 정보 조회.
+	 * test userKey - "IF1023002708420090928145937"
+	 * </pre>
+	 * 
+	 * @param keyType
+	 *            검색 조건 타입
+	 * @param keyValue
+	 *            검색 조건 값
+	 * @param systemId
+	 *            시스템 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 * @return UserExtraInfo
+	 * @throws Exception
+	 *             Exception
+	 */
+	public UserExtraInfoRes getUserExtraInfo(String userKey, String systemId, String tenantId) throws Exception {
+
+		/**
+		 * SearchManagementListRequest setting
+		 */
+		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(systemId);
+		commonRequest.setTenantID(tenantId);
+		searchUserExtraRequest.setCommonRequest(commonRequest);
+		searchUserExtraRequest.setUserKey(userKey);
+
+		/**
+		 * SC 사용자 회원 부가정보를 조회
+		 */
+		UserExtraInfoRes extraRes = new UserExtraInfoRes();
+		List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
+
+		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
+
+		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
+
+		if (schUserExtraRes.getMbrMangItemPtcrList().size() == 0) {
+			throw new RuntimeException("######## 사용자 부가정보 조회 : 사용자 데이터 없음");
+		} else if (StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(),
+				MemberConstants.RESULT_SUCCES) && schUserExtraRes.getMbrMangItemPtcrList().size() != 0) {
+
+			/* 유저키 세팅 */
+			extraRes.setUserKey(schUserExtraRes.getUserKey());
+			/* 부가정보 값 세팅 */
+			for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
+
+				LOGGER.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
+				LOGGER.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
+
+				if (ptcr.getExtraProfile() == null && ptcr.getExtraProfileValue() == null) {
+					throw new RuntimeException("######## 사용자 부가정보 조회 : ProfileCode, ProfileValue 없음");
+				}
+
+				UserExtraInfo extra = new UserExtraInfo();
+				extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
+				extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
+
+				listExtraInfo.add(extra);
+			}
+
+			extraRes.setAddInfoList(listExtraInfo);
+
+		}
+		return extraRes;
 	}
 
 	/**
