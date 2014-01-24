@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.display.common.service;
 
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+
+import java.util.List;
+
 /**
  * 전시 공통 서비스
  *
@@ -14,5 +18,13 @@ public interface DisplayCommonService {
      * @return 기준일시를 yyyyMMddHHmmss 형태의 문자열로 리턴. 만족하는 데이터가 없는 경우 null
      */
     public String getBatchStandardDateString(String tenantId, String listId);
+
+    /**
+     * 메뉴 목록을 조회한다.
+     * @param prodId 상품ID
+     * @param langCd 언어코드
+     * @return
+     */
+    public List<MenuItem> getMenuItemList(String prodId, String langCd);
 
 }
