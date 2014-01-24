@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
@@ -68,11 +69,23 @@ public class SellerSubServiceImpl implements SellerSubService {
 			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 			schReq.setCommonRequest(commonRequest);
 		}
-		// schReq.setSellerKey(req.getSellerKey());
-		// schReq.setSubSellerID(req.getSubSellerID());
-		// schReq.setSubSellerPW(req.getSubSellerPW());
-		// schReq.setSubSellerMemo(req.getSubSellerMemo());
-		// schReq.setSubSellerEmail(req.getSubSellerEmail());
+
+		com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr = new com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr();
+		sellerMbr.setParentSellerKey(req.getSellerKey()); // US201401231325534800000164
+														  // IF1023501437920130904104346
+		sellerMbr.setSellerID(req.getSubSellerID());
+		sellerMbr.setSellerKey(req.getSubSellerKey());
+		sellerMbr.setSubSellerMemo(req.getSubSellerMemo());
+		sellerMbr.setSellerEmail(req.getSubSellerEmail());
+
+		MbrPwd mbrPwd = new MbrPwd();
+		mbrPwd.setMemberPW(req.getMemberPW());
+		mbrPwd.setOldPW(req.getOldPW());
+
+		schReq.setSellerMbr(sellerMbr);
+		schReq.setMbrPwd(mbrPwd);
+
+		schReq.setIsNew(req.getIsNew());
 
 		schRes = this.sellerSCI.createSubSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -81,7 +94,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 		CreateSubsellerRes response = new CreateSubsellerRes();
 
-		// response.setSubSellerKey(schRes.getSubSellerKey());
+		response.setSubSellerKey(schRes.getSellerKey());
 
 		return response;
 	}
@@ -110,11 +123,11 @@ public class SellerSubServiceImpl implements SellerSubService {
 			schReq.setCommonRequest(commonRequest);
 		}
 
-		// schReq.setSellerKey(req.getSellerKey());
+		schReq.setParentSellerKey(req.getSellerKey());
 		// 최종 vo 에 값 셋팅
 		List<String> removeKeyList = new ArrayList<String>();
 		removeKeyList = req.getSubSellerKey();
-		// schReq.setSubSeller(removeKeyList);
+		schReq.setSellerKeyList(removeKeyList);
 
 		schRes = this.sellerSCI.removeSubSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -151,7 +164,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 			schReq.setCommonRequest(commonRequest);
 		}
-		// schReq.setSellerKey(req.getSellerKey());
+		schReq.setParentSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchSubSellerList(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
