@@ -100,7 +100,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			LOGGER.error("## 필수 약관 미동의");
+			LOGGER.info("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
 
@@ -449,7 +449,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} else {
 
-			LOGGER.error("## 통합 서비스 이용동의 가입 실패!!");
+			LOGGER.info("## 통합 서비스 이용동의 가입 실패!!");
 			throw new RuntimeException("통합 서비스 이용동의 가입 실패");
 
 		}
