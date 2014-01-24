@@ -582,7 +582,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
 		String nativeId = deviceInfo.getNativeId(); // nativeId(imei)
 		String deviceAccount = deviceInfo.getDeviceAccount(); // gmailAddr
-		String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, deviceInfo.getUserDeviceExtraInfo()); // SKT 서비스 관리번호
 		String deviceTelecom = deviceInfo.getDeviceTelecom(); // 통신사코드
 		String deviceNickName = deviceInfo.getDeviceNickName(); // 휴대폰닉네임
 		String isPrimary = deviceInfo.getIsPrimary(); // 대표폰 여부
@@ -604,7 +603,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
 				// 폰정보 조회 (deviceModelNo)
 				Device device = this.commService.getPhoneInfo(deviceModelNo);
@@ -643,7 +642,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (nativeId != null) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(userMbrDevice.getDeviceTelecom())) {
+			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
 				if (!nativeId.equals(userMbrDevice.getNativeID())) {
 					logger.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
@@ -708,11 +707,6 @@ public class DeviceServiceImpl implements DeviceService {
 			logger.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
-		}
-
-		if (imMngNum != null && !imMngNum.equals(userMbrDevice.getImMngNum())) {
-			logger.info("[imMngNum] {} -> {}", userMbrDevice.getImMngNum(), imMngNum);
-			userMbrDevice.setImMngNum(imMngNum);
 		}
 
 		if (deviceTelecom != null && !deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
