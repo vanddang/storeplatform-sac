@@ -774,7 +774,7 @@ public class DummySellerController {
 	public DuplicateBySubsellerIdRes duplicateBySubsellerId() {
 
 		DuplicateBySubsellerIdRes responseVO = new DuplicateBySubsellerIdRes();
-		responseVO.setDuplicateYn("Y");
+		responseVO.setIsRegistered("Y");
 
 		return responseVO;
 	}

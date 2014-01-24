@@ -27,8 +27,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateBySubsellerIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
@@ -204,7 +204,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 	}
 
 	@Override
-	public DuplicateByIdEmailRes duplicateBySubsellerId(SacRequestHeader header, DuplicateByIdEmailReq req)
+	public DuplicateBySubsellerIdRes duplicateBySubsellerId(SacRequestHeader header, DuplicateBySubsellerIdReq req)
 			throws Exception {
 
 		/** SC회원 시작 */
@@ -236,7 +236,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 				.getResultMessage());
 
 		/** 4. TenantRes Response 생성 및 주입 */
-		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes();
+		DuplicateBySubsellerIdRes response = new DuplicateBySubsellerIdRes();
 
 		// TODO Exception 재정의 - 성공또는 값없음의 경우
 		if (MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
