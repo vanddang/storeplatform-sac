@@ -212,7 +212,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			LOGGER.error("## 필수 약관 미동의");
+			LOGGER.info("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
 
@@ -308,7 +308,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} else {
 
-			LOGGER.error("## 통합 서비스 이용동의 가입 실패!!");
+			LOGGER.info("## 통합 서비스 이용동의 가입 실패!!");
 			throw new RuntimeException("통합 서비스 이용동의 가입 실패");
 
 		}
@@ -336,7 +336,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			LOGGER.error("## 필수 약관 미동의");
+			LOGGER.info("## 필수 약관 미동의");
 			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
 		}
 
@@ -929,7 +929,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 			return deviceKey;
 
 		} catch (Exception e) {
+
+			LOGGER.info("## ===================== 휴대기기 등록 실패!!! (모듈 호출시 Error) ");
 			throw new RuntimeException("## 휴대기기 등록 실패 ================");
+
 		}
 
 	}
@@ -1009,6 +1012,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## checkDupID - Result Text : {}", checkDupIdInfo.getResponseHeader().getResult_text());
 		if (!StringUtils.equals(checkDupIdInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
+			LOGGER.info("## ===================== ID 중복 체크 실패");
 			throw new RuntimeException(checkDupIdInfo.getResponseHeader().getResult_text());
 
 		}
