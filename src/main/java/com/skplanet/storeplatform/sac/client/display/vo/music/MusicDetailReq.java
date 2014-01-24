@@ -8,6 +8,24 @@ package com.skplanet.storeplatform.sac.client.display.vo.music;
 public class MusicDetailReq {
 
     private String episodeId;
+    private String langCd;
+    private String tenantId;
+
+    public String getLangCd() {
+        return langCd;
+    }
+
+    public void setLangCd(String langCd) {
+        this.langCd = langCd;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     public String getEpisodeId() {
         return episodeId;
