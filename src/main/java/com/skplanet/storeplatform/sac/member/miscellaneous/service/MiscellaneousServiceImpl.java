@@ -460,13 +460,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.info("## 기존 인증회원 여부 : {}", isAuthEmail);
 		if (isAuthEmail != null) {
 			if (isAuthEmail.equals("N")) {
-				LOGGER.info("이미 발급된 회원 입니다. 동일 코드 재발급.");
 				// 기존 발급 & 미인증
+				LOGGER.info("이미 발급된 회원 입니다. 동일 코드 재발급.");
 			} else {
 				throw new Exception("기존 인증된 회원입니다.");
 			}
 		} else {
-			// isAuthEmail == null
 			// 신규 인증
 			/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
 			authCode = UUID.randomUUID().toString().replace("-", "");
@@ -487,7 +486,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 4. 인증코드 Response */
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
-		LOGGER.info("## 이메일 인증 코드 생성 및 저장 완료. response : {}", response.getEmailAuthCode());
+		LOGGER.info("## 이메일 인증 코드 발급 완료. response : {}", response.getEmailAuthCode());
 
 		return response;
 	}
