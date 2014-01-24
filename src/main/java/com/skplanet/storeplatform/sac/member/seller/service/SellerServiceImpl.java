@@ -443,7 +443,6 @@ public class SellerServiceImpl implements SellerService {
 
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
-		loginInfo.setIpAddress(req.getIpAddress());
 		schReq.setLoginInfo(loginInfo);
 
 		schRes = this.sellerSCI.removeLoginInfo(schReq);
