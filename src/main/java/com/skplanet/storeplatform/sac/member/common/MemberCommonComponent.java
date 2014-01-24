@@ -223,7 +223,8 @@ public class MemberCommonComponent {
 	 *             Exception
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) throws Exception {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId());
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+				.toString());
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
 		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
@@ -324,15 +325,15 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public UserExtraInfoRes getUserExtraInfo(String userKey, String systemId, String tenantId) throws Exception {
+	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) throws Exception {
 
 		/**
 		 * SearchManagementListRequest setting
 		 */
 		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
 		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(systemId);
-		commonRequest.setTenantID(tenantId);
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserExtraRequest.setCommonRequest(commonRequest);
 		searchUserExtraRequest.setUserKey(userKey);
 

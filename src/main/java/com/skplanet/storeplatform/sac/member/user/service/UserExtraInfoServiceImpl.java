@@ -60,7 +60,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.searchUser(req);
+		UserInfo searchUser = this.searchUser(req, sacHeader);
 
 		/* 정상회원이면 SC 회원 부가 정보 등록/수정 호출 */
 		if (searchUser != null) {
@@ -81,12 +81,12 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.searchUser(req);
+		UserInfo searchUser = this.searchUser(req, sacHeader);
 
 		/* 정상회원이면 SC 회원 부가 정보 조회 호출 */
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		if (searchUser != null) {
-			res = this.listUserExtra(req);
+			res = this.listUserExtra(req, sacHeader);
 		}
 
 		return res;
@@ -104,19 +104,17 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원정보 조회 */
 	@Override
-	public UserInfo searchUser(UserExtraInfoReq req) throws Exception {
+	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
 
-		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), commonRequest.getSystemID(),
-				commonRequest.getTenantID());
+		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		return userInfo;
 	}
 
 	/* SC API 회원부가정보 조회 */
 	@Override
-	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req) throws Exception {
-		UserExtraInfoRes extraRes = this.mcc.getUserExtraInfo(req.getUserKey(), commonRequest.getSystemID(),
-				commonRequest.getTenantID());
+	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+		UserExtraInfoRes extraRes = this.mcc.getUserExtraInfo(req.getUserKey(), sacHeader);
 
 		return extraRes;
 	}

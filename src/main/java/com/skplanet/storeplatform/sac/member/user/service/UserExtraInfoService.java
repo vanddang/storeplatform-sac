@@ -53,7 +53,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserInfo searchUser(UserExtraInfoReq req) throws Exception;
+	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
 
 	/**
 	 * 부가정보리스트 SC API
@@ -63,7 +63,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req) throws Exception;
+	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
 
 	/**
 	 * 부가정보등록/수정 SC API
