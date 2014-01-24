@@ -74,7 +74,7 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
-		 * Header 정보 세팅
+		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 		if (StringUtil.equals(sacHeader.getDeviceHeader().getModel(), "")) {
@@ -116,7 +116,7 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
-		 * Header 정보 세팅
+		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
@@ -180,7 +180,7 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
-		 * Header 정보 세팅
+		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
