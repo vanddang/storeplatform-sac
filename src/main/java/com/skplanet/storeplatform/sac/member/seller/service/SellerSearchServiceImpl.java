@@ -60,6 +60,11 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
 
+/**
+ * 판매자 회원 조회관련 기능 항목들
+ * 
+ * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
+ */
 @Service
 @Transactional
 public class SellerSearchServiceImpl implements SellerSearchService {
@@ -73,6 +78,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	/**
+	 * <pre>
+	 * 5.2.2. 판매자 회원 ID/Email 중복 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @param req
+	 * @return DuplicateByIdEmailRes
+	 */
 	@Override
 	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req) {
 

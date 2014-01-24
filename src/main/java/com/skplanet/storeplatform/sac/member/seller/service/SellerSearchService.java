@@ -18,9 +18,14 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
+/**
+ * 판매자 회원 조회관련 기능 항목들
+ * 
+ * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
+ */
 public interface SellerSearchService {
 
-	/** 판매자 회원 ID/Email 중복조회 */
+	/** 5.2.2. 판매자 회원 ID/Email 중복 조회 */
 	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req);
 
 	/**
