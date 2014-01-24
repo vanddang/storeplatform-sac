@@ -103,7 +103,7 @@ public class CreateByMdnTest {
 						// 단말 정보
 						reqJson.setDeviceId("01012346480"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012102"); // 통신사
+						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -127,7 +127,7 @@ public class CreateByMdnTest {
 						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
 						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US012101");
+						reqJson.setParentTelecom("US001202");
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 						reqJson.setParentRealNameDate(DateUtil.getToday());
@@ -191,7 +191,7 @@ public class CreateByMdnTest {
 						// 단말 정보
 						reqJson.setDeviceId("01002346470"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012102"); // 통신사
+						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -279,7 +279,7 @@ public class CreateByMdnTest {
 						// 단말 정보
 						reqJson.setDeviceId("550e8400e29b41d4a716446655440000"); // 기기 ID
 						reqJson.setDeviceIdType("uuid"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012107"); // 통신사 (uuid 일경우 ISO 고정)
+						reqJson.setDeviceTelecom("US001207"); // 통신사 (uuid 일경우 ISO 고정)
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -299,7 +299,7 @@ public class CreateByMdnTest {
 						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
 						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US012101");
+						reqJson.setParentTelecom("US001202");
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 						reqJson.setParentRealNameDate(DateUtil.getToday());
@@ -363,7 +363,7 @@ public class CreateByMdnTest {
 						// 단말 정보
 						reqJson.setDeviceId("B102E3010201"); // 기기 ID
 						reqJson.setDeviceIdType("mac"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012107"); // 통신사 (uuid 일경우 ISO 고정)
+						reqJson.setDeviceTelecom("US001207"); // 통신사 (uuid 일경우 ISO 고정)
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -383,7 +383,7 @@ public class CreateByMdnTest {
 						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
 						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US012101");
+						reqJson.setParentTelecom("US001202");
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 						reqJson.setParentRealNameDate(DateUtil.getToday());
@@ -446,7 +446,7 @@ public class CreateByMdnTest {
 						// 단말 정보
 						reqJson.setDeviceId("01076771470"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012101"); // 통신사
+						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -461,7 +461,7 @@ public class CreateByMdnTest {
 						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
 						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US012101");
+						reqJson.setParentTelecom("US001202");
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 						reqJson.setParentRealNameDate(DateUtil.getToday());

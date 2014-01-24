@@ -170,7 +170,7 @@ public class CreateByAgreementTest {
 						// 단말 정보
 						reqJson.setDeviceId("01090556567"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012102"); // 통신사
+						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("tlaeo004@yahoo.co.kr"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
