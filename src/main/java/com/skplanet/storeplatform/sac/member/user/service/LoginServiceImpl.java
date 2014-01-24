@@ -60,41 +60,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 public class LoginServiceImpl implements LoginService {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
-	private static Map<String, String> mapSiteCd = new HashMap<String, String>();
-
-	static {
-
-		mapSiteCd.put("10100", "네이트");
-		mapSiteCd.put("10200", "싸이월드");
-		mapSiteCd.put("20100", "11st");
-		mapSiteCd.put("30100", "멜론");
-		mapSiteCd.put("40100", "Planet X 개발자센터");
-		mapSiteCd.put("40300", "Smart Touch Platform");
-		mapSiteCd.put("41000", "IDP");
-		mapSiteCd.put("41100", "T store");
-		mapSiteCd.put("41200", "T cloud");
-		mapSiteCd.put("41300", "T map");
-		mapSiteCd.put("41400", "SimpleSync");
-		mapSiteCd.put("41500", "T-Ad");
-		mapSiteCd.put("41600", "T-MapHot");
-		mapSiteCd.put("41700", "J-Store");
-		mapSiteCd.put("41800", "Gold-In-City");
-		mapSiteCd.put("41900", "T-MapNavi");
-		mapSiteCd.put("42100", "OK Cashbag");
-		mapSiteCd.put("42200", "기프티콘");
-		mapSiteCd.put("45000", "Landing Page");
-		mapSiteCd.put("50000", "NAP");
-		mapSiteCd.put("50100", "상생혁신센터");
-		mapSiteCd.put("80100", "BSS");
-		mapSiteCd.put("80200", "ISF");
-		mapSiteCd.put("80300", "BoSS VOC");
-		mapSiteCd.put("90000", "One ID");
-		mapSiteCd.put("90100", "Admin");
-		mapSiteCd.put("90200", "OAuth");
-		mapSiteCd.put("90300", "One ID 사이트");
-		mapSiteCd.put("90400", "mOTP");
-		;
-	}
 
 	@Autowired
 	MemberCommonComponent commService; // 회원 공통 서비스
@@ -344,6 +309,37 @@ public class LoginServiceImpl implements LoginService {
 				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, null));
 
 			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_INVALID_USER_INFO)) {
+
+				Map<String, String> mapSiteCd = new HashMap<String, String>();
+				mapSiteCd.put("10100", "네이트");
+				mapSiteCd.put("10200", "싸이월드");
+				mapSiteCd.put("20100", "11st");
+				mapSiteCd.put("30100", "멜론");
+				mapSiteCd.put("40100", "Planet X 개발자센터");
+				mapSiteCd.put("40300", "Smart Touch Platform");
+				mapSiteCd.put("41000", "IDP");
+				mapSiteCd.put("41100", "T store");
+				mapSiteCd.put("41200", "T cloud");
+				mapSiteCd.put("41300", "T map");
+				mapSiteCd.put("41400", "SimpleSync");
+				mapSiteCd.put("41500", "T-Ad");
+				mapSiteCd.put("41600", "T-MapHot");
+				mapSiteCd.put("41700", "J-Store");
+				mapSiteCd.put("41800", "Gold-In-City");
+				mapSiteCd.put("41900", "T-MapNavi");
+				mapSiteCd.put("42100", "OK Cashbag");
+				mapSiteCd.put("42200", "기프티콘");
+				mapSiteCd.put("45000", "Landing Page");
+				mapSiteCd.put("50000", "NAP");
+				mapSiteCd.put("50100", "상생혁신센터");
+				mapSiteCd.put("80100", "BSS");
+				mapSiteCd.put("80200", "ISF");
+				mapSiteCd.put("80300", "BoSS VOC");
+				mapSiteCd.put("90000", "One ID");
+				mapSiteCd.put("90100", "Admin");
+				mapSiteCd.put("90200", "OAuth");
+				mapSiteCd.put("90300", "One ID 사이트");
+				mapSiteCd.put("90400", "mOTP");
 
 				// 가가입 상태 - 가입신청 사이트 정보
 				String joinSst = imIdpReceiver.getResponseBody().getJoin_sst_list();
