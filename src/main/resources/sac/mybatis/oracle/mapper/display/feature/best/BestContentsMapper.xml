@@ -136,13 +136,13 @@
                                            AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
                                            AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd}) = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
                                                      ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
-                                       <if test='fiteredBy == "movie+broadcast"'>                                                    
+                                       <if test='filteredBy == "movie+broadcast"'>                                                    
                                            AND B.TOP_MENU_ID IN ('DP17', 'DP18')               /* 탑메뉴ID */
                                        </if>
-                                       <if test='fiteredBy == "movie"'>                                                    
+                                       <if test='filteredBy == "movie"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP17'               /* 탑메뉴ID */
                                        </if>
-                                       <if test='fiteredBy == "broadcast"'>                                                    
+                                       <if test='filteredBy == "broadcast"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP18'               /* 탑메뉴ID */
                                        </if>                                                                           
                                        <if test="prodGradeCd != null">
@@ -313,13 +313,13 @@
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                            AND K.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
                                            AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
-                                       <if test='fiteredBy == "ebook+comic"'>                                                    
+                                       <if test='filteredBy == "ebook+comic"'>                                                    
                                            AND B.TOP_MENU_ID IN ('DP13', 'DP14')               /* 탑메뉴ID */
                                        </if>
-                                       <if test='fiteredBy == "ebook"'>                                                    
+                                       <if test='filteredBy == "ebook"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP13'               /* 탑메뉴ID */
                                        </if>
-                                       <if test='fiteredBy == "comic"'>                                                    
+                                       <if test='filteredBy == "comic"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP14'               /* 탑메뉴ID */
                                        </if>   
                                        <if test="prodGradeCd != null">

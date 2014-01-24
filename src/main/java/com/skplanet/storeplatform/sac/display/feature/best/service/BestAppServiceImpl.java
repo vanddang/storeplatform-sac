@@ -74,6 +74,8 @@ public class BestAppServiceImpl implements BestAppService {
 		BestAppRes response = new BestAppRes();
 		CommonResponse commonResponse = new CommonResponse();
 		int totalCount = 0;
+		int offset = 1;
+		int count = 20;
 
 		List<Product> productList = new ArrayList<Product>();
 		List<Menu> menuList = null;
@@ -88,8 +90,19 @@ public class BestAppServiceImpl implements BestAppService {
 			return response;
 		}
 
-		int count = 0;
-		count = bestAppReq.getOffset() + bestAppReq.getCount() - 1;
+		if (bestAppReq.getOffset() != null) {
+			offset = bestAppReq.getOffset();
+		} else {
+			bestAppReq.setOffset(offset);
+		}
+
+		if (bestAppReq.getCount() != null) {
+			count = bestAppReq.getCount();
+		} else {
+			bestAppReq.setCount(count);
+		}
+
+		count = offset + count - 1;
 		bestAppReq.setCount(count);
 
 		String stdDt = this.commonService.getBatchStandardDateString("S01", bestAppReq.getListId());

@@ -73,6 +73,9 @@ public class BestContentsServiceImpl implements BestContentsService {
 		List<Source> sourceList = null;
 		List<Support> supportList = null;
 
+		int offset = 1;
+		int count = 20;
+
 		if (bestContentsReq.getListId() == null || "".equals(bestContentsReq.getListId())) {
 			this.log.error("필수 파라미터(listId)값이 없음");
 			commonResponse.setTotalCount(0);
@@ -85,8 +88,19 @@ public class BestContentsServiceImpl implements BestContentsService {
 			bestContentsReq.setFilteredBy("movie+broadcast");
 		}
 
-		int count = 0;
-		count = bestContentsReq.getOffset() + bestContentsReq.getCount() - 1;
+		if (bestContentsReq.getOffset() != null) {
+			offset = bestContentsReq.getOffset();
+		} else {
+			bestContentsReq.setOffset(offset);
+		}
+
+		if (bestContentsReq.getCount() != null) {
+			count = bestContentsReq.getCount();
+		} else {
+			bestContentsReq.setCount(count);
+		}
+
+		count = offset + count - 1;
 		bestContentsReq.setCount(count);
 
 		String stdDt = this.commonService.getBatchStandardDateString("S01", bestContentsReq.getListId());
