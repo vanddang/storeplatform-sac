@@ -142,7 +142,7 @@
                                        <if test='fiteredBy == "movie"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP17'               /* 탑메뉴ID */
                                        </if>
-                                       <if test='fiteredBy == "broadcase"'>                                                    
+                                       <if test='fiteredBy == "broadcast"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP18'               /* 탑메뉴ID */
                                        </if>                                                                           
                                        <if test="prodGradeCd != null">

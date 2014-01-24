@@ -81,8 +81,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 			return response;
 
 		}
-		if (bestContentsReq.getFiteredBy() == null || "".equals(bestContentsReq.getFiteredBy())) {
-			bestContentsReq.setFiteredBy("movie+broadcast");
+		if (bestContentsReq.getFilteredBy() == null || "".equals(bestContentsReq.getFilteredBy())) {
+			bestContentsReq.setFilteredBy("movie+broadcast");
 		}
 
 		int count = 0;
@@ -98,10 +98,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 			List<BestContents> contentsList = null;
 
 			this.log.debug("########################################################");
-			this.log.debug("bestContentsReq.getFiteredBy()	:	" + bestContentsReq.getFiteredBy());
+			this.log.debug("bestContentsReq.getFilteredBy()	:	" + bestContentsReq.getFilteredBy());
 			this.log.debug("########################################################");
-			if ("movie".equals(bestContentsReq.getFiteredBy()) || "boardcast".equals(bestContentsReq.getFiteredBy())
-					|| "movie+broadcast".equals(bestContentsReq.getFiteredBy())) {
+			if ("movie".equals(bestContentsReq.getFilteredBy()) || "boardcast".equals(bestContentsReq.getFilteredBy())
+					|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 				contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsVodList", bestContentsReq,
 						BestContents.class);
 			} else {
@@ -152,23 +152,23 @@ public class BestContentsServiceImpl implements BestContentsService {
 					menu.setType("metaClass");
 					menuList.add(menu);
 
-					if ("movie".equals(bestContentsReq.getFiteredBy())
-							|| "movie+broadcast".equals(bestContentsReq.getFiteredBy())) {
+					if ("movie".equals(bestContentsReq.getFilteredBy())
+							|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						contributor.setDirector(mapperVO.getArtist2Nm());
 						contributor.setArtist(mapperVO.getArtist1Nm());
 						Date date = new Date();
 						date.setText(mapperVO.getIssueDay());
 						contributor.setDate(date);
-					} else if ("broadcast".equals(bestContentsReq.getFiteredBy())) {
+					} else if ("broadcast".equals(bestContentsReq.getFilteredBy())) {
 						contributor.setArtist(mapperVO.getArtist1Nm());
-					} else if ("ebook".equals(bestContentsReq.getFiteredBy())) {
+					} else if ("ebook".equals(bestContentsReq.getFilteredBy())) {
 						contributor.setName(mapperVO.getArtist1Nm());
 						contributor.setPublisher(mapperVO.getChnlCompNm());
 						Date date = new Date();
 						date.setText(mapperVO.getIssueDay());
 						contributor.setDate(date);
-					} else if ("comic".equals(bestContentsReq.getFiteredBy())
-							|| "ebook+comic".equals(bestContentsReq.getFiteredBy())) {
+					} else if ("comic".equals(bestContentsReq.getFilteredBy())
+							|| "ebook+comic".equals(bestContentsReq.getFilteredBy())) {
 						contributor.setName(mapperVO.getArtist1Nm());
 						contributor.setPainter(mapperVO.getArtist2Nm());
 						contributor.setPublisher(mapperVO.getChnlCompNm());
@@ -203,9 +203,9 @@ public class BestContentsServiceImpl implements BestContentsService {
 					 */
 					price.setText(mapperVO.getProdAmt());
 
-					if (!"movie".equals(bestContentsReq.getFiteredBy())
-							&& !"boardcast".equals(bestContentsReq.getFiteredBy())
-							&& !"movie+broadcast".equals(bestContentsReq.getFiteredBy())) {
+					if (!"movie".equals(bestContentsReq.getFilteredBy())
+							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
+							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						supportList = new ArrayList<Support>();
 						book.setStatus(mapperVO.getBookStatus());
 						book.setType(mapperVO.getBookType());
@@ -296,23 +296,23 @@ public class BestContentsServiceImpl implements BestContentsService {
 			// fiteredBy = comic
 			// fiteredBy = ebook+comic
 
-			if ("movie".equals(bestContentsReq.getFiteredBy())
-					|| "movie+broadcast".equals(bestContentsReq.getFiteredBy())) {
+			if ("movie".equals(bestContentsReq.getFilteredBy())
+					|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 				contributor.setDirector("곽경택");
 				contributor.setArtist("유오성,주진모,김우빈,박아인,강한나,한수아");
 				Date date = new Date();
 				date.setText("20131114");
 				contributor.setDate(date);
-			} else if ("broadcast".equals(bestContentsReq.getFiteredBy())) {
+			} else if ("broadcast".equals(bestContentsReq.getFilteredBy())) {
 				contributor.setArtist("유재석,지석진,김종국,하하,개리,이광수");
-			} else if ("ebook".equals(bestContentsReq.getFiteredBy())) {
+			} else if ("ebook".equals(bestContentsReq.getFilteredBy())) {
 				contributor.setName("정현웅");
 				contributor.setPublisher("L&amp;B BOOKS");
 				Date date = new Date();
 				date.setText("20130322");
 				contributor.setDate(date);
-			} else if ("comic".equals(bestContentsReq.getFiteredBy())
-					|| "ebook+comic".equals(bestContentsReq.getFiteredBy())) {
+			} else if ("comic".equals(bestContentsReq.getFilteredBy())
+					|| "ebook+comic".equals(bestContentsReq.getFilteredBy())) {
 				contributor.setName("황성");
 				contributor.setPainter("황성");
 				contributor.setPublisher("미스터블루");
