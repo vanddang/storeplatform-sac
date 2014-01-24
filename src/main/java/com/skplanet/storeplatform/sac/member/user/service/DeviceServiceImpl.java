@@ -442,6 +442,7 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(userKey);
 
+		deviceInfo.setUserKey(userKey);
 		deviceInfo.setTenantId(tenantId);
 
 		logger.info("::::::::::::::::::::::::::::::::: insertDeviceInfo deviceInfo :::::::::::::::::::::::::::::::::::::");
