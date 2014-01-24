@@ -442,8 +442,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
 		}
 
+		List<SellerMbr> sList = new ArrayList<SellerMbr>();
+		SellerMbr sellerMbrRes = null;
+		if (schRes.getSellerMbr() != null)
+			for (int i = 0; i < schRes.getSellerMbr().size(); i++) {
+				sellerMbrRes = new SellerMbr();
+				sellerMbrRes.setSellerId(schRes.getSellerMbr().get(i).getSellerID());
+				sList.add(sellerMbrRes);
+			}
+
 		SearchIdRes response = new SearchIdRes();
-		response.setSellerMbr(this.sellerMbrList(schRes.getSellerMbr()));// 판매자 정보 리스트
+		response.setSellerMbr(sList);// 판매자 정보 리스트
 
 		return response;
 
