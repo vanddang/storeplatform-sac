@@ -594,6 +594,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
+		deviceModelNo = "SHW-M110S";
+		logger.info(":::: deviceModelNo : {}", deviceModelNo);
 		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
 
 			logger.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceId);
@@ -608,32 +610,37 @@ public class DeviceServiceImpl implements DeviceService {
 				// 폰정보 조회 (deviceModelNo)
 				Device device = this.commService.getPhoneInfo(deviceModelNo);
 
-				// OMD 단말이 아닐 경우만
-				if (!MemberConstants.DEVICE_TELECOM_OMD.equals(device.getCmntCompCd())) {
+				if (device != null) {
+					// OMD 단말이 아닐 경우만
+					if (!MemberConstants.DEVICE_TELECOM_OMD.equals(device.getCmntCompCd())) {
 
-					IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
-					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-						String idpModelId = idpReceiver.getResponseBody().getModel_id();
+						IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
+						if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+							String idpModelId = idpReceiver.getResponseBody().getModel_id();
 
-						if (idpModelId != null && !idpModelId.equals("")) {
-							// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-							if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
-								idpModelId = "SSNL";
-							} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
-								idpModelId = "SSO0";
+							if (idpModelId != null && !idpModelId.equals("")) {
+								// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
+								if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
+									idpModelId = "SSNL";
+								} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
+									idpModelId = "SSO0";
+								}
+
+								//uacd 부가속성 추가
+								deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId,
+										deviceInfo));
+
+								logger.info("[change uacd] {}", idpModelId);
 							}
 
-							//uacd 부가속성 추가
-							deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId,
-									deviceInfo));
+						} else {
+							throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
+									+ idpReceiver.getResponseHeader().getResult_text());
 						}
 
-					} else {
-						throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
-								+ idpReceiver.getResponseHeader().getResult_text());
 					}
-
 				}
+
 			}
 			logger.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
@@ -680,10 +687,7 @@ public class DeviceServiceImpl implements DeviceService {
 							throw new Exception("로그인에 실패하였습니다.(오류코드 4204).");
 						}
 					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
-						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
-																													// 조회된
-																													// 회선정보
-																													// 없음
+						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS 조회된 회선정보 없음
 					}
 				}
 			} else { // 타사
@@ -794,26 +798,15 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 		}
 
-		if (majorDeviceInfo.getImMngNum() != null) {
+		/* <NODATA> 적용요부 확인필요 */
+		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM,
+				majorDeviceInfo.getImMngNum() == null ? "" : majorDeviceInfo.getImMngNum(), deviceInfo));
 
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, majorDeviceInfo.getImMngNum(),
-					deviceInfo));
+		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
+				: majorDeviceInfo.getUacd(), deviceInfo));
 
-		}
-
-		if (majorDeviceInfo.getUacd() != null) {
-
-			deviceInfo
-					.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd(), deviceInfo));
-
-		}
-
-		if (majorDeviceInfo.getOmdUacd() != null) {
-
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD, majorDeviceInfo.getOmdUacd(),
-					deviceInfo));
-
-		}
+		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OMDUACD,
+				majorDeviceInfo.getOmdUacd() == null ? "" : majorDeviceInfo.getOmdUacd(), deviceInfo));
 
 		return deviceInfo;
 	}
