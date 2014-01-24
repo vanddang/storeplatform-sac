@@ -41,6 +41,41 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	/**
 	 * 
 	 * <pre>
+	 * 구매요청 전체적인 적합성 체크: 회원/상품/구매 적합성 체크.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매 주문 정보
+	 * @return 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
+	 */
+	@Override
+	public PurchaseOrderResult validate(PurchaseOrder purchaseOrderInfo) {
+		PurchaseOrderResult checkResult = null;
+
+		// 회원
+		checkResult = this.validateMember(purchaseOrderInfo);
+		if (checkResult != null) {
+			return checkResult;
+		}
+
+		// 상품
+		checkResult = this.validateProduct(purchaseOrderInfo);
+		if (checkResult != null) {
+			return checkResult;
+		}
+
+		// 구매: 회원&상품, 기타 등등
+		checkResult = this.validatePurchase(purchaseOrderInfo);
+		if (checkResult != null) {
+			return checkResult;
+		}
+
+		return null;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 회원 적합성 체크.
 	 * </pre>
 	 * 
@@ -110,6 +145,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		String deviceModelCd = purchaseOrderInfo.getDeviceModelCd();
 		List<DummyProduct> productInfoList = purchaseOrderInfo.getProductList();
 
+		Double totAmt = 0.0;
 		// 상품 정보 조회
 		DummyProduct productInfo = null;
 		for (CreatePurchaseReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
@@ -126,8 +162,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				return new PurchaseOrderResult("SAC_PUR_00013", "not support product");
 			}
 
+			productInfo.setProdAmt(reqProduct.getProdAmt());
+			totAmt += reqProduct.getProdAmt();
+
 			productInfoList.add(productInfo);
 		}
+		purchaseOrderInfo.setRealTotAmt(totAmt);
 
 		return null;
 	}
@@ -135,7 +175,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	/**
 	 * 
 	 * <pre>
-	 * 구매 적합성 체크.
+	 * 구매 적합성 체크: 상품&회원 결합 체크, 기구매체크, 쇼핑쿠폰 발급 가능여부 체크 등.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo

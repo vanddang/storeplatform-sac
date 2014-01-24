@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
+import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentReq;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
@@ -25,10 +28,10 @@ public interface PurchaseOrderService {
 	 * 구매 전처리.
 	 * </pre>
 	 * 
-	 * @param purchaseInfo
+	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void checkPurchase(PurchaseOrder purchaseInfo);
+	public void checkPurchase(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -36,10 +39,10 @@ public interface PurchaseOrderService {
 	 * 무료구매 처리.
 	 * </pre>
 	 * 
-	 * @param purchaseInfo
+	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void freePurchase(PurchaseOrder purchaseInfo);
+	public void freePurchase(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -47,10 +50,49 @@ public interface PurchaseOrderService {
 	 * 유료구매 - 구매예약.
 	 * </pre>
 	 * 
-	 * @param purchaseInfo
+	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void reservePurchase(PurchaseOrder purchaseInfo);
+	public void reservePurchase(PurchaseOrder purchaseOrderInfo);
+
+	/**
+	 * 
+	 * <pre>
+	 * 유료구매 - 구매예약 정보 조회.
+	 * </pre>
+	 * 
+	 * @param tenantId
+	 *            테넌트 ID
+	 * @param prchsId
+	 *            구매 ID
+	 * @param useUserKey
+	 *            내부 회원 NO
+	 */
+	public PrchsDtl searchReservedPurchaseDetail(String tenantId, String prchsId, String useUserKey);
+
+	/**
+	 * 
+	 * <pre>
+	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장.
+	 * </pre>
+	 * 
+	 * @param prchs
+	 *            구매 정보
+	 */
+	public void confirmPurchase(Prchs prchs);
+
+	/**
+	 * 
+	 * <pre>
+	 * 결제 내역 생성.
+	 * </pre>
+	 * 
+	 * @param prchs
+	 *            구매정보
+	 * @param notifyParam
+	 *            결제정보
+	 */
+	public void createPayment(Prchs prchs, NotifyPaymentReq notifyParam);
 
 	/**
 	 * 
@@ -58,8 +100,8 @@ public interface PurchaseOrderService {
 	 * 유료구매 - 결제Page 준비작업.
 	 * </pre>
 	 * 
-	 * @param purchaseInfo
+	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void setPaymentPageInfo(PurchaseOrder purchaseInfo);
+	public void setPaymentPageInfo(PurchaseOrder purchaseOrderInfo);
 }

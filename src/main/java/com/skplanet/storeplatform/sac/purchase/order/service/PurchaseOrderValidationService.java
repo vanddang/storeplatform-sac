@@ -23,6 +23,18 @@ public interface PurchaseOrderValidationService {
 	/**
 	 * 
 	 * <pre>
+	 * 구매요청 전체적인 적합성 체크: 회원/상품/구매 적합성 체크.
+	 * </pre>
+	 * 
+	 * @param purchaseOrderInfo
+	 *            구매 주문 정보
+	 * @return 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
+	 */
+	public PurchaseOrderResult validate(PurchaseOrder purchaseOrderInfo);
+
+	/**
+	 * 
+	 * <pre>
 	 * 회원 적합성 체크.
 	 * </pre>
 	 * 
@@ -47,7 +59,7 @@ public interface PurchaseOrderValidationService {
 	/**
 	 * 
 	 * <pre>
-	 * 구매 적합성 체크.
+	 * 구매 적합성 체크: 상품&회원 결합 체크, 기구매체크, 쇼핑쿠폰 발급 가능여부 체크 등.
 	 * </pre>
 	 * 
 	 * @param purchaseOrderInfo
