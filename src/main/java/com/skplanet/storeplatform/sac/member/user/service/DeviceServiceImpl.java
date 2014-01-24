@@ -576,7 +576,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		/* 휴대기기 주요정보 확인 */
-		//deviceInfo = this.getDeviceMajorInfo(deviceInfo);
+		deviceInfo = this.getDeviceMajorInfo(deviceInfo);
 
 		/* 기기정보 필드 */
 		String deviceModelNo = deviceInfo.getDeviceModelNo(); // 단말모델코드
