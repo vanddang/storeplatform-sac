@@ -24,7 +24,7 @@ public interface MemberCommonRepository {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public List<Clause> getMandAgreeList(String tenantId) throws Exception;
+	public List<Clause> searchMandatoryAgreeList(String tenantId) throws Exception;
 
 	/**
 	 * <pre>
@@ -37,7 +37,7 @@ public interface MemberCommonRepository {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public Device getPhoneInfo(String deviceModelCd) throws Exception;
+	public Device searchPhoneInfo(String deviceModelCd) throws Exception;
 
 	/**
 	 * <pre>
@@ -50,6 +50,6 @@ public interface MemberCommonRepository {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public int getOmdCount(String uacd) throws Exception;
+	public int searchOmdCount(String uacd) throws Exception;
 
 }

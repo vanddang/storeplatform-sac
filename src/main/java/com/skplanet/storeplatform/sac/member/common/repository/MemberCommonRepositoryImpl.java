@@ -30,21 +30,21 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 	private CommonDAO commonDAO;
 
 	@Override
-	public List<Clause> getMandAgreeList(String tenantId) throws Exception {
+	public List<Clause> searchMandatoryAgreeList(String tenantId) throws Exception {
 		Clause dto = new Clause();
 		dto.setTenantId(tenantId);
 		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
 	}
 
 	@Override
-	public Device getPhoneInfo(String deviceModelCd) throws Exception {
+	public Device searchPhoneInfo(String deviceModelCd) throws Exception {
 		Device dto = new Device();
 		dto.setDeviceModelCd(deviceModelCd);
 		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
 	}
 
 	@Override
-	public int getOmdCount(String uacd) throws Exception {
+	public int searchOmdCount(String uacd) throws Exception {
 		return (Integer) this.commonDAO.queryForObject("MemberCommon.getOmdCount", uacd);
 	}
 

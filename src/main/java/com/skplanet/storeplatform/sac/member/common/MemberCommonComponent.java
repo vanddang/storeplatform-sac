@@ -128,7 +128,7 @@ public class MemberCommonComponent {
 	 *             Exception
 	 */
 	public List<Clause> getMandAgreeList(String tenantId) throws Exception {
-		return this.repository.getMandAgreeList(tenantId);
+		return this.repository.searchMandatoryAgreeList(tenantId);
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class MemberCommonComponent {
 	 *             Exception
 	 */
 	public Device getPhoneInfo(String deviceModelCd) throws Exception {
-		return this.repository.getPhoneInfo(deviceModelCd);
+		return this.repository.searchPhoneInfo(deviceModelCd);
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class MemberCommonComponent {
 			/**
 			 * OMD 단말 setting.
 			 */
-			if (this.repository.getOmdCount(model) > 0) {
+			if (this.repository.searchOmdCount(model) > 0) {
 
 				LOGGER.info("## OMD 단말 setting.");
 				majorDeviceInfo.setOmdUacd(model);
