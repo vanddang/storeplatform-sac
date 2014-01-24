@@ -213,23 +213,6 @@ public class DeviceServiceImpl implements DeviceService {
 		return res;
 	}
 
-	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) {
-		deviceInfo.setDeviceModelNo(deviceheader.getModel());
-		if (deviceheader.getModel() != null) { //단말모델
-			deviceInfo.setDeviceModelNo(deviceheader.getModel());
-		}
-		if (deviceheader.getOsVersion() != null) { // OS버젼
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, deviceheader.getOsVersion(),
-					deviceInfo));
-		}
-		//		if (deviceheader.getPkgVersion() != null) { //SC버젼
-		//			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, deviceheader
-		//					.getPkgVersion(), deviceInfo));
-		//		}
-
-		return deviceInfo;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -785,6 +768,43 @@ public class DeviceServiceImpl implements DeviceService {
 
 	}
 
+	/**
+	 * 휴대기기 헤더 정보 셋팅
+	 * 
+	 * @param deviceheader
+	 *            DeviceHeader
+	 * @param deviceInfo
+	 *            DeviceInfo
+	 * @return DeviceInfo
+	 * @throws Exception
+	 *             Exception
+	 */
+	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) throws Exception {
+		deviceInfo.setDeviceModelNo(deviceheader.getModel());
+		if (deviceheader.getModel() != null) { //단말모델
+			deviceInfo.setDeviceModelNo(deviceheader.getModel());
+		}
+		if (deviceheader.getOsVersion() != null) { // OS버젼
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, deviceheader.getOsVersion(),
+					deviceInfo));
+		}
+		//		if (deviceheader.getPkgVersion() != null) { //SC버젼
+		//			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, deviceheader
+		//					.getPkgVersion(), deviceInfo));
+		//		}
+
+		return deviceInfo;
+	}
+
+	/**
+	 * 휴대기기 주요정보 셋팅
+	 * 
+	 * @param deviceInfo
+	 *            DeviceInfo
+	 * @return DeviceInfo
+	 * @throws Exception
+	 *             Exception
+	 */
 	public DeviceInfo getDeviceMajorInfo(DeviceInfo deviceInfo) throws Exception {
 
 		MajorDeviceInfo majorDeviceInfo = this.commService.getDeviceBaseInfo(deviceInfo.getDeviceModelNo(), deviceInfo.getDeviceTelecom(),
