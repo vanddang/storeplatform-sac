@@ -62,7 +62,7 @@ public interface MiscellaneousRepository {
 	 *            String
 	 * @return String
 	 */
-	public String getEmailAuthYn(String mbrNo);
+	public ServiceAuth getEmailAuthYn(String mbrNo);
 
 	/**
 	 * <pre>

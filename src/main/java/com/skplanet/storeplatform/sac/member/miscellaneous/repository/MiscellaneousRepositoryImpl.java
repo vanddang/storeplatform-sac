@@ -41,8 +41,8 @@ public class MiscellaneousRepositoryImpl implements MiscellaneousRepository {
 	}
 
 	@Override
-	public String getEmailAuthYn(String mbrNo) { // confirmEmailAuthYn
-		return (String) this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo);
+	public ServiceAuth getEmailAuthYn(String mbrNo) { // confirmEmailAuthYn
+		return (ServiceAuth) this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo);
 	}
 
 	@Override

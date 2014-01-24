@@ -98,10 +98,11 @@
     
     
     <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)-->
-    <select id="getEmailAuthYn" parameterType="String" resultType="String">
+    <select id="getEmailAuthYn" parameterType="String" resultType="ServiceAuth">
     /* MiscellaneousMapper.xml, getEmailAuthYn, SAC : 김다슬 , 2014-01-23 */
     SELECT 
-        AUTH_COMPT_YN 
+        AUTH_COMPT_YN,
+        AUTH_VALUE 
     FROM 
         TB_CM_SVC_AUTH
     WHERE
