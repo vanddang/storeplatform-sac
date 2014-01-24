@@ -13,7 +13,7 @@ public final class MemberConstants {
 
 	/** SC회원 결과 코드. */
 	public static final String RESULT_SUCCES = "0000"; // 성공
-	public static final String RESULT_FAIL = "9999"; // 실패
+	public static final String RESULT_FAIL = "9999"; // 값없음
 	public static final String RESULT_NOT_FOUND_INPUT = "9998"; // 입력 파라미터가 없음
 	public static final String RESULT_NOT_FOUND_COMMON = "9997"; // 공통 파라미터 없음
 	public static final String RESULT_NOT_FOUND_TANENT_ID = "9996"; // 테넌트 아이디 없음
