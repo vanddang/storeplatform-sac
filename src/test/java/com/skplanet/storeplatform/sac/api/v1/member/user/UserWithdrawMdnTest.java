@@ -77,7 +77,7 @@ public class UserWithdrawMdnTest {
 		new TestCaseTemplate(this.mockMvc)
 				.url("/member/user/createByMdn/v1")
 				.httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("x-store-auth-info", "authKey=2af99ed5f1caa3f02ea7e12e6ba9861f4e7612ea;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info",
 						"model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
@@ -88,9 +88,9 @@ public class UserWithdrawMdnTest {
 						CreateByMdnReq reqJson = new CreateByMdnReq();
 
 						// 단말 정보
-						reqJson.setDeviceId("01012346488"); // 기기 ID
+						reqJson.setDeviceId("01032641287"); // 기기 ID
 						reqJson.setDeviceIdType("msisdn"); // 기기 ID 타입
-						reqJson.setDeviceTelecom("US012102"); // 통신사
+						reqJson.setDeviceTelecom("US001202"); // 통신사
 						reqJson.setNativeId("A0000031648EE9"); // 기기 고유 ID (IMEI)
 						reqJson.setDeviceAccount("mdntest@gmail.com"); // 기기 계정 (Gmail)
 						reqJson.setJoinId("US002903"); // 가입채널코드
@@ -114,7 +114,7 @@ public class UserWithdrawMdnTest {
 						reqJson.setParentDate(DateUtil.getToday());
 						reqJson.setParentEmail("hkd@aaaa.com");
 						reqJson.setParentBirthDay("19700331");
-						reqJson.setParentTelecom("US012101");
+						reqJson.setParentTelecom("US001202");
 						reqJson.setParentPhone("01088889999");
 						reqJson.setParentCi("skpone0000132653GWyh3WsEm0FutitO5oSgC2/SgSrLKv5XohA8mxTNLitpB1 B9A3z5zrVHettHzKa5dpJA==");
 						reqJson.setParentRealNameDate(DateUtil.getToday());

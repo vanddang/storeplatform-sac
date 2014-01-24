@@ -85,7 +85,7 @@ public class UserExtraInfoUpdateTest {
 						user1.setExtraProfileValue("100000008780");
 
 						UserExtraInfo user2 = new UserExtraInfo();
-						user2.setExtraProfileCode("US010902");
+						user2.setExtraProfileCode("US010902111111111");
 						user2.setExtraProfileValue("100008258911");
 
 						// UserExtraInfo user3 = new UserExtraInfo();
