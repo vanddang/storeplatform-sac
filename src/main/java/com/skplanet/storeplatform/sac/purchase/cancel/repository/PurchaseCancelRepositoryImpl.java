@@ -78,7 +78,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 			purchaseDetail.setProdId(prchsDtl.getProdId());
 			purchaseDetail.setProdAmt(prchsDtl.getProdAmt());
 			purchaseDetail.setProdQty(prchsDtl.getProdQty());
-			purchaseDetail.setProdGrpCd(prchsDtl.getProdGrpCd());
+			purchaseDetail.setProdGrpCd(prchsDtl.getTenantProdGrpCd());
 			purchaseDetail.setStatusCd(prchsDtl.getStatusCd());
 			purchaseDetail.setUseStartDt(prchsDtl.getUseStartDt());
 			purchaseDetail.setUseExprDt(prchsDtl.getUseExprDt());
