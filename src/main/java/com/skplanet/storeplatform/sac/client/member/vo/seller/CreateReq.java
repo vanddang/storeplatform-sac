@@ -118,6 +118,17 @@ public class CreateReq extends CommonInfo {
 	/** 보안질문 정보들. */
 	private List<PwReminder> pwReminderList;
 
+	/** 실명인증 여부. */
+	private String isRealName;
+
+	public String getIsRealName() {
+		return this.isRealName;
+	}
+
+	public void setIsRealName(String isRealName) {
+		this.isRealName = isRealName;
+	}
+
 	public String getSellerClass() {
 		return this.sellerClass;
 	}
