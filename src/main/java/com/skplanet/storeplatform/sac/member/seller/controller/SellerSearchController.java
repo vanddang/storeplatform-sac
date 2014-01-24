@@ -85,6 +85,8 @@ public class SellerSearchController {
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 		String aid = StringUtil.nvl(req.getAid(), "");
 
+		req.setAid(aid);
+		req.setSellerKey(sellerKey);
 		if (sellerKey.equals("") && aid.equals(""))
 			throw new Exception("필수 파라미터 미존재");
 
