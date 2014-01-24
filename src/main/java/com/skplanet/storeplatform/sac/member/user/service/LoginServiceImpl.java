@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByIdRes;
@@ -557,20 +556,13 @@ public class LoginServiceImpl implements LoginService {
 			AuthorizeByMdnReq req = new AuthorizeByMdnReq();
 			req = (AuthorizeByMdnReq) obj;
 
-			/** 사용자 휴대기기 부가정보 셋팅 */
-			List<DeviceExtraInfo> userDeviceExtraInfo = req.getUserDeviceExtraInfo();
-
-			/* 헤더로 받는 부가 속성 정보(os버젼) */
-			userDeviceExtraInfo = DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, requestHeader.getDeviceHeader()
-					.getOsVersion(), req.getUserDeviceExtraInfo());
-
 			deviceInfo.setDeviceId(req.getDeviceId());
 			deviceInfo.setDeviceIdType(req.getDeviceIdType());
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 			deviceInfo.setNativeId(req.getNativeId());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
-			deviceInfo.setUserDeviceExtraInfo(userDeviceExtraInfo);
-			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+
+			this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
 
@@ -579,23 +571,16 @@ public class LoginServiceImpl implements LoginService {
 
 			if (req.getDeviceId() != null) { // deviceId가 파라메터로 넘어왔을 경우에만 휴대기기 정보 merge 요청
 
-				/** 사용자 휴대기기 부가정보 셋팅 */
-				List<DeviceExtraInfo> userDeviceExtraInfo = req.getUserDeviceExtraInfo();
-
-				/* 헤더로 받는 부가 속성 정보(os버젼) */
-				userDeviceExtraInfo = DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, requestHeader.getDeviceHeader()
-						.getOsVersion(), req.getUserDeviceExtraInfo());
-
 				deviceInfo.setDeviceId(req.getDeviceId());
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 				deviceInfo.setNativeId(req.getNativeId());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
-				deviceInfo.setUserDeviceExtraInfo(userDeviceExtraInfo);
-				this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+
+				this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
 
 				/* 변경된 휴대기기 정보 IDP도 변경 */
-				this.userService.modifyProfileIdp(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, userAuthKey);
+				this.userService.modifyProfileIdp(requestHeader, userKey, userAuthKey);
 			}
 
 		}
@@ -696,7 +681,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceId(deviceId);
 			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, imMngNum,
 					deviceInfo.getUserDeviceExtraInfo()));
-			this.deviceService.mergeDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), deviceInfo);
+			this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
 
 		} else {
 
