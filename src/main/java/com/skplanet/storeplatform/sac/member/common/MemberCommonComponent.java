@@ -208,7 +208,7 @@ public class MemberCommonComponent {
 	 * </pre>
 	 * 
 	 * @param keyType
-	 *            검색 조건 타입
+	 *            검색 조건 타입 (userKey, userId, deviceKey, deviceId)
 	 * @param keyValue
 	 *            검색 조건 값
 	 * @param sacHeader
