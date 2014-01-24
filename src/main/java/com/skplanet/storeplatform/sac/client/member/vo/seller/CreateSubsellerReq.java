@@ -45,6 +45,28 @@ public class CreateSubsellerReq extends CommonInfo {
 	/** 신규 등록여부 Example : Y/N. */
 	private String isNew;
 
+	/** 이전 비밀번호. */
+	private String oldPW; // OldPW
+
+	/** 비밀번호. */
+	private String memberPW; // PWD
+
+	public String getOldPW() {
+		return this.oldPW;
+	}
+
+	public void setOldPW(String oldPW) {
+		this.oldPW = oldPW;
+	}
+
+	public String getMemberPW() {
+		return this.memberPW;
+	}
+
+	public void setMemberPW(String memberPW) {
+		this.memberPW = memberPW;
+	}
+
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
