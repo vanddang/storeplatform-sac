@@ -619,7 +619,7 @@ public class DummyDataController {
 		 */
 		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
 		UserExtraInfo userExtraInfo = new UserExtraInfo();
-		userExtraInfo.setExtraProfile("US010901");
+		userExtraInfo.setExtraProfileCode("US010901");
 		userExtraInfo.setExtraProfileValue("100000003899");
 		userExtraInfoList.add(userExtraInfo);
 
