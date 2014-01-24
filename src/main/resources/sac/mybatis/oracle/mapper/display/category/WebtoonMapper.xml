@@ -282,7 +282,8 @@
                          AND  G.PROD_ID = I.PROD_ID
                          AND  G.TENANT_ID = I.TENANT_ID  
                          AND  G.TENANT_ID = L.TENANT_ID   
-                         AND  D.PROD_ID = L.PROD_ID
+                         /*AND  D.PROD_ID = L.PROD_ID*/
+                         AND  J.PROD_ID = L.PROD_ID
                          AND  D.PROD_ID = J.PART_PROD_ID   
                          AND  D.PROD_ID = K.PART_PROD_ID(+)
                          AND  K.PART_PROD_ID IS NOT NULL
