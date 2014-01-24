@@ -131,7 +131,7 @@ public class LoginServiceImpl implements LoginService {
 				|| StringUtil.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
 			/* 로그인 실패이력 저장 */
-			this.insertloginHistory(requestHeader, deviceId, "", "N", userType, deviceId);
+			this.insertloginHistory(requestHeader, deviceId, "", "N", "Y", deviceId);
 
 			res.setUserKey(userKey);
 			res.setUserType(userType);
