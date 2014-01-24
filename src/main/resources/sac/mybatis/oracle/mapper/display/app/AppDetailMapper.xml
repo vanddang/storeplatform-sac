@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppDetail">
+    
+    <select id="getAppDetail" parameterType="com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.AppDetail">
+        SELECT
+            PD.PROD_ID,
+            SC.SUB_CONTENTS_ID,
+            APP.WAP_PROD_NM,
+            TPRC.PROD_AMT,
+            nvl(TS.AVG_EVLU_SCORE, 0.0) as AVG_EVLU_SCORE,
+            nvl(TS.DWLD_CNT, 0) as DWLD_CNT,
+            nvl(TS.PATICPERS_CNT, 0) as PATICPERS_CNT,
+            APP.AID,
+            SC.APK_PKG_NM,
+            SC.APK_VER,
+            SC.APK_VER_NM,
+            SC.VM_VER,
+            SC.FILE_SIZE,
+            DECODE( NVL( APP.PROD_CLSF_CD, 'PD000601' )
+            , 'PD000601', 'PAID'
+            , 'PD000602', 'LIBRARY'
+            , 'PD000603', 'VM'
+            , 'PD000604', 'FREE'
+            , 'PD000605', 'PAID-RSS'
+            , 'PD000606', 'FREE-RSS' )  AS PROD_GBN,
+            DECODE( PD.PROD_GRD_CD
+            , 'PD004401', 0
+            , 'PD004402', 1
+            , 'PD004403', 2
+            , 'PD004404', 4 ) AS PROD_GRD,
+            PD.SELLER_MBR_NO,
+            PD.EXPO_SELLER_EMAIL,
+            PD.EXPO_SELLER_NM,
+            PD.EXPO_SELLER_TELNO
+        FROM
+                TB_DP_PROD PD,
+                TB_DP_APP_PROD APP,
+                TB_DP_SUB_CONTENTS SC,
+                TB_DP_TENANT_PROD_STATS TS,
+                TB_DP_TENANT_PROD TP,
+                TB_DP_TENANT_PROD_PRICE TPRC
+        WHERE 1 = 1
+              AND PD.PROD_ID = #{episodeId}
+              AND APP.PROD_ID = PD.PROD_ID
+              AND SC.PROD_ID = PD.PROD_ID
+              AND TS.PROD_ID (+) = PD.PROD_ID
+              AND TS.TENANT_ID (+) = #{tenantId}
+              AND TP.PROD_ID = TS.PROD_ID
+              AND TP.TENANT_ID = TS.TENANT_ID
+              AND TPRC.PROD_ID = TS.PROD_ID
+              AND TPRC.TENANT_ID = TS.TENANT_ID
+    </select>
+
+    <select id="getSourceList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
+        SELECT FILE_PATH, FILE_NM, IMG_CD
+        FROM TB_DP_PROD_IMG
+        WHERE PROD_ID = #{episodeId}
+        AND IMG_CD = #{imgCd}
+        AND LANG_CD = #{langCd}
+        ORDER BY EXPO_ORD
+    </select>
+
+    <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
+        SELECT
+            PROD_UPD_DT,
+            UPDT_TEXT
+        FROM TB_DP_PROD_UPDT_HIS
+        WHERE PROD_ID = #{episodeId}
+        ORDER BY UPDT_SEQ DESC
+    </select>
+
+
+    
+</mapper>

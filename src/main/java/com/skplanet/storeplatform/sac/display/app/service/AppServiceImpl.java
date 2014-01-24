@@ -1,8 +1,20 @@
 package com.skplanet.storeplatform.sac.display.app.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
+import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
+import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
+import com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq;
+import com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
+import freemarker.template.SimpleDate;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,23 +22,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.AppDebug;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.History;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Update;
+import javax.xml.bind.DatatypeConverter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 앱 상품 상세조회
@@ -43,96 +42,109 @@ public class AppServiceImpl implements AppService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+    @Autowired
+    private DisplayCommonService commonService;
+
 	@Override
 	public AppDetailRes getAppDetail(AppDetailReq request) {
-		// Dummy generation
-		AppDetailRes res = new AppDetailRes();
-		Product product = new Product();
 
-		product.setIdentifier(new Identifier("episode", "0000308800"));
+        AppDetail appDetail = commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
+        if(appDetail == null)
+            throw new StorePlatformException("SAC_DSP_9999");
+        AppDetailRes res = new AppDetailRes();
 
-		product.setTitle(new Title("CNN 수퍼스타 20인을 인터뷰하다"));
-		Price price = new Price();
-		price.setFixedPrice(0);
-		product.setPrice(price);
-		Menu menu = new Menu();
-		menu.setId("DP000508");
-		menu.setName("languageEducation");
-		menu.setType("topClass");
+        // Product Basic info
+        Product product = new Product();
+        product.setIdentifier(new Identifier("episode", request.getEpisodeId()));
+        product.setPacketFee(appDetail.getProdGbn());
 
-		Menu menu1 = new Menu();
-		menu1.setId("DP08002");
-		menu1.setName("liveEnglish");
+        product.setTitle(new Title(appDetail.getWapProdNm()));
+        Price price = new Price();
+        price.setFixedPrice(appDetail.getProdAmt());
+        product.setPrice(price);
 
-		product.setMenuList(new ArrayList<Menu>(Arrays.asList(menu, menu1)));
-		product.setPacketFee("paid");
-		Source source = new Source();
-		source.setMediaType("image/png");
-		source.setType("screenshot");
-		source.setUrl("http://wap.tstore.co.kr/android6/201211/15/IF1423026819420091216095419/0000308800/img/thumbnail/0000308800_219_365_0_01.PNG");
+        // Menu
+        List<MenuItem> menuList = commonService.getMenuItemList(request.getEpisodeId(), request.getLangCd());
+        product.setMenuList(new ArrayList<Menu>());
+        for (MenuItem mi : menuList) {
+            Menu menu = new Menu();
+            menu.setId(mi.getMenuId());
+            menu.setName(mi.getMenuNm());
+            if(mi.isInfrMenu())
+                menu.setType("topClass");
 
-		Source source1 = new Source();
-		source1.setMediaType("image/png");
-		source1.setType("screenshot");
-		source1.setUrl("http://wap.tstore.co.kr/android6/201211/15/IF1423026819420091216095419/0000308800/img/thumbnail/0000308800_219_365_0_02.PNG");
+            product.getMenuList().add(menu);
+        }
 
-		product.setSourceList(new ArrayList<Source>(Arrays.asList(source, source1)));
-		Accrual accrual = new Accrual();
-		accrual.setVoterCount(20);
-		accrual.setDownloadCount(1000);
-		accrual.setScore(4.5);
-		product.setAccrual(accrual);
+        // Source
+        // TODO thumbnail, screenshot
+        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getEpisodeId(), "DP000111", request.getLangCd()), ImageSource.class);
+        List<Source> sourceList = new ArrayList<Source>();
+        for (ImageSource imgSrc : imageSourceList) {
+            Source source = new Source();
+            source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
+            source.setType("screenshot");
+            source.setUrl(imgSrc.getFilePath());
 
-		Rights rights = new Rights();
-		rights.setGrade("0");
+            sourceList.add(source);
+        }
+        product.setSourceList(sourceList);
 
-		product.setRights(rights);
+        Accrual accrual = new Accrual();
+        accrual.setVoterCount(appDetail.getPaticpersCnt());
+        accrual.setDownloadCount(appDetail.getDwldCnt());
+        accrual.setScore(appDetail.getAvgEvluScore());
+        product.setAccrual(accrual);
 
-		App app = new App();
-		app.setAid("OA00308800");
-		app.setSupportedOs("Android 2.2&amp;2.3&amp;3.0&amp;3.1&amp;3.2&amp;4.0&amp;4.1&amp;4.2&amp;4.3&amp;4.4");
-		app.setPackageName("kr.co.waterbear.cnn");
-		app.setVersionCode("10100014");
-		app.setVersion("1.7");
+        Rights rights = new Rights();
+        rights.setGrade(appDetail.getProdGrd());
+        product.setRights(rights);
 
-		AppDebug debug = new AppDebug();
-		debug.setPackageName("kr.co.waterbear.cnn");
-		debug.setVersionCode("10100014");
-		app.setAppDebug(debug);
-		History history = new History();
+        // App
+        App app = new App();
+        product.setApp(app);
+        app.setAid(appDetail.getAid());
+        app.setSupportedOs("Android " + appDetail.getVmVer());
+        app.setPackageName(appDetail.getApkPkgNm());
+        app.setVersionCode(appDetail.getApkVer());
+        app.setVersion(appDetail.getApkVerNm());
 
-		Update update = new Update();
-		Date date = new Date();
-		update.setDate(date);
-		date.setType("date/reg");
-		date.setText("20131202T000000+0900");
-		update.setUpdateExplain("안녕하세요 와이비엠시사닷컴 입니다. 지원 기기 추가 요청 검증요청 드립니다 ...");
+        // AppDebug
+        AppDebug debug = new AppDebug();
+        debug.setPackageName(appDetail.getApkPkgNm());  // TODO check
+        debug.setVersionCode(appDetail.getApkVer());    // TODO check
+        app.setAppDebug(debug);
 
-		Update update1 = new Update();
-		Date date1 = new Date();
-		update1.setDate(date1);
-		date1.setType("date/reg");
-		date1.setText("20131120T000000+0900");
-		update1.setUpdateExplain("해당 어플 추가 지원 기기 문의 드립니다. 기기명 : IM-A860K");
-		app.setHistory(history);
-		history.setUpdate(new ArrayList<Update>(Arrays.asList(update, update1)));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
-		product.setApp(app);
-		Distributor distributor = new Distributor();
-		distributor.setType("corporation");
-		distributor.setName("오재환");
-		distributor.setNickName("ybmsisa_com");
-		distributor.setTel("0220090346");
-		distributor.setEmail("sarang486s@ybmsisa.com");
-		distributor.setAddress("경기도 성남시 분당구 대왕판교로 670  유스페이스2 A동 9층");
-		distributor.setRegNo("강남-1757");
-		distributor.setCompany("(주)와이비엠시사닷컴");
-		product.setDistributor(distributor);
-		product.setPhysicalPath("/android6/201211/15/IF1423026819420091216095419/0000308800/apk/app.apk");
+        // Update History
+        History history = new History();
+        List<UpdateHistory> updateHistoryList = commonDAO.queryForList("AppDetail.getUpdateHistoryList", request, UpdateHistory.class);
+        List<Update> updateList = new ArrayList<Update>();
+        for (UpdateHistory uh : updateHistoryList) {
+            Update update = new Update();
+            Date date = new Date();
+            date.setType("date/reg");
+            date.setText(sdf.format(uh.getProdUpdDt()));
 
-		res.setProduct(product);
+            update.setUpdateExplain(uh.getUpdtText());
+            update.setDate(date);
 
-		return res;
-	}
+            updateList.add(update);
+        }
+        app.setHistory(history);
+        history.setUpdate(updateList);
+
+        // Distributor
+        Distributor distributor = new Distributor();
+        distributor.setIdentifier(appDetail.getSellerMbrNo());
+        distributor.setName(appDetail.getExpoSellerNm()); // TODO name or nickname
+        distributor.setTel(appDetail.getExpoSellerTelno());
+        distributor.setEmail(appDetail.getExpoSellerEmail());
+        product.setDistributor(distributor);
+
+        res.setProduct(product);
+        return res;
+    }
 
 }
