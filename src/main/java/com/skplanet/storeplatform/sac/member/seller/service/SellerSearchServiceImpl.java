@@ -122,13 +122,18 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		LOGGER.info("checkDuplicationSellerResponse Messge : {}", checkDuplicationSellerResponse.getCommonResponse()
 				.getResultMessage());
 
-		// TODO Exception 재정의 - 결과 값 성공(0000)이 아니면 던져~~~
-		if (!MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
+		/** 4. TenantRes Response 생성 및 주입 */
+		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes();
+
+		// TODO Exception 재정의 - 성공또는 값없음의 경우
+		if (MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
+			response.setIsRegistered(checkDuplicationSellerResponse.getIsRegistered());
+		} else if (MemberConstants.RESULT_FAIL.equals(checkDuplicationSellerResponse.getCommonResponse()
+				.getResultCode())) {
+			response.setIsRegistered("N");
+		} else {
 			throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
 		}
-
-		/** 4. TenantRes Response 생성 및 주입 */
-		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes(checkDuplicationSellerResponse.getIsRegistered());
 
 		return response;
 	}
