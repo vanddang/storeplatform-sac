@@ -321,8 +321,10 @@ public class SellerServiceImpl implements SellerService {
 				.getCommonResponse().getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
 
 		// 계정 잠금 해제 요청
-		if (req.getReleaseLock().equals(MemberConstants.USE_Y)) {
-			if (logInSellerResponse.getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_PAUSE)
+
+		if (req.getReleaseLock() != null) {
+			if (req.getReleaseLock().equals(MemberConstants.USE_Y)
+					&& logInSellerResponse.getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_PAUSE)
 					&& logInSellerResponse.getSellerSubStatus().equals(MemberConstants.SUB_STATUS_LOGIN_PAUSE)) {
 				/** 2-1. SC회원 Req 생성 및 주입. */
 				UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
