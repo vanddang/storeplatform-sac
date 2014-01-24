@@ -157,7 +157,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 			prchsDtl.setProdId(product.getProdId());
 			prchsDtl.setProdAmt(product.getProdAmt());
 			prchsDtl.setProdQty(product.getProdQty());
-			prchsDtl.setProdGrpCd("GRP-1");
+			prchsDtl.setTenantProdGrpCd("GRP-1");
 			prchsDtl.setRePrchsPmtYn("N");
 			prchsDtl.setUseExprDt("99991231235959");
 			prchsDtl.setDwldExprDt("99991231235959");
@@ -224,7 +224,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 				prchsDtl.setProdId(product.getProdId());
 				prchsDtl.setProdAmt(product.getProdAmt());
 				prchsDtl.setProdQty(product.getProdQty());
-				prchsDtl.setProdGrpCd("GRP-1");
+				prchsDtl.setTenantProdGrpCd("GRP-1");
 				prchsDtl.setRePrchsPmtYn("N");
 				prchsDtl.setUseExprDt("99991231235959");
 				prchsDtl.setDwldExprDt("99991231235959");
