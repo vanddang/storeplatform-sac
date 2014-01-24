@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -16,13 +16,13 @@ public class ModifyReq extends CommonInfo {
 	/**
 	 * 사용자 고유 Key.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
-	private String userAuthKey;
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String userKey;
 
 	/**
 	 * IDP 인증 Key.
 	 */
-	private String userKey;
+	private String userAuthKey;
 
 	/**
 	 * 사용자 메인 상태 코드.
