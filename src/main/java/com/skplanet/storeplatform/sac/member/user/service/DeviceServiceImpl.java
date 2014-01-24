@@ -269,15 +269,15 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
 		deviceInfo.setUserKey(req.getUserKey()); // 단말모델
-		this.mergeDeviceInfo(requestHeader, deviceInfo);
+		String deviceKey = this.mergeDeviceInfo(requestHeader, deviceInfo);
 
-		/* userAuthKey가 넘오온 경우만 업데이트 처리 */
+		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
 		if (req.getUserAuthKey() != null) {
 			this.userService.modifyProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 		}
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
-		//res.setDeviceKey(req.getDeviceKey());
+		res.setDeviceKey(deviceKey);
 		res.setUserKey(req.getUserKey());
 		return res;
 	}
