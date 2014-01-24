@@ -594,8 +594,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
 
-		deviceModelNo = "SHW-M110S";
-		logger.info(":::: deviceModelNo : {}", deviceModelNo);
 		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
 
 			logger.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceId);
