@@ -160,8 +160,7 @@ public class SellerController {
 
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-		String ipAddress = StringUtil.nvl(req.getIpAddress(), "");
-		if (sellerKey.equals("") || ipAddress.equals("")) {
+		if (sellerKey.equals("")) {
 			throw new Exception("필수 파라미터 미존재");
 		}
 
