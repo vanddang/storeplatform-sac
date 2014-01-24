@@ -30,32 +30,27 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	private String type;
 
-	/*
+	/**
 	 * 업데이트 주기
 	 */
 	private String updateCycle;
-
-	/*
+	/**
 	 * 전체 페이지수
 	 */
 	private String totalPages;
-
-	/*
+	/**
 	 * 버전
 	 */
 	private String bookVersion;
-
-	/*
+	/**
 	 * Sub Contents ID
 	 */
 	private String scid;
-
-	/*
+	/**
 	 * 용량 (byte 단위)
 	 */
-	private int size;
-
-	/*
+	private Integer size;
+	/**
 	 * 회차 정보
 	 */
 	private Chapter chapter;
@@ -63,28 +58,25 @@ public class Book extends CommonInfo implements Serializable {
 	 *
 	 */
 	private String saleDate;
-
-	/*
+	/**
 	 * 정기 구독수
 	 */
 	private Count subscriptionCount;
-
-	/*
+	/**
 	 * 채널에 속해 있는 전체 책 권수
 	 */
 	private Count channelCount;
-
-	/*
+	/**
 	 * 상태 > continue
 	 */
 	private String status;
 
-	/*
+	/**
 	 * 지원 >play >store
 	 */
 	private List<Support> supportList;
 
-	private int totalCount;
+	private Integer totalCount;
 
 	/**
 	 * @return String
@@ -164,7 +156,7 @@ public class Book extends CommonInfo implements Serializable {
 	/**
 	 * @return int
 	 */
-	public int getSize() {
+	public Integer getSize() {
 		return this.size;
 	}
 
@@ -172,7 +164,7 @@ public class Book extends CommonInfo implements Serializable {
 	 * @param size
 	 *            size
 	 */
-	public void setSize(int size) {
+	public void setSize(Integer size) {
 		this.size = size;
 	}
 
@@ -267,9 +259,9 @@ public class Book extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return int
+	 * @return Integer
 	 */
-	public int getTotalCount() {
+	public Integer getTotalCount() {
 		return this.totalCount;
 	}
 
@@ -277,7 +269,7 @@ public class Book extends CommonInfo implements Serializable {
 	 * @param totalCount
 	 *            totalCount
 	 */
-	public void setTotalCount(int totalCount) {
+	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
 

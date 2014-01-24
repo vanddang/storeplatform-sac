@@ -24,13 +24,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class Chapter extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String unit; // 회차
-	private String text; // 회차의 수
+	private Integer unit; // 회차
+	private Integer text; // 회차의 수
 
 	/**
-	 * @return String
+	 * @return Integer
 	 */
-	public String getUnit() {
+	public Integer getUnit() {
 		return this.unit;
 	}
 
@@ -38,14 +38,14 @@ public class Chapter extends CommonInfo implements Serializable {
 	 * @param unit
 	 *            unit
 	 */
-	public void setUnit(String unit) {
+	public void setUnit(Integer unit) {
 		this.unit = unit;
 	}
 
 	/**
-	 * @return String
+	 * @return Integer
 	 */
-	public String getText() {
+	public Integer getText() {
 		return this.text;
 	}
 
@@ -53,7 +53,7 @@ public class Chapter extends CommonInfo implements Serializable {
 	 * @param text
 	 *            text
 	 */
-	public void setText(String text) {
+	public void setText(Integer text) {
 		this.text = text;
 	}
 
