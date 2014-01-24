@@ -188,6 +188,7 @@ public class IdpServiceImpl implements IdpService {
 			CommonRequest commonRequest = new CommonRequest();
 			commonRequest.setTenantID(map.get("tenantID").toString());
 			commonRequest.setSystemID(map.get("systemID").toString());
+			map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
 				LOGGER.debug("전환가입 정보 입력 시작");
@@ -212,8 +213,6 @@ public class IdpServiceImpl implements IdpService {
 
 					searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 				}
-
-				map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 
 				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(this.getUpdateUserRequest(map,
 						searchUserResponse));
@@ -301,15 +300,13 @@ public class IdpServiceImpl implements IdpService {
 		UserMbr getUserMbr = searchUserResponse.getUserMbr();
 		MbrAuth getMbrAuth = searchUserResponse.getMbrAuth();
 
-		if (hashMap.get("im_reg_date") != null) {
-			getUserMbr.setImRegDate(hashMap.get("im_reg_date").toString());
-		}
+		getUserMbr.setImRegDate(hashMap.get("im_reg_date").toString());
 
 		getUserMbr.setTenantID(commonRequest.getTenantID()); // 테넌트 ID
 		getUserMbr.setSystemID(commonRequest.getSystemID()); // 테넌트의 시스템 ID
 
-		getUserMbr.setImMbrNo(searchUserResponse.getUserMbr().getImMbrNo()); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스
-																			 // 키 USERMBR_NO
+		getUserMbr.setImMbrNo(hashMap.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key . IDP 통합서비스
+																   // 키 USERMBR_NO
 		getUserMbr.setUserType(hashMap.get("user_type").toString()); // 사용자 구분 코드
 		getUserMbr.setUserMainStatus(searchUserResponse.getUserMbr().getUserMainStatus()); // 사용자 메인 상태 코드
 		getUserMbr.setUserSubStatus(searchUserResponse.getUserMbr().getUserSubStatus()); // 사용자 서브 상태 코드
@@ -327,7 +324,7 @@ public class IdpServiceImpl implements IdpService {
 		getUserMbr.setUserCity(hashMap.get("user_city_name").toString()); // (외국인)도시
 		getUserMbr.setUserState(hashMap.get("user_area_name").toString()); // (외국인)주
 		getUserMbr.setUserCountry(hashMap.get("user_nation_code").toString()); // 사용자 국가 코드
-		// getUserMbr.setImSiteCode("Y"); // OneID 이용동의 사이트 정보
+		getUserMbr.setImSiteCode(hashMap.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
 		getUserMbr.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
 
 		// 실명인증정보
