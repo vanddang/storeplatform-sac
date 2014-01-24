@@ -839,7 +839,6 @@ public class IdpServiceImpl implements IdpService {
 		String spId = map.get("sp_id").toString(); // 서비스 사이트 코드
 		String targetSstCode = map.get("target_sst_cd").toString(); // 대상 서비스 사이트 코드
 		String imIntSvcNo = map.get("im_int_svc_no").toString();
-		String userId = map.get("user_id").toString();
 		String userStatusCode = map.get("user_status_code").toString();
 		String isEmailAuth = map.get("is_email_auth").toString();
 
