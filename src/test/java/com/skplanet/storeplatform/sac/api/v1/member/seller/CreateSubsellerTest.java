@@ -73,6 +73,12 @@ public class CreateSubsellerTest {
 						req.setSubSellerMemo("test");
 						req.setSubSellerEmail("ID1@qqq.com");
 
+						// 새로 추가됨
+						req.setSubSellerKey("US201401231325534800000164");
+						req.setMemberPW("12312312");
+						req.setOldPW("a");
+						req.setIsNew("Y");
+
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
