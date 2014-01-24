@@ -26,21 +26,17 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetSupportAomRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveAddtionalInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
@@ -764,19 +760,19 @@ public class DummyDataController {
 	 * 
 	 * @return GetSupportAomRes
 	 */
-	@RequestMapping(value = "/member/user/getSupportAom/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public GetSupportAomRes getSupportAom() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.3.8. 단말 AOM 지원 여부 확인. #####");
-		LOGGER.info("####################################################");
-
-		GetSupportAomRes res = new GetSupportAomRes();
-		res.setIsAomSupport("Y");
-
-		return res;
-	}
+	// @RequestMapping(value = "/member/user/getSupportAom/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public GetSupportAomRes getSupportAom() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.3.8. 단말 AOM 지원 여부 확인. #####");
+	// LOGGER.info("####################################################");
+	//
+	// GetSupportAomRes res = new GetSupportAomRes();
+	// res.setIsAomSupport("Y");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -923,20 +919,20 @@ public class DummyDataController {
 	 * 
 	 * @return CreateAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/member/user/modifyAdditionalInformation/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateAddtionalInformationRes createAddtionalInformation() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.25.	회원 부가 정보 등록/수정. #####");
-		LOGGER.info("####################################################");
-
-		CreateAddtionalInformationRes res = new CreateAddtionalInformationRes();
-
-		res.setUserKey("IF1023511101420120615164319");
-
-		return res;
-	}
+	// @RequestMapping(value = "/member/user/modifyAdditionalInformation/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateAddtionalInformationRes createAddtionalInformation() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.25.	회원 부가 정보 등록/수정. #####");
+	// LOGGER.info("####################################################");
+	//
+	// CreateAddtionalInformationRes res = new CreateAddtionalInformationRes();
+	//
+	// res.setUserKey("IF1023511101420120615164319");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -945,20 +941,20 @@ public class DummyDataController {
 	 * 
 	 * @return RemoveAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/member/user/removeAdditionalInformation/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public RemoveAddtionalInformationRes removeAddtionalInformation() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.26.	회원 부가 정보 삭제. #####");
-		LOGGER.info("####################################################");
-
-		RemoveAddtionalInformationRes res = new RemoveAddtionalInformationRes();
-
-		res.setUserKey("IF1023511101420120615164319");
-
-		return res;
-	}
+	// @RequestMapping(value = "/member/user/removeAdditionalInformation/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public RemoveAddtionalInformationRes removeAddtionalInformation() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.26.	회원 부가 정보 삭제. #####");
+	// LOGGER.info("####################################################");
+	//
+	// RemoveAddtionalInformationRes res = new RemoveAddtionalInformationRes();
+	//
+	// res.setUserKey("IF1023511101420120615164319");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -967,27 +963,27 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	@RequestMapping(value = "/member/user/listAdditionalInformation/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public ListAddtionalInformationRes listAddtionalInformation() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.27.	회원 부가 정보 조회. #####");
-		LOGGER.info("####################################################");
-
-		ListAddtionalInformationRes res = new ListAddtionalInformationRes();
-
-		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
-		UserExtraInfo userExtraInfo = new UserExtraInfo();
-		userExtraInfo.setExtraProfileCode("US010903");
-		userExtraInfo.setExtraProfileValue("100000003899");
-
-		userExtraInfoList.add(userExtraInfo);
-
-		res.setUserKey("IF1023511101420120615164319");
-		res.setAddInfoList(userExtraInfoList);
-
-		return res;
-	}
+	// @RequestMapping(value = "/member/user/listAdditionalInformation/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public ListAddtionalInformationRes listAddtionalInformation() {
+	//
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.27.	회원 부가 정보 조회. #####");
+	// LOGGER.info("####################################################");
+	//
+	// ListAddtionalInformationRes res = new ListAddtionalInformationRes();
+	//
+	// List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
+	// UserExtraInfo userExtraInfo = new UserExtraInfo();
+	// userExtraInfo.setExtraProfileCode("US010903");
+	// userExtraInfo.setExtraProfileValue("100000003899");
+	//
+	// userExtraInfoList.add(userExtraInfo);
+	//
+	// res.setUserKey("IF1023511101420120615164319");
+	// res.setAddInfoList(userExtraInfoList);
+	//
+	// return res;
+	// }
 
 }

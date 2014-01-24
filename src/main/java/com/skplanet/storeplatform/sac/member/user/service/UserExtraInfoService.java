@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -15,9 +16,62 @@ public interface UserExtraInfoService {
 	 * 등록/수정
 	 * 
 	 * @param headerVo
-	 * @param WithdrawReq
+	 * @param UserExtraInfoReq
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes withdraw(SacRequestHeader requestHeader, UserExtraInfoReq req) throws Exception;
+	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
+			throws Exception;
+
+	/**
+	 * 조회
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
+			throws Exception;
+
+	/**
+	 * 삭제
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
+			throws Exception;
+
+	/**
+	 * 회원조회 SC API
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public UserInfo searchUser(UserExtraInfoReq req) throws Exception;
+
+	/**
+	 * 부가정보리스트 SC API
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req) throws Exception;
+
+	/**
+	 * 부가정보등록/수정 SC API
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req) throws Exception;
 }
