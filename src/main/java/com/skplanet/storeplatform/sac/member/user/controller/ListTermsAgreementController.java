@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
-import com.skplanet.storeplatform.sac.member.user.service.UserSearchServiceImpl;
+import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
  * Store 약관동의 목록조회 서비스 Controller
@@ -38,7 +38,7 @@ public class ListTermsAgreementController extends ParameterExceptionHandling {
 	private static final Logger logger = LoggerFactory.getLogger(ListTermsAgreementController.class);
 
 	@Autowired
-	private UserSearchServiceImpl svc;
+	private UserSearchService svc;
 
 	// @RequestMapping(value = "/listTermsAgreement/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -62,10 +62,10 @@ public class ListTermsAgreementController extends ParameterExceptionHandling {
 
 		List<Agreement> agreementList = new ArrayList<Agreement>();
 		Agreement agreement = new Agreement();
-		agreement = this.svc.agreementList(schAgreementListReq);
+		// agreement = this.svc.agreementList(schAgreementListReq);
 		agreementList.add(agreement);
 
-		res = this.svc.agreementList(schAgreementListReq);
+		// res = this.svc.agreementList(schAgreementListReq);
 
 		return res;
 	}
