@@ -65,7 +65,7 @@ public class DuplicateByIdEmailTest {
 	@Test
 	public void duplicateById() {
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=id&keyString=test_jun")
+				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1?keyType=id&keyString=test_jun1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.GET).success(DuplicateByIdEmailRes.class, new SuccessCallback() {
 					@Override
