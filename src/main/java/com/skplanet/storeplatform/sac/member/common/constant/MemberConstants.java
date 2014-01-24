@@ -43,11 +43,6 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_JOIN_APPLY_WATING = "US010305"; // 가입승인 대기
 	public static final String SUB_STATUS_EMAIL_CERT_WATING = "US010306"; // 이메일변경 승인 대기
 	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 계정잠금
-	/**
-	 * SC 회원 코드 변경으로 인한 삭제.
-	 */
-	@Deprecated
-	public static final String SUB_STATUS_AUTHORITY_PAUSE = "US010308"; // 직권 중지
 	public static final String SUB_STATUS_SEVEN_PAUSE = "US010309"; // 7일 이용정지
 	public static final String SUB_STATUS_THIRTY_PAUSE = "US010310"; // 30일 이용정지
 	public static final String SUB_STATUS_ETERNAL_PAUSE = "US010311"; // 영구 이용정지
