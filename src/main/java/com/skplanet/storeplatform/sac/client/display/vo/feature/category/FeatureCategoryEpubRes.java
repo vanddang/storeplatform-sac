@@ -11,20 +11,23 @@ package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
 import java.util.List;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * Feature 상품  리스트 조회 List Value Object.
+ * Feature 상품 리스트 조회 List Value Object.
  * 
  * Updated on : 2013. 12. 20. Updated by : 서영배, GTSOFT.
  */
-public class FeatureCategoryEpubRes {
+public class FeatureCategoryEpubRes extends CommonInfo {
+	private static final long serialVersionUID = 1L;
+
 	private CommonResponse commonResponse;
 	private List<Product> productList;
 
 	public List<Product> getProductList() {
-		return productList;
+		return this.productList;
 	}
 
 	public void setProductList(List<Product> productList) {
@@ -32,7 +35,7 @@ public class FeatureCategoryEpubRes {
 	}
 
 	public CommonResponse getCommonResponse() {
-		return commonResponse;
+		return this.commonResponse;
 	}
 
 	public void setCommonResponse(CommonResponse commonResponse) {

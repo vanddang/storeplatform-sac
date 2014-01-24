@@ -1,11 +1,13 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * 추천 상품 (앱,멀티미디어) 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 26. Updated by : 서영배, GTSOFT.
  */
-public class FeatureCategoryAppReq {
+public class FeatureCategoryAppReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -15,84 +17,106 @@ public class FeatureCategoryAppReq {
 	private String menuId; // 메뉴ID
 	private int offset; // offset
 	private int count; // count
-	
-	//common req 전까지 임시
+
+	// common req 전까지 임시
 	private String tenantId; // 메뉴ID
 	private String langCd; // 메뉴ID
 	private String deviceModelCd; // 메뉴ID
 	private String stdDt; // 배치일자
-	
-	//Dummy Data용
+
+	// Dummy Data용
 	private String dummy; // 메뉴ID
-	
+
 	public String getListId() {
-		return listId;
+		return this.listId;
 	}
+
 	public void setListId(String listId) {
 		this.listId = listId;
 	}
+
 	public String getProdCharge() {
-		return prodCharge;
+		return this.prodCharge;
 	}
+
 	public void setProdCharge(String prodCharge) {
 		this.prodCharge = prodCharge;
 	}
+
 	public String getProdGradeCd() {
-		return prodGradeCd;
+		return this.prodGradeCd;
 	}
+
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
 	}
+
 	public String getMenuId() {
-		return menuId;
+		return this.menuId;
 	}
+
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
 	}
+
 	public int getOffset() {
-		return offset;
+		return this.offset;
 	}
+
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
+
 	public int getCount() {
-		return count;
+		return this.count;
 	}
+
 	public void setCount(int count) {
 		this.count = count;
 	}
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	public String getTenantId() {
-		return tenantId;
+		return this.tenantId;
 	}
+
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
+
 	public String getLangCd() {
-		return langCd;
+		return this.langCd;
 	}
+
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
 	}
+
 	public String getDeviceModelCd() {
-		return deviceModelCd;
+		return this.deviceModelCd;
 	}
+
 	public void setDeviceModelCd(String deviceModelCd) {
 		this.deviceModelCd = deviceModelCd;
 	}
+
 	public String getDummy() {
-		return dummy;
+		return this.dummy;
 	}
+
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
 	}
+
 	public String getStdDt() {
-		return stdDt;
+		return this.stdDt;
 	}
+
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
 	}
-	
+
 }

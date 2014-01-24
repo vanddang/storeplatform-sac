@@ -1,11 +1,13 @@
 package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * 추천 상품 (앱,멀티미디어) 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 26. Updated by : 서영배, GTSOFT.
  */
-public class FeatureCategoryEpubReq {
+public class FeatureCategoryEpubReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
