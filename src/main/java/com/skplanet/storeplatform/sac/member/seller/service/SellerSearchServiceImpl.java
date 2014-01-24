@@ -49,6 +49,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
@@ -58,7 +59,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.vo.SellerDTO;
 
 /**
  * 판매자 회원 조회관련 기능 항목들
@@ -168,9 +168,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			if (!req.getSellerKey().equals("")) {
 				keySearch.setKeyString(req.getSellerKey());
 			} else {
-				SellerDTO dto = new SellerDTO();
-				dto.setSellerKey(req.getAid());
-				SellerDTO sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", dto, SellerDTO.class);
+				DetailInformationReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
+						DetailInformationReq.class);
 				keySearch.setKeyString(sellerDTO.getSellerKey());
 			}
 		} else {
@@ -371,21 +370,18 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) throws Exception {
 
-		SellerDTO dto = new SellerDTO();
-		dto.setKoUsWhether(language);
+		ListWithdrawalReasonReq req = new ListWithdrawalReasonReq();
+		req.setKoUsWhether(language);
 
-		List<SellerDTO> sellerDTO = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", dto,
-				SellerDTO.class);
+		List<SecedeReson> sList = this.commonDAO.queryForList("SellerSearch.listWithdrawalReason", req,
+				SecedeReson.class);
 
-		List<SecedeReson> sList = new ArrayList<SecedeReson>();
-		SecedeReson secedeReson = null;
-		if (sellerDTO != null)
-			for (int i = 0; i < sellerDTO.size(); i++) {
-				secedeReson = new SecedeReson();
-				secedeReson.setSecedeReasonCode(sellerDTO.get(i).getSecedeReasonCode());
-				secedeReson.setSecedeReasonMessage(sellerDTO.get(i).getSecedeReasonMessage());
-				sList.add(secedeReson);
-			}
+		/*
+		 * List<SecedeReson> sList = new ArrayList<SecedeReson>(); SecedeReson secedeReson = null; if (sellerDTO !=
+		 * null) for (int i = 0; i < sellerDTO.size(); i++) { secedeReson = new SecedeReson();
+		 * secedeReson.setSecedeReasonCode(sellerDTO.get(i).getSecedeReasonCode());
+		 * secedeReson.setSecedeReasonMessage(sellerDTO.get(i).getSecedeReasonMessage()); sList.add(secedeReson); }
+		 */
 
 		ListWithdrawalReasonRes response = new ListWithdrawalReasonRes();
 		response.setSecedeResonList(sList);
