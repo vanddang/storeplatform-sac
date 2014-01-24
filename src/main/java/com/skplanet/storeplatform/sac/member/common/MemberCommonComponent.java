@@ -43,7 +43,6 @@ import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
-import com.skplanet.storeplatform.sac.member.user.service.UserSearchServiceImpl;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -60,9 +59,6 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private MiscellaneousService miscellaneousService;
-
-	@Autowired
-	private UserSearchServiceImpl userSelectService;
 
 	@Autowired
 	private UapsSCI uapsSCI;
