@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 서브계정 ID 중복 조회
+ * 5.2.23. 판매자 서브계정 ID 중복 체크 [RESPONSE]
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
@@ -15,14 +15,15 @@ public class DuplicateBySubsellerIdRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String duplicateYn;
+	/** 사용유무(Y/N). */
+	private String isRegistered;
 
-	public String getDuplicateYn() {
-		return this.duplicateYn;
+	public String getIsRegistered() {
+		return this.isRegistered;
 	}
 
-	public void setDuplicateYn(String duplicateYn) {
-		this.duplicateYn = duplicateYn;
+	public void setIsRegistered(String isRegistered) {
+		this.isRegistered = isRegistered;
 	}
 
 }
