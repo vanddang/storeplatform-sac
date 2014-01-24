@@ -175,37 +175,25 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			key.setKeyString(userId);
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
-			schUserRes = this.userSCI.searchUser(schUserReq);
-
-			logger.info("###### 회원 조회 데이터 : " + schUserRes.toString());
-			if (schUserRes.getUserKey() == null)
-				throw new RuntimeException("회원정보가 없습니다.");
-
-			logger.info("###### SearchUser.userID req : {}", schUserReq.toString());
 
 		} else if (!deviceId.equals("")) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 			keySearchList.add(key);
 			schUserReq.setKeySearchList(keySearchList);
-			schUserRes = this.userSCI.searchUser(schUserReq);
-
-			logger.info("###### 회원 조회 데이터 : " + schUserRes.toString());
-			if (schUserRes.getUserKey() == null)
-				throw new RuntimeException("회원정보가 없습니다.");
-
-			logger.info("###### SearchUser.deviceId req : {}", schUserReq.toString());
 
 		} else {
 			throw new RuntimeException("파라미터 없음 userId, userAuthKey, deviceId");
 		}
 
+		schUserRes = this.userSCI.searchUser(schUserReq);
+
+		logger.info("###### SearchUser.deviceId req : {}", schUserReq.toString());
+
 		// SC 컴포넌트에서 성공이 아닐때
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			throw new RuntimeException("3. SC Member Search Fail : " + schUserRes.getCommonResponse().getResultCode()
 					+ ", " + schUserRes.getCommonResponse().getResultMessage());
-		} else if (schUserRes.getUserMbr().getUserKey() == null) {
-			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr().getUserKey()");
 		} else if (schUserRes.getUserMbr() == null) {
 			throw new RuntimeException("회원정보 없음. schUserRes.getUserMbr()");
 		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
