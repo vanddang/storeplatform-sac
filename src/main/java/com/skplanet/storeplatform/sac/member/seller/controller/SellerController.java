@@ -137,7 +137,8 @@ public class SellerController {
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 		String ipAddress = StringUtil.nvl(req.getIpAddress(), "");
-		if (sellerKey.equals("") || ipAddress.equals("")) {
+		String expireDate = StringUtil.nvl(req.getExpireDate(), "");
+		if (sellerKey.equals("") || ipAddress.equals("") || expireDate.equals("")) {
 			throw new Exception("필수 파라미터 미존재");
 		}
 
