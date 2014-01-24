@@ -166,6 +166,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrAuth.setSex(map.get("user_sex").toString()); // SEX 성별
 			mbrAuth.setName(map.get("user_name").toString()); // MBR_NM 회원명
 			mbrAuth.setTenantID(commonRequest.getTenantID()); // TENANT_ID 테넌트 아이디
+			mbrAuth.setRealNameSite(map.get("rname_auth_sst_code").toString());
 
 			createUserRequest.setCommonRequest(commonRequest); // 공통요청
 			createUserRequest.setUserMbr(userMbr); // 사용자정보
@@ -333,7 +334,8 @@ public class IdpServiceImpl implements IdpService {
 		getMbrAuth.setSex(hashMap.get("user_sex").toString()); // SEX 성별
 		getMbrAuth.setName(hashMap.get("user_name").toString()); // MBR_NM 회원명
 		getMbrAuth.setUpdateDate(hashMap.get("modify_req_date").toString() + hashMap.get("modify_req_time").toString()); // UPD_DT
-																														 // 수정일시
+		getMbrAuth.setRealNameSite(hashMap.get("rname_auth_sst_code").toString());
+
 		getMbrAuth.setTenantID(commonRequest.getTenantID()); // TENANT_ID 테넌트 아이디
 
 		updateUserRequest.setCommonRequest(commonRequest);
