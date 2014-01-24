@@ -251,7 +251,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* device header 값 셋팅 */
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
-		deviceInfo.setUserKey(req.getUserKey()); // 단말모델
+		deviceInfo.setUserKey(req.getUserKey());
 		String deviceKey = this.mergeDeviceInfo(requestHeader, deviceInfo);
 
 		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */

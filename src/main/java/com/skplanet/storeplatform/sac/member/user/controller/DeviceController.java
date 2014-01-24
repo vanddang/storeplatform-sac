@@ -146,14 +146,6 @@ public class DeviceController {
 	@ResponseBody
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) throws Exception {
 
-		/* 휴대기기 정보 수정 필수 파라메터 체크 */
-		DeviceInfo deviceInfo = req.getDeviceInfo();
-
-		// ICAS연동시 필요한 deviceIdType 체크
-		if (!StringUtil.nvl(deviceInfo.getNativeId(), "").equals("") && StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
-			throw new Exception("deviceIdType 필수 파라미터 입니다.");
-		}
-
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
 
 		return res;
