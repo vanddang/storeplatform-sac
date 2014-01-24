@@ -221,8 +221,16 @@ public class BestContentsServiceImpl implements BestContentsService {
 							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
 							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						supportList = new ArrayList<Support>();
-						book.setStatus(mapperVO.getBookStatus());
-						book.setType(mapperVO.getBookType());
+						if (mapperVO.getBookStatus() == null) {
+							book.setStatus("");
+						} else {
+							book.setStatus(mapperVO.getBookStatus());
+						}
+						if (mapperVO.getBookType() == null) {
+							book.setType("");
+						} else {
+							book.setType(mapperVO.getBookType());
+						}
 						book.setTotalCount(mapperVO.getBookCount());
 						support = new Support();
 						support.setType("store");
@@ -231,6 +239,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 						} else {
 							support.setText("");
 						}
+						supportList.add(support);
 						support = new Support();
 						support.setType("play");
 						if (!"".equals(mapperVO.getSupportPlay()) && mapperVO.getSupportPlay() != null) {
@@ -244,7 +253,11 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 					product = new Product();
 					product.setIdentifier(identifier);
-					product.setSupportList(supportList);
+					if ("movie".equals(bestContentsReq.getFilteredBy())
+							&& "boardcast".equals(bestContentsReq.getFilteredBy())
+							&& "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
+						product.setSupportList(supportList);
+					}
 					// product.setSupport("hd");
 					product.setMenuList(menuList);
 					product.setContributor(contributor);
