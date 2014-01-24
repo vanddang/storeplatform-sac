@@ -7,6 +7,8 @@ package com.skplanet.storeplatform.sac.client.display.vo.app;
  */
 public class AppDetailReq {
 
+    private String tenantId;
+    private String langCd;
     private String episodeId;
 
     public String getEpisodeId() {
@@ -15,5 +17,21 @@ public class AppDetailReq {
 
     public void setEpisodeId(String episodeId) {
         this.episodeId = episodeId;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getLangCd() {
+        return langCd;
+    }
+
+    public void setLangCd(String langCd) {
+        this.langCd = langCd;
     }
 }
