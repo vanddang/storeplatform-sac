@@ -399,7 +399,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			 */
 			if (schUserExtraInfoRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr info : schUserExtraInfoRes.getMbrMangItemPtcrList()) {
-					userExtraInfo.setExtraProfile(StringUtil.setTrim(info.getExtraProfile()));
+					userExtraInfo.setExtraProfileCode(StringUtil.setTrim(info.getExtraProfile()));
 					userExtraInfo.setExtraProfileValue(StringUtil.setTrim(info.getExtraProfileValue()));
 				}
 			} else {
