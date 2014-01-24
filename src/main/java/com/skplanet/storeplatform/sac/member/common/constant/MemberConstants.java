@@ -64,13 +64,13 @@ public final class MemberConstants {
 	public static final String KEY_TYPE_WILS_TEL_NO = "WILS_TEL_NO"; // 판매자 연락처
 
 	/** 통신사 코드. */
-	public static final String DEVICE_TELECOM_SKT = "US012101"; // SKT
-	public static final String DEVICE_TELECOM_KT = "US012102"; // KT
-	public static final String DEVICE_TELECOM_LGT = "US012103"; // U+
-	public static final String DEVICE_TELECOM_OMD = "US012104"; // 자급제 단말
-	public static final String DEVICE_TELECOM_NSH = "US012105"; // NSH
-	public static final String DEVICE_TELECOM_NON = "US012106"; // NON
-	public static final String DEVICE_TELECOM_IOS = "US012107"; // iOS
+	public static final String DEVICE_TELECOM_SKT = "US001201"; // SKT
+	public static final String DEVICE_TELECOM_KT = "US001202"; // KT
+	public static final String DEVICE_TELECOM_LGT = "US001203"; // U+
+	public static final String DEVICE_TELECOM_OMD = "US001204"; // 자급제 단말
+	public static final String DEVICE_TELECOM_NSH = "US001205"; // NSH
+	public static final String DEVICE_TELECOM_NON = "US001206"; // NON
+	public static final String DEVICE_TELECOM_IOS = "US001207"; // iOS
 
 	/** 통신사 코드. */
 	public static final String NM_DEVICE_TELECOM_SKT = "SKT"; // SKT
