@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
  *
  * Updated on : 2014. 01. 07 Updated by : 정희원, SK 플래닛.
  */
-public interface MusicDetailService {
+public interface MusicService {
 
     public MusicDetailRes getMusicDetail(MusicDetailReq req);
 

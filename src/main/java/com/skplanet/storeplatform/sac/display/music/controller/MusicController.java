@@ -2,7 +2,8 @@ package com.skplanet.storeplatform.sac.display.music.controller;
 
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
-import com.skplanet.storeplatform.sac.display.music.service.MusicDetailService;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.music.service.MusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,17 +17,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/display")
-public class MusicDetailController {
+public class MusicController {
 
     @Autowired
-    private MusicDetailService musicDetailService;
+    private MusicService musicService;
 
     @RequestMapping(value = "/music/detail/v1", method = RequestMethod.GET)
     @ResponseBody
-    public MusicDetailRes getMusicDetail(String episodeId) {
+    public MusicDetailRes getMusicDetail(String episodeId, SacRequestHeader header) {
+
         MusicDetailReq req = new MusicDetailReq();
         req.setEpisodeId(episodeId);
+        req.setTenantId(header.getTenantHeader().getTenantId());
+        req.setLangCd(header.getTenantHeader().getLangCd());
 
-        return musicDetailService.getMusicDetail(req);
+        return musicService.getMusicDetail(req);
     }
 }

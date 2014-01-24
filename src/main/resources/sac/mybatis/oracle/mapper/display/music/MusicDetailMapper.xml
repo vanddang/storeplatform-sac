@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MusicDetail">
+
+    <!-- Music Main -->
+    <select id="getMusicDetail" parameterType="com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq" resultType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetail">
+        /* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
+        SELECT
+            PR.PROD_ID,
+            TPRC.PROD_AMT,
+            PD.PROD_NM,
+            NVL(TS.AVG_EVLU_SCORE, 0.0) AS AVG_EVLU_SCORE,
+            NVL(TS.DWLD_CNT, 0) AS DWLD_CNT,
+            NVL(TS.PATICPERS_CNT, 0) AS PATICPERS_CNT,
+            PD.ARTIST1_ID,
+            PD.ARTIST1_NM,
+            PD.ARTIST2_ID,
+            PD.ARTIST2_NM,
+            PD.ARTIST3_ID,
+            PD.ARTIST3_NM,
+            DECODE(MM.BELL_SPRT_YN, 'Y', 1, 0) AS BELL_SPRT_YN,
+            DECODE(MM.COLORRING_SPRT_YN, 'Y', 1, 0) AS COLORRING_SPRT_YN,
+            DECODE( PR.PROD_GRD_CD
+            , 'PD004401', 0
+            , 'PD004402', 1
+            , 'PD004403', 2
+            , 'PD004404', 4 ) AS PROD_GRD,
+            MM.AGENCY_NM,
+            MM.CHNL_COMP_NM,
+            MM.OUTSD_CONTENTS_ID
+        FROM TB_DP_PROD PR INNER JOIN TB_DP_MULTIMDA_PROD MM
+                ON PR.PROD_ID = MM.PROD_ID
+            INNER JOIN TB_DP_PROD_DESC PD
+                ON PR.PROD_ID = PD.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD TP
+                ON PR.PROD_ID = TP.PROD_ID
+            INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
+                ON PR.PROD_ID = TPRC.PROD_ID AND TPRC.TENANT_ID = TP.TENANT_ID
+            LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS TS
+                ON PR.PROD_ID = TS.PROD_ID AND TS.TENANT_ID = TP.TENANT_ID
+        WHERE
+            TP.TENANT_ID = #{tenantId}
+            AND PD.LANG_CD = #{langCd}
+            AND PD.PROD_ID = #{episodeId}
+            AND PR.META_CLSF_CD = 'CT25'
+            AND PR.CONTENTS_TYPE_CD = 'PD002502'
+            AND TP.PROD_STATUS_CD = 'PD000403'
+            AND TP.EXPO_YN = 'Y'
+    </select>
+
+    <select id="getSubContentList" parameterType="String" resultType="com.skplanet.storeplatform.sac.display.music.vo.SubContent">
+        /* MusicDetailMapper.xml, getSubContentList, SAC : 정희원 , 2014-01-24 */
+        select
+            SC.DP_PG_QULT_CD,
+            SC.FILE_PATH,
+            SC.FILE_SIZE
+        from TB_DP_SUB_CONTENTS SC
+        where
+            SC.PROD_ID = #{value}
+    </select>
+    
+</mapper>
