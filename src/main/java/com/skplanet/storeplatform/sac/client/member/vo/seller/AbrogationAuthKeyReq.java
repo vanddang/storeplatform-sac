@@ -17,22 +17,12 @@ public class AbrogationAuthKeyReq extends CommonInfo {
 	/** 판매자 회원키. */
 	private String sellerKey;
 
-	private String ipAddress;
-
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
 
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
-	}
-
-	public String getIpAddress() {
-		return this.ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
 	}
 
 }
