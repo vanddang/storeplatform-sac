@@ -115,38 +115,49 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		IDPReceiverM idpReceiver = new IDPReceiverM();
 		ImIDPReceiverM imIdpReceiver = new ImIDPReceiverM();
 
+		/* Return Value */
+		WithdrawRes withdrawRes = new WithdrawRes();
+
+		/* Tenant 연동 (임시 데이터 하드코딩되어 있음) */
+		RemoveUserRequest removeUserRequest = this.tenantRemoveUser(requestHeader, schUserRes);
+
 		/* 통합회원 연동 */
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 			imIdpReceiver = this.oneIdUser(requestHeader, schUserRes, req);
+
+			if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+				logger.info("IMIDP Success Response ", schUserRes.toString());
+				withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
+			}
 		}
 		/* IDP 모바일 회원 */
 		else if (schUserRes.getUserMbr().getImSvcNo() == null
 				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 			idpReceiver = this.idpMobileUser(requestHeader, schUserRes, req);
+
+			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+				logger.info("IMIDP Success Response ", schUserRes.toString());
+				withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
+			}
 		}
 		/* IDP 아이디 회원 */
 		else if (schUserRes.getUserMbr().getImSvcNo() == null
 				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
 			idpReceiver = this.idpIdUser(requestHeader, schUserRes, req);
+
+			/* IDP or IMIDP 연동결과 성공이면 SC회원 탈퇴 */
+			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+				logger.info("IDP Success Response ", schUserRes.toString());
+				withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
+			}
 		}
 
-		/* Tenant 연동 (임시 데이터 하드코딩되어 있음) */
-		RemoveUserRequest removeUserRequest = this.tenantRemoveUser(requestHeader, schUserRes);
-
-		/* Return Value */
-		WithdrawRes withdrawRes = new WithdrawRes();
-
-		/* IDP or IMIDP 연동결과 성공이면 SC회원 탈퇴 */
-		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)
-				|| StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-			logger.info("7. IDP or IMIDP Success Response ", schUserRes.toString());
-			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
-		} else {
-			throw new RuntimeException("알수없는 오류 IDP 연동 : " + idpReceiver.getResponseHeader().getResult() + " ::: "
-					+ idpReceiver.getResponseHeader().getResult_text() + "알수없는 오류 IMIDP 연동 : "
-					+ imIdpReceiver.getResponseHeader().getResult() + " ::: "
-					+ imIdpReceiver.getResponseHeader().getResult_text());
-		}
+		// else {
+		// throw new RuntimeException("알수없는 오류 IDP 연동 : " + idpReceiver.getResponseHeader().getResult() + " ::: "
+		// + idpReceiver.getResponseHeader().getResult_text() + "알수없는 오류 IMIDP 연동 : "
+		// + imIdpReceiver.getResponseHeader().getResult() + " ::: "
+		// + imIdpReceiver.getResponseHeader().getResult_text());
+		// }
 
 		return withdrawRes;
 
@@ -224,15 +235,17 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			throw new RuntimeException("[ImIDP JoinCheck 가입여부 체크 : " + imIdpReceiver.getResponseHeader().getResult()
 					+ "] " + imIdpReceiver.getResponseHeader().getResult_text());
 		} else {
-			logger.info("ImIDP 가입여부 체크 userInfoIdpSearchServer Success : ", imIdpReceiver.getResponseHeader()
+			logger.info("ImIDP 가입여부 체크 userInfoIdpSearchServer Success : {}", imIdpReceiver.getResponseHeader()
 					.getResult(), "] ", imIdpReceiver.getResponseHeader().getResult_text());
-			logger.info("가입여부 체크 ImIDP userInfoIdpSearchServer Success Response : ", imIdpReceiver.getResponseBody()
+			logger.info("가입여부 체크 ImIDP userInfoIdpSearchServer Success Response : {}", imIdpReceiver.getResponseBody()
 					.toString());
 
 			// 통합회원 OneId 사용자
 			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("key", schUserRes.getUserMbr().getUserKey());
-			param.put("user_auth_kery", req.getUserAuthKey());
+
+			param.put("key", schUserRes.getUserMbr().getImSvcNo());
+			param.put("key_type", "1");
+			param.put("user_auth_key", req.getUserAuthKey());
 			// param.put("term_reason_cd", "1"); // 1=IM통합서비스번호, 2=IM통합ID
 
 			imIdpReceiver = this.imIdpService.discardUser(param);

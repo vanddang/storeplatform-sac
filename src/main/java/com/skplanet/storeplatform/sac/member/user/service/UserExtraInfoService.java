@@ -84,4 +84,14 @@ public interface UserExtraInfoService {
 	 * @throws Exception
 	 */
 	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * profileCode 정상 데이터인지 체크
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public String validProfileCode(UserExtraInfoReq req) throws Exception;
 }
