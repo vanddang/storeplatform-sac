@@ -49,16 +49,16 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
-		String extraProfile = "";
 		String extraProfileCode = "";
+		String extraProfilValue = "";
 
 		for (UserExtraInfo infoReq : req.getAddInfoList()) {
-			extraProfile = StringUtil.nvl(infoReq.getExtraProfile(), "");
-			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
+			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileCode(), "");
+			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
-			if (extraProfile.equals("") && extraProfileCode.equals("")) {
-				throw new RuntimeException("회원 부가 정보 Profile, ProfileCode is Null" + "profile [" + extraProfile + "]"
-						+ " [" + extraProfileCode + "]");
+			if (extraProfileCode.equals("") && extraProfilValue.equals("")) {
+				throw new RuntimeException("회원 부가 정보 extraProfileCode, extraProfilValue is Null" + "extraProfileCode ["
+						+ extraProfileCode + "]" + " [" + extraProfilValue + "]");
 			}
 		}
 
