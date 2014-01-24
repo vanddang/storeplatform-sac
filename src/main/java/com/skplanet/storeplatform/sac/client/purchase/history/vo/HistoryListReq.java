@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -15,22 +17,23 @@ public class HistoryListReq extends CommonInfo {
 
 	private String tenantId;
 	private String systemId;
-	private String insdUsermbrNo;
-	private String insdDeviceId;
-	private String startDt;
-	private String endDt;
-	private String tenantProdGrpCd;
-
-	private List<HistoryProductList> productList;
-
-	private String prchsCaseCd;
-	private String prchsProdType;
-	private String hidingYn;
-	private String prchsStatusCd;
-	private String frProdId;
-
-	private int offset;
-	private int count;
+	@NotEmpty
+	private String insdUsermbrNo; // 내부사용자번호
+	private String insdDeviceId; // 내부디바이스ID
+	@NotEmpty
+	private String startDt; // 조회시작일시
+	@NotEmpty
+	private String endDt; // 조회종료일시
+	private String tenantProdGrpCd; // 테넌트상품분류코드
+	private List<HistoryProductList> productList; // 조회 상품PID LIST
+	private String prchsCaseCd; // 구매유형코드
+	@NotEmpty
+	private String prchsProdType; // 구매상품타입
+	private String hidingYn; // 숨김여부
+	private String prchsStatusCd; // 구매상태
+	private String frProdId; // 정액권ID
+	private int offset; // 오프셋
+	private int count; // 데이터갯수
 
 	/**
 	 * @return the tenantId
