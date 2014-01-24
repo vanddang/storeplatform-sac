@@ -70,7 +70,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndiv
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.miscellaneous.repository.MiscellaneousRepository;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
 /**
@@ -98,9 +97,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Autowired
 	private MessageSCI messageSCI; // 기타 Component 메시지전송 기능 Interface.
-
-	@Autowired
-	private MiscellaneousRepository repository; // 기타 기능 Repository.
 
 	@Autowired
 	private ImageSCI imageSCI;
@@ -461,20 +457,36 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throws Exception {
 
 		/** 1. 기존에 인증코드 발급된 회원인지 여부 확인 */
-		String mbrNo = request.getUserKey();
-		ServiceAuth serviceAuth = this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo,
+		// String mbrNo = request.getUserKey();
+		// ServiceAuth serviceAuth = this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo,
+		// ServiceAuth.class);
+		/** TODO userKey, emailAddr을 이용해서 인증코드 발급 여부 및 인증 여부 확인 */
+		ServiceAuth serviceAuthReq = new ServiceAuth();
+		serviceAuthReq.setAuthEmail(request.getUserEmail());
+		serviceAuthReq.setMbrNo(request.getUserKey());
+		// ServiceAuth serviceAuth = this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", serviceAuthReq,
+		// ServiceAuth.class);
+
+		List<ServiceAuth> serviceAuthList = this.commonDao.queryForList("Miscellaneous.getEmailAuthYn", serviceAuthReq,
 				ServiceAuth.class);
-		String isAuthEmail = serviceAuth.getAuthComptYn();
-		String authCode = serviceAuth.getAuthValue();
-		LOGGER.info("## 기존 인증회원 여부 : {}", isAuthEmail);
-		if (isAuthEmail != null) {
-			if (isAuthEmail.equals("N")) {
-				// 기존 발급 & 미인증
-				LOGGER.info("이미 발급된 회원 입니다. 동일 코드 재발급.");
-			} else {
-				throw new Exception("기존 인증된 회원입니다.");
+
+		String isAuthEmail = "Y";
+		String authCode = "";
+		if (serviceAuthList != null) {
+			for (int i = 0; i < serviceAuthList.size(); i++) {
+				if (serviceAuthList.get(i).getAuthComptYn().equals("N")) {
+					isAuthEmail = "N";
+					authCode = serviceAuthList.get(i).getAuthValue();
+				}
 			}
-		} else {
+		}
+
+		LOGGER.info("## 인증코드 재발급 여부 : {}", isAuthEmail);
+
+		if (isAuthEmail.equals("N")) { // 기존 발급 & 미인증
+			LOGGER.info("이미 발급된 회원 입니다. 동일 인증코드 전달.");
+			LOGGER.info("## authCode : {}", authCode);
+		} else if (isAuthEmail.equals("Y") || serviceAuthList == null) { // null 또는 기존에 인증했으나 무효화된 값들을 가지고 있는경우.
 			// 신규 인증
 			/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
 			authCode = UUID.randomUUID().toString().replace("-", "");
@@ -484,8 +496,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			ServiceAuth serviceAuthInfo = new ServiceAuth();
 			serviceAuthInfo.setAuthTypeCd("CM010902");
 			serviceAuthInfo.setAuthValue(authCode);
-			serviceAuthInfo.setMbrNo(mbrNo);
-			serviceAuthInfo.setAuthSign("email"); // DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
+			serviceAuthInfo.setMbrNo(request.getUserKey());
+			serviceAuthInfo.setAuthSign("EmailAuthorization"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
 			serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
 			LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
@@ -493,6 +505,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		}
 
 		/** 4. 인증코드 Response */
+
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
 		response.setEmailAuthCode(authCode);
 		LOGGER.info("## 이메일 인증 코드 발급 완료. response : {}", response.getEmailAuthCode());
