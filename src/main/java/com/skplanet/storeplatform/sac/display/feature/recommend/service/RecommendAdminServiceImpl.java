@@ -86,7 +86,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		if (StringUtils.isEmpty(requestVO.getDeviceModelCd()))
 			requestVO.setDeviceModelCd("SHW-M180L");
 		if (StringUtils.isEmpty(requestVO.getListId()))
-			requestVO.setListId("ADM000000012");
+			requestVO.setListId("ADM000000013");
 		if (StringUtils.isEmpty(requestVO.getTopMenuId()))
 			requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
 
@@ -128,7 +128,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		requestVO.setStdDt(stdDt);
 
 		// topMenuId 배열로 변경
-		String[] topMenuIdArr = requestVO.getTopMenuId().split("+");
+		String[] topMenuIdArr = requestVO.getTopMenuId().split(","); // 구분자 확인 필요 + 에러
 		requestVO.setTopMenuIdArr(topMenuIdArr);
 
 		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList", requestVO,
