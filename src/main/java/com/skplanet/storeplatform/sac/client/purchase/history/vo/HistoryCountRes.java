@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -12,6 +14,8 @@ public class HistoryCountRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private int totalCnt;
+
+	private List<HistoryProductCount> cntList;
 
 	/**
 	 * @return the totalCnt
@@ -26,6 +30,21 @@ public class HistoryCountRes extends CommonInfo {
 	 */
 	public void setTotalCnt(int totalCnt) {
 		this.totalCnt = totalCnt;
+	}
+
+	/**
+	 * @return the cntList
+	 */
+	public List<HistoryProductCount> getCntList() {
+		return this.cntList;
+	}
+
+	/**
+	 * @param cntList
+	 *            the cntList to set
+	 */
+	public void setCntList(List<HistoryProductCount> cntList) {
+		this.cntList = cntList;
 	}
 
 }

@@ -23,6 +23,7 @@ public class HistoryListReq extends CommonInfo {
 
 	private List<HistoryProductList> productList;
 
+	private String prchsCaseCd;
 	private String prchsProdType;
 	private String hidingYn;
 	private String prchsStatusCd;
@@ -44,6 +45,21 @@ public class HistoryListReq extends CommonInfo {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the prchsCaseCd
+	 */
+	public String getPrchsCaseCd() {
+		return this.prchsCaseCd;
+	}
+
+	/**
+	 * @param prchsCaseCd
+	 *            the prchsCaseCd to set
+	 */
+	public void setPrchsCaseCd(String prchsCaseCd) {
+		this.prchsCaseCd = prchsCaseCd;
 	}
 
 	/**
