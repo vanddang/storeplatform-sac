@@ -979,7 +979,7 @@ public class DummyDataController {
 
 		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
 		UserExtraInfo userExtraInfo = new UserExtraInfo();
-		// userExtraInfo.setExtraProfileCode("US010903");
+		userExtraInfo.setExtraProfileCode("US010903");
 		userExtraInfo.setExtraProfileValue("100000003899");
 
 		userExtraInfoList.add(userExtraInfo);
