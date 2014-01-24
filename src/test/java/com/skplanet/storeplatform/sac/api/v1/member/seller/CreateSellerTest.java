@@ -63,10 +63,9 @@ public class CreateSellerTest {
 	@Autowired
 	private SellerSCI sellerSCI;
 
-	// 판매자 회원 Key
-	static String sellerKey = "";
-	// 판매자 회원 Id
-	static String sellerId = "";
+	public static CreateReq req;
+
+	public static CreateRes res;
 
 	/**
 	 * 
@@ -77,6 +76,7 @@ public class CreateSellerTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		req = new CreateReq();
 	}
 
 	/**
@@ -88,6 +88,8 @@ public class CreateSellerTest {
 	 */
 	@After
 	public void after() {
+		// Debug
+		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtil.convertObjectToJson(res));
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID("S001");
@@ -95,7 +97,7 @@ public class CreateSellerTest {
 
 		// 정상업데이트 [REQUEST]
 		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
-		updateStatusSellerRequest.setSellerID(sellerId);
+		updateStatusSellerRequest.setSellerID(res.getSellerMbr().getSellerId());
 		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 		updateStatusSellerRequest.setCommonRequest(commonRequest);
@@ -112,7 +114,7 @@ public class CreateSellerTest {
 		request.setCommonRequest(commonRequest);
 		request.setSecedeReasonCode("US001801");
 		request.setSecedeReasonMessage("ID 변경");
-		request.setSellerKey(sellerKey);
+		request.setSellerKey(res.getSellerMbr().getSellerKey());
 
 		// SC-회원 탈퇴 CALL
 		RemoveSellerResponse response = this.sellerSCI.removeSeller(request);
@@ -132,11 +134,9 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
 						req.setSellerClass("US010101");
 						req.setSellerCategory("US011301");
-						// req.setSellerId("sellerPersonNoPay01");
-						req.setSellerId("testSeller0020");
+						req.setSellerId("sellerPersonNoPay01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
@@ -184,13 +184,9 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						// assertEquals("sellerPersonNoPay01", res.getSellerMbr().getSellerId());
-
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
 
 						LOGGER.debug("response param : {}", res.toString());
 					}
@@ -210,8 +206,6 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
-
 						req.setSellerClass("US010101");
 						req.setSellerCategory("US011302");
 						req.setSellerId("sellerPersonPay01");
@@ -225,7 +219,6 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
-
 						req.setSellerName("개인유료");
 						req.setSellerCI("1231323123");
 
@@ -266,13 +259,11 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						assertEquals(res.getSellerMbr().getSellerId(), "sellerPersonPay01");
 						LOGGER.debug("response param : {}", res.toString());
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
+
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -291,8 +282,6 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
-
 						req.setSellerClass("US010102");
 						req.setSellerCategory("US011301");
 						req.setSellerId("sellerBusinessNoPay01");
@@ -306,7 +295,6 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
-
 						req.setSellerName("개사무료");
 						req.setSellerCI("1231323123");
 
@@ -347,12 +335,10 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						assertEquals(res.getSellerMbr().getSellerId(), "sellerBusinessNoPay01");
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
+
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -372,8 +358,6 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
-
 						req.setSellerClass("US010102");
 						req.setSellerCategory("US011302");
 						req.setSellerId("sellerBusinessPay01");
@@ -387,7 +371,6 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
-
 						req.setSellerName("개사유료");
 						req.setSellerCI("1231323123");
 
@@ -428,13 +411,11 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						assertEquals(res.getSellerMbr().getSellerId(), "sellerBusinessPay01");
 						LOGGER.debug("response param : {}", res.toString());
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
+
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -453,8 +434,6 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
-
 						req.setSellerClass("US010103");
 						req.setSellerCategory("US011301");
 						req.setSellerId("sellerLegalBusinessNoPay01");
@@ -468,7 +447,6 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
-
 						req.setSellerName("법사무료");
 						req.setSellerCI("1231323123");
 
@@ -509,13 +487,11 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						assertEquals(res.getSellerMbr().getSellerId(), "sellerLegalBusinessNoPay01");
 						LOGGER.debug("response param : {}", res.toString());
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
+
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -534,8 +510,6 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
-
 						req.setSellerClass("US010103");
 						req.setSellerCategory("US011302");
 						req.setSellerId("sellerLegalBusinessPay01");
@@ -549,7 +523,6 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
-
 						req.setSellerName("법사유료");
 						req.setSellerCI("1231323123");
 
@@ -590,13 +563,11 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						assertEquals(res.getSellerMbr().getSellerId(), "sellerLegalBusinessPay01");
 						LOGGER.debug("response param : {}", res.toString());
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
+
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -615,8 +586,6 @@ public class CreateSellerTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						CreateReq req = new CreateReq();
-
 						req.setSellerClass("US010103");
 						req.setSellerCategory("US011303");
 						req.setSellerId("sellerLegalBusinessBP01");
@@ -630,7 +599,6 @@ public class CreateSellerTest {
 						req.setSellerLanguage("US004301");
 						req.setIsForeign("Y");
 						req.setRealNameMethod("US011101");
-
 						req.setSellerName("법사BP");
 						req.setSellerCI("1231323123");
 
@@ -671,13 +639,11 @@ public class CreateSellerTest {
 				}).success(CreateRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateRes res = (CreateRes) result;
+						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
 						assertEquals(res.getSellerMbr().getSellerId(), "sellerLegalBusinessBP01");
 						LOGGER.debug("response param : {}", res.toString());
-						// 탈퇴 처리를 위한 값 셋팅
-						sellerKey = res.getSellerMbr().getSellerKey();
-						sellerId = res.getSellerMbr().getSellerId();
+
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

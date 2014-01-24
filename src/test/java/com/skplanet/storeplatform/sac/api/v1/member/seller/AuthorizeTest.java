@@ -1,8 +1,10 @@
 package com.skplanet.storeplatform.sac.api.v1.member.seller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,12 +25,13 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 
 /**
- * Calss 설명
+ * 5.2.3. 판매자 회원 인증
  * 
  * Updated on : 2014. 1. 14. Updated by : 김경복, 부르칸.
  */
@@ -45,15 +48,34 @@ public class AuthorizeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	public static AuthorizeReq authorizeReq;
+
+	/** [RESPONSE]. */
+	public static AuthorizeRes authorizeRes;
+
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * TestCase 수행 전 실행 Method.
+	 * 인증 요청 [REQUEST] 객체 생성
 	 * </pre>
 	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		authorizeReq = new AuthorizeReq();
+	}
+
+	/**
+	 * <pre>
+	 * TestCase 수행 후 실행 Method.
+	 * 인증 요청 결과 LOGGER 실행
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtil.convertObjectToJson(authorizeRes));
 	}
 
 	/**
@@ -69,18 +91,16 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatestqwe");
-						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+						authorizeReq.setSellerId("qatestqwe");
+						authorizeReq.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						assertEquals("Y", authorizeRes.getIsLoginSuccess());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -99,18 +119,17 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatestqwe123");
-						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+						authorizeReq.setSellerId("qatestqwe123");
+						authorizeReq.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -129,18 +148,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatestqwe");
-						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=12313123");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("qatestqwe");
+						authorizeReq.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=12313123");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -159,18 +178,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatestqwe123123123");
-						req.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=123123");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("qatestqwe123123123");
+						authorizeReq.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=123123");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -189,18 +208,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("devadmin");
-						req.setSellerPW("kGaBfCSoIkTKHrCe/PqPpIbZj1Qiysfh3JavZblwztc=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("devadmin");
+						authorizeReq.setSellerPW("kGaBfCSoIkTKHrCe/PqPpIbZj1Qiysfh3JavZblwztc=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -219,18 +238,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("testsign");
-						req.setSellerPW("6uYY9nPngiCgDEkMKWL6znlgclEKMkrSQnZNY/irBtg=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("testsign");
+						authorizeReq.setSellerPW("6uYY9nPngiCgDEkMKWL6znlgclEKMkrSQnZNY/irBtg=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -249,18 +268,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("stg01");
-						req.setSellerPW("TrmVG3NjqCtRJK0KmzCNuqHYNG/W5KrCoQ3IyvRUVaU=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("stg01");
+						authorizeReq.setSellerPW("TrmVG3NjqCtRJK0KmzCNuqHYNG/W5KrCoQ3IyvRUVaU=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -279,18 +298,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("signtest");
-						req.setSellerPW("6uYY9nPngiCgDEkMKWL6znlgclEKMkrSQnZNY/irBtg=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("signtest");
+						authorizeReq.setSellerPW("6uYY9nPngiCgDEkMKWL6znlgclEKMkrSQnZNY/irBtg=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -309,18 +328,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("su004");
-						req.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("su004");
+						authorizeReq.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -339,18 +358,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("tbjh");
-						req.setSellerPW("gGYxFfhiyyUZF/IBX3HdXSQn7YR/oCsKYvuhQ2j1gD8=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("tbjh");
+						authorizeReq.setSellerPW("gGYxFfhiyyUZF/IBX3HdXSQn7YR/oCsKYvuhQ2j1gD8=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -369,18 +388,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatest105");
-						req.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("qatest105");
+						authorizeReq.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -399,18 +418,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("qatest019");
-						req.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("qatest019");
+						authorizeReq.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -429,18 +448,18 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AuthorizeReq req = new AuthorizeReq();
-						req.setSellerId("wqatest1");
-						req.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
+
+						authorizeReq.setSellerId("wqatest1");
+						authorizeReq.setSellerPW("cS1DhNOYV5JbVO+uLyOk9zltEQEOJFwc9/srL8z02dA=");
+						LOGGER.debug("request param : {}", authorizeReq.toString());
+						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						AuthorizeRes res = (AuthorizeRes) result;
-						assertThat(res.getSellerMbr(), notNullValue());
-						LOGGER.debug("response param : {}", res.getSellerMbr().toString());
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						LOGGER.debug("response param : {}", authorizeRes.getSellerMbr().toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
