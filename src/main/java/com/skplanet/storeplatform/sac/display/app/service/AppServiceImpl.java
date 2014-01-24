@@ -108,6 +108,7 @@ public class AppServiceImpl implements AppService {
         app.setPackageName(appDetail.getApkPkgNm());
         app.setVersionCode(appDetail.getApkVer());
         app.setVersion(appDetail.getApkVerNm());
+        app.setSize(appDetail.getFileSize());
 
         // AppDebug
         AppDebug debug = new AppDebug();

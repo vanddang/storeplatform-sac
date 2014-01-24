@@ -16,6 +16,7 @@ public class AppDetail {
     private String apkPkgNm;
     private String apkVer;
     private String apkVerNm;
+    private Integer fileSize;
     private String vmVer;
     private String sellerMbrNo;
     private String prodGbn;
@@ -23,6 +24,14 @@ public class AppDetail {
     private String expoSellerEmail;
     private String expoSellerNm;
     private String expoSellerTelno;
+
+    public Integer getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Integer fileSize) {
+        this.fileSize = fileSize;
+    }
 
     public String getExpoSellerEmail() {
         return expoSellerEmail;
