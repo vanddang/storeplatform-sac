@@ -22,6 +22,7 @@ public class BestDownloadReq extends CommonInfo {
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
+	private String stdDt; // 배치완료 기준일시
 	private String listId; // 리스트 Id
 	private String topMenuId; // 메뉴 Id
 	private String menuId; // 메뉴 Id
@@ -407,6 +408,31 @@ public class BestDownloadReq extends CommonInfo {
 	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 배치완료 기준일시
+	 * </pre>
+	 * 
+	 * @return the stdDt
+	 */
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 배치완료 기준일시
+	 * </pre>
+	 * 
+	 * @param stdDt
+	 *            the stdDt to set
+	 */
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 }
