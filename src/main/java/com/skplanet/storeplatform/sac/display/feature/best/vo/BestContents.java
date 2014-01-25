@@ -637,7 +637,7 @@ public class BestContents {
 	 * 
 	 * @return int
 	 */
-	public int getProdAmt() {
+	public Integer getProdAmt() {
 		return this.prodAmt;
 	}
 
@@ -650,7 +650,7 @@ public class BestContents {
 	 * @param prodAmt
 	 *            prodAmt
 	 */
-	public void setProdAmt(int prodAmt) {
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
