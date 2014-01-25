@@ -32,7 +32,7 @@ public class BestApp {
 	private String apkPkgNm;
 	private String menuNm;
 	private String menuNesc;
-	private int prodAmt;
+	private Integer prodAmt;
 	private String apkVerCd;
 	private Double avgEvluScore;
 	private Integer dwldCnt;
@@ -474,7 +474,7 @@ public class BestApp {
 	 * 
 	 * @return int
 	 */
-	public int getProdAmt() {
+	public Integer getProdAmt() {
 		return this.prodAmt;
 	}
 
@@ -487,7 +487,7 @@ public class BestApp {
 	 * @param prodAmt
 	 *            prodAmt
 	 */
-	public void setProdAmt(int prodAmt) {
+	public void setProdAmt(Integer prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 

@@ -38,7 +38,7 @@ public class BestContents {
 	private String agencyNm;
 	private String hdvYn;
 	private String dolbySprtYn;
-	private int prodAmt;
+	private Integer prodAmt;
 	private Integer paticpersCnt;
 	private Integer dwldCnt;
 	private Double avgEvluScore;
