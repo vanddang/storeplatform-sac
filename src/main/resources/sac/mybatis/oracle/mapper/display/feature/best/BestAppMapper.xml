@@ -88,7 +88,7 @@
 		                                    AND A.LIST_ID = #{listId} /* param : listId */
 		                                    AND A.EXPO_YN ='Y' /* 전시여부 */ 
 		                                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
-		                                    AND SYSDATE BETWEEN A.EXPO_START_DT AND A.EXPO_END_DT                       
+		                                    --AND SYSDATE BETWEEN A.EXPO_START_DT AND A.EXPO_END_DT                       
 		                               ) A
 		                               ,TB_DP_PROD B
 		                               ,TB_DP_PROD_DESC C
