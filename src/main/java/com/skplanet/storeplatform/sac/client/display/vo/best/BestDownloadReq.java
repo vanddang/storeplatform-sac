@@ -26,7 +26,7 @@ public class BestDownloadReq extends CommonInfo {
 	private String listId; // 리스트 Id
 	private String topMenuId; // 메뉴 Id
 	private String menuId; // 메뉴 Id
-	private String fiteredBy; // 카테고리 유형
+	private String filteredBy; // 카테고리 유형
 	private String b2bprod; // B2B 상품구분
 	private String hdv; // HDV 지원구분
 	private String drm; // drm 지원구분
@@ -193,8 +193,8 @@ public class BestDownloadReq extends CommonInfo {
 	 * 
 	 * @return String
 	 */
-	public String getFiteredBy() {
-		return this.fiteredBy;
+	public String getFilteredBy() {
+		return this.filteredBy;
 	}
 
 	/**
@@ -203,11 +203,11 @@ public class BestDownloadReq extends CommonInfo {
 	 * 카테고리 유형.
 	 * </pre>
 	 * 
-	 * @param fiteredBy
-	 *            fiteredBy
+	 * @param filteredBy
+	 *            filteredBy
 	 */
-	public void setFiteredBy(String fiteredBy) {
-		this.fiteredBy = fiteredBy;
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
 	}
 
 	/**
