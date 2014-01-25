@@ -58,10 +58,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 	 */
 	@Override
 	public BestContentsRes searchBestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq) {
-		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		bestContentsReq.setTenantId(tanantHeader.getTenantId());
+		bestContentsReq.setTenantId(tenantHeader.getTenantId());
 		bestContentsReq.setDeviceModelCd(deviceHeader.getModel());
 
 		BestContentsRes response = new BestContentsRes();

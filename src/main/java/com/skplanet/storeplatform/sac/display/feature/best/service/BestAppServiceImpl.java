@@ -65,10 +65,10 @@ public class BestAppServiceImpl implements BestAppService {
 	 */
 	@Override
 	public BestAppRes searchBestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq) {
-		TenantHeader tanantHeader = requestheader.getTenantHeader();
+		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		bestAppReq.setTenantId(tanantHeader.getTenantId());
+		bestAppReq.setTenantId(tenantHeader.getTenantId());
 		bestAppReq.setDeviceModelCd(deviceHeader.getModel());
 
 		BestAppRes response = new BestAppRes();
