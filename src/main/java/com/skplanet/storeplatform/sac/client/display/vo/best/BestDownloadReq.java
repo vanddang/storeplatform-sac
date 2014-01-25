@@ -23,6 +23,7 @@ public class BestDownloadReq extends CommonInfo {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String listId; // 리스트 Id
+	private String topMenuId; // 메뉴 Id
 	private String menuId; // 메뉴 Id
 	private String fiteredBy; // 카테고리 유형
 	private String b2bprod; // B2B 상품구분
@@ -381,6 +382,31 @@ public class BestDownloadReq extends CommonInfo {
 	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * TOP 메뉴 ID.
+	 * </pre>
+	 * 
+	 * @return the topMenuId
+	 */
+	public String getTopMenuId() {
+		return this.topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * TOP 메뉴 ID.
+	 * </pre>
+	 * 
+	 * @param topMenuId
+	 *            the topMenuId to set
+	 */
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 }
