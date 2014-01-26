@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 
 /**
  * Interface Message Product Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -83,6 +83,10 @@ public class Product extends CommonInfo implements Serializable {
 	 * 상품설명.
 	 */
 	private String productExplain;
+	/**
+	 * 상품상세설명.
+	 */
+	private String productDetailExplain;
 	/**
 	 * 목차정보(ebook일 경우).
 	 */
@@ -173,9 +177,19 @@ public class Product extends CommonInfo implements Serializable {
 	private String physicalPath;
 
 	/**
+	 * 하위 상품 총 건수
+	 */
+	private Integer subProductTotalCount;
+
+	/**
 	 * 하위 상품 목록.
 	 */
 	private List<Product> subProductList;
+
+	/**
+	 * 날짜 목록
+	 */
+	private List<Date> dateList;
 
 	/**
 	 * @return Identifier
@@ -370,6 +384,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setProductExplain(String productExplain) {
 		this.productExplain = productExplain;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getProductDetailExplain() {
+		return this.productDetailExplain;
+	}
+
+	/**
+	 * @param productDetailExplain
+	 *            productDetailExplain
+	 */
+	public void setProductDetailExplain(String productDetailExplain) {
+		this.productDetailExplain = productDetailExplain;
 	}
 
 	/**
@@ -703,6 +732,22 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
+	 * @return Integer
+	 */
+	public Integer getSubProductTotalCount() {
+		return this.subProductTotalCount;
+	}
+
+	/**
+	 *
+	 * @param subProductTotalCount
+	 * 				subProductTotalCount
+	 */
+	public void setSubProductTotalCount(Integer subProductTotalCount) {
+		this.subProductTotalCount = subProductTotalCount;
+	}
+
+	/**
 	 * @return List<Product>
 	 */
 	public List<Product> getSubProductList() {
@@ -716,5 +761,21 @@ public class Product extends CommonInfo implements Serializable {
 	public void setSubProductList(List<Product> subProductList) {
 		this.subProductList = subProductList;
 	}
+
+	/**
+	 * @return List<Date>
+	 */
+	public List<Date> getDateList() {
+		return this.dateList;
+	}
+
+	/**
+	 * @param dateList
+	 *            dateList
+	 */
+	public void setDateList(List<Date> dateList) {
+		this.dateList = dateList;
+	}
+
 
 }

@@ -13,31 +13,41 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Vod 상세 조회 Input Value Object.
- * 
+ *
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
 public class VodDetailReq extends CommonInfo {
 
 	private static final long serialVersionUID = 3567228512653706925L;
 
-	private String channelld; // 체널 ID
+	/** 체널 ID */
+	private String channelId;
 
-	private String orderedBy; // 상품 정렬 순서
+	/** 상품 정렬 순서 */
+	private String orderedBy;
 
-	private Integer offset = 1; // 시작점 ROW, default : 1
+	/** 시작점 ROW, default : 1 */
+	private Integer offset = 1;
 
-	private Integer count = 20; // 페이지당 노출될 ROW 개수, default :20
+	/** 페이지당 노출될 ROW 개수, default :20 */
+	private Integer count = 20;
+
+	/** 언어 코드 */
+	private String langCd;
+
+	/** Tenant ID */
+	private String tenantId;
 
 	public String getChannelld() {
-		return channelld;
+		return this.channelId;
 	}
 
-	public void setChannelld(String channelld) {
-		this.channelld = channelld;
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
 	}
 
 	public String getOrderedBy() {
-		return orderedBy;
+		return this.orderedBy;
 	}
 
 	public void setOrderedBy(String orderedBy) {
@@ -45,7 +55,7 @@ public class VodDetailReq extends CommonInfo {
 	}
 
 	public Integer getOffset() {
-		return offset;
+		return this.offset;
 	}
 
 	public void setOffset(Integer offset) {
@@ -53,17 +63,34 @@ public class VodDetailReq extends CommonInfo {
 	}
 
 	public Integer getCount() {
-		return count;
+		return this.count;
 	}
 
 	public void setCount(Integer count) {
 		this.count = count;
 	}
 
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
+
 	@Override
 	public String toString() {
-		return "VodDetailReq [channelld=" + channelld + ", orderedBy="
-				+ orderedBy + ", offset=" + offset + ", count=" + count + "]";
+		return "VodDetailReq [channelId=" + this.channelId + ", orderedBy="
+				+ this.orderedBy + ", offset=" + this.offset + ", count=" + this.count
+				+ ", langCd=" + this.langCd + ", tenantId=" + this.tenantId + "]";
 	}
 
 }
