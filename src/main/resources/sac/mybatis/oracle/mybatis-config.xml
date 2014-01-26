@@ -113,5 +113,9 @@
         <typeAlias alias="ProductBasicInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo" />
         <typeAlias alias="MetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo" />
         
+        <!-- VOD 상품상세 정보 조회 -->
+        <typeAlias alias="VodDetailReq"  type="com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq" />
+        <typeAlias alias="VodDetail"  type="com.skplanet.storeplatform.sac.display.vod.vo.VodDetail" />
+        
     </typeAliases>
 </configuration>

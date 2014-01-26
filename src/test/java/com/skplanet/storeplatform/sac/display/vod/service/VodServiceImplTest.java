@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
 /**
  * VOD Service
  *
- * Updated on : 2014. 01. 09 
+ * Updated on : 2014. 01. 09
  * Updated by : 임근대, SK 플래닛.
  */
 @ActiveProfiles(value = "local")
@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
 @ContextConfiguration({"classpath*:/spring-test/context-test.xml"})
 @TransactionConfiguration
 @Transactional
-public class VodServiceTest {
+public class VodServiceImplTest {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -34,9 +34,12 @@ public class VodServiceTest {
 
     @Test
     public void searchVod() {
-    	VodDetailReq req = new VodDetailReq(); 
-        VodDetailRes res = vodService.searchVod(req);
-        logger.info("{}", res);
+    	VodDetailReq req = new VodDetailReq();
+    	req.setTenantId("S01");
+    	req.setLangCd("ko");
+
+        VodDetailRes res = this.vodService.searchVod(req);
+        this.logger.info("{}", res);
     }
 
 }
