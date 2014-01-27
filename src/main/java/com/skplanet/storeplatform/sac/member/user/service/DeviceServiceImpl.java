@@ -585,6 +585,10 @@ public class DeviceServiceImpl implements DeviceService {
 					+ schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
+		if (schDeviceRes.getUserMbrDevice() == null) {
+			throw new Exception("휴대기기 정보가 없습니다.");
+		}
+
 		/* deviceKey로 조회시 파라메터로 넘어온 deviceId와 DB deviceId 비교 */
 		if (deviceKey != null) {
 			if (!deviceId.equals(userMbrDevice.getDeviceID())) {
