@@ -931,6 +931,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		} catch (Exception e) {
 
 			LOGGER.info("## ===================== 휴대기기 등록 실패!!! (모듈 호출시 Error) ");
+			e.printStackTrace();
 			throw new RuntimeException("## 휴대기기 등록 실패 ================");
 
 		}
