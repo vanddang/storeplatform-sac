@@ -43,7 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
- * 5.2.1. 판매자 회원 가입
+ * 2.2.1. 판매자 회원 가입
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
@@ -152,7 +152,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
-						req.setSellerCategory("US011301");
 						req.setSellerId("sellerPersonNoPay01");
 						// req.setSellerId("sellerTest0003");
 						req.setSellerPW("1234");
@@ -223,7 +222,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
-						req.setSellerCategory("US011302");
 						req.setSellerId("sellerPersonPay01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
@@ -297,7 +295,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010102");
-						req.setSellerCategory("US011301");
 						req.setSellerId("sellerBusinessNoPay01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
@@ -371,7 +368,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010102");
-						req.setSellerCategory("US011302");
 						req.setSellerId("sellerBusinessPay01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
@@ -445,7 +441,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010103");
-						req.setSellerCategory("US011301");
 						req.setSellerId("sellerLegalBusinessNoPay01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
@@ -519,7 +514,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010103");
-						req.setSellerCategory("US011302");
 						req.setSellerId("sellerLegalBusinessPay01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
@@ -593,7 +587,6 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010103");
-						req.setSellerCategory("US011303");
 						req.setSellerId("sellerLegalBusinessBP01");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");

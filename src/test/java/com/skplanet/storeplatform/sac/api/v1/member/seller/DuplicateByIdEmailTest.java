@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmail
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 
 /**
- * 5.2.2. ID / Email 중복체크.
+ * 2.2.2. ID / Email 중복체크.
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */

@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 
 /**
- * 5.2.3. 판매자 회원 인증
+ * 2.2.3. 판매자 회원 인증
  * 
  * Updated on : 2014. 1. 14. Updated by : 김경복, 부르칸.
  */
@@ -76,7 +76,7 @@ public class AuthorizeTest {
 	 */
 	@After
 	public void after() {
-		//Debug
+		// Debug
 		LOGGER.debug("[RESPONSE(SAC)-회원인증] : \n{}", ConvertMapperUtil.convertObjectToJson(authorizeRes));
 	}
 

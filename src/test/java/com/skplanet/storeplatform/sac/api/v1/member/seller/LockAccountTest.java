@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
 
 /**
- * 5.2.16. 판매자 계정 잠금
+ * 2.2.16. 판매자 계정 잠금
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */

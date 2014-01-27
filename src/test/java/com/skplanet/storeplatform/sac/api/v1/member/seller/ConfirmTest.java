@@ -35,7 +35,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ConfirmRes;
 
 /**
- * 5.2.14. 판매자 회원 계정 승인
+ * 2.2.14. 판매자 회원 계정 승인
  * 
  * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */

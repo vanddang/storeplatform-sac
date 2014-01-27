@@ -57,7 +57,7 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
-	 * 5.2.2 판매자 회원 ID/Email 중복 조회.
+	 * 2.2.2 판매자 회원 ID/Email 중복 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -224,7 +224,7 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
-	 * 5.2.27.	판매자 회원 인증키 조회.
+	 * 2.2.27.	판매자 회원 인증키 조회.
 	 * </pre>
 	 * 
 	 * @param req

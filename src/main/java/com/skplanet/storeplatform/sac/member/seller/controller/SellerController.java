@@ -57,7 +57,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.1. 판매자 회원 가입.
+	 * 2.2.1. 판매자 회원 가입.
 	 * </pre>
 	 * 
 	 * @param req
@@ -72,7 +72,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.3. 판매자 회원 인증.
+	 * 2.2.3. 판매자 회원 인증.
 	 * </pre>
 	 * 
 	 * @param AuthorizeReq
@@ -87,7 +87,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.10. 판매자 회원 기본정보 수정.
+	 * 2.2.10. 판매자 회원 기본정보 수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -104,7 +104,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.11. 판매자회원 정산 정보 수정.
+	 * 2.2.11. 판매자회원 정산 정보 수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -120,7 +120,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.14. 판매자 회원 계정 승인.
+	 * 2.2.14. 판매자 회원 계정 승인.
 	 * </pre>
 	 * 
 	 * @param header
@@ -136,7 +136,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.16. 판매자회원 계정 잠금.
+	 * 2.2.16. 판매자회원 계정 잠금.
 	 * </pre>
 	 * 
 	 * @param LockAccountReq
@@ -152,7 +152,7 @@ public class SellerController {
 
 	/**
 	 * <pre>
-	 * 5.2.24. 판매자 회원 탈퇴.
+	 * 2.2.24. 판매자 회원 탈퇴.
 	 * </pre>
 	 * 
 	 * @param WithdrawReq
@@ -162,7 +162,7 @@ public class SellerController {
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) throws Exception {
-		LOGGER.debug("### 5.2.3. 판매자 회원 인증 [authorize] START ###");
+		LOGGER.debug("### 2.2.3. 판매자 회원 탈퇴 [authorize] START ###");
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
 		String secedeReasonCode = StringUtil.nvl(req.getSecedeReasonCode(), "");
