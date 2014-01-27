@@ -41,6 +41,11 @@ import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificP
 import com.skplanet.storeplatform.sac.display.category.service.CategoryVodBoxService;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
+/**
+ * 일반 카테고리 Controller
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ */
 @Controller
 @RequestMapping("/display/category")
 public class CategoryController {
@@ -69,7 +74,10 @@ public class CategoryController {
 	 * 일반 카테고리 앱 상품 조회.
 	 * </pre>
 	 * 
-	 * @param CategoryAppReq
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
 	 * @return CategoryAppRes
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
@@ -89,7 +97,10 @@ public class CategoryController {
 	 * </pre>
 	 * 
 	 * @param req
-	 * @return
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategoryEbookComicRes
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
@@ -102,6 +113,17 @@ public class CategoryController {
 		return this.categoryEbookComicService.searchEbookComicList(req, header);
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            header
+	 * @param req
+	 *            req
+	 * @return CategoryWebtoonRes
+	 */
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req) {
@@ -112,6 +134,23 @@ public class CategoryController {
 
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            requestVO
+	 * @return VodBoxListRes
+	 * @throws JsonGenerationException
+	 *             JsonGenerationException
+	 * @throws JsonMappingException
+	 *             JsonMappingException
+	 * @throws IOException
+	 *             IOException
+	 * @throws Exception
+	 *             Exception
+	 */
 	@RequestMapping(value = "/vodBox/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public VodBoxListRes searchVodBoxList(VodBoxReq requestVO) throws JsonGenerationException, JsonMappingException,
@@ -119,6 +158,25 @@ public class CategoryController {
 		return this.categoryVodBoxService.searchVodBoxList(requestVO);
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            requestVO
+	 * @param requestHeader
+	 *            requestHeader
+	 * @return MusicContentsListRes
+	 * @throws JsonGenerationException
+	 *             JsonGenerationException
+	 * @throws JsonMappingException
+	 *             JsonGenerationException
+	 * @throws IOException
+	 *             IOException
+	 * @throws Exception
+	 *             Exception
+	 */
 	@RequestMapping(value = "/music/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
@@ -126,6 +184,17 @@ public class CategoryController {
 		return this.categoryMusicContentsService.searchMusicContentsList(requestVO, requestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 특정 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategorySpecificRes
+	 */
 	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public CategorySpecificRes searchSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {

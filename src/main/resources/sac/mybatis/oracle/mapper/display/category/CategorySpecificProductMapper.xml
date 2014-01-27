@@ -164,6 +164,12 @@
               , LA.EXPO_SELLER_EMAIL
               , LA.EXPO_SELLER_NM
               , LA.EXPO_SELLER_TELNO
+              <![CDATA[
+              , ( CASE WHEN LA.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
+             ]]>
+              <![CDATA[
+              , ( CASE WHEN LA.STRM_EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_PLAY
+             ]]>
               <![CDATA[       
               , CASE WHEN (LA.USE_PERIOD_UNIT_CD = 'PD00312' AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
                      ELSE CHNL_UNLMT_AMT END AS PROD_AMT
@@ -202,6 +208,7 @@
                                              , E.COMPT_YN
                                              , E.VOD_TITL_NM
                                              , E.STRM_EPSD_CNT
+                                             , E.EPSD_CNT
                                              , E.ISSUE_DAY
                                              , E.CHNL_COMP_NM
                                              , E.AGENCY_NM

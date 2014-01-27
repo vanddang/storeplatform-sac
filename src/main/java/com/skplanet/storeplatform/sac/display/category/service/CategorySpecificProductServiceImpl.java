@@ -47,6 +47,11 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
+/**
+ * 특정 상품 조회 Service 구현체
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ */
 @Service
 @Transactional
 public class CategorySpecificProductServiceImpl implements CategorySpecificProductService {
@@ -62,6 +67,14 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService#getSpecificProductList
+	 * (com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 */
 	@Override
 	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
@@ -76,7 +89,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
 			if (prodIdList.size() > 50) {
 				// TODO osm1021 에러 처리 추가 필요
-
+				this.log.error("## prod id over 50 : {}" + prodIdList.size());
 			}
 
 			// 상품 기본 정보 List 조회
@@ -89,6 +102,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				Map<String, Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("tenantHeader", header.getTenantHeader());
 				paramMap.put("deviceHeader", header.getDeviceHeader());
+				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 				// TODO osm1021 더미 데이터 꼭 삭제할것
 				paramMap.put("imageCd", "DP006206");
 				paramMap.put("lang", "ko");
@@ -100,7 +114,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 					this.log.debug("##### Top Menu Id : {}", topMenuId);
 					this.log.debug("##### Service Group Cd : {}", svcGrpCd);
-					// paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
 					// 상품 SVC_GRP_CD 조회
 					// DP000203 : 멀티미디어
 					// DP000206 : Tstore 쇼핑
@@ -120,9 +134,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 							productList.add(product);
 						}
 
-					}
-					// 멀티미디어 타입일 경우
-					else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
 						// 영화/방송 상품의 경우
 						// TODO osm1021 더미 데이터 꼭 삭제할것
 						paramMap.put("imageCd", "DP000101");
@@ -140,11 +152,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 								}
 								productList.add(product);
 							}
-						}
-						// Ebook / Comic 상품의 경우
-						else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) {
-
+						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 							// TODO osm1021 더미 데이터 꼭 삭제할것
 							paramMap.put("imageCd", "DP000108");
 							this.log.debug("##### Search for EbookComic specific product");
@@ -159,9 +168,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 								productList.add(product);
 							}
 
-						}
-						// 음원 상품의 경우
-						else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) {
+						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
 							// 배치완료 기준일시 조회
 							// TODO osm1021 기준 ListID가 없기 때문에 일단 멜론 Top 100으로 고정
 							String stdDt = this.displayCommonService.getBatchStandardDateString(tenantId,
@@ -180,9 +187,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 								productList.add(product);
 							}
 						}
-					}
-					// 쇼핑 상품의 경우
-					else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 						// TODO osm1021 더미 데이터 꼭 삭제할것
 						paramMap.put("imageCd", "DP0001B4");
@@ -206,6 +211,13 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		}
 	}
 
+	/**
+	 * <pre>
+	 * 더미 데이터 생성.
+	 * </pre>
+	 * 
+	 * @return CategorySpecificRes
+	 */
 	private CategorySpecificRes generateDummy() {
 		Identifier identifier = null;
 		Support support = null;
@@ -362,6 +374,13 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		return res;
 	}
 
+	/**
+	 * <pre>
+	 * Dummy date 생성.
+	 * </pre>
+	 * 
+	 * @return Product
+	 */
 	private Product generateShoppingProduct() {
 		Identifier identifier = new Identifier();
 		Support support = new Support();

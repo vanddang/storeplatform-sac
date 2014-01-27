@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.ArrayList;
@@ -14,6 +23,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
+/**
+ * Ebook 상품 전용 정보 Generator 구현체
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ */
 @Component
 public class EbookComicGeneratorImpl implements EbookComicGenerator {
 	@Autowired

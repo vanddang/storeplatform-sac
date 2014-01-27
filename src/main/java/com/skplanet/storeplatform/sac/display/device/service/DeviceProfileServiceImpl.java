@@ -28,9 +28,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.vo.DeviceProfile;
 
 /**
- * DeviceProfileService Service 인터페이스(CoreStoreBusiness) 구현체
+ * DeviceProfileService Service 인터페이스(CoreStoreBusiness) 구현체.
  * 
- * Updated on : 2013-12-18 Updated by : 오승민, Incross
+ * Updated on : 2013-12-18 Updated by : 오승민, 인크로스
  */
 @Service
 @Transactional

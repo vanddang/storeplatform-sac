@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.List;
@@ -22,6 +31,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Sale
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
+/**
+ * Response 객체 Generate Facade 구현체
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ */
 @Component
 public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacade {
 
@@ -43,6 +57,12 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Autowired
 	private ShoppingInfoGenerator shoppingGenerator;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateAppProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateAppProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -77,6 +97,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMusicProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateMusicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -111,6 +138,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateMovieProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateMovieProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -144,6 +178,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateBroadcastProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateBroadcastProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -176,6 +217,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateEbookProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateEbookProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -211,6 +259,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateComicProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateComicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -246,6 +301,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateShoppingProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateShoppingProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -279,6 +341,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificAppProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificAppProduct(MetaInfo metaInfo) {
 		// TODO osm1021 일단은 기존 App meta 조회와 동일
@@ -314,6 +383,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificMusicProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificMusicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -332,6 +408,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificMovieProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificMovieProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -345,7 +428,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
-		product.setRights(this.commonGenerator.generateRights(metaInfo));
+		product.setRights(this.vodGenerator.generateRights(metaInfo));
 		product.setContributor(this.vodGenerator.generateMovieContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
@@ -353,6 +436,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificBroadcastProduct(com
+	 * .skplanet.storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificBroadcastProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -364,7 +454,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
 		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
-		product.setRights(this.commonGenerator.generateRights(metaInfo));
+		product.setRights(this.vodGenerator.generateRights(metaInfo));
 		product.setContributor(this.vodGenerator.generateBroadcastContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
@@ -372,6 +462,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificEbookProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificEbookProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -392,6 +489,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificComicProduct(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificComicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
@@ -412,6 +516,13 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		return product;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificShoppingProduct(com
+	 * .skplanet.storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Product generateSpecificShoppingProduct(MetaInfo metaInfo) {
 		Product product = new Product();

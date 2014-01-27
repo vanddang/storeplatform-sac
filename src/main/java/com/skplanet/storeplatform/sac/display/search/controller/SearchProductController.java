@@ -22,14 +22,30 @@ import com.skplanet.storeplatform.sac.client.display.vo.search.SearchProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.search.service.SearchVodBoxProductService;
 
+/**
+ * Meta 정보 조회 Prototype Controller
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ */
 @Controller
 @RequestMapping("/display/search/product")
 public class SearchProductController {
-	private static final Logger logger = LoggerFactory.getLogger(SearchProductController.class);
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private SearchVodBoxProductService searchVodBoxProductService;
 
+	/**
+	 * <pre>
+	 * Vod 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return SearchProductRes
+	 */
 	@RequestMapping(value = "/vod", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchProductRes searchVodBoxProdIdList(SearchProductReq req, SacRequestHeader header) {

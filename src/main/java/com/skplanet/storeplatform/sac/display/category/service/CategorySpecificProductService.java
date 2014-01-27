@@ -13,6 +13,22 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecifi
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
+/**
+ * 특정 상품 조회 Service
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ */
 public interface CategorySpecificProductService {
+	/**
+	 * <pre>
+	 * 특정 상품 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return CategorySpecificRes
+	 */
 	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header);
 }

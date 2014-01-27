@@ -14,22 +14,22 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * 특정 단말 정보 조회(CoreStoreBusiness)
+ * 특정 단말 정보 조회(CoreStoreBusiness).
  * 
- * Updated on : 2013-12-18 Updated by : 오승민, Incross.
+ * Updated on : 2013-12-18 Updated by : 오승민, 인크로스
  */
 public interface DeviceProfileService {
 
 	/**
 	 * <pre>
-	 * 특정 상품 조회 API
+	 * 특정 상품 조회 API.
 	 * </pre>
 	 * 
-	 * @param manufacturer
-	 *            제조사 명
-	 * @param model
-	 *            모델명
-	 * @return
+	 * @param requestVO
+	 *            requestVO
+	 * @param header
+	 *            header
+	 * @return DeviceProfileRes
 	 */
 	public DeviceProfileRes searchDeviceProfile(DeviceProfileReq requestVO, SacRequestHeader header);
 }

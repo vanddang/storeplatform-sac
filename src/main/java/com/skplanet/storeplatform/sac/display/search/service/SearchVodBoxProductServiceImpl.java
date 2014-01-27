@@ -27,6 +27,11 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
+/**
+ * Vod 상품 조회 Serivce 구현체.
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ */
 @Service
 @Transactional
 public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductService {
@@ -46,6 +51,14 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.search.service.SearchVodBoxProductService#searchVodBoxProduct(com.skplanet
+	 * .storeplatform.sac.client.display.vo.search.SearchProductReq,
+	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
+	 */
 	@Override
 	public SearchProductRes searchVodBoxProduct(SearchProductReq req, SacRequestHeader header) {
 		CommonResponse commonResponse = new CommonResponse();

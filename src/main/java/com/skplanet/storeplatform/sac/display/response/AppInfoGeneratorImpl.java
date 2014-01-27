@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.ArrayList;
@@ -13,12 +22,24 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
+/**
+ * App 상품 전용 정보 Generator 구현체.
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ */
 @Component
 public class AppInfoGeneratorImpl implements AppInfoGenerator {
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateSupportList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public List<Support> generateSupportList(MetaInfo metaInfo) {
 		List<Support> supportList = new ArrayList<Support>();
@@ -30,6 +51,13 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		return supportList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateApp(com.skplanet.storeplatform.sac.display
+	 * .meta.vo.MetaInfo)
+	 */
 	@Override
 	public App generateApp(MetaInfo metaInfo) {
 		App app = new App();
@@ -41,6 +69,13 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		return app;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateMenuList(com.skplanet.storeplatform.
+	 * sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public List<Menu> generateMenuList(MetaInfo metaInfo) {
 		Menu menu = new Menu();
@@ -58,6 +93,13 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		return menuList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateAppIdentifierList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public List<Identifier> generateAppIdentifierList(MetaInfo metaInfo) {
 		Identifier identifier = new Identifier();

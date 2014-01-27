@@ -22,18 +22,33 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 
+/**
+ * 특정 단말 조회 관련 Controller
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ */
 @Controller
 @RequestMapping("/display/device")
 public class DeviceController {
-	private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private DeviceProfileService deviceProfileService;
 
+	/**
+	 * <pre>
+	 * 특정 단말 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            request
+	 * @param header
+	 *            header
+	 * @return DeviceProfileRes
+	 */
 	@RequestMapping(value = "/specific/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DeviceProfileRes specificDetail(DeviceProfileReq request, SacRequestHeader header) {
-		// logger.info("==================================::{}", name);
 		return this.deviceProfileService.searchDeviceProfile(request, header);
 	}
 

@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.response;
 
 import java.util.ArrayList;
@@ -12,8 +21,20 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
+/**
+ * 음원 상품 전용 정보 Generator 구현체
+ * 
+ * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
+ */
 @Component
 public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateAccrual(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Accrual generateAccrual(MetaInfo metaInfo) {
 		Accrual accrual = new Accrual();
@@ -21,6 +42,12 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		return accrual;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateService(java.lang.String,
+	 * java.lang.String)
+	 */
 	@Override
 	public Service generateService(String name, String type) {
 		Service service = new Service();
@@ -29,6 +56,13 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		return service;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateMusic(com.skplanet.storeplatform.sac
+	 * .display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Music generateMusic(MetaInfo metaInfo) {
 		Music music = new Music();
@@ -36,6 +70,13 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		return music;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateServiceList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public List<Service> generateServiceList(MetaInfo metaInfo) {
 		List<Service> serviceList = new ArrayList<Service>();
@@ -48,6 +89,13 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		return serviceList;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateContributor(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
 	@Override
 	public Contributor generateContributor(MetaInfo metaInfo) {
 		Contributor contributor = new Contributor();
