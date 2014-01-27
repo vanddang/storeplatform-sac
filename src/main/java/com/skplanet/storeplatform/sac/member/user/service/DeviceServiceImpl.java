@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CreateDeviceRequest;
@@ -464,11 +465,20 @@ public class DeviceServiceImpl implements DeviceService {
 				schAgreeListReq.setCommonRequest(commonRequest);
 				schAgreeListReq.setUserKey(previousUserKey);
 				SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+
 				if (schAgreeListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+
+					List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
+
+					for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
+						agreeInfo.setMemberKey(nowUserKey);
+						agreeList.add(agreeInfo);
+					}
+
 					UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
 					updAgreeReq.setCommonRequest(commonRequest);
-					updAgreeReq.setUserKey(nowUserKey);
-					updAgreeReq.setMbrClauseAgreeList(schAgreeListRes.getMbrClauseAgreeList());
+					updAgreeReq.setUserKey(previousUserKey);
+					updAgreeReq.setMbrClauseAgreeList(agreeList);
 					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
 
 					if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
@@ -1461,7 +1471,10 @@ public class DeviceServiceImpl implements DeviceService {
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		UserInfo searchUser = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
-		/* userKey, deviceId 두개의 코드로 디바이스 리스트 조회 --> getDeviceModelNo(휴대기기 모델 코드) */
+		/*
+		 * userKey, deviceId 두개의 코드로 디바이스 리스트 조회 --> getDeviceModelNo(휴대기기 모델
+		 * 코드)
+		 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setUserKey(searchUser.getUserKey());
 		listDeviceReq.setDeviceId(req.getDeviceId());
@@ -1472,8 +1485,7 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.debug("###### 리스트디바이스 : listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
 
 		/* PhoneInfo 조회 */
-		if (searchUser != null && listDeviceRes.getDeviceInfoList().size() == 1
-				&& listDeviceRes.getDeviceInfoList() != null) {
+		if (searchUser != null && listDeviceRes.getDeviceInfoList().size() == 1 && listDeviceRes.getDeviceInfoList() != null) {
 			Device device = this.mcc.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
 			logger.debug("###### Phoneinfo Res {}", device.toString());
