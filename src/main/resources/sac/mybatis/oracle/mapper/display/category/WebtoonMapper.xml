@@ -4,11 +4,12 @@
     <!-- 웹툰 상품 리스트 조회-->
     <select id="getWebtoonList" parameterType="CategoryWebtoonReq" resultType="CategoryWebtoon">
        /* WebtoonMapper.xml.getWebtoonList, 웹툰 상품 리스트 조회, 김형식/SK플래닛 , 2013-12-26 */
-        SELECT *
+        SELECT   
+                 ka.*
+                ,COUNT(1) OVER() AS totalCount
           FROM (                        
                 SELECT  
                        ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
-                      ,COUNT(PROD_ID) OVER() AS totalCount
                       ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
                       ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
                       ,MENU_ID as menuId                                  /* 메뉴ID */
@@ -144,11 +145,13 @@
     <!-- 운영자 웹툰 상품 리스트 조회-->
     <select id="getAdminWebtoonList" parameterType="RecommendWebtoonReq" resultType="RecommendWebtoon">
         /* WebtoonMapper.xml.getAdminWebtoonList, 운영자 웹툰 상품 리스트 조회, 김형식/SK플래닛 , 2013-12-26 */
-        SELECT *
+        SELECT
+               ka.*
+              ,COUNT(1) OVER() AS totalCount
           FROM (                        
                 SELECT  
                        ROW_NUMBER()OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB ) AS RNUM       
-                      ,COUNT(PROD_ID) OVER() AS totalCount
+                      
                       ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
                       ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
                       ,MENU_ID as menuId                                  /* 메뉴ID */
