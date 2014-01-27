@@ -114,7 +114,7 @@ public class VodServceImpl implements VodService {
 		Support support1 = new Support();
 		support1.setType("hd");
 		support1.setText("Y");
-		product.setSupportList(new ArrayList<Support>(Arrays.asList(support, support2)));
+		product.setSupportList(new ArrayList<Support>(Arrays.asList(support, support1)));
 
         Menu menu = new Menu();
         menu.setId("DP000518");
