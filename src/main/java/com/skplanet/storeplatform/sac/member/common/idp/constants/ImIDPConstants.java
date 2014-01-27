@@ -31,7 +31,7 @@ public final class ImIDPConstants {
 	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
 	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
 	public static final String IDP_REQ_CMD_DISAGREE_USER = "TXDisagreeUserIDP";
-	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICELIST = "findJoinServiceListIDP)";
+	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICELIST = "findJoinServiceListIDP";
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default
 	public static final String IDP_PARAM_RESP_TYPE_XML = "2"; // xml
