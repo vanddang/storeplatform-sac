@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -67,15 +68,59 @@ public class UserModifyServiceImpl implements UserModifyService {
 		ModifyRes response = new ModifyRes();
 
 		/**
-		 * 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 * 회원 정보 조회.
 		 */
-		if (StringUtils.equals(this.checkMemberType(req.getUserKey(), sacHeader), MemberConstants.USER_TYPE_IDPID)) {
+		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		/**
+		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 */
+		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
+		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+			/**
+			 * TODO 통합 IDP 연동
+			 */
 
 			/**
-			 * TODO IDP 연동
+			 * TODO SC 사용자 정보 수정
+			 */
+
+		} else {
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * IDP 연동 정도 setting.
 			 */
 			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("user_auth_key", req.getUserAuthKey());
+			param.put("key_type", "2");
+			param.put("key", userInfo.getImMbrNo()); // MBR_NO
+			param.put("user_name", req.getUserName());
+			param.put("user_sex", req.getUserSex());
+			param.put("user_birthday", req.getUserBirthDay());
+			param.put("user_calendar", req.getUserCalendar());
+			param.put("user_zipcode", req.getUserZip());
+			param.put("user_address", req.getUserAddress());
+			param.put("user_address2", req.getUserDetailAddress());
+			param.put("user_tel", req.getUserPhone());
+
 			IDPReceiverM modifyInfo = this.idpService.modifyProfile(param);
+			LOGGER.info("## IDP modifyProfile Code : {}", modifyInfo.getResponseHeader().getResult());
+			LOGGER.info("## IDP modifyProfile Text  : {}", modifyInfo.getResponseHeader().getResult_text());
+
+			if (StringUtils.equals(modifyInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+
+				LOGGER.info("## IDP 연동 성공 ==============================================");
+
+			}
 
 			/**
 			 * TODO SC 사용자 정보 수정
@@ -86,17 +131,11 @@ public class UserModifyServiceImpl implements UserModifyService {
 			//
 			// userSCI.updateUser(updateUserRequest);
 
-		} else {
-
-			/**
-			 * TODO 통합 IDP 연동
-			 */
-
-			/**
-			 * TODO SC 사용자 정보 수정
-			 */
-
 		}
+
+		/**
+		 * SC 회원 수정 요청.
+		 */
 
 		return response;
 	}
