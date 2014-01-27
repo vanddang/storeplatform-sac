@@ -11,9 +11,6 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -26,27 +23,13 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	private String systemId; // 시스템ID
 	private String sendMbrNo; // 회원번호
 	private String sendDeviceNo; // 디바이스 번호
 	private String recvMbrNo; // 회원번호
 	private String recvDeviceNo; // 디바이스 번호
 	private String prodId; // 상품 아이디
 	private String prchsId; // 구매ID
-
-	/**
-	 * @return the prchsId
-	 */
-	public String getPrchsId() {
-		return this.prchsId;
-	}
-
-	/**
-	 * @param prchsId
-	 *            the prchsId to set
-	 */
-	public void setPrchsId(String prchsId) {
-		this.prchsId = prchsId;
-	}
 
 	/**
 	 * @return the tenantId
@@ -61,6 +44,21 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 	/**
@@ -138,9 +136,19 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 		this.prodId = prodId;
 	}
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	/**
+	 * @return the prchsId
+	 */
+	public String getPrchsId() {
+		return this.prchsId;
+	}
+
+	/**
+	 * @param prchsId
+	 *            the prchsId to set
+	 */
+	public void setPrchsId(String prchsId) {
+		this.prchsId = prchsId;
 	}
 
 }

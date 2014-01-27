@@ -23,6 +23,7 @@ public class AutoPaymentCancelReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	private String systemId; // 시스템ID
 	private String insdUsermbrNo; // 회원번호
 	private String insdDeviceId; // 디바이스 번호
 	private String prchsId; // 구매ID
@@ -43,6 +44,21 @@ public class AutoPaymentCancelReq extends CommonInfo implements Serializable {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 	/**
