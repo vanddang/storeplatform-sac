@@ -8,6 +8,9 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * <pre>
  * 전처리 상품상태 정보 Value Object
@@ -18,7 +21,7 @@ package com.skplanet.storeplatform.sac.api.vo;
  * Last Updated on : 2014-01-02
  * Last Updated by : 김형식, SK플래닛
  */
-public class TbDpProdDescInfo {
+public class TbDpProdDescInfo extends CommonInfo{
 	private String prodId; //
 	private String langCd; //
 	private String prodNm; //

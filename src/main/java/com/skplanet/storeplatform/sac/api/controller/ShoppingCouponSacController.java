@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.external.client.shopping.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
+import com.skplanet.storeplatform.external.client.shopping.inf.ItxTypeCode.TX_TYPE_CODE;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
 import com.skplanet.storeplatform.external.client.shopping.vo.DpCouponInfo;
@@ -39,7 +39,6 @@ import com.skplanet.storeplatform.sac.api.service.ShoppingCouponService;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
-import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
@@ -59,7 +58,6 @@ public class ShoppingCouponSacController {
 	public final DpBrandInfo brandInfo;
 	public final DpCatalogInfo catalogInfo;
 	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
-	private CouponContainer containers;
 	private List<CouponRes> couponList = null;
 	public CouponRes couponRes;
 	public String response;
@@ -198,7 +196,7 @@ public class ShoppingCouponSacController {
 
 					result = this.doValidParameterCP(couponReq);
 					if (result) {
-						success = this.insertCouponInfo(this.containers, couponReq);
+						success = this.insertCouponInfo(couponReq);
 					}
 
 					if (success) {
@@ -317,12 +315,12 @@ public class ShoppingCouponSacController {
 	/**
 	 * 쿠폰 정보를 추가한다.
 	 * 
-	 * @param CouponContainer
-	 *            containers, String txType
+	 * @param CouponReq
+	 *            couponReq
 	 * @response boolean
 	 */
-	public boolean insertCouponInfo(CouponContainer containers, CouponReq couponReq) {
-		boolean result = this.couponProcessService.insertCouponInfo(containers, couponReq);
+	public boolean insertCouponInfo(CouponReq couponReq) {
+		boolean result = this.couponProcessService.insertCouponInfo(couponReq);
 		return result;
 
 	}
@@ -568,9 +566,9 @@ public class ShoppingCouponSacController {
 			}
 			break;
 		}
-		this.containers = new CouponContainer();
-		this.containers.setDpCouponInfo(couponInfo);
-		this.containers.setDpItemlist(itemInfoList);
+		couponReq.setDpCouponInfo(couponInfo);
+		couponReq.setDpItemInfo(itemInfoList);
+
 		this.log.info("<<<<< MetaDefXMLParser.makeContentXMLMap >>>>> END");
 
 		return result;
@@ -604,7 +602,6 @@ public class ShoppingCouponSacController {
 				this.couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG"))
 						+ map.get("ERROR_VALUE"));
 			}
-			this.couponRes.setTxId(couponReq.getTxId());
 			this.log.debug("-------------------jade 추가 E---------------------------------------------");
 
 			if (couponReq.checkTX_TYPE()) {
@@ -616,18 +613,12 @@ public class ShoppingCouponSacController {
 					xmlSb.append("<brandCode><![CDATA[" + couponReq.getBrandCode() + "]]></brandCode>");
 					xmlSb.append("</rData>");
 					map.put("COMMON_CODE", couponReq.getBrandCode());
-					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setBrandCode(couponReq.getBrandCode());
-					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 					break;
 				case CT:
 					xmlSb.append("<rData>");
 					xmlSb.append("<catalogCode><![CDATA[" + couponReq.getCatalogCode() + "]]></catalogCode>");
 					xmlSb.append("</rData>");
 					map.put("COMMON_CODE", couponReq.getCatalogCode());
-					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setCatalogCode(couponReq.getCatalogCode());
-					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 					break;
 				case CP:
 					xmlSb.append("<rData>");
@@ -639,7 +630,18 @@ public class ShoppingCouponSacController {
 																						   // 가포함되어 마지막에 , put
 																						   // 해준다.
 					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setCouponCode(couponReq.getCouponCode());
+					this.couponRes.setCouponId(couponReq.getDpCouponInfo().getProdId());
+					String itemProdId = "";
+					for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
+						if (i == 0) {
+							itemProdId = itemProdId + couponReq.getDpItemInfo().get(i).getProdId() + ":"
+									+ couponReq.getDpItemInfo().get(i).getItemCode();
+						} else {
+							itemProdId = itemProdId + "," + couponReq.getDpItemInfo().get(i).getProdId() + ":"
+									+ couponReq.getDpItemInfo().get(i).getItemCode();
+						}
+					}
+					this.couponRes.setItemId(itemProdId);
 					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 					break;
 				case ST:
@@ -647,9 +649,6 @@ public class ShoppingCouponSacController {
 					xmlSb.append("<couponCode><![CDATA[" + couponReq.getCouponCode() + "]]></couponCode>");
 					xmlSb.append("</rData>");
 					map.put("COMMON_CODE", couponReq.getCouponCode());
-					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setCouponCode(couponReq.getCouponCode());
-					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 				case AT:
 					break;
 				case LS:
@@ -690,9 +689,6 @@ public class ShoppingCouponSacController {
 					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventDcRate(), "")
 							+ "]]></eventDcRate>");
 					xmlSb.append("</rData>");
-					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setCouponCode(couponReq.getCouponCode());
-					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 
 					break;
 				default:

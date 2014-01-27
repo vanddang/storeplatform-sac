@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.api.conts;
 
-import com.skplanet.storeplatform.external.client.shopping.inf.ITX_TYPE_CODE.TX_TYPE_CODE;
+import com.skplanet.storeplatform.external.client.shopping.inf.ItxTypeCode.TX_TYPE_CODE;
 
 /**
  * 쇼핑 쿠폰용 상수 Class

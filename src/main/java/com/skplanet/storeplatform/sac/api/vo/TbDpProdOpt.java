@@ -8,6 +8,9 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * <pre>
  * 전처리 상품 옵션 Value Object
@@ -18,7 +21,7 @@ package com.skplanet.storeplatform.sac.api.vo;
  * Last Updated on : 2014-01-02
  * Last Updated by : 김형식, SK플래닛
  */
-public class TbDpProdOpt {
+public class TbDpProdOpt extends CommonInfo {
 	private String chnlProdId; // 채널_상품_ID
 	private String epsdProdId; // 에피소드_상품_ID
 	private String opt1Nm; // 옵션1_명

@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.api.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /*
  * Copyright (c) 2013 SK planet.
  * All right reserved.
@@ -19,7 +21,7 @@ package com.skplanet.storeplatform.sac.api.vo;
  * Last Updated on : 2014-01-02
  * Last Updated by : 김형식, SK플래닛
  */
-public class TbDpProdCatalogMapgInfo {
+public class TbDpProdCatalogMapgInfo extends CommonInfo {
 	private String prodId; // 상품_ID
 	private String catalogId; // 카탈로그_ID
 	private String baseYn; // 기본_여부

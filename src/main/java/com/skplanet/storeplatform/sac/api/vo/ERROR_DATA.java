@@ -11,6 +11,8 @@
 package com.skplanet.storeplatform.sac.api.vo;
 
 import java.io.Serializable;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 /**
  * <pre>
  * 전처리 에러데이터 Value Object
@@ -21,7 +23,7 @@ import java.io.Serializable;
  * Last Updated on : 2014-01-02
  * Last Updated by : 김형식, SK플래닛
  */
-public class ERROR_DATA implements Serializable {
+public class ERROR_DATA extends CommonInfo implements Serializable {
 
 	/**
 	 *

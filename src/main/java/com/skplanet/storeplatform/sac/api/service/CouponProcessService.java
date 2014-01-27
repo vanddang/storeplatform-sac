@@ -4,16 +4,13 @@ import java.util.List;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
-import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
+
 /**
  * <pre>
  * 쿠폰아이템 서비스 인터페이스
  * </pre>
- *
- * Created on : 2014-01-03
- * Created by : 김형식, SK 플래닛.
- * Last Updated on :  2014-01-03
- * Last Updated by : 김형식, SK 플래닛
+ * 
+ * Created on : 2014-01-03 Created by : 김형식, SK 플래닛. Last Updated on : 2014-01-03 Last Updated by : 김형식, SK 플래닛
  */
 public interface CouponProcessService {
 
@@ -22,7 +19,7 @@ public interface CouponProcessService {
 	 * 쿠폰 정보 입력
 	 * </pre>
 	 */
-	public boolean insertCouponInfo(CouponContainer containers, CouponReq couponReq);
+	public boolean insertCouponInfo(CouponReq couponReq);
 
 	/**
 	 * <pre>

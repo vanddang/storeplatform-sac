@@ -31,7 +31,6 @@ import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
 import com.skplanet.storeplatform.sac.api.except.CouponException;
 import com.skplanet.storeplatform.sac.api.inf.IcmsJobPrint;
 import com.skplanet.storeplatform.sac.api.util.CSVReader;
-import com.skplanet.storeplatform.sac.api.vo.CouponContainer;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo;
@@ -67,13 +66,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	private SellerSearchService sellerSearchService;
 
 	@Override
-	public boolean insertCouponInfo(CouponContainer containers, CouponReq couponReq) {
+	public boolean insertCouponInfo(CouponReq couponReq) {
 
 		// 호출
 		this.log.info("■■■■■ processForCouponCSP ■■■■■");
 		// 상품 추가/수정 작업을 호출한다.
 		DpCouponInfo couponInfo = new DpCouponInfo(); // 쿠폰 정보
-		couponInfo = containers.getDpCouponInfo();
+		couponInfo = couponReq.getDpCouponInfo();
 		List<TbDpProdInfo> tblDpProdList = new ArrayList<TbDpProdInfo>();
 		List<TbDpShpgProdInfo> tbDpShpgProdList = new ArrayList<TbDpShpgProdInfo>();
 		List<TbDpProdDescInfo> tbDpProdDescList = new ArrayList<TbDpProdDescInfo>();
@@ -84,9 +83,9 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList = new ArrayList<TbDpTenantProdPriceInfo>();
 		List<DpCatalogTagInfo> tbDpProdTagList = new ArrayList<DpCatalogTagInfo>();
 
-		if (containers != null) {
+		if (couponReq != null) {
 			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
-			itemInfoList = containers.getDpItemlist();
+			itemInfoList = couponReq.getDpItemInfo();
 			// 1. Validation Check
 
 			// COUPON 기본정보 등록상태확인
@@ -155,9 +154,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.log.info("■■■■■ setTbDpProdInfoValue 완료 ■■■■■");
 
 		} else {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "containers is NULL!!", null);
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "couponReq is NULL!!", null);
 		}
-		// watch.stop();
 		this.log.info("◆◆◆ to TimeString... 전체 처리 완료:  ◆◆◆");
 		return this.result;
 	}// End processForCouponCSP

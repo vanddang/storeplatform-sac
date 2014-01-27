@@ -59,7 +59,6 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 		int cnt = 0;
 		try {
 			cnt = (Integer) this.commonDAO.queryForObject("BrandCatalog.SELECT_COUNT_CUDTYPE", brandId);
-			this.log.info("cnt:::" + cnt);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR, e.getMessage(), null);
 		}
@@ -302,7 +301,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_BRID,
 						"해당 brand_id로 등록한 brand가 없습니다. BRAND_ID = " + brandId, null);
 			}
-
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -323,7 +323,8 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID,
 						"해당 catalog_id로 등록한 catalog가 없습니다. CATALOG_ID = " + catalogId, null);
 			}
-
+		} catch (CouponException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}

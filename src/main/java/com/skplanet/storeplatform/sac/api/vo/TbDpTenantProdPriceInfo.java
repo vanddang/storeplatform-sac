@@ -8,6 +8,9 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.api.vo;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * <pre>
  * 전처리 상품 테넌트 상품 가격 Value Object
@@ -18,7 +21,7 @@ package com.skplanet.storeplatform.sac.api.vo;
  * Last Updated on : 2014-01-02
  * Last Updated by : 김형식, SK플래닛
  */
-public class TbDpTenantProdPriceInfo {
+public class TbDpTenantProdPriceInfo extends CommonInfo{
 	private String tenantId; // 테넌트_ID
 	private String prodId; // 상품_ID
 	private String applyStartDt; // 적용_시작_일시
