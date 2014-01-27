@@ -1,3 +1,7 @@
+/**
+ * 카네고리 메인(앱) 컨트롤러.
+ */
+
 package com.skplanet.storeplatform.sac.display.feature.recommend.controller;
 
 import org.slf4j.Logger;
@@ -17,6 +21,12 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
+/**
+ * 카네고리 메인(앱) 컨트롤러.
+ *
+ * Updated on : 2014-01-24
+ * Updated by : 서영배, GTSOFT.
+ */
 @Controller
 @RequestMapping("/display/feature/recommend")
 public class RecommendController {
@@ -37,12 +47,25 @@ public class RecommendController {
 
 	}
 
+	/**
+	 * <pre>
+     * 카테고리 메인(앱) 조회 – GET.
+     * </pre> 
+	 * 
+	 * @param RecommendAdminReq
+	 *            UserDefine 파라미터
+	 * @param SacRequestHeader
+	 *            공통헤더
+	 * @return RecommendAdminRes 조회 결과
+	 */
 	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header) {
+	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO,
+			SacRequestHeader header) {
 
 		RecommendAdminRes responseVO;
-		responseVO = this.recommendAdminService.searchAdminList(requestVO, header);
+		responseVO = this.recommendAdminService.searchAdminList(requestVO,
+				header);
 		return responseVO;
 	}
 }
