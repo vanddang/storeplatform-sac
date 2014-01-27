@@ -753,7 +753,7 @@ public class IdpServiceImpl implements IdpService {
 			// 실명인증 대상 본인/법정대리인 여부
 			// 본인
 			updateRealNameRequest.setIsOwn("OWN");
-			updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
+			// updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
 			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
 
 			MbrAuth mbrAuth = new MbrAuth();
