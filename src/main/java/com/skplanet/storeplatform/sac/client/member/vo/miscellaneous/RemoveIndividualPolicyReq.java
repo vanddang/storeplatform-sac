@@ -8,7 +8,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * 5.3.10. 사용자별 정책 삭제 [REQUEST]
+ * 2.3.10. 사용자별 정책 삭제 [REQUEST]
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */
