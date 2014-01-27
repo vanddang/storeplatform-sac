@@ -47,7 +47,17 @@ public class History extends CommonInfo implements Serializable {
 	private String cpnPublishCd;
 	private String cpnDlvUrl;
 	private String etcSeq;
-	private String frProdId;
+	private String fixProdId;
+	private String prchsProdType;
+
+	// 자동결제정보
+	private String paymentStartDt; // 결제시작일시
+	private String paymentEndDt; // 결제종료일시
+	private String afterPaymentDt; // 이후결제일시
+	private String closedCd; // 해지코드
+	private String closedDt; // 해지일시
+	private String closedReasonCd; // 해지사유코드
+	private String closedReqPathCd; // 해지요청경로
 
 	// 상품정보
 	// private Product product;
@@ -63,19 +73,11 @@ public class History extends CommonInfo implements Serializable {
 	// private String menuName; // 메뉴명
 	//
 	private String grade; // 이용등급
+
 	//
 	// // 앱정보
 	// private String packageName; // 패키지명
 	// private String versionCode; // 패키지 버전 코드
-
-	// 자동결제정보
-	private String paymentStartDt; // 결제시작일시
-	private String paymentEndDt; // 결제종료일시
-	private String afterPaymentDt; // 이후결제일시
-	private String closedCd; // 해지코드
-	private String closedDt; // 해지일시
-	private String closedReasonCd; // 해지사유코드
-	private String closedReqPathCd; // 해지요청경로
 
 	/**
 	 * @return the tenantId
@@ -573,18 +575,18 @@ public class History extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the frProdId
+	 * @return the fixProdId
 	 */
-	public String getFrProdId() {
-		return this.frProdId;
+	public String getFixProdId() {
+		return this.fixProdId;
 	}
 
 	/**
-	 * @param frProdId
-	 *            the frProdId to set
+	 * @param fixProdId
+	 *            the fixProdId to set
 	 */
-	public void setFrProdId(String frProdId) {
-		this.frProdId = frProdId;
+	public void setFixProdId(String fixProdId) {
+		this.fixProdId = fixProdId;
 	}
 
 	/**
@@ -720,6 +722,21 @@ public class History extends CommonInfo implements Serializable {
 	 */
 	public void setClosedReqPathCd(String closedReqPathCd) {
 		this.closedReqPathCd = closedReqPathCd;
+	}
+
+	/**
+	 * @return the prchsProdType
+	 */
+	public String getPrchsProdType() {
+		return this.prchsProdType;
+	}
+
+	/**
+	 * @param prchsProdType
+	 *            the prchsProdType to set
+	 */
+	public void setPrchsProdType(String prchsProdType) {
+		this.prchsProdType = prchsProdType;
 	}
 
 }

@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -9,6 +12,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
+@JsonSerialize(include = Inclusion.NON_EMPTY)
 public class HistoryCountRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
