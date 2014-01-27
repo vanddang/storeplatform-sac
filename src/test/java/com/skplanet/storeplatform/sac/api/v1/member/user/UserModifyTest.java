@@ -83,8 +83,17 @@ public class UserModifyTest {
 
 						ModifyReq reqJson = new ModifyReq();
 
-						// reqJson.setUserKey("US201401241550022950000616"); // One ID 회원
-						reqJson.setUserKey("US201401231555153430000447"); // 기존 IDP 회원
+						/**
+						 * One ID 회원
+						 */
+						// reqJson.setUserKey("US201401241550022950000616");
+						// reqJson.setUserAuthKey("01f3af5e6d8f7d4643c914cf7ae42b283270b232");
+
+						/**
+						 * 기존 IDP 회원
+						 */
+						reqJson.setUserKey("US201401231555153430000447");
+						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						return reqJson;
 					}
