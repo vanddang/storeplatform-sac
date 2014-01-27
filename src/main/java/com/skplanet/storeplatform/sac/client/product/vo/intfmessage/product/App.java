@@ -31,7 +31,6 @@ public class App extends CommonInfo implements Serializable {
 	private String version; // App 상품 버전
 	private Integer size; // 용량 (byte단위)
 	private Date date; // 상품 등록일자
-	private AppDebug appDebug; // Debug 정보
 	private History history; // update history
 	private Install install; // Install 정보
 	private String filePath; // 파일경로
@@ -209,31 +208,6 @@ public class App extends CommonInfo implements Serializable {
 	 */
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Debug 정보.
-	 * </pre>
-	 * 
-	 * @return Date
-	 */
-	public AppDebug getAppDebug() {
-		return this.appDebug;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Debug 정보.
-	 * </pre>
-	 * 
-	 * @param appDebug
-	 *            appDebug
-	 */
-	public void setAppDebug(AppDebug appDebug) {
-		this.appDebug = appDebug;
 	}
 
 	/**
