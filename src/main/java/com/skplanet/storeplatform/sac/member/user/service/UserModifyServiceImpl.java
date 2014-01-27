@@ -20,7 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
@@ -103,25 +107,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 			param.put("user_auth_key", req.getUserAuthKey());
 			param.put("key_type", "2");
 			param.put("key", userInfo.getImMbrNo()); // MBR_NO
-
-			/**
-			 * TODO 실명인증 정보 등록/수정 API 구현할때 살펴 볼것...
-			 * 
-			 * is_rname_auth이 N 인 경우 user_ci와 user_name의 값은 공백이어야 합니다.
-			 * 
-			 * 사용자 이름변경은 실명인증과 관계가 있어 보이는데....
-			 */
-			// param.put("is_rname_auth", MemberConstants.USE_N); // Y일경우 user_name, user_ci 필수
-			// param.put("user_name", req.getUserName());
-			// param.put("user_ci", req.getUserName());
-
-			param.put("user_sex", req.getUserSex());
-			param.put("user_birthday", req.getUserBirthDay());
-			param.put("user_calendar", req.getUserCalendar());
-			param.put("user_zipcode", req.getUserZip());
-			param.put("user_address", req.getUserAddress());
-			param.put("user_address2", req.getUserDetailAddress());
-			param.put("user_tel", req.getUserPhone());
+			param.put("user_sex", req.getUserSex()); // 성별
+			param.put("user_birthday", req.getUserBirthDay()); // 생년월일
+			param.put("user_calendar", req.getUserCalendar()); // 양력1, 음력2
+			param.put("user_zipcode", req.getUserZip()); // 우편번호
+			param.put("user_address", req.getUserAddress()); // 주소
+			param.put("user_address2", req.getUserDetailAddress()); // 상세주소
+			param.put("user_tel", req.getUserPhone()); // 사용자 연락처
 
 			IDPReceiverM modifyInfo = this.idpService.modifyProfile(param);
 			LOGGER.info("## IDP modifyProfile Code : {}", modifyInfo.getResponseHeader().getResult());
@@ -143,14 +135,34 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 			}
 
+			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+
 			/**
-			 * TODO SC 사용자 정보 수정
+			 * 공통 정보 setting.
 			 */
-			// UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-			//
-			// updateUserRequest.setUserMbr(userMbr);
-			//
-			// userSCI.updateUser(updateUserRequest);
+			updateUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+			/**
+			 * 사용자 기본정보 setting.
+			 */
+			updateUserRequest.setUserMbr(this.getUserMbr(req));
+
+			/**
+			 * SC 사용자 회원 기본정보 수정 요청.
+			 */
+			UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+			LOGGER.info("## ResponseCode : {}", updateUserResponse.getCommonResponse().getResultCode());
+			LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
+
+			if (!StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+			} else {
+
+				LOGGER.info("## 사용자 기본정보 수정 실패 ===========================");
+				throw new RuntimeException("사용자 기본정보 수정 실패");
+
+			}
 
 		}
 
@@ -175,39 +187,54 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	/**
 	 * <pre>
-	 * 사용자의 타입을 식별하여 코드를 리턴한다.
+	 * SC 공통정보 setting.
 	 * </pre>
 	 * 
-	 * @param userKey
-	 *            사용자 고유 Key
 	 * @param sacHeader
-	 *            공통 헤더
-	 * @return 사용자 타입 코드
+	 *            SacRequestHeader
+	 * @return CommonRequest
 	 * @throws Exception
 	 *             익셉션
-	 * 
 	 */
-	private String checkMemberType(String userKey, SacRequestHeader sacHeader) throws Exception {
+	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) throws Exception {
 
-		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", userKey, sacHeader);
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		LOGGER.info("## SC Request 공통 정보 : {}", commonRequest.toString());
 
-		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.)
-		 */
-		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
-		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+		return commonRequest;
+	}
 
-			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
-			return MemberConstants.USER_TYPE_ONEID;
+	/**
+	 * <pre>
+	 * 사용자 기본정보 setting..
+	 * </pre>
+	 * 
+	 * @param req
+	 *            ModifyReq
+	 * @return UserMbr
+	 * @throws Exception
+	 *             익셉션
+	 */
+	private UserMbr getUserMbr(ModifyReq req) throws Exception {
 
-		} else {
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserTelecom(req.getDeviceTelecom());
+		userMbr.setUserPhoneCountry(req.getUserPhoneCountry());
+		userMbr.setUserPhone(req.getUserPhone());
+		userMbr.setIsRecvSMS(req.getIsRecvSms());
+		userMbr.setIsRecvEmail(req.getIsRecvEmail());
+		userMbr.setUserSex(req.getUserSex());
+		userMbr.setUserBirthDay(req.getUserBirthDay());
+		userMbr.setUserZip(req.getUserZip());
+		userMbr.setUserAddress(req.getUserAddress());
+		userMbr.setUserDetailAddress(req.getUserDetailAddress());
+		userMbr.setUserCity(req.getUserCity());
+		userMbr.setUserState(req.getUserState());
+		LOGGER.info("## SC Request 사용자 기본정보 : {}", userMbr.toString());
 
-			LOGGER.info("## 기존 IDP 회원 [{}]", userInfo.getUserName());
-			return MemberConstants.USER_TYPE_IDPID;
-
-		}
-
+		return userMbr;
 	}
 
 }

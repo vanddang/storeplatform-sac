@@ -57,6 +57,8 @@ public class UserModifyController {
 	 *            공통 헤더 정보
 	 * @param req
 	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
 	 * @return Response Value Object
 	 * @throws Exception
 	 *             익셉션
@@ -104,6 +106,8 @@ public class UserModifyController {
 	 *            공통 헤더 정보
 	 * @param req
 	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
 	 * @return Response Value Object
 	 * @throws Exception
 	 *             익셉션
@@ -151,6 +155,8 @@ public class UserModifyController {
 	 *            공통 헤더 정보
 	 * @param req
 	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
 	 * @return Response Value Object
 	 * @throws Exception
 	 *             익셉션
