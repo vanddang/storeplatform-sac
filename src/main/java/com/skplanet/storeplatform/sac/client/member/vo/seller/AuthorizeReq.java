@@ -31,10 +31,10 @@ public class AuthorizeReq extends CommonInfo {
 	@Pattern(regexp = "^Y|^N")
 	private String releaseLock;
 	/** 만료일시. */
-	@NotBlank
+	// @NotBlank
 	private String expireDate;
 	/** IP 주소. */
-	@NotBlank
+	// @NotBlank
 	private String ipAddress;
 
 	public String getSellerId() {
