@@ -13,23 +13,24 @@
 		  DEVICE_MODEL_CD = #{deviceModelNo}
 	</select>
 	
-	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 확인 -->
+	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 및 인증코드 만료시간 확인 -->
 	<select id="getPhoneAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
-	   /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
+       /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
        SELECT 
            AUTH_SEQ,
            AUTH_SIGN,
            AUTH_VALUE,
-           TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyy-mm-dd-hh24-mi-ss') AS AUTH_VALUE_CREATE_DT,
-           AUTH_COMPT_YN,
-           TO_CHAR(SYSDATE, 'yyyy-mm-dd-hh24-mi-ss') AS CURR_DT
+           <if test="timeToLive!=null">
+           TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT,
+           </if>
+           AUTH_COMPT_YN
        FROM
            TB_CM_SVC_AUTH
        WHERE
            AUTH_TYPE_CD = #{authTypeCd}
            AND AUTH_SIGN = #{authSign}
            AND AUTH_VALUE = #{authValue}
-	</select>
+    </select>
 	
 	<!--  휴대폰 SMS & 이메일 인증 여부 업데이트(인증성공) -->
     <update id="updateServiceAuthYn" parameterType="String">
@@ -111,12 +112,15 @@
     </select>
     
     <!-- 이메일 인증코드 정보 확인 -->
-    <select id="getEmailAuthInfo" parameterType="String" resultType="ServiceAuth">
+    <select id="getEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
     /* MiscellaneousMapper.xml, getEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
     SELECT 
         AUTH_SEQ,
         MBR_NO,
         AUTH_EMAIL,
+        <if test="timeToLive!=null">
+        TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT,
+        </if>
         AUTH_COMPT_YN
     FROM 
         TB_CM_SVC_AUTH

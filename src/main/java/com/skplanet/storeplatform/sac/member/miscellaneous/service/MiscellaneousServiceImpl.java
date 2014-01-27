@@ -323,7 +323,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
 		String authSign = request.getPhoneSign();
-		long timeToLive = Long.parseLong(request.getTimeToLive()); // Tenant 정책에 따라 변경되는 인증번호 생존 시간.
 		String userPhone = request.getUserPhone();
 
 		/* DB에 저장할 파라미터 셋팅 */
@@ -331,8 +330,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setAuthTypeCd("CM010901");
 		serviceAuthInfo.setAuthSign(authSign);
 		serviceAuthInfo.setAuthValue(authCode);
+		serviceAuthInfo.setTimeToLive(request.getTimeToLive());
 
-		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo,
+		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn2", serviceAuthInfo,
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
@@ -343,23 +343,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			throw new Exception("기인증된 인증 코드 입니다.");
 		}
 
-		/* 인증유효 시간 만료여부 확인 */
-		String nowDate = resultInfo.getCurrDt();
-		LOGGER.debug("## current time : " + nowDate);
-		String[] nowDateToken = StringUtil.split(nowDate, "-");
-
-		String createDate = resultInfo.getAuthValueCreateDt();
-		LOGGER.debug("## create time : {}", createDate);
-		String[] createDateToken = StringUtil.split(createDate, "-");
-
-		int liveTime[] = new int[6];
-		// 0:년, 1:월, 2:일, 3:시, 4:분, 5:초
-		for (int i = 0; i < 6; i++) {
-			liveTime[i] = (Integer.parseInt(nowDateToken[i]) - Integer.parseInt(createDateToken[i]));
-		}
-		LOGGER.debug("## nowDate - createDate = {}", liveTime);
-		if ((liveTime[0] != 0 && liveTime[1] != 0 && liveTime[2] != 0 && liveTime[3] != 0)
-				|| (liveTime[4]) + (liveTime[5] / 60) > timeToLive) {
+		if (Double.parseDouble(resultInfo.getCurrDt()) < 0) {
+			LOGGER.info("인증 시간이 만료된 인증 코드입니다.");
 			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
@@ -456,17 +441,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(GetEmailAuthorizationCodeReq request)
 			throws Exception {
 
-		/** 1. 기존에 인증코드 발급된 회원인지 여부 확인 */
-		// String mbrNo = request.getUserKey();
-		// ServiceAuth serviceAuth = this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", mbrNo,
-		// ServiceAuth.class);
-		/** TODO userKey, emailAddr을 이용해서 인증코드 발급 여부 및 인증 여부 확인 */
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthEmail(request.getUserEmail());
 		serviceAuthReq.setMbrNo(request.getUserKey());
-		// ServiceAuth serviceAuth = this.commonDao.queryForObject("Miscellaneous.getEmailAuthYn", serviceAuthReq,
-		// ServiceAuth.class);
 
+		/** 1. 기존 인증코드 발급 여부 및 인증 여부 확인 */
 		List<ServiceAuth> serviceAuthList = this.commonDao.queryForList("Miscellaneous.getEmailAuthYn", serviceAuthReq,
 				ServiceAuth.class);
 
@@ -481,13 +460,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			}
 		}
 
-		LOGGER.info("## 인증코드 재발급 여부 : {}", isAuthEmail);
+		LOGGER.info("## 인증코드 신규 발급 여부 : {}", isAuthEmail);
 
-		if (isAuthEmail.equals("N")) { // 기존 발급 & 미인증
+		if (isAuthEmail.equals("N")) { // 기존 인증코드 발급고 인증하지 않은 경우.
 			LOGGER.info("이미 발급된 회원 입니다. 동일 인증코드 전달.");
 			LOGGER.info("## authCode : {}", authCode);
-		} else if (isAuthEmail.equals("Y") || serviceAuthList == null) { // null 또는 기존에 인증했으나 무효화된 값들을 가지고 있는경우.
-			// 신규 인증
+		} else if (isAuthEmail.equals("Y") || serviceAuthList == null) { // 신규 인증 - NULL 또는 기존에 인증했으나 무효화된 값들을 가지고 있는경우.
 			/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
 			authCode = UUID.randomUUID().toString().replace("-", "");
 			LOGGER.debug("## authCode : {}", authCode);
@@ -520,12 +498,23 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 1. 인증 코드로 DB 확인하여 , 회원 key, 회원 email 조회 */
 		LOGGER.info("## 인증코드 정보 조회. Request : {}", request);
 		String authValue = request.getEmailAuthCode();
-		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.getEmailAuthInfo", authValue,
+		String timeToLive = request.getTimeToLive();
+
+		ServiceAuth serviceAuthReq = new ServiceAuth();
+		serviceAuthReq.setAuthValue(authValue);
+		serviceAuthReq.setTimeToLive(timeToLive);
+		ServiceAuth serviceAuthInfo = this.commonDao.queryForObject("Miscellaneous.getEmailAuthInfo", serviceAuthReq,
 				ServiceAuth.class);
 		LOGGER.info("## 인증코드 정보 조회. Response : {}", serviceAuthInfo);
 
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
 		if (serviceAuthInfo != null) {
+			/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
+			if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
+				LOGGER.info("## 인증 유효기간 만료.");
+				throw new Exception("인증 유효기간이 만료되었습니다.");
+			}
+
 			if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
 				throw new Exception("기존 인증된 회원입니다.");
 			}

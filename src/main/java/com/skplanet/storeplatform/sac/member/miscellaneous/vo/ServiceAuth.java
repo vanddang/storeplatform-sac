@@ -81,6 +81,23 @@ public class ServiceAuth extends CommonInfo {
 	 */
 	private String currDt;
 
+	private String timeToLive;
+
+	/**
+	 * @return the timeToLive
+	 */
+	public String getTimeToLive() {
+		return this.timeToLive;
+	}
+
+	/**
+	 * @param timeToLive
+	 *            the timeToLive to set
+	 */
+	public void setTimeToLive(String timeToLive) {
+		this.timeToLive = timeToLive;
+	}
+
 	/**
 	 * @return the authSeq
 	 */
