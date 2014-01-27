@@ -9,9 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,33 +18,27 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
@@ -61,6 +52,12 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 public class UserSearchServiceImpl implements UserSearchService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserSearchServiceImpl.class);
+
+	@Autowired
+	private MemberCommonComponent mcc;
+
+	@Autowired
+	private DeviceService deviceService;
 
 	private static CommonRequest commonRequest;
 
@@ -93,48 +90,40 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) throws Exception {
 		ExistRes result = new ExistRes();
-		SearchUserRequest schUserReq = new SearchUserRequest();
+		DetailReq detailReq = new DetailReq();
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		/**
+		 * 모번호 조회 (989 일 경우만)
+		 */
+		if (req.getDeviceId() != null) {
+			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+			logger.info("모번호 조회 getOpmdMdnInfo: {}", this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+		}
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
 		String userId = StringUtil.setTrim(req.getUserId());
 		String deviceKey = StringUtil.setTrim(req.getDeviceKey());
 		String deviceId = StringUtil.setTrim(req.getDeviceId());
 
-		List<KeySearch> keySchList = new ArrayList<KeySearch>();
-
 		if (userKey != null && !"".equals(userKey)) {
-			KeySearch keySchUserKey = new KeySearch();
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-			keySchUserKey.setKeyString(userKey);
-			keySchList.add(keySchUserKey);
+			detailReq.setUserKey(userKey);
 		} else if (userId != null && !"".equals(userId)) {
-			KeySearch keySchUserId = new KeySearch();
-			keySchUserId.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-			keySchUserId.setKeyString(userId);
-			keySchList.add(keySchUserId);
+			detailReq.setUserId(userId);
 		} else if (deviceId != null && !"".equals(deviceId)) {
-			KeySearch keySchDeviceId = new KeySearch();
-			keySchDeviceId.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			keySchDeviceId.setKeyString(deviceId);
-			keySchList.add(keySchDeviceId);
+			detailReq.setDeviceId(deviceId);
 		} else if (deviceKey != null && !"".equals(deviceKey)) {
-			KeySearch keySchDeviceKey = new KeySearch();
-			keySchDeviceKey.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-			keySchDeviceKey.setKeyString(deviceKey);
-			keySchList.add(keySchDeviceKey);
+			detailReq.setDeviceKey(deviceKey);
 		}
 
 		// 회원정보 세팅
-		schUserReq.setKeySearchList(keySchList);
-		schUserReq.setCommonRequest(commonRequest);
-		UserInfo userInfo = this.userInfo(schUserReq);
+		UserInfo userInfo = this.searchUser(detailReq, sacHeader);
 
-		logger.info("###### userInfo Request : {}", schUserReq);
-		logger.info("###### userInfo Response : {}", userInfo);
+		logger.info("###### userInfo Request : {}", detailReq.toString());
+		logger.info("###### userInfo Response : {}", userInfo.toString());
 
 		if ("".equals(userInfo) || userInfo == null) {
 			throw new RuntimeException("SC 회원조회 실패 : 해당 회원이 없음");
@@ -148,8 +137,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			result.setUserMainStatus(userInfo.getUserMainStatus());
 			result.setUserSubStatus(userInfo.getUserSubStatus());
 		}
-
-		logger.info("###### userInfo.getImSvcNo : " + userInfo.getImSvcNo());
 
 		// // IDP 사용자
 		// if ("".equals(userInfo.getImSvcNo()) && userInfo.getImSvcNo() == null) {
@@ -208,209 +195,106 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 */
 	@Override
 	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) throws Exception {
-		DetailRes result = new DetailRes();
+		DetailRes res = new DetailRes();
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		List<KeySearch> keySchList = new ArrayList<KeySearch>();
+		/**
+		 * 모번호 조회 (989 일 경우만)
+		 */
+		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+		logger.info("모번호 조회 getOpmdMdnInfo: {}", this.mcc.getOpmdMdnInfo(req.getDeviceId()));
 
-		if (req.getUserKey() != null && !"".equals(req.getUserKey())) {
-			KeySearch keySchUserKey = new KeySearch();
-			keySchUserKey.setKeyType("INSD_USERMBR_NO");
-			keySchUserKey.setKeyString(req.getUserKey());
-			keySchList.add(keySchUserKey);
-		} else if (req.getUserId() != null && !"".equals(req.getUserId())) {
-			KeySearch keySchUserId = new KeySearch();
-			keySchUserId.setKeyType("MBR_ID");
-			keySchUserId.setKeyString(req.getUserId());
-			keySchList.add(keySchUserId);
-		} else if (req.getDeviceId() != null && !"".equals(req.getDeviceId())) {
-			KeySearch keySchDeviceId = new KeySearch();
-			keySchDeviceId.setKeyType("INSD_DEVICE_ID");
-			keySchDeviceId.setKeyString(req.getDeviceId());
-			keySchList.add(keySchDeviceId);
-		} else if (req.getDeviceKey() != null && !"".equals(req.getUserKey())) {
-			KeySearch keySchDeviceKey = new KeySearch();
-			keySchDeviceKey.setKeyType("DEVICE_ID");
-			keySchDeviceKey.setKeyString(req.getDeviceKey());
-			keySchList.add(keySchDeviceKey);
-		}
+		/* 회원 기본 정보 */
+		UserInfo searchUser = this.searchUser(req, sacHeader);
 
-		logger.info("###### : Request : " + req.toString());
-		logger.info("###### : keySchList : " + keySchList.toString());
+		/* 회원 부가 정보 */
+		UserExtraInfoRes userExtraInfoRes = this.listUserExtra(req, sacHeader);
+		searchUser.setUserExtraInfo(userExtraInfoRes.getAddInfoList());
 
-		SearchUserRequest schUserReq = new SearchUserRequest(); // 사용자 Request
-		SearchManagementListRequest schUserExtraInfoReq = new SearchManagementListRequest(); // 사용자 부가정보 Request
-		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest(); // 디바이스 Request
-		SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest(); // 디바이스 리스트 Request
-		SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest(); // 약관동의 리스트 Request
-
-		schUserReq.setKeySearchList(keySchList);
-		schDeviceListReq.setKeySearchList(keySchList);
-
-		// 공통헤더 세팅
-		schUserReq.setCommonRequest(commonRequest);
-		schUserExtraInfoReq.setCommonRequest(commonRequest);
-		schDeviceListReq.setCommonRequest(commonRequest);
-		schDeviceReq.setCommonRequest(commonRequest);
-		schAgreementListReq.setCommonRequest(commonRequest);
-
-		// 사용자 기본정보 세팅
-		UserInfo userInfo = this.userInfo(schUserReq);
-
-		// 사용자 부가정보 리스트 세팅
-		schUserExtraInfoReq.setUserKey(userInfo.getUserKey());
-		List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
-		UserExtraInfo userExtraInfo = this.userExtraInfo(schUserExtraInfoReq);
-		userExtraInfoList.add(userExtraInfo);
-		userInfo.setUserExtraInfo(userExtraInfoList);
-
-		// 사용자 인증정보 세팅
-		List<MbrAuth> mbrAuthList = new ArrayList<MbrAuth>();
-		MbrAuth mbrAuth = this.mbrAuth(schUserReq);
-		mbrAuthList.add(mbrAuth);
-
-		// 법정 대리인정보 세팅
-		List<MbrLglAgent> mbrLglAgentList = new ArrayList<MbrLglAgent>();
-		MbrLglAgent mbrLglAgent = this.mbrLglAgent(schUserReq);
-		mbrLglAgentList.add(mbrLglAgent);
-
-		// 디바이스목록정보 세팅
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		// ListDeviceRes listDeviceRes = this.memberCommonComponent.listDevice(requestHeader, listDeviceReq);
-
-		// 약관동의목록정보 세팅
-		schAgreementListReq.setUserKey(userInfo.getUserKey());
-		List<Agreement> agreementList = new ArrayList<Agreement>();
-		Agreement agreement = this.agreementList(schAgreementListReq);
-		agreementList.add(agreement);
-
-		result.setUserInfo(userInfo);
-		result.setMbrAuthList(mbrAuthList);
-		result.setMbrLglAgentList(mbrLglAgentList);
-		// result.setDeviceInfoList(listDeviceRes);
-		result.setAgreementList(agreementList);
-
-		logger.info("###### getUserInfoList : " + result.getUserInfo());
-		logger.info("###### getMbrAuthList : " + result.getMbrAuthList());
-		logger.info("###### getMbrLglAgentList : " + result.getMbrLglAgentList());
-		logger.info("###### getDeviceInfoList : " + result.getDeviceInfoList());
-		logger.info("###### getAgreementList : " + result.getAgreementList());
-
-		return result;
-	}
-
-	// 사용자 정보
-	public UserInfo userInfo(SearchUserRequest schUserReq) throws Exception {
-
-		// 사용자 회원 기본정보 SC
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
-		UserInfo userInfo = new UserInfo();
-
-		logger.info("###### schUserRes : " + schUserRes.getCommonResponse().getResultCode());
-		logger.info("###### schUserRes : " + schUserRes.getCommonResponse().getResultMessage());
-
-		if ("0000".equals(schUserRes.getCommonResponse().getResultCode())) {
-
-			/**
-			 * 사용자 정보
-			 */
-			if (schUserRes.getUserMbr() != null) {
-				userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
-				userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
-				userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-				userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
-				userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
-				userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-				userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
-				userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
-				userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-				userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-				userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
-				userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
-				userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
-				userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-				userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
-				userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-				userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
-				userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
-				userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
-				userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
-				userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-				userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
-				userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
-				userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
-				userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
-				userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
-				userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-				userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
-				userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-				userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
-				userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
-				userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
-				userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
-				userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
-				userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
-				userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
-
-			} else {
-				throw new RuntimeException("SearchUser.UserMbr (사용자정보) 데이터가 없습니다.");
+		/* 정보조회범위 */
+		if (req.getSearchExtent() != null) {
+			/* 단말 + 부가정보 */
+			if ("Y".equals(req.getSearchExtent().getDeviceInfoYn())) {
+				ListDeviceRes listDeviceRes = this.listDevice(req, sacHeader);
+				res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
 			}
+			/* 약관동의정보 */
+			if ("Y".equals(req.getSearchExtent().getAgreementInfoYn())) {
 
-			/**
-			 * 사용자 징계 정보
-			 */
-			if (schUserRes.getUserMbrPnsh() != null) {
-				userInfo.setIsRestricted(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getIsRestricted()));
-				userInfo.setIsRestricted(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
-				userInfo.setRestrictStartDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
-				userInfo.setRestrictEndDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictEndDate()));
-				userInfo.setRestrictId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictID()));
-				userInfo.setRestrictCount(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictCount()));
-				userInfo.setRestrictRegisterDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh()
-						.getRestrictRegisterDate()));
-				userInfo.setRestrictOwner(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictOwner()));
-			} else {
-				throw new RuntimeException("SearchUser.UserMbrPnsh (사용자 징계 정보) 데이터가 없습니다.");
+			}
+			/* 실명인증정보 */
+			if ("Y".equals(req.getSearchExtent().getMbrAuthInfoYn())) {
+
+			}
+			/* 법정대리인정보 */
+			if ("Y".equals(req.getSearchExtent().getMbrLglAgentInfoYn())) {
+
 			}
 
 		}
 
-		logger.info("###### userInfo : {}", userInfo.toString());
-		return userInfo;
-	}
+		// /* 회원기본정보 + 부가정보 */
+		// res.setUserInfo(searchUser);
+		//
+		// SearchUserRequest schUserReq = new SearchUserRequest(); // 사용자 Request
+		// SearchManagementListRequest schUserExtraInfoReq = new SearchManagementListRequest(); // 사용자 부가정보 Request
+		// SearchDeviceRequest schDeviceReq = new SearchDeviceRequest(); // 디바이스 Request
+		// SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest(); // 디바이스 리스트 Request
+		// SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest(); // 약관동의 리스트 Request
+		//
+		// // 공통헤더 세팅
+		// schUserReq.setCommonRequest(commonRequest);
+		// schUserExtraInfoReq.setCommonRequest(commonRequest);
+		// schDeviceListReq.setCommonRequest(commonRequest);
+		// schDeviceReq.setCommonRequest(commonRequest);
+		// schAgreementListReq.setCommonRequest(commonRequest);
+		//
+		// // 사용자 기본정보 세팅
+		// UserInfo userInfo = this.userInfo(schUserReq);
+		//
+		// // 사용자 부가정보 리스트 세팅
+		// schUserExtraInfoReq.setUserKey(userInfo.getUserKey());
+		// List<UserExtraInfo> userExtraInfoList = new ArrayList<UserExtraInfo>();
+		// UserExtraInfo userExtraInfo = this.userExtraInfo(schUserExtraInfoReq);
+		// userExtraInfoList.add(userExtraInfo);
+		// userInfo.setUserExtraInfo(userExtraInfoList);
+		//
+		// // 사용자 인증정보 세팅
+		// List<MbrAuth> mbrAuthList = new ArrayList<MbrAuth>();
+		// MbrAuth mbrAuth = this.mbrAuth(schUserReq);
+		// mbrAuthList.add(mbrAuth);
+		//
+		// // 법정 대리인정보 세팅
+		// List<MbrLglAgent> mbrLglAgentList = new ArrayList<MbrLglAgent>();
+		// MbrLglAgent mbrLglAgent = this.mbrLglAgent(schUserReq);
+		// mbrLglAgentList.add(mbrLglAgent);
+		//
+		// // 디바이스목록정보 세팅
+		// ListDeviceReq listDeviceReq = new ListDeviceReq();
+		// // ListDeviceRes listDeviceRes = this.memberCommonComponent.listDevice(requestHeader, listDeviceReq);
+		//
+		// // 약관동의목록정보 세팅
+		// schAgreementListReq.setUserKey(userInfo.getUserKey());
+		// List<Agreement> agreementList = new ArrayList<Agreement>();
+		// Agreement agreement = this.agreementList(schAgreementListReq);
+		// agreementList.add(agreement);
+		//
+		// result.setUserInfo(userInfo);
+		// result.setMbrAuthList(mbrAuthList);
+		// result.setMbrLglAgentList(mbrLglAgentList);
+		// // result.setDeviceInfoList(listDeviceRes);
+		// result.setAgreementList(agreementList);
+		//
+		// logger.info("###### getUserInfoList : " + result.getUserInfo());
+		// logger.info("###### getMbrAuthList : " + result.getMbrAuthList());
+		// logger.info("###### getMbrLglAgentList : " + result.getMbrLglAgentList());
+		// logger.info("###### getDeviceInfoList : " + result.getDeviceInfoList());
+		// logger.info("###### getAgreementList : " + result.getAgreementList());
 
-	// 사용자 부가정보
-	public UserExtraInfo userExtraInfo(SearchManagementListRequest schUserExtraInfo) throws Exception {
-
-		// 사용자 회원 기본정보 SC
-		SearchManagementListResponse schUserExtraInfoRes = this.userSCI.searchManagementList(schUserExtraInfo);
-		UserExtraInfo userExtraInfo = new UserExtraInfo();
-
-		logger.info("###### schUserExtraInfoRes : " + schUserExtraInfoRes.getCommonResponse().getResultCode());
-		logger.info("###### schUserExtraInfoRes : " + schUserExtraInfoRes.getCommonResponse().getResultMessage());
-
-		if ("0000".equals(schUserExtraInfoRes.getCommonResponse().getResultCode())) {
-
-			/**
-			 * 사용자 부가정보
-			 */
-			if (schUserExtraInfoRes.getMbrMangItemPtcrList() != null) {
-				for (MbrMangItemPtcr info : schUserExtraInfoRes.getMbrMangItemPtcrList()) {
-					userExtraInfo.setExtraProfileCode(StringUtil.setTrim(info.getExtraProfile()));
-					userExtraInfo.setExtraProfileValue(StringUtil.setTrim(info.getExtraProfileValue()));
-				}
-			} else {
-				throw new RuntimeException("searchManagementList (사용자 부가정보) 데이터가 없습니다.");
-			}
-
-		} else {
-			throw new RuntimeException("SC 호출에러 Code : " + schUserExtraInfoRes.getCommonResponse().getResultCode());
-		}
-
-		return userExtraInfo;
+		return res;
 	}
 
 	// 사용자 인증정보 세팅
@@ -523,4 +407,59 @@ public class UserSearchServiceImpl implements UserSearchService {
 		return mbrLglAgent;
 	}
 
+	/* SC API 회원정보 조회 */
+	@Override
+	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+
+		String keyType = "";
+		String keyValue = "";
+		if (req.getUserKey() != null) {
+			keyType = "userKey";
+			keyValue = req.getUserKey();
+		} else if (req.getUserId() != null) {
+			keyType = "userId";
+			keyValue = req.getUserId();
+		} else if (req.getDeviceKey() != null) {
+			keyType = "deviceKey";
+			keyValue = req.getDeviceKey();
+		} else if (req.getDeviceId() != null) {
+			keyType = "deviceId";
+			keyValue = req.getDeviceId();
+		}
+
+		UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, keyValue, sacHeader);
+
+		logger.debug("###### 회원기본정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
+		logger.debug("###### 회원기본정보조회 Res : {}", userInfo.toString());
+
+		return userInfo;
+	}
+
+	/* SC API 회원부가정보 조회 */
+	@Override
+	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+		UserExtraInfoRes extraRes = this.mcc.getUserExtraInfo(req.getUserKey(), sacHeader);
+
+		return extraRes;
+	}
+
+	/* SC API 디바이스 리스트 조회 */
+	@Override
+	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setUserKey(req.getUserKey());
+		listDeviceReq.setIsMainDevice("N");
+
+		if (req.getUserId() != null) {
+			listDeviceReq.setUserId(req.getUserId());
+		} else if (req.getDeviceKey() != null) {
+			listDeviceReq.setDeviceKey(req.getDeviceKey());
+		} else if (req.getDeviceId() != null) {
+			listDeviceReq.setDeviceId(req.getDeviceId());
+		}
+
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
+
+		return listDeviceRes;
+	}
 }

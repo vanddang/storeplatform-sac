@@ -9,10 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -46,4 +49,39 @@ public interface UserSearchService {
 	 */
 	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) throws Exception;
 
+	/**
+	 * 
+	 * <pre>
+	 * 회원 기본정보 조회 SC API
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 부가정보 조회 SC API
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * 
+	 * <pre>
+	 * 디바이스 리스트 조회 SC API
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) throws Exception;
 }
