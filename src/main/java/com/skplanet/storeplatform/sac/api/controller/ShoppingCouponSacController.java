@@ -38,7 +38,6 @@ import com.skplanet.storeplatform.sac.api.service.CouponProcessService;
 import com.skplanet.storeplatform.sac.api.service.ShoppingCouponService;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
@@ -55,9 +54,6 @@ public class ShoppingCouponSacController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private String ERR_MESSAGE;
 	private String ERR_CODE;
-	public final DpBrandInfo brandInfo;
-	public final DpCatalogInfo catalogInfo;
-	public final BrandCatalogProdImgInfo brandCatalogProdImgInfo;
 	private List<CouponRes> couponList = null;
 	public CouponRes couponRes;
 	public String response;
@@ -72,9 +68,6 @@ public class ShoppingCouponSacController {
 	private CouponProcessService couponProcessService;
 
 	public ShoppingCouponSacController() {
-		this.brandInfo = new DpBrandInfo();
-		this.catalogInfo = new DpCatalogInfo();
-		this.brandCatalogProdImgInfo = new BrandCatalogProdImgInfo();
 		this.couponRes = new CouponRes();
 	}
 
@@ -158,10 +151,11 @@ public class ShoppingCouponSacController {
 
 				case BD:
 					// brand 작업을 호출한다.
-					result = this.doValidParameterBD(couponReq); // 기본적인 validation 확인 및 parameter 정보 setting
-					IcmsJobPrint.printBrand(this.brandInfo, "브랜드");
+					DpBrandInfo brandInfo = new DpBrandInfo();
+					result = this.doValidParameterBD(couponReq, brandInfo); // 기본적인 validation 확인 및 parameter 정보 setting
+					IcmsJobPrint.printBrand(brandInfo, "브랜드");
 					if (result) {
-						success = this.insertBrandInfo(this.brandInfo);
+						success = this.insertBrandInfo(brandInfo);
 					}
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
@@ -175,11 +169,12 @@ public class ShoppingCouponSacController {
 					break;
 				case CT:
 					// 카달로그 작업을 호출한다.
-
-					result = this.doValidParameterCT(couponReq); // 기본적인 validation 확인 및 parameter 정보 setting
-					IcmsJobPrint.printCatalog(this.catalogInfo, "카달로그");
+					DpCatalogInfo catalogInfo = new DpCatalogInfo();
+					result = this.doValidParameterCT(couponReq, catalogInfo); // 기본적인 validation 확인 및 parameter 정보
+																			  // setting
+					IcmsJobPrint.printCatalog(catalogInfo, "카달로그");
 					if (result) {
-						success = this.insertCatalogInfo(this.catalogInfo);
+						success = this.insertCatalogInfo(catalogInfo);
 					}
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
@@ -402,33 +397,33 @@ public class ShoppingCouponSacController {
 
 	}
 
-	public boolean doValidParameterBD(CouponReq couponReq) {
+	public boolean doValidParameterBD(CouponReq couponReq, DpBrandInfo brandInfo) {
 		this.log.info("<CouponControl> doValidParameterBD...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
 		try {
-			this.brandInfo.setBrandNm(couponReq.getBrandName());
-			this.brandInfo.setDpCatNo(couponReq.getBrandCategory());
-			this.brandInfo.setBrandId(couponReq.getBrandCode());
-			this.brandInfo.setBrandImgPath(couponReq.getBrandImage());
-			this.brandInfo.setCudType(couponReq.getCudType());
-			this.brandInfo.setTxType(couponReq.getTxType());
-			if (this.brandInfo.getBrandId().equals("") || this.brandInfo.getBrandId() == null) {
+			brandInfo.setBrandNm(couponReq.getBrandName());
+			brandInfo.setDpCatNo(couponReq.getBrandCategory());
+			brandInfo.setBrandId(couponReq.getBrandCode());
+			brandInfo.setBrandImgPath(couponReq.getBrandImage());
+			brandInfo.setCudType(couponReq.getCudType());
+			brandInfo.setTxType(couponReq.getTxType());
+			if (brandInfo.getBrandId().equals("") || brandInfo.getBrandId() == null) {
 				result = false;
 				sb.append("브랜드 ID는 null을가질수 없습니다.");
 			}
-			if (this.brandInfo.getDpCatNo().equals("") || this.brandInfo.getDpCatNo() == null) {
+			if (brandInfo.getDpCatNo().equals("") || brandInfo.getDpCatNo() == null) {
 				result = false;
 				sb.append("브랜드 카탈로그는 null을가질수 없습니다.");
 			}
-			if (this.brandInfo.getBrandNm().equals("") || this.brandInfo.getBrandNm() == null) {
+			if (brandInfo.getBrandNm().equals("") || brandInfo.getBrandNm() == null) {
 				result = false;
 				sb.append("브랜드명은 null을가질수 없습니다.");
-			} else if (this.brandInfo.getBrandNm().length() > 50) {
+			} else if (brandInfo.getBrandNm().length() > 50) {
 				result = false;
 				sb.append("브랜드명은 length 50을 가질수 없습니다.");
 			}
-			if (this.brandInfo.getBrandImgPath().equals("") || this.brandInfo.getBrandImgPath() == null) {
+			if (brandInfo.getBrandImgPath().equals("") || brandInfo.getBrandImgPath() == null) {
 				result = false;
 				sb.append("브랜드 이미지 은 null을가질수 없습니다.");
 			}
@@ -449,58 +444,58 @@ public class ShoppingCouponSacController {
 
 	}
 
-	public boolean doValidParameterCT(CouponReq couponReq) {
+	public boolean doValidParameterCT(CouponReq couponReq, DpCatalogInfo catalogInfo) {
 		this.log.info("<CouponControl> doValidParameterCT...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
 		try {
-			this.catalogInfo.setCudType(couponReq.getCudType());
-			this.catalogInfo.setCatalogId(couponReq.getCatalogCode());
-			this.catalogInfo.setDpCatNo(couponReq.getCatalogCategory());
-			this.catalogInfo.setBrandId(couponReq.getBrandCode());
-			this.catalogInfo.setCatalogDesc(couponReq.getCatalogDescription());
-			this.catalogInfo.setCatalogNm(couponReq.getCatalogName());
-			this.catalogInfo.setTopImgPath(couponReq.getCatalogImage1());
-			this.catalogInfo.setDtlImgPath(couponReq.getCatalogImage2());
-			this.catalogInfo.setIntroText(couponReq.getIntro_text());
-			this.catalogInfo.setCatalogTag(couponReq.getTag());
+			catalogInfo.setCudType(couponReq.getCudType());
+			catalogInfo.setCatalogId(couponReq.getCatalogCode());
+			catalogInfo.setDpCatNo(couponReq.getCatalogCategory());
+			catalogInfo.setBrandId(couponReq.getBrandCode());
+			catalogInfo.setCatalogDesc(couponReq.getCatalogDescription());
+			catalogInfo.setCatalogNm(couponReq.getCatalogName());
+			catalogInfo.setTopImgPath(couponReq.getCatalogImage1());
+			catalogInfo.setDtlImgPath(couponReq.getCatalogImage2());
+			catalogInfo.setIntroText(couponReq.getIntro_text());
+			catalogInfo.setCatalogTag(couponReq.getTag());
 
-			if (this.catalogInfo.getCatalogNm().equals("") || this.catalogInfo.getCatalogNm() == null) {
+			if (catalogInfo.getCatalogNm().equals("") || catalogInfo.getCatalogNm() == null) {
 				result = false;
 				sb.append("카탈로그명은 null을가질수 없습니다.");
-			} else if (this.catalogInfo.getCatalogNm().length() > 100) {
+			} else if (catalogInfo.getCatalogNm().length() > 100) {
 				result = false;
 				sb.append("카탈로그명은 length 100을 가질수 없습니다.");
 			}
-			if (this.catalogInfo.getDpCatNo().equals("") || this.catalogInfo.getDpCatNo() == null) {
+			if (catalogInfo.getDpCatNo().equals("") || catalogInfo.getDpCatNo() == null) {
 				result = false;
 				sb.append("카탈로그 카테고리은 null을가질수 없습니다.");
 			}
 
-			if (this.catalogInfo.getCatalogDesc().equals("") || this.catalogInfo.getCatalogDesc() == null) {
+			if (catalogInfo.getCatalogDesc().equals("") || catalogInfo.getCatalogDesc() == null) {
 				result = false;
 				sb.append("카탈로그 상세설명은 null을가질수 없습니다.");
-			} else if (this.catalogInfo.getCatalogDesc().length() > 4000) {
+			} else if (catalogInfo.getCatalogDesc().length() > 4000) {
 				result = false;
 				sb.append("카탈로그 상세설명은 length 4000 가질수 없습니다.");
 			}
 
-			if (this.catalogInfo.getTopImgPath().equals("") || this.catalogInfo.getTopImgPath() == null) {
+			if (catalogInfo.getTopImgPath().equals("") || catalogInfo.getTopImgPath() == null) {
 				result = false;
 				sb.append("카탈로그 탑이미지 은 null을가질수 없습니다.");
 			}
-			if (this.catalogInfo.getDtlImgPath().equals("") || this.catalogInfo.getDtlImgPath() == null) {
+			if (catalogInfo.getDtlImgPath().equals("") || catalogInfo.getDtlImgPath() == null) {
 				result = false;
 				sb.append("카탈로그 탑이미지 은 null을가질수 없습니다.");
 			}
-			if (this.catalogInfo.getBrandId().equals("") || this.catalogInfo.getBrandId() == null) {
+			if (catalogInfo.getBrandId().equals("") || catalogInfo.getBrandId() == null) {
 				result = false;
 				sb.append("카탈로그 브랜드코드 은 null을가질수 없습니다.");
 			}
-			if (this.catalogInfo.getIntroText().equals("") || this.catalogInfo.getIntroText() == null) {
+			if (catalogInfo.getIntroText().equals("") || catalogInfo.getIntroText() == null) {
 				result = false;
 				sb.append("카탈로그 한줄소개는 null을가질수 없습니다.");
-			} else if (this.catalogInfo.getCatalogNm().length() > 150) {
+			} else if (catalogInfo.getCatalogNm().length() > 150) {
 				result = false;
 				sb.append("카탈로그 한줄소개는 length 150을 가질수 없습니다.");
 			}
