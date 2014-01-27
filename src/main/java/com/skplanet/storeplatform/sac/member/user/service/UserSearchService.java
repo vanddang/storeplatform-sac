@@ -15,6 +15,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -84,4 +86,16 @@ public interface UserSearchService {
 	 * @throws Exception
 	 */
 	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * 
+	 * <pre>
+	 * 약관동의목록 조회 SC API
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public SearchAgreementRes searchAgreement(SearchAgreementReq req, SacRequestHeader sacHeader) throws Exception;
 }

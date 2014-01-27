@@ -27,19 +27,24 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
+import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -380,6 +385,72 @@ public class MemberCommonComponent {
 
 		}
 		return extraRes;
+	}
+
+	/**
+	 * <pre>
+	 * 약관동의 목록 조회.
+	 * test userKey - "IF1023002708420090928145937"
+	 * </pre>
+	 * 
+	 * @param keyType
+	 *            검색 조건 타입
+	 * @param keyValue
+	 *            검색 조건 값
+	 * @param systemId
+	 *            시스템 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 * @return UserExtraInfo
+	 * @throws Exception
+	 *             Exception
+	 */
+	public SearchAgreementRes getSearchAgreement(String userKey, SacRequestHeader sacHeader) throws Exception {
+
+		/**
+		 * SearchManagementListRequest setting
+		 */
+		SearchAgreementListRequest searchAgreementListRequest = new SearchAgreementListRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		searchAgreementListRequest.setCommonRequest(commonRequest);
+		searchAgreementListRequest.setUserKey(userKey);
+
+		/**
+		 * SC 사용자 약관동의 목록 조회
+		 */
+		SearchAgreementRes agreementRes = new SearchAgreementRes();
+		List<Agreement> listAgreement = new ArrayList<Agreement>();
+
+		SearchAgreementListResponse schAgreementRes = this.userSCI.searchAgreementList(searchAgreementListRequest);
+
+		LOGGER.debug("############ 약관동의 리스트 Size : {}", schAgreementRes.getMbrClauseAgreeList().size());
+
+		if (!StringUtils.equals(schAgreementRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new RuntimeException("######## 사용자 약관동의목록 조회실패 : "
+					+ schAgreementRes.getCommonResponse().getResultCode() + " MSG : "
+					+ schAgreementRes.getCommonResponse().getResultMessage());
+		} else if (StringUtils.equals(schAgreementRes.getCommonResponse().getResultCode(),
+				MemberConstants.RESULT_SUCCES)) {
+
+			/* 유저키 세팅 */
+			agreementRes.setUserKey(schAgreementRes.getUserKey());
+			/* 약관동의 세팅 */
+			for (MbrClauseAgree mbrAgree : schAgreementRes.getMbrClauseAgreeList()) {
+
+				Agreement agree = new Agreement();
+				agree.setExtraAgreementId(mbrAgree.getExtraAgreementID());
+				agree.setExtraAgreementVersion(mbrAgree.getExtraAgreementVersion());
+				agree.setIsExtraAgreement(mbrAgree.getIsExtraAgreement());
+
+				listAgreement.add(agree);
+			}
+
+			agreementRes.setAgreementList(listAgreement);
+
+		}
+		return agreementRes;
 	}
 
 	/**

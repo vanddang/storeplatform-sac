@@ -36,6 +36,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -223,7 +225,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 			/* 약관동의정보 */
 			if ("Y".equals(req.getSearchExtent().getAgreementInfoYn())) {
-
+				SearchAgreementReq schAgreeReq = new SearchAgreementReq();
+				schAgreeReq.setUserKey(req.getUserKey());
+				SearchAgreementRes schAgreeRes = this.searchAgreement(schAgreeReq, sacHeader);
+				res.setAgreementList(schAgreeRes.getAgreementList());
 			}
 			/* 실명인증정보 */
 			if ("Y".equals(req.getSearchExtent().getMbrAuthInfoYn())) {
@@ -461,5 +466,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
 
 		return listDeviceRes;
+	}
+
+	/* SC API 약관동의 목록 조회 */
+	@Override
+	public SearchAgreementRes searchAgreement(SearchAgreementReq req, SacRequestHeader sacHeader) throws Exception {
+		SearchAgreementRes schAgreeRes = this.mcc.getSearchAgreement(req.getUserKey(), sacHeader);
+
+		return schAgreeRes;
 	}
 }
