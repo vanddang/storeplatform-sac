@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 
 /**
  * Interface Message Product Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -177,7 +177,7 @@ public class Product extends CommonInfo implements Serializable {
 	private String physicalPath;
 
 	/**
-	 * 하위 상품 총 건수
+	 * 하위 상품 총 건수.
 	 */
 	private Integer subProductTotalCount;
 
@@ -187,7 +187,7 @@ public class Product extends CommonInfo implements Serializable {
 	private List<Product> subProductList;
 
 	/**
-	 * 날짜 목록
+	 * 날짜 목록.
 	 */
 	private List<Date> dateList;
 
@@ -739,9 +739,9 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param subProductTotalCount
-	 * 				subProductTotalCount
+	 *            subProductTotalCount
 	 */
 	public void setSubProductTotalCount(Integer subProductTotalCount) {
 		this.subProductTotalCount = subProductTotalCount;
@@ -776,6 +776,5 @@ public class Product extends CommonInfo implements Serializable {
 	public void setDateList(List<Date> dateList) {
 		this.dateList = dateList;
 	}
-
 
 }
