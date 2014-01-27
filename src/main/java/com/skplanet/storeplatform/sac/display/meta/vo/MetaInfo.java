@@ -42,7 +42,7 @@ public class MetaInfo {
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
-	private Integer chapter;
+	private String chapter;
 	private String issueDay;
 	private String chnlCompNm;
 	private String agencyNm;
@@ -356,11 +356,11 @@ public class MetaInfo {
 		this.vodTitlNm = vodTitlNm;
 	}
 
-	public Integer getChapter() {
+	public String getChapter() {
 		return this.chapter;
 	}
 
-	public void setChapter(Integer chapter) {
+	public void setChapter(String chapter) {
 		this.chapter = chapter;
 	}
 
