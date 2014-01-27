@@ -66,6 +66,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
@@ -1429,5 +1431,47 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		return removeDeviceResponse;
+	}
+
+	/**
+	 * 단말 AOM 지원여부 확인
+	 */
+	@Override
+	public SupportAomRes getSupportAom(SacRequestHeader sacHeader, SupportAomReq req) throws Exception {
+
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		SupportAomRes res = new SupportAomRes();
+
+		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
+		UserInfo searchUser = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		/* userKey, deviceId 두개의 코드로 디바이스 리스트 조회 --> getDeviceModelNo(휴대기기 모델 코드) */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setUserKey(searchUser.getUserKey());
+		listDeviceReq.setDeviceId(req.getDeviceId());
+		listDeviceReq.setIsMainDevice("N");
+		ListDeviceRes listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
+
+		logger.debug("###### 리스트디바이스 : listDeviceReq {}", listDeviceReq.toString());
+		logger.debug("###### 리스트디바이스 : listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
+
+		/* PhoneInfo 조회 */
+		if (searchUser != null && listDeviceRes.getDeviceInfoList().size() == 1
+				&& listDeviceRes.getDeviceInfoList() != null) {
+			Device device = this.mcc.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
+
+			logger.debug("###### Phoneinfo Res {}", device.toString());
+
+			if (device.getAomSprtYn() != null) {
+				res.setIsAomSupport(device.getAomSprtYn());
+			} else {
+				throw new RuntimeException("###### PhoneInfo.getAOmSprtYn is Null ");
+			}
+
+		}
+
+		return res;
 	}
 }

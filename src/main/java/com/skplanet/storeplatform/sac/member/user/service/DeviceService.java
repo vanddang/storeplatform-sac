@@ -19,6 +19,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -82,11 +84,11 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) throws Exception;
+	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey)
+			throws Exception;
 
 	/**
-	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
-	 * 경우 IDP에 무선회원 해지 요청.
+	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인 경우 IDP에 무선회원 해지 요청.
 	 * 
 	 * @param systemId
 	 *            String
@@ -100,7 +102,8 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
+	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo)
+			throws Exception;
 
 	/**
 	 * 기기정보 merge
@@ -126,7 +129,8 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) throws Exception;
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req)
+			throws Exception;
 
 	/**
 	 * 휴대기기 삭제
@@ -167,7 +171,8 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) throws Exception;
+	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo)
+			throws Exception;
 
 	/**
 	 * 휴대기기 디바이스 키 추출
@@ -176,7 +181,8 @@ public interface DeviceService {
 	 * @param schUserRes
 	 * @return
 	 */
-	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req) throws Exception;
+	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req)
+			throws Exception;
 
 	/**
 	 * IDP 연동 데이터 세팅
@@ -209,8 +215,8 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr)
-			throws Exception;
+	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo,
+			String userPhoneStr) throws Exception;
 
 	/**
 	 * 
@@ -236,6 +242,19 @@ public interface DeviceService {
 	 * @param req
 	 * @return
 	 */
-	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req)
-			throws Exception;
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader,
+			DetailRepresentationDeviceReq req) throws Exception;
+
+	/**
+	 * 단말 AOM 확인
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            RemoveDeviceReq
+	 * @return List<DeviceInfo>
+	 * @throws Exception
+	 *             Exception
+	 */
+	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req) throws Exception;
 }
