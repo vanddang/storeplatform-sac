@@ -19,16 +19,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryList;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProductCountList;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountReqSC;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountResSC;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListReqSC;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResSC;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProductCountSC;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistorySC;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.History;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
@@ -68,8 +70,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
-		HistoryListRequest scRequest = new HistoryListRequest();
-		HistoryListResponse scResponse = new HistoryListResponse();
+		HistoryListReqSC scRequest = new HistoryListReqSC();
+		HistoryListResSC scResponse = new HistoryListResSC();
 
 		// SAC Response VO
 		HistoryListRes response = new HistoryListRes();
@@ -104,28 +106,9 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// SC Call
 		scResponse = this.historySci.listHistory(scRequest);
 
-		// if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
-		// this.logger.debug("##### 보유상품조회");
-		// // SC Call
-		// scResponse = this.historySci.listHistory(scRequest);
-		//
-		// } else if (PurchaseConstants.PRCHS_PROD_TYPE_SEND.equals(request.getPrchsProdType())) {
-		// this.logger.debug("##### 미보유상품조회");
-		// // SC Call
-		// scResponse = this.historySci.sendListHistory(scRequest);
-		//
-		// } else if (PurchaseConstants.PRCHS_PROD_TYPE_FIX.equals(request.getPrchsProdType())) {
-		// this.logger.debug("##### 구매권한상품조회");
-		// // SC Call
-		// scResponse = this.historySci.authListHistory(scRequest);
-		// } else {
-		// // 오류처리... 잘못된 요청
-		// return response;
-		// }
-
 		// SC객체를 SAC객체로 맵핑작업
-		List<HistoryList> scHistoryList = scResponse.getHistoryList();
-		for (HistoryList obj : scHistoryList) {
+		List<HistorySC> scHistoryList = scResponse.getHistoryList();
+		for (HistorySC obj : scHistoryList) {
 
 			history = new History();
 
@@ -158,6 +141,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 			history.setRePrchsPmtYn(obj.getRePrchsPmtYn());
 			history.setDwldStartDt(obj.getDwldStartDt());
 			history.setDwldExprDt(obj.getDwldExprDt());
+			history.setPrchsProdType(obj.getPrchsProdType());
+			history.setFixProdId(obj.getFixProdId());
 
 			// 정액제 정보 set
 			history.setPaymentStartDt(obj.getPaymentStartDt());
@@ -215,12 +200,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 * @return HistoryCountRes
 	 */
 	@Override
-	public HistoryCountRes count(HistoryListReq request) {
+	public HistoryCountRes count(HistoryCountReq request) {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
-		HistoryListRequest scRequest = new HistoryListRequest();
-		HistoryCountResponse scResponse = new HistoryCountResponse();
+		HistoryCountReqSC scRequest = new HistoryCountReqSC();
+		HistoryCountResSC scResponse = new HistoryCountResSC();
 
 		// SAC Response VO
 		HistoryCountRes response = new HistoryCountRes();
@@ -252,7 +237,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scResponse = this.historySci.getHistoryCount(scRequest);
 
 		if (scResponse.getCntList() != null && scResponse.getCntList().size() > 0) {
-			for (HistoryProductCountList obj : scResponse.getCntList()) {
+			for (HistoryProductCountSC obj : scResponse.getCntList()) {
 				historyProductCount = new HistoryProductCount();
 				historyProductCount.setProdId(obj.getProdId());
 				historyProductCount.setProdCount(obj.getProdCount());

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
@@ -39,6 +40,6 @@ public interface HistoryListService {
 	 *            구매내역요청
 	 * @return HistoryCountRes
 	 */
-	public HistoryCountRes count(HistoryListReq request);
+	public HistoryCountRes count(HistoryCountReq request);
 
 }
