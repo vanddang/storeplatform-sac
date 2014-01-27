@@ -29,7 +29,8 @@ public class Play extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Identifier identifier; // 상품의 에피소드 ID
-	private String support; // Product의 support와 동일 ("play"와 "store" 두 개의 상품으로 나눠질 경우 각각 상품의 지원하는 항목을 정의하기 위해 사용)
+	// private String support; // Product의 support와 동일 ("play"와 "store" 두 개의 상품으로 나눠질 경우 각각 상품의 지원하는 항목을 정의하기 위해 사용)
+	private Support support; // 지원매체
 	private Price price; // Rights 가격과 다를 경우 정의한다.
 	private Date date; // Rights 이용기간과 다운로드 이용기간이 다를 경우만 정의한다.
 	private String durationUsagePeriodUI; // 이용기간의 UI 표시
@@ -52,7 +53,7 @@ public class Play extends CommonInfo implements Serializable {
 	 * @param date
 	 *            date
 	 */
-	public Play(String support, Price price, Date date) {
+	public Play(Support support, Price price, Date date) {
 		super();
 		this.support = support;
 		this.price = price;
@@ -77,7 +78,7 @@ public class Play extends CommonInfo implements Serializable {
 	/**
 	 * @return String
 	 */
-	public String getSupport() {
+	public Support getSupport() {
 		return this.support;
 	}
 
@@ -85,7 +86,7 @@ public class Play extends CommonInfo implements Serializable {
 	 * @param support
 	 *            support
 	 */
-	public void setSupport(String support) {
+	public void setSupport(Support support) {
 		this.support = support;
 	}
 
