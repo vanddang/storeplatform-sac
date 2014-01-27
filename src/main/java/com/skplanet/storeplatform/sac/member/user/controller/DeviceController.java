@@ -236,19 +236,25 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @Valid @RequestBody RemoveDeviceReq req)
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req)
 			throws Exception {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
-
-		if (userAuthKey.equals("") || deviceId.equals("")) {
-			throw new Exception("필수요청 파라메터 부족");
-		}
 
 		logger.info("###### Start removeDevice Request : {}", req.toString());
 
+		if (userAuthKey.equals("")) {
+			throw new Exception("필수요청 파라메터 부족 userAuthKey");
+		} else if (userKey.equals("")) {
+			throw new Exception("필수요청 파라메터 부족 userKey");
+		} else if (deviceId.equals("")) {
+			throw new Exception("필수요청 파라메터 부족 deviceId");
+		}
+
 		req.setUserAuthKey(userAuthKey);
+		req.setUserKey(userKey);
 		req.setDeviceId(deviceId);
 
 		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);

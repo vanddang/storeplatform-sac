@@ -156,7 +156,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public UserInfo searchUser(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
+	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader) throws Exception;
 
 	/**
 	 * 휴대기기 목록 세팅 : 삭제요청 디바이스를 제외하고 리스트로 세팅
