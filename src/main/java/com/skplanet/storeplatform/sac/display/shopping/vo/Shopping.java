@@ -8,6 +8,9 @@
  * you entered into with SK planet.
  */
 package com.skplanet.storeplatform.sac.display.shopping.vo;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * <pre>
  * 쇼핑 Value Object
@@ -18,7 +21,7 @@ package com.skplanet.storeplatform.sac.display.shopping.vo;
  * Last Updated on : 2014-01-02
  * Last Updated by : 김형식, SK플래닛
  */
-public class Shopping {
+public class Shopping extends CommonInfo{
 
 	private int totalCount;
 	private String catagoryId;

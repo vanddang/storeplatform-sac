@@ -9,12 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.recommend.vo;
 
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
 /**
  * 웹툰 DTO Default Value Object.
  * 
  * Updated on : 2013. 12. 22. Updated by : 김형식, SK 플래닛.
  */
-public class RecommendWebtoon {
+public class RecommendWebtoon extends CommonInfo {
 
 	private int totalCount;
 	private String upMenuId;
