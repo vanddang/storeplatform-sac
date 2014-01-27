@@ -332,7 +332,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		serviceAuthInfo.setAuthValue(authCode);
 		serviceAuthInfo.setTimeToLive(request.getTimeToLive());
 
-		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn2", serviceAuthInfo,
+		ServiceAuth resultInfo = this.commonDao.queryForObject("Miscellaneous.getPhoneAuthYn", serviceAuthInfo,
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
