@@ -301,31 +301,43 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	public IDPReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req)
 			throws Exception {
 		// 모바일 인증
-		IDPReceiverM idpReceiver = this.idpService.alredyJoinCheckByEmail(schUserRes.getUserMbr().getUserEmail());
+		// IDPReceiverM idpReceiver = this.idpService.alredyJoinCheckByEmail(schUserRes.getUserMbr().getUserEmail());
+		//
+		// logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success : {}, {}", idpReceiver.getResponseHeader()
+		// .getResult(), idpReceiver.getResponseHeader().getResult_text());
+		// logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success Response : {}", idpReceiver.getResponseBody()
+		// .toString());
 
-		logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success : {}, {}", idpReceiver.getResponseHeader()
-				.getResult(), idpReceiver.getResponseHeader().getResult_text());
-		logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success Response : {}", idpReceiver.getResponseBody()
-				.toString());
+		IDPReceiverM idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr()
+				.getUserID());
+		if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+			throw new RuntimeException("[ IDP secedeUser 아이디 회원해지 Fail : "
+					+ idpReceiver.getResponseHeader().getResult() + "] "
+					+ idpReceiver.getResponseHeader().getResult_text());
+		} else {
+			logger.info("[회원해지 IDP secedeUser Success : {}, {}", idpReceiver.getResponseHeader().getResult(),
+					idpReceiver.getResponseHeader().getResult_text());
+			logger.info("[회원해지 IDP secedeUser Success Response : {}", idpReceiver.getResponseBody().toString());
+		}
 
 		// 이메일 가입여부 체크 등록되어 있지 않으면 resultCode : Success
-		if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-			// IDP 사용자 해지 userAuthKey, keyType(1:userId 2:userKey)
-			idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr().getUserID());
-			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new RuntimeException("[ IDP secedeUser 아이디 회원해지 Fail : "
-						+ idpReceiver.getResponseHeader().getResult() + "] "
-						+ idpReceiver.getResponseHeader().getResult_text());
-			} else {
-				logger.info("[회원해지 IDP secedeUser Success : {}, {}", idpReceiver.getResponseHeader().getResult(),
-						idpReceiver.getResponseHeader().getResult_text());
-				logger.info("[회원해지 IDP secedeUser Success Response : {}", idpReceiver.getResponseBody().toString());
-			}
-		} else {
-			throw new RuntimeException("Not Service Join 서비스 가입 상태 아님 : [" + schUserRes.getUserMbr().getUserEmail()
-					+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "] + result message : ["
-					+ idpReceiver.getResponseHeader().getResult_text() + "]");
-		}
+		// if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+		// // IDP 사용자 해지 userAuthKey, keyType(1:userId 2:userKey)
+		// idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr().getUserID());
+		// if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+		// throw new RuntimeException("[ IDP secedeUser 아이디 회원해지 Fail : "
+		// + idpReceiver.getResponseHeader().getResult() + "] "
+		// + idpReceiver.getResponseHeader().getResult_text());
+		// } else {
+		// logger.info("[회원해지 IDP secedeUser Success : {}, {}", idpReceiver.getResponseHeader().getResult(),
+		// idpReceiver.getResponseHeader().getResult_text());
+		// logger.info("[회원해지 IDP secedeUser Success Response : {}", idpReceiver.getResponseBody().toString());
+		// }
+		// } else {
+		// throw new RuntimeException("Not Service Join 서비스 가입 상태 아님 : [" + schUserRes.getUserMbr().getUserEmail()
+		// + "] result code : [" + idpReceiver.getResponseHeader().getResult() + "] + result message : ["
+		// + idpReceiver.getResponseHeader().getResult_text() + "]");
+		// }
 
 		return idpReceiver;
 	}
