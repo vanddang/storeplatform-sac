@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 5.2.14. 판매자 회원 계정 승인 [REQUEST]
+ * 2.2.14. 판매자 회원 계정 승인 [REQUEST]
  * 
  * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */

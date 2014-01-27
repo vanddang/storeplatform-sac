@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 
 /**
- * 판매자회원 인증
+ * 2.2.3 판매자회원 인증 [RESPONSE]
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */
@@ -21,6 +21,10 @@ public class AuthorizeRes extends CommonInfo {
 	private String loginFailCount;
 	/** 로그인 성공 여부 */
 	private String isLoginSuccess;
+	/** 인증키. */
+	private String sessionKey;
+	/** 만료일시. */
+	private String expireDate;
 
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
@@ -44,5 +48,21 @@ public class AuthorizeRes extends CommonInfo {
 
 	public void setIsLoginSuccess(String isLoginSuccess) {
 		this.isLoginSuccess = isLoginSuccess;
+	}
+
+	public String getSessionKey() {
+		return this.sessionKey;
+	}
+
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
+	}
+
+	public String getExpireDate() {
+		return this.expireDate;
+	}
+
+	public void setExpireDate(String expireDate) {
+		this.expireDate = expireDate;
 	}
 }

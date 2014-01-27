@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 5.2.16. 판매자 계정 잠금 [REQUEST]
+ * 2.2.16. 판매자 계정 잠금 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */

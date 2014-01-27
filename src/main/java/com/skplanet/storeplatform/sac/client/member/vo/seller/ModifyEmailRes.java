@@ -6,7 +6,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 판매자회원 이메일 수정
+ * 2.2.12. 판매자회원 이메일 수정
  * 
  * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
  */

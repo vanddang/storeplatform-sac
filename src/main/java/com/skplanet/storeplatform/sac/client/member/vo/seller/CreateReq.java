@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 /**
- * 5.2.1. 판매자 회원 가입 [REQUEST]
+ * 2.2.1. 판매자 회원 가입 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
@@ -26,9 +26,6 @@ public class CreateReq extends CommonInfo {
 	/** 판매자 구분코드. */
 	@NotBlank
 	private String sellerClass;
-	/** 판매자 분류코드. */
-	@NotBlank
-	private String sellerCategory;
 	/** 판매자 ID. */
 	@NotBlank
 	private String sellerId;
@@ -120,14 +117,6 @@ public class CreateReq extends CommonInfo {
 
 	public void setSellerClass(String sellerClass) {
 		this.sellerClass = sellerClass;
-	}
-
-	public String getSellerCategory() {
-		return this.sellerCategory;
-	}
-
-	public void setSellerCategory(String sellerCategory) {
-		this.sellerCategory = sellerCategory;
 	}
 
 	public String getSellerId() {

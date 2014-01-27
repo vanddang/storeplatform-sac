@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 5.2.2. 판매자 ID / Email 중복 체크 [REQUEST]
+ * 2.2.2. 판매자 ID / Email 중복 체크 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */

@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 5.2.11. 판매자 회원 정산 정보 수정 [REQUEST]
+ * 2.2.11. 판매자 회원 정산 정보 수정 [REQUEST]
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
