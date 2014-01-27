@@ -110,12 +110,6 @@ public class AppServiceImpl implements AppService {
         app.setVersion(appDetail.getApkVerNm());
         app.setSize(appDetail.getFileSize());
 
-        // AppDebug
-        AppDebug debug = new AppDebug();
-        debug.setPackageName(appDetail.getApkPkgNm());  // TODO check
-        debug.setVersionCode(appDetail.getApkVer());    // TODO check
-        app.setAppDebug(debug);
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
         // Update History
