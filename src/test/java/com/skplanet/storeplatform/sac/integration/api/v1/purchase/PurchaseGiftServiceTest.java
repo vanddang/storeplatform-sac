@@ -97,12 +97,12 @@ public class PurchaseGiftServiceTest {
 		GiftConfirmRequest giftConfirmRequest = new GiftConfirmRequest();
 
 		giftConfirmRequest.setTenantId("S01");
-		giftConfirmRequest.setSendMbrNo("IF1023541315020111207133720");
-		giftConfirmRequest.setSendDeviceNo("01046129571");
-		giftConfirmRequest.setRecvMbrNo("IF1023541315020111207133720");
-		giftConfirmRequest.setRecvDeviceNo("01033276046");
+		giftConfirmRequest.setSystemId("S001");
+		giftConfirmRequest.setInsdUsermbrNo("IF1023541315020111207133720");
+		giftConfirmRequest.setInsdDeviceId("01046129571");
 		giftConfirmRequest.setProdId("H900026621");
-		giftConfirmRequest.setPrchsId("M1046129571541651515");
+		giftConfirmRequest.setRecvDt("20140129225055");
+		giftConfirmRequest.setPrchsId("PI100000000000010571");
 
 		GiftConfirmResponse giftConfirmResponse = new GiftConfirmResponse();
 		giftConfirmResponse = this.giftService.modifyGiftConfirm(giftConfirmRequest);

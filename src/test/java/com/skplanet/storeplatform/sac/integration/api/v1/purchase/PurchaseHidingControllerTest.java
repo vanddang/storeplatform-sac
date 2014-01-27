@@ -91,10 +91,10 @@ public class PurchaseHidingControllerTest {
 									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes.getHidingRes()
 											.get(i).getPrchsId());
 							PurchaseHidingControllerTest.this.logger.debug(
-									"@@@@@@@@@@@@ getProdId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes.getHidingRes()
-											.get(i).getPrchsDtlId());
+									"@@@@@@@@@@@@ getPrchsDtlId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes
+											.getHidingRes().get(i).getPrchsDtlId());
 							PurchaseHidingControllerTest.this.logger.debug(
-									"@@@@@@@@@@@@ getProdId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes.getHidingRes()
+									"@@@@@@@@@@@@ getResultYn  @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes.getHidingRes()
 											.get(i).getResultYn());
 						}
 						assertThat(hidingListRes, notNullValue());

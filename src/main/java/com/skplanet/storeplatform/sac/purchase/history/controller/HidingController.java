@@ -64,10 +64,26 @@ public class HidingController {
 		if (header.getTenantId() == null || header.getTenantId() == "") {
 			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
 		}
+		if (header.getSystemId() == null || header.getSystemId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
 		if (hidingReq.getInsdUsermbrNo() == null || hidingReq.getInsdUsermbrNo() == "") {
 			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
 		}
-
+		if (hidingReq.getInsdDeviceId() == null || hidingReq.getInsdDeviceId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "insdDeviceId");
+		}
+		// for (HidingSacList req : hidingReq.getHidingSacList()) {
+		// if (req.getPrchsId() == null || req.getPrchsId() == "") {
+		// throw new StorePlatformException("SAC_PUR_0001", "prchsId");
+		// }
+		// if (req.getPrchsDtlId() == null || req.getPrchsDtlId() < 0) {
+		// throw new StorePlatformException("SAC_PUR_0001", "prchsDtlId");
+		// }
+		// if (req.getHidingYn() == null || req.getHidingYn() == "") {
+		// throw new StorePlatformException("SAC_PUR_0001", "hidingYn");
+		// }
+		// }
 		HidingRequest req = this.reqConvert(hidingReq, header);
 		List<HidingResponse> hidingResponse = new ArrayList<HidingResponse>();
 		List<HidingRes> hidingRes = new ArrayList<HidingRes>();
@@ -95,6 +111,7 @@ public class HidingController {
 		req.setTenantId(header.getTenantId());
 		req.setInsdUsermbrNo(hidingReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(hidingReq.getInsdDeviceId());
+		this.logger.debug("@@@@@@header.getSystemId()@@@@@@@" + header.getSystemId());
 		req.setSystemId(header.getSystemId());
 		int size = hidingReq.getHidingSacList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);

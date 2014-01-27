@@ -58,13 +58,13 @@ public class AutoPaymentCancelController {
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
 		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+			throw new StorePlatformException("SAC_PUR_0001", "tenantId");
 		}
 		if (autoPaymentCancelReq.getInsdUsermbrNo() == null || autoPaymentCancelReq.getInsdUsermbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
+			throw new StorePlatformException("SAC_PUR_0001", "insdUsermbrNo");
 		}
 		if (autoPaymentCancelReq.getPrchsId() == null || autoPaymentCancelReq.getPrchsId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "PrchsId");
+			throw new StorePlatformException("SAC_PUR_0001", "prchsId");
 		}
 
 		AutoPaymentCancelRequest rea = this.reqConvert(autoPaymentCancelReq, header);

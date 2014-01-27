@@ -73,7 +73,7 @@ public class GiftController {
 	}
 
 	/**
-	 * 선물수신.
+	 * 선물수신 처리.
 	 * 
 	 * @param giftConfirmReq
 	 *            요청정보
@@ -85,6 +85,32 @@ public class GiftController {
 	@ResponseBody
 	public GiftConfirmRes modifyGiftConfirm(@RequestBody GiftConfirmReq giftConfirmReq, SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
+		// header 필수값 체크
+		if (header.getTenantId() == null || header.getTenantId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "tenantId");
+		}
+		if (header.getSystemId() == null || header.getSystemId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "systemId");
+		}
+		// body 필수값 체크
+		if (giftConfirmReq.getInsdUsermbrNo() == null || giftConfirmReq.getInsdUsermbrNo() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "insdUsermbrNo");
+		}
+		if (giftConfirmReq.getPrchsId() == null || giftConfirmReq.getPrchsId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "prchsId");
+		}
+		if (giftConfirmReq.getProdId() == null || giftConfirmReq.getProdId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "prodId");
+		}
+		if (giftConfirmReq.getRecvDt() == null || giftConfirmReq.getRecvDt() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "recvDt");
+		} else if (giftConfirmReq.getRecvDt().length() < 15) {
+			throw new StorePlatformException("SAC_PUR_0002", "recvDt");
+		}
+
+		if (giftConfirmReq.getRecvConfPathCd() == null || giftConfirmReq.getRecvConfPathCd() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "recvConfPathCd");
+		}
 
 		GiftConfirmRequest req = this.reqConvert(giftConfirmReq, header);
 		GiftConfirmResponse giftConfirmResponse = new GiftConfirmResponse();
@@ -95,10 +121,10 @@ public class GiftController {
 	}
 
 	/**
-	 * reqConvert.
+	 * 선물수신처리 reqConvert.
 	 * 
 	 * @param giftConfirmReq
-	 *            요청정보
+	 *            선물수신처리 요청정보
 	 * @param header
 	 *            테넌트 헤더정보
 	 * @return GiftConfirmRequest
@@ -108,21 +134,20 @@ public class GiftController {
 
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
-		req.setSendMbrNo(giftConfirmReq.getSendMbrNo());
-		req.setSendDeviceNo(giftConfirmReq.getSendDeviceNo());
-		req.setRecvMbrNo(giftConfirmReq.getRecvMbrNo());
-		req.setRecvDeviceNo(giftConfirmReq.getRecvDeviceNo());
+		req.setInsdUsermbrNo(giftConfirmReq.getInsdUsermbrNo());
+		req.setInsdDeviceId(giftConfirmReq.getInsdDeviceId());
 		req.setPrchsId(giftConfirmReq.getPrchsId());
+		req.setRecvDt(giftConfirmReq.getRecvDt());
 		req.setProdId(giftConfirmReq.getProdId());
 
 		return req;
 	}
 
 	/**
-	 * resConvert.
+	 * 선물수신처리 resConvert.
 	 * 
 	 * @param giftComfirmResponse
-	 *            요청정보
+	 *            선물수신처리 응답정보
 	 * @return GiftConfirmRes
 	 */
 	private GiftConfirmRes resConvert(GiftConfirmResponse giftComfirmResponse) {
