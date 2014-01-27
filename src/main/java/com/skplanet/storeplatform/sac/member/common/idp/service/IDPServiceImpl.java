@@ -25,11 +25,32 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * 아이디 중복 체크
+	 * 2.1.2. 서비스 중복 가입 체크. (이메일 기준).
+	 * </pre>
+	 * 
+	 * @param email
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_ALEADY_JOIN_CHECK);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey(email);
+		sendData.setKey_type(IDPConstants.IDP_PARAM_KEY_TYPE_EMAIL);
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 2.1.13. 아이디 중복 체크.
 	 * </pre>
 	 * 
 	 * @param id
-	 * @return
+	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -47,31 +68,10 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * Email 중복 가입여부 조회.
+	 * 2.1.8. 자동 가입 방지 Image 발급.
 	 * </pre>
 	 * 
-	 * @param email
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
-		IDPSenderM sendData = new IDPSenderM();
-		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_ALEADY_JOIN_CHECK);
-		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setKey(email);
-		sendData.setKey_type(IDPConstants.IDP_PARAM_KEY_TYPE_EMAIL);
-		return this.repository.sendIDP(sendData);
-	}
-
-	/**
-	 * <pre>
-	 * 워터마크 발급.
-	 * </pre>
-	 * 
-	 * @return
+	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -88,13 +88,13 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * 워터마크 인증.
+	 * 2.1.9. 자동 가입 방지 인증.
 	 * </pre>
 	 * 
 	 * @param authCode
 	 * @param imageSign
 	 * @param signData
-	 * @return
+	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -113,45 +113,19 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * 회원탈퇴.
+	 * 2.1.10. 휴대폰 단말 기종 조회 및 업데이트.
 	 * </pre>
 	 * 
-	 * @param userAuthKey
-	 * @param secedeKeyType
-	 * @param secedeKeyValue
+	 * @param mdn
 	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception {
+	public IDPReceiverM deviceCompare(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SECEDE_USER);
-		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		// sendData.setWatermark_auth(IDP_PARAM_KEY_WATERMARK_AUTH_NON_INCLISION);
-		sendData.setUser_auth_key(userAuthKey);
-		sendData.setKey_type(secedeKeyType);
-		sendData.setKey(secedeKeyValue);
-		return this.repository.sendIDP(sendData);
-	}
-
-	/**
-	 * <pre>
-	 * 모바일 회원 인증
-	 * </pre>
-	 * 
-	 * @param mdn
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public IDPReceiverM authForWap(String mdn) throws Exception {
-		IDPSenderM sendData = new IDPSenderM();
-
-		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_AUTH_FOR_WAP);
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_DEVICE_COMPARE);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
@@ -161,56 +135,38 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * 모바일 회원가입
+	 * 2.2.7 간편 회원 가입
 	 * </pre>
 	 * 
-	 * @param mdn
-	 * @return
+	 * @param param
+	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM join4Wap(String mdn, String mdnCorp) throws Exception {
+	public IDPReceiverM simpleJoin(Map<String, Object> param) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_JOIN_FOR_WAP);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SIMPLE_JOIN);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setMdn_corp(mdnCorp);
-		sendData.setUser_mdn(mdn);
+		sendData.setUser_id((String) param.get("user_id"));
+		sendData.setUser_passwd((String) param.get("user_passwd"));
+		sendData.setUser_email((String) param.get("user_email"));
+		sendData.setUser_phone((String) param.get("user_phone"));
+		sendData.setPhone_auth_key((String) param.get("phone_auth_key"));
 
 		return this.repository.sendIDP(sendData);
 	}
 
 	/**
 	 * <pre>
-	 * 모바일 회원 탈퇴
-	 * </pre>
-	 * 
-	 * @param mdn
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	public IDPReceiverM secedeUser4Wap(String mdn) throws Exception {
-		IDPSenderM sendData = new IDPSenderM();
-
-		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SECEDE_FOR_WAP);
-		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setUser_mdn(mdn);
-		return this.repository.sendIDP(sendData);
-	}
-
-	/**
-	 * <pre>
-	 * 로그인
+	 * 2.3.1. 유선 회원의 로그인.
 	 * </pre>
 	 * 
 	 * @param userId
 	 * @param userPwd
-	 * @return
+	 * @return 2.3.1. 유선 회원의 로그인.
 	 * @throws Exception
 	 */
 	@Override
@@ -229,11 +185,112 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * 프로파일 수정
+	 * 2.3.2. 유선 회원의 비밀번호 확인.
+	 * </pre>
+	 * 
+	 * @param id
+	 * @param pwd
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM authPwd(String id, String pwd) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_AUTH_FOR_PWD);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_id(id);
+		sendData.setUser_passwd(pwd);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 2.4.2. 기본 Profile 조회 (For SO Server).
+	 * </pre>
+	 * 
+	 * @param userAuthKey
+	 * @param queryKeyType
+	 * @param queryKeyValue
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM searchUserCommonInfo(String userAuthKey, String queryKeyType, String queryKeyValue)
+			throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_auth_key(userAuthKey);
+		sendData.setKey_type(queryKeyType);
+		sendData.setKey(queryKeyValue);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 2.4.3. 특정 Profile 조회 (For SO Server).
+	 * </pre>
+	 * 
+	 * @param queryKeyType
+	 * @param queryKeyValue
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM searchSpecialProfile(String queryKeyType, String queryKeyValue) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_FIND_SPECIAL_PROFILE);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey_type(queryKeyType);
+		sendData.setKey(queryKeyValue);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 2.5.1. 인증 정보 변경 API.
+	 * </pre>
+	 * 
+	 * @param user_auth_key
+	 * @param key_type
+	 * @param key
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM modifyAuthInfo(String user_auth_key, String key_type, String key) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_MODIFY_AUTH_INFO);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+
+		sendData.setUser_auth_key(user_auth_key);
+		sendData.setKey_type(key_type);
+		sendData.setKey(key);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 2.5.2. 회원 정보 변경.
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return
+	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -380,18 +437,107 @@ public class IDPServiceImpl implements IDPService {
 		if (user_ci != null) {
 			sendData.setUser_ci(user_ci);
 		}
-
-		// TODO Https 변경
 		return this.repository.sendIDP(sendData);
 	}
 
 	/**
 	 * <pre>
-	 * 3.4.1	무선 회원 Profile 조회 (For SP Server)
+	 * 2.6.1. 회원 해지.
+	 * </pre>
+	 * 
+	 * @param userAuthKey
+	 * @param secedeKeyType
+	 * @param secedeKeyValue
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SECEDE_USER);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_auth_key(userAuthKey);
+		sendData.setKey_type(secedeKeyType);
+		sendData.setKey(secedeKeyValue);
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 3.1.1. MDN/Password 중복 가입 체크.
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM aleadyJoinCheckForMdn(String mdn) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_ALEADY_JOIN_MDN);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_mdn(mdn);
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 3.2.1. 모바일 회원가입.
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM join4Wap(String mdn, String mdnCorp) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_JOIN_FOR_WAP);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setMdn_corp(mdnCorp);
+		sendData.setUser_mdn(mdn);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 3.3.1. 무선 회원 인증 (For SP Server).
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM authForWap(String mdn) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_AUTH_FOR_WAP);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_mdn(mdn);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 3.4.1 무선 회원 Profile 조회 (For SP Server).
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @return IDPReceiverM
 	 * @throws Exception
 	 */
 	@Override
@@ -408,47 +554,103 @@ public class IDPServiceImpl implements IDPService {
 		return this.repository.sendIDP(sendData);
 	}
 
+	/**
+	 * <pre>
+	 * 3.6.1. 무선 회원 해지 (For SP Server).
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
 	@Override
-	public IDPReceiverM deviceCompare(String mdn) throws Exception {
+	public IDPReceiverM secedeUser4Wap(String mdn) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_DEVICE_COMPARE);
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SECEDE_FOR_WAP);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
-
 		return this.repository.sendIDP(sendData);
 	}
 
+	/**
+	 * <pre>
+	 * 4.1.1. 부가서비스 가입.
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @param svcCd
+	 * @param svcMngNum
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
 	@Override
-	public IDPReceiverM simpleJoin(Map<String, Object> param) throws Exception {
+	public IDPReceiverM joinSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SIMPLE_JOIN);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_JOIN_SUP_SERVICE);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setUser_id((String) param.get("user_id"));
-		sendData.setUser_passwd((String) param.get("user_passwd"));
-		sendData.setUser_email((String) param.get("user_email"));
-		sendData.setUser_phone((String) param.get("user_phone"));
-		sendData.setPhone_auth_key((String) param.get("phone_auth_key"));
+		sendData.setUser_mdn(mdn);
+		sendData.setSvc_code(svcCd);
+
+		if (svcMngNum != null && svcMngNum.length() > 0)
+			sendData.setUser_svc_mng_num(svcMngNum);
 
 		return this.repository.sendIDP(sendData);
 	}
 
+	/**
+	 * <pre>
+	 * 4.2.1. 부가서비스 해지.
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @param svcCd
+	 * @param svcMngNum
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
 	@Override
-	public IDPReceiverM searchUserCommonInfo4SPServer(String keyType, String key) throws Exception {
+	public IDPReceiverM secedeSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
-		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(IDPConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SECEDE_SUP_SERVICE);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setKey_type(keyType);
-		sendData.setKey(key);
+		sendData.setUser_mdn(mdn);
+		sendData.setSvc_code(svcCd);
 
+		if (svcMngNum != null && svcMngNum.length() > 0)
+			sendData.setUser_svc_mng_num(svcMngNum);
+
+		return this.repository.sendIDP(sendData);
+	}
+
+	/**
+	 * <pre>
+	 * 4.3.2. 부가서비스 가입 여부 조회.
+	 * </pre>
+	 * 
+	 * @param mdn
+	 * @param svcCode
+	 * @return IDPReceiverM
+	 * @throws Exception
+	 */
+	@Override
+	public IDPReceiverM serviceSubscriptionCheck(String mdn, String svcCode) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_SERVICE_SUBSCRIPTION_CHECK);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUser_mdn(mdn);
+		sendData.setSvc_code(svcCode);
 		return this.repository.sendIDP(sendData);
 	}
 

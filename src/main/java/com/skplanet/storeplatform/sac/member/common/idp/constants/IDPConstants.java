@@ -23,44 +23,60 @@ public final class IDPConstants {
 	public static final String IDP_REQ_URL_SEARCH_TOKEN = "/web/SpTokenCheck.api";
 	public static final String IDP_REQ_URL_DELETE_TOKEN = "/web/MappingDel.api";
 
-	/** API COMMAND */
-	/** */
+	/** API COMMAND. */
+	/** 2.1. 기본 API. */
+	public static final String IDP_REQ_CMD_ALEADY_JOIN_CHECK = "aleadyJoinCheck"; // 가입여부 확인
 	public static final String IDP_REQ_CMD_DUPLICATE_ID_CHECK = "duplicateIDCheck"; // ID
-																					// 중복체크
-	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForId"; // 회원 인증
-	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "modifyProfile"; // 프로파일
-																			 // 수정
-	public static final String IDP_REQ_CMD_ALEADY_JOIN_CHECK = "aleadyJoinCheck"; // 가입여부
-																				  // 확인
 	public static final String IDP_REQ_CMD_WATERMARK_AUTH_IMAGE = "watermarkAuthImage"; // 위터마크발급
 	public static final String IDP_REQ_CMD_WATERMARK_AUTH = "watermarkAuth"; // 워터마크인증
-	public static final String IDP_REQ_CMD_SECEDE_USER = "secedeUser"; // 회원 탈퇴
+	public static final String IDP_REQ_CMD_DEVICE_COMPARE = "deviceCompare"; // 휴대폰
+	/** 2.2. 회원 가입 API */
 	public static final String IDP_REQ_CMD_SIMPLE_JOIN = "simpleJoinApply"; // 간편 회원 가입
-	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "findCommonProfileForServer"; // 기본 Profile
-																										  // 조회 (For SP
-																										  // Server)
+
+	/** 2.3. 회원 인증 API. */
+	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForId"; // 회원 인증
+	public static final String IDP_REQ_CMD_AUTH_FOR_PWD = "authForPasswd";
+
+	/** 2.2. 회원 정보 조회 API. */
+	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "findCommonProfileForServer";
+	public static final String IDP_REQ_CMD_FIND_SPECIAL_PROFILE = "findSpecialProfile";
+
+	/** 2.2. 회원 정보 변경 API. */
+	public static final String IDP_REQ_CMD_MODIFY_AUTH_INFO = "modifyAuthInfo";
+	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "modifyProfile"; // 프로파일 수정
+	/** 2.2. 회원 해지 API */
+	public static final String IDP_REQ_CMD_SECEDE_USER = "secedeUser"; // 회원 탈퇴
 
 	/** 모바일. */
-	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap"; // 인증
+	/** 3.1. 기본 API. */
+	public static final String IDP_REQ_CMD_ALEADY_JOIN_MDN = "aleadyJoinCheckForMdn";
+
+	/** 3.2. 회원 가입 API. */
 	public static final String IDP_REQ_CMD_JOIN_FOR_WAP = "joinForWap"; // 가입
-	public static final String IDP_REQ_CMD_SECEDE_FOR_WAP = "secedeForWap"; // 모바일
-																			// 탈퇴
+
+	/** 3.3. 회원 인증 API. */
+	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap"; // 인증
+
+	/** 3.4. 회원 정보 조회 API. */
 	public static final String IDP_REQ_CMD_FIND_PROFILE_FOR_WAP = "findProfileForWap"; // 정보조회
-	public static final String IDP_REQ_CMD_DEVICE_COMPARE = "deviceCompare"; // 휴대폰
-																			 // 단말
-																			 // 기종
-																			 // 조회
-																			 // 및
-																			 // 업데이트
+
+	/** 3.5. 회원 API */
+	/** 3.6. 회원 해지 API */
+	public static final String IDP_REQ_CMD_SECEDE_FOR_WAP = "secedeForWap"; // 모바일
+
+	/** 4.1. 부가 서비스 가입 API. */
+	public static final String IDP_REQ_CMD_JOIN_SUP_SERVICE = "joinSupServiceRequest";
+	/** 4.2. 부가 서비스 해지 API. */
+	public static final String IDP_REQ_CMD_SECEDE_SUP_SERVICE = "secedeSupServiceRequest";
+	/** 4.3. 부가서비스 조회 API. */
+	public static final String IDP_REQ_CMD_SERVICE_SUBSCRIPTION_CHECK = "secedeSupServiceRequest";
 
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default
 	public static final String IDP_PARAM_RESP_TYPE_XML = "2"; // xml
-
-	/** API REST_TYPE. */
+	/** API REST_FLOW_TYPE. */
 	public static final String IDP_PARAM_RESP_FLOW_RESPONSE = "resp"; // response
 	public static final String IDP_PARAM_RESP_FLOW_REDIRECT = "redt"; // redirect
-
 	/** API MSISDN_TYPE. */
 	public static final String IDP_PARAM_KEY_USER_MDN_TYPE_SKT = "SKT"; // default
 	public static final String IDP_PARAM_KEY_USER_MDN_TYPE_KTF = "KTF";

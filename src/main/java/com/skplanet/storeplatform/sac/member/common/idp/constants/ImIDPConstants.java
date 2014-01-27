@@ -23,15 +23,61 @@ public final class ImIDPConstants {
 	public static final String IDP_REQ_URL_MOBILE_AUTH = "/web/IMMobileAuth.api";
 
 	/** API(TX) COMMAND. */
+	/** 2.1. IDP 정책 설계 API(TX). */
 	public static final String IDP_REQ_CMD_AGREE_USER = "TXAgreeUserIDP"; // 서비스 이용동의
-	public static final String IDP_REQ_CMD_GET_MDNINFO_IDP = "getMdnInfoIDP"; // IMDN 정보 조회 (SKT 가입자)
-	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForIdIDP"; //
-	public static final String IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER = "findCommonProfileForServerIDP";// 기본프로파일조회(for
-																												// Server)
-	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
-	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
+	// 개별약관 해지
 	public static final String IDP_REQ_CMD_DISAGREE_USER = "TXDisagreeUserIDP";
-	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICELIST = "findJoinServiceListIDP";
+	// TODO 공통프로파일조회요청 (For Server)
+	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "TXGetUserInfoForServerIDP";
+	// TODO 공통프로파일 수정
+	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "TXUpdateUserInfoIDP";
+	// 부가프로파일 수정
+	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
+	// TODO 비밀번호 변경
+	public static final String IDP_REQ_CMD_MODIFY_PWD = "TXUpdateUserPwdIDP";
+	// TODO 인증 E-mail 재발송요청
+	// public static final String IDP_REQ_CMD_CONFIRM_EMAIL_RESEND = "TXResendConfirmEmailIDP";
+	// TXGetCountryCodeIDP ?? 국가 정보 조회 요청
+	// TODO 로그인 상태 정보 변경
+	public static final String IDP_REQ_CMD_SET_LOGIN_STATUS = "TXSetLoginConditionIDP";
+	// TXSetFlagLocalUserIdIDP ID 전환불가 설정/해제 요청
+	// TODO 실명변경 Y : 해지 가능, N : 해지 불가) 요청
+	public static final String IDP_REQ_CMD_UPDATE_USER_NAME = "TXUpdateUserNameIDP";
+	// TODO 법정대리인 동의정보 변경 요청
+	public static final String IDP_REQ_CMD_UPDATE_GUARDIAN = "TXUpdateGuardianInfoIDP";
+	// TXRequestRetryIDP RX 배포 Retry 요청
+	// TXGetSerivceInfoIDP ???!!!
+
+	/** 2.2. SP 요구사항 API. */
+	// TODO
+	// duplicateMDNCheckIDP MDN 중복체크
+	// minToMdnIDP MDN 조회 (SKT, non-SKT 구분)
+	// 통합 ID 회원로그인
+	public static final String IDP_REQ_CMD_AUTH_FOR_ID = "authForIdIDP";
+	// 통합 ID 서비스가입리스트조회
+	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICE_LIST = "findJoinServiceListIDP";
+	// MDN 정보 조회 (SKT 가입자)
+	public static final String IDP_REQ_CMD_GET_MDN_INFO_IDP = "getMdnInfoIDP";// IMDN 정보 조회 (SKT 가입자)
+	// TODO IM통합회원 ID 찾기
+	public static final String IDP_REQ_CMD_FIND_USERID_BY_MDN = "findUserIdByMdn";
+	// chkExistAgreeUserIDP 이용동의 가능여부 조회
+	// 기본 프로파일 조회(for Server)
+	public static final String IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER = "findCommonProfileForServerIDP";// 기본프로파일조회(for
+	// joinIDCheckChangedIDP ID 가입여부 체크
+	// ID 가입여부 체크
+	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
+
+	/** 2.3. IDP 정책 설계 API(RX). */
+	// public static final String IDP_REQ_RX_CMD_CREATE_USER = "RXCreateUserIDP";
+	// public static final String IDP_REQ_RX_CMD_CREATE_USERID = "RXCreateUserIdIDP";
+	// public static final String IDP_REQ_RX_CMD_ACTIVE_USERID = "RXActivateUserIdIDP";
+	// public static final String IDP_REQ_RX_CMD_DELETE_USERID = "RXDeleteUserIdIDP";
+	// public static final String IDP_REQ_RX_CMD_CHECK_DELETE_USERID = "RXPreCheckDeleteUserIDP";
+	// public static final String IDP_REQ_RX_CMD_UPDATE_DISAGREE_USERID = "RXUpdateDisagreeUserIDP";
+	// public static final String IDP_REQ_RX_CMD_UPDATE_USERINFO = "RXUpdateUserInfoIDP";
+	// public static final String IDP_REQ_RX_CMD_INVALID_TEL_NO = "RXInvalidUserTelNoIDP";
+	// public static final String IDP_REQ_RX_CMD_LOGIN_CONDITION = "RXSetLoginConditionIDP";
+
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default
 	public static final String IDP_PARAM_RESP_TYPE_XML = "2"; // xml
