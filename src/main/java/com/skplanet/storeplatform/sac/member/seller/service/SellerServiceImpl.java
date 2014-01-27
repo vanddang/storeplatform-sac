@@ -1,17 +1,15 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
@@ -40,7 +38,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -63,7 +60,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.RandomString;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의
@@ -84,7 +80,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 5.2.1. 판매자 회원 가입.
+	 * 2.2.1. 판매자 회원 가입.
 	 * </pre>
 	 * 
 	 * @param header
@@ -94,12 +90,6 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@Override
 	public CreateRes createSeller(SacRequestHeader header, CreateReq req) throws Exception {
-
-		if (this.checkAgree(req.getAgreementList(), header.getTenantHeader().getTenantId())) {
-			LOGGER.error("## 필수 약관 미동의");
-			// TODO [김경복] Exception 재정의 필요
-			throw new Exception("필수 약관 미동의");
-		}
 
 		LOGGER.debug("############ SellerServiceImpl.createSeller() [START] ############");
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -114,7 +104,7 @@ public class SellerServiceImpl implements SellerService {
 		// DI
 		mbrAuth.setDi(req.getSellerDI());
 		//
-		mbrAuth.setMemberCategory(req.getSellerCategory());
+		mbrAuth.setMemberCategory(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY);
 		// 인증방법코드
 		mbrAuth.setRealNameMethod(req.getRealNameMethod());
 		// 통신사 코드
@@ -190,7 +180,7 @@ public class SellerServiceImpl implements SellerService {
 		// 판매자구분코드
 		sellerMbr.setSellerClass(req.getSellerClass());
 		// 판매자 분류코드
-		sellerMbr.setSellerCategory(req.getSellerCategory());
+		sellerMbr.setSellerCategory(MemberConstants.SellerConstants.SELLER_TYPE_NOPAY);
 		// 판매자 main 상태 코드
 		sellerMbr.setSellerMainStatus(MemberConstants.MAIN_STATUS_WATING);
 		// 판매자 sub 상태 코드
@@ -270,7 +260,8 @@ public class SellerServiceImpl implements SellerService {
 		if (!MemberConstants.RESULT_SUCCES.equals(createSellerResponse.getCommonResponse().getResultCode())) {
 			LOGGER.error(createSellerResponse.getCommonResponse().getResultMessage());
 			// TODO [김경복] Exception 재정의 필요
-			throw new Exception(createSellerResponse.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("SAC_MEM_20002", createSellerResponse.getCommonResponse()
+					.getResultMessage());
 		}
 
 		// 결과 리턴 객체 생성 및 주입
@@ -290,7 +281,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 5.2.3. 판매자회원 인증.
+	 * 2.2.3. 판매자회원 인증.
 	 * </pre>
 	 * 
 	 * @param header
@@ -326,18 +317,18 @@ public class SellerServiceImpl implements SellerService {
 			if (req.getReleaseLock().equals(MemberConstants.USE_Y)
 					&& logInSellerResponse.getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_PAUSE)
 					&& logInSellerResponse.getSellerSubStatus().equals(MemberConstants.SUB_STATUS_LOGIN_PAUSE)) {
-				/** 2-1. SC회원 Req 생성 및 주입. */
+				/** 2.1. SC회원 Req 생성 및 주입. */
 				UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 				updateStatusSellerRequest.setSellerID(req.getSellerId());
 				updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 				updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 
-				/** 2-2. 공통 헤더 생성 및 주입. */
+				/** 2.2. 공통 헤더 생성 및 주입. */
 				updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
 
 				LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
-				/** 2-3. SC회원 - 상태변경 Call. */
+				/** 2.3. SC회원 - 상태변경 Call. */
 				UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
 						.updateStatusSeller(updateStatusSellerRequest);
 
@@ -354,13 +345,46 @@ public class SellerServiceImpl implements SellerService {
 			}
 		}
 
-		/** 2. SAC-[Response] 생성 및 주입. */
+		/** 3. SAC-[Response] 생성 및 주입. */
 		AuthorizeRes res = new AuthorizeRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
 
 		if (logInSellerResponse != null) {
 			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
-			sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+			// 회원 인증 "Y" 일 경우
+			if (logInSellerResponse.getIsLoginSuccess().equals(MemberConstants.USE_Y)) {
+				// /** 3.1. SC-REQUEST 생성 및 주입 */
+				// UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
+				//
+				// LoginInfo loginInfo = new LoginInfo();
+				// loginInfo.setSellerKey(res.getSellerMbr().getSellerKey());
+				// loginInfo.setIpAddress(req.getIpAddress());
+				// loginInfo.setSessionKey(res.getSellerMbr().getSellerKey() + "_" + RandomString.getString(10));
+				// loginInfo.setExpireDate(req.getExpireDate());
+				// updateLoginInfoRequest.setLoginInfo(loginInfo);
+				//
+				// /** 3.2. 공통 헤더 생성 및 주입. */
+				// updateLoginInfoRequest.setCommonRequest(this.getCommonRequest(header));
+				//
+				// /** 3.3. SC회원 - 상태변경 Call. */
+				// UpdateLoginInfoResponse updateLoginInfoResponse = this.sellerSCI
+				// .updateLoginInfo(updateLoginInfoRequest);
+				// // Response Debug
+				// LOGGER.info("[SellerSCI.updateLoginInfo()] - Response CODE : {}, MESSGE : {}",
+				// updateLoginInfoResponse
+				// .getCommonResponse().getResultCode(), updateLoginInfoResponse.getCommonResponse()
+				// .getResultMessage());
+				//
+				// if
+				// (!MemberConstants.RESULT_SUCCES.equals(updateLoginInfoResponse.getCommonResponse().getResultCode()))
+				// {
+				// // TODO [김경복] Exception 재정의 필요
+				// // throw new StorePlatformException(updateLoginInfoResponse.getCommonResponse().getResultMessage());
+				// }
+				// res.setSessionKey(loginInfo.getSessionKey());
+				sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+
+			}
 			sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
 			sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
 			sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
@@ -379,7 +403,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 5.2.14. 판매자 회원 계정 승인.
+	 * 2.2.14. 판매자 회원 계정 승인.
 	 * </pre>
 	 * 
 	 * @param header
@@ -447,7 +471,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 5.2.16 판매자 회원 계정 잠금.
+	 * 2.2.16 판매자 회원 계정 잠금.
 	 * </pre>
 	 * 
 	 * @param header
@@ -513,7 +537,7 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 5.2.10. 판매자 기본정보 수정.
+	 * 2.2.10. 판매자 기본정보 수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -530,7 +554,7 @@ public class SellerServiceImpl implements SellerService {
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
 
 		// 실명인증 정보
-		if (req.getIsRealName().equals("Y")) {
+		if (req.getIsRealName().equals(MemberConstants.USE_Y)) {
 			MbrAuth mbrAuth = new MbrAuth();
 			// 실명인증여부
 			mbrAuth.setIsRealName(req.getIsRealName());
@@ -637,7 +661,8 @@ public class SellerServiceImpl implements SellerService {
 
 	/**
 	 * <pre>
-	 * 5.2.11. 판매자회원 정산 정보 수정.
+	 * 2.2.11. 판매자회원 정산 정보 수정.
+	 * @TODO
 	 * </pre>
 	 * 
 	 * @param header
@@ -800,72 +825,5 @@ public class SellerServiceImpl implements SellerService {
 		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
 		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
 		return commonRequest;
-	}
-
-	/**
-	 * <pre>
-	 * 필수 약관 체크.
-	 * </pre>
-	 * 
-	 * @param agreementList
-	 * @param tenantId
-	 * @return boolean
-	 * @throws Exception
-	 */
-	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) throws Exception {
-
-		/**
-		 * DB 약관 목록 조회 sorting
-		 */
-		List<Clause> dbAgreementList = this.component.getMandAgreeList(tenantId);
-		if (dbAgreementList.size() == 0) {
-			LOGGER.info("## 체크할 필수 약관이 존재 하지 않습니다.");
-			// TODO [김경복] Exception 재정의 필요
-			throw new Exception("## 체크할 필수 약관이 존재 하지 않습니다.");
-		}
-		Comparator<Clause> dbComparator = new Comparator<Clause>() {
-			@Override
-			public int compare(Clause value1, Clause value2) {
-				return value1.getClauseItemCd().compareTo(value2.getClauseItemCd());
-			}
-		};
-		Collections.sort(dbAgreementList, dbComparator);
-
-		// sorting data setting
-		StringBuffer sortDbAgreeInfo = new StringBuffer();
-		for (Clause sortInfo : dbAgreementList) {
-			sortDbAgreeInfo.append(sortInfo.getClauseItemCd());
-		}
-		LOGGER.info("## DB 필수약관목록 : {}", sortDbAgreeInfo);
-
-		/**
-		 * 요청 약관 목록 조회 sorting
-		 */
-		Comparator<AgreementInfo> comparator = new Comparator<AgreementInfo>() {
-			@Override
-			public int compare(AgreementInfo o1, AgreementInfo o2) {
-				return o1.getExtraAgreementId().compareTo(o2.getExtraAgreementId());
-			}
-		};
-		Collections.sort(agreementList, comparator);
-
-		// sorting data setting
-		StringBuffer sortAgreeInfo = new StringBuffer();
-		for (AgreementInfo info : agreementList) {
-			if (StringUtils.equals(info.getIsExtraAgreement(), MemberConstants.USE_Y)) { // 약관 동의한것만 비교대상으로 세팅
-				sortAgreeInfo.append(info.getExtraAgreementId());
-			}
-		}
-		LOGGER.info("## DB 요청약관목록 : {}", sortAgreeInfo);
-
-		/**
-		 * 정렬된 DB 약관 목록과 요청 약관 목록을 비교한다.
-		 */
-		if (!StringUtils.equals(sortDbAgreeInfo.toString(), sortAgreeInfo.toString())) {
-			return true;
-		} else {
-			return false;
-		}
-
 	}
 }

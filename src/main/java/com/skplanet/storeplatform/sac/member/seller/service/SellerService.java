@@ -27,41 +27,41 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 public interface SellerService {
 
-	/** 5.2.1. 판매자 회원 가입. */
+	/** 2.2.1. 판매자 회원 가입. */
 	public CreateRes createSeller(SacRequestHeader header, CreateReq req) throws Exception;
 
-	/** 5.2.3. 판매자 회원 인증. */
+	/** 2.2.3. 판매자 회원 인증. */
 	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) throws Exception;
 
-	/** 5.2.10. 판매자 회원 기본정보 수정 */
+	/** 2.2.10. 판매자 회원 기본정보 수정 */
 	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) throws Exception;
 
-	/** 5.2.11. 판매자 회원 정산정보 수정 */
+	/** 2.2.11. 판매자 회원 정산정보 수정 */
 	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req)
 			throws Exception;
 
-	/** 5.2.16. 판매자 회원 계정 잠금. */
+	/** 2.2.16. 판매자 회원 계정 잠금. */
 	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) throws Exception;
 
-	/** 5.2.14. 판매자 회원 계정 승인. */
+	/** 2.2.14. 판매자 회원 계정 승인. */
 	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req) throws Exception;
 
 	/**
-	 * 5.2.24. 판매자 회원 탈퇴.
+	 * 2.2.24. 판매자 회원 탈퇴.
 	 * 
 	 * @throws Exception
 	 */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception;
 
 	/**
-	 * 5.2.26. 판매자 회원 인증키 생성/연장.
+	 * 2.2.26. 판매자 회원 인증키 생성/연장.
 	 * 
 	 * @throws Exception
 	 */
 	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) throws Exception;
 
 	/**
-	 * 5.2.28. 판매자 회원 인증키 폐기.
+	 * 2.2.28. 판매자 회원 인증키 폐기.
 	 * 
 	 * @throws Exception
 	 */
