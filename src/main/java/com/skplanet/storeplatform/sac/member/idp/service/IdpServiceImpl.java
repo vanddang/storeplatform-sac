@@ -760,7 +760,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrAuth.setBirthDay(map.get("user_birthday").toString());
 			mbrAuth.setCi(map.get("user_ci").toString());
 			mbrAuth.setDi(map.get("user_di").toString());
-			mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
+			// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
 			mbrAuth.setRealNameSite(map.get("rname_auth_sst_code").toString());
 			mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
 			mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
