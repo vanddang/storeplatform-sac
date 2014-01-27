@@ -148,7 +148,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String userKey = req.getUserKey();
 		String deviceId = req.getDeviceInfo().getDeviceId();
-		String deviceKey = null;
 
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
@@ -200,7 +199,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo = this.getDeviceMajorInfo(deviceInfo);
 
 		/* 휴대기기 등록 처리 */
-		deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, deviceInfo);
+		String deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, deviceInfo);
 
 		/* 변경된 정보 idp 연동 */
 		this.userService.modifyProfileIdp(requestHeader, userKey, req.getUserAuthKey());
@@ -229,13 +228,16 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
+		String userKey = req.getUserKey();
+		String deviceKey = req.getDeviceInfo().getDeviceKey();
+
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(req.getUserKey());
+		key.setKeyString(userKey);
 		keySearchList.add(key);
 		schUserReq.setKeySearchList(keySearchList);
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
@@ -253,8 +255,12 @@ public class DeviceServiceImpl implements DeviceService {
 		/* device header 값 셋팅 */
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
-		deviceInfo.setUserKey(req.getUserKey());
-		String deviceKey = this.mergeDeviceInfo(requestHeader, deviceInfo);
+		/* 수정할 device 키 값 셋팅 */
+		deviceInfo.setDeviceKey(deviceKey);
+		deviceInfo.setUserKey(userKey);
+
+		/* 휴대기기 정보 수정 */
+		deviceKey = this.mergeDeviceInfo(requestHeader, deviceInfo);
 
 		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
 		if (req.getUserAuthKey() != null) {
@@ -442,11 +448,11 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 2.휴대기기 정보 등록완료 */
 		if (StringUtil.equals(createDeviceRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
+			logger.info(":::: [PreviousUserKey] {}", createDeviceRes.getPreviousUserKey());
+			logger.info(":::: [NowUserKey] {}", createDeviceRes.getUserKey());
+
 			/* 3. 기등록된 회원이 존재하는지 확인 */
 			if (createDeviceRes.getPreviousUserKey() != null) {
-
-				logger.info(":::: [] {PreviousUserKey}", createDeviceRes.getPreviousUserKey());
-				logger.info(":::: [] {NowUserKey}", createDeviceRes.getUserKey());
 
 				String previousUserKey = createDeviceRes.getPreviousUserKey();
 				String nowUserKey = createDeviceRes.getUserKey();
@@ -533,16 +539,21 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
+		String deviceKey = deviceInfo.getDeviceKey();
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch key = new KeySearch();
 
-		if (deviceId != null) {
+		if (deviceKey != null) {
+			key.setKeyType(MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
+			key.setKeyString(deviceKey);
+		} else if (deviceId != null) {
 			key.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
 			key.setKeyString(deviceId);
 		}
+
 		keySearchList.add(key);
 		schDeviceReq.setCommonRequest(commonRequest);
 		schDeviceReq.setUserKey(deviceInfo.getUserKey());
@@ -555,10 +566,16 @@ public class DeviceServiceImpl implements DeviceService {
 			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
+		/* deviceKey로 조회시 파라메터로 넘어온 deviceId와 DB deviceId 비교 */
+		if (deviceKey != null) {
+			if (!deviceId.equals(userMbrDevice.getDeviceID())) {
+				throw new Exception("deviceKey에 등록된 deviceId가 일치하지 않습니다.");
+			}
+		}
 		// 부가정보 등록시 셋팅할 값들
-		// userKey는 담겨있음
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
+		deviceInfo.setUserKey(userMbrDevice.getUserKey());
 
 		/* device header 값 셋팅 */
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
@@ -673,10 +690,7 @@ public class DeviceServiceImpl implements DeviceService {
 							throw new Exception("로그인에 실패하였습니다.(오류코드 4204).");
 						}
 					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
-						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
-																													// 조회된
-																													// 회선정보
-																													// 없음
+						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS 조회된 회선정보없음
 					}
 				}
 			} else { // 타사
