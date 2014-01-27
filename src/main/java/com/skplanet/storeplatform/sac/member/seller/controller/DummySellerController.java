@@ -551,7 +551,7 @@ public class DummySellerController {
 	public ModifyAccountInformationRes modifyAccountInformation() {
 
 		ModifyAccountInformationRes responseVO = new ModifyAccountInformationRes();
-		responseVO.setSellerKey("User1");
+		responseVO.setSellerKey("IF102158942020090723111912");
 
 		return responseVO;
 	}
