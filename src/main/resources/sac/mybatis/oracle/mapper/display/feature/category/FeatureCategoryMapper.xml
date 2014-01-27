@@ -849,7 +849,7 @@
                                   FROM TB_DP_SPRT_DEVICE SD
                                      , TB_CM_DEVICE CD
                                 WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                                  AND SD.DEVICE_MODEL_CD = 'LG-LU6200'
+                                  AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
                                   <if test='topMenuId == "DP13"'>
                                   AND CD.EBOOK_SPRT_YN = 'Y'
                                   </if>
