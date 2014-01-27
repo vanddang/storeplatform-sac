@@ -209,7 +209,7 @@ public class IDPServiceImpl implements IDPService {
 
 	/**
 	 * <pre>
-	 * 2.4.2. 기본 Profile 조회 (For SO Server).
+	 * 2.4.2. 기본 Profile 조회 (For SP Server).
 	 * </pre>
 	 * 
 	 * @param userAuthKey
@@ -219,15 +219,13 @@ public class IDPServiceImpl implements IDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public IDPReceiverM searchUserCommonInfo(String userAuthKey, String queryKeyType, String queryKeyValue)
-			throws Exception {
+	public IDPReceiverM searchUserCommonInfo(String queryKeyType, String queryKeyValue) throws Exception {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
 		sendData.setCmd(IDPConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
 		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setUser_auth_key(userAuthKey);
 		sendData.setKey_type(queryKeyType);
 		sendData.setKey(queryKeyValue);
 

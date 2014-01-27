@@ -38,9 +38,8 @@ public interface IDPService {
 	public IDPReceiverM authPwd(String id, String pwd) throws Exception;
 
 	/** 2.4. 회원 정보 조회 API. */
-	/** 2.4.2. 기본 Profile 조회 (For SO Server). */
-	public IDPReceiverM searchUserCommonInfo(String userAuthKey, String queryKeyType, String queryKeyValue)
-			throws Exception;
+	/** 2.4.2. 기본 Profile 조회 (For SP Server). */
+	public IDPReceiverM searchUserCommonInfo(String queryKeyType, String queryKeyValue) throws Exception;
 
 	/** 2.4.3. 특정 Profile 조회 (For SO Server). */
 	public IDPReceiverM searchSpecialProfile(String queryKeyType, String queryKeyValue) throws Exception;
