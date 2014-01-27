@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountReqSC;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountResSC;
@@ -106,8 +107,13 @@ public class HistoryListServiceImpl implements HistoryListService {
 		// SC Call
 		scResponse = this.historySci.listHistory(scRequest);
 
+		if (scResponse.getHistoryList().size() <= 0) {
+			throw new StorePlatformException("SAC_PUR_0100");
+		}
+
 		// SC객체를 SAC객체로 맵핑작업
 		List<HistorySC> scHistoryList = scResponse.getHistoryList();
+
 		for (HistorySC obj : scHistoryList) {
 
 			history = new History();
@@ -142,7 +148,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			history.setDwldStartDt(obj.getDwldStartDt());
 			history.setDwldExprDt(obj.getDwldExprDt());
 			history.setPrchsProdType(obj.getPrchsProdType());
-			history.setFixProdId(obj.getFixProdId());
+			history.setFixrateProdId(obj.getFixrateProdId());
 
 			// 정액제 정보 set
 			history.setPaymentStartDt(obj.getPaymentStartDt());
