@@ -37,6 +37,8 @@ public class CategoryAppReq extends CommonInfo {
 
 	private String imageCd; // 이미지 코드
 
+	private String langCd; // 언어 코드
+
 	public String getProdCharge() {
 		return this.prodCharge;
 	}
@@ -108,4 +110,13 @@ public class CategoryAppReq extends CommonInfo {
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
 	}
+
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
 }
