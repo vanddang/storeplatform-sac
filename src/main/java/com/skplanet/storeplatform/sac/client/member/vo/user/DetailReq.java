@@ -26,7 +26,7 @@ public class DetailReq extends CommonInfo {
 	/*
 	 * 정보조회범위 01 : 기본정보 02 : 기본정보 + 부가정보 03 : 기본정보 + 부가정보 + 단말정보
 	 */
-	private String searchExtent;
+	private SearchExtentReq searchExtent;
 
 	public String getUserId() {
 		return this.userId;
@@ -60,11 +60,11 @@ public class DetailReq extends CommonInfo {
 		this.deviceKey = deviceKey;
 	}
 
-	public String getSearchExtent() {
+	public SearchExtentReq getSearchExtent() {
 		return this.searchExtent;
 	}
 
-	public void setSearchExtent(String searchExtent) {
+	public void setSearchExtent(SearchExtentReq searchExtent) {
 		this.searchExtent = searchExtent;
 	}
 

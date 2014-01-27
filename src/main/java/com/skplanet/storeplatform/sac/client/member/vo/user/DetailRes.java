@@ -11,7 +11,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 
 /**
@@ -34,8 +33,6 @@ public class DetailRes extends CommonInfo {
 	private List<DeviceExtraInfo> deviceExtraInfoList;
 	/* 사용자 정보 */
 	private UserInfo userInfo;
-	/* 사용자 부가정보 */
-	private List<UserExtraInfo> userExtraInfoList;
 	/* 약관동의정보 리스트 */
 	private List<Agreement> agreementList;
 
@@ -77,14 +74,6 @@ public class DetailRes extends CommonInfo {
 
 	public void setUserInfo(UserInfo userInfo) {
 		this.userInfo = userInfo;
-	}
-
-	public List<UserExtraInfo> getUserExtraInfoList() {
-		return this.userExtraInfoList;
-	}
-
-	public void setUserExtraInfoList(List<UserExtraInfo> userExtraInfoList) {
-		this.userExtraInfoList = userExtraInfoList;
 	}
 
 	public List<Agreement> getAgreementList() {
