@@ -81,6 +81,15 @@ public final class MemberConstants {
 	public static final String NM_DEVICE_TELECOM_NON = "NON"; // NON
 	public static final String NM_DEVICE_TELECOM_IOS = "ISB"; // iOS
 
+	/** 사용자 부가속성. */
+	public static final String USER_EXTRA_CERTIFICATION = "US010901"; // 공인인증여부
+	public static final String USER_EXTRA_SKTBILLSEPARATION = "US010902"; // SKT 청구서 분리 여부
+	public static final String USER_EXTRA_FACEBOOKACCESSTOKEN = "US010903"; // Facebook Access Token 정보
+	public static final String USER_EXTRA_FACEBOOKPURCHASE = "US010904"; // Facebook 구매 연동 여부
+	public static final String USER_EXTRA_FACEBOOKRATING = "US010905"; // Facebook 평점 연동 여부
+	public static final String USER_EXTRA_FACEBOOKREVIEW = "US010906"; // Facebook 후기 연동 여부
+	public static final String USER_EXTRA_MEMBERPOINTJOIN = "US010907"; // 통합포인트 가입 여부
+
 	/** 휴대기기 부가속성. */
 	public static final String DEVICE_EXTRA_OMPDOWNLOADER_YN = "US011401"; // OMP DOWNLOADER 설치 여부
 	public static final String DEVICE_EXTRA_STANDBYSCREEN_YN = "US011402"; // 대기화면 설정 여부

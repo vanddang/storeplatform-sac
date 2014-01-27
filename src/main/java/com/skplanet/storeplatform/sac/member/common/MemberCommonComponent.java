@@ -347,10 +347,12 @@ public class MemberCommonComponent {
 
 		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
 
-		if (schUserExtraRes.getMbrMangItemPtcrList().size() == 0) {
-			throw new RuntimeException("######## 사용자 부가정보 조회 : 사용자 데이터 없음");
+		if (!StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new RuntimeException("######## 사용자 부가정보 조회실패 : "
+					+ schUserExtraRes.getCommonResponse().getResultCode() + " MSG : "
+					+ schUserExtraRes.getCommonResponse().getResultMessage());
 		} else if (StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(),
-				MemberConstants.RESULT_SUCCES) && schUserExtraRes.getMbrMangItemPtcrList().size() != 0) {
+				MemberConstants.RESULT_SUCCES)) {
 
 			/* 유저키 세팅 */
 			extraRes.setUserKey(schUserExtraRes.getUserKey());
@@ -365,8 +367,8 @@ public class MemberCommonComponent {
 				}
 
 				UserExtraInfo extra = new UserExtraInfo();
-				extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
-				extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
+				extra.setExtraProfileCode(ptcr.getExtraProfile());
+				extra.setExtraProfileValue(ptcr.getExtraProfileValue());
 
 				listExtraInfo.add(extra);
 			}

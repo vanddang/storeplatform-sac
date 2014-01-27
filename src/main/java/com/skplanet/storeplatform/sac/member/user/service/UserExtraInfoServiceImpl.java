@@ -68,8 +68,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		String validProfileCode = this.validProfileCode(req);
 
 		/* 정상회원이면 SC 회원 부가 정보 등록/수정 호출 */
-		// if (searchUser != null && "Y".equals(validProfileCode)) {
-		if (searchUser != null) {
+		if (searchUser != null && "Y".equals(validProfileCode)) {
 			res = this.modifyUserExtra(req, sacHeader);
 		}
 
@@ -113,8 +112,11 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
 		UserInfo searchUser = this.searchUser(req, sacHeader);
 
+		/* 입력받은 profileCode 정상인지 확인 */
+		String validProfileCode = this.validProfileCode(req);
+
 		/* 정상회원이면 SC 회원 부가 정보 삭제 호출 */
-		if (searchUser != null) {
+		if (searchUser != null && "Y".equals(validProfileCode)) {
 			res = this.removeUserExtra(req, sacHeader);
 		}
 
@@ -247,17 +249,20 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		String validProfileCode = "";
 
 		for (UserExtraInfo info : req.getAddInfoList()) {
-			if (!info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_SKT)
-					|| !info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_KT)
-					|| !info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_LGT)
-					|| !info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_OMD)
-					|| !info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_NSH)
-					|| !info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_NON)
-					|| !info.getExtraProfileCode().equals(MemberConstants.DEVICE_TELECOM_IOS)) {
+			if (info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_CERTIFICATION)
+					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_SKTBILLSEPARATION)
+					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKACCESSTOKEN)
+					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKPURCHASE)
+					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKRATING)
+					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_FACEBOOKREVIEW)
+					|| info.getExtraProfileCode().equals(MemberConstants.USER_EXTRA_MEMBERPOINTJOIN)) {
 
-				LOGGER.debug("###### 회원부가정보 삭제 Req ProfileCode 잘못된 코드 : {}", info.getExtraProfileCode());
-				throw new RuntimeException("###### 회원부가정보 삭제 Req ProfileCode 잘못된 코드 : " + info.getExtraProfileCode());
+				validProfileCode = "Y";
 
+			} else {
+				validProfileCode = "N";
+				LOGGER.debug("###### 회원부가정보 ProfileCode 잘못된 코드 : {}", info.getExtraProfileCode());
+				throw new RuntimeException("###### 회원부가정보 ProfileCode 잘못된 코드 : " + info.getExtraProfileCode());
 			}
 		}
 

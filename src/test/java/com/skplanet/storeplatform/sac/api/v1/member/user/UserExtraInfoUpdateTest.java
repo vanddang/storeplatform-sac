@@ -81,12 +81,12 @@ public class UserExtraInfoUpdateTest {
 						List<UserExtraInfo> userExtraList = new ArrayList<UserExtraInfo>();
 
 						UserExtraInfo user1 = new UserExtraInfo();
-						user1.setExtraProfileCode("US010901");
-						user1.setExtraProfileValue("100000008780");
+						user1.setExtraProfileCode("US010905");
+						user1.setExtraProfileValue("111");
 
 						UserExtraInfo user2 = new UserExtraInfo();
-						user2.setExtraProfileCode("US010902111111111");
-						user2.setExtraProfileValue("100008258911");
+						user2.setExtraProfileCode("US010906");
+						user2.setExtraProfileValue("222");
 
 						// UserExtraInfo user3 = new UserExtraInfo();
 						// user3.setExtraProfileCode("US010903");
