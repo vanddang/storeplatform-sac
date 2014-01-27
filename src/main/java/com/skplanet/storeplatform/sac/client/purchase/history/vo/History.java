@@ -47,7 +47,7 @@ public class History extends CommonInfo implements Serializable {
 	private String cpnPublishCd;
 	private String cpnDlvUrl;
 	private String etcSeq;
-	private String fixProdId;
+	private String fixrateProdId;
 	private String prchsProdType;
 
 	// 자동결제정보
@@ -575,18 +575,18 @@ public class History extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the fixProdId
+	 * @return the fixrateProdId
 	 */
-	public String getFixProdId() {
-		return this.fixProdId;
+	public String getFixrateProdId() {
+		return this.fixrateProdId;
 	}
 
 	/**
-	 * @param fixProdId
-	 *            the fixProdId to set
+	 * @param fixrateProdId
+	 *            the fixrateProdId to set
 	 */
-	public void setFixProdId(String fixProdId) {
-		this.fixProdId = fixProdId;
+	public void setFixrateProdId(String fixrateProdId) {
+		this.fixrateProdId = fixrateProdId;
 	}
 
 	/**
