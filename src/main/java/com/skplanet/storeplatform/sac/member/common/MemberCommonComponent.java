@@ -259,6 +259,9 @@ public class MemberCommonComponent {
 
 		if (schUserRes.getUserMbr() == null) {
 			throw new RuntimeException("######## 사용자 기본정보 조회 : 사용자 데이터 없음");
+		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
+			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
+					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
 		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
 				&& schUserRes.getUserMbr() != null) {
 			userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
