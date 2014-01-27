@@ -321,7 +321,7 @@
 		                                                                        , 'DP13027009'
 		                                                                        , 'DP13027010' ) )
 		                           </if>
-		                           <if test='filteredBy == "ebook+genre"'>
+		                           <if test='filteredBy == "ebook+gener"'>
 		                               AND B.TOP_MENU_ID = 'DP13'
                                        AND B.MENU_ID IN ( SELECT MENU_ID
                                                             FROM TB_DP_MENU_CATEGORY
