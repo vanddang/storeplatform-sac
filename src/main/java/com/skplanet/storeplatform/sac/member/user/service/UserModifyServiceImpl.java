@@ -97,13 +97,24 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## ====================================================");
 
 			/**
-			 * IDP 연동 정도 setting.
+			 * IDP 연동 정보 setting.
 			 */
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("user_auth_key", req.getUserAuthKey());
 			param.put("key_type", "2");
 			param.put("key", userInfo.getImMbrNo()); // MBR_NO
-			param.put("user_name", req.getUserName());
+
+			/**
+			 * TODO 실명인증 정보 등록/수정 API 구현할때 살펴 볼것...
+			 * 
+			 * is_rname_auth이 N 인 경우 user_ci와 user_name의 값은 공백이어야 합니다.
+			 * 
+			 * 사용자 이름변경은 실명인증과 관계가 있어 보이는데....
+			 */
+			// param.put("is_rname_auth", MemberConstants.USE_N); // Y일경우 user_name, user_ci 필수
+			// param.put("user_name", req.getUserName());
+			// param.put("user_ci", req.getUserName());
+
 			param.put("user_sex", req.getUserSex());
 			param.put("user_birthday", req.getUserBirthDay());
 			param.put("user_calendar", req.getUserCalendar());
@@ -116,9 +127,19 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## IDP modifyProfile Code : {}", modifyInfo.getResponseHeader().getResult());
 			LOGGER.info("## IDP modifyProfile Text  : {}", modifyInfo.getResponseHeader().getResult_text());
 
-			if (StringUtils.equals(modifyInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
+			if (StringUtils.equals(modifyInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 				LOGGER.info("## IDP 연동 성공 ==============================================");
+
+				IDPReceiverM searchUserInfo = this.idpService.searchUserCommonInfo4SPServer("3", userInfo.getImMbrNo());
+				LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseHeader().getResult_text());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_sex());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_birthday());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_zipcode());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_address());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_address2());
+				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_tel());
 
 			}
 
