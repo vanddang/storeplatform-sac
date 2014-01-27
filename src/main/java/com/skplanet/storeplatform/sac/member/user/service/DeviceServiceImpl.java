@@ -150,6 +150,9 @@ public class DeviceServiceImpl implements DeviceService {
 		String userKey = req.getUserKey();
 		String deviceId = req.getDeviceInfo().getDeviceId();
 
+		/* 모번호 조회 */
+		deviceId = this.commService.getOpmdMdnInfo(deviceId);
+
 		/* 회원 정보 조회 */
 		SearchUserRequest schUserReq = new SearchUserRequest();
 		schUserReq.setCommonRequest(commonRequest);
@@ -254,7 +257,7 @@ public class DeviceServiceImpl implements DeviceService {
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		/* 모번호 조회 */
-		//deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceId));
+		deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceInfo.getDeviceId()));
 
 		/* device header 값 셋팅 */
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
