@@ -122,34 +122,28 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		RemoveUserRequest removeUserRequest = this.tenantRemoveUser(requestHeader, schUserRes);
 
 		/* 통합회원 연동 */
-		if (schUserRes.getUserMbr().getImSvcNo() != null) {
+		if (schUserRes.getUserMbr().getImSvcNo() != null
+				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) {
 			imIdpReceiver = this.oneIdUser(requestHeader, schUserRes, req);
 
-			if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-				logger.info("IMIDP Success Response ", schUserRes.toString());
-				withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
-			}
+			logger.info("IMIDP Success Response ", schUserRes.toString());
+			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
 		}
 		/* IDP 모바일 회원 */
 		else if (schUserRes.getUserMbr().getImSvcNo() == null
 				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 			idpReceiver = this.idpMobileUser(requestHeader, schUserRes, req);
 
-			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				logger.info("IMIDP Success Response ", schUserRes.toString());
-				withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
-			}
+			logger.info("IDP MDN Success Response ", schUserRes.toString());
+			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
 		}
 		/* IDP 아이디 회원 */
 		else if (schUserRes.getUserMbr().getImSvcNo() == null
 				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
 			idpReceiver = this.idpIdUser(requestHeader, schUserRes, req);
 
-			/* IDP or IMIDP 연동결과 성공이면 SC회원 탈퇴 */
-			if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				logger.info("IDP Success Response ", schUserRes.toString());
-				withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
-			}
+			logger.info("IDP ID Success Response ", schUserRes.toString());
+			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
 		}
 
 		// else {
@@ -312,9 +306,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		// 모바일 인증
 		IDPReceiverM idpReceiver = this.idpService.alredyJoinCheckByEmail(schUserRes.getUserMbr().getUserEmail());
 
-		logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success : ", idpReceiver.getResponseHeader().getResult(),
-				"] ", idpReceiver.getResponseHeader().getResult_text());
-		logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success Response : ", idpReceiver.getResponseBody()
+		logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success : {}, {}", idpReceiver.getResponseHeader()
+				.getResult(), idpReceiver.getResponseHeader().getResult_text());
+		logger.info("[이메일 가입여부 체크 IDP alredyJoinCheckByEmail Success Response : {}", idpReceiver.getResponseBody()
 				.toString());
 
 		// 이메일 가입여부 체크 등록되어 있지 않으면 resultCode : Success
@@ -345,6 +339,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	@Override
 	public RemoveUserRequest tenantRemoveUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes)
 			throws Exception {
+
 		RemoveUserRequest removeUserRequest = new RemoveUserRequest();
 		removeUserRequest.setCommonRequest(commonRequest);
 		removeUserRequest.setSecedeReasonCode("US010411"); // 탈퇴사유 코드 : 임시
