@@ -438,4 +438,18 @@ public class IDPServiceImpl implements IDPService {
 		return this.repository.sendIDP(sendData);
 	}
 
+	@Override
+	public IDPReceiverM searchUserCommonInfo4SPServer(String keyType, String key) throws Exception {
+		IDPSenderM sendData = new IDPSenderM();
+
+		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(IDPConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setResp_type(IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(IDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setKey_type(keyType);
+		sendData.setKey(key);
+
+		return this.repository.sendIDP(sendData);
+	}
+
 }

@@ -50,4 +50,7 @@ public interface IDPService {
 
 	/** 2.2.7 간편 회원 가입 */
 	public IDPReceiverM simpleJoin(Map<String, Object> param) throws Exception;
+
+	/** 기본 Profile 조회 (For SP Server) */
+	public IDPReceiverM searchUserCommonInfo4SPServer(String keyType, String key) throws Exception;
 }

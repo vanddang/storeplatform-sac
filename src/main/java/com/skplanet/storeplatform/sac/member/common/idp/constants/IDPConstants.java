@@ -36,6 +36,9 @@ public final class IDPConstants {
 	public static final String IDP_REQ_CMD_WATERMARK_AUTH = "watermarkAuth"; // 워터마크인증
 	public static final String IDP_REQ_CMD_SECEDE_USER = "secedeUser"; // 회원 탈퇴
 	public static final String IDP_REQ_CMD_SIMPLE_JOIN = "simpleJoinApply"; // 간편 회원 가입
+	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "findCommonProfileForServer"; // 기본 Profile
+																										  // 조회 (For SP
+																										  // Server)
 
 	/** 모바일. */
 	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap"; // 인증
