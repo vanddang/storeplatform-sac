@@ -253,6 +253,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
+		/* 모번호 조회 */
+		//deviceInfo.setDeviceId(this.commService.getOpmdMdnInfo(deviceId));
+
 		/* device header 값 셋팅 */
 		deviceInfo = this.setDeviceHeader(requestHeader.getDeviceHeader(), deviceInfo);
 
@@ -477,7 +480,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 					UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
 					updAgreeReq.setCommonRequest(commonRequest);
-					updAgreeReq.setUserKey(previousUserKey);
+					updAgreeReq.setUserKey(nowUserKey);
 					updAgreeReq.setMbrClauseAgreeList(agreeList);
 					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
 
