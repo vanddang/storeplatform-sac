@@ -5,14 +5,16 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
+import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
  * VOD Service
@@ -29,9 +31,26 @@ public class VodServiceImplTest {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /*
     @Autowired
     private VodService vodService;
+    */
 
+	@Autowired
+	@Qualifier("sac")
+	private CommonDAO commonDAO;
+
+    @Test
+    public void searchVod_channelInfo() {
+    	VodDetailReq req = new VodDetailReq();
+    	req.setChannelId("H900000421");
+    	req.setLangCd("ko");
+    	req.setTenantId("S01");
+		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodDetail", req, VodDetail.class);
+		this.logger.debug("vodDetail={}", vodDetail);
+    }
+
+    /*
     @Test
     public void searchVod() {
     	VodDetailReq req = new VodDetailReq();
@@ -41,5 +60,7 @@ public class VodServiceImplTest {
         VodDetailRes res = this.vodService.searchVod(req);
         this.logger.info("{}", res);
     }
+	*/
+
 
 }
