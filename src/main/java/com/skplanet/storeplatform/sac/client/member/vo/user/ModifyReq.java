@@ -17,112 +17,77 @@ public class ModifyReq extends CommonInfo {
 	 * 사용자 고유 Key.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String userKey;
+	private String userKey = "";
 
 	/**
 	 * IDP 인증 Key.
 	 */
-	private String userAuthKey;
-
-	/**
-	 * 사용자 메인 상태 코드.
-	 */
-	private String userMainStatus;
-
-	/**
-	 * 사용자 서브 상태 코드.
-	 */
-	private String userSubStatus;
+	private String userAuthKey = "";
 
 	/**
 	 * 이동 통신사.
 	 */
-	private String deviceTelecom;
+	private String deviceTelecom = "";
 
 	/**
 	 * 휴대폰 번호 국가 코드.
 	 */
-	private String userPhoneCountry;
+	private String userPhoneCountry = "";
 
 	/**
 	 * 사용자 연락처.
 	 */
-	private String userPhone;
+	private String userPhone = "";
 
 	/**
 	 * SMS 수신 여부.
 	 */
-	private String isRecvSms;
-
-	/**
-	 * 사용자 이메일.
-	 */
-	private String userEmail;
+	private String isRecvSms = "";
 
 	/**
 	 * 이메일 수신 여부.
 	 */
-	private String isRecvEmail;
-
-	/**
-	 * 사용자 이름.
-	 */
-	private String userName;
+	private String isRecvEmail = "";
 
 	/**
 	 * 사용자 성별.
 	 */
-	private String userSex;
+	private String userSex = "";
 
 	/**
 	 * 사용자 생년월일.
 	 */
-	private String userBirthDay;
+	private String userBirthDay = "";
 
 	/**
 	 * 우편번호.
 	 */
-	private String userZip;
+	private String userZip = "";
 
 	/**
 	 * 거주지 주소.
 	 */
-	private String userAddress;
+	private String userAddress = "";
 
 	/**
 	 * 거주지 상세 주소.
 	 */
-	private String userDetailAddress;
+	private String userDetailAddress = "";
 
 	/**
 	 * (외국인) 도시.
 	 */
-	private String userCity;
+	private String userCity = "";
 
 	/**
 	 * (외국인) 주.
 	 */
-	private String userState;
+	private String userState = "";
 
 	/**
 	 * 사용자 생일.
 	 */
-	private String userCalendar;
-
-	/**
-	 * @return String : userAuthKey
-	 */
-	public String getUserAuthKey() {
-		return this.userAuthKey;
-	}
-
-	/**
-	 * @param userAuthKey
-	 *            String : the userAuthKey to set
-	 */
-	public void setUserAuthKey(String userAuthKey) {
-		this.userAuthKey = userAuthKey;
-	}
+	private String userCalendar = "";
 
 	/**
 	 * @return String : userKey
@@ -140,33 +105,18 @@ public class ModifyReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : userMainStatus
+	 * @return String : userAuthKey
 	 */
-	public String getUserMainStatus() {
-		return this.userMainStatus;
+	public String getUserAuthKey() {
+		return this.userAuthKey;
 	}
 
 	/**
-	 * @param userMainStatus
-	 *            String : the userMainStatus to set
+	 * @param userAuthKey
+	 *            String : the userAuthKey to set
 	 */
-	public void setUserMainStatus(String userMainStatus) {
-		this.userMainStatus = userMainStatus;
-	}
-
-	/**
-	 * @return String : userSubStatus
-	 */
-	public String getUserSubStatus() {
-		return this.userSubStatus;
-	}
-
-	/**
-	 * @param userSubStatus
-	 *            String : the userSubStatus to set
-	 */
-	public void setUserSubStatus(String userSubStatus) {
-		this.userSubStatus = userSubStatus;
+	public void setUserAuthKey(String userAuthKey) {
+		this.userAuthKey = userAuthKey;
 	}
 
 	/**
@@ -230,21 +180,6 @@ public class ModifyReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : userEmail
-	 */
-	public String getUserEmail() {
-		return this.userEmail;
-	}
-
-	/**
-	 * @param userEmail
-	 *            String : the userEmail to set
-	 */
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-
-	/**
 	 * @return String : isRecvEmail
 	 */
 	public String getIsRecvEmail() {
@@ -257,21 +192,6 @@ public class ModifyReq extends CommonInfo {
 	 */
 	public void setIsRecvEmail(String isRecvEmail) {
 		this.isRecvEmail = isRecvEmail;
-	}
-
-	/**
-	 * @return String : userName
-	 */
-	public String getUserName() {
-		return this.userName;
-	}
-
-	/**
-	 * @param userName
-	 *            String : the userName to set
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 	/**
