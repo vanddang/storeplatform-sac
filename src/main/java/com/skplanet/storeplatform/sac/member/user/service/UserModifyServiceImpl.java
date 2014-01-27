@@ -123,7 +123,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 				LOGGER.info("## IDP 연동 성공 ==============================================");
 
-				IDPReceiverM searchUserInfo = this.idpService.searchUserCommonInfo4SPServer("3", userInfo.getImMbrNo());
+				IDPReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
 				LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
 				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseHeader().getResult_text());
 				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_sex());
@@ -155,7 +155,12 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
 
-			if (!StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			if (StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+				/**
+				 * 결과 세팅
+				 */
+				response.setUserKey(updateUserResponse.getUserKey());
 
 			} else {
 
@@ -165,10 +170,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 			}
 
 		}
-
-		/**
-		 * SC 회원 수정 요청.
-		 */
 
 		return response;
 	}
@@ -220,6 +221,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	private UserMbr getUserMbr(ModifyReq req) throws Exception {
 
 		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(req.getUserKey());
 		userMbr.setUserTelecom(req.getDeviceTelecom());
 		userMbr.setUserPhoneCountry(req.getUserPhoneCountry());
 		userMbr.setUserPhone(req.getUserPhone());
