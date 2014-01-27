@@ -102,6 +102,17 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			return responseVO;
 		}
 
+		// 리스트ID 유효값 체크
+		if (!"ADM000000013".equals(requestVO.getListId())) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("유효하지않은 리스트ID");
+			this.log.debug("----------------------------------------------------------------");
+
+			responseVO = new RecommendAdminRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
 		// 시작점 ROW Default 세팅
 		if (requestVO.getOffset() == 0) {
 			requestVO.setOffset(1);
