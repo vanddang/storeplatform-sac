@@ -152,6 +152,10 @@ public class DeviceController {
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req)
 			throws Exception {
 
+		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("")) {
+			throw new Exception("deviceKey 필수 파라미터 입니다.");
+		}
+
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
 
 		return res;
