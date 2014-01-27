@@ -157,9 +157,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 가입요청
 			 */
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
+			LOGGER.info("## ResponseCode : {}", createUserResponse.getCommonResponse().getResultCode());
+			LOGGER.info("## ResponseMsg  : {}", createUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.info("## UserKey      : {}", createUserResponse.getUserKey());
 
 			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 
