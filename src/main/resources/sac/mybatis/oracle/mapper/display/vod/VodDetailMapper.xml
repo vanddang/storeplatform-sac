@@ -3,17 +3,39 @@
 <mapper namespace="VodDetail">
     
     <select id="selectVodDetail" parameterType="VodDetailReq" resultType="VodDetail">
-		SELECT
-		     G.TENANT_ID, A.MENU_ID, A.PROD_ID
-		     , B.UP_MENU_ID , B.TOP_MENU_ID
-		     , C.MENU_NM, C.MENU_DESC
-		     , D.PROD_GRD_CD, D.USE_PERIOD_UNIT_CD, D.META_CLSF_CD, D.CONTENTS_TYPE_CD, D.DRM_YN
-		     , E.VOD_TITL_NM, E.STRM_EPSD_CNT, E.ISSUE_DAY, E.CHNL_COMP_NM, E.AGENCY_NM, E.HDV_YN, E.DOLBY_SPRT_YN, F.PROD_NM
-		     , F.ARTIST1_NM, F.ARTIST2_NM, F.PROD_BASE_DESC
-		     , H.CHNL_PERIOD_AMT, H.CHNL_UNLMT_AMT
-		FROM TB_DP_MENU_CATEGORY_PROD_MAPG A, TB_DP_MENU_CATEGORY B, TB_DP_MENU_CATEGORY_DESC C
+		SELECT /* VodDetailMapper.xml, selectVodDetail, SAC : 임근대 , 2014-01-28 */
+		     G.TENANT_ID
+		     , A.MENU_ID
+		     , A.PROD_ID
+		     , B.UP_MENU_ID
+		     , B.TOP_MENU_ID
+		     , C.MENU_NM
+		     , C.MENU_DESC
+		     , D.PROD_GRD_CD
+		     , D.USE_PERIOD_UNIT_CD
+		     , D.META_CLSF_CD
+		     , D.CONTENTS_TYPE_CD
+		     , D.DRM_YN
+		     , E.VOD_TITL_NM
+		     , E.STRM_EPSD_CNT
+		     , E.ISSUE_DAY
+		     , E.CHNL_COMP_NM
+		     , E.AGENCY_NM
+		     , E.HDV_YN
+		     , E.DOLBY_SPRT_YN
+		     , F.PROD_NM
+		     , F.PROD_BASE_DESC
+		     , F.PROD_DTL_DESC
+		     , F.ARTIST1_NM
+		     , F.ARTIST2_NM
+		     , F.PROD_BASE_DESC
+		     , H.CHNL_PERIOD_AMT
+		     , H.CHNL_UNLMT_AMT
+		FROM 
+			TB_DP_MENU_CATEGORY_PROD_MAPG A, TB_DP_MENU_CATEGORY B, TB_DP_MENU_CATEGORY_DESC C
 		     , TB_DP_PROD D, TB_DP_MULTIMDA_PROD E, TB_DP_PROD_DESC F, TB_DP_TENANT_PROD G
 		     , TB_DP_TENANT_PROD_PRICE H
+		     , TB_DP_PROD_IMG I
 		WHERE 1=1
 		   AND D.PROD_ID = #{channelId}
 		   AND A.MENU_ID = B.MENU_ID AND A.MENU_ID = C.MENU_ID
@@ -27,16 +49,27 @@
 		   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
     </select>
     
-<!-- 
-    <select id="getSourceList" parameterType="com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.ImageSource">
-        SELECT FILE_PATH, FILE_NM, IMG_CD
-        FROM TB_DP_PROD_IMG
-        WHERE PROD_ID = #{episodeId}
-        AND IMG_CD = #{imgCd}
-        AND LANG_CD = #{langCd}
-        ORDER BY EXPO_ORD
+    <select id="selectSourceList" parameterType="ProductImage" resultType="ProductImage">
+        SELECT A.*
+          FROM (
+			SELECT
+				FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+			FROM TB_DP_PROD_IMG
+			WHERE PROD_ID = #{prodId}
+			  AND LANG_CD = #{langCd}
+			  AND IMG_CD IN ( 'DP000137', 'DP000138', 'DP000139', 'DP000140' )
+			UNION ALL
+			SELECT 
+				FILE_PATH, FILE_NM, FILE_SIZE, EXPO_ORD
+			FROM TB_DP_PROD_IMG
+			WHERE PROD_ID = #{prodId}
+	          AND LANG_CD = #{langCd}
+			  AND IMG_CD IN ( 'DP000128', 'DP000129', 'DP000130', 'DP000131' )
+		) A
+		ORDER BY EXPO_ORD
     </select>
-
+    
+<!-- 
     <select id="getUpdateHistoryList" parameterType="com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq" resultType="com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory">
         SELECT
             PROD_UPD_DT,

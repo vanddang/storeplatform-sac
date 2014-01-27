@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.api.conts;
 
 /**
  * 전시용 상수 Class
- * 
+ *
  * Updated on : 2013. 12. 30. Updated by : 오승민, Incross.
  */
 public class DisplayConstants {
@@ -221,4 +221,25 @@ public class DisplayConstants {
 	public static final String DP_EBOOK_STORE_SUPPORT_NM = "store";
 
 	public static final String DP_EBOOK_PLAY_SUPPORT_NM = "play";
+
+
+	// //////////////////////////////////// Source Type //////////////////////////////////////////
+	/** 상품 */
+	public static final String DP_SOURCE_TYPE_PRODUCT = "product";
+	/** 썸네일 */
+	public static final String DP_SOURCE_TYPE_THUMBNAIL = "thumbnail";
+	/** 동영상 */
+	public static final String DP_SOURCE_TYPE_MOVIE = "movie";
+	/** 스크린샷 */
+	public static final String DP_SOURCE_TYPE_SCREENSHOT = "screenshot";
+	/** 스크린샷(큰사이즈) */
+	public static final String DP_SOURCE_TYPE_SCREENSHOT_LARGE = "screenshot/large";
+	/** 음악 */
+	public static final String DP_SOURCE_TYPE_MUSIC = "music";
+	/** 바코드이미지 */
+	public static final String DP_SOURCE_TYPE_BARCODE = "barcode";
+	/** 음악 mp3-192 */
+	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
+	/** 음악 mp3-128 */
+	public static final String DP_SOURCE_TYPE_AUDIO_MP3_128 = "audio/mp3-128";
 }

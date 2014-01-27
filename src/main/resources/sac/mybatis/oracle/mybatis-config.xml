@@ -24,13 +24,22 @@
     -->
 
     <!-- Definition of MAPPER Alias -->
-    <typeAliases> 
+    <typeAliases>
+                
+        <!-- ################################################# -->
+        <!-- SAC 공통										   -->
+        <!-- ################################################# -->
         <!-- ACL 관련 조회-->
         <typeAlias alias="AclAuthKeyInfo"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo" />
         <typeAlias alias="AclAuthInfo"        type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthInfo" />
         <typeAlias alias="InterfaceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.InterfaceInfo" />
         <typeAlias alias="ServiceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
         <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
+        
+        
+        <!-- ################################################# -->
+        <!-- 회원											   -->
+        <!-- ################################################# -->
         
         <!-- 공통 관련 조회 -->
         <typeAlias alias="DeviceDTO"      type="com.skplanet.storeplatform.sac.member.common.vo.Device" />
@@ -46,9 +55,25 @@
         <!-- 휴대폰 SMS 인증 / 이메일 인증  -->
         <typeAlias alias="ServiceAuth" type="com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth"/>
         
+        
+        
+		<!-- ################################################# -->
+        <!-- 구매											   -->
+        <!-- ################################################# -->
+        
+        
+        
+        <!-- ################################################# -->
+        <!-- 전시											   -->
+        <!-- ################################################# -->
+        
         <!-- 전시 상품 공통 -->
         <typeAlias alias="ProductCommonRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.common.ProductCommonRequest" />
         <typeAlias alias="ProductCommonDTO"  type="com.skplanet.storeplatform.sac.product.vo.ProductCommonDTO" /> 
+        <!-- 상품 이미지 -->
+        <typeAlias alias="ProductImage"  type="com.skplanet.storeplatform.sac.display.common.vo.ProductImage" /> 
+        
+        
         
         <!-- 일반카테고리 앱 상품 조회 -->
         <typeAlias alias="CategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq" />
