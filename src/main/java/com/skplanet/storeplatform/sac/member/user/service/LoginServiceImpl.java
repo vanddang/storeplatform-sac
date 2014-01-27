@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.LoginUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -62,22 +64,22 @@ public class LoginServiceImpl implements LoginService {
 	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 	@Autowired
-	MemberCommonComponent commService; // 회원 공통 서비스
+	MemberCommonComponent commService;
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
+	private UserSCI userSCI;
 
 	@Autowired
-	private DeviceService deviceService; // 휴대기기 관련 서비스
+	private DeviceService deviceService;
 
 	@Autowired
-	private IDPService idpService; // IDP 연동 클래스
+	private IDPService idpService;
 
 	@Autowired
-	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
+	private ImIDPService imIdpService;
 
 	/*
 	 * (non-Javadoc)
@@ -147,6 +149,7 @@ public class LoginServiceImpl implements LoginService {
 			this.volatileMemberPoc(requestHeader, deviceId, userKey, req.getDeviceTelecom());
 		}
 
+		/* 원아이디인 경우 */
 		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
 
 			/* 단말정보 merge */
@@ -164,7 +167,7 @@ public class LoginServiceImpl implements LoginService {
 			res.setStopStatusCode(stopStatusCode);
 			res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, userKey));
 
-		} else {
+		} else { /* 기존IDP회원 / 모바일회원인 경우 */
 
 			/* 무선회원 인증 */
 			IDPReceiverM idpReceiver = this.idpService.authForWap(deviceId);
@@ -242,18 +245,11 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 서비스 이용동의 간편 가입 대상 확인 */
-		//		Map<String, Object> param = new HashMap<String, Object>();
-		//		param.put("key_type", "2");
-		//		param.put("key", userId);
-		//		ImIDPReceiverM imIdpReceiver = this.imIdpService.findJoinServiceListIDP(param);
-		//		if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-		//
-		//			/*	SC회원 원아이디 테이블 조회	(현재 API 미존재	*/
-		//			if("SC회원 콤포넌트 원아이디 테이블 내부키" ==  null){
-		//				res.setImIntSvcNo(imIdpReceiver.getResponseBody().getIm_int_svc_no());
-		//				return res;
-		//			}
-		//		}
+		String imSvcNo = this.getAgreeJoinUserImSvcNo(requestHeader, userId);
+		if (imSvcNo != null) {
+			res.setImIntSvcNo(imSvcNo);
+			return res;
+		}
 
 		/* 회원정보 조회 */
 		SearchUserResponse schUserRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
@@ -507,6 +503,61 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
+	 * 서비스 이용동의 간편 가입 대상 확인
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param userId
+	 *            String
+	 * @return String imSvcNo
+	 * @throws Exception
+	 *             Exception
+	 */
+	public String getAgreeJoinUserImSvcNo(SacRequestHeader requestHeader, String userId) throws Exception {
+
+		boolean isAgreeJoinUser = false;
+
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("key_type", "2");
+		param.put("key", userId);
+		ImIDPReceiverM imIdpReceiver = this.imIdpService.findJoinServiceListIDP(param);
+
+		String imSvcNo = null;
+
+		if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+			imSvcNo = imIdpReceiver.getResponseBody().getIm_int_svc_no();
+		} else {
+			logger.info(":::: agreeJoinUser findJoinServiceListIDP : {}, {}", imIdpReceiver.getResponseHeader().getResult(), imIdpReceiver
+					.getResponseHeader().getResult_text());
+		}
+
+		logger.info(":::: agreeJoinUser imSvcNo : {}", imSvcNo);
+
+		if (imSvcNo != null) {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
+			commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+
+			SearchAgreeSiteRequest schAgreeSiteReq = new SearchAgreeSiteRequest();
+			schAgreeSiteReq.setCommonRequest(commonRequest);
+			schAgreeSiteReq.setImSvcNo(imSvcNo);
+
+			SearchAgreeSiteResponse schAgreeSiteRes = this.userSCI.searchAgreeSite(schAgreeSiteReq);
+			if (StringUtil.equals(schAgreeSiteRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+				if (schAgreeSiteRes.getMbrOneID().getUserKey() == null) {
+					isAgreeJoinUser = true;
+				}
+			}
+		}
+
+		if (isAgreeJoinUser) {
+			return imSvcNo;
+		} else {
+			return null;
+		}
+	}
+
+	/**
 	 * 
 	 * 휴대기기정보 merge
 	 * 
@@ -523,15 +574,8 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	public void mergeDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) throws Exception {
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
 		DeviceInfo deviceInfo = new DeviceInfo();
-		String model = requestHeader.getDeviceHeader().getModel(); //단말모델코드
-
 		deviceInfo.setUserKey(userKey);
-		deviceInfo.setDeviceModelNo(model);
 
 		if (obj instanceof AuthorizeByMdnReq) { // mdn인증
 
