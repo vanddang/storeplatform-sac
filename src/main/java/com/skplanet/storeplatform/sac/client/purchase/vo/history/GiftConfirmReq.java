@@ -24,12 +24,12 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 
 	private String tenantId; // Tenant ID
 	private String systemId; // 시스템ID
-	private String sendMbrNo; // 회원번호
-	private String sendDeviceNo; // 디바이스 번호
-	private String recvMbrNo; // 회원번호
-	private String recvDeviceNo; // 디바이스 번호
+	private String insdUsermbrNo; // 회원번호
+	private String insdDeviceId; // 디바이스 번호
 	private String prodId; // 상품 아이디
 	private String prchsId; // 구매ID
+	private String recvDt; // 선물수신일시
+	private String recvConfPathCd; // 수신확인경로코드
 
 	/**
 	 * @return the tenantId
@@ -62,63 +62,33 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the sendMbrNo
+	 * @return the insdUsermbrNo
 	 */
-	public String getSendMbrNo() {
-		return this.sendMbrNo;
+	public String getInsdUsermbrNo() {
+		return this.insdUsermbrNo;
 	}
 
 	/**
-	 * @param sendMbrNo
-	 *            the sendMbrNo to set
+	 * @param insdUsermbrNo
+	 *            the insdUsermbrNo to set
 	 */
-	public void setSendMbrNo(String sendMbrNo) {
-		this.sendMbrNo = sendMbrNo;
+	public void setInsdUsermbrNo(String insdUsermbrNo) {
+		this.insdUsermbrNo = insdUsermbrNo;
 	}
 
 	/**
-	 * @return the sendDeviceNo
+	 * @return the insdDeviceId
 	 */
-	public String getSendDeviceNo() {
-		return this.sendDeviceNo;
+	public String getInsdDeviceId() {
+		return this.insdDeviceId;
 	}
 
 	/**
-	 * @param sendDeviceNo
-	 *            the sendDeviceNo to set
+	 * @param insdDeviceId
+	 *            the insdDeviceId to set
 	 */
-	public void setSendDeviceNo(String sendDeviceNo) {
-		this.sendDeviceNo = sendDeviceNo;
-	}
-
-	/**
-	 * @return the recvMbrNo
-	 */
-	public String getRecvMbrNo() {
-		return this.recvMbrNo;
-	}
-
-	/**
-	 * @param recvMbrNo
-	 *            the recvMbrNo to set
-	 */
-	public void setRecvMbrNo(String recvMbrNo) {
-		this.recvMbrNo = recvMbrNo;
-	}
-
-	/**
-	 * @return the recvDeviceNo
-	 */
-	public String getRecvDeviceNo() {
-		return this.recvDeviceNo;
-	}
-
-	/**
-	 * @param recvDeviceNo
-	 *            the recvDeviceNo to set
-	 */
-	public void setRecvDeviceNo(String recvDeviceNo) {
-		this.recvDeviceNo = recvDeviceNo;
+	public void setInsdDeviceId(String insdDeviceId) {
+		this.insdDeviceId = insdDeviceId;
 	}
 
 	/**
@@ -149,6 +119,36 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 	 */
 	public void setPrchsId(String prchsId) {
 		this.prchsId = prchsId;
+	}
+
+	/**
+	 * @return the recvDt
+	 */
+	public String getRecvDt() {
+		return this.recvDt;
+	}
+
+	/**
+	 * @param recvDt
+	 *            the recvDt to set
+	 */
+	public void setRecvDt(String recvDt) {
+		this.recvDt = recvDt;
+	}
+
+	/**
+	 * @return the recvConfPathCd
+	 */
+	public String getRecvConfPathCd() {
+		return this.recvConfPathCd;
+	}
+
+	/**
+	 * @param recvConfPathCd
+	 *            the recvConfPathCd to set
+	 */
+	public void setRecvConfPathCd(String recvConfPathCd) {
+		this.recvConfPathCd = recvConfPathCd;
 	}
 
 }
