@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +83,7 @@ public class BestAppServiceImpl implements BestAppService {
 		List<Support> supportList = null;
 		List<Source> sourceList = null;
 
-		if (bestAppReq.getListId() == null || "".equals(bestAppReq.getListId())) {
+		if (StringUtils.isEmpty(bestAppReq.getListId())) {
 			this.log.error("필수 파라미터(listId)값이 없음");
 			commonResponse.setTotalCount(0);
 			response.setCommonResponse(commonResponse);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 		int offset = 1;
 		int count = 20;
 
-		if (bestContentsReq.getListId() == null || "".equals(bestContentsReq.getListId())) {
+		if (StringUtils.isEmpty(bestContentsReq.getListId())) {
 			this.log.error("필수 파라미터(listId)값이 없음");
 			commonResponse.setTotalCount(0);
 			response.setCommonResponse(commonResponse);
@@ -84,7 +85,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 			return response;
 
 		}
-		if (bestContentsReq.getFilteredBy() == null || "".equals(bestContentsReq.getFilteredBy())) {
+		if (StringUtils.isEmpty(bestContentsReq.getFilteredBy())) {
 			bestContentsReq.setFilteredBy("movie+broadcast");
 		}
 

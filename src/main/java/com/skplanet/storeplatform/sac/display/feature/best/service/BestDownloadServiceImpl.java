@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
-		if (bestDownloadReq.getListId() == null || "".equals(bestDownloadReq.getListId())) {
+		if (StringUtils.isEmpty(bestDownloadReq.getListId())) {
 			this.log.error("필수 파라미터(listId)값이 없음");
 			commonResponse.setTotalCount(0);
 			response.setCommonResponse(commonResponse);
