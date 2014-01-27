@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.GiftSCI;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
@@ -26,6 +27,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse
  * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
 @Service
+@Transactional
 public class GiftServiceImpl implements GiftService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -36,7 +38,7 @@ public class GiftServiceImpl implements GiftService {
 	 * 선물수신확인 체크.
 	 * 
 	 * @param giftReceiveRequest
-	 *            선물수신확인 체크
+	 *            요청정보
 	 * @return GiftReceiveResponse
 	 */
 	@Override

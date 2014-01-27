@@ -25,7 +25,7 @@ public interface HidingSacService {
 	 * 구매내역 숨김처리.
 	 * 
 	 * @param hidingRequest
-	 *            구매내역 숨김처리
+	 *            요청정보
 	 * @return HidingResponse
 	 */
 	public List<HidingResponse> modifyHiding(HidingRequest hidingRequest);

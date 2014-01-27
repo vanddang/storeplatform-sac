@@ -39,7 +39,7 @@ public class ExistenceServiceImpl implements ExistenceService {
 	 * 기구매 체크 SAC Service.
 	 * 
 	 * @param existenceRequest
-	 *            기구매 체크 SAC
+	 *            요청정보
 	 * @return List<ExistenceResponse>
 	 */
 	@Override

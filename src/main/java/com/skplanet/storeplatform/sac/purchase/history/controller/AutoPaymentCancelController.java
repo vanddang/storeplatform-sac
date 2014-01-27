@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelResponse;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.AutoPaymentCancelService;
 
 /**
@@ -42,14 +45,29 @@ public class AutoPaymentCancelController {
 	 * 자동결재해지예약/예약취소/해지 SAC.
 	 * 
 	 * @param autoPaymentCancelReq
-	 *            자동결재해지예약/예약취소/해지 SAC
-	 * @return AutoPaymentCancelRes
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
+	 * @return AutoPaymentCancelRes 응답값
 	 */
 	@RequestMapping(value = "/history/reservation/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AutoPaymentCancelRes modifyReservation(@RequestBody AutoPaymentCancelReq autoPaymentCancelReq) {
+	public AutoPaymentCancelRes modifyReservation(@RequestBody AutoPaymentCancelReq autoPaymentCancelReq,
+			SacRequestHeader requestHeader) {
 
-		AutoPaymentCancelRequest rea = this.reqConvert(autoPaymentCancelReq);
+		TenantHeader header = requestHeader.getTenantHeader();
+		// 필수값 체크
+		if (header.getTenantId() == null || header.getTenantId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (autoPaymentCancelReq.getInsdUsermbrNo() == null || autoPaymentCancelReq.getInsdUsermbrNo() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
+		}
+		if (autoPaymentCancelReq.getPrchsId() == null || autoPaymentCancelReq.getPrchsId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "PrchsId");
+		}
+
+		AutoPaymentCancelRequest rea = this.reqConvert(autoPaymentCancelReq, header);
 		AutoPaymentCancelResponse autoPaymentCancelResponse = new AutoPaymentCancelResponse();
 
 		autoPaymentCancelResponse = this.autoPaymentCancelService.modifyReservation(rea);
@@ -61,14 +79,17 @@ public class AutoPaymentCancelController {
 	 * reqConvert.
 	 * 
 	 * @param autoPaymentCancelReq
-	 *            reqConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return AutoPaymentCancelRequest
 	 */
-	private AutoPaymentCancelRequest reqConvert(AutoPaymentCancelReq autoPaymentCancelReq) {
+	private AutoPaymentCancelRequest reqConvert(AutoPaymentCancelReq autoPaymentCancelReq, TenantHeader header) {
 
 		AutoPaymentCancelRequest req = new AutoPaymentCancelRequest();
 
-		req.setTenantId(autoPaymentCancelReq.getTenantId());
+		req.setTenantId(header.getTenantId());
+		req.setSystemId(header.getSystemId());
 		req.setInsdUsermbrNo(autoPaymentCancelReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(autoPaymentCancelReq.getInsdDeviceId());
 		req.setPrchsId(autoPaymentCancelReq.getPrchsId());
@@ -83,7 +104,7 @@ public class AutoPaymentCancelController {
 	 * resConvert.
 	 * 
 	 * @param autoPaymentCancelResponse
-	 *            resConvert
+	 *            요청정보
 	 * @return AutoPaymentCancelRes
 	 */
 	private AutoPaymentCancelRes resConvert(AutoPaymentCancelResponse autoPaymentCancelResponse) {

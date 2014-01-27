@@ -21,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingScList;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.HidingSacService;
 
 /**
@@ -44,17 +47,28 @@ public class HidingController {
 	private HidingSacService hidingSacService;
 
 	/**
-	 * 기구매 체크 SAC.
+	 * 구매내역 숨김처리 SAC.
 	 * 
 	 * @param hidingReq
-	 *            기구매 체크 SAC
-	 * @return List<HidingRes>
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
+	 * @return List<HidingRes> 응답정보
 	 */
 	@RequestMapping(value = "/history/hiding/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HidingListRes modifyHiding(@RequestBody HidingReq hidingReq) {
+	public HidingListRes modifyHiding(@RequestBody HidingReq hidingReq, SacRequestHeader requestHeader) {
 
-		HidingRequest req = this.reqConvert(hidingReq);
+		TenantHeader header = requestHeader.getTenantHeader();
+		// 필수값 체크
+		if (header.getTenantId() == null || header.getTenantId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (hidingReq.getInsdUsermbrNo() == null || hidingReq.getInsdUsermbrNo() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
+		}
+
+		HidingRequest req = this.reqConvert(hidingReq, header);
 		List<HidingResponse> hidingResponse = new ArrayList<HidingResponse>();
 		List<HidingRes> hidingRes = new ArrayList<HidingRes>();
 
@@ -69,16 +83,19 @@ public class HidingController {
 	 * reqConvert.
 	 * 
 	 * @param hidingReq
-	 *            reqConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return HidingRequest
 	 */
-	private HidingRequest reqConvert(HidingReq hidingReq) {
+	private HidingRequest reqConvert(HidingReq hidingReq, TenantHeader header) {
 		HidingRequest req = new HidingRequest();
 		List<HidingScList> list = new ArrayList<HidingScList>();
 
-		req.setTenantId(hidingReq.getTenantId());
+		req.setTenantId(header.getTenantId());
 		req.setInsdUsermbrNo(hidingReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(hidingReq.getInsdDeviceId());
+		req.setSystemId(header.getSystemId());
 		int size = hidingReq.getHidingSacList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
@@ -99,7 +116,9 @@ public class HidingController {
 	 * resConvert.
 	 * 
 	 * @param hidingResponseList
-	 *            resConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return List<HidingRes>
 	 */
 	private List<HidingRes> resConvert(List<HidingResponse> hidingResponseList) {

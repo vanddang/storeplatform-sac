@@ -25,7 +25,7 @@ public interface GiftService {
 	 * 선물수신확인 체크.
 	 * 
 	 * @param giftReceiveRequest
-	 *            선물수신확인 체크
+	 *            요청정보
 	 * @return GiftReceiveResponse
 	 */
 	public GiftReceiveResponse searchGiftReceive(GiftReceiveRequest giftReceiveRequest);
@@ -34,7 +34,7 @@ public interface GiftService {
 	 * 선물수신.
 	 * 
 	 * @param giftConfirmRequest
-	 *            선물수신
+	 *            요청정보
 	 * @return GiftConfirmResponse
 	 */
 	public GiftConfirmResponse modifyGiftConfirm(GiftConfirmRequest giftConfirmRequest);

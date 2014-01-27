@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmResponse;
 import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
@@ -24,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
 
 /**
@@ -42,14 +45,26 @@ public class GiftController {
 	 * 선물수신확인 체크 SAC.
 	 * 
 	 * @param giftReceiveReq
-	 *            선물수신확인 체크 SAC
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
 	 * @return GiftReceiveRes
 	 */
 	@RequestMapping(value = "/history/gift/get/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftReceiveRes searchGiftReceive(@RequestBody GiftReceiveReq giftReceiveReq) {
-
-		GiftReceiveRequest req = this.reqConvert(giftReceiveReq);
+	public GiftReceiveRes searchGiftReceive(@RequestBody GiftReceiveReq giftReceiveReq, SacRequestHeader requestHeader) {
+		TenantHeader header = requestHeader.getTenantHeader();
+		// 필수값 체크
+		if (header.getTenantId() == null || header.getTenantId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (giftReceiveReq.getSendMbrNo() == null || giftReceiveReq.getSendMbrNo() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "SendMbrNo");
+		}
+		if (giftReceiveReq.getPrchsId() == null || giftReceiveReq.getPrchsId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "PrchsId");
+		}
+		GiftReceiveRequest req = this.reqConvert(giftReceiveReq, header);
 		GiftReceiveResponse giftReceiveResponse = new GiftReceiveResponse();
 		giftReceiveResponse = this.giftService.searchGiftReceive(req);
 		GiftReceiveRes res = this.resConvert(giftReceiveResponse);
@@ -61,14 +76,17 @@ public class GiftController {
 	 * 선물수신.
 	 * 
 	 * @param giftConfirmReq
-	 *            선물수신
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return GiftConfirmRes
 	 */
 	@RequestMapping(value = "/history/gift/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftConfirmRes modifyGiftConfirm(@RequestBody GiftConfirmReq giftConfirmReq) {
+	public GiftConfirmRes modifyGiftConfirm(@RequestBody GiftConfirmReq giftConfirmReq, SacRequestHeader requestHeader) {
+		TenantHeader header = requestHeader.getTenantHeader();
 
-		GiftConfirmRequest req = this.reqConvert(giftConfirmReq);
+		GiftConfirmRequest req = this.reqConvert(giftConfirmReq, header);
 		GiftConfirmResponse giftConfirmResponse = new GiftConfirmResponse();
 		giftConfirmResponse = this.giftService.modifyGiftConfirm(req);
 		GiftConfirmRes res = this.resConvert(giftConfirmResponse);
@@ -80,13 +98,16 @@ public class GiftController {
 	 * reqConvert.
 	 * 
 	 * @param giftConfirmReq
-	 *            reqConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return GiftConfirmRequest
 	 */
-	private GiftConfirmRequest reqConvert(GiftConfirmReq giftConfirmReq) {
+	private GiftConfirmRequest reqConvert(GiftConfirmReq giftConfirmReq, TenantHeader header) {
 		GiftConfirmRequest req = new GiftConfirmRequest();
 
-		req.setTenantId(giftConfirmReq.getTenantId());
+		req.setTenantId(header.getTenantId());
+		req.setSystemId(header.getSystemId());
 		req.setSendMbrNo(giftConfirmReq.getSendMbrNo());
 		req.setSendDeviceNo(giftConfirmReq.getSendDeviceNo());
 		req.setRecvMbrNo(giftConfirmReq.getRecvMbrNo());
@@ -101,7 +122,7 @@ public class GiftController {
 	 * resConvert.
 	 * 
 	 * @param giftComfirmResponse
-	 *            resConvert
+	 *            요청정보
 	 * @return GiftConfirmRes
 	 */
 	private GiftConfirmRes resConvert(GiftConfirmResponse giftComfirmResponse) {
@@ -117,13 +138,15 @@ public class GiftController {
 	 * reqConvert.
 	 * 
 	 * @param giftReceiveReq
-	 *            reqConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return GiftReceiveRequest
 	 */
-	private GiftReceiveRequest reqConvert(GiftReceiveReq giftReceiveReq) {
+	private GiftReceiveRequest reqConvert(GiftReceiveReq giftReceiveReq, TenantHeader header) {
 		GiftReceiveRequest req = new GiftReceiveRequest();
 
-		req.setTenantId(giftReceiveReq.getTenantId());
+		req.setTenantId(header.getTenantId());
 		req.setSendMbrNo(giftReceiveReq.getSendMbrNo());
 		req.setSendDeviceNo(giftReceiveReq.getSendDeviceNo());
 		req.setRecvMbrNo(giftReceiveReq.getRecvMbrNo());
@@ -138,7 +161,7 @@ public class GiftController {
 	 * resConvert.
 	 * 
 	 * @param giftReceiveResponse
-	 *            resConvert
+	 *            요청정보
 	 * @return GiftReceiveRes
 	 */
 	private GiftReceiveRes resConvert(GiftReceiveResponse giftReceiveResponse) {

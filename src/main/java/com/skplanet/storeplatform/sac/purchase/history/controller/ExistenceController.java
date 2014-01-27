@@ -12,7 +12,6 @@ package com.skplanet.storeplatform.sac.purchase.history.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
 
 /**
@@ -48,26 +50,30 @@ public class ExistenceController {
 	 * 기구매 체크 SAC.
 	 * 
 	 * @param existenceReq
-	 *            기구매 체크 SAC
-	 * @return List<ExistenceRes>
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
+	 * @return List<ExistenceRes> 응답정보
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListRes listExist(@RequestBody ExistenceReq existenceReq) {
-		// ExistenceListRes res = new ExistenceListRes();
+	public ExistenceListRes listExist(@RequestBody ExistenceReq existenceReq, SacRequestHeader requestHeader) {
+
+		TenantHeader header = requestHeader.getTenantHeader();
+
+		// 필수값 체크
+		if (header.getTenantId() == null || header.getTenantId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (existenceReq.getInsdUsermbrNo() == null || existenceReq.getInsdUsermbrNo() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
+		}
+
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 		ExistenceListRes existenceListRes = new ExistenceListRes();
-		// 필수값 체크
-		if (StringUtils.isBlank(existenceReq.getTenantId())) {
-			this.logger.debug("@@@@@@getTenantId@@@@@@@{}", existenceReq.getTenantId());
-			return existenceListRes;
-		}
-		if (StringUtils.isBlank(existenceReq.getInsdUsermbrNo())) {
-			this.logger.debug("@@@@@@getInsdUsermbrNo@@@@@@@{}", existenceReq.getInsdUsermbrNo());
-			return existenceListRes;
-		}
-		ExistenceRequest req = this.reqConvert(existenceReq);
+		ExistenceRequest req = this.reqConvert(existenceReq, header);
 		List<ExistenceResponse> existenceResponse = new ArrayList<ExistenceResponse>();
+
 		existenceResponse = this.existenceService.listExist(req);
 
 		res = this.resConvert(existenceResponse);
@@ -81,15 +87,17 @@ public class ExistenceController {
 	 * reqConvert.
 	 * 
 	 * @param existenceReq
-	 *            reqConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return ExistenceRequest
 	 */
-	private ExistenceRequest reqConvert(ExistenceReq existenceReq) {
+	private ExistenceRequest reqConvert(ExistenceReq existenceReq, TenantHeader header) {
 
 		ExistenceRequest req = new ExistenceRequest();
 		List<ExistenceList> list = new ArrayList<ExistenceList>();
 
-		req.setTenantId(existenceReq.getTenantId());
+		req.setTenantId(header.getTenantId());
 		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
 		req.setPrchsId(existenceReq.getPrchsId());
@@ -113,7 +121,7 @@ public class ExistenceController {
 	 * resConvert.
 	 * 
 	 * @param existenceResponseList
-	 *            resConvert
+	 *            요청정보
 	 * @return List<ExistenceRes>
 	 */
 	private List<ExistenceRes> resConvert(List<ExistenceResponse> existenceResponseList) {

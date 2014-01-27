@@ -21,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.PaymentResponse;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentListRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.PaymentSearchSacService;
 
 /**
@@ -46,16 +49,29 @@ public class PaymentListController {
 	 * 결제내역 조회.
 	 * 
 	 * @param paymentReq
-	 *            결제내역 조회 조건
-	 * @return PaymentListRes
+	 *            요청정보
+	 * @param requestHeader
+	 *            헤더정보
+	 * @return PaymentListRes 응답정보
 	 */
 	@RequestMapping(value = "/history/payment/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PaymentListRes searchPayment(@RequestBody PaymentReq paymentReq) {
-
-		List<PaymentResponse> paymentResponse = new ArrayList<PaymentResponse>();
-		paymentResponse = this.paymentSearchSacService.searchPayment(this.reqConvert(paymentReq));
+	public PaymentListRes searchPayment(@RequestBody PaymentReq paymentReq, SacRequestHeader requestHeader) {
+		TenantHeader header = requestHeader.getTenantHeader();
 		PaymentListRes paymentListRes = new PaymentListRes();
+		List<PaymentResponse> paymentResponse = new ArrayList<PaymentResponse>();
+
+		if (header.getTenantId() == null || header.getTenantId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		}
+		if (paymentReq.getInsdUsermbrNo() == null || paymentReq.getInsdUsermbrNo() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
+		}
+		if (paymentReq.getPrchsId() == null || paymentReq.getPrchsId() == "") {
+			throw new StorePlatformException("SAC_PUR_0001", "PrchsId");
+		}
+
+		paymentResponse = this.paymentSearchSacService.searchPayment(this.reqConvert(paymentReq, header));
 		paymentListRes.setPaymentListRes(this.resConvert(paymentResponse));
 		return paymentListRes;
 	}
@@ -64,15 +80,17 @@ public class PaymentListController {
 	 * reqConvert.
 	 * 
 	 * @param paymentReq
-	 *            reqConvert
+	 *            요청정보
+	 * @param header
+	 *            테넌트 헤더정보
 	 * @return PaymentRequest
 	 */
-	private PaymentRequest reqConvert(PaymentReq paymentReq) {
+	private PaymentRequest reqConvert(PaymentReq paymentReq, TenantHeader header) {
 
 		this.logger.debug("@@@@@@reqConvert@@@@@@@");
 		PaymentRequest req = new PaymentRequest();
 
-		req.setTenantId(paymentReq.getTenantId());
+		req.setTenantId(header.getTenantId());
 		req.setInsdUsermbrNo(paymentReq.getInsdUsermbrNo());
 		req.setInsdDeviceId(paymentReq.getInsdDeviceId());
 		req.setPrchsId(paymentReq.getPrchsId());
@@ -84,7 +102,7 @@ public class PaymentListController {
 	 * resConvert.
 	 * 
 	 * @param paymentResponse
-	 *            resConvert
+	 *            요청정보
 	 * @return List<PaymentRes>
 	 */
 	private List<PaymentRes> resConvert(List<PaymentResponse> paymentResponse) {

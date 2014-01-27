@@ -38,7 +38,7 @@ public class HidingSacServiceImpl implements HidingSacService {
 	 * 구매내역 숨김처리.
 	 * 
 	 * @param hidingRequest
-	 *            구매내역 숨김처리
+	 *            요청정보
 	 * @return List<HidingResponse>
 	 */
 	@Override

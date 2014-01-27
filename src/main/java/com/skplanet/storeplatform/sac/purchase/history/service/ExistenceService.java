@@ -25,8 +25,7 @@ public interface ExistenceService {
 	 * 기구매 체크 SAC Service.
 	 * 
 	 * @param existenceRequest
-	 *            기구매 체크 SAC
-	 * @param header
+	 *            요청정보
 	 * @return List<ExistenceResponse>
 	 */
 	public List<ExistenceResponse> listExist(ExistenceRequest existenceRequest);

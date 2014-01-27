@@ -39,7 +39,7 @@ public class PaymentSearchSacServiceImpl implements PaymentSearchSacService {
 	 * 결제내역 조회.
 	 * 
 	 * @param paymentRequest
-	 *            결제내역 조회 조건
+	 *            요청정보
 	 * @return List<PaymentResponse>
 	 */
 	@Override

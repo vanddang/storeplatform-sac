@@ -25,7 +25,7 @@ public interface PaymentSearchSacService {
 	 * 결제내역 조회.
 	 * 
 	 * @param paymentRequest
-	 *            결제내역 조회 조건
+	 *            요청정보
 	 * @return List<PaymentResponse>
 	 */
 	public List<PaymentResponse> searchPayment(PaymentRequest paymentRequest);

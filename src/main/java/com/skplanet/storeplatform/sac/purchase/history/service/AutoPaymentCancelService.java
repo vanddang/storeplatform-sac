@@ -23,7 +23,7 @@ public interface AutoPaymentCancelService {
 	 * 자동결재해지예약/예약취소/해지 SAC Service.
 	 * 
 	 * @param autoPaymentCancelRequest
-	 *            자동결재해지예약/예약취소/해지 SAC
+	 *            요청정보
 	 * @return AutoPaymentCancelResponse
 	 */
 	public AutoPaymentCancelResponse modifyReservation(AutoPaymentCancelRequest autoPaymentCancelRequest);
