@@ -21,52 +21,52 @@ public class CreateByAgreementReq extends CommonInfo {
 	 * 사용자 아이디.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String userId;
+	private String userId = "";
 
 	/**
 	 * 기기 ID
 	 */
-	private String deviceId;
+	private String deviceId = "";
 
 	/**
 	 * 기기 ID 타입.
 	 */
-	private String deviceIdType;
+	private String deviceIdType = "";
 
 	/**
 	 * 이동 통신사.
 	 */
-	private String deviceTelecom;
+	private String deviceTelecom = "";
 
 	/**
 	 * 기기고유 ID (imei).
 	 */
-	private String nativeId;
+	private String nativeId = "";
 
 	/**
 	 * 기기 계정 (Gmail).
 	 */
-	private String deviceAccount;
+	private String deviceAccount = "";
 
 	/**
 	 * 가입 채널 코드.
 	 */
-	private String joinId;
+	private String joinId = "";
 
 	/**
 	 * Sms 수신 동의 여부.
 	 */
-	private String isRecvSms;
+	private String isRecvSms = "";
 
 	/**
 	 * 사용자 단말 부가 정보 리스트.
 	 */
-	private List<DeviceExtraInfo> deviceExtraInfoList;
+	private List<DeviceExtraInfo> deviceExtraInfoList = null;
 
 	/**
 	 * 약관 동의 정보.
 	 */
-	private List<AgreementInfo> agreementList;
+	private List<AgreementInfo> agreementList = null;
 
 	/**
 	 * @return String : userId

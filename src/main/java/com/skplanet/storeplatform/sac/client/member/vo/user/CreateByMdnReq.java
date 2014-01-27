@@ -2,7 +2,8 @@ package com.skplanet.storeplatform.sac.client.member.vo.user;
 
 import java.util.List;
 
-import org.hibernate.validator.constraints.Email;
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -22,116 +23,116 @@ public class CreateByMdnReq extends CommonInfo {
 	 * 기기 ID
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String deviceId;
+	private String deviceId = "";
 
 	/**
 	 * 기기 ID 타입
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String deviceIdType;
+	private String deviceIdType = "";
 
 	/**
 	 * 이동 통신사.
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String deviceTelecom;
+	private String deviceTelecom = "";
 
 	/**
 	 * 기기고유 ID (imei).
 	 */
-	private String nativeId;
+	private String nativeId = "";
 
 	/**
 	 * 기기 계정 (Gmail).
 	 */
-	private String deviceAccount;
+	private String deviceAccount = "";
 
 	/**
 	 * 가입 채널 코드.
 	 */
-	private String joinId;
+	private String joinId = "";
 
 	/**
 	 * SMS 수신 여부.
 	 */
-	private String isRecvSms;
+	private String isRecvSms = "";
 
 	/**
 	 * 본인의 생년월일.
 	 */
-	private String ownBirth;
+	private String ownBirth = "";
 
 	/**
 	 * 사용자 단말 부가 정보 리스트.
 	 */
-	private List<DeviceExtraInfo> deviceExtraInfoList;
+	private List<DeviceExtraInfo> deviceExtraInfoList = null;
 
 	/**
 	 * 약관동의 정보.
 	 */
-	private List<AgreementInfo> agreementList;
+	private List<AgreementInfo> agreementList = null;
 
 	/**
 	 * 법정대리인 동의 여부
 	 */
 	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String isParent;
+	@Pattern(regexp = "^Y|N")
+	private String isParent = "";
 
 	/**
 	 * 법정대리인 인증방법코드
 	 */
-	private String parentRealNameMethod;
+	private String parentRealNameMethod = "";
 
 	/**
 	 * 법정대리인 이름
 	 */
-	private String parentName;
+	private String parentName = "";
 
 	/**
 	 * 법정대리인 관계
 	 */
-	private String parentType;
+	private String parentType = "";
 
 	/**
 	 * 법정대리인 동의일시
 	 */
-	private String parentDate;
+	private String parentDate = "";
 
 	/**
 	 * 법정대리인 Email
 	 */
-	@Email(message = "유효한 Email 주소가 아닙니다.")
-	private String parentEmail;
+	private String parentEmail = "";
 
 	/**
 	 * 법정대리인 생년월일
 	 */
-	private String parentBirthDay;
+	private String parentBirthDay = "";
 
 	/**
 	 * 법정대리인 통신사 코드
 	 */
-	private String parentTelecom;
+	private String parentTelecom = "";
 
 	/**
 	 * 법정대리인 전화번호
 	 */
-	private String parentPhone;
+	private String parentPhone = "";
 
 	/**
 	 * 법정대리인 CI
 	 */
-	private String parentCi;
+	private String parentCi = "";
 
 	/**
 	 * 법정대리인 인증 일시
 	 */
-	private String parentRealNameDate;
+	private String parentRealNameDate = "";
 
 	/**
 	 * 법정대리인 실명인증사이트 코드
 	 */
-	private String parentRealNameSite;
+	private String parentRealNameSite = "";
 
 	/**
 	 * @return String : deviceId
