@@ -17,8 +17,6 @@ public class ModifyInformationRes extends CommonInfo {
 
 	/** 판매자 회원 Key. */
 	private String sellerKey;
-	/** 판매자 회원 Id. */
-	private String sellerId;
 
 	public String getSellerKey() {
 		return this.sellerKey;
@@ -27,13 +25,4 @@ public class ModifyInformationRes extends CommonInfo {
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
 	}
-
-	public String getSellerId() {
-		return this.sellerId;
-	}
-
-	public void setSellerId(String sellerId) {
-		this.sellerId = sellerId;
-	}
-
 }
