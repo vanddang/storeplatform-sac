@@ -64,6 +64,7 @@ public class AuthorizeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
 		authorizeReq = new AuthorizeReq();
 	}
 
@@ -75,7 +76,8 @@ public class AuthorizeTest {
 	 */
 	@After
 	public void after() {
-		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtil.convertObjectToJson(authorizeRes));
+		//Debug
+		LOGGER.debug("[RESPONSE(SAC)-회원인증] : \n{}", ConvertMapperUtil.convertObjectToJson(authorizeRes));
 	}
 
 	/**

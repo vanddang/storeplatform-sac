@@ -1,9 +1,10 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndiv
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 
 /**
- * 사용자별 정책 등록 / 수정
+ * 5.3.9. 사용자별 정책 등록 / 수정
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */
@@ -49,14 +50,36 @@ public class CreateIndividualPolicyTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static CreateIndividualPolicyReq request;
+
+	/** [RESPONSE]. */
+	private static CreateIndividualPolicyRes response;
+	/** [x-store-auth-info]. */
+	private static String xStoreAuthInfo;
+
 	/**
 	 * <pre>
-	 * method 설명.
+	 * before method 설명.
 	 * </pre>
 	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new CreateIndividualPolicyReq();
+		// [HEADER] 주입
+		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
+	}
+
+	/**
+	 * <pre>
+	 * After method 설명.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		LOGGER.debug("[RESPONSE(SAC)-정책등록/수정] : \n{} ", response.toString());
 	}
 
 	/**
@@ -67,38 +90,33 @@ public class CreateIndividualPolicyTest {
 	 */
 	@Test
 	public void createIndividualPolicy() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createIndividualPolicy/v1")
-					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createIndividualPolicy/v1")
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							CreateIndividualPolicyReq request = new CreateIndividualPolicyReq();
-							// key(30), code(10), value(100)
-							request.setKey("010123456");
-							request.setPolicyCode("8");
-							request.setValue("Y");
-							request.setRegId("test");
-							LOGGER.debug(ConvertMapperUtil.convertObjectToJson(request));
+					@Override
+					public Object requestBody() {
+						// key(30), code(10), value(100)
+						request.setKey("010123456");
+						request.setPolicyCode("8");
+						request.setValue("Y");
+						request.setRegId("test");
 
-							return request;
-						}
-					}).success(CreateIndividualPolicyRes.class, new SuccessCallback() {
+						// Debug
+						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
+						return request;
+					}
+				}).success(CreateIndividualPolicyRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							CreateIndividualPolicyRes response = (CreateIndividualPolicyRes) result;
-							assertThat(response.getPolicyCode(), notNullValue());
-							assertThat(response.getPolicyCode(), is("8"));
-							assertThat(response.getKey(), is("010123456"));
-							assertThat(response.getValue(), is("Y"));
-							LOGGER.debug("## response param ## \n{} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						response = (CreateIndividualPolicyRes) result;
+						assertThat(response.getPolicyCode(), notNullValue());
+						assertEquals(response.getKey(), request.getKey());
+						assertEquals(response.getPolicyCode(), request.getPolicyCode());
+						assertEquals(response.getValue(), request.getValue());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

@@ -64,9 +64,11 @@ public class CreateSellerTest {
 	private SellerSCI sellerSCI;
 
 	/** [REQUEST]. */
-	public static CreateReq req;
+	private static CreateReq req;
 	/** [RESPONSE]. */
-	public static CreateRes res;
+	private static CreateRes res;
+	/** [x-store-auth-info]. */
+	private static String xStoreAuthInfo;
 
 	/**
 	 * 
@@ -77,7 +79,10 @@ public class CreateSellerTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
 		req = new CreateReq();
+		// TODO 임시 [HEADER] 주입
+		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
 	}
 
 	/**
@@ -89,38 +94,49 @@ public class CreateSellerTest {
 	 */
 	@After
 	public void after() {
-		// Debug
-		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtil.convertObjectToJson(res));
+		// Debug - 가입 결과
+		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", ConvertMapperUtil.convertObjectToJson(res));
+		if (res != null) {
+			CommonRequest commonRequest = new CommonRequest();
+			commonRequest.setSystemID("S001");
+			commonRequest.setTenantID("S01");
 
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID("S001");
-		commonRequest.setTenantID("S01");
+			// 정상업데이트 [REQUEST]
+			UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+			updateStatusSellerRequest.setSellerID(res.getSellerMbr().getSellerId());
+			updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+			updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+			updateStatusSellerRequest.setCommonRequest(commonRequest);
+			LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
-		// 정상업데이트 [REQUEST]
-		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
-		updateStatusSellerRequest.setSellerID(res.getSellerMbr().getSellerId());
-		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
-		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-		updateStatusSellerRequest.setCommonRequest(commonRequest);
-		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
+			// SC-회원 메인 상태 정상 업데이트 CALL
+			UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
+					.updateStatusSeller(updateStatusSellerRequest);
 
-		// SC-회원 메인 상태 정상 업데이트 CALL
-		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
-				.updateStatusSeller(updateStatusSellerRequest);
-		LOGGER.debug("[sellerSCI.updateStatusSeller()] CODE : {}, MESSAGE : {}", updateStatusSellerResponse
-				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
+			// Debug - 상태변경[SC] 결과 코드, 메세지
+			LOGGER.debug("[sellerSCI.updateStatusSeller()] CODE : {}, MESSAGE : {}", updateStatusSellerResponse
+					.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse()
+					.getResultMessage());
 
-		// 탈퇴 [REQUEST]
-		RemoveSellerRequest request = new RemoveSellerRequest();
-		request.setCommonRequest(commonRequest);
-		request.setSecedeReasonCode("US001801");
-		request.setSecedeReasonMessage("ID 변경");
-		request.setSellerKey(res.getSellerMbr().getSellerKey());
+			// Debug - 정상회원으로 변경 결과
+			LOGGER.debug("[RESPONSE(SC)-정상회원] : \n{}",
+					ConvertMapperUtil.convertObjectToJson(updateStatusSellerResponse));
 
-		// SC-회원 탈퇴 CALL
-		RemoveSellerResponse response = this.sellerSCI.removeSeller(request);
-		LOGGER.debug("[sellerSCI.removeSeller()] CODE : {}, MESSAGE : {}",
-				response.getCommonResponse().getResultCode(), response.getCommonResponse().getResultMessage());
+			// 탈퇴 [REQUEST]
+			RemoveSellerRequest request = new RemoveSellerRequest();
+			request.setCommonRequest(commonRequest);
+			request.setSecedeReasonCode("US001801");
+			request.setSecedeReasonMessage("ID 변경");
+			request.setSellerKey(res.getSellerMbr().getSellerKey());
+
+			// SC-회원 탈퇴 CALL
+			RemoveSellerResponse response = this.sellerSCI.removeSeller(request);
+			// Debug - 회원탈퇴[SC] 결과 코드, 메세지
+			LOGGER.debug("[sellerSCI.removeSeller()] CODE : {}, MESSAGE : {}", response.getCommonResponse()
+					.getResultCode(), response.getCommonResponse().getResultMessage());
+			// Debug - 회원탈퇴 결과
+			LOGGER.debug("[RESPONSE(SC)-회원탈퇴] : \n{}", ConvertMapperUtil.convertObjectToJson(response));
+		}
 	}
 
 	/**
@@ -131,13 +147,14 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerPersonNopay() {
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
 						req.setSellerCategory("US011301");
 						req.setSellerId("sellerPersonNoPay01");
+						// req.setSellerId("sellerTest0003");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
@@ -168,7 +185,7 @@ public class CreateSellerTest {
 						agreement3.setExtraAgreementVersion("0.1");
 						agreement3.setIsExtraAgreement("Y");
 						agreementList.add(agreement3);
-						req.setAgreementList(agreementList);
+						// req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
@@ -187,9 +204,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						// assertEquals("sellerPersonNoPay01", res.getSellerMbr().getSellerId());
-
-						LOGGER.debug("response param : {}", res.toString());
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -203,8 +218,8 @@ public class CreateSellerTest {
 	public void createSellerPersonPay() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
@@ -262,9 +277,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						assertEquals(res.getSellerMbr().getSellerId(), "sellerPersonPay01");
-						LOGGER.debug("response param : {}", res.toString());
-
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -279,8 +292,8 @@ public class CreateSellerTest {
 	public void createSellerBusinessNoPay() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010102");
@@ -338,9 +351,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						assertEquals(res.getSellerMbr().getSellerId(), "sellerBusinessNoPay01");
-
-						LOGGER.debug("response param : {}", res.toString());
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -355,8 +366,8 @@ public class CreateSellerTest {
 	public void createSellerBusinessPay() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010102");
@@ -414,9 +425,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						assertEquals(res.getSellerMbr().getSellerId(), "sellerBusinessPay01");
-						LOGGER.debug("response param : {}", res.toString());
-
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -431,8 +440,8 @@ public class CreateSellerTest {
 	public void createSellerLegalBusinessNoPay() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010103");
@@ -490,9 +499,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						assertEquals(res.getSellerMbr().getSellerId(), "sellerLegalBusinessNoPay01");
-						LOGGER.debug("response param : {}", res.toString());
-
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -507,8 +514,8 @@ public class CreateSellerTest {
 	public void createSellerLegalBusinessPay() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010103");
@@ -566,9 +573,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						assertEquals(res.getSellerMbr().getSellerId(), "sellerLegalBusinessPay01");
-						LOGGER.debug("response param : {}", res.toString());
-
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -583,8 +588,8 @@ public class CreateSellerTest {
 	public void createSellerLegalBusinessBP() {
 
 		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010103");
@@ -642,9 +647,7 @@ public class CreateSellerTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						res = (CreateRes) result;
 						assertThat(res.getSellerMbr(), notNullValue());
-						assertEquals(res.getSellerMbr().getSellerId(), "sellerLegalBusinessBP01");
-						LOGGER.debug("response param : {}", res.toString());
-
+						assertEquals(res.getSellerMbr().getSellerId(), req.getSellerId());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

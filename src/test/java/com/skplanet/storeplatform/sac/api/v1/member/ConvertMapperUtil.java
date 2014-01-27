@@ -26,7 +26,8 @@ public class ConvertMapperUtil {
 		String returnStr = "";
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			returnStr = mapper.writeValueAsString(obj);
+			if (obj != null)
+				returnStr = mapper.writeValueAsString(obj);
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -39,15 +40,12 @@ public class ConvertMapperUtil {
 
 	public static void main(String[] args) {
 		boolean flag = false;
-		String id = "id";
-		String email = "email";
-
+		String id = "email";
+		String email = "kim.rejoice@gmail";
 		String patternRegex = "^id|^email";
 
 		flag = Pattern.matches(patternRegex, id);
 		System.out.println(flag);
 		flag = Pattern.matches(patternRegex, email);
-		System.out.println(flag);
-
 	}
 }

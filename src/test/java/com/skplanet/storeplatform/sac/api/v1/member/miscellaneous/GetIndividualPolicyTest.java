@@ -1,12 +1,13 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +54,13 @@ public class GetIndividualPolicyTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetIndividualPolicyReq request;
+	/** [RESPONSE]. */
+	private static GetIndividualPolicyRes response;
+	/** [x-store-auth-info]. */
+	private static String xStoreAuthInfo;
+
 	/**
 	 * <pre>
 	 * method 설명.
@@ -61,6 +69,21 @@ public class GetIndividualPolicyTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetIndividualPolicyReq();
+		// [HEADER] 주입
+		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
+	}
+
+	/**
+	 * <pre>
+	 * After method 설명.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug SAC 결과
+		LOGGER.debug("[RESPONSE(SAC)-정책조회] : \n{}", ConvertMapperUtil.convertObjectToJson(response));
 	}
 
 	/**
@@ -71,40 +94,71 @@ public class GetIndividualPolicyTest {
 	 */
 	@Test
 	public void getIndividualPolicy() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getIndividualPolicy/v1")
-					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getIndividualPolicy/v1")
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetIndividualPolicyReq request = new GetIndividualPolicyReq();
-							PolicyCode policyCode = null;
-							List<PolicyCode> policyCodeList = new ArrayList<GetIndividualPolicyReq.PolicyCode>();
-							for (int i = 0; i < 3; i++) {
-								policyCode = new PolicyCode();
-								policyCode.setPolicyCode(String.valueOf(i + 3));
-								policyCodeList.add(policyCode);
-							}
-							request.setPolicyCodeList(policyCodeList);
-							request.setKey("53");
-							LOGGER.debug("request JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
-							return request;
+					@Override
+					public Object requestBody() {
+						List<PolicyCode> policyCodeList = new ArrayList<GetIndividualPolicyReq.PolicyCode>();
+						for (int i = 0; i < 3; i++) {
+							PolicyCode policyCode = new PolicyCode();
+							policyCode.setPolicyCode(String.valueOf(i + 3));
+							policyCodeList.add(policyCode);
 						}
-					}).success(GetIndividualPolicyRes.class, new SuccessCallback() {
+						request.setPolicyCodeList(policyCodeList);
+						request.setKey("53");
+						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetIndividualPolicyRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetIndividualPolicyRes response = (GetIndividualPolicyRes) result;
-							assertThat(response.getPolicyList(), notNullValue());
-							assertThat(response.getPolicyList().get(0).getKey(), is("53"));
-							LOGGER.debug("response JSON : \n{}", ConvertMapperUtil.convertObjectToJson(response));
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						response = (GetIndividualPolicyRes) result;
+						assertThat(response.getPolicyList(), notNullValue());
+						for (int i = 0; i < response.getPolicyList().size(); i++) {
+							assertEquals(response.getPolicyList().get(i).getKey(), request.getKey());
+							// assertEquals(response.getPolicyList().get(i).getKey(),
+							// request.getPolicyCodeList().get(i).getPolicyCode());
 						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	}
+
+	@Test
+	public void getIndividualPolicyNonData() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getIndividualPolicy/v1")
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						List<PolicyCode> policyCodeList = new ArrayList<GetIndividualPolicyReq.PolicyCode>();
+						for (int i = 0; i < 3; i++) {
+							PolicyCode policyCode = new PolicyCode();
+							policyCode.setPolicyCode(String.valueOf(i + 3));
+							policyCodeList.add(policyCode);
+						}
+						request.setPolicyCodeList(policyCodeList);
+						request.setKey("5123");
+						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetIndividualPolicyRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						response = (GetIndividualPolicyRes) result;
+						assertThat(response.getPolicyList(), notNullValue());
+						for (int i = 0; i < response.getPolicyList().size(); i++) {
+							assertEquals(response.getPolicyList().get(i).getKey(), request.getKey());
+							// assertEquals(response.getPolicyList().get(i).getKey(),
+							// request.getPolicyCodeList().get(i).getPolicyCode());
+						}
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 }

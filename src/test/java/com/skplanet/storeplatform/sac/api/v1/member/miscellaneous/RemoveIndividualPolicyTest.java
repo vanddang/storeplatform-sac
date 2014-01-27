@@ -1,9 +1,10 @@
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 
@@ -48,6 +50,13 @@ public class RemoveIndividualPolicyTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static RemoveIndividualPolicyReq request;
+	/** [RESPONSE]. */
+	private static RemoveIndividualPolicyRes response;
+	/** [x-store-auth-info]. */
+	private static String xStoreAuthInfo;
+
 	/**
 	 * <pre>
 	 * method 설명.
@@ -56,6 +65,16 @@ public class RemoveIndividualPolicyTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new RemoveIndividualPolicyReq();
+		// [HEADER] 주입
+		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
+	}
+
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)-정책삭제] : \n{}", ConvertMapperUtil.convertObjectToJson(response));
 	}
 
 	/**
@@ -66,33 +85,25 @@ public class RemoveIndividualPolicyTest {
 	 */
 	@Test
 	public void removeIndividualPolicy() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/removeIndividualPolicy/v1")
-					.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/removeIndividualPolicy/v1")
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						request.setKey("010123456");
+						request.setPolicyCode("8");
+						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
+						return request;
+					}
+				}).success(RemoveIndividualPolicyRes.class, new SuccessCallback() {
 
-						@Override
-						public Object requestBody() {
-							RemoveIndividualPolicyReq request = new RemoveIndividualPolicyReq();
-							request.setKey("010123456");
-							request.setPolicyCode("8");
-							LOGGER.debug("request param : \n{}", request.toString());
-							return request;
-						}
-					}).success(RemoveIndividualPolicyRes.class, new SuccessCallback() {
-
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							RemoveIndividualPolicyRes response = (RemoveIndividualPolicyRes) result;
-							assertThat(response.getPolicyCode(), notNullValue());
-							assertThat(response.getPolicyCode(), is("8"));
-							LOGGER.debug("response param : \n{} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						RemoveIndividualPolicyRes response = (RemoveIndividualPolicyRes) result;
+						assertThat(response.getPolicyCode(), notNullValue());
+						assertEquals(response.getPolicyCode(), request.getPolicyCode());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 }
