@@ -527,8 +527,8 @@ public class LoginServiceImpl implements LoginService {
 		if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 			imSvcNo = imIdpReceiver.getResponseBody().getIm_int_svc_no();
 		} else {
-			logger.info(":::: agreeJoinUser findJoinServiceListIDP : {}, {}", imIdpReceiver.getResponseHeader().getResult(), imIdpReceiver
-					.getResponseHeader().getResult_text());
+			logger.info(":::: {} agreeJoinUser findJoinServiceListIDP result : {}, {}", userId, imIdpReceiver.getResponseHeader().getResult(),
+					imIdpReceiver.getResponseHeader().getResult_text());
 		}
 
 		logger.info(":::: agreeJoinUser imSvcNo : {}", imSvcNo);
