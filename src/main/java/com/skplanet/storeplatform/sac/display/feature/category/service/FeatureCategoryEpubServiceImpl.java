@@ -125,6 +125,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		// 헤더값 세팅
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
+		requestVO.setLangCd("ko");
 		// requestVO.setImageCd("DP000101");
 
 		// 배치완료 기준일시 조회

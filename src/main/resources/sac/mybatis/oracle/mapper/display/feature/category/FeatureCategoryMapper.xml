@@ -788,126 +788,130 @@
              , B.SUPPORT_PLAY
              , B.BOOK_STATUS
              , B.TOTAL_COUNT
-             , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT    /* 참여자수 */
-             , NVL(LB.PRCHS_CNT, 0) AS PRCHS_CNT            /* 구매수 */
+             , NVL(C.PATICPERS_CNT, 0) AS PATICPERS_CNT    /* 참여자수 */
+             , NVL(C.PRCHS_CNT, 0) AS PRCHS_CNT            /* 구매수 */
              <![CDATA[
-             , NVL((CASE WHEN (LB.AVG_EVLU_SCORE > 0 AND LB.AVG_EVLU_SCORE < 1) THEN 1
-                          WHEN LB.AVG_EVLU_SCORE > 5 THEN 5
-                          ELSE ROUND(LB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+             , NVL((CASE WHEN (C.AVG_EVLU_SCORE > 0 AND C.AVG_EVLU_SCORE < 1) THEN 1
+                          WHEN C.AVG_EVLU_SCORE > 5 THEN 5
+                          ELSE ROUND(C.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
              ]]>
-          FROM (SELECT A.*
+          FROM (SELECT COUNT(*) OVER () AS TOTAL_COUNT
                      , ROWNUM AS RNUM
-                     , COUNT(*) OVER () AS TOTAL_COUNT
-                  FROM (SELECT LP.TENANT_ID
-                             , C_DP.TOP_MENU_ID
-                             , MC.MENU_ID
-                             , MCD.MENU_NM
-                             , C_DP.META_CLSF_CD
-                             , C_DP.PROD_ID
-                             , DPD.PROD_NM 
-                             || NVL2(MUP.BOOK_CLSF_CD
-                                  , MUP.CHAPTER || DECODE(MUP.BOOK_CLSF_CD
-                                                        , 'DP004301', '권'
-                                                        , 'DP004302', '회'
-                                                        , 'DP004303', '호', '' )
-                                  , '') AS PROD_NM
-                             , DPD.PROD_BASE_DESC
-                             , NVL(TPP.PROD_AMT, 0) AS PROD_AMT
-                             , NVL(TPP.PROD_NET_AMT, 0) AS PROD_NET_AMT
-                             , E_DP.PROD_GRD_CD
-                             , DPD.ARTIST1_NM
-                             , DPD.ARTIST2_NM
-                             , DPD.ARTIST3_NM
-                             , C_MUP.CHNL_COMP_NM
-                             , MUP.ISSUE_DAY
-                             , C_MUP.BOOK_PAGE_CNT
-                             , ( CASE WHEN C_DP.META_CLSF_CD IN ('CT20', 'CT21') THEN 'serial' ELSE '' END ) AS BOOK_TYPE
-                             , ( CASE WHEN C_DP.META_CLSF_CD IN ('CT20', 'CT21') THEN (NVL(MUP.EPSD_CNT, 0) + NVL(MUP.STRM_EPSD_CNT, 0) ) END ) AS BOOK_COUNT
-                             , ( CASE WHEN NVL(MUP.EPSD_CNT, 0) > 0 THEN 'store' ELSE '' END ) AS SUPPORT_STORE
-                             , ( CASE WHEN NVL(MUP.STRM_EPSD_CNT, 0) > 0 THEN 'play' ELSE '' END ) AS SUPPORT_PLAY
-                             , ( CASE WHEN C_DP.META_CLSF_CD IN ('CT20', 'CT21') THEN DECODE( MUP.COMPT_YN, 'Y', 'completed', 'continue' ) ELSE '' END ) AS BOOK_STATUS
-                             , ROW_NUMBER( ) OVER ( PARTITION BY C_DP.PROD_ID
-                                                           ORDER BY DECODE( MUP.BOOK_CLSF_CD, MUP.BOOK_CLSF_CD, 1, 2 )
-                                                                  , TO_NUMBER( REGEXP_REPLACE( MUP.CHAPTER, '[^[:digit:]]') ) DESC
-                                                                  , NVL( E_DP.USE_PERIOD_UNIT_CD , 'PD00310' ) DESC
-                                                                  , E_DP.REG_DT DESC
-                                                                 ) AS RN
-                             , LP.EXPO_ORD_ALWAYS_YN
-                             , LP.EXPO_ORD
-                             , LP.EXPO_ORD_SUB
-                          FROM TB_DP_LIST LT
-                             , TB_DP_LIST_PROD LP
-                             , TB_DP_PROD C_DP
-                             , TB_DP_PROD E_DP
-                             , TB_DP_PROD_RSHP PR
-                             , TB_DP_MENU_CATEGORY_PROD_MAPG MP
-                             , TB_DP_MENU_CATEGORY MC
-                             , TB_DP_MENU_CATEGORY_DESC MCD
-                             , TB_DP_TENANT_PROD TP
-                             , TB_DP_TENANT_PROD_PRICE TPP
-                             , (SELECT SD.PROD_ID
-                                  FROM TB_DP_SPRT_DEVICE SD
-                                     , TB_CM_DEVICE CD
-                                WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                                  AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
-                                  <if test='topMenuId == "DP13"'>
-                                  AND CD.EBOOK_SPRT_YN = 'Y'
-                                  </if>
-                                  <if test='topMenuId == "DP14"'>
-                                  AND CD.COMIC_SPRT_YN = 'Y'
-                                  </if>
-                               ) SD
-                             , TB_DP_MULTIMDA_PROD MUP
-                             , TB_DP_MULTIMDA_PROD C_MUP
-                             , TB_DP_PROD_DESC DPD
-                         WHERE LT.LIST_ID = #{listId}
-                           AND LT.EXPO_YN = 'Y'
-                           AND LT.LIST_ID = LP.LIST_ID
-                           AND LP.EXPO_YN = 'Y'
-                           AND SYSDATE BETWEEN LP.EXPO_START_DT AND LP.EXPO_END_DT
-                           AND LP.TENANT_ID = #{tenantId}
-                           AND TO_CHAR(LP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
-                           AND LP.PROD_ID = C_DP.PROD_ID
-                           AND C_DP.CONTENTS_TYPE_CD = 'PD002501'
-                           AND PR.PROD_ID = C_DP.PROD_ID
-                           AND E_DP.PROD_ID = PR.PART_PROD_ID
-                           AND E_DP.CONTENTS_TYPE_CD = 'PD002502'
-                           <if test='prodGradeCd != null and prodGradeCd != ""'>
-                           AND E_DP.PROD_GRD_CD = #{prodGradeCd}          /* 상품등급코드 */
-                           </if>
-                           <if test='prodCharge == "Y"'>
-                           AND E_DP.PROD_CHRG_YN = 'Y'       /* 유료 */
-                           </if>
-                           <if test='prodCharge == "N"'>
-                           AND E_DP.PROD_CHRG_YN = 'N'       /* 무료 */
-                           </if>
-                           AND C_DP.PROD_ID = MP.PROD_ID
-                           AND MP.USE_YN = 'Y'
-                           AND MC.TOP_MENU_ID = #{topMenuId}
-                           AND MP.MENU_ID = MC.MENU_ID
-                           AND MC.USE_YN = 'Y'
-                           --AND MC.MENU_ID_TYPE = 'A'
-                           AND LP.TENANT_ID = TP.TENANT_ID
-                           AND E_DP.PROD_ID = TP.PROD_ID
-                           AND TP.TENANT_ID = TPP.TENANT_ID
-                           AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN TO_CHAR(TPP.APPLY_START_DT, 'YYYYMMDDHH24MISS') AND TO_CHAR(TPP.APPLY_END_DT, 'YYYYMMDDHH24MISS')
-                           AND TP.EXPO_YN = 'Y'
-                           AND TP.PROD_STATUS_CD = 'PD000403'
-                           AND TP.PROD_ID = TPP.PROD_ID
-                           AND LP.PROD_ID = SD.PROD_ID --WHITE OR BLACK
-                           AND E_DP.PROD_ID = MUP.PROD_ID
-                           AND C_DP.PROD_ID = C_MUP.PROD_ID
-                           AND C_DP.PROD_ID = DPD.PROD_ID
-                           AND MC.MENU_ID = MCD.MENU_ID
-                       ) A
-                 WHERE RN = 1
-                 ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB   
-               ) B
-              , TB_DP_TENANT_PROD_STATS LB
-              --, TB_DP_PROD_IMG
-          WHERE LB.PROD_ID = B.PROD_ID
+                     , A.*
+                  FROM (SELECT A.*
+						  FROM (SELECT G.TOP_MENU_ID
+						             , G.MENU_ID
+						             , L.MENU_NM
+						             , E.META_CLSF_CD
+						             , B.PROD_ID --채널아이디
+						             , K.PROD_NM 
+						               || NVL2(I.BOOK_CLSF_CD
+						                      , I.CHAPTER || DECODE(I.BOOK_CLSF_CD
+						                      , 'DP004301', '권'
+						                      , 'DP004302', '회'
+						                      , 'DP004303', '호', '' )
+						               , '') AS PROD_NM
+						             , K.PROD_BASE_DESC
+						             , J.PROD_AMT
+						             , J.PROD_NET_AMT
+						             , E.PROD_GRD_CD  
+						             , K.ARTIST1_NM
+						             , K.ARTIST2_NM
+						             , K.ARTIST3_NM
+						             , M.CHNL_COMP_NM
+						             , I.ISSUE_DAY
+						             , M.BOOK_PAGE_CNT
+						             , ( CASE WHEN N.META_CLSF_CD IN ('CT20', 'CT21') THEN 'serial' ELSE '' END ) AS BOOK_TYPE
+						             , ( CASE WHEN N.META_CLSF_CD IN ('CT20', 'CT21') THEN (NVL(M.EPSD_CNT, 0) + NVL(M.STRM_EPSD_CNT, 0) ) END ) AS BOOK_COUNT
+						             , ( CASE WHEN NVL(I.EPSD_CNT, 0) > 0 THEN 'store' ELSE '' END ) AS SUPPORT_STORE
+						             , ( CASE WHEN NVL(I.STRM_EPSD_CNT, 0) > 0 THEN 'play' ELSE '' END ) AS SUPPORT_PLAY
+						             , ( CASE WHEN N.META_CLSF_CD IN ('CT20', 'CT21') THEN DECODE( I.COMPT_YN, 'Y', 'completed', 'continue' ) ELSE '' END ) AS BOOK_STATUS
+						             , ROW_NUMBER( ) OVER ( PARTITION BY N.PROD_ID
+						                                    ORDER BY DECODE( I.BOOK_CLSF_CD, I.BOOK_CLSF_CD, 1, 2 )
+						                                                   , TO_NUMBER( REGEXP_REPLACE( I.CHAPTER, '[^[:digit:]]') ) DESC
+						                                                   , NVL( E.USE_PERIOD_UNIT_CD , 'PD00310' ) DESC
+						                                                   , E.REG_DT DESC
+						                                  ) AS NO
+						             , B.EXPO_ORD_ALWAYS_YN
+						             , B.EXPO_ORD
+						             , B.EXPO_ORD_SUB
+						          FROM TB_DP_LIST A
+						             , TB_DP_LIST_PROD B
+						             , TB_DP_TENANT_PROD C  /* 채널 */
+						             , TB_DP_PROD_RSHP D
+						             , TB_DP_PROD E  /* 에피소드 */
+						             , (SELECT SD.PROD_ID
+						                  FROM TB_DP_SPRT_DEVICE SD
+						                     , TB_CM_DEVICE CD
+						                 WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+						                   AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+		                                   <if test='topMenuId == "DP13"'>
+		                                   AND CD.EBOOK_SPRT_YN = 'Y'
+		                                   </if>
+		                                   <if test='topMenuId == "DP14"'>
+		                                   AND CD.COMIC_SPRT_YN = 'Y'
+		                                   </if>
+						               ) F
+						             , TB_DP_MENU_CATEGORY G
+						             , TB_DP_MENU_CATEGORY_PROD_MAPG H
+						             , TB_DP_MULTIMDA_PROD I  /* 에피소드 */
+						             , TB_DP_TENANT_PROD_PRICE J
+						             , TB_DP_PROD_DESC K
+						             , TB_DP_MENU_CATEGORY_DESC L
+						             , TB_DP_MULTIMDA_PROD M  /* 채널 */
+						             , TB_DP_PROD N  /* 채널 */
+						         WHERE A.LIST_ID = B.LIST_ID
+						           AND A.LIST_ID = #{listId}
+						           AND A.EXPO_YN = 'Y'
+						           AND B.EXPO_YN = 'Y'
+						           AND SYSDATE BETWEEN B.EXPO_START_DT AND B.EXPO_END_DT
+						           AND TO_CHAR(B.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+						           AND B.TENANT_ID = #{tenantId}
+						           AND B.PROD_ID = C.PROD_ID
+						           AND C.EXPO_YN = 'Y'
+						           AND C.PROD_STATUS_CD = 'PD000403'
+						           AND B.TENANT_ID = C.TENANT_ID
+						           AND B.PROD_ID = D.PROD_ID
+						           AND D.PROD_RSHP_CD = 'DP010802'
+						           AND D.PART_PROD_ID = E.PROD_ID
+						           AND E.TOP_MENU_ID = #{topMenuId}
+						           <if test='prodGradeCd != null and prodGradeCd != ""'>
+		                           AND E.PROD_GRD_CD = #{prodGradeCd}          /* 상품등급코드 */
+		                           </if>
+		                           <if test='prodCharge == "Y"'>
+		                           AND E.PROD_CHRG_YN = 'Y'       /* 유료 */
+		                           </if>
+		                           <if test='prodCharge == "N"'>
+		                           AND E.PROD_CHRG_YN = 'N'       /* 무료 */
+		                           </if>
+						           AND E.CONTENTS_TYPE_CD = 'PD002502'
+						           AND E.PROD_ID = F.PROD_ID
+						           AND B.MENU_ID = G.MENU_ID
+						           AND G.USE_YN = 'Y'
+						           AND G.MENU_ID = H.MENU_ID
+						           AND H.USE_YN = 'Y'
+						           AND H.PROD_ID = I.PROD_ID
+						           AND I.PROD_ID = J.PROD_ID
+						           AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN TO_CHAR(J.APPLY_START_DT, 'YYYYMMDDHH24MISS') AND TO_CHAR(J.APPLY_END_DT, 'YYYYMMDDHH24MISS')
+						           AND J.TENANT_ID = B.TENANT_ID
+						           AND B.PROD_ID = K.PROD_ID
+						           AND K.LANG_CD = #{langCd}
+						           AND L.MENU_ID = G.MENU_ID
+						           AND L.LANG_CD = K.LANG_CD
+						           AND M.PROD_ID = B.PROD_ID
+						           AND M.PROD_ID = N.PROD_ID
+						           AND N.CONTENTS_TYPE_CD = 'PD002501'
+						           AND E.TOP_MENU_ID = N.TOP_MENU_ID
+						       ) A
+						 WHERE NO = 1
+						 ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB 
+					) A
+				 ) B
+				 , TB_DP_TENANT_PROD_STATS C
+			   --, TB_DP_PROD_IMG
+          WHERE B.PROD_ID = C.PROD_ID(+)
             AND RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-
+          ORDER BY RNUM
     </select>
     
 </mapper>
