@@ -308,11 +308,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						supportList.add(support);
 						support = new Support();
 						support.setType("iab");
-						if (mapperVO.getPartParentClsfCd() == null || "".equals(mapperVO.getPartParentClsfCd())) {
-							support.setText("");
-						} else {
-							support.setText(mapperVO.getPartParentClsfCd());
-						}
+						support.setText(mapperVO.getPartParentClsfCd());
 						supportList.add(support);
 
 						List<Menu> menuList = new ArrayList<Menu>();
@@ -385,15 +381,19 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				identifier.setText("0000643818");
 
 				List<Support> supportList = new ArrayList<Support>();
-				support.setType("PD012301");
-				support.setText("PD012301");
+				support.setType("drm");
+				support.setText("N");
+				supportList.add(support);
+				support = new Support();
+				support.setType("iab");
+				support.setText("N");
 				supportList.add(support);
 
 				/*
 				 * Menu(메뉴정보) Id, Name, Type
 				 */
 				List<Menu> menuList = new ArrayList<Menu>();
-				menu.setId("DP000501");
+				menu.setId("DP01");
 				menu.setName("게임");
 				menu.setType("topClass");
 				menuList.add(menu);
@@ -428,7 +428,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				 * source mediaType, size, type, url
 				 */
 				List<Source> sourceList = new ArrayList<Source>();
-				source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
+				source.setType("thumbnail");
+				source.setUrl("/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 				sourceList.add(source);
 
 				/*
@@ -438,7 +439,6 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 
 				product = new Product();
 				product.setIdentifier(identifier);
-				// product.setSupport("y|iab");
 				product.setSupportList(supportList);
 				product.setMenuList(menuList);
 				product.setApp(app);
