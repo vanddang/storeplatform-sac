@@ -9,14 +9,14 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import javax.validation.Valid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -55,23 +55,33 @@ public class UserJoinController {
 	 * 모바일 전용 회원 가입 (MDN 회원 가입).
 	 * </pre>
 	 * 
-	 * @param req
-	 *            CreateByMdnReq
 	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @return CreateByMdnRes
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
+	 * @return Response Value Object
 	 * @throws Exception
-	 *             Exception
+	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(@Valid @RequestBody CreateByMdnReq req, SacRequestHeader sacHeader) throws Exception {
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		LOGGER.info("####################################################");
 
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		}
 
 		/**
 		 * Header 정보
@@ -97,17 +107,19 @@ public class UserJoinController {
 	 * ID 회원 약관 동의 가입 (One ID 회원).
 	 * </pre>
 	 * 
-	 * @param req
-	 *            CreateByAgreementReq
 	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @return CreateByAgreementRes
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
+	 * @return Response Value Object
 	 * @throws Exception
-	 *             Exception
+	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(@Valid @RequestBody CreateByAgreementReq req, SacRequestHeader sacHeader) throws Exception {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
@@ -116,12 +128,19 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		}
+
+		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		CreateByAgreementRes res = new CreateByAgreementRes();
-
 		if (!StringUtil.equals(req.getDeviceId(), "")) {
 
 			/**
@@ -161,17 +180,19 @@ public class UserJoinController {
 	 * ID 회원 간편 가입 (IDP 회원).
 	 * </pre>
 	 * 
-	 * @param req
-	 *            CreateByAgreementReq
 	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @return CreateByAgreementRes
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
+	 * @return Response Value Object
 	 * @throws Exception
-	 *             Exception
+	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateBySimpleRes createBySimple(@Valid @RequestBody CreateBySimpleReq req, SacRequestHeader sacHeader) throws Exception {
+	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("#############################################");
 		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
@@ -180,12 +201,19 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
 
 		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		}
+
+		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		CreateBySimpleRes res = new CreateBySimpleRes();
-
 		if (!StringUtil.equals(req.getDeviceId(), "")) {
 
 			/**
