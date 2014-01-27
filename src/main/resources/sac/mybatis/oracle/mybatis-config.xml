@@ -109,6 +109,10 @@
         <typeAlias alias="BestContentsReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq" />
         <typeAlias alias="BestContents"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestContents" />
         
+        <!-- BEST 다운로드 상품 조회 -->
+        <typeAlias alias="BestDownloadReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq" />
+        <typeAlias alias="BestDownload"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestDownload" />
+        
         <!-- 상품 meta 정보 조회 -->
         <typeAlias alias="ProductBasicInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo" />
         <typeAlias alias="MetaInfo"  type="com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo" />
