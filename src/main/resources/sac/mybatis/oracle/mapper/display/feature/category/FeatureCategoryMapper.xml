@@ -891,6 +891,7 @@
 						           AND G.MENU_ID = H.MENU_ID
 						           AND H.USE_YN = 'Y'
 						           AND H.PROD_ID = I.PROD_ID
+						           AND H.PROD_ID = E.PROD_ID
 						           AND I.PROD_ID = J.PROD_ID
 						           AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN TO_CHAR(J.APPLY_START_DT, 'YYYYMMDDHH24MISS') AND TO_CHAR(J.APPLY_END_DT, 'YYYYMMDDHH24MISS')
 						           AND J.TENANT_ID = B.TENANT_ID
