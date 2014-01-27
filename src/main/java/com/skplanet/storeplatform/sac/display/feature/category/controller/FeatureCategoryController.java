@@ -29,6 +29,11 @@ import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCa
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryVodService;
 
+/**
+ * Feature 카테고리 컨트롤러.
+ * 
+ * Updated on : 2014-01-24 Updated by : , GTSOFT.
+ */
 @Controller
 @RequestMapping("/display/feature/category")
 public class FeatureCategoryController {
@@ -46,7 +51,10 @@ public class FeatureCategoryController {
 	 * Feature VOD 카테고리 상품 조회.
 	 * </pre>
 	 * 
-	 * @param FeatureCategoryVodReq
+	 * @param req
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * @return FeatureCategoryVodRes
 	 */
 	@RequestMapping(value = "/vod/list/v1", method = RequestMethod.GET)
@@ -66,7 +74,10 @@ public class FeatureCategoryController {
 	 * Feature App 카테고리 상품 조회.
 	 * </pre>
 	 * 
-	 * @param FeatureCategoryAppReq
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * @return FeatureCategoryAppRes
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
@@ -103,7 +114,10 @@ public class FeatureCategoryController {
 	 * Feature Epub 카테고리 상품 조회.
 	 * </pre>
 	 * 
-	 * @param FeatureCategoryEpubReq
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * @return FeatureCategoryEpubRes
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)

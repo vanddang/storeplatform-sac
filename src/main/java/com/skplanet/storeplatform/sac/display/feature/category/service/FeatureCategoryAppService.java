@@ -21,26 +21,28 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface FeatureCategoryAppService {
 	/**
 	 * <pre>
-	 * 운영자 추천 전체 카테고리 상품 리스트 조회
+	 * 운영자 추천 전체 카테고리 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param
+	 * @param requestVO
+	 *            UserDefine 파라미터
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
 	FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO);
-	
+
 	/**
 	 * <pre>
-	 * Feature 탑카테고리 App 상품 리스트 조 회 - 최신
+	 * Feature 탑카테고리 App 상품 리스트 조 회 - 최신.
 	 * </pre>
 	 * 
-	 * @param
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
 	FeatureCategoryAppRes searchMenuAppList(FeatureCategoryAppReq requestVO, SacRequestHeader header);
 
-	
-	
 }

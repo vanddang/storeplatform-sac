@@ -13,13 +13,21 @@ import com.skplanet.storeplatform.sac.client.display.vo.feature.category.Feature
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
+/**
+ * 
+ * 
+ * Updated on : 2014. 01. 27. Updated by : , GTSOFT.
+ */
 public interface FeatureCategoryVodService {
 	/**
 	 * <pre>
 	 * Feature VOD 카테고리 상품 조회.
 	 * </pre>
 	 * 
-	 * @param FeatureCategoryVodReq
+	 * @param req
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * @return FeatureCategoryVodRes
 	 */
 	FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header);

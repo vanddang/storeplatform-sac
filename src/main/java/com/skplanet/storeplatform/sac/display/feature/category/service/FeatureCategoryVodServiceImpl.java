@@ -42,6 +42,11 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVodDTO;
 
+/**
+ * 
+ * 
+ * Updated on : 2014. 01. 27. Updated by : , GTSOFT.
+ */
 @Service
 @Transactional
 public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService {

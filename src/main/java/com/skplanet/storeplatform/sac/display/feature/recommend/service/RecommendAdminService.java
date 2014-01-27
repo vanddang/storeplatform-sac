@@ -19,13 +19,16 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * Updated on : 2013. 12. 19. Updated by : 서영배, GTSOFT.
  */
 public interface RecommendAdminService {
-	
+
 	/**
 	 * <pre>
-	 * 운영자 추천 전체 카테고리 상품 리스트 조회
+	 * 운영자 추천 전체 카테고리 상품 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
