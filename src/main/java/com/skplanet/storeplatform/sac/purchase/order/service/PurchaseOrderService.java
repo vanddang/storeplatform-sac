@@ -25,17 +25,6 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 구매 전처리.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
-	 */
-	public void checkPurchase(PurchaseOrder purchaseOrderInfo);
-
-	/**
-	 * 
-	 * <pre>
 	 * 무료구매 처리.
 	 * </pre>
 	 * 

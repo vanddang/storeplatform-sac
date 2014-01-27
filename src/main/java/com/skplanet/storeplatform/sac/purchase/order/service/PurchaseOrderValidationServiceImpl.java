@@ -94,10 +94,10 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 회원 체크
 		if (userInfo == null) { // 회원 정보 조회 실패
-			return new PurchaseOrderResult("SAC_PUR_00001", "not found user: " + purchaseOrderInfo.getUserKey());
+			return new PurchaseOrderResult("SAC_PUR_0001", "not found user: " + purchaseOrderInfo.getUserKey());
 		}
 		if ("US010701".equals(userInfo.getUserStatusCd()) == false) { // 회원상태 정상 아님
-			return new PurchaseOrderResult("SAC_PUR_00002", "not available user status: " + userInfo.getUserStatusCd());
+			return new PurchaseOrderResult("SAC_PUR_0002", "not available user status: " + userInfo.getUserStatusCd());
 		}
 
 		purchaseOrderInfo.setPurchaseMember(userInfo);
@@ -113,11 +113,11 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			// 회원 체크
 			if (recvUserInfo == null) { // 회원 정보 조회 실패
-				return new PurchaseOrderResult("SAC_PUR_00003", "not found recv user: "
+				return new PurchaseOrderResult("SAC_PUR_0003", "not found recv user: "
 						+ purchaseOrderInfo.getRecvUserKey());
 			}
 			if ("US010701".equals(recvUserInfo.getUserStatusCd()) == false) { // 회원상태 정상 아님
-				return new PurchaseOrderResult("SAC_PUR_00004", "not available recvuser status: "
+				return new PurchaseOrderResult("SAC_PUR_0004", "not available recvuser status: "
 						+ recvUserInfo.getUserStatusCd());
 			}
 
@@ -153,13 +153,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					deviceModelCd);
 
 			if (productInfo == null) {
-				return new PurchaseOrderResult("SAC_PUR_00011", "not found product: " + reqProduct.getProdId());
+				return new PurchaseOrderResult("SAC_PUR_0011", "not found product: " + reqProduct.getProdId());
 			}
 			if (productInfo.getbSell() == false) {
-				return new PurchaseOrderResult("SAC_PUR_00012", "not selling product");
+				return new PurchaseOrderResult("SAC_PUR_0012", "not selling product");
 			}
 			if (productInfo.getbSupport() == false) {
-				return new PurchaseOrderResult("SAC_PUR_00013", "not support product");
+				return new PurchaseOrderResult("SAC_PUR_0013", "not support product");
 			}
 
 			productInfo.setProdAmt(reqProduct.getProdAmt());
@@ -189,7 +189,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			if ("PD004404".equals(product) && userInfo.getAge() < 20) {
-				return new PurchaseOrderResult("SAC_PUR_00022", "not allow age: " + userInfo.getAge());
+				return new PurchaseOrderResult("SAC_PUR_0022", "not allow age: " + userInfo.getAge());
 			}
 
 			// 쇼핑상품 경우, 발급 가능 여부 확인

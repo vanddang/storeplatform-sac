@@ -80,16 +80,16 @@ public class PaymentPageParam extends CommonInfo {
 	public String makeEncDataFormat() {
 		StringBuffer sb = new StringBuffer(1024);
 
-		sb.append("mid:").append(this.mid).append(";orderId:").append(this.orderId).append(";mctTrDate:")
-				.append(this.mctTrDate).append(";amtPurchase:").append(this.amtPurchase).append(";pid:")
-				.append(this.pid).append(";pName:").append(this.pName).append(";pDescription:")
-				.append(this.pDescription).append(";pType:").append(this.pType).append(";aid:").append(this.aid)
-				.append(";returnFormat:").append(this.returnFormat).append(";flgMchtAuth:").append(this.flgMchtAuth)
-				.append(";returnPath:").append(this.returnPath).append(";resultPath:").append(this.resultPath)
-				.append(";mctSpareParam:").append(this.mctSpareParam).append(";mdn:").append(this.mdn)
-				.append(";nmDevice:").append(this.nmDevice).append(";imei:").append(this.imei).append(";uacd:")
-				.append(this.uacd).append(";typeNetwork:").append(this.typeNetwork).append(";carrier:")
-				.append(this.carrier).append(";noSim:").append(this.noSim).append(";flgSim:").append(this.flgSim);
+		sb.append("mid=").append(this.mid).append(";orderId=").append(this.orderId).append(";mctTrDate=")
+				.append(this.mctTrDate).append(";amtPurchase=").append(this.amtPurchase).append(";pid=")
+				.append(this.pid).append(";pName=").append(this.pName).append(";pDescription=")
+				.append(this.pDescription).append(";pType=").append(this.pType).append(";aid=").append(this.aid)
+				.append(";returnFormat=").append(this.returnFormat).append(";flgMchtAuth=").append(this.flgMchtAuth)
+				.append(";returnPath=").append(this.returnPath).append(";resultPath=").append(this.resultPath)
+				.append(";mctSpareParam=").append(this.mctSpareParam).append(";mdn=").append(this.mdn)
+				.append(";nmDevice=").append(this.nmDevice).append(";imei=").append(this.imei).append(";uacd=")
+				.append(this.uacd).append(";typeNetwork=").append(this.typeNetwork).append(";carrier=")
+				.append(this.carrier).append(";noSim=").append(this.noSim).append(";flgSim=").append(this.flgSim);
 
 		return sb.toString();
 	}

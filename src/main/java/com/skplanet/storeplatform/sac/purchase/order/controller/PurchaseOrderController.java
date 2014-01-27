@@ -140,6 +140,81 @@ public class PurchaseOrderController {
 	/**
 	 * 
 	 * <pre>
+	 * 유료상품 무료결제 구매 요청 처리: 일부 외부판매 사이트에 필요하며, 요청한 사이트에 대해 해당 요청 권한이 있는 지 체크하는 부분이 추가된다.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            구매요청 정보
+	 * @return 구매요청 처리 결과: 무료구매완료
+	 */
+	@RequestMapping(value = "/createFreeCharge/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreatePurchaseRes createFreeChargePurchase(@RequestBody CreatePurchaseReq req) {
+		this.logger.debug("PRCHS,INFO,CREATE,REQ,{}", req);
+
+		// ------------------------------------------------------------------------------
+		// 구매정보 개체 세팅
+
+		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(req);
+		purchaseOrderInfo.setTenantId(req.getTenantId()); // 구매(선물발신) 테넌트 ID
+		purchaseOrderInfo.setSystemId(req.getSystemId()); // 구매(선물발신) 시스템 ID
+		purchaseOrderInfo.setUserKey(req.getInsdUsermbrNo()); // 구매(선물발신) 내부 회원 번호
+		purchaseOrderInfo.setDeviceKey(req.getInsdDeviceId()); // 구매(선물발신) 내부 디바이스 ID
+		purchaseOrderInfo.setRecvTenantId(req.getRecvTenantId()); // 선물수신 테넌트 ID
+		purchaseOrderInfo.setRecvUserKey(req.getRecvInsdUsermbrNo()); // 선물수신 내부 회원 번호
+		purchaseOrderInfo.setRecvDeviceKey(req.getRecvInsdDeviceId()); // 선물수신 내부 디바이스 ID
+		purchaseOrderInfo.setPrchsReqPathCd(req.getPrchsReqPathCd()); // 구매 요청 경로 코드
+		purchaseOrderInfo.setMid(req.getMid()); // 가맹점 ID
+		purchaseOrderInfo.setAuthKey(req.getAuthKey()); // 가맹점 인증키
+		purchaseOrderInfo.setResultUrl(req.getResultUrl()); // 결과처리 URL
+		purchaseOrderInfo.setCurrencyCd(req.getCurrencyCd()); // 통화 코드
+		purchaseOrderInfo.setTotAmt(req.getTotAmt()); // 총 결제 금액
+		purchaseOrderInfo.setClientIp(req.getClientIp()); // 클라이언트 IP
+		purchaseOrderInfo.setNetworkTypeCd(req.getNetworkTypeCd()); // 네트워크 타입 코드
+		purchaseOrderInfo.setPrchsCaseCd(req.getPrchsCaseCd()); // 구매 유형 코드
+
+		purchaseOrderInfo.setRealTotAmt(0); // 최종 결제 총 금액 : 0원 처리
+
+		// ------------------------------------------------------------------------------
+		// 적합성 체크
+
+		PurchaseOrderResult checkResult = this.validationService.validate(purchaseOrderInfo);
+		if (checkResult != null) { // TODO:: 에러 - 예외처리 - 종료
+			;
+		}
+
+		// ------------------------------------------------------------------------------
+		// 제한정책 체크
+
+		checkResult = this.policyService.checkPolicy(purchaseOrderInfo);
+		if (checkResult != null) { // TODO:: 에러 - 예외처리 - 종료
+			;
+		}
+
+		// ------------------------------------------------------------------------------
+		// TAKTODO:: 결제 내역 생성 확인 및 처리
+		// 무료구매완료 처리
+
+		purchaseOrderInfo.setResultType("free");
+		// 구매생성 (무료)
+		this.orderService.freePurchase(purchaseOrderInfo);
+
+		// ------------------------------------------------------------------------------
+		// 응답 세팅
+
+		CreatePurchaseRes res = new CreatePurchaseRes();
+		res.setResultType(purchaseOrderInfo.getResultType());
+		res.setPrchsId(purchaseOrderInfo.getPrchsId());
+		res.setPaymentPageUrl(purchaseOrderInfo.getPaymentPageUrl());
+		res.setPaymentPageParam(purchaseOrderInfo.getPaymentPageParam());
+
+		this.logger.debug("PRCHS,INFO,CREATE,RES,{}", res);
+		return res;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * Pay Planet 측으로부터 결제 진행 결과 응답 받음.
 	 * </pre>
 	 * 
@@ -164,7 +239,7 @@ public class PurchaseOrderController {
 			arSpareParam = mctSpareParam.split("&");
 
 			for (String param : arSpareParam) {
-				arParamKeyValue = param.split("=");
+				arParamKeyValue = param.split(":");
 				spareParamMap.put(arParamKeyValue[0], arParamKeyValue[1]);
 			}
 		}
@@ -191,6 +266,7 @@ public class PurchaseOrderController {
 		// 구매 확정 및 결제 내역 저장
 
 		Prchs prchs = new Prchs();
+		prchs.setTenantId(systemId);
 		prchs.setTenantId(tenantId);
 		prchs.setPrchsId(prchsId);
 		prchs.setInsdUsermbrNo(useUserKey);

@@ -9,10 +9,13 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +35,8 @@ import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchas
 import com.skplanet.storeplatform.purchase.client.order.vo.SearchReservedPurchaseResSC;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReqProduct;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentReq;
+import com.skplanet.storeplatform.sac.other.common.CryptUtils;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.order.precheck.CheckerManager;
-import com.skplanet.storeplatform.sac.purchase.order.precheck.PurchaseOrderChecker;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PaymentPageParam;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
@@ -54,36 +56,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 	@Autowired
 	private PurchaseOrderSCI purchaseOrderSCI;
-
-	private final CheckerManager checkerManager = new CheckerManager();
-
-	/**
-	 * 
-	 * <pre>
-	 * 구매 전처리.
-	 * </pre>
-	 * 
-	 * @param purchaseOrderInfo
-	 *            구매요청 정보
-	 */
-	@Override
-	public void checkPurchase(PurchaseOrder purchaseOrderInfo) {
-		List<PurchaseOrderChecker> checkerList = this.checkerManager.getCheckerList(null);
-
-		Long startTime = System.currentTimeMillis();
-
-		for (PurchaseOrderChecker checker : checkerList) {
-			if (checker.isTarget(purchaseOrderInfo) == false) {
-				continue;
-			}
-
-			if (checker.checkAndSetInfo(purchaseOrderInfo) == false) {
-				break;
-			}
-		}
-
-		this.logger.debug("PRCHS,DUMMY,CHECK," + (System.currentTimeMillis() - startTime) + "ms");
-	}
 
 	/**
 	 * 
@@ -115,6 +87,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void freePurchase(PurchaseOrder purchaseOrderInfo) {
+		this.logger.debug("PRCHS,ORDER,FREE,START,{}", purchaseOrderInfo);
+
 		String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
 				.get(0).getProdId());
 		purchaseOrderInfo.setPrchsId(prchsId);
@@ -182,6 +156,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// Payment payment = new Payment();
 		// this.dummyPurchaseSCI.createPayment(payment);
+
+		this.logger.debug("PRCHS,ORDER,FREE,END,{}", purchaseOrderInfo);
 	}
 
 	/**
@@ -195,6 +171,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void reservePurchase(PurchaseOrder purchaseOrderInfo) {
+		this.logger.debug("PRCHS,ORDER,RESERVE,START,{}", purchaseOrderInfo);
 		String prchsId = this.makePrchsId(purchaseOrderInfo.getPrchsReqPathCd(), purchaseOrderInfo.getProductList()
 				.get(0).getProdId());
 		purchaseOrderInfo.setPrchsId(prchsId);
@@ -255,6 +232,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		ReservePurchaseReqSC reservePurchaseReqSC = new ReservePurchaseReqSC();
 		reservePurchaseReqSC.setPrchsDtlList(prchsDtlList);
 		this.purchaseOrderSCI.reservePurchase(reservePurchaseReqSC);
+
+		this.logger.debug("PRCHS,ORDER,RESERVE,END,{}", purchaseOrderInfo);
 	}
 
 	/**
@@ -292,6 +271,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void confirmPurchase(Prchs prchs) {
+		this.logger.debug("PRCHS,ORDER,CONFIRM,START,{}", prchs);
+
 		ConfirmPurchaseReqSC reqConfirm = new ConfirmPurchaseReqSC();
 		reqConfirm.setTenantId(prchs.getTenantId());
 		reqConfirm.setSystemId(null);
@@ -302,6 +283,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		this.purchaseOrderSCI.confirmPurchase(reqConfirm);
 
+		this.logger.debug("PRCHS,ORDER,CONFIRM,END,{}", prchs);
 	}
 
 	/**
@@ -317,6 +299,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void createPayment(Prchs prchs, NotifyPaymentReq notifyParam) {
+		this.logger.debug("PRCHS,ORDER,NOTIPAY,START,{}", notifyParam);
+
 		String tenantId = prchs.getTenantId();
 		String prchsId = prchs.getPrchsId();
 		String payUserKey = prchs.getInsdUsermbrNo();
@@ -364,6 +348,8 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		reqPayment.setPaymentList(paymentList);
 
 		this.purchaseOrderSCI.createPayment(reqPayment);
+
+		this.logger.debug("PRCHS,ORDER,NOTIPAY,END,{}", notifyParam);
 	}
 
 	/**
@@ -377,8 +363,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 */
 	@Override
 	public void setPaymentPageInfo(PurchaseOrder purchaseOrderInfo) {
-		purchaseOrderInfo.setPaymentPageUrl(PP_PAYMENT_PAGE_URL);
+		this.logger.debug("PRCHS,ORDER,SET_PAYPAGE,START,{}", purchaseOrderInfo);
+
+		purchaseOrderInfo.setPaymentPageUrl(DUMMY_PP_PAYMENT_PAGE_URL);
 		purchaseOrderInfo.setPaymentPageParam(this.makeEncryptedPaymentParameter(purchaseOrderInfo));
+
+		this.logger.debug("PRCHS,ORDER,SET_PAYPAGE,END,{}", purchaseOrderInfo);
 	}
 
 	/**
@@ -412,7 +402,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		param.setAid("");
 		param.setReturnFormat(PaymentPageParam.PP_RETURN_FORMAT_JSON);
 		param.setReturnPath(purchaseOrderInfo.getResultUrl());
-		param.setResultPath(SAC_PUR_PAYMENT_NOTIFY_URL);
+		param.setResultPath(DUMMY_SAC_PUR_PAYMENT_NOTIFY_URL);
 		param.setMdn(purchaseOrderInfo.getPurchaseMember().getDeviceId());
 		param.setNmDevice(purchaseOrderInfo.getDeviceModelCd());
 		param.setImei("");
@@ -425,22 +415,34 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
 		// 가맹점 필요 파라미터
 		StringBuffer sbSpare = new StringBuffer(1024);
-		sbSpare.append("tenantId=").append(purchaseOrderInfo.getTenantId()).append("&systemId=")
-				.append(purchaseOrderInfo.getSystemId()).append("&useUserKey=").append(useUserKey)
-				.append("&networkTypeCd=").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd=")
+		sbSpare.append("tenantId:").append(purchaseOrderInfo.getTenantId()).append("&systemId:")
+				.append(purchaseOrderInfo.getSystemId()).append("&useUserKey:").append(useUserKey)
+				.append("&networkTypeCd:").append(purchaseOrderInfo.getNetworkTypeCd()).append("&currencyCd:")
 				.append(purchaseOrderInfo.getCurrencyCd());
 
 		param.setMctSpareParam(sbSpare.toString());
 
 		// 암호화
-		String eDataStr = param.makeEncDataFormat();
+		String eData = param.makeEncDataFormat();
+		eData = CryptUtils.encrypt(CryptUtils.AES128_CTR, "5", eData);
+		eData = Base64.encodeBase64String(eData.getBytes());
+		param.seteData(eData);
 
 		// Token
-		// String tokenStr = param.makeTokenFormat();
+		String token = param.makeTokenFormat();
+		try {
+			token = Base64.encodeBase64String(MessageDigest.getInstance("MD5").digest(token.getBytes()));
+		} catch (NoSuchAlgorithmException e) {
+			// TODO::
+			;
+		}
+		param.setToken(token);
 
-		return eDataStr;
+		this.logger.debug("TAKTEST,{},{}", eData, token);
+
+		return eData;
 	}
 
-	public static final String PP_PAYMENT_PAGE_URL = "http://localhost:8080/payplanet/paymentPage";
-	public static final String SAC_PUR_PAYMENT_NOTIFY_URL = "http://localhost:8010/sp_sac/purchase/order/notifyPayment/v1";
+	public static final String DUMMY_PP_PAYMENT_PAGE_URL = "http://localhost:8080/payplanet/paymentPage";
+	public static final String DUMMY_SAC_PUR_PAYMENT_NOTIFY_URL = "http://localhost:8010/sp_sac/purchase/order/notifyPayment/v1";
 }

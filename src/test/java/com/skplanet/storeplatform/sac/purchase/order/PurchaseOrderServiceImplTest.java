@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPar
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
+import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
@@ -45,6 +46,9 @@ public class PurchaseOrderServiceImplTest {
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
 
+	@Autowired
+	private PurchaseOrderPolicyService purchasePolicyService;
+
 	CreatePurchaseReq createPurchaseReq;
 	PurchaseOrder purchaseInfo;
 
@@ -54,6 +58,7 @@ public class PurchaseOrderServiceImplTest {
 	public void init() {
 		this.createPurchaseReq = new CreatePurchaseReq();
 		this.createPurchaseReq.setTenantId("S01"); // 테넌트 ID
+		this.createPurchaseReq.setSystemId("S01-001"); // 시스템 ID
 		this.createPurchaseReq.setInsdUsermbrNo("TEST_MBR_NO_1"); // 내부 회원 번호
 		this.createPurchaseReq.setInsdDeviceId("1"); // 내부 디바이스 ID
 		this.createPurchaseReq.setPrchsReqPathCd("OR000401"); // 구매 요청 경로 코드
@@ -67,8 +72,8 @@ public class PurchaseOrderServiceImplTest {
 		this.createPurchaseReq.setResultUrl("http://localhost:8080/tenant/completePurchase");
 
 		List<CreatePurchaseReqProduct> productList = new ArrayList<CreatePurchaseReqProduct>();
-		productList.add(new CreatePurchaseReqProduct("0000044819", "GRP-1", 0.0, 1));
-		productList.add(new CreatePurchaseReqProduct("0000044820", "GRP-1", 0.0, 1));
+		productList.add(new CreatePurchaseReqProduct("0000044819", "DP000201", 0.0, 1));
+		productList.add(new CreatePurchaseReqProduct("0000044820", "DP000201", 0.0, 1));
 		this.createPurchaseReq.setProductList(productList);
 
 		this.purchaseInfo = new PurchaseOrder(this.createPurchaseReq);
@@ -114,7 +119,7 @@ public class PurchaseOrderServiceImplTest {
 	 */
 	@Test
 	public void checkPurchase() throws Exception {
-		this.purchaseOrderService.checkPurchase(this.purchaseInfo);
+		this.purchasePolicyService.checkPolicy(this.purchaseInfo);
 
 	}
 
