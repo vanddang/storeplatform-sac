@@ -9,36 +9,33 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.vod;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
  * Interface Message Vod Detail Value Object.
- * 
+ *
  * Updated on : 2014. 01. 09 Updated by : 임근대, SK 플래닛.
  */
 public class VodDetailRes extends CommonInfo {
 
 	private static final long serialVersionUID = 3342908170045743735L;
 
-	private CommonResponse commonRes;
+	private CommonResponse commonResponse;
 
 	private Product product;
 
-	public CommonResponse getCommonRes() {
-		return this.commonRes;
+	public CommonResponse getCommonResponse() {
+		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonRes) {
-		this.commonRes = commonRes;
+	public void setCommonResponse(CommonResponse commonResponse) {
+		this.commonResponse = commonResponse;
 	}
 
 	public Product getProduct() {
-		return product;
+		return this.product;
 	}
 
 	public void setProduct(Product product) {
@@ -47,8 +44,8 @@ public class VodDetailRes extends CommonInfo {
 
 	@Override
 	public String toString() {
-		return "VodDetailRes [commonRes=" + commonRes + ", product=" + product
-				+ "]";
+		return "VodDetailRes [commonResponse=" + this.commonResponse + ", product="
+				+ this.product + "]";
 	}
 
 }
