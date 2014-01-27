@@ -274,7 +274,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		messageText = this.messageSourceAccessor.getMessage(messageText, object, LocaleContextHolder.getLocale());
 		messageSender = this.messageSourceAccessor.getMessage(messageSender, object, LocaleContextHolder.getLocale());
-		LOGGER.debug("## messageText : {}", messageSender);
+		LOGGER.debug("## messageText : {}", messageText);
 		LOGGER.debug("## messageSender : {}", messageSender);
 
 		/* 인증 Signautre 생성 - guid 형식 */
