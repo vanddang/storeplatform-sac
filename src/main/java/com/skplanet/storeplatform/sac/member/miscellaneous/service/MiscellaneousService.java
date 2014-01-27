@@ -150,7 +150,7 @@ public interface MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * 5.3.8. 사용자별 정책 조회.
+	 * 2.3.8. 사용자별 정책 조회.
 	 * </pre>
 	 * 
 	 * @param header
@@ -161,7 +161,7 @@ public interface MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * 5.3.9. 사용자별 정책 등록/수정.
+	 * 2.3.9. 사용자별 정책 등록/수정.
 	 * </pre>
 	 * 
 	 * @param header
@@ -172,7 +172,7 @@ public interface MiscellaneousService {
 
 	/**
 	 * <pre>
-	 * 5.3.10. 사용자별 정책 삭제.
+	 * 2.3.10. 사용자별 정책 삭제.
 	 * </pre>
 	 * 
 	 * @param header

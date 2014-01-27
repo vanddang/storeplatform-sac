@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndiv
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 
 /**
- * 사용자별 정책 삭제
+ * 2.3.10. 사용자별 정책 삭제
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */

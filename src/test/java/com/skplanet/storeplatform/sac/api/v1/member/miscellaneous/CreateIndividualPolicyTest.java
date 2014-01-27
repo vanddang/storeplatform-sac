@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndiv
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
 
 /**
- * 5.3.9. 사용자별 정책 등록 / 수정
+ * 2.3.9. 사용자별 정책 등록 / 수정
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */

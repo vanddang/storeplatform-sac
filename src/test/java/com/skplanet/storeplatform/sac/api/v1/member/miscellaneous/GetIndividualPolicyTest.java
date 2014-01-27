@@ -36,7 +36,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividu
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
 
 /**
- * 사용자별 정책 조회
+ * 2.3.8. 사용자별 정책 조회
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */
