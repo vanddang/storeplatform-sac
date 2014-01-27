@@ -99,9 +99,9 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileCode(), "");
 			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
-			if (extraProfileCode.equals("") && extraProfilValue.equals("")) {
-				throw new RuntimeException("회원 부가 삭제 extraProfileCode, extraProfilValue is Null" + "extraProfileCode ["
-						+ extraProfileCode + "]" + " [" + extraProfilValue + "]");
+			if (extraProfileCode.equals("")) {
+				throw new RuntimeException("회원 부가 삭제 extraProfileCode is Null" + "extraProfileCode ["
+						+ extraProfileCode + "]");
 			}
 		}
 
