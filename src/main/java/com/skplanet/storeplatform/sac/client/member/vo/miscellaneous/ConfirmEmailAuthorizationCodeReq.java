@@ -24,22 +24,36 @@ public class ConfirmEmailAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 인증 코드 생존 시간 ( 일 단위 )
 	 */
-	private String tileToLive;
+	private String timeToLive;
 
+	/**
+	 * @return the emailAuthCode
+	 */
 	public String getEmailAuthCode() {
 		return this.emailAuthCode;
 	}
 
+	/**
+	 * @param emailAuthCode
+	 *            the emailAuthCode to set
+	 */
 	public void setEmailAuthCode(String emailAuthCode) {
 		this.emailAuthCode = emailAuthCode;
 	}
 
-	public String getTileToLive() {
-		return this.tileToLive;
+	/**
+	 * @return the timeToLive
+	 */
+	public String getTimeToLive() {
+		return this.timeToLive;
 	}
 
-	public void setTileToLive(String tileToLive) {
-		this.tileToLive = tileToLive;
+	/**
+	 * @param timeToLive
+	 *            the timeToLive to set
+	 */
+	public void setTimeToLive(String timeToLive) {
+		this.timeToLive = timeToLive;
 	}
 
 }
