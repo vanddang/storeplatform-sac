@@ -534,8 +534,7 @@ public class DummySellerController {
 
 		ModifyInformationRes responseVO = new ModifyInformationRes();
 
-		responseVO.setSellerId("IF1023599819420120111013407");
-		responseVO.setSellerKey("User1");
+		responseVO.setSellerKey("IF102158942020090723111912");
 
 		return responseVO;
 	}
