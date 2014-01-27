@@ -95,6 +95,36 @@ public class UserModifyTest {
 						reqJson.setUserKey("US201401231555153430000447");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
+						/**
+						 * 사용자 연락처 정보...?? (휴대기기 정보 아님....)
+						 */
+						reqJson.setDeviceTelecom("US001202"); // 이동통신사
+						reqJson.setUserPhoneCountry("82"); // 국가코드
+						reqJson.setUserPhone("01011111112"); // 사용자 연락처
+
+						reqJson.setIsRecvSms("N"); // SMS 수신 여부
+						reqJson.setUserEmail("이메일@naver.com"); // Email 정보
+						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
+
+						/**
+						 * 사용자명은 실명인증정보와 관련이 있는데....SC 에서만 수정 가능한지..?? (IDP 에서는 실명인증이 되지 않으면 업데이트 불가함.)
+						 */
+						reqJson.setUserName("사용자명"); // 사용자명
+
+						reqJson.setUserSex("M"); // 성별
+						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일
+						reqJson.setUserZip("151919"); // 우편번호
+						reqJson.setUserAddress("서울 관악구 낙성대동 서울대연구공원단지"); // 주소
+						reqJson.setUserDetailAddress("SKT연구소"); // 상세주소
+
+						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
+
+						/**
+						 * 외국인
+						 */
+						reqJson.setUserCity("Pittsburgh");
+						reqJson.setUserState("Pennsylvania");
+
 						return reqJson;
 					}
 				}).success(ModifyRes.class, new SuccessCallback() {
