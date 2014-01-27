@@ -120,7 +120,7 @@ public class IdpServiceImpl implements IdpService {
 
 		if ("null".equals(oldId) || "".equals(oldId)) { // 신규가입경우 기존 Tstore에 없던 회원가입요청시 전환가입 대상자중 Tstore 미가입자로 Tstore에
 														// 가입이 안되어있는경우는 신규가입으로 판단
-			LOGGER.debug("신규가입 정보 입력 시작");
+			LOGGER.debug("JOIN NEW DATA INSERT START");
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 
 			// 공통으로 사용되는 요청정보
@@ -178,9 +178,34 @@ public class IdpServiceImpl implements IdpService {
 
 			createUserRequest.setMbrAuth(mbrAuth); // 실명인증
 			CreateUserResponse create = this.userSCI.create(createUserRequest); // 가입정보 등록
-			LOGGER.debug("신규가입 정보 입력 완료");
-			responseResult = create.getCommonResponse().getResultCode();
-			responseResultText = create.getCommonResponse().getResultMessage();
+			LOGGER.debug("JOIN NEW DATA INSERT COMPLETE");
+
+			if (MemberConstants.RESULT_SUCCES.equals(create.getCommonResponse().getResultCode())) {
+
+				LOGGER.debug("JOIN ONEID DATA INSERT START");
+
+				// ONEID에 데이터 입력
+				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+				updateMbrOneIDRequest.setCommonRequest(commonRequest);
+				MbrOneID mbrOneID = new MbrOneID();
+				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+				mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+				mbrOneID.setUserKey(create.getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
+				mbrOneID.setUserID(userId); // userID
+				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+				responseResult = updateMbrOneIDResponse.getCommonResponse().getResultCode();
+				responseResultText = updateMbrOneIDResponse.getCommonResponse().getResultMessage();
+				LOGGER.debug("JOIN ONEID DATA INSERT COMPLETE");
+			} else { // 신규가입정보 입력시 리턴메시지가 정상이 아닌경우
+				responseResult = create.getCommonResponse().getResultCode();
+				responseResultText = create.getCommonResponse().getResultMessage();
+				LOGGER.debug("Error Result Code :" + create.getCommonResponse().getResultCode());
+				LOGGER.debug("Error Result Message :" + create.getCommonResponse().getResultMessage());
+			}
+
 			responseImIntSvcNo = map.get("im_int_svc_no").toString();
 			responseUserId = map.get("user_id").toString();
 
@@ -189,7 +214,7 @@ public class IdpServiceImpl implements IdpService {
 			commonRequest.setTenantID(map.get("tenantID").toString());
 			commonRequest.setSystemID(map.get("systemID").toString());
 			map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
-
+			String updateUserKey = "";
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
 				LOGGER.debug("전환가입 정보 입력 시작");
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -220,9 +245,7 @@ public class IdpServiceImpl implements IdpService {
 				// TO DO... 전시,구매,기타에서 사용되는 회원ID, 회원USER_KEY 등을 변경할수 있는 API 호출 추가 로직 대기중...
 				responseResult = updateUserResponse.getCommonResponse().getResultCode();
 				responseResultText = updateUserResponse.getCommonResponse().getResultMessage();
-				responseImIntSvcNo = map.get("im_int_svc_no").toString();
-				responseUserId = map.get("user_id").toString();
-
+				updateUserKey = updateUserResponse.getUserKey();
 			} else if (!userId.equals(oldId)) { // 변경가입, 변경전환
 				LOGGER.debug("변경가입,변경전환 정보 입력 시작");
 				SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -254,15 +277,39 @@ public class IdpServiceImpl implements IdpService {
 				// TO DO... 전시,구매,기타에서 사용되는 회원ID, 회원USER_KEY 등을 변경할수 있는 API 호출 추가 로직 대기중...
 				responseResult = updateUserResponse.getCommonResponse().getResultCode();
 				responseResultText = updateUserResponse.getCommonResponse().getResultMessage();
-				responseImIntSvcNo = map.get("im_int_svc_no").toString();
-				responseUserId = map.get("user_id").toString();
-
+				updateUserKey = updateUserResponse.getUserKey();
 			}
+
+			responseImIntSvcNo = map.get("im_int_svc_no").toString();
+			responseUserId = map.get("user_id").toString();
+
+			LOGGER.debug("ONEID DATA UPDATE START");
+
+			if (responseResult.equals(MemberConstants.RESULT_SUCCES)) {
+				// ONEID에 데이터 입력
+				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+				updateMbrOneIDRequest.setCommonRequest(commonRequest);
+				MbrOneID mbrOneID = new MbrOneID();
+				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+				mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+				mbrOneID.setUserKey(updateUserKey); // 내부사용자키를 셋팅
+				mbrOneID.setUserID(userId); // 사용자 ID 셋팅
+				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+				responseResult = updateMbrOneIDResponse.getCommonResponse().getResultCode();
+				responseResultText = updateMbrOneIDResponse.getCommonResponse().getResultMessage();
+			} else {
+				LOGGER.debug("Error Result Code :" + responseResult);
+				LOGGER.debug("Error Result Message :" + responseResultText);
+			}
+			LOGGER.debug("ONEID DATA UPDATE COMPLETE");
 		}
 
 		ImResult imResult = new ImResult();
 		imResult.setCmd("RXCreateUserIDP");
-		if (responseResult.equals("0000")) {
+		if (responseResult.equals(MemberConstants.RESULT_SUCCES)) {
 			imResult.setResult(idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE);
 			imResult.setResultText(idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 			imResult.setImIntSvcNo(responseImIntSvcNo);
@@ -895,9 +942,36 @@ public class IdpServiceImpl implements IdpService {
 				updateStatusUserRequest.setKeySearchList(updateKeySearchList);
 
 				UpdateStatusUserResponse updateStatusUserResponse = this.userSCI.updateStatus(updateStatusUserRequest);
+				responseResult = updateStatusUserResponse.getCommonResponse().getResultCode();
 
-				responseResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-				responseResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				if (responseResult.equals(MemberConstants.RESULT_SUCCES)) {
+					LOGGER.debug("ONEID DATA MERGE START");
+					// ONEID에 데이터 입력
+					UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+					updateMbrOneIDRequest.setCommonRequest(commonRequest);
+					MbrOneID mbrOneID = new MbrOneID();
+					mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
+					mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+					mbrOneID.setUserKey(searchUserResponse.getUserMbr().getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
+					mbrOneID.setUserID(searchUserResponse.getUserMbr().getUserID()); // userID
+					updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+					UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+					responseResult = updateMbrOneIDResponse.getCommonResponse().getResultCode();
+					responseResultText = updateMbrOneIDResponse.getCommonResponse().getResultMessage();
+					LOGGER.debug("ONEID DATA MERGE COMPLETE");
+				} else {
+					responseResult = MemberConstants.RESULT_FAIL;
+				}
+
+				if (responseResult.equals(MemberConstants.RESULT_SUCCES)) {
+					responseResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+					responseResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				} else {
+					responseResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+					responseResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+				}
 			}
 
 			// TO DO ... 이하 API 호출구현되면 로직 처리
