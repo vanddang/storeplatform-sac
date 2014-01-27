@@ -122,24 +122,21 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		RemoveUserRequest removeUserRequest = this.tenantRemoveUser(requestHeader, schUserRes);
 
 		/* 통합회원 연동 */
-		if (schUserRes.getUserMbr().getImSvcNo() != null
-				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) {
+		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) {
 			imIdpReceiver = this.oneIdUser(requestHeader, schUserRes, req);
 
 			logger.info("IMIDP Success Response ", schUserRes.toString());
 			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
 		}
 		/* IDP 모바일 회원 */
-		else if (schUserRes.getUserMbr().getImSvcNo() == null
-				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+		else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
 			idpReceiver = this.idpMobileUser(requestHeader, schUserRes, req);
 
 			logger.info("IDP MDN Success Response ", schUserRes.toString());
 			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
 		}
 		/* IDP 아이디 회원 */
-		else if (schUserRes.getUserMbr().getImSvcNo() == null
-				&& schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+		else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
 			idpReceiver = this.idpIdUser(requestHeader, schUserRes, req);
 
 			logger.info("IDP ID Success Response ", schUserRes.toString());
