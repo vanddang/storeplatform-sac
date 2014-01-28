@@ -26,20 +26,20 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 public class Preview extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<Source> source;
+	private List<Source> sourceList;
 
 	/**
-	 * @return the source
+	 * @return the sourceList
 	 */
-	public List<Source> getSource() {
-		return this.source;
+	public List<Source> getSourceList() {
+		return this.sourceList;
 	}
 
 	/**
-	 * @param source
-	 *            the source to set
+	 * @param sourceList
+	 *            the sourceList to set
 	 */
-	public void setSource(List<Source> source) {
-		this.source = source;
+	public void setSourceList(List<Source> sourceList) {
+		this.sourceList = sourceList;
 	}
 }
