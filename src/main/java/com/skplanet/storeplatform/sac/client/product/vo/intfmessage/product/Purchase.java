@@ -30,7 +30,7 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	private Identifier identifier; // 구매ID
 	/*
-	 * 구매상태 (payment : 구매, gift : 선물, expired : 만료, cancel : 취소, noPayment : 미구매)
+	 * 구매상태 (1 : 구매 (payment), 2 : 선물 (gift), 3 : 만료 (expired), 4 : 취소 (cancel))
 	 */
 	private String state;
 	private String show; // 구매내역 숨김처리 여부
@@ -43,10 +43,10 @@ public class Purchase extends CommonInfo implements Serializable {
 	private Coupon coupon; // 구매한 쿠폰이 있을 경우 정의
 	private AutoPay autoPay; // 자동결제 상품인 경우 정의
 	private Count count; // 구매 건수
-	private Identifier channelIdentifier; // 채널 ID
+	private String purchaseFlag; // payment : 구매, nonPayment : 미구매
 
 	/**
-	 * @return Identifier
+	 * @return the identifier
 	 */
 	public Identifier getIdentifier() {
 		return this.identifier;
@@ -54,14 +54,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param identifier
-	 *            identifier
+	 *            the identifier to set
 	 */
 	public void setIdentifier(Identifier identifier) {
 		this.identifier = identifier;
 	}
 
 	/**
-	 * @return String
+	 * @return the state
 	 */
 	public String getState() {
 		return this.state;
@@ -69,14 +69,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param state
-	 *            state
+	 *            the state to set
 	 */
 	public void setState(String state) {
 		this.state = state;
 	}
 
 	/**
-	 * @return String
+	 * @return the show
 	 */
 	public String getShow() {
 		return this.show;
@@ -84,14 +84,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param show
-	 *            show
+	 *            the show to set
 	 */
 	public void setShow(String show) {
 		this.show = show;
 	}
 
 	/**
-	 * @return String
+	 * @return the token
 	 */
 	public String getToken() {
 		return this.token;
@@ -99,14 +99,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param token
-	 *            token
+	 *            the token to set
 	 */
 	public void setToken(String token) {
 		this.token = token;
 	}
 
 	/**
-	 * @return String
+	 * @return the purchaser
 	 */
 	public String getPurchaser() {
 		return this.purchaser;
@@ -114,14 +114,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param purchaser
-	 *            purchaser
+	 *            the purchaser to set
 	 */
 	public void setPurchaser(String purchaser) {
 		this.purchaser = purchaser;
 	}
 
 	/**
-	 * @return Price
+	 * @return the price
 	 */
 	public Price getPrice() {
 		return this.price;
@@ -129,14 +129,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param price
-	 *            price
+	 *            the price to set
 	 */
 	public void setPrice(Price price) {
 		this.price = price;
 	}
 
 	/**
-	 * @return Date
+	 * @return the date
 	 */
 	public Date getDate() {
 		return this.date;
@@ -144,14 +144,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param date
-	 *            date
+	 *            the date to set
 	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
 	/**
-	 * @return Rights
+	 * @return the rights
 	 */
 	public Rights getRights() {
 		return this.rights;
@@ -159,14 +159,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param rights
-	 *            rights
+	 *            the rights to set
 	 */
 	public void setRights(Rights rights) {
 		this.rights = rights;
 	}
 
 	/**
-	 * @return Gift
+	 * @return the gift
 	 */
 	public Gift getGift() {
 		return this.gift;
@@ -174,14 +174,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param gift
-	 *            gift
+	 *            the gift to set
 	 */
 	public void setGift(Gift gift) {
 		this.gift = gift;
 	}
 
 	/**
-	 * @return Coupon
+	 * @return the coupon
 	 */
 	public Coupon getCoupon() {
 		return this.coupon;
@@ -189,14 +189,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param coupon
-	 *            coupon
+	 *            the coupon to set
 	 */
 	public void setCoupon(Coupon coupon) {
 		this.coupon = coupon;
 	}
 
 	/**
-	 * @return AutoPay
+	 * @return the autoPay
 	 */
 	public AutoPay getAutoPay() {
 		return this.autoPay;
@@ -204,14 +204,14 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param autoPay
-	 *            autoPay
+	 *            the autoPay to set
 	 */
 	public void setAutoPay(AutoPay autoPay) {
 		this.autoPay = autoPay;
 	}
 
 	/**
-	 * @return Count
+	 * @return the count
 	 */
 	public Count getCount() {
 		return this.count;
@@ -219,25 +219,24 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	/**
 	 * @param count
-	 *            count
+	 *            the count to set
 	 */
 	public void setCount(Count count) {
 		this.count = count;
 	}
 
 	/**
-	 * @return Identifier
+	 * @return the purchaseFlag
 	 */
-	public Identifier getChannelIdentifier() {
-		return this.channelIdentifier;
+	public String getPurchaseFlag() {
+		return this.purchaseFlag;
 	}
 
 	/**
-	 * @param channelIdentifier
-	 *            channelIdentifier
+	 * @param purchaseFlag
+	 *            the purchaseFlag to set
 	 */
-	public void setChannelIdentifier(Identifier channelIdentifier) {
-		this.channelIdentifier = channelIdentifier;
+	public void setPurchaseFlag(String purchaseFlag) {
+		this.purchaseFlag = purchaseFlag;
 	}
-
 }
