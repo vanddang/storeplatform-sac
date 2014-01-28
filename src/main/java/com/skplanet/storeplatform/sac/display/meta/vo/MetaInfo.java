@@ -34,9 +34,12 @@ public class MetaInfo {
 	private Integer fileSize;
 	private String contentsTypeCd;
 	private Map<String, Object> supportList;
+	private String sellerMbrNo;
 	private String expoSellerEmail;
 	private String expoSellerNm;
 	private String expoSellerTelNo;
+	private String subContentsId;
+	private String imgPath;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -60,10 +63,20 @@ public class MetaInfo {
 	private String bookType;
 	private Integer bookCount;
 	private String bookStatus;
-	/*
-	 * 완료 여부
-	 */
+	private String bookClsfCd;
 	private String comptYn;
+	private String storeProdId;
+	private Integer storeProdAmt;
+	private Integer storeProdNetAmt;
+	private String storeDrmYn;
+	private String storeProdStatusCd;
+	private String playProdId;
+	private Integer playProdAmt;
+	private Integer playProdNetAmt;
+	private String playDrmYn;
+	private String playProdStatusCd;
+	private String usePeriodUnitCd;
+	private String usePeriod;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
@@ -465,6 +478,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the sellerMbrNo
+	 */
+	public String getSellerMbrNo() {
+		return this.sellerMbrNo;
+	}
+
+	/**
+	 * @param sellerMbrNo
+	 *            the sellerMbrNo to set
+	 */
+	public void setSellerMbrNo(String sellerMbrNo) {
+		this.sellerMbrNo = sellerMbrNo;
+	}
+
+	/**
 	 * @return the expoSellerEmail
 	 */
 	public String getExpoSellerEmail() {
@@ -507,6 +535,36 @@ public class MetaInfo {
 	 */
 	public void setExpoSellerTelNo(String expoSellerTelNo) {
 		this.expoSellerTelNo = expoSellerTelNo;
+	}
+
+	/**
+	 * @return the subContentsId
+	 */
+	public String getSubContentsId() {
+		return this.subContentsId;
+	}
+
+	/**
+	 * @param subContentsId
+	 *            the subContentsId to set
+	 */
+	public void setSubContentsId(String subContentsId) {
+		this.subContentsId = subContentsId;
+	}
+
+	/**
+	 * @return the imgPath
+	 */
+	public String getImgPath() {
+		return this.imgPath;
+	}
+
+	/**
+	 * @param imgPath
+	 *            the imgPath to set
+	 */
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
 	}
 
 	/**
@@ -795,6 +853,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the bookClsfCd
+	 */
+	public String getBookClsfCd() {
+		return this.bookClsfCd;
+	}
+
+	/**
+	 * @param bookClsfCd
+	 *            the bookClsfCd to set
+	 */
+	public void setBookClsfCd(String bookClsfCd) {
+		this.bookClsfCd = bookClsfCd;
+	}
+
+	/**
 	 * @return the comptYn
 	 */
 	public String getComptYn() {
@@ -807,6 +880,186 @@ public class MetaInfo {
 	 */
 	public void setComptYn(String comptYn) {
 		this.comptYn = comptYn;
+	}
+
+	/**
+	 * @return the storeProdId
+	 */
+	public String getStoreProdId() {
+		return this.storeProdId;
+	}
+
+	/**
+	 * @param storeProdId
+	 *            the storeProdId to set
+	 */
+	public void setStoreProdId(String storeProdId) {
+		this.storeProdId = storeProdId;
+	}
+
+	/**
+	 * @return the storeProdAmt
+	 */
+	public Integer getStoreProdAmt() {
+		return this.storeProdAmt;
+	}
+
+	/**
+	 * @param storeProdAmt
+	 *            the storeProdAmt to set
+	 */
+	public void setStoreProdAmt(Integer storeProdAmt) {
+		this.storeProdAmt = storeProdAmt;
+	}
+
+	/**
+	 * @return the storeProdNetAmt
+	 */
+	public Integer getStoreProdNetAmt() {
+		return this.storeProdNetAmt;
+	}
+
+	/**
+	 * @param storeProdNetAmt
+	 *            the storeProdNetAmt to set
+	 */
+	public void setStoreProdNetAmt(Integer storeProdNetAmt) {
+		this.storeProdNetAmt = storeProdNetAmt;
+	}
+
+	/**
+	 * @return the storeDrmYn
+	 */
+	public String getStoreDrmYn() {
+		return this.storeDrmYn;
+	}
+
+	/**
+	 * @param storeDrmYn
+	 *            the storeDrmYn to set
+	 */
+	public void setStoreDrmYn(String storeDrmYn) {
+		this.storeDrmYn = storeDrmYn;
+	}
+
+	/**
+	 * @return the storeProdStatusCd
+	 */
+	public String getStoreProdStatusCd() {
+		return this.storeProdStatusCd;
+	}
+
+	/**
+	 * @param storeProdStatusCd
+	 *            the storeProdStatusCd to set
+	 */
+	public void setStoreProdStatusCd(String storeProdStatusCd) {
+		this.storeProdStatusCd = storeProdStatusCd;
+	}
+
+	/**
+	 * @return the playProdId
+	 */
+	public String getPlayProdId() {
+		return this.playProdId;
+	}
+
+	/**
+	 * @param playProdId
+	 *            the playProdId to set
+	 */
+	public void setPlayProdId(String playProdId) {
+		this.playProdId = playProdId;
+	}
+
+	/**
+	 * @return the playProdAmt
+	 */
+	public Integer getPlayProdAmt() {
+		return this.playProdAmt;
+	}
+
+	/**
+	 * @param playProdAmt
+	 *            the playProdAmt to set
+	 */
+	public void setPlayProdAmt(Integer playProdAmt) {
+		this.playProdAmt = playProdAmt;
+	}
+
+	/**
+	 * @return the playProdNetAmt
+	 */
+	public Integer getPlayProdNetAmt() {
+		return this.playProdNetAmt;
+	}
+
+	/**
+	 * @param playProdNetAmt
+	 *            the playProdNetAmt to set
+	 */
+	public void setPlayProdNetAmt(Integer playProdNetAmt) {
+		this.playProdNetAmt = playProdNetAmt;
+	}
+
+	/**
+	 * @return the playDrmYn
+	 */
+	public String getPlayDrmYn() {
+		return this.playDrmYn;
+	}
+
+	/**
+	 * @param playDrmYn
+	 *            the playDrmYn to set
+	 */
+	public void setPlayDrmYn(String playDrmYn) {
+		this.playDrmYn = playDrmYn;
+	}
+
+	/**
+	 * @return the playProdStatusCd
+	 */
+	public String getPlayProdStatusCd() {
+		return this.playProdStatusCd;
+	}
+
+	/**
+	 * @param playProdStatusCd
+	 *            the playProdStatusCd to set
+	 */
+	public void setPlayProdStatusCd(String playProdStatusCd) {
+		this.playProdStatusCd = playProdStatusCd;
+	}
+
+	/**
+	 * @return the usePeriodUnitCd
+	 */
+	public String getUsePeriodUnitCd() {
+		return this.usePeriodUnitCd;
+	}
+
+	/**
+	 * @param usePeriodUnitCd
+	 *            the usePeriodUnitCd to set
+	 */
+	public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+		this.usePeriodUnitCd = usePeriodUnitCd;
+	}
+
+	/**
+	 * @return the usePeriod
+	 */
+	public String getUsePeriod() {
+		return this.usePeriod;
+	}
+
+	/**
+	 * @param usePeriod
+	 *            the usePeriod to set
+	 */
+	public void setUsePeriod(String usePeriod) {
+		this.usePeriod = usePeriod;
 	}
 
 	/**
@@ -1108,5 +1361,4 @@ public class MetaInfo {
 	public void setCatalogId(String catalogId) {
 		this.catalogId = catalogId;
 	}
-
 }
