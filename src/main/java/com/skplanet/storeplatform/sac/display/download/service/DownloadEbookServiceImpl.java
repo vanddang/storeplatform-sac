@@ -135,20 +135,20 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			product.setTitle(title);
 
 			// 이미지 정보
-			source.setMediaType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
 			source.setUrl(metaInfo.getImagePath());
 			sourceList.add(source);
 			product.setSourceList(sourceList);
 
 			// 메뉴 정보
-			menu.setId(metaInfo.getMenuId());
-			menu.setName(metaInfo.getMenuNm());
-			menuList.add(menu);
-			menu = new Menu();
 			menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 			menu.setId(metaInfo.getTopMenuId());
 			menu.setName(metaInfo.getTopMenuNm());
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(metaInfo.getMenuId());
+			menu.setName(metaInfo.getMenuNm());
 			menuList.add(menu);
 			menu = new Menu();
 			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
