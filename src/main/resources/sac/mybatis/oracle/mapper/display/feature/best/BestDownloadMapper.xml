@@ -149,6 +149,11 @@
                 LA.TOTAL_COUNT
 --              , LA.RNUM
               , LA.TOP_MENU_ID
+              , (SELECT MENU_NM
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = LA.TOP_MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS TOP_MENU_NM
               , LA.MENU_ID
               , LA.MENU_NM
               , LA.MENU_DESC
@@ -157,21 +162,13 @@
               , LA.CHNL_PROD_ID
               , LA.VOD_TITL_NM
               , LA.PROD_NM
-              , LA.CHAPTER
-              , CASE WHEN LA.TOP_MENU_ID IN ('DP13','DP14')
-                     THEN CONCAT( LA.PROD_NM, NVL2( LA.BOOK_CLSF_CD
-		                                          , NULL
-		                                          , ' '||CONCAT( LA.CHAPTER, DECODE( LA.BOOK_CLSF_CD
-									                                               , 'DP004301', '권'
-									                                               , 'DP004302', '회'
-									                                               , 'DP004303', '호' ) )
-	                             ) )
-	                 WHEN LA.TOP_MENU_ID IN ('DP17','DP18')
-                     THEN CONCAT( LA.VOD_TITL_NM, DECODE( LA.META_CLSF_CD
-							                            , 'CT14'
-							                            , LA.PROD_NM||' '||LA.CHAPTER
-							                            , LA.PROD_NM ) )
-                END AS CONCAT_PROD_NM
+              , CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) 
+                     THEN LA.CHAPTER || DECODE( LA.BOOK_CLSF_CD
+		                                      , 'DP004301', '권'
+		                                      , 'DP004302', '회'
+		                                      , 'DP004303', '호' )
+				     ELSE DECODE(LA.CHAPTER, '0', NULL, LA.CHAPTER)
+				END AS CHAPTER
               , CASE WHEN LA.TOP_MENU_ID = 'DP13' 
                      THEN LA.PROD_DTL_DESC
                      ELSE LA.PROD_BASE_DESC
@@ -200,11 +197,7 @@
                           ELSE ROUND(LB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
               ]]>                     
               , CONCAT(LC.FILE_PATH, LC.FILE_NM) AS IMG_PATH
-              , (SELECT MENU_NM
-                   FROM TB_DP_MENU_CATEGORY_DESC
-                  WHERE MENU_ID = LA.TOP_MENU_ID
-                    AND LANG_CD = #{langCd}
-                    AND ROWNUM = 1) AS TOP_MENU_NM
+              , LC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
               , LC.IMG_CD
           FROM (
                 SELECT KA.*

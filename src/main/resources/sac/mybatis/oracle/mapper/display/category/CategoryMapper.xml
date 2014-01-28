@@ -7,6 +7,11 @@
 		        KA.TOTAL_COUNT
 		      , KA.RNUM
 		      , KA.TOP_MENU_ID
+		      , (SELECT MENU_NM
+		           FROM TB_DP_MENU_CATEGORY_DESC
+		          WHERE MENU_ID = KA.TOP_MENU_ID
+		            AND LANG_CD = #{langCd}
+		            AND ROWNUM = 1) AS TOP_MENU_NM
 		      , KA.MENU_ID
 		      , KA.MENU_NM
 		      , KA.PROD_ID
@@ -15,13 +20,14 @@
 		      , KA.PROD_BASE_DESC
 		      , KA.PROD_AMT
 		      , KA.PROD_GRD_CD
-		      , KA.PART_PARENT_CLSF_CD
-		      , KA.DRM_YN
+		      , NVL(KA.PART_PARENT_CLSF_CD, 'N') AS PART_PARENT_CLSF_CD
+		      , NVL(KA.DRM_YN, 'N') AS DRM_YN
 		      , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
 		      , KB.APK_PKG_NM
 		      , KB.APK_VER
 		      , KB.FILE_SIZE AS APK_FILE_SIZE
 		      , KC.FILE_PATH AS IMG_PATH
+              , KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
 		      , NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT
 		      , NVL(KA.PRCHS_CNT, 0) AS PRCHS_CNT
 		      <![CDATA[
@@ -29,11 +35,6 @@
 		                  WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
 		                  ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
               ]]>
-		      , (SELECT MENU_NM
-		           FROM TB_DP_MENU_CATEGORY_DESC
-		          WHERE MENU_ID = KA.TOP_MENU_ID
-		            AND LANG_CD = #{langCd}
-		            AND ROWNUM = 1) AS TOP_MENU_NM
 		  FROM (SELECT JA.*
 		          FROM (SELECT ROW_NUMBER() OVER(ORDER BY NVL(IB.PRCHS_CNT, 0) DESC, IA.REG_DT DESC) AS RNUM
 		                     , IA.*
@@ -117,6 +118,11 @@
                 LA.TOTAL_COUNT
               , LA.RNUM
               , LA.TOP_MENU_ID
+              , (SELECT MENU_NM
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = LA.TOP_MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS TOP_MENU_NM
               , LA.MENU_ID
               , LA.MENU_NM
               , LA.MENU_DESC
@@ -138,8 +144,6 @@
               , LA.ISSUE_DAY
               , LA.CHNL_COMP_NM
               , LA.AGENCY_NM
-              , LA.HDV_YN
-              , LA.DOLBY_SPRT_YN
               , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
               , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( LA.EPSD_CNT + LA.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
               , ( CASE WHEN LA.EPSD_CNT > 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
@@ -156,11 +160,7 @@
                           ELSE ROUND(LB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
               ]]>                      
               , CONCAT(LC.FILE_PATH, LC.FILE_NM) AS IMG_PATH
-              , (SELECT MENU_NM
-                   FROM TB_DP_MENU_CATEGORY_DESC
-                  WHERE MENU_ID = LA.TOP_MENU_ID
-                    AND LANG_CD = #{langCd}
-                    AND ROWNUM = 1) AS TOP_MENU_NM
+              , LC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
               , LC.IMG_CD
           FROM (
                 SELECT KA.*
