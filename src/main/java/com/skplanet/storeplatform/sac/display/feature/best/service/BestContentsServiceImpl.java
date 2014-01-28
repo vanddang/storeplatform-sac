@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.best.vo.BestContents;
 
@@ -101,20 +103,27 @@ public class BestContentsServiceImpl implements BestContentsService {
 			bestContentsReq.setCount(count);
 		}
 
+		// 2014.01.28 이석희 추가
+		if ("movie".equals(bestContentsReq.getFilteredBy()) || "boardcast".equals(bestContentsReq.getFilteredBy())
+				|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
+			bestContentsReq.setImgCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+		} else {
+			bestContentsReq.setImgCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+		}
+		// 2014.01.28 이석희 추가 끝
+
 		count = offset + count - 1;
 		bestContentsReq.setCount(count);
 
-		String stdDt = this.commonService.getBatchStandardDateString("S01", bestContentsReq.getListId());
-		bestContentsReq.setStdDt(stdDt);
+		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
+				bestContentsReq.getListId());
+		bestContentsReq.setStdDt(stdDt);// 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
 
 		if (bestContentsReq.getDummy() == null) {
 			// dummy 호출이 아닐때
 			// BEST 컨텐츠 상품 조회
 			List<BestContents> contentsList = null;
 
-			this.log.debug("########################################################");
-			this.log.debug("bestContentsReq.getFilteredBy()	:	" + bestContentsReq.getFilteredBy());
-			this.log.debug("########################################################");
 			if ("movie".equals(bestContentsReq.getFilteredBy()) || "boardcast".equals(bestContentsReq.getFilteredBy())
 					|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 				contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsVodList", bestContentsReq,
@@ -141,11 +150,11 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 					// 상품ID
 					identifier = new Identifier();
-					identifier.setType("channel");
+					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);// 2014.01.28 이석희 common 상수 변경
 					identifier.setText(mapperVO.getProdId());
 
 					supportList = new ArrayList<Support>();
-					support.setType("hd");
+					support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);// 2014.01.28 이석희 common 상수 변경
 					support.setText(mapperVO.getHdvYn());
 					supportList.add(support);
 
@@ -156,7 +165,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 					Menu menu = new Menu();
 					menu.setId(mapperVO.getTopMenuId());
 					menu.setName(mapperVO.getUpMenuNm());
-					menu.setType("topClass");
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);// 2014.01.28 이석희 common 상수 변경
 					menuList.add(menu);
 					menu = new Menu();
 					menu.setId(mapperVO.getMenuId());
@@ -164,7 +173,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 					menuList.add(menu);
 					menu = new Menu();
 					menu.setId(mapperVO.getMetaClsfCd());
-					menu.setType("metaClass");
+					menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);// 2014.01.28 이석희 common 상수 변경
 					menuList.add(menu);
 
 					if ("movie".equals(bestContentsReq.getFilteredBy())
@@ -210,6 +219,11 @@ public class BestContentsServiceImpl implements BestContentsService {
 					 * source mediaType - url
 					 */
 					sourceList = new ArrayList<Source>();
+					// 2014.01.28 이석희 추가
+					source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+					source.setSize(mapperVO.getImgSize());
+					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+					// 2014.01.28 이석희 추가 끝
 					source.setUrl(mapperVO.getImgPath());
 					sourceList.add(source);
 
@@ -234,7 +248,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 						}
 						book.setTotalCount(mapperVO.getBookCount());
 						support = new Support();
-						support.setType("store");
+						support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
 						if (!"".equals(mapperVO.getSupportStore()) && mapperVO.getSupportStore() != null) {
 							support.setText(mapperVO.getSupportStore());
 						} else {
@@ -242,7 +256,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 						}
 						supportList.add(support);
 						support = new Support();
-						support.setType("play");
+						support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
 						if (!"".equals(mapperVO.getSupportPlay()) && mapperVO.getSupportPlay() != null) {
 							support.setText(mapperVO.getSupportPlay());
 						} else {
@@ -250,6 +264,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 						}
 						supportList.add(support);
 						book.setSupportList(supportList);
+						product.setBook(book);
 					}
 
 					product = new Product();
@@ -268,7 +283,6 @@ public class BestContentsServiceImpl implements BestContentsService {
 					product.setSourceList(sourceList);
 					product.setProductExplain(mapperVO.getProdBaseDesc());
 					product.setPrice(price);
-					product.setBook(book);
 
 					productList.add(product);
 
@@ -367,6 +381,11 @@ public class BestContentsServiceImpl implements BestContentsService {
 			 * source mediaType - url
 			 */
 			sourceList = new ArrayList<Source>();
+			// 2014.01.28 이석희 추가
+			source.setMediaType("image/png");
+			source.setSize(4325);
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			// 2014.01.28 이석희 추가 끝
 			source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PVOD/201401/02/0002057676/3/0003876930/3/RT1_02000024893_1_0921_182x261_130x186.PNG");
 			sourceList.add(source);
 

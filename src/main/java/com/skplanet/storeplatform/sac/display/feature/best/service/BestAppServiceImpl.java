@@ -84,6 +84,7 @@ public class BestAppServiceImpl implements BestAppService {
 		List<Menu> menuList = null;
 		List<Support> supportList = null;
 		List<Source> sourceList = null;
+		List<Identifier> identifierList = null;
 
 		if (StringUtils.isEmpty(bestAppReq.getListId())) {
 			this.log.error("필수 파라미터(listId)값이 없음");
@@ -108,8 +109,9 @@ public class BestAppServiceImpl implements BestAppService {
 		count = offset + count - 1;
 		bestAppReq.setCount(count);
 
-		String stdDt = this.commonService.getBatchStandardDateString("S01", bestAppReq.getListId());
-		bestAppReq.setStdDt(stdDt);
+		String stdDt = this.commonService
+				.getBatchStandardDateString(tenantHeader.getTenantId(), bestAppReq.getListId());
+		bestAppReq.setStdDt(stdDt); // 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
 
 		// BEST 앱 상품 조회
 		List<BestApp> appList = null;
@@ -154,16 +156,21 @@ public class BestAppServiceImpl implements BestAppService {
 					totalCount = mapperVO.getTotalCount();
 					commonResponse.setTotalCount(totalCount);
 
-					identifier.setType("episode");
+					/*
+					 * Identifier 객체 List로 변경
+					 */
+					identifierList = new ArrayList<Identifier>();
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD); // 2014.01.28 이석희 common 상수 변경
 					identifier.setText(mapperVO.getProdId());
+					identifierList.add(identifier);
 
 					supportList = new ArrayList<Support>();
 					support = new Support();
-					support.setType("drm");
+					support.setType(DisplayConstants.DP_DRM_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
 					support.setText(mapperVO.getDrmYn());
 					supportList.add(support);
 					support = new Support();
-					support.setType("iab");
+					support.setType(DisplayConstants.DP_IN_APP_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
 					if (mapperVO.getPartParentClsfCd() == null || "".equals(mapperVO.getPartParentClsfCd())) {
 						support.setText("");
 					} else {
@@ -176,7 +183,7 @@ public class BestAppServiceImpl implements BestAppService {
 					menu = new Menu();
 					menu.setId(mapperVO.getTopMenuId());
 					menu.setName(mapperVO.getUpMenuNm());
-					menu.setType("topClass");
+					menu.setType(DisplayConstants.DP_THUMNAIL_SOURCE); // 2014.01.28 이석희 common 상수 변경
 					menuList.add(menu);
 					menu = new Menu();
 					menu.setId(mapperVO.getMenuId());
@@ -199,7 +206,7 @@ public class BestAppServiceImpl implements BestAppService {
 
 					sourceList = new ArrayList<Source>();
 					source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL); // 2014.01.28 이석희 common 상수 변경
 					source.setUrl(mapperVO.getImgPath());
 					source.setSize(mapperVO.getImgSize());
 					sourceList.add(source);
@@ -207,7 +214,7 @@ public class BestAppServiceImpl implements BestAppService {
 					price.setText(mapperVO.getProdAmt());
 
 					product = new Product();
-					product.setIdentifier(identifier);
+					product.setIdentifierList(identifierList); // 2014.01.28 이석희 List 형태로 변경
 					product.setSupportList(supportList);
 					product.setMenuList(menuList);
 					product.setApp(app);

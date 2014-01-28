@@ -40,6 +40,8 @@ public class BestApp {
 	private String imgPath;
 	private String imgNm;
 	private Integer imgSize;
+	private String filePath;
+	private Integer fileSize;
 
 	/**
 	 * 
@@ -644,7 +646,7 @@ public class BestApp {
 	/**
 	 * 
 	 * <pre>
-	 * 이미지(파일) 크기.
+	 * 이미지 크기.
 	 * </pre>
 	 * 
 	 * @return Integer
@@ -656,7 +658,7 @@ public class BestApp {
 	/**
 	 * 
 	 * <pre>
-	 * 이미지(파일) 크기.
+	 * 이미지 크기.
 	 * </pre>
 	 * 
 	 * @param imgSize
@@ -664,6 +666,36 @@ public class BestApp {
 	 */
 	public void setImgSize(Integer imgSize) {
 		this.imgSize = imgSize;
+	}
+
+	/**
+	 * @return the filePath
+	 */
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	/**
+	 * @param filePath
+	 *            the filePath to set
+	 */
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	/**
+	 * @return the fileSize
+	 */
+	public Integer getFileSize() {
+		return this.fileSize;
+	}
+
+	/**
+	 * @param fileSize
+	 *            the fileSize to set
+	 */
+	public void setFileSize(Integer fileSize) {
+		this.fileSize = fileSize;
 	}
 
 }

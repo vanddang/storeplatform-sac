@@ -43,6 +43,7 @@ public class BestContents {
 	private Integer dwldCnt;
 	private Double avgEvluScore;
 	private String imgPath;
+	private Integer imgSize;
 	private String upMenuNm;
 
 	/*
@@ -752,6 +753,21 @@ public class BestContents {
 	 */
 	public void setImgPath(String imgPath) {
 		this.imgPath = imgPath;
+	}
+
+	/**
+	 * @return the imgSize
+	 */
+	public Integer getImgSize() {
+		return this.imgSize;
+	}
+
+	/**
+	 * @param imgSize
+	 *            the imgSize to set
+	 */
+	public void setImgSize(Integer imgSize) {
+		this.imgSize = imgSize;
 	}
 
 	/**
