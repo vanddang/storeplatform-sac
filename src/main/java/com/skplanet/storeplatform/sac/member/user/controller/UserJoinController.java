@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
@@ -67,7 +66,8 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req, BindingResult result) throws Exception {
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req,
+			BindingResult result) throws Exception {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
@@ -79,16 +79,16 @@ public class UserJoinController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+		throw new RuntimeException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
-		if (StringUtil.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-			throw new RuntimeException("[model] 미존재.");
+		if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
+		throw new RuntimeException("[model] 미존재.");
 		}
 
 		/**
@@ -119,7 +119,8 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req, BindingResult result) throws Exception {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader,
+			@Validated @RequestBody CreateByAgreementReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
@@ -131,8 +132,8 @@ public class UserJoinController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+		throw new RuntimeException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
@@ -141,31 +142,31 @@ public class UserJoinController {
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		CreateByAgreementRes res = new CreateByAgreementRes();
-		if (!StringUtil.equals(req.getDeviceId(), "")) {
+		if (!StringUtils.equals(req.getDeviceId(), "")) {
 
-			/**
-			 * [[ 단말정보 포함 ]] Biz
-			 */
-			if (StringUtil.equals(req.getDeviceId(), "")) {
-				throw new RuntimeException("[deviceId] 미존재.");
-			} else if (StringUtil.equals(req.getDeviceIdType(), "")) {
-				throw new RuntimeException("[deviceIdType] 미존재.");
-			} else if (StringUtil.equals(req.getDeviceTelecom(), "")) {
-				throw new RuntimeException("[deviceTelecom] 미존재.");
-			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-				throw new RuntimeException("[model] 미존재.");
-			}
+		/**
+		 * [[ 단말정보 포함 ]] Biz
+		 */
+		if (StringUtils.equals(req.getDeviceId(), "")) {
+		throw new RuntimeException("[deviceId] 미존재.");
+		} else if (StringUtils.equals(req.getDeviceIdType(), "")) {
+		throw new RuntimeException("[deviceIdType] 미존재.");
+		} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
+		throw new RuntimeException("[deviceTelecom] 미존재.");
+		} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
+		throw new RuntimeException("[model] 미존재.");
+		}
 
-			LOGGER.info("## 단말정보 존재  ==========================================");
-			res = this.svc.createByAgreementDevice(sacHeader, req);
+		LOGGER.info("## 단말정보 존재  ==========================================");
+		res = this.svc.createByAgreementDevice(sacHeader, req);
 
 		} else {
 
-			/**
-			 * [[ 단말정보 미포함 ]] Biz
-			 */
-			LOGGER.info("## 단말정보 미존재  ==========================================");
-			res = this.svc.createByAgreementId(sacHeader, req);
+		/**
+		 * [[ 단말정보 미포함 ]] Biz
+		 */
+		LOGGER.info("## 단말정보 미존재  ==========================================");
+		res = this.svc.createByAgreementId(sacHeader, req);
 
 		}
 
@@ -192,7 +193,8 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req, BindingResult result) throws Exception {
+	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req,
+			BindingResult result) throws Exception {
 
 		LOGGER.info("#############################################");
 		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
@@ -204,8 +206,8 @@ public class UserJoinController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+		throw new RuntimeException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
@@ -214,31 +216,31 @@ public class UserJoinController {
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
 		CreateBySimpleRes res = new CreateBySimpleRes();
-		if (!StringUtil.equals(req.getDeviceId(), "")) {
+		if (!StringUtils.equals(req.getDeviceId(), "")) {
 
-			/**
-			 * [[ 단말정보 포함 ]] Biz
-			 */
-			if (StringUtil.equals(req.getDeviceId(), "")) {
-				throw new RuntimeException("[deviceId] 미존재.");
-			} else if (StringUtil.equals(req.getDeviceIdType(), "")) {
-				throw new RuntimeException("[deviceIdType] 미존재.");
-			} else if (StringUtil.equals(req.getDeviceTelecom(), "")) {
-				throw new RuntimeException("[deviceTelecom] 미존재.");
-			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-				throw new RuntimeException("[model] 미존재.");
-			}
+		/**
+		 * [[ 단말정보 포함 ]] Biz
+		 */
+		if (StringUtils.equals(req.getDeviceId(), "")) {
+		throw new RuntimeException("[deviceId] 미존재.");
+		} else if (StringUtils.equals(req.getDeviceIdType(), "")) {
+		throw new RuntimeException("[deviceIdType] 미존재.");
+		} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
+		throw new RuntimeException("[deviceTelecom] 미존재.");
+		} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
+		throw new RuntimeException("[model] 미존재.");
+		}
 
-			LOGGER.info("## 단말정보 존재  ==========================================");
-			res = this.svc.createBySimpleDevice(sacHeader, req);
+		LOGGER.info("## 단말정보 존재  ==========================================");
+		res = this.svc.createBySimpleDevice(sacHeader, req);
 
 		} else {
 
-			/**
-			 * [[ 단말정보 미포함 ]] Biz
-			 */
-			LOGGER.info("## 단말정보 미존재  ==========================================");
-			res = this.svc.createBySimpleId(sacHeader, req);
+		/**
+		 * [[ 단말정보 미포함 ]] Biz
+		 */
+		LOGGER.info("## 단말정보 미존재  ==========================================");
+		res = this.svc.createBySimpleId(sacHeader, req);
 
 		}
 
