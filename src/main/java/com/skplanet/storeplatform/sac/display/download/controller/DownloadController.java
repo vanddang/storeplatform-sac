@@ -2,6 +2,8 @@ package com.skplanet.storeplatform.sac.display.download.controller;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,7 @@ import com.skplanet.storeplatform.sac.display.download.service.DownloadVodServic
 @Controller
 @RequestMapping("/display/download")
 public class DownloadController {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private DownloadAppService downloadAppService;
@@ -114,6 +117,10 @@ public class DownloadController {
 	@ResponseBody
 	public DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader,
 			@RequestBody DownloadEbookReq downloadEbookReq) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getDownloadEbookInfo started");
+		this.logger.debug("----------------------------------------------------------------");
+
 		return this.downloadEbookService.getDownloadEbookInfo(requestHeader, downloadEbookReq);
 	}
 }

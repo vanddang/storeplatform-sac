@@ -9,6 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.display.download.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +24,25 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -39,8 +57,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
 	@Autowired
 	private DisplayCommonService commonService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseGenerate;
 
 	@Override
 	public DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookReq downloadEbookReq) {
@@ -48,7 +70,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		DownloadEbookRes ebookRes = null;
+		DownloadEbookRes ebookRes = new DownloadEbookRes();
+		CommonResponse commonResponse = new CommonResponse();
 
 		String idType = downloadEbookReq.getIdType();
 		String productId = downloadEbookReq.getProductId();
@@ -79,11 +102,108 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		downloadEbookReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 		downloadEbookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
+		// ebook 상품 정보 조회(for download)
 		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadEbookInfo",
 				downloadEbookReq);
 
-		this.logger.info("----> " + metaInfo);
+		if (metaInfo != null) {
+			Product product = new Product();
+			Title title = new Title();
+			Source source = new Source();
+			Identifier identifier = new Identifier();
+			Menu menu = new Menu();
+			Book book = new Book();
+			Rights rights = new Rights();
+			Store store = new Store();
+			Play play = new Play();
+			Support support = new Support();
+			Price price = new Price();
+			Distributor distributor = new Distributor();
 
-		return null;
+			List<Identifier> identifierList = new ArrayList<Identifier>();
+			List<Source> sourceList = new ArrayList<Source>();
+			List<Menu> menuList = new ArrayList<Menu>();
+
+			// 상품 ID 정보
+			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getProdId());
+			identifierList.add(identifier);
+			product.setIdentifierList(identifierList);
+
+			// 상품명 정보
+			title.setText(metaInfo.getProdNm());
+			product.setTitle(title);
+
+			// 이미지 정보
+			source.setMediaType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
+			source.setUrl(metaInfo.getImagePath());
+			sourceList.add(source);
+			product.setSourceList(sourceList);
+
+			// 메뉴 정보
+			menu.setId(metaInfo.getMenuId());
+			menu.setName(metaInfo.getMenuNm());
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+			menu.setId(metaInfo.getTopMenuId());
+			menu.setName(metaInfo.getTopMenuNm());
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+			menu.setId(metaInfo.getMetaClsfCd());
+			menuList.add(menu);
+			product.setMenuList(menuList);
+
+			// 책 정보
+			book.setBookVersion(metaInfo.getProdVer());
+			book.setScid(metaInfo.getSubContentsId());
+			book.setSize(metaInfo.getFileSize());
+			product.setBook(book);
+
+			// 소장 대여 정보 (store : 소장, play : 대여)
+			if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
+				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
+				support.setText(metaInfo.getStoreDrmYn());
+				store.setSupport(support);
+				price.setFixedPrice(metaInfo.getStoreProdNetAmt());
+				price.setText(metaInfo.getStoreProdAmt());
+				store.setPrice(price);
+				source = new Source();
+				source.setUrl(metaInfo.getStoreProdId());
+				store.setSource(source);
+				rights.setGrade(metaInfo.getProdGrdCd());
+				rights.setStore(store);
+			} else {
+				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
+				support.setText(metaInfo.getPlayDrmYn());
+				play.setSupport(support);
+				price.setFixedPrice(metaInfo.getPlayProdNetAmt());
+				price.setText(metaInfo.getPlayProdAmt());
+				play.setPrice(price);
+				source = new Source();
+				source.setUrl(metaInfo.getStoreProdId());
+				play.setSource(source);
+				rights.setGrade(metaInfo.getProdGrdCd());
+				rights.setPlay(play);
+			}
+			product.setRights(rights);
+
+			// 저작자 정보
+			distributor.setName(metaInfo.getExpoSellerNm());
+			distributor.setTel(metaInfo.getExpoSellerTelNo());
+			distributor.setEmail(metaInfo.getExpoSellerEmail());
+			distributor.setRegNo(metaInfo.getSellerMbrNo());
+			product.setDistributor(distributor);
+
+			ebookRes.setProduct(product);
+			commonResponse.setTotalCount(1);
+		} else {
+			commonResponse.setTotalCount(0);
+		}
+
+		ebookRes.setCommonResponse(commonResponse);
+		return ebookRes;
 	}
 }

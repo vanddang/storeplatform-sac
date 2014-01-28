@@ -449,7 +449,7 @@
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookReq" resultType="MetaInfo">
 		SELECT /* DownloadMapper.xml, selectDownloadEbookInfo, tae hee Lee, 2014-01-28 */
 		        KA.*
-		      , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMG_PATH
+		      , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMAGE_PATH
 		      , (SELECT MENU_NM
 		           FROM TB_DP_MENU_CATEGORY_DESC
 		          WHERE MENU_ID = KA.TOP_MENU_ID
@@ -485,6 +485,7 @@
 		              , MAX(JA.EXPO_SELLER_NM) AS EXPO_SELLER_NM
 		              , MAX(JA.EXPO_SELLER_TELNO) AS EXPO_SELLER_TELNO
 		              , MAX(JA.EXPO_SELLER_EMAIL) AS EXPO_SELLER_EMAIL
+		              , MAX(JA.CONTENTS_TYPE_CD) AS CONTENTS_TYPE_CD
 		              , MAX(JA.TOP_MENU_ID) AS TOP_MENU_ID
 		              , MAX(JA.MENU_ID) AS MENU_ID
 		          FROM (SELECT IA.*, IC.TOP_MENU_ID, IC.MENU_ID
@@ -493,6 +494,7 @@
 		                              , A.EXPO_SELLER_NM
 		                              , A.EXPO_SELLER_TELNO
 		                              , A.EXPO_SELLER_EMAIL
+		                              , A.CONTENTS_TYPE_CD
 		                              , C.PROD_ID
 		                              , C.PART_PROD_ID
 		                              , D.META_CLSF_CD
