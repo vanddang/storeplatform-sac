@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,20 +59,19 @@ public class PaymentListController {
 	 */
 	@RequestMapping(value = "/history/payment/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public PaymentListRes searchPayment(@RequestBody PaymentReq paymentReq, SacRequestHeader requestHeader) {
+	public PaymentListRes searchPayment(@RequestBody @Validated PaymentReq paymentReq, BindingResult bindingResult,
+			SacRequestHeader requestHeader) {
+		// 필수값 체크
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_PUR_0001", error.getField());
+			}
+		}
+
 		TenantHeader header = requestHeader.getTenantHeader();
 		PaymentListRes paymentListRes = new PaymentListRes();
 		List<PaymentResponse> paymentResponse = new ArrayList<PaymentResponse>();
-
-		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
-		}
-		if (paymentReq.getInsdUsermbrNo() == null || paymentReq.getInsdUsermbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
-		}
-		if (paymentReq.getPrchsId() == null || paymentReq.getPrchsId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "PrchsId");
-		}
 
 		paymentResponse = this.paymentSearchSacService.searchPayment(this.reqConvert(paymentReq, header));
 		paymentListRes.setPaymentListRes(this.resConvert(paymentResponse));

@@ -9,10 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,20 +56,18 @@ public class AutoPaymentCancelController {
 	 * @return AutoPaymentCancelRes 응답값
 	 */
 	@RequestMapping(value = "/history/reservation/modify/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public AutoPaymentCancelRes modifyReservation(@RequestBody AutoPaymentCancelReq autoPaymentCancelReq,
-			SacRequestHeader requestHeader) {
+	public @ResponseBody
+	AutoPaymentCancelRes modifyReservation(SacRequestHeader requestHeader,
+			@RequestBody @Validated AutoPaymentCancelReq autoPaymentCancelReq, BindingResult bindingResult)
+			throws Exception {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
-		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "tenantId");
-		}
-		if (autoPaymentCancelReq.getInsdUsermbrNo() == null || autoPaymentCancelReq.getInsdUsermbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "insdUsermbrNo");
-		}
-		if (autoPaymentCancelReq.getPrchsId() == null || autoPaymentCancelReq.getPrchsId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "prchsId");
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_PUR_0001", error.getField());
+			}
 		}
 
 		AutoPaymentCancelRequest rea = this.reqConvert(autoPaymentCancelReq, header);

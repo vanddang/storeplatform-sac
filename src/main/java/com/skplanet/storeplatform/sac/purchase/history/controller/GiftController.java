@@ -9,8 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +45,7 @@ import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
 @RequestMapping(value = "/purchase")
 public class GiftController {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private GiftService giftService;
 
@@ -52,17 +60,15 @@ public class GiftController {
 	 */
 	@RequestMapping(value = "/history/gift/get/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftReceiveRes searchGiftReceive(@RequestBody GiftReceiveReq giftReceiveReq, SacRequestHeader requestHeader) {
+	public GiftReceiveRes searchGiftReceive(@RequestBody @Validated GiftReceiveReq giftReceiveReq,
+			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
-		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
-		}
-		if (giftReceiveReq.getSendMbrNo() == null || giftReceiveReq.getSendMbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "SendMbrNo");
-		}
-		if (giftReceiveReq.getPrchsId() == null || giftReceiveReq.getPrchsId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "PrchsId");
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_PUR_0001", error.getField() + error.getCode());
+			}
 		}
 		GiftReceiveRequest req = this.reqConvert(giftReceiveReq, header);
 		GiftReceiveResponse giftReceiveResponse = new GiftReceiveResponse();
@@ -83,31 +89,22 @@ public class GiftController {
 	 */
 	@RequestMapping(value = "/history/gift/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftConfirmRes modifyGiftConfirm(@RequestBody GiftConfirmReq giftConfirmReq, SacRequestHeader requestHeader) {
+	public GiftConfirmRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmReq giftConfirmReq,
+			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
-		// header 필수값 체크
-		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "tenantId");
-		}
-		if (header.getSystemId() == null || header.getSystemId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "systemId");
-		}
-		// body 필수값 체크
-		if (giftConfirmReq.getInsdUsermbrNo() == null || giftConfirmReq.getInsdUsermbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "insdUsermbrNo");
-		}
-		if (giftConfirmReq.getPrchsId() == null || giftConfirmReq.getPrchsId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "prchsId");
-		}
-		if (giftConfirmReq.getProdId() == null || giftConfirmReq.getProdId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "prodId");
-		}
-		if (giftConfirmReq.getRecvDt() == null || giftConfirmReq.getRecvDt() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "recvDt");
-		}
+		// 필수값 체크
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@{} ", error.getObjectName());
+				if (error.getCode().equals("Pattern")) {
+					throw new StorePlatformException("SAC_PUR_0003", error.getField(), error.getRejectedValue(),
+							"YYYYMMDDHH24MISS");
+				} else {
+					throw new StorePlatformException("SAC_PUR_0001", error.getField());
+				}
 
-		if (giftConfirmReq.getRecvConfPathCd() == null || giftConfirmReq.getRecvConfPathCd() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "recvConfPathCd");
+			}
 		}
 
 		GiftConfirmRequest req = this.reqConvert(giftConfirmReq, header);

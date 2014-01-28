@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,33 +60,18 @@ public class HidingController {
 	 */
 	@RequestMapping(value = "/history/hiding/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HidingListRes modifyHiding(@RequestBody HidingReq hidingReq, SacRequestHeader requestHeader) {
+	public HidingListRes modifyHiding(@RequestBody @Validated HidingReq hidingReq, BindingResult bindingResult,
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
-		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_PUR_0001", error.getField());
+			}
 		}
-		if (header.getSystemId() == null || header.getSystemId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
-		}
-		if (hidingReq.getInsdUsermbrNo() == null || hidingReq.getInsdUsermbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
-		}
-		if (hidingReq.getInsdDeviceId() == null || hidingReq.getInsdDeviceId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "insdDeviceId");
-		}
-		// for (HidingSacList req : hidingReq.getHidingSacList()) {
-		// if (req.getPrchsId() == null || req.getPrchsId() == "") {
-		// throw new StorePlatformException("SAC_PUR_0001", "prchsId");
-		// }
-		// if (req.getPrchsDtlId() == null || req.getPrchsDtlId() < 0) {
-		// throw new StorePlatformException("SAC_PUR_0001", "prchsDtlId");
-		// }
-		// if (req.getHidingYn() == null || req.getHidingYn() == "") {
-		// throw new StorePlatformException("SAC_PUR_0001", "hidingYn");
-		// }
-		// }
+
 		HidingRequest req = this.reqConvert(hidingReq, header);
 		List<HidingResponse> hidingResponse = new ArrayList<HidingResponse>();
 		List<HidingRes> hidingRes = new ArrayList<HidingRes>();
@@ -116,6 +104,24 @@ public class HidingController {
 		int size = hidingReq.getHidingSacList().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
+			// 필수값 체크
+			if (hidingReq.getHidingSacList().get(i).getPrchsId() == null
+					|| hidingReq.getHidingSacList().get(i).getPrchsId() == "") {
+				throw new StorePlatformException("SAC_PUR_0001", "prchsId");
+			}
+			if (hidingReq.getHidingSacList().get(i).getPrchsDtlId() == null
+					|| hidingReq.getHidingSacList().get(i).getPrchsDtlId() <= 0) {
+				throw new StorePlatformException("SAC_PUR_0001", "prchsDtlId");
+			}
+			if (hidingReq.getHidingSacList().get(i).getHidingYn() == null
+					|| hidingReq.getHidingSacList().get(i).getHidingYn() == "") {
+				throw new StorePlatformException("SAC_PUR_0001", "hidingYn");
+			}
+			String yn = hidingReq.getHidingSacList().get(i).getHidingYn();
+			this.logger.debug("@@@@@@reqConver ynt@@@@@@@" + yn);
+			if (!yn.equals("Y") && !yn.equals("N")) {
+				throw new StorePlatformException("SAC_PUR_0003", "hidingYn", yn, "Y/N");
+			}
 			HidingScList hidingScList = new HidingScList();
 
 			hidingScList.setPrchsId(hidingReq.getHidingSacList().get(i).getPrchsId());

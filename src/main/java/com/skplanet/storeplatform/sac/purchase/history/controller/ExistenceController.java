@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,18 +60,18 @@ public class ExistenceController {
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListRes listExist(@RequestBody ExistenceReq existenceReq, SacRequestHeader requestHeader) {
+	public ExistenceListRes listExist(@RequestBody @Validated ExistenceReq existenceReq, BindingResult bindingResult,
+			SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 
 		// 필수값 체크
-		if (header.getTenantId() == null || header.getTenantId() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "TenantId");
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_PUR_0001", error.getField());
+			}
 		}
-		if (existenceReq.getInsdUsermbrNo() == null || existenceReq.getInsdUsermbrNo() == "") {
-			throw new StorePlatformException("SAC_PUR_0001", "InsdUsermbrNo");
-		}
-
 		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
 		ExistenceListRes existenceListRes = new ExistenceListRes();
 		ExistenceRequest req = this.reqConvert(existenceReq, header);
