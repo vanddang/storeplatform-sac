@@ -173,11 +173,21 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 				support.setType("iab");
 				support.setText("Y");
 				supportList.add(support);
+			} else {
+				support = new Support();
+				support.setType("iab");
+				support.setText("N");
+				supportList.add(support);
 			}
 			if ("Y".equals(categoryAppDTO.getDrmYn())) {
 				support = new Support();
 				support.setType("drm");
 				support.setText("Y");
+				supportList.add(support);
+			} else {
+				support = new Support();
+				support.setType("drm");
+				support.setText("N");
 				supportList.add(support);
 			}
 
@@ -382,11 +392,21 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 				support.setType("iab");
 				support.setText("Y");
 				supportList.add(support);
+			} else {
+				support = new Support();
+				support.setType("iab");
+				support.setText("N");
+				supportList.add(support);
 			}
 			if ("Y".equals(categoryAppDTO.getDrmYn())) {
 				support = new Support();
 				support.setType("drm");
 				support.setText("Y");
+				supportList.add(support);
+			} else {
+				support = new Support();
+				support.setType("drm");
+				support.setText("N");
 				supportList.add(support);
 			}
 
