@@ -11,6 +11,10 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -22,53 +26,29 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CreatePurchaseReq extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
-	private String tenantId; // 테넌트 ID
-	private String systemId; // 시스템 ID
+	@NotBlank
 	private String insdUsermbrNo; // 내부 회원 번호
+	@NotBlank
 	private String insdDeviceId; // 내부 디바이스 ID
+	private String recvInsdUsermbrNo; // (선물 경우 필수) 수신자 내부 회원 번호
+	private String recvInsdDeviceId; // (선물 경우 필수) 수신자 내부 디바이스 ID
+	@NotBlank
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String mid; // 가맹점 ID
 	private String authKey; // 가맹점 인증키
 	private String resultUrl; // 결과처리 URL
+	@NotBlank
 	private String currencyCd; // 통화 코드
+	@NotNull
 	private Double totAmt; // 총 결제 금액
+	@NotBlank
 	private String clientIp; // 클라이언트 IP
+	@NotBlank
 	private String networkTypeCd; // 네트워크 타입 코드
+	@NotBlank
 	private String prchsCaseCd; // 구매 유형 코드
-	private String recvTenantId; // 수신자 테넌트 ID
-	private String recvInsdUsermbrNo; // 수신자 내부 회원 번호
-	private String recvInsdDeviceId; // 수신자 내부 디바이스 ID
+	@NotNull
 	private List<CreatePurchaseReqProduct> productList; // 구매할 상품 리스트
-
-	/**
-	 * @return the tenantId
-	 */
-	public String getTenantId() {
-		return this.tenantId;
-	}
-
-	/**
-	 * @param tenantId
-	 *            the tenantId to set
-	 */
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
-
-	/**
-	 * @return the systemId
-	 */
-	public String getSystemId() {
-		return this.systemId;
-	}
-
-	/**
-	 * @param systemId
-	 *            the systemId to set
-	 */
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
-	}
 
 	/**
 	 * @return the insdUsermbrNo
@@ -233,21 +213,6 @@ public class CreatePurchaseReq extends CommonInfo {
 	 */
 	public void setPrchsCaseCd(String prchsCaseCd) {
 		this.prchsCaseCd = prchsCaseCd;
-	}
-
-	/**
-	 * @return the recvTenantId
-	 */
-	public String getRecvTenantId() {
-		return this.recvTenantId;
-	}
-
-	/**
-	 * @param recvTenantId
-	 *            the recvTenantId to set
-	 */
-	public void setRecvTenantId(String recvTenantId) {
-		this.recvTenantId = recvTenantId;
 	}
 
 	/**

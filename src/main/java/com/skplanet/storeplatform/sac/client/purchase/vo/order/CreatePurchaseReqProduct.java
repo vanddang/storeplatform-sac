@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -20,9 +24,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CreatePurchaseReqProduct extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
+	@NotBlank
 	private String prodId; // 상품 ID
 	private String tenantProdGrpCd; // 테넌트 상품그룹 코드
+	@NotNull
 	private Double prodAmt; // 상품 가격
+	@NotNull
 	private Integer prodQty; // 상품 수량
 	private String resvCol01; // 예비컬럼01
 	private String resvCol02; // 예비컬럼02
