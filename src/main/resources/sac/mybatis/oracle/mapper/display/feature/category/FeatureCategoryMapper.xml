@@ -43,7 +43,6 @@
 		            AND ROWNUM = 1) AS TOP_MENU_NM
 		      , (SELECT SAMPL_URL FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = LA.PART_PROD_ID AND ROWNUM = 1) AS SAMPL_URL
 		      , LA.PROD_CHRG_YN
-		      , '' AS CHAPTER
 		  FROM (SELECT KA.*
 		          FROM (SELECT JA.*
 		                     <if test='filteredBy == "recommend"'>
