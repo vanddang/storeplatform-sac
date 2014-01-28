@@ -27,8 +27,8 @@
               , LA.ISSUE_DAY
               , LA.CHNL_COMP_NM
               , LA.AGENCY_NM
-              , LA.HDV_YN
-              , LA.DOLBY_SPRT_YN
+              , NVL(LA.HDV_YN, 'N' ) AS HDV_YN
+              , NVL(LA.DOLBY_SPRT_YN, 'N' ) AS DOLBY_SPRT_YN
               , CASE WHEN (LA.CHNL_PERIOD_AMT <![CDATA[ >= ]]>0  AND STRM_EPSD_CNT <![CDATA[ > ]]> 0) THEN CHNL_PERIOD_AMT
                      ELSE CHNL_UNLMT_AMT END AS PROD_AMT
               , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT
