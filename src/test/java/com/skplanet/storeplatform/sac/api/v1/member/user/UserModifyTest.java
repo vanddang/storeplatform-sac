@@ -95,20 +95,14 @@ public class UserModifyTest {
 						reqJson.setUserKey("US201401231555153430000447");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
-						/**
-						 * 사용자 연락처 정보...?? (휴대기기 정보 아님....)
-						 */
-						reqJson.setDeviceTelecom("US001202"); // 이동통신사
-						reqJson.setUserPhoneCountry("82"); // 국가코드
-						reqJson.setUserPhone("01011111112"); // 사용자 연락처
-
+						reqJson.setUserPhone("01011111112"); // 사용자 연락처 (Sync 대상)
 						reqJson.setIsRecvSms("N"); // SMS 수신 여부
 						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
-						reqJson.setUserSex("M"); // 성별
-						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일
-						reqJson.setUserZip(" "); // 우편번호
-						reqJson.setUserAddress(" "); // 주소
-						reqJson.setUserDetailAddress(" "); // 상세주소
+						reqJson.setUserSex("M"); // 성별 (Sync 대상)
+						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일 (Sync 대상)
+						reqJson.setUserZip("151919"); // 우편번호 (Sync 대상)
+						reqJson.setUserAddress("서울 관악구 낙성대동 서울대연구공원단지"); // 주소 (Sync 대상)
+						reqJson.setUserDetailAddress("SKT연구소"); // 상세주소 (Sync 대상)
 
 						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
 

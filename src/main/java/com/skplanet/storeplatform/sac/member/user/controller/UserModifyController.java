@@ -93,7 +93,7 @@ public class UserModifyController {
 
 		LOGGER.info("Response : {}", res.toString());
 
-		return new ModifyRes();
+		return res;
 
 	}
 
