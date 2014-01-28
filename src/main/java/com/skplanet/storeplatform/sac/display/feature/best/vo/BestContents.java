@@ -10,13 +10,12 @@
 package com.skplanet.storeplatform.sac.display.feature.best.vo;
 
 /**
- * BEST 컨텐츠 DTO Default Value Object.
+ * BEST 컨텐츠 Default Value Object.
  * 
  * Updated on : 2014. 1. 14. Updated by : 이석희, 아이에스플러스.
  */
 public class BestContents {
 	private int totalCount;
-	private String upMenuId;
 	private String topMenuId;
 	private String menuId;
 	private String menuNm;
@@ -43,8 +42,8 @@ public class BestContents {
 	private Integer dwldCnt;
 	private Double avgEvluScore;
 	private String imgPath;
+	private String topMenuNm;
 	private Integer imgSize;
-	private String upMenuNm;
 
 	/*
 	 * ebook, comic element 추가
@@ -78,31 +77,6 @@ public class BestContents {
 	 */
 	public void setTotalCount(int totalCount) {
 		this.totalCount = totalCount;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 상위 Menu Id.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getUpMenuId() {
-		return this.upMenuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 상위 Menu Id.
-	 * </pre>
-	 * 
-	 * @param upMenuId
-	 *            upMenuId
-	 */
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
 	}
 
 	/**
@@ -756,6 +730,11 @@ public class BestContents {
 	}
 
 	/**
+	 * 
+	 * <pre>
+	 * 이미지(파일) 사이즈.
+	 * </pre>
+	 * 
 	 * @return the imgSize
 	 */
 	public Integer getImgSize() {
@@ -763,6 +742,11 @@ public class BestContents {
 	}
 
 	/**
+	 * 
+	 * <pre>
+	 * 이미지(파일) 사이즈.
+	 * </pre>
+	 * 
 	 * @param imgSize
 	 *            the imgSize to set
 	 */
@@ -778,8 +762,8 @@ public class BestContents {
 	 * 
 	 * @return String
 	 */
-	public String getUpMenuNm() {
-		return this.upMenuNm;
+	public String getTopMenuNm() {
+		return this.topMenuNm;
 	}
 
 	/**
@@ -788,11 +772,11 @@ public class BestContents {
 	 * 상위 Menu 명.
 	 * </pre>
 	 * 
-	 * @param upMenuNm
-	 *            upMenuNm
+	 * @param topMenuNm
+	 *            topMenuNm
 	 */
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
 	}
 
 	/**

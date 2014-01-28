@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.display.feature.best.vo;
 
 /**
- * BEST 앱 DTO Default Value Object.
+ * BEST 앱 Default Value Object.
  * 
  * Updated on : 2014. 1. 8. Updated by : 이석희, 아이에스플러스.
  */
@@ -19,9 +19,8 @@ public class BestApp {
 	private String prodId;
 	private String prodNm;
 	private String menuId;
-	private String upMenuid;
-	private String upMenuNm;
 	private String topMenuId;
+	private String topMenuNm;
 	private String prodGrdCd;
 	private String prodBaseDesc;
 	private String prodDtlDesc;
@@ -151,8 +150,8 @@ public class BestApp {
 	 * 
 	 * @return String
 	 */
-	public String getUpMenuid() {
-		return this.upMenuid;
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
 
 	/**
@@ -161,61 +160,36 @@ public class BestApp {
 	 * 상위 Menu Id.
 	 * </pre>
 	 * 
-	 * @param upMenuid
-	 *            upMenuid
-	 */
-	public void setUpMenuid(String upMenuid) {
-		this.upMenuid = upMenuid;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 상위 Menu 명.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getUpMenuNm() {
-		return this.upMenuNm;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 상위 Menu 명.
-	 * </pre>
-	 * 
-	 * @param upMenuNm
-	 *            upMenuNm
-	 */
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Top Menu Id.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getTopMenuId() {
-		return this.topMenuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * Top Menu Id.
-	 * </pre>
-	 * 
 	 * @param topMenuId
 	 *            topMenuId
 	 */
 	public void setTopMenuId(String topMenuId) {
 		this.topMenuId = topMenuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상위 Menu 명.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getTopMenuNm() {
+		return this.topMenuNm;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상위 Menu 명.
+	 * </pre>
+	 * 
+	 * @param topMenuNm
+	 *            topMenuNm
+	 */
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
 	}
 
 	/**

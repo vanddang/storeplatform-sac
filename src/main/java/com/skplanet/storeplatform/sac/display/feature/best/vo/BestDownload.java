@@ -40,7 +40,6 @@ public class BestDownload {
 	private String imgPath;
 	private String imgNm;
 	private Integer imgSize;
-	private String upMenuId;
 	private String menuDesc;
 	private String metaClsfCd;
 	private String partProdId;
@@ -114,31 +113,6 @@ public class BestDownload {
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 상위 Menu Id.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getUpMenuId() {
-		return this.upMenuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 상위 Menu Id.
-	 * </pre>
-	 * 
-	 * @param upMenuId
-	 *            upMenuId
-	 */
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
 	}
 
 	/**
