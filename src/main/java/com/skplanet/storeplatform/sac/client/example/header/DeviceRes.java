@@ -11,6 +11,7 @@ public class DeviceRes extends CommonInfo {
 	private String resolution;
 	private String osVersion;
 	private String pkgVersion;
+	private String svcVersion;
 
 	public DeviceRes() {
 		super();
@@ -45,6 +46,14 @@ public class DeviceRes extends CommonInfo {
 	}
 	public void setPkgVersion(String pkgVersion) {
 		this.pkgVersion = pkgVersion;
+	}
+
+	public String getSvcVersion() {
+		return this.svcVersion;
+	}
+
+	public void setSvcVersion(String svcVersion) {
+		this.svcVersion = svcVersion;
 	}
 
 }
