@@ -450,7 +450,7 @@
              ]]>
              , (SELECT PROD_NET_AMT FROM TB_DP_TENANT_PROD_PRICE WHERE PROD_ID = TB.PART_PROD_ID) AS PROD_NET_AMT
              , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
-             , NVL(TB.PRCHS_CNT, 0) AS DWLD_CNT
+             , NVL(TB.PRCHS_CNT, 0) AS PRCHS_CNT
               <![CDATA[
              , NVL((CASE WHEN (TB.AVG_EVLU_SCORE > 0 AND TB.AVG_EVLU_SCORE < 1) THEN 1
                          WHEN TB.AVG_EVLU_SCORE > 5 THEN 5

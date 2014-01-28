@@ -62,8 +62,8 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		chapter.setText(metaInfo.getBookCount());
 		book.setChapter(chapter);
 
-		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo)) {
-			// 연재물인 경우에만 Type과 status를 적용한다.
+		if (DisplayConstants.DP_SERIAL_META_CLASS_CD.equals(metaInfo.getMetaClsfCd())) {
+			// eBook 연재물인 경우에만 Type과 status를 적용한다.
 			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
 			if ("Y".equals(metaInfo.getComptYn())) {
 				book.setStatus(DisplayConstants.DP_EBOOK_COMPLETED_NM);
