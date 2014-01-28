@@ -108,15 +108,6 @@ public class MiscellaneousController {
 		return response;
 	}
 
-	// public boolean isNumber(String str) {
-	// try {
-	// new Double(str);
-	// return true;
-	// } catch (Exception e) {
-	// return false;
-	// }
-	// }
-
 	/**
 	 * <pre>
 	 * 휴대폰 인증 SMS 발송.
