@@ -394,7 +394,7 @@
     
     <!--운영자 추천 앱상품 조회-->
     <select id="selectTopMenuAppListByRecent" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryAppDTO">
-        /* FeatureCategoryMapper.xml, selectTopCategoryAppListByRecent, SAC : 서영배 , 2014-01-03 */
+        /* FeatureCategoryMapper.xml, selectTopMenuAppListByRecent, SAC : 서영배 , 2014-01-03 */
 		SELECT
 			F_PROD.*
 			, ST.DWLD_CNT
@@ -459,7 +459,9 @@
 						AND LP.PROD_ID = P1.PROD_ID
 						AND P1.PROD_ID = PS.PROD_ID
 						AND PS.LANG_CD = #{langCd}
+						<if test='menuId != null and menuId != ""'>
 						AND MN.TOP_MENU_ID = #{menuId}
+						</if>
 						AND MN.MENU_ID = MP.MENU_ID
 						AND MP.PROD_ID = P1.PROD_ID
 						AND TP.PROD_ID = P1.PROD_ID
@@ -560,7 +562,9 @@
 						AND LP.PROD_ID = P1.PROD_ID
 						AND P1.PROD_ID = PS.PROD_ID
 						AND PS.LANG_CD = #{langCd}
+						<if test='menuId != null and menuId != ""'>
 						AND MN.TOP_MENU_ID = #{menuId}
+						</if>
 						AND MN.MENU_ID = MP.MENU_ID
 						AND MP.PROD_ID = P1.PROD_ID
 						AND TP.PROD_ID = P1.PROD_ID
@@ -660,7 +664,9 @@
 						AND LP.PROD_ID = P1.PROD_ID
 						AND P1.PROD_ID = PS.PROD_ID
 						AND PS.LANG_CD = #{langCd}
+						<if test='menuId != null and menuId != ""'>
 						AND MN.MENU_ID = #{menuId}
+						</if>
 						AND MN.MENU_ID = MP.MENU_ID
 						AND MP.PROD_ID = P1.PROD_ID
 						AND TP.PROD_ID = P1.PROD_ID

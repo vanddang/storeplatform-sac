@@ -124,8 +124,6 @@ public class FeatureCategoryController {
 	@ResponseBody
 	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header) {
 
-		if (requestVO.getCount() == 0)
-			requestVO.setCount(10);
 		FeatureCategoryEpubRes responseVO;
 		responseVO = this.categoryEpubService.searchEpubList(requestVO, header);
 		return responseVO;

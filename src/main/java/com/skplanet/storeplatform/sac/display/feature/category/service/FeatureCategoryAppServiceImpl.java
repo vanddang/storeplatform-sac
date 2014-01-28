@@ -161,20 +161,20 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 
 			product.setIdentifier(identifier);
 			product.setTitle(title);
-			
-			if( "PD012301".equals(categoryAppDTO.getPartParentClsfCd())){
-				support = new Support();	
+
+			if ("PD012301".equals(categoryAppDTO.getPartParentClsfCd())) {
+				support = new Support();
 				support.setType("iab");
 				support.setText("Y");
 				supportList.add(support);
 			}
-			if( "Y".equals(categoryAppDTO.getDrmYn())){
-				support = new Support();	
+			if ("Y".equals(categoryAppDTO.getDrmYn())) {
+				support = new Support();
 				support.setType("drm");
 				support.setText("Y");
 				supportList.add(support);
 			}
-			
+
 			product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
@@ -236,6 +236,11 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		// 페이지당 노출될 ROW 개수 Default 세팅
 		if (requestVO.getCount() == 0) {
 			requestVO.setCount(20);
+		}
+
+		// 소셜게임 menuId 세팅
+		if ("ADM000000005".equals(requestVO.getListId())) {
+			requestVO.setMenuId("DP01");
 		}
 
 		// 배치완료 기준일시 조회
@@ -356,17 +361,18 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
-			//support.setText(FeatureConstant.convertAppSupport(StringUtil.nvl(categoryAppDTO.getPartParentClsfCd(), ""),
-			//		StringUtil.nvl(categoryAppDTO.getDrmYn(), "")));
-			
-			if( "PD012301".equals(categoryAppDTO.getPartParentClsfCd())){
-				support = new Support();	
+			// support.setText(FeatureConstant.convertAppSupport(StringUtil.nvl(categoryAppDTO.getPartParentClsfCd(),
+			// ""),
+			// StringUtil.nvl(categoryAppDTO.getDrmYn(), "")));
+
+			if ("PD012301".equals(categoryAppDTO.getPartParentClsfCd())) {
+				support = new Support();
 				support.setType("iab");
 				support.setText("Y");
 				supportList.add(support);
 			}
-			if( "Y".equals(categoryAppDTO.getDrmYn())){
-				support = new Support();	
+			if ("Y".equals(categoryAppDTO.getDrmYn())) {
+				support = new Support();
 				support.setType("drm");
 				support.setText("Y");
 				supportList.add(support);
