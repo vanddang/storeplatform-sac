@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonSerialize(include = Inclusion.NON_DEFAULT)
 public class DeviceExtraInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
@@ -18,12 +18,12 @@ public class DeviceExtraInfo extends CommonInfo {
 	/**
 	 * 부가정보 코드
 	 */
-	private String extraProfile;
+	private String extraProfile = "";
 
 	/**
 	 * 부가정보 값
 	 */
-	private String extraProfileValue;
+	private String extraProfileValue = "";
 
 	/**
 	 * 테넌트 아이디
