@@ -33,8 +33,9 @@
 		      ,KA.DWLD_CNT /* 다운로드수 */
 		      ,KA.PATICPERS_CNT /* 참여자수 */
 		      ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
-		      ,KC.FILE_NM AS IMG_NM /* 이미지 명 */
 		      ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
+              ,KB.FILE_PATH AS FILE_PATH /* APK 파일 경로 */
+              ,KB.FILE_SIZE AS FILE_SIZE /* APK 파일 사이즈 */
 		  FROM 
 		       (
 		        SELECT  JA.*
@@ -102,7 +103,7 @@
 		                               ,TB_CM_DEVICE K
 		                          WHERE A.PROD_ID = B.PROD_ID
 		                            AND B.SVC_GRP_CD ='DP000201' /* 서비스 그룹코드 : 앱 */
-                                  <if test="prodGradeCd != null">
+                                  <if test="prodGradeCd != null and prodGradeCd != '' ">
                                     AND  B.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
                                   </if>  		                            
 		                            AND A.PROD_ID = C.PROD_ID
@@ -173,9 +174,10 @@
 		        ]]>
 		        ,KA.DWLD_CNT /* 다운로드수 */
 		        ,KA.PATICPERS_CNT /* 참여자수 */
-		        ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
-		        ,KC.FILE_NM AS IMG_NM /* 이미지 명 */
-		        ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
+                ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
+                ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
+                ,KB.FILE_PATH AS FILE_PATH /* APK 파일 경로 */
+                ,KB.FILE_SIZE AS FILE_SIZE /* APK 파일 사이즈 */
 		    FROM 
 		         (
 		           SELECT TA.*
@@ -248,7 +250,7 @@
 		                                         ,TB_CM_DEVICE K
 		                                    WHERE A.PROD_ID = B.PROD_ID
 		                                      AND B.SVC_GRP_CD ='DP000201'
-			                                 <if test="prodGradeCd != null">
+			                                 <if test="prodGradeCd != null and prodGradeCd != '' ">
 			                                    AND  B.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
 			                                  </if>                                                                                  
 		                                      AND A.PROD_ID = C.PROD_ID
