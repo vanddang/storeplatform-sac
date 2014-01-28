@@ -152,15 +152,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
 
@@ -271,15 +264,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchAccountSeller(schReq);
@@ -403,15 +389,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
 
 		boolean reqStat = false;
 		if (req.getSellerBizNumber() != null)
@@ -473,16 +452,10 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchPwdHintListResponse schRes = new SearchPwdHintListResponse();
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
 
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
+
 		schReq.setLanguageCode(language);
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
 
 		schRes = this.sellerSCI.searchPwdHintList(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -531,6 +504,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		CheckPasswordReminderSellerResponse schRes = new CheckPasswordReminderSellerResponse();
 		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
 
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
+
 		schReq.setSellerID(req.getSellerID());
 
 		/** 보안질문 리스트 주입 - [시작]. */
@@ -548,16 +524,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			schReq.setPWReminderList(pWReminderList);
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
-
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
 
 		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -584,20 +550,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		ResetPasswordSellerResponse schRes = new ResetPasswordSellerResponse();
 		ResetPasswordSellerRequest schReq = new ResetPasswordSellerRequest();
 
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
+
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberID(req.getSellerId()); // 셀러 id 를 넣어야한다.
 
 		schReq.setMbrPwd(mbrPwd);
-
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
 
 		schRes = this.sellerSCI.resetPasswordSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -625,15 +584,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchLoginInfoResponse schRes = new SearchLoginInfoResponse();
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			schReq.setCommonRequest(this.imsiCommonRequest());
-		} else {
-			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-			commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-			schReq.setCommonRequest(commonRequest);
-		}
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
 
 		schReq.setSellerKey(req.getSellerKey());
 
@@ -818,19 +770,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 	/**
 	 * <pre>
-	 * TODO 임시 SC회원 전달용 공통헤더.
+	 * SC 공통 헤더 셋팅.
 	 * </pre>
 	 * 
-	 * @return
+	 * @param header
+	 * @return CommonRequest
 	 */
-	private CommonRequest imsiCommonRequest() {
-		/** TODO 임시 공통헤더 생성 주입 */
+	private CommonRequest getCommonRequest(SacRequestHeader header) {
 		CommonRequest commonRequest = new CommonRequest();
-		// S001(ShopClient), S002(WEB), S003(OpenAPI)
-		commonRequest.setSystemID("S001");
-		// TODO SC회원 문의?? - Reamine ID생성 규칙과 다름
-		// T01(T-Store), T02(A-Store), T03(B-Store) - ['S01' 데이터로 마이그레이션 작업 할 예정]
-		commonRequest.setTenantID("S01");
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
 		return commonRequest;
 	}
 }

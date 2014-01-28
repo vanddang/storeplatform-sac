@@ -715,11 +715,10 @@ public class SellerServiceImpl implements SellerService {
 
 		RemoveSellerResponse schRes = new RemoveSellerResponse();
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		schReq.setCommonRequest(commonRequest);
+
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
+
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
@@ -749,11 +748,8 @@ public class SellerServiceImpl implements SellerService {
 		UpdateLoginInfoResponse schRes = new UpdateLoginInfoResponse();
 		UpdateLoginInfoRequest schReq = new UpdateLoginInfoRequest();
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		schReq.setCommonRequest(commonRequest);
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
 
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
@@ -789,11 +785,8 @@ public class SellerServiceImpl implements SellerService {
 		RemoveLoginInfoResponse schRes = new RemoveLoginInfoResponse();
 		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		schReq.setCommonRequest(commonRequest);
+		/** 2. 공통 헤더 생성 및 주입. */
+		schReq.setCommonRequest(this.getCommonRequest(header));
 
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
