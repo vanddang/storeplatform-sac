@@ -154,7 +154,10 @@ public class VodServceImpl implements VodService {
 		previewSource.setMediaType("video/mp4");
 		previewSource.setType("video/x-freeview-lq");
 		previewSource.setUrl("http://../preview.mp4");
-		preview.setSource(previewSource);
+		// preview.setSource(previewSource);
+		// Source Object에서 List로 변경됨. (이태희)
+		preview.setSourceList(new ArrayList<Source>(Arrays.asList(source)));
+
 		rights.setPreview(preview);
 
 		Support emplySupport = new Support();
@@ -317,7 +320,9 @@ public class VodServceImpl implements VodService {
 		previewSource.setMediaType("video/mp4");
 		previewSource.setType("video/x-freeview-lq");
 		previewSource.setUrl("http://../preview.mp4");
-		preview.setSource(previewSource);
+		// preview.setSource(previewSource);
+		// Source Object에서 List로 변경됨. (이태희)
+		preview.setSourceList(new ArrayList<Source>(Arrays.asList(source)));
 		rights.setPreview(preview);
 
 		Support emplySupport = new Support();
