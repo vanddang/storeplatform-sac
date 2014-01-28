@@ -79,7 +79,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		// 헤더값 세팅
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
-		requestVO.setLangCd("ko");
+		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
 		if (StringUtils.isEmpty(requestVO.getTenantId()))
 			requestVO.setTenantId("S01");
@@ -162,6 +162,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
+		List<Identifier> identifierList;
 
 		for (int i = 0; resultList != null && i < resultList.size(); i++) {
 
@@ -183,6 +184,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
+			identifierList = new ArrayList<Identifier>();
 
 			totalCount = recommendAdminDTO.getTotalCount();
 
@@ -231,7 +233,11 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			 */
 			price.setText(recommendAdminDTO.getProdAmt());
 
-			product.setIdentifier(identifier);
+			//identifier Lisst형으로 수정
+			//product.setIdentifier(identifier);
+			identifierList.add(identifier);
+			product.setIdentifierList(identifierList);
+			
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
