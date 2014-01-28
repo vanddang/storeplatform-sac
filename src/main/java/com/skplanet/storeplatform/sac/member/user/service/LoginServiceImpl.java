@@ -93,11 +93,6 @@ public class LoginServiceImpl implements LoginService {
 
 		logger.info("############################ LoginServiceImpl authorizeByMdn start ############################");
 
-		/* 헤더 정보 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
-
 		String deviceId = req.getDeviceId();
 		String userKey = null;
 		String userType = null;
@@ -223,11 +218,6 @@ public class LoginServiceImpl implements LoginService {
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) throws Exception {
 
 		logger.info("############################ LoginServiceImpl authorizeById start ############################");
-
-		/* 헤더 정보 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		String deviceId = req.getDeviceId();
 		String userId = req.getUserId();
