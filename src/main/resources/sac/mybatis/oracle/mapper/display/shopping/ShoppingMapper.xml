@@ -43,7 +43,9 @@
                    ,DECODE(PROD_CASE_CD
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
-                     , 'DP006303', 'delivery' ) AS prodCaseCd                                       
+                     , 'DP006303', 'delivery' ) AS prodCaseCd      
+                   ,FILE_PATH as filePath
+                   ,FILE_NM as fileNm                                                      
              FROM (
                   SELECT  * 
                    FROM (
@@ -72,7 +74,9 @@
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
                                ,I.PROD_CASE_CD      
-                               ,E.TOP_MENU_ID                                                                                      
+                               ,E.TOP_MENU_ID  
+                               ,PI.FILE_PATH
+                               ,PI.FILE_NM                                                                                                                   
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -86,6 +90,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+                                 ,TB_DP_PROD_IMG           PI
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -133,6 +138,7 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = M.TENANT_ID 
                         AND I.PROD_ID = M.PROD_ID   
+                        AND B.CATALOG_ID = PI.PROD_ID
                         AND I.PROD_ID = N.PROD_ID(+)     
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/                  
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
@@ -211,7 +217,9 @@
                    ,DECODE(PROD_CASE_CD
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
-                     , 'DP006303', 'delivery' ) AS prodCaseCd                                       
+                     , 'DP006303', 'delivery' ) AS prodCaseCd
+                   ,FILE_PATH as filePath
+                   ,FILE_NM as fileNm
              FROM (
                   SELECT  * 
                    FROM (
@@ -238,7 +246,9 @@
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
                                ,I.PROD_CASE_CD  
-                               ,E.TOP_MENU_ID                                                         
+                               ,E.TOP_MENU_ID     
+                               ,PI.FILE_PATH
+                               ,PI.FILE_NM
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -252,6 +262,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+                                 ,TB_DP_PROD_IMG          PI
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
                                      FROM TB_DP_TENANT_PROD_STATS 
@@ -282,7 +293,8 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND I.PROD_ID = M.PROD_ID(+)                           
-                        AND I.PROD_ID = N.PROD_ID(+)         
+                        AND I.PROD_ID = N.PROD_ID(+)  
+                        AND B.CATALOG_ID = PI.PROD_ID       
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/         
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
@@ -361,7 +373,9 @@
                    ,DECODE(PROD_CASE_CD
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
-                     , 'DP006303', 'delivery' ) AS prodCaseCd                                       
+                     , 'DP006303', 'delivery' ) AS prodCaseCd   
+                   ,FILE_PATH as filePath
+                   ,FILE_NM as fileNm                                                         
              FROM (
                   SELECT  * 
                    FROM (
@@ -395,7 +409,9 @@
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
                                ,I.PROD_CASE_CD         
-                               ,E.TOP_MENU_ID                                                                                    
+                               ,E.TOP_MENU_ID  
+                               ,PI.FILE_PATH
+                               ,PI.FILE_NM                                                                                                                 
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -409,6 +425,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
+                                 ,TB_DP_PROD_IMG           PI
                                  <if test='orderedBy == "recent"'>
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
@@ -464,6 +481,7 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
+                        AND B.CATALOG_ID = PI.PROD_ID
                          <if test='orderedBy == "recent"'>
                         AND I.PROD_ID = M.PROD_ID(+)        
                         </if>                                           
