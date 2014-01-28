@@ -34,8 +34,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategoryAppDTO;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.category.vo.CategoryApp;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
@@ -65,6 +67,19 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
+
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+
+		this.logger.debug("########################################################");
+		this.logger.debug("tenantHeader.getTenantId()	:	" + tenantHeader.getTenantId());
+		this.logger.debug("tenantHeader.getLangCd()		:	" + tenantHeader.getLangCd());
+		this.logger.debug("deviceHeader.getModel()		:	" + deviceHeader.getModel());
+		this.logger.debug("########################################################");
+
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setDeviceModelCd(deviceHeader.getModel());
 
 		CategoryAppRes appRes = new CategoryAppRes();
 		CommonResponse commonRes = new CommonResponse();
@@ -107,26 +122,30 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		if (!"A".equals(prodCharge) && (!"Y".equals(prodCharge) && !"N".equals(prodCharge))) {
 			prodCharge = "A";
 		}
-		// 시작점 ROW Default 세팅
-		if (req.getOffset() == null) {
-			req.setOffset(1);
-		}
-		// 페이지당 노출될 ROW 개수 Default 세팅
-		if (req.getCount() == null) {
-			req.setCount(20);
-		}
 
-		// 헤더값 세팅
-		req.setDeviceModelCd(header.getDeviceHeader().getModel());
-		req.setTenantId(header.getTenantHeader().getTenantId());
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
+		}
+		req.setOffset(offset);
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count);
+
+		// 이미지 사이즈
 		req.setImageCd("DP000101");
 
 		// 일반 카테고리 앱 상품 조회
-		List<CategoryAppDTO> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
-				CategoryAppDTO.class);
+		List<CategoryApp> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
+				CategoryApp.class);
 
 		if (!appList.isEmpty()) {
-			CategoryAppDTO categoryAppDTO = null;
+			CategoryApp categoryApp = null;
 
 			Identifier identifier = null;
 			Support support = null;
@@ -146,89 +165,89 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 
 			for (int i = 0; i < appList.size(); i++) {
 				product = new Product();
-				categoryAppDTO = appList.get(i);
+				categoryApp = appList.get(i);
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(categoryAppDTO.getProdId());
+				identifier.setText(categoryApp.getProdId());
 				product.setIdentifier(identifier);
 
 				// 상품 지원 정보
 				support = new Support();
 				supportList = new ArrayList<Support>();
-				support.setType("drm");
-				support.setText(categoryAppDTO.getDrmYn());
+				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
+				support.setText(categoryApp.getDrmYn());
 				supportList.add(support);
 
 				support = new Support();
-				support.setType("inApp");
-				support.setText(categoryAppDTO.getPartParentClsfCd());
+				support.setType(DisplayConstants.DP_IN_APP_SUPPORT_NM);
+				support.setText(categoryApp.getPartParentClsfCd());
 				supportList.add(support);
 				product.setSupportList(supportList);
 
 				// 메뉴 정보
 				menu = new Menu();
 				menuList = new ArrayList<Menu>();
-				menu.setType("topClass");
-				menu.setId(categoryAppDTO.getTopMenuId());
-				menu.setName(categoryAppDTO.getTopMenuNm());
+				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+				menu.setId(categoryApp.getTopMenuId());
+				menu.setName(categoryApp.getTopMenuNm());
 				menuList.add(menu);
 
 				menu = new Menu();
-				menu.setId(categoryAppDTO.getMenuId());
-				menu.setName(categoryAppDTO.getMenuNm());
+				menu.setId(categoryApp.getMenuId());
+				menu.setName(categoryApp.getMenuNm());
 				menuList.add(menu);
 				product.setMenuList(menuList);
 
 				// 어플리케이션 정보
 				app = new App();
-				app.setAid(categoryAppDTO.getAid());
-				app.setPackageName(categoryAppDTO.getApkPkgNm());
-				app.setSize(categoryAppDTO.getApkFileSize());
-				app.setVersion(categoryAppDTO.getProdVer());
-				app.setVersionCode(categoryAppDTO.getApkVer());
+				app.setAid(categoryApp.getAid());
+				app.setPackageName(categoryApp.getApkPkgNm());
+				app.setSize(categoryApp.getApkFileSize());
+				app.setVersion(categoryApp.getProdVer());
+				app.setVersionCode(categoryApp.getApkVer());
 				product.setApp(app);
 
 				// 평점 정보
 				accrual = new Accrual();
-				accrual.setDownloadCount(categoryAppDTO.getPrchsCnt());
-				accrual.setScore(categoryAppDTO.getAvgEvluScore());
-				accrual.setVoterCount(categoryAppDTO.getPaticpersCnt());
+				accrual.setDownloadCount(categoryApp.getPrchsCnt());
+				accrual.setScore(categoryApp.getAvgEvluScore());
+				accrual.setVoterCount(categoryApp.getPaticpersCnt());
 				product.setAccrual(accrual);
 
 				// 이용권한 정보
 				rights = new Rights();
-				rights.setGrade(categoryAppDTO.getProdGrdCd());
+				rights.setGrade(categoryApp.getProdGrdCd());
 				product.setRights(rights);
 
 				// 상품 정보 (상품명)
 				title = new Title();
-				title.setText(categoryAppDTO.getProdNm());
+				title.setText(categoryApp.getProdNm());
 				product.setTitle(title);
 
 				// 이미지 정보
 				source = new Source();
 				sourceList = new ArrayList<Source>();
-				source.setType("thumbnail");
-				source.setMediaType(DisplayCommonUtil.getMimeType(categoryAppDTO.getImgPath()));
-				source.setUrl(categoryAppDTO.getImgPath());
+				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+				source.setMediaType(DisplayCommonUtil.getMimeType(categoryApp.getImgPath()));
+				source.setUrl(categoryApp.getImgPath());
 				sourceList.add(source);
 				product.setSourceList(sourceList);
 
 				// 상품 정보 (상품설명)
-				product.setProductExplain(categoryAppDTO.getProdBaseDesc());
+				product.setProductExplain(categoryApp.getProdBaseDesc());
 
 				// 상품 정보 (상품가격)
 				price = new Price();
-				price.setText(Integer.parseInt(categoryAppDTO.getProdAmt()));
+				price.setText(Integer.parseInt(categoryApp.getProdAmt()));
 				product.setPrice(price);
 
 				// 데이터 매핑
 				productList.add(i, product);
 			}
 
-			commonRes.setTotalCount(categoryAppDTO.getTotalCount());
+			commonRes.setTotalCount(categoryApp.getTotalCount());
 			appRes.setProductList(productList);
 			appRes.setCommonResponse(commonRes);
 		} else {

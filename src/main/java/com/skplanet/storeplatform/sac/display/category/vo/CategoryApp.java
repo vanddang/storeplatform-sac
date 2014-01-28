@@ -10,13 +10,13 @@
 package com.skplanet.storeplatform.sac.display.category.vo;
 
 /**
- * 일반 카테고리 ebook/만화 상품 조회 DTO Value Object.
+ * 일반 카테고리 앱 상품 조회 Value Object.
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class CategoryEbookComicDTO {
+public class CategoryApp {
 	private int totalCount;
-	private String upMenuId;
+	private String topMenuId;
 	private String menuId;
 	private String menuNm;
 	private String prodId;
@@ -35,7 +35,7 @@ public class CategoryEbookComicDTO {
 	private Integer paticpersCnt;
 	private Integer prchsCnt;
 	private Double avgEvluScore;
-	private String upMenuNm;
+	private String topMenuNm;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -45,12 +45,12 @@ public class CategoryEbookComicDTO {
 		this.totalCount = totalCount;
 	}
 
-	public String getUpMenuId() {
-		return this.upMenuId;
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
 
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	public String getMenuId() {
@@ -197,11 +197,11 @@ public class CategoryEbookComicDTO {
 		this.avgEvluScore = avgEvluScore;
 	}
 
-	public String getUpMenuNm() {
-		return this.upMenuNm;
+	public String getTopMenuNm() {
+		return this.topMenuNm;
 	}
 
-	public void setUpMenuNm(String upMenuNm) {
-		this.upMenuNm = upMenuNm;
+	public void setTopMenuNm(String topMenuNm) {
+		this.topMenuNm = topMenuNm;
 	}
 }
