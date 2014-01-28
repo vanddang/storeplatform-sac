@@ -2,21 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Coupon">
     
-    <!--쿠폰ID 생성 조회-->
-    <select id="couponGenerateId" resultType="String">
-       /* CouponMapper.xml, couponGenerateId, 쿠폰ID 생성 조회, 김형식/SK플래닛 , 2013-01-08 */
+    <!--쿠폰ID,아이템ID 생성 조회-->
+    <select id="prodGenerateId" resultType="String">
+       /* CouponMapper.xml, prodGenerateId, 쿠폰ID 생성 조회, 김형식/SK플래닛 , 2013-01-08 */
         SELECT 
          'S9'||LPAD(SQ_DP_PROD.NEXTVAL, 8, '0')
         FROM DUAL
     </select>
-    
-    <!--아이템ID 생성 조회-->
-    <select id="itemGenerateId" resultType="String">
-       /* CouponMapper.xml, itemGenerateId, 아이템ID 생성 조회, 김형식/SK플래닛 , 2013-01-08 */
-       SELECT 
-         (MAX(SUBSTR(PROD_ID,3,8))+2)
-        FROM TB_DP_SHPG_PROD A
-    </select>
+  
 
     <!--쿠폰ID,아이템ID 가져오기 조회-->
     <select id="getGenerateId" resultType="String"  parameterType="String">
