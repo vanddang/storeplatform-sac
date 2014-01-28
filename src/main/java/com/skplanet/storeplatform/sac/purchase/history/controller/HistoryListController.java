@@ -57,10 +57,6 @@ public class HistoryListController {
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	public HistoryListRes list(@RequestBody @Validated HistoryListReq request, SacRequestHeader requestHeader) {
 
-		if (result.hasErrors()) {
-			this.logger.debug("################################ 에러다");
-		}
-
 		// tenantID, systemId Set
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		request.setTenantId(tenantHeader.getTenantId());
