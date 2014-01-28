@@ -405,8 +405,8 @@
         /* FeatureCategoryMapper.xml, selectTopMenuAppListByRecent, SAC : 서영배 , 2014-01-03 */
 		SELECT
 			F_PROD.*
-			, ST.DWLD_CNT
-			, ST.PRCHS_CNT
+			, NVL(ST.DWLD_CNT, 0) AS DWLD_CNT
+			, NVL(ST.PRCHS_CNT, 0) AS PRCHS_CNT
 			, NVL(
 				( 
 					CASE WHEN ( ST.AVG_EVLU_SCORE <![CDATA[>]]> 0 AND ST.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
@@ -514,8 +514,8 @@
         /* FeatureCategoryMapper.xml, selectTopMenuAppList, SAC : 서영배 , 2014-01-16 */
 		SELECT
 			F_PROD.*
-			, ST.DWLD_CNT
-			, ST.PRCHS_CNT
+			, NVL(ST.DWLD_CNT, 0) AS DWLD_CNT
+			, NVL(ST.PRCHS_CNT, 0) AS PRCHS_CNT
 			, NVL(
 				( 
 					CASE WHEN ( ST.AVG_EVLU_SCORE <![CDATA[>]]> 0 AND ST.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
@@ -616,8 +616,8 @@
         /* FeatureCategoryMapper.xml, selectSubMenuAppList, SAC : 서영배 , 2014-01-16 */
 		SELECT
 			F_PROD.*
-			, ST.DWLD_CNT
-			, ST.PRCHS_CNT
+			, NVL(ST.DWLD_CNT, 0) AS DWLD_CNT
+			, NVL(ST.PRCHS_CNT, 0) AS PRCHS_CNT
 			, NVL(
 				( 
 					CASE WHEN ( ST.AVG_EVLU_SCORE <![CDATA[>]]> 0 AND ST.AVG_EVLU_SCORE <![CDATA[<]]> 1 ) THEN 1
