@@ -537,7 +537,7 @@ public class ShoppingCouponSacController {
 		for (DpItemInfo itemInfo : itemInfoList) {
 			if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 				itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
-				itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
+				itemInfo.setProdId(itemProdId); // 아이템 prodId 생성
 			} else if ("U".equalsIgnoreCase(itemInfo.getCudType())) {
 				itemProdId = this.couponItemService.getGenerateId(itemInfo.getItemCode()); // 기존 아이템 ID 가져오기
 				itemInfo.setProdId(itemProdId);
@@ -777,7 +777,7 @@ public class ShoppingCouponSacController {
 				}
 			}
 			if (couponInfo.getDescription() != "") {
-				if (couponInfo.getDescription().length() > 250) {
+				if (couponInfo.getDescription().length() > 4000) {
 					message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]";
 					result = false;
 				}
