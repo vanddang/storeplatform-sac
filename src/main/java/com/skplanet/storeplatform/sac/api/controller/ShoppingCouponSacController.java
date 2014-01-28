@@ -55,7 +55,6 @@ public class ShoppingCouponSacController {
 	private String ERR_MESSAGE;
 	private String ERR_CODE;
 	private List<CouponRes> couponList = null;
-	public CouponRes couponRes;
 	public String response;
 
 	@Autowired
@@ -66,10 +65,6 @@ public class ShoppingCouponSacController {
 
 	@Autowired
 	private CouponProcessService couponProcessService;
-
-	public ShoppingCouponSacController() {
-		this.couponRes = new CouponRes();
-	}
 
 	/**
 	 * <pre>
@@ -87,14 +82,14 @@ public class ShoppingCouponSacController {
 		this.log.debug("----------------------------------------------------------------");
 		this.log.debug("apiCouponInterface Controller started!!");
 		this.log.debug("----------------------------------------------------------------");
-
+		CouponRes couponRes = new CouponRes();
 		try {
-			this.dePloy(couponReq);
+			this.dePloy(couponReq, couponRes);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return this.couponRes;
+		return couponRes;
 
 	}
 
@@ -120,7 +115,7 @@ public class ShoppingCouponSacController {
 
 	}
 
-	public boolean dePloy(CouponReq couponReq) throws Exception {
+	public boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
 
@@ -158,6 +153,7 @@ public class ShoppingCouponSacController {
 						success = this.insertBrandInfo(brandInfo);
 					}
 					if (success) {
+						couponRes.setBrandId(brandInfo.getCreateBrandId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 						map.put("ERROR_MSG", this.getERR_MESSAGE());
@@ -177,6 +173,7 @@ public class ShoppingCouponSacController {
 						success = this.insertCatalogInfo(catalogInfo);
 					}
 					if (success) {
+						couponRes.setCatalogId(catalogInfo.getCreateCatalogId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 						map.put("ERROR_MSG", this.getERR_MESSAGE());
@@ -228,13 +225,13 @@ public class ShoppingCouponSacController {
 					break;
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
-					this.couponRes = this.getSpecialProductDetail(couponReq.getCouponCode());
-					if (this.couponRes.getRCode().equals("")) {
+					couponRes = this.getSpecialProductDetail(couponReq.getCouponCode());
+					if (couponRes.getRCode().equals("")) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 					} else {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", this.couponRes.getRCode());
+						map.put("ERROR_CODE", couponRes.getRCode());
 					}
 
 					break;
@@ -245,14 +242,14 @@ public class ShoppingCouponSacController {
 					break;
 				}
 
-				this.sendResponseData(couponReq, map);
+				this.sendResponseData(couponReq, map, couponRes);
 
 			} else {
 				// Error Messag 를 작성한다.
 				map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 				map.put("ERROR_MSG", this.getERR_MESSAGE());
-				this.sendResponseData(couponReq, map);
+				this.sendResponseData(couponReq, map, couponRes);
 			}
 
 		} catch (CouponException ex) {
@@ -265,7 +262,7 @@ public class ShoppingCouponSacController {
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
 			map.put("ERROR_MSG", ex.getMessage());
 			map.put("ERROR_VALUE", ex.getErr_value());
-			this.sendResponseData(couponReq, map);
+			this.sendResponseData(couponReq, map, couponRes);
 			result = false;
 
 		} catch (Exception e) {
@@ -274,7 +271,7 @@ public class ShoppingCouponSacController {
 			map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 			map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_SERVICE_STOP);
 			map.put("ERROR_MSG", e.getMessage());
-			this.sendResponseData(couponReq, map);
+			this.sendResponseData(couponReq, map, couponRes);
 			result = false;
 		}
 
@@ -571,7 +568,7 @@ public class ShoppingCouponSacController {
 	}
 
 	// 쇼핑쿠폰 API 응답은 XML 으로 전송한다.
-	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map) {
+	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map, CouponRes couponRes) {
 		this.log.info("<CouponControl> sendResponseData...");
 
 		boolean success = false;
@@ -591,10 +588,10 @@ public class ShoppingCouponSacController {
 			xmlSb.append("<txId><![CDATA[" + couponReq.getTxId() + "]]></txId>");
 
 			this.log.debug("-------------------jade 추가 S---------------------------------------------");
-			this.couponRes.setRCode(map.get("ERROR_CODE"));
-			this.couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
+			couponRes.setRCode(map.get("ERROR_CODE"));
+			couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG")));
 			if (map.get("ERROR_VALUE") != null && !map.get("ERROR_VALUE").equals("")) {
-				this.couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG"))
+				couponRes.setRMsg(CouponConstants.getCouponErrorMsg(map.get("ERROR_CODE"), map.get("ERROR_MSG"))
 						+ map.get("ERROR_VALUE"));
 			}
 			this.log.debug("-------------------jade 추가 E---------------------------------------------");
@@ -625,7 +622,7 @@ public class ShoppingCouponSacController {
 																						   // 가포함되어 마지막에 , put
 																						   // 해준다.
 					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setCouponId(couponReq.getDpCouponInfo().getProdId());
+					couponRes.setCouponId(couponReq.getDpCouponInfo().getProdId());
 					String itemProdId = "";
 					for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
 						if (i == 0) {
@@ -636,7 +633,7 @@ public class ShoppingCouponSacController {
 									+ couponReq.getDpItemInfo().get(i).getItemCode();
 						}
 					}
-					this.couponRes.setItemId(itemProdId);
+					couponRes.setItemId(itemProdId);
 					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 					break;
 				case ST:
@@ -666,22 +663,22 @@ public class ShoppingCouponSacController {
 					xmlSb.append("]]></eventList>");
 					xmlSb.append("</rData>");
 					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					this.couponRes.setEventList(eventList);
+					couponRes.setEventList(eventList);
 					this.log.debug("-------------------jade 추가 E---------------------------------------------");
 
 					break;
 				case DT:
 					xmlSb.append("<rData>");
-					if (this.couponRes == null)
+					if (couponRes == null)
 						xmlSb.append("<couponCode><![CDATA[" + StringUtil.nvl(couponReq.getCouponCode(), "")
 								+ "]]></couponCode>");
-					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(this.couponRes.getEventName(), "")
+					xmlSb.append("<eventName><![CDATA[" + StringUtil.nvl(couponRes.getEventName(), "")
 							+ "]]></eventName>");
-					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventStartDate(), "")
+					xmlSb.append("<eventStartDate><![CDATA[" + StringUtil.nvl(couponRes.getEventStartDate(), "")
 							+ "]]></eventStartDate>");
-					xmlSb.append("<eventEndDate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventEndDate(), "")
+					xmlSb.append("<eventEndDate><![CDATA[" + StringUtil.nvl(couponRes.getEventEndDate(), "")
 							+ "]]></eventEndDate>");
-					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(this.couponRes.getEventDcRate(), "")
+					xmlSb.append("<eventDcRate><![CDATA[" + StringUtil.nvl(couponRes.getEventDcRate(), "")
 							+ "]]></eventDcRate>");
 					xmlSb.append("</rData>");
 
