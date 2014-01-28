@@ -31,7 +31,7 @@ public class Source extends CommonInfo implements Serializable {
 	private Integer size; // 파일 사이즈
 	/*
 	 * Resource 타입 (product : 상품, thumbnail : 썸네일, movie : 동영상, screenshot : 스크린샷, screenshot/large : 스크린샷(큰사이즈), music
-	 * : 음악, barcode : 바코드이미지, 음악의 경우 audio/mp3-192, audio/mp3-128로 구분한다.)
+	 * : 음악, barcode : 바코드이미지, 음악의 경우 audio/mp3-192, audio/mp3-128로 구분한다. preview : vod 미리보기)
 	 */
 	private String type;
 	private String url; // Resource URL
