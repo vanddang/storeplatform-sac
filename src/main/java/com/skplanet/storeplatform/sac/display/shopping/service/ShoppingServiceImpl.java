@@ -77,8 +77,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 			} else {
 				req.setTenantId(header.getTenantHeader().getTenantId());
 				req.setSystemId(header.getTenantHeader().getSystemId());
+				req.setLangCd(header.getTenantHeader().getLangCd());
 				req.setImageCd("DP000196");
-				req.setLangCd("ko");
 				req.setDeviceModelCd("SHV-E330SSO");
 			}
 
@@ -110,6 +110,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Date date = null;
 				SalesOption saleoption = null;
 
+				List<Identifier> identifierList = null;
 				List<Menu> menuList = null;
 				List<Source> sourceList = null;
 				List<Product> productList = new ArrayList<Product>();
@@ -119,14 +120,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 					// 상품 정보 (상품ID)
 					product = new Product();
+
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 					identifier.setText(ShoppingDto.getCatagoryId());
+					identifierList.add(identifier);
 
 					// 메뉴 정보
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
-					menu.setType("menuId");
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+					menu.setId(ShoppingDto.getUpMenuId());
+					menu.setName(ShoppingDto.getUpMenuName());
+					menuList.add(menu);
+
+					menu = new Menu();
 					menu.setId(ShoppingDto.getMenuId());
 					menu.setName(ShoppingDto.getMenuName());
 					menuList.add(menu);
@@ -134,7 +143,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 상품 정보 (상품명)
 					title = new Title();
 					title.setText(ShoppingDto.getCatagoryName());
-					title.setPrefix(ShoppingDto.getNewYn());
 
 					// 상품 정보 (상품가격)
 					price = new Price();
@@ -145,7 +153,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
 					source = new Source();
-					source.setType("thumbnail");
+					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 					source.setUrl("inst_thumbnail_20111216154840.jpg");
 					sourceList.add(source);
 
@@ -156,7 +164,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이용권한 정보
 					rights = new Rights();
 					date = new Date();
-					date.setType("duration/salePeriod");
+					date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
 					date.setText(ShoppingDto.getApplyStartDt() + "/" + ShoppingDto.getApplyEndDt());
 					rights.setGrade(ShoppingDto.getProdGrdCd());
 					rights.setDate(date);
@@ -174,7 +182,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					saleoption.setType(ShoppingDto.getProdCaseCd());
 
 					// 데이터 매핑
-					product.setIdentifier(identifier);
+					product.setIdentifierList(identifierList);
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setPrice(price);
@@ -332,7 +340,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 				req.setTenantId(header.getTenantHeader().getTenantId());
 				req.setSystemId(header.getTenantHeader().getSystemId());
 				req.setImageCd("DP000196");
-				req.setLangCd("ko");
+				req.setLangCd(header.getTenantHeader().getLangCd());
+
 				req.setDeviceModelCd("SHV-E330SSO");
 			}
 
@@ -355,6 +364,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Accrual accrual = null;
 				Date date = null;
 				SalesOption saleoption = null;
+				List<Identifier> identifierList = null;
 
 				List<Menu> menuList = null;
 				List<Source> sourceList = null;
@@ -365,14 +375,21 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 					// 상품 정보 (상품ID)
 					product = new Product();
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
-					identifier.setType("catalog");
+					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 					identifier.setText(ShoppingDto.getCatagoryId());
+					identifierList.add(identifier);
 
 					// 메뉴 정보
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
-					menu.setType("menuId");
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+					menu.setId(ShoppingDto.getMenuId());
+					menu.setName(ShoppingDto.getMenuName());
+					menuList.add(menu);
+
+					menu = new Menu();
 					menu.setId(ShoppingDto.getMenuId());
 					menu.setName(ShoppingDto.getMenuName());
 					menuList.add(menu);
@@ -380,7 +397,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 상품 정보 (상품명)
 					title = new Title();
 					title.setText(ShoppingDto.getCatagoryName());
-					title.setPrefix(ShoppingDto.getNewYn());
+					// title.setPrefix(ShoppingDto.getNewYn());
 
 					// 상품 정보 (상품가격)
 					price = new Price();
@@ -391,7 +408,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
 					source = new Source();
-					source.setType("thumbnail");
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 					source.setUrl("inst_thumbnail_20111216154840.jpg");
 					sourceList.add(source);
 
@@ -402,7 +419,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이용권한 정보
 					rights = new Rights();
 					date = new Date();
-					date.setType("duration/salePeriod");
+					date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
 					date.setText(ShoppingDto.getApplyStartDt() + "/" + ShoppingDto.getApplyEndDt());
 					rights.setGrade(ShoppingDto.getProdGrdCd());
 					rights.setDate(date);
@@ -410,7 +427,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// contributor
 					contributor = new Contributor();
 					identifier1 = new Identifier();
-					identifier1.setType("brand");
+					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
 					identifier1.setText(ShoppingDto.getBrandId());
 					contributor.setName(ShoppingDto.getBrandName());
 					contributor.setIdentifier(identifier1);
@@ -420,7 +437,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					saleoption.setType(ShoppingDto.getProdCaseCd());
 
 					// 데이터 매핑
-					product.setIdentifier(identifier);
+					product.setIdentifierList(identifierList);
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setPrice(price);
@@ -611,7 +628,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Accrual accrual = null;
 				Date date = null;
 				SalesOption saleoption = null;
-
+				List<Identifier> identifierList = null;
 				List<Menu> menuList = null;
 				List<Source> sourceList = null;
 				List<Product> productList = new ArrayList<Product>();
@@ -621,14 +638,21 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 					// 상품 정보 (상품ID)
 					product = new Product();
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
-					identifier.setType("catalog");
+					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
 					identifier.setText(ShoppingDto.getCatagoryId());
+					identifierList.add(identifier);
 
 					// 메뉴 정보
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
-					menu.setType("menuId");
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+					menu.setId(ShoppingDto.getUpMenuId());
+					menu.setName(ShoppingDto.getUpMenuName());
+					menuList.add(menu);
+
+					menu = new Menu();
 					menu.setId(ShoppingDto.getMenuId());
 					menu.setName(ShoppingDto.getMenuName());
 					menuList.add(menu);
@@ -636,7 +660,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 상품 정보 (상품명)
 					title = new Title();
 					title.setText(ShoppingDto.getCatagoryName());
-					title.setPrefix(ShoppingDto.getNewYn());
 
 					// 상품 정보 (상품가격)
 					price = new Price();
@@ -647,7 +670,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
 					source = new Source();
-					source.setType("thumbnail");
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 					source.setUrl("inst_thumbnail_20111216154840.jpg");
 					sourceList.add(source);
 
@@ -658,7 +681,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 이용권한 정보
 					rights = new Rights();
 					date = new Date();
-					date.setType("duration/salePeriod");
+					date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
 					date.setText(ShoppingDto.getApplyStartDt() + "/" + ShoppingDto.getApplyEndDt());
 					rights.setGrade(ShoppingDto.getProdGrdCd());
 					rights.setDate(date);
@@ -666,7 +689,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// contributor
 					contributor = new Contributor();
 					identifier1 = new Identifier();
-					identifier1.setType("brand");
+					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
 					identifier1.setText(ShoppingDto.getBrandId());
 					contributor.setName(ShoppingDto.getBrandName());
 					contributor.setIdentifier(identifier1);
@@ -676,7 +699,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					saleoption.setType(ShoppingDto.getProdCaseCd());
 
 					// 데이터 매핑
-					product.setIdentifier(identifier);
+					product.setIdentifierList(identifierList);
 					product.setMenuList(menuList);
 					product.setTitle(title);
 					product.setPrice(price);
