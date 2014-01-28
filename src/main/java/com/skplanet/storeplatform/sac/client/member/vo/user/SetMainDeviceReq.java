@@ -21,6 +21,9 @@ public class SetMainDeviceReq extends CommonInfo {
 	private String userKey;
 	/* 기기 키 */
 	private String deviceKey;
+	/* 기기 아이디 */
+	private String deviceId;
+
 	private CommonRequest commonRequest;
 
 	public String getUserKey() {
@@ -49,6 +52,14 @@ public class SetMainDeviceReq extends CommonInfo {
 
 	public void setCommonRequest(CommonRequest commonRequest) {
 		this.commonRequest = commonRequest;
+	}
+
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
 	}
 
 	public class CommonRequest implements Serializable {
