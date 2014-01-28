@@ -41,6 +41,9 @@
 		          WHERE MENU_ID = LA.TOP_MENU_ID
 		            AND LANG_CD = 'ko'
 		            AND ROWNUM = 1) AS TOP_MENU_NM
+		      , (SELECT SAMPL_URL FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = LA.PART_PROD_ID AND ROWNUM = 1) AS SAMPL_URL
+		      , LA.PROD_CHRG_YN
+		      , '' AS CHAPTER
 		  FROM (SELECT KA.*
 		          FROM (SELECT JA.*
 		                     <if test='filteredBy == "recommend"'>
@@ -78,6 +81,7 @@
 		                                     , H.CHNL_UNLMT_AMT
 		                                     , I.PART_PROD_ID
 		                                     , J.DRM_YN
+		                                     , D.PROD_CHRG_YN
 		                                  FROM (SELECT  TENANT_ID
 		                                              , LIST_ID
 		                                              , MENU_ID
@@ -165,7 +169,7 @@
 		      , LA.PART_PROD_ID
 		      , LA.VOD_TITL_NM
 		      , LA.PROD_NM
-		      , LA.CHAPTER
+		      , REPLACE(LA.CHAPTER, '회', '') AS CHAPTER
 		      , LA.PROD_BASE_DESC
 		      , LA.PROD_GRD_CD
 		      , LA.ARTIST1_NM
@@ -192,6 +196,8 @@
 		          WHERE MENU_ID = LA.TOP_MENU_ID
 		            AND LANG_CD = 'ko'
 		            AND ROWNUM = 1) AS TOP_MENU_NM
+		     , LA.SAMPL_URL
+		     , LA.PROD_CHRG_YN
 		  FROM (SELECT KA.*
 		          FROM (SELECT JA.*
 		                     , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.PROD_NM) AS RNUM
@@ -225,6 +231,8 @@
 		                                     , I.PART_PROD_ID
 		                                     , J.DRM_YN
 		                                     , K.CHAPTER
+		                                     , K.SAMPL_URL
+		                                     , D.PROD_CHRG_YN
 		                                  FROM (SELECT  TENANT_ID
 		                                              , LIST_ID
 		                                              , MENU_ID
@@ -909,6 +917,25 @@
 						           AND M.PROD_ID = N.PROD_ID
 						           AND N.CONTENTS_TYPE_CD = 'PD002501'
 						           AND E.TOP_MENU_ID = N.TOP_MENU_ID
+						           <if test='topMenuId == "DP13"'>
+						           AND E.META_CLSF_CD IN ('CT19', 'CT20')
+						              <if test='filteredBy == "ebook+normal"'>  /* 이북 일반 */
+						           AND G.MENU_ID NOT IN (SELECT MENU_ID
+                                                           FROM TB_DP_MENU_CATEGORY
+                                                          WHERE (MENU_ID LIKE 'DP13004%'
+                                                                 OR MENU_ID  IN ('DP13027002', 'DP13027008', 'DP13027009', 'DP13027010' )
+                                                                )
+                                                         )
+						              </if>
+						              <if test='filteredBy == "ebook+gener"'>  /* 이북 장르 */
+						           AND G.MENU_ID IN (SELECT MENU_ID
+                                                       FROM TB_DP_MENU_CATEGORY
+                                                      WHERE (MENU_ID LIKE 'DP13004%'
+                                                             OR MENU_ID  IN ('DP13027002', 'DP13027008', 'DP13027009', 'DP13027010' )
+                                                            )
+                                                     )  
+						              </if>
+						           </if>
 						       ) A
 						 WHERE NO = 1
 						 ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB 
