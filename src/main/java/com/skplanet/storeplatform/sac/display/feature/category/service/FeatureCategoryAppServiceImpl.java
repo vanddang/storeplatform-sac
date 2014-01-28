@@ -94,6 +94,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
+		List<Identifier> identifierList;
 
 		for (int i = 0; resultList != null && i < resultList.size(); i++) {
 
@@ -115,6 +116,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
+			identifierList = new ArrayList<Identifier>();
 
 			totalCount = categoryAppDTO.getTotalCount();
 
@@ -159,7 +161,11 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			 */
 			price.setText(categoryAppDTO.getProdAmt());
 
-			product.setIdentifier(identifier);
+			//identifier Lisst형으로 수정
+			//product.setIdentifier(identifier);
+			identifierList.add(identifier);
+			product.setIdentifierList(identifierList);
+			
 			product.setTitle(title);
 
 			if ("PD012301".equals(categoryAppDTO.getPartParentClsfCd())) {
@@ -289,6 +295,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
+		List<Identifier> identifierList;
 
 		for (int i = 0; resultList != null && i < resultList.size(); i++) {
 
@@ -310,6 +317,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
+			identifierList = new ArrayList<Identifier>();
 
 			totalCount = categoryAppDTO.getTotalCount();
 
@@ -357,7 +365,11 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			 */
 			price.setText(categoryAppDTO.getProdAmt());
 
-			product.setIdentifier(identifier);
+			//identifier Lisst형으로 수정
+			//product.setIdentifier(identifier);
+			identifierList.add(identifier);
+			product.setIdentifierList(identifierList);
+			
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
