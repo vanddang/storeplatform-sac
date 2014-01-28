@@ -11,8 +11,11 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -26,11 +29,23 @@ public class GiftReceiveReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	@NotNull
+	@NotEmpty
 	private String sendMbrNo; // 회원번호
+	@NotNull
+	@NotEmpty
 	private String sendDeviceNo; // 디바이스 번호
+	@NotNull
+	@NotEmpty
 	private String recvMbrNo; // 회원번호
+	@NotNull
+	@NotEmpty
 	private String recvDeviceNo; // 디바이스 번호
+	@NotNull
+	@NotEmpty
 	private String prodId; // 상품 아이디
+	@NotNull
+	@NotEmpty
 	private String prchsId; // 구매ID
 
 	/**

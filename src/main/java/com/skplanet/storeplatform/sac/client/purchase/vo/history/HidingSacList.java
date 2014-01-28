@@ -2,6 +2,10 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -13,8 +17,14 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class HidingSacList extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
+	@NotEmpty
 	private String prchsId; // 구매아이디
+	@NotNull
+	@NotEmpty
 	private Integer prchsDtlId; // 상품 아이디
+	@NotNull
+	@NotEmpty
 	private String hidingYn; // 숨김여부
 
 	/**

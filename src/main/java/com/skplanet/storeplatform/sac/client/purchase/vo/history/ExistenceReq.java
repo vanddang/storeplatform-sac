@@ -12,8 +12,11 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -27,6 +30,8 @@ public class ExistenceReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	@NotNull
+	@NotEmpty
 	private String insdUsermbrNo; // 회원번호
 	private String insdDeviceId; // 디바이스 번호
 	private String prchsId; // 구매ID

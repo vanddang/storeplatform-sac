@@ -12,6 +12,10 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,8 +29,14 @@ public class HidingReq extends CommonInfo implements Serializable {
 
 	private String tenantId; // Tenant ID
 	private String systemId; // 시스템ID
+	@NotNull
+	@NotEmpty
 	private String insdUsermbrNo; // 회원번호
+	@NotNull
+	@NotEmpty
 	private String insdDeviceId; // 디바이스 번호
+	@NotNull
+	@NotEmpty
 	private List<HidingSacList> hidingSacList; // 구매내역 숨김 리스트
 
 	/**

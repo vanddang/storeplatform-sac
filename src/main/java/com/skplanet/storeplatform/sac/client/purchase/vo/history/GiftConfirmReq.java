@@ -11,6 +11,11 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -24,11 +29,24 @@ public class GiftConfirmReq extends CommonInfo implements Serializable {
 
 	private String tenantId; // Tenant ID
 	private String systemId; // 시스템ID
+	@NotNull
+	@NotEmpty
 	private String insdUsermbrNo; // 회원번호
+	@NotNull
+	@NotEmpty
 	private String insdDeviceId; // 디바이스 번호
+	@NotNull
+	@NotEmpty
 	private String prodId; // 상품 아이디
+	@NotNull
+	@NotEmpty
 	private String prchsId; // 구매ID
+	@NotNull
+	@NotEmpty
+	@Pattern(regexp = "(20[0-9]{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])([0-1][0-9]|2[0-3])([0-5][0-9]){2}")
 	private String recvDt; // 선물수신일시
+	@NotNull
+	@NotEmpty
 	private String recvConfPathCd; // 수신확인경로코드
 
 	/**

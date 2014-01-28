@@ -11,6 +11,10 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -19,16 +23,29 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 15. Updated by : 조용진, 엔텔스.
  */
+
 public class AutoPaymentCancelReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
 	private String systemId; // 시스템ID
+	@NotNull
+	@NotEmpty
 	private String insdUsermbrNo; // 회원번호
+	@NotNull
+	@NotEmpty
 	private String insdDeviceId; // 디바이스 번호
+	@NotNull
+	@NotEmpty
 	private String prchsId; // 구매ID
+	@NotNull
+	@NotEmpty
 	private String closedCd; // 해지예약코드
+	@NotNull
+	@NotEmpty
 	private String closedReasonCd; // 해지사유 코드
+	@NotNull
+	@NotEmpty
 	private String closedReqPathCd; // 해지요청경로 코드
 
 	/**
