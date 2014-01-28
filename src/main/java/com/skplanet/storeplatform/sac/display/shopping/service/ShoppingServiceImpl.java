@@ -236,7 +236,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Accrual acc = new Accrual();
 			Date date = new Date();
 			SalesOption saleoption = new SalesOption();
-
+			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Menu> menuList = new ArrayList<Menu>();
 			List<Source> sourceList = new ArrayList<Source>();
 			List<Product> productList = new ArrayList<Product>();
@@ -246,16 +246,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				identifier.setType("catalog");
 				identifier.setText("CT00010008");
-
+				identifierList.add(identifier);
 				// 메뉴 정보
+				menu.setType("topClass");
+				menu.setId("DP28");
+				menu.setName("쇼핑");
+				menuList.add(menu);
+				menu = new Menu();
 				menu.setType("menuId");
 				menu.setId("DP28009");
 				menu.setName("편의점/마트");
 				menuList.add(menu);
 
 				// 상품 정보 (상품명)
-				title.setText("추천/인기 카탈로그 상품");
-				title.setPrefix("Y");
+				title.setText("쇼핑 추천/인기 상품 리스트  카탈로그 상품");
 				// 상품 정보 (상품가격)
 
 				price.setFixedPrice(1000);
@@ -287,7 +291,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				saleoption.setType("delivery");
 
 				// 데이터 매핑
-				product.setIdentifier(identifier);
+				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setPrice(price);
@@ -299,7 +303,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setSalesOption(saleoption);
 
 				productList.add(i, product);
+
 				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
 				menu = new Menu();
 				menuList = new ArrayList<Menu>();
 				rights = new Rights();
@@ -385,8 +391,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
 					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(shopping.getMenuId());
-					menu.setName(shopping.getMenuName());
+					menu.setId(shopping.getUpMenuId());
+					menu.setName(shopping.getUpMenuName());
 					menuList.add(menu);
 
 					menu = new Menu();
@@ -491,7 +497,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Accrual acc = new Accrual();
 			Date date = new Date();
 			SalesOption saleoption = new SalesOption();
-
+			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Menu> menuList = new ArrayList<Menu>();
 			List<Source> sourceList = new ArrayList<Source>();
 			List<Product> productList = new ArrayList<Product>();
@@ -501,8 +507,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				identifier.setType("catalog");
 				identifier.setText("CT00010008");
-
+				identifierList.add(identifier);
 				// 메뉴 정보
+				menu.setType("topClass");
+				menu.setId("DP28");
+				menu.setName("쇼핑");
+				menuList.add(menu);
+				menu = new Menu();
 				menu.setType("menuId");
 				menu.setId("DP28009");
 				menu.setName("편의점/마트");
@@ -510,7 +521,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품명)
 				title.setText("신규 카탈로그 상품");
-				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
 				price.setFixedPrice(1000);
@@ -542,7 +552,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				saleoption.setType("delivery");
 
 				// 데이터 매핑
-				product.setIdentifier(identifier);
+				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setPrice(price);
@@ -554,7 +564,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setSalesOption(saleoption);
 
 				productList.add(i, product);
+
 				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
 				menu = new Menu();
 				menuList = new ArrayList<Menu>();
 				rights = new Rights();
@@ -753,7 +765,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			Accrual acc = new Accrual();
 			Date date = new Date();
 			SalesOption saleoption = new SalesOption();
-
+			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Menu> menuList = new ArrayList<Menu>();
 			List<Source> sourceList = new ArrayList<Source>();
 			List<Product> productList = new ArrayList<Product>();
@@ -763,8 +775,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품ID)
 				identifier.setType("catalog");
 				identifier.setText("CT00010008");
-
+				identifierList.add(identifier);
 				// 메뉴 정보
+				menu.setType("topClass");
+				menu.setId("DP28");
+				menu.setName("쇼핑");
+				menuList.add(menu);
+				menu = new Menu();
 				menu.setType("menuId");
 				menu.setId("DP28009");
 				menu.setName("편의점/마트");
@@ -772,7 +789,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품명)
 				title.setText("서브카테고리 카탈로그 상품");
-				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
 				price.setFixedPrice(1000);
@@ -804,7 +820,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				saleoption.setType("delivery");
 
 				// 데이터 매핑
-				product.setIdentifier(identifier);
+				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
 				product.setPrice(price);
@@ -816,7 +832,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 				product.setSalesOption(saleoption);
 
 				productList.add(i, product);
+
 				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
 				menu = new Menu();
 				menuList = new ArrayList<Menu>();
 				rights = new Rights();
