@@ -76,9 +76,10 @@ public class SacRequestHeaderWebArgumentResolver implements WebArgumentResolver 
 		DeviceHeader device = new DeviceHeader();
 		device.setDpi("320");
 		device.setModel("SHW-M110S");
+		device.setResolution("480*720");
 		device.setOsVersion("Android/4.0.4");
 		device.setPkgVersion("store.skplanet.com/0.1");
-		device.setResolution("480*720");
+		device.setSvcVersion("SAC_Client/4.3");
 		return device;
 	}
 

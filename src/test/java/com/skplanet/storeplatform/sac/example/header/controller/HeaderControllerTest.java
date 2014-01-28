@@ -52,7 +52,10 @@ public class HeaderControllerTest {
 		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("application/json;charset=UTF-8"))
-		.andExpect(jsonPath("$.model").exists());
+		.andExpect(jsonPath("$.model").exists())
+		.andExpect(jsonPath("$.osVersion").exists())
+		.andExpect(jsonPath("$.pkgVersion").exists())
+		.andExpect(jsonPath("$.svcVersion").exists());
 	}
 
 	@Test

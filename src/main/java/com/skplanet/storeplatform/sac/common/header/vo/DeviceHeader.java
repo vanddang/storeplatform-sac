@@ -26,6 +26,7 @@ public class DeviceHeader extends CommonInfo {
 	private String resolution;
 	private String osVersion;
 	private String pkgVersion;
+	private String svcVersion;
 
 	public DeviceHeader() {
 		super();
@@ -60,6 +61,12 @@ public class DeviceHeader extends CommonInfo {
 	}
 	public void setPkgVersion(String pkgVersion) {
 		this.pkgVersion = pkgVersion;
+	}
+	public String getSvcVersion() {
+		return this.svcVersion;
+	}
+	public void setSvcVersion(String svcVersion) {
+		this.svcVersion = svcVersion;
 	}
 
 }
