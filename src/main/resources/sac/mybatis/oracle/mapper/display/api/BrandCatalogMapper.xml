@@ -110,6 +110,7 @@
 	         CATALOG_ID
 	        ,ORG_CATALOG_ID
 	        ,BRAND_ID
+	        ,CHNL_CNT
 	        ,REG_ID
 	        ,REG_DT
 	        ,UPD_ID
@@ -119,6 +120,7 @@
              #{createCatalogId}
             ,#{catalogId}
             ,#{createBrandId}
+            ,0
             ,'admin'
             ,SYSDATE
             ,'admin'
