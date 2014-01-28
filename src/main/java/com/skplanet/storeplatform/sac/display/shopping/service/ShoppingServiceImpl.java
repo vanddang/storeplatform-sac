@@ -94,7 +94,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					Shopping.class);
 
 			if (resultList != null) {
-				Shopping ShoppingDto = new Shopping();
+				Shopping shopping = new Shopping();
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
@@ -116,7 +116,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				List<Product> productList = new ArrayList<Product>();
 
 				for (int i = 0; i < resultList.size(); i++) {
-					ShoppingDto = resultList.get(i);
+					shopping = resultList.get(i);
 
 					// 상품 정보 (상품ID)
 					product = new Product();
@@ -124,62 +124,62 @@ public class ShoppingServiceImpl implements ShoppingService {
 					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
-					identifier.setText(ShoppingDto.getCatagoryId());
+					identifier.setText(shopping.getCatagoryId());
 					identifierList.add(identifier);
 
 					// 메뉴 정보
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
 					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(ShoppingDto.getUpMenuId());
-					menu.setName(ShoppingDto.getUpMenuName());
+					menu.setId(shopping.getUpMenuId());
+					menu.setName(shopping.getUpMenuName());
 					menuList.add(menu);
 
 					menu = new Menu();
-					menu.setId(ShoppingDto.getMenuId());
-					menu.setName(ShoppingDto.getMenuName());
+					menu.setId(shopping.getMenuId());
+					menu.setName(shopping.getMenuName());
 					menuList.add(menu);
 
 					// 상품 정보 (상품명)
 					title = new Title();
-					title.setText(ShoppingDto.getCatagoryName());
+					title.setText(shopping.getCatagoryName());
 
 					// 상품 정보 (상품가격)
 					price = new Price();
-					price.setFixedPrice(ShoppingDto.getProdNetAmt());
-					price.setDiscountRate(ShoppingDto.getDcRate());
-					price.setText(ShoppingDto.getProdAmt());
+					price.setFixedPrice(shopping.getProdNetAmt());
+					price.setDiscountRate(shopping.getDcRate());
+					price.setText(shopping.getProdAmt());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-					source.setUrl(ShoppingDto.getFilePath() + ShoppingDto.getFileNm());
+					source.setUrl(shopping.getFilePath() + shopping.getFileNm());
 					sourceList.add(source);
 
 					// 다운로드 수
 					accrual = new Accrual();
-					accrual.setDownloadCount(ShoppingDto.getPrchsQty());
+					accrual.setDownloadCount(shopping.getPrchsQty());
 
 					// 이용권한 정보
 					rights = new Rights();
 					date = new Date();
 					date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
-					date.setText(ShoppingDto.getApplyStartDt() + "/" + ShoppingDto.getApplyEndDt());
-					rights.setGrade(ShoppingDto.getProdGrdCd());
+					date.setText(shopping.getApplyStartDt() + "/" + shopping.getApplyEndDt());
+					rights.setGrade(shopping.getProdGrdCd());
 					rights.setDate(date);
 
 					// contributor
 					contributor = new Contributor();
 					identifier1 = new Identifier();
 					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-					identifier1.setText(ShoppingDto.getBrandId());
-					contributor.setName(ShoppingDto.getBrandName());
+					identifier1.setText(shopping.getBrandId());
+					contributor.setName(shopping.getBrandName());
 					contributor.setIdentifier(identifier1);
 
 					// saleoption
 					saleoption = new SalesOption();
-					saleoption.setType(ShoppingDto.getProdCaseCd());
+					saleoption.setType(shopping.getProdCaseCd());
 
 					// 데이터 매핑
 					product.setIdentifierList(identifierList);
@@ -191,7 +191,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setRights(rights);
 					product.setContributor(contributor);
 					product.setSalesOption(saleoption);
-					totalCount = ShoppingDto.getTotalCount();
+					totalCount = shopping.getTotalCount();
 					productList.add(i, product);
 				}
 
@@ -216,12 +216,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// throw new Exception("systemId 는 필수 파라메터 입니다.");
 			}
 
-			// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// ShoppingDTO.class);
-			// List<ShoppingDTO> resultList = null;
+			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+			// shopping.class);
+			// List<shopping> resultList = null;
 
 			// if (resultList != null) {
-			// ShoppingDTO ShoppingDto = new ShoppingDTO();
+			// shopping shopping = new shopping();
 
 			// Response VO를 만들기위한 생성자
 			Identifier identifier = new Identifier();
@@ -242,7 +242,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < 1; i++) {
-				// ShoppingDto = resultList.get(i);
+				// shopping = resultList.get(i);
 				// 상품 정보 (상품ID)
 				identifier.setType("catalog");
 				identifier.setText("CT00010008");
@@ -349,7 +349,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req, Shopping.class);
 
 			if (resultList != null) {
-				Shopping ShoppingDto = new Shopping();
+				Shopping shopping = new Shopping();
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
@@ -371,70 +371,70 @@ public class ShoppingServiceImpl implements ShoppingService {
 				List<Product> productList = new ArrayList<Product>();
 
 				for (int i = 0; i < resultList.size(); i++) {
-					ShoppingDto = resultList.get(i);
+					shopping = resultList.get(i);
 
 					// 상품 정보 (상품ID)
 					product = new Product();
 					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
-					identifier.setText(ShoppingDto.getCatagoryId());
+					identifier.setText(shopping.getCatagoryId());
 					identifierList.add(identifier);
 
 					// 메뉴 정보
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
 					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(ShoppingDto.getMenuId());
-					menu.setName(ShoppingDto.getMenuName());
+					menu.setId(shopping.getMenuId());
+					menu.setName(shopping.getMenuName());
 					menuList.add(menu);
 
 					menu = new Menu();
-					menu.setId(ShoppingDto.getMenuId());
-					menu.setName(ShoppingDto.getMenuName());
+					menu.setId(shopping.getMenuId());
+					menu.setName(shopping.getMenuName());
 					menuList.add(menu);
 
 					// 상품 정보 (상품명)
 					title = new Title();
-					title.setText(ShoppingDto.getCatagoryName());
-					// title.setPrefix(ShoppingDto.getNewYn());
+					title.setText(shopping.getCatagoryName());
+					// title.setPrefix(shopping.getNewYn());
 
 					// 상품 정보 (상품가격)
 					price = new Price();
-					price.setFixedPrice(ShoppingDto.getProdNetAmt());
-					price.setDiscountRate(ShoppingDto.getDcRate());
-					price.setText(ShoppingDto.getProdAmt());
+					price.setFixedPrice(shopping.getProdNetAmt());
+					price.setDiscountRate(shopping.getDcRate());
+					price.setText(shopping.getProdAmt());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(ShoppingDto.getFilePath() + ShoppingDto.getFileNm());
+					source.setUrl(shopping.getFilePath() + shopping.getFileNm());
 					sourceList.add(source);
 
 					// 다운로드 수
 					accrual = new Accrual();
-					accrual.setDownloadCount(ShoppingDto.getPrchsQty());
+					accrual.setDownloadCount(shopping.getPrchsQty());
 
 					// 이용권한 정보
 					rights = new Rights();
 					date = new Date();
 					date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
-					date.setText(ShoppingDto.getApplyStartDt() + "/" + ShoppingDto.getApplyEndDt());
-					rights.setGrade(ShoppingDto.getProdGrdCd());
+					date.setText(shopping.getApplyStartDt() + "/" + shopping.getApplyEndDt());
+					rights.setGrade(shopping.getProdGrdCd());
 					rights.setDate(date);
 
 					// contributor
 					contributor = new Contributor();
 					identifier1 = new Identifier();
 					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-					identifier1.setText(ShoppingDto.getBrandId());
-					contributor.setName(ShoppingDto.getBrandName());
+					identifier1.setText(shopping.getBrandId());
+					contributor.setName(shopping.getBrandName());
 					contributor.setIdentifier(identifier1);
 
 					// saleoption
 					saleoption = new SalesOption();
-					saleoption.setType(ShoppingDto.getProdCaseCd());
+					saleoption.setType(shopping.getProdCaseCd());
 
 					// 데이터 매핑
 					product.setIdentifierList(identifierList);
@@ -446,7 +446,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setRights(rights);
 					product.setContributor(contributor);
 					product.setSalesOption(saleoption);
-					totalCount = ShoppingDto.getTotalCount();
+					totalCount = shopping.getTotalCount();
 					productList.add(i, product);
 				}
 
@@ -471,12 +471,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// throw new Exception("systemId 는 필수 파라메터 입니다.");
 			}
 
-			// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// ShoppingDTO.class);
-			// List<ShoppingDTO> resultList = null;
+			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+			// shopping.class);
+			// List<shopping> resultList = null;
 
 			// if (resultList != null) {
-			// ShoppingDTO ShoppingDto = new ShoppingDTO();
+			// shopping shopping = new shopping();
 
 			// Response VO를 만들기위한 생성자
 			Identifier identifier = new Identifier();
@@ -497,7 +497,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < 1; i++) {
-				// ShoppingDto = resultList.get(i);
+				// shopping = resultList.get(i);
 				// 상품 정보 (상품ID)
 				identifier.setType("catalog");
 				identifier.setText("CT00010008");
@@ -613,7 +613,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req, Shopping.class);
 
 			if (resultList != null) {
-				Shopping ShoppingDto = new Shopping();
+				Shopping shopping = new Shopping();
 
 				// Response VO를 만들기위한 생성자
 				Product product = null;
@@ -634,69 +634,69 @@ public class ShoppingServiceImpl implements ShoppingService {
 				List<Product> productList = new ArrayList<Product>();
 
 				for (int i = 0; i < resultList.size(); i++) {
-					ShoppingDto = resultList.get(i);
+					shopping = resultList.get(i);
 
 					// 상품 정보 (상품ID)
 					product = new Product();
 					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
-					identifier.setText(ShoppingDto.getCatagoryId());
+					identifier.setText(shopping.getCatagoryId());
 					identifierList.add(identifier);
 
 					// 메뉴 정보
 					menuList = new ArrayList<Menu>();
 					menu = new Menu();
 					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(ShoppingDto.getUpMenuId());
-					menu.setName(ShoppingDto.getUpMenuName());
+					menu.setId(shopping.getUpMenuId());
+					menu.setName(shopping.getUpMenuName());
 					menuList.add(menu);
 
 					menu = new Menu();
-					menu.setId(ShoppingDto.getMenuId());
-					menu.setName(ShoppingDto.getMenuName());
+					menu.setId(shopping.getMenuId());
+					menu.setName(shopping.getMenuName());
 					menuList.add(menu);
 
 					// 상품 정보 (상품명)
 					title = new Title();
-					title.setText(ShoppingDto.getCatagoryName());
+					title.setText(shopping.getCatagoryName());
 
 					// 상품 정보 (상품가격)
 					price = new Price();
-					price.setFixedPrice(ShoppingDto.getProdNetAmt());
-					price.setDiscountRate(ShoppingDto.getDcRate());
-					price.setText(ShoppingDto.getProdAmt());
+					price.setFixedPrice(shopping.getProdNetAmt());
+					price.setDiscountRate(shopping.getDcRate());
+					price.setText(shopping.getProdAmt());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(ShoppingDto.getFilePath() + ShoppingDto.getFileNm());
+					source.setUrl(shopping.getFilePath() + shopping.getFileNm());
 					sourceList.add(source);
 
 					// 다운로드 수
 					accrual = new Accrual();
-					accrual.setDownloadCount(ShoppingDto.getPrchsQty());
+					accrual.setDownloadCount(shopping.getPrchsQty());
 
 					// 이용권한 정보
 					rights = new Rights();
 					date = new Date();
 					date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
-					date.setText(ShoppingDto.getApplyStartDt() + "/" + ShoppingDto.getApplyEndDt());
-					rights.setGrade(ShoppingDto.getProdGrdCd());
+					date.setText(shopping.getApplyStartDt() + "/" + shopping.getApplyEndDt());
+					rights.setGrade(shopping.getProdGrdCd());
 					rights.setDate(date);
 
 					// contributor
 					contributor = new Contributor();
 					identifier1 = new Identifier();
 					identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
-					identifier1.setText(ShoppingDto.getBrandId());
-					contributor.setName(ShoppingDto.getBrandName());
+					identifier1.setText(shopping.getBrandId());
+					contributor.setName(shopping.getBrandName());
 					contributor.setIdentifier(identifier1);
 
 					// saleoption
 					saleoption = new SalesOption();
-					saleoption.setType(ShoppingDto.getProdCaseCd());
+					saleoption.setType(shopping.getProdCaseCd());
 
 					// 데이터 매핑
 					product.setIdentifierList(identifierList);
@@ -708,7 +708,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setRights(rights);
 					product.setContributor(contributor);
 					product.setSalesOption(saleoption);
-					totalCount = ShoppingDto.getTotalCount();
+					totalCount = shopping.getTotalCount();
 					productList.add(i, product);
 				}
 
@@ -733,12 +733,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// throw new Exception("systemId 는 필수 파라메터 입니다.");
 			}
 
-			// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-			// ShoppingDTO.class);
-			// List<ShoppingDTO> resultList = null;
+			// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+			// shopping.class);
+			// List<shopping> resultList = null;
 
 			// if (resultList != null) {
-			// ShoppingDTO ShoppingDto = new ShoppingDTO();
+			// shopping shopping = new shopping();
 
 			// Response VO를 만들기위한 생성자
 			Identifier identifier = new Identifier();
@@ -759,7 +759,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < 1; i++) {
-				// ShoppingDto = resultList.get(i);
+				// shopping = resultList.get(i);
 				// 상품 정보 (상품ID)
 				identifier.setType("catalog");
 				identifier.setText("CT00010008");
@@ -868,12 +868,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -894,7 +894,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -988,12 +988,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1014,7 +1014,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1108,12 +1108,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1134,7 +1134,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1228,12 +1228,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1254,7 +1254,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1348,12 +1348,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1374,7 +1374,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1468,12 +1468,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1494,7 +1494,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1588,12 +1588,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1614,7 +1614,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1708,12 +1708,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1734,7 +1734,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
@@ -1828,12 +1828,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		// List<ShoppingDTO> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// ShoppingDTO.class);
-		// List<ShoppingDTO> resultList = null;
+		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
+		// shopping.class);
+		// List<shopping> resultList = null;
 
 		// if (resultList != null) {
-		// ShoppingDTO ShoppingDto = new ShoppingDTO();
+		// shopping shopping = new shopping();
 
 		// Response VO를 만들기위한 생성자
 		Identifier identifier = new Identifier();
@@ -1854,7 +1854,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Product> productList = new ArrayList<Product>();
 
 		for (int i = 0; i < 1; i++) {
-			// ShoppingDto = resultList.get(i);
+			// shopping = resultList.get(i);
 			// 상품 정보 (상품ID)
 			identifier.setType("product");
 			identifier.setText("S900000960");
