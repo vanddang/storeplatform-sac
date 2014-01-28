@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -25,21 +26,20 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 public class Preview extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Source source;
+	private List<Source> source;
 
 	/**
-	 * @return Source
+	 * @return the source
 	 */
-	public Source getSource() {
+	public List<Source> getSource() {
 		return this.source;
 	}
 
 	/**
 	 * @param source
-	 *            source
+	 *            the source to set
 	 */
-	public void setSource(Source source) {
+	public void setSource(List<Source> source) {
 		this.source = source;
 	}
-
 }
