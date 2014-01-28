@@ -50,57 +50,56 @@ public interface CouponItemService {
 	 * TB_DP_PROD 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpProdInfo(List<TbDpProdInfo> tblDpProdList, String cudType);
+	public void insertTbDpProdInfo(List<TbDpProdInfo> tblDpProdList);
 
 	/**
 	 * <pre>
 	 * TB_DP_SHPG_PROD 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpShpgProdInfo(List<TbDpShpgProdInfo> tbDpShpgProdList, String cudType);
+	public void insertTbDpShpgProdInfo(List<TbDpShpgProdInfo> tbDpShpgProdList);
 
 	/**
 	 * <pre>
 	 * TB_DP_PROD_DESC 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpProdDescInfo(List<TbDpProdDescInfo> tbDpProdDescList, String cudType);
+	public void insertTbDpProdDescInfo(List<TbDpProdDescInfo> tbDpProdDescList);
 
 	/**
 	 * <pre>
 	 * TB_DP_PROD_RSHP 테이블 입력및 수정한다.TB_DP_PROD_RSHP
 	 * </pre>
 	 */
-	public void insertTbDpProdRshpInfo(List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType);
+	public void insertTbDpProdRshpInfo(List<TbDpProdRshpInfo> tbDpProdRshpList);
 
 	/**
 	 * <pre>
 	 * TB_DP_TENANT_PROD 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList, String cudType);
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList);
 
 	/**
 	 * <pre>
 	 * TB_DP_TENANT_PROD_PRICE 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList, String cudType);
+	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList);
 
 	/**
 	 * <pre>
 	 * TB_DP_PROD_CATALOG_MAPG 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType,
-			String prodId);
+	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String prodId);
 
 	/**
 	 * <pre>
 	 * TB_DP_PROD_OPT 테이블 입력및 수정한다.
 	 * </pre>
 	 */
-	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList, String cudType);
+	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList);
 
 	/**
 	 * <pre>

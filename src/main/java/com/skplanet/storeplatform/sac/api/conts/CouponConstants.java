@@ -173,7 +173,7 @@ public class CouponConstants {
 	public static final String USE_PERIOD_UNIT_SELECT = "PD00319"; // 기간선택
 
 	public static final String CATEGORY_ID_CUPON_SERIES_CONTENT = "CT28"; // 쇼핑쿠폰 부모 카테고리ID
-	public static final String TOP_MENU_ID_CUPON_CONTENT = "CT28"; // 상위 메뉴 ID
+	public static final String TOP_MENU_ID_CUPON_CONTENT = "DP28"; // 상위 메뉴 ID
 	public static final String UPDATE_TYPE_CD_DESC = "D";
 
 	public static final String LANG_CD_KO = "ko"; // ko 한글 코드값

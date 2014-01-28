@@ -538,10 +538,10 @@ public class ShoppingCouponSacController {
 
 		int kk = 0;
 		for (DpItemInfo itemInfo : itemInfoList) {
-			if ("C".equalsIgnoreCase(couponReq.getCudType())) {
+			if ("C".equalsIgnoreCase(itemInfo.getCudType())) {
 				itemProdId = this.couponItemService.itemGenerateId(); // 아이템 prodId 생성
 				itemInfo.setProdId("S90000" + (Long.parseLong(itemProdId) + kk)); // 아이템 prodId 생성
-			} else if ("U".equalsIgnoreCase(couponReq.getCudType())) {
+			} else if ("U".equalsIgnoreCase(itemInfo.getCudType())) {
 				itemProdId = this.couponItemService.getGenerateId(itemInfo.getItemCode()); // 기존 아이템 ID 가져오기
 				itemInfo.setProdId(itemProdId);
 			}

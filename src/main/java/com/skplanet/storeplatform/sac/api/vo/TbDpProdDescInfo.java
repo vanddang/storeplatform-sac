@@ -15,13 +15,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <pre>
  * 전처리 상품상태 정보 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
-public class TbDpProdDescInfo extends CommonInfo{
+public class TbDpProdDescInfo extends CommonInfo {
 	private String prodId; //
 	private String langCd; //
 	private String prodNm; //
@@ -40,6 +37,7 @@ public class TbDpProdDescInfo extends CommonInfo{
 	private String regDt; //
 	private String updId; //
 	private String updDt; //
+	private String cudType; // CUD
 
 	public String getProdId() {
 		return this.prodId;
@@ -183,6 +181,14 @@ public class TbDpProdDescInfo extends CommonInfo{
 
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
+	}
+
+	public String getCudType() {
+		return this.cudType;
+	}
+
+	public void setCudType(String cudType) {
+		this.cudType = cudType;
 	}
 
 }

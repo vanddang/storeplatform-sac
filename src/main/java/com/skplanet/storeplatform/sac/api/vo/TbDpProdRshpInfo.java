@@ -15,11 +15,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <pre>
  * 전처리 상품 관계 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class TbDpProdRshpInfo extends CommonInfo {
 	private String prodId; //
@@ -27,6 +24,7 @@ public class TbDpProdRshpInfo extends CommonInfo {
 	private String prodRshpCd; //
 	private String regId; //
 	private String regDt; //
+	private String cudType; // CUD
 
 	public String getProdId() {
 		return this.prodId;
@@ -66,6 +64,14 @@ public class TbDpProdRshpInfo extends CommonInfo {
 
 	public void setRegDt(String regDt) {
 		this.regDt = regDt;
+	}
+
+	public String getCudType() {
+		return this.cudType;
+	}
+
+	public void setCudType(String cudType) {
+		this.cudType = cudType;
 	}
 
 }

@@ -228,6 +228,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dp.setTopMenuId(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 상위 메뉴 아이디
 			dp.setRegId(couponInfo.getBpId());
 			dp.setUpdId(couponInfo.getBpId());
+			dp.setCudType(cudType);
 			tblDpProdList.add(dp);
 			IcmsJobPrint.printTblDpProd(dp, "TBL_DP_PROD - COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
@@ -263,14 +264,14 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dp.setTopMenuId(CouponConstants.TOP_MENU_ID_CUPON_CONTENT); // 상위 메뉴 아이디
 				dp.setRegId(couponInfo.getBpId());
 				dp.setUpdId(couponInfo.getBpId());
-
+				dp.setCudType(itemInfo.getCudType());
 				tblDpProdList.add(dp);
 				IcmsJobPrint.printTblDpProd(dp, "TBL_DP_PROD - ITEM::" + i);
 			}
 			// ////////////////// Item 정보 E////////////////////////////
 
 			// 저장
-			this.couponItemService.insertTbDpProdInfo(tblDpProdList, cudType);
+			this.couponItemService.insertTbDpProdInfo(tblDpProdList);
 
 			// // Phone 목록저장
 			// PhoneService phService = new PhoneService();
@@ -335,6 +336,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dsp.setSrcContentId(couponInfo.getCouponCode());
 			dsp.setRegId(couponInfo.getBpId());
 			dsp.setUpdId(couponInfo.getBpId());
+			dsp.setCudType(cudType);
 			tbDpShpgProdList.add(dsp);
 			IcmsJobPrint.printTbDpShpgProd(dsp, "TB_DP_SHPG_PROD - COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
@@ -387,12 +389,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dsp.setSrcContentId(itemInfo.getItemCode());
 				dsp.setRegId(couponInfo.getBpId());
 				dsp.setUpdId(couponInfo.getBpId());
+				dsp.setCudType(itemInfo.getCudType());
 				tbDpShpgProdList.add(dsp);
 				IcmsJobPrint.printTbDpShpgProd(dsp, "TB_DP_SHPG_PROD - ITEM::" + i);
 			}
 
 			// 저장
-			this.couponItemService.insertTbDpShpgProdInfo(tbDpShpgProdList, cudType);
+			this.couponItemService.insertTbDpShpgProdInfo(tbDpShpgProdList);
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_SHPG_PROD VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -423,6 +426,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dpd.setProdUseMtd("");
 			dpd.setRegId(couponInfo.getBpId());
 			dpd.setUpdId(couponInfo.getBpId());
+			dpd.setCudType(cudType);
 			tbDpProdDescList.add(dpd);
 			IcmsJobPrint.printTbDpProdDesc(dpd, "TB_DP_PROD_DESC- COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
@@ -440,12 +444,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dpd.setProdUseMtd("");
 				dpd.setRegId(couponInfo.getBpId());
 				dpd.setUpdId(couponInfo.getBpId());
+				dpd.setCudType(itemInfo.getCudType());
 				tbDpProdDescList.add(dpd);
 				IcmsJobPrint.printTbDpProdDesc(dpd, "TB_DP_PROD_DESC- ITEM:::" + i);
 			}
 
 			// 저장
-			this.couponItemService.insertTbDpProdDescInfo(tbDpProdDescList, cudType);
+			this.couponItemService.insertTbDpProdDescInfo(tbDpProdDescList);
 
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_DESC VO 셋팅 실패", null);
@@ -475,11 +480,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dps.setPartProdId(itemInfo.getProdId()); // 에피소드 상품
 				dps.setProdRshpCd(CouponConstants.PROD_RSHP_CD); // 채널-에피소드 상품 관계
 				dps.setRegId(couponInfo.getBpId());
+				dps.setCudType(itemInfo.getCudType());
 				tbDpProdRshpList.add(dps);
 				IcmsJobPrint.printTbDpProdRshp(dps, "TB_DP_PROD_RSHP- ITEM:::" + i);
 			}
 			// 저장
-			this.couponItemService.insertTbDpProdRshpInfo(tbDpProdRshpList, cudType);
+			this.couponItemService.insertTbDpProdRshpInfo(tbDpProdRshpList);
 
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_RSHP VO 셋팅 실패", null);
@@ -509,6 +515,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dtpd.setExpoOrd(1);
 			dtpd.setRegId(couponInfo.getBpId());
 			dtpd.setUpdId(couponInfo.getBpId());
+			dtpd.setCudType(cudType);
 			tbDpTenantProdList.add(dtpd);
 			IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
@@ -524,11 +531,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dtpd.setExpoOrd(i + 1);
 				dtpd.setRegId(couponInfo.getBpId());
 				dtpd.setUpdId(couponInfo.getBpId());
+				dtpd.setCudType(itemInfo.getCudType());
 				tbDpTenantProdList.add(dtpd);
 				IcmsJobPrint.printTbTenantDpProd(dtpd, "TB_DP_TENANT_PROD - ITEM:::" + i);
 			}
 			// 저장
-			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList, cudType);
+			this.couponItemService.insertTbDpTenantProdInfo(tbDpTenantProdList);
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD VO 셋팅 실패", null);
 		} catch (Exception e) {
@@ -565,6 +573,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dtpp.setTaxClsf(""); // 세금_구분
 			dtpp.setRegId(couponInfo.getBpId());
 			dtpp.setUpdId(couponInfo.getBpId());
+			dtpp.setCudType(cudType);
 			tbDpTenantProdPriceList.add(dtpp);
 			IcmsJobPrint.printTbTenantDpProdPrice(dtpp, "TB_DP_TENANT_PROD_PRICE - COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
@@ -591,11 +600,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				dtpp.setTaxClsf(""); // 세금_구분
 				dtpp.setRegId(couponInfo.getBpId());
 				dtpp.setUpdId(couponInfo.getBpId());
+				dtpp.setCudType(itemInfo.getCudType());
 				tbDpTenantProdPriceList.add(dtpp);
 				IcmsJobPrint.printTbTenantDpProdPrice(dtpp, "TB_DP_TENANT_PROD_PRICE- ITEM:::" + i);
 			}
 			// 저장
-			this.couponItemService.insertTbDpTenantProdPriceInfo(tbDpTenantProdPriceList, cudType);
+			this.couponItemService.insertTbDpTenantProdPriceInfo(tbDpTenantProdPriceList);
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_TENANT_PROD_PRICE VO 셋팅 실패",
 					null);
@@ -626,12 +636,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			dpcm.setUseYn("Y");
 			dpcm.setRegId(couponInfo.getBpId());
 			dpcm.setUpdId(couponInfo.getBpId());
+			dpcm.setCudType(cudType);
 			tbDpProdCatalogMapgList.add(dpcm);
 			IcmsJobPrint.TbDpProdCatalogMapg(dpcm, "TB_DP_PROD_CATALOG_MAPG- COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
 
-			this.couponItemService.insertTbDpProdCatalogMapgInfo(tbDpProdCatalogMapgList, cudType,
-					couponInfo.getProdId());
+			this.couponItemService.insertTbDpProdCatalogMapgInfo(tbDpProdCatalogMapgList, couponInfo.getProdId());
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_CATALOG_MAPG VO 셋팅 실패",
 					null);
@@ -727,7 +737,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				}
 			}
 			// 저장
-			this.couponItemService.insertTbDpProdOptInfo(tbDpProdOptList, cudType);
+			this.couponItemService.insertTbDpProdOptInfo(tbDpProdOptList);
 
 		} catch (CouponException e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_PROD_OPT VO 셋팅 실패", null);
@@ -809,6 +819,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
 
 		}
+		// this.compNm = "GTSOFT";
+		// this.mbrNo = "IF1023541432620111207152255";
 		return true;
 	}// End validateBusinessPartner
 

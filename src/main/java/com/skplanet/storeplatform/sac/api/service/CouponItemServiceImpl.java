@@ -88,10 +88,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpProdInfo(List<TbDpProdInfo> tblDpProdList, String cudType) {
+	public void insertTbDpProdInfo(List<TbDpProdInfo> tblDpProdList) {
 		try {
 			for (TbDpProdInfo vo : tblDpProdList) {
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdInfo", vo);
@@ -110,11 +110,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpShpgProdInfo(List<TbDpShpgProdInfo> tbDpShpgProdList, String cudType) {
+	public void insertTbDpShpgProdInfo(List<TbDpShpgProdInfo> tbDpShpgProdList) {
 		try {
 			for (TbDpShpgProdInfo vo : tbDpShpgProdList) {
 
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpShpgProdInfo", vo);
@@ -133,11 +133,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpProdDescInfo(List<TbDpProdDescInfo> tbDpProdDescList, String cudType) {
+	public void insertTbDpProdDescInfo(List<TbDpProdDescInfo> tbDpProdDescList) {
 		try {
 			for (TbDpProdDescInfo vo : tbDpProdDescList) {
 
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdDescInfo", vo);
@@ -156,11 +156,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpProdRshpInfo(List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType) {
+	public void insertTbDpProdRshpInfo(List<TbDpProdRshpInfo> tbDpProdRshpList) {
 		try {
 			for (TbDpProdRshpInfo vo : tbDpProdRshpList) {
 
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
 				}
 			}
@@ -177,11 +177,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList, String cudType) {
+	public void insertTbDpTenantProdInfo(List<TbDpTenantProdInfo> tbDpTenantProdList) {
 		try {
 			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
 
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdInfo", vo);
@@ -200,11 +200,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList, String cudType) {
+	public void insertTbDpTenantProdPriceInfo(List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList) {
 		try {
 			for (TbDpTenantProdPriceInfo vo : tbDpTenantProdPriceList) {
 
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdPriceInfo", vo);
@@ -223,12 +223,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String cudType,
-			String prodId) {
+	public void insertTbDpProdCatalogMapgInfo(List<TbDpProdCatalogMapgInfo> tbDpProdCatalogMapg, String prodId) {
 		try {
 			for (TbDpProdCatalogMapgInfo vo : tbDpProdCatalogMapg) {
 
-				if ("C".equalsIgnoreCase(cudType)) {
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
 					this.commonDAO.insert("Coupon.insertTbDpProdCatalogMapgInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
@@ -248,7 +247,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 */
 
 	@Override
-	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList, String cudType) {
+	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList) {
 		try {
 			String prodId = "";
 			for (TbDpProdOpt vo : tbDpProdOptList) {

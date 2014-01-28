@@ -15,13 +15,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <pre>
  * 전처리 쇼핑 상품 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
-public class TbDpShpgProdInfo extends CommonInfo{
+public class TbDpShpgProdInfo extends CommonInfo {
 	private String prodId; // 상품_ID
 	private long epsdCnt; // 에피소드_수
 	private String chnlCompNm; // 채널_회사_명
@@ -47,6 +44,7 @@ public class TbDpShpgProdInfo extends CommonInfo{
 	private String regDt; // 등록_일시
 	private String updId; // 수정_ID
 	private String updDt; // 수정_일시
+	private String cudType; // CUD
 
 	public String getProdId() {
 		return this.prodId;
@@ -246,6 +244,14 @@ public class TbDpShpgProdInfo extends CommonInfo{
 
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
+	}
+
+	public String getCudType() {
+		return this.cudType;
+	}
+
+	public void setCudType(String cudType) {
+		this.cudType = cudType;
 	}
 
 }
