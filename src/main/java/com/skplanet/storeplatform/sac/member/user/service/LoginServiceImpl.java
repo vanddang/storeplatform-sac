@@ -252,12 +252,12 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 회원 상태 확인 */
 		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
-			throw new StorePlatformException("회원정보 없음.");
-		} else {
 			/* 서비스 이용동의 간편 가입 대상 확인 */
 			if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
 				res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
 				return res;
+			} else {
+				throw new StorePlatformException("회원정보 없음.");
 			}
 		}
 
