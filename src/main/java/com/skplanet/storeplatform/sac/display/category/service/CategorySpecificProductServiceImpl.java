@@ -103,8 +103,6 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 				paramMap.put("tenantHeader", header.getTenantHeader());
 				paramMap.put("deviceHeader", header.getDeviceHeader());
 				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				// TODO osm1021 더미 데이터 꼭 삭제할것
-				paramMap.put("imageCd", "DP006206");
 				paramMap.put("lang", "ko");
 
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
@@ -124,9 +122,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
+						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 						this.log.debug("##### Search for app specific product");
-						// TODO osm1021 더미 데이터 꼭 삭제할것
-						paramMap.put("imageCd", "DP000101");
 						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getAppMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
@@ -136,8 +133,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 					} else if (DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 멀티미디어 타입일 경우
 						// 영화/방송 상품의 경우
-						// TODO osm1021 더미 데이터 꼭 삭제할것
-						paramMap.put("imageCd", "DP000101");
+						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
 							this.log.debug("##### Search for Vod specific product");
@@ -154,8 +150,8 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 							}
 						} else if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
-							// TODO osm1021 더미 데이터 꼭 삭제할것
-							paramMap.put("imageCd", "DP000108");
+
+							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 							this.log.debug("##### Search for EbookComic specific product");
 							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getEbookComicMetaInfo",
 									paramMap, MetaInfo.class);
@@ -175,9 +171,10 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 									"MELON_DP004901");
 							// paramMap.put("stdDt", stdDt);
 							productBasicInfo.setMenuId("DP004901");
+							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+
 							// TODO osm1021 dummy data 꼭 삭제할것
 							paramMap.put("stdDt", "20110806");
-							paramMap.put("imageCd", "DP000102");
 
 							this.log.debug("##### Search for Music specific product");
 							metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getMusicMetaInfo",
@@ -189,8 +186,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 						}
 					} else if (DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD.equals(svcGrpCd)) { // 쇼핑 상품의 경우
 						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
-						// TODO osm1021 더미 데이터 꼭 삭제할것
-						paramMap.put("imageCd", "DP0001B4");
+						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 						this.log.debug("##### Search for Shopping specific product");
 						metaInfo = this.commonDAO.queryForObject("CategorySpecificProduct.getShoppingMetaInfo",
