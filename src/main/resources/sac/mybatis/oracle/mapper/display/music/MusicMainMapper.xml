@@ -5,7 +5,7 @@
     <!-- Music Main -->
     <select id="getMusicMainList" parameterType="MusicContentsRequest" resultType="MusicContentsDTO">
         SELECT /* MusicMainMapper.xml, getMusicMainList, JuYoungYun, 2014-01-16 */
-               COUNT(*) OVER () AS TOTAL_COUNT
+               P.TOTAL_COUNT
              , P.TOP_MENU_ID
              , (SELECT MENU_NM 
                   FROM TB_DP_MENU_CATEGORY_DESC
@@ -50,6 +50,7 @@
                   (
                   SELECT A.*
                        , ROWNUM AS RNUM
+                       , COUNT(*) OVER () AS TOTAL_COUNT
                     FROM
                        (
                        SELECT MCI.RANK_CHG_CNT
