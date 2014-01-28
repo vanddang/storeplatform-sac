@@ -31,10 +31,13 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
@@ -221,7 +224,11 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			Rights rights = null;
 			Title title = null;
 			Source source = null;
+			Source source1 = null;
 			Price price = null;
+			Chapter chapter = null;
+			Vod vod = null;
+			Preview preview = null;
 			Product product = null;
 
 			List<Menu> menuList = null;
@@ -302,7 +309,26 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				source.setMediaType(DisplayCommonUtil.getMimeType(vodDto.getImgPath()));
 				source.setUrl(vodDto.getImgPath());
 				sourceList.add(source);
+
+				// 미리보기 url
+				source1 = new Source();
+				source1.setType("preview");
+				source1.setUrl(vodDto.getSamplUrl());
+				sourceList.add(source1);
 				product.setSourceList(sourceList);
+
+				// 회차 정보
+				if (!StringUtils.isEmpty(vodDto.getChapter())) {
+					chapter = new Chapter();
+					vod = new Vod();
+					chapter.setUnit("회");
+					chapter.setText(Integer.parseInt(vodDto.getChapter()));
+					vod.setChapter(chapter);
+					product.setVod(vod);
+				}
+
+				// 상품 유무료 여부
+				product.setProdChrgYn(vodDto.getProdChrgYn());
 
 				// 상품 정보 (상품설명)
 				product.setProductExplain(vodDto.getProdBaseDesc());
