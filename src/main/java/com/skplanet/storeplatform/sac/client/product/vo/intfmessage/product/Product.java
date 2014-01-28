@@ -192,6 +192,11 @@ public class Product extends CommonInfo implements Serializable {
 	private List<Date> dateList;
 
 	/**
+	 * 상품 유/무료 여부.
+	 */
+	private String prodChrgYn;
+
+	/**
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier() {
@@ -775,6 +780,14 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setDateList(List<Date> dateList) {
 		this.dateList = dateList;
+	}
+
+	public String getProdChrgYn() {
+		return this.prodChrgYn;
+	}
+
+	public void setProdChrgYn(String prodChrgYn) {
+		this.prodChrgYn = prodChrgYn;
 	}
 
 }
