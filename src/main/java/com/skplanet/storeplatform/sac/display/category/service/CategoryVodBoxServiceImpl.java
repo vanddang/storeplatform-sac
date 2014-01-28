@@ -108,6 +108,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 			Menu menu = new Menu();
 			Rights rights = new Rights();
 			Preview preview = new Preview();
+			List<Source> sourceList = new ArrayList<Source>();
 			Source source = new Source();
 			Store store = new Store();
 			Price price = new Price();
@@ -149,8 +150,8 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 			source.setMediaType("video/mp4");
 			source.setType("video/x-freeview-lq");
 			source.setUrl("http://../preview.mp4");
-
-			preview.setSource(source);
+			sourceList.add(source);
+			preview.setSource(sourceList);
 
 			rights.setPreview(preview);
 
