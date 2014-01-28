@@ -151,7 +151,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 			source.setType("video/x-freeview-lq");
 			source.setUrl("http://../preview.mp4");
 			sourceList.add(source);
-			preview.setSource(sourceList);
+			preview.setSourceList(sourceList);
 
 			rights.setPreview(preview);
 
