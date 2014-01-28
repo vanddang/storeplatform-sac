@@ -50,6 +50,9 @@ public class Shopping extends CommonInfo {
 	private String applyEndDt;
 	private String prodCaseCd;
 
+	private String filePath;
+	private String fileNm;
+
 	public String getUpMenuId() {
 		return this.upMenuId;
 	}
@@ -272,6 +275,22 @@ public class Shopping extends CommonInfo {
 
 	public void setProdCaseCd(String prodCaseCd) {
 		this.prodCaseCd = prodCaseCd;
+	}
+
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFileNm() {
+		return this.fileNm;
+	}
+
+	public void setFileNm(String fileNm) {
+		this.fileNm = fileNm;
 	}
 
 }

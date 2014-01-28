@@ -154,7 +154,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-					source.setUrl("inst_thumbnail_20111216154840.jpg");
+					source.setUrl(ShoppingDto.getFilePath() + ShoppingDto.getFileNm());
 					sourceList.add(source);
 
 					// 다운로드 수
@@ -409,7 +409,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl("inst_thumbnail_20111216154840.jpg");
+					source.setUrl(ShoppingDto.getFilePath() + ShoppingDto.getFileNm());
 					sourceList.add(source);
 
 					// 다운로드 수
@@ -671,7 +671,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl("inst_thumbnail_20111216154840.jpg");
+					source.setUrl(ShoppingDto.getFilePath() + ShoppingDto.getFileNm());
 					sourceList.add(source);
 
 					// 다운로드 수
