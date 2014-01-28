@@ -39,7 +39,6 @@ public class MetaInfo {
 	private String expoSellerNm;
 	private String expoSellerTelNo;
 	private String subContentsId;
-	private String imgPath;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -77,6 +76,8 @@ public class MetaInfo {
 	private String playProdStatusCd;
 	private String usePeriodUnitCd;
 	private String usePeriod;
+	private String ebookFilePath;
+	private Integer ebookFileSize;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
@@ -550,21 +551,6 @@ public class MetaInfo {
 	 */
 	public void setSubContentsId(String subContentsId) {
 		this.subContentsId = subContentsId;
-	}
-
-	/**
-	 * @return the imgPath
-	 */
-	public String getImgPath() {
-		return this.imgPath;
-	}
-
-	/**
-	 * @param imgPath
-	 *            the imgPath to set
-	 */
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
 	}
 
 	/**
@@ -1060,6 +1046,36 @@ public class MetaInfo {
 	 */
 	public void setUsePeriod(String usePeriod) {
 		this.usePeriod = usePeriod;
+	}
+
+	/**
+	 * @return the ebookFilePath
+	 */
+	public String getEbookFilePath() {
+		return this.ebookFilePath;
+	}
+
+	/**
+	 * @param ebookFilePath
+	 *            the ebookFilePath to set
+	 */
+	public void setEbookFilePath(String ebookFilePath) {
+		this.ebookFilePath = ebookFilePath;
+	}
+
+	/**
+	 * @return the ebookFileSize
+	 */
+	public Integer getEbookFileSize() {
+		return this.ebookFileSize;
+	}
+
+	/**
+	 * @param ebookFileSize
+	 *            the ebookFileSize to set
+	 */
+	public void setEbookFileSize(Integer ebookFileSize) {
+		this.ebookFileSize = ebookFileSize;
 	}
 
 	/**
