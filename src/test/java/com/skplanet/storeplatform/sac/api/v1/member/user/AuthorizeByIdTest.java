@@ -87,8 +87,8 @@ public class AuthorizeByIdTest {
 						@Override
 						public Object requestBody() {
 							AuthorizeByIdReq req = new AuthorizeByIdReq();
-							req.setDeviceId("01066786220");
-							req.setUserId("tlaeowlsuser1");
+							req.setDeviceId("01001232112");
+							req.setUserId("agreejoin003");
 							req.setUserPw("abcd1234");
 							req.setDeviceIdType("msisdn");
 							req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
@@ -140,8 +140,8 @@ public class AuthorizeByIdTest {
 		header.setTenantHeader(tenantHeader);
 
 		AuthorizeByIdReq req = new AuthorizeByIdReq();
-		req.setDeviceId("01066786220");
-		req.setUserId("tlaeowlsuser1");
+		req.setDeviceId("01001232112");
+		req.setUserId("agreejoin003");
 		req.setUserPw("abcd1234");
 		req.setDeviceIdType("msisdn");
 		req.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
