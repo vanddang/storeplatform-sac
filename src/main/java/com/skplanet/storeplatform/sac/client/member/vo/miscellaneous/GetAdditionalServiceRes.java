@@ -18,10 +18,17 @@ public class GetAdditionalServiceRes extends AdditionalServicInfo {
 	 */
 	private String svcJoinResult;
 
+	/**
+	 * @return the svcJoinResult
+	 */
 	public String getSvcJoinResult() {
 		return this.svcJoinResult;
 	}
 
+	/**
+	 * @param svcJoinResult
+	 *            the svcJoinResult to set
+	 */
 	public void setSvcJoinResult(String svcJoinResult) {
 		this.svcJoinResult = svcJoinResult;
 	}
