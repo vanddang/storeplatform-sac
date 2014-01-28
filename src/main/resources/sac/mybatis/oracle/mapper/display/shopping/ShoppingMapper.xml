@@ -21,6 +21,13 @@
                    ,BRAND_NM AS brandName
                    ,MENU_ID AS menuId
                    ,MENU_NM AS menuName
+                   ,TOP_MENU_ID as upMenuId
+                   ,(SELECT MENU_NM
+                        FROM TB_DP_MENU_CATEGORY_DESC
+                       WHERE MENU_ID = TOP_MENU_ID
+                         AND LANG_CD = 'ko'
+                         AND ROWNUM = 1
+                     ) AS upMenuName                         
                    ,NO AS no
                    ,NEW_YN AS newYn
                    ,REG_DT AS regDt
@@ -64,7 +71,8 @@
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
-                               ,I.PROD_CASE_CD                                                         
+                               ,I.PROD_CASE_CD      
+                               ,E.TOP_MENU_ID                                                                                      
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -183,6 +191,13 @@
                    ,BRAND_NM AS brandName
                    ,MENU_ID AS menuId
                    ,MENU_NM AS menuName
+                   ,TOP_MENU_ID as upMenuId
+                   ,(SELECT MENU_NM
+                        FROM TB_DP_MENU_CATEGORY_DESC
+                       WHERE MENU_ID = TOP_MENU_ID
+                         AND LANG_CD = 'ko'
+                         AND ROWNUM = 1
+                     ) AS upMenuName                        
                    ,NO AS no
                    ,NEW_YN AS newYn
                    ,REG_DT AS regDt
@@ -222,7 +237,8 @@
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
-                               ,I.PROD_CASE_CD                                                         
+                               ,I.PROD_CASE_CD  
+                               ,E.TOP_MENU_ID                                                         
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
@@ -324,6 +340,13 @@
                    ,BRAND_NM AS brandName
                    ,MENU_ID AS menuId
                    ,MENU_NM AS menuName
+                   ,TOP_MENU_ID as upMenuId
+                   ,(SELECT MENU_NM
+                        FROM TB_DP_MENU_CATEGORY_DESC
+                       WHERE MENU_ID = TOP_MENU_ID
+                         AND LANG_CD = 'ko'
+                         AND ROWNUM = 1
+                     ) AS upMenuName                    
                    ,NO AS no
                    ,NEW_YN AS newYn
                    ,REG_DT AS regDt
@@ -371,7 +394,8 @@
                                ,J.PROD_GRD_CD   
                                ,L.APPLY_START_DT     
                                ,L.APPLY_END_DT    
-                               ,I.PROD_CASE_CD                                                         
+                               ,I.PROD_CASE_CD         
+                               ,E.TOP_MENU_ID                                                                                    
                           FROM 
                                   TB_DP_SHPG_BRAND A
                                  ,TB_DP_SHPG_CATALOG B
