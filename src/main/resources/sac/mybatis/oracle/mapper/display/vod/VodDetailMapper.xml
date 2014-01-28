@@ -2,51 +2,124 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="VodDetail">
     
-    <select id="selectVodDetail" parameterType="VodDetailReq" resultType="VodDetail">
+    <select id="selectVodChannel" parameterType="VodDetailReq" resultType="VodDetail">
 		SELECT /* VodDetailMapper.xml, selectVodDetail, SAC : 임근대 , 2014-01-28 */
-		     G.TENANT_ID
-		     , A.MENU_ID
-		     , A.PROD_ID
-		     , B.UP_MENU_ID
-		     , B.TOP_MENU_ID
-		     , C.MENU_NM
-		     , C.MENU_DESC
-		     , D.PROD_GRD_CD
-		     , D.USE_PERIOD_UNIT_CD
-		     , D.META_CLSF_CD
-		     , D.CONTENTS_TYPE_CD
-		     , D.DRM_YN
-		     , E.VOD_TITL_NM
-		     , E.STRM_EPSD_CNT
-		     , E.ISSUE_DAY
-		     , E.CHNL_COMP_NM
-		     , E.AGENCY_NM
-		     , E.HDV_YN
-		     , E.DOLBY_SPRT_YN
-		     , F.PROD_NM
-		     , F.PROD_BASE_DESC
-		     , F.PROD_DTL_DESC
-		     , F.ARTIST1_NM
-		     , F.ARTIST2_NM
-		     , F.PROD_BASE_DESC
-		     , H.CHNL_PERIOD_AMT
-		     , H.CHNL_UNLMT_AMT
-		FROM 
-			TB_DP_MENU_CATEGORY_PROD_MAPG A, TB_DP_MENU_CATEGORY B, TB_DP_MENU_CATEGORY_DESC C
-		     , TB_DP_PROD D, TB_DP_MULTIMDA_PROD E, TB_DP_PROD_DESC F, TB_DP_TENANT_PROD G
-		     , TB_DP_TENANT_PROD_PRICE H
-		     , TB_DP_PROD_IMG I
-		WHERE 1=1
-		   AND D.PROD_ID = #{channelId}
-		   AND A.MENU_ID = B.MENU_ID AND A.MENU_ID = C.MENU_ID
-		   AND A.PROD_ID = D.PROD_ID AND D.PROD_ID = E.PROD_ID AND D.PROD_ID = F.PROD_ID AND D.PROD_ID = G.PROD_ID
-		   AND D.PROD_ID = H.PROD_ID
-		   AND A.BASE_YN = 'Y'
-		   AND B.USE_YN = 'Y'
-		   AND C.LANG_CD = #{langCd}
-		   AND G.TENANT_ID = #{tenantId}
-		   AND F.LANG_CD = #{langCd}
-		   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+			   T1.TENANT_ID
+		     , T1.MENU_ID
+		     , T1.PROD_ID
+		     , T1.UP_MENU_ID
+		     , T1.TOP_MENU_ID
+			 , T1TOP_MENU_NM                       
+		     , T1.MENU_NM
+		     , T1.MENU_DESC
+		     , T1.PROD_GRD_CD
+		     , T1.USE_PERIOD_UNIT_CD
+		     , T1.META_CLSF_CD
+		     , T1.CONTENTS_TYPE_CD
+		     , T1.DRM_YN
+		     , T1.CHNL_CLSF_CD
+		     , T1.VOD_TITL_NM
+		     , T1.STRM_EPSD_CNT
+		     , T1.ISSUE_DAY
+		     , T1.CHNL_COMP_NM
+		     , T1.AGENCY_NM
+		     , T1.HDV_YN
+		     , T1.DOLBY_SPRT_YN
+		     , T1.SVC_START_DT
+		     , T1.BRDC_COMP_CD
+		     , T1.BRDC_COMP_CD_NM
+		     , T1.GENRE_CD
+		     , T1.PLAY_TM
+		     , T1.PROD_NM
+		     , T1.PROD_BASE_DESC
+		     , T1.PROD_DTL_DESC
+		     , T1.PROD_INTR_DSCR
+		     , T1.ARTIST1_NM
+		     , T1.ARTIST2_NM
+		     , T1.PROD_BASE_DESC
+		     , T1.CHNL_PERIOD_AMT
+		     , T1.CHNL_UNLMT_AMT
+		     , T1.FILE_PATH AS IMG_PATH
+		     , T1.FILE_NM AS IMG_NM
+		     , T1.FILE_SIZE AS IMG_SIZE
+			 , NVL(T2.PATICPERS_CNT, 0) AS PATICPERS_CNT
+             , NVL(T2.PRCHS_CNT, 0) AS PRCHS_CNT
+             <![CDATA[             
+             , NVL((CASE WHEN (T2.AVG_EVLU_SCORE > 0 AND T2.AVG_EVLU_SCORE < 1) THEN 1
+                          WHEN T2.AVG_EVLU_SCORE > 5 THEN 5
+                          ELSE ROUND(T2.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+              ]]>
+		FROM (
+			SELECT
+			       G.TENANT_ID
+			     , A.MENU_ID
+			     , A.PROD_ID
+			     , B.UP_MENU_ID
+			     , B.TOP_MENU_ID
+				 , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.TOP_MENU_ID = MENU_ID AND LANG_CD =  C.LANG_CD) AS TOP_MENU_NM                       
+			     , C.MENU_NM
+			     , C.MENU_DESC
+			     , D.PROD_GRD_CD
+			     , D.USE_PERIOD_UNIT_CD
+			     , D.META_CLSF_CD
+			     , D.CONTENTS_TYPE_CD
+			     , D.DRM_YN
+			     , E.CHNL_CLSF_CD
+			     , E.VOD_TITL_NM
+			     , E.STRM_EPSD_CNT
+			     , E.ISSUE_DAY
+			     , E.CHNL_COMP_NM
+			     , E.AGENCY_NM
+			     , E.HDV_YN
+			     , E.DOLBY_SPRT_YN
+			     , E.SVC_START_DT
+			     , E.BRDC_COMP_CD /* 방송사 */
+			     , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = E.BRDC_COMP_CD) AS BRDC_COMP_CD_NM /* 방송사명 */
+			     , E.GENRE_CD
+			     , E.PLAY_TM
+			     , F.PROD_NM
+			     , F.PROD_BASE_DESC
+			     , F.PROD_DTL_DESC
+			     , F.PROD_INTR_DSCR
+			     , F.ARTIST1_NM
+			     , F.ARTIST2_NM
+			     , F.PROD_BASE_DESC
+			     , H.CHNL_PERIOD_AMT
+			     , H.CHNL_UNLMT_AMT
+			     , I.FILE_PATH AS IMG_PATH
+			     , I.FILE_NM AS IMG_NM
+			     , I.FILE_SIZE AS IMG_SIZE
+			FROM 
+				TB_DP_MENU_CATEGORY_PROD_MAPG A
+				INNER JOIN TB_DP_MENU_CATEGORY B 
+					ON A.MENU_ID = B.MENU_ID
+				INNER JOIN TB_DP_MENU_CATEGORY_DESC C 
+					ON A.MENU_ID = C.MENU_ID
+				INNER JOIN TB_DP_PROD D 
+					ON A.PROD_ID = D.PROD_ID
+				INNER JOIN TB_DP_MULTIMDA_PROD E 
+					ON D.PROD_ID = E.PROD_ID
+				INNER JOIN TB_DP_PROD_DESC F 
+					ON D.PROD_ID = F.PROD_ID
+				INNER JOIN TB_DP_TENANT_PROD G 
+					ON D.PROD_ID = G.PROD_ID
+				INNER JOIN TB_DP_TENANT_PROD_PRICE H 
+					ON D.PROD_ID = H.PROD_ID
+				INNER JOIN TB_DP_PROD_IMG I 
+					ON D.PROD_ID = I.PROD_ID
+			WHERE 1=1
+			   AND D.PROD_ID = #{channelId}
+			   AND A.BASE_YN = 'Y'
+			   AND B.USE_YN = 'Y'
+			   AND C.LANG_CD = #{langCd}
+			   AND G.TENANT_ID = #{tenantId}
+			   AND F.LANG_CD = C.LANG_CD
+			   AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+			   AND I.IMG_CD = 'DP000101'
+		) T1
+		LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS T2
+			ON T1.TENANT_ID = T2.TENANT_ID AND T1.PROD_ID = T2.PROD_ID
+		
     </select>
     
     <select id="selectSourceList" parameterType="ProductImage" resultType="ProductImage">

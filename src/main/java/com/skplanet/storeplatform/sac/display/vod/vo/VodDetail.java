@@ -1,8 +1,31 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.vod.vo;
 
-public class VodDetail {
-	/** */
+import java.util.Date;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+
+/**
+ * VOD 상세조회 Value Object
+ *
+ * Updated on : 2014. 1. 28. Updated by : 임근대, SK플래닛.
+ */
+public class VodDetail extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
+
+	/** TopMenu ID */
 	private String topMenuId;
+	/** TopMenu 명 */
+	private String topMenuNm;
 	/** */
 	private String menuId;
 	/** */
@@ -39,21 +62,36 @@ public class VodDetail {
 	private String dolbySprtYn;
 	/** */
 	private Integer prodAmt;
-	/** */
-	private String paticpersCnt;
-	/** */
-	private String prchsCnt;
-	/** */
+	/** 참여자수 */
+	private Integer paticpersCnt;
+	/** 구매수 */
+	private Integer prchsCnt;
+	/** 평균 평가 점수 */
 	private Double avgEvluScore;
-	/** */
-	private String topMenuNm;
-	/** */
-	private String fileNm;
-	/** */
-	private String filePath;
+
+	/** thumbnail filePath */
+	private String imgPath;
+	/** thumbnail fileName */
+	private String imgNm;
+	/** thumbnail fileSize */
+	private Integer imgSize;
 
 	/** DRM 여부 */
 	private String drmYn;
+	/** 상품 소개 내용 */
+	private String prodIntrDscr;
+	/** 등록일시 */
+	private Date regDt;
+	/** 서비스시작 일시 */
+	private Date svcStartDt;
+	/** 방송사 코드 */
+	private String brdcCompCd;
+	/** 방송사명 */
+	private String brdcCompCdNm;
+	/** 장르코드 */
+	private String genreCd;
+	/** 재생시간 */
+	private String playTm;
 
 	public String getTopMenuId() {
 		return this.topMenuId;
@@ -262,44 +300,58 @@ public class VodDetail {
 		this.prodAmt = prodAmt;
 	}
 
-	public String getPaticpersCnt() {
+	/**
+	 * 참여자수
+	 * @return
+	 * 		참여자수
+	 */
+	public Integer getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
-	public void setPaticpersCnt(String paticpersCnt) {
+	/**
+	 * 참여자수
+	 * @param paticpersCnt
+	 * 			참여자수
+	 */
+	public void setPaticpersCnt(Integer paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
-	public String getPrchsCnt() {
+	/**
+	 * 구매수
+	 * @return
+	 * 		구매수
+	 */
+	public Integer getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
-	public void setPrchsCnt(String prchsCnt) {
+	/**
+	 * 구매수
+	 * @param prchsCnt
+	 * 			구매수
+	 */
+	public void setPrchsCnt(Integer prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 
+	/**
+	 * 평균 평가 점수
+	 * @return
+	 * 		평균 평가 점수
+	 */
 	public Double getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
+	/**
+	 * 평균 평가 점수
+	 * @param avgEvluScore
+	 * 			평균 평가 점수
+	 */
 	public void setAvgEvluScore(Double avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
-	}
-
-	public String getFileNm() {
-		return this.fileNm;
-	}
-
-	public void setFileNm(String fileNm) {
-		this.fileNm = fileNm;
-	}
-
-	public String getFilePath() {
-		return this.filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
 	}
 
 	public String getTopMenuNm() {
@@ -318,24 +370,137 @@ public class VodDetail {
 		this.drmYn = drmYn;
 	}
 
-	@Override
-	public String toString() {
-		return "VodDetail [topMenuId=" + this.topMenuId + ", menuId="
-				+ this.menuId + ", menuNm=" + this.menuNm + ", menuDesc="
-				+ this.menuDesc + ", metaClsfCd=" + this.metaClsfCd
-				+ ", prodId=" + this.prodId + ", vodTitlNm=" + this.vodTitlNm
-				+ ", prodNm=" + this.prodNm + ", prodBaseDesc="
-				+ this.prodBaseDesc + ", prodDtlDesc=" + this.prodDtlDesc
-				+ ", prodGrdCd=" + this.prodGrdCd + ", artist1Nm="
-				+ this.artist1Nm + ", artist2Nm=" + this.artist2Nm
-				+ ", issueDay=" + this.issueDay + ", chnlCompNm="
-				+ this.chnlCompNm + ", agencyNm=" + this.agencyNm + ", hdvYn="
-				+ this.hdvYn + ", dolbySprtYn=" + this.dolbySprtYn
-				+ ", prodAmt=" + this.prodAmt + ", paticpersCnt="
-				+ this.paticpersCnt + ", prchsCnt=" + this.prchsCnt
-				+ ", avgEvluScore=" + this.avgEvluScore + ", topMenuNm="
-				+ this.topMenuNm + ", fileNm=" + this.fileNm + ", filePath="
-				+ this.filePath + ", drmYn=" + this.drmYn + "]";
+	/**
+	 * thumbnail filePath
+	 *
+	 * @return
+	 */
+	public String getImgPath() {
+		return this.imgPath;
 	}
+
+	/**
+	 * thumbnail filePath
+	 *
+	 * @param imgPath
+	 */
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	/**
+	 * thumbnail fileNm
+	 *
+	 * @return thumbnail fileNm
+	 */
+	public String getImgNm() {
+		return this.imgNm;
+	}
+
+	/**
+	 * thumbnail fileNm
+	 *
+	 * @param imgNm
+	 */
+	public void setImgNm(String imgNm) {
+		this.imgNm = imgNm;
+	}
+
+	/**
+	 * thumbnail fileSize
+	 *
+	 * @return thumbnail fileSize
+	 */
+	public Integer getImgSize() {
+		return this.imgSize;
+	}
+
+	/**
+	 * thumbnail fileSize
+	 *
+	 * @param imgSize
+	 *            thumbnail fileSize
+	 */
+	public void setImgSize(Integer imgSize) {
+		this.imgSize = imgSize;
+	}
+
+	/**
+	 * 등록 일시
+	 * @return
+	 * 		등록 일시
+	 */
+	public Date getRegDt() {
+		return this.regDt;
+	}
+
+	/**
+	 * 등록 일시
+	 * @param regDt
+	 * 		등록 일시
+	 */
+	public void setRegDt(Date regDt) {
+		this.regDt = regDt;
+	}
+
+	/**
+	 * 상품 소개 내용
+	 *
+	 * @return 상품 소개 내용
+	 */
+	public String getProdIntrDscr() {
+		return this.prodIntrDscr;
+	}
+	/**
+	 * 상품 소개 내용
+	 * @param prodIntrDscr
+	 * 		상품 소개 내용
+	 */
+	public void setProdIntrDscr(String prodIntrDscr) {
+		this.prodIntrDscr = prodIntrDscr;
+	}
+
+	public Date getSvcStartDt() {
+		return this.svcStartDt;
+	}
+
+	public void setSvcStartDt(Date svcStartDt) {
+		this.svcStartDt = svcStartDt;
+	}
+
+	public String getBrdcCompCd() {
+		return this.brdcCompCd;
+	}
+
+	public void setBrdcCompCd(String brdcCompCd) {
+		this.brdcCompCd = brdcCompCd;
+	}
+
+	public String getBrdcCompCdNm() {
+		return this.brdcCompCdNm;
+	}
+
+	public void setBrdcCompCdNm(String brdcCompCdNm) {
+		this.brdcCompCdNm = brdcCompCdNm;
+	}
+
+	public String getGenreCd() {
+		return this.genreCd;
+	}
+
+	public void setGenreCd(String genreCd) {
+		this.genreCd = genreCd;
+	}
+
+	public String getPlayTm() {
+		return this.playTm;
+	}
+
+	public void setPlayTm(String playTm) {
+		this.playTm = playTm;
+	}
+
+
+
 
 }
