@@ -291,10 +291,10 @@
     
     <select id="getMusicMetaInfo" parameterType="ProductBasicInfo" resultType="MetaInfo">
        SELECT 
-              MCI.RANK_CHG_CNT
-            , MCI.RANK_CHG_CLSF_CD
-            , MCI.ARTIST_ID
-            , CP.PROD_ID 
+    --          MCI.RANK_CHG_CNT
+    --        , MCI.RANK_CHG_CLSF_CD
+    --        , MCI.ARTIST_ID
+             CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
             , CD.MENU_NM
@@ -327,7 +327,7 @@
             , PI.FILE_SIZE
             , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
          FROM TB_DP_MULTIMDA_PROD MP
-            , TB_DP_MUSIC_CHART MCI
+     --       , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
             , TB_DP_PROD_DESC PD
             , TB_DP_PROD_RSHP CP
@@ -344,7 +344,7 @@
             , TB_DP_SPRT_DEVICE             K
         WHERE MP.PROD_ID = CP.PART_PROD_ID
           AND P.PROD_ID = CP.PART_PROD_ID
-          AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
+    --      AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
           AND CPM.PROD_ID = CP.PART_PROD_ID
           AND C.MENU_ID = CPM.MENU_ID
           AND CD.MENU_ID = C.MENU_ID
@@ -362,15 +362,6 @@
           AND TPP.TENANT_ID = TP.TENANT_ID
           AND PD.PROD_ID = P.PROD_ID
           AND PI.PROD_ID = CP.PROD_ID
-       -----------------------------------------------------------------------------
-       -- 차트 정보 조건절 START
-       -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
-       -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
-       ----------------------------------------------------------------------------- 
-          <if test='productBasicInfo.menuId != null'>
-          AND MCI.CHART_CLSF_CD = #{productBasicInfo.menuId} -- 멜론 TOP 100
-          </if>
-           AND MCI.RANK_START_DAY = #{stdDt}
        -----------------------------------------------------------------------------
        -- 차트 정보 조건절 END
        ----------------------------------------------------------------------------- 

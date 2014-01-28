@@ -209,8 +209,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 			this.log.debug("##### Episode & Channel Identifier setting");
 			identifier = this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPartProdId());
 			identifierList.add(identifier);
-			identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
-			identifierList.add(identifier);
+
+			if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+				identifier = this
+						.generateIdentifier(DisplayConstants.DP_CATALOG_IDENTIFIER_CD, metaInfo.getCatalogId());
+				identifierList.add(identifier);
+			} else {
+				identifier = this.generateIdentifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId());
+				identifierList.add(identifier);
+			}
 		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd) // Catalog ID 기준 검색일 경우
 				&& DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
 			this.log.debug("##### Catalog & Episode Identifier setting");
