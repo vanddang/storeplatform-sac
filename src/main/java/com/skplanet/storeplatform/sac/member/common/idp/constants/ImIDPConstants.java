@@ -238,4 +238,6 @@ public final class ImIDPConstants {
 	// 결과 값
 	public static final String IDP_RES_EXIST = "1";
 	public static final String IDP_RES_NO_EXIST = "0";
+
+	public static String SSO_SST_CD_TSTORE_WEB = "41100";
 }

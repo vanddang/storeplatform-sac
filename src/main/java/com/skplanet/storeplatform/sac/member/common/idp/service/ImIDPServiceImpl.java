@@ -334,7 +334,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_SET_LOGIN_STATUS);
 		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		// sendData.setLogin_limit_sst_code(SSO_SST_CD_TSTORE_WEB);
+		sendData.setLogin_limit_sst_code(ImIDPConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setLogin_status_code(login_status_code);
 		sendData.setKey(key);
 		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_ID);
@@ -373,7 +373,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setUser_birthday(user_birthday);
 		sendData.setUser_calendar("1");
 		sendData.setIs_rname_auth("Y");
-		// sendData.setRname_auth_sst_code(SSO_SST_CD_TSTORE_WEB);
+		sendData.setRname_auth_sst_code(ImIDPConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setSn_auth_key(sn_auth_key);
 		sendData.setKey(key);
 		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
@@ -433,7 +433,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setParent_email(parent_email);
 		sendData.setParent_approve_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setIs_parent_approve("Y");
-		// sendData.setParent_approve_sst_code(SSO_SST_CD_TSTORE_WEB);
+		sendData.setParent_approve_sst_code(ImIDPConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		return this.repository.sendImIDP(sendData);
