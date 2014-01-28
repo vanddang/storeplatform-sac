@@ -149,13 +149,20 @@ public class BestContentsServiceImpl implements BestContentsService {
 					Book book = new Book();
 
 					// 상품ID
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);// 2014.01.28 이석희 common 상수 변경
 					identifier.setText(mapperVO.getProdId());
+					identifierList.add(identifier);
 
 					supportList = new ArrayList<Support>();
+					support = new Support();
 					support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);// 2014.01.28 이석희 common 상수 변경
 					support.setText(mapperVO.getHdvYn());
+					supportList.add(support);
+					support = new Support();
+					support.setType(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);// 2014.01.28 이석희 common 상수 변경
+					support.setText(mapperVO.getDolbySprtYn());
 					supportList.add(support);
 
 					/*
@@ -235,7 +242,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 					if (!"movie".equals(bestContentsReq.getFilteredBy())
 							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
 							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
-						supportList = new ArrayList<Support>();
+						List<Support> bookSupportList = new ArrayList<Support>();
 						if (mapperVO.getBookStatus() == null) {
 							book.setStatus("");
 						} else {
@@ -250,23 +257,28 @@ public class BestContentsServiceImpl implements BestContentsService {
 						support = new Support();
 						support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
 						support.setText(mapperVO.getSupportStore());
-						supportList.add(support);
+						bookSupportList.add(support);
 						support = new Support();
 						support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
 						support.setText(mapperVO.getSupportPlay());
-						supportList.add(support);
-						book.setSupportList(supportList);
+						bookSupportList.add(support);
+						book.setSupportList(bookSupportList);
 					}
 
 					product = new Product();
-					product.setIdentifier(identifier);
+					product.setIdentifierList(identifierList);
 					if ("movie".equals(bestContentsReq.getFilteredBy())
-							&& "boardcast".equals(bestContentsReq.getFilteredBy())
-							&& "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
+							|| "boardcast".equals(bestContentsReq.getFilteredBy())
+							|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						product.setSupportList(supportList);
-					} else {
-						product.setBook(book); // 2014.01.28 이북 /코믹일때만 Book(소장대여 정보);
 					}
+
+					if (!"movie".equals(bestContentsReq.getFilteredBy())
+							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
+							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
+						product.setBook(book); // 2014.01.28 이북 /코믹일때만 Book(소장대여 정보) set
+					}
+
 					// product.setSupport("hd");
 					product.setMenuList(menuList);
 					product.setContributor(contributor);
