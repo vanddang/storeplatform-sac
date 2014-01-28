@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
@@ -42,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Stor
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.vod.controller.VodController;
@@ -49,7 +49,7 @@ import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
  * VOD Service
- *
+ * 
  * Updated on : 2014-01-09 Updated by : 임근대, SK플래닛.
  */
 @Service
@@ -67,7 +67,7 @@ public class VodServceImpl implements VodService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.vod.service.VodService#searchVod(com.skplanet.storeplatform.sac.client
 	 * .display.vo.vod.VodDetailReq)
@@ -88,7 +88,7 @@ public class VodServceImpl implements VodService {
 		 * List<MenuItem> menuList = this.commonService.getMenuItemList(req.getChannelld(), req.getLangCd());
 		 * product.setMenuList(new ArrayList<Menu>()); for (MenuItem mi : menuList) { Menu menu = new Menu();
 		 * menu.setId(mi.getMenuId()); menu.setName(mi.getMenuNm()); if(mi.isInfrMenu()) menu.setType("topClass");
-		 *
+		 * 
 		 * product.getMenuList().add(menu); }
 		 */
 
@@ -224,9 +224,9 @@ public class VodServceImpl implements VodService {
 		VodDetailRes res = new VodDetailRes();
 		Product product = new Product();
 
-		//--------------------------------------------------------
+		// --------------------------------------------------------
 		// 1. Channel 정보 조회
-		//--------------------------------------------------------
+		// --------------------------------------------------------
 		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodDetail", req, VodDetail.class);
 		logger.debug("vodDetail={}", vodDetail);
 
@@ -243,21 +243,20 @@ public class VodServceImpl implements VodService {
 		sourceList.add(source);
 
 		// screenshot
-		List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", req, ProductImage.class);
-		for(ProductImage screenshotImage : screenshotList) {
+		List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", req,
+				ProductImage.class);
+		for (ProductImage screenshotImage : screenshotList) {
 			Source screenshotSource = new Source();
 			screenshotSource.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
 			screenshotSource.setSize(screenshotImage.getFileSize());
-			screenshotSource.setUrl(screenshotImage.getFilePath()+screenshotImage.getFileNm());
+			screenshotSource.setUrl(screenshotImage.getFilePath() + screenshotImage.getFileNm());
 			sourceList.add(screenshotSource);
 		}
 		product.setSourceList(sourceList);
 
-		//상품 설명
+		// 상품 설명
 		product.setProductExplain(vodDetail.getProdBaseDesc());
 		product.setProductDetailExplain(vodDetail.getProdDtlDesc());
-
-
 
 		/** DRM */
 		Support supportDrm = new Support();
@@ -274,8 +273,6 @@ public class VodServceImpl implements VodService {
 
 		product.setSupportList(new ArrayList<Support>(Arrays.asList(supportDrm, supportHd)));
 
-
-
 		Menu topMenu = new Menu();
 		topMenu.setId(vodDetail.getTopMenuId());
 		topMenu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
@@ -284,12 +281,11 @@ public class VodServceImpl implements VodService {
 		menu.setId(vodDetail.getMenuId());
 		menu.setType("broadcast");
 
-
 		Menu menu1 = new Menu();
 		menu1.setId("DP18001");
 		menu1.setName("broadcast/drama");
 
-        product.setMenuList(new ArrayList<Menu>(Arrays.asList(topMenu, menu, menu1)));
+		product.setMenuList(new ArrayList<Menu>(Arrays.asList(topMenu, menu, menu1)));
 
 		Date date = new Date();
 		date.setType("date/reg");
@@ -338,9 +334,9 @@ public class VodServceImpl implements VodService {
 
 		product.setSubProductTotalCount(100);
 
-		//--------------------------------------------------------
+		// --------------------------------------------------------
 		// 2. subProjectList
-		//--------------------------------------------------------
+		// --------------------------------------------------------
 		List<Product> subProjectList = new ArrayList<Product>();
 		Product product1 = new Product();
 		product1.setIdentifier(new Identifier(DisplayConstants.DP_CONTENT_IDENTIFIER_CD, "0002119673"));

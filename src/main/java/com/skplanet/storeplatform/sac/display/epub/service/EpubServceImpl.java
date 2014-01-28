@@ -16,7 +16,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailRes;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
@@ -32,6 +31,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
  * EPUB Service
