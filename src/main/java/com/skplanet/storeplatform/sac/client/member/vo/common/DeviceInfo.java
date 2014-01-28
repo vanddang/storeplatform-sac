@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
-@JsonSerialize(include = Inclusion.NON_DEFAULT)
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class DeviceInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
@@ -20,117 +20,117 @@ public class DeviceInfo extends CommonInfo {
 	/**
 	 * SKT 관리번호
 	 */
-	private String imMngNum = "";
+	private String imMngNum;
 
 	/**
 	 * 사용자 Id
 	 */
-	private String userId = "";
+	private String userId;
 
 	/**
 	 * 사용자 key
 	 */
-	private String userKey = "";
+	private String userKey;
 
 	/**
 	 * 기기 Key
 	 */
-	private String deviceKey = "";
+	private String deviceKey;
 
 	/**
 	 * 기기 ID
 	 */
-	private String deviceId = "";
+	private String deviceId;
 
 	/**
 	 * 기기 ID 타입 (msisdn, uuid, macaddress)
 	 */
-	private String deviceIdType = "";
+	private String deviceIdType;
 
 	/**
 	 * 기기 타입 코드
 	 */
-	private String deviceType = "";
+	private String deviceType;
 
 	/**
 	 * 기기 모델 번호
 	 */
-	private String deviceModelNo = "";
+	private String deviceModelNo;
 
 	/**
 	 * 통신사 코드
 	 */
-	private String deviceTelecom = "";
+	private String deviceTelecom;
 
 	/**
 	 * 기기별명
 	 */
-	private String deviceNickName = "";
+	private String deviceNickName;
 
 	/**
 	 * 대표기기 여부
 	 */
-	private String isPrimary = "";
+	private String isPrimary;
 
 	/**
 	 * 인증여부
 	 */
-	private String isAuthenticated = "";
+	private String isAuthenticated;
 
 	/**
 	 * 인증일시
 	 */
-	private String authenticationDate = "";
+	private String authenticationDate;
 
 	/**
 	 * SMS 수신 여부
 	 */
-	private String isRecvSms = "";
+	private String isRecvSms;
 
 	/**
 	 * 휴대기기 사용 여부
 	 */
-	private String isUsed = "";
+	private String isUsed;
 
 	/**
 	 * 기기고유 ID
 	 */
-	private String nativeId = "";
+	private String nativeId;
 
 	/**
 	 * 기기계정
 	 */
-	private String deviceAccount = "";
+	private String deviceAccount;
 
 	/**
 	 * 가입 채널 코드
 	 */
-	private String joinId = "";
+	private String joinId;
 
 	/**
 	 * 제조사명
 	 */
-	private String makeComp = "";
+	private String makeComp;
 
 	/**
 	 * 수정 일시
 	 */
-	private String updateDate = "";
+	private String updateDate;
 
 	/**
 	 * 시작 일시
 	 */
-	private String startDate = "";
+	private String startDate;
 
 	/**
 	 * 종료 일시
 	 */
-	private String endDate = "";
+	private String endDate;
 
 	/**
 	 * TenantId
 	 */
-	private String TenantId = "";
+	private String TenantId;
 
 	/**
 	 * 사용자 단말 부가 정보 리스트 - 회원정보조회
