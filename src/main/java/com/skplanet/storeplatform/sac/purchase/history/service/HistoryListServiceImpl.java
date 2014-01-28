@@ -99,6 +99,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
+		scRequest.setFixrateProdId(request.getFixrateProdId());
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setOffset(request.getOffset());
@@ -108,6 +109,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scResponse = this.historySci.listHistory(scRequest);
 
 		if (scResponse.getHistoryList().size() <= 0) {
+			// [SAC 구매] 조건에 맞는 데이터가 존재 하지 않습니다.
 			throw new StorePlatformException("SAC_PUR_0100");
 		}
 
@@ -150,6 +152,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 			history.setPrchsProdType(obj.getPrchsProdType());
 			history.setFixrateProdId(obj.getFixrateProdId());
 
+			// 수신자 정보 set
+			history.setRecvTenantId(obj.getRecvTenantId());
+			history.setRecvInsdUsermbrNo(obj.getRecvInsdUsermbrNo());
+			history.setRecvInsdDeviceId(obj.getRecvInsdDeviceId());
+
 			// 정액제 정보 set
 			history.setPaymentStartDt(obj.getPaymentStartDt());
 			history.setPaymentEndDt(obj.getPaymentEndDt());
@@ -189,7 +196,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			}
 		}
 
-		this.logger.debug("prodList ==== " + resProdList.toString());
+		// this.logger.debug("prodList ==== " + resProdList.toString());
 
 		response.setHistoryList(sacHistoryList);
 		response.setTotalCnt(scResponse.getTotalCnt());
@@ -236,6 +243,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
+		scRequest.setFixrateProdId(request.getFixrateProdId());
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
 
