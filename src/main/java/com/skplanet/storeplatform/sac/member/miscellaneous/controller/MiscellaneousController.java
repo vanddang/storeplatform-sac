@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,14 +96,27 @@ public class MiscellaneousController {
 	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request)
 			throws Exception {
 
-		GetOpmdRes response = this.service.getOpmd(request);
 		// MDN 이외의 값일 경우 Error Return - 2014.01.28
-		if (response.getMsisdn().length() != 10 && response.getMsisdn().length() != 11) {
+		Pattern pattern = Pattern.compile("[0-9]*");
+		Matcher matcher = pattern.matcher(request.getMsisdn());
+		boolean isNumber = matcher.matches();
+
+		if ((request.getMsisdn().length() != 10 && request.getMsisdn().length() != 11) || !isNumber) {
 			throw new Exception("MDN값이 아닙니다.");
 		}
 
+		GetOpmdRes response = this.service.getOpmd(request);
 		return response;
 	}
+
+	// public boolean isNumber(String str) {
+	// try {
+	// new Double(str);
+	// return true;
+	// } catch (Exception e) {
+	// return false;
+	// }
+	// }
 
 	/**
 	 * <pre>
