@@ -133,39 +133,11 @@ public class UserModifyServiceImpl implements UserModifyService {
 				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_address2());
 				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_tel());
 
-				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-
 				/**
-				 * 공통 정보 setting.
+				 * SC 회원 수정.
 				 */
-				updateUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
-
-				/**
-				 * 사용자 기본정보 setting.
-				 */
-				updateUserRequest.setUserMbr(this.getUserMbr(req));
-
-				/**
-				 * SC 사용자 회원 기본정보 수정 요청.
-				 */
-				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
-				LOGGER.info("## ResponseCode : {}", updateUserResponse.getCommonResponse().getResultCode());
-				LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
-				LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
-
-				if (StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-					/**
-					 * 결과 세팅
-					 */
-					response.setUserKey(updateUserResponse.getUserKey());
-
-				} else {
-
-					LOGGER.info("## 사용자 기본정보 수정 실패 ===========================");
-					throw new RuntimeException("사용자 기본정보 수정 실패");
-
-				}
+				String userKey = this.updateUser(sacHeader, req);
+				response.setUserKey(userKey);
 
 			} else {
 
@@ -188,6 +160,44 @@ public class UserModifyServiceImpl implements UserModifyService {
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	private String updateUser(SacRequestHeader sacHeader, ModifyReq req) throws Exception {
+
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+
+		/**
+		 * 공통 정보 setting.
+		 */
+		updateUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+		/**
+		 * 사용자 기본정보 setting.
+		 */
+		updateUserRequest.setUserMbr(this.getUserMbr(req));
+
+		/**
+		 * SC 사용자 회원 기본정보 수정 요청.
+		 */
+		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+		LOGGER.info("## ResponseCode : {}", updateUserResponse.getCommonResponse().getResultCode());
+		LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
+		LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
+
+		if (StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+			/**
+			 * 결과 세팅
+			 */
+			return updateUserResponse.getUserKey();
+
+		} else {
+
+			LOGGER.info("## 사용자 기본정보 수정 실패 ===========================");
+			throw new RuntimeException("사용자 기본정보 수정 실패");
+
+		}
+
 	}
 
 	/**
@@ -226,7 +236,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(req.getUserKey());
-		
+
 		/**
 		 * 이동통신사
 		 */
@@ -254,7 +264,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		if (!StringUtils.equals(req.getIsRecvSms(), "")) {
 			userMbr.setIsRecvSMS(req.getIsRecvSms());
 		}
-		
+
 		/**
 		 * 이메일 수신여부
 		 */
