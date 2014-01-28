@@ -24,7 +24,7 @@ public class DownloadEbookReq extends CommonInfo {
 	private String deviceKey; // 디바이스키
 	private String userKey; // 사용자고유키
 	private String tenantId; // 테넌트ID
-	private String languageCd; // 언어코드
+	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스모델코드
 	private String imageCd; // 이미지코드
 
@@ -104,18 +104,18 @@ public class DownloadEbookReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the languageCd
+	 * @return the langCd
 	 */
-	public String getLanguageCd() {
-		return this.languageCd;
+	public String getLangCd() {
+		return this.langCd;
 	}
 
 	/**
-	 * @param languageCd
-	 *            the languageCd to set
+	 * @param langCd
+	 *            the langCd to set
 	 */
-	public void setLanguageCd(String languageCd) {
-		this.languageCd = languageCd;
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
 	}
 
 	/**
