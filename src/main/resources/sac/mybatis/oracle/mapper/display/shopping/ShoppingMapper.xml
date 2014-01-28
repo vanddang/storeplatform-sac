@@ -137,7 +137,7 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND K.TENANT_ID = M.TENANT_ID 
-                        AND I.PROD_ID = M.PROD_ID   
+                        AND B.CATALOG_ID = M.PROD_ID   
                         AND B.CATALOG_ID = PI.PROD_ID
                         AND I.PROD_ID = N.PROD_ID(+)     
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/                  
@@ -487,7 +487,7 @@
                         </if>                                           
                         <if test='orderedBy == "download"'>
                         AND K.TENANT_ID = M.TENANT_ID 
-                        AND I.PROD_ID = M.PROD_ID                             
+                        AND B.CATALOG_ID = M.PROD_ID                             
                         </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/         
