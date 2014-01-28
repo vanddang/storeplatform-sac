@@ -71,7 +71,14 @@ public class BestAppServiceImpl implements BestAppService {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
+		this.log.debug("########################################################");
+		this.log.debug("tenantHeader.getTenantId()	:	" + tenantHeader.getTenantId());
+		this.log.debug("tenantHeader.getLangCd()	:	" + tenantHeader.getLangCd());
+		this.log.debug("deviceHeader.getModel()		:	" + deviceHeader.getModel());
+		this.log.debug("########################################################");
+
 		bestAppReq.setTenantId(tenantHeader.getTenantId());
+		bestAppReq.setLangCd(tenantHeader.getLangCd());
 		bestAppReq.setDeviceModelCd(deviceHeader.getModel());
 
 		BestAppRes response = new BestAppRes();
@@ -138,7 +145,7 @@ public class BestAppServiceImpl implements BestAppService {
 				appList = this.commonDAO.queryForList("BestApp.selectNewBestAppList", bestAppReq, BestApp.class);
 			}
 
-			if (appList.size() != 0) {
+			if (appList.size() > 0) {
 				Iterator<BestApp> iterator = appList.iterator();
 				while (iterator.hasNext()) {
 					product = new Product();
@@ -182,8 +189,8 @@ public class BestAppServiceImpl implements BestAppService {
 
 					menu = new Menu();
 					menu.setId(mapperVO.getTopMenuId());
-					menu.setName(mapperVO.getUpMenuNm());
-					menu.setType(DisplayConstants.DP_THUMNAIL_SOURCE); // 2014.01.28 이석희 common 상수 변경
+					menu.setName(mapperVO.getTopMenuNm());
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 					menuList.add(menu);
 					menu = new Menu();
 					menu.setId(mapperVO.getMenuId());

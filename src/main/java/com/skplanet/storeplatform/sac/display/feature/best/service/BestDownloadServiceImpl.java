@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.best.vo.BestDownload;
 
@@ -120,8 +121,10 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		List<BestDownload> bestList = null;
 
 		if (bestDownloadReq.getDummy() == null) { // dummy 호출이 아닐때
-			if ("DP13".equals(bestDownloadReq.getTopMenuId()) || "DP14".equals(bestDownloadReq.getTopMenuId())
-					|| "DP17".equals(bestDownloadReq.getTopMenuId()) || "DP18".equals(bestDownloadReq.getTopMenuId())) { // 멀티미디어_상품
+			if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+					|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+					|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 멀티미디어_상품
 				bestList = this.commonDAO.queryForList("BestDownload.selectBestDownloadMMList", bestDownloadReq,
 						BestDownload.class);
 
@@ -142,14 +145,14 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 
 						// 상품ID
 						identifier = new Identifier();
-						identifier.setType("episode");
+						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 						identifier.setText(mapperVO.getProdId());
 
 						/*
 						 * VOD - HD 지원여부, DOLBY 지원여부
 						 */
 						List<Support> supportList = new ArrayList<Support>();
-						support.setType("hd");
+						support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
 						support.setText(mapperVO.getHdvYn());
 						supportList.add(support);
 						support = new Support();
@@ -164,7 +167,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						Menu menu = new Menu();
 						menu.setId(mapperVO.getTopMenuId());
 						menu.setName(mapperVO.getTopMenuNm());
-						menu.setType("topClass");
+						menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 						menuList.add(menu);
 						menu = new Menu();
 						menu.setId(mapperVO.getMenuId());
@@ -172,27 +175,37 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						menuList.add(menu);
 						menu = new Menu();
 						menu.setId(mapperVO.getMetaClsfCd());
-						menu.setType("metaClass");
+						menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
 						menuList.add(menu);
 
-						if ("DP13".equals(bestDownloadReq.getTopMenuId())) { // 이북
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 이북
 							contributor.setName(mapperVO.getArtist1Nm());
 							contributor.setPublisher(mapperVO.getChnlCompNm());
 							Date date = new Date();
+							date.setType("date/publish");
 							date.setText(mapperVO.getIssueDay());
 							contributor.setDate(date);
-						} else if ("DP14".equals(bestDownloadReq.getTopMenuId())) { // 코믹
+						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 코믹
 							contributor.setName(mapperVO.getArtist1Nm());
 							contributor.setPainter(mapperVO.getArtist2Nm());
 							contributor.setPublisher(mapperVO.getChnlCompNm());
-						} else if ("DP17".equals(bestDownloadReq.getTopMenuId())) { // 영화
+							Date date = new Date();
+							date.setType("date/publish");
+							date.setText(mapperVO.getIssueDay());
+							contributor.setDate(date);
+						} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 영화
 							contributor.setDirector(mapperVO.getArtist2Nm());
 							contributor.setArtist(mapperVO.getArtist1Nm());
 							Date date = new Date();
+							date.setType("date/broadcast");
 							date.setText(mapperVO.getIssueDay());
 							contributor.setDate(date);
-						} else if ("DP18".equals(bestDownloadReq.getTopMenuId())) { // 방송
+						} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 방송
 							contributor.setArtist(mapperVO.getArtist1Nm());
+							Date date = new Date();
+							date.setType("date/broadcast");
+							date.setText(mapperVO.getIssueDay());
+							contributor.setDate(date);
 						}
 
 						/*
@@ -216,7 +229,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						 * source mediaType - url
 						 */
 						ArrayList<Source> sourceList = new ArrayList<Source>();
-						source.setType("thumbnail");
+						source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 						source.setUrl(mapperVO.getImgPath());
 						sourceList.add(source);
 
@@ -228,19 +241,19 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						/*
 						 * 이북, 코믹 일 경우에만
 						 */
-						if ("DP13".equals(bestDownloadReq.getTopMenuId())
-								|| "DP14".equals(bestDownloadReq.getTopMenuId())) {
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
 							ArrayList<Support> supportList2 = new ArrayList<Support>();
 							book.setStatus(mapperVO.getBookStatus());
 							book.setType(mapperVO.getBookType());
 							book.setTotalCount(mapperVO.getBookCount());
 
 							support = new Support();
-							support.setType("store");
+							support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
 							support.setText(mapperVO.getSupportStore());
 							supportList2.add(support);
 							support = new Support();
-							support.setType("play");
+							support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
 							support.setText(mapperVO.getSupportPlay());
 							supportList2.add(support);
 
@@ -252,8 +265,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						/*
 						 * 영화, 방송 일 경우에만
 						 */
-						if ("DP17".equals(bestDownloadReq.getTopMenuId())
-								|| "DP18".equals(bestDownloadReq.getTopMenuId())) {
+						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
 							product.setSupportList(supportList);
 						}
 						product.setMenuList(menuList);
@@ -275,6 +288,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 					commonResponse.setTotalCount(0);
 					response.setCommonResponse(commonResponse);
 					response.setProductList(productList);
+
+					return response;
 				}
 
 			} else { // App 상품
@@ -300,22 +315,22 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						int totalCount = mapperVO.getTotalCount();
 						commonResponse.setTotalCount(totalCount);
 
-						identifier.setType("episode");
+						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 						identifier.setText(mapperVO.getProdId());
 
 						List<Support> supportList = new ArrayList<Support>();
-						support.setType("drm");
+						support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 						support.setText(mapperVO.getDrmYn());
 						supportList.add(support);
 						support = new Support();
-						support.setType("iab");
+						support.setType(DisplayConstants.DP_IN_APP_SUPPORT_NM);
 						support.setText(mapperVO.getPartParentClsfCd());
 						supportList.add(support);
 
 						List<Menu> menuList = new ArrayList<Menu>();
 						menu.setId(mapperVO.getTopMenuId());
 						menu.setName(mapperVO.getTopMenuNm());
-						menu.setType("topClass");
+						menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 						menuList.add(menu);
 						menu = new Menu();
 						menu.setId(mapperVO.getMenuId());
@@ -336,7 +351,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						title.setText(mapperVO.getProdNm());
 
 						List<Source> sourceList = new ArrayList<Source>();
-						source.setType("thumbnail");
+						source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 						source.setUrl(mapperVO.getImgPath());
 						sourceList.add(source);
 
@@ -359,6 +374,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 					commonResponse.setTotalCount(0);
 					response.setCommonResponse(commonResponse);
 					response.setProductList(productList);
+
+					return response;
 				}
 			}
 
