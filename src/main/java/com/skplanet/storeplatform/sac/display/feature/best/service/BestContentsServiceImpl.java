@@ -64,7 +64,14 @@ public class BestContentsServiceImpl implements BestContentsService {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
+		this.log.debug("########################################################");
+		this.log.debug("tenantHeader.getTenantId()	:	" + tenantHeader.getTenantId());
+		this.log.debug("tenantHeader.getLangCd()	:	" + tenantHeader.getLangCd());
+		this.log.debug("deviceHeader.getModel()		:	" + deviceHeader.getModel());
+		this.log.debug("########################################################");
+
 		bestContentsReq.setTenantId(tenantHeader.getTenantId());
+		bestContentsReq.setLangCd(tenantHeader.getLangCd());
 		bestContentsReq.setDeviceModelCd(deviceHeader.getModel());
 
 		BestContentsRes response = new BestContentsRes();
@@ -119,8 +126,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 				bestContentsReq.getListId());
 		bestContentsReq.setStdDt(stdDt);// 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
 
-		if (bestContentsReq.getDummy() == null) {
-			// dummy 호출이 아닐때
+		if (bestContentsReq.getDummy() == null) { // dummy 호출이 아닐때
 			// BEST 컨텐츠 상품 조회
 			List<BestContents> contentsList = null;
 
@@ -133,7 +139,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 						BestContents.class);
 			}
 
-			if (contentsList.size() != 0) {
+			if (contentsList.size() > 0) {
 				Iterator<BestContents> iterator = contentsList.iterator();
 				while (iterator.hasNext()) {
 					BestContents mapperVO = iterator.next();
@@ -151,28 +157,30 @@ public class BestContentsServiceImpl implements BestContentsService {
 					// 상품ID
 					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);// 2014.01.28 이석희 common 상수 변경
+					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 					identifier.setText(mapperVO.getProdId());
 					identifierList.add(identifier);
 
+					/*
+					 * VOD - HD 지원여부, DOLBY 지원여부
+					 */
 					supportList = new ArrayList<Support>();
 					support = new Support();
-					support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);// 2014.01.28 이석희 common 상수 변경
+					support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
 					support.setText(mapperVO.getHdvYn());
 					supportList.add(support);
 					support = new Support();
-					support.setType(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);// 2014.01.28 이석희 common 상수 변경
+					support.setType(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);
 					support.setText(mapperVO.getDolbySprtYn());
 					supportList.add(support);
-
 					/*
 					 * Menu(메뉴정보) Id, Name, Type
 					 */
 					menuList = new ArrayList<Menu>();
 					Menu menu = new Menu();
 					menu.setId(mapperVO.getTopMenuId());
-					menu.setName(mapperVO.getUpMenuNm());
-					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);// 2014.01.28 이석희 common 상수 변경
+					menu.setName(mapperVO.getTopMenuNm());
+					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 					menuList.add(menu);
 					menu = new Menu();
 					menu.setId(mapperVO.getMenuId());
@@ -180,7 +188,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 					menuList.add(menu);
 					menu = new Menu();
 					menu.setId(mapperVO.getMetaClsfCd());
-					menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);// 2014.01.28 이석희 common 상수 변경
+					menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
 					menuList.add(menu);
 
 					if ("movie".equals(bestContentsReq.getFilteredBy())
@@ -188,7 +196,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 						contributor.setDirector(mapperVO.getArtist2Nm());
 						contributor.setArtist(mapperVO.getArtist1Nm());
 						Date date = new Date();
-						date.setText(mapperVO.getIssueDay());
+						date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
 						contributor.setDate(date);
 					} else if ("broadcast".equals(bestContentsReq.getFilteredBy())) {
 						contributor.setArtist(mapperVO.getArtist1Nm());
@@ -196,7 +204,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 						contributor.setName(mapperVO.getArtist1Nm());
 						contributor.setPublisher(mapperVO.getChnlCompNm());
 						Date date = new Date();
-						date.setText(mapperVO.getIssueDay());
+						// date.setType("date/publish");
+						date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
 						contributor.setDate(date);
 					} else if ("comic".equals(bestContentsReq.getFilteredBy())
 							|| "ebook+comic".equals(bestContentsReq.getFilteredBy())) {
@@ -243,25 +252,19 @@ public class BestContentsServiceImpl implements BestContentsService {
 							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
 							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						List<Support> bookSupportList = new ArrayList<Support>();
-						if (mapperVO.getBookStatus() == null) {
-							book.setStatus("");
-						} else {
-							book.setStatus(mapperVO.getBookStatus());
-						}
-						if (mapperVO.getBookType() == null) {
-							book.setType("");
-						} else {
-							book.setType(mapperVO.getBookType());
-						}
+						book.setStatus(mapperVO.getBookStatus() == null ? "" : mapperVO.getBookStatus());
+						book.setType(mapperVO.getBookType() == null ? "" : mapperVO.getBookType());
 						book.setTotalCount(mapperVO.getBookCount());
+
 						support = new Support();
-						support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
+						support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
 						support.setText(mapperVO.getSupportStore());
 						bookSupportList.add(support);
 						support = new Support();
-						support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
+						support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
 						support.setText(mapperVO.getSupportPlay());
 						bookSupportList.add(support);
+
 						book.setSupportList(bookSupportList);
 					}
 
@@ -271,15 +274,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 							|| "boardcast".equals(bestContentsReq.getFilteredBy())
 							|| "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						product.setSupportList(supportList);
+					} else {
+						product.setBook(book); // 2014.01.28 이북/코믹 일 때만 Book(소장대여 정보) set
 					}
 
-					if (!"movie".equals(bestContentsReq.getFilteredBy())
-							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
-							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
-						product.setBook(book); // 2014.01.28 이북 /코믹일때만 Book(소장대여 정보) set
-					}
-
-					// product.setSupport("hd");
 					product.setMenuList(menuList);
 					product.setContributor(contributor);
 					product.setAccrual(accrual);
@@ -297,6 +295,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 			} else {
 				commonResponse = new CommonResponse();
 				commonResponse.setTotalCount(0);
+				response.setProductList(productList);
 				this.log.debug("조회된 결과가 없습니다.");
 			}
 		} else {
@@ -312,7 +311,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 			// 상품ID
 			identifier = new Identifier();
-			identifier.setType("channelId");
+			identifier.setType("channel");
 			identifier.setText("H001540562");
 
 			supportList = new ArrayList<Support>();
