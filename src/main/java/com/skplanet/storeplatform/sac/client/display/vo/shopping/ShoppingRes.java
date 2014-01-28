@@ -20,19 +20,16 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * <pre>
  * 쇼핑 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class ShoppingRes extends CommonInfo {
 	/**
 	 * 
 	 */
+	private CommonResponse commonResponse;
 	private static final long serialVersionUID = 1L;
 	private List<Product> productList;
-	private CommonResponse commonResponse;
 
 	public List<Product> getProductList() {
 		return this.productList;
