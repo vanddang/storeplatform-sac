@@ -66,8 +66,7 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req,
-			BindingResult result) throws Exception {
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
@@ -119,8 +118,7 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader,
-			@Validated @RequestBody CreateByAgreementReq req, BindingResult result) throws Exception {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
@@ -193,8 +191,7 @@ public class UserJoinController {
 	 */
 	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req,
-			BindingResult result) throws Exception {
+	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("#############################################");
 		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
