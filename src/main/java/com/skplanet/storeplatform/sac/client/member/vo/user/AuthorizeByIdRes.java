@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 3. Updated by : 반범진. 지티소프트.
  */
-@JsonSerialize(include = Inclusion.NON_NULL)
+@JsonSerialize(include = Inclusion.NON_EMPTY)
 public class AuthorizeByIdRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
