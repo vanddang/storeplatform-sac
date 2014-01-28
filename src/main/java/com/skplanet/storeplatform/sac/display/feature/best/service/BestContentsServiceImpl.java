@@ -249,22 +249,13 @@ public class BestContentsServiceImpl implements BestContentsService {
 						book.setTotalCount(mapperVO.getBookCount());
 						support = new Support();
 						support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
-						if (!"".equals(mapperVO.getSupportStore()) && mapperVO.getSupportStore() != null) {
-							support.setText(mapperVO.getSupportStore());
-						} else {
-							support.setText("");
-						}
+						support.setText(mapperVO.getSupportStore());
 						supportList.add(support);
 						support = new Support();
 						support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM); // 2014.01.28 이석희 common 상수 변경
-						if (!"".equals(mapperVO.getSupportPlay()) && mapperVO.getSupportPlay() != null) {
-							support.setText(mapperVO.getSupportPlay());
-						} else {
-							support.setText("");
-						}
+						support.setText(mapperVO.getSupportPlay());
 						supportList.add(support);
 						book.setSupportList(supportList);
-						product.setBook(book);
 					}
 
 					product = new Product();
@@ -273,6 +264,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 							&& "boardcast".equals(bestContentsReq.getFilteredBy())
 							&& "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
 						product.setSupportList(supportList);
+					} else {
+						product.setBook(book); // 2014.01.28 이북 /코믹일때만 Book(소장대여 정보);
 					}
 					// product.setSupport("hd");
 					product.setMenuList(menuList);
