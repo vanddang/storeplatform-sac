@@ -77,9 +77,13 @@
         
         <!-- 일반카테고리 앱 상품 조회 -->
         <typeAlias alias="CategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq" />
-        <typeAlias alias="CategoryAppDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryAppDTO" />
+        <typeAlias alias="CategoryApp"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryApp" />
         
-        <!-- 일반카테고리 ebook/만화 상품 조회 -->
+        <!-- 일반카테고리 이북/코믹 상품 조회 -->
+        <typeAlias alias="CategoryEbookComicReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq" />
+        <typeAlias alias="CategoryEbookComic"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryEbookComic" />
+        
+        <!-- ??? -->
         <typeAlias alias="FeatureVodProductRequest"  type="com.skplanet.storeplatform.sac.client.product.vo.feature.FeatureVodProductRequest" />
         <typeAlias alias="FeatureVodProductDTO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO" />
         
