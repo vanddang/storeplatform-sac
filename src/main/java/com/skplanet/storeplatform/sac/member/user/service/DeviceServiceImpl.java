@@ -480,21 +480,24 @@ public class DeviceServiceImpl implements DeviceService {
 
 					List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
 
-					for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
-						agreeInfo.setMemberKey(nowUserKey);
-						agreeList.add(agreeInfo);
+					if (schAgreeListRes.getMbrClauseAgreeList() != null && schAgreeListRes.getMbrClauseAgreeList().size() > 0) {
+						for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
+							agreeInfo.setMemberKey(nowUserKey);
+							agreeList.add(agreeInfo);
+						}
+
+						UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
+						updAgreeReq.setCommonRequest(commonRequest);
+						updAgreeReq.setUserKey(nowUserKey);
+						updAgreeReq.setMbrClauseAgreeList(agreeList);
+						UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
+
+						if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
+							throw new StorePlatformException("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
+									+ updAgreeRes.getCommonResponse().getResultMessage());
+						}
 					}
 
-					UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
-					updAgreeReq.setCommonRequest(commonRequest);
-					updAgreeReq.setUserKey(nowUserKey);
-					updAgreeReq.setMbrClauseAgreeList(agreeList);
-					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
-
-					if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-						throw new StorePlatformException("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
-								+ updAgreeRes.getCommonResponse().getResultMessage());
-					}
 				} else {
 					throw new StorePlatformException("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
 							+ schAgreeListRes.getCommonResponse().getResultMessage());
