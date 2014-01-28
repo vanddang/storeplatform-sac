@@ -29,8 +29,6 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
@@ -118,30 +116,28 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		/* Return Value */
 		WithdrawRes withdrawRes = new WithdrawRes();
 
-		/* Tenant 연동 (임시 데이터 하드코딩되어 있음) */
-		RemoveUserRequest removeUserRequest = this.tenantRemoveUser(requestHeader, schUserRes);
-
 		/* 통합회원 연동 */
-		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) {
+		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 			imIdpReceiver = this.oneIdUser(requestHeader, schUserRes, req);
 
 			logger.info("IMIDP Success Response ", schUserRes.toString());
-			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
+			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
+		} else {
+			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				idpReceiver = this.idpMobileUser(requestHeader, schUserRes, req);
+
+				logger.info("IDP MDN Success Response ", schUserRes.toString());
+				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
+			}
+			/* IDP 아이디 회원 */
+			else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+				idpReceiver = this.idpIdUser(requestHeader, schUserRes, req);
+
+				logger.info("IDP ID Success Response ", schUserRes.toString());
+				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
+			}
 		}
 		/* IDP 모바일 회원 */
-		else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-			idpReceiver = this.idpMobileUser(requestHeader, schUserRes, req);
-
-			logger.info("IDP MDN Success Response ", schUserRes.toString());
-			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
-		}
-		/* IDP 아이디 회원 */
-		else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
-			idpReceiver = this.idpIdUser(requestHeader, schUserRes, req);
-
-			logger.info("IDP ID Success Response ", schUserRes.toString());
-			withdrawRes = this.sciRemoveUser(removeUserRequest, schUserRes);
-		}
 
 		return withdrawRes;
 
@@ -280,49 +276,4 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		return idpReceiver;
 	}
 
-	/**
-	 * Tenant API 연동
-	 */
-	@Override
-	public RemoveUserRequest tenantRemoveUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes)
-			throws Exception {
-
-		RemoveUserRequest removeUserRequest = new RemoveUserRequest();
-		removeUserRequest.setCommonRequest(commonRequest);
-		removeUserRequest.setSecedeReasonCode("US010411"); // 탈퇴사유 코드 : 임시
-		removeUserRequest.setSecedeReasonMessage("돈독이 오름"); // 임시
-		removeUserRequest.setSecedeTypeCode("US010705"); // 탈퇴유형 코드 : 임시
-		removeUserRequest.setUserKey(schUserRes.getUserMbr().getUserKey()); // 사용자 키
-
-		logger.info("Tenant Request Imsi Setting {}", removeUserRequest.toString());
-
-		return removeUserRequest;
-	}
-
-	/**
-	 * SC 회원탈퇴 연동
-	 */
-	@Override
-	public WithdrawRes sciRemoveUser(RemoveUserRequest removeUserRequest, SearchUserResponse schUserRes)
-			throws Exception {
-
-		WithdrawRes withdrawRes = new WithdrawRes();
-		RemoveUserResponse removeUserResponse = this.userSCI.remove(removeUserRequest);
-
-		// SC Component Remove Fail
-		if (!StringUtil.equals(removeUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new RuntimeException("[ IDP -> SC remove Fail : "
-					+ removeUserResponse.getCommonResponse().getResultCode() + "] "
-					+ removeUserResponse.getCommonResponse().getResultMessage());
-		}
-		// SC Component Remove Success
-		else {
-			logger.info("[ IDP -> SC remove Success Code : {}, {}", removeUserResponse.getCommonResponse()
-					.getResultCode(), removeUserResponse.getCommonResponse().getResultMessage());
-			logger.info("[ IDP -> SC remove Success Response : {}, {}", schUserRes.getUserMbr().getUserKey());
-			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
-		}
-
-		return withdrawRes;
-	}
 }

@@ -2,7 +2,6 @@ package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
@@ -68,30 +67,6 @@ public interface UserWithdrawService {
 	 * @throws Exception
 	 */
 	public IDPReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req)
-			throws Exception;
-
-	/**
-	 * Tenant 연동
-	 * 
-	 * @param SacRequestHeader
-	 * @param SearchUserResponse
-	 *            , WithdrawReq
-	 * @return
-	 * @throws Exception
-	 */
-	public RemoveUserRequest tenantRemoveUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes)
-			throws Exception;
-
-	/**
-	 * SC 회원탈퇴 연동
-	 * 
-	 * @param SacRequestHeader
-	 * @param RemoveUserRequest
-	 *            , SearchUserResponse
-	 * @return
-	 * @throws Exception
-	 */
-	public WithdrawRes sciRemoveUser(RemoveUserRequest removeUserRequest, SearchUserResponse schUserRes)
 			throws Exception;
 
 }

@@ -102,8 +102,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		if (req.getDeviceId() != null) {
-			req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-			logger.info("모번호 조회 getOpmdMdnInfo: {}", this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+			req.setDeviceId(opmdMdn);
+			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 		}
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
