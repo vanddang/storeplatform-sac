@@ -218,8 +218,6 @@ public class DisplayConstants {
 	 */
 	public static final String DP_SERIAL_META_CLASS_CD = "CT20";
 
-	public static final String DP_VOD_HD_SUPPORT_NM = "hd";
-
 	public static final String DP_EBOOK_STORE_SUPPORT_NM = "store";
 
 	public static final String DP_EBOOK_PLAY_SUPPORT_NM = "play";
@@ -254,4 +252,20 @@ public class DisplayConstants {
 	public static final String DP_MUSIC_REPRESENT_IMAGE_CD = "DP000162";
 
 	public static final String DP_SHOPPING_REPRESENT_IMAGE_CD = "DP0001A3";
+
+	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
+	public static final String DP_VOD_QUALITY_NORMAL = "normal";
+
+	public static final String DP_VOD_QUALITY_SD = "sd";
+
+	public static final String DP_VOD_QUALITY_HD = "hd";
+
+	// //////////////////////////////////// VOD 지원명 //////////////////////////////////////////
+
+	public static final String DP_VOD_HD_SUPPORT_NM = "hd";
+
+	public static final String DP_VOD_DOLBY_SUPPORT_NM = "dolbySprt";
+
+	public static final String DP_VOD_HDCP_SUPPORT_NM = "hdcp";
+
 }
