@@ -22,7 +22,7 @@ public class CategoryWebtoonReq extends CommonInfo {
 	private String tenantId; // 테넌트ID
 	private String systemId; // 시스템ID
 	private String imageCd; // 이미지코드
-	private String upMenuId; // 상위 메뉴아이디
+	private String topMenuId; // TOP 메뉴 아이디
 	private String menuId; // 메뉴아이디
 	private String listId; // 리스트아이디
 	private String weekDayCd; // 요일별 구분 코드
@@ -55,12 +55,12 @@ public class CategoryWebtoonReq extends CommonInfo {
 		this.imageCd = imageCd;
 	}
 
-	public String getUpMenuId() {
-		return this.upMenuId;
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
 
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	public String getMenuId() {
