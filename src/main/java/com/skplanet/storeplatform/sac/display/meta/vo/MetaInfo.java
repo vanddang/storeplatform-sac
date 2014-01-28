@@ -39,6 +39,7 @@ public class MetaInfo {
 	private String expoSellerNm;
 	private String expoSellerTelNo;
 	private String subContentsId;
+	private String imagePath;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -78,6 +79,7 @@ public class MetaInfo {
 	private String usePeriod;
 	private String ebookFilePath;
 	private Integer ebookFileSize;
+	private String cid;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
@@ -551,6 +553,21 @@ public class MetaInfo {
 	 */
 	public void setSubContentsId(String subContentsId) {
 		this.subContentsId = subContentsId;
+	}
+
+	/**
+	 * @return the imagePath
+	 */
+	public String getImagePath() {
+		return this.imagePath;
+	}
+
+	/**
+	 * @param imagePath
+	 *            the imagePath to set
+	 */
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	/**
@@ -1076,6 +1093,21 @@ public class MetaInfo {
 	 */
 	public void setEbookFileSize(Integer ebookFileSize) {
 		this.ebookFileSize = ebookFileSize;
+	}
+
+	/**
+	 * @return the cid
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            the cid to set
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
 	}
 
 	/**
