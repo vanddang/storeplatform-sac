@@ -104,8 +104,6 @@ public class GiftController {
 		}
 		if (giftConfirmReq.getRecvDt() == null || giftConfirmReq.getRecvDt() == "") {
 			throw new StorePlatformException("SAC_PUR_0001", "recvDt");
-		} else if (giftConfirmReq.getRecvDt().length() < 15) {
-			throw new StorePlatformException("SAC_PUR_0002", "recvDt");
 		}
 
 		if (giftConfirmReq.getRecvConfPathCd() == null || giftConfirmReq.getRecvConfPathCd() == "") {
