@@ -97,11 +97,10 @@ public class MiscellaneousController {
 			throws Exception {
 
 		// MDN 이외의 값일 경우 Error Return - 2014.01.28
-		Pattern pattern = Pattern.compile("[0-9]*");
+		Pattern pattern = Pattern.compile("[0-9]{10,11}");
 		Matcher matcher = pattern.matcher(request.getMsisdn());
-		boolean isNumber = matcher.matches();
-
-		if ((request.getMsisdn().length() != 10 && request.getMsisdn().length() != 11) || !isNumber) {
+		boolean isMdn = matcher.matches();
+		if (!isMdn) {
 			throw new Exception("MDN값이 아닙니다.");
 		}
 
