@@ -226,6 +226,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(req.getUserKey());
+		
 		/**
 		 * 이동통신사
 		 */
@@ -233,46 +234,79 @@ public class UserModifyServiceImpl implements UserModifyService {
 			userMbr.setUserTelecom(req.getDeviceTelecom());
 		}
 
+		/**
+		 * 휴대폰 번호 국가 코드
+		 */
 		if (!StringUtils.equals(req.getUserPhoneCountry(), "")) {
 			userMbr.setUserPhoneCountry(req.getUserPhoneCountry());
 		}
 
+		/**
+		 * 사용자 연락처
+		 */
 		if (!StringUtils.equals(req.getUserPhone(), "")) {
 			userMbr.setUserPhone(req.getUserPhone());
 		}
 
+		/**
+		 * SMS 수신 여부
+		 */
 		if (!StringUtils.equals(req.getIsRecvSms(), "")) {
 			userMbr.setIsRecvSMS(req.getIsRecvSms());
 		}
-
+		
+		/**
+		 * 이메일 수신여부
+		 */
 		if (!StringUtils.equals(req.getIsRecvEmail(), "")) {
 			userMbr.setIsRecvEmail(req.getIsRecvEmail());
 		}
 
+		/**
+		 * 사용자 성별
+		 */
 		if (!StringUtils.equals(req.getUserSex(), "")) {
 			userMbr.setUserSex(req.getUserSex());
 		}
 
+		/**
+		 * 사용자 생년월일
+		 */
 		if (!StringUtils.equals(req.getUserBirthDay(), "")) {
 			userMbr.setUserBirthDay(req.getUserBirthDay());
 		}
 
+		/**
+		 * 우편번호
+		 */
 		if (!StringUtils.equals(req.getUserZip(), "")) {
 			userMbr.setUserZip(req.getUserZip());
 		}
 
+		/**
+		 * 거주지 주소
+		 */
 		if (!StringUtils.equals(req.getUserAddress(), "")) {
 			userMbr.setUserAddress(req.getUserAddress());
 		}
 
+		/**
+		 * 거주지 상세주소
+		 */
 		if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
 			userMbr.setUserDetailAddress(req.getUserDetailAddress());
 		}
 
+		/**
+		 * (외국인) 도시
+		 */
 		if (!StringUtils.equals(req.getUserCity(), "")) {
 			userMbr.setUserCity(req.getUserCity());
 		}
 
+		/**
+		 * (외국인) 주
+		 */
 		if (!StringUtils.equals(req.getUserState(), "")) {
 			userMbr.setUserState(req.getUserState());
 		}
