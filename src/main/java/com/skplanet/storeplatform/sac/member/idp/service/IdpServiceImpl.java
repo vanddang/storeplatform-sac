@@ -835,7 +835,7 @@ public class IdpServiceImpl implements IdpService {
 			// 실명인증 대상 본인/법정대리인 여부
 			// 법정대리인
 			updateRealNameRequest.setIsOwn("PARENT");
-			updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
+			// updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
 			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
 
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
@@ -843,7 +843,7 @@ public class IdpServiceImpl implements IdpService {
 			if (map.get("parent_rname_auth_key") != null) {
 				mbrLglAgent.setParentCI(map.get("parent_rname_auth_key").toString());
 			}
-			mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
+			// mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
 			mbrLglAgent.setParentRealNameSite(map.get("parent_approve_sst_code").toString());
 			if (map.get("parent_approve_date").toString().length() == 8) {
 				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString() + "000000");
