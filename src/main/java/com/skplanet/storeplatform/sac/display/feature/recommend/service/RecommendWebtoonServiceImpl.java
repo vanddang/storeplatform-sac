@@ -109,7 +109,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			Contributor contributor = null;
 			Accrual accrual = null;
 			Date date = null;
-
+			List<Identifier> identifierList = null;
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
 			List<Product> productList = new ArrayList<Product>();
@@ -119,20 +119,21 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				product = new Product();
 
 				// 상품 정보 (상품ID)
+				identifierList = new ArrayList<Identifier>();
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				identifier.setText(webtoonDto.getProdId());
+				identifierList.add(identifier);
 
 				// 메뉴 정보
 				menuList = new ArrayList<Menu>();
 				menu = new Menu();
-				menu.setType("topClass");
+				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 				menu.setId(webtoonDto.getUpMenuId());
 				menu.setName(webtoonDto.getUpMenuName());
 				menuList.add(menu);
 
 				menu = new Menu();
-				menu.setType("menuId");
 				menu.setId(webtoonDto.getMenuId());
 				menu.setName(webtoonDto.getMenuNm());
 				menuList.add(menu);
@@ -156,17 +157,17 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				// 이미지 정보
 				sourceList = new ArrayList<Source>();
 				source = new Source();
-				source.setType("thumbnail");
+				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 				source.setUrl(webtoonDto.getFilePos());
 				sourceList.add(source);
 
 				// 업데이트 날짜
 				date = new Date();
-				date.setType("date/upt");
+				date.setType(DisplayConstants.DP_DATE_UPT_NM);
 				date.setText(webtoonDto.getUpdDt());
 
 				// 데이터 매핑
-				product.setIdentifier(identifier);
+				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setContributor(contributor);
 				product.setAccrual(accrual);
