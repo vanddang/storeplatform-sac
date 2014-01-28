@@ -37,6 +37,8 @@ public class CategoryEbookComicReq extends CommonInfo {
 
 	private String imageCd; // 이미지 코드
 
+	private String dummy; // dummy Data
+
 	public String getProdGradeCd() {
 		return this.prodGradeCd;
 	}
@@ -108,4 +110,13 @@ public class CategoryEbookComicReq extends CommonInfo {
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
 	}
+
+	public String getDummy() {
+		return this.dummy;
+	}
+
+	public void setDummy(String dummy) {
+		this.dummy = dummy;
+	}
+
 }
