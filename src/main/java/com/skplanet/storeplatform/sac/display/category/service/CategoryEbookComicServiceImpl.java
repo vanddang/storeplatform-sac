@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryEbookComic;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
@@ -196,6 +197,8 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 					// 이미지 정보
 					source = new Source();
 					sourceList = new ArrayList<Source>();
+					source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+					source.setSize(mapperVO.getImgSize());
 					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 					source.setUrl(mapperVO.getImgPath());
 					sourceList.add(source);
@@ -321,8 +324,9 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 					// 이미지 정보
 					source = new Source();
 					sourceList = new ArrayList<Source>();
+					source.setMediaType("image/png");
+					source.setSize(1234);
 					source.setType("thumbnail");
-					// source.setMediaType("image/png");
 					source.setUrl("/SMILE_DATA7/PEBOOK/201401/06/0002092536/1/0003917513/1/01_0002092536_480_679_1539_130x186.PNG");
 					sourceList.add(source);
 					product.setSourceList(sourceList);
