@@ -16,8 +16,12 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmai
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
@@ -88,7 +92,12 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request)
 			throws Exception {
+
 		GetOpmdRes response = this.service.getOpmd(request);
+		// MDN 이외의 값일 경우 Error Return - 2014.01.28
+		if (response.getMsisdn().length() != 10 && response.getMsisdn().length() != 11) {
+			throw new Exception("MDN값이 아닙니다.");
+		}
 
 		return response;
 	}
@@ -188,9 +197,9 @@ public class MiscellaneousController {
 	 */
 	@RequestMapping(value = "/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(
+	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetEmailAuthorizationCodeReq request) throws Exception {
-		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(request);
+		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(requestHeader, request);
 		return res;
 
 	}
@@ -212,6 +221,46 @@ public class MiscellaneousController {
 			@Validated @RequestBody ConfirmEmailAuthorizationCodeReq request) throws Exception {
 		ConfirmEmailAuthorizationCodeRes res = this.service.confirmEmailAuthorizationCode(request);
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * 부가서비스 가입.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            CreateAdditionalServiceReq
+	 * @return CreateAdditionalServiceRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	@RequestMapping(value = "/dev/createAdditionalService/v1")
+	@ResponseBody
+	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request)
+			throws Exception {
+
+		CreateAdditionalServiceRes response = this.service.createAdditionalService(request);
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * 부가서비스 가입 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetAdditionalServiceReq
+	 * @return GetAdditionalServiceRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	@RequestMapping(value = "/dev/getAdditionalService/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request)
+			throws Exception {
+		GetAdditionalServiceRes response = this.service.getAdditionalService(request);
+
+		return response;
 	}
 
 	/**

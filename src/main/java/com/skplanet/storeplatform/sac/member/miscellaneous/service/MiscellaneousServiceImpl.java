@@ -45,14 +45,22 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
@@ -67,6 +75,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRe
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
@@ -344,7 +356,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		}
 
 		if (Double.parseDouble(resultInfo.getCurrDt()) < 0) {
-			LOGGER.info("인증 시간이 만료된 인증 코드입니다.");
+			LOGGER.info("## 인증 시간이 만료된 인증 코드입니다. - AuthValueCreateDt : {}", resultInfo.getAuthValueCreateDt());
 			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
@@ -438,9 +450,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(GetEmailAuthorizationCodeReq request)
-			throws Exception {
+	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader sacRequestHeader,
+			GetEmailAuthorizationCodeReq request) throws Exception {
 
+		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		ServiceAuth serviceAuthReq = new ServiceAuth();
 		serviceAuthReq.setAuthEmail(request.getUserEmail());
 		serviceAuthReq.setMbrNo(request.getUserKey());
@@ -472,6 +485,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			/** 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
 			ServiceAuth serviceAuthInfo = new ServiceAuth();
+			serviceAuthInfo.setTenantId(tenantId);
 			serviceAuthInfo.setAuthTypeCd("CM010902");
 			serviceAuthInfo.setAuthValue(authCode);
 			serviceAuthInfo.setMbrNo(request.getUserKey());
@@ -509,15 +523,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
 		if (serviceAuthInfo != null) {
-			/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
-			if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
-				LOGGER.info("## 인증 유효기간 만료.");
-				throw new Exception("인증 유효기간이 만료되었습니다.");
-			}
 
 			if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
 				throw new Exception("기존 인증된 회원입니다.");
 			}
+
+			/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
+			if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
+				LOGGER.info("## 인증 유효기간 만료. - AuthValueCreateDt : {}", serviceAuthInfo.getAuthValueCreateDt());
+				throw new Exception("인증 유효기간이 만료되었습니다.");
+			}
+
 			String authSeq = serviceAuthInfo.getAuthSeq();
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 			LOGGER.info("## 이메일 인증 완료.");
@@ -544,7 +560,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 */
 	public String mdnValidation(String mdn) {
 		String validation = "N";
-		if (mdn.length() == 10 | mdn.length() == 11) {
+		if (mdn.length() == 10 || mdn.length() == 11) {
 			validation = "Y";
 		}
 		return validation;
@@ -595,6 +611,63 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 					+ searchUserResponse.getCommonResponse().getResultMessage());
 		}
 		return userKey;
+	}
+
+	@Override
+	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) throws Exception {
+		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
+		// TODO IdpServie joinSupService 호출해서 부가서비스 가입 요청
+		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getDeviceId(), request.getSvcCode(), null);
+		idpReciver.getResponseBody().getSvc_code(); // 부가서비스 코드
+
+		return response;
+	}
+
+	@Override
+	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) throws Exception {
+		// TODO IdpServie tmapServiceCheck 호출해서 부가서비스 가입 조회 요청
+		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
+		IDPReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getDeviceId(), request.getSvcCode());
+		idpReciver.getResponseBody().getSp_list(); // 타 채널 가입 리스트
+		idpReciver.getResponseBody().getCharge(); // SKT 사용자의 휴대폰 요금제 코드
+		idpReciver.getResponseBody().getServiceCD(); // SKT 사용자의 휴대폰 요금제에 따른 부가서비스 코드
+
+		response.setDeviceId(request.getDeviceId());
+		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
+		response.setSvcJoinResult(idpReciver.getResponseBody().getSvc_result()); // 부가서비스 결과 : 하나 또는 복수 파이프(|)로 구분함 /
+																				 // 결과는 (=) 로 구분
+
+		return response;
+	}
+
+	@Override
+	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization(SendSmsForRealNameAuthorizationReq request) {
+		// TODO 1. 모번호 조회 UAPS 연동
+		// TODO 2. 실명인증 SMS 발송 요청 - EC (KMD 연동)
+		// TODO 3. EC 발송 결과 Response
+		return null;
+	}
+
+	@Override
+	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization(ConfirmRealNameAuthorizationReq request) {
+		// TODO 1. 인증코드 확인 요청 - EC (KMD 연동)
+		// TODO 2. 인증코드 확인 리턴값 Response
+		return null;
+	}
+
+	@Override
+	public ResendSmsForRealNameAuthorizationRes resendSmsForRealNameAuthorization(
+			ResendSmsForRealNameAuthorizationReq request) {
+		// TODO 1. EC (KMD 연동)에 SMS 재발송 요청
+		// TODO 2. EC 발송 결과 Response
+		return null;
+	}
+
+	@Override
+	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request) {
+		// TODO 1. EC (Inicis 연동) 파라미터 전달, 결제계좌 정보 인증 요청
+		// TODO 2. EC (Inicis 연동) 결제계좌 인증 여부 Response
+		return null;
 	}
 
 	/**

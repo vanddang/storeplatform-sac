@@ -1,13 +1,21 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmRealNameAuthorizationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
@@ -21,6 +29,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRe
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ResendSmsForRealNameAuthorizationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForRealNameAuthorizationRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -125,14 +137,15 @@ public interface MiscellaneousService {
 	 * 이메일 인증 코드 생성.
 	 * </pre>
 	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param request
 	 *            GetPhoneAuthorizationCodeReq
 	 * @return GetEmailAuthorizationCodeRes
 	 * @throws Exception
-	 *             Exception
 	 */
-	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(GetEmailAuthorizationCodeReq request)
-			throws Exception;
+	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader requestHeader,
+			GetEmailAuthorizationCodeReq request) throws Exception;
 
 	/**
 	 * <pre>
@@ -147,6 +160,77 @@ public interface MiscellaneousService {
 	 */
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
 			throws Exception;
+
+	/**
+	 * <pre>
+	 * 부가서비스 가입 - IDP 연동.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            CreateAdditionalServiceReq
+	 * @return CreateAdditionalServiceRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) throws Exception;
+
+	/**
+	 * <pre>
+	 * 부가서비스 가입 조회 - IDP 연동.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetAdditionalServiceReq
+	 * @return GetAdditionalServiceRes
+	 * @throws Exception
+	 *             Exception
+	 */
+	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) throws Exception;
+
+	/**
+	 * <pre>
+	 * 실명인증용 휴대폰 인증 SMS 발송.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            SendSmsForRealNameAuthorizationReq
+	 * @return SendSmsForRealNameAuthorizationRes
+	 */
+	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization(SendSmsForRealNameAuthorizationReq request);
+
+	/**
+	 * <pre>
+	 * 실명인증용 휴대폰 인증 코드 확인.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ConfirmRealNameAuthorizationReq
+	 * @return ConfirmRealNameAuthorizationRes
+	 */
+	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization(ConfirmRealNameAuthorizationReq request);
+
+	/**
+	 * <pre>
+	 * 실명인증용 휴대폰 인증 SMS 재발송.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            ResendSmsForRealNameAuthorizationReq
+	 * @return ResendSmsForRealNameAuthorizationRes
+	 */
+	public ResendSmsForRealNameAuthorizationRes resendSmsForRealNameAuthorization(
+			ResendSmsForRealNameAuthorizationReq request);
+
+	/**
+	 * <pre>
+	 * 결제 계좌 정보 인증.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            AuthorizeAccountReq
+	 * @return AuthorizeAccountRes
+	 */
+	public AuthorizeAccountRes authorizeAccount(AuthorizeAccountReq request);
 
 	/**
 	 * <pre>
