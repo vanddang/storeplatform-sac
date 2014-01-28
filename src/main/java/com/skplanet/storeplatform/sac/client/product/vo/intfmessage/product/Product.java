@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 
 /**
  * Interface Message Product Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -87,6 +87,10 @@ public class Product extends CommonInfo implements Serializable {
 	 * 상품상세설명.
 	 */
 	private String productDetailExplain;
+	/**
+	 * 상품소개내용
+	 */
+	private String productIntroduction;
 	/**
 	 * 목차정보(ebook일 경우).
 	 */
@@ -404,6 +408,25 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setProductDetailExplain(String productDetailExplain) {
 		this.productDetailExplain = productDetailExplain;
+	}
+	
+	
+	/**
+	 * 상품 소개 내용
+	 * @return
+	 * 		상품 소개 내용
+	 */
+	public String getProductIntroduction() {
+		return productIntroduction;
+	}
+
+	/**
+	 * 상품 소개 내용
+	 * @param productIntroduction
+	 * 		상품 소개 내용
+	 */
+	public void setProductIntroduction(String productIntroduction) {
+		this.productIntroduction = productIntroduction;
 	}
 
 	/**
@@ -744,7 +767,7 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subProductTotalCount
 	 *            subProductTotalCount
 	 */

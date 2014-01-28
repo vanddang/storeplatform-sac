@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 
 /**
  * Interface Message Vod Value Object.
- * 
+ *
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -40,7 +40,7 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param runningTime
 	 *            runningTime
 	 * @param videoInfo
@@ -50,6 +50,19 @@ public class Vod extends CommonInfo implements Serializable {
 		super();
 		this.runningTime = runningTime;
 		this.videoInfo = videoInfo;
+	}
+
+	/**
+	 *
+	 * @param runningTime
+	 *            runningTime
+	 * @param videoInfoList
+	 *            videoInfoList
+	 */
+	public Vod(Time runningTime, List<VideoInfo> videoInfoList) {
+		super();
+		this.runningTime = runningTime;
+		this.videoInfoList = videoInfoList;
 	}
 
 	/**
@@ -98,11 +111,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 화질별 video 정보 List.
 	 * </pre>
-	 * 
+	 *
 	 * @return VideoInfoList
 	 */
 	public List<VideoInfo> getVideoInfoList() {
@@ -110,11 +123,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * 화질별 video 정보 List.
 	 * </pre>
-	 * 
+	 *
 	 * @param videoInfoList
 	 *            videoInfoList
 	 */
@@ -123,11 +136,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * vod 정보.
 	 * </pre>
-	 * 
+	 *
 	 * @return VodExplain
 	 */
 	public VodExplain getVodExplain() {
@@ -135,11 +148,11 @@ public class Vod extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * <pre>
 	 * vod 정보.
 	 * </pre>
-	 * 
+	 *
 	 * @param vodExplain
 	 *            vodExplain
 	 */

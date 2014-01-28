@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.vod;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
@@ -18,6 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  *
  * Updated on : 2014. 01. 09 Updated by : 임근대, SK 플래닛.
  */
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class VodDetailRes extends CommonInfo {
 
 	private static final long serialVersionUID = 3342908170045743735L;
