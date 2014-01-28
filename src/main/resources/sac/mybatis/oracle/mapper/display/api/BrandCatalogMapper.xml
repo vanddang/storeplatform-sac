@@ -6,9 +6,8 @@
     <select id="ID_GEN_SELECT_BRAND_ID" resultType="String">
        /* BrandCatalogMapper.xml, ID_GEN_SELECT_BRAND_ID, 브랜드ID SEQ 만들기, 김형식/SK플래닛 , 2013-12-30 */
         SELECT 
-         'BR000'||(MAX(SUBSTR(BRAND_ID,3,8))+1)
-        FROM TB_DP_SHPG_BRAND A
-        WHERE BRAND_ID LIKE 'BR%'
+         'BR'||LPAD(SQ_DP_SHPG_BRAND.NEXTVAL, 8, '0')
+        FROM DUAL
     </select>
     
     <!--브랜드, 카탈로그 카테고리 조회-->
@@ -71,9 +70,8 @@
     <select id="ID_GEN_SELECT_CATALOG_ID" resultType="String">
        /* BrandCatalogMapper.xml, ID_GEN_SELECT_CATALOG_ID, 카탈로그 ID SEQ 만들기, 김형식/SK플래닛 , 2013-12-30 */
         SELECT 
-          'CL'||(MAX(SUBSTR(CATALOG_ID,3,8))+1)
-        FROM TB_DP_SHPG_CATALOG A
-        WHERE CATALOG_ID LIKE 'CL%'  
+         'CL'||LPAD(SQ_DP_SHPG_CATALOG.NEXTVAL, 8, '0')
+        FROM DUAL
     </select>    
     
     <!--카탈로그ID 조회-->
