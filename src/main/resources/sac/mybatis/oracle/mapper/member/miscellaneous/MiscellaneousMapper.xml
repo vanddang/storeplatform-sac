@@ -23,6 +23,7 @@
            <if test="timeToLive!=null">
            TO_CHAR(AUTH_VALUE_CREATE_DT - (SYSDATE - (#{timeToLive}/24/60))) AS CURR_DT,
            </if>
+           TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT, 
            AUTH_COMPT_YN
        FROM
            TB_CM_SVC_AUTH
@@ -121,6 +122,7 @@
         <if test="timeToLive!=null">
         TO_CHAR(AUTH_VALUE_CREATE_DT -(SYSDATE -#{timeToLive})) AS CURR_DT,
         </if>
+        TO_CHAR(AUTH_VALUE_CREATE_DT, 'yyyyMMdd hh24:mi:ss') AS AUTH_VALUE_CREATE_DT,
         AUTH_COMPT_YN
     FROM 
         TB_CM_SVC_AUTH
