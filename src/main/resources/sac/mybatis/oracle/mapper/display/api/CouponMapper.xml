@@ -5,9 +5,9 @@
     <!--쿠폰ID 생성 조회-->
     <select id="couponGenerateId" resultType="String">
        /* CouponMapper.xml, couponGenerateId, 쿠폰ID 생성 조회, 김형식/SK플래닛 , 2013-01-08 */
-       SELECT 
-         'S90000'||(MAX(SUBSTR(PROD_ID,3,8))+1)
-        FROM TB_DP_SHPG_PROD A
+        SELECT 
+         'S9'||LPAD(SQ_DP_PROD.NEXTVAL, 8, '0')
+        FROM DUAL
     </select>
     
     <!--아이템ID 생성 조회-->
