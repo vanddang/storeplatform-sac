@@ -40,6 +40,8 @@ public class FeatureCategoryVodDTO {
 	private Double avgEvluScore;
 	private String imgPath;
 	private String topMenuNm;
+	private String samplUrl;
+	private String prodChrgYn;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -240,4 +242,21 @@ public class FeatureCategoryVodDTO {
 	public void setTopMenuNm(String topMenuNm) {
 		this.topMenuNm = topMenuNm;
 	}
+
+	public String getSamplUrl() {
+		return this.samplUrl;
+	}
+
+	public void setSamplUrl(String samplUrl) {
+		this.samplUrl = samplUrl;
+	}
+
+	public String getProdChrgYn() {
+		return this.prodChrgYn;
+	}
+
+	public void setProdChrgYn(String prodChrgYn) {
+		this.prodChrgYn = prodChrgYn;
+	}
+
 }
