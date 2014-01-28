@@ -15,13 +15,10 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <pre>
  * 쇼핑 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
-public class Shopping extends CommonInfo{
+public class Shopping extends CommonInfo {
 
 	private int totalCount;
 	private String catagoryId;
@@ -39,7 +36,8 @@ public class Shopping extends CommonInfo{
 	private String brandName;
 	private String menuId;
 	private String menuName;
-
+	private String upMenuId;
+	private String upMenuName;
 	private String no;
 	private String newYn;
 	private String regDt;
@@ -51,6 +49,22 @@ public class Shopping extends CommonInfo{
 	private String applyStartDt;
 	private String applyEndDt;
 	private String prodCaseCd;
+
+	public String getUpMenuId() {
+		return this.upMenuId;
+	}
+
+	public void setUpMenuId(String upMenuId) {
+		this.upMenuId = upMenuId;
+	}
+
+	public String getUpMenuName() {
+		return this.upMenuName;
+	}
+
+	public void setUpMenuName(String upMenuName) {
+		this.upMenuName = upMenuName;
+	}
 
 	public int getTotalCount() {
 		return this.totalCount;
