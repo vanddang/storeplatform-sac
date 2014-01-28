@@ -47,7 +47,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	@Override
 	public String couponGenerateId() {
 		try {
-			return (String) this.commonDAO.queryForObject("Coupon.couponGenerateId", "");
+			return (String) this.commonDAO.queryForObject("Coupon.prodGenerateId", "");
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
 		}
@@ -61,7 +61,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 	@Override
 	public String itemGenerateId() {
 		try {
-			return (String) this.commonDAO.queryForObject("Coupon.itemGenerateId", "");
+			return (String) this.commonDAO.queryForObject("Coupon.prodGenerateId", "");
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
 		}
