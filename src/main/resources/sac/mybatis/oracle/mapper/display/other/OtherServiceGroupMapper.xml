@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherServiceGroup">
+    <!-- 일반 카테고리 앱 상품 조회 -->
+    <select id="selectOtherServiceGroupList" parameterType="ServiceGroupReq" resultType="ServiceGroup">
+		SELECT  /* OtherServiceGroupMapper.XML, selectOtherServiceGroupList, seung hun Lee, 2014-01-27 */		
+              COUNT(*) OVER () AS TOTAL_COUNT
+              , TDP.PROD_ID
+		      , TDP.CONTENTS_TYPE_CD
+		      , DECODE(TDP.CONTENTS_TYPE_CD,'PD002501','채널','PD002502','에피소드') AS CONTENTS_TYPE_NM
+		      , TDP.TOP_MENU_ID
+              , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TDP.TOP_MENU_ID AND LANG_CD = 'ko') TOP_MENU_NM
+		FROM TB_DP_PROD TDP
+		WHERE 1=1
+         <if test = "prodIdList !=null">
+        AND TDP.PROD_ID IN
+           <foreach collection="prodIdList" item="item" index="index" open="(" separator="," close=")"> 
+                #{item}
+           </foreach>
+      </if>
+       <if test = "prodIdList != null">  
+            ORDER BY instr
+            <foreach collection="prodIdList" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
+                #{item}
+            </foreach>
+         </if>
+    </select>
+</mapper>
