@@ -79,7 +79,6 @@ public class MetaInfo {
 	private String usePeriod;
 	private String ebookFilePath;
 	private Integer ebookFileSize;
-	private String cid;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
@@ -1093,21 +1092,6 @@ public class MetaInfo {
 	 */
 	public void setEbookFileSize(Integer ebookFileSize) {
 		this.ebookFileSize = ebookFileSize;
-	}
-
-	/**
-	 * @return the cid
-	 */
-	public String getCid() {
-		return this.cid;
-	}
-
-	/**
-	 * @param cid
-	 *            the cid to set
-	 */
-	public void setCid(String cid) {
-		this.cid = cid;
 	}
 
 	/**
