@@ -30,7 +30,7 @@ public class Purchase extends CommonInfo implements Serializable {
 
 	private Identifier identifier; // 구매ID
 	/*
-	 * 구매상태 (1 : 구매 (payment), 2 : 선물 (gift), 3 : 만료 (expired), 4 : 취소 (cancel))
+	 * 구매상태 (payment : 구매, gift : 선물, expired : 만료, cancel : 취소, noPayment : 미구매)
 	 */
 	private String state;
 	private String show; // 구매내역 숨김처리 여부
