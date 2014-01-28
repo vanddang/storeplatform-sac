@@ -38,6 +38,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.best.vo.BestApp;
 
@@ -185,6 +187,7 @@ public class BestAppServiceImpl implements BestAppService {
 					app.setPackageName(mapperVO.getApkPkgNm());
 					app.setVersionCode(mapperVO.getApkVerCd());
 					app.setVersion(mapperVO.getApkVer());
+					app.setSize(mapperVO.getFileSize());
 
 					accrual.setVoterCount(mapperVO.getPaticpersCnt());
 					accrual.setDownloadCount(mapperVO.getDwldCnt());
@@ -195,8 +198,10 @@ public class BestAppServiceImpl implements BestAppService {
 					title.setText(mapperVO.getProdNm());
 
 					sourceList = new ArrayList<Source>();
-					source.setType("thumbnail");
+					source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 					source.setUrl(mapperVO.getImgPath());
+					source.setSize(mapperVO.getImgSize());
 					sourceList.add(source);
 
 					price.setText(mapperVO.getProdAmt());
@@ -233,7 +238,7 @@ public class BestAppServiceImpl implements BestAppService {
 
 				// 상품ID
 				identifier = new Identifier();
-				identifier.setType("episodeId");
+				identifier.setType("episode");
 				identifier.setText("0000643818");
 
 				support.setType("Y");
@@ -260,6 +265,7 @@ public class BestAppServiceImpl implements BestAppService {
 				app.setPackageName("proj.syjt.tstore");
 				app.setVersionCode("11000");
 				app.setVersion("1.1");
+				app.setSize(5908912);
 
 				/*
 				 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
@@ -278,6 +284,7 @@ public class BestAppServiceImpl implements BestAppService {
 				/*
 				 * source mediaType, size, type, url
 				 */
+				source.setMediaType("image/png");
 				source.setType("thumbnail");
 				source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 				sourceList.add(source);
@@ -320,7 +327,7 @@ public class BestAppServiceImpl implements BestAppService {
 
 			// 상품ID
 			identifier = new Identifier();
-			identifier.setType("episodeId");
+			identifier.setType("episode");
 			identifier.setText("0000643818");
 
 			support.setType("Y");
@@ -347,6 +354,7 @@ public class BestAppServiceImpl implements BestAppService {
 			app.setPackageName("proj.syjt.tstore");
 			app.setVersionCode("11000");
 			app.setVersion("1.1");
+			app.setSize(5908912);
 
 			/*
 			 * Accrual voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
@@ -365,6 +373,7 @@ public class BestAppServiceImpl implements BestAppService {
 			/*
 			 * source mediaType, size, type, url
 			 */
+			source.setMediaType("image/png");
 			source.setType("thumbnail");
 			source.setUrl("http://wap.tstore.co.kr/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 			sourceList.add(source);
