@@ -10,7 +10,7 @@
 		      ,KA.PROD_NM         /* 상품명 */
 		      ,KA.MENU_ID         /* MENU_ID */
 		      ,KA.TOP_MENU_ID     /* TOP MENU ID */
-		      ,KA.TOP_MENU_NM     /* TOP 메뉴명 */
+		      ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE KA.TOP_MENU_ID = MENU_ID AND LANG_CD = #{langCd} AND ROWNUM = 1) AS TOP_MENU_NM /* TOP 메뉴명 */
 		      ,KA.PROD_GRD_CD     /* 이용등급 */
 		      ,KA.PROD_BASE_DESC  /* 상품 기본 설명 */
 --		      ,KA.PROD_DTL_DESC   /* 상품 상세 설명 */
@@ -64,7 +64,6 @@
 		                               ,D.VER_MAJOR||'.'||D.VER_MINOR AS APK_VER   
 		                               ,D.AID             
 		                               ,F.TOP_MENU_ID
-		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.TOP_MENU_ID = MENU_ID AND LANG_CD = #{langCd}) AS TOP_MENU_NM                       
 		                               ,G.MENU_NM                               
 		                               ,G.MENU_DESC
 		                               ,H.SUB_CONTENTS_ID
@@ -173,7 +172,10 @@
 							                            , LA.PROD_NM||' '||LA.CHAPTER
 							                            , LA.PROD_NM ) )
                 END AS CONCAT_PROD_NM
-              , LA.PROD_BASE_DESC
+              , CASE WHEN LA.TOP_MENU_ID = 'DP13' 
+                     THEN LA.PROD_DTL_DESC
+                     ELSE LA.PROD_BASE_DESC
+                END AS PROD_BASE_DESC
               , LA.PROD_GRD_CD
               , LA.ARTIST1_NM
               , LA.ARTIST2_NM
@@ -230,9 +232,8 @@
                                          , F.ARTIST1_NM
                                          , F.ARTIST2_NM
                                          , F.ARTIST3_NM
-                                         , CASE WHEN B.TOP_MENU_ID = 'DP13' THEN F.PROD_DTL_DESC
-                                                ELSE F.PROD_BASE_DESC
-                                           END AS PROD_BASE_DESC
+                                         , F.PROD_BASE_DESC
+                                         , F.PROD_DTL_DESC
                                          , H.CHNL_PERIOD_AMT
                                          , H.CHNL_UNLMT_AMT
                                          , H.PROD_NET_AMT
@@ -342,6 +343,7 @@
            AND LA.PROD_ID = LB.PROD_ID(+)
            AND LA.CHNL_PROD_ID = LC.PROD_ID
            AND LC.EXPO_ORD = '1'
+           AND LC.LANG_CD = #{langCd}
            AND LC.IMG_CD = 'DP000108'
     </select>  
     

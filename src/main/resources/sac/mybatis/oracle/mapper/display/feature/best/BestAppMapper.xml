@@ -8,9 +8,8 @@
 		      ,KA.PROD_ID         /* 상품 ID */
 		      ,KA.PROD_NM         /* 상품명 */
 		      ,KA.MENU_ID         /* MENU_ID */
-		      ,KA.UP_MENU_ID      /* 상위 MENU ID */
-		      ,KA.UP_MENU_NM      /* 상위 메뉴명 */
-		      ,KA.TOP_MENU_ID     /* TOP MENU ID */
+		      ,KA.TOP_MENU_ID     /* 상위 MENU ID */
+		      ,KA.TOP_MENU_NM     /* 상위 메뉴명 */
 		      ,KA.PROD_GRD_CD     /* 이용등급 */
 		      ,KA.PROD_BASE_DESC  /* 상품 기본 설명 */
 --		      ,KA.PROD_DTL_DESC   /* 상품 상세 설명 */
@@ -30,8 +29,8 @@
                          WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
                          ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE     /* 평점 */
               ]]> 
-		      ,KA.DWLD_CNT /* 다운로드수 */
-		      ,KA.PATICPERS_CNT /* 참여자수 */
+		      ,NVL(KA.DWLD_CNT, 0) AS DWLD_CNT /* 다운로드수 */
+		      ,NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT /* 참여자수 */
 		      ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
 		      ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
               ,KB.FILE_PATH AS FILE_PATH /* APK 파일 경로 */
@@ -64,9 +63,8 @@
 		                               ,D.PART_PARENT_CLSF_CD                              
 		                               ,D.VER_MAJOR||'.'||D.VER_MINOR AS APK_VER   
 		                               ,D.AID             
-		                               ,F.UP_MENU_ID
 		                               ,F.TOP_MENU_ID
-		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
+		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.TOP_MENU_ID = MENU_ID AND LANG_CD =#{langCd}) AS TOP_MENU_NM                       
 		                               ,G.MENU_NM                               
 		                               ,G.MENU_DESC
 		                               ,H.SUB_CONTENTS_ID
@@ -87,9 +85,8 @@
 		                                   FROM TB_DP_LIST_PROD A
 		                                  WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
 		                                    AND A.LIST_ID = #{listId} /* param : listId */
-		                                    AND A.EXPO_YN ='Y' /* 전시여부 */ 
+		                                    AND A.EXPO_YN = 'Y' /* 전시여부 */ 
 		                                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
-		                                    --AND SYSDATE BETWEEN A.EXPO_START_DT AND A.EXPO_END_DT                       
 		                               ) A
 		                               ,TB_DP_PROD B
 		                               ,TB_DP_PROD_DESC C
@@ -107,14 +104,14 @@
                                     AND  B.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
                                   </if>  		                            
 		                            AND A.PROD_ID = C.PROD_ID
-		                            AND C.LANG_CD = 'ko' /* param : 언어코드 */
+		                            AND C.LANG_CD = #{langCd} /* param : 언어코드 */
 		                            AND A.PROD_ID = D.PROD_ID
 		                            AND A.PROD_ID = E.PROD_ID
 		                            AND A.MENU_ID = E.MENU_ID                    
 		                            AND E.MENU_ID = F.MENU_ID
 		                            AND F.USE_YN ='Y'                    
 		                            AND A.MENU_ID = G.MENU_ID             
-		                            AND G.LANG_CD = 'ko' /* param : 언어코드 */
+		                            AND G.LANG_CD = #{langCd} /* param : 언어코드 */
 		                            AND A.PROD_ID = H.PROD_ID
 		                            AND A.TENANT_ID = I.TENANT_ID
 		                            AND A.PROD_ID = I.PROD_ID
@@ -124,7 +121,7 @@
 		                            AND F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' /* DP02 : 폰꾸미기 */
 		                            AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
 		                            AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
-		                            AND K.USE_YN ='Y'
+		                            AND K.USE_YN = 'Y'
 		                            AND I.EXPO_YN ='Y' /* 노출여부 */
 		                            AND SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT 
 		                          ORDER BY A.EXPO_ORD
@@ -141,6 +138,7 @@
 		     AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
 		     AND KA.PROD_ID = KC.PROD_ID
 		     AND KC.EXPO_ORD = '1'
+		     AND KC.LANG_CD = #{langCd}
 		     AND KC.IMG_CD = 'DP000101'    	       
     </select>
     
@@ -152,9 +150,8 @@
 		        ,KA.PROD_ID         /* 상품 ID */
 		        ,KA.PROD_NM         /* 상품명 */
 		        ,KA.MENU_ID         /* MENU_ID */
-		        ,KA.UP_MENU_ID      /* 상위 MENU ID */
-		        ,KA.UP_MENU_NM      /* 상위 메뉴명 */
-		        ,KA.TOP_MENU_ID     /* TOP MENU ID */
+		        ,KA.TOP_MENU_ID     /* 상위 MENU ID */
+		        ,KA.TOP_MENU_NM     /* 상위 메뉴명 */
 		        ,KA.PROD_GRD_CD     /* 이용등급 */
 		        ,KA.PROD_BASE_DESC  /* 상품 기본 설명 */           
 		        ,DECODE( KA.PART_PARENT_CLSF_CD, 'PD012301', 'Y', 'N' ) AS PART_PARENT_CLSF_CD /* IN_APP_BILLING */
@@ -172,8 +169,8 @@
 		                   WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
 		                   ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE     /* 평점 */
 		        ]]>
-		        ,KA.DWLD_CNT /* 다운로드수 */
-		        ,KA.PATICPERS_CNT /* 참여자수 */
+		        ,NVL(KA.DWLD_CNT, 0) AS DWLD_CNT /* 다운로드수 */
+		        ,NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT /* 참여자수 */
                 ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
                 ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
                 ,KB.FILE_PATH AS FILE_PATH /* APK 파일 경로 */
@@ -212,9 +209,8 @@
 		                                         ,D.PART_PARENT_CLSF_CD                              
 		                                         ,D.VER_MAJOR||'.'||D.VER_MINOR AS APK_VER   
 		                                         ,D.AID             
-		                                         ,F.UP_MENU_ID
 		                                         ,F.TOP_MENU_ID
-		                                         ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.UP_MENU_ID = MENU_ID AND LANG_CD ='ko') AS UP_MENU_NM                       
+		                                         ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.TOP_MENU_ID = MENU_ID AND LANG_CD =#{langCd}) AS TOP_MENU_NM                       
 		                                         ,G.MENU_NM                               
 		                                         ,G.MENU_DESC
 		                                         ,H.SUB_CONTENTS_ID
@@ -236,7 +232,7 @@
 		                                            WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
                                                       AND A.LIST_ID = #{listId} /* param : listId */
 		                                              AND A.EXPO_YN ='Y' /* 전시여부 */
-		                                              AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = '20140101000000' /* 기준일시 */                                             
+		                                              AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */                                             
 		                                         ) A
 		                                         ,TB_DP_PROD B
 		                                         ,TB_DP_PROD_DESC C
@@ -254,14 +250,14 @@
 			                                    AND  B.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
 			                                  </if>                                                                                  
 		                                      AND A.PROD_ID = C.PROD_ID
-		                                      AND C.LANG_CD = 'ko' /* param : 언어코드 */
+		                                      AND C.LANG_CD = #{langCd} /* param : 언어코드 */
 		                                      AND A.PROD_ID = D.PROD_ID
 		                                      AND A.PROD_ID = E.PROD_ID
 		                                      AND A.MENU_ID = E.MENU_ID                    
 		                                      AND E.MENU_ID = F.MENU_ID
-		                                      AND F.USE_YN ='Y'                    
+		                                      AND F.USE_YN = 'Y'                    
 		                                      AND A.MENU_ID = G.MENU_ID             
-		                                      AND G.LANG_CD = 'ko' /* param : 언어코드 */
+		                                      AND G.LANG_CD = #{langCd} /* param : 언어코드 */
 		                                      AND A.PROD_ID = H.PROD_ID
 		                                      AND A.TENANT_ID = I.TENANT_ID
 		                                      AND A.PROD_ID = I.PROD_ID
@@ -290,6 +286,7 @@
 		      AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
 		      AND KA.PROD_ID = KC.PROD_ID
 		      AND KC.EXPO_ORD = '1'
+		      AND KC.LANG_CD = #{langCd}
 		      AND KC.IMG_CD = 'DP000101'     
     </select>    
     
