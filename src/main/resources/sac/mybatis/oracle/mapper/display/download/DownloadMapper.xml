@@ -447,6 +447,129 @@
     </select>
     
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookReq" resultType="MetaInfo">
-        SELECT 1 FROM DUAL
+		SELECT /* DownloadMapper.xml, selectDownloadEbookInfo, tae hee Lee, 2014-01-28 */
+		        KA.*
+		      , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMG_PATH
+		      , (SELECT MENU_NM
+		           FROM TB_DP_MENU_CATEGORY_DESC
+		          WHERE MENU_ID = KA.TOP_MENU_ID
+		            AND LANG_CD = #{langCd}
+		            AND ROWNUM = 1) AS TOP_MENU_NM
+		      , (SELECT MENU_NM
+		           FROM TB_DP_MENU_CATEGORY_DESC
+		          WHERE MENU_ID = KA.MENU_ID
+		            AND LANG_CD = #{langCd}
+		            AND ROWNUM = 1) AS MENU_NM
+		  FROM (SELECT  MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PART_PROD_ID)) AS STORE_PROD_ID
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PART_PROD_ID)) AS PLAY_PROD_ID
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_AMT)) AS STORE_PROD_AMT
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_AMT)) AS PLAY_PROD_AMT
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_NET_AMT)) AS STORE_PROD_NET_AMT
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_NET_AMT)) AS PLAY_PROD_NET_AMT
+		              , NVL(MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.DRM_YN)), 'N') AS STORE_DRM_YN
+		              , NVL(MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.DRM_YN)), 'N') AS PLAY_DRM_YN
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_STATUS_CD)) AS STORE_PROD_STATUS_CD
+		              , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PROD_STATUS_CD)) AS PLAY_PROD_STATUS_CD
+		              , MAX(JA.USE_PERIOD_UNIT_CD) AS USE_PERIOD_UNIT_CD
+		              , MAX(JA.USE_PERIOD) AS USE_PERIOD
+		              , MAX(JA.SUB_CONTENTS_ID) AS SUB_CONTENTS_ID
+		              , MAX(JA.PROD_NM) AS PROD_NM
+		              , MAX(JA.BOOK_CLSF_CD) AS BOOK_CLSF_CD
+		              , MAX(JA.META_CLSF_CD) AS META_CLSF_CD
+		              , MAX(JA.PROD_GRD_CD) AS PROD_GRD_CD
+		              , MAX(JA.PROD_VER) AS PROD_VER
+		              , MAX(JA.FILE_SIZE) AS FILE_SIZE
+		              , MAX(JA.FILE_PATH) AS FILE_PATH
+		              , MAX(JA.PROD_ID) AS PROD_ID
+		              , MAX(JA.SELLER_MBR_NO) AS SELLER_MBR_NO
+		              , MAX(JA.EXPO_SELLER_NM) AS EXPO_SELLER_NM
+		              , MAX(JA.EXPO_SELLER_TELNO) AS EXPO_SELLER_TELNO
+		              , MAX(JA.EXPO_SELLER_EMAIL) AS EXPO_SELLER_EMAIL
+		              , MAX(JA.TOP_MENU_ID) AS TOP_MENU_ID
+		              , MAX(JA.MENU_ID) AS MENU_ID
+		          FROM (SELECT IA.*, IC.TOP_MENU_ID, IC.MENU_ID
+		                  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY C.PART_PROD_ID ORDER BY K.PROD_VER DESC) AS RNUM
+		                              , A.SELLER_MBR_NO
+		                              , A.EXPO_SELLER_NM
+		                              , A.EXPO_SELLER_TELNO
+		                              , A.EXPO_SELLER_EMAIL
+		                              , C.PROD_ID
+		                              , C.PART_PROD_ID
+		                              , D.META_CLSF_CD
+		                              , D.PROD_GRD_CD
+		                              , D.CID
+		                              , D.DRM_YN
+		                              , D.USE_PERIOD_UNIT_CD
+		                              , D.USE_PERIOD
+		                              , E.PROD_NM
+		                              , F.BOOK_CLSF_CD
+		                              , G.PROD_STATUS_CD
+		                              , H.PROD_AMT
+		                              , H.PROD_NET_AMT
+		                              , K.SUB_CONTENTS_ID
+		                              , K.PROD_VER
+		                              , K.FILE_SIZE
+		                              , K.FILE_PATH
+		                          FROM  TB_DP_PROD                    A
+		                              , TB_DP_TENANT_PROD             B
+		                              , TB_DP_PROD_RSHP               C
+		                              , TB_DP_PROD                    D
+		                              , TB_DP_PROD_DESC               E
+		                              , TB_DP_MULTIMDA_PROD           F
+		                              , TB_DP_TENANT_PROD             G
+		                              , TB_DP_TENANT_PROD_PRICE       H
+		                              , TB_DP_SPRT_DEVICE             I
+		                              , TB_CM_DEVICE                  J
+		                              , TB_DP_SUB_CONTENTS            K
+		                         WHERE  A.PROD_ID = B.PROD_ID
+		                           AND  A.PROD_ID = C.PROD_ID
+		                           AND  C.PART_PROD_ID = D.PROD_ID
+		                           AND  C.PART_PROD_ID = E.PROD_ID
+		                           AND  C.PART_PROD_ID = F.PROD_ID
+		                           AND  C.PART_PROD_ID = G.PROD_ID
+		                           AND  C.PART_PROD_ID = H.PROD_ID
+		                           AND  G.TENANT_ID = H.TENANT_ID
+		                           AND  C.PART_PROD_ID = I.PROD_ID(+)
+		                           AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+		                           AND  C.PART_PROD_ID = K.PROD_ID
+		                           AND  A.SVC_GRP_CD = 'DP000203'
+		                           AND  A.CONTENTS_TYPE_CD = 'PD002501'
+		                           AND  B.EXPO_YN = 'Y'
+		                           AND  B.TENANT_ID = #{tenantId}
+		                           AND  B.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')
+		                           AND  C.PROD_RSHP_CD = 'DP010802'
+		                           AND  D.SVC_GRP_CD = 'DP000203'
+		                           AND  D.CONTENTS_TYPE_CD = 'PD002502'
+		                           AND  E.LANG_CD = #{langCd}
+		                           AND  G.EXPO_YN = 'Y'
+		                           AND  G.TENANT_ID = #{tenantId}
+		                           AND  G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+		                           AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+		                           AND  I.DEVICE_MODEL_CD(+) = #{deviceModelCd}
+		                           AND  I.PROD_ID IS NOT NULL
+		                           AND  K.SALE_YN = 'Y'
+		                           <if test='idType == "channel"'>
+		                           AND  C.PROD_ID = #{productId}
+		                           </if>
+		                           <if test='idType == "episode"'>
+		                           AND  C.PART_PROD_ID = #{productId}
+		                           </if>
+		                       )                               IA
+		                       , TB_DP_MENU_CATEGORY_PROD_MAPG IB
+		                       , TB_DP_MENU_CATEGORY           IC
+		                 WHERE IA.PART_PROD_ID = IB.PROD_ID
+		                   AND IB.MENU_ID = IC.MENU_ID
+		                   AND IA.RNUM = 1
+		                   AND IB.USE_YN = 'Y'
+		                   AND IC.USE_YN = 'Y'
+		                   AND IC.TOP_MENU_ID = 'DP13'
+		               ) JA
+		         GROUP BY JA.CID
+		       )                KA 
+		       , TB_DP_PROD_IMG KB
+		 WHERE KA.PROD_ID = KB.PROD_ID
+		   AND KB.EXPO_ORD = 1
+		   AND KB.IMG_CD = #{imageCd}
+		   AND KB.LANG_CD = #{langCd}
     </select>
 </mapper>

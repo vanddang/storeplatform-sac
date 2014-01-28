@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.api.conts.DisplayConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -75,7 +75,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 		// 헤더정보 세팅
 		downloadEbookReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		downloadEbookReq.setLanguageCd(requestHeader.getTenantHeader().getLangCd());
+		downloadEbookReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
 		downloadEbookReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
 		downloadEbookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
