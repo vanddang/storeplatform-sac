@@ -222,7 +222,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		// 헤더값 세팅
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
-		requestVO.setLangCd("ko");
+		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())) {
