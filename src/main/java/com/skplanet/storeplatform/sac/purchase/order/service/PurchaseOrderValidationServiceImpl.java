@@ -11,9 +11,12 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReqProduct;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
@@ -23,7 +26,6 @@ import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 
 /**
  * 
@@ -34,6 +36,7 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 @Service
 @Transactional
 public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidationService {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final PurchaseMemberPartService memberPartService = new PurchaseMemberPartServiceImpl();
 	private final PurchaseDisplayPartService displayPartService = new PurchaseDisplayPartServiceImpl();
@@ -46,31 +49,17 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
 	@Override
-	public PurchaseOrderResult validate(PurchaseOrder purchaseOrderInfo) {
-		PurchaseOrderResult checkResult = null;
-
+	public void validate(PurchaseOrder purchaseOrderInfo) {
 		// 회원
-		checkResult = this.validateMember(purchaseOrderInfo);
-		if (checkResult != null) {
-			return checkResult;
-		}
+		this.validateMember(purchaseOrderInfo);
 
 		// 상품
-		checkResult = this.validateProduct(purchaseOrderInfo);
-		if (checkResult != null) {
-			return checkResult;
-		}
+		this.validateProduct(purchaseOrderInfo);
 
 		// 구매: 회원&상품, 기타 등등
-		checkResult = this.validatePurchase(purchaseOrderInfo);
-		if (checkResult != null) {
-			return checkResult;
-		}
-
-		return null;
+		this.validatePurchase(purchaseOrderInfo);
 	}
 
 	/**
@@ -81,10 +70,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 회원 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
 	@Override
-	public PurchaseOrderResult validateMember(PurchaseOrder purchaseOrderInfo) {
+	public void validateMember(PurchaseOrder purchaseOrderInfo) {
 		// ----------------------------------------------------------------------------------------------
 		// 구매(선물발신) 회원
 
@@ -92,12 +80,13 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		DummyMember userInfo = this.memberPartService.searchDummyUserDetail(purchaseOrderInfo.getTenantId(),
 				purchaseOrderInfo.getSystemId(), purchaseOrderInfo.getUserKey(), purchaseOrderInfo.getDeviceKey());
 
-		// 회원 체크
-		if (userInfo == null) { // 회원 정보 조회 실패
-			return new PurchaseOrderResult("SAC_PUR_0001", "not found user: " + purchaseOrderInfo.getUserKey());
+		// 회원정보 조회 실패
+		if (userInfo == null) {
+			throw new StorePlatformException("SAC_PUR_0001", "회원정보를 조회할 수 없습니다: " + purchaseOrderInfo.getUserKey());
 		}
-		if ("US010701".equals(userInfo.getUserStatusCd()) == false) { // 회원상태 정상 아님
-			return new PurchaseOrderResult("SAC_PUR_0002", "not available user status: " + userInfo.getUserStatusCd());
+		// 회원상태 체크
+		if ("US010701".equals(userInfo.getUserStatusCd()) == false) {
+			throw new StorePlatformException("SAC_PUR_0001", "정상회원이 아닙니다: " + userInfo.getUserStatusCd());
 		}
 
 		purchaseOrderInfo.setPurchaseMember(userInfo);
@@ -111,20 +100,19 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 					purchaseOrderInfo.getRecvTenantId(), purchaseOrderInfo.getSystemId(),
 					purchaseOrderInfo.getRecvUserKey(), purchaseOrderInfo.getRecvDeviceKey());
 
-			// 회원 체크
-			if (recvUserInfo == null) { // 회원 정보 조회 실패
-				return new PurchaseOrderResult("SAC_PUR_0003", "not found recv user: "
+			// 회원정보 조회 실패
+			if (recvUserInfo == null) {
+				throw new StorePlatformException("SAC_PUR_0001", "선물 수신 회원정보를 조회할 수 없습니다: "
 						+ purchaseOrderInfo.getRecvUserKey());
 			}
-			if ("US010701".equals(recvUserInfo.getUserStatusCd()) == false) { // 회원상태 정상 아님
-				return new PurchaseOrderResult("SAC_PUR_0004", "not available recvuser status: "
+			// 회원상태 체크
+			if ("US010701".equals(recvUserInfo.getUserStatusCd()) == false) {
+				throw new StorePlatformException("SAC_PUR_0001", "선물 수신회원이 정상회원이 아닙니다: "
 						+ recvUserInfo.getUserStatusCd());
 			}
 
 			purchaseOrderInfo.setRecvMember(recvUserInfo);
 		}
-
-		return null;
 	}
 
 	/**
@@ -135,10 +123,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 상품 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
 	@Override
-	public PurchaseOrderResult validateProduct(PurchaseOrder purchaseOrderInfo) {
+	public void validateProduct(PurchaseOrder purchaseOrderInfo) {
 
 		String tenantId = purchaseOrderInfo.getTenantId();
 		String systemId = purchaseOrderInfo.getSystemId();
@@ -152,24 +139,30 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			productInfo = this.displayPartService.searchDummyProductDetail(tenantId, systemId, reqProduct.getProdId(),
 					deviceModelCd);
 
+			// 상품정보 조회 실패
 			if (productInfo == null) {
-				return new PurchaseOrderResult("SAC_PUR_0011", "not found product: " + reqProduct.getProdId());
+				throw new StorePlatformException("SAC_PUR_0001", "상품정보를 조회할 수 없습니다: " + reqProduct.getProdId());
 			}
+			// 상품 판매상태 체크
 			if (productInfo.getbSell() == false) {
-				return new PurchaseOrderResult("SAC_PUR_0012", "not selling product");
+				throw new StorePlatformException("SAC_PUR_0001", "판매중인 상품이 아닙니다.");
 			}
+			// 상품 지원 여부 체크
 			if (productInfo.getbSupport() == false) {
-				return new PurchaseOrderResult("SAC_PUR_0013", "not support product");
+				throw new StorePlatformException("SAC_PUR_0001", "지원하지 않는 상품입니다.");
 			}
 
-			productInfo.setProdAmt(reqProduct.getProdAmt());
+			productInfo.setProdAmt(reqProduct.getProdAmt()); // 임시
 			totAmt += reqProduct.getProdAmt();
+
+			// 상품 가격 체크
+			if (reqProduct.getProdAmt() != productInfo.getProdAmt()) {
+				throw new StorePlatformException("SAC_PUR_0001", "상품가격이 맞지 않습니다.");
+			}
 
 			productInfoList.add(productInfo);
 		}
 		purchaseOrderInfo.setRealTotAmt(totAmt);
-
-		return null;
 	}
 
 	/**
@@ -180,22 +173,29 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 구매 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
 	@Override
-	public PurchaseOrderResult validatePurchase(PurchaseOrder purchaseOrderInfo) {
+	public void validatePurchase(PurchaseOrder purchaseOrderInfo) {
 		DummyMember userInfo = PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd()) ? purchaseOrderInfo
 				.getPurchaseMember() : purchaseOrderInfo.getRecvMember();
 
+		double totAmt = purchaseOrderInfo.getTotAmt();
+		double sumAmt = 0.0;
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
+			// 연령 체크
 			if ("PD004404".equals(product) && userInfo.getAge() < 20) {
-				return new PurchaseOrderResult("SAC_PUR_0022", "not allow age: " + userInfo.getAge());
+				throw new StorePlatformException("SAC_PUR_0001", "이용불가한 연령입니다: " + userInfo.getAge());
 			}
+
+			sumAmt += product.getProdAmt();
 
 			// 쇼핑상품 경우, 발급 가능 여부 확인
 		}
 
-		return null;
+		// 상품금액 & 총 금액 체크
+		if (totAmt != sumAmt) {
+			throw new StorePlatformException("SAC_PUR_0001", "구매금액 정보가 잘못되었습니다.");
+		}
 	}
 
 }

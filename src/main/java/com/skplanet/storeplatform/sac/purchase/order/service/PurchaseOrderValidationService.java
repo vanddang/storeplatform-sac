@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 
 /**
  * 
@@ -28,9 +27,8 @@ public interface PurchaseOrderValidationService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
-	public PurchaseOrderResult validate(PurchaseOrder purchaseOrderInfo);
+	public void validate(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -40,9 +38,8 @@ public interface PurchaseOrderValidationService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 회원 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
-	public PurchaseOrderResult validateMember(PurchaseOrder purchaseOrderInfo);
+	public void validateMember(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -52,9 +49,8 @@ public interface PurchaseOrderValidationService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 상품 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
-	public PurchaseOrderResult validateProduct(PurchaseOrder purchaseOrderInfo);
+	public void validateProduct(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -64,8 +60,7 @@ public interface PurchaseOrderValidationService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매 주문 정보
-	 * @return 구매 적합성 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
-	public PurchaseOrderResult validatePurchase(PurchaseOrder purchaseOrderInfo);
+	public void validatePurchase(PurchaseOrder purchaseOrderInfo);
 
 }

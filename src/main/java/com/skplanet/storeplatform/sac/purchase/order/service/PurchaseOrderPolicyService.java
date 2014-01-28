@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 
 /**
  * 
@@ -28,7 +27,6 @@ public interface PurchaseOrderPolicyService {
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매주문 정보
-	 * @return 제한정책 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
-	public PurchaseOrderResult checkPolicy(PurchaseOrder purchaseOrderInfo);
+	public void checkPolicy(PurchaseOrder purchaseOrderInfo);
 }

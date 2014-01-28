@@ -17,23 +17,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentRes;
+import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderPolicyService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderService;
 import com.skplanet.storeplatform.sac.purchase.order.service.PurchaseOrderValidationService;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 
 /**
  * 구매 처리 컨트롤러
@@ -64,18 +68,26 @@ public class PurchaseOrderController {
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreatePurchaseRes createPurchase(@RequestBody CreatePurchaseReq req) {
-		this.logger.debug("PRCHS,INFO,CREATE,REQ,{}", req);
+	public CreatePurchaseRes createPurchase(@RequestBody @Validated CreatePurchaseReq req, BindingResult bindingResult,
+			SacRequestHeader sacRequestHeader) {
+		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+		this.logger.debug("PRCHS,INFO,CREATE,REQ,{},{}", tenantHeader, req);
+
+		if (bindingResult.hasErrors()) {
+			this.logger.debug("PRCHS,INFO,CREATE,ERROR,BINDING,{},{},{},{}", bindingResult.getFieldError().getCode(),
+					bindingResult.getFieldError().getDefaultMessage(), bindingResult.getFieldError().getField());
+			throw new StorePlatformException("SAC_PUR_0001", bindingResult.getFieldError().getField());
+		}
 
 		// ------------------------------------------------------------------------------
 		// 구매정보 개체 세팅
 
 		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(req);
-		purchaseOrderInfo.setTenantId(req.getTenantId()); // 구매(선물발신) 테넌트 ID
-		purchaseOrderInfo.setSystemId(req.getSystemId()); // 구매(선물발신) 시스템 ID
+		purchaseOrderInfo.setTenantId(tenantHeader.getTenantId()); // 구매(선물발신) 테넌트 ID
+		purchaseOrderInfo.setSystemId(tenantHeader.getSystemId()); // 구매(선물발신) 시스템 ID
 		purchaseOrderInfo.setUserKey(req.getInsdUsermbrNo()); // 구매(선물발신) 내부 회원 번호
 		purchaseOrderInfo.setDeviceKey(req.getInsdDeviceId()); // 구매(선물발신) 내부 디바이스 ID
-		purchaseOrderInfo.setRecvTenantId(req.getRecvTenantId()); // 선물수신 테넌트 ID
+		purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
 		purchaseOrderInfo.setRecvUserKey(req.getRecvInsdUsermbrNo()); // 선물수신 내부 회원 번호
 		purchaseOrderInfo.setRecvDeviceKey(req.getRecvInsdDeviceId()); // 선물수신 내부 디바이스 ID
 		purchaseOrderInfo.setPrchsReqPathCd(req.getPrchsReqPathCd()); // 구매 요청 경로 코드
@@ -93,18 +105,12 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 적합성 체크
 
-		PurchaseOrderResult checkResult = this.validationService.validate(purchaseOrderInfo);
-		if (checkResult != null) { // TODO:: 에러 - 예외처리 - 종료
-			;
-		}
+		this.validationService.validate(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// 제한정책 체크
 
-		checkResult = this.policyService.checkPolicy(purchaseOrderInfo);
-		if (checkResult != null) { // TODO:: 에러 - 예외처리 - 종료
-			;
-		}
+		this.policyService.checkPolicy(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// 진행 처리: 무료구매완료 처리 | 결제Page 요청 준비작업
@@ -149,18 +155,20 @@ public class PurchaseOrderController {
 	 */
 	@RequestMapping(value = "/createFreeCharge/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreatePurchaseRes createFreeChargePurchase(@RequestBody CreatePurchaseReq req) {
-		this.logger.debug("PRCHS,INFO,CREATE,REQ,{}", req);
+	public CreatePurchaseRes createFreeChargePurchase(@RequestBody CreatePurchaseReq req,
+			SacRequestHeader sacRequestHeader) {
+		TenantHeader tenantHeader = sacRequestHeader.getTenantHeader();
+		this.logger.debug("PRCHS,INFO,CREATE_FREE,REQ,{},{}", tenantHeader, req);
 
 		// ------------------------------------------------------------------------------
 		// 구매정보 개체 세팅
 
 		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(req);
-		purchaseOrderInfo.setTenantId(req.getTenantId()); // 구매(선물발신) 테넌트 ID
-		purchaseOrderInfo.setSystemId(req.getSystemId()); // 구매(선물발신) 시스템 ID
+		purchaseOrderInfo.setTenantId(tenantHeader.getTenantId()); // 구매(선물발신) 테넌트 ID
+		purchaseOrderInfo.setSystemId(tenantHeader.getSystemId()); // 구매(선물발신) 시스템 ID
 		purchaseOrderInfo.setUserKey(req.getInsdUsermbrNo()); // 구매(선물발신) 내부 회원 번호
 		purchaseOrderInfo.setDeviceKey(req.getInsdDeviceId()); // 구매(선물발신) 내부 디바이스 ID
-		purchaseOrderInfo.setRecvTenantId(req.getRecvTenantId()); // 선물수신 테넌트 ID
+		purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
 		purchaseOrderInfo.setRecvUserKey(req.getRecvInsdUsermbrNo()); // 선물수신 내부 회원 번호
 		purchaseOrderInfo.setRecvDeviceKey(req.getRecvInsdDeviceId()); // 선물수신 내부 디바이스 ID
 		purchaseOrderInfo.setPrchsReqPathCd(req.getPrchsReqPathCd()); // 구매 요청 경로 코드
@@ -178,18 +186,12 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 적합성 체크
 
-		PurchaseOrderResult checkResult = this.validationService.validate(purchaseOrderInfo);
-		if (checkResult != null) { // TODO:: 에러 - 예외처리 - 종료
-			;
-		}
+		this.validationService.validate(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// 제한정책 체크
 
-		checkResult = this.policyService.checkPolicy(purchaseOrderInfo);
-		if (checkResult != null) { // TODO:: 에러 - 예외처리 - 종료
-			;
-		}
+		this.policyService.checkPolicy(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// TAKTODO:: 결제 내역 생성 확인 및 처리
@@ -225,11 +227,13 @@ public class PurchaseOrderController {
 	@RequestMapping(value = "/notifyPayment/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public NotifyPaymentRes notifyPayment(@RequestBody NotifyPaymentReq notifyParam) {
+		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyParam);
 
 		if ("0".equals(notifyParam.getCode()) == false) {
 			return new NotifyPaymentRes("0", "SUCCESS");
 		}
 
+		// 가맹점용 파라미터 추출
 		String mctSpareParam = notifyParam.getMctSpareParam();
 		String[] arSpareParam = null;
 		String[] arParamKeyValue = null;

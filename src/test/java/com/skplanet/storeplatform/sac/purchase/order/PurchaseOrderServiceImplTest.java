@@ -57,8 +57,6 @@ public class PurchaseOrderServiceImplTest {
 	@Before
 	public void init() {
 		this.createPurchaseReq = new CreatePurchaseReq();
-		this.createPurchaseReq.setTenantId("S01"); // 테넌트 ID
-		this.createPurchaseReq.setSystemId("S01-001"); // 시스템 ID
 		this.createPurchaseReq.setInsdUsermbrNo("TEST_MBR_NO_1"); // 내부 회원 번호
 		this.createPurchaseReq.setInsdDeviceId("1"); // 내부 디바이스 ID
 		this.createPurchaseReq.setPrchsReqPathCd("OR000401"); // 구매 요청 경로 코드
@@ -77,11 +75,11 @@ public class PurchaseOrderServiceImplTest {
 		this.createPurchaseReq.setProductList(productList);
 
 		this.purchaseInfo = new PurchaseOrder(this.createPurchaseReq);
-		this.purchaseInfo.setTenantId(this.createPurchaseReq.getTenantId()); // 구매(선물발신) 테넌트 ID
-		this.purchaseInfo.setSystemId(this.createPurchaseReq.getSystemId()); // 구매(선물발신) 시스템 ID
+		this.purchaseInfo.setTenantId("S01"); // 구매(선물발신) 테넌트 ID
+		this.purchaseInfo.setSystemId("S01-01002"); // 구매(선물발신) 시스템 ID
 		this.purchaseInfo.setUserKey(this.createPurchaseReq.getInsdUsermbrNo()); // 구매(선물발신) 내부 회원 번호
 		this.purchaseInfo.setDeviceKey(this.createPurchaseReq.getInsdDeviceId()); // 구매(선물발신) 내부 디바이스 ID
-		this.purchaseInfo.setRecvTenantId(this.createPurchaseReq.getRecvTenantId()); // 선물수신 테넌트 ID
+		this.purchaseInfo.setRecvTenantId("S01"); // 선물수신 테넌트 ID
 		this.purchaseInfo.setRecvUserKey(this.createPurchaseReq.getRecvInsdUsermbrNo()); // 선물수신 내부 회원 번호
 		this.purchaseInfo.setRecvDeviceKey(this.createPurchaseReq.getRecvInsdDeviceId()); // 선물수신 내부 디바이스 ID
 		this.purchaseInfo.setPrchsReqPathCd(this.createPurchaseReq.getPrchsReqPathCd()); // 구매 요청 경로 코드

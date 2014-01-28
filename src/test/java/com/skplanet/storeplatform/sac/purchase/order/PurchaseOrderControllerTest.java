@@ -70,7 +70,6 @@ public class PurchaseOrderControllerTest {
 	public void testFreePurchase() throws Exception {
 		CreatePurchaseReq req = new CreatePurchaseReq();
 
-		req.setTenantId("S01"); // 테넌트 ID
 		req.setInsdUsermbrNo("TEST_MBR_NO_1"); // 내부 회원 번호
 		req.setInsdDeviceId("1"); // 내부 디바이스 ID
 		req.setPrchsReqPathCd("OR000401"); // 구매 요청 경로 코드

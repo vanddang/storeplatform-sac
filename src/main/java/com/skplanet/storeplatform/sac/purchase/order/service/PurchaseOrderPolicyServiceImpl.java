@@ -20,7 +20,6 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyAdminSer
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyMemberServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderPolicy;
-import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 
 /**
  * 
@@ -33,7 +32,6 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderResult;
 public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	// private final CheckerManager checkerManager = new CheckerManager();
 	private final PurchaseOrderPolicyManager policyManager = new PurchaseOrderPolicyManager();
 
 	private final DummyMemberServiceImpl dummyMemberService = new DummyMemberServiceImpl();
@@ -47,10 +45,9 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 	 * 
 	 * @param purchaseOrderInfo
 	 *            구매주문 정보
-	 * @return 제한정책 체크 결과 정보: null-정상, not null-체크 오류 결과 정보
 	 */
 	@Override
-	public PurchaseOrderResult checkPolicy(PurchaseOrder purchaseOrderInfo) {
+	public void checkPolicy(PurchaseOrder purchaseOrderInfo) {
 		// List<PurchaseOrderChecker> checkerList = this.checkerManager.getCheckerList(null);
 		//
 		// for (PurchaseOrderChecker checker : checkerList) {
@@ -103,8 +100,6 @@ public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyServic
 				break;
 			}
 		}
-
-		return null;
 	}
 
 	/**
