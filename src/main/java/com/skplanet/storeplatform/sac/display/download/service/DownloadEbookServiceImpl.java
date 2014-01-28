@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -34,15 +37,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
+import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -59,10 +62,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private DisplayCommonService commonService;
-
-	@Autowired
-	private ResponseInfoGenerateFacade responseGenerate;
+	ExistenceService existenceService;
 
 	@Override
 	public DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookReq downloadEbookReq) {
@@ -107,6 +107,43 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				downloadEbookReq);
 
 		if (metaInfo != null) {
+			String prchsId = null;
+
+			if ("episode".equals(idType)) {
+				try {
+					// 기구매 체크를 위한 생성자
+					ExistenceRequest existenceRequest = new ExistenceRequest();
+					existenceRequest.setTenantId(downloadEbookReq.getTenantId());
+					existenceRequest.setInsdUsermbrNo(downloadEbookReq.getUserKey());
+					existenceRequest.setInsdDeviceId(downloadEbookReq.getDeviceKey());
+					existenceRequest.setPrchsId("M1040449015718184793");
+
+					ExistenceList existenceList = new ExistenceList();
+					existenceList.setProdId(downloadEbookReq.getProductId());
+
+					List<ExistenceList> list = new ArrayList<ExistenceList>();
+					list.add(existenceList);
+					existenceRequest.setExistenceList(list);
+
+					// 기구매 체크 실행
+					List<ExistenceResponse> existenceResponseList = this.existenceService.listExist(existenceRequest);
+
+					if (!existenceResponseList.isEmpty()) {
+						this.logger.debug("----------------------------------------------------------------");
+						this.logger.debug("구매 상품");
+						this.logger.debug("----------------------------------------------------------------");
+
+						prchsId = existenceResponseList.get(0).getPrchsId();
+					} else {
+						this.logger.debug("----------------------------------------------------------------");
+						this.logger.debug("미구매 상품");
+						this.logger.debug("----------------------------------------------------------------");
+					}
+				} catch (Exception e) {
+					throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+				}
+			}
+
 			Product product = new Product();
 			Title title = new Title();
 			Source source = new Source();
@@ -119,6 +156,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			Support support = new Support();
 			Price price = new Price();
 			Distributor distributor = new Distributor();
+			Purchase purchase = new Purchase();
 
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Source> sourceList = new ArrayList<Source>();
@@ -196,6 +234,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			distributor.setEmail(metaInfo.getExpoSellerEmail());
 			distributor.setRegNo(metaInfo.getSellerMbrNo());
 			product.setDistributor(distributor);
+
+			// 구매 정보
+			purchase.setState(StringUtils.isNotEmpty(prchsId) ? "payment" : "noPayment");
+			product.setPurchase(purchase);
 
 			ebookRes.setProduct(product);
 			commonResponse.setTotalCount(1);
