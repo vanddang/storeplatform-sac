@@ -11,22 +11,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadAppService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadEbookService;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadMusicService;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadVodService;
 
 /**
+ * 상품 정보 요청(for download)
  * 
- * Calss 설명(Download 앱 정보 관련)
- * 
- * Updated on : 2014. 1. 22. Updated by : 이석희, 인크로스
+ * Updated on : 2014. 1. 28. Updated by : 이태희.
  */
 @Controller
+@RequestMapping("/display/download")
 public class DownloadController {
 
 	@Autowired
@@ -37,6 +40,9 @@ public class DownloadController {
 
 	@Autowired
 	private DownloadVodService downloadVodService;
+
+	@Autowired
+	private DownloadEbookService downloadEbookService;
 
 	/**
 	 * 
@@ -50,7 +56,7 @@ public class DownloadController {
 	 *            downloadAppReq
 	 * @return DownloadAppRes
 	 */
-	@RequestMapping(value = "/display/download/app/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadAppRes downloadApp(SacRequestHeader requestheader, @RequestBody DownloadAppReq downloadAppReq) {
 		return this.downloadAppService.searchDownloadApp(requestheader, downloadAppReq);
@@ -68,7 +74,7 @@ public class DownloadController {
 	 *            downloadMusicReq
 	 * @return DownloadMusicRes
 	 */
-	@RequestMapping(value = "/display/download/music/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadMusicRes downloadMusic(SacRequestHeader requestheader,
 			@RequestBody @Valid DownloadMusicReq downloadMusicReq) {
@@ -87,10 +93,27 @@ public class DownloadController {
 	 *            downloadVodReq
 	 * @return DownloadVodRes
 	 */
-	@RequestMapping(value = "/display/download/vod/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/vod/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DownloadVodRes downloadVod(SacRequestHeader requestheader, @RequestBody DownloadVodReq downloadVodReq) {
 		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodReq);
 	}
 
+	/**
+	 * <pre>
+	 * ebook 상품 정보 조회(for download).
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            requestHeader
+	 * @param downloadEbookReq
+	 *            requestHeader
+	 * @return DownloadEbookRes
+	 */
+	@RequestMapping(value = "/ebook/detail/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader,
+			@RequestBody DownloadEbookReq downloadEbookReq) {
+		return this.downloadEbookService.getDownloadEbookInfo(requestHeader, downloadEbookReq);
+	}
 }

@@ -444,5 +444,9 @@
 	          AND  TB.EXPO_ORD = '1'
 	          AND  TB.LANG_CD = 'ko'
 	          AND  TB.IMG_CD = 'DP000108'
-    </select>    
+    </select>
+    
+    <select id="selectDownloadEbookInfo" parameterType="DownloadEbookReq" resultType="MetaInfo">
+        SELECT 1 FROM DUAL
+    </select>
 </mapper>
