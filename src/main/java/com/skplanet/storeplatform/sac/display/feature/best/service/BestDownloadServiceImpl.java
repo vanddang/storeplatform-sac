@@ -162,7 +162,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						support.setText(mapperVO.getHdvYn());
 						supportList.add(support);
 						support = new Support();
-						support.setType("dolby");
+						support.setType(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);
 						support.setText(mapperVO.getDolbySprtYn());
 						supportList.add(support);
 
@@ -323,8 +323,10 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						int totalCount = mapperVO.getTotalCount();
 						commonResponse.setTotalCount(totalCount);
 
+						List<Identifier> identifierList = new ArrayList<Identifier>();
 						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 						identifier.setText(mapperVO.getProdId());
+						identifierList.add(identifier);
 
 						List<Support> supportList = new ArrayList<Support>();
 						support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
@@ -367,7 +369,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 
 						price.setText(mapperVO.getProdAmt());
 
-						product.setIdentifier(identifier);
+						product.setIdentifierList(identifierList);
 						product.setSupportList(supportList);
 						product.setMenuList(menuList);
 						product.setApp(app);
@@ -404,9 +406,11 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				Menu menu = new Menu();
 
 				// 상품ID
+				List<Identifier> identifierList = new ArrayList<Identifier>();
 				identifier = new Identifier();
 				identifier.setType("episode");
 				identifier.setText("0000643818");
+				identifierList.add(identifier);
 
 				List<Support> supportList = new ArrayList<Support>();
 				support.setType("drm");
@@ -468,7 +472,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				price.setText(0);
 
 				product = new Product();
-				product.setIdentifier(identifier);
+				product.setIdentifierList(identifierList);
 				product.setSupportList(supportList);
 				product.setMenuList(menuList);
 				product.setApp(app);

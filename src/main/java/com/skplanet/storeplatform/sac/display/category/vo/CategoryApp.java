@@ -32,6 +32,7 @@ public class CategoryApp {
 	private String apkVer;
 	private Integer apkFileSize;
 	private String imgPath;
+	private Integer imgSize;
 	private Integer paticpersCnt;
 	private Integer prchsCnt;
 	private Double avgEvluScore;
@@ -163,6 +164,14 @@ public class CategoryApp {
 
 	public void setImgPath(String imgPath) {
 		this.imgPath = imgPath;
+	}
+
+	public Integer getImgSize() {
+		return this.imgSize;
+	}
+
+	public void setImgSize(Integer imgSize) {
+		this.imgSize = imgSize;
 	}
 
 	public Integer getApkFileSize() {

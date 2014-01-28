@@ -158,6 +158,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 			Price price = null;
 			Product product = null;
 
+			List<Identifier> identifierList = null;
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
 			List<Support> supportList = null;
@@ -168,10 +169,12 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				categoryApp = appList.get(i);
 
 				// 상품 정보 (상품ID)
+				identifierList = new ArrayList<Identifier>();
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				identifier.setText(categoryApp.getProdId());
-				product.setIdentifier(identifier);
+				identifierList.add(identifier);
+				product.setIdentifierList(identifierList);
 
 				// 상품 지원 정보
 				support = new Support();
@@ -230,6 +233,7 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 				source = new Source();
 				sourceList = new ArrayList<Source>();
 				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+				source.setSize(categoryApp.getImgSize());
 				source.setMediaType(DisplayCommonUtil.getMimeType(categoryApp.getImgPath()));
 				source.setUrl(categoryApp.getImgPath());
 				sourceList.add(source);

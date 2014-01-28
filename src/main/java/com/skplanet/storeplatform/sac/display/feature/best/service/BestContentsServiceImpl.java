@@ -226,10 +226,10 @@ public class BestContentsServiceImpl implements BestContentsService {
 					 */
 					rights.setGrade(mapperVO.getProdGrdCd());
 
+					/* 채널 상품이라 postfix 필요 없을 듯하여 주석처리 */
 					title.setPrefix(mapperVO.getVodTitlNm());
 					title.setText(mapperVO.getProdNm());
-					title.setPostfix(mapperVO.getChapter());
-					// title.setText(mapperVO.getConcatProdNm());
+					// title.setPostfix(mapperVO.getChapter());
 
 					/*
 					 * source mediaType - url
@@ -310,9 +310,11 @@ public class BestContentsServiceImpl implements BestContentsService {
 			Support support = new Support();
 
 			// 상품ID
+			identifierList = new ArrayList<Identifier>();
 			identifier = new Identifier();
 			identifier.setType("channel");
 			identifier.setText("H001540562");
+			identifierList.add(identifier);
 
 			supportList = new ArrayList<Support>();
 			support.setType("hd");
@@ -378,8 +380,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 
 			title.setPrefix("[20%할인]");
 			title.setText("친구");
-			title.setPostfix("2");
-			// title.setText("[20%할인]친구 2");
+			// title.setPostfix("2");
 
 			/*
 			 * source mediaType - url
@@ -390,7 +391,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 			source.setSize(4325);
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			// 2014.01.28 이석희 추가 끝
-			source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PVOD/201401/02/0002057676/3/0003876930/3/RT1_02000024893_1_0921_182x261_130x186.PNG");
+			source.setUrl("/SMILE_DATA7/PVOD/201401/02/0002057676/3/0003876930/3/RT1_02000024893_1_0921_182x261_130x186.PNG");
 			sourceList.add(source);
 
 			/*
@@ -399,9 +400,8 @@ public class BestContentsServiceImpl implements BestContentsService {
 			price.setText(3200);
 
 			product = new Product();
-			product.setIdentifier(identifier);
+			product.setIdentifierList(identifierList);
 			product.setSupportList(supportList);
-			// product.setSupport("hd");
 			product.setMenuList(menuList);
 			product.setContributor(contributor);
 			product.setAccrual(accrual);

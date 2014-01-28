@@ -118,6 +118,7 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 				Support support = null;
 				Product product = null;
 
+				List<Identifier> identifierList = null;
 				List<Menu> menuList = null;
 				List<Source> sourceList = null;
 				List<Support> supportList = null;
@@ -127,10 +128,12 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 					mapperVO = ebookComicList.get(i);
 
 					// 상품 정보 (상품ID)
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 					identifier.setText(mapperVO.getProdId());
-					product.setIdentifier(identifier);
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
 
 					// 메뉴 정보
 					menu = new Menu();
@@ -259,6 +262,7 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 			Support support = null;
 			Product product = null;
 
+			List<Identifier> identifierList = null;
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
 			List<Support> supportList = new ArrayList<Support>();
@@ -269,10 +273,12 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 				// DP13 : ebook, DP14 : 만화
 				if ("DP13".equals(req.getTopMenuId())) {
 					// 상품 정보 (상품ID)
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType("channel");
 					identifier.setText("H001579466");
-					product.setIdentifier(identifier);
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
 
 					// 메뉴 정보
 					menu = new Menu();
@@ -348,10 +354,12 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 					product.setBook(book);
 				} else if ("DP14".equals(req.getTopMenuId())) {
 					// 상품 정보 (상품ID)
+					identifierList = new ArrayList<Identifier>();
 					identifier = new Identifier();
 					identifier.setType("channel");
 					identifier.setText("H001579674");
-					product.setIdentifier(identifier);
+					identifierList.add(identifier);
+					product.setIdentifierList(identifierList);
 
 					// 메뉴 정보
 					menu = new Menu();
@@ -404,8 +412,9 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 					// 이미지 정보
 					source = new Source();
 					sourceList = new ArrayList<Source>();
-					source.setType("thumbnail");
 					source.setMediaType("image/png");
+					source.setSize(1234);
+					source.setType("thumbnail");
 					source.setUrl("/SMILE_DATA7/PEBOOK/201401/06/0002092536/1/0003917513/1/01_0002092536_480_679_1539_130x186.PNG");
 					sourceList.add(source);
 					product.setSourceList(sourceList);
