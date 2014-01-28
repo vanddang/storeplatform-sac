@@ -34,6 +34,7 @@ public class BestContentsReq extends CommonInfo {
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy;
+	private String imgCd;
 
 	/**
 	 * 
@@ -383,6 +384,21 @@ public class BestContentsReq extends CommonInfo {
 	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
+	}
+
+	/**
+	 * @return the imgCd
+	 */
+	public String getImgCd() {
+		return this.imgCd;
+	}
+
+	/**
+	 * @param imgCd
+	 *            the imgCd to set
+	 */
+	public void setImgCd(String imgCd) {
+		this.imgCd = imgCd;
 	}
 
 }
