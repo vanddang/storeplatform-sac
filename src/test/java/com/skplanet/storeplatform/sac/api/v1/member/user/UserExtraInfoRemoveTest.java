@@ -82,11 +82,11 @@ public class UserExtraInfoRemoveTest {
 
 						UserExtraInfo user1 = new UserExtraInfo();
 						user1.setExtraProfileCode("US010905");
-						user1.setExtraProfileValue("");
+						// user1.setExtraProfileValue("");
 
 						UserExtraInfo user2 = new UserExtraInfo();
 						user2.setExtraProfileCode("US010906");
-						user2.setExtraProfileValue("");
+						// user2.setExtraProfileValue("");
 
 						// UserExtraInfo user3 = new UserExtraInfo();
 						// user3.setExtraProfileCode("US010903");
