@@ -18,12 +18,12 @@ public class CreateBySimpleRes extends CommonInfo {
 	/**
 	 * 사용자 고유키.
 	 */
-	private String userKey;
+	private String userKey = "";
 
 	/**
 	 * 단말 고유키.
 	 */
-	private String deviceKey;
+	private String deviceKey = "";
 
 	/**
 	 * @return String : userKey
