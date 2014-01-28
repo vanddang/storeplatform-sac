@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.purchase.history.vo;
 
 import java.util.List;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -31,8 +34,11 @@ public class HistoryListReq extends CommonInfo {
 	private String prchsProdType; // 구매상품타입
 	private String hidingYn; // 숨김여부
 	private String prchsStatusCd; // 구매상태
-	private String frProdId; // 정액권ID
+	private String fixrateProdId; // 정액권ID
+	@Min(1)
 	private int offset; // 오프셋
+	@Min(1)
+	@Max(100)
 	private int count; // 데이터갯수
 
 	/**
@@ -216,18 +222,18 @@ public class HistoryListReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the frProdId
+	 * @return the fixrateProdId
 	 */
-	public String getFrProdId() {
-		return this.frProdId;
+	public String getFixrateProdId() {
+		return this.fixrateProdId;
 	}
 
 	/**
-	 * @param frProdId
-	 *            the frProdId to set
+	 * @param fixrateProdId
+	 *            the fixrateProdId to set
 	 */
-	public void setFrProdId(String frProdId) {
-		this.frProdId = frProdId;
+	public void setFixrateProdId(String fixrateProdId) {
+		this.fixrateProdId = fixrateProdId;
 	}
 
 	/**

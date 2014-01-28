@@ -31,7 +31,7 @@ public class HistoryCountReq extends CommonInfo {
 	private String prchsProdType; // 구매상품타입
 	private String hidingYn; // 숨김여부
 	private String prchsStatusCd; // 구매상태
-	private String frProdId; // 정액권ID
+	private String fixrateProdId; // 정액권ID
 
 	/**
 	 * @return the tenantId
@@ -214,18 +214,18 @@ public class HistoryCountReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the frProdId
+	 * @return the fixrateProdId
 	 */
-	public String getFrProdId() {
-		return this.frProdId;
+	public String getFixrateProdId() {
+		return this.fixrateProdId;
 	}
 
 	/**
-	 * @param frProdId
-	 *            the frProdId to set
+	 * @param fixrateProdId
+	 *            the fixrateProdId to set
 	 */
-	public void setFrProdId(String frProdId) {
-		this.frProdId = frProdId;
+	public void setFixrateProdId(String fixrateProdId) {
+		this.fixrateProdId = fixrateProdId;
 	}
 
 }
