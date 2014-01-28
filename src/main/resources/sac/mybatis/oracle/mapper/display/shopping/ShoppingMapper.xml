@@ -454,7 +454,7 @@
                                        AND  TDLP.TENANT_ID = TDL.TENANT_ID
                                        AND  TDLP.LIST_ID   = TDL.LIST_ID
                                        AND  TDLP.TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                       AND  TDLP.LIST_ID   = #{listId}     /* ADM000000014 : 쇼핑 추천, RNK000000004 쇼핑 인기 */
+                                       AND  TDLP.LIST_ID   = #{listId}     /* ADM000000014 : 쇼핑 추천, RNK000000006 쇼핑 인기 */
                                        AND  TDLP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TDL.EXPO_YN  = 'Y'             /* Y : 노출 (노출여부) */
                                        AND  TO_CHAR(TDLP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
