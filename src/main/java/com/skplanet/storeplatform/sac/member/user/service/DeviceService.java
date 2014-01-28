@@ -175,6 +175,22 @@ public interface DeviceService {
 			throws Exception;
 
 	/**
+	 * 휴대기기 목록
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 * @param req
+	 * @param schUserRes
+	 * @return
+	 * @throws Exception
+	 */
+	public ListDeviceRes deviceList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo)
+			throws Exception;
+
+	/**
 	 * 휴대기기 디바이스 키 추출
 	 * 
 	 * @param requestHeader
@@ -244,6 +260,20 @@ public interface DeviceService {
 	 */
 	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader,
 			DetailRepresentationDeviceReq req) throws Exception;
+
+	/**
+	 * 대표기기 여부
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 * @param req
+	 * @return
+	 */
+	public ListDeviceRes isPrimaryDevice(RemoveDeviceRes res, UserInfo userInfo, SacRequestHeader sacHeader)
+			throws Exception;
 
 	/**
 	 * 단말 AOM 확인
