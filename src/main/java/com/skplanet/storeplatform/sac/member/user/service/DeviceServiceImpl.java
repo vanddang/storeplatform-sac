@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -165,17 +166,18 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("회원정보 없음.");
+			throw new StorePlatformException("회원정보 없음.");
 		}
 
 		if (req.getRegMaxCnt().equals("0")
 				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= Integer
 						.parseInt(req.getRegMaxCnt()))) {
-			throw new Exception("등록 가능한 단말개수가 초과되었습니다.");
+			throw new StorePlatformException("등록 가능한 단말개수가 초과되었습니다.");
 		}
 
 		/* 동일한 정보로 등록 요청시 체크 */
@@ -187,7 +189,7 @@ public class DeviceServiceImpl implements DeviceService {
 		if (deviceInfoList != null) {
 			for (DeviceInfo deviceInfo : deviceInfoList) {
 				if (deviceInfo.getDeviceId().equals(deviceId)) {
-					throw new Exception("이미 등록된 휴대기기 입니다.");
+					throw new StorePlatformException("이미 등록된 휴대기기 입니다.");
 				}
 			}
 		}
@@ -247,11 +249,12 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("회원정보 없음.");
+			throw new StorePlatformException("회원정보 없음.");
 		}
 
 		DeviceInfo deviceInfo = req.getDeviceInfo();
@@ -343,9 +346,9 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
 		if (!schDeviceListRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
 			if (schDeviceListRes.getCommonResponse().getResultCode().equals("9999")) {
-				throw new Exception("휴대기기 목록정보가 없습니다.");
+				throw new StorePlatformException("휴대기기 목록정보가 없습니다.");
 			} else {
-				throw new Exception("[" + schDeviceListRes.getCommonResponse().getResultCode() + "]"
+				throw new StorePlatformException("[" + schDeviceListRes.getCommonResponse().getResultCode() + "]"
 						+ schDeviceListRes.getCommonResponse().getResultMessage());
 			}
 
@@ -401,11 +404,12 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "]" + schDeviceRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("[" + schDeviceRes.getCommonResponse().getResultCode() + "]"
+					+ schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
 		if (schDeviceRes.getUserMbrDevice() == null) {
-			throw new Exception("휴대기기 정보가 없습니다.");
+			throw new StorePlatformException("휴대기기 정보가 없습니다.");
 		}
 
 		DeviceInfo deviceInfo = new DeviceInfo();
@@ -488,11 +492,11 @@ public class DeviceServiceImpl implements DeviceService {
 					UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
 
 					if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-						throw new Exception("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
+						throw new StorePlatformException("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
 								+ updAgreeRes.getCommonResponse().getResultMessage());
 					}
 				} else {
-					throw new Exception("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
+					throw new StorePlatformException("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
 							+ schAgreeListRes.getCommonResponse().getResultMessage());
 				}
 
@@ -508,7 +512,7 @@ public class DeviceServiceImpl implements DeviceService {
 				SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
 				if (!schUserRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-					throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					throw new StorePlatformException("[" + schUserRes.getCommonResponse().getResultCode() + "] "
 							+ schUserRes.getCommonResponse().getResultMessage());
 				}
 
@@ -519,7 +523,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
 						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							throw new RuntimeException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
+							throw new StorePlatformException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
 									+ idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
@@ -531,7 +535,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			return createDeviceRes.getDeviceKey();
 		} else {
-			throw new RuntimeException("[" + createDeviceRes.getCommonResponse().getResultCode() + "] "
+			throw new StorePlatformException("[" + createDeviceRes.getCommonResponse().getResultCode() + "] "
 					+ createDeviceRes.getCommonResponse().getResultMessage());
 		}
 
@@ -579,17 +583,18 @@ public class DeviceServiceImpl implements DeviceService {
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
 		if (!schDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schDeviceRes.getCommonResponse().getResultCode() + "] " + schDeviceRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("[" + schDeviceRes.getCommonResponse().getResultCode() + "] "
+					+ schDeviceRes.getCommonResponse().getResultMessage());
 		}
 
 		if (schDeviceRes.getUserMbrDevice() == null) {
-			throw new Exception("휴대기기 정보가 없습니다.");
+			throw new StorePlatformException("휴대기기 정보가 없습니다.");
 		}
 
 		/* deviceKey로 조회시 파라메터로 넘어온 deviceId와 DB deviceId 비교 */
 		if (deviceKey != null) {
 			if (!deviceId.equals(userMbrDevice.getDeviceID())) {
-				throw new Exception("deviceKey에 등록된 deviceId가 일치하지 않습니다.");
+				throw new StorePlatformException("deviceKey에 등록된 deviceId가 일치하지 않습니다.");
 			}
 		}
 		// 부가정보 등록시 셋팅할 값들
@@ -657,7 +662,7 @@ public class DeviceServiceImpl implements DeviceService {
 							}
 
 						} else {
-							throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] "
+							throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
 									+ idpReceiver.getResponseHeader().getResult_text());
 						}
 
@@ -707,12 +712,12 @@ public class DeviceServiceImpl implements DeviceService {
 
 						// ICAS의 IMEI와 단말 IMEI값 불일치 시 로그인 실패
 						if (!mapIcas.get("IMEI_NUM").equals(nativeId)) {
-							throw new Exception("로그인에 실패하였습니다.(오류코드 4204).");
+							throw new StorePlatformException("로그인에 실패하였습니다.(오류코드 4204).");
 						}
 					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
-						throw new Exception("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
-																													// 조회된
-																													// 회선정보없음
+						throw new StorePlatformException("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
+						// 조회된
+						// 회선정보없음
 					}
 				}
 			} else { // 타사
@@ -724,7 +729,7 @@ public class DeviceServiceImpl implements DeviceService {
 				} else {
 					if (rooting.equals("Y") && !nativeId.equals(userMbrDevice.getNativeID())) {
 						// 루팅된 단말 & DB의 IMEI와 단말 IMEI값 불일치
-						throw new Exception("로그인에 실패하였습니다.(오류코드 4204)");
+						throw new StorePlatformException("로그인에 실패하였습니다.(오류코드 4204)");
 					}
 				}
 			}
@@ -801,7 +806,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("휴대기기정보 업데이트 실패 [" + createDeviceRes.getCommonResponse().getResultCode() + "]"
+			throw new StorePlatformException("휴대기기정보 업데이트 실패 [" + createDeviceRes.getCommonResponse().getResultCode() + "]"
 					+ createDeviceRes.getCommonResponse().getResultMessage());
 
 		}

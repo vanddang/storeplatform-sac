@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.StringUtil;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -193,12 +194,14 @@ public class LoginServiceImpl implements LoginService {
 
 				/* 미가입 회원인 경우 로그 님김 */
 				logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
 
 			} else { // 무선회원 인증 실패
 
 				this.insertloginHistory(requestHeader, deviceId, "", "N", "Y", deviceId);
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
 
 			}
 
@@ -256,7 +259,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setImIntSvcNo(imSvcNo);
 				return res;
 			} else {
-				throw new Exception("회원정보 없음.");
+				throw new StorePlatformException("회원정보 없음.");
 			}
 
 		}
@@ -370,16 +373,19 @@ public class LoginServiceImpl implements LoginService {
 			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 				this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
-				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
 
 			} else if (StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 				/* 미존재 회원인 경우 로그 님김 */
 				logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
-				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
 
 			} else {
-				throw new Exception("[" + imIdpReceiver.getResponseHeader().getResult() + "] " + imIdpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
 			}
 
 		} else { // 기존 IDP 계정인 경우
@@ -404,7 +410,8 @@ public class LoginServiceImpl implements LoginService {
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 				this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
 
 			} else if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
@@ -412,7 +419,8 @@ public class LoginServiceImpl implements LoginService {
 				logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
 
 			} else {
-				throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+				throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
 			}
 
 		}
@@ -498,7 +506,8 @@ public class LoginServiceImpl implements LoginService {
 
 		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 		if (!StringUtil.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + schUserRes.getCommonResponse().getResultCode() + "] " + schUserRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("[" + schUserRes.getCommonResponse().getResultCode() + "] "
+					+ schUserRes.getCommonResponse().getResultMessage());
 		}
 
 		return schUserRes;
@@ -656,7 +665,8 @@ public class LoginServiceImpl implements LoginService {
 
 		LoginUserResponse loginRes = this.userSCI.loginUser(loginReq);
 		if (!StringUtil.equals(loginRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("[" + loginRes.getCommonResponse().getResultCode() + "] " + loginRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("[" + loginRes.getCommonResponse().getResultCode() + "] "
+					+ loginRes.getCommonResponse().getResultMessage());
 		}
 		return loginRes;
 	}
@@ -704,7 +714,8 @@ public class LoginServiceImpl implements LoginService {
 			UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
 
 			if (!StringUtil.equals(updUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-				throw new Exception("[" + updUserRes.getCommonResponse().getResultCode() + "] " + updUserRes.getCommonResponse().getResultMessage());
+				throw new StorePlatformException("[" + updUserRes.getCommonResponse().getResultCode() + "] "
+						+ updUserRes.getCommonResponse().getResultMessage());
 			}
 
 			/* 3. imMngNum 부가속성 추가 */
@@ -717,7 +728,8 @@ public class LoginServiceImpl implements LoginService {
 
 		} else {
 
-			throw new Exception("[" + idpReceiver.getResponseHeader().getResult() + "] " + idpReceiver.getResponseHeader().getResult_text());
+			throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+					+ idpReceiver.getResponseHeader().getResult_text());
 
 		}
 
