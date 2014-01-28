@@ -80,6 +80,7 @@ public class DisplayConstants {
 	public static final String DP_FOREIGNER_IDENTIFIER_CD = "foreigner";
 	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
 	public static final String DP_SONG_IDENTIFIER_CD = "songId";
+	public static final String DP_PURCHASE_IDENTIFIER_CD = "purchase";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
 	/**
@@ -262,10 +263,21 @@ public class DisplayConstants {
 
 	// //////////////////////////////////// VOD 지원명 //////////////////////////////////////////
 
+	public static final String DP_VOD_HDCP_SUPPORT_NM = "hdcp";
+
 	public static final String DP_VOD_HD_SUPPORT_NM = "hd";
+
+	public static final String DP_VOD_BTV_SUPPORT_NM = "btv";
 
 	public static final String DP_VOD_DOLBY_SUPPORT_NM = "dolbySprt";
 
-	public static final String DP_VOD_HDCP_SUPPORT_NM = "hdcp";
+	public static final String DP_VOD_DOLBY_NM = "dolby";
+
+	// ////////////////////////////////// 날짜 유형 //////////////////////////////////////////
+	public static final String DP_DATE_USAGE_PERIOD = "duration/usagePeriod";
+
+	// ////////////////////////////////// ETC //////////////////////////////////////////
+
+	public static final String DP_NETWORK_RESTRICT = "ota";
 
 }
