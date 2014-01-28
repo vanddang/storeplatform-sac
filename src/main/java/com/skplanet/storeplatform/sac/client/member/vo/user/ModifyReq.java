@@ -25,16 +25,6 @@ public class ModifyReq extends CommonInfo {
 	private String userAuthKey = "";
 
 	/**
-	 * 이동 통신사.
-	 */
-	private String deviceTelecom = "";
-
-	/**
-	 * 휴대폰 번호 국가 코드.
-	 */
-	private String userPhoneCountry = "";
-
-	/**
 	 * 사용자 연락처.
 	 */
 	private String userPhone = "";
@@ -117,36 +107,6 @@ public class ModifyReq extends CommonInfo {
 	 */
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
-	}
-
-	/**
-	 * @return String : deviceTelecom
-	 */
-	public String getDeviceTelecom() {
-		return this.deviceTelecom;
-	}
-
-	/**
-	 * @param deviceTelecom
-	 *            String : the deviceTelecom to set
-	 */
-	public void setDeviceTelecom(String deviceTelecom) {
-		this.deviceTelecom = deviceTelecom;
-	}
-
-	/**
-	 * @return String : userPhoneCountry
-	 */
-	public String getUserPhoneCountry() {
-		return this.userPhoneCountry;
-	}
-
-	/**
-	 * @param userPhoneCountry
-	 *            String : the userPhoneCountry to set
-	 */
-	public void setUserPhoneCountry(String userPhoneCountry) {
-		this.userPhoneCountry = userPhoneCountry;
 	}
 
 	/**
