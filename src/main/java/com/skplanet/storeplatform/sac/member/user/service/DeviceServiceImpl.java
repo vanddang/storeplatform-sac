@@ -513,7 +513,7 @@ public class DeviceServiceImpl implements DeviceService {
 				}
 
 				/* 통합 회원 아이디에 휴대기기 등록 시 IDP에 무선 회원 해지 요청 - 자동 해지 안된다고 함 */
-				if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) {
+				if (schUserRes.getUserMbr().getImSvcNo() != null) {
 					IDPReceiverM idpReceiver = this.idpService.authForWap(deviceInfo.getDeviceId());
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 

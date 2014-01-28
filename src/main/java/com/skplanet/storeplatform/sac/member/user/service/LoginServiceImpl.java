@@ -150,7 +150,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 원아이디인 경우 */
-		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
+		if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
 			/* 단말정보 merge */
 			this.mergeDeviceInfo(requestHeader, userKey, null, req);
@@ -244,19 +244,21 @@ public class LoginServiceImpl implements LoginService {
 			deviceId = this.commService.getOpmdMdnInfo(deviceId);
 		}
 
-		/* 서비스 이용동의 간편 가입 대상 확인 */
-		String imSvcNo = this.getAgreeJoinUserImSvcNo(requestHeader, userId);
-		if (imSvcNo != null) {
-			res.setImIntSvcNo(imSvcNo);
-			return res;
-		}
-
 		/* 회원정보 조회 */
 		SearchUserResponse schUserRes = this.searchUserInfo(requestHeader, MemberConstants.KEY_TYPE_MBR_ID, userId);
 
 		/* 회원 상태 확인 */
 		if (schUserRes.getUserMbr() == null) {
-			throw new Exception("회원정보 없음.");
+
+			/* 서비스 이용동의 간편 가입 대상 확인 */
+			String imSvcNo = this.getAgreeJoinUserImSvcNo(requestHeader, userId);
+			if (imSvcNo != null) {
+				res.setImIntSvcNo(imSvcNo);
+				return res;
+			} else {
+				throw new Exception("회원정보 없음.");
+			}
+
 		}
 
 		userKey = schUserRes.getUserMbr().getUserKey();
@@ -285,7 +287,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		/* 회원 인증 요청 */
-		if (StringUtil.equals(userType, MemberConstants.USER_TYPE_ONEID)) {
+		if (schUserRes.getUserMbr().getImSvcNo() != null) { //원아이디인 경우
 
 			ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
 
@@ -543,10 +545,13 @@ public class LoginServiceImpl implements LoginService {
 			schAgreeSiteReq.setImSvcNo(imSvcNo);
 
 			SearchAgreeSiteResponse schAgreeSiteRes = this.userSCI.searchAgreeSite(schAgreeSiteReq);
+
 			if (StringUtil.equals(schAgreeSiteRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
 				if (schAgreeSiteRes.getMbrOneID().getUserKey() == null) {
 					isAgreeJoinUser = true;
 				}
+
 			}
 		}
 
