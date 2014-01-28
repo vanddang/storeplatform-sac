@@ -41,6 +41,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.best.vo.BestDownload;
@@ -144,9 +145,14 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						Book book = new Book();
 
 						// 상품ID
-						identifier = new Identifier();
+						List<Identifier> identifierList = new ArrayList<Identifier>();
 						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 						identifier.setText(mapperVO.getProdId());
+						identifierList.add(identifier);
+						identifier = new Identifier();
+						identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+						identifier.setText(mapperVO.getChnlProdId());
+						identifierList.add(identifier);
 
 						/*
 						 * VOD - HD 지원여부, DOLBY 지원여부
@@ -183,7 +189,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 							contributor.setPublisher(mapperVO.getChnlCompNm());
 							Date date = new Date();
 							date.setType("date/publish");
-							date.setText(mapperVO.getIssueDay());
+							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
 							contributor.setDate(date);
 						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 코믹
 							contributor.setName(mapperVO.getArtist1Nm());
@@ -191,20 +197,20 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 							contributor.setPublisher(mapperVO.getChnlCompNm());
 							Date date = new Date();
 							date.setType("date/publish");
-							date.setText(mapperVO.getIssueDay());
+							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
 							contributor.setDate(date);
 						} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 영화
 							contributor.setDirector(mapperVO.getArtist2Nm());
 							contributor.setArtist(mapperVO.getArtist1Nm());
 							Date date = new Date();
 							date.setType("date/broadcast");
-							date.setText(mapperVO.getIssueDay());
+							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
 							contributor.setDate(date);
 						} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 방송
 							contributor.setArtist(mapperVO.getArtist1Nm());
 							Date date = new Date();
 							date.setType("date/broadcast");
-							date.setText(mapperVO.getIssueDay());
+							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
 							contributor.setDate(date);
 						}
 
@@ -229,6 +235,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						 * source mediaType - url
 						 */
 						ArrayList<Source> sourceList = new ArrayList<Source>();
+						source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+						source.setSize(mapperVO.getImgSize());
 						source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 						source.setUrl(mapperVO.getImgPath());
 						sourceList.add(source);
@@ -261,7 +269,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						}
 
 						product = new Product();
-						product.setIdentifier(identifier);
+						product.setIdentifierList(identifierList);
 						/*
 						 * 영화, 방송 일 경우에만
 						 */
@@ -351,6 +359,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						title.setText(mapperVO.getProdNm());
 
 						List<Source> sourceList = new ArrayList<Source>();
+						source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+						source.setSize(mapperVO.getImgSize());
 						source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 						source.setUrl(mapperVO.getImgPath());
 						sourceList.add(source);
@@ -446,6 +456,8 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 				 * source mediaType, size, type, url
 				 */
 				List<Source> sourceList = new ArrayList<Source>();
+				source.setMediaType("image/png");
+				source.setSize(1234);
 				source.setType("thumbnail");
 				source.setUrl("/android6/201311/22/IF1423067129420100319114239/0000643818/img/thumbnail/0000643818_130_130_0_91_20131122120310.PNG");
 				sourceList.add(source);
