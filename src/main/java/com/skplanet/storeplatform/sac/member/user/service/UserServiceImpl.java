@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -91,25 +91,25 @@ public class UserServiceImpl implements UserService {
 
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		if (userMbr.getUserSex() != null) {
-		param.put("user_sex", userMbr.getUserSex());
+			param.put("user_sex", userMbr.getUserSex());
 		}
 		if (userMbr.getUserBirthDay() != null) {
-		param.put("user_birthday", userMbr.getUserBirthDay());
+			param.put("user_birthday", userMbr.getUserBirthDay());
 		}
 		if (userMbr.getUserZip() != null) {
-		param.put("user_zipcode", userMbr.getUserZip());
+			param.put("user_zipcode", userMbr.getUserZip());
 		}
 		if (userMbr.getUserAddress() != null) {
-		param.put("user_address", userMbr.getUserAddress());
+			param.put("user_address", userMbr.getUserAddress());
 		}
 		if (userMbr.getUserDetailAddress() != null) {
-		param.put("user_address2", userMbr.getUserDetailAddress());
+			param.put("user_address2", userMbr.getUserDetailAddress());
 		}
 		if (userMbr.getUserPhone() != null) {
-		param.put("user_tel", userMbr.getUserPhone());
+			param.put("user_tel", userMbr.getUserPhone());
 		}
 		if (userMbr.getUserPhoneCountry() != null) {
-		param.put("is_foreign", (userMbr.getUserPhoneCountry().equals("82") ? "N" : "Y"));
+			param.put("is_foreign", (userMbr.getUserPhoneCountry().equals("82") ? "N" : "Y"));
 		}
 
 		/* 휴대기기 목록 조회 */
@@ -122,60 +122,60 @@ public class UserServiceImpl implements UserService {
 		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 		String userPhoneStr = null;
 		if (deviceInfoList != null) {
-		StringBuffer sbUserPhone = new StringBuffer();
-		for (DeviceInfo deviceInfo : deviceInfoList) {
+			StringBuffer sbUserPhone = new StringBuffer();
+			for (DeviceInfo deviceInfo : deviceInfoList) {
 
-		String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM,
-				deviceInfo.getUserDeviceExtraInfo());
-		String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
-				deviceInfo.getUserDeviceExtraInfo());
+				String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM,
+						deviceInfo.getUserDeviceExtraInfo());
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+						deviceInfo.getUserDeviceExtraInfo());
 
-		sbUserPhone.append(deviceInfo.getDeviceId());
-		sbUserPhone.append(",");
-		sbUserPhone.append(imMngNum == null ? "" : imMngNum);
-		sbUserPhone.append(",");
-		sbUserPhone.append(uacd == null ? "" : uacd);
-		sbUserPhone.append(",");
-		sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
-		sbUserPhone.append("|");
-		}
-		userPhoneStr = sbUserPhone.toString();
-		userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+				sbUserPhone.append(deviceInfo.getDeviceId());
+				sbUserPhone.append(",");
+				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+				sbUserPhone.append(",");
+				sbUserPhone.append(uacd == null ? "" : uacd);
+				sbUserPhone.append(",");
+				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
+				sbUserPhone.append("|");
+			}
+			userPhoneStr = sbUserPhone.toString();
+			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
 		}
 
 		param.put("user_auth_key", userAuthKey);
 
 		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
 
-		param.put("key", schUserRes.getUserMbr().getImSvcNo());
-		param.put("operation_mode", this.IDP_OPERATION_MODE);
-		if (userPhoneStr != null) {
-		param.put("user_mdn", userPhoneStr);
-		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-		}
+			param.put("key", schUserRes.getUserMbr().getImSvcNo());
+			param.put("operation_mode", this.IDP_OPERATION_MODE);
+			if (userPhoneStr != null) {
+				param.put("user_mdn", userPhoneStr);
+				param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
+			}
 
-		param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
-		param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
+			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
+			param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
 
-		ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
-		if (!StringUtils.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-		throw new RuntimeException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-				+ imIdpReceiver.getResponseHeader().getResult_text());
-		}
+			ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
+			if (!StringUtils.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+				throw new RuntimeException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
+						+ imIdpReceiver.getResponseHeader().getResult_text());
+			}
 
 		} else {
 
-		param.put("key_type", "2");
-		param.put("key", schUserRes.getUserMbr().getImMbrNo());
-		if (userPhoneStr != null) {
-		param.put("user_phone", userPhoneStr);
-		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-		}
-		IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-		if (!StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-		throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
-				+ idpReceiver.getResponseHeader().getResult_text());
-		}
+			param.put("key_type", "2");
+			param.put("key", schUserRes.getUserMbr().getImMbrNo());
+			if (userPhoneStr != null) {
+				param.put("user_phone", userPhoneStr);
+				param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
+			}
+			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
+			if (!StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+				throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+						+ idpReceiver.getResponseHeader().getResult_text());
+			}
 
 		}
 	}

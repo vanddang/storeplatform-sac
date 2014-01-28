@@ -12,7 +12,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,39 +133,43 @@ public class UserModifyServiceImpl implements UserModifyService {
 				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_address2());
 				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_tel());
 
-			}
-
-			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-
-			/**
-			 * 공통 정보 setting.
-			 */
-			updateUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
-
-			/**
-			 * 사용자 기본정보 setting.
-			 */
-			updateUserRequest.setUserMbr(this.getUserMbr(req));
-
-			/**
-			 * SC 사용자 회원 기본정보 수정 요청.
-			 */
-			UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
-			LOGGER.info("## ResponseCode : {}", updateUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
-
-			if (StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 
 				/**
-				 * 결과 세팅
+				 * 공통 정보 setting.
 				 */
-				response.setUserKey(updateUserResponse.getUserKey());
+				updateUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+
+				/**
+				 * 사용자 기본정보 setting.
+				 */
+				updateUserRequest.setUserMbr(this.getUserMbr(req));
+
+				/**
+				 * SC 사용자 회원 기본정보 수정 요청.
+				 */
+				UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
+				LOGGER.info("## ResponseCode : {}", updateUserResponse.getCommonResponse().getResultCode());
+				LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
+				LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
+
+				if (StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+					/**
+					 * 결과 세팅
+					 */
+					response.setUserKey(updateUserResponse.getUserKey());
+
+				} else {
+
+					LOGGER.info("## 사용자 기본정보 수정 실패 ===========================");
+					throw new RuntimeException("사용자 기본정보 수정 실패");
+
+				}
 
 			} else {
 
-				LOGGER.info("## 사용자 기본정보 수정 실패 ===========================");
-				throw new RuntimeException("사용자 기본정보 수정 실패");
+				this.mcc.errorIdp(modifyInfo.getResponseHeader());
 
 			}
 
@@ -222,18 +226,56 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(req.getUserKey());
-		userMbr.setUserTelecom(req.getDeviceTelecom());
-		userMbr.setUserPhoneCountry(req.getUserPhoneCountry());
-		userMbr.setUserPhone(req.getUserPhone());
-		userMbr.setIsRecvSMS(req.getIsRecvSms());
-		userMbr.setIsRecvEmail(req.getIsRecvEmail());
-		userMbr.setUserSex(req.getUserSex());
-		userMbr.setUserBirthDay(req.getUserBirthDay());
-		userMbr.setUserZip(req.getUserZip());
-		userMbr.setUserAddress(req.getUserAddress());
-		userMbr.setUserDetailAddress(req.getUserDetailAddress());
-		userMbr.setUserCity(req.getUserCity());
-		userMbr.setUserState(req.getUserState());
+		/**
+		 * 이동통신사
+		 */
+		if (!StringUtils.equals(req.getDeviceTelecom(), "")) {
+			userMbr.setUserTelecom(req.getDeviceTelecom());
+		}
+
+		if (!StringUtils.equals(req.getUserPhoneCountry(), "")) {
+			userMbr.setUserPhoneCountry(req.getUserPhoneCountry());
+		}
+
+		if (!StringUtils.equals(req.getUserPhone(), "")) {
+			userMbr.setUserPhone(req.getUserPhone());
+		}
+
+		if (!StringUtils.equals(req.getIsRecvSms(), "")) {
+			userMbr.setIsRecvSMS(req.getIsRecvSms());
+		}
+
+		if (!StringUtils.equals(req.getIsRecvEmail(), "")) {
+			userMbr.setIsRecvEmail(req.getIsRecvEmail());
+		}
+
+		if (!StringUtils.equals(req.getUserSex(), "")) {
+			userMbr.setUserSex(req.getUserSex());
+		}
+
+		if (!StringUtils.equals(req.getUserBirthDay(), "")) {
+			userMbr.setUserBirthDay(req.getUserBirthDay());
+		}
+
+		if (!StringUtils.equals(req.getUserZip(), "")) {
+			userMbr.setUserZip(req.getUserZip());
+		}
+
+		if (!StringUtils.equals(req.getUserAddress(), "")) {
+			userMbr.setUserAddress(req.getUserAddress());
+		}
+
+		if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
+			userMbr.setUserDetailAddress(req.getUserDetailAddress());
+		}
+
+		if (!StringUtils.equals(req.getUserCity(), "")) {
+			userMbr.setUserCity(req.getUserCity());
+		}
+
+		if (!StringUtils.equals(req.getUserState(), "")) {
+			userMbr.setUserState(req.getUserState());
+		}
 		LOGGER.info("## SC Request 사용자 기본정보 : {}", userMbr.toString());
 
 		return userMbr;

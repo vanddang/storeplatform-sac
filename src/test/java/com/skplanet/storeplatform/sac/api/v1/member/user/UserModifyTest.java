@@ -104,7 +104,7 @@ public class UserModifyTest {
 
 						reqJson.setIsRecvSms("N"); // SMS 수신 여부
 						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
-						reqJson.setUserSex("M"); // 성별
+						reqJson.setUserSex("NODATA"); // 성별
 						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일
 						reqJson.setUserZip("151919"); // 우편번호
 						reqJson.setUserAddress("서울 관악구 낙성대동 서울대연구공원단지"); // 주소
