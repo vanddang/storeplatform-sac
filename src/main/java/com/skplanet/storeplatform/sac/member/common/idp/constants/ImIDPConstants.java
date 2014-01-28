@@ -27,26 +27,25 @@ public final class ImIDPConstants {
 	public static final String IDP_REQ_CMD_AGREE_USER = "TXAgreeUserIDP"; // 서비스 이용동의
 	// 개별약관 해지
 	public static final String IDP_REQ_CMD_DISAGREE_USER = "TXDisagreeUserIDP";
-	// TODO 공통프로파일조회요청 (For Server)
+	// 공통프로파일조회요청 (For Server)
 	public static final String IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER = "TXGetUserInfoForServerIDP";
-	// TODO 공통프로파일 수정
+	// 공통프로파일 수정
 	public static final String IDP_REQ_CMD_MODIFY_PROFILE = "TXUpdateUserInfoIDP";
 	// 부가프로파일 수정
 	public static final String IDP_REQ_CMD_MODIFY_ADDITIONAL = "TXUpdateAdditionalUserInfoIDP";
-	// TODO 비밀번호 변경
+	// 비밀번호 변경
 	public static final String IDP_REQ_CMD_MODIFY_PWD = "TXUpdateUserPwdIDP";
 	// TODO 인증 E-mail 재발송요청
 	// public static final String IDP_REQ_CMD_CONFIRM_EMAIL_RESEND = "TXResendConfirmEmailIDP";
 	// TXGetCountryCodeIDP ?? 국가 정보 조회 요청
-	// TODO 로그인 상태 정보 변경
+	// 로그인 상태 정보 변경
 	public static final String IDP_REQ_CMD_SET_LOGIN_STATUS = "TXSetLoginConditionIDP";
 	// TXSetFlagLocalUserIdIDP ID 전환불가 설정/해제 요청
-	// TODO 실명변경 Y : 해지 가능, N : 해지 불가) 요청
+	// 실명변경 Y : 해지 가능, N : 해지 불가) 요청
 	public static final String IDP_REQ_CMD_UPDATE_USER_NAME = "TXUpdateUserNameIDP";
-	// TODO 법정대리인 동의정보 변경 요청
+	// 법정대리인 동의정보 변경 요청
 	public static final String IDP_REQ_CMD_UPDATE_GUARDIAN = "TXUpdateGuardianInfoIDP";
 	// TXRequestRetryIDP RX 배포 Retry 요청
-	// TXGetSerivceInfoIDP ???!!!
 
 	/** 2.2. SP 요구사항 API. */
 	// TODO
@@ -58,12 +57,11 @@ public final class ImIDPConstants {
 	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICE_LIST = "findJoinServiceListIDP";
 	// MDN 정보 조회 (SKT 가입자)
 	public static final String IDP_REQ_CMD_GET_MDN_INFO_IDP = "getMdnInfoIDP";// IMDN 정보 조회 (SKT 가입자)
-	// TODO IM통합회원 ID 찾기
+	// IM통합회원 ID 찾기
 	public static final String IDP_REQ_CMD_FIND_USERID_BY_MDN = "findUserIdByMdn";
 	// chkExistAgreeUserIDP 이용동의 가능여부 조회
 	// 기본 프로파일 조회(for Server)
 	public static final String IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER = "findCommonProfileForServerIDP";// 기본프로파일조회(for
-	// joinIDCheckChangedIDP ID 가입여부 체크
 	// ID 가입여부 체크
 	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
 
