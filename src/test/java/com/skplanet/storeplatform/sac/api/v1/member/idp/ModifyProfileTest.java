@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.framework.core.util.StringUtil;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -86,37 +86,38 @@ public class ModifyProfileTest {
 	@Test
 	public void ModifyProfileTest01() {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				ProvisioningReq req = new ProvisioningReq();
-				req.setCmd("modifyProfile");
-				HashMap<String, String> resultMap = new HashMap<String, String>();
+		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						ProvisioningReq req = new ProvisioningReq();
+						req.setCmd("modifyProfile");
+						HashMap<String, String> resultMap = new HashMap<String, String>();
 
-				resultMap.put("systemID", "S001");
-				resultMap.put("tenantID", "S01");
+						resultMap.put("systemID", "S001");
+						resultMap.put("tenantID", "S01");
 
-				resultMap.put("sp_id", "90000");
-				resultMap.put("target_sst_cd", "10100");
-				resultMap.put("im_int_svc_no", " 2222222");
-				resultMap.put("user_id", "test");
-				resultMap.put("idp_id", "test01");
-				resultMap.put("im_mem_type_cd", "100");
+						resultMap.put("sp_id", "90000");
+						resultMap.put("target_sst_cd", "10100");
+						resultMap.put("im_int_svc_no", " 2222222");
+						resultMap.put("user_id", "test");
+						resultMap.put("idp_id", "test01");
+						resultMap.put("im_mem_type_cd", "100");
 
-				req.setReqParam(resultMap);
+						req.setReqParam(resultMap);
 
-				logger.info("request param : {}", req.toString());
-				return req;
-			}
-		}).success(ProvisioningRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				ProvisioningRes res = (ProvisioningRes) result;
-				// res.get
-				// assertThat(res.getSellerKey(), notNullValue());
-				logger.info("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+						logger.info("request param : {}", req.toString());
+						return req;
+					}
+				}).success(ProvisioningRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ProvisioningRes res = (ProvisioningRes) result;
+						// res.get
+						// assertThat(res.getSellerKey(), notNullValue());
+						logger.info("response param : {}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -132,81 +133,81 @@ public class ModifyProfileTest {
 
 		try {
 
-			String userKey = "US201401161113423010000110";
-			String userAuthKey = "114127c7ef42667669819dad5df8d820c";
+		String userKey = "US201401161113423010000110";
+		String userAuthKey = "114127c7ef42667669819dad5df8d820c";
 
-			/* sc회원 컴포넌트 휴대기기 목록 조회 */
-			ListDeviceReq listDeviceReq = new ListDeviceReq();
-			listDeviceReq.setIsMainDevice("Y");// 대표기기만 조회(Y), 모든기기 조회(N)
-			listDeviceReq.setUserKey(userKey);
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(header, listDeviceReq);
+		/* sc회원 컴포넌트 휴대기기 목록 조회 */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setIsMainDevice("Y");// 대표기기만 조회(Y), 모든기기 조회(N)
+		listDeviceReq.setUserKey(userKey);
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(header, listDeviceReq);
 
-			List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
-			String userPhoneStr = null;
-			if (deviceInfoList != null) {
-				StringBuffer sbUserPhone = new StringBuffer();
-				for (DeviceInfo deviceInfo : deviceInfoList) {
-					sbUserPhone.append(deviceInfo.getDeviceId());
-					sbUserPhone.append(",");
-					//sbUserPhone.append(deviceInfo.getImMngNum() == null ? "" : deviceInfo.getImMngNum());
-					sbUserPhone.append("");
-					sbUserPhone.append(",");
-					//sbUserPhone.append(deviceInfo.getUacd() == null ? "" : deviceInfo.getUacd());
-					sbUserPhone.append("");
-					sbUserPhone.append(",");
-					sbUserPhone.append("KTF");
-					sbUserPhone.append("|");
-				}
-				userPhoneStr = sbUserPhone.toString();
+		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
+		String userPhoneStr = null;
+		if (deviceInfoList != null) {
+		StringBuffer sbUserPhone = new StringBuffer();
+		for (DeviceInfo deviceInfo : deviceInfoList) {
+		sbUserPhone.append(deviceInfo.getDeviceId());
+		sbUserPhone.append(",");
+		// sbUserPhone.append(deviceInfo.getImMngNum() == null ? "" : deviceInfo.getImMngNum());
+		sbUserPhone.append("");
+		sbUserPhone.append(",");
+		// sbUserPhone.append(deviceInfo.getUacd() == null ? "" : deviceInfo.getUacd());
+		sbUserPhone.append("");
+		sbUserPhone.append(",");
+		sbUserPhone.append("KTF");
+		sbUserPhone.append("|");
+		}
+		userPhoneStr = sbUserPhone.toString();
 
-				userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
-				logger.info("::: userPhoneStr : {} ", userPhoneStr);
-			}
+		userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+		logger.info("::: userPhoneStr : {} ", userPhoneStr);
+		}
 
-			/* IDP 휴대기기 정보 등록 요청 */
-			HashMap<String, Object> param = new HashMap<String, Object>();
-			param.put("user_auth_key", userAuthKey);
-			param.put("user_sex", "1");
-			param.put("user_birthday", "19831210");
-			param.put("user_zipcode", "123123");
-			param.put("user_address", "판교");
-			param.put("user_address2", "123-123");
-			param.put("user_tel", "021231234");
-			param.put("is_foreign", "N");
-			param.put("key_type", "2");
-			param.put("key", "IW1312839620140116201341");
-			if (userPhoneStr != null) {
-				param.put("user_phone", userPhoneStr);
-				param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-			}
-			IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
-						+ idpReceiver.getResponseHeader().getResult_text());
-			}
+		/* IDP 휴대기기 정보 등록 요청 */
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("user_auth_key", userAuthKey);
+		param.put("user_sex", "1");
+		param.put("user_birthday", "19831210");
+		param.put("user_zipcode", "123123");
+		param.put("user_address", "판교");
+		param.put("user_address2", "123-123");
+		param.put("user_tel", "021231234");
+		param.put("is_foreign", "N");
+		param.put("key_type", "2");
+		param.put("key", "IW1312839620140116201341");
+		if (userPhoneStr != null) {
+		param.put("user_phone", userPhoneStr);
+		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
+		}
+		IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
+		if (!StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+		throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
+				+ idpReceiver.getResponseHeader().getResult_text());
+		}
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 		}
 	}
 
 	public static String converterTelecomCode(String code) {
 		String value = "";
 		if (code.equals(MemberConstants.DEVICE_TELECOM_SKT)) {
-			value = "SKT";
+		value = "SKT";
 		} else if (code.equals(MemberConstants.DEVICE_TELECOM_KT)) {
-			value = "KTF";
+		value = "KTF";
 		} else if (code.equals(MemberConstants.DEVICE_TELECOM_LGT)) {
-			value = "LGT";
+		value = "LGT";
 		} else if (code.equals(MemberConstants.DEVICE_TELECOM_OMD)) {
-			value = "OMD";
+		value = "OMD";
 		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NSH)) {
-			value = "NSH";
+		value = "NSH";
 		} else if (code.equals(MemberConstants.DEVICE_TELECOM_NON)) {
-			value = "NON";
+		value = "NON";
 		} else if (code.equals(MemberConstants.DEVICE_TELECOM_IOS)) {
-			value = "IOS";
+		value = "IOS";
 		}
 		return value;
 	}
