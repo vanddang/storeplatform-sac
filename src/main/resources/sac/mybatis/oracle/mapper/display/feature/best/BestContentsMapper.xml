@@ -39,6 +39,7 @@
                           ELSE ROUND(LB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
               ]]>
               , CONCAT(LC.FILE_PATH, LC.FILE_NM) AS IMG_PATH
+              , LC.FILE_SIZE AS IMG_SIZE
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = LA.UP_MENU_ID
@@ -145,7 +146,7 @@
                                        <if test='filteredBy == "broadcast"'>                                                    
                                            AND D.TOP_MENU_ID = 'DP18'               /* 탑메뉴ID */
                                        </if>                                                                           
-                                       <if test="prodGradeCd != null">
+                                       <if test="prodGradeCd != null and prodGradeCd != ''">
                                            AND D.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
                                        </if>   
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 에피소드타입 */
@@ -161,7 +162,7 @@
            AND LA.PROD_ID = LB.PROD_ID(+)
            AND LA.PROD_ID = LC.PROD_ID
            AND LC.EXPO_ORD = '1'
-           AND LC.IMG_CD = 'DP000101'              
+           AND LC.IMG_CD = #{imgCd}              
     </select>
     
     <!-- BEST 컨텐츠 상품 조회(ebook, comic) -->
@@ -194,8 +195,8 @@
               , LA.DOLBY_SPRT_YN
               , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
               , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( LA.EPSD_CNT + LA.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
-              , ( CASE WHEN LA.EPSD_CNT <![CDATA[ > ]]> 0 THEN 'store' END ) AS SUPPORT_STORE
-              , ( CASE WHEN LA.STRM_EPSD_CNT <![CDATA[ > ]]> 0 THEN 'play' END ) AS SUPPORT_PLAY
+              , ( CASE WHEN LA.EPSD_CNT <![CDATA[ > ]]> 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_STORE
+              , ( CASE WHEN LA.STRM_EPSD_CNT <![CDATA[ > ]]> 0 THEN 'Y' ELSE 'N' END ) AS SUPPORT_PLAY
               , ( CASE WHEN LA.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( LA.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
               , CASE WHEN (LA.CHNL_PERIOD_AMT <![CDATA[ >= ]]> 0  AND STRM_EPSD_CNT <![CDATA[ > ]]> 0) THEN CHNL_PERIOD_AMT
                      ELSE CHNL_UNLMT_AMT END AS PROD_AMT
@@ -208,6 +209,7 @@
                           ELSE ROUND(LB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
               ]]>                     
               , CONCAT(LC.FILE_PATH, LC.FILE_NM) AS IMG_PATH
+              , LC.FILE_SIZE AS IMG_SIZE
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = LA.UP_MENU_ID
@@ -322,7 +324,7 @@
                                        <if test='filteredBy == "comic"'>                                                    
                                            AND D.TOP_MENU_ID = 'DP14'               /* 탑메뉴ID */
                                        </if>   
-                                       <if test="prodGradeCd != null">
+                                       <if test="prodGradeCd != null and prodGradeCd != ''">
                                            AND D.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
                                        </if>                                          
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
@@ -338,6 +340,6 @@
            AND LA.PROD_ID = LB.PROD_ID(+)
            AND LA.PROD_ID = LC.PROD_ID
            AND LC.EXPO_ORD = '1'
-           AND LC.IMG_CD = 'DP000108'
+           AND LC.IMG_CD = #{imgCd}
     </select>    
 </mapper>
