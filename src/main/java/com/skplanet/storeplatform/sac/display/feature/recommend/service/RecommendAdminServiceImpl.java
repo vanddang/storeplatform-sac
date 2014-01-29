@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.FeatureConstant;
@@ -222,7 +223,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			// rights.setGrade(recommendAdminDTO.getProdGrdCd());
 			rights.setGrade(FeatureConstant.convertProdGrdCd(recommendAdminDTO.getProdGrdCd()));
 
-			// source.setMediaType("");
+			source.setMediaType(DisplayCommonUtil.getMimeType(recommendAdminDTO.getFilePath()));
 			source.setSize(recommendAdminDTO.getFileSize());
 			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 			source.setUrl(recommendAdminDTO.getFilePath());
@@ -233,11 +234,11 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			 */
 			price.setText(recommendAdminDTO.getProdAmt());
 
-			//identifier Lisst형으로 수정
-			//product.setIdentifier(identifier);
+			// identifier Lisst형으로 수정
+			// product.setIdentifier(identifier);
 			identifierList.add(identifier);
 			product.setIdentifierList(identifierList);
-			
+
 			product.setTitle(title);
 			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
 			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
