@@ -79,7 +79,7 @@ public class DisplayConstants {
 	public static final String DP_CORPORATION_IDENTIFIER_CD = "corporation";
 	public static final String DP_FOREIGNER_IDENTIFIER_CD = "foreigner";
 	public static final String DP_BRAND_IDENTIFIER_CD = "brand";
-	public static final String DP_SONG_IDENTIFIER_CD = "songId";
+	public static final String DP_SONG_IDENTIFIER_CD = "song";
 	public static final String DP_PURCHASE_IDENTIFIER_CD = "purchase";
 
 	// //////////////////////////////////// TOP MENU ID //////////////////////////////////////////
