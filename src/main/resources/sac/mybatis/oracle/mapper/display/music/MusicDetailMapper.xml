@@ -3,7 +3,7 @@
 <mapper namespace="MusicDetail">
 
     <!-- Music Main -->
-    <select id="getMusicDetail" parameterType="com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq" resultType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetail">
+    <select id="getMusicDetail" parameterType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam" resultType="com.skplanet.storeplatform.sac.display.music.vo.MusicDetail">
         /* MusicDetailMapper.xml, getMusicDetail, SAC : 정희원 , 2014-01-24 */
         SELECT
             PR.PROD_ID,

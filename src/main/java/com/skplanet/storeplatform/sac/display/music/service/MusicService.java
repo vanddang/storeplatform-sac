@@ -1,7 +1,10 @@
 package com.skplanet.storeplatform.sac.display.music.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailReq;
+import com.skplanet.storeplatform.sac.display.music.vo.MusicDetailComposite;
+import com.skplanet.storeplatform.sac.display.music.vo.MusicDetailParam;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
+
+import java.util.Map;
 
 /**
  * 음악 상세 보기
@@ -10,6 +13,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.music.MusicDetailRes;
  */
 public interface MusicService {
 
-    public MusicDetailRes getMusicDetail(MusicDetailReq req);
+    public MusicDetailComposite getMusicDetail(MusicDetailParam param);
 
 }
