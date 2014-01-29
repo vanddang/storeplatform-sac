@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -23,5 +23,5 @@ public interface DownloadAppService {
 	 *            downloadAppReq
 	 * @return DownloadAppRes
 	 */
-	DownloadAppRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppReq downloadAppReq);
+	DownloadAppSacRes searchDownloadApp(SacRequestHeader requestheader, DownloadAppSacReq downloadAppSacReq);
 }

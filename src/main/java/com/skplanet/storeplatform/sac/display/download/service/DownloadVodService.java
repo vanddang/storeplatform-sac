@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -23,5 +23,5 @@ public interface DownloadVodService {
 	 *            downloadVodReq
 	 * @return DownloadVodRes
 	 */
-	DownloadVodRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodReq downloadVodReq);
+	DownloadVodSacRes searchDownloadVod(SacRequestHeader requestheader, DownloadVodSacReq downloadVodReq);
 }

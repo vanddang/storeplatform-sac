@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadAppService;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadEbookService;
@@ -61,8 +61,9 @@ public class DownloadController {
 	 */
 	@RequestMapping(value = "/app/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadAppRes downloadApp(SacRequestHeader requestheader, @RequestBody DownloadAppReq downloadAppReq) {
-		return this.downloadAppService.searchDownloadApp(requestheader, downloadAppReq);
+	public DownloadAppSacRes downloadApp(SacRequestHeader requestheader,
+			@RequestBody DownloadAppSacReq downloadAppSacReq) {
+		return this.downloadAppService.searchDownloadApp(requestheader, downloadAppSacReq);
 	}
 
 	/**
@@ -98,8 +99,9 @@ public class DownloadController {
 	 */
 	@RequestMapping(value = "/vod/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadVodRes downloadVod(SacRequestHeader requestheader, @RequestBody DownloadVodReq downloadVodReq) {
-		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodReq);
+	public DownloadVodSacRes downloadVod(SacRequestHeader requestheader,
+			@RequestBody DownloadVodSacReq downloadVodSacReq) {
+		return this.downloadVodService.searchDownloadVod(requestheader, downloadVodSacReq);
 	}
 
 	/**
