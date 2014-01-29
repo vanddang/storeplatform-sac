@@ -25,9 +25,9 @@ public class CategoryWebtoonRes extends CommonInfo {
 	/**
 	 * 
 	 */
+	private CommonResponse commonResponse;
 	private static final long serialVersionUID = 1L;
 	private List<Product> productList;
-	private CommonResponse commonResponse;
 
 	public List<Product> getProductList() {
 		return this.productList;
