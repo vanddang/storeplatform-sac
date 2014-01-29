@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.app.service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
@@ -5,6 +14,7 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
@@ -24,8 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.DatatypeConverter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 앱 상품 상세조회
@@ -37,6 +46,10 @@ import java.util.List;
 public class AppServiceImpl implements AppService {
 
 	private static Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
+    private static final Set<String> SOURCE_LIST_SCREENSHOT_ORIGINAL;
+    static {
+        SOURCE_LIST_SCREENSHOT_ORIGINAL = new HashSet<String>(Arrays.asList("DP000103" ,"DP000104" ,"DP000105" ,"DP000106" ,"DP0001C1" ,"DP0001C2" ,"DP0001C3" ,"DP0001C4"));
+    }
 
 	@Autowired
 	@Qualifier("sac")
@@ -48,6 +61,7 @@ public class AppServiceImpl implements AppService {
 	@Override
 	public AppDetailRes getAppDetail(AppDetailReq request) {
 
+        // TODO Provisioning - 단말기, 운영체제 버전
         AppDetail appDetail = commonDAO.queryForObject("AppDetail.getAppDetail", request, AppDetail.class);
         if(appDetail == null)
             throw new StorePlatformException("SAC_DSP_9999");
@@ -77,14 +91,16 @@ public class AppServiceImpl implements AppService {
         }
 
         // Source
-        // TODO thumbnail, screenshot
-        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getEpisodeId(), "DP000111", request.getLangCd()), ImageSource.class);
+        // TODO screenshot, thumbnail
+        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getEpisodeId(), SOURCE_LIST_SCREENSHOT_ORIGINAL.toArray(new String[SOURCE_LIST_SCREENSHOT_ORIGINAL.size()]), request.getLangCd()), ImageSource.class);
         List<Source> sourceList = new ArrayList<Source>();
         for (ImageSource imgSrc : imageSourceList) {
             Source source = new Source();
             source.setMediaType(DisplayCommonUtil.getMimeType(imgSrc.getFileNm()));
-            source.setType("screenshot");
             source.setUrl(imgSrc.getFilePath());
+
+            if(SOURCE_LIST_SCREENSHOT_ORIGINAL.contains(imgSrc.getImgCd()))
+                source.setType("screenshot/large");
 
             sourceList.add(source);
         }
@@ -118,12 +134,9 @@ public class AppServiceImpl implements AppService {
         List<Update> updateList = new ArrayList<Update>();
         for (UpdateHistory uh : updateHistoryList) {
             Update update = new Update();
-            Date date = new Date();
-            date.setType("date/reg");
-            date.setText(sdf.format(uh.getProdUpdDt()));
 
             update.setUpdateExplain(uh.getUpdtText());
-            update.setDate(date);
+            update.setDate(new Date("date/reg", sdf.format(uh.getProdUpdDt())));
 
             updateList.add(update);
         }

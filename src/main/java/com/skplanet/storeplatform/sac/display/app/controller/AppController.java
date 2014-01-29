@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.app.controller;
 
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
@@ -13,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * AppController
- * <p/>
  * Updated on : 2014. 01. 06 Updated by : 정희원, SK 플래닛.
  */
 @Controller
@@ -31,6 +39,7 @@ public class AppController {
         request.setEpisodeId(episodeId);
         request.setLangCd("ko");
         request.setTenantId(header.getTenantHeader().getTenantId());
+        request.setDeviceModelCd(header.getDeviceHeader().getModel());
 
         return appService.getAppDetail(request);
     }

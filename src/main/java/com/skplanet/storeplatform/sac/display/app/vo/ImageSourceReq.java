@@ -1,18 +1,21 @@
 package com.skplanet.storeplatform.sac.display.app.vo;
 
+import java.util.List;
+
 /**
  * ImageSourceReq
  * Updated on : 2014. 01. 24 Updated by : 정희원, SK 플래닛.
  */
 public class ImageSourceReq {
     private String episodeId;
-    private String imgCd;
+    private String[] imgCds;
     private String langCd;
 
     public ImageSourceReq() {}
-    public ImageSourceReq(String episodeId, String imgCd, String langCd) {
+
+    public ImageSourceReq(String episodeId, String[] imgCds, String langCd) {
         this.episodeId = episodeId;
-        this.imgCd = imgCd;
+        this.imgCds = imgCds;
         this.langCd = langCd;
     }
 
@@ -24,12 +27,12 @@ public class ImageSourceReq {
         this.episodeId = episodeId;
     }
 
-    public String getImgCd() {
-        return imgCd;
+    public String[] getImgCds() {
+        return imgCds;
     }
 
-    public void setImgCd(String imgCd) {
-        this.imgCd = imgCd;
+    public void setImgCds(String[] imgCds) {
+        this.imgCds = imgCds;
     }
 
     public String getLangCd() {
