@@ -231,6 +231,7 @@
                                            AND G.TENANT_ID = H.TENANT_ID
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                            AND D.PROD_ID = I.PROD_ID
+                                           AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND I.PART_PROD_ID = J.PROD_ID
                                            AND I.PART_PROD_ID = K.PROD_ID
                                            AND I.PART_PROD_ID = L.PROD_ID(+)

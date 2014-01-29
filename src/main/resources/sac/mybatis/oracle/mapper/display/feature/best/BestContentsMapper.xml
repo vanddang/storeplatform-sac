@@ -130,6 +130,7 @@
                                            AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                                           AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND K.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
                                            AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
                                            AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd}) = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
@@ -312,6 +313,7 @@
                                            AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                                           AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND K.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
                                            AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
                                        <if test='filteredBy == "ebook+comic"'>                                                    
