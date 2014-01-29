@@ -103,8 +103,11 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
-		req.setDeviceId(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
-		logger.info("모번호 조회 getOpmdMdnInfo: {}", this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+		if (req.getDeviceId() != null) {
+			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+			req.setDeviceId(opmdMdn);
+			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+		}
 
 		/* SC 회원 존재 여부 */
 		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
