@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
@@ -227,6 +228,22 @@ public class DummySellerController {
 		// 판매자 멀티미디어정보
 		List<ExtraRight> eList = new ArrayList<ExtraRight>();
 
+		// 약관동의목록
+		List<MbrClauseAgree> mList = new ArrayList<MbrClauseAgree>();
+		MbrClauseAgree mbrClauseAgreeList = null;
+		for (int i = 0; i < 1; i++) {
+			mbrClauseAgreeList = new MbrClauseAgree();
+			mbrClauseAgreeList.setExtraAgreementID("US004901");
+			mbrClauseAgreeList.setExtraAgreementVersion("1.0");
+			mbrClauseAgreeList.setIsExtraAgreement("Y");
+			mbrClauseAgreeList.setIsMandatory("");
+			mbrClauseAgreeList.setMemberKey("IF102158942020090723111912");
+			mbrClauseAgreeList.setRegDate("2009-07-23 00:00:00");
+			mbrClauseAgreeList.setTenantID("");
+			mbrClauseAgreeList.setUpdateDate("");
+			mList.add(mbrClauseAgreeList);
+		}
+
 		// 법정대리인정보
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 
@@ -299,6 +316,7 @@ public class DummySellerController {
 		sellerMbr.setVendorCode("");
 
 		responseVO.setExtraRightList(eList);
+		responseVO.setMbrClauseAgreeList(mList);
 		responseVO.setMbrLglAgent(mbrLglAgent);
 		responseVO.setSellerKey("IF102158942020090723111912");
 		responseVO.setSellerMbr(sellerMbr);
