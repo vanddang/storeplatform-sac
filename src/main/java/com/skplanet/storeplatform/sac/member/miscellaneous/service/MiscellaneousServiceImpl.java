@@ -128,27 +128,27 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
-		/** 1) OPMD 모번호 조회 (UAPS 연동) */
-		OpmdRes opmdRes = new OpmdRes();
-		UapsReq uapsReq = new UapsReq();
-		uapsReq.setDeviceId(msisdn);
-		LOGGER.info("## UAPS 연동 시작.");
-		LOGGER.info("## Request : {}", uapsReq);
-		opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
+			/** 1) OPMD 모번호 조회 (UAPS 연동) */
+			OpmdRes opmdRes = new OpmdRes();
+			UapsReq uapsReq = new UapsReq();
+			uapsReq.setDeviceId(msisdn);
+			LOGGER.info("## UAPS 연동 시작.");
+			LOGGER.info("## Request : {}", uapsReq);
+			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 
-		LOGGER.info("## UAPS 연동 종료.");
-		LOGGER.info("## Response {}", opmdRes);
-		/** 2) UAPS 연동 결과 확인 */
-		if (opmdRes.getResultCode() == 0) {
-		LOGGER.info("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
-		res.setMsisdn(opmdRes.getMobileMdn());
+			LOGGER.info("## UAPS 연동 종료.");
+			LOGGER.info("## Response {}", opmdRes);
+			/** 2) UAPS 연동 결과 확인 */
+			if (opmdRes.getResultCode() == 0) {
+				LOGGER.info("##### External Comp. UAPS 연동성공 {}", opmdRes.getResultCode());
+				res.setMsisdn(opmdRes.getMobileMdn());
+			} else {
+				throw new Exception("UAPS 연동 오류.[" + opmdRes.getResultCode() + "]");
+			}
 		} else {
-		throw new Exception("UAPS 연동 오류.[" + opmdRes.getResultCode() + "]");
-		}
-		} else {
-		/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
-		res.setMsisdn(msisdn);
-		LOGGER.info("OPMD 번호 아님, Request값 그대로 내려줌.");
+			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
+			res.setMsisdn(msisdn);
+			LOGGER.info("OPMD 번호 아님, Request값 그대로 내려줌.");
 		}
 		return res;
 	}
@@ -170,76 +170,79 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 파라미터로 MSISDN만 넘어온 경우 */
 		if (msisdn != null && deviceModelNo == null) {
 
-		/** 1. MSISDN 유효성 검사 */
-		String validation = this.mdnValidation(msisdn);
-		if (validation.equals("Y")) {
+			/** 1. MSISDN 유효성 검사 */
+			String validation = this.mdnValidation(msisdn);
+			if (validation.equals("Y")) {
 
-		/** 2. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
+				/** 2. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
 
-		userKey = this.getUserKey(commonRequest, msisdn);
+				userKey = this.getUserKey(commonRequest, msisdn);
 
-		/** 3. SC 회원 Request 생성 */
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+				/** 3. SC 회원 Request 생성 */
+				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
-		/** 4. 공통헤더 Request 파라미터 셋팅 */
-		searchDeviceRequest.setCommonRequest(commonRequest);
+				/** 4. 공통헤더 Request 파라미터 셋팅 */
+				searchDeviceRequest.setCommonRequest(commonRequest);
 
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		keySearch.setKeyString(msisdn);
-		keySearchList.add(keySearch);
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+				KeySearch keySearch = new KeySearch();
+				keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+				keySearch.setKeyString(msisdn);
+				keySearchList.add(keySearch);
 
-		searchDeviceRequest.setKeySearchList(keySearchList);
-		searchDeviceRequest.setUserKey(userKey);
+				searchDeviceRequest.setKeySearchList(keySearchList);
+				searchDeviceRequest.setUserKey(userKey);
 
-		/** 5. deviceId와 userKey로 deviceModelNo 조회 */
-		SearchDeviceResponse searchDeviceResult = new SearchDeviceResponse();
-		searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
+				/** 5. deviceId와 userKey로 deviceModelNo 조회 */
+				SearchDeviceResponse searchDeviceResult = new SearchDeviceResponse();
+				searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-		/** 6. deviceModelNo 조회 결과 확인 */
-		if (StringUtils.equals(searchDeviceResult.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-		deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
-		LOGGER.debug("## Response deviceModelNo {}: ", deviceModelNo);
-		if (deviceModelNo != null) {
-		LOGGER.debug("## UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice().getUserMbrDeviceDetail());
-		String uaCode = null;
-		boolean isUaCode = false;
-		List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice().getUserMbrDeviceDetail();
-		LOGGER.info("## SC 회원  DeviceMapper.searchDeviceList에서 UA Code 확인.");
-		for (int i = 0; i < deviceDetails.size(); i++) {
-		isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
-		if (isUaCode) {
-		uaCode = deviceDetails.get(i).getExtraProfileValue();
-		}
-		}
-		if (uaCode != null) {
-		response.setUaCd(uaCode);
-		LOGGER.info("## UA Code : {}", uaCode);
-		} else {
-		LOGGER.info("deviceId에 해당하는 UA 코드 없음.");
-		throw new Exception("deviceId에 해당하는 UA 코드 없음.");
-		}
-		} else {
-		throw new Exception("deviceId에 해당하는 UA 코드 없음.");
-		}
-		} else {
-		throw new Exception("SC 회원 API 조회 실패[" + searchDeviceResult.getCommonResponse().getResultCode() + "] "
-				+ searchDeviceResult.getCommonResponse().getResultMessage());
-		}
+				/** 6. deviceModelNo 조회 결과 확인 */
+				if (StringUtils.equals(searchDeviceResult.getCommonResponse().getResultCode(),
+						MemberConstants.RESULT_SUCCES)) {
+					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
+					LOGGER.debug("## Response deviceModelNo {}: ", deviceModelNo);
+					if (deviceModelNo != null) {
+						LOGGER.debug("## UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
+								.getUserMbrDeviceDetail());
+						String uaCode = null;
+						boolean isUaCode = false;
+						List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
+								.getUserMbrDeviceDetail();
+						LOGGER.info("## SC 회원  DeviceMapper.searchDeviceList에서 UA Code 확인.");
+						for (int i = 0; i < deviceDetails.size(); i++) {
+							isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
+							if (isUaCode) {
+								uaCode = deviceDetails.get(i).getExtraProfileValue();
+							}
+						}
+						if (uaCode != null) {
+							response.setUaCd(uaCode);
+							LOGGER.info("## UA Code : {}", uaCode);
+						} else {
+							LOGGER.info("deviceId에 해당하는 UA 코드 없음.");
+							throw new Exception("deviceId에 해당하는 UA 코드 없음.");
+						}
+					} else {
+						throw new Exception("deviceId에 해당하는 UA 코드 없음.");
+					}
+				} else {
+					throw new Exception("SC 회원 API 조회 실패[" + searchDeviceResult.getCommonResponse().getResultCode()
+							+ "] " + searchDeviceResult.getCommonResponse().getResultMessage());
+				}
 
-		} else {
-		throw new Exception("유효하지 않은 휴대폰 번호.");
-		}
+			} else {
+				throw new Exception("유효하지 않은 휴대폰 번호.");
+			}
 		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
-		// DB 접속(TB_CM_DEVICE) - UaCode 조회
-		String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
-		if (uaCode != null) {
-		response.setUaCd(uaCode);
-		} else {
-		LOGGER.info("deviceModelNo에 해당하는 UA 코드 없음.");
-		throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
-		}
+			// DB 접속(TB_CM_DEVICE) - UaCode 조회
+			String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
+			if (uaCode != null) {
+				response.setUaCd(uaCode);
+			} else {
+				LOGGER.info("deviceModelNo에 해당하는 UA 코드 없음.");
+				throw new Exception("deviceModelNo에 해당하는 UA 코드 없음.");
+			}
 		}
 		return response;
 	}
@@ -258,26 +261,26 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		Random random = new Random();
 		authCode += random.nextInt(999999); // 0~999999 사이의 난수 발생
 		if (authCode.length() < 6) {
-		LOGGER.debug("## 변경 전 인증번호 : {}", authCode);
-		int loop = 6 - authCode.length();
-		for (int i = 0; i < loop; i++) { // 첫째자리수가 0으로 시작할 경우 "0"값을 앞에 추가.
-		authCode = "0" + authCode;
-		}
-		LOGGER.debug("## 변경 후 인증번호 : {}", authCode);
+			LOGGER.debug("## 변경 전 인증번호 : {}", authCode);
+			int loop = 6 - authCode.length();
+			for (int i = 0; i < loop; i++) { // 첫째자리수가 0으로 시작할 경우 "0"값을 앞에 추가.
+				authCode = "0" + authCode;
+			}
+			LOGGER.debug("## 변경 후 인증번호 : {}", authCode);
 		}
 		LOGGER.debug("## 인증번호 생성 >> authCode : {}", authCode);
 		Object[] object = new Object[1];
 		object[0] = authCode;
 
 		if (tenantId.equals("S01")) { // 티스토어
-		messageText += "tstore";
-		messageSender += "tstore";
+			messageText += "tstore";
+			messageSender += "tstore";
 		} else if (tenantId.equals("S00") && systemId.equals("S00-01001")) { // 개발자
-		messageText += "dev";
-		messageSender += "dev";
+			messageText += "dev";
+			messageSender += "dev";
 		} else { // default
-		messageText += "default";
-		messageSender += "default";
+			messageText += "default";
+			messageSender += "default";
 		}
 
 		messageText = this.messageSourceAccessor.getMessage(messageText, object, LocaleContextHolder.getLocale());
@@ -317,10 +320,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/* SMS 발송 성공 여부를 확인 */
 		if (smsSendRes.getResultStatus().equals("success")) {
-		LOGGER.info("## EC - SMS 발송 성공.");
-		response.setPhoneSign(authSign);
+			LOGGER.info("## EC - SMS 발송 성공.");
+			response.setPhoneSign(authSign);
 		} else {
-		throw new Exception("## EC SMS 전송 오류.[" + smsSendRes.getResultStatus() + "]");
+			throw new Exception("## EC SMS 전송 오류.[" + smsSendRes.getResultStatus() + "]");
 		}
 		return response;
 	}
@@ -344,16 +347,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
-		throw new Exception("인증 코드가 일치 하지 않습니다.");
+			throw new Exception("인증 코드가 일치 하지 않습니다.");
 		}
 
 		if (resultInfo.getAuthComptYn().equals("Y")) {
-		throw new Exception("기인증된 인증 코드 입니다.");
+			throw new Exception("기인증된 인증 코드 입니다.");
 		}
 
 		if (Double.parseDouble(resultInfo.getCurrDt()) < 0) {
-		LOGGER.info("## 인증 시간이 만료된 인증 코드입니다. - AuthValueCreateDt : {}", resultInfo.getAuthValueCreateDt());
-		throw new Exception("인증 시간이 만료된 인증 코드입니다.");
+			LOGGER.info("## 인증 시간이 만료된 인증 코드입니다. - AuthValueCreateDt : {}", resultInfo.getAuthValueCreateDt());
+			throw new Exception("인증 시간이 만료된 인증 코드입니다.");
 		}
 
 		String authSeq = resultInfo.getAuthSeq();
@@ -385,30 +388,31 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
 
 		if (waterMarkImageUrl != null) {
-		LOGGER.info("## waterMarkImageUrl 정상 발급.");
-		HTTP_PROTOCOL protocol = null;
-		HTTP_METHOD method = null;
-		String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
+			LOGGER.info("## waterMarkImageUrl 정상 발급.");
+			HTTP_PROTOCOL protocol = null;
+			HTTP_METHOD method = null;
+			String urlPath = waterMarkImageUrl.substring(waterMarkImageUrl.indexOf("/watermark"));
 
-		if (waterMarkImageUrl.substring(0, 5).equals("https")) {
-		protocol = HTTP_PROTOCOL.HTTPS;
-		method = HTTP_METHOD.POST;
-		} else {
-		protocol = HTTP_PROTOCOL.HTTP;
-		method = HTTP_METHOD.GET;
-		}
+			if (waterMarkImageUrl.substring(0, 5).equals("https")) {
+				protocol = HTTP_PROTOCOL.HTTPS;
+				method = HTTP_METHOD.POST;
+			} else {
+				protocol = HTTP_PROTOCOL.HTTP;
+				method = HTTP_METHOD.GET;
+			}
 
-		LOGGER.debug("## Request to ImageSCI >> Protocol : {}, Method : {}, UrlPath : {}", protocol, method, urlPath);
+			LOGGER.debug("## Request to ImageSCI >> Protocol : {}, Method : {}, UrlPath : {}", protocol, method,
+					urlPath);
 
-		ImageReq req = new ImageReq();
-		req.setMethod(method); // GET or POST
-		req.setProtocol(protocol); // HTTP or HTTPS
-		req.setUrlPath(urlPath);
-		ImageRes res = this.imageSCI.convert(req);
+			ImageReq req = new ImageReq();
+			req.setMethod(method); // GET or POST
+			req.setProtocol(protocol); // HTTP or HTTPS
+			req.setUrlPath(urlPath);
+			ImageRes res = this.imageSCI.convert(req);
 
-		waterMarkImageString = res.getImgData();
-		LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
-		LOGGER.info("## Captcha 문자 발급 완료.");
+			waterMarkImageString = res.getImgData();
+			LOGGER.debug("## >> WaterMark ImageString : {}", waterMarkImageString);
+			LOGGER.info("## Captcha 문자 발급 완료.");
 		}
 
 		// warterMarkImageString 를 다음 태그의 물음표(???)에 넣으면 이미지 확인 가능
@@ -434,11 +438,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 
 		if (idpReciver.getResponseHeader().getResult().equals("1000")) {
-		LOGGER.info("## IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
-				idpReciver.getResponseHeader().getResult_text());
+			LOGGER.info("## IDP 연동 성공 resultCode : {}, resultMessage : {}", idpReciver.getResponseHeader().getResult(),
+					idpReciver.getResponseHeader().getResult_text());
 		} else {
-		throw new Exception("IDP 호출 오류.resultCode : {" + idpReciver.getResponseHeader().getResult()
-				+ "}, resultMessage : {" + idpReciver.getResponseHeader().getResult_text() + "}");
+			throw new Exception("IDP 호출 오류.resultCode : {" + idpReciver.getResponseHeader().getResult()
+					+ "}, resultMessage : {" + idpReciver.getResponseHeader().getResult_text() + "}");
 		}
 		LOGGER.info("## Captcha 문자 인증 Service 종료.");
 		return response;
@@ -460,35 +464,35 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String isAuthEmail = "Y";
 		String authCode = "";
 		if (serviceAuthList != null) {
-		for (int i = 0; i < serviceAuthList.size(); i++) {
-		if (serviceAuthList.get(i).getAuthComptYn().equals("N")) {
-		isAuthEmail = "N";
-		authCode = serviceAuthList.get(i).getAuthValue();
-		}
-		}
+			for (int i = 0; i < serviceAuthList.size(); i++) {
+				if (serviceAuthList.get(i).getAuthComptYn().equals("N")) {
+					isAuthEmail = "N";
+					authCode = serviceAuthList.get(i).getAuthValue();
+				}
+			}
 		}
 
 		LOGGER.info("## 인증코드 신규 발급 여부 : {}", isAuthEmail);
 
 		if (isAuthEmail.equals("N")) { // 기존 인증코드 발급고 인증하지 않은 경우.
-		LOGGER.info("이미 발급된 회원 입니다. 동일 인증코드 전달.");
-		LOGGER.info("## authCode : {}", authCode);
+			LOGGER.info("이미 발급된 회원 입니다. 동일 인증코드 전달.");
+			LOGGER.info("## authCode : {}", authCode);
 		} else if (isAuthEmail.equals("Y") || serviceAuthList == null) { // 신규 인증 - NULL 또는 기존에 인증했으나 무효화된 값들을 가지고 있는경우.
-		/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
-		authCode = UUID.randomUUID().toString().replace("-", "");
-		LOGGER.debug("## authCode : {}", authCode);
+			/** 2. 이메일 인증 코드 생성 - GUID 수준의 난수 */
+			authCode = UUID.randomUUID().toString().replace("-", "");
+			LOGGER.debug("## authCode : {}", authCode);
 
-		/** 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
-		ServiceAuth serviceAuthInfo = new ServiceAuth();
-		serviceAuthInfo.setTenantId(tenantId);
-		serviceAuthInfo.setAuthTypeCd("CM010902");
-		serviceAuthInfo.setAuthValue(authCode);
-		serviceAuthInfo.setMbrNo(request.getUserKey());
-		serviceAuthInfo.setAuthSign("EmailAuthorization"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
-		serviceAuthInfo.setAuthEmail(request.getUserEmail());
+			/** 3. DB에 저장(TB_CM_SVC_AUTH) - 인증서비스 코드, 인증코드, 회원Key, 인증 Email 주소 */
+			ServiceAuth serviceAuthInfo = new ServiceAuth();
+			serviceAuthInfo.setTenantId(tenantId);
+			serviceAuthInfo.setAuthTypeCd("CM010902");
+			serviceAuthInfo.setAuthValue(authCode);
+			serviceAuthInfo.setMbrNo(request.getUserKey());
+			serviceAuthInfo.setAuthSign("EmailAuthorization"); // 의미 없음. DB에 AUTH_SIGN 이 "NOT NULL"로 정의되어있음.
+			serviceAuthInfo.setAuthEmail(request.getUserEmail());
 
-		LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
-		this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
+			LOGGER.info("## TB에 저장할 값들 serviceAuthInfo : {}", serviceAuthInfo);
+			this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
 		}
 
 		/** 4. 인증코드 Response */
@@ -519,21 +523,21 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 2. 인증코드 정보가 존재할 경우, 인증 처리 */
 		if (serviceAuthInfo != null) {
 
-		if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
-		throw new Exception("기존 인증된 회원입니다.");
-		}
+			if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
+				throw new Exception("기존 인증된 회원입니다.");
+			}
 
-		/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
-		if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
-		LOGGER.info("## 인증 유효기간 만료. - AuthValueCreateDt : {}", serviceAuthInfo.getAuthValueCreateDt());
-		throw new Exception("인증 유효기간이 만료되었습니다.");
-		}
+			/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
+			if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
+				LOGGER.info("## 인증 유효기간 만료. - AuthValueCreateDt : {}", serviceAuthInfo.getAuthValueCreateDt());
+				throw new Exception("인증 유효기간이 만료되었습니다.");
+			}
 
-		String authSeq = serviceAuthInfo.getAuthSeq();
-		this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
-		LOGGER.info("## 이메일 인증 완료.");
+			String authSeq = serviceAuthInfo.getAuthSeq();
+			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
+			LOGGER.info("## 이메일 인증 완료.");
 		} else {
-		throw new Exception("유효하지 않은 인증코드 입니다.");
+			throw new Exception("유효하지 않은 인증코드 입니다.");
 		}
 		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
 		response.setUserEmail(serviceAuthInfo.getAuthEmail());
@@ -556,7 +560,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public String mdnValidation(String mdn) {
 		String validation = "N";
 		if (mdn.length() == 10 || mdn.length() == 11) {
-		validation = "Y";
+			validation = "Y";
 		}
 		return validation;
 	}
@@ -594,16 +598,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 3. 회원정보 조회 성공 여부 확인 */
 		if (StringUtils.equals(searchUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-		if (searchUserResponse.getUserMbr() == null) {
-		throw new Exception("DeviceId에 해당하는 회원정보 없음.");
+			if (searchUserResponse.getUserMbr() == null) {
+				throw new Exception("DeviceId에 해당하는 회원정보 없음.");
+			} else {
+				userKey = searchUserResponse.getUserMbr().getUserKey();
+				LOGGER.debug(">>>>>>> userKey:" + userKey);
+			}
 		} else {
-		userKey = searchUserResponse.getUserMbr().getUserKey();
-		LOGGER.debug(">>>>>>> userKey:" + userKey);
-		}
-		} else {
-		LOGGER.debug("######## SC 회원 회원 기본 정보 조회 API 연동 오류. ########");
-		throw new Exception("[" + searchUserResponse.getCommonResponse().getResultCode() + "] "
-				+ searchUserResponse.getCommonResponse().getResultMessage());
+			LOGGER.debug("######## SC 회원 회원 기본 정보 조회 API 연동 오류. ########");
+			throw new Exception("[" + searchUserResponse.getCommonResponse().getResultCode() + "] "
+					+ searchUserResponse.getCommonResponse().getResultMessage());
 		}
 		return userKey;
 	}
@@ -683,7 +687,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
 		List<String> codeList = new ArrayList<String>();
 		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
-		codeList.add(req.getPolicyCodeList().get(i).getPolicyCode());
+			codeList.add(req.getPolicyCodeList().get(i).getPolicyCode());
 		}
 
 		LOGGER.debug("==>>[SC] codeList.toString() : {}", codeList.toString());
@@ -709,8 +713,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		// TODO 실패 처리
 		if (MemberConstants.RESULT_FAIL.equals(policyResponse.getCommonResponse().getResultCode())) {
-		LOGGER.debug("[IndividualPolicyService] - getIndividualPolicy CODE {}, MESSAGE {} ", policyResponse
-				.getCommonResponse().getResultCode(), policyResponse.getCommonResponse().getResultMessage());
+			LOGGER.debug("[IndividualPolicyService] - getIndividualPolicy CODE {}, MESSAGE {} ", policyResponse
+					.getCommonResponse().getResultCode(), policyResponse.getCommonResponse().getResultMessage());
 		}
 
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
@@ -718,18 +722,21 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		List<IndividualPolicyInfo> policyInfos = null;
 		IndividualPolicyInfo policyInfo = null;
 		if (policyResponse.getLimitTargetList().size() > 0) {
-		policyInfos = new ArrayList<IndividualPolicyInfo>();
-		for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
-		policyInfo = new IndividualPolicyInfo();
-		policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
-		policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
-		policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
-		policyInfos.add(policyInfo);
+			policyInfos = new ArrayList<IndividualPolicyInfo>();
+			for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
+				policyInfo = new IndividualPolicyInfo();
+				policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
+				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
+				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+				policyInfos.add(policyInfo);
 
-		LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", i, policyInfo.toString());
+				LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", i, policyInfo.toString());
+			}
+			res.setPolicyList(policyInfos);
+		} else {
+			// TODO 정책 조회 결과가 없음
+			// return new
 		}
-		}
-		res.setPolicyList(policyInfos);
 
 		LOGGER.debug("==>>[SAC] GetIndividualPolicyRes.toString() : {}", res.toString());
 
@@ -782,17 +789,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		// TODO 실패 처리
 		if (MemberConstants.RESULT_FAIL.equals(updatePolicyResponse.getCommonResponse().getResultCode())) {
-		LOGGER.debug("[IndividualPolicyService] - createIndividualPolicy CODE {}, MESSAGE {} ", updatePolicyResponse
-				.getCommonResponse().getResultCode(), updatePolicyResponse.getCommonResponse().getResultMessage());
+			LOGGER.debug("[IndividualPolicyService] - createIndividualPolicy CODE {}, MESSAGE {} ",
+					updatePolicyResponse.getCommonResponse().getResultCode(), updatePolicyResponse.getCommonResponse()
+							.getResultMessage());
 		}
 
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
 
 		if (updatePolicyResponse.getLimitTargetList().size() > 0) {
-		res.setKey(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyKey());
-		res.setPolicyCode(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyCode());
-		res.setValue(updatePolicyResponse.getLimitTargetList().get(0).getPolicyApplyValue());
+			res.setKey(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyKey());
+			res.setPolicyCode(updatePolicyResponse.getLimitTargetList().get(0).getLimitPolicyCode());
+			res.setValue(updatePolicyResponse.getLimitTargetList().get(0).getPolicyApplyValue());
 		}
 
 		LOGGER.debug("==>>[SAC] CreateIndividualPolicyRes.toString() : {}", res.toString());
@@ -844,8 +852,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		// TODO 실패 처리
 		if (MemberConstants.RESULT_FAIL.equals(removePolicyResponse.getCommonResponse().getResultCode())) {
-		LOGGER.debug("[IndividualPolicyService] - removeIndividualPolicy CODE {}, MESSAGE {} ", removePolicyResponse
-				.getCommonResponse().getResultCode(), removePolicyResponse.getCommonResponse().getResultMessage());
+			LOGGER.debug("[IndividualPolicyService] - removeIndividualPolicy CODE {}, MESSAGE {} ",
+					removePolicyResponse.getCommonResponse().getResultCode(), removePolicyResponse.getCommonResponse()
+							.getResultMessage());
 		}
 
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
