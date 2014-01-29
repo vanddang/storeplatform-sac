@@ -229,16 +229,19 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			List<Source> sourceList = null;
 			List<Support> supportList = null;
 			List<Product> productList = new ArrayList<Product>();
+			List<Identifier> identifierList;
 
 			for (int i = 0; i < vodList.size(); i++) {
 				product = new Product();
+				identifierList = new ArrayList<Identifier>();
 				vodDto = vodList.get(i);
 
 				// 상품 정보 (상품ID)
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 				identifier.setText(vodDto.getProdId());
-				product.setIdentifier(identifier);
+				identifierList.add(identifier);
+				product.setIdentifierList(identifierList);
 
 				// 상품 지원 정보
 				support = new Support();

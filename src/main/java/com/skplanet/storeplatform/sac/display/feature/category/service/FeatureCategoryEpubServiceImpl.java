@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
@@ -113,6 +115,36 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			return responseVO;
 		}
 
+		// ADM000000002 만화만 조회되어야 함 topMenuId DP13(이북) 넘어온 경우 체크
+		if ("ADM000000002".equals(listId) && "DP13".equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("리스트ID에 유효하지않은 탑메뉴ID");
+			this.logger.debug("----------------------------------------------------------------");
+
+			responseVO = new FeatureCategoryEpubRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
+		// RNK000000002 이북만 조회되어야 함 topMenuId DP14(코믹) 넘어온 경우 체크
+		if ("RNK000000002".equals(listId) && "DP14".equals(topMenuId)) {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("리스트ID에 유효하지않은 탑메뉴ID");
+			this.logger.debug("----------------------------------------------------------------");
+
+			responseVO = new FeatureCategoryEpubRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+
+		if (!StringUtils.isEmpty(requestVO.getFilteredBy())) {
+			try {
+				requestVO.setFilteredBy(URLEncoder.encode(requestVO.getFilteredBy(), "UTF-8"));
+			} catch (Exception ex) {
+				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+			}
+		}
+
 		// 시작점 ROW Default 세팅
 		if (requestVO.getOffset() == null) {
 			requestVO.setOffset(1);
@@ -156,14 +188,14 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("만화 > 최신 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
-			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy", requestVO,
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList", requestVO,
 					CategoryEpubDTO.class);
 		} else if (listId.equals("RNK000000002")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("eBook > 최신 > 일반/장르 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
-			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy", requestVO,
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList", requestVO,
 					CategoryEpubDTO.class);
 		} else {
 			this.logger.debug("----------------------------------------------------------------");
@@ -193,6 +225,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		List<Menu> menuList;
 		List<Source> sourceList;
 		List<Support> supportList;
+		List<Identifier> identifierList;
 
 		for (int i = 0; resultList != null && i < resultList.size(); i++) {
 
@@ -210,6 +243,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 			// 상품ID
 			identifier = new Identifier();
+			identifierList = new ArrayList<Identifier>();
 
 			// Response VO를 만들기위한 생성자
 			menuList = new ArrayList<Menu>();
@@ -281,7 +315,8 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			price.setFixedPrice(categoryEpubDTO.getProdNetAmt());
 			this.log.debug("price");
 			// product = new Product();
-			product.setIdentifier(identifier);
+			identifierList.add(identifier);
+			product.setIdentifierList(identifierList);
 			product.setTitle(title);
 			// support.setText(categoryEpubDTO.getDrmYn() + "|" + categoryEpubDTO.getPartParentClsfCd());
 			// supportList.add(support);
