@@ -923,7 +923,7 @@ public class DeviceServiceImpl implements DeviceService {
 		}
 
 		if (listRes.getDeviceInfoList() == null) {
-			throw new RuntimeException("대표단말 정보가 없습니다.");
+			throw new StorePlatformException("대표단말 정보가 없습니다.");
 		} else if (listRes.getDeviceInfoList().size() == 1 && listRes.getDeviceInfoList() != null) {
 			for (DeviceInfo info : listRes.getDeviceInfoList()) {
 				DeviceInfo addData = new DeviceInfo();
@@ -955,9 +955,9 @@ public class DeviceServiceImpl implements DeviceService {
 				res.setUserDeviceInfo(addData);
 			}
 		} else if (listRes.getDeviceInfoList().size() > 1) {
-			throw new RuntimeException("조회된 리스트가 1개 이상 입니다.");
+			throw new StorePlatformException("조회된 리스트가 1개 이상 입니다.");
 		} else {
-			throw new RuntimeException("대표단말 조회에서 알수 없는 오류 발생");
+			throw new StorePlatformException("대표단말 조회에서 알수 없는 오류 발생");
 		}
 
 		logger.info("###### Start detailRepresentationDevice Request : {}", req.toString());
@@ -1026,7 +1026,7 @@ public class DeviceServiceImpl implements DeviceService {
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
 			if (!res.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				throw new RuntimeException("result_code : [" + res.getCommonResponse().getResultCode()
+				throw new StorePlatformException("result_code : [" + res.getCommonResponse().getResultCode()
 						+ "] result_message : [" + res.getCommonResponse().getResultMessage() + "]");
 			} else {
 				setMainDeviceRes.setDeviceKey(req.getDeviceKey());
@@ -1076,7 +1076,7 @@ public class DeviceServiceImpl implements DeviceService {
 				&& schDeviceListKeyResponse.getDeviceInfoList().size() > 0) {
 			removeDeviceRes.setDeviceKey(schDeviceListKeyResponse.getDeviceInfoList().get(0).getDeviceKey());
 		} else {
-			throw new RuntimeException("####### 디바이스 아이디로 검색한 디바이스 키가 없습니다.");
+			throw new StorePlatformException("####### 디바이스 아이디로 검색한 디바이스 키가 없습니다.");
 		}
 
 		/* 휴대기기 목록 세팅 : 삭제대상 디바이스는 제외시킴 */
@@ -1084,13 +1084,41 @@ public class DeviceServiceImpl implements DeviceService {
 		String userPhoneStr = null;
 		if (deviceModifyList == null) {
 
-			StringBuffer sbUserPhone = new StringBuffer();
-
 			logger.debug("###### IDP 연동 데이터 : NULL 세팅 {}", schDeviceListKeyResponse.getDeviceInfoList().toString());
+			StringBuffer sbUserPhone = new StringBuffer();
+			DeviceInfo deviceInfo = schDeviceListKeyResponse.getDeviceInfoList().get(0);
+			String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM,
+					deviceInfo.getUserDeviceExtraInfo());
+			String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD,
+					deviceInfo.getUserDeviceExtraInfo());
 
-			// if (schDeviceListKeyResponse.getDeviceInfoList().get(0).getDeviceTelecom() == null) {
-			// throw new RuntimeException("###### 통신사 코드가 없음.");
-			// }
+			if (deviceInfo.getDeviceTelecom() == null) {
+				throw new StorePlatformException("###### 통신사 코드가 없음.");
+			}
+
+			if (deviceInfo.getDeviceTelecom().equals(MemberConstants.DEVICE_TELECOM_SKT) && imMngNum != null
+					&& uacd != null) {
+				sbUserPhone.append("");
+				sbUserPhone.append(",");
+				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+				sbUserPhone.append(",");
+				if (MemberConstants.RESULT_FAIL.equals(uacd)) {
+					sbUserPhone.append(MemberConstants.NM_DEVICE_TELECOM_NSH);
+				} else {
+					sbUserPhone.append(uacd == null ? "" : uacd);
+				}
+				sbUserPhone.append(",");
+				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
+
+				sbUserPhone.append("|");
+			} else if (!deviceInfo.getDeviceTelecom().equals(MemberConstants.DEVICE_TELECOM_SKT)) {
+				sbUserPhone.append("");
+				sbUserPhone.append("|");
+			} else if (deviceInfo.getDeviceTelecom() == null || deviceInfo.getDeviceId() == null) {
+				throw new StorePlatformException("###### 통신사 코드, 디바이스아이디 값이 없음");
+			} else {
+				logger.info("###### sbUserPhone Setting : unKnown Error");
+			}
 
 			sbUserPhone.append("");
 			sbUserPhone.append("|");
@@ -1122,7 +1150,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				/* 단말리스트가 한개가 아니고 삭제요청 단말이 대표단말일 경우 */
 				if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-					throw new RuntimeException("대표단말 입니다.");
+					throw new StorePlatformException("대표단말 입니다.");
 				} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
 					/* 단말리스트가 한개가 아니고 삭제요청 단말이 대표단말일 경우 */
 					imIdpReceiver = this.imIdpDeviceUpdate(req, param, userInfo, userPhoneStr);
@@ -1130,12 +1158,15 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-				throw new RuntimeException("[ 디바이스업데이트 IMIDP 연동결과 imIdpDeviceUpdate : "
+				throw new StorePlatformException("[ 디바이스업데이트 IMIDP 연동결과 imIdpDeviceUpdate : "
 						+ imIdpReceiver.getResponseHeader().getResult() + "] "
 						+ imIdpReceiver.getResponseHeader().getResult_text());
 			} else {
-				logger.info("###### 디바이스업데이트 [ImIDP] 연동결과 , : Code : {}, Message : {} ", imIdpReceiver
+				logger.info("###### 디바이스업데이트 [ImIDP] RESULT HEADER : Code : {}, Message : {} ", imIdpReceiver
 						.getResponseHeader().getResult(), imIdpReceiver.getResponseHeader().getResult_text());
+
+				logger.info("###### 디바이스업데이트 [ImIDP] RESULT BODY : {}", imIdpReceiver.getResponseBody().toString());
+
 				removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
 				logger.info("###### 디바이스 삭제 [ImIDP] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse
 						.getCommonResponse().getResultCode(), removeDeviceResponse.getCommonResponse()
@@ -1156,14 +1187,17 @@ public class DeviceServiceImpl implements DeviceService {
 					}
 					IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 					if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-						throw new RuntimeException("[ 디바이스삭제 [IDP ID회원] 연동결과 : "
+						throw new StorePlatformException("[ 디바이스삭제 [IDP ID회원] 연동결과 : "
 								+ idpReceiver.getResponseHeader().getResult() + "] "
 								+ idpReceiver.getResponseHeader().getResult_text());
 					} else {
-						logger.info("###### [IDP ID회원] IDP 연동결과 : {} , {}",
-								idpReceiver.getResponseHeader().getResult(), idpReceiver.getResponseHeader()
-										.getResult_text());
 						removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
+
+						logger.info("###### [IDP ID회원] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader()
+								.getResult(), idpReceiver.getResponseHeader().getResult_text());
+
+						logger.info("###### [IDP ID회원] IDP RESULT BODY : {}", idpReceiver.getResponseBody().toString());
+
 						logger.info("###### 디바이스 삭제 [IDP ID회원] SC Remove Req Code : {}, Mesasage : {}",
 								removeDeviceResponse.getCommonResponse().getResultCode(), removeDeviceResponse
 										.getCommonResponse().getResultMessage());
@@ -1173,7 +1207,7 @@ public class DeviceServiceImpl implements DeviceService {
 					ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
 
 					if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						throw new RuntimeException("대표단말 입니다.");
+						throw new StorePlatformException("대표단말 입니다.");
 					} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
 						param.put("key_type", "1");
 						param.put("key", userInfo.getUserId());
@@ -1185,12 +1219,15 @@ public class DeviceServiceImpl implements DeviceService {
 						IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
 								IDPConstants.IDP_RES_CODE_OK)) {
-							throw new RuntimeException("[ 디바이스삭제 [IDP ID회원] 연동결과 : "
+							throw new StorePlatformException("[ 디바이스삭제 [IDP ID회원] 연동결과 : "
 									+ idpReceiver.getResponseHeader().getResult() + "] "
 									+ idpReceiver.getResponseHeader().getResult_text());
 						} else {
-							logger.info("###### [IDP ID회원] IDP 연동결과 : {} , {}", idpReceiver.getResponseHeader()
-									.getResult(), idpReceiver.getResponseHeader().getResult_text());
+							logger.info("###### [IDP ID회원] IDP RESULT HEADER : {} , {}", idpReceiver
+									.getResponseHeader().getResult(), idpReceiver.getResponseHeader().getResult_text());
+
+							logger.info("###### [IDP ID회원] IDP RESULT BODY : {}", idpReceiver.getResponseBody()
+									.toString());
 
 							removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
 							logger.info("###### 디바이스 삭제 [IDP ID회원] SC Remove Req Code : {}, Mesasage : {}",
@@ -1211,7 +1248,7 @@ public class DeviceServiceImpl implements DeviceService {
 					ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
 
 					if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						throw new RuntimeException("대표단말 입니다.");
+						throw new StorePlatformException("대표단말 입니다.");
 					} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
 						param.put("key_type", "1");
 						param.put("key", userInfo.getUserId());
@@ -1223,12 +1260,15 @@ public class DeviceServiceImpl implements DeviceService {
 						IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
 						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
 								IDPConstants.IDP_RES_CODE_OK)) {
-							throw new RuntimeException("[ 디바이스삭제 [IDP Mobile회원] 연동결과 : "
+							throw new StorePlatformException("[ 디바이스삭제 [IDP Mobile회원] 연동결과 : "
 									+ idpReceiver.getResponseHeader().getResult() + "] "
 									+ idpReceiver.getResponseHeader().getResult_text());
 						} else {
-							logger.info("###### [IDP Mobile회원] IDP 연동결과 : {} , {}", idpReceiver.getResponseHeader()
-									.getResult(), idpReceiver.getResponseHeader().getResult_text());
+							logger.info("###### [IDP Mobile회원] IDP RESULT HEADER : {} , {}", idpReceiver
+									.getResponseHeader().getResult(), idpReceiver.getResponseHeader().getResult_text());
+
+							logger.info("###### [IDP Mobile회원] IDP RESULT BODY : {}", idpReceiver.getResponseBody()
+									.toString());
 
 							removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
 							logger.info("###### 디바이스 삭제 [IDP Mobile회원] SC Remove Req Code : {}, Mesasage : {}",
@@ -1345,7 +1385,7 @@ public class DeviceServiceImpl implements DeviceService {
 		ListDeviceRes schDeviceListKeyResponse = this.listDevice(requestHeader, schDeviceListKeyRequest);
 		if (schDeviceListKeyResponse.getDeviceInfoList().size() == 0
 				&& schDeviceListKeyResponse.getDeviceInfoList().size() > 1) {
-			throw new RuntimeException("디바이스 키 추출 리스트 사이즈가 0이거나 1이상 입니다.");
+			throw new StorePlatformException("디바이스 키 추출 리스트 사이즈가 0이거나 1이상 입니다.");
 		} else {
 			logger.info("###### 디바이스 목록에서 키 추출 : {}", schDeviceListKeyResponse.getDeviceInfoList().size());
 			logger.info("###### 디바이스 목록에서 키 추출 : {}", schDeviceListKeyResponse.getDeviceInfoList().get(0)
@@ -1397,7 +1437,7 @@ public class DeviceServiceImpl implements DeviceService {
 					sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
 					sbUserPhone.append("|");
 				} else if (deviceInfo.getDeviceTelecom() == null || deviceInfo.getDeviceId() == null) {
-					throw new RuntimeException("###### 통신사 코드, 디바이스아이디 값이 없음");
+					throw new StorePlatformException("###### 통신사 코드, 디바이스아이디 값이 없음");
 				} else {
 					logger.info("###### sbUserPhone Setting : unKnown Error");
 				}
