@@ -8,29 +8,29 @@
                  ka.*
           FROM (                        
                 SELECT 
-                       COUNT(1) OVER() AS totalCount
+                       COUNT(1) OVER() AS TOTAL_COUNT
                       ,ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
-                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TOP_MENU_ID AND ROWNUM=1) as topMenuName 
-                      ,TOP_MENU_ID as topMenuId                           /* TOP 메뉴ID */
-                      ,MENU_ID as menuId                                  /* 메뉴ID */
-                      ,MENU_DESC as menuNm                                /* 메뉴명 */
-                      ,CHANNEL_ID as channelId                            /* 채널ID */
-                      ,PROD_ID as prodId                                  /* 상품ID */
-                      ,PROD_NM as prodNm                                  /* 상품명 */   
-                      ,PROD_GRD_CD as prodGrdCd                           /* 상품등급코드 */   
-                      ,AVG_SCORE as avgScore                              /* 평점   */
-                      ,PROD_AMT as prodAmt                                /* 가격   */
-                      ,PART_CNT as partCnt                                /* 부분개수 */
-                      ,SERIALLY_WKDY  as seriallyWkdy                     /* 요일별 */
-                      ,CASE WHEN (SYSDATE - UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS iconYn     /* 아이콘 */
-                      ,UPD_DT as updDt                                    /* 수정일 */
-                      ,DECODE(COMPT_YN,'Y','completed','N','continue',NULL,'continue') as comptYn    /* 완결여부 */
-                      ,VOD_TITL_NM       as prefix                                 /* prefix */
-                      ,CHAPTER as chapter                                 /* 챕터 */
-                      ,ARTIST1_NM as artist1Nm                            /* 아티스트1 */   
-                      ,ARTIST2_NM as artist2Nm                            /* 아티스트2 */
-                      ,ARTIST3_NM as artist3Nm                            /* 아티스트3 */
-                      ,FILE_POS as filePos                                /* 파일경로 */
+                      ,TOP_MENU_ID                  /* TOP 메뉴ID */
+                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TOP_MENU_ID AND ROWNUM=1) as TOP_MENU_NM
+                      ,MENU_ID                      /* 메뉴ID */
+                      ,MENU_DESC as MENU_NM         /* 메뉴명 */
+                      ,CHANNEL_ID                   /* 채널ID */
+                      ,PROD_ID                      /* 상품ID */
+                      ,PROD_NM                      /* 상품명 */   
+                      ,PROD_GRD_CD                  /* 상품등급코드 */   
+                      ,AVG_SCORE                    /* 평점 */
+                      ,PROD_AMT                     /* 가격 */
+                      ,PART_CNT                     /* 부분개수 */
+                      ,SERIALLY_WKDY                /* 요일별 */
+                      ,CASE WHEN (SYSDATE - UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
+                      ,UPD_DT                       /* 수정일 */
+                      ,DECODE(COMPT_YN,'Y','completed','N','continue',NULL,'continue') as COMPT_YN    /* 완결여부 */
+                      ,VOD_TITL_NM as PREFIX        /* prefix */
+                      ,CHAPTER                      /* 챕터 */
+                      ,ARTIST1_NM                   /* 아티스트1 */   
+                      ,ARTIST2_NM                   /* 아티스트2 */
+                      ,ARTIST3_NM                   /* 아티스트3 */
+                      ,FILE_POS                     /* 파일경로 */
                  FROM (
                         SELECT  
                                A.TOP_MENU_ID
