@@ -10,6 +10,23 @@ public class AppDetailReq {
     private String tenantId;
     private String langCd;
     private String episodeId;
+    private String deviceModelCd;
+
+    public AppDetailReq() {}
+    public AppDetailReq(String tenantId, String langCd, String episodeId, String deviceModelCd) {
+        this.tenantId = tenantId;
+        this.langCd = langCd;
+        this.episodeId = episodeId;
+        this.deviceModelCd = deviceModelCd;
+    }
+
+    public String getDeviceModelCd() {
+        return deviceModelCd;
+    }
+
+    public void setDeviceModelCd(String deviceModelCd) {
+        this.deviceModelCd = deviceModelCd;
+    }
 
     public String getEpisodeId() {
         return episodeId;
