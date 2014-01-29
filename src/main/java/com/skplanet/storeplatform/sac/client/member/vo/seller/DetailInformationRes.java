@@ -8,7 +8,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrPwd;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
@@ -38,9 +37,6 @@ public class DetailInformationRes extends CommonInfo {
 	/** 법정대리인 Value Object. */
 	private MbrLglAgent mbrLglAgent;
 
-	/** 약관동의 Value Object 목록. */
-	private List<MbrClauseAgree> mbrClauseAgreeList; // 이용약관 TB_US_SELLERMBR_CLAUSE_AGREE
-
 	/** 판매자 멀티미디어정보 Value Object 목록. */
 	private List<ExtraRight> extraRightList; // US_판매자회원_멀티미디어_권한 TB_US_SELLERMBR_MULTIMDA_AUTH (bp 사인경우만)
 
@@ -61,14 +57,6 @@ public class DetailInformationRes extends CommonInfo {
 
 	public void setMbrAuth(MbrAuth mbrAuth) {
 		this.mbrAuth = mbrAuth;
-	}
-
-	public List<MbrClauseAgree> getMbrClauseAgreeList() {
-		return this.mbrClauseAgreeList;
-	}
-
-	public void setMbrClauseAgreeList(List<MbrClauseAgree> mbrClauseAgreeList) {
-		this.mbrClauseAgreeList = mbrClauseAgreeList;
 	}
 
 	public MbrLglAgent getMbrLglAgent() {
