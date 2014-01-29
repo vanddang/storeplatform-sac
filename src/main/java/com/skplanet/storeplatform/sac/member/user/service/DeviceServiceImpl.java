@@ -424,12 +424,12 @@ public class DeviceServiceImpl implements DeviceService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * insertDeviceInfo(java.lang.String, java.lang.String, java.lang.String,
-	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
+	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService# insertDeviceInfo(java.lang.String,
+	 * java.lang.String, java.lang.String, com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
+	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
+			throws Exception {
 
 		logger.info("######################## DeviceServiceImpl insertDeviceInfo start ############################");
 
@@ -479,7 +479,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 					List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
 
-					if (schAgreeListRes.getMbrClauseAgreeList() != null && schAgreeListRes.getMbrClauseAgreeList().size() > 0) {
+					if (schAgreeListRes.getMbrClauseAgreeList() != null
+							&& schAgreeListRes.getMbrClauseAgreeList().size() > 0) {
 						for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
 							agreeInfo.setMemberKey(nowUserKey);
 							agreeList.add(agreeInfo);
@@ -492,14 +493,15 @@ public class DeviceServiceImpl implements DeviceService {
 						UpdateAgreementResponse updAgreeRes = this.userSCI.updateAgreement(updAgreeReq);
 
 						if (!updAgreeRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-							throw new StorePlatformException("약관저장실패 [" + updAgreeRes.getCommonResponse().getResultCode() + "]"
+							throw new StorePlatformException("약관저장실패 ["
+									+ updAgreeRes.getCommonResponse().getResultCode() + "]"
 									+ updAgreeRes.getCommonResponse().getResultMessage());
 						}
 					}
 
 				} else {
-					throw new StorePlatformException("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode() + "]"
-							+ schAgreeListRes.getCommonResponse().getResultMessage());
+					throw new StorePlatformException("약관조회실패 [" + schAgreeListRes.getCommonResponse().getResultCode()
+							+ "]" + schAgreeListRes.getCommonResponse().getResultMessage());
 				}
 
 				/* 6. 통합회원인 경우 무선회원 해지 */
@@ -524,9 +526,10 @@ public class DeviceServiceImpl implements DeviceService {
 					if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
 						idpReceiver = this.idpService.secedeUser4Wap(deviceInfo.getDeviceId());
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							throw new StorePlatformException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId() + "] result code : ["
-									+ idpReceiver.getResponseHeader().getResult() + "]");
+						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(),
+								IDPConstants.IDP_RES_CODE_OK)) {
+							throw new StorePlatformException("IDP secedeForWap fail mdn : [" + deviceInfo.getDeviceId()
+									+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
 						}
 					}
 				}
@@ -719,7 +722,8 @@ public class DeviceServiceImpl implements DeviceService {
 							throw new StorePlatformException("로그인에 실패하였습니다.(오류코드 4204).");
 						}
 					} else if (mapIcas.get("RESULT_CODE").equals("3162")) {
-						throw new StorePlatformException("휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
+						throw new StorePlatformException(
+								"휴대폰 번호에 등록된 단말 정보가 일치하지 않아 T store 를 이용할 수 없습니다. T store 를 종료합니다."); // ICAS
 						// 조회된
 						// 회선정보없음
 					}
@@ -810,8 +814,8 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-			throw new StorePlatformException("휴대기기정보 업데이트 실패 [" + createDeviceRes.getCommonResponse().getResultCode() + "]"
-					+ createDeviceRes.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("휴대기기정보 업데이트 실패 [" + createDeviceRes.getCommonResponse().getResultCode()
+					+ "]" + createDeviceRes.getCommonResponse().getResultMessage());
 
 		}
 
@@ -994,14 +998,25 @@ public class DeviceServiceImpl implements DeviceService {
 		/* userKey, deviceKey 회원존재여부 체크 */
 		ExistReq existReq = new ExistReq();
 		existReq.setUserKey(req.getUserKey());
-		existReq.setDeviceKey(req.getDeviceKey());
+
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
+
+		/* userKey, deviceId 로 디바이스 리스트 조회 -> getDeviceKey */
+		ListDeviceRes deviceRes = new ListDeviceRes();
+		if (req.getDeviceId() != null) {
+			ListDeviceReq deviceReq = new ListDeviceReq();
+			deviceReq.setUserKey(req.getUserKey());
+			deviceReq.setDeviceId(req.getDeviceId());
+			deviceRes = this.listDevice(requestHeader, deviceReq);
+			String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
+			req.setDeviceKey(deviceKey);
+		}
 
 		logger.info("###### 2. exist Request : {}", existReq.toString());
 		logger.info("###### 2. exist Respone : {}", existRes.toString());
 
 		if (existRes == null) {
-			throw new RuntimeException("회원정보 없음.");
+			throw new StorePlatformException("회원정보 없음.");
 		}
 
 		if (existRes.getUserKey() != null) {
@@ -1440,8 +1455,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
 			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-				throw new Exception("IDP secedeForWap fail mdn : [" + req.getDeviceId() + "] result code : ["
-						+ idpReceiver.getResponseHeader().getResult() + "]");
+				throw new StorePlatformException("IDP secedeForWap fail mdn : [" + req.getDeviceId()
+						+ "] result code : [" + idpReceiver.getResponseHeader().getResult() + "]");
 			}
 		}
 
@@ -1459,8 +1474,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
 		if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-			throw new Exception("[ 디바이스삭제 IMIDP 연동결과 : " + imIdpReceiver.getResponseHeader().getResult() + "] "
-					+ imIdpReceiver.getResponseHeader().getResult_text());
+			throw new StorePlatformException("[ 디바이스삭제 IMIDP 연동결과 : " + imIdpReceiver.getResponseHeader().getResult()
+					+ "] " + imIdpReceiver.getResponseHeader().getResult_text());
 		} else {
 			logger.info("[ 디바이스삭제 IMIDP 연동결과 : {}, {}", imIdpReceiver.getResponseHeader().getResult(), imIdpReceiver
 					.getResponseHeader().getResult_text());
@@ -1486,8 +1501,9 @@ public class DeviceServiceImpl implements DeviceService {
 		removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
 		if (!StringUtil.equals(removeDeviceResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new Exception("SC Device Remove Fail : " + removeDeviceResponse.getCommonResponse().getResultCode()
-					+ ", " + removeDeviceResponse.getCommonResponse().getResultMessage());
+			throw new StorePlatformException("SC Device Remove Fail : "
+					+ removeDeviceResponse.getCommonResponse().getResultCode() + ", "
+					+ removeDeviceResponse.getCommonResponse().getResultMessage());
 		} else {
 			logger.info("SC Device Remove Success : {}, {}", removeDeviceResponse.getCommonResponse().getResultCode(),
 					removeDeviceResponse.getCommonResponse().getResultMessage());
@@ -1542,7 +1558,7 @@ public class DeviceServiceImpl implements DeviceService {
 			if (device.getAomSprtYn() != null) {
 				res.setIsAomSupport(device.getAomSprtYn());
 			} else {
-				throw new RuntimeException("###### PhoneInfo.getAOmSprtYn is Null ");
+				throw new StorePlatformException("###### PhoneInfo.getAOmSprtYn is Null ");
 			}
 
 		}
