@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.api.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.api.vo.DpBrandInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
+import com.skplanet.storeplatform.sac.api.vo.ErrorData;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 
 /**
@@ -52,10 +54,6 @@ import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 public class ShoppingCouponSacController {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
-	private String ERR_MESSAGE;
-	private String ERR_CODE;
-	private List<CouponRes> couponList = null;
-	public String response;
 
 	@Autowired
 	private ShoppingCouponService shoppingCouponService;
@@ -83,8 +81,9 @@ public class ShoppingCouponSacController {
 		this.log.debug("apiCouponInterface Controller started!!");
 		this.log.debug("----------------------------------------------------------------");
 		CouponRes couponRes = new CouponRes();
+		ErrorData errorData = new ErrorData();
 		try {
-			this.dePloy(couponReq, couponRes);
+			this.dePloy(couponReq, couponRes, errorData);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -109,20 +108,20 @@ public class ShoppingCouponSacController {
 			String yesterdayTime = DateUtil.getDateString(yesDate, "yyyyMMdd");
 			this.couponProcessService.CouponStateUpdateStart(yesterdayTime);
 		} catch (Exception e) {
-			this.log.error("couponStateUpdateStart 생성 중 예외 발생 - ( 쿠폰(아이템) 상태변경 Batch  Call 에러 )", e);
+			// this.log.error("couponStateUpdateStart 생성 중 예외 발생 - ( 쿠폰(아이템) 상태변경 Batch  Call 에러 )", e);
 		}
 		return null;
 
 	}
 
-	public boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
+	public boolean dePloy(CouponReq couponReq, CouponRes couponRes, ErrorData errorData) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
 
 		boolean result = false;
 
 		Map<String, String> map = null;
-
+		List<CouponRes> couponList = new ArrayList<CouponRes>();
 		try {
 
 			// 01.log delete
@@ -138,7 +137,7 @@ public class ShoppingCouponSacController {
 			map = new HashMap<String, String>();
 			map.put("TX_ID", couponReq.getTxId());
 
-			result = this.doValidParameter1(couponReq); // 기본적인 validation 확인 및 parameter 정보 setting
+			result = this.doValidParameter1(couponReq, errorData); // 기본적인 validation 확인 및 parameter 정보 setting
 
 			if (result) {
 				boolean success = false;
@@ -147,7 +146,8 @@ public class ShoppingCouponSacController {
 				case BD:
 					// brand 작업을 호출한다.
 					DpBrandInfo brandInfo = new DpBrandInfo();
-					result = this.doValidParameterBD(couponReq, brandInfo); // 기본적인 validation 확인 및 parameter 정보 setting
+					result = this.doValidParameterBD(couponReq, brandInfo, errorData); // 기본적인 validation 확인 및 parameter
+																					   // 정보 setting
 					IcmsJobPrint.printBrand(brandInfo, "브랜드");
 					if (result) {
 						success = this.insertBrandInfo(brandInfo);
@@ -156,18 +156,19 @@ public class ShoppingCouponSacController {
 						couponRes.setBrandId(brandInfo.getCreateBrandId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					} else {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", this.getERR_CODE());
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_CODE", errorData.getErrorCode());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					}
 					break;
 				case CT:
 					// 카달로그 작업을 호출한다.
 					DpCatalogInfo catalogInfo = new DpCatalogInfo();
-					result = this.doValidParameterCT(couponReq, catalogInfo); // 기본적인 validation 확인 및 parameter 정보
-																			  // setting
+					result = this.doValidParameterCT(couponReq, catalogInfo, errorData); // 기본적인 validation 확인 및
+																						 // parameter 정보
+					// setting
 					IcmsJobPrint.printCatalog(catalogInfo, "카달로그");
 					if (result) {
 						success = this.insertCatalogInfo(catalogInfo);
@@ -176,17 +177,17 @@ public class ShoppingCouponSacController {
 						couponRes.setCatalogId(catalogInfo.getCreateCatalogId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					} else {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", this.getERR_CODE());
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_CODE", errorData.getErrorCode());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					}
 					break;
 				case CP:
 					// 쿠폰 정보 작업을 호출한다
 
-					result = this.doValidParameterCP(couponReq);
+					result = this.doValidParameterCP(couponReq, errorData);
 					if (result) {
 						success = this.insertCouponInfo(couponReq);
 					}
@@ -194,11 +195,11 @@ public class ShoppingCouponSacController {
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					} else {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
-						map.put("ERROR_CODE", this.getERR_CODE());
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_CODE", errorData.getErrorCode());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					}
 
 					break;
@@ -208,20 +209,21 @@ public class ShoppingCouponSacController {
 					if (success) {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					} else {
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
-						map.put("ERROR_MSG", this.getERR_MESSAGE());
+						map.put("ERROR_MSG", errorData.getErrorMsg());
 					}
 					break;
 				case LS:
 					// 특가 상품 목록 조회 작업을 호출한다.
+
 					String[] couponCodes = couponReq.getCouponCode().split(",");
-					this.couponList = this.getSpecialProductList(couponCodes);
+					couponList = this.getSpecialProductList(couponCodes);
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
-					map.put("ERROR_MSG", this.getERR_MESSAGE());
+					map.put("ERROR_MSG", errorData.getErrorMsg());
 					break;
 				case DT:
 					// 특가 상품 상세 조회 작업을 호출한다.
@@ -238,40 +240,37 @@ public class ShoppingCouponSacController {
 				default:
 					map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 					map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_MISS);
-					map.put("ERROR_MSG", this.getERR_MESSAGE());
+					map.put("ERROR_MSG", errorData.getErrorMsg());
 					break;
 				}
 
-				this.sendResponseData(couponReq, map, couponRes);
+				this.sendResponseData(couponReq, map, couponRes, couponList);
 
 			} else {
 				// Error Messag 를 작성한다.
 				map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
-				map.put("ERROR_MSG", this.getERR_MESSAGE());
-				this.sendResponseData(couponReq, map, couponRes);
+				map.put("ERROR_MSG", errorData.getErrorMsg());
+				this.sendResponseData(couponReq, map, couponRes, null);
 			}
 
 		} catch (CouponException ex) {
 			// 1차 Logic 처리시 벌생한 Coupon Exception 처리.
-			this.log.error("Coupon Control CouponException err_code=" + ex.getErrCode() + ", msg=" + ex.getMessage(),
-					ex);
 			map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 			map.put("ERROR_CODE", ex.getErrCode());
 			if (map.get("ERROR_CODE") == null || map.get("ERROR_CODE").equals(""))
 				map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_DB_ERR);
 			map.put("ERROR_MSG", ex.getMessage());
 			map.put("ERROR_VALUE", ex.getErr_value());
-			this.sendResponseData(couponReq, map, couponRes);
+			this.sendResponseData(couponReq, map, couponRes, null);
 			result = false;
 
 		} catch (Exception e) {
 			// Exception 처리.
-			this.log.error("Coupon Control Exception", e);
 			map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_ERROR);
 			map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_SERVICE_STOP);
 			map.put("ERROR_MSG", e.getMessage());
-			this.sendResponseData(couponReq, map, couponRes);
+			this.sendResponseData(couponReq, map, couponRes, null);
 			result = false;
 		}
 
@@ -285,7 +284,7 @@ public class ShoppingCouponSacController {
 	 *            dpBrandInfo
 	 * @throws
 	 */
-	public boolean insertBrandInfo(DpBrandInfo dpBrandInfo) {
+	private boolean insertBrandInfo(DpBrandInfo dpBrandInfo) {
 		boolean result = this.shoppingCouponService.insertBrandInfo(dpBrandInfo);
 		return result;
 
@@ -298,7 +297,7 @@ public class ShoppingCouponSacController {
 	 *            dpCatalogInfo
 	 * @throws
 	 */
-	public boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo) {
+	private boolean insertCatalogInfo(DpCatalogInfo dpCatalogInfo) {
 		boolean result = this.shoppingCouponService.insertCatalogInfo(dpCatalogInfo);
 		return result;
 
@@ -311,7 +310,7 @@ public class ShoppingCouponSacController {
 	 *            couponReq
 	 * @response boolean
 	 */
-	public boolean insertCouponInfo(CouponReq couponReq) {
+	private boolean insertCouponInfo(CouponReq couponReq) {
 		boolean result = this.couponProcessService.insertCouponInfo(couponReq);
 		return result;
 
@@ -324,7 +323,7 @@ public class ShoppingCouponSacController {
 	 *            couponReq
 	 * @response boolean
 	 */
-	public boolean updateForCouponStatus(CouponReq couponReq) {
+	private boolean updateForCouponStatus(CouponReq couponReq) {
 		boolean result = this.couponProcessService.updateForCouponStatus(couponReq);
 		return result;
 
@@ -337,7 +336,7 @@ public class ShoppingCouponSacController {
 	 *            [] couponCodes
 	 * @response List<CouponRes>
 	 */
-	public List<CouponRes> getSpecialProductList(String[] couponCodes) {
+	private List<CouponRes> getSpecialProductList(String[] couponCodes) {
 		List<CouponRes> result = this.couponProcessService.getSpecialProductList(couponCodes);
 		return result;
 
@@ -350,13 +349,13 @@ public class ShoppingCouponSacController {
 	 *            couponCode
 	 * @response CouponRes
 	 */
-	public CouponRes getSpecialProductDetail(String couponCode) {
+	private CouponRes getSpecialProductDetail(String couponCode) {
 		CouponRes result = this.couponProcessService.getSpecialProductDetail(couponCode);
 		return result;
 
 	}
 
-	public boolean doValidParameter1(CouponReq couponReq) {
+	private boolean doValidParameter1(CouponReq couponReq, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameter1...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
@@ -377,16 +376,16 @@ public class ShoppingCouponSacController {
 			}
 
 			if (!result) {
-				this.setERR_MESSAGE(sb.toString());
-				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_TYPE);
+				errorData.setErrorMsg(sb.toString());
+				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_TYPE);
 			}
 			return result;
 
 		} catch (Exception e) {
 			this.log.error("doValidParameter 작업중 예외 발생", e);
 			sb.append(e.getMessage() + "\n");
-			this.setERR_MESSAGE(sb.toString());
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+			errorData.setErrorMsg(sb.toString());
+			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 			result = false;
 			return result;
 
@@ -394,7 +393,7 @@ public class ShoppingCouponSacController {
 
 	}
 
-	public boolean doValidParameterBD(CouponReq couponReq, DpBrandInfo brandInfo) {
+	private boolean doValidParameterBD(CouponReq couponReq, DpBrandInfo brandInfo, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameterBD...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
@@ -425,8 +424,8 @@ public class ShoppingCouponSacController {
 				sb.append("브랜드 이미지 은 null을가질수 없습니다.");
 			}
 			if (!result) {
-				this.setERR_MESSAGE(sb.toString());
-				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+				errorData.setErrorMsg(sb.toString());
+				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			}
 			return result;
 
@@ -434,14 +433,14 @@ public class ShoppingCouponSacController {
 			this.log.error("doValidParameter 작업중 예외 발생", e);
 			sb.append(e.getMessage() + "\n");
 			result = false;
-			this.setERR_MESSAGE(sb.toString());
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+			errorData.setErrorMsg(sb.toString());
+			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 			return result;
 		}
 
 	}
 
-	public boolean doValidParameterCT(CouponReq couponReq, DpCatalogInfo catalogInfo) {
+	private boolean doValidParameterCT(CouponReq couponReq, DpCatalogInfo catalogInfo, ErrorData errorData) {
 		this.log.info("<CouponControl> doValidParameterCT...");
 		StringBuffer sb = new StringBuffer();
 		boolean result = true;
@@ -457,6 +456,10 @@ public class ShoppingCouponSacController {
 			catalogInfo.setIntroText(couponReq.getIntro_text());
 			catalogInfo.setCatalogTag(couponReq.getTag());
 
+			if (catalogInfo.getCatalogId().equals("") || catalogInfo.getCatalogId() == null) {
+				result = false;
+				sb.append("카탈로그 ID는 null을가질수 없습니다.");
+			}
 			if (catalogInfo.getCatalogNm().equals("") || catalogInfo.getCatalogNm() == null) {
 				result = false;
 				sb.append("카탈로그명은 null을가질수 없습니다.");
@@ -498,8 +501,8 @@ public class ShoppingCouponSacController {
 			}
 
 			if (!result) {
-				this.setERR_MESSAGE(sb.toString());
-				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+				errorData.setErrorMsg(sb.toString());
+				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			}
 
 			return result;
@@ -508,14 +511,14 @@ public class ShoppingCouponSacController {
 			this.log.error("doValidParameter 작업중 예외 발생", e);
 			sb.append(e.getMessage() + "\n");
 			result = false;
-			this.setERR_MESSAGE(sb.toString());
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
+			errorData.setErrorMsg(sb.toString());
+			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DATA_ERR);
 			return result;
 		}
 
 	}
 
-	private boolean doValidParameterCP(CouponReq couponReq) {
+	private boolean doValidParameterCP(CouponReq couponReq, ErrorData errorData) {
 		String couponProdId = "";
 		String itemProdId = "";
 		boolean result = true;
@@ -549,11 +552,11 @@ public class ShoppingCouponSacController {
 			kk++;
 		}
 
-		if (!this.doValidateCouponInfo(couponInfo)) {
+		if (!this.doValidateCouponInfo(couponInfo, errorData)) {
 			result = false;
 		}
 		for (int i = 0; i < itemInfoList.size(); i++) {
-			if (!this.doValidateItemInfo(itemInfoList.get(i))) {
+			if (!this.doValidateItemInfo(itemInfoList.get(i), errorData)) {
 				result = false;
 			}
 			break;
@@ -568,7 +571,8 @@ public class ShoppingCouponSacController {
 	}
 
 	// 쇼핑쿠폰 API 응답은 XML 으로 전송한다.
-	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map, CouponRes couponRes) {
+	private boolean sendResponseData(CouponReq couponReq, Map<String, String> map, CouponRes couponRes,
+			List<CouponRes> couponList) {
 		this.log.info("<CouponControl> sendResponseData...");
 
 		boolean success = false;
@@ -649,8 +653,8 @@ public class ShoppingCouponSacController {
 					String seperator_comma = "";
 					String eventList = "";
 					int j = 0;
-					if (this.couponList != null) {
-						for (CouponRes couponInfo : this.couponList) {
+					if (couponList != null) {
+						for (CouponRes couponInfo : couponList) {
 							if (j > 0)
 								seperator_comma = ",";
 							xmlSb.append(seperator_comma + couponInfo.getCouponCode() + ":" + couponInfo.getSpecialYN());
@@ -692,7 +696,7 @@ public class ShoppingCouponSacController {
 
 			xmlSb.append("</cms>");
 
-			this.response = xmlSb.toString();
+			// this.response = xmlSb.toString();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -709,16 +713,16 @@ public class ShoppingCouponSacController {
 	 * 
 	 * @return boolean
 	 */
-	private boolean doValidateCouponInfo(DpCouponInfo couponInfo) {
+	private boolean doValidateCouponInfo(DpCouponInfo couponInfo, ErrorData errorData) {
 		boolean result = true;
 		String message = "";
 
 		try {
-			if (couponInfo.getProdId() == "") {
+			if (couponInfo.getProdId().equals("")) {
 				message = "유효성 검사 실패 [couponName : 상품코드] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getCouponName() == "") {
+			if (couponInfo.getCouponName().equals("")) {
 				message = "유효성 검사 실패 [couponName : 쿠폰명] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
@@ -726,81 +730,81 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [couponName : 쿠폰명:" + couponInfo.getCouponName() + "]";
 				result = false;
 			}
-			if (couponInfo.getIssueSDate() == "") {
+			if (couponInfo.getIssueSDate().equals("")) {
 				message = "유효성 검사 실패 [issueSDate : 발급시작일시] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getIssueSDate() != "") {
+			if (!couponInfo.getIssueSDate().equals("")) {
 				if (couponInfo.getIssueSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueSDate())) {
 					message = "유효성 검사 실패 [issueSDate : 발급시작일시:" + couponInfo.getIssueSDate() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getIssueEDate() == "") {
+			if (couponInfo.getIssueEDate().equals("")) {
 				message = "유효성 검사 실패 [issueEDate : 발급종료일시] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getIssueEDate() != "") {
+			if (!couponInfo.getIssueEDate().equals("")) {
 				if (couponInfo.getIssueEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getIssueEDate())) {
 					message = "유효성 검사 실패 [issueEDate : 발급종료일시:" + couponInfo.getIssueEDate() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getValidSDate() == "") {
+			if (couponInfo.getValidSDate().equals("")) {
 				message = "유효성 검사 실패 [validSDate : 유효시작일시] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getValidSDate() != "") {
+			if (!couponInfo.getValidSDate().equals("")) {
 				if (couponInfo.getValidSDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidSDate())) {
 					message = "유효성 검사 실패 [validSDate : 유효시작일시:" + couponInfo.getValidSDate() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getValidEDate() == "") {
+			if (couponInfo.getValidEDate().equals("")) {
 				message = "유효성 검사 실패 [validEDate : 유효종료일시] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getValidEDate() != "") {
+			if (!couponInfo.getValidEDate().equals("")) {
 				if (couponInfo.getValidEDate().length() > 14 || !StringUtils.isNumeric(couponInfo.getValidEDate())) {
 					message = "유효성 검사 실패 [validEDate : 유효종료일시:" + couponInfo.getValidEDate() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getValidUntil() == "") {
+			if (couponInfo.getValidUntil().equals("")) {
 				message = "유효성 검사 실패 [validUntil : 유효일수] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getValidUntil() != "") {
+			if (!couponInfo.getValidUntil().equals("")) {
 				if (!StringUtils.isNumeric(couponInfo.getValidUntil())) {
 					message = "유효성 검사 실패 [validUntil : 유효일수:" + couponInfo.getValidUntil() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getDescription() != "") {
+			if (!couponInfo.getDescription().equals("")) {
 				if (couponInfo.getDescription().length() > 4000) {
 					message = "유효성 검사 실패 [description : 쿠폰설명:" + couponInfo.getDescription() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getDirection() != "") {
+			if (!couponInfo.getDirection().equals("")) {
 				if (couponInfo.getDirection().length() > 4000) {
 					message = "유효성 검사 실패 [direction : 사용장소:" + couponInfo.getDirection() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getUseCondition() != "") {
+			if (!couponInfo.getUseCondition().equals("")) {
 				if (couponInfo.getUseCondition().length() > 4000) {
 					message = "유효성 검사 실패 [useCondition : 사용제한:" + couponInfo.getUseCondition() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getAddtionalInfo() != "") {
+			if (!couponInfo.getAddtionalInfo().equals("")) {
 				if (couponInfo.getAddtionalInfo().length() > 1000) {
 					message = "유효성 검사 실패 [addtionalInfo : 주의사항:" + couponInfo.getAddtionalInfo() + "]";
 					result = false;
 				}
 			}
-			if (couponInfo.getRefundCondition() != "") {
+			if (!couponInfo.getRefundCondition().equals("")) {
 				if (couponInfo.getRefundCondition().length() > 4000) {
 					message = "유효성 검사 실패 [refundCondition : 구매취소(환불) 조건:" + couponInfo.getRefundCondition() + "]";
 					result = false;
@@ -812,7 +816,7 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [storeSaleType : 상품유형:" + couponInfo.getStoreSaleType() + "]";
 				result = false;
 			}
-			if (couponInfo.getStoreSaleType() == "") {
+			if (couponInfo.getStoreSaleType().equals("")) {
 				message = "유효성 검사 실패 [storeSaleType : 상품유형] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
@@ -820,20 +824,20 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [storeb2bFlag : B2B상품여부:" + couponInfo.getStoreb2bFlag() + "]";
 				result = false;
 			}
-			if (couponInfo.getStoreb2bFlag() == "") {
+			if (couponInfo.getStoreb2bFlag().equals("")) {
 				message = "유효성 검사 실패 [storeb2bFlag : B2B상품여부] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 
-			if (couponInfo.getStoreCatalogCode() == "") {
+			if (couponInfo.getStoreCatalogCode().equals("")) {
 				message = "유효성 검사 실패 [storeCatalogCode : 카탈로그 번호] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getAccountingRate() == "") {
+			if (couponInfo.getAccountingRate().equals("")) {
 				message = "유효성 검사 실패 [accountingRate : 정산율 번호] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getAccountingRate() != "") {
+			if (!couponInfo.getAccountingRate().equals("")) {
 				if (!StringUtils.isNumeric(couponInfo.getAccountingRate())) {
 					message = "유효성 검사 실패 [accountingRate : 정산율 번호:" + couponInfo.getAccountingRate() + "]";
 					result = false;
@@ -844,22 +848,22 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [taxType : 세금구분유형:" + couponInfo.getTaxType() + "]";
 				result = false;
 			}
-			if (couponInfo.getTaxType() == "") {
+			if (couponInfo.getTaxType().equals("")) {
 				message = "유효성 검사 실패 [taxType : 세금구분유형] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getBpId() == "") {
+			if (couponInfo.getBpId().equals("")) {
 				message = "유효성 검사 실패 [bpId : 업체아이디] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (couponInfo.getCoupnStatus() == "") {
+			if (couponInfo.getCoupnStatus().equals("")) {
 				message = "유효성 검사 실패 [coupnStatus : 쿠폰상태] 이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 
 			if (!result) {
-				this.setERR_MESSAGE(message);
-				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+				errorData.setErrorMsg(message);
+				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			} else {
 				result = true;
 			}
@@ -867,8 +871,8 @@ public class ShoppingCouponSacController {
 			this.log.error("유효성 검사 실패", e);
 			message = e.getMessage() + "\n";
 			result = false;
-			this.setERR_MESSAGE(message);
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+			errorData.setErrorMsg(message);
+			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			return result;
 		}
 
@@ -882,19 +886,19 @@ public class ShoppingCouponSacController {
 	 *            couponInfo
 	 * @return boolean
 	 */
-	private boolean doValidateItemInfo(DpItemInfo itemInfo) {
+	private boolean doValidateItemInfo(DpItemInfo itemInfo, ErrorData errorData) {
 		boolean result = true;
 		String message = "";
 		try {
-			if (itemInfo.getItemCode() == "") {
+			if (itemInfo.getItemCode().equals("")) {
 				message = "유효성 검사 실패 [itemName : 단품코드 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getStoreLicenseCode() == "") {
+			if (itemInfo.getStoreLicenseCode().equals("")) {
 				message = "유효성 검사 실패 [storeLicenseCode : 스토어 라이선스 번호 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getItemName() == "") {
+			if (itemInfo.getItemName().equals("")) {
 				message = "유효성 검사 실패 [itemName : 단품명 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
@@ -902,109 +906,109 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [itemName : 단품명 :" + itemInfo.getItemName() + "]";
 				result = false;
 			}
-			if (itemInfo.getOrgPrice() == "") {
+			if (itemInfo.getOrgPrice().equals("")) {
 				message = "유효성 검사 실패 [orgPrice : 정상가격 :이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getOrgPrice() != "") {
+			if (!itemInfo.getOrgPrice().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getOrgPrice())) {
 					message = "유효성 검사 실패 [orgPrice : 정상가격 :" + itemInfo.getOrgPrice() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getSalePrice() == "") {
+			if (itemInfo.getSalePrice().equals("")) {
 				message = "유효성 검사 실패 [salePrice : 할인가격 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getSalePrice() != "") {
+			if (!itemInfo.getSalePrice().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getSalePrice())) {
 					message = "유효성 검사 실패 [salePrice : 할인가격 :" + itemInfo.getSalePrice() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getItemPrice() == "") {
+			if (itemInfo.getItemPrice().equals("")) {
 				message = "유효성 검사 실패 [itemPrice : 단품가격 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getItemPrice() != "") {
+			if (!itemInfo.getItemPrice().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getItemPrice())) {
 					message = "유효성 검사 실패 [itemPrice : 단품가격 :" + itemInfo.getItemPrice() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getDcRate() == "") {
+			if (itemInfo.getDcRate().equals("")) {
 				message = "유효성 검사 실패 [dcRate : 할인율 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getDcRate() != "") {
+			if (!itemInfo.getDcRate().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getDcRate())) {
 					message = "유효성 검사 실패 [dcRate : 할인율 :" + itemInfo.getDcRate() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getMaxCount() == "") {
+			if (itemInfo.getMaxCount().equals("")) {
 				message = "유효성 검사 실패 [maxCount : 판매개수 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getMaxCount() != "") {
+			if (!itemInfo.getMaxCount().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCount())) {
 					message = "유효성 검사 실패 [maxCount : 판매개수 :" + itemInfo.getMaxCount() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getMaxCountMonthly() == "") {
+			if (itemInfo.getMaxCountMonthly().equals("")) {
 				message = "유효성 검사 실패 [maxCountMonthly : 월간 상품 최대 판매 수량 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getMaxCountMonthly() != "") {
+			if (!itemInfo.getMaxCountMonthly().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountMonthly())) {
 					message = "유효성 검사 실패 [maxCountMonthly : 월간 상품 최대 판매 수량 :" + itemInfo.getMaxCountMonthly() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getMaxCountDaily() == "") {
+			if (!itemInfo.getMaxCountDaily().equals("")) {
 				message = "유효성 검사 실패 [maxCountMonthly : 일간 상품 최대 판매 수량 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getMaxCountDaily() != "") {
+			if (!itemInfo.getMaxCountDaily().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountDaily())) {
 					message = "유효성 검사 실패 [maxCountDaily : 일간 상품 최대 판매 수량 :" + itemInfo.getMaxCountDaily() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getMaxCountMonthlyUser() == "") {
+			if (itemInfo.getMaxCountMonthlyUser().equals("")) {
 				message = "유효성 검사 실패 [maxCountMonthlyUser : 1인 당월 최대 구매 수량 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getMaxCountMonthlyUser() != "") {
+			if (!itemInfo.getMaxCountMonthlyUser().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountMonthlyUser())) {
 					message = "유효성 검사 실패 [maxCountMonthlyUser : 1인 당월 최대 구매 수량 :" + itemInfo.getMaxCountMonthlyUser()
 							+ "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getMaxCountDailyUser() == "") {
+			if (itemInfo.getMaxCountDailyUser().equals("")) {
 				message = "유효성 검사 실패 [maxCountDailyUser : 1인 당일 최대 구매 수량 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getMaxCountDailyUser() != "") {
+			if (!itemInfo.getMaxCountDailyUser().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getMaxCountDailyUser())) {
 					message = "유효성 검사 실패 [maxCountDailyUser : 1인 당일 최대 구매 수량 :" + itemInfo.getMaxCountDailyUser() + "]";
 					result = false;
 				}
 			}
-			if (itemInfo.getBuyMaxLimit() == "") {
+			if (itemInfo.getBuyMaxLimit().equals("")) {
 				message = "유효성 검사 실패 [buyMaxLimit : 최대결제수량 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getBuyMaxLimit() != "") {
+			if (!itemInfo.getBuyMaxLimit().equals("")) {
 				if (!StringUtils.isNumeric(itemInfo.getBuyMaxLimit())) {
 					message = "유효성 검사 실패 [buyMaxLimit : 최대결제수량 :" + itemInfo.getBuyMaxLimit() + "]";
 					result = false;
 				}
 			}
 
-			if (itemInfo.getBpManageId() != "") {
+			if (!itemInfo.getBpManageId().equals("")) {
 				if (itemInfo.getBpManageId().length() > 32) {
 					message = "유효성 검사 실패 [bpManageId : BP관리ID :" + itemInfo.getBpManageId() + "]";
 					result = false;
@@ -1015,17 +1019,17 @@ public class ShoppingCouponSacController {
 				message = "유효성 검사 실패 [cudType : 추가수정플래그 :" + itemInfo.getCudType() + "]";
 				result = false;
 			}
-			if (itemInfo.getCudType() == "") {
+			if (itemInfo.getCudType().equals("")) {
 				message = "유효성 검사 실패 [cudType : 추가수정플래그 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
-			if (itemInfo.getItemStatus() == "") {
+			if (itemInfo.getItemStatus().equals("")) {
 				message = "유효성 검사 실패 [itemStatus : 단품상태 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (!result) {
-				this.setERR_MESSAGE(message);
-				this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+				errorData.setErrorMsg(message);
+				errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			} else {
 				result = true;
 			}
@@ -1033,35 +1037,11 @@ public class ShoppingCouponSacController {
 			this.log.error("유효성 검사 실패", e);
 			message = e.getMessage() + "\n";
 			result = false;
-			this.setERR_MESSAGE(message);
-			this.setERR_CODE(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
+			errorData.setErrorMsg(message);
+			errorData.setErrorCode(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC);
 			return result;
 		}
 		return result;
-	}
-
-	public String getERR_MESSAGE() {
-		return this.ERR_MESSAGE;
-	}
-
-	public void setERR_MESSAGE(String eRR_MESSAGE) {
-		this.ERR_MESSAGE = eRR_MESSAGE;
-	}
-
-	public String getERR_CODE() {
-		return this.ERR_CODE;
-	}
-
-	public void setERR_CODE(String eRR_CODE) {
-		this.ERR_CODE = eRR_CODE;
-	}
-
-	public String getReponse() {
-		return this.response;
-	}
-
-	public void setReponse(String response) {
-		this.response = response;
 	}
 
 }

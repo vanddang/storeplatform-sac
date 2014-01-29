@@ -10,21 +10,19 @@
 
 package com.skplanet.storeplatform.sac.api.except;
 
-import com.skplanet.storeplatform.sac.api.vo.ERROR_DATA;
+import com.skplanet.storeplatform.sac.api.vo.ErrorData;
+
 /**
  * <pre>
  * 전처리 쿠폰 Exception Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class CouponException extends RuntimeException {
-	private ERROR_DATA error_data;
-	private String request_time;
-	private String err_value;
+	private ErrorData errorData;
+	private String requestTime;
+	private String errValue;
 
 	/**
 	 * Exception 시에는 tx_id = null 로와도 무방함.
@@ -35,42 +33,42 @@ public class CouponException extends RuntimeException {
 	 * @param request_time
 	 */
 	public CouponException(String error_code, String error_message, String err_value) {
-		this.error_data = new ERROR_DATA();
-		this.error_data.setERROR_CODE(error_code);
-		this.error_data.setERROR_MSG(error_message);
-		this.err_value = err_value;
+		this.errorData = new ErrorData();
+		this.errorData.setErrorCode(error_code);
+		this.errorData.setErrorMsg(error_message);
+		this.errValue = err_value;
 	}
 
 	@Override
 	public String getMessage() {
-		return this.error_data.getERROR_MSG();
+		return this.errorData.getErrorMsg();
 	}
 
 	public String getErrCode() {
-		return this.error_data.getERROR_CODE();
+		return this.errorData.getErrorCode();
 	}
 
-	public ERROR_DATA getError_data() {
-		return this.error_data;
+	public ErrorData getError_data() {
+		return this.errorData;
 	}
 
-	public void setError_data(ERROR_DATA error_data) {
-		this.error_data = error_data;
+	public void setError_data(ErrorData error_data) {
+		this.errorData = error_data;
 	}
 
 	public String getRequest_time() {
-		return this.request_time;
+		return this.requestTime;
 	}
 
 	public void setRequest_time(String request_time) {
-		this.request_time = request_time;
+		this.requestTime = request_time;
 	}
 
 	public String getErr_value() {
-		return this.err_value;
+		return this.errValue;
 	}
 
 	public void setErr_valu(String err_value) {
-		this.err_value = err_value;
+		this.errValue = err_value;
 	}
 }
