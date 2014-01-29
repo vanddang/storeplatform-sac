@@ -709,7 +709,7 @@ public class ShoppingCouponSacController {
 	 * 
 	 * @return boolean
 	 */
-	public boolean doValidateCouponInfo(DpCouponInfo couponInfo) {
+	private boolean doValidateCouponInfo(DpCouponInfo couponInfo) {
 		boolean result = true;
 		String message = "";
 
@@ -882,7 +882,7 @@ public class ShoppingCouponSacController {
 	 *            couponInfo
 	 * @return boolean
 	 */
-	public boolean doValidateItemInfo(DpItemInfo itemInfo) {
+	private boolean doValidateItemInfo(DpItemInfo itemInfo) {
 		boolean result = true;
 		String message = "";
 		try {
