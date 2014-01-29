@@ -110,7 +110,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 			if (PurchaseConstants.PRCHS_PROD_TYPE_FIX.equals(StringUtil.setTrim(purchaseDetail.getPrchsProdType()))) {
 				// 정액권 상품이면 이용내역 없는지 확인.
 				// TODO : 정액권 상품 컬럼 생기면 확인.
-
+				;
 			}
 		}
 
@@ -190,6 +190,17 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 		return purchaseCancelResultDetail;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param purchaseCommonParam
+	 *            purchaseCommonParam
+	 * @param purchaseCancelParamDetail
+	 *            purchaseCancelParamDetail
+	 */
 	private void removeRO(PurchaseCommonParam purchaseCommonParam, PurchaseCancelParamDetail purchaseCancelParamDetail) {
 
 		// aom message 발송.
