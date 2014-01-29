@@ -25,8 +25,8 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -65,12 +65,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	ExistenceService existenceService;
 
 	@Override
-	public DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookReq downloadEbookReq) {
+	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq downloadEbookReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		DownloadEbookRes ebookRes = new DownloadEbookRes();
+		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		String idType = downloadEbookReq.getIdType();
@@ -85,7 +85,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			this.logger.debug("필수 파라미터 부족");
 			this.logger.debug("----------------------------------------------------------------");
 
-			throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+			throw new StorePlatformException("ERROR_0001");
 		}
 		// ID유형 유효값 체크
 		if (!"channel".equals(idType) && !"episode".equals(idType)) {
@@ -93,7 +93,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			this.logger.debug("유효하지않은 ID유형");
 			this.logger.debug("----------------------------------------------------------------");
 
-			throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+			throw new StorePlatformException("ERROR_0001");
 		}
 
 		// 헤더정보 세팅
@@ -130,7 +130,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 					if (!existenceResponseList.isEmpty()) {
 						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("구매 상품");
+						this.logger.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
 						this.logger.debug("----------------------------------------------------------------");
 
 						prchsId = existenceResponseList.get(0).getPrchsId();
@@ -139,8 +139,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 						this.logger.debug("미구매 상품");
 						this.logger.debug("----------------------------------------------------------------");
 					}
-				} catch (Exception e) {
-					throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+				} catch (Exception ex) {
+					throw new StorePlatformException("ERROR_0001", ex);
 				}
 			}
 
@@ -236,7 +236,11 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			product.setDistributor(distributor);
 
 			// 구매 정보
-			purchase.setState(StringUtils.isNotEmpty(prchsId) ? "payment" : "noPayment");
+			purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+			identifier.setText(prchsId);
+			purchase.setIdentifier(identifier);
 			product.setPurchase(purchase);
 
 			ebookRes.setProduct(product);

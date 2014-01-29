@@ -446,7 +446,7 @@
 	          AND  TB.IMG_CD = 'DP000108'
     </select>
     
-    <select id="selectDownloadEbookInfo" parameterType="DownloadEbookReq" resultType="MetaInfo">
+    <select id="selectDownloadEbookInfo" parameterType="DownloadEbookSacReq" resultType="MetaInfo">
 		SELECT /* DownloadMapper.xml, selectDownloadEbookInfo, tae hee Lee, 2014-01-28 */
 		        KA.*
 		      , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMAGE_PATH
@@ -550,6 +550,7 @@
 		                           AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
 		                           AND  I.DEVICE_MODEL_CD(+) = #{deviceModelCd}
 		                           AND  I.PROD_ID IS NOT NULL
+		                           AND  DECODE(J.EBOOK_SPRT_YN, 'Y', DECODE(A.META_CLSF_CD, 'CT24', DECODE(J.MAGAZINE_SPRT_YN, 'Y', 1, 0), 'CT26', DECODE(J.MAGAZINE_SPRT_YN, 'Y', 1, 0), 1), 0) = 1
 		                           AND  K.SALE_YN = 'Y'
 		                           <if test='idType == "channel"'>
 		                           AND  C.PROD_ID = #{productId}

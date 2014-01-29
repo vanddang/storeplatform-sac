@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodReq;
@@ -115,8 +115,8 @@ public class DownloadController {
 	 */
 	@RequestMapping(value = "/ebook/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader,
-			@RequestBody DownloadEbookReq downloadEbookReq) {
+	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader,
+			@RequestBody DownloadEbookSacReq downloadEbookReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getDownloadEbookInfo started");
 		this.logger.debug("----------------------------------------------------------------");

@@ -163,6 +163,6 @@
         <typeAlias alias="ServiceGroup"  type="com.skplanet.storeplatform.sac.display.other.vo.OtherServiceGroup" />           
         
         <!-- for download Ebook 정보 조회 -->
-        <typeAlias alias="DownloadEbookReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq" />         
+        <typeAlias alias="DownloadEbookSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq" />         
     </typeAliases>
 </configuration>

@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -21,5 +21,5 @@ public interface DownloadEbookService {
 	 *            requestHeader
 	 * @return DownloadEbookRes
 	 */
-	DownloadEbookRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookReq downloadEbookReq);
+	DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq downloadEbookReq);
 }
