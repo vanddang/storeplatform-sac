@@ -14,6 +14,7 @@ public class BannerReq {
 	private String prodId; // 상품_ID
 	private String resvExpoYn; // 예비_노출_여부
 	private String langCd; // 언어 코드
+	private String testYn; // 테스트 여부
 	private int offset;
 	private int count;
 
@@ -127,6 +128,14 @@ public class BannerReq {
 
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
+	}
+
+	public String getTestYn() {
+		return this.testYn;
+	}
+
+	public void setTestYn(String testYn) {
+		this.testYn = testYn;
 	}
 
 }
