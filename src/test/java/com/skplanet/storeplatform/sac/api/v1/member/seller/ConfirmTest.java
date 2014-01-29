@@ -138,7 +138,7 @@ public class ConfirmTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						req.setSellerKey("");
+						req.setSellerKey("SE201401271147460550000319");
 						return req;
 					}
 				}).success(ConfirmRes.class, new SuccessCallback() {
