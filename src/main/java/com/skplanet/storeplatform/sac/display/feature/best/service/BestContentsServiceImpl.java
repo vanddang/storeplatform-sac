@@ -248,6 +248,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 					 */
 					price.setText(mapperVO.getProdAmt());
 
+					// 이북/코믹 이면
 					if (!"movie".equals(bestContentsReq.getFilteredBy())
 							&& !"boardcast".equals(bestContentsReq.getFilteredBy())
 							&& !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
