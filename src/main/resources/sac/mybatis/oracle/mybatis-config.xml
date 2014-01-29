@@ -151,11 +151,11 @@
         <typeAlias alias="VodDetail"  type="com.skplanet.storeplatform.sac.display.vod.vo.VodDetail" />
         
         <!-- for download App 정보 조회 -->
-        <typeAlias alias="DownloadAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppReq" />
+        <typeAlias alias="DownloadAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq" />
         <typeAlias alias="DownloadApp"  type="com.skplanet.storeplatform.sac.display.download.vo.DownloadApp" />
         
         <!-- for download Vod 정보 조회 -->
-        <typeAlias alias="DownloadVodReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodReq" />
+        <typeAlias alias="DownloadVodSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq" />
         <typeAlias alias="DownloadVod"  type="com.skplanet.storeplatform.sac.display.download.vo.DownloadVod" />    
         
         <!-- 기타 상품서비스군 정보 조회 -->
