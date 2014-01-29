@@ -33,8 +33,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoon;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
 /**
@@ -63,23 +66,43 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	@Override
 	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req) {
 
-		CategoryWebtoonRes responseVO = null;
-
 		Integer totalCount = 0;
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		if (header.getTenantHeader() == null) {
-			req.setTenantId("S01");
-			req.setImageCd("DP000196");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHV-E330SSO");
-		} else {
-			req.setTenantId("S01");
-			req.setSystemId(header.getTenantHeader().getSystemId());
-			req.setImageCd("DP000196");
-			req.setLangCd("ko");
-			req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+
+		this.log.debug("########################################################");
+		this.log.debug("tenantHeader.getTenantId()	:	" + tenantHeader.getTenantId());
+		this.log.debug("tenantHeader.getLangCd()	:	" + tenantHeader.getLangCd());
+		this.log.debug("deviceHeader.getModel()		:	" + deviceHeader.getModel());
+		this.log.debug("########################################################");
+
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setDeviceModelCd(deviceHeader.getModel());
+
+		CategoryWebtoonRes responseVO = new CategoryWebtoonRes(); // Response 객체
+		CommonResponse commonResponse = new CommonResponse();
+		List<Product> productList = new ArrayList<Product>();
+
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
 		}
+		req.setOffset(offset);
+
+		if (req.getCount() != null) {
+			count = req.getCount();
+		}
+		count = offset + count - 1;
+		req.setCount(count);
+
+		/**
+		 * TODO 삭제 필요.
+		 */
+		req.setImageCd("DP000196");
 
 		List<CategoryWebtoon> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
 				CategoryWebtoon.class);
@@ -102,7 +125,6 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			List<Identifier> identifierList = null;
 			List<Menu> menuList = null;
 			List<Source> sourceList = null;
-			List<Product> productList = new ArrayList<Product>();
 
 			for (int i = 0; i < resultList.size(); i++) {
 				webtoonDto = resultList.get(i);
@@ -119,8 +141,8 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				menuList = new ArrayList<Menu>();
 				menu = new Menu();
 				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menu.setId(webtoonDto.getUpMenuId());
-				menu.setName(webtoonDto.getUpMenuName());
+				menu.setId(webtoonDto.getTopMenuId());
+				menu.setName(webtoonDto.getTopMenuName());
 				menuList.add(menu);
 
 				menu = new Menu();
@@ -147,6 +169,8 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				// 이미지 정보
 				sourceList = new ArrayList<Source>();
 				source = new Source();
+				source.setMediaType(DisplayCommonUtil.getMimeType(webtoonDto.getFilePos()));
+				// source.setSize(webtoonDto.getImgSize());
 				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
 				source.setUrl(webtoonDto.getFilePos());
 				sourceList.add(source);
@@ -171,12 +195,9 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				productList.add(i, product);
 			}
 
-			responseVO = new CategoryWebtoonRes();
-			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
 			commonResponse.setTotalCount(totalCount);
 			responseVO.setCommonResponse(commonResponse);
+			responseVO.setProductList(productList);
 		}
 		return responseVO;
 	}

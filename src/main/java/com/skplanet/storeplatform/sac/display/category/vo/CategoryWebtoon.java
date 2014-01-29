@@ -19,8 +19,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategoryWebtoon extends CommonInfo {
 
 	private int totalCount;
-	private String upMenuName;
-	private String upMenuId;
+	private String topMenuName;
+	private String topMenuId;
 	private String menuId;
 	private String menuNm;
 	private String channelId;
@@ -40,6 +40,8 @@ public class CategoryWebtoon extends CommonInfo {
 	private String artist2Nm;
 	private String artist3Nm;
 	private String filePos;
+	private String imgPath;
+	private Integer imgSize;
 
 	public int getTotalCount() {
 		return this.totalCount;
@@ -49,20 +51,20 @@ public class CategoryWebtoon extends CommonInfo {
 		this.totalCount = totalCount;
 	}
 
-	public String getUpMenuName() {
-		return this.upMenuName;
+	public String getTopMenuName() {
+		return this.topMenuName;
 	}
 
-	public void setUpMenuName(String upMenuName) {
-		this.upMenuName = upMenuName;
+	public void setTopMenuName(String topMenuName) {
+		this.topMenuName = topMenuName;
 	}
 
-	public String getUpMenuId() {
-		return this.upMenuId;
+	public String getTopMenuId() {
+		return this.topMenuId;
 	}
 
-	public void setUpMenuId(String upMenuId) {
-		this.upMenuId = upMenuId;
+	public void setTopMenuId(String topMenuId) {
+		this.topMenuId = topMenuId;
 	}
 
 	public String getMenuId() {
@@ -216,4 +218,21 @@ public class CategoryWebtoon extends CommonInfo {
 	public void setPreFix(String preFix) {
 		this.preFix = preFix;
 	}
+
+	public String getImgPath() {
+		return this.imgPath;
+	}
+
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
+	}
+
+	public Integer getImgSize() {
+		return this.imgSize;
+	}
+
+	public void setImgSize(Integer imgSize) {
+		this.imgSize = imgSize;
+	}
+
 }

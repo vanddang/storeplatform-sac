@@ -115,7 +115,7 @@ public class CategoryController {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * 웹툰 상품 조회.
 	 * </pre>
 	 * 
 	 * @param header
