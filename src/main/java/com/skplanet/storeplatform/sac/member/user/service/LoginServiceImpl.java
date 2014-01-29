@@ -245,6 +245,9 @@ public class LoginServiceImpl implements LoginService {
 			/* 서비스 이용동의 간편 가입 대상 확인 */
 			if (chkDupRes.getUserMbr() == null && chkDupRes.getMbrOneID() != null) {
 				res.setImIntSvcNo(chkDupRes.getMbrOneID().getIntgSvcNumber());
+				res.setUserMainStatus(chkDupRes.getMbrOneID().getEntryStatusCode());
+				res.setLoginStatusCode(chkDupRes.getMbrOneID().getLoginStatusCode());
+				res.setStopStatusCode(chkDupRes.getMbrOneID().getStopStatusCode());
 				return res;
 			} else {
 				throw new StorePlatformException("회원정보 없음.");
