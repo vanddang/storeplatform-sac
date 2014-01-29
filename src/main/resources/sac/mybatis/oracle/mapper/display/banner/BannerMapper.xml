@@ -3,6 +3,211 @@
 <mapper namespace="Banner">
     <!-- 배너 리스트 조회-->
     <select id="searchBannerList" parameterType="BannerReq" resultType="Banner">
+    <!-- 테스트 임의 데이터 -->
+    <if test='testYn == "Y"'>
+    WITH TB_DP_BNR AS (
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,1 BNR_SEQ
+	    ,'DP000500' BNR_TOP_CD
+        ,'테스트 1(NM)' BNR_NM
+        ,'테스트 1(DESC)' BNR_DESC
+	    ,'B' IMG_CASE_CD
+	    ,'DP010303' BNR_TYPE_CD
+	    ,'' BNR_INFO
+	    ,'' MENU_ID
+	    ,'0000000109' PROD_ID
+	    ,'DP010201' EXPO_STATUS_CD
+	    ,SYSDATE - 1 EXPO_START_DT
+	    ,SYSDATE + 1 EXPO_END_DT
+	    ,'Y' EXPO_YN
+	    ,1 EXPO_ORD
+	    ,'Y' USE_YN
+	    , SYSDATE REG_DT
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,2 BNR_SEQ
+	    ,'DP000500' BNR_TOP_CD
+        ,'테스트 2(NM)' BNR_NM
+        ,'테스트 2(DESC)' BNR_DESC
+	    ,'B' IMG_CASE_CD
+	    ,'DP010303' BNR_TYPE_CD
+	    ,'' BNR_INFO
+	    ,'' MENU_ID
+	    ,'H000043790' PROD_ID
+	    ,'DP010201' EXPO_STATUS_CD
+	    ,SYSDATE - 1 EXPO_START_DT
+	    ,SYSDATE + 1 EXPO_END_DT
+	    ,'Y' EXPO_YN
+	    ,2 EXPO_ORD
+	    ,'Y' USE_YN
+	    , SYSDATE REG_DT
+	FROM DUAL
+	UNION ALL
+    SELECT 
+        'S01' TENANT_ID
+        ,'MBI000000004' BNR_GRP_ID
+        ,3 BNR_SEQ
+        ,'DP000500' BNR_TOP_CD
+        ,'테스트 3(NM)' BNR_NM
+        ,'테스트 3(DESC)' BNR_DESC
+        ,'B' IMG_CASE_CD
+        ,'DP010303' BNR_TYPE_CD
+        ,'' BNR_INFO
+        ,'' MENU_ID
+        ,'H900064702' PROD_ID
+        ,'DP010201' EXPO_STATUS_CD
+        ,SYSDATE - 1 EXPO_START_DT
+        ,SYSDATE + 1 EXPO_END_DT
+        ,'Y' EXPO_YN
+        ,3 EXPO_ORD
+        ,'Y' USE_YN
+        , SYSDATE REG_DT
+    FROM DUAL
+    UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,4 BNR_SEQ
+	    ,'DP000500' BNR_TOP_CD
+	    ,'테스트 4(NM)' BNR_NM
+	    ,'테스트 4(DESC)' BNR_DESC
+	    ,'B' IMG_CASE_CD
+	    ,'DP010307' BNR_TYPE_CD
+	    ,'AR00001286' BNR_INFO
+	    ,'' MENU_ID
+	    ,'' PROD_ID
+	    ,'DP010201' EXPO_STATUS_CD
+	    ,SYSDATE - 1 EXPO_START_DT
+	    ,SYSDATE + 1 EXPO_END_DT
+	    ,'Y' EXPO_YN
+	    ,4 EXPO_ORD
+	    ,'Y' USE_YN
+	    , SYSDATE REG_DT
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,5 BNR_SEQ
+	    ,'DP000500' BNR_TOP_CD
+	    ,'테스트 5(NM)' BNR_NM
+	    ,'테스트 5(DESC)' BNR_DESC
+	    ,'B' IMG_CASE_CD
+	    ,'DP010310' BNR_TYPE_CD
+	    ,'https://tstore.co.kr/images/event/EVENT_140115174421/preview/main.html' BNR_INFO
+	    ,'' MENU_ID
+	    ,'' PROD_ID
+	    ,'DP010201' EXPO_STATUS_CD
+	    ,SYSDATE - 1 EXPO_START_DT
+	    ,SYSDATE + 1 EXPO_END_DT
+	    ,'Y' EXPO_YN
+	    ,5 EXPO_ORD
+	    ,'Y' USE_YN
+	    , SYSDATE REG_DT
+	FROM DUAL
+	), TB_DP_BNR_IMG AS (
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,1 BNR_SEQ
+	    ,'1' IMG_SIZE_CD
+	    ,'/data/img/tstore30/banner/broad/' IMG_PATH
+	    ,'broad_xhdpi_338_227_20121126140454590.png' IMG_NM
+	    , NULL IMG_TYPE_CD
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,2 BNR_SEQ
+	    ,'1' IMG_SIZE_CD
+	    ,'/data/img/tstore30/banner/broad/' IMG_PATH
+	    ,'comic_hdpi_193_127_20121119155642771.png.png' IMG_NM
+	    , NULL IMG_TYPE_CD
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,3 BNR_SEQ
+	    ,'1' IMG_SIZE_CD
+	    ,'/data/img/tstore30/banner/broad/' IMG_PATH
+	    ,'comic_mdpi_193_127_20121119155642771.png.png' IMG_NM
+	    , NULL IMG_TYPE_CD
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,4 BNR_SEQ
+	    ,'1' IMG_SIZE_CD
+	    ,'/data/img/tstore30/banner/broad/' IMG_PATH
+	    ,'mainTop_xhdpi_453_453_20121126140429087.png.png' IMG_NM
+	    , NULL IMG_TYPE_CD
+	FROM DUAL
+    UNION ALL
+    SELECT 
+        'S01' TENANT_ID
+        ,'MBI000000004' BNR_GRP_ID
+        ,5 BNR_SEQ
+        ,'1' IMG_SIZE_CD
+        ,'/data/img/tstore30/banner/broad/' IMG_PATH
+        ,'mainTop_xhdpi_453_453_20121126140429087.png.png' IMG_NM
+        , NULL IMG_TYPE_CD
+    FROM DUAL
+	), TB_DP_BNR_DVC AS (
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,1 BNR_SEQ
+	    ,'SHW-M110S' DEVICE_MODEL_CD
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,2 BNR_SEQ
+	    ,'SHW-M110S' DEVICE_MODEL_CD
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,3 BNR_SEQ
+	    ,'SHW-M110S' DEVICE_MODEL_CD
+	FROM DUAL
+	UNION ALL
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'MBI000000004' BNR_GRP_ID
+	    ,4 BNR_SEQ
+	    ,'SHW-M110S' DEVICE_MODEL_CD
+	FROM DUAL
+	), TB_CM_DEVICE AS (
+	SELECT 
+	    'SHW-M110S' DEVICE_MODEL_CD
+	    ,'Y' USE_YN
+	FROM DUAL
+	), TB_DP_RSLTN_MAPG AS (
+	SELECT 
+	    'S01' TENANT_ID
+	    ,'test01' SYSTEM_ID
+	    ,'320' RSLTN_SIZE
+	    ,'SC' POC_CLSF
+	    ,'B' EXPO_AREA
+	    ,'ALL' PROD_CLSF
+	    ,'DP000500' TOP_MENU_ID
+	    ,'1' TBNAIL_CLSF
+	FROM DUAL
+	)
+	</if>
+<!-- 여기까지 -->
+
     SELECT A.*
     FROM (
 		SELECT COUNT(*) OVER () AS TOTAL_COUNT
@@ -111,7 +316,7 @@
 	        , TB_DP_SUB_CONTENTS TDSC2
         WHERE TDP.PROD_ID = TDPR.PART_PROD_ID
         AND TDPR.PROD_ID = TDMCRM.PROD_ID
-        AND TDP.PROD_ID = TDMP.PROD_ID
+        AND TDP.PROD_ID = TDMP.PROD_ID(+)
 	    AND TDTM1.TENANT_ID = TDTM2.TENANT_ID
 	    AND TDTM1.SYSTEM_ID = TDTM2.SYSTEM_ID
 	    AND TDP.TOP_MENU_ID = TDTM1.TENANT_MENU_ID
@@ -123,6 +328,34 @@
 	    AND TDTM1.TENANT_ID = #{tenantId}
 	    AND TDTM1.SYSTEM_ID = #{systemId}
         AND TDPR.PROD_RSHP_CD = 'DP010802'
+        AND TDP.PROD_ID = #{prodId}
+        AND ROWNUM <![CDATA[<=]]> 1
+        UNION ALL
+        SELECT TDP.TOP_MENU_ID
+            , TDTM1.MENU_NM TOP_MENU_NM
+            , TDMCRM.MENU_ID
+            , TDTM2.MENU_NM
+            , TDP.PROD_ID
+            , TDP.META_CLSF_CD
+            , NULL SC_SAMPL_URL
+            , NULL SAMPL_URL
+            , NULL PROD_CASE
+        , NULL OUTSD_CONTENTS_ID
+        , NULL FILE_SIZE_H
+        , NULL FILE_SIZE
+        FROM TB_DP_PROD TDP
+            , TB_DP_MENU_CATEGORY_PROD_MAPG TDMCRM
+            , TB_DP_APP_PROD TDAP
+            , TB_DP_TENANT_MENU TDTM1
+            , TB_DP_TENANT_MENU TDTM2
+        WHERE TDP.PROD_ID = TDMCRM.PROD_ID
+        AND TDP.PROD_ID = TDAP.PROD_ID
+        AND TDTM1.TENANT_ID = TDTM2.TENANT_ID
+        AND TDTM1.SYSTEM_ID = TDTM2.SYSTEM_ID
+        AND TDP.TOP_MENU_ID = TDTM1.TENANT_MENU_ID
+        AND TDMCRM.MENU_ID = TDTM2.TENANT_MENU_ID
+        AND TDTM1.TENANT_ID = #{tenantId}
+        AND TDTM1.SYSTEM_ID = #{systemId}
         AND TDP.PROD_ID = #{prodId}
         AND ROWNUM <![CDATA[<=]]> 1
         UNION ALL

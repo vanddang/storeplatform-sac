@@ -117,8 +117,8 @@ public class BannerServceImpl implements BannerService {
 
 		// Test 값 설정
 		// 헤더
-		// bannerReq.setTenantId("S01");
-		// bannerReq.setSystemId("test01");
+		bannerReq.setTenantId("S01");
+		bannerReq.setSystemId("test01");
 		// bannerReq.setDeviceModelCd("SHV-E210S");
 		// bannerReq.setRsltnSize("PI000101");
 		// 파라미터
@@ -261,7 +261,7 @@ public class BannerServceImpl implements BannerService {
 			menu = new Menu();
 			menu.setId(resultInfo.getMenuId());
 			menu.setName(resultInfo.getMenuNm());
-			if (menu.getId() != null || menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함
+			if (menu.getId() != null && menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
 				menuList.add(menu);
 			}
 
@@ -281,7 +281,7 @@ public class BannerServceImpl implements BannerService {
 			source.setUrl(resultInfo.getImgPath() + "" + resultInfo.getImgNm());
 			source.setMediaType(DisplayCommonUtil.getMimeType(resultInfo.getImgNm()));
 			sourceList.add(source);
-			this.log.debug("4");
+			banner.setSourceList(sourceList);
 
 			// 상품모바일배너 전용(BnrTypeCd : DP010303)
 			if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {
@@ -291,13 +291,17 @@ public class BannerServceImpl implements BannerService {
 				menu.setId(resultInfo.getTopMenuId());
 				menu.setName(resultInfo.getTopMenuNm());
 				menu.setType("topClass");
-				menuList.add(menu);
+				if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+					menuList.add(menu);
+				}
 
 				// MetaclsfCd 설정
 				menu = new Menu();
 				menu.setId(resultInfo.getMetaClsfCd());
 				menu.setType("metaClass");
-				menuList.add(menu);
+				if (menu.getId() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+					menuList.add(menu);
+				}
 
 				// music 상품일 경우 미리듣기 정보
 				if (resultInfo.getTopMenuId() != null
@@ -331,19 +335,26 @@ public class BannerServceImpl implements BannerService {
 					source = new Source();
 					source.setType("video/x-freeview-lq");
 					source.setUrl(resultInfo.getScSamplUrl());
-					sourceList.add(source);
+					if (resultInfo.getScSamplUrl() != null) {
+						sourceList.add(source);
+					}
 					source = new Source();
 					source.setType("video/x-freeview-hq");
 					source.setUrl(resultInfo.getSamplUrl());
-					sourceList.add(source);
+					if (resultInfo.getSamplUrl() != null) {
+						sourceList.add(source);
+					}
 					preview.setSourceList(sourceList);
-					banner.setPreview(preview);
+					if (sourceList.size() > 0) {
+						banner.setPreview(preview);
+					}
 				}
 			}
 
 			banner.setTitle(title);
-			banner.setMenuList(menuList);
-			banner.setSourceList(sourceList);
+			if (menuList.size() > 0) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+				banner.setMenuList(menuList);
+			}
 			banner.setIdentifier(identifierList);
 			bannerList.add(banner);
 		}
