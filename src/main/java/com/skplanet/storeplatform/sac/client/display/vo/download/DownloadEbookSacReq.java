@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 27. Updated by : 이태희.
  */
-public class DownloadEbookReq extends CommonInfo {
+public class DownloadEbookSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String idType; // ID유형

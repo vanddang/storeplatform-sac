@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 01. 28. Updated by : 이태희.
  */
-public class DownloadEbookRes extends CommonInfo {
+public class DownloadEbookSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;
 	private Product product;
