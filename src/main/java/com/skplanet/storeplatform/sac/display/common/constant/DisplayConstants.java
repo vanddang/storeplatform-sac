@@ -10,9 +10,9 @@
 package com.skplanet.storeplatform.sac.display.common.constant;
 
 /**
- *
+ * 
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
- *
+ * 
  * Updated on : 2014. 1. 22. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
@@ -285,5 +285,32 @@ public class DisplayConstants {
 	// ////////////////////////////////// ETC //////////////////////////////////////////
 
 	public static final String DP_NETWORK_RESTRICT = "ota";
+
+	/*
+	 * 배너 타입 코드
+	 */
+	public static final String DP_BANNER_URL_NEW_CD = "DP010301"; // URL 직접 입력, 새 페이지(New) 연결
+	public static final String DP_BANNER_URL_POPUP_CD = "DP010302"; // URL 직접 입력, 매뉴 내 삽입(POPUP) 연결
+	public static final String DP_BANNER_PRODUCT_CD = "DP010303"; // 상품 지정 입력
+	public static final String DP_BANNER_PRODUCT_NEW_CD = "DP010304"; // 상품 지정 입력, 새 페이지(New) 연결
+	public static final String DP_BANNER_PRODUCT_POPUP_CD = "DP010305"; // 상품 지정 입력, 매뉴 내 삽입(POPUP) 연결
+	public static final String DP_BANNER_CATEGORY_CD = "DP010306"; // 카테고리모바일배너
+	public static final String DP_BANNER_ADMIN_RECOMM_CD = "DP010307"; // 운영자 임의 추천
+	public static final String DP_BANNER_BRANDSHOP_LIST_CD = "DP010308"; // 브랜드샵 리스트
+	public static final String DP_BANNER_SPECIFIC_BRANDSHOP_CD = "DP010309"; // 특정 브랜드샵
+	public static final String DP_BANNER_INTERNAL_URL_CD = "DP010310"; // 내부URL연결
+	public static final String DP_BANNER_SITUATIONAL_RECOMM_CD = "DP010311"; // 상황별 추천리스트 연결
+	public static final String DP_BANNER_THEME_RECOMM_CD = "DP010312"; // 테마추천 리스트 연결
+
+	/*
+	 * 배너 탑 코드
+	 */
+	public static final String DP_EBOOK_THEME_BANNER_CD = "DP010913"; // Ebook 테마 배너
+	public static final String DP_COMIC_THEME_BANNER_CD = "DP010914"; // Comic 테마 배너
+
+	/*
+	 * 배너 그룹 코드
+	 */
+	public static final String DP_BANNER_MOBILE_CLIENT_CD = "MBI000000003"; // 배너관리 > 모바일 클라이언트
 
 }

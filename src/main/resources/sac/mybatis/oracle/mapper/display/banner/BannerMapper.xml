@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Banner">
+    <!-- 배너 리스트 조회-->
+    <select id="searchBannerList" parameterType="BannerReq" resultType="Banner">
+    SELECT A.*
+    FROM (
+		SELECT COUNT(*) OVER () AS TOTAL_COUNT
+		    , ROW_NUMBER() OVER(ORDER BY TDB.EXPO_ORD , TDB.EXPO_STATUS_CD) RNUM
+		    , TDB.BNR_SEQ
+		    , TDB.IMG_CASE_CD
+		    , TDB.BNR_TYPE_CD
+		    , TDB.BNR_NM
+		    , TDB.BNR_INFO
+		    , TDB.PROD_ID
+		    , TDBI.IMG_PATH
+		    , TDBI.IMG_NM
+		    , TDBI.IMG_TYPE_CD
+		    , TO_CHAR( TDB.REG_DT, 'YYYYMMDDHH24MISS' ) REG_DT
+		    <!-- 'DP010308'에는 menu 값이 아닌 코드값으로 관리됨
+		    , CASE WHEN TDB.BNR_TYPE_CD IN ('DP010306', 'DP010308') THEN TDB.BNR_INFO END) MENU_ID
+		     -->
+		    , DECODE(TDB.BNR_TYPE_CD, 'DP010306', TDB.BNR_INFO) MENU_ID
+		    , DECODE(TDB.BNR_TYPE_CD
+		          , 'DP010306', (SELECT C.MENU_NM FROM TB_DP_TENANT_MENU C WHERE C.TENANT_MENU_ID = TDB.BNR_INFO AND C.TENANT_ID = TDB.TENANT_ID AND C.SYSTEM_ID = #{systemId})
+		          , 'DP010308' , FN_COMM_CD_NM(TDB.BNR_INFO, #{langCd})) MENU_NM
+		    <!-- 베스트 앱, 컨텐츠일 경우 사용 -->
+            , DECODE( TDB.BNR_TYPE_CD
+			   , 'DP010303'
+			   , ( SELECT P.PROD_NM FROM TB_DP_PROD_DESC P WHERE P.PROD_ID = TDB.PROD_ID )
+			   , 'DP010306'
+			   , ( SELECT C.MENU_NM FROM TB_DP_TENANT_MENU C WHERE C.TENANT_MENU_ID = TDB.BNR_INFO AND C.TENANT_ID = TDB.TENANT_ID AND C.SYSTEM_ID = #{systemId})
+			   , 'DP010307'
+			   , ( SELECT R.LIST_NM FROM TB_DP_LIST R WHERE R.LIST_ID = TDB.BNR_INFO AND R.LIST_GRP_CD = 'ADR' AND R.TENANT_ID = TDB.TENANT_ID)
+			   , 'DP010309'
+			   , ( SELECT BS.BRAND_SHOP_NM FROM TB_DP_BRAND_SHOP BS WHERE BS.BRAND_SHOP_NO = TDB.BNR_INFO AND BS.TENANT_ID = TDB.TENANT_ID)
+			   , 'DP010310'
+			   ,  TDB.BNR_NM ) AS BNR_TITLE
+		FROM 
+		    TB_DP_BNR TDB
+		    , TB_DP_BNR_IMG TDBI
+		    , TB_DP_BNR_DVC TDBD
+		    , TB_CM_DEVICE TCD
+		WHERE 1=1
+		AND TDB.TENANT_ID = TDBI.TENANT_ID
+		AND TDB.TENANT_ID = TDBD.TENANT_ID
+		AND TDB.BNR_GRP_ID = TDBI.BNR_GRP_ID
+		AND TDB.BNR_GRP_ID = TDBD.BNR_GRP_ID
+		AND TDB.BNR_SEQ = TDBI.BNR_SEQ
+		AND TDB.BNR_SEQ = TDBD.BNR_SEQ
+		AND TDBD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD
+        AND TDB.TENANT_ID = #{tenantId}
+        AND TDB.BNR_GRP_ID = #{bnrGrpId}
+        AND TDB.BNR_TOP_CD = #{bnrTopCd}
+        AND TCD.DEVICE_MODEL_CD = #{deviceModelCd}
+        AND TDB.EXPO_YN = 'Y'
+        AND TCD.USE_YN = 'Y'
+        <if test='imgCaseCd != null'>
+        AND TDB.IMG_CASE_CD = #{imgCaseCd}
+        </if>
+        <if test='bnrGrpId == "MBI000000004"'>
+        <!-- 데이터 출력을 위해 임시로 주석 처리 -->
+        AND TDBI.IMG_SIZE_CD = ( 
+            SELECT SUBSTR(TBNAIL_CLSF, 1, 10)
+            FROM TB_DP_RSLTN_MAPG TDRM
+            WHERE TDRM.RSLTN_SIZE = #{rsltnSize}
+            AND TDRM.POC_CLSF = 'SC'
+            AND TDRM.EXPO_AREA = TDB.IMG_CASE_CD
+            AND TDRM.PROD_CLSF = #{prodClsf}
+            AND TDRM.TOP_MENU_ID = TDB.BNR_TOP_CD /* 확인 필요 */
+            AND ROWNUM <![CDATA[<=]]> 1
+        )
+            <!-- 예비 노출 -->
+	        <if test='resvExpoYn == null || resvExpoYn != "Y"'>
+	        AND TDB.EXPO_STATUS_CD IN ( 'DP010201', 'DP010202' )
+	        </if>
+	        <if test='resvExpoYn == "Y"'>
+	        AND TDB.EXPO_STATUS_CD IN ( 'DP010203' )
+	        </if>
+	    </if>
+        <!-- 데이터 출력을 위해 임시로 주석 처리 -->
+        AND SYSDATE BETWEEN TDB.EXPO_START_DT AND NVL( TDB.EXPO_END_DT, SYSDATE ) 
+	) A
+	WHERE RNUM BETWEEN  #{offset} and #{offset}+#{count}-1
+	ORDER BY RNUM
+    </select>
+    
+    
+    
+    <!-- 상품 메타 정보 -->
+    <select id="searchProductInfo" parameterType="BannerReq" resultType="Banner">
+        SELECT TDP.TOP_MENU_ID
+            , TDTM1.MENU_NM TOP_MENU_NM
+            , TDMCRM.MENU_ID
+            , TDTM2.MENU_NM
+            , TDPR.PROD_ID
+            , TDP.META_CLSF_CD
+            , TDMP.SC_SAMPL_URL
+            , TDMP.SAMPL_URL
+            , NULL PROD_CASE
+	        , TDMP.OUTSD_CONTENTS_ID
+	        , TDSC1.FILE_SIZE FILE_SIZE_H
+	        , TDSC2.FILE_SIZE FILE_SIZE
+        FROM TB_DP_PROD TDP
+            , TB_DP_PROD_RSHP TDPR
+            , TB_DP_MENU_CATEGORY_PROD_MAPG TDMCRM
+            , TB_DP_MULTIMDA_PROD TDMP
+	        , TB_DP_TENANT_MENU TDTM1
+	        , TB_DP_TENANT_MENU TDTM2
+	        , TB_DP_SUB_CONTENTS TDSC1
+	        , TB_DP_SUB_CONTENTS TDSC2
+        WHERE TDP.PROD_ID = TDPR.PART_PROD_ID
+        AND TDPR.PROD_ID = TDMCRM.PROD_ID
+        AND TDP.PROD_ID = TDMP.PROD_ID
+	    AND TDTM1.TENANT_ID = TDTM2.TENANT_ID
+	    AND TDTM1.SYSTEM_ID = TDTM2.SYSTEM_ID
+	    AND TDP.TOP_MENU_ID = TDTM1.TENANT_MENU_ID
+	    AND TDMCRM.MENU_ID = TDTM2.TENANT_MENU_ID
+        AND TDP.PROD_ID = TDSC1.PROD_ID(+)
+        AND TDP.PROD_ID = TDSC2.PROD_ID(+)
+        AND TDSC1.DP_PG_QULT_CD(+) = 'PD009711'
+        AND TDSC2.DP_PG_QULT_CD(+) = 'PD009712'
+	    AND TDTM1.TENANT_ID = #{tenantId}
+	    AND TDTM1.SYSTEM_ID = #{systemId}
+        AND TDPR.PROD_RSHP_CD = 'DP010802'
+        AND TDP.PROD_ID = #{prodId}
+        AND ROWNUM <![CDATA[<=]]> 1
+        UNION ALL
+        SELECT TDP.TOP_MENU_ID
+            , TDTM1.MENU_NM TOP_MENU_NM
+            , TDMSM.MENU_ID
+            , TDTM2.MENU_NM
+            , TDPCM.CATALOG_ID
+            , TDP.META_CLSF_CD
+            , NULL SC_SAMPL_URL
+            , TDSP.SAMPL_URL
+            , DECODE( TDPAI.PROD_CASE
+                , 'DP006301', 'giftcard'
+                , 'DP006302', 'exchange'
+                , 'DP006303', 'delivery' )
+            , NULL
+            , NULL
+            , NULL
+        FROM TB_DP_PROD TDP
+            , TB_DP_PROD_RSHP TDPR
+            , TB_DP_MENU_SHPG_MAPG TDMSM
+            , TB_DP_PROD_CATALOG_MAPG TDPCM
+            , TB_DP_PROD_ATTR_INFO TDPAI
+            , TB_DP_SHPG_PROD TDSP
+	        , TB_DP_TENANT_MENU TDTM1
+	        , TB_DP_TENANT_MENU TDTM2
+        WHERE TDP.PROD_ID = TDPR.PART_PROD_ID
+        AND TDPR.PROD_ID = TDPCM.PROD_ID
+        AND TDPCM.CATALOG_ID = TDMSM.CATALOG_ID
+        AND TDP.PROD_ID = TDPAI.PROD_ID
+        AND TDP.PROD_ID = TDSP.PROD_ID
+        AND TDTM1.TENANT_ID = TDTM2.TENANT_ID
+        AND TDTM1.SYSTEM_ID = TDTM2.SYSTEM_ID
+        AND TDP.TOP_MENU_ID = TDTM1.TENANT_MENU_ID
+        AND TDMSM.MENU_ID = TDTM2.TENANT_MENU_ID
+        AND TDTM1.TENANT_ID = #{tenantId}
+        AND TDTM1.SYSTEM_ID = #{systemId}
+        AND TDPR.PROD_RSHP_CD = 'DP010802'
+        AND TDPCM.USE_YN = 'Y'
+        AND TDMSM.USE_YN = 'Y'
+        AND TDP.PROD_ID = #{prodId}
+        AND ROWNUM <![CDATA[<=]]> 1
+    </select>
+    
+    <!-- 
+    SELECT 1 totalCount
+    FROM DUAL
+    -->
+    <!-- 
+		SELECT
+		    D.TOTAL_COUNT
+		    , D.BNR_SEQ
+		    , D.IMG_CASE_CD
+		    , D.BNR_TYPE_CD
+		    , D.BNR_NM
+		    , D.IMG_PATH
+		    , D.IMG_NM
+		    , D.IMG_TYPE_CD
+		    , TO_CHAR( D.REG_DT, 'YYYYMMDDHH24MISS' ) REG_DT
+		    , ( CASE WHEN D.BNR_TYPE_CD NOT IN ('DP010306', 'DP010308')
+		        THEN DECODE( D.BNR_TYPE_CD, 'DP010303', D.PROD_ID, D.BNR_INFO )
+		        END ) AS ID
+		    , DECODE( D.BNR_TYPE_CD
+		        , 'DP010303', D.MENU_ID
+		        , 'DP010306', D.BNR_INFO ) AS MENU_ID
+		    , DECODE( D.BNR_TYPE_CD, 'DP010308', D.BNR_INFO, D.TOP_MENU_ID ) AS TOP_MENU_ID
+		    , ( CASE WHEN D.META_CLSF_CD != 'Y' THEN D.META_CLSF_CD END ) AS META_CLSF_CD
+		    , ( CASE WHEN D.SC_SAMPL_URL != 'Y' THEN D.SC_SAMPL_URL END ) AS SC_SAMPL_URL
+		    , ( CASE WHEN D.SAMPL_URL != 'Y' THEN D.SAMPL_URL END ) AS SAMPL_URL
+		    , ( CASE WHEN D.PROD_CASE != 'Y' THEN
+		        DECODE( D.PROD_CASE
+		            , 'DP006301', 'giftcard'
+		            , 'DP006302', 'exchange'
+		            , 'DP006303', 'delivery' )
+		        END ) AS PROD_CASE
+		FROM
+		(
+		    SELECT C.TOTAL_COUNT
+		        , C.BNR_SEQ
+		        , C.IMG_CASE_CD
+		        , C.BNR_TYPE_CD
+		        , C.BNR_NM
+		        , C.BNR_INFO
+		        , C.IMG_PATH
+		        , C.IMG_NM
+		        , C.IMG_TYPE_CD
+		        , C.REG_DT
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 1 ) AS TOP_MENU_ID
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 2 ) AS MENU_ID
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 3 ) AS PROD_ID
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 4 ) AS META_CLSF_CD
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 5 ) AS SC_SAMPL_URL
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 6 ) AS SAMPL_URL
+		        , REGEXP_SUBSTR( C.PROD_INFO, '[^|]+', 1, 7 ) AS PROD_CASE
+		    FROM
+		    (
+		        SELECT B.*
+		            , DECODE( B.BNR_TYPE_CD
+		                , 'DP010303'
+		                , ( SELECT TDP.TOP_MENU_ID||'|'||
+		                        TDMCRM.MENU_ID||'|'||
+		                        TDPR.PROD_ID||'|'||
+		                        NVL( TDP.META_CLSF_CD, 'Y' )||'|'||
+		                        NVL( TDMP.SC_SAMPL_URL, 'Y')||'|'||
+		                        NVL( TDMP.SAMPL_URL, 'Y' )||'|'||
+		                        'Y'
+		                    FROM TB_DP_PROD TDP
+		                        , TB_DP_PROD_RSHP TDPR
+		                        , TB_DP_MENU_CATEGORY_PROD_MAPG TDMCRM
+		                        , TB_DP_MULTIMDA_PROD TDMP
+		                    WHERE TDP.PROD_ID = TDPR.PART_PROD_ID
+		                    AND TDPR.PROD_ID = TDMCRM.PROD_ID
+		                    AND TDP.PROD_ID = TDMP.PROD_ID
+		                    AND TDPR.PROD_RSHP_CD = 'DP010802'
+		                    AND TDP.PROD_ID = B.BNR_INFO
+		                    AND ROWNUM <= 1
+		                    UNION ALL
+		                    SELECT TDP.TOP_MENU_ID||'|'||
+		                        TDMSM.MENU_ID||'|'||
+		                        TDPCM.CATALOG_ID||'|'||
+		                        NVL( TDP.META_CLSF_CD, 'Y' )||'|'||
+		                        NVL( TDMP.SC_SAMPL_URL, 'Y')||'|'||
+		                        NVL( TDSP.SAMPL_URL, 'Y' )||'|'||
+		                        TDPAI.PROD_CASE
+		                    FROM TB_DP_PROD TDP
+		                        , TB_DP_PROD_RSHP TDPR
+		                        , TB_DP_MENU_SHPG_MAPG TDMSM
+		                        , TB_DP_PROD_CATALOG_MAPG TDPCM
+		                        , TB_DP_PROD_ATTR_INFO TDPAI
+		                        , TB_DP_SHPG_PROD TDSP
+		                        , TB_DP_MULTIMDA_PROD TDMP
+		                    WHERE TDP.PROD_ID = TDPR.PART_PROD_ID
+		                    AND TDPR.PROD_ID = TDPCM.PROD_ID
+		                    AND TDPCM.CATALOG_ID = TDMSM.CATALOG_ID
+		                    AND TDP.PROD_ID = TDPAI.PROD_ID
+		                    AND TDP.PROD_ID = TDSP.PROD_ID
+		                    AND TDP.PROD_ID = TDMP.PROD_ID
+		                    AND TDPR.PROD_RSHP_CD = 'DP010802'
+		                    AND TDPCM.USE_YN = 'Y'
+		                    AND TDMSM.USE_YN = 'Y'
+		                    AND TDP.PROD_ID = B.BNR_INFO
+		                    AND ROWNUM <= 1 ) ) AS PROD_INFO
+		        FROM
+		        (
+		            SELECT A.*
+		                , ROWNUM AS RNUM
+		            FROM
+		            (
+		                SELECT COUNT(*) OVER () AS TOTAL_COUNT
+		                    , TDB.BNR_SEQ
+		                    , TDB.IMG_CASE_CD
+		                    , TDB.BNR_TYPE_CD
+		                    , TDB.BNR_NM
+		                    , DECODE(TDB.BNR_TYPE_CD, 'DP010303', TDB.PROD_ID, TDB.BNR_INFO) BNR_INFO
+		                    , TDBI.IMG_PATH
+		                    , TDBI.IMG_NM
+		                    , TDBI.IMG_TYPE_CD
+		                    , TDB.REG_DT
+		                FROM 
+		                    TB_DP_BNR TDB
+		                    , TB_DP_BNR_IMG TDBI
+		                    , TB_DP_BNR_DVC TDBD
+		                    , TB_CM_DEVICE TCD
+		                WHERE 1=1
+		                AND TDB.TENANT_ID = TDBI.TENANT_ID
+		                AND TDB.TENANT_ID = TDBD.TENANT_ID
+		                AND TDB.BNR_GRP_ID = TDBI.BNR_GRP_ID
+		                AND TDB.BNR_GRP_ID = TDBD.BNR_GRP_ID
+		                AND TDBI.BNR_SEQ = TDB.BNR_SEQ
+		                AND TDBD.BNR_SEQ = TDB.BNR_SEQ
+		                AND TDBD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD
+		                AND TDB.TENANT_ID = #{tenantId}
+		                AND TDB.BNR_GRP_ID = #{bnrGrpId}
+		                AND TDB.BNR_TOP_CD = #{bnrTopCd}
+		                AND TDB.IMG_CASE_CD = #{imgCaseCd}
+		                AND TDB.EXPO_YN = 'Y'
+		                AND TDBI.IMG_SIZE_CD = ( 
+		                    SELECT SUBSTR(TBNAIL_CLSF, 1, 10)
+		                    FROM TB_DP_RSLTN_MAPG TDRM
+		                    WHERE TDRM.RSLTN_SIZE = #{rsltnSize}
+		                    AND TDRM.POC_CLSF = 'SC'
+		                    AND TDRM.EXPO_AREA = TDB.IMG_CASE_CD
+		                    AND TDRM.PROD_CLSF = #{prodClsf}
+		                    AND TDRM.TOP_MENU_ID = TDB.BNR_TOP_CD /* 확인 필요(코드? 메뉴 id?) */
+		                )
+		                AND TCD.DEVICE_MODEL_CD = #{deviceModelCd}
+		                AND TCD.USE_YN = 'Y'
+		                AND TDB.EXPO_STATUS_CD IN ( 'DP010201', 'DP010202' )
+		                AND SYSDATE BETWEEN TDB.EXPO_START_DT AND NVL( TDB.EXPO_END_DT, SYSDATE )
+		                AND DECODE( TDB.BNR_TYPE_CD
+
+		                , 'DP010303'
+		                , ( /* 상품모바일배너 */
+		                    SELECT 1
+		                    FROM TB_DP_PROD TDP
+		                        , TB_DP_TENANT_PROD TDTP
+		                        , TB_DP_SPRT_DEVICE TDSD
+		                    WHERE TDSD.PROD_ID = TDP.PROD_ID
+		                    AND TDSD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD
+		                    AND TDB.TENANT_ID = TDTP.TENANT_ID
+		                    AND TDP.PROD_ID = TDTP.PROD_ID
+		                    AND TDP.PROD_ID = TDB.BNR_INFO
+		                    AND TDTP.PROD_STATUS_CD = 'PD000403'
+		                    AND DECODE( TDP.TOP_MENU_ID
+		                        , 'DP13'
+		                        , DECODE( TCD.EBOOK_SPRT_YN
+		                            , 'Y'
+		                            , DECODE( TDP.META_CLSF_CD
+		                                , 'CT24'
+		                                , DECODE( TCD.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 'CT26'
+		                                , DECODE( TCD.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                            , 1 )
+		                        , 0 )
+		                        , 'DP14'
+		                        , DECODE( TCD.COMIC_SPRT_YN , 'Y', 1 , 0 )
+		                        , 'DP15' 
+		                        , 0
+		                        , 'DP28'
+		                        , DECODE( TCD.SCL_SHPG_SPRT_YN, 'N', 1, 'Y', 1, 0 )
+		                        , 'DP16'
+		                        , DECODE( TDP.META_CLSF_CD
+		                            , 'CT25'
+		                            , DECODE( TCD.MUSIC_SPRT_YN, 'Y', 1, 0)
+		                        , 1 )
+		                        , 1 ) = 1
+		                    AND ( CASE WHEN TDP.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                        THEN (
+		                            SELECT 1
+		                            FROM TB_DP_SUB_CONTENTS SC
+		                            WHERE SC.PROD_ID = TDP.PROD_ID
+		                            AND SC.SALE_YN = 'Y'
+		                            AND DECODE( TCD.HDV_SPRT_YN
+		                                , 'Y'
+		                                , ( CASE WHEN SC.DP_PG_QULT_CD IN ('PD009701','PD009702') THEN 1
+		                                    ELSE DECODE( TCD.HDV_SPRT_YN , 'Y', 1 , 0 )
+		                                    END )
+		                                , DECODE( SC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+		                            AND ROWNUM <= 1  )
+		                        ELSE 1
+		                        END ) = 1
+		                    AND ( CASE WHEN TDP.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                        THEN DECODE( TCD.VIDEO_DRM_SPRT_YN
+		                            , 'N'
+		                            , DECODE( NVL( TDP.DRM_YN, 'N' ), 'N', 1, 0 )
+		                            , 'Y'
+		                            , 1 )
+		                        ELSE 1
+		                        END ) = 1
+		                    AND ROWNUM <= 1
+		                )
+
+		                , 'DP010306'
+		                , DECODE( SUBSTR( TDB.BNR_INFO, 1, 4 ) /* 카테고리모바일배너 */
+		                    , 'DP13'
+		                    , DECODE( TCD.EBOOK_SPRT_YN , 'Y', 1 , 0 )
+		                    , 'DP14'
+		                    , DECODE( TCD.COMIC_SPRT_YN , 'Y', 1 , 0 )
+		                    <if test='NEW_SHOPPING != "A"'> /* 구 Shopping */
+		                    , 'DP15'
+		                    , DECODE( TCD.SCL_SHPG_SPRT_YN, 'N', 1, 'Y', 1, 0 )
+		                    , 'DP28'
+		                    , 0
+		                    </if>
+                            <if test='NEW_SHOPPING == "A"'> /* New Shopping */
+		                    , 'DP15'
+		                    , 0
+		                    , 'DP28'
+		                    , DECODE( TCD.SCL_SHPG_SPRT_YN, 'N', 1, 'Y', 1, 0 )
+		                    </if>
+		                , 1 )
+
+		                , 'DP010307'
+		                , ( /* 운영자 임의 추천 시작 /*
+		                    SELECT
+		                        1
+		                    FROM TB_DP_LIST TDL
+		                        , TB_DP_LIST_PROD TDLP
+		                        , TB_DP_PROD_RSHP TDPR
+		                        , TB_DP_MENU_CATEGORY_PROD_MAPG TDMCPM
+		                        , TB_DP_MENU_CATEGORY TDMC
+		                        , TB_DP_TENANT_MENU TDTM
+		                        , TB_DP_PROD TDP
+		                        , TB_DP_TENANT_PROD TDTP1
+		                        , TB_DP_TENANT_PROD TDTP2
+		                        , TB_DP_SPRT_DEVICE TDSD
+		                    WHERE TDL.TENANT_ID = TDB.TENANT_ID
+		                    AND TDL.TENANT_ID = TDLP.TENANT_ID
+		                    AND TDL.TENANT_ID = TDTM.TENANT_ID
+		                    AND TDL.TENANT_ID = TDTP1.TENANT_ID
+		                    AND TDL.TENANT_ID = TDTP2.TENANT_ID
+		                    AND TDTM.SYSTEM_ID = #{systemId}
+		                    AND TDL.LIST_GRP_CD = 'ADR'
+		                    AND TDPR.PROD_RSHP_CD = 'DP010802'
+		                    AND TDL.LIST_ID = TDLP.LIST_ID
+		                    AND TDPR.PROD_ID = TDLP.PROD_ID
+		                    AND TDPR.PROD_ID = TDMCPM.PROD_ID
+		                    AND TDMCPM.MENU_ID = TDMC.MENU_ID
+		                    AND TDMCPM.MENU_ID = TDTM.TENANT_MENU_ID
+		                    AND TDP.PROD_ID = TDPR.PART_PROD_ID
+		                    AND TDSD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD
+		                    AND TDSD.PROD_ID = TDPR.PART_PROD_ID
+		                    AND TDL.LIST_ID = 'ADR' || LPAD( SUBSTR( TDB.BNR_INFO, 3 ), 9, '0' ) /* TDB.BNR_INFO 마이그레이션 이상 */
+		                    AND TDTP1.PROD_ID = TDPR.PART_PROD_ID
+		                    AND TDTP2.PROD_ID = TDPR.PROD_ID
+		                    AND TDL.EXPO_YN = 'Y'
+		                    AND TDLP.EXPO_YN = 'Y'
+		                    AND TDMCPM.USE_YN = 'Y'
+		                    AND TDMC.USE_YN = 'Y'
+		                    AND TDTM.USE_YN = 'Y'
+		                    AND TDTP2.PROD_STATUS_CD = 'PD000403'
+		                    AND DECODE( TDP.TOP_MENU_ID
+		                        , 'DP13'
+		                        , DECODE( TCD.EBOOK_SPRT_YN
+		                            , 'Y'
+		                            , DECODE( TDP.META_CLSF_CD
+		                                , 'CT24'
+		                                , DECODE( TCD.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 'CT26'
+		                                , DECODE( TCD.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 1 )
+		                            , 0 )
+		                        , 'DP14'
+		                        , DECODE( TCD.COMIC_SPRT_YN , 'Y', 1 , 0 )
+                            <if test='NEW_SHOPPING != "A"'> /* 구 Shopping */
+		                            , 'DP15'
+		                            , DECODE( PHI.SCL_SHPG_SPRT_YN, 'N', 1, 'Y', 1, 0 )
+		                    </if>
+                            <if test='NEW_SHOPPING == "A"'> /* New Shopping */
+		                        , 'DP15'
+		                        , 0
+		                    </if>
+		                        , 'DP16'
+		                        , DECODE( TDP.META_CLSF_CD
+		                            , 'CT25'
+		                            , DECODE( TCD.MUSIC_SPRT_YN, 'Y', 1, 0)
+		                            , 1 )
+		                        , 1 ) = 1
+		                    AND ( CASE WHEN TDP.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                    THEN (
+		                        SELECT 1
+		                        FROM TB_DP_SUB_CONTENTS TDSC
+		                        WHERE TDSC.PROD_ID = TDP.PROD_ID
+		                        AND TDSC.SALE_YN = 'Y'
+		                        AND DECODE( TCD.SD_VIDEO_SPRT_YN
+		                            , 'Y'
+		                            , DECODE ( TDSC.DP_PG_QULT_CD
+		                                , 'PD009701', 1
+		                                , 'PD009702', 1
+		                                , DECODE( TCD.HDV_SPRT_YN , 'Y', 1 , 0 ) )
+		                                , DECODE( TDSC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+		                        AND ROWNUM <= 1  )
+		                    ELSE 1
+		                    END ) = 1
+		                    AND ( CASE WHEN TDP.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                    THEN DECODE( TCD.VIDEO_DRM_SPRT_YN
+		                        , 'N'
+		                        , DECODE( NVL( TDP.DRM_YN, 'N' ), 'N', 1, 0 )
+		                        , 'Y'
+		                        , 1 )
+		                    ELSE 1
+		                    END ) = 1
+		                    AND ROWNUM <= 1
+                            <if test='NEW_SHOPPING == "A"'> /* New Shopping */
+		                    UNION
+		                    SELECT
+		                         1
+		                    FROM TB_DP_LIST TDL
+		                        , TB_DP_LIST_PROD TDLP
+		                        , TB_DP_SHPG_CATALOG TDSC
+		                        , TB_DP_PROD_CATALOG_MAPG TDPCM
+		                        , TB_DP_MENU_SHPG_MAPG TDMSM
+		                        , TB_DP_PROD_RSHP TDPR
+		                        , TB_DP_MENU_CATEGORY TDMC
+		                        , TB_DP_TENANT_MENU TDTM
+		                        , TB_DP_PROD TDP
+		                        , TB_DP_PROD_ATTR_INFO TDPAI
+		                        , TB_DP_TENANT_PROD TDTP
+		                        , TB_DP_SPRT_DEVICE TDSD
+		                    WHERE TDL.TENANT_ID = TDB.TENANT_ID
+		                    AND TDL.TENANT_ID = TDLP.TENANT_ID
+		                    AND TDL.TENANT_ID = TDTM.TENANT_ID
+		                    AND TDL.TENANT_ID = TDTP.TENANT_ID
+		                    AND TDTM.SYSTEM_ID = #{systemId}
+		                    AND TDL.LIST_GRP_CD = 'ADR'
+		                    AND TDLP.PROD_ID = TDSC.CATALOG_ID
+		                    AND TDSC.CATALOG_ID = TDPCM.CATALOG_ID
+		                    AND TDSC.CATALOG_ID = TDMSM.CATALOG_ID
+		                    AND TDMSM.MENU_ID = TDMC.MENU_ID
+		                    AND TDMSM.MENU_ID = TDTM.TENANT_MENU_ID
+		                    AND TDPR.PROD_ID = TDPCM.PROD_ID
+		                    AND TDPR.PART_PROD_ID = TDP.PROD_ID
+		                    AND TDPR.PART_PROD_ID = TDPAI.PROD_ID
+		                    AND TDPR.PART_PROD_ID = TDTP.PROD_ID
+		                    AND TDPR.PART_PROD_ID = TDSD.PROD_ID
+		                    AND TDL.LIST_ID = 'ADR' || LPAD( SUBSTR( TDB.BNR_INFO, 3 ), 9, '0' ) /* TDB.BNR_INFO 마이그레이션 이상 */
+		                    AND TDPR.PROD_RSHP_CD = 'DP010802'
+		                    AND TDP.CONTENTS_TYPE_CD = 'PD002502'
+		                    AND TDL.EXPO_YN = 'Y'
+		                    AND TDLP.EXPO_YN = 'Y'
+		                    AND TDPCM.USE_YN = 'Y'
+		                    AND TDMSM.USE_YN = 'Y'
+		                    AND TDMC.USE_YN = 'Y'
+		                    AND TDTM.USE_YN = 'Y'
+		                    AND TDSC.CHNL_CNT > 0
+		                    AND TDTP.PROD_STATUS_CD = 'PD000403'
+		                    AND TDPAI.B2B_PROD_YN <> 'Y'
+		                    AND TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN TDPAI.SALE_START_DT AND TDPAI.SALE_END_DT
+		                    AND DECODE( TCD.SCL_SHPG_SPRT_YN, 'N', 1, 'Y', 1, 0 ) = 1
+		                    AND ROWNUM <= 1
+                           </if>
+		                )
+
+		                , 'DP010309'
+		                , ( /* 특정 브랜드샵 시작 */
+		                    SELECT
+		                        1
+		                    FROM TB_DP_BRAND_SHOP TDBS
+		                        , TB_DP_BRAND_SHOP_DVC TDBSD
+		                        , TB_DP_BRAND_SHOP_SELLER TDBSS
+		                        , TB_DP_PROD TDP
+		                        , TB_DP_TENANT_PROD TDTP
+		                        , TB_DP_SPRT_DEVICE TDSD
+		                    WHERE TDBS.TENANT_ID = TDB.TENANT_ID
+		                    AND TDBS.TENANT_ID = TDBSD.TENANT_ID
+		                    AND TDBS.TENANT_ID = TDBSS.TENANT_ID
+		                    AND TDBS.TENANT_ID = TDTP.TENANT_ID
+		                    AND TDBS.BRAND_SHOP_NO = TDBSD.BRAND_SHOP_NO
+		                    AND TDBS.BRAND_SHOP_NO = TDBSS.BRAND_SHOP_NO
+		                    AND TDP.SELLER_MBR_NO = TDBSS.MBR_NO
+		                    AND TDP.PROD_ID = TDTP.PROD_ID
+		                    AND TDP.PROD_ID = TDSD.PROD_ID
+		                    AND TDBSD.DVC_TYPE_CD = TCD.DEVICE_MODEL_CD
+		                    AND TDSD.DEVICE_MODEL_CD = TCD.DEVICE_MODEL_CD
+		                    AND TDBS.EXPO_YN = 'Y'
+		                    AND TDBS.BRAND_SHOP_NO = 'ADR' || LPAD( SUBSTR( TDB.BNR_INFO, 3 ), 9, '0' ) /* TDB.BNR_INFO 마이그레이션 이상 */
+		                    AND TDTP.PROD_STATUS_CD = 'PD000403'
+		                    AND DECODE( TDP.TOP_MENU_ID
+		                        , 'DP13'
+		                        , DECODE( TCD.EBOOK_SPRT_YN
+		                            , 'Y'
+		                            , DECODE( TDP.META_CLSF_CD
+		                                , 'CT24'
+		                                , DECODE( TCD.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 'CT26'
+		                                , DECODE( TCD.MAGAZINE_SPRT_YN, 'Y', 1, 0 )
+		                                , 1 )
+		                            , 0 )
+		                        , 'DP14'
+		                        , DECODE( TCD.COMIC_SPRT_YN , 'Y', 1 , 0 )
+                                <if test='NEW_SHOPPING != "A"'> /* New Shopping */
+		                            , 'DP15'
+		                            , DECODE( TCD.SCL_SHPG_SPRT_YN, 'N', 1, 'Y', 1, 0 )
+                                </if>
+                                <if test='NEW_SHOPPING == "A"'> /* New Shopping */
+		                        , 'DP15'
+		                        , 0
+                                </if>
+		                        , 'DP16'
+		                        , DECODE( TDP.META_CLSF_CD
+		                            , 'CT25'
+		                            , DECODE( TCD.MUSIC_SPRT_YN, 'Y', 1, 0)
+		                            , 1 )
+		                        , 1 ) = 1
+		                    AND ( CASE WHEN TDP.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                        THEN ( SELECT 1
+		                        FROM TB_DP_SUB_CONTENTS TDSC
+		                        WHERE TDSC.PROD_ID = TDP.PROD_ID
+		                        AND TDSC.SALE_YN = 'Y'
+		                        AND DECODE( TCD.SD_VIDEO_SPRT_YN
+		                            , 'Y'
+		                            , DECODE( TDSC.DP_PG_QULT_CD
+		                                , 'PD009701', 1
+		                                , 'PD009702', 1
+		                                , DECODE( TCD.HDV_SPRT_YN , 'Y', 1 , 0 ) )
+		                                , DECODE( TDSC.DP_PG_QULT_CD , 'PD009701', 1 , 0 ) ) = 1
+		                        AND ROWNUM <= 1  )
+		                        ELSE 1
+		                        END ) = 1
+		                    AND ( CASE WHEN TDP.TOP_MENU_ID IN ( 'DP17', 'DP18' )
+		                        THEN DECODE( TCD.VIDEO_DRM_SPRT_YN
+		                            , 'N'
+		                            , DECODE( NVL( TDP.DRM_YN, 'N' ), 'N', 1, 0 )
+		                            , 'Y'
+		                            , 1 )
+		                        ELSE 1
+		                        END ) = 1
+		                    AND ROWNUM <= 1
+		                )
+
+		                , 1 ) = 1
+		                ORDER BY TDB.EXPO_ORD
+		                , TDB.EXPO_STATUS_CD
+		            ) A
+		        ) B
+		    WHERE BETWEEN #{offset} AND #{count}
+		    )  C
+		) D
+ -->
+	    
+</mapper>
