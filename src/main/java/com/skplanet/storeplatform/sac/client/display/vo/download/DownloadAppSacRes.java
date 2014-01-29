@@ -15,6 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Component;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
@@ -23,13 +24,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 // @ProtobufMapping(BestAppProto.resBestApp.class)
-public class DownloadVodRes extends CommonInfo {
+public class DownloadAppSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;
 	private Product product;
-
-	// private Component component;
+	private Component component;
 
 	/**
 	 * 
@@ -81,30 +81,30 @@ public class DownloadVodRes extends CommonInfo {
 		this.product = product;
 	}
 
-	// /**
-	// *
-	// * <pre>
-	// * Seed 앱 정보.
-	// * </pre>
-	// *
-	// * @return Component
-	// */
-	// public Component getComponent() {
-	// return this.component;
-	// }
-	//
-	// /**
-	// *
-	// * <pre>
-	// * Seed 앱 정보.
-	// * </pre>
-	// *
-	// * @param component
-	// * component
-	// */
-	// public void setComponent(Component component) {
-	// this.component = component;
-	// }
+	/**
+	 * 
+	 * <pre>
+	 * Seed 앱 정보.
+	 * </pre>
+	 * 
+	 * @return Component
+	 */
+	public Component getComponent() {
+		return this.component;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Seed 앱 정보.
+	 * </pre>
+	 * 
+	 * @param component
+	 *            component
+	 */
+	public void setComponent(Component component) {
+		this.component = component;
+	}
 
 	@Override
 	public String toString() {

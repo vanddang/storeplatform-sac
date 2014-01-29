@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.download;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -16,20 +18,24 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 21. Updated by : 이석희, 인크로스.
  */
-public class DownloadAppReq extends CommonInfo {
+public class DownloadVodSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
-	private String osVersion; // os 버전
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String category; // 상품 유형
-	private String filteredBy; // 조회유형
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String productId; // 상품Id
-	private String packageName; // 패키지명
-	private String userHpNo; // 사용자 전화번호
-	private String sellerMemberNo; // 판매자 회원번호
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String idType; // Id 유형
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String deviceKey; // device Key
+	@NotEmpty(message = "필수 파라미터 입니다.")
+	private String userKey; // 사용자 Key
+	private String imgCd; // 이미지 코드
 	private String dummy; // dummy data check
 
 	/**
@@ -135,31 +141,6 @@ public class DownloadAppReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * os 버전.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getOsVersion() {
-		return this.osVersion;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 언어코드.
-	 * </pre>
-	 * 
-	 * @param osVersion
-	 *            osVersion
-	 */
-	public void setOsVersion(String osVersion) {
-		this.osVersion = osVersion;
-	}
-
-	/**
-	 * 
-	 * <pre>
 	 * 상품 유형.
 	 * </pre>
 	 * 
@@ -180,31 +161,6 @@ public class DownloadAppReq extends CommonInfo {
 	 */
 	public void setCategory(String category) {
 		this.category = category;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 조회 유형.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getFilteredBy() {
-		return this.filteredBy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 조회 유형.
-	 * </pre>
-	 * 
-	 * @param filteredBy
-	 *            filteredBy
-	 */
-	public void setFilteredBy(String filteredBy) {
-		this.filteredBy = filteredBy;
 	}
 
 	/**
@@ -235,82 +191,82 @@ public class DownloadAppReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * 패키지 명.
+	 * ID 유형.
 	 * </pre>
 	 * 
 	 * @return String
 	 */
-	public String getPackageName() {
-		return this.packageName;
+	public String getIdType() {
+		return this.idType;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 패키지 명.
+	 * ID 유형.
 	 * </pre>
 	 * 
-	 * @param packageName
-	 *            packageName
+	 * @param idType
+	 *            idType
 	 */
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void setIdType(String idType) {
+		this.idType = idType;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 사용자 전화번호.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getUserHpNo() {
-		return this.userHpNo;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 사용자 전화번호.
-	 * </pre>
-	 * 
-	 * @param userHpNo
-	 *            userHpNo
-	 */
-	public void setUserHpNo(String userHpNo) {
-		this.userHpNo = userHpNo;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 판매자 회원 번호.
+	 * device Key.
 	 * </pre>
 	 * 
 	 * @return String
 	 */
-	public String getSellerMemberNo() {
-		return this.sellerMemberNo;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * 판매자 회원 번호.
+	 * device Key.
 	 * </pre>
 	 * 
-	 * @param sellerMemberNo
-	 *            sellerMemberNo
+	 * @param deviceKey
+	 *            deviceKey
 	 */
-	public void setSellerMemberNo(String sellerMemberNo) {
-		this.sellerMemberNo = sellerMemberNo;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * 사용자 key.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용자 key.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 *            userKey
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * dummy check.
 	 * </pre>
 	 * 
 	 * @return String
@@ -322,7 +278,7 @@ public class DownloadAppReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * method 설명.
+	 * dummy check.
 	 * </pre>
 	 * 
 	 * @param dummy
@@ -330,6 +286,31 @@ public class DownloadAppReq extends CommonInfo {
 	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getImgCd() {
+		return this.imgCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 이미지 코드.
+	 * </pre>
+	 * 
+	 * @param imgCd
+	 *            imgCd
+	 */
+	public void setImgCd(String imgCd) {
+		this.imgCd = imgCd;
 	}
 
 }
