@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM.ResponseHeader;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
@@ -637,21 +636,6 @@ public class MemberCommonComponent {
 			LOGGER.info("## Convert Device Telecom Exception!!!");
 			throw new RuntimeException("Convert Device Telecom Exception!!!");
 		}
-	}
-
-	/**
-	 * <pre>
-	 * IDP 에러 발생및 로그.
-	 * </pre>
-	 * 
-	 * @param idpHeader
-	 *            void
-	 */
-	public void errorIdp(ResponseHeader idpHeader) {
-
-		LOGGER.info("## IDP 연동 실패 Msg : [{}] [{}]", idpHeader.getResult(), idpHeader.getResult_text());
-		throw new RuntimeException("## IDP 연동 실패 Msg [" + idpHeader.getResult() + "] [" + idpHeader.getResult_text() + "]");
-
 	}
 
 }

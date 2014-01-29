@@ -141,7 +141,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 			} else {
 
-				this.mcc.errorIdp(modifyInfo.getResponseHeader());
+				LOGGER.info("## IDP 연동 실패 Msg : [{}] [{}]", modifyInfo.getResponseHeader().getResult(), modifyInfo.getResponseHeader().getResult_text());
+				throw new RuntimeException("## IDP 연동 실패 Msg [" + modifyInfo.getResponseHeader().getResult() + "] [" + modifyInfo.getResponseHeader().getResult_text() + "]");
 
 			}
 
