@@ -6,12 +6,12 @@
        /* WebtoonMapper.xml.getWebtoonList, 웹툰 상품 리스트 조회, 김형식/SK플래닛 , 2013-12-26 */
         SELECT   
                  ka.*
-                ,COUNT(1) OVER() AS totalCount
           FROM (                        
-                SELECT  
-                       ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
-                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
-                      ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
+                SELECT 
+                       COUNT(1) OVER() AS totalCount
+                      ,ROW_NUMBER()OVER(ORDER BY UPD_DT DESC, PROD_NM ) AS RNUM        
+                      ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = TOP_MENU_ID AND ROWNUM=1) as topMenuName 
+                      ,TOP_MENU_ID as topMenuId                           /* TOP 메뉴ID */
                       ,MENU_ID as menuId                                  /* 메뉴ID */
                       ,MENU_DESC as menuNm                                /* 메뉴명 */
                       ,CHANNEL_ID as channelId                            /* 채널ID */
@@ -33,7 +33,7 @@
                       ,FILE_POS as filePos                                /* 파일경로 */
                  FROM (
                         SELECT  
-                               A.UP_MENU_ID
+                               A.TOP_MENU_ID
                               ,A.MENU_ID
                               ,C.MENU_DESC 
                               ,J.PROD_ID AS CHANNEL_ID
@@ -52,7 +52,7 @@
                               ,F.ARTIST1_NM
                               ,F.ARTIST2_NM
                               ,F.ARTIST3_NM
-                              ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND ROWNUM=1) FILE_POS
+                              ,(SELECT FILE_PATH||FILE_NM  FROM TB_DP_PROD_IMG WHERE IMG_CD=#{imageCd} AND PROD_ID =D.PROD_ID AND LANG_CD = #{langCd} AND ROWNUM=1) FILE_POS
                         FROM  TB_DP_MENU_CATEGORY            A
                             , TB_DP_MENU_CATEGORY_PROD_MAPG  B
                             , TB_DP_MENU_CATEGORY_DESC       C
@@ -86,24 +86,25 @@
 				                         AND  D1.PROD_ID = F1.PROD_ID
 				                         AND  D1.PROD_ID = G1.PROD_ID
 				                         AND  D1.PROD_ID = J1.PART_PROD_ID   
-				                         AND  G1.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
+				                         AND  G1.TENANT_ID = #{tenantId}      /* INPUT 테넌트ID */
 				                        <if test="menuId != null">
-				                         AND  A1.MENU_ID = #{menuId}            /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
+				                         AND  A1.MENU_ID = #{menuId}          /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
 				                        </if>        
-                                         AND  A1.UP_MENU_ID ='DP26'      /* DP26 : 웹툰 */
-                                         AND  J1.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
+                                         AND  A1.TOP_MENU_ID ='DP26'          /* DP26 : 웹툰 */
+                                         AND  J1.PROD_RSHP_CD ='DP010802'     /* 채널-에피소드 상품 관계 */   
 				                         AND  A1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
 				                         AND  B1.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
 				                         AND  C1.LANG_CD = #{langCd}          /* ko : 한국어 */
 				                         AND  D1.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+				                         AND  F1.LANG_CD = #{langCd}          /* ko : 한국어 */
 				                         AND  G1.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
 				                         AND  G1.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
-				                         <if test="weekDayCd != null">
-				                         AND  E1.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
+				                        <if test="weekDayCd != null">
+				                         AND  E1.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} AND LANG_CD = #{langCd}  )|| '%'     /* DP010101 ~DP010107  :월~토*/
 				                        </if>  
-                               )WHERE NO =1                                          
+                                      )WHERE NO =1                                          
                              ) K
                        WHERE  1=1
                          AND  A.MENU_ID = B.MENU_ID
@@ -114,27 +115,29 @@
                          AND  D.PROD_ID = G.PROD_ID
                          AND  G.PROD_ID = H.PROD_ID
                          AND  G.PROD_ID = I.PROD_ID
-                         AND  G.TENANT_ID = I.TENANT_ID   
+                         AND  G.TENANT_ID = H.TENANT_ID   
+                         AND  G.TENANT_ID = I.TENANT_ID
                          AND  D.PROD_ID = J.PART_PROD_ID   
                          AND  D.PROD_ID = K.PART_PROD_ID(+)
                          AND  K.PART_PROD_ID IS NOT NULL
-                         AND  G.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
+                         AND  G.TENANT_ID = #{tenantId}      /* INPUT 테넌트ID */
                         <if test="menuId != null">
                          AND A.MENU_ID = #{menuId}           /* DP26001 : 웹툰>코믹,DP26002:순정,DP26003:드라마,DP26004:스릴러,DP26005:판타지,DP26006:액션 */
                         </if>        
-                         AND  A.UP_MENU_ID = 'DP26'             /* DP26 : 웹툰 */
-                         AND  J.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
+                         AND  A.TOP_MENU_ID = 'DP26'         /* DP26 : 웹툰 */
+                         AND  J.PROD_RSHP_CD ='DP010802'     /* 채널-에피소드 상품 관계 */   
                          AND  A.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.USE_YN = 'Y'                 /* Y : 사용(시용여부) */
                          AND  B.BASE_YN = 'Y'                /* Y : 기본(기본여부) */
                          AND  C.LANG_CD = #{langCd}          /* ko : 한국어 */
                          AND  D.SVC_GRP_CD = 'DP000203'      /* DP000203 : 멀티미디어 */
+                         AND  F.LANG_CD = #{langCd}          /* ko : 한국어 */
                          AND  G.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                          AND  G.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                          AND  SYSDATE BETWEEN I.APPLY_START_DT AND I.APPLY_END_DT
-                         <if test="weekDayCd != null">
-                         AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
+                        <if test="weekDayCd != null">
+                         AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} AND LANG_CD = #{langCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
                         </if>     
                          AND  NOT EXISTS (SELECT 1 FROM  TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd} AND PROD_ID = D.PROD_ID )
                    )
