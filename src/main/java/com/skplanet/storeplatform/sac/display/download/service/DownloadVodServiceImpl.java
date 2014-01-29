@@ -430,10 +430,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			identifier.setType("episode");
 			identifier.setText("H001601609");
 			identifierList.add(identifier);
-			identifier = new Identifier();
-			identifier.setType("isPartOf");
-			identifier.setText("H001601608");
-			identifierList.add(identifier);
 
 			supportList = new ArrayList<Support>();
 			support = new Support();
@@ -565,6 +561,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			identifier.setType("purchase");
 			identifier.setText("GI100000000265812187");
 			purchase.setIdentifier(identifier);
+			purchase.setPurchaseFlag("payment");
 
 			product = new Product();
 			product.setIdentifierList(identifierList);

@@ -330,10 +330,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			identifier.setType("episode");
 			identifier.setText("0000395599");
 			identifierList.add(identifier);
-			identifier = new Identifier();
-			identifier.setType("isPartOf");
-			identifier.setText("0000395599");
-			identifierList.add(identifier);
 
 			title.setText("아스팔트 8: 에어본");
 
@@ -381,8 +377,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			identifier.setType("purchase");
 			identifier.setText("GI100000000265812187");
 			purchase.setIdentifier(identifier);
-			purchase.setState("gift");
-			purchase.setToken("863353467024782ffce534613bac6450048a87fb0dcdbb4e30184f2a88418a037b90c3a16eb87d6eef34b18f320114e9d9cc965fb055db");
+			purchase.setPurchaseFlag("payment");
 
 			product = new Product();
 			product.setIdentifierList(identifierList);
