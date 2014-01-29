@@ -261,27 +261,29 @@ public class BannerServceImpl implements BannerService {
 			menu = new Menu();
 			menu.setId(resultInfo.getMenuId());
 			menu.setName(resultInfo.getMenuNm());
-			if (menu.getId() != null && menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
+			if (menu.getId() != null || menu.getName() != null) {// 메뉴 값이 없을 경우 메뉴 리스트에 추가 안함(체크 로직 공통화 필요)
 				menuList.add(menu);
 			}
 
 			// bannerExplain 설정
 			bannerExplain = new BannerExplain();
-			if (resultInfo.getDescName().equals("id")) {
+			if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("id")) {
 				bannerExplain.setId(resultInfo.getBnrInfo());
 				banner.setBannerExplain(bannerExplain);
-			} else if (resultInfo.getDescName().equals("url")) {
+			} else if (resultInfo.getDescName() != null && resultInfo.getDescName().equals("url")) {
 				bannerExplain.setUrl(resultInfo.getBnrInfo());
 				banner.setBannerExplain(bannerExplain);
 			}
 
 			// Source 설정
 			sourceList = new ArrayList<Source>();
-			source = new Source();
-			source.setUrl(resultInfo.getImgPath() + "" + resultInfo.getImgNm());
-			source.setMediaType(DisplayCommonUtil.getMimeType(resultInfo.getImgNm()));
-			sourceList.add(source);
-			banner.setSourceList(sourceList);
+			if (resultInfo.getImgPath() != null) {
+				source = new Source();
+				source.setUrl(resultInfo.getImgPath() + "" + resultInfo.getImgNm());
+				source.setMediaType(DisplayCommonUtil.getMimeType(resultInfo.getImgNm()));
+				sourceList.add(source);
+				banner.setSourceList(sourceList);
+			}
 
 			// 상품모바일배너 전용(BnrTypeCd : DP010303)
 			if (resultInfo.getBnrTypeCd().equals(DisplayConstants.DP_BANNER_PRODUCT_CD)) {

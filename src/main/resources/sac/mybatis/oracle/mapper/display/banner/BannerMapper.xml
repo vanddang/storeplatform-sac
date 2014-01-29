@@ -110,6 +110,27 @@
 	    ,'Y' USE_YN
 	    , SYSDATE REG_DT
 	FROM DUAL
+    UNION ALL
+    SELECT 
+        'S01' TENANT_ID
+        ,'MBI000000004' BNR_GRP_ID
+        ,6 BNR_SEQ
+        ,'DP000500' BNR_TOP_CD
+        ,'테스트 6(NM)' BNR_NM
+        ,'테스트 6(DESC)' BNR_DESC
+        ,'B' IMG_CASE_CD
+        ,'DP010308' BNR_TYPE_CD
+        ,'DP000501' BNR_INFO
+        ,'' MENU_ID
+        ,'' PROD_ID
+        ,'DP010201' EXPO_STATUS_CD
+        ,SYSDATE - 1 EXPO_START_DT
+        ,SYSDATE + 1 EXPO_END_DT
+        ,'Y' EXPO_YN
+        ,6 EXPO_ORD
+        ,'Y' USE_YN
+        , SYSDATE REG_DT
+    FROM DUAL
 	), TB_DP_BNR_IMG AS (
 	SELECT 
 	    'S01' TENANT_ID
@@ -160,6 +181,16 @@
         ,'mainTop_xhdpi_453_453_20121126140429087.png.png' IMG_NM
         , NULL IMG_TYPE_CD
     FROM DUAL
+    UNION ALL
+    SELECT 
+        'S01' TENANT_ID
+        ,'MBI000000004' BNR_GRP_ID
+        ,6 BNR_SEQ
+        ,'1' IMG_SIZE_CD
+        ,'/data/img/tstore30/banner/broad/' IMG_PATH
+        ,'mainTop_xhdpi_453_453_20121126140429087.png.png' IMG_NM
+        , NULL IMG_TYPE_CD
+    FROM DUAL
 	), TB_DP_BNR_DVC AS (
 	SELECT 
 	    'S01' TENANT_ID
@@ -188,6 +219,20 @@
 	    ,4 BNR_SEQ
 	    ,'SHW-M110S' DEVICE_MODEL_CD
 	FROM DUAL
+    UNION ALL
+    SELECT 
+        'S01' TENANT_ID
+        ,'MBI000000004' BNR_GRP_ID
+        ,5 BNR_SEQ
+        ,'SHW-M110S' DEVICE_MODEL_CD
+    FROM DUAL
+    UNION ALL
+    SELECT 
+        'S01' TENANT_ID
+        ,'MBI000000004' BNR_GRP_ID
+        ,6 BNR_SEQ
+        ,'SHW-M110S' DEVICE_MODEL_CD
+    FROM DUAL
 	), TB_CM_DEVICE AS (
 	SELECT 
 	    'SHW-M110S' DEVICE_MODEL_CD
