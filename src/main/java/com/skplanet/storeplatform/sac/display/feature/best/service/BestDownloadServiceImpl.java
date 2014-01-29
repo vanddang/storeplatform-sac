@@ -251,7 +251,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						 */
 						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
-							ArrayList<Support> supportList2 = new ArrayList<Support>();
+							ArrayList<Support> bookSupportList = new ArrayList<Support>();
 							book.setStatus(mapperVO.getBookStatus());
 							book.setType(mapperVO.getBookType());
 							book.setTotalCount(mapperVO.getBookCount());
@@ -259,13 +259,13 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 							support = new Support();
 							support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
 							support.setText(mapperVO.getSupportStore());
-							supportList2.add(support);
+							bookSupportList.add(support);
 							support = new Support();
 							support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
 							support.setText(mapperVO.getSupportPlay());
-							supportList2.add(support);
+							bookSupportList.add(support);
 
-							book.setSupportList(supportList2);
+							book.setSupportList(bookSupportList);
 						}
 
 						product = new Product();
