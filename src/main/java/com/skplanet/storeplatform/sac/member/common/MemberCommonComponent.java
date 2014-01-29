@@ -10,11 +10,9 @@
 package com.skplanet.storeplatform.sac.member.common;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +23,8 @@ import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -34,9 +32,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListR
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -44,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -53,6 +49,7 @@ import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.service.MiscellaneousService;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
+import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
  * 공통 기능을 임시로 정의해서 사용한다.
@@ -81,6 +78,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private DeviceService deviceService;
+
+	@Autowired
+	private UserSearchService userSearchService;
 
 	/**
 	 * <pre>
@@ -231,87 +231,20 @@ public class MemberCommonComponent {
 		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
 
-		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
-		keyTypeMap.put("userKey", MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		keyTypeMap.put("userId", MemberConstants.KEY_TYPE_MBR_ID);
-		keyTypeMap.put("deviceKey", MemberConstants.KEY_TYPE_INSD_DEVICE_ID);
-		keyTypeMap.put("deviceId", MemberConstants.KEY_TYPE_DEVICE_ID);
-
-		/**
-		 * 검색 조건 setting
-		 */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySchUserKey = new KeySearch();
-		keySchUserKey.setKeyType(ObjectUtils.toString(keyTypeMap.get(keyType)));
-		keySchUserKey.setKeyString(keyValue);
-		keySearchList.add(keySchUserKey);
-
-		/**
-		 * SearchUserRequest setting
-		 */
-		SearchUserRequest searchUserRequest = new SearchUserRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		searchUserRequest.setCommonRequest(commonRequest);
-		searchUserRequest.setKeySearchList(keySearchList);
-
-		/**
-		 * SC 사용자 회원 기본정보를 조회
-		 */
-		UserInfo userInfo = new UserInfo();
-		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
-
-		if (schUserRes.getUserMbr() == null) {
-			throw new RuntimeException("######## 사용자 기본정보 조회 : 사용자 데이터 없음");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
-					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
-		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& schUserRes.getUserMbr() != null) {
-			userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
-			userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
-			userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
-			userInfo.setImSiteCode(StringUtil.setTrim(schUserRes.getUserMbr().getImSiteCode()));
-			userInfo.setImSvcNo(StringUtil.setTrim(schUserRes.getUserMbr().getImSvcNo()));
-			userInfo.setIsImChanged(StringUtil.setTrim(schUserRes.getUserMbr().getIsImChanged()));
-			userInfo.setIsMemberPoint(StringUtil.setTrim(schUserRes.getUserMbr().getIsMemberPoint()));
-			userInfo.setIsParent(StringUtil.setTrim(schUserRes.getUserMbr().getIsParent()));
-			userInfo.setIsRealName(StringUtil.setTrim(schUserRes.getUserMbr().getIsRealName()));
-			userInfo.setIsRecvEmail(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvEmail()));
-			userInfo.setIsRecvSMS(StringUtil.setTrim(schUserRes.getUserMbr().getIsRecvSMS()));
-			userInfo.setLoginStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getLoginStatusCode()));
-			userInfo.setRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getRegDate()));
-			userInfo.setSecedeDate(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeDate()));
-			userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
-			userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
-			userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
-			userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
-			userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
-			userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
-			userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-			userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
-			userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
-			userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
-			userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
-			userInfo.setUserLanguage(StringUtil.setTrim(schUserRes.getUserMbr().getUserLanguage()));
-			userInfo.setUserMainStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserMainStatus()));
-			userInfo.setUserName(StringUtil.setTrim(schUserRes.getUserMbr().getUserName()));
-			userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
-			userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
-			userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
-			userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
-			userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
-			userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
-			userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
-			userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
+		DetailReq req = new DetailReq();
+		if ("userKey".equals(keyType)) {
+			req.setUserKey(keyValue);
+		} else if ("userId".equals(keyType)) {
+			req.setUserId(keyValue);
+		} else if ("deviceKey".equals(keyType)) {
+			req.setDeviceKey(keyValue);
+		} else if ("deviceId".equals(keyType)) {
+			req.setDeviceId(keyValue);
 		} else {
-			LOGGER.debug("###### 사용자 기본 정보 조회 오류 : {}", searchUserRequest.toString());
-			LOGGER.debug("###### 사용자 기본 정보 조회 오류 : {}", schUserRes.getUserMbr().toString());
-			LOGGER.debug("###### 사용자 기본 정보 조회 오류 : {}", schUserRes.getCommonResponse().toString());
-			throw new RuntimeException("사용자 기본 정보 조회 오류");
+			throw new StorePlatformException("###### 잘못된 keyType : userId, userKey, deviceKey, deviceId is Not Equal");
 		}
 
+		UserInfo userInfo = this.userSearchService.searchUser(req, sacHeader);
 		return userInfo;
 	}
 
@@ -637,5 +570,6 @@ public class MemberCommonComponent {
 			throw new RuntimeException("Convert Device Telecom Exception!!!");
 		}
 	}
+
 
 }
