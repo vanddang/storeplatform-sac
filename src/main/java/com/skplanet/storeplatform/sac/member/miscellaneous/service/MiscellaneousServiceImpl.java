@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.LimitTarget;
@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
@@ -198,7 +199,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 				/** 6. deviceModelNo 조회 결과 확인 */
-				if (StringUtils.equals(searchDeviceResult.getCommonResponse().getResultCode(),
+				if (StringUtil.equals(searchDeviceResult.getCommonResponse().getResultCode(),
 						MemberConstants.RESULT_SUCCES)) {
 					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
 					LOGGER.debug("## Response deviceModelNo {}: ", deviceModelNo);
@@ -597,7 +598,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 		/** 3. 회원정보 조회 성공 여부 확인 */
-		if (StringUtils.equals(searchUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+		if (StringUtil.equals(searchUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
 			if (searchUserResponse.getUserMbr() == null) {
 				throw new Exception("DeviceId에 해당하는 회원정보 없음.");
 			} else {
@@ -732,11 +733,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 				LOGGER.debug("==>>[SAC] IndividualPolicyInfo[{}].toString() : {}", i, policyInfo.toString());
 			}
-			res.setPolicyList(policyInfos);
-		} else {
-			// TODO 정책 조회 결과가 없음
-			// return new
 		}
+		res.setPolicyList(policyInfos);
 
 		LOGGER.debug("==>>[SAC] GetIndividualPolicyRes.toString() : {}", res.toString());
 
