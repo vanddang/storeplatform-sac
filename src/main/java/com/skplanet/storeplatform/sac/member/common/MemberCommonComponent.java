@@ -27,6 +27,9 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
+import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
@@ -39,6 +42,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
@@ -78,6 +82,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private DeviceService deviceService;
+
+	@Autowired
+	private SellerSCI sellerSCI;
 
 	@Autowired
 	private UserSearchService userSearchService;
@@ -570,6 +577,50 @@ public class MemberCommonComponent {
 			throw new RuntimeException("Convert Device Telecom Exception!!!");
 		}
 	}
+
+	/**
+	 * <pre>
+	 * SC 공통 헤더 셋팅.
+	 * </pre>
+	 * 
+	 * @param header
+	 * @return CommonRequest
+	 */
+	public CommonRequest getSCCommonRequest(SacRequestHeader header) {
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
+		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
+		return commonRequest;
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 SessionKey 조회.
+	 * </pre>
+	 * 
+	 * @param commonRequest
+	 * @param sellerKey
+	 * @return SearchAuthKeyRes
+	 */
+	public SearchAuthKeyRes searchSessionKey(CommonRequest commonRequest, String sellerKey) {
+
+		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
+		schReq.setCommonRequest(commonRequest);
+		schReq.setSellerKey(sellerKey);
+
+		SearchLoginInfoResponse schRes = this.sellerSCI.searchLoginInfo(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			// TODO Exception Code 재정의
+			throw new StorePlatformException("SC ERROR~~~~~~ : " + schRes.getCommonResponse().getResultMessage());
+		}
+
+		SearchAuthKeyRes response = new SearchAuthKeyRes();
+		response.setSessionKey(schRes.getLoginInfo().getSessionKey());
+		response.setExpireDate(schRes.getLoginInfo().getExpireDate());
+		return response;
+	}
+
 
 
 }

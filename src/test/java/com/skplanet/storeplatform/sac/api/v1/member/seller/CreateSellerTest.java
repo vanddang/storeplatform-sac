@@ -184,7 +184,7 @@ public class CreateSellerTest {
 						agreement3.setExtraAgreementVersion("0.1");
 						agreement3.setIsExtraAgreement("Y");
 						agreementList.add(agreement3);
-						// req.setAgreementList(agreementList);
+						 req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();

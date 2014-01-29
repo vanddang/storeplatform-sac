@@ -10,10 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
-import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -128,24 +126,24 @@ public class SellerServiceImpl implements SellerService {
 		/** 실명인증정보 생성 및 주입 [끝]. */
 
 		/** 약관동의 정보 리스트 주입 - [시작]. */
-		List<MbrClauseAgree> mbrClauseAgreeList = null;
-		MbrClauseAgree mbrClauseAgree = null;
-		if (req.getAgreementList() != null) {
-			mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
-			for (int i = 0; i < req.getAgreementList().size(); i++) {
-				mbrClauseAgree = new MbrClauseAgree();
-				// 약관동의 ID
-				mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
-				// 약관동의 여부
-				mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
-				// 약관 버전
-				mbrClauseAgree.setExtraAgreementVersion(req.getAgreementList().get(i).getExtraAgreementVersion());
-				mbrClauseAgreeList.add(mbrClauseAgree);
-				LOGGER.debug("==>>[SC] CreateSellerRequest.mbrClauseAgree[{}].toString() : {}", i,
-						mbrClauseAgree.toString());
-			}
-			createSellerRequest.setMbrClauseAgree(mbrClauseAgreeList);
-		}
+		// List<MbrClauseAgree> mbrClauseAgreeList = null;
+		// MbrClauseAgree mbrClauseAgree = null;
+		// if (req.getAgreementList() != null) {
+		// mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+		// for (int i = 0; i < req.getAgreementList().size(); i++) {
+		// mbrClauseAgree = new MbrClauseAgree();
+		// // 약관동의 ID
+		// mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
+		// // 약관동의 여부
+		// mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
+		// // 약관 버전
+		// mbrClauseAgree.setExtraAgreementVersion(req.getAgreementList().get(i).getExtraAgreementVersion());
+		// mbrClauseAgreeList.add(mbrClauseAgree);
+		// LOGGER.debug("==>>[SC] CreateSellerRequest.mbrClauseAgree[{}].toString() : {}", i,
+		// mbrClauseAgree.toString());
+		// }
+		// createSellerRequest.setMbrClauseAgree(mbrClauseAgreeList);
+		// }
 		/** 약관동의 정보 리스트 주입 - [끝]. */
 
 		/** 보안질문 리스트 주입 - [시작]. */
@@ -246,7 +244,7 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 판매자 회원 정보 생성 및 주입 - [끝]. */
 
-		createSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		createSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		LOGGER.debug("==>>[SC] CreateSellerRequest.toString() : {}", createSellerRequest.toString());
 
@@ -302,7 +300,7 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.debug("==>>[SC] LoginSellerRequest.toString() : {}", loginSellerRequest.toString());
 
 		// SC공통 헤더 정보 주입
-		loginSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		loginSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		/** 2. SC-로그인인증 Call. */
 		LoginSellerResponse logInSellerResponse = this.sellerSCI.loginSeller(loginSellerRequest);
@@ -324,7 +322,7 @@ public class SellerServiceImpl implements SellerService {
 				updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 
 				/** 2.2. 공통 헤더 생성 및 주입. */
-				updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
+				updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 				LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
@@ -352,48 +350,51 @@ public class SellerServiceImpl implements SellerService {
 		if (logInSellerResponse != null) {
 			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
 			// 회원 인증 "Y" 일 경우
-			if (logInSellerResponse.getIsLoginSuccess().equals(MemberConstants.USE_Y)) {
-				// /** 3.1. SC-REQUEST 생성 및 주입 */
-				// UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
-				//
-				// LoginInfo loginInfo = new LoginInfo();
-				// loginInfo.setSellerKey(res.getSellerMbr().getSellerKey());
-				// loginInfo.setIpAddress(req.getIpAddress());
-				// loginInfo.setSessionKey(res.getSellerMbr().getSellerKey() + "_" + RandomString.getString(10));
-				// loginInfo.setExpireDate(req.getExpireDate());
-				// updateLoginInfoRequest.setLoginInfo(loginInfo);
-				//
-				// /** 3.2. 공통 헤더 생성 및 주입. */
-				// updateLoginInfoRequest.setCommonRequest(this.getCommonRequest(header));
-				//
-				// /** 3.3. SC회원 - 상태변경 Call. */
-				// UpdateLoginInfoResponse updateLoginInfoResponse = this.sellerSCI
-				// .updateLoginInfo(updateLoginInfoRequest);
-				// // Response Debug
-				// LOGGER.info("[SellerSCI.updateLoginInfo()] - Response CODE : {}, MESSGE : {}",
-				// updateLoginInfoResponse
-				// .getCommonResponse().getResultCode(), updateLoginInfoResponse.getCommonResponse()
-				// .getResultMessage());
-				//
-				// if
-				// (!MemberConstants.RESULT_SUCCES.equals(updateLoginInfoResponse.getCommonResponse().getResultCode()))
-				// {
-				// // TODO [김경복] Exception 재정의 필요
-				// // throw new StorePlatformException(updateLoginInfoResponse.getCommonResponse().getResultMessage());
-				// }
-				// res.setSessionKey(loginInfo.getSessionKey());
-				sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+			if (logInSellerResponse.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_UNKNOWN_USER_ID)) {
+				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+			} else {
+				if (logInSellerResponse.getIsLoginSuccess().equals(MemberConstants.USE_Y)) {
+					/** 3.1. SC-REQUEST 생성 및 주입 */
+					UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
+					LoginInfo loginInfo = new LoginInfo();
+					loginInfo.setSellerKey(res.getSellerMbr().getSellerKey());
+					loginInfo.setIpAddress(req.getIpAddress());
+					loginInfo.setSessionKey(res.getSellerMbr().getSellerKey() + "_" + RandomString.getString(10));
+					loginInfo.setExpireDate(req.getExpireDate());
+					updateLoginInfoRequest.setLoginInfo(loginInfo);
+
+					/** 3.2. 공통 헤더 생성 및 주입. */
+					updateLoginInfoRequest.setCommonRequest(this.component.getSCCommonRequest(header));
+
+					/** 3.3. SC회원 - 상태변경 Call. */
+					UpdateLoginInfoResponse updateLoginInfoResponse = this.sellerSCI
+							.updateLoginInfo(updateLoginInfoRequest);
+					// [RESPONSE] Debug
+					LOGGER.info("[SellerSCI.updateLoginInfo()] - Response CODE : {}, MESSGE : {}",
+							updateLoginInfoResponse.getCommonResponse().getResultCode(), updateLoginInfoResponse
+									.getCommonResponse().getResultMessage());
+
+					if (!MemberConstants.RESULT_SUCCES.equals(updateLoginInfoResponse.getCommonResponse()
+							.getResultCode())) {
+						// TODO [김경복] Exception 재정의 필요
+						// throw new
+						// StorePlatformException(updateLoginInfoResponse.getCommonResponse().getResultMessage());
+					}
+					res.setSessionKey(loginInfo.getSessionKey());
+					res.setExpireDate(req.getExpireDate());
+					sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+
+				}
+				sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
+				sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
+				sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
+				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
+				res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
 			}
-			sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
-			sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
-			sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
-			res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 			res.setSellerMbr(sellerMbr);
 			LOGGER.debug("==>>[SAC] SellerMbr.toString() : {}", sellerMbr.toString());
 		}
-		res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
-		res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 
 		// Response Debug
 		LOGGER.debug("==>>[SAC] AuthorizeRes.toString() : {}", res.toString());
@@ -417,7 +418,7 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 1. SC회원 정보조회[Req] 생성 및 주입 */
 		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
-		searchSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		searchSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
@@ -444,7 +445,7 @@ public class SellerServiceImpl implements SellerService {
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
 
 		/** 2. 공통 헤더 생성 및 주입. */
-		updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
@@ -486,7 +487,7 @@ public class SellerServiceImpl implements SellerService {
 
 		// TODO [김경복 : 2014-01-23] 회원 조회 후 상태 체크 후 정상 회원만 계정잠금
 		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
-		searchSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		searchSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
@@ -510,7 +511,7 @@ public class SellerServiceImpl implements SellerService {
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_LOGIN_PAUSE);
 
 		/** 2. 공통 헤더 생성 및 주입. */
-		updateStatusSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
@@ -638,7 +639,7 @@ public class SellerServiceImpl implements SellerService {
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
 		/** 2. 공통 헤더 생성 및 주입. */
-		updateSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		updateSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		/** 3. SC회원 - 상태변경 Call. */
 		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
@@ -679,7 +680,7 @@ public class SellerServiceImpl implements SellerService {
 		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
 
 		/** 2. 공통 헤더 생성 및 주입. */
-		updateAccountSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		updateAccountSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		/** 3. SC회원 - 정산정보수정변경 Call. */
 		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
@@ -716,9 +717,7 @@ public class SellerServiceImpl implements SellerService {
 		RemoveSellerResponse schRes = new RemoveSellerResponse();
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
-
+		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
@@ -748,8 +747,7 @@ public class SellerServiceImpl implements SellerService {
 		UpdateLoginInfoResponse schRes = new UpdateLoginInfoResponse();
 		UpdateLoginInfoRequest schReq = new UpdateLoginInfoRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
@@ -785,8 +783,7 @@ public class SellerServiceImpl implements SellerService {
 		RemoveLoginInfoResponse schRes = new RemoveLoginInfoResponse();
 		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
@@ -802,21 +799,5 @@ public class SellerServiceImpl implements SellerService {
 		response.setSellerKey(loginInfo.getSellerKey());
 
 		return response;
-	}
-
-	/**
-	 * <pre>
-	 * SC 공통 헤더 셋팅.
-	 * </pre>
-	 * 
-	 * @param header
-	 * @return CommonRequest
-	 */
-	private CommonRequest getCommonRequest(SacRequestHeader header) {
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
-		return commonRequest;
 	}
 }

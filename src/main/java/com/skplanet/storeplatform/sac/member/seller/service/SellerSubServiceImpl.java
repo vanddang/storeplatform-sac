@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -35,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 @Service
@@ -45,6 +45,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 
 	@Autowired
 	private SellerSCI sellerSCI;
+
+	@Autowired
+	private MemberCommonComponent commonComponent;
 
 	/**
 	 * <pre>
@@ -60,8 +63,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		CreateSubSellerResponse schRes = new CreateSubSellerResponse();
 		CreateSubSellerRequest schReq = new CreateSubSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr sellerMbr = new com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr();
 		sellerMbr.setParentSellerKey(req.getSellerKey()); // US201401231325534800000164
@@ -106,8 +108,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		RemoveSubSellerResponse schRes = new RemoveSubSellerResponse();
 		RemoveSubSellerRequest schReq = new RemoveSubSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schReq.setParentSellerKey(req.getSellerKey());
 		// 최종 vo 에 값 셋팅
@@ -141,9 +142,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		SearchSubSellerListResponse schRes = new SearchSubSellerListResponse();
 		SearchSubSellerListRequest schReq = new SearchSubSellerListRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
-
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setParentSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchSubSellerList(schReq);
@@ -174,9 +173,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		SearchSubSellerResponse schRes = new SearchSubSellerResponse();
 		SearchSubSellerRequest schReq = new SearchSubSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
-
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchSubSeller(schReq);
@@ -198,8 +195,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		/** 1. ID/Email Req 생성 및 주입 */
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		checkDuplicationSellerRequest.setCommonRequest(this.getCommonRequest(header));
+		checkDuplicationSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
@@ -399,22 +395,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
 		}
 		return sellerMbrRes;
-	}
-
-	/**
-	 * <pre>
-	 * SC 공통 헤더 셋팅.
-	 * </pre>
-	 * 
-	 * @param header
-	 * @return CommonRequest
-	 */
-	private CommonRequest getCommonRequest(SacRequestHeader header) {
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
-		return commonRequest;
 	}
 
 }

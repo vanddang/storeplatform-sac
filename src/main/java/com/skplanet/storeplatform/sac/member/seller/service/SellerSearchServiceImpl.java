@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -58,6 +57,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 /**
@@ -78,6 +78,9 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	@Autowired
+	private MemberCommonComponent commonComponent;
+
 	/**
 	 * <pre>
 	 * 2.2.2. 판매자 회원 ID/Email 중복 조회.
@@ -94,11 +97,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		/** 1. ID/Email Req 생성 및 주입 */
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
 
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+		/** 2. SC 헤더 셋팅 */
+		checkDuplicationSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
 		if ("id".equals(req.getKeyType())) {
@@ -152,8 +152,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
 
@@ -264,8 +263,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchAccountSeller(schReq);
@@ -389,8 +387,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		boolean reqStat = false;
 		if (req.getSellerBizNumber() != null)
@@ -452,10 +449,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchPwdHintListResponse schRes = new SearchPwdHintListResponse();
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
-
 		schReq.setLanguageCode(language);
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schRes = this.sellerSCI.searchPwdHintList(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -504,9 +499,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		CheckPasswordReminderSellerResponse schRes = new CheckPasswordReminderSellerResponse();
 		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
-
 		schReq.setSellerID(req.getSellerID());
 
 		/** 보안질문 리스트 주입 - [시작]. */
@@ -525,6 +517,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 		/** 보안질문 리스트 주입 - [끝]. */
 
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
 			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
@@ -550,13 +543,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		ResetPasswordSellerResponse schRes = new ResetPasswordSellerResponse();
 		ResetPasswordSellerRequest schReq = new ResetPasswordSellerRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
-
 		MbrPwd mbrPwd = new MbrPwd();
 		mbrPwd.setMemberID(req.getSellerId()); // 셀러 id 를 넣어야한다.
 
 		schReq.setMbrPwd(mbrPwd);
+
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schRes = this.sellerSCI.resetPasswordSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
@@ -584,8 +577,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchLoginInfoResponse schRes = new SearchLoginInfoResponse();
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		schReq.setCommonRequest(this.getCommonRequest(header));
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schReq.setSellerKey(req.getSellerKey());
 
@@ -766,21 +758,5 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
 		}
 		return sellerMbrRes;
-	}
-
-	/**
-	 * <pre>
-	 * SC 공통 헤더 셋팅.
-	 * </pre>
-	 * 
-	 * @param header
-	 * @return CommonRequest
-	 */
-	private CommonRequest getCommonRequest(SacRequestHeader header) {
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(header.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(header.getTenantHeader().getTenantId());
-		LOGGER.debug("==>>[SC] CommonRequest.toString() : {}", commonRequest.toString());
-		return commonRequest;
 	}
 }
