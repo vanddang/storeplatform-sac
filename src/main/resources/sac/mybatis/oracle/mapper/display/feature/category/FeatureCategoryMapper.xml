@@ -168,7 +168,7 @@
 		      , LA.PART_PROD_ID
 		      , LA.VOD_TITL_NM
 		      , LA.PROD_NM
-		      , REPLACE(LA.CHAPTER, '회', '') AS CHAPTER
+		      , LA.CHAPTER
 		      , LA.PROD_BASE_DESC
 		      , LA.PROD_GRD_CD
 		      , LA.ARTIST1_NM
