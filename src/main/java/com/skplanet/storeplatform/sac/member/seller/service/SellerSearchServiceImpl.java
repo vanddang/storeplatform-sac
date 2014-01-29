@@ -34,7 +34,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
@@ -202,26 +201,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 						eList.add(extraRightList);
 					}
 
-				// 약관동의목록
-				List<MbrClauseAgree> mList = new ArrayList<MbrClauseAgree>();
-				MbrClauseAgree mbrClauseAgreeList = null;
-				if (schRes.getMbrClauseAgreeList() != null)
-					for (int i = 0; i < schRes.getMbrClauseAgreeList().size(); i++) {
-						mbrClauseAgreeList = new MbrClauseAgree();
-						mbrClauseAgreeList.setExtraAgreementID(schRes.getMbrClauseAgreeList().get(i)
-								.getExtraAgreementID());
-						mbrClauseAgreeList.setExtraAgreementVersion(schRes.getMbrClauseAgreeList().get(i)
-								.getExtraAgreementVersion());
-						mbrClauseAgreeList.setIsExtraAgreement(schRes.getMbrClauseAgreeList().get(i)
-								.getIsExtraAgreement());
-						mbrClauseAgreeList.setIsMandatory(schRes.getMbrClauseAgreeList().get(i).getIsMandatory());
-						mbrClauseAgreeList.setMemberKey(schRes.getMbrClauseAgreeList().get(i).getMemberKey());
-						mbrClauseAgreeList.setRegDate(schRes.getMbrClauseAgreeList().get(i).getRegDate());
-						mbrClauseAgreeList.setTenantID(schRes.getMbrClauseAgreeList().get(i).getTenantID());
-						mbrClauseAgreeList.setUpdateDate(schRes.getMbrClauseAgreeList().get(i).getUpdateDate());
-						mList.add(mbrClauseAgreeList);
-					}
-
 				// 법정대리인정보
 				MbrLglAgent mbrLglAgent = new MbrLglAgent();
 				if (schRes.getMbrLglAgent() != null) {
@@ -241,7 +220,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				}
 
 				response.setExtraRightList(eList);// 판매자 멀티미디어정보
-				response.setMbrClauseAgreeList(mList);// 약관동의목록
 				response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
 				response.setSellerKey(schRes.getSellerKey());// 판매자Key
 				response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));// 판매자 정보
