@@ -161,9 +161,6 @@
                         <if test="prodCharge != null">
                         AND J.PROD_CHRG_YN =#{prodCharge}
                         </if>
-                        <if test="b2bProd != null">
-                        AND I.B2B_PROD_YN =#{b2bProd}
-                        </if>
                         <if test="prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{prodGradeCd}
                         </if>   
@@ -315,9 +312,6 @@
                         AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                         <if test="prodCharge != null">
                         AND J.PROD_CHRG_YN =#{prodCharge}
-                        </if>
-                        <if test="b2bProd != null">
-                        AND I.B2B_PROD_YN =#{b2bProd}
                         </if>
                         <if test="prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{prodGradeCd}
@@ -510,9 +504,6 @@
                         AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                         <if test="prodCharge != null">
                         AND J.PROD_CHRG_YN =#{prodCharge}
-                        </if>
-                        <if test="b2bProd != null">
-                        AND I.B2B_PROD_YN =#{b2bProd}
                         </if>
                         <if test="prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{prodGradeCd}
