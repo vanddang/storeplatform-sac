@@ -10,7 +10,7 @@ public class ProductImage {
 	/** 이미지 코드 */
 	private String imgCd;
 	/** 노출 순서 */
-	private String expoOrd;
+	private Integer expoOrd;
 	/** 언어 코드 */
 	private String langCd;
 	/** 파일 경로 */
@@ -63,7 +63,7 @@ public class ProductImage {
 	 *
 	 * @return 노출 순서
 	 */
-	public String getExpoOrd() {
+	public Integer getExpoOrd() {
 		return this.expoOrd;
 	}
 
@@ -73,7 +73,7 @@ public class ProductImage {
 	 * @param expoOrd
 	 *            노출 순서
 	 */
-	public void setExpoOrd(String expoOrd) {
+	public void setExpoOrd(Integer expoOrd) {
 		this.expoOrd = expoOrd;
 	}
 

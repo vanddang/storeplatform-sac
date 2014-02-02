@@ -40,9 +40,13 @@ public class VodController {
 	@RequestMapping(value = "/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public VodDetailRes vodDetail(SacRequestHeader header, VodDetailReq req) {
-        req.setLangCd("ko");
+		//logger.debug("header={}, req={}", new String[]{ header.toString(), req.toString() });
+        req.setLangCd(header.getTenantHeader().getLangCd());
         req.setTenantId(header.getTenantHeader().getTenantId());
+        req.setDeviceModel(header.getDeviceHeader().getModel());
 
+        //FXIME: Test
+        //req.setChannelId("H906023417");
 		return this.vodService.searchVod(req);
 
 	}

@@ -10,10 +10,10 @@
 package com.skplanet.storeplatform.sac.display.common.constant;
 
 /**
- * 
+ *
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
- * 
- * Updated on : 2014. 1. 22. Updated by : 서대영, SK 플래닛.
+ *
+ * Updated on : 2014. 1. 30. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
 	// 상품 서비스 그룹 코드
@@ -313,4 +313,15 @@ public class DisplayConstants {
 	 */
 	public static final String DP_BANNER_MOBILE_CLIENT_CD = "MBI000000003"; // 배너관리 > 모바일 클라이언트
 
+
+	// ////////////////////////////////////// rights //////////////////////////////////////////
+	public static final String DP_RIGHTS_ALLOW_DOMESTIC = "domestic";	//dwldAreaLimitYn 다운로드 지역제한 == 'Y' 일 경우 domestic 리턴
+	/** 바로보기/대여 */
+	public static final String DP_RIGHTS_PLAY = "play";
+	/** 다운로드/소장 */
+	public static final String DP_RIGHTS_STORE = "store";
+
+	// ////////////////////////////////////// preview //////////////////////////////////////////
+	public static final String DP_PREVIEW_HQ = "video/x-freeview-hq";
+	public static final String DP_PREVIEW_LQ = "video/x-freeview-lq";
 }

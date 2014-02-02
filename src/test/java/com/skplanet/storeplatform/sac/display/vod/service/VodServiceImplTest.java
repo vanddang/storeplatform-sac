@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.display.vod.service;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -14,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailReq;
+import com.skplanet.storeplatform.sac.client.display.vo.vod.VodDetailRes;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.vo.ProductImage;
 import com.skplanet.storeplatform.sac.display.vod.vo.VodDetail;
 
 /**
@@ -31,36 +36,47 @@ public class VodServiceImplTest {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /*
     @Autowired
     private VodService vodService;
-    */
 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
     @Test
-    public void searchVod_channelInfo() {
+    public void searchVod_dao_selectVodChannel() {
     	VodDetailReq req = new VodDetailReq();
-    	req.setChannelId("H900000421");
+    	req.setChannelId("H090107970");
     	req.setLangCd("ko");
     	req.setTenantId("S01");
-		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodDetail", req, VodDetail.class);
+    	req.setDeviceModel("SHW-M110S");
+    	req.setImgCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+    	req.setOrderedBy("recent");
+		VodDetail vodDetail = this.commonDAO.queryForObject("VodDetail.selectVodChannel", req, VodDetail.class);
 		this.logger.debug("vodDetail={}", vodDetail);
     }
 
-    /*
+    @Test
+    public void searchVod_dao_screenshotList() {
+    	ProductImage param = new ProductImage();
+    	param.setProdId("H090107970");
+    	param.setLangCd("ko");
+    	List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", param, ProductImage.class);
+    	this.logger.debug("screenshotList={}", screenshotList);
+    }
+
     @Test
     public void searchVod() {
     	VodDetailReq req = new VodDetailReq();
+    	req.setChannelId("H090107970");
     	req.setTenantId("S01");
     	req.setLangCd("ko");
-
+    	req.setDeviceModel("SHW-M110S");
+    	req.setImgCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+    	req.setOrderedBy("recent");
         VodDetailRes res = this.vodService.searchVod(req);
-        this.logger.info("{}", res);
+        this.logger.debug("VodDetailRes={}", res);
     }
-	*/
 
 
 }
