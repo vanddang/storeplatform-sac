@@ -28,16 +28,20 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
+import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
@@ -150,55 +154,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			result.setUserMainStatus(userInfo.getUserMainStatus());
 			result.setUserSubStatus(userInfo.getUserSubStatus());
 		}
-
-		// // IDP 사용자
-		// if ("".equals(userInfo.getImSvcNo()) && userInfo.getImSvcNo() == null) {
-		//
-		// // IDP 연동 회원정보 조회
-		// this.idpReceiverM = this.idpService.alredyJoinCheckByEmail(userInfo.getUserEmail());
-		// logger.info("## alredyJoinCheckByEmail - Result Code : {}", this.idpReceiverM.getResponseHeader()
-		// .getResult());
-		// logger.info("## alredyJoinCheckByEmail - Result Text : {}", this.idpReceiverM.getResponseHeader()
-		// .getResult_text());
-		//
-		// if (StringUtils.equals(this.idpReceiverM.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-		// result.setUserKey(userInfo.getUserKey());
-		// result.setUserType(userInfo.getUserType());
-		// result.setUserId(userInfo.getUserId());
-		// result.setIsRealName(userInfo.getIsRealName());
-		// result.setAgencyYn(userInfo.getIsParent());
-		// result.setUserEmail(userInfo.getUserEmail());
-		// result.setUserMainStatus(userInfo.getUserMainStatus());
-		// result.setUserSubStatus(userInfo.getUserSubStatus());
-		// } else {
-		// throw new RuntimeException("IDP 회원조회 실패 : 해당 회원이 없음");
-		// }
-		//
-		// }
-		// // OneID 사용자
-		// else if (!"".equals(userInfo.getImSvcNo()) && userInfo.getImSvcNo() != null) {
-		// // OneID 연동 회원정보 조회 : UserId
-		// this.imIdpReceiverM = this.imIdpService.checkIdStatusIdpIm(userInfo.getUserId());
-		// // this.imIdpReceiverM = this.imIdpManager.checkDupId(userInfo.getUserId());
-		// logger.info("## checkDupId - Result Code : {}", this.imIdpReceiverM.getResponseHeader().getResult());
-		// logger.info("## checkDupId - Result Text : {}", this.imIdpReceiverM.getResponseHeader().getResult_text());
-		//
-		// if (StringUtils.equals(this.imIdpReceiverM.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK))
-		// {
-		// result.setUserKey(userInfo.getUserKey());
-		// result.setUserType(userInfo.getUserType());
-		// result.setUserId(userInfo.getUserId());
-		// result.setIsRealName(userInfo.getIsRealName());
-		// result.setAgencyYn(userInfo.getIsParent());
-		// result.setUserEmail(userInfo.getUserEmail());
-		// result.setUserMainStatus(userInfo.getUserMainStatus());
-		// result.setUserSubStatus(userInfo.getUserSubStatus());
-		// } else {
-		// throw new RuntimeException("OneID 회원조회 실패 : 해당 회원이 없음");
-		// }
-		// } else {
-		// throw new RuntimeException("SC 데이터에서 오류발생 : imSvcNo 호출 에러");
-		// }
 
 		return result;
 	}
@@ -406,12 +361,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 				mbrLglAgent.setParentEmail(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentEmail()));
 				mbrLglAgent.setParentMDN(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
 				mbrLglAgent.setParentName(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentName()));
-				mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent()
-						.getParentRealNameDate()));
-				mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent()
-						.getParentRealNameMethod()));
-				mbrLglAgent.setParentRealNameSite(StringUtil.setTrim(schUserRes.getMbrLglAgent()
-						.getParentRealNameSite()));
+				mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameDate()));
+				mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameMethod()));
+				mbrLglAgent.setParentRealNameSite(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameSite()));
 				mbrLglAgent.setParentTelecom(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentTelecom()));
 				mbrLglAgent.setParentType(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentType()));
 				mbrLglAgent.setSequence(StringUtil.setTrim(schUserRes.getMbrLglAgent().getSequence()));
@@ -480,8 +432,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (schUserRes.getUserMbr() == null) {
 			throw new RuntimeException("######## 사용자 기본정보 조회 : 사용자 데이터 없음");
 		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]"
-					+ "SubStatusCode [" + schUserRes.getUserMbr().getUserSubStatus() + "]");
+			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
+					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
 		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
 				&& schUserRes.getUserMbr() != null) {
 			userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
@@ -532,17 +484,61 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		return userInfo;
 
-		// UserInfo userInfo = this.mcc.getUserBaseInfo(keyType, keyValue, sacHeader);
-
-		// return userInfo;
 	}
 
 	/* SC API 회원부가정보 조회 */
 	@Override
 	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) throws Exception {
-		UserExtraInfoRes extraRes = this.mcc.getUserExtraInfo(req.getUserKey(), sacHeader);
 
+		/**
+		 * SearchManagementListRequest setting
+		 */
+		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		searchUserExtraRequest.setCommonRequest(commonRequest);
+		searchUserExtraRequest.setUserKey(req.getUserKey());
+
+		/**
+		 * SC 사용자 회원 부가정보를 조회
+		 */
+		UserExtraInfoRes extraRes = new UserExtraInfoRes();
+		List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
+
+		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
+
+		logger.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
+
+		if (!StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new RuntimeException("######## 사용자 부가정보 조회실패 : " + schUserExtraRes.getCommonResponse().getResultCode() + " MSG : "
+					+ schUserExtraRes.getCommonResponse().getResultMessage());
+		} else if (StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+			/* 유저키 세팅 */
+			extraRes.setUserKey(schUserExtraRes.getUserKey());
+			/* 부가정보 값 세팅 */
+			for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
+
+				logger.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
+				logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
+
+				if (ptcr.getExtraProfile() == null && ptcr.getExtraProfileValue() == null) {
+					throw new RuntimeException("######## 사용자 부가정보 조회 : ProfileCode, ProfileValue 없음");
+				}
+
+				UserExtraInfo extra = new UserExtraInfo();
+				extra.setExtraProfileCode(ptcr.getExtraProfile());
+				extra.setExtraProfileValue(ptcr.getExtraProfileValue());
+
+				listExtraInfo.add(extra);
+			}
+
+			extraRes.setAddInfoList(listExtraInfo);
+
+		}
 		return extraRes;
+
 	}
 
 	/* SC API 디바이스 리스트 조회 */
@@ -568,8 +564,46 @@ public class UserSearchServiceImpl implements UserSearchService {
 	/* SC API 약관동의 목록 조회 */
 	@Override
 	public SearchAgreementRes searchAgreement(SearchAgreementReq req, SacRequestHeader sacHeader) throws Exception {
-		SearchAgreementRes schAgreeRes = this.mcc.getSearchAgreement(req.getUserKey(), sacHeader);
 
-		return schAgreeRes;
+		SearchAgreementListRequest searchAgreementListRequest = new SearchAgreementListRequest();
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		searchAgreementListRequest.setCommonRequest(commonRequest);
+		searchAgreementListRequest.setUserKey(req.getUserKey());
+
+		/**
+		 * SC 사용자 약관동의 목록 조회
+		 */
+		SearchAgreementRes agreementRes = new SearchAgreementRes();
+		List<Agreement> listAgreement = new ArrayList<Agreement>();
+
+		SearchAgreementListResponse schAgreementRes = this.userSCI.searchAgreementList(searchAgreementListRequest);
+
+		logger.debug("############ 약관동의 리스트 Size : {}", schAgreementRes.getMbrClauseAgreeList().size());
+
+		if (!StringUtils.equals(schAgreementRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+			throw new StorePlatformException("######## 사용자 약관동의목록 조회실패 : " + schAgreementRes.getCommonResponse().getResultCode() + " MSG : "
+					+ schAgreementRes.getCommonResponse().getResultMessage());
+		} else if (StringUtils.equals(schAgreementRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+
+			/* 유저키 세팅 */
+			agreementRes.setUserKey(schAgreementRes.getUserKey());
+			/* 약관동의 세팅 */
+			for (MbrClauseAgree mbrAgree : schAgreementRes.getMbrClauseAgreeList()) {
+
+				Agreement agree = new Agreement();
+				agree.setExtraAgreementId(mbrAgree.getExtraAgreementID());
+				agree.setExtraAgreementVersion(mbrAgree.getExtraAgreementVersion());
+				agree.setIsExtraAgreement(mbrAgree.getIsExtraAgreement());
+
+				listAgreement.add(agree);
+			}
+
+			agreementRes.setAgreementList(listAgreement);
+
+		}
+		return agreementRes;
+
 	}
 }

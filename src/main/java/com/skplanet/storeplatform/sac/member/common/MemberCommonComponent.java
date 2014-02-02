@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.common;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,25 +24,18 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
-import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
-import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
-import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -211,8 +203,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
-			throws Exception {
+	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
 		return this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, deviceInfo);
 	}
 
@@ -235,8 +226,7 @@ public class MemberCommonComponent {
 	 *             Exception
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) throws Exception {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
-				.toString());
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
@@ -261,70 +251,18 @@ public class MemberCommonComponent {
 	 * test userKey - "IF1023002708420090928145937"
 	 * </pre>
 	 * 
-	 * @param keyType
-	 *            검색 조건 타입
-	 * @param keyValue
-	 *            검색 조건 값
-	 * @param systemId
-	 *            시스템 아이디
-	 * @param tenantId
-	 *            테넌트 아이디
-	 * @return UserExtraInfo
+	 * @return UserExtraInfoRes
 	 * @throws Exception
-	 *             Exception
 	 */
 	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) throws Exception {
 
-		/**
-		 * SearchManagementListRequest setting
-		 */
-		SearchManagementListRequest searchUserExtraRequest = new SearchManagementListRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		searchUserExtraRequest.setCommonRequest(commonRequest);
-		searchUserExtraRequest.setUserKey(userKey);
+		DetailReq req = new DetailReq();
+		UserExtraInfoRes res = new UserExtraInfoRes();
+		req.setUserKey(userKey);
 
-		/**
-		 * SC 사용자 회원 부가정보를 조회
-		 */
-		UserExtraInfoRes extraRes = new UserExtraInfoRes();
-		List<UserExtraInfo> listExtraInfo = new ArrayList<UserExtraInfo>();
+		res = this.userSearchService.listUserExtra(req, sacHeader);
 
-		SearchManagementListResponse schUserExtraRes = this.userSCI.searchManagementList(searchUserExtraRequest);
-
-		LOGGER.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
-
-		if (!StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new RuntimeException("######## 사용자 부가정보 조회실패 : "
-					+ schUserExtraRes.getCommonResponse().getResultCode() + " MSG : "
-					+ schUserExtraRes.getCommonResponse().getResultMessage());
-		} else if (StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(),
-				MemberConstants.RESULT_SUCCES)) {
-
-			/* 유저키 세팅 */
-			extraRes.setUserKey(schUserExtraRes.getUserKey());
-			/* 부가정보 값 세팅 */
-			for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
-
-				LOGGER.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-				LOGGER.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
-
-				if (ptcr.getExtraProfile() == null && ptcr.getExtraProfileValue() == null) {
-					throw new RuntimeException("######## 사용자 부가정보 조회 : ProfileCode, ProfileValue 없음");
-				}
-
-				UserExtraInfo extra = new UserExtraInfo();
-				extra.setExtraProfileCode(ptcr.getExtraProfile());
-				extra.setExtraProfileValue(ptcr.getExtraProfileValue());
-
-				listExtraInfo.add(extra);
-			}
-
-			extraRes.setAddInfoList(listExtraInfo);
-
-		}
-		return extraRes;
+		return res;
 	}
 
 	/**
@@ -347,50 +285,13 @@ public class MemberCommonComponent {
 	 */
 	public SearchAgreementRes getSearchAgreement(String userKey, SacRequestHeader sacHeader) throws Exception {
 
-		/**
-		 * SearchManagementListRequest setting
-		 */
-		SearchAgreementListRequest searchAgreementListRequest = new SearchAgreementListRequest();
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		searchAgreementListRequest.setCommonRequest(commonRequest);
-		searchAgreementListRequest.setUserKey(userKey);
+		SearchAgreementReq req = new SearchAgreementReq();
+		SearchAgreementRes res = new SearchAgreementRes();
+		req.setUserKey(userKey);
 
-		/**
-		 * SC 사용자 약관동의 목록 조회
-		 */
-		SearchAgreementRes agreementRes = new SearchAgreementRes();
-		List<Agreement> listAgreement = new ArrayList<Agreement>();
+		res = this.userSearchService.searchAgreement(req, sacHeader);
 
-		SearchAgreementListResponse schAgreementRes = this.userSCI.searchAgreementList(searchAgreementListRequest);
-
-		LOGGER.debug("############ 약관동의 리스트 Size : {}", schAgreementRes.getMbrClauseAgreeList().size());
-
-		if (!StringUtils.equals(schAgreementRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new RuntimeException("######## 사용자 약관동의목록 조회실패 : "
-					+ schAgreementRes.getCommonResponse().getResultCode() + " MSG : "
-					+ schAgreementRes.getCommonResponse().getResultMessage());
-		} else if (StringUtils.equals(schAgreementRes.getCommonResponse().getResultCode(),
-				MemberConstants.RESULT_SUCCES)) {
-
-			/* 유저키 세팅 */
-			agreementRes.setUserKey(schAgreementRes.getUserKey());
-			/* 약관동의 세팅 */
-			for (MbrClauseAgree mbrAgree : schAgreementRes.getMbrClauseAgreeList()) {
-
-				Agreement agree = new Agreement();
-				agree.setExtraAgreementId(mbrAgree.getExtraAgreementID());
-				agree.setExtraAgreementVersion(mbrAgree.getExtraAgreementVersion());
-				agree.setIsExtraAgreement(mbrAgree.getIsExtraAgreement());
-
-				listAgreement.add(agree);
-			}
-
-			agreementRes.setAgreementList(listAgreement);
-
-		}
-		return agreementRes;
+		return res;
 	}
 
 	/**
@@ -456,8 +357,7 @@ public class MemberCommonComponent {
 	 *             익셉션
 	 * 
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType)
-			throws Exception {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
@@ -492,7 +392,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -620,7 +521,5 @@ public class MemberCommonComponent {
 		response.setExpireDate(schRes.getLoginInfo().getExpireDate());
 		return response;
 	}
-
-
 
 }
