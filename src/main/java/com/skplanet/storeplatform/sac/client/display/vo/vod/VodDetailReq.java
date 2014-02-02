@@ -38,6 +38,12 @@ public class VodDetailReq extends CommonInfo {
 	/** Tenant ID */
 	private String tenantId;
 
+	/** 디바이스 모델 */
+	private String deviceModel;
+
+	/** 대표이미지 코드 */
+	private String imgCd;
+
 	public String getChannelld() {
 		return this.channelId;
 	}
@@ -86,11 +92,24 @@ public class VodDetailReq extends CommonInfo {
 		this.tenantId = tenantId;
 	}
 
-	@Override
-	public String toString() {
-		return "VodDetailReq [channelId=" + this.channelId + ", orderedBy="
-				+ this.orderedBy + ", offset=" + this.offset + ", count=" + this.count
-				+ ", langCd=" + this.langCd + ", tenantId=" + this.tenantId + "]";
+	public String getDeviceModel() {
+		return this.deviceModel;
+	}
+
+	public void setDeviceModel(String deviceModel) {
+		this.deviceModel = deviceModel;
+	}
+
+	public String getChannelId() {
+		return this.channelId;
+	}
+
+	public String getImgCd() {
+		return this.imgCd;
+	}
+
+	public void setImgCd(String imgCd) {
+		this.imgCd = imgCd;
 	}
 
 }
