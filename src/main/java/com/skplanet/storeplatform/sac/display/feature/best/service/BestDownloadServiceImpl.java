@@ -285,7 +285,13 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 						product.setSourceList(sourceList);
 						product.setProductExplain(mapperVO.getProdBaseDesc());
 						product.setPrice(price);
-						product.setBook(book);
+						/*
+						 * 이북, 코믹 일 경우에만
+						 */
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
+								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
+							product.setBook(book);
+						}
 
 						productList.add(product);
 
