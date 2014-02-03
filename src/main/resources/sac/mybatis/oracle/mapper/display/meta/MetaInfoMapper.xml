@@ -149,10 +149,10 @@
               , ( CASE WHEN LA.STRM_EPSD_CNT > 0 THEN 'Y' END ) AS SUPPORT_PLAY
             <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
               , CASE WHEN (LA.CHNL_PERIOD_AMT >= 0  AND LA.STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
-                     ELSE LA.CHNL_UNLMT_AMT END AS PROD_AMT -- 채널 대표 가격
+                     ELSE NVL(LA.CHNL_UNLMT_AMT, 0) END AS PROD_AMT -- 채널 대표 가격
             </if>
             <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-              , LA.PROD_AMT -- 에피소드 가격
+              , NVL(LA.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
             </if>
               , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT
               , NVL(LB.PRCHS_CNT, 0) AS PRCHS_CNT
@@ -411,10 +411,10 @@
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
              , CASE WHEN (TB.CHNL_PERIOD_AMT >= 0  AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
-                    ELSE CHNL_UNLMT_AMT END AS PROD_AMT -- 채널 대표 가격
+                    ELSE NVL(CHNL_UNLMT_AMT, 0) END AS PROD_AMT -- 채널 대표 가격
            </if>
            <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-             , TB.PROD_AMT -- 에피소드 가격
+             , NVL(TB.PROD_AMT, 0) AS PROD_AMT -- 에피소드 가격
            </if>       
              , (SELECT PROD_NET_AMT FROM TB_DP_TENANT_PROD_PRICE WHERE PROD_ID = TB.PART_PROD_ID) AS PROD_NET_AMT
              , NVL(TB.PATICPERS_CNT, 0) AS PATICPERS_CNT
