@@ -21,7 +21,6 @@ public class ProductBasicInfo {
 	// 쇼핑 관련
 	private String catalogId;
 	private String brandId;
-	private int totalCount;
 
 	/**
 	 * @return the totalCount
@@ -202,14 +201,6 @@ public class ProductBasicInfo {
 
 	public void setBrandId(String brandId) {
 		this.brandId = brandId;
-	}
-
-	public int getTotalCount() {
-		return this.totalCount;
-	}
-
-	public void setTotalCount(int totalCount) {
-		this.totalCount = totalCount;
 	}
 
 }
