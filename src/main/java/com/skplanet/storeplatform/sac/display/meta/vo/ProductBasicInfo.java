@@ -18,6 +18,11 @@ public class ProductBasicInfo {
 	private String topMenuId;
 	private String expoOrd;
 
+	// 쇼핑 관련
+	private String catalogId;
+	private String brandId;
+	private int totalCount;
+
 	/**
 	 * @return the totalCount
 	 */
@@ -181,6 +186,30 @@ public class ProductBasicInfo {
 	 */
 	public void setExpoOrd(String expoOrd) {
 		this.expoOrd = expoOrd;
+	}
+
+	public String getCatalogId() {
+		return this.catalogId;
+	}
+
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+
+	public String getBrandId() {
+		return this.brandId;
+	}
+
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
+	}
+
+	public int getTotalCount() {
+		return this.totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 
 }
