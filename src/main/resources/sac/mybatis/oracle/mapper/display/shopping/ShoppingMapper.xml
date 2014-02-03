@@ -17,7 +17,7 @@
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
                    ,EXPO_ORD as expoOrd
-                   ,CONTENTS_TYPE_CD as contentsTypeCd
+                   ,'PD002501' as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -31,7 +31,6 @@
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
                                ,M.EXPO_ORD
-                               ,J.CONTENTS_TYPE_CD    
                                ,I.REG_DT   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -46,7 +45,6 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,TB_DP_PROD_IMG           PI
                                 ,(
                                     SELECT  TDLP.TENANT_ID
                                           , TDLP.LIST_ID
@@ -99,8 +97,6 @@
                         <if test='req.listId =="RNK000000006"'>
                         AND I.PROD_ID = M.PROD_ID   
                         </if>                        
-                        AND B.CATALOG_ID = PI.PROD_ID
-                        AND PI.IMG_CD=#{imageCd}
                         AND I.PROD_ID = N.PROD_ID(+)     
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/                  
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
@@ -152,7 +148,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,CONTENTS_TYPE_CD as contentsTypeCd
+                   ,'PD002501' as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -165,7 +161,6 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
-                               ,J.CONTENTS_TYPE_CD    
                                ,I.REG_DT   
                           FROM 
                                   TB_DP_SHPG_BRAND A
@@ -180,7 +175,6 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,TB_DP_PROD_IMG          PI
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
                                      FROM TB_DP_TENANT_PROD_STATS 
@@ -212,8 +206,6 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)  
-                        AND B.CATALOG_ID = PI.PROD_ID   
-                        AND PI.IMG_CD=#{imageCd}    
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/         
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
@@ -264,8 +256,7 @@
                    ,TENANT_ID AS tenentId
                    ,PROD_ID as prodId
                    ,PART_PROD_ID as partProdId 
-                   ,CONTENTS_TYPE_CD as contentsTypeCd
-                                                              
+                   ,'PD002501' as contentsTypeCd
              FROM (
                   SELECT  * 
                    FROM (
@@ -278,7 +269,6 @@
                                ,K.TENANT_ID 
                                ,H.PROD_ID 
                                ,H.PART_PROD_ID  
-                               ,J.CONTENTS_TYPE_CD    
                                ,I.REG_DT 
 				               <if test='req.orderedBy == "recent"'>                 
 				               ,'1' EXPO_ORD
@@ -299,7 +289,7 @@
                                  ,TB_DP_PROD J
                                  ,TB_DP_TENANT_PROD K
                                  ,TB_DP_TENANT_PROD_PRICE L
-                                 ,TB_DP_PROD_IMG           PI
+
                                  <if test='req.orderedBy == "recent"'>
                                  ,(SELECT  PROD_ID
                                           ,PRCHS_CNT
@@ -355,8 +345,6 @@
                         AND I.PROD_ID = J.PROD_ID
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
-                        AND B.CATALOG_ID = PI.PROD_ID
-                        AND PI.IMG_CD=#{imageCd}
                          <if test='req.orderedBy == "recent"'>
                         AND I.PROD_ID = M.PROD_ID(+)        
                         </if>                                           
