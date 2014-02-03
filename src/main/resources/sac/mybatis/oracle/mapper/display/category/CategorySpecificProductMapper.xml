@@ -3,21 +3,53 @@
 <mapper namespace="CategorySpecificProduct">
 	<!-- 상품별 서비스 그룹 코드 조회-->
 	<select id="selectProductInfoList" resultType="ProductBasicInfo">
-	 SELECT 
-	       PROD_ID,SVC_GRP_CD,SVC_TYPE_CD,CONTENTS_TYPE_CD,META_CLSF_CD,TOP_MENU_ID,PROD_ID AS PART_PROD_ID
-      FROM TB_DP_PROD
-      <if test = "list !=null">
-      WHERE PROD_ID IN  
-           <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
-                #{item}
-           </foreach>
-      </if>
-       <if test = "list != null">  
-            ORDER BY instr
-            <foreach collection="list" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
-                #{item}
-            </foreach>
-         </if>
+		SELECT 
+		* 
+		FROM 
+		( 	 
+			 SELECT 
+			       PROD_ID,
+			       SVC_GRP_CD,
+			       SVC_TYPE_CD,
+			       CONTENTS_TYPE_CD,
+			       META_CLSF_CD,
+			       TOP_MENU_ID,
+			       PROD_ID AS PART_PROD_ID,
+			       ROWNUM
+		      FROM TB_DP_PROD
+		      WHERE PROD_ID IN  
+		           <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
+		                #{item}
+		           </foreach>
+		     UNION ALL
+		     SELECT * FROM(
+			     SELECT 
+			           A.CATALOG_ID AS PROD_ID,
+			           C.SVC_GRP_CD,
+			           C.SVC_TYPE_CD,
+			           C.CONTENTS_TYPE_CD,
+			           C.META_CLSF_CD,
+			           C.TOP_MENU_ID,
+			           B.PROD_ID AS PART_PROD_ID,
+			           ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY A.CATALOG_ID) AS RNUM
+			      FROM TB_DP_PROD_CATALOG_MAPG A, 
+			           TB_DP_PROD_RSHP B, 
+			           TB_DP_PROD C
+			     WHERE A.CATALOG_ID IN  
+			          <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
+			               #{item}
+			          </foreach>
+			     AND   A.PROD_ID = B.PROD_ID
+			     AND   B.PROD_ID = C.PROD_ID
+			  ) LA
+                WHERE LA.RNUM = 1   
+		 )
+	    <if test = "list != null">  
+	     ORDER BY INSTR
+		     <foreach collection="list" item="item" index="index" open="(" separator="||" close=",PROD_ID)"> 
+		         #{item}
+		     </foreach>
+	    </if>   
     </select>
     
     <select id="getAppMetaInfo" parameterType="Map" resultType="MetaInfo">
