@@ -108,6 +108,7 @@ public class MetaInfo {
 	private String prodCaseCd;
 	private Integer prodNetAmt;
 	private String catalogId;
+	private String catalogNm;
 
 	/**
 	 * @return the topMenuId
@@ -1472,6 +1473,14 @@ public class MetaInfo {
 	 */
 	public void setFileSizeH(Integer fileSizeH) {
 		this.fileSizeH = fileSizeH;
+	}
+
+	public String getCatalogNm() {
+		return this.catalogNm;
+	}
+
+	public void setCatalogNm(String catalogNm) {
+		this.catalogNm = catalogNm;
 	}
 
 }
