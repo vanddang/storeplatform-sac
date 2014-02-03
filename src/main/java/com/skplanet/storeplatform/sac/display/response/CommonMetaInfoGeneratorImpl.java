@@ -199,7 +199,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	}
 
 	@Override
-	public List<Identifier> generateSpecificProductIdentifierList(MetaInfo metaInfo) {
+	public List<Identifier> generateIdentifierList(MetaInfo metaInfo) {
 		String contentsTypeCd = metaInfo.getContentsTypeCd();
 		Identifier identifier = null;
 		List<Identifier> identifierList = new ArrayList<Identifier>();

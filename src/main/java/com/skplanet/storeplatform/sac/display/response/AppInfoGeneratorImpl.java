@@ -101,7 +101,7 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 	 * .sac.display.meta.vo.MetaInfo)
 	 */
 	@Override
-	public List<Identifier> generateAppIdentifierList(MetaInfo metaInfo) {
+	public List<Identifier> generateIdentifierList(MetaInfo metaInfo) {
 		Identifier identifier = new Identifier();
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);

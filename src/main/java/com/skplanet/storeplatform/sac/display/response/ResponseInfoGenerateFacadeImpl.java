@@ -28,7 +28,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -66,7 +65,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateAppProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.appGenerator.generateIdentifierList(metaInfo));
+		;
 		// App용 SupportList 설정
 		List<Support> supportList = this.appGenerator.generateSupportList(metaInfo);
 		// Title 설정
@@ -84,7 +84,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// App용 MenuList 설정
 		List<Menu> menuList = this.appGenerator.generateMenuList(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setSupportList(supportList);
 		product.setTitle(title);
 		product.setApp(app);
@@ -108,7 +107,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateMusicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 		// Identifier 설정
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 설정
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 설정
@@ -126,7 +125,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Music 생성
 		Music music = this.musicGenerator.generateMusic(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -149,7 +147,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateMovieProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 		// Identifier 설정
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
@@ -165,7 +163,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 영화용 Contributor 설정
 		Contributor contributor = this.vodGenerator.generateMovieContributor(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -188,7 +185,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateBroadcastProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
@@ -204,7 +201,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// 방송용 Contributor 설정
 		Contributor contributor = this.vodGenerator.generateBroadcastContributor(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -227,7 +223,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateEbookProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
@@ -245,7 +241,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Book 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -269,7 +264,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateComicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
@@ -287,7 +282,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// BOOK 설정
 		Book book = this.ebookComicGenerator.generateBook(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -311,7 +305,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateShoppingProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+
 		// Title 생성
 		Title title = this.commonGenerator.generateTitle(metaInfo);
 		// Price 생성
@@ -329,7 +324,6 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// SalesOption 생성
 		SalesOption salesOption = this.shoppingGenerator.generateSalesOption(metaInfo);
 
-		product.setIdentifier(identifier);
 		product.setTitle(title);
 		product.setPrice(price);
 		product.setMenuList(menuList);
@@ -352,7 +346,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateSpecificAppProduct(MetaInfo metaInfo) {
 		// TODO osm1021 일단은 기존 App meta 조회와 동일
 		Product product = new Product();
-		List<Identifier> identifierList = this.appGenerator.generateAppIdentifierList(metaInfo);
+		List<Identifier> identifierList = this.appGenerator.generateIdentifierList(metaInfo);
 		// App용 SupportList 설정
 		List<Support> supportList = this.appGenerator.generateSupportList(metaInfo);
 		// Title 설정
@@ -393,8 +387,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	@Override
 	public Product generateSpecificMusicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
-		List<Identifier> identifierList = this.commonGenerator.generateSpecificProductIdentifierList(metaInfo);
-		product.setIdentifierList(identifierList);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
@@ -421,7 +414,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 
 		// Identifier 설정
 		String contentsTypeCd = metaInfo.getContentsTypeCd();
-		List<Identifier> identifierList = this.commonGenerator.generateSpecificProductIdentifierList(metaInfo);
+		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
@@ -448,7 +441,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Product product = new Product();
 
 		// Identifier 설정
-		product.setIdentifierList(this.commonGenerator.generateSpecificProductIdentifierList(metaInfo));
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
@@ -473,7 +466,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateSpecificEbookProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 		String productExplain = metaInfo.getProdBaseDesc();
-		List<Identifier> identifierList = this.commonGenerator.generateSpecificProductIdentifierList(metaInfo);
+		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
@@ -500,7 +493,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 	public Product generateSpecificComicProduct(MetaInfo metaInfo) {
 		Product product = new Product();
 
-		List<Identifier> identifierList = this.commonGenerator.generateSpecificProductIdentifierList(metaInfo);
+		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setIdentifierList(identifierList);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
@@ -528,16 +521,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Product product = new Product();
 
 		// Identifier 설정
-		String contentsTypeCd = metaInfo.getContentsTypeCd();
-		if (DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
-			List<Identifier> identifierList = this.commonGenerator.generateSpecificProductIdentifierList(metaInfo);
-			product.setIdentifierList(identifierList);
-
-		} else if (DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD.equals(contentsTypeCd)) {
-			Identifier identifier = this.commonGenerator.generateIdentifier(metaInfo);
-			product.setIdentifier(identifier);
-		}
-
+		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.shoppingGenerator.generatePrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));

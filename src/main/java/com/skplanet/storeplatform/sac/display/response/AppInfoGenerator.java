@@ -65,5 +65,5 @@ public interface AppInfoGenerator {
 	 *            metaInfo
 	 * @return List<Identifier>
 	 */
-	public List<Identifier> generateAppIdentifierList(MetaInfo metaInfo);
+	public List<Identifier> generateIdentifierList(MetaInfo metaInfo);
 }

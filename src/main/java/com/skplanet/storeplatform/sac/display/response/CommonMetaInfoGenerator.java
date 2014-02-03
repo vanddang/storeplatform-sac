@@ -164,7 +164,7 @@ public interface CommonMetaInfoGenerator {
 	 *            metaInfo
 	 * @return List<Identifier>
 	 */
-	public List<Identifier> generateSpecificProductIdentifierList(MetaInfo metaInfo);
+	public List<Identifier> generateIdentifierList(MetaInfo metaInfo);
 
 	/**
 	 * <pre>
