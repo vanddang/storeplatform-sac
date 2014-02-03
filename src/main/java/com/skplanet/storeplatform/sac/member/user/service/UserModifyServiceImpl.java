@@ -27,12 +27,18 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
@@ -187,14 +193,42 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 	@Override
 	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+
+		ModifyPasswordRes response = new ModifyPasswordRes();
+
+		return response;
 	}
 
 	@Override
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+
+		ModifyEmailRes response = new ModifyEmailRes();
+
+		return response;
+	}
+
+	@Override
+	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) throws Exception {
+
+		CreateTermsAgreementRes response = new CreateTermsAgreementRes();
+
+		return response;
+	}
+
+	@Override
+	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) throws Exception {
+
+		ModifyTermsAgreementRes response = new ModifyTermsAgreementRes();
+
+		return response;
+	}
+
+	@Override
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) throws Exception {
+
+		CreateRealNameRes response = new CreateRealNameRes();
+
+		return response;
 	}
 
 	private String updateUser(SacRequestHeader sacHeader, ModifyReq req) throws Exception {

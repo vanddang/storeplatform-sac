@@ -9,12 +9,18 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -68,5 +74,50 @@ public interface UserModifyService {
 	 *             익셉션
 	 */
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * Store 약관 동의 등록.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 * @throws Exception
+	 *             익셉션
+	 */
+	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * Store 약관 동의 수정.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 * @throws Exception
+	 *             익셉션
+	 */
+	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) throws Exception;
+
+	/**
+	 * <pre>
+	 * 실명 인증 정보 등록.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 * @throws Exception
+	 *             익셉션
+	 */
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) throws Exception;
 
 }

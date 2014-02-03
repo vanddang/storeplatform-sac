@@ -35,7 +35,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
@@ -160,26 +159,26 @@ public class DummyDataController {
 	 * res.setUserSubStatus("US010301"); return res; }
 	 */
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return ModifyRes
-	 */
-	@RequestMapping(value = "/member/user/modify/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public ModifyRes modify() {
-
-		LOGGER.info("#################################");
-		LOGGER.info("##### 5.1.13. 회원 정보 수정 #####");
-		LOGGER.info("#################################");
-
-		ModifyRes res = new ModifyRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return ModifyRes
+	// */
+	// @RequestMapping(value = "/member/user/modify/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public ModifyRes modify() {
+	//
+	// LOGGER.info("#################################");
+	// LOGGER.info("##### 5.1.13. 회원 정보 수정 #####");
+	// LOGGER.info("#################################");
+	//
+	// ModifyRes res = new ModifyRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>

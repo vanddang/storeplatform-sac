@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordReq;
@@ -63,12 +65,12 @@ public class UserModifyController {
 	 * @throws Exception
 	 *             익셉션
 	 */
-	@RequestMapping(value = "/dev/member/user/modify/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyRes modify(SacRequestHeader sacHeader, @Validated @RequestBody ModifyReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("#################################");
-		LOGGER.info("##### 5.1.13. 회원 정보 수정 #####");
+		LOGGER.info("##### 2.1.13. 회원 정보 수정 #####");
 		LOGGER.info("#################################");
 
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
@@ -117,7 +119,7 @@ public class UserModifyController {
 	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("################################");
-		LOGGER.info("##### 5.1.14. 비밀번호 수정 #####");
+		LOGGER.info("##### 2.1.14. 비밀번호 수정 #####");
 		LOGGER.info("################################");
 
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
@@ -142,7 +144,7 @@ public class UserModifyController {
 
 		LOGGER.info("Response : {}", res.toString());
 
-		return new ModifyPasswordRes();
+		return res;
 
 	}
 
@@ -166,7 +168,7 @@ public class UserModifyController {
 	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req, BindingResult result) throws Exception {
 
 		LOGGER.info("##################################");
-		LOGGER.info("##### 5.1.15. 이메일 주소 수정 #####");
+		LOGGER.info("##### 2.1.15. 이메일 주소 수정 #####");
 		LOGGER.info("##################################");
 
 		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
@@ -191,7 +193,41 @@ public class UserModifyController {
 
 		LOGGER.info("Response : {}", res.toString());
 
-		return new ModifyEmailRes();
+		return res;
+
+	}
+
+	@RequestMapping(value = "/dev/member/user/createRealName/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req, BindingResult result) throws Exception {
+
+		LOGGER.info("####################################");
+		LOGGER.info("##### 2.1.18 실명 인증 정보 등록 #####");
+		LOGGER.info("####################################");
+
+		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
+			throw new RuntimeException("Request Parameter Binding Exception!!!");
+		}
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		/**
+		 * 이메일 주소 Biz
+		 */
+		CreateRealNameRes res = this.svc.createRealName(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
 
 	}
 
