@@ -91,7 +91,6 @@ public class CreateByMdnTest {
 	public void test1_createByMdn() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
@@ -179,7 +178,6 @@ public class CreateByMdnTest {
 	public void test2_createByMdn() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
@@ -267,7 +265,6 @@ public class CreateByMdnTest {
 	public void test3_createByUuid() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
@@ -351,7 +348,6 @@ public class CreateByMdnTest {
 	public void test4_createByMac() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
@@ -434,7 +430,6 @@ public class CreateByMdnTest {
 	public void test5_errorTestCase() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByMdn/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {

@@ -76,7 +76,6 @@ public class ModifyTest {
 	public void test1_modifyIdp() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/modify/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -132,7 +131,6 @@ public class ModifyTest {
 	public void test2_modifyImIdp() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/modify/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override

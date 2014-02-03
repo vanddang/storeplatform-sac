@@ -65,7 +65,7 @@ public class CreateRealNameTest {
 
 	/**
 	 * <pre>
-	 * 회원정보 수정 테스트 (IDP 회원).
+	 * 실명인증정보 수정 테스트.
 	 * </pre>
 	 * 
 	 * @throws Exception
@@ -75,7 +75,6 @@ public class CreateRealNameTest {
 	public void test1_createRealName() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
-				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
