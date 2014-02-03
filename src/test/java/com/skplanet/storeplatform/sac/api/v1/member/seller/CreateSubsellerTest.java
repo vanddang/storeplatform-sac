@@ -67,14 +67,14 @@ public class CreateSubsellerTest {
 					public Object requestBody() {
 						CreateSubsellerReq req = new CreateSubsellerReq();
 
-						req.setSellerKey("IF1023501437920130904104346");
-						req.setSubSellerID("ID323R411");
+						req.setSellerKey("IF102102956220120711144039");
+						req.setSubSellerID("ID323R4119");
 						req.setSubSellerPW("12312312");
 						req.setSubSellerMemo("test");
-						req.setSubSellerEmail("ID1@qqq.com");
+						req.setSubSellerEmail("ID11@qqq.com");
 
 						// 새로 추가됨
-						req.setSubSellerKey("US201401231325534800000164");
+						req.setSubSellerKey("SS201402031144367350000510");
 						req.setMemberPW("12312312");
 						req.setOldPW("a");
 						req.setIsNew("Y");
