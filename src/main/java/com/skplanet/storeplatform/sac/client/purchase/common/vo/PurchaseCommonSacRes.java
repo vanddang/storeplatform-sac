@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCommonRes extends CommonInfo {
+public class PurchaseCommonSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

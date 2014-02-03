@@ -11,14 +11,14 @@ package com.skplanet.storeplatform.sac.client.purchase.cancel.vo;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonRes;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacRes;
 
 /**
  * 구매 취소 응답 VO.
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelRes extends PurchaseCommonRes {
+public class PurchaseCancelRes extends PurchaseCommonSacRes {
 
 	private static final long serialVersionUID = 1L;
 
