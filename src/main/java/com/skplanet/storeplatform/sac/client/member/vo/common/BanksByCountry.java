@@ -16,9 +16,9 @@ public class BanksByCountry extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String nationCode;
-	private String nateionName;
+	private String nationName;
 	private String alphaCode;
-	private String namericCode;
+	private String numericCode;
 	private String bankNo;
 	private String nationTelNo;
 	private String taxtrtCnclsYn;
@@ -29,7 +29,7 @@ public class BanksByCountry extends CommonInfo {
 	private String abaUseYn;
 	private String sortUseYn;
 	private String bsbUseYn;
-	private String UseYn;
+	private String useYn;
 	private String nationDesc;
 	private String regId;
 	private String regDt;
@@ -44,12 +44,12 @@ public class BanksByCountry extends CommonInfo {
 		this.nationCode = nationCode;
 	}
 
-	public String getNateionName() {
-		return this.nateionName;
+	public String getNationName() {
+		return this.nationName;
 	}
 
-	public void setNateionName(String nateionName) {
-		this.nateionName = nateionName;
+	public void setNationName(String nationName) {
+		this.nationName = nationName;
 	}
 
 	public String getAlphaCode() {
@@ -60,12 +60,12 @@ public class BanksByCountry extends CommonInfo {
 		this.alphaCode = alphaCode;
 	}
 
-	public String getNamericCode() {
-		return this.namericCode;
+	public String getNumericCode() {
+		return this.numericCode;
 	}
 
-	public void setNamericCode(String namericCode) {
-		this.namericCode = namericCode;
+	public void setNumericCode(String numericCode) {
+		this.numericCode = numericCode;
 	}
 
 	public String getBankNo() {
@@ -149,11 +149,11 @@ public class BanksByCountry extends CommonInfo {
 	}
 
 	public String getUseYn() {
-		return this.UseYn;
+		return this.useYn;
 	}
 
 	public void setUseYn(String useYn) {
-		this.UseYn = useYn;
+		this.useYn = useYn;
 	}
 
 	public String getNationDesc() {

@@ -15,14 +15,14 @@ public class ListBanksByCountryReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String UseYn;
+	private String useYn;
 
 	public String getUseYn() {
-		return this.UseYn;
+		return this.useYn;
 	}
 
 	public void setUseYn(String useYn) {
-		this.UseYn = useYn;
+		this.useYn = useYn;
 	}
 
 }
