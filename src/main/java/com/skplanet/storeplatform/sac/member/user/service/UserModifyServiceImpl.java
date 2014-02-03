@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -35,7 +36,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -72,6 +72,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 		ModifyRes response = new ModifyRes();
 
 		/**
+		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
+		 */
+		if (StringUtils.equals(req.getUserAuthKey(), "")) {
+			throw new RuntimeException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+		}
+
+		/**
 		 * 회원 정보 조회.
 		 */
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
@@ -86,13 +93,46 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## ====================================================");
 			LOGGER.info("## One ID 통합회원 [{}]", userInfo.getUserName());
 			LOGGER.info("## ====================================================");
-			/**
-			 * TODO 통합 IDP 연동
-			 */
 
 			/**
-			 * TODO SC 사용자 정보 수정
+			 * 통합 IDP 연동 정보 setting.
 			 */
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("user_auth_key", req.getUserAuthKey()); // IDP 인증키
+			param.put("key_type", "1"); // updateUserInfo 메서드에 하드코딩 되어 있음.
+			param.put("key", userInfo.getImSvcNo()); // 통합서비스 관리번호
+			param.put("user_type", "1"); // 가입자 유형코드 (1:개인)
+			param.put("is_biz_auth", "N");
+			param.put("udt_type_cd", "4"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
+
+			param.put("user_calendar", req.getUserCalendar()); // 양력1, 음력2
+			param.put("user_zipcode", req.getUserZip()); // 우편번호
+			param.put("user_address", req.getUserAddress()); // 주소
+			param.put("user_address2", req.getUserDetailAddress()); // 상세주소
+
+			/**
+			 * 통합IDP 회원정보 수정 연동 (cmd - TXUpdateUserInfoIDP)
+			 */
+			this.imIdpService.updateUserInfo(param);
+
+			/**
+			 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
+			 */
+			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+			LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseHeader().getResult_text());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_sex());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_calendar());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_birthday());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_zipcode());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address());
+			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address2());
+
+			/**
+			 * SC 회원 수정.
+			 */
+			String userKey = this.updateUser(sacHeader, req);
+			response.setUserKey(userKey);
 
 		} else {
 
@@ -104,7 +144,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * IDP 연동 정보 setting.
 			 */
 			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("user_auth_key", req.getUserAuthKey());
+			param.put("user_auth_key", req.getUserAuthKey()); // IDP 인증키
 			param.put("key_type", "2");
 			param.put("key", userInfo.getImMbrNo()); // MBR_NO
 			param.put("user_sex", req.getUserSex()); // 성별
@@ -115,36 +155,30 @@ public class UserModifyServiceImpl implements UserModifyService {
 			param.put("user_address2", req.getUserDetailAddress()); // 상세주소
 			param.put("user_tel", req.getUserPhone()); // 사용자 연락처
 
-			IDPReceiverM modifyInfo = this.idpService.modifyProfile(param);
-			LOGGER.info("## IDP modifyProfile Code : {}", modifyInfo.getResponseHeader().getResult());
-			LOGGER.info("## IDP modifyProfile Text  : {}", modifyInfo.getResponseHeader().getResult_text());
+			/**
+			 * IDP 회원정보 수정 연동 (cmd - modifyProfile)
+			 */
+			this.idpService.modifyProfile(param);
 
-			if (StringUtils.equals(modifyInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+			/**
+			 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
+			 */
+			IDPReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
+			LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseHeader().getResult_text());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_sex());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_calendar());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_birthday());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_zipcode());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_address());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_address2());
+			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_tel());
 
-				LOGGER.info("## IDP 연동 성공 ==============================================");
-
-				IDPReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
-				LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseHeader().getResult_text());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_sex());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_birthday());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_zipcode());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_address());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_address2());
-				LOGGER.info("## IDP searchUserInfo Text  : {}", searchUserInfo.getResponseBody().getUser_tel());
-
-				/**
-				 * SC 회원 수정.
-				 */
-				String userKey = this.updateUser(sacHeader, req);
-				response.setUserKey(userKey);
-
-			} else {
-
-				LOGGER.info("## IDP 연동 실패 Msg : [{}] [{}]", modifyInfo.getResponseHeader().getResult(), modifyInfo.getResponseHeader().getResult_text());
-				throw new RuntimeException("## IDP 연동 실패 Msg [" + modifyInfo.getResponseHeader().getResult() + "] [" + modifyInfo.getResponseHeader().getResult_text() + "]");
-
-			}
+			/**
+			 * SC 회원 수정.
+			 */
+			String userKey = this.updateUser(sacHeader, req);
+			response.setUserKey(userKey);
 
 		}
 
