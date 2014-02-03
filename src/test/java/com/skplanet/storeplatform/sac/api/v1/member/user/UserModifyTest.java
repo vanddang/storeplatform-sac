@@ -65,14 +65,69 @@ public class UserModifyTest {
 
 	/**
 	 * <pre>
-	 * 회원정보 수정 테스트.
+	 * 회원정보 수정 테스트 (IDP 회원).
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
 	@Test
-	public void test1_modify() throws Exception {
+	public void test1_modifyIdp() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/modify/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						ModifyReq reqJson = new ModifyReq();
+
+						/**
+						 * 기존 IDP 회원
+						 */
+						reqJson.setUserKey("US201401231555153430000447");
+						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+
+						reqJson.setUserPhone("01011111112"); // 사용자 연락처 (Sync 대상 - IDP)
+						reqJson.setIsRecvSms("N"); // SMS 수신 여부
+						reqJson.setIsRecvEmail("N"); // 이메일 수신여부
+						reqJson.setUserSex("M"); // 성별 (Sync 대상 - IDP)
+						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일 (Sync 대상 - IDP)
+						reqJson.setUserZip("123123"); // 우편번호 (Sync 대상 - IDP|통합)
+						reqJson.setUserAddress("경기도 성남시 분당구"); // 주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserDetailAddress("H스퀘어"); // 상세주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserCalendar("2"); // 생년월일 (1 : 양력, 2 : 음력)
+
+						/**
+						 * 외국인
+						 */
+						reqJson.setUserCity("Pittsburgh");
+						reqJson.setUserState("Pennsylvania");
+
+						return reqJson;
+					}
+				}).success(ModifyRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ModifyRes res = (ModifyRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원정보 수정 테스트 (통합 IDP 회원).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void test1_modifyImIdp() throws Exception {
 
 		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/modify/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
@@ -86,25 +141,15 @@ public class UserModifyTest {
 						/**
 						 * One ID 회원
 						 */
-						// reqJson.setUserKey("US201401241550022950000616");
-						// reqJson.setUserAuthKey("01f3af5e6d8f7d4643c914cf7ae42b283270b232");
+						reqJson.setUserKey("US201401241550022950000616");
+						reqJson.setUserAuthKey("01f3af5e6d8f7d4643c914cf7ae42b283270b232");
 
-						/**
-						 * 기존 IDP 회원
-						 */
-						reqJson.setUserKey("US201401231555153430000447");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
-
-						reqJson.setUserPhone("01011111112"); // 사용자 연락처 (Sync 대상)
 						reqJson.setIsRecvSms("N"); // SMS 수신 여부
-						reqJson.setIsRecvEmail("Y"); // 이메일 수신여부
-						reqJson.setUserSex("M"); // 성별 (Sync 대상)
-						reqJson.setUserBirthDay("19820328"); // 사용자 생년월일 (Sync 대상)
-						reqJson.setUserZip("151919"); // 우편번호 (Sync 대상)
-						reqJson.setUserAddress("서울 관악구 낙성대동 서울대연구공원단지"); // 주소 (Sync 대상)
-						reqJson.setUserDetailAddress("SKT연구소"); // 상세주소 (Sync 대상)
-
-						reqJson.setUserCalendar("1"); // 생년월일 (1 : 양력, 2 : 음력)
+						reqJson.setIsRecvEmail("N"); // 이메일 수신여부
+						reqJson.setUserZip("123123"); // 우편번호 (Sync 대상 - IDP|통합)
+						reqJson.setUserAddress("경기도 성남시 분당구"); // 주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserDetailAddress("H스퀘어"); // 상세주소 (Sync 대상 - IDP|통합)
+						reqJson.setUserCalendar("2"); // 생년월일 (1 : 양력, 2 : 음력)
 
 						/**
 						 * 외국인
