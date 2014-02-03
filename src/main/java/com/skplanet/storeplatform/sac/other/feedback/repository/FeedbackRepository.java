@@ -9,6 +9,11 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
+import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
+import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
+import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
+import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
+
 /**
  * 
  * Feedback Repository
@@ -16,5 +21,209 @@ package com.skplanet.storeplatform.sac.other.feedback.repository;
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
 public interface FeedbackRepository {
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 기등록 여부 조회.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return ProdNoti
+	 */
+	public ProdNoti getRegProdNoti(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 등록.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object insertProdNoti(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 수정 / 삭제.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object updateProdNoti(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 추천 삭제.
+	 * </pre>
+	 * 
+	 * @param prodNotiGood
+	 *            prodNotiGood
+	 * @return Object
+	 */
+	public Object deleteProdNotiGood(ProdNotiGood prodNotiGood);
+
+	/**
+	 * 
+	 * <pre>
+	 * 평점 기등록 여부 조회.
+	 * </pre>
+	 * 
+	 * @param mbrAvg
+	 *            mbrAvg
+	 * @return MbrAvg
+	 */
+	public MbrAvg getRegMbrAvg(MbrAvg mbrAvg);
+
+	/**
+	 * 
+	 * <pre>
+	 * 평점 등록/수정.
+	 * </pre>
+	 * 
+	 * @param mbrAvg
+	 *            mbrAvg
+	 * @return Object
+	 */
+	public Object mergeMbrAvg(MbrAvg mbrAvg);
+
+	/**
+	 * 
+	 * <pre>
+	 * 평점 삭제.
+	 * </pre>
+	 * 
+	 * @param mbrAvg
+	 *            mbrAvg
+	 * @return Object
+	 */
+	public Object deleteMbrAvg(MbrAvg mbrAvg);
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 상품 통계 조회.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return TenantProdStats
+	 */
+	public TenantProdStats getTenantProdStats(TenantProdStats tenantProdStats);
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 상품통계 수정 / 등록.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return Object
+	 */
+	public Object mergeTenantProdStats(TenantProdStats tenantProdStats);
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 상품통계 기등록 수정.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return Object
+	 */
+	public Object updateRegTenantProdStats(TenantProdStats tenantProdStats);
+
+	/**
+	 * 
+	 * <pre>
+	 * 테넌트 상품통계 삭제.
+	 * </pre>
+	 * 
+	 * @param tenantProdStats
+	 *            tenantProdStats
+	 * @return Object
+	 */
+	public Object deleteTenantProdStats(TenantProdStats tenantProdStats);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 사용자 ID 변경.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object changeProdNotiUserId(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 추천 사용자 ID 변경.
+	 * </pre>
+	 * 
+	 * @param prodNotiGood
+	 *            prodNotiGood
+	 * @return Object
+	 */
+	public Object changeProdNotiGoodUserId(ProdNotiGood prodNotiGood);
+
+	/**
+	 * 
+	 * <pre>
+	 * 평점 사용자 ID 변경.
+	 * </pre>
+	 * 
+	 * @param mbrAvg
+	 *            mbrAvg
+	 * @return Object
+	 */
+	public Object changeMbrAvgUserId(MbrAvg mbrAvg);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 사용자 Key 변경.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object changeProdNotiUserKey(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 추천 사용자 Key 변경.
+	 * </pre>
+	 * 
+	 * @param prodNotiGood
+	 *            prodNotiGood
+	 * @return Object
+	 */
+	public Object changeProdNotiGoodUserKey(ProdNotiGood prodNotiGood);
+
+	/**
+	 * 
+	 * <pre>
+	 * 평점 사용자 Key 변경.
+	 * </pre>
+	 * 
+	 * @param mbrAvg
+	 *            mbrAvg
+	 * @return Object
+	 */
+	public Object changeMbrAvgUserKey(MbrAvg mbrAvg);
 
 }
