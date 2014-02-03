@@ -9,22 +9,25 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
@@ -38,7 +41,7 @@ import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListServic
 @RequestMapping(value = "/purchase/history")
 public class HistoryListController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private HistoryListService historyListService;
@@ -50,20 +53,36 @@ public class HistoryListController {
 	 *            구매내역요청
 	 * @param requestHeader
 	 *            공통헤더정보
-	 * @return HistoryListResponse
+	 * @return HistoryListSacRes
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-	public HistoryListRes list(@RequestBody @Validated HistoryListReq request, SacRequestHeader requestHeader) {
+	public HistoryListSacRes searchHistoryList(@RequestBody @Validated HistoryListSacReq request,
+			BindingResult bindingResult, SacRequestHeader requestHeader) {
+
+		// 필수값 체크
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+
+				if (error.getCode().equals("Max")) {
+					throw new StorePlatformException("SAC_PUR_0004", error.getField(), error.getRejectedValue(), 100);
+				} else if (error.getCode().equals("Min")) {
+					throw new StorePlatformException("SAC_PUR_0005", error.getField(), error.getRejectedValue(), 1);
+				} else {
+					throw new StorePlatformException("SAC_PUR_0001", error.getField());
+				}
+			}
+		}
 
 		// tenantID, systemId Set
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		request.setTenantId(tenantHeader.getTenantId());
 		request.setSystemId(tenantHeader.getSystemId());
-		this.logger.debug("TenantHeader :: " + tenantHeader.toString());
+		this.LOGGER.debug("TenantHeader :: " + tenantHeader.toString());
 
-		return this.historyListService.list(request, requestHeader);
+		return this.historyListService.searchHistoryList(request, requestHeader);
 	}
 
 	/**
@@ -73,19 +92,28 @@ public class HistoryListController {
 	 *            구매내역요청
 	 * @param requestHeader
 	 *            공통헤더정보
-	 * @return HistoryListResponse
+	 * @return HistoryCountSacRes
 	 */
 	@RequestMapping(value = "/count/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HistoryCountRes count(@RequestBody HistoryCountReq request, SacRequestHeader requestHeader) {
+	public HistoryCountSacRes searchHistoryCount(@RequestBody HistoryCountSacReq request, BindingResult bindingResult,
+			SacRequestHeader requestHeader) {
+
+		// 필수값 체크
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_PUR_0001", error.getField());
+			}
+		}
 
 		// tenantID, systemId Set
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
 		request.setTenantId(tenantHeader.getTenantId());
 		request.setSystemId(tenantHeader.getSystemId());
-		this.logger.debug("TenantHeader :: " + tenantHeader.toString());
+		this.LOGGER.debug("TenantHeader :: " + tenantHeader.toString());
 
-		return this.historyListService.count(request);
+		return this.historyListService.searchHistoryCount(request);
 	}
 
 }

@@ -34,8 +34,8 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
@@ -86,7 +86,7 @@ public class HistoryListTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						HistoryListReq req = new HistoryListReq();
+						HistoryListSacReq req = new HistoryListSacReq();
 						req.setTenantId("S01"); // 테넌트ID
 						req.setInsdUsermbrNo("IF1423020847420091202152309"); // 사용자번호
 						req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
@@ -99,10 +99,10 @@ public class HistoryListTest {
 
 						return req;
 					}
-				}).success(HistoryListRes.class, new SuccessCallback() {
+				}).success(HistoryListSacRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						HistoryListRes res = (HistoryListRes) result;
+						HistoryListSacRes res = (HistoryListSacRes) result;
 
 						assertThat(res, notNullValue());
 					}
@@ -123,7 +123,7 @@ public class HistoryListTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						HistoryListReq req = new HistoryListReq();
+						HistoryListSacReq req = new HistoryListSacReq();
 						req.setTenantId("S01"); // 테넌트ID
 						req.setInsdUsermbrNo("IF1423020847420091202152309"); // 사용자번호
 						req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
@@ -136,10 +136,10 @@ public class HistoryListTest {
 
 						return req;
 					}
-				}).success(HistoryListRes.class, new SuccessCallback() {
+				}).success(HistoryListSacRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						HistoryListRes res = (HistoryListRes) result;
+						HistoryListSacRes res = (HistoryListSacRes) result;
 
 						assertThat(res, notNullValue());
 					}

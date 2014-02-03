@@ -16,27 +16,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.purchase.client.history.sci.HistorySCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountReqSC;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountResSC;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListReqSC;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListResSC;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistoryProductCountSC;
-import com.skplanet.storeplatform.purchase.client.history.vo.HistorySC;
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.History;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProductCount;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryProductList;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryCountScRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySac;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductCountSac;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
 
@@ -46,10 +42,9 @@ import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificP
  * Updated on : 2014-01-10 Updated by : 양주원, 엔텔스.
  */
 @Service
-@Transactional
 public class HistoryListServiceImpl implements HistoryListService {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private HistorySCI historySci;
@@ -64,20 +59,20 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 *            구매내역요청
 	 * @param requestHeader
 	 *            공통헤더정보
-	 * @return HistoryListRes
+	 * @return HistoryListSacRes
 	 */
 	@Override
-	public HistoryListRes list(HistoryListReq request, SacRequestHeader requestHeader) {
-		// logger.debug("list : {}", historyListReq);
+	public HistoryListSacRes searchHistoryList(HistoryListSacReq request, SacRequestHeader requestHeader) {
+		this.LOGGER.debug("HistoryListSacRes : {}", request);
 
 		// SC request/response VO
-		HistoryListReqSC scRequest = new HistoryListReqSC();
-		HistoryListResSC scResponse = new HistoryListResSC();
+		HistoryListScReq scRequest = new HistoryListScReq();
+		HistoryListScRes scResponse = new HistoryListScRes();
 
 		// SAC Response VO
-		HistoryListRes response = new HistoryListRes();
-		List<History> sacHistoryList = new ArrayList<History>();
-		History history = new History();
+		HistoryListSacRes response = new HistoryListSacRes();
+		List<HistorySac> sacHistoryList = new ArrayList<HistorySac>();
+		HistorySac historySac = new HistorySac();
 
 		String prodArray = "";
 
@@ -93,8 +88,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		List<String> prodList = new ArrayList<String>();
 		if (request.getProductList() != null && request.getProductList().size() > 0) {
-			for (HistoryProductList obj : request.getProductList()) {
-				if (!StringUtil.isEmpty(obj.getProdId())) {
+			for (ProductListSac obj : request.getProductList()) {
+				if (!StringUtils.isEmpty(obj.getProdId())) {
 					prodList.add(obj.getProdId());
 				}
 			}
@@ -105,98 +100,102 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setOffset(request.getOffset());
 		scRequest.setCount(request.getCount());
 
-		// SC Call
-		scResponse = this.historySci.listHistory(scRequest);
+		try {
+			// SC Call
+			scResponse = this.historySci.searchHistoryList(scRequest);
+		} catch (Exception ex) {
+			// TODO : 추후 메세지 추가후 처리함
+			throw new StorePlatformException("구매SC 호출중 오류발생", ex);
+		}
 
 		if (scResponse.getHistoryList().size() <= 0) {
 			// [SAC 구매] 조건에 맞는 데이터가 존재 하지 않습니다.
 			throw new StorePlatformException("SAC_PUR_0100");
 		}
 
+		// List<HistorySC> scHistoryList = scResponse.getHistoryList();
 		// SC객체를 SAC객체로 맵핑작업
-		List<HistorySC> scHistoryList = scResponse.getHistoryList();
+		for (HistorySc obj : scResponse.getHistoryList()) {
 
-		for (HistorySC obj : scHistoryList) {
-
-			history = new History();
+			historySac = new HistorySac();
 
 			// 구매정보 set
-			history.setTenantId(obj.getTenantId());
-			history.setSystemId(obj.getSystemId());
-			history.setPrchsId(obj.getPrchsId());
-			history.setPrchsDtlId(obj.getPrchsDtlId());
-			history.setUseTenantId(obj.getUseTenantId());
-			history.setUseInsdUsermbrNo(obj.getUseInsdUsermbrNo());
-			history.setUseInsdDeviceId(obj.getUseInsdDeviceId());
-			history.setPrchsDt(obj.getPrchsDt());
-			history.setTotAmt(obj.getTotAmt());
-			history.setSendInsdUsermbrNo(obj.getSendInsdUsermbrNo());
-			history.setSendInsdDeviceId(obj.getSendInsdDeviceId());
-			history.setRecvDt(obj.getRecvDt());
-			history.setProdId(obj.getProdId());
-			history.setProdAmt(obj.getProdAmt());
-			history.setProdQty(obj.getProdQty());
-			history.setTenantProdGrpCd(obj.getTenantProdGrpCd());
-			history.setStatusCd(obj.getStatusCd());
-			history.setUseStartDt(obj.getUseStartDt());
-			history.setUseExprDt(obj.getUseExprDt());
-			history.setHidingYn(obj.getHidingYn());
-			history.setCancelReqPathCd(obj.getCancelReqPathCd());
-			history.setCancelDt(obj.getCancelDt());
-			history.setCpnPublishCd(obj.getCpnPublishCd());
-			history.setCpnDlvUrl(obj.getCpnDlvUrl());
-			history.setPrchsCaseCd(obj.getPrchsCaseCd());
-			history.setRePrchsPmtYn(obj.getRePrchsPmtYn());
-			history.setDwldStartDt(obj.getDwldStartDt());
-			history.setDwldExprDt(obj.getDwldExprDt());
-			history.setPrchsProdType(obj.getPrchsProdType());
-			history.setFixrateProdId(obj.getFixrateProdId());
+			historySac.setTenantId(obj.getTenantId());
+			historySac.setSystemId(obj.getSystemId());
+			historySac.setPrchsId(obj.getPrchsId());
+			historySac.setPrchsDtlId(obj.getPrchsDtlId());
+			historySac.setUseTenantId(obj.getUseTenantId());
+			historySac.setUseInsdUsermbrNo(obj.getUseInsdUsermbrNo());
+			historySac.setUseInsdDeviceId(obj.getUseInsdDeviceId());
+			historySac.setPrchsDt(obj.getPrchsDt());
+			historySac.setTotAmt(obj.getTotAmt());
+			historySac.setSendInsdUsermbrNo(obj.getSendInsdUsermbrNo());
+			historySac.setSendInsdDeviceId(obj.getSendInsdDeviceId());
+			historySac.setRecvDt(obj.getRecvDt());
+			historySac.setProdId(obj.getProdId());
+			historySac.setProdAmt(obj.getProdAmt());
+			historySac.setProdQty(obj.getProdQty());
+			historySac.setTenantProdGrpCd(obj.getTenantProdGrpCd());
+			historySac.setStatusCd(obj.getStatusCd());
+			historySac.setUseStartDt(obj.getUseStartDt());
+			historySac.setUseExprDt(obj.getUseExprDt());
+			historySac.setHidingYn(obj.getHidingYn());
+			historySac.setCancelReqPathCd(obj.getCancelReqPathCd());
+			historySac.setCancelDt(obj.getCancelDt());
+			historySac.setCpnPublishCd(obj.getCpnPublishCd());
+			historySac.setCpnDlvUrl(obj.getCpnDlvUrl());
+			historySac.setPrchsCaseCd(obj.getPrchsCaseCd());
+			historySac.setRePrchsPmtYn(obj.getRePrchsPmtYn());
+			historySac.setDwldStartDt(obj.getDwldStartDt());
+			historySac.setDwldExprDt(obj.getDwldExprDt());
+			historySac.setPrchsProdType(obj.getPrchsProdType());
+			historySac.setFixrateProdId(obj.getFixrateProdId());
 
 			// 수신자 정보 set
-			history.setRecvTenantId(obj.getRecvTenantId());
-			history.setRecvInsdUsermbrNo(obj.getRecvInsdUsermbrNo());
-			history.setRecvInsdDeviceId(obj.getRecvInsdDeviceId());
+			historySac.setRecvTenantId(obj.getRecvTenantId());
+			historySac.setRecvInsdUsermbrNo(obj.getRecvInsdUsermbrNo());
+			historySac.setRecvInsdDeviceId(obj.getRecvInsdDeviceId());
 
 			// 정액제 정보 set
-			history.setPaymentStartDt(obj.getPaymentStartDt());
-			history.setPaymentEndDt(obj.getPaymentEndDt());
-			history.setAfterPaymentDt(obj.getAfterPaymentDt());
-			history.setClosedCd(obj.getClosedCd());
-			history.setClosedDt(obj.getClosedDt());
-			history.setClosedReasonCd(obj.getClosedReasonCd());
-			history.setClosedReqPathCd(obj.getClosedReqPathCd());
+			historySac.setPaymentStartDt(obj.getPaymentStartDt());
+			historySac.setPaymentEndDt(obj.getPaymentEndDt());
+			historySac.setAfterPaymentDt(obj.getAfterPaymentDt());
+			historySac.setPrchsTme(obj.getPrchsTme());
+			historySac.setClosedCd(obj.getClosedCd());
+			historySac.setClosedDt(obj.getClosedDt());
+			historySac.setClosedReasonCd(obj.getClosedReasonCd());
+			historySac.setClosedReqPathCd(obj.getClosedReqPathCd());
 
-			sacHistoryList.add(history);
+			sacHistoryList.add(historySac);
 
 			// 상품정보 조회를 위한 상품ID 셋팅
-			prodArray = prodArray + history.getProdId() + "+";
+			prodArray = prodArray + historySac.getProdId() + "+";
 		}
 
-		CategorySpecificReq productReq = new CategorySpecificReq();
-		productReq.setList(prodArray);
-
-		// TODO : 테스트용 데이터 받기
-		productReq.setDummy("dummy");
-
-		// 상품정보조회
-		CategorySpecificRes productRes = this.productService.getSpecificProductList(productReq, requestHeader);
-
-		List<Product> resProdList = productRes.getProductList();
-
-		for (History obj : sacHistoryList) {
-
-			for (Product product : resProdList) {
-
-				if (obj.getProdId().equals(product.getIdentifier().getText())) {
-					// obj.setProduct(product); //
-					obj.setProdNm(product.getTitle().getText());
-					obj.setGrade(product.getRights().getGrade());
-					break;
-				}
-			}
-		}
-
+		// CategorySpecificReq productReq = new CategorySpecificReq();
+		// this.logger.debug("#######################################" + prodArray);
+		// productReq.setList(prodArray);
+		//
+		// // TODO : 테스트용 데이터 받기
+		// // productReq.setDummy("dummy");
+		//
+		// // 상품정보조회
+		// CategorySpecificRes productRes = this.productService.getSpecificProductList(productReq, requestHeader);
+		//
+		// List<Product> resProdList = productRes.getProductList();
 		// this.logger.debug("prodList ==== " + resProdList.toString());
+		// for (History obj : sacHistoryList) {
+		//
+		// for (Product product : resProdList) {
+		//
+		// if (obj.getProdId().equals(product.getIdentifierList().get(0).getText())) {
+		// // obj.setProduct(product); //
+		// obj.setProdNm(product.getTitle().getText());
+		// obj.setGrade(product.getRights().getGrade());
+		// break;
+		// }
+		// }
+		// }
 
 		response.setHistoryList(sacHistoryList);
 		response.setTotalCnt(scResponse.getTotalCnt());
@@ -210,20 +209,20 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 * 
 	 * @param request
 	 *            구매내역요청
-	 * @return HistoryCountRes
+	 * @return HistoryCountSacRes
 	 */
 	@Override
-	public HistoryCountRes count(HistoryCountReq request) {
+	public HistoryCountSacRes searchHistoryCount(HistoryCountSacReq request) {
 		// logger.debug("list : {}", historyListReq);
 
 		// SC request/response VO
-		HistoryCountReqSC scRequest = new HistoryCountReqSC();
-		HistoryCountResSC scResponse = new HistoryCountResSC();
+		HistoryCountScReq scRequest = new HistoryCountScReq();
+		HistoryCountScRes scResponse = new HistoryCountScRes();
 
 		// SAC Response VO
-		HistoryCountRes response = new HistoryCountRes();
-		List<HistoryProductCount> sacProdList = new ArrayList<HistoryProductCount>();
-		HistoryProductCount historyProductCount = new HistoryProductCount();
+		HistoryCountSacRes response = new HistoryCountSacRes();
+		List<ProductCountSac> sacProdList = new ArrayList<ProductCountSac>();
+		ProductCountSac productCountSac = new ProductCountSac();
 
 		// SC Request Set
 		scRequest.setTenantId(request.getTenantId());
@@ -237,8 +236,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		List<String> prodList = new ArrayList<String>();
 		if (request.getProductList() != null && request.getProductList().size() > 0) {
-			for (HistoryProductList obj : request.getProductList()) {
-				if (!StringUtil.isEmpty(obj.getProdId())) {
+			for (ProductListSac obj : request.getProductList()) {
+				if (!StringUtils.isEmpty(obj.getProdId())) {
 					prodList.add(obj.getProdId());
 				}
 			}
@@ -248,15 +247,15 @@ public class HistoryListServiceImpl implements HistoryListService {
 		scRequest.setHidingYn(request.getHidingYn());
 
 		// SC Call
-		scResponse = this.historySci.getHistoryCount(scRequest);
+		scResponse = this.historySci.searchHistoryCount(scRequest);
 
 		if (scResponse.getCntList() != null && scResponse.getCntList().size() > 0) {
-			for (HistoryProductCountSC obj : scResponse.getCntList()) {
-				historyProductCount = new HistoryProductCount();
-				historyProductCount.setProdId(obj.getProdId());
-				historyProductCount.setProdCount(obj.getProdCount());
+			for (ProductCountSc obj : scResponse.getCntList()) {
+				productCountSac = new ProductCountSac();
+				productCountSac.setProdId(obj.getProdId());
+				productCountSac.setProdCount(obj.getProdCount());
 
-				sacProdList.add(historyProductCount);
+				sacProdList.add(productCountSac);
 			}
 		}
 
