@@ -235,7 +235,7 @@ public class VodServceImpl implements VodService {
 
 		if(vodDetail.getSvcStartDt() != null) {
 			date = new Date();
-			date.setType(DisplayConstants.DP_DATE_SALE_REG);
+			date.setType(DisplayConstants.DP_DATE_RELEASE);
 			date.setText(sdf.format(vodDetail.getSvcStartDt()));
 			dateList.add(date);
 		}
@@ -475,8 +475,8 @@ public class VodServceImpl implements VodService {
 			// 상품 설명
 			//-------------------------------------------
 			subProduct.setProductExplain(vodDetail.getProdBaseDesc());
-			//subProduct.setProductDetailExplain(vodDetail.getProdDtlDesc());
-			//subProduct.setProductIntroduction(vodDetail.getProdIntrDscr());
+			subProduct.setProductDetailExplain(vodDetail.getProdDtlDesc());
+			subProduct.setProductIntroduction(vodDetail.getProdIntrDscr());
 
 
 			//-------------------------------------------
@@ -552,7 +552,7 @@ public class VodServceImpl implements VodService {
 
 			if(vodDetail.getSvcStartDt() != null) {
 				date = new Date();
-				date.setType(DisplayConstants.DP_DATE_SALE_REG);
+				date.setType(DisplayConstants.DP_DATE_RELEASE);
 				date.setText(sdf.format(vodDetail.getSvcStartDt()));
 				dateList.add(date);
 			}
