@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
@@ -46,6 +47,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
  * Updated on : 2013. 12. 23. Updated by : 김형식, SK 플래닛.
  */
 @Service
+@Transactional
 public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
