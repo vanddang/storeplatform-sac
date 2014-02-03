@@ -984,9 +984,9 @@ public class IdpServiceImpl implements IdpService {
 			// 기존 모바일회원과 웹아이디회원 실명인증 정보처리
 			// DEVICE관련 & 구매내역이관 모바일 회원 탈퇴처리
 
-		} else {
-			responseResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
-			responseResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+		} else { // 회원정보가 없어도 성공으로 처리
+			responseResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+			responseResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 		}
 
 		ImResult imResult = new ImResult();
