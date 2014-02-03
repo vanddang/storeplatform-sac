@@ -14,17 +14,15 @@ import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
 
 /**
  * <pre>
  * 쇼핑 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 public class ShoppingThemeRes extends CommonInfo {
 	/**
@@ -33,6 +31,7 @@ public class ShoppingThemeRes extends CommonInfo {
 	private CommonResponse commonResponse;
 	private static final long serialVersionUID = 1L;
 	private List<Promotion> promotionList;
+	private List<Product> productList;
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
@@ -48,6 +47,14 @@ public class ShoppingThemeRes extends CommonInfo {
 
 	public void setPromotionList(List<Promotion> promotionList) {
 		this.promotionList = promotionList;
+	}
+
+	public List<Product> getProductList() {
+		return this.productList;
+	}
+
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
 	}
 
 }
