@@ -29,6 +29,15 @@ public class MusicDetail {
     private String agencyNm;
     private String chnlCompNm;
     private String outsdContentsId;
+    private String thmPath;
+
+    public String getThmPath() {
+        return thmPath;
+    }
+
+    public void setThmPath(String thmPath) {
+        this.thmPath = thmPath;
+    }
 
     public String getEpsdId() {
         return epsdId;

@@ -3,10 +3,10 @@ package com.skplanet.storeplatform.sac.display.music.controller.binder;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
-import org.springframework.stereotype.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,11 +46,10 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     }
 
     @Override
-    public void mapThumbnail(Product product) {
-        // Source List TODO under cons.
+    public void mapThumbnail(Product product, MusicDetail musicDetail) {
         Source source = new Source();
-        source.setMediaType("image/png");
-        source.setUrl("http://wap.tstore.co.kr/SMILE_DATA7/PMUSIC/201401/02/0002074441/14/0003894669/14/10_0002074441_200_200_1701_200x200_R180x180.PNG");
+        source.setUrl(musicDetail.getThmPath());
+        source.setMediaType(DisplayCommonUtil.getMimeType(musicDetail.getThmPath()));
         product.setSourceList(new ArrayList<Source>(Arrays.asList(source)));
     }
 

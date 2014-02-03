@@ -71,7 +71,7 @@ public class MusicController {
 
         musicDetailBinder.mapBasicInfo(product, musicDetail);
         musicDetailBinder.mapMenu(product, menuList);
-        musicDetailBinder.mapThumbnail(product);
+        musicDetailBinder.mapThumbnail(product, musicDetail);
         musicDetailBinder.mapMusic(product, musicDetail, contentList);
     }
 

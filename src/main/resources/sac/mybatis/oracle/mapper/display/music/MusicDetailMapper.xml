@@ -28,7 +28,8 @@
             , 'PD004404', 4 ) AS PROD_GRD,
             MM.AGENCY_NM,
             MM.CHNL_COMP_NM,
-            MM.OUTSD_CONTENTS_ID
+            MM.OUTSD_CONTENTS_ID,
+            PI.FILE_PATH || PI.FILE_NM AS THM_PATH
         FROM TB_DP_PROD CPD
             INNER JOIN TB_DP_PROD_RSHP RS
                 ON RS.PROD_ID = CPD.PROD_ID
@@ -38,6 +39,8 @@
                 ON EPD.PROD_ID = MM.PROD_ID
             INNER JOIN TB_DP_PROD_DESC PDESC
                 ON PDESC.PROD_ID = EPD.PROD_ID
+            LEFT OUTER JOIN TB_DP_PROD_IMG PI
+                ON PI.PROD_ID = CPD.PROD_ID AND PI.EXPO_ORD = 1 AND PI.LANG_CD = PDESC.LANG_CD
             INNER JOIN TB_DP_TENANT_PROD TP
                 ON TP.PROD_ID = EPD.PROD_ID
             INNER JOIN TB_DP_TENANT_PROD_PRICE TPRC
@@ -51,6 +54,7 @@
               AND TP.TENANT_ID = #{tenantId}
               AND PDESC.LANG_CD = #{langCd}
               AND CPD.PROD_ID = #{channelId}
+              AND PI.IMG_CD = 'DP000162' -- 곡 이미지
               AND RS.PROD_RSHP_CD = 'DP010802'
               AND TP.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')
               AND TP.EXPO_YN = 'Y'

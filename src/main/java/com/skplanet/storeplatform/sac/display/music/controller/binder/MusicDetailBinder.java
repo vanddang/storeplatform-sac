@@ -17,7 +17,7 @@ import java.util.List;
 public interface MusicDetailBinder {
     void mapMusic(Product product, MusicDetail musicDetail, List<SubContent> contentList);
 
-    void mapThumbnail(Product product);
+    void mapThumbnail(Product product, MusicDetail musicDetail);
 
     void mapMenu(Product product, List<MenuItem> menuList);
 
