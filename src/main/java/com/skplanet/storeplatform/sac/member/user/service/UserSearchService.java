@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -17,7 +18,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -44,7 +44,19 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 정보 조회
+	 * 회원 기본 정보 조회
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 상세 정보 조회
 	 * </pre>
 	 * 
 	 * @param req
@@ -56,7 +68,7 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
-	 * 회원 기본정보 조회 SC API
+	 * 회원 정보 조회 SC API
 	 * </pre>
 	 * 
 	 * @param req
@@ -80,6 +92,18 @@ public interface UserSearchService {
 	/**
 	 * 
 	 * <pre>
+	 * 회원 징계정보 조회 SC API
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * 
+	 * <pre>
 	 * 디바이스 리스트 조회 SC API
 	 * </pre>
 	 * 
@@ -99,7 +123,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public SearchAgreementRes searchAgreement(SearchAgreementReq req, SacRequestHeader sacHeader) throws Exception;
+	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader) throws Exception;
 
 	/**
 	 * <pre>

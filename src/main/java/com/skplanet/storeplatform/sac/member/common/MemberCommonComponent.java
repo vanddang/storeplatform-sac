@@ -35,7 +35,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -290,11 +289,11 @@ public class MemberCommonComponent {
 	 */
 	public SearchAgreementRes getSearchAgreement(String userKey, SacRequestHeader sacHeader) throws Exception {
 
-		SearchAgreementReq req = new SearchAgreementReq();
+		DetailReq req = new DetailReq();
 		SearchAgreementRes res = new SearchAgreementRes();
 		req.setUserKey(userKey);
 
-		res = this.userSearchService.searchAgreement(req, sacHeader);
+		res = this.userSearchService.searchUserAgreement(req, sacHeader);
 
 		return res;
 	}
