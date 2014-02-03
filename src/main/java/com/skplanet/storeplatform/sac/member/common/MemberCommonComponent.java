@@ -91,14 +91,21 @@ public class MemberCommonComponent {
 	 * @param msisdn
 	 *            msisdn
 	 * @return String
-	 * @throws Exception
-	 *             Exception
 	 */
-	public String getOpmdMdnInfo(String msisdn) throws Exception { // 2014. 01. 09. 김다슬, 인크로스. 수정
-		GetOpmdReq req = new GetOpmdReq();
-		req.setMsisdn(msisdn);
+	public String getOpmdMdnInfo(String msisdn) { // 2014. 01. 09. 김다슬, 인크로스. 수정
+		/**
+		 * TODO try catch 절은 삭제 해야함.
+		 */
+		try {
 
-		return this.miscellaneousService.getOpmd(req).getMsisdn();
+			GetOpmdReq req = new GetOpmdReq();
+			req.setMsisdn(msisdn);
+
+			return this.miscellaneousService.getOpmd(req).getMsisdn();
+
+		} catch (Exception e) {
+			throw new StorePlatformException("미정의", e);
+		}
 	}
 
 	/**
@@ -392,8 +399,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
