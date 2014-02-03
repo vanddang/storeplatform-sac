@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceList;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceItemSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 
 /**
@@ -54,9 +54,9 @@ public class PurchaseExistenceControllerTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						ExistenceReq existenceReq = new ExistenceReq();
-						List<ExistenceList> list = new ArrayList<ExistenceList>();
-						ExistenceList existenceList = new ExistenceList();
+						ExistenceSacReq existenceReq = new ExistenceSacReq();
+						List<ExistenceItemSac> list = new ArrayList<ExistenceItemSac>();
+						ExistenceItemSac existenceList = new ExistenceItemSac();
 
 						existenceReq.setTenantId("S01");
 						existenceReq.setInsdUsermbrNo("IW1023795408420101206143202");
@@ -67,7 +67,7 @@ public class PurchaseExistenceControllerTest {
 						existenceList.setTenantProdGrpCd("");
 						list.add(existenceList);
 
-						existenceList = new ExistenceList();
+						existenceList = new ExistenceItemSac();
 						existenceList.setProdId("H000044893");
 						existenceList.setTenantProdGrpCd("");
 						list.add(existenceList);
@@ -75,7 +75,7 @@ public class PurchaseExistenceControllerTest {
 						// existenceReq.setExistenceList(list);
 						return existenceReq;
 					}
-				}).success(ExistenceListRes.class, new SuccessCallbackForJson() {
+				}).success(ExistenceListSacRes.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
@@ -84,7 +84,7 @@ public class PurchaseExistenceControllerTest {
 					@Override
 					public void success(Object result) throws Exception {
 						@SuppressWarnings("unchecked")
-						ExistenceListRes existenceListRes = (ExistenceListRes) result;
+						ExistenceListSacRes existenceListRes = (ExistenceListSacRes) result;
 						for (int i = 0; i < existenceListRes.getExistenceListRes().size(); i++) {
 							PurchaseExistenceControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", existenceListRes

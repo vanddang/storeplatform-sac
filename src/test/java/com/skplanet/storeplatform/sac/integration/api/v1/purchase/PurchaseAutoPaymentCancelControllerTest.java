@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacRes;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 
 /**
@@ -50,7 +50,7 @@ public class PurchaseAutoPaymentCancelControllerTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						AutoPaymentCancelReq autoPaymentCancelReq = new AutoPaymentCancelReq();
+						AutoPaymentCancelSacReq autoPaymentCancelReq = new AutoPaymentCancelSacReq();
 
 						autoPaymentCancelReq.setTenantId("S01");
 						autoPaymentCancelReq.setInsdUsermbrNo("IF1423218743620101219191957");
@@ -61,7 +61,7 @@ public class PurchaseAutoPaymentCancelControllerTest {
 						autoPaymentCancelReq.setClosedReqPathCd("OR000499");
 						return autoPaymentCancelReq;
 					}
-				}).success(AutoPaymentCancelRes.class, new SuccessCallbackForJson() {
+				}).success(AutoPaymentCancelSacRes.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
@@ -69,7 +69,7 @@ public class PurchaseAutoPaymentCancelControllerTest {
 
 					@Override
 					public void success(Object result) throws Exception {
-						AutoPaymentCancelRes autoPaymentCancelRes = (AutoPaymentCancelRes) result;
+						AutoPaymentCancelSacRes autoPaymentCancelRes = (AutoPaymentCancelSacRes) result;
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + autoPaymentCancelRes.getPrchsId());
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + autoPaymentCancelRes.getResultYn());
 						assertThat(autoPaymentCancelRes, notNullValue());
