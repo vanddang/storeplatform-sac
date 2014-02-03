@@ -635,9 +635,12 @@ public class VodServceImpl implements VodService {
 
 			runningTime.setText(String.valueOf(vodDetail.getEpsdPlayTm()));
 			vod.setRunningTime(runningTime);
-			chapter.setUnit(vodDetail.getChapterUnit());
-			chapter.setText(Integer.parseInt(vodDetail.getChapter()));
 
+			chapter.setUnit(vodDetail.getChapterUnit());
+			if(StringUtils.isNotEmpty(vodDetail.getChapter())) { //null 일 경우 NumberFormatExceptio 발생
+				chapter.setText(Integer.parseInt(vodDetail.getChapter()));
+			}
+			vod.setChapter(chapter);
 
 			/** 일반화질 정보 */
 			if (StringUtils.isNotEmpty(vodDetail.getNmSubContsId())) {
@@ -672,7 +675,6 @@ public class VodServceImpl implements VodService {
 				videoInfo.setVersion(vodDetail.getHdProdVer());
 				videoInfoList.add(videoInfo);
 			}
-			vod.setChapter(chapter);
 			vod.setVideoInfoList(videoInfoList);
 			product.setVod(vod);
 

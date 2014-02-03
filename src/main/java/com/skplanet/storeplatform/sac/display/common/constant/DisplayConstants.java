@@ -282,6 +282,8 @@ public class DisplayConstants {
 	public static final String DP_DATE_REG = "date/reg";
 	/** 판매등록 날짜 */
 	public static final String DP_DATE_SALE_REG = "date/saleReg";
+	/** 개봉일 */
+	public static final String DP_DATE_RELEASE = "date/release";
 
 	// ////////////////////////////////// ETC //////////////////////////////////////////
 
