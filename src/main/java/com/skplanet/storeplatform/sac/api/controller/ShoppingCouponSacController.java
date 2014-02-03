@@ -81,9 +81,9 @@ public class ShoppingCouponSacController {
 		this.log.debug("apiCouponInterface Controller started!!");
 		this.log.debug("----------------------------------------------------------------");
 		CouponRes couponRes = new CouponRes();
-		ErrorData errorData = new ErrorData();
+
 		try {
-			this.dePloy(couponReq, couponRes, errorData);
+			this.dePloy(couponReq, couponRes);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,12 +114,12 @@ public class ShoppingCouponSacController {
 
 	}
 
-	public boolean dePloy(CouponReq couponReq, CouponRes couponRes, ErrorData errorData) throws Exception {
+	public boolean dePloy(CouponReq couponReq, CouponRes couponRes) throws Exception {
 
 		this.log.info("<CouponControl> dePloy...");
 
 		boolean result = false;
-
+		ErrorData errorData = new ErrorData();
 		Map<String, String> map = null;
 		List<CouponRes> couponList = new ArrayList<CouponRes>();
 		try {
