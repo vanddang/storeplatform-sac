@@ -107,12 +107,6 @@ public class HistoryListServiceImpl implements HistoryListService {
 			throw new StorePlatformException("구매SC 호출중 오류발생", ex);
 		}
 
-		if (scResponse.getHistoryList().size() <= 0) {
-			// [SAC 구매] 조건에 맞는 데이터가 존재 하지 않습니다.
-			// throw new StorePlatformException("SAC_PUR_0100");
-		}
-
-		// List<HistorySC> scHistoryList = scResponse.getHistoryList();
 		// SC객체를 SAC객체로 맵핑작업
 		for (HistorySc obj : scResponse.getHistoryList()) {
 
