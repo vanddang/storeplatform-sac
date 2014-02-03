@@ -106,6 +106,12 @@
         <level value="OFF" /> 
     </logger>
     
+    <!-- rabbit mq BlockingQueue INFO 로그 -->
+    <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
     <root>
         <level value="INFO" />
         <appender-ref ref="CONSOLE" />

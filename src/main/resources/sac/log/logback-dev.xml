@@ -90,7 +90,6 @@
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     
-    <!-- 기본jdbc 로그 사용 안함 -->
     <logger name="jdbc.resultset" additivity="false">
         <level value="INFO" /> 
     </logger>
@@ -99,6 +98,12 @@
     </logger>
     <logger name="jdbc.sqltiming" additivity="false">
         <level value="INFO" /> 
+    </logger>
+    
+    <!-- rabbit mq BlockingQueue INFO 로그 -->
+    <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     
     <root>
