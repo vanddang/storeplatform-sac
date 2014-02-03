@@ -20,24 +20,24 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 12. 20. Updated by : 조용진, 엔텔스.
  */
-public class HidingListRes extends CommonInfo implements Serializable {
+public class HidingListSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<HidingRes> hidingRes; // 숨김처리 응답리스트
+	private List<HidingSacRes> hidingSacRes; // 숨김처리 응답리스트
 
 	/**
-	 * @return the hidingRes
+	 * @return the hidingSacRes
 	 */
-	public List<HidingRes> getHidingRes() {
-		return this.hidingRes;
+	public List<HidingSacRes> getHidingSacRes() {
+		return this.hidingSacRes;
 	}
 
 	/**
-	 * @param hidingRes
-	 *            the hidingRes to set
+	 * @param hidingSacRes
+	 *            the hidingSacRes to set
 	 */
-	public void setHidingRes(List<HidingRes> hidingRes) {
-		this.hidingRes = hidingRes;
+	public void setHidingSacRes(List<HidingSacRes> hidingSacRes) {
+		this.hidingSacRes = hidingSacRes;
 	}
 
 }

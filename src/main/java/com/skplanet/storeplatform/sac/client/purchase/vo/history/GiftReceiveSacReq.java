@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
  */
-public class GiftReceiveReq extends CommonInfo implements Serializable {
+public class GiftReceiveSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
@@ -35,12 +35,6 @@ public class GiftReceiveReq extends CommonInfo implements Serializable {
 	@NotNull
 	@NotEmpty
 	private String sendDeviceNo; // 디바이스 번호
-	@NotNull
-	@NotEmpty
-	private String recvMbrNo; // 회원번호
-	@NotNull
-	@NotEmpty
-	private String recvDeviceNo; // 디바이스 번호
 	@NotNull
 	@NotEmpty
 	private String prodId; // 상품 아이디
@@ -106,36 +100,6 @@ public class GiftReceiveReq extends CommonInfo implements Serializable {
 	 */
 	public void setSendDeviceNo(String sendDeviceNo) {
 		this.sendDeviceNo = sendDeviceNo;
-	}
-
-	/**
-	 * @return the recvMbrNo
-	 */
-	public String getRecvMbrNo() {
-		return this.recvMbrNo;
-	}
-
-	/**
-	 * @param recvMbrNo
-	 *            the recvMbrNo to set
-	 */
-	public void setRecvMbrNo(String recvMbrNo) {
-		this.recvMbrNo = recvMbrNo;
-	}
-
-	/**
-	 * @return the recvDeviceNo
-	 */
-	public String getRecvDeviceNo() {
-		return this.recvDeviceNo;
-	}
-
-	/**
-	 * @param recvDeviceNo
-	 *            the recvDeviceNo to set
-	 */
-	public void setRecvDeviceNo(String recvDeviceNo) {
-		this.recvDeviceNo = recvDeviceNo;
 	}
 
 	/**

@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 21. Updated by : 조용진, 엔텔스.
  */
-public class PaymentRes extends CommonInfo implements Serializable {
+public class PaymentSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String paymentMtdCd; // 결제방법코드

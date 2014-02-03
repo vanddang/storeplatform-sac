@@ -1,30 +1,32 @@
-/*
- * Copyright (c) 2013 SK planet.
- * All right reserved.
- *
- * This software is the confidential and proprietary information of SK planet.
- * You shall not disclose such Confidential Information and
- * shall use it only in accordance with the terms of the license agreement
- * you entered into with SK planet.
- */
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * 구매내역숨김처리 컴포넌트 응답.
+ * 구매내역숨김처리 컴포넌트 요청.
  * 
  * Updated on : 2014. 12. 20. Updated by : 조용진, 엔텔스.
  */
-public class HidingRes extends CommonInfo implements Serializable {
+public class HidingListSac extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	@NotNull
+	@NotEmpty
 	private String prchsId; // 구매아이디
+	@Min(1)
+	@NotNull
 	private Integer prchsDtlId; // 상품 아이디
-	private String resultYn; // update 성공여부
+	@NotNull
+	@NotEmpty
+	private String hidingYn; // 숨김여부
 
 	/**
 	 * @return the prchsId
@@ -57,18 +59,18 @@ public class HidingRes extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the resultYn
+	 * @return the hidingYn
 	 */
-	public String getResultYn() {
-		return this.resultYn;
+	public String getHidingYn() {
+		return this.hidingYn;
 	}
 
 	/**
-	 * @param resultYn
-	 *            the resultYn to set
+	 * @param hidingYn
+	 *            the hidingYn to set
 	 */
-	public void setResultYn(String resultYn) {
-		this.resultYn = resultYn;
+	public void setHidingYn(String hidingYn) {
+		this.hidingYn = hidingYn;
 	}
 
 }

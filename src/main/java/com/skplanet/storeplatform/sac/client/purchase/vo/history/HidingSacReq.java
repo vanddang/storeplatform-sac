@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -19,23 +21,25 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * 결제내역 요청.
+ * 구매내역숨김처리 컴포넌트 요청.
  * 
- * Updated on : 2014. 01. 21. Updated by : 조용진, 엔텔스.
+ * Updated on : 2014. 12. 20. Updated by : 조용진, 엔텔스.
  */
-public class PaymentReq extends CommonInfo implements Serializable {
+public class HidingSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	private String systemId; // 시스템ID
 	@NotNull
 	@NotEmpty
 	private String insdUsermbrNo; // 회원번호
 	@NotNull
 	@NotEmpty
 	private String insdDeviceId; // 디바이스 번호
-	@NotNull
 	@NotEmpty
-	private String prchsId; // 구매ID
+	@NotNull
+	@Valid
+	private List<HidingListSac> hidingListSac; // 구매내역 숨김 리스트
 
 	/**
 	 * @return the tenantId
@@ -50,6 +54,21 @@ public class PaymentReq extends CommonInfo implements Serializable {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 	/**
@@ -83,18 +102,18 @@ public class PaymentReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the prchsId
+	 * @return the hidingListSac
 	 */
-	public String getPrchsId() {
-		return this.prchsId;
+	public List<HidingListSac> getHidingListSac() {
+		return this.hidingListSac;
 	}
 
 	/**
-	 * @param prchsId
-	 *            the prchsId to set
+	 * @param hidingListSac
+	 *            the hidingListSac to set
 	 */
-	public void setPrchsId(String prchsId) {
-		this.prchsId = prchsId;
+	public void setHidingListSac(List<HidingListSac> hidingListSac) {
+		this.hidingListSac = hidingListSac;
 	}
 
 }
