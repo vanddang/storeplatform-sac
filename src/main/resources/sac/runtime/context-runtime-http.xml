@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:int="http://www.springframework.org/schema/integration"
-    xmlns:int-http="http://www.springframework.org/schema/integration/http"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="
-        http://www.springframework.org/schema/mvc                 http://www.springframework.org/schema/mvc/spring-mvc.xsd
-        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
-        http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/integration/http    http://www.springframework.org/schema/integration/http/spring-integration-http-2.2.xsd 
-        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
-        http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
-        http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd ">
-     
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc 				  http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/integration/http    http://www.springframework.org/schema/integration/http/spring-integration-http-2.2.xsd 
+		http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
+		http://www.springframework.org/schema/util				  http://www.springframework.org/schema/util/spring-util.xsd ">
+ 	
+ 	<import resource="classpath*:runtime/context-runtime-http.xml"/>
+ 	
+ 	<bean class="org.springframework.integration.http.support.DefaultHttpHeaderMapper"> 
+	   <property name="inboundHeaderNames"
+            value="x-sac-guid, x-sac-auth-tenant-key, x-sac-auth-signature, x-sac-auth-timestamp, x-sac-auth-nonce, x-sac-interface-id, x-sac-tenant-id, x-sac-system-id, x-sac-device-info, x-sac-network-info, HTTP_REQUEST_HEADERS" />            
+        <property name="outboundHeaderNames" value="x-sac-result-code, HTTP_RESPONSE_HEADERS" /> 
+	</bean>	 
+ 	
     <int:channel id="defaultPreProcessChannel" />
     
     <!-- SAC Spring Controller 지원으로 인하여 ACL 로직이 변경될 예정이므로 현재(2014.01.02)는 바로 messageRoutChannel로 보냄(SWA 최현식과장) -->
@@ -36,4 +44,5 @@
         <!-- =================================================================================================================================== -->    
         <int:filter discard-channel="httpErrorChannel"  ref="com.skplanet.storeplatform.sac.runtime.flow.service.AuthServiceImpl" method="authorization"/>  
     </int:chain> 
-</beans>
+	 
+</beans> 

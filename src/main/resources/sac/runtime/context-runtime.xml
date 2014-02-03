@@ -15,21 +15,10 @@
         http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
         http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd ">
 
-	<import resource="classpath*:/runtime/context-runtime.xml" />
-
-	<context:component-scan
-		base-package="com.skplanet.storeplatform.framework.integration"
-		name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
-
-	<bean
-		class="org.springframework.integration.http.support.DefaultHttpHeaderMapper">
-		<property name="inboundHeaderNames"
-			value="x-sac-guid, x-sac-auth-tenant-key, x-sac-auth-signature, x-sac-auth-timestamp, x-sac-auth-nonce, x-sac-interface_id, x-sac-device-info, x-sac-network-info, HTTP_REQUEST_HEADERS" />
-        <property name="outboundHeaderNames" value="x-sac-result-code, HTTP_RESPONSE_HEADERS" /> 
-	</bean>
-
+	<context:component-scan base-package="com.skplanet.storeplatform.framework.integration"	name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
+	
+	<context:component-scan base-package="com.skplanet.storeplatform.sac.runtime" name-generator="com.skplanet.storeplatform.framework.core.bean.support.ExtBeanNameGenerator" />
 
 	<!-- 아키텍처 위반 사항 체크하는 클래스, Protobuf DTO와 맵핑되는 VO간의 불일치를 잡아낸다. -->
-	<bean
-		class="com.skplanet.storeplatform.framework.core.helper.ArchitectureDefectChecker" />
+	<bean class="com.skplanet.storeplatform.framework.core.helper.ArchitectureDefectChecker" />
 </beans>

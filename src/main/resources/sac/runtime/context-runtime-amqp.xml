@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/mvc 				  http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/integration/http    http://www.springframework.org/schema/integration/http/spring-integration-http-2.2.xsd 
+		http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
+		http://www.springframework.org/schema/util				  http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
+        http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
+ 	
+ 	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
+ 	
+ 	<bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
+ 	    <constructor-arg>
+            <list>
+                <value>cmsapp.sac.request.sync.content.test0001</value>
+                <value>cmsapp.sac.response.sync.content.test0001</value>
+                <value>tenant1.sac.request.sync.content.test0001</value>
+                <value>tenant1.sac.response.sync.content.test0001</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String">
+            <value>,</value>
+        </constructor-arg>
+ 	</bean>
+ 	
+	<rabbit:queue id="cmsapp.sac.request.sync.content.test0001" name="cmsapp.sac.request.sync.content.test0001" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    <rabbit:queue id="cmsapp.sac.response.sync.content.test0001" name="cmsapp.sac.response.sync.content.test0001" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    
+    <rabbit:queue id="tenant1.sac.request.sync.content.test0001" name="tenant1.sac.request.sync.content.test0001" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    <rabbit:queue id="tenant1.sac.response.sync.content.test0001" name="tenant1.sac.response.sync.content.test0001" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+
+</beans> 

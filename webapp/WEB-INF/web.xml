@@ -11,17 +11,25 @@
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:sac/spring/context-*.xml</param-value>
+        <param-value>
+            classpath:runtime/context-runtime.xml, 
+            classpath:sac/runtime/context-runtime.xml, 
+            classpath:sac/runtime/context-runtime-amqp.xml, 
+            classpath*:sac/spring/context-*.xml 
+        </param-value>
     </context-param>
     <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+        <listener-class>org.springframework.web.context.ContextLoaderListener
+        </listener-class>
     </listener>
     <listener>
-        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+        <listener-class>org.springframework.web.context.request.RequestContextListener
+        </listener-class>
     </listener>
     <filter>
         <filter-name>encoding</filter-name>
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
         <init-param>
             <param-name>encoding</param-name>
             <param-value>utf-8</param-value>
@@ -35,38 +43,44 @@
         <filter-name>encoding</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+ 
     <filter>
         <filter-name>loggingRequestFilter</filter-name>
         <filter-class>com.skplanet.storeplatform.sac.runtime.filter.RequestFilter</filter-class>
     </filter>   
     <filter-mapping>
         <filter-name>loggingRequestFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>     
+        <url-pattern>/internal/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
-        <servlet-name>integration</servlet-name>
+        <servlet-name>runtime</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath*:sac/runtime/context-run*.xml</param-value>
+            <param-value>
+                classpath:sac/runtime/context-runtime-http.xml
+            </param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>integration</servlet-name>
+        <servlet-name>runtime</servlet-name>
         <url-pattern>/</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping> 
+
     <servlet>
         <servlet-name>internal</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath*:sac/runtime/context-res*.xml</param-value>
+            <param-value>classpath:sac/runtime/context-rest.xml</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>internal</servlet-name>
         <url-pattern>/internal/*</url-pattern>
-    </servlet-mapping>      
+    </servlet-mapping>
+    
     <session-config>
         <session-timeout>600</session-timeout>
     </session-config>
