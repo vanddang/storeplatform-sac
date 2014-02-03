@@ -11,12 +11,10 @@ package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.skplanet.storeplatform.external.client.shopping.sci.CouponSCI;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
 /**
  * 쇼핑쿠폰 Repository Implements.
@@ -24,15 +22,12 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacResult;
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
 @Component
-public class ShoppingCouponRepositoryImpl implements ShoppingCouponRepository {
+public class ShoppingRepositoryImpl implements ShoppingRepository {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	CouponSCI couponSCI;
-
 	@Override
-	public UseStatusSacResult getUseStatus(UseStatusSacParam useStatusSacParam) {
+	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam) {
 
 		return null;
 

@@ -16,12 +16,12 @@ import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
  * 
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
-public class UseStatusSacParam extends PurchaseCommonSacParam {
+public class CouponUseStatusSacParam extends PurchaseCommonSacParam {
 
 	private static final long serialVersionUID = 1L;
 
 	private String prchsId;
-	private String cpPublishCd;
+	private String cpnPublishCd;
 
 	/**
 	 * @return the prchsId
@@ -39,18 +39,18 @@ public class UseStatusSacParam extends PurchaseCommonSacParam {
 	}
 
 	/**
-	 * @return the cpPublishCd
+	 * @return the cpnPublishCd
 	 */
-	public String getCpPublishCd() {
-		return this.cpPublishCd;
+	public String getCpnPublishCd() {
+		return this.cpnPublishCd;
 	}
 
 	/**
-	 * @param cpPublishCd
-	 *            the cpPublishCd to set
+	 * @param cpnPublishCd
+	 *            the cpnPublishCd to set
 	 */
-	public void setCpPublishCd(String cpPublishCd) {
-		this.cpPublishCd = cpPublishCd;
+	public void setCpnPublishCd(String cpnPublishCd) {
+		this.cpnPublishCd = cpnPublishCd;
 	}
 
 }

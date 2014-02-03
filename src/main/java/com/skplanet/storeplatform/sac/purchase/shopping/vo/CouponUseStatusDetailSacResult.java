@@ -16,41 +16,41 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
-public class UseStatusDetailSacResult extends CommonInfo {
+public class CouponUseStatusDetailSacResult extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	private String cpPublishCd;
-	private String useStatusCd;
+	private String cpnPublishCd;
+	private String cpnUseStatusCd;
 
 	/**
-	 * @return the cpPublishCd
+	 * @return the cpnPublishCd
 	 */
-	public String getCpPublishCd() {
-		return this.cpPublishCd;
+	public String getCpnPublishCd() {
+		return this.cpnPublishCd;
 	}
 
 	/**
-	 * @param cpPublishCd
-	 *            the cpPublishCd to set
+	 * @param cpnPublishCd
+	 *            the cpnPublishCd to set
 	 */
-	public void setCpPublishCd(String cpPublishCd) {
-		this.cpPublishCd = cpPublishCd;
+	public void setCpnPublishCd(String cpnPublishCd) {
+		this.cpnPublishCd = cpnPublishCd;
 	}
 
 	/**
-	 * @return the useStatusCd
+	 * @return the cpnUseStatusCd
 	 */
-	public String getUseStatusCd() {
-		return this.useStatusCd;
+	public String getCpnUseStatusCd() {
+		return this.cpnUseStatusCd;
 	}
 
 	/**
-	 * @param useStatusCd
-	 *            the useStatusCd to set
+	 * @param cpnUseStatusCd
+	 *            the cpnUseStatusCd to set
 	 */
-	public void setUseStatusCd(String useStatusCd) {
-		this.useStatusCd = useStatusCd;
+	public void setCpnUseStatusCd(String cpnUseStatusCd) {
+		this.cpnUseStatusCd = cpnUseStatusCd;
 	}
 
 }

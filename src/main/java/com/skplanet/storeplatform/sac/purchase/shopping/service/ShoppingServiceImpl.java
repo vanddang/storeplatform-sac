@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingCouponRepository;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
 /**
  * 쇼핑쿠폰 Service Implements.
@@ -24,17 +24,17 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacResult;
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
 @Service
-public class ShoppingCouponServiceImpl implements ShoppingCouponService {
+public class ShoppingServiceImpl implements ShoppingService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private ShoppingCouponRepository shoppingCouponRepository;
+	private ShoppingRepository shoppingRepository;
 
 	@Override
-	public UseStatusSacResult getUseStatus(UseStatusSacParam useStatusSacParam) {
+	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam) {
 
-		return this.shoppingCouponRepository.getUseStatus(useStatusSacParam);
+		return this.shoppingRepository.getCouponUseStatus(couponUseStatusSacParam);
 
 	}
 

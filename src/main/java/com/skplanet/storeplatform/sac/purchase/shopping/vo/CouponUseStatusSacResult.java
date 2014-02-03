@@ -18,25 +18,25 @@ import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacResult
  * 
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
-public class UseStatusSacResult extends PurchaseCommonSacResult {
+public class CouponUseStatusSacResult extends PurchaseCommonSacResult {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<UseStatusDetailSacResult> useStatusList;
+	private List<CouponUseStatusDetailSacResult> cpnUseStatusList;
 
 	/**
-	 * @return the useStatusList
+	 * @return the cpnUseStatusList
 	 */
-	public List<UseStatusDetailSacResult> getUseStatusList() {
-		return this.useStatusList;
+	public List<CouponUseStatusDetailSacResult> getCpnUseStatusList() {
+		return this.cpnUseStatusList;
 	}
 
 	/**
-	 * @param useStatusList
-	 *            the useStatusList to set
+	 * @param cpnUseStatusList
+	 *            the cpnUseStatusList to set
 	 */
-	public void setUseStatusList(List<UseStatusDetailSacResult> useStatusList) {
-		this.useStatusList = useStatusList;
+	public void setCpnUseStatusList(List<CouponUseStatusDetailSacResult> cpnUseStatusList) {
+		this.cpnUseStatusList = cpnUseStatusList;
 	}
 
 }

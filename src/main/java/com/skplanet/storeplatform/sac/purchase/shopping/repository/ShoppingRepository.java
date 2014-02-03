@@ -9,15 +9,15 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacParam;
-import com.skplanet.storeplatform.sac.purchase.shopping.vo.UseStatusSacResult;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
 /**
  * 쇼핑쿠폰 Repository Interface.
  * 
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
-public interface ShoppingCouponRepository {
+public interface ShoppingRepository {
 
 	/**
 	 * 
@@ -25,10 +25,10 @@ public interface ShoppingCouponRepository {
 	 * 쇼핑쿠폰 사용유무 조회
 	 * </pre>
 	 * 
-	 * @param useStatusSacParam
-	 *            useStatusSacParam
-	 * @return UseStatusSacResult
+	 * @param couponUseStatusSacParam
+	 *            couponUseStatusSacParam
+	 * @return CouponUseStatusSacResult
 	 */
-	public UseStatusSacResult getUseStatus(UseStatusSacParam useStatusSacParam);
+	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam);
 
 }
