@@ -29,7 +29,7 @@ import com.skplanet.storeplatform.purchase.client.cancel.vo.PurchaseDtlHistoryLi
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParamDetail;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseDetail;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -49,7 +49,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	private ArmsSCI armsSCI;
 
 	@Override
-	public PurchaseCancelParamDetail getPurchaseDtlHistoryList(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelParamDetail getPurchaseDtlHistoryList(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail) {
 
 		PurchaseDtlHistoryListReqSC purchaseDtlHistoryListReqSC = new PurchaseDtlHistoryListReqSC();
@@ -103,7 +103,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	}
 
 	@Override
-	public PurchaseCancelParamDetail cancelPurchase(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelParamDetail cancelPurchase(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail) {
 
 		PurchaseCancelReqSC purchaseCancelReqSC = new PurchaseCancelReqSC();
@@ -130,7 +130,7 @@ public class PurchaseCancelRepositoryImpl implements PurchaseCancelRepository {
 	}
 
 	@Override
-	public PurchaseCancelParamDetail removeLicense(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelParamDetail removeLicense(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail) {
 
 		RemoveLicenseReqEC removeLicenseReq = new RemoveLicenseReqEC();

@@ -15,14 +15,14 @@ import java.util.List;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReq;
 import com.skplanet.storeplatform.sac.client.purchase.cancel.vo.PurchaseCancelReqDetail;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 
 /**
  * 구매 취소 Param VO.
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCancelParam extends PurchaseCommonParam {
+public class PurchaseCancelParam extends PurchaseCommonSacParam {
 
 	private static final long serialVersionUID = 1L;
 

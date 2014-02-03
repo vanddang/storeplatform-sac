@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.cancel.repository;
 
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParamDetail;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 
 /**
  * 구매 취소 repository Interface.
@@ -30,7 +30,7 @@ public interface PurchaseCancelRepository {
 	 *            구매 취소 요청 VO.
 	 * @return PurchaseCancelParamDetail
 	 */
-	public PurchaseCancelParamDetail getPurchaseDtlHistoryList(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelParamDetail getPurchaseDtlHistoryList(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail);
 
 	/**
@@ -44,7 +44,7 @@ public interface PurchaseCancelRepository {
 	 *            구매 취소 요청 VO.
 	 * @return PurchaseCancelParamDetail
 	 */
-	public PurchaseCancelParamDetail cancelPurchase(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelParamDetail cancelPurchase(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail);
 
 	/**
@@ -60,7 +60,7 @@ public interface PurchaseCancelRepository {
 	 * @return PurchaseCancelParamDetail
 	 * @return PurchaseCancelParamDetail
 	 */
-	public PurchaseCancelParamDetail removeLicense(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelParamDetail removeLicense(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail);
 
 }

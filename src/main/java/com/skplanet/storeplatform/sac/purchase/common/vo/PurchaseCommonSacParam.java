@@ -10,7 +10,7 @@
 package com.skplanet.storeplatform.sac.purchase.common.vo;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonReq;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * 
  * Updated on : 2014. 1. 16. Updated by : nTels_cswoo81, nTels.
  */
-public class PurchaseCommonParam extends CommonInfo {
+public class PurchaseCommonSacParam extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,17 +26,18 @@ public class PurchaseCommonParam extends CommonInfo {
 	private String systemId;
 	private String userKey;
 	private String deviceKey;
+	private String langCd;
 
-	public PurchaseCommonParam() {
+	public PurchaseCommonSacParam() {
 
 	}
 
-	public PurchaseCommonParam(SacRequestHeader sacRequestHeader) {
+	public PurchaseCommonSacParam(SacRequestHeader sacRequestHeader) {
 		this.tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		this.systemId = sacRequestHeader.getTenantHeader().getSystemId();
 	}
 
-	public PurchaseCommonParam(SacRequestHeader sacRequestHeader, PurchaseCommonReq purchaseCommonReq) {
+	public PurchaseCommonSacParam(SacRequestHeader sacRequestHeader, PurchaseCommonSacReq purchaseCommonReq) {
 		this.tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		this.systemId = sacRequestHeader.getTenantHeader().getSystemId();
 		this.userKey = purchaseCommonReq.getUserKey();
@@ -101,6 +102,21 @@ public class PurchaseCommonParam extends CommonInfo {
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the langCd
+	 */
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	/**
+	 * @param langCd
+	 *            the langCd to set
+	 */
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
 	}
 
 }

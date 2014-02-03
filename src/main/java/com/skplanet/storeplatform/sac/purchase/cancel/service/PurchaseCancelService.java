@@ -13,7 +13,7 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParam;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParamDetail;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResult;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResultDetail;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 
 /**
  * 구매 취소 Service Interface.
@@ -44,7 +44,7 @@ public interface PurchaseCancelService {
 	 *            구매 취소 요청 VO.
 	 * @return PurchaseCancelResultDetail
 	 */
-	public PurchaseCancelResultDetail cancelPurchaseItem(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelResultDetail cancelPurchaseItem(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail);
 
 }

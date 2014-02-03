@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelParamDeta
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResult;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseCancelResultDetail;
 import com.skplanet.storeplatform.sac.purchase.cancel.vo.PurchaseDetail;
-import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonParam;
+import com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseCommonSacParam;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -85,7 +85,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	}
 
 	@Override
-	public PurchaseCancelResultDetail cancelPurchaseItem(PurchaseCommonParam purchaseCommonParam,
+	public PurchaseCancelResultDetail cancelPurchaseItem(PurchaseCommonSacParam purchaseCommonParam,
 			PurchaseCancelParamDetail purchaseCancelParamDetail) {
 
 		this.logger.debug("구매 취소 tr 시작");
@@ -201,7 +201,7 @@ public class PurchaseCancelServiceImpl implements PurchaseCancelService {
 	 * @param purchaseCancelParamDetail
 	 *            purchaseCancelParamDetail
 	 */
-	private void removeRO(PurchaseCommonParam purchaseCommonParam, PurchaseCancelParamDetail purchaseCancelParamDetail) {
+	private void removeRO(PurchaseCommonSacParam purchaseCommonParam, PurchaseCancelParamDetail purchaseCancelParamDetail) {
 
 		// aom message 발송.
 
