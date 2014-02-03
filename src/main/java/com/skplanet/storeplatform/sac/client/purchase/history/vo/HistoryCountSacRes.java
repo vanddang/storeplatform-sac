@@ -13,13 +13,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
 @JsonSerialize(include = Inclusion.NON_EMPTY)
-public class HistoryCountRes extends CommonInfo {
+public class HistoryCountSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private int totalCnt;
 
-	private List<HistoryProductCount> cntList;
+	private List<ProductCountSac> cntList;
 
 	/**
 	 * @return the totalCnt
@@ -39,7 +39,7 @@ public class HistoryCountRes extends CommonInfo {
 	/**
 	 * @return the cntList
 	 */
-	public List<HistoryProductCount> getCntList() {
+	public List<ProductCountSac> getCntList() {
 		return this.cntList;
 	}
 
@@ -47,7 +47,7 @@ public class HistoryCountRes extends CommonInfo {
 	 * @param cntList
 	 *            the cntList to set
 	 */
-	public void setCntList(List<HistoryProductCount> cntList) {
+	public void setCntList(List<ProductCountSac> cntList) {
 		this.cntList = cntList;
 	}
 

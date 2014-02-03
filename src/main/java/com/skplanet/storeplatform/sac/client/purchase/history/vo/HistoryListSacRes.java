@@ -9,12 +9,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class HistoryListRes extends CommonInfo {
+public class HistoryListSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private int totalCnt;
-	private List<History> historyList;
+	private List<HistorySac> historyList;
 
 	/**
 	 * @return the totalCnt
@@ -34,7 +34,7 @@ public class HistoryListRes extends CommonInfo {
 	/**
 	 * @return the historyList
 	 */
-	public List<History> getHistoryList() {
+	public List<HistorySac> getHistoryList() {
 		return this.historyList;
 	}
 
@@ -42,7 +42,7 @@ public class HistoryListRes extends CommonInfo {
 	 * @param historyList
 	 *            the historyList to set
 	 */
-	public void setHistoryList(List<History> historyList) {
+	public void setHistoryList(List<HistorySac> historyList) {
 		this.historyList = historyList;
 	}
 

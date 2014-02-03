@@ -9,12 +9,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class HistoryProductCount extends CommonInfo implements Serializable {
+public class ProductListSac extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String prodId;
-	private String prodCount;
 
 	/**
 	 * @return the prodId
@@ -29,21 +28,6 @@ public class HistoryProductCount extends CommonInfo implements Serializable {
 	 */
 	public void setProdId(String prodId) {
 		this.prodId = prodId;
-	}
-
-	/**
-	 * @return the prodCount
-	 */
-	public String getProdCount() {
-		return this.prodCount;
-	}
-
-	/**
-	 * @param prodCount
-	 *            the prodCount to set
-	 */
-	public void setProdCount(String prodCount) {
-		this.prodCount = prodCount;
 	}
 
 }

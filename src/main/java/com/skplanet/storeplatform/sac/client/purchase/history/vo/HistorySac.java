@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class History extends CommonInfo implements Serializable {
+public class HistorySac extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -54,6 +54,7 @@ public class History extends CommonInfo implements Serializable {
 	private String paymentStartDt; // 결제시작일시
 	private String paymentEndDt; // 결제종료일시
 	private String afterPaymentDt; // 이후결제일시
+	private String prchsTme; // 회차
 	private String closedCd; // 해지코드
 	private String closedDt; // 해지일시
 	private String closedReasonCd; // 해지사유코드
@@ -84,6 +85,21 @@ public class History extends CommonInfo implements Serializable {
 	 */
 	public String getTenantId() {
 		return this.tenantId;
+	}
+
+	/**
+	 * @return the prchsTme
+	 */
+	public String getPrchsTme() {
+		return this.prchsTme;
+	}
+
+	/**
+	 * @param prchsTme
+	 *            the prchsTme to set
+	 */
+	public void setPrchsTme(String prchsTme) {
+		this.prchsTme = prchsTme;
 	}
 
 	/**

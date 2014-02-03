@@ -14,7 +14,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class HistoryListReq extends CommonInfo {
+public class HistoryListSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class HistoryListReq extends CommonInfo {
 	@NotEmpty
 	private String endDt; // 조회종료일시
 	private String tenantProdGrpCd; // 테넌트상품분류코드
-	private List<HistoryProductList> productList; // 조회 상품PID LIST
+	private List<ProductListSac> productList; // 조회 상품PID LIST
 	private String prchsCaseCd; // 구매유형코드
 	@NotEmpty
 	private String prchsProdType; // 구매상품타입
@@ -164,7 +164,7 @@ public class HistoryListReq extends CommonInfo {
 	/**
 	 * @return the productList
 	 */
-	public List<HistoryProductList> getProductList() {
+	public List<ProductListSac> getProductList() {
 		return this.productList;
 	}
 
@@ -172,7 +172,7 @@ public class HistoryListReq extends CommonInfo {
 	 * @param productList
 	 *            the productList to set
 	 */
-	public void setProductList(List<HistoryProductList> productList) {
+	public void setProductList(List<ProductListSac> productList) {
 		this.productList = productList;
 	}
 
