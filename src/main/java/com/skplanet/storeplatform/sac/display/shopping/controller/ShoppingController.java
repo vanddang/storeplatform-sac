@@ -115,7 +115,7 @@ public class ShoppingController {
 	 */
 	@RequestMapping(value = "/specialSales/productList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getSpecialSalesProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

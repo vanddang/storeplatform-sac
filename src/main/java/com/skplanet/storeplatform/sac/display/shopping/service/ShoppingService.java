@@ -54,7 +54,7 @@ public interface ShoppingService {
 	 * 특정 기획전에 대한 상품 리스트 조회.
 	 * </pre>
 	 */
-	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>

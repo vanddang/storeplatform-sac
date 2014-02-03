@@ -97,7 +97,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdGradeCd())) {
 				req.setProdGradeCd(null);
 			}
-
+			if (req.getOffset() == null) {
+				req.setOffset(1);
+			}
+			if (req.getCount() == null) {
+				req.setCount(1);
+			}
+			req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+			req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 			String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
 
 			// 기준일시 체크
@@ -385,7 +392,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdGradeCd())) {
 				req.setProdGradeCd(null);
 			}
-
+			if (req.getOffset() == null) {
+				req.setOffset(1);
+			}
+			if (req.getCount() == null) {
+				req.setCount(1);
+			}
+			req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+			req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 			resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req, Shopping.class);
 
 			if (resultList != null) {
@@ -659,6 +673,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdGradeCd())) {
 				req.setProdGradeCd(null);
 			}
+			if (req.getOffset() == null) {
+				req.setOffset(1);
+			}
+			if (req.getCount() == null) {
+				req.setCount(1);
+			}
+			req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+			req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 
 			if (req.getOrderedBy().equals("download")) {
 				// 필수 파라미터 체크
@@ -961,6 +983,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getOrderedBy())) {
 			req.setOrderedBy("recent");
 		}
+		if (req.getOffset() == null) {
+			req.setOffset(1);
+		}
+		if (req.getCount() == null) {
+			req.setCount(1);
+		}
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
 
 		if (resultList != null) {
@@ -1011,9 +1042,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * </pre>
 	 */
 	@Override
-	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
+	public ShoppingThemeRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
 		int totalCount = 0;
-		ShoppingRes responseVO = null;
+		ShoppingThemeRes responseVO = null;
 		ShoppingReq requestVO = new ShoppingReq();
 		requestVO.setOffset(1);
 		requestVO.setCount(20);
@@ -1115,7 +1146,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 			product = new Product();
 		}
 
-		responseVO = new ShoppingRes();
+		responseVO = new ShoppingThemeRes();
 		responseVO.setProductList(productList);
 
 		CommonResponse commonResponse = new CommonResponse();
@@ -1155,10 +1186,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
+		if (req.getOffset() == null) {
+			req.setOffset(1);
+		}
+		if (req.getCount() == null) {
+			req.setCount(1);
+		}
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 
 		if (!StringUtils.isEmpty(req.getMenuId())) {
 			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
 		} else {
+			req.setMenuId(null);
 			hotBrandList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
 			for (Shopping hotBrandShopping : hotBrandList) {
 				resultList.add(hotBrandShopping);
@@ -1384,7 +1424,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
-
+		if (req.getOffset() == null) {
+			req.setOffset(1);
+		}
+		if (req.getCount() == null) {
+			req.setCount(1);
+		}
+		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
+		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
 
 		if (resultList != null) {
