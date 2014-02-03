@@ -22,7 +22,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
  */
-public class ExistenceRes extends CommonInfo implements Serializable {
+public class ExistenceSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String prodId; // 상품ID

@@ -20,15 +20,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
  */
-public class ExistenceListRes extends CommonInfo implements Serializable {
+public class ExistenceListSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<ExistenceRes> existenceListRes;
+	private List<ExistenceSacRes> existenceListRes;
 
 	/**
 	 * @return the existenceListRes
 	 */
-	public List<ExistenceRes> getExistenceListRes() {
+	public List<ExistenceSacRes> getExistenceListRes() {
 		return this.existenceListRes;
 	}
 
@@ -36,7 +36,7 @@ public class ExistenceListRes extends CommonInfo implements Serializable {
 	 * @param existenceListRes
 	 *            the existenceListRes to set
 	 */
-	public void setExistenceListRes(List<ExistenceRes> existenceListRes) {
+	public void setExistenceListRes(List<ExistenceSacRes> existenceListRes) {
 		this.existenceListRes = existenceListRes;
 	}
 

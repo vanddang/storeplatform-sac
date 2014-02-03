@@ -10,32 +10,43 @@
 package com.skplanet.storeplatform.sac.client.purchase.vo.history;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * 기구매체크 요청.
+ * 자동결제해치예약 요청.
  * 
- * Updated on : 2013. 12. 28. Updated by : 조용진, 엔텔스.
+ * Updated on : 2014. 01. 15. Updated by : 조용진, 엔텔스.
  */
-public class ExistenceReq extends CommonInfo implements Serializable {
+
+public class AutoPaymentCancelSacReq extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String tenantId; // Tenant ID
+	private String systemId; // 시스템ID
 	@NotNull
 	@NotEmpty
 	private String insdUsermbrNo; // 회원번호
+	@NotNull
+	@NotEmpty
 	private String insdDeviceId; // 디바이스 번호
+	@NotNull
+	@NotEmpty
 	private String prchsId; // 구매ID
-	private List<ExistenceList> existenceList; // 기구매 상품 리스트
+	@NotNull
+	@NotEmpty
+	private String closedCd; // 해지예약코드
+	@NotNull
+	@NotEmpty
+	private String closedReasonCd; // 해지사유 코드
+	@NotNull
+	@NotEmpty
+	private String closedReqPathCd; // 해지요청경로 코드
 
 	/**
 	 * @return the tenantId
@@ -50,6 +61,21 @@ public class ExistenceReq extends CommonInfo implements Serializable {
 	 */
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @return the systemId
+	 */
+	public String getSystemId() {
+		return this.systemId;
+	}
+
+	/**
+	 * @param systemId
+	 *            the systemId to set
+	 */
+	public void setSystemId(String systemId) {
+		this.systemId = systemId;
 	}
 
 	/**
@@ -98,23 +124,48 @@ public class ExistenceReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the existenceList
+	 * @return the closedCd
 	 */
-	public List<ExistenceList> getExistenceList() {
-		return this.existenceList;
+	public String getClosedCd() {
+		return this.closedCd;
 	}
 
 	/**
-	 * @param existenceList
-	 *            the existenceList to set
+	 * @param closedCd
+	 *            the closedCd to set
 	 */
-	public void setExistenceList(List<ExistenceList> existenceList) {
-		this.existenceList = existenceList;
+	public void setClosedCd(String closedCd) {
+		this.closedCd = closedCd;
 	}
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+	/**
+	 * @return the closedReasonCd
+	 */
+	public String getClosedReasonCd() {
+		return this.closedReasonCd;
+	}
+
+	/**
+	 * @param closedReasonCd
+	 *            the closedReasonCd to set
+	 */
+	public void setClosedReasonCd(String closedReasonCd) {
+		this.closedReasonCd = closedReasonCd;
+	}
+
+	/**
+	 * @return the closedReqPathCd
+	 */
+	public String getClosedReqPathCd() {
+		return this.closedReqPathCd;
+	}
+
+	/**
+	 * @param closedReqPathCd
+	 *            the closedReqPathCd to set
+	 */
+	public void setClosedReqPathCd(String closedReqPathCd) {
+		this.closedReqPathCd = closedReqPathCd;
 	}
 
 }
