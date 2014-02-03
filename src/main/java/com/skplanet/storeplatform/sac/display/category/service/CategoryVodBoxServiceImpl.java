@@ -91,9 +91,9 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		if (null == filteredBy || "".equals(filteredBy)) {
 			throw new Exception("filteredBy 는 필수 파라메터 입니다.");
 		}
-		if (null == imageSizeCd || "".equals(imageSizeCd)) {
-			throw new Exception("imageSizeCd 는 필수 파라메터 입니다.");
-		}
+		// if (null == imageSizeCd || "".equals(imageSizeCd)) {
+		// throw new Exception("imageSizeCd 는 필수 파라메터 입니다.");
+		// }
 
 		if (true) {
 
