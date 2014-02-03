@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -20,17 +20,17 @@ public class HistoryListSacReq extends CommonInfo {
 
 	private String tenantId;
 	private String systemId;
-	@NotEmpty
+	@NotBlank
 	private String insdUsermbrNo; // 내부사용자번호
 	private String insdDeviceId; // 내부디바이스ID
-	@NotEmpty
+	@NotBlank
 	private String startDt; // 조회시작일시
-	@NotEmpty
+	@NotBlank
 	private String endDt; // 조회종료일시
 	private String tenantProdGrpCd; // 테넌트상품분류코드
 	private List<ProductListSac> productList; // 조회 상품PID LIST
 	private String prchsCaseCd; // 구매유형코드
-	@NotEmpty
+	@NotBlank
 	private String prchsProdType; // 구매상품타입
 	private String hidingYn; // 숨김여부
 	private String prchsStatusCd; // 구매상태
