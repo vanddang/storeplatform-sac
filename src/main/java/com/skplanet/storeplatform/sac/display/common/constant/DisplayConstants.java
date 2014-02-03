@@ -291,6 +291,8 @@ public class DisplayConstants {
 
 	public static final String DP_NETWORK_RESTRICT = "ota";
 
+	public static final String DP_SHOPPING_DEFAULT_ORDERED_OPTION = "recent";
+
 	/*
 	 * 배너 타입 코드
 	 */
