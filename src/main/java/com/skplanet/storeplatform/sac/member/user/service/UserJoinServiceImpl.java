@@ -953,16 +953,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList.toString());
 
-		/**
-		 * SKT 회원관리번호 추가.
-		 */
-		if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getImMngNum()), "")) {
-			LOGGER.info("## SKT 회원관리번호 추가.");
-			DeviceExtraInfo imMngNum = new DeviceExtraInfo();
-			imMngNum.setExtraProfile(MemberConstants.DEVICE_EXTRA_IMMNGNUM);
-			imMngNum.setExtraProfileValue(majorDeviceInfo.getImMngNum());
-			deviceExtraInfoList.add(imMngNum);
-		}
+		// /**
+		// * SKT 회원관리번호 추가.
+		// */
+		// if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getImMngNum()), "")) {
+		// LOGGER.info("## SKT 회원관리번호 추가.");
+		// DeviceExtraInfo imMngNum = new DeviceExtraInfo();
+		// imMngNum.setExtraProfile(MemberConstants.DEVICE_EXTRA_IMMNGNUM);
+		// imMngNum.setExtraProfileValue(majorDeviceInfo.getImMngNum());
+		// deviceExtraInfoList.add(imMngNum);
+		// }
 
 		/**
 		 * UA 코드 추가.
