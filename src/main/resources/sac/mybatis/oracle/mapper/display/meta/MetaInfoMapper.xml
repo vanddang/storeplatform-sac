@@ -126,6 +126,8 @@
               , LA.MENU_NM
               , LA.MENU_DESC
               , LA.META_CLSF_CD
+              , LA.COMPT_YN
+              , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
               , LA.PROD_ID
               , LA.PART_PROD_ID
               , LA.VOD_TITL_NM
@@ -139,6 +141,15 @@
               , LA.AGENCY_NM
               , LA.HDV_YN
               , LA.DOLBY_SPRT_YN
+              , LA.EXPO_SELLER_EMAIL
+              , LA.EXPO_SELLER_NM
+              , LA.EXPO_SELLER_TELNO
+              <![CDATA[
+              , ( CASE WHEN LA.EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_STORE
+             ]]>
+              <![CDATA[
+              , ( CASE WHEN LA.STRM_EPSD_CNT   >   0 THEN 'Y' END ) AS SUPPORT_PLAY
+             ]]>
               <![CDATA[       
               , CASE WHEN (LA.USE_PERIOD_UNIT_CD = 'PD00312' AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
                      ELSE CHNL_UNLMT_AMT END AS PROD_AMT
@@ -157,13 +168,14 @@
                   WHERE MENU_ID = LA.TOP_MENU_ID
                     AND LANG_CD = 'ko'
                     AND ROWNUM = 1) AS TOP_MENU_NM
+              , LA.FILE_SIZE
           FROM (          
                             SELECT JA.*
                                   FROM (SELECT 'S01' AS TENANT_ID
                                              , A.MENU_ID
-                                             , B.UP_MENU_ID
-                                             , B.TOP_MENU_ID
-                                             , A.PROD_ID
+                                             , A.UP_MENU_ID
+                                             , A.TOP_MENU_ID
+                                             , B.PROD_ID
                                              , I.PART_PROD_ID
                                              , C.MENU_NM
                                              , C.MENU_DESC
@@ -171,8 +183,13 @@
                                              , D.USE_PERIOD_UNIT_CD
                                              , D.META_CLSF_CD
                                              , D.CONTENTS_TYPE_CD
+                                             , D.EXPO_SELLER_EMAIL
+                                             , D.EXPO_SELLER_NM
+                                             , D.EXPO_SELLER_TELNO
+                                             , E.COMPT_YN
                                              , E.VOD_TITL_NM
                                              , E.STRM_EPSD_CNT
+                                             , E.EPSD_CNT
                                              , E.ISSUE_DAY
                                              , E.CHNL_COMP_NM
                                              , E.AGENCY_NM
@@ -185,46 +202,63 @@
                                              , H.CHNL_PERIOD_AMT
                                              , H.CHNL_UNLMT_AMT                                     
                                              , D.DRM_YN
-                                             , K.FILE_PATH
-                                             , K.FILE_NM
-                                             , K.FILE_SIZE
-                                          FROM TB_DP_MENU_CATEGORY_PROD_MAPG    A                                       
-                                             , TB_DP_MENU_CATEGORY              B
-                                             , TB_DP_MENU_CATEGORY_DESC         C
-                                             , TB_DP_PROD              D
-                                             , TB_DP_MULTIMDA_PROD     E
-                                             , TB_DP_PROD_DESC         F
-                                             , TB_DP_TENANT_PROD       G
-                                             , TB_DP_TENANT_PROD_PRICE H                                     
-                                             , TB_DP_PROD_RSHP         I
-                                             , TB_DP_PROD              J
-                                             , TB_DP_PROD_IMG          K
+                                             , M.FILE_PATH
+                                             , M.FILE_NM
+                                             , M.FILE_SIZE
+                                          FROM  TB_DP_MENU_CATEGORY           A
+                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                                              , TB_DP_MENU_CATEGORY_DESC      C
+                                              , TB_DP_PROD                    D
+                                              , TB_DP_MULTIMDA_PROD           E
+                                              , TB_DP_PROD_DESC               F
+                                              , TB_DP_TENANT_PROD             G
+                                              , TB_DP_TENANT_PROD_PRICE       H
+                                              , TB_DP_PROD_RSHP               I
+                                              , TB_DP_PROD                    J
+                                              , TB_DP_MULTIMDA_PROD           L
+                                              , TB_DP_PROD_IMG                M
+                                              , TB_DP_TENANT_PROD_STATS       N              
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND A.MENU_ID = C.MENU_ID
-                                           AND A.PROD_ID = D.PROD_ID
-                                           AND D.PROD_ID = E.PROD_ID
-                                           AND D.PROD_ID = F.PROD_ID                                   
-                                           AND D.PROD_ID = G.PROD_ID
-                                           AND D.PROD_ID = H.PROD_ID
-                                           AND A.PROD_ID = I.PROD_ID                                   
+                                           AND B.PROD_ID = D.PROD_ID
+                                           AND B.PROD_ID = E.PROD_ID
+                                           AND B.PROD_ID = F.PROD_ID
+                                           AND B.PROD_ID = G.PROD_ID
+                                           AND B.PROD_ID = H.PROD_ID
+                                           AND B.PROD_ID = I.PROD_ID
+                                           AND B.PROD_ID = M.PROD_ID
+                                           AND G.TENANT_ID = H.TENANT_ID                      
+                                           AND G.TENANT_ID = N.TENANT_ID(+)           
+                                           AND G.PROD_ID = N.PROD_ID(+)           
                                            AND I.PART_PROD_ID = J.PROD_ID
-                                           AND I.PROD_ID = K.PROD_ID
-                                           AND D.PROD_ID = K.PROD_ID 
-                                           AND A.BASE_YN = 'Y'                        /* Y : 사용 (사용여부) */
+                                           AND I.PART_PROD_ID   = L.PROD_ID
+                                           AND A.USE_YN = 'Y'        
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                                           AND C.LANG_CD = #{lang}                      /* ko : 한국어 */                                   
-                                           AND G.TENANT_ID = #{tenantHeader.tenantId}
+                                           AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
+                                           AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
+                                           AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                                            AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
-                                           AND K.IMG_CD = #{imageCd}                 
-                                           AND K.EXPO_ORD = '1'                 
+                                            <if test='prodStatusCd != null'>
+                                           AND G.PROD_STATUS_CD = #{prodStatusCd}         /* PD000403 : 판매중 */
+                                           </if>
+                                           AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                                           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
+                                           AND M.IMG_CD = #{imageCd}             /* 이미지코드 */
+                                           AND M.EXPO_ORD = 1                  /* 노출순서 */
+                                           AND M.LANG_CD = #{lang}                /* ko : 한국어 */           
+                                           -----------------------------------------------------------------------------
+                                           -- INPUT PARAMETER
+                                           ----------------------------------------------------------------------------- 
                                            <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                                           AND D.PROD_ID = #{productBasicInfo.prodId} 
-                                           </if>
-                                           <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                                           AND I.PART_PROD_ID = #{productBasicInfo.prodId}
-                                           </if>
+                                                AND B.PROD_ID = #{productBasicInfo.prodId}      -- 채널 상품 ID 조회       
+                                              </if>
+                                              <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
+                                                AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
+                                              </if>
+                                           AND G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
                                        ) JA 
+                                      WHERE ROWNUM = 1
                ) LA
              , TB_DP_TENANT_PROD_STATS LB
          WHERE LA.TENANT_ID = LB.TENANT_ID(+)

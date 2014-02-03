@@ -80,8 +80,7 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		reqMap.put("stdDt", stdDt);
 		reqMap.put("lang", tenantHeader.getLangCd());
 
-		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
-		reqMap.put("imageCd", "DP006206");
+		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
 		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
 		reqMap.put("etcCd", DisplayConstants.DP_MOVIE_ETC_CD);

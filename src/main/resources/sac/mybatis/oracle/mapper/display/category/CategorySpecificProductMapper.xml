@@ -31,7 +31,7 @@
 			           C.META_CLSF_CD,
 			           C.TOP_MENU_ID,
 			           B.PROD_ID AS PART_PROD_ID,
-			           ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY A.CATALOG_ID) AS RNUM
+			           ROW_NUMBER() OVER ( PARTITION BY A.CATALOG_ID ORDER BY B.PROD_ID) AS RNUM
 			      FROM TB_DP_PROD_CATALOG_MAPG A, 
 			           TB_DP_PROD_RSHP B, 
 			           TB_DP_PROD C
