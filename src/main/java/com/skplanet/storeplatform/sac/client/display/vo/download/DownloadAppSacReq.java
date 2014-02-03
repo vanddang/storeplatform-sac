@@ -37,7 +37,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String userKey; // 판매자 회원번호
 	private String dummy; // dummy data check
-	private String imgCd; // 이미지 코드
+	private String imageCd; // 이미지 코드
 
 	/**
 	 * 
@@ -342,16 +342,16 @@ public class DownloadAppSacReq extends CommonInfo {
 	/**
 	 * @return the imgCd
 	 */
-	public String getImgCd() {
-		return this.imgCd;
+	public String getImageCd() {
+		return this.imageCd;
 	}
 
 	/**
-	 * @param imgCd
-	 *            the imgCd to set
+	 * @param imageCd
+	 *            the imageCd to set
 	 */
-	public void setImgCd(String imgCd) {
-		this.imgCd = imgCd;
+	public void setImageCd(String imageCd) {
+		this.imageCd = imageCd;
 	}
 
 }

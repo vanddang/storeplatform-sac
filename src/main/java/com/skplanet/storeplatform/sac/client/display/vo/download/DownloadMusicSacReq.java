@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.download;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -18,25 +16,19 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 21. Updated by : 이석희, 인크로스.
  */
-public class DownloadVodSacReq extends CommonInfo {
+public class DownloadMusicSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String category; // 상품 유형
-	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String productId; // 상품Id
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String idType; // Id 유형
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String deviceKey; // device Key
-	@NotEmpty(message = "필수 파라미터 입니다.")
-	private String userKey; // 사용자 Key
-	private String imageCd; // 이미지 코드
+	private String deviceKey; // 디바이스키
+	private String userKey; // 사용자고유키
 	private String dummy; // dummy data check
+	private String imageCd; // 이미지 코드
 
 	/**
 	 * 
@@ -189,75 +181,30 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * ID 유형.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getIdType() {
-		return this.idType;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * ID 유형.
-	 * </pre>
-	 * 
-	 * @param idType
-	 *            idType
-	 */
-	public void setIdType(String idType) {
-		this.idType = idType;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * device Key.
-	 * </pre>
-	 * 
-	 * @return String
+	 * @return the deviceKey
 	 */
 	public String getDeviceKey() {
 		return this.deviceKey;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * device Key.
-	 * </pre>
-	 * 
 	 * @param deviceKey
-	 *            deviceKey
+	 *            the deviceKey to set
 	 */
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 사용자 key.
-	 * </pre>
-	 * 
-	 * @return String
+	 * @return the userKey
 	 */
 	public String getUserKey() {
 		return this.userKey;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 사용자 key.
-	 * </pre>
-	 * 
 	 * @param userKey
-	 *            userKey
+	 *            the userKey to set
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
@@ -266,7 +213,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * dummy check.
+	 * method 설명.
 	 * </pre>
 	 * 
 	 * @return String
@@ -278,7 +225,7 @@ public class DownloadVodSacReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * dummy check.
+	 * method 설명.
 	 * </pre>
 	 * 
 	 * @param dummy
@@ -289,28 +236,17 @@ public class DownloadVodSacReq extends CommonInfo {
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 이미지 코드.
-	 * </pre>
-	 * 
-	 * @return String
+	 * @return the imgCd
 	 */
 	public String getImageCd() {
 		return this.imageCd;
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 이미지 코드.
-	 * </pre>
-	 * 
 	 * @param imageCd
-	 *            imageCd
+	 *            the imageCd to set
 	 */
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
 	}
-
 }
