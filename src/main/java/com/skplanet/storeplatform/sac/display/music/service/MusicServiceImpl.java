@@ -1,5 +1,15 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.music.service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.display.music.vo.*;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
@@ -35,8 +45,11 @@ public class MusicServiceImpl implements MusicService {
     public MusicDetailComposite getMusicDetail(MusicDetailParam param) {
         MusicDetailComposite detailComposite = new MusicDetailComposite();
         MusicDetail musicDetail = commonDAO.queryForObject("MusicDetail.getMusicDetail", param, MusicDetail.class);
-        List<MenuItem> menuList = commonService.getMenuItemList(param.getEpisodeId(), param.getLangCd());
-        List<SubContent> contentList = commonDAO.queryForList("MusicDetail.getSubContentList", param.getEpisodeId(), SubContent.class);
+        if(musicDetail == null)
+            throw new StorePlatformException("SAC_DSP_9999");
+
+        List<MenuItem> menuList = commonService.getMenuItemList(param.getChannelId(), param.getLangCd());
+        List<SubContent> contentList = commonDAO.queryForList("MusicDetail.getSubContentList", param.getChannelId(), SubContent.class);
 
         detailComposite.setMusicDetail(musicDetail);
         detailComposite.setMenuList(menuList);

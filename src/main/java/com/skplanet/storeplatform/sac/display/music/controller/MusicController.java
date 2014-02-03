@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2013 SK planet.
+ * All right reserved.
+ *
+ * This software is the confidential and proprietary information of SK planet.
+ * You shall not disclose such Confidential Information and
+ * shall use it only in accordance with the terms of the license agreement
+ * you entered into with SK planet.
+ */
 package com.skplanet.storeplatform.sac.display.music.controller;
 
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.controller.binder.MusicDetailBinder;
@@ -18,8 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,11 +45,12 @@ public class MusicController {
 
     @RequestMapping(value = "/music/detail/v1", method = RequestMethod.GET)
     @ResponseBody
-    public MusicDetailRes getMusicDetail(@RequestParam String episodeId, SacRequestHeader header) {
+    public MusicDetailRes getMusicDetail(@RequestParam String channelId, SacRequestHeader header) {
         MusicDetailParam param = new MusicDetailParam();
-        param.setEpisodeId(episodeId);
+        param.setChannelId(channelId);
         param.setTenantId(header.getTenantHeader().getTenantId());
         param.setLangCd(header.getTenantHeader().getLangCd());
+        param.setDeviceModelCd(header.getDeviceHeader().getModel());
 
         MusicDetailComposite musicDetailComp = musicService.getMusicDetail(param);
         MusicDetailRes res = new MusicDetailRes();

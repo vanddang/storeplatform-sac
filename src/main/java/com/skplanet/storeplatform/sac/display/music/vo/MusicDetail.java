@@ -6,7 +6,8 @@ package com.skplanet.storeplatform.sac.display.music.vo;
  */
 public class MusicDetail {
 
-    private String prodId;
+    private String chnlId;
+    private String epsdId;
     private int prodAmt;
     private String prodNm;
     private double avgEvluScore;
@@ -28,6 +29,14 @@ public class MusicDetail {
     private String agencyNm;
     private String chnlCompNm;
     private String outsdContentsId;
+
+    public String getEpsdId() {
+        return epsdId;
+    }
+
+    public void setEpsdId(String epsdId) {
+        this.epsdId = epsdId;
+    }
 
     public String getOutsdContentsId() {
         return outsdContentsId;
@@ -69,12 +78,12 @@ public class MusicDetail {
         this.prodAmt = prodAmt;
     }
 
-    public String getProdId() {
-        return prodId;
+    public String getChnlId() {
+        return chnlId;
     }
 
-    public void setProdId(String prodId) {
-        this.prodId = prodId;
+    public void setChnlId(String chnlId) {
+        this.chnlId = chnlId;
     }
 
     public String getProdNm() {

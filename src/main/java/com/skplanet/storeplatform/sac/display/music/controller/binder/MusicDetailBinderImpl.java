@@ -13,11 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: joyspring
- * Date: 1/28/14
- * Time: 4:33 PM
- * To change this template use File | Settings | File Templates.
+ * 음악 상세정보 VO매퍼
+ * Updated on : 2014. 01. 07 Updated by : 정희원, SK 플래닛.
  */
 @org.springframework.stereotype.Component
 public class MusicDetailBinderImpl implements MusicDetailBinder {
@@ -28,14 +25,16 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         music.setIdentifier(new Identifier("downloadId", musicDetail.getOutsdContentsId()));
 
         // Music Source List
+        /*
         music.setSourceList(new ArrayList<Source>());
         for (SubContent sc : contentList) {
             Source src = new Source();
             src.setSize(sc.getFileSize());
-            src.setType(sc.getDpPgQultCd().equals("PD009711") ? "audio/mp3-192" : "audio/mp3-128"); // TODO Util로 만들어야 함.
+            src.setType("PD009711".equals(sc.getDpPgQultCd()) ? "audio/mp3-192" : "audio/mp3-128"); // TODO Util로 만들어야 함.
 
             music.getSourceList().add(src);
         }
+        */
 
         music.setServiceList(new ArrayList<Service>(
                 Arrays.asList(
@@ -78,7 +77,9 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
     @Override
     public void mapBasicInfo(Product product, MusicDetail musicDetail) {
 
-        product.setIdentifier(new Identifier("episode", "EPID")); // TODO
+        product.setIdentifierList(new ArrayList<Identifier>());
+        product.getIdentifierList().add(new Identifier("channel", musicDetail.getChnlId()));
+        product.getIdentifierList().add(new Identifier("episode", musicDetail.getEpsdId()));
         Title title = new Title();
         title.setText(musicDetail.getProdNm());
         product.setTitle(title);
