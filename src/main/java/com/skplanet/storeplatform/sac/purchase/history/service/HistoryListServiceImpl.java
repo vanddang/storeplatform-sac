@@ -109,7 +109,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		if (scResponse.getHistoryList().size() <= 0) {
 			// [SAC 구매] 조건에 맞는 데이터가 존재 하지 않습니다.
-			throw new StorePlatformException("SAC_PUR_0100");
+			// throw new StorePlatformException("SAC_PUR_0100");
 		}
 
 		// List<HistorySC> scHistoryList = scResponse.getHistoryList();
@@ -149,6 +149,11 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setDwldExprDt(obj.getDwldExprDt());
 			historySac.setPrchsProdType(obj.getPrchsProdType());
 			historySac.setFixrateProdId(obj.getFixrateProdId());
+			historySac.setResvCol01(obj.getResvCol01());
+			historySac.setResvCol02(obj.getResvCol02());
+			historySac.setResvCol03(obj.getResvCol03());
+			historySac.setResvCol04(obj.getResvCol04());
+			historySac.setResvCol05(obj.getResvCol05());
 
 			// 수신자 정보 set
 			historySac.setRecvTenantId(obj.getRecvTenantId());
