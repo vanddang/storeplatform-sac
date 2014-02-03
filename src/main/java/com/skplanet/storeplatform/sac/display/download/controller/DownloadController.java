@@ -17,8 +17,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSa
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -82,13 +82,13 @@ public class DownloadController {
 	 *            requestheader
 	 * @param downloadMusicReq
 	 *            downloadMusicReq
-	 * @return DownloadMusicRes
+	 * @return DownloadMusicSacRes
 	 */
 	@RequestMapping(value = "/music/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DownloadMusicRes downloadMusic(SacRequestHeader requestheader,
-			@RequestBody @Valid DownloadMusicReq downloadMusicReq) {
-		return this.downloadMusicService.searchDownloadMusic(requestheader, downloadMusicReq);
+	public DownloadMusicSacRes downloadMusic(SacRequestHeader requestheader,
+			@RequestBody @Valid DownloadMusicSacReq downloadMusicSacReq) {
+		return this.downloadMusicService.searchDownloadMusic(requestheader, downloadMusicSacReq);
 	}
 
 	/**

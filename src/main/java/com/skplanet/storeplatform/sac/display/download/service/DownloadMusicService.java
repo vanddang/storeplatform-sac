@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.download.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -23,5 +23,5 @@ public interface DownloadMusicService {
 	 *            downloadMusicReq
 	 * @return DownloadMusicRes
 	 */
-	DownloadMusicRes searchDownloadMusic(SacRequestHeader requestheader, DownloadMusicReq downloadMusicReq);
+	DownloadMusicSacRes searchDownloadMusic(SacRequestHeader requestheader, DownloadMusicSacReq downloadMusicSacReq);
 }

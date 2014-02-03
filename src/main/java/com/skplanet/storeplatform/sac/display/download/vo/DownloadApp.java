@@ -35,7 +35,7 @@ public class DownloadApp {
 	private String supportedOs; // 지원 OS
 	private Integer apkFileSize; // 앱 용량
 	private String filePath; // 앱 파일 경로
-	private String imgPath; // 앱 이미지 경로
+	private String imagePath; // 앱 이미지 경로
 
 	// Seed 정보
 	private String seedProductId; // Seed 상품 Id
@@ -550,8 +550,8 @@ public class DownloadApp {
 	 * 
 	 * @return String
 	 */
-	public String getImgPath() {
-		return this.imgPath;
+	public String getImagePath() {
+		return this.imagePath;
 	}
 
 	/**
@@ -563,8 +563,8 @@ public class DownloadApp {
 	 * @param imgPath
 	 *            imgPath
 	 */
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	/**

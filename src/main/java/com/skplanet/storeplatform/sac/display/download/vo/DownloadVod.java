@@ -44,6 +44,7 @@ public class DownloadVod {
 	private String expoSellerTelno; // 노출 판매자 전화번호
 	private String expoSellerEmail; // 노출 판매자 Email
 	private String dolbySprtYn; // dolby 지원여부
+	private String dolbyYn; // dolby 지원여부
 	private String nmSubContsId; // 일반화질 sub 컨텐츠 Id
 	private String sdSubContsid; // SD화질 sub 컨텐츠 Id
 	private String hdSubContsid; // HD화질 sub 컨텐츠 Id
@@ -64,9 +65,9 @@ public class DownloadVod {
 	private String hdBtvCid; // HD화질 BTV CID
 	private String dwldNetworkCd; // 다운로드 망 코드
 	private String strmNetworkCd; // 바로보기 망 코드
-	private String imgPath; // 이미지 경로
-	private String imgNm; // 이미지 명
-	private Integer imgSize; // 이미지 사이즈
+	private String imagePath; // 이미지 경로
+	private String imageNm; // 이미지 명
+	private Integer imageSize; // 이미지 사이즈
 	private String filePath; // 파일 경로
 
 	/**
@@ -797,6 +798,31 @@ public class DownloadVod {
 	/**
 	 * 
 	 * <pre>
+	 * Dolby 지원여부.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getDolbyYn() {
+		return this.dolbyYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 *  Dolby 지원여부.
+	 * </pre>
+	 * 
+	 * @param dolbyYn
+	 *            dolbyYn
+	 */
+	public void setDolbyYn(String dolbyYn) {
+		this.dolbyYn = dolbyYn;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 일반화질 sub 컨텐츠 Id.
 	 * </pre>
 	 * 
@@ -1302,8 +1328,8 @@ public class DownloadVod {
 	 * 
 	 * @return String
 	 */
-	public String getImgPath() {
-		return this.imgPath;
+	public String getImagePath() {
+		return this.imagePath;
 	}
 
 	/**
@@ -1312,11 +1338,11 @@ public class DownloadVod {
 	 * 이미지 경로.
 	 * </pre>
 	 * 
-	 * @param imgPath
-	 *            imgPath
+	 * @param imagePath
+	 *            imagePath
 	 */
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	/**
@@ -1327,8 +1353,8 @@ public class DownloadVod {
 	 * 
 	 * @return String
 	 */
-	public String getImgNm() {
-		return this.imgNm;
+	public String getImageNm() {
+		return this.imageNm;
 	}
 
 	/**
@@ -1337,11 +1363,11 @@ public class DownloadVod {
 	 * 이미지 명.
 	 * </pre>
 	 * 
-	 * @param imgNm
-	 *            imgNm
+	 * @param imageNm
+	 *            imageNm
 	 */
-	public void setImgNm(String imgNm) {
-		this.imgNm = imgNm;
+	public void setImageNm(String imageNm) {
+		this.imageNm = imageNm;
 	}
 
 	/**
@@ -1352,8 +1378,8 @@ public class DownloadVod {
 	 * 
 	 * @return String
 	 */
-	public Integer getImgSize() {
-		return this.imgSize;
+	public Integer getImageSize() {
+		return this.imageSize;
 	}
 
 	/**
@@ -1365,8 +1391,8 @@ public class DownloadVod {
 	 * @param filePath
 	 *            filePath
 	 */
-	public void setImgSize(Integer imgSize) {
-		this.imgSize = imgSize;
+	public void setImageSize(Integer imageSize) {
+		this.imageSize = imageSize;
 	}
 
 	/**

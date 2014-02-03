@@ -86,7 +86,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
 		downloadAppSacReq.setOsVersion(osVersion);
-		downloadAppSacReq.setImgCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -238,9 +238,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				/*
 				 * source mediaType, size, type, url
 				 */
-				source.setMediaType(DisplayCommonUtil.getMimeType(downloadAppInfo.getImgPath()));
+				source.setMediaType(DisplayCommonUtil.getMimeType(downloadAppInfo.getImagePath()));
 				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(downloadAppInfo.getImgPath());
+				source.setUrl(downloadAppInfo.getImagePath());
 				sourceList.add(source);
 
 				/*

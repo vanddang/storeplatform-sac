@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.download.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -36,8 +41,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.download.vo.DownloadMusic;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -56,6 +65,9 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	@Autowired
 	private DisplayCommonService commonService;
 
+	@Autowired
+	ExistenceSacService existenceSacService;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -63,16 +75,23 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 	 * .storeplatform.sac.client.product.vo.DownloadAppReqVO)
 	 */
 	@Override
-	public DownloadMusicRes searchDownloadMusic(SacRequestHeader requestheader, DownloadMusicReq downloadMusicReq) {
+	public DownloadMusicSacRes searchDownloadMusic(SacRequestHeader requestheader,
+			DownloadMusicSacReq downloadMusicSacReq) {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		downloadMusicReq.setTenantId(tanantHeader.getTenantId());
-		downloadMusicReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadMusicSacReq.setTenantId(tanantHeader.getTenantId());
+		downloadMusicSacReq.setDeviceModelCd(deviceHeader.getModel());
+		downloadMusicSacReq.setLangCd(tanantHeader.getLangCd());
+		downloadMusicSacReq.setImageCd(DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
-		DownloadMusicRes response = new DownloadMusicRes();
+		DownloadMusicSacRes response = new DownloadMusicSacRes();
 		CommonResponse commonResponse = new CommonResponse();
+
 		int totalCount = 0;
+		String productId = downloadMusicSacReq.getProductId();
+		String deviceKey = downloadMusicSacReq.getDeviceKey();
+		String userKey = downloadMusicSacReq.getUserKey();
 
 		List<Identifier> identifierList = null;
 		List<Menu> menuList = null;
@@ -92,99 +111,150 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 		Contributor contributor = null;
 		Music music = null;
 
-		if (downloadMusicReq.getDummy() == null) {
-			this.log.debug("##################################################");
-			this.log.debug("dummy 호출 아님");
-			this.log.debug("##################################################");
+		if (downloadMusicSacReq.getDummy() == null) {
 			// dummy 호출이 아닐때
+			DownloadMusic downloadMusic = null;
 
-			// if (!"ADM000000001".equals(DownloadAppReq.getListId())) {
-			// // 추천, 인기(매출), 인기신규 상품 조회
-			// appList = this.commonDAO.queryForList("DownloadApp.selectDownloadAppList", DownloadAppReq,
-			// DownloadApp.class);
-			// } else {
-			// // 신규 상품조회
-			// appList = this.commonDAO.queryForList("DownloadApp.selectNewDownloadAppList", DownloadAppReq,
-			// DownloadApp.class);
-			// }
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(productId) || StringUtils.isEmpty(deviceKey) || StringUtils.isEmpty(userKey)) {
 
-			// product = new Product();
-			// identifier = new Identifier();
-			// app = new App();
-			// accrual = new Accrual();
-			// rights = new Rights();
-			// source = new Source();
-			// price = new Price();
-			// title = new Title();
-			// support = new Support();
-			//
-			// DownloadApp mapperVO = iterator.next();
-			//
-			// totalCount = mapperVO.getTotalCount();
-			// commonResponse.setTotalCount(totalCount);
-			//
-			// identifier.setType("episodeId");
-			// identifier.setText(mapperVO.getProdId());
-			//
-			// supportList = new ArrayList<Support>();
-			// support = new Support();
-			// support.setType("drm");
-			// support.setText(mapperVO.getDrmYn());
-			// supportList.add(support);
-			// support = new Support();
-			// support.setType("iab");
-			// if (mapperVO.getPartParentClsfCd() == null || "".equals(mapperVO.getPartParentClsfCd())) {
-			// support.setText("");
-			// } else {
-			// support.setText(mapperVO.getPartParentClsfCd());
-			// }
-			// supportList.add(support);
-			//
-			// menuList = new ArrayList<Menu>();
-			//
-			// menu = new Menu();
-			// menu.setId(mapperVO.getTopMenuId());
-			// menu.setName(mapperVO.getUpMenuNm());
-			// menu.setType("topClass");
-			// menuList.add(menu);
-			// menu = new Menu();
-			// menu.setId(mapperVO.getMenuId());
-			// menu.setName(mapperVO.getMenuNm());
-			// menuList.add(menu);
-			//
-			// app.setAid(mapperVO.getAid());
-			// app.setPackageName(mapperVO.getApkPkgNm());
-			// app.setVersionCode(mapperVO.getApkVerCd());
-			// app.setVersion(mapperVO.getApkVer());
-			//
-			// accrual.setVoterCount(mapperVO.getPaticpersCnt());
-			// accrual.setDownloadCount(mapperVO.getDwldCnt());
-			// accrual.setScore(mapperVO.getAvgEvluScore());
-			//
-			// rights.setGrade(mapperVO.getProdGrdCd());
-			//
-			// title.setText(mapperVO.getProdNm());
-			//
-			// sourceList = new ArrayList<Source>();
-			// source.setType("thumbnail");
-			// source.setUrl(mapperVO.getImgPath());
-			// sourceList.add(source);
-			//
-			// price.setText(mapperVO.getProdAmt());
-			//
-			// product = new Product();
-			// product.setIdentifier(identifier);
-			// product.setSupportList(supportList);
-			// product.setMenuList(menuList);
-			// product.setApp(app);
-			// product.setAccrual(accrual);
-			// product.setRights(rights);
-			// product.setTitle(title);
-			// product.setSourceList(sourceList);
-			// product.setProductExplain(mapperVO.getProdBaseDesc());
-			// product.setPrice(price);
-			//
-			// productList.add(product);
+				// throw new StorePlatformException("필수 파라미터가 부족합니다.");
+				throw new StorePlatformException("필수 파라미터가 부족합니다.", "1", "2", "3");
+			}
+
+			// 다운로드 Music 상품 조회
+			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
+					downloadMusicSacReq);
+
+			this.log.debug("###################################################");
+			this.log.debug("metaInfo	:	" + metaInfo);
+			this.log.debug("###################################################");
+			String prchsId = null;
+
+			try {
+				// 기구매 체크를 위한 생성자
+				ExistenceScRequest existenceScRequest = new ExistenceScRequest();
+				existenceScRequest.setTenantId(downloadMusicSacReq.getTenantId());
+				existenceScRequest.setInsdUsermbrNo(downloadMusicSacReq.getUserKey());
+				existenceScRequest.setInsdDeviceId(downloadMusicSacReq.getDeviceKey());
+
+				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+				existenceItemSc.setProdId(downloadMusicSacReq.getProductId());
+
+				List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
+				list.add(existenceItemSc);
+				existenceScRequest.setExistenceItemSc(list);
+
+				// 기구매 체크 실행
+				List<ExistenceScResponse> existenceResponseList = this.existenceSacService
+						.searchExistenceList(existenceScRequest);
+
+				if (!existenceResponseList.isEmpty()) {
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
+					this.log.debug("----------------------------------------------------------------");
+
+					prchsId = existenceResponseList.get(0).getPrchsId();
+				} else {
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("미구매 상품");
+					this.log.debug("----------------------------------------------------------------");
+				}
+			} catch (Exception e) {
+				throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+			}
+
+			menuList = new ArrayList<Menu>();
+			sourceList = new ArrayList<Source>();
+			identifierList = new ArrayList<Identifier>();
+
+			product = new Product();
+			identifier = new Identifier();
+			rights = new Rights();
+			source = new Source();
+			title = new Title();
+			purchase = new Purchase();
+			contributor = new Contributor();
+			music = new Music();
+
+			// 상품ID
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getProdId());
+			identifierList.add(identifier);
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getChnlProdId());
+			identifierList.add(identifier);
+
+			title.setText(metaInfo.getProdNm());
+
+			/*
+			 * source mediaType, size, type, url
+			 */
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath() + metaInfo.getImageNm()));
+			source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+			source.setUrl(metaInfo.getImagePath() + metaInfo.getImageNm());
+			source.setSize(metaInfo.getImageSize());
+			sourceList.add(source);
+
+			/*
+			 * Menu(메뉴정보) Id, Name, Type
+			 */
+			menu = new Menu();
+			menu.setId(metaInfo.getTopMenuId());
+			menu.setName(metaInfo.getTopMenuNm());
+			menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+			menuList.add(menu);
+			menu = new Menu();
+			menu.setId(metaInfo.getMenuId());
+			menu.setName(metaInfo.getMenuNm());
+			menu = new Menu();
+			menu.setId(metaInfo.getMetaClsfCd());
+			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+			menuList.add(menu);
+
+			contributor.setName(metaInfo.getArtist1Nm());
+			contributor.setAlbum(metaInfo.getArtist3Nm());
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_DOWNLOAD_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getOutsdContentsId());
+			sourceList = new ArrayList<Source>();
+			source = new Source();
+			source.setSize(metaInfo.getFileSize());
+			source.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128);
+			sourceList.add(source);
+			source = new Source();
+			source.setSize(metaInfo.getFileSizeH());
+			source.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192);
+			sourceList.add(source);
+			music.setIdentifier(identifier);
+			music.setSourceList(sourceList);
+
+			/*
+			 * Rights grade
+			 */
+			rights.setGrade(metaInfo.getProdGrdCd());
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+			identifier.setText(prchsId);
+			purchase.setIdentifier(identifier);
+			purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
+			product.setPurchase(purchase);
+
+			product = new Product();
+			product.setIdentifierList(identifierList);
+			product.setTitle(title);
+			product.setSourceList(sourceList);
+			product.setMenuList(menuList);
+			product.setContributor(contributor);
+			product.setMusic(music);
+			product.setRights(rights);
+			product.setPurchase(purchase);
+
+			commonResponse.setTotalCount(1);
 
 		} else {
 			// dummy data를 호출할때
@@ -234,7 +304,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			menu.setName("가요");
 			menu = new Menu();
 			menu.setId("CT25");
-			menu.setName("mp3");
 			menu.setType("metaClass");
 			menuList.add(menu);
 
@@ -242,19 +311,19 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			contributor.setAlbum("MR.GAE");
 
 			identifier = new Identifier();
-			identifier.setType("downloadId");
+			identifier.setType("download");
 			identifier.setText("4397969");
-			sourceList = new ArrayList<Source>();
+			List<Source> musicSourceList = new ArrayList<Source>();
 			source = new Source();
 			source.setSize(3842715);
 			source.setType("audio/mp3-128");
-			sourceList.add(source);
+			musicSourceList.add(source);
 			source = new Source();
 			source.setSize(5764074);
 			source.setType("audio/mp3-192");
-			sourceList.add(source);
+			musicSourceList.add(source);
 			music.setIdentifier(identifier);
-			music.setSourceList(sourceList);
+			music.setSourceList(musicSourceList);
 
 			/*
 			 * Rights grade
@@ -265,8 +334,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			identifier.setType("purchase");
 			identifier.setText("GI100000000265812187");
 			purchase.setIdentifier(identifier);
-			purchase.setState("gift");
-			purchase.setToken("863353467024782ffce534613bac6450048a87fb0dcdbb4e30184f2a88418a037b90c3a16eb87d6eef34b18f320114e9d9cc965fb055db");
+			purchase.setPurchaseFlag("payment");
 
 			product = new Product();
 			product.setIdentifierList(identifierList);
