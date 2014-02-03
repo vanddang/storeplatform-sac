@@ -78,7 +78,7 @@ public class SearchVodBoxProductServiceImpl implements SearchVodBoxProductServic
 		reqMap.put("tenantHeader", tenantHeader);
 		reqMap.put("deviceHeader", deviceHeader);
 		reqMap.put("stdDt", stdDt);
-		reqMap.put("lang", tenantHeader.getLangCd());
+		// reqMap.put("lang", tenantHeader.getLangCd()); // 통일성을 위해 쿼리에서 langCd는 Header 에서 가져옴
 
 		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
