@@ -139,4 +139,56 @@ public interface IdpService {
 	 */
 	public ImResult rXDeleteUserIdIDP(HashMap map);
 
+	/**
+	 * 
+	 * <pre>
+	 * 가입 승인 만료 정보 Provisioning (유선, 통합 회원)
+	 * - CMD : joinComplete
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String joinComplete(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 프로파일 변경 Provisioning (유선, 통합 회원)
+	 * - CMD : adjustWiredProfile
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String adjustWiredProfile(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 부가서비스 가입 Provisioning
+	 * - CMD : ecgJoinedTStore
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String ecgJoinedTStore(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 부가서비스 해지 Provisioning
+	 * - CMD : ecgScededTStore
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String ecgScededTStore(HashMap map);
+
 }
