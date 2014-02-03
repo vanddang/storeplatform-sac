@@ -35,12 +35,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -141,9 +138,6 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			Menu menu = new Menu();
 			Book book = new Book();
 			Rights rights = new Rights();
-			Store store = new Store();
-			Play play = new Play();
-			Support support = new Support();
 			Price price = new Price();
 			Distributor distributor = new Distributor();
 			Purchase purchase = new Purchase();
@@ -178,45 +172,21 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			menu.setId(metaInfo.getMenuId());
 			menu.setName(metaInfo.getMenuNm());
 			menuList.add(menu);
-			menu = new Menu();
-			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-			menu.setId(metaInfo.getMetaClsfCd());
-			menuList.add(menu);
 			product.setMenuList(menuList);
 
-			// 책 정보
+			// 도서 정보
 			book.setBookVersion(metaInfo.getProdVer());
 			book.setScid(metaInfo.getSubContentsId());
 			book.setSize(metaInfo.getFileSize());
+			book.setType("DP004302".equals(metaInfo.getBookClsfCd()) ? "serial" : "");
 			product.setBook(book);
 
-			// 소장 대여 정보 (store : 소장, play : 대여)
-			if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
-				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-				support.setText(metaInfo.getStoreDrmYn());
-				store.setSupport(support);
-				price.setFixedPrice(metaInfo.getStoreProdNetAmt());
-				price.setText(metaInfo.getStoreProdAmt());
-				store.setPrice(price);
-				source = new Source();
-				source.setUrl(metaInfo.getStoreProdId());
-				store.setSource(source);
-				rights.setGrade(metaInfo.getProdGrdCd());
-				rights.setStore(store);
-			} else {
-				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-				support.setText(metaInfo.getPlayDrmYn());
-				play.setSupport(support);
-				price.setFixedPrice(metaInfo.getPlayProdNetAmt());
-				price.setText(metaInfo.getPlayProdAmt());
-				play.setPrice(price);
-				source = new Source();
-				source.setUrl(metaInfo.getStoreProdId());
-				play.setSource(source);
-				rights.setGrade(metaInfo.getProdGrdCd());
-				rights.setPlay(play);
-			}
-			product.setRights(rights);
+			// 상품금액 정보
+			price.setText(metaInfo.getProdAmt());
+			product.setPrice(price);
+
+			// 이용권한 정보
+			rights.setGrade(metaInfo.getProdGrdCd());
 
 			// 저작자 정보
 			distributor.setName(metaInfo.getExpoSellerNm());

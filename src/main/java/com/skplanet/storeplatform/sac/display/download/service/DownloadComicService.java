@@ -5,7 +5,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSa
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * DownloadComicService Service 인터페이스(CoreStoreBusiness)
+ * DownloadComic Service 인터페이스(CoreStoreBusiness)
  * 
  * Updated on : 2014. 2. 03. Updated by : 이태희
  */

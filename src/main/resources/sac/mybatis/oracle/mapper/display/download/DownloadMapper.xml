@@ -588,4 +588,8 @@
            AND KB.IMG_CD = #{imageCd}
            AND KB.LANG_CD = #{langCd}
     </select>
+    
+    <select id="selectDownloadComicInfo" parameterType="DownloadComicSacReq" resultType="MetaInfo">
+        SELECT 1 FROM DUAL
+    </select>
 </mapper>

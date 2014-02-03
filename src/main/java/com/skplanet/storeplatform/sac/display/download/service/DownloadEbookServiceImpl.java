@@ -202,7 +202,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			menuList.add(menu);
 			product.setMenuList(menuList);
 
-			// 책 정보
+			// 도서 정보
 			book.setBookVersion(metaInfo.getProdVer());
 			book.setScid(metaInfo.getSubContentsId());
 			book.setSize(metaInfo.getFileSize());

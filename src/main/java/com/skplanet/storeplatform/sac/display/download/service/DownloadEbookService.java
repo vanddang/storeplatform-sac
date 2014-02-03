@@ -5,7 +5,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSa
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * DownloadEbookService Service 인터페이스(CoreStoreBusiness)
+ * DownloadEbook Service 인터페이스(CoreStoreBusiness)
  * 
  * Updated on : 2014. 1. 28. Updated by : 이태희
  */
