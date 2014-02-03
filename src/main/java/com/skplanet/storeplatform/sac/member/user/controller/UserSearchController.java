@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.HeaderInfo;
 import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
@@ -39,12 +37,6 @@ public class UserSearchController extends ParameterExceptionHandling {
 
 	@Autowired
 	private UserSearchService svc;
-
-	@Autowired
-	private HeaderInfo headerInfo;
-
-	@Autowired
-	private IDPService idpService;
 
 	@RequestMapping(value = "/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
