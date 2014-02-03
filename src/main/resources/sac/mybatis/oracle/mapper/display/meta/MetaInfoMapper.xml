@@ -533,6 +533,7 @@
                                ,F.MENU_NM
                                ,J.TOP_MENU_ID
                                ,J.META_CLSF_CD  
+                               ,J.CONTENTS_TYPE_CD   
                                ,(SELECT MENU_NM
                                    FROM TB_DP_MENU_CATEGORY_DESC
                                   WHERE MENU_ID = J.TOP_MENU_ID
@@ -612,10 +613,10 @@
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)
                       <if test='productBasicInfo.contentsTypeCd == "PD002501"'>
-                        AND B.CATALOG_ID = #{productBasicInfo.prodId}          
+                        AND B.CATALOG_ID = #{productBasicInfo.catalogId}          
                       </if>
                       <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
-                        AND H.PART_PROD_ID = #{productBasicInfo.prodId}
+                        AND H.PART_PROD_ID = #{productBasicInfo.partProdId}
                       </if>
                         
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/

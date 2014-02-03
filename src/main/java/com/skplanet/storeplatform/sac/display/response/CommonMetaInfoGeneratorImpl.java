@@ -194,7 +194,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Title generateTitle(MetaInfo metaInfo) {
 		Title title = new Title();
-		title.setText(metaInfo.getProdNm());
+		if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
+			title.setText(metaInfo.getCatalogNm());
+		} else {
+			title.setText(metaInfo.getProdNm());
+		}
 		return title;
 	}
 
