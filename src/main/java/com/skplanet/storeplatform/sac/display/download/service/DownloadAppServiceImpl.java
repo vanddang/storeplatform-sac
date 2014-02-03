@@ -23,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
@@ -47,7 +47,7 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.download.vo.DownloadApp;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
+import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -67,7 +67,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 	private DisplayCommonService commonService;
 
 	@Autowired
-	ExistenceService existenceService;
+	ExistenceSacService existenceSacService;
 
 	/*
 	 * (non-Javadoc)
@@ -146,146 +146,142 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				}
 			}
 
-			try {
+			// 다운로드 앱 상품 조회
+			downloadAppInfo = this.commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq,
+					DownloadApp.class);
 
-				// 다운로드 앱 상품 조회
-				downloadAppInfo = this.commonDAO.queryForObject("Download.getDownloadAppInfo", downloadAppSacReq,
-						DownloadApp.class);
+			if (downloadAppInfo != null) {
 
-				if (downloadAppInfo != null) {
+				menuList = new ArrayList<Menu>();
+				sourceList = new ArrayList<Source>();
+				identifierList = new ArrayList<Identifier>();
 
-					menuList = new ArrayList<Menu>();
-					sourceList = new ArrayList<Source>();
-					identifierList = new ArrayList<Identifier>();
+				product = new Product();
+				identifier = new Identifier();
+				app = new App();
+				rights = new Rights();
+				source = new Source();
+				title = new Title();
+				purchase = new Purchase();
+				distributor = new Distributor();
+				component = new Component(); // Seed App 정보
 
-					product = new Product();
-					identifier = new Identifier();
-					app = new App();
-					rights = new Rights();
-					source = new Source();
-					title = new Title();
-					purchase = new Purchase();
-					distributor = new Distributor();
-					component = new Component(); // Seed App 정보
+				String prchsId = null;
 
-					String prchsId = null;
+				try {
+					// 기구매 체크를 위한 생성자
+					ExistenceScRequest existenceScRequest = new ExistenceScRequest();
+					existenceScRequest.setTenantId(downloadAppSacReq.getTenantId());
+					existenceScRequest.setInsdUsermbrNo(downloadAppSacReq.getUserKey());
+					existenceScRequest.setInsdDeviceId(downloadAppSacReq.getDeviceKey());
 
-					try {
-						// 기구매 체크를 위한 생성자
-						ExistenceRequest existenceRequest = new ExistenceRequest();
-						existenceRequest.setTenantId(downloadAppSacReq.getTenantId());
-						existenceRequest.setInsdUsermbrNo(downloadAppSacReq.getUserKey());
-						existenceRequest.setInsdDeviceId(downloadAppSacReq.getDeviceKey());
-						existenceRequest.setPrchsId("M1040449015718184793");
+					ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+					existenceItemSc.setProdId(downloadAppSacReq.getProductId());
 
-						ExistenceList existenceList = new ExistenceList();
-						// existenceList.setProdId(downloadAppSacReq.getProductId());
-						existenceList.setProdId("H900000037"); // 기구매 테스트용 상품 ID
+					List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
+					list.add(existenceItemSc);
+					existenceScRequest.setExistenceItemSc(list);
 
-						List<ExistenceList> list = new ArrayList<ExistenceList>();
-						list.add(existenceList);
-						existenceRequest.setExistenceList(list);
+					// 기구매 체크 실행
+					List<ExistenceScResponse> existenceResponseList = this.existenceSacService
+							.searchExistenceList(existenceScRequest);
 
-						// 기구매 체크 실행
-						List<ExistenceResponse> existenceResponseList = this.existenceService
-								.listExist(existenceRequest);
+					if (!existenceResponseList.isEmpty()) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
+						this.log.debug("----------------------------------------------------------------");
 
-						if (!existenceResponseList.isEmpty()) {
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("구매 상품");
-							this.log.debug("----------------------------------------------------------------");
-
-							prchsId = existenceResponseList.get(0).getPrchsId();
-						} else {
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("미구매 상품");
-							this.log.debug("----------------------------------------------------------------");
-						}
-					} catch (Exception e) {
-						throw new StorePlatformException("ERROR_0001", "1", "2", "3");
-					}
-
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					if (StringUtil.isEmpty(downloadAppInfo.getSeedProductId())) {
-						identifier.setText("");
+						prchsId = existenceResponseList.get(0).getPrchsId();
 					} else {
-						identifier.setText(downloadAppInfo.getSeedProductId());
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("미구매 상품");
+						this.log.debug("----------------------------------------------------------------");
 					}
-
-					component.setIdentifier(identifier);
-
-					if (StringUtil.isEmpty(downloadAppInfo.getSeedProductId())) {
-						component.setUseYn("");
-					} else {
-						component.setUseYn(downloadAppInfo.getSeedUseYn());
-					}
-
-					if (StringUtil.isEmpty(downloadAppInfo.getSeedCaseRefCd())) {
-						component.setCaseRefCd("");
-					} else {
-						component.setCaseRefCd(downloadAppInfo.getSeedCaseRefCd());
-					}
-
-					// 상품ID
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(downloadAppInfo.getProdId());
-					identifierList.add(identifier);
-					// identifier = new Identifier();
-					// identifier.setType("isPartOf");
-					// identifier.setText(downloadAppInfo.getProdId());
-					// identifierList.add(identifier);
-
-					title.setText(downloadAppInfo.getProdNm());
-
-					/*
-					 * source mediaType, size, type, url
-					 */
-					source.setMediaType(DisplayCommonUtil.getMimeType(downloadAppInfo.getImgPath()));
-					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(downloadAppInfo.getImgPath());
-					sourceList.add(source);
-
-					/*
-					 * Menu(메뉴정보) Id, Name, Type
-					 */
-					menu = new Menu();
-					menu.setId(downloadAppInfo.getTopMenuId());
-					menu.setName(downloadAppInfo.getTopMenuNm());
-					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menuList.add(menu);
-					menu = new Menu();
-					menu.setId(downloadAppInfo.getMenuId());
-					menu.setName(downloadAppInfo.getMenuNm());
-					menuList.add(menu);
-
-					/*
-					 * App aid, packagename, versioncode, version
-					 */
-					app.setSupportedOs(downloadAppInfo.getSupportedOs());
-					app.setPackageName(downloadAppInfo.getApkPkgNm());
-					app.setVersionCode(downloadAppInfo.getApkVerCd());
-					app.setSize(downloadAppInfo.getApkFileSize());
-					app.setFilePath(downloadAppInfo.getFilePath());
-
-					/*
-					 * Rights grade
-					 */
-					rights.setGrade(downloadAppInfo.getProdGrdCd());
-
-					distributor.setName(downloadAppInfo.getExpoSellerNm());
-					distributor.setTel(downloadAppInfo.getExpoSellerTelNo());
-					distributor.setEmail(downloadAppInfo.getExpoSellerEmail());
-					distributor.setRegNo(downloadAppInfo.getSellerMbrNo());
-
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-					identifier.setText(prchsId);
-					purchase.setIdentifier(identifier);
-					purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
-					product.setPurchase(purchase);
+				} catch (Exception e) {
+					throw new StorePlatformException("ERROR_0001", "1", "2", "3");
 				}
+
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				if (StringUtil.isEmpty(downloadAppInfo.getSeedProductId())) {
+					identifier.setText("");
+				} else {
+					identifier.setText(downloadAppInfo.getSeedProductId());
+				}
+
+				component.setIdentifier(identifier);
+
+				if (StringUtil.isEmpty(downloadAppInfo.getSeedProductId())) {
+					component.setUseYn("");
+				} else {
+					component.setUseYn(downloadAppInfo.getSeedUseYn());
+				}
+
+				if (StringUtil.isEmpty(downloadAppInfo.getSeedCaseRefCd())) {
+					component.setCaseRefCd("");
+				} else {
+					component.setCaseRefCd(downloadAppInfo.getSeedCaseRefCd());
+				}
+
+				// 상품ID
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(downloadAppInfo.getProdId());
+				identifierList.add(identifier);
+				// identifier = new Identifier();
+				// identifier.setType("isPartOf");
+				// identifier.setText(downloadAppInfo.getProdId());
+				// identifierList.add(identifier);
+
+				title.setText(downloadAppInfo.getProdNm());
+
+				/*
+				 * source mediaType, size, type, url
+				 */
+				source.setMediaType(DisplayCommonUtil.getMimeType(downloadAppInfo.getImgPath()));
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setUrl(downloadAppInfo.getImgPath());
+				sourceList.add(source);
+
+				/*
+				 * Menu(메뉴정보) Id, Name, Type
+				 */
+				menu = new Menu();
+				menu.setId(downloadAppInfo.getTopMenuId());
+				menu.setName(downloadAppInfo.getTopMenuNm());
+				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+				menuList.add(menu);
+				menu = new Menu();
+				menu.setId(downloadAppInfo.getMenuId());
+				menu.setName(downloadAppInfo.getMenuNm());
+				menuList.add(menu);
+
+				/*
+				 * App aid, packagename, versioncode, version
+				 */
+				app.setSupportedOs(downloadAppInfo.getSupportedOs());
+				app.setPackageName(downloadAppInfo.getApkPkgNm());
+				app.setVersionCode(downloadAppInfo.getApkVerCd());
+				app.setSize(downloadAppInfo.getApkFileSize());
+				app.setFilePath(downloadAppInfo.getFilePath());
+
+				/*
+				 * Rights grade
+				 */
+				rights.setGrade(downloadAppInfo.getProdGrdCd());
+
+				distributor.setName(downloadAppInfo.getExpoSellerNm());
+				distributor.setTel(downloadAppInfo.getExpoSellerTelNo());
+				distributor.setEmail(downloadAppInfo.getExpoSellerEmail());
+				distributor.setRegNo(downloadAppInfo.getSellerMbrNo());
+
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+				identifier.setText(prchsId);
+				purchase.setIdentifier(identifier);
+				purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
+				product.setPurchase(purchase);
+
 				product = new Product();
 				product.setIdentifierList(identifierList);
 				product.setPacketFee(downloadAppInfo.getProdClsfCd());
@@ -298,8 +294,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setPurchase(purchase);
 
 				commonResponse.setTotalCount(1);
-			} catch (Exception ex) {
-				throw new StorePlatformException("ERROR_0001", ex);
+			} else {
+				commonResponse.setTotalCount(0);
 			}
 
 		} else {
