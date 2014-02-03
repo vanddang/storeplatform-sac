@@ -170,10 +170,8 @@ public class MemberCommonComponent {
 	 * @param type
 	 *            type
 	 * @return UserRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public UserRes getMappingInfo(String pReqParam, String type) throws Exception {
+	public UserRes getMappingInfo(String pReqParam, String type) {
 		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
 		UapsReq uapsReq = new UapsReq();
 		uapsReq.setDeviceId(pReqParam);

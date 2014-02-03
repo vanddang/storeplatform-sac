@@ -612,32 +612,55 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req) {
 
-		DetailByDeviceIdSacRes response = new DetailByDeviceIdSacRes();
+		/**
+		 * OPMD 단말 여부, OPMD 모번호, SKT 이용정지회원 여부 setting.
+		 */
+		DetailByDeviceIdSacRes response = this.getUapsInfo(req);
 
 		/**
-		 * OPMD 여부 setting.
+		 * 사용자별 정책 리스트 setting.
 		 */
-		response.setIsOpmd(this.getOpmdYn(req));
 
 		return response;
 	}
 
 	/**
 	 * <pre>
-	 * OPMD 단말 여부.
+	 * OPMD 단말 여부, OPMD 모번호, SKT 이용정지회원 여부 setting.
 	 * </pre>
 	 * 
 	 * @param req
 	 *            Request Value Object
-	 * @return String (Y or N)
+	 * @return DetailByDeviceIdSacRes
 	 */
-	private String getOpmdYn(DetailByDeviceIdSacReq req) {
+	private DetailByDeviceIdSacRes getUapsInfo(DetailByDeviceIdSacReq req) {
 
-		if (StringUtils.substring(req.getDeviceId(), 0, 3).equals("989")) {
-			return MemberConstants.USE_Y;
-		} else {
-			return MemberConstants.USE_N;
+		DetailByDeviceIdSacRes response = new DetailByDeviceIdSacRes();
+
+		if (StringUtils.equals(req.getDeviceIdType(), MemberConstants.DEVICE_ID_TYPE_MSISDN)) {
+
+			/**
+			 * OPMD 단말 여부, OPMD 모번호 setting.
+			 */
+			if (StringUtils.substring(req.getDeviceId(), 0, 3).equals("989")) {
+
+				response.setIsOpmd(MemberConstants.USE_Y);
+				response.setMsisdn(this.mcc.getOpmdMdnInfo(req.getDeviceId()));
+
+			} else {
+
+				response.setIsOpmd(MemberConstants.USE_N);
+
+			}
+
+			/**
+			 * SKT 이용정지회원 여부 setting.
+			 */
+			response.setIsSktPause(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getPauseYN());
+
 		}
+
+		return response;
 
 	}
 
