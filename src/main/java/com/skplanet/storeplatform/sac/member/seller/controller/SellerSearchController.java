@@ -24,6 +24,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
@@ -241,6 +242,20 @@ public class SellerSearchController {
 			throw new Exception("필수 파라미터 미존재");
 
 		return this.sellerSearchService.searchAuthKey(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 나라별 해외 은행 정보 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return ListBanksByCountryRes
+	 */
+	@RequestMapping(value = "/listBanksByCountry/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListBanksByCountryRes ListBanksByCountry(SacRequestHeader header) {
+		return this.sellerSearchService.listBanksByCountry(header);
 	}
 
 }
