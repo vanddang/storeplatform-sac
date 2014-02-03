@@ -83,6 +83,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// App용 MenuList 설정
 		List<Menu> menuList = this.appGenerator.generateMenuList(metaInfo);
+		// App 상품설명
+		product.setProductExplain(metaInfo.getProdBaseDesc());
 
 		product.setSupportList(supportList);
 		product.setTitle(title);
