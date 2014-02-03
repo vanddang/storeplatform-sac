@@ -22,8 +22,8 @@ import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageRes;
 import com.skplanet.storeplatform.external.client.message.sci.MessageSCI;
-import com.skplanet.storeplatform.external.client.message.vo.SmsSendReq;
-import com.skplanet.storeplatform.external.client.message.vo.SmsSendRes;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
+import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
@@ -304,7 +304,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		this.commonDao.insert("Miscellaneous.insertServiceAuthCode", serviceAuthInfo);
 
 		/* External Comp.에 SMS 발송 요청 */
-		SmsSendReq smsReq = new SmsSendReq();
+		SmsSendEcReq smsReq = new SmsSendEcReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
 		smsReq.setCarrier(request.getCarrier()); // 테넌트에서 파라미터를 SKT, KT, LGT로 받는다.
 		smsReq.setSendMdn(messageSender);
@@ -314,7 +314,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		LOGGER.info("## EC - SMS 발송 요청 Request : {}", smsReq);
 		/* External Comp. SMS 발송 기능 */
-		SmsSendRes smsSendRes = this.messageSCI.smsSend(smsReq);
+		SmsSendEcRes smsSendRes = this.messageSCI.smsSend(smsReq);
 		LOGGER.info("## EC - SMS 발송 결과 Response : {}", smsSendRes);
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
