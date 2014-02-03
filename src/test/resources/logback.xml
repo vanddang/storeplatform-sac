@@ -19,6 +19,12 @@
     <logger name="jdbc.audit"     level="OFF" additivity="false" /> 
     <logger name="jdbc.sqltiming" level="OFF" additivity="false" />
     
+    <!-- rabbit mq BlockingQueue INFO 로그 -->
+    <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    
     <include resource="member-sci/log/logback-local.xml"/>   
     
     <root>
