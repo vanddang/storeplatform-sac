@@ -25,8 +25,8 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
-import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -48,13 +48,13 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
- * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
+ * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
  * 
  * Updated on : 2014. 1. 28. Updated by : 이태희.
  */
 @Service
 @Transactional
-public class DownloadEbookServiceImpl implements DownloadEbookService {
+public class DownloadComicServiceImpl implements DownloadComicService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -64,32 +64,20 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	@Autowired
 	ExistenceSacService existenceSacService;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.download.service.DownloadEbookService#getDownloadEbookInfo(com.skplanet
-	 * .storeplatform.sac.common.header.vo.SacRequestHeader,
-	 * com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq)
-	 */
 	@Override
-	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq downloadEbookReq) {
+	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
+		DownloadComicSacRes comicRes = new DownloadComicSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
-		String idType = downloadEbookReq.getIdType();
-		String productId = downloadEbookReq.getProductId();
-		String deviceKey = downloadEbookReq.getDeviceKey();
-		String userKey = downloadEbookReq.getUserKey();
+		String productId = downloadComicReq.getProductId();
+		String deviceKey = downloadComicReq.getDeviceKey();
+		String userKey = downloadComicReq.getUserKey();
 
 		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(idType)) {
-			throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
-		}
 		if (StringUtils.isEmpty(productId)) {
 			throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
 		}
@@ -99,57 +87,51 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		if (StringUtils.isEmpty(userKey)) {
 			throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
 		}
-		// ID유형 유효값 체크
-		if (!"channel".equals(idType) && !"episode".equals(idType)) {
-			throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
-		}
 
 		// 헤더정보 세팅
-		downloadEbookReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
-		downloadEbookReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
-		downloadEbookReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
-		downloadEbookReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+		downloadComicReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		downloadComicReq.setLangCd(requestHeader.getTenantHeader().getLangCd());
+		downloadComicReq.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		downloadComicReq.setImageCd(DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
 
-		// ebook 상품 정보 조회(for download)
-		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadEbookInfo",
-				downloadEbookReq);
+		// comic 상품 정보 조회(for download)
+		MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.selectDownloadComicInfo",
+				downloadComicReq);
 
 		if (metaInfo != null) {
 			String prchsId = null;
 
-			if ("episode".equals(idType)) {
-				try {
-					// 기구매 체크를 위한 생성자
-					ExistenceScRequest existenceScRequest = new ExistenceScRequest();
-					existenceScRequest.setTenantId(downloadEbookReq.getTenantId());
-					existenceScRequest.setInsdUsermbrNo(downloadEbookReq.getUserKey());
-					existenceScRequest.setInsdDeviceId(downloadEbookReq.getDeviceKey());
+			try {
+				// 기구매 체크를 위한 생성자
+				ExistenceScRequest existenceScRequest = new ExistenceScRequest();
+				existenceScRequest.setTenantId(downloadComicReq.getTenantId());
+				existenceScRequest.setInsdUsermbrNo(downloadComicReq.getUserKey());
+				existenceScRequest.setInsdDeviceId(downloadComicReq.getDeviceKey());
 
-					ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-					existenceItemSc.setProdId(downloadEbookReq.getProductId());
+				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+				existenceItemSc.setProdId(downloadComicReq.getProductId());
 
-					List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
-					list.add(existenceItemSc);
-					existenceScRequest.setExistenceItemSc(list);
+				List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
+				list.add(existenceItemSc);
+				existenceScRequest.setExistenceItemSc(list);
 
-					// 기구매 체크 실행
-					List<ExistenceScResponse> existenceResponseList = this.existenceSacService
-							.searchExistenceList(existenceScRequest);
+				// 기구매 체크 실행
+				List<ExistenceScResponse> existenceResponseList = this.existenceSacService
+						.searchExistenceList(existenceScRequest);
 
-					if (!existenceResponseList.isEmpty()) {
-						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
-						this.logger.debug("----------------------------------------------------------------");
+				if (!existenceResponseList.isEmpty()) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
+					this.logger.debug("----------------------------------------------------------------");
 
-						prchsId = existenceResponseList.get(0).getPrchsId();
-					} else {
-						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("미구매 상품");
-						this.logger.debug("----------------------------------------------------------------");
-					}
-				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", ex);
+					prchsId = existenceResponseList.get(0).getPrchsId();
+				} else {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("미구매 상품");
+					this.logger.debug("----------------------------------------------------------------");
 				}
+			} catch (Exception ex) {
+				throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", ex);
 			}
 
 			Product product = new Product();
@@ -251,13 +233,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			purchase.setIdentifier(identifier);
 			product.setPurchase(purchase);
 
-			ebookRes.setProduct(product);
+			comicRes.setProduct(product);
 			commonResponse.setTotalCount(1);
 		} else {
 			commonResponse.setTotalCount(0);
 		}
 
-		ebookRes.setCommonResponse(commonResponse);
-		return ebookRes;
+		comicRes.setCommonResponse(commonResponse);
+		return comicRes;
 	}
 }
