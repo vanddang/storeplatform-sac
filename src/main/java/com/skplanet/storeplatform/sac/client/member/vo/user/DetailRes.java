@@ -7,11 +7,11 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
 
 /**
  * [RESPONSE] 회원 정보 조회
@@ -23,33 +23,71 @@ public class DetailRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/* 사용자 변동성 여부 */
+	private String isChangeSubject;
+
+	/* 비밀번호 변경일자 */
+	private String pwRegDate;
+
+	/* 사용자 키 */
+	private String userKey;
+
 	/* 사용자 인증정보 */
-	private List<MbrAuth> mbrAuthList;
+	private MbrAuth mbrAuth;
+
 	/* 법정대리인 정보 */
-	private List<MbrLglAgent> mbrLglAgentList;
+	private MbrLglAgent mbrLglAgent;
+
 	/* 휴대기기정보 리스트 */
 	private List<DeviceInfo> deviceInfoList;
-	/* 휴대기기 부가정보 리스트 */
-	private List<DeviceExtraInfo> deviceExtraInfoList;
+
 	/* 사용자 정보 */
 	private UserInfo userInfo;
+
 	/* 약관동의정보 리스트 */
 	private List<Agreement> agreementList;
 
-	public List<MbrAuth> getMbrAuthList() {
-		return this.mbrAuthList;
+	/* 징계정보 */
+	private UserMbrPnsh userMbrPnsh;
+
+	public String getIsChangeSubject() {
+		return this.isChangeSubject;
 	}
 
-	public void setMbrAuthList(List<MbrAuth> mbrAuthList) {
-		this.mbrAuthList = mbrAuthList;
+	public void setIsChangeSubject(String isChangeSubject) {
+		this.isChangeSubject = isChangeSubject;
 	}
 
-	public List<MbrLglAgent> getMbrLglAgentList() {
-		return this.mbrLglAgentList;
+	public String getPwRegDate() {
+		return this.pwRegDate;
 	}
 
-	public void setMbrLglAgentList(List<MbrLglAgent> mbrLglAgentList) {
-		this.mbrLglAgentList = mbrLglAgentList;
+	public void setPwRegDate(String pwRegDate) {
+		this.pwRegDate = pwRegDate;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public MbrAuth getMbrAuth() {
+		return this.mbrAuth;
+	}
+
+	public void setMbrAuth(MbrAuth mbrAuth) {
+		this.mbrAuth = mbrAuth;
+	}
+
+	public MbrLglAgent getMbrLglAgent() {
+		return this.mbrLglAgent;
+	}
+
+	public void setMbrLglAgent(MbrLglAgent mbrLglAgent) {
+		this.mbrLglAgent = mbrLglAgent;
 	}
 
 	public List<DeviceInfo> getDeviceInfoList() {
@@ -58,14 +96,6 @@ public class DetailRes extends CommonInfo {
 
 	public void setDeviceInfoList(List<DeviceInfo> deviceInfoList) {
 		this.deviceInfoList = deviceInfoList;
-	}
-
-	public List<DeviceExtraInfo> getDeviceExtraInfoList() {
-		return this.deviceExtraInfoList;
-	}
-
-	public void setDeviceExtraInfoList(List<DeviceExtraInfo> deviceExtraInfoList) {
-		this.deviceExtraInfoList = deviceExtraInfoList;
 	}
 
 	public UserInfo getUserInfo() {
@@ -82,6 +112,14 @@ public class DetailRes extends CommonInfo {
 
 	public void setAgreementList(List<Agreement> agreementList) {
 		this.agreementList = agreementList;
+	}
+
+	public UserMbrPnsh getUserMbrPnsh() {
+		return this.userMbrPnsh;
+	}
+
+	public void setUserMbrPnsh(UserMbrPnsh userMbrPnsh) {
+		this.userMbrPnsh = userMbrPnsh;
 	}
 
 	public static long getSerialversionuid() {

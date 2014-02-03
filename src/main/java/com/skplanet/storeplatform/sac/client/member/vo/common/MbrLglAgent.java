@@ -56,6 +56,12 @@ public class MbrLglAgent extends CommonInfo {
 	/** The 내부 회원 키. */
 	private String memberKey; // INSD_SELLERMBR_NO 내부 사용자코드
 
+	/** The 내국인 여부 */
+	private String isDomestic;
+
+	/** The 테넌트 ID */
+	private String tenantId;
+
 	public String getIsParent() {
 		return this.isParent;
 	}
@@ -166,6 +172,22 @@ public class MbrLglAgent extends CommonInfo {
 
 	public void setSequence(String sequence) {
 		this.sequence = sequence;
+	}
+
+	public String getIsDomestic() {
+		return this.isDomestic;
+	}
+
+	public void setIsDomestic(String isDomestic) {
+		this.isDomestic = isDomestic;
+	}
+
+	public String getTenantId() {
+		return this.tenantId;
+	}
+
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }

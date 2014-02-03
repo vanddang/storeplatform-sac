@@ -13,14 +13,11 @@ public class SearchExtentReq extends CommonInfo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/* 사용자 부가 정보 */
-	private String userInfoExtraYn;
+	/* 사용자 정보 */
+	private String userInfoYn;
 
 	/* 단말정보 */
 	private String deviceInfoYn;
-
-	/* 단말부가정보 */
-	private String deviceInfoExtraYn;
 
 	/* 약관동의정보 */
 	private String agreementInfoYn;
@@ -31,13 +28,8 @@ public class SearchExtentReq extends CommonInfo implements Serializable {
 	/* 법정대리인정보 */
 	private String mbrLglAgentInfoYn;
 
-	public String getUserInfoExtraYn() {
-		return this.userInfoExtraYn;
-	}
-
-	public void setUserInfoExtraYn(String userInfoExtraYn) {
-		this.userInfoExtraYn = userInfoExtraYn;
-	}
+	/* 사용자 징계 정보 */
+	private String mbrPnshInfoYn;
 
 	public String getDeviceInfoYn() {
 		return this.deviceInfoYn;
@@ -45,14 +37,6 @@ public class SearchExtentReq extends CommonInfo implements Serializable {
 
 	public void setDeviceInfoYn(String deviceInfoYn) {
 		this.deviceInfoYn = deviceInfoYn;
-	}
-
-	public String getDeviceInfoExtraYn() {
-		return this.deviceInfoExtraYn;
-	}
-
-	public void setDeviceInfoExtraYn(String deviceInfoExtraYn) {
-		this.deviceInfoExtraYn = deviceInfoExtraYn;
 	}
 
 	public String getAgreementInfoYn() {
@@ -81,6 +65,22 @@ public class SearchExtentReq extends CommonInfo implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getUserInfoYn() {
+		return this.userInfoYn;
+	}
+
+	public void setUserInfoYn(String userInfoYn) {
+		this.userInfoYn = userInfoYn;
+	}
+
+	public String getMbrPnshInfoYn() {
+		return this.mbrPnshInfoYn;
+	}
+
+	public void setMbrPnshInfoYn(String mbrPnshInfoYn) {
+		this.mbrPnshInfoYn = mbrPnshInfoYn;
 	}
 
 }

@@ -2,6 +2,9 @@ package com.skplanet.storeplatform.sac.client.member.vo.common;
 
 import java.util.List;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -9,7 +12,12 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
+
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class UserInfo extends CommonInfo {
+
+	private static final long serialVersionUID = 1L;
+
 	/*
 	 * 사용자 휴대기기 등록 대수.
 	 */
@@ -66,19 +74,21 @@ public class UserInfo extends CommonInfo {
 	private String userKey;
 
 	/*
-	 * 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자 - null : Tstore 회원 아님
+	 * 사용자 구분 코드 - US011501 : 기기 사용자 - US011502 : IDP 사용자 - US011503 : OneID 사용자
+	 * - null : Tstore 회원 아님
 	 */
 	private String userType;
 
 	/*
-	 * 사용자 메인 상태코드 - US010701 : 정상 - US010702 : 탈퇴 - US010703 : 대기(가가입) - US010704 : 가입 - US010705 : 전환 - US010706 : 탈퇴
-	 * - US010707 : 승인대기
+	 * 사용자 메인 상태코드 - US010701 : 정상 - US010702 : 탈퇴 - US010703 : 대기(가가입) -
+	 * US010704 : 가입 - US010705 : 전환 - US010706 : 탈퇴 - US010707 : 승인대기
 	 */
 	private String userMainStatus;
 
 	/*
-	 * 사용자 서브 상태 코드 - US010201 : 모바일전용회원 - US010202 : 가가입승인대기 - US010203 : 정상 - US010204 : 일시정지 - US010205 : 자의탈퇴 -
-	 * US010206 : 이메일변경승인대기 - US010207 : 가입승인 만료 - US010208 : 직권탈퇴
+	 * 사용자 서브 상태 코드 - US010201 : 모바일전용회원 - US010202 : 가가입승인대기 - US010203 : 정상 -
+	 * US010204 : 일시정지 - US010205 : 자의탈퇴 - US010206 : 이메일변경승인대기 - US010207 :
+	 * 가입승인 만료 - US010208 : 직권탈퇴
 	 */
 	private String userSubStatus;
 
@@ -91,11 +101,6 @@ public class UserInfo extends CommonInfo {
 	 * 전환가입 코드
 	 */
 	private String isImChanged;
-
-	/*
-	 * OneID 전환 가입일
-	 */
-	private String imRegDat;
 
 	/*
 	 * 사용자 아이디
@@ -131,41 +136,6 @@ public class UserInfo extends CommonInfo {
 	 * 이메일 수신 여부
 	 */
 	private String isRecvEmail;
-
-	/*
-	 * 사용자 징계여부
-	 */
-	private String isRestricted;
-
-	/*
-	 * 징계 시작일
-	 */
-	private String restrictStartDate;
-
-	/*
-	 * 징계 종료일
-	 */
-	private String restrictEndDate;
-
-	/*
-	 * 징계구분
-	 */
-	private String restrictId;
-
-	/*
-	 * 징계 게시물수
-	 */
-	private String restrictCount;
-
-	/*
-	 * 징계 등록일
-	 */
-	private String restrictRegisterDate;
-
-	/*
-	 * 징계 등록자
-	 */
-	private String restrictOwner;
 
 	/*
 	 * 사용자명
@@ -231,16 +201,6 @@ public class UserInfo extends CommonInfo {
 	 * 이용동의 사이트 정보
 	 */
 	private String imSiteCode;
-
-	/*
-	 * 사용자 단말 정보
-	 */
-	private String userDeviceInfo;
-
-	/*
-	 * 실명 인증 정보
-	 */
-	private String realNameInfo;
 
 	/* 사용자 부가정보 */
 	private List<UserExtraInfo> userExtraInfo;
@@ -373,14 +333,6 @@ public class UserInfo extends CommonInfo {
 		this.isImChanged = isImChanged;
 	}
 
-	public String getImRegDat() {
-		return this.imRegDat;
-	}
-
-	public void setImRegDat(String imRegDat) {
-		this.imRegDat = imRegDat;
-	}
-
 	public String getUserId() {
 		return this.userId;
 	}
@@ -435,62 +387,6 @@ public class UserInfo extends CommonInfo {
 
 	public void setIsRecvEmail(String isRecvEmail) {
 		this.isRecvEmail = isRecvEmail;
-	}
-
-	public String getIsRestricted() {
-		return this.isRestricted;
-	}
-
-	public void setIsRestricted(String isRestricted) {
-		this.isRestricted = isRestricted;
-	}
-
-	public String getRestrictStartDate() {
-		return this.restrictStartDate;
-	}
-
-	public void setRestrictStartDate(String restrictStartDate) {
-		this.restrictStartDate = restrictStartDate;
-	}
-
-	public String getRestrictEndDate() {
-		return this.restrictEndDate;
-	}
-
-	public void setRestrictEndDate(String restrictEndDate) {
-		this.restrictEndDate = restrictEndDate;
-	}
-
-	public String getRestrictId() {
-		return this.restrictId;
-	}
-
-	public void setRestrictId(String restrictId) {
-		this.restrictId = restrictId;
-	}
-
-	public String getRestrictCount() {
-		return this.restrictCount;
-	}
-
-	public void setRestrictCount(String restrictCount) {
-		this.restrictCount = restrictCount;
-	}
-
-	public String getRestrictRegisterDate() {
-		return this.restrictRegisterDate;
-	}
-
-	public void setRestrictRegisterDate(String restrictRegisterDate) {
-		this.restrictRegisterDate = restrictRegisterDate;
-	}
-
-	public String getRestrictOwner() {
-		return this.restrictOwner;
-	}
-
-	public void setRestrictOwner(String restrictOwner) {
-		this.restrictOwner = restrictOwner;
 	}
 
 	public String getUserName() {
@@ -597,28 +493,16 @@ public class UserInfo extends CommonInfo {
 		this.imSiteCode = imSiteCode;
 	}
 
-	public String getUserDeviceInfo() {
-		return this.userDeviceInfo;
-	}
-
-	public void setUserDeviceInfo(String userDeviceInfo) {
-		this.userDeviceInfo = userDeviceInfo;
-	}
-
-	public String getRealNameInfo() {
-		return this.realNameInfo;
-	}
-
-	public void setRealNameInfo(String realNameInfo) {
-		this.realNameInfo = realNameInfo;
-	}
-
 	public List<UserExtraInfo> getUserExtraInfo() {
 		return this.userExtraInfo;
 	}
 
 	public void setUserExtraInfo(List<UserExtraInfo> userExtraInfo) {
 		this.userExtraInfo = userExtraInfo;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

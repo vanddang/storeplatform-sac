@@ -18,6 +18,7 @@ public class MbrAuth extends CommonInfo {
 	private String birthDay;
 	private String ci;
 	private String di;
+	private String isDomestic;
 	private String isRealName;
 	private String memberCategory;
 	private String memberKey;
@@ -158,6 +159,14 @@ public class MbrAuth extends CommonInfo {
 
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public String getIsDomestic() {
+		return this.isDomestic;
+	}
+
+	public void setIsDomestic(String isDomestic) {
+		this.isDomestic = isDomestic;
 	}
 
 }
