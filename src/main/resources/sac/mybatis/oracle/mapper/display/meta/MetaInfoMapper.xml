@@ -37,7 +37,7 @@
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = TB.TOP_MENU_ID
-                    AND LANG_CD = 'ko'
+                    AND LANG_CD = #{tenantHeader.langCd}
                     AND ROWNUM = 1) AS TOP_MENU_NM
           FROM (SELECT  A.TOP_MENU_ID
                       , A.UP_MENU_ID
@@ -92,30 +92,30 @@
                    AND  B.PROD_ID = K.PROD_ID
                    AND  G.TENANT_ID = L.TENANT_ID(+)
                    AND  G.PROD_ID = L.PROD_ID(+)
-                   AND  A.USE_YN = 'Y'                  /* Y : 사용 (사용여부) */
-                   AND  B.USE_YN = 'Y'                  /* Y : 사용 (사용여부) */
-                   AND  C.LANG_CD = #{lang}                /* ko : 한국어 */
+                   AND  A.USE_YN = 'Y'                                    /* Y : 사용 (사용여부) */
+                   AND  B.USE_YN = 'Y'                                    /* Y : 사용 (사용여부) */
+                   AND  C.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
                    <if test='productBasicInfo.svcGrpCd != null'>
                    AND  D.SVC_GRP_CD = #{productBasicInfo.svcGrpCd}       /* DP000201 : 애플리캐이션 */
                    </if>
-                   AND  F.LANG_CD = #{lang}                /* ko : 한국어 */
+                   AND  F.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
                    <if test='prodStatusCd != null'>
-                   AND  G.PROD_STATUS_CD = #{prodStatusCd}   /* PD000403 : 판매중 */
+                   AND  G.PROD_STATUS_CD = #{prodStatusCd}                /* PD000403 : 판매중 */
                    </if>
                    AND  G.EXPO_YN = 'Y'                 /* Y : 노출 (노출여부) */
                    AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND  K.IMG_CD = #{imageCd}           /* 이미지코드 */
                    AND  K.EXPO_ORD = 1                  /* 노출순서 */
-                   AND  K.LANG_CD = #{lang}                /* ko : 한국어 */
+                   AND  K.LANG_CD = #{tenantHeader.langCd}                /* ko : 한국어 */
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    -----------------------------------------------------------------------------
                    <if test='menuId != null'>
-                   AND  A.MENU_ID = #{productBasicInfo.menuId}           /* 메뉴ID */
+                   AND  A.MENU_ID = #{productBasicInfo.menuId}            /* 메뉴ID */
                    </if>
-                   AND  B.PROD_ID = #{productBasicInfo.prodId}        /* 상품ID */
-                   AND  G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
-                   AND  I.DEVICE_MODEL_CD = #{deviceHeader.model} /* 단말모델코드 */
+                   AND  B.PROD_ID = #{productBasicInfo.prodId}            /* 상품ID */
+                   AND  G.TENANT_ID = #{tenantHeader.tenantId}            /* 테넌트ID */
+                   AND  I.DEVICE_MODEL_CD = #{deviceHeader.model}         /* 단말모델코드 */
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
@@ -166,12 +166,12 @@
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = LA.TOP_MENU_ID
-                    AND LANG_CD = 'ko'
+                    AND LANG_CD = #{tenantHeader.langCd}
                     AND ROWNUM = 1) AS TOP_MENU_NM
               , LA.FILE_SIZE
           FROM (          
                             SELECT JA.*
-                                  FROM (SELECT 'S01' AS TENANT_ID
+                                  FROM (SELECT G.TENANT_ID
                                              , A.MENU_ID
                                              , A.UP_MENU_ID
                                              , A.TOP_MENU_ID
@@ -234,19 +234,19 @@
                                            AND I.PART_PROD_ID   = L.PROD_ID
                                            AND A.USE_YN = 'Y'        
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                                           AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
+                                           AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
                                            AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-                                           AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
+                                           AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                                             <if test='prodStatusCd != null'>
-                                           AND G.PROD_STATUS_CD = #{prodStatusCd}         /* PD000403 : 판매중 */
+                                           AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                                            </if>
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
-                                           AND M.IMG_CD = #{imageCd}             /* 이미지코드 */
-                                           AND M.EXPO_ORD = 1                  /* 노출순서 */
-                                           AND M.LANG_CD = #{lang}                /* ko : 한국어 */           
+                                           AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
+                                           AND M.EXPO_ORD = 1                        /* 노출순서 */
+                                           AND M.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */           
                                            -----------------------------------------------------------------------------
                                            -- INPUT PARAMETER
                                            ----------------------------------------------------------------------------- 
@@ -256,7 +256,7 @@
                                               <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                                                 AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
                                               </if>
-                                           AND G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
+                                           AND G.TENANT_ID = #{tenantHeader.tenantId} /* 테넌트ID */
                                        ) JA 
                                       WHERE ROWNUM = 1
                ) LA
@@ -366,8 +366,8 @@
           AND P.TOP_MENU_ID = #{productBasicInfo.topMenuId}
           AND PI.IMG_CD = #{imageCd}
           AND TP.TENANT_ID = #{tenantHeader.tenantId}
-          AND PD.LANG_CD = #{lang}
-          AND CD.LANG_CD = #{lang}
+          AND PD.LANG_CD = #{tenantHeader.langCd}
+          AND CD.LANG_CD = #{tenantHeader.langCd}
        
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
@@ -375,7 +375,7 @@
              , (SELECT MENU_NM
                   FROM TB_DP_MENU_CATEGORY_DESC
                  WHERE MENU_ID = TB.TOP_MENU_ID
-                   AND LANG_CD = 'ko'
+                   AND LANG_CD = #{tenantHeader.langCd}
                    AND ROWNUM = 1) AS TOP_MENU_NM
              , TB.TOP_MENU_ID
              , TB.MENU_ID
@@ -488,19 +488,19 @@
                    AND I.PART_PROD_ID   = L.PROD_ID
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                   AND C.LANG_CD = #{lang}                      /* ko : 한국어 */
+                   AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                    AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
-                   AND F.LANG_CD = #{lang}                      /* ko : 한국어 */
+                   AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                     <if test='prodStatusCd != null'>
-                   AND G.PROD_STATUS_CD = #{prodStatusCd}         /* PD000403 : 판매중 */
+                   AND G.PROD_STATUS_CD = #{prodStatusCd}    /* PD000403 : 판매중 */
                    </if>
                    AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                    AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                    AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */           
-                   AND M.IMG_CD = #{imageCd}             /* 이미지코드 */
-                   AND M.EXPO_ORD = 1                  /* 노출순서 */
-                   AND M.LANG_CD = #{lang}                /* ko : 한국어 */           
+                   AND M.IMG_CD = #{imageCd}                 /* 이미지코드 */
+                   AND M.EXPO_ORD = 1                        /* 노출순서 */
+                   AND M.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */           
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    ----------------------------------------------------------------------------- 
@@ -510,7 +510,7 @@
                       <if test='productBasicInfo.contentsTypeCd == "PD002502"'>
                         AND I.PART_PROD_ID = #{productBasicInfo.partProdId}   -- 에피소드 상품 ID 조회
                       </if>
-                   AND G.TENANT_ID = #{tenantHeader.tenantId}             /* 테넌트ID */
+                   AND G.TENANT_ID = #{tenantHeader.tenantId} /* 테넌트ID */
         
                ) TB
            WHERE TB.RN = 1 
@@ -536,7 +536,7 @@
                                ,(SELECT MENU_NM
                                    FROM TB_DP_MENU_CATEGORY_DESC
                                   WHERE MENU_ID = J.TOP_MENU_ID
-                                    AND LANG_CD = 'ko'
+                                    AND LANG_CD = #{tenantHeader.langCd}
                                     AND ROWNUM = 1
                                 ) AS TOP_MENU_NM                                   
                                ,ROW_NUMBER() OVER(PARTITION BY B.CATALOG_ID ORDER BY NVL(N.SPRC_PRICE, L.PROD_AMT) ASC) as NO
@@ -607,7 +607,7 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND C.CATALOG_ID = PI.PROD_ID
-                        AND PI.IMG_CD =#{imageCd}
+                        AND PI.IMG_CD = #{imageCd}
                         AND PI.EXPO_ORD ='1'
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)
@@ -618,14 +618,14 @@
                         AND H.PART_PROD_ID = #{productBasicInfo.prodId}
                       </if>
                         
-                        AND H.PROD_RSHP_CD =#{prodRshpCd}    /*채널-에피소드 상품 관계*/
-                        AND PI.LANG_CD= #{lang}                /* ko : 한국어 */         
-                        AND C.LANG_CD= #{lang}          /* ko : 한국어 */
-                        AND F.LANG_CD= #{lang}          /* ko : 한국어 */
-                        AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
-                        AND D.USE_YN ='Y'                 /* Y : 기본(기본여부) */
-                        AND E.USE_YN='Y'                  /* Y : 기본(기본여부) */
-                        AND G.BASE_YN='Y'                 /* Y : 기본(기본여부) */
+                        AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                        AND PI.LANG_CD = #{tenantHeader.langCd}         /* ko : 한국어 */         
+                        AND C.LANG_CD = #{tenantHeader.langCd}          /* ko : 한국어 */
+                        AND F.LANG_CD = #{tenantHeader.langCd}          /* ko : 한국어 */
+                        AND D.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
+                        AND D.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                        AND E.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                        AND G.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]>  'Y'
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
