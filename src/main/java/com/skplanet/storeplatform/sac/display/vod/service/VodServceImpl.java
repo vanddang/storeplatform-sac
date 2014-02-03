@@ -475,8 +475,8 @@ public class VodServceImpl implements VodService {
 			// 상품 설명
 			//-------------------------------------------
 			subProduct.setProductExplain(vodDetail.getProdBaseDesc());
-			subProduct.setProductDetailExplain(vodDetail.getProdDtlDesc());
-			subProduct.setProductIntroduction(vodDetail.getProdIntrDscr());
+			//subProduct.setProductDetailExplain(vodDetail.getProdDtlDesc());
+			//subProduct.setProductIntroduction(vodDetail.getProdIntrDscr());
 
 
 			//-------------------------------------------
