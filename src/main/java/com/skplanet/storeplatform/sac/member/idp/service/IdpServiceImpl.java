@@ -222,7 +222,7 @@ public class IdpServiceImpl implements IdpService {
 				KeySearch keySearch = new KeySearch();
 				keySearch.setKeyType("MBR_ID");
 				keySearch.setKeyString(map.get("old_id").toString());
-				List<KeySearch> keySearchList = new ArrayList();
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 				keySearchList.add(keySearch);
 				searchUserRequest.setKeySearchList(keySearchList);
 				searchUserRequest.setCommonRequest(commonRequest);
@@ -232,7 +232,7 @@ public class IdpServiceImpl implements IdpService {
 				if (searchUserResponse == null) {
 					keySearch.setKeyString(map.get("old_id").toString() + "@nate.com");
 					keySearchList = null;
-					keySearchList = new ArrayList();
+					keySearchList = new ArrayList<KeySearch>();
 					keySearchList.add(keySearch);
 					searchUserRequest.setKeySearchList(keySearchList);
 
@@ -253,7 +253,7 @@ public class IdpServiceImpl implements IdpService {
 				KeySearch keySearch = new KeySearch();
 				keySearch.setKeyType("MBR_ID");
 				keySearch.setKeyString(map.get("old_id").toString());
-				List<KeySearch> keySearchList = new ArrayList();
+				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 				keySearchList.add(keySearch);
 				searchUserRequest.setKeySearchList(keySearchList);
 				searchUserRequest.setCommonRequest(commonRequest);
@@ -263,7 +263,7 @@ public class IdpServiceImpl implements IdpService {
 				if (searchUserResponse == null) {
 					keySearch.setKeyString(map.get("old_id").toString() + "@nate.com");
 					keySearchList = null;
-					keySearchList = new ArrayList();
+					keySearchList = new ArrayList<KeySearch>();
 					keySearchList.add(keySearch);
 					searchUserRequest.setKeySearchList(keySearchList);
 
@@ -910,10 +910,14 @@ public class IdpServiceImpl implements IdpService {
 
 		searchUserRequest.setCommonRequest(commonRequest);
 
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("INTG_SVC_NO");
 		keySearch.setKeyString(map.get("im_int_svc_no").toString()); // 통합 서비스 번호
-		List<KeySearch> keySearchList = new ArrayList();
+		keySearchList.add(keySearch);
+		keySearch = new KeySearch();
+		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyString(responseUserId); // 사용자 ID추가
 		keySearchList.add(keySearch);
 
 		searchUserRequest.setKeySearchList(keySearchList);
@@ -936,7 +940,7 @@ public class IdpServiceImpl implements IdpService {
 				updateKeySearch.setKeyType("INSD_USERMBR_NO");
 				updateKeySearch.setKeyString(searchUserResponse.getUserMbr().getUserKey()); // 내부사용자 회원번호
 
-				List<KeySearch> updateKeySearchList = new ArrayList();
+				List<KeySearch> updateKeySearchList = new ArrayList<KeySearch>();
 				updateKeySearchList.add(keySearch);
 
 				updateStatusUserRequest.setKeySearchList(updateKeySearchList);
@@ -994,5 +998,18 @@ public class IdpServiceImpl implements IdpService {
 		LOGGER.debug("rXActivateUserIdIDP ------- End");
 		return imResult;
 
+	}
+
+	/*
+	 * 
+	 * <pre> 전체서비스사이트에해지배포 - CMD : RXDeleteUserIdIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXDeleteUserIdIDP(HashMap map) {
+		return null;
 	}
 }

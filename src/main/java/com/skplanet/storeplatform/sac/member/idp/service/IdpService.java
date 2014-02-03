@@ -127,4 +127,16 @@ public interface IdpService {
 	 * @return
 	 */
 	public ImResult rXActivateUserIdIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 전체 서비스 사이트 해지 배포.
+	 * </pre>
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ImResult rXDeleteUserIdIDP(HashMap map);
+
 }
