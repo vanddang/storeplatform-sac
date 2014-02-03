@@ -40,6 +40,9 @@ public class MetaInfo {
 	private String expoSellerTelNo;
 	private String subContentsId;
 	private String imagePath;
+	private String imageNm;
+	private Integer imageSize;
+	private String chnlProdId;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -85,6 +88,8 @@ public class MetaInfo {
 	private String mp3SprtYn;
 	private String bellSprtYn;
 	private String colorringSprtYn;
+	private String outsdContentsId;
+	private Integer fileSizeH;
 
 	// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
 	private Double dcRate;
@@ -1393,4 +1398,80 @@ public class MetaInfo {
 	public void setCatalogId(String catalogId) {
 		this.catalogId = catalogId;
 	}
+
+	/**
+	 * @return the imageNm
+	 */
+	public String getImageNm() {
+		return this.imageNm;
+	}
+
+	/**
+	 * @param imageNm
+	 *            the imageNm to set
+	 */
+	public void setImageNm(String imageNm) {
+		this.imageNm = imageNm;
+	}
+
+	/**
+	 * @return the imageSize
+	 */
+	public Integer getImageSize() {
+		return this.imageSize;
+	}
+
+	/**
+	 * @param imageSize
+	 *            the imageSize to set
+	 */
+	public void setImageSize(Integer imageSize) {
+		this.imageSize = imageSize;
+	}
+
+	/**
+	 * @return the chnlProdId
+	 */
+	public String getChnlProdId() {
+		return this.chnlProdId;
+	}
+
+	/**
+	 * @param chnlProdId
+	 *            the chnlProdId to set
+	 */
+	public void setChnlProdId(String chnlProdId) {
+		this.chnlProdId = chnlProdId;
+	}
+
+	/**
+	 * @return the outsdContentsId
+	 */
+	public String getOutsdContentsId() {
+		return this.outsdContentsId;
+	}
+
+	/**
+	 * @param outsdContentsId
+	 *            the outsdContentsId to set
+	 */
+	public void setOutsdContentsId(String outsdContentsId) {
+		this.outsdContentsId = outsdContentsId;
+	}
+
+	/**
+	 * @return the fileSizeH
+	 */
+	public Integer getFileSizeH() {
+		return this.fileSizeH;
+	}
+
+	/**
+	 * @param fileSizeH
+	 *            the fileSizeH to set
+	 */
+	public void setFileSizeH(Integer fileSizeH) {
+		this.fileSizeH = fileSizeH;
+	}
+
 }
