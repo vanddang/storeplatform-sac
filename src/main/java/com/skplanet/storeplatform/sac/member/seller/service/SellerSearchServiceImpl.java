@@ -31,6 +31,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListR
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
+import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
@@ -47,6 +48,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
@@ -588,6 +591,37 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchAuthKeyRes response = new SearchAuthKeyRes();
 		response.setSessionKey(schRes.getLoginInfo().getSessionKey());
 		response.setExpireDate(schRes.getLoginInfo().getExpireDate());
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * 나라별 해회은행 정보 조회.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return ListBanksByCountryRes
+	 */
+	@Override
+	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header) {
+
+		ListBanksByCountryReq req = new ListBanksByCountryReq();
+		req.setUseYn("Y");
+
+		List<BanksByCountry> sList = this.commonDAO.queryForList("SellerSearch.listBanksByCountry", req,
+				BanksByCountry.class);
+
+		/*
+		 * List<SecedeReson> sList = new ArrayList<SecedeReson>(); SecedeReson secedeReson = null; if (sellerDTO !=
+		 * null) for (int i = 0; i < sellerDTO.size(); i++) { secedeReson = new SecedeReson();
+		 * secedeReson.setSecedeReasonCode(sellerDTO.get(i).getSecedeReasonCode());
+		 * secedeReson.setSecedeReasonMessage(sellerDTO.get(i).getSecedeReasonMessage()); sList.add(secedeReson); }
+		 */
+
+		ListBanksByCountryRes response = new ListBanksByCountryRes();
+		response.setBanksByCountry(sList);
 
 		return response;
 
