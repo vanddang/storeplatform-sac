@@ -7,9 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.purchase.shopping.coupon.vo;
-
-import javax.validation.constraints.NotNull;
+package com.skplanet.storeplatform.sac.client.purchase.shopping.vo;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -20,14 +18,13 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSa
  * 
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
-public class UseStatusSacReq extends PurchaseCommonSacReq {
+public class CouponUseStatusSacReq extends PurchaseCommonSacReq {
 
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
 	@NotBlank
 	private String prchsId;
-	private String cpPublishCd;
+	private String cpnPublishCd;
 
 	/**
 	 * @return the prchsId
@@ -45,18 +42,18 @@ public class UseStatusSacReq extends PurchaseCommonSacReq {
 	}
 
 	/**
-	 * @return the cpPublishCd
+	 * @return the cpnPublishCd
 	 */
-	public String getCpPublishCd() {
-		return this.cpPublishCd;
+	public String getCpnPublishCd() {
+		return this.cpnPublishCd;
 	}
 
 	/**
-	 * @param cpPublishCd
-	 *            the cpPublishCd to set
+	 * @param cpnPublishCd
+	 *            the cpnPublishCd to set
 	 */
-	public void setCpPublishCd(String cpPublishCd) {
-		this.cpPublishCd = cpPublishCd;
+	public void setCpnPublishCd(String cpnPublishCd) {
+		this.cpnPublishCd = cpnPublishCd;
 	}
 
 }

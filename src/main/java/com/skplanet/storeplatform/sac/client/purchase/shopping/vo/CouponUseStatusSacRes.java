@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.purchase.shopping.coupon.vo;
+package com.skplanet.storeplatform.sac.client.purchase.shopping.vo;
 
 import java.util.List;
 
@@ -18,25 +18,25 @@ import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseCommonSa
  * 
  * Updated on : 2014. 2. 3. Updated by : nTels_cswoo81, nTels.
  */
-public class UseStatusSacRes extends PurchaseCommonSacRes {
+public class CouponUseStatusSacRes extends PurchaseCommonSacRes {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<UseStatusDetailSacRes> useStatusList;
+	private List<CouponUseStatusDetailSacRes> cpnUseStatusList;
 
 	/**
-	 * @return the useStatusList
+	 * @return the cpnUseStatusList
 	 */
-	public List<UseStatusDetailSacRes> getUseStatusList() {
-		return this.useStatusList;
+	public List<CouponUseStatusDetailSacRes> getCpnUseStatusList() {
+		return this.cpnUseStatusList;
 	}
 
 	/**
-	 * @param useStatusList
-	 *            the useStatusList to set
+	 * @param cpnUseStatusList
+	 *            the cpnUseStatusList to set
 	 */
-	public void setUseStatusList(List<UseStatusDetailSacRes> useStatusList) {
-		this.useStatusList = useStatusList;
+	public void setCpnUseStatusList(List<CouponUseStatusDetailSacRes> cpnUseStatusList) {
+		this.cpnUseStatusList = cpnUseStatusList;
 	}
 
 }
