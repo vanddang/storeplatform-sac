@@ -11,6 +11,10 @@
                            http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
     <context:property-placeholder properties-ref="propertiesForSac" /> 
+    
+    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>
+    </bean>
         
     <beans profile="local"> 
         <util:properties id="propertiesForSac" location="classpath:sac/properties/app.local.properties" /> 

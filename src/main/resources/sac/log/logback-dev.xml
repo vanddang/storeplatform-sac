@@ -12,7 +12,7 @@
             <FileNamePattern>${catalina.home}/logs/sac/svc/service_storeplatform-sac_%d{yyyyMMdd}.log</FileNamePattern>            
         </rollingPolicy>
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${instanceName}|%X{type}|%logger{36}:%file:%line]\t%msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
         </layout>
     </appender>
     
@@ -22,17 +22,27 @@
             <FileNamePattern>${catalina.home}/logs/sac/err/error_storeplatform-sac_%d{yyyyMMdd}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${instanceName}|%X{type}|%logger{36}:%file:%line]\t%msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
         </layout>
     </appender>
     
     <appender name="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${catalina.home}/logs/omc/omc_요건1.log</File>
+        <File>${catalina.home}/logs/sac/omc/omc_요건1.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${catalina.home}/logs/omc/omc_요건1_%d{yyyyMMdd}.log</FileNamePattern>            
+            <FileNamePattern>${catalina.home}/logs/sac/omc/omc_요건1_%d{yyyyMMdd}.log</FileNamePattern>            
         </rollingPolicy> 
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${instanceName}|%X{type}|%logger{36}:%file:%line]\t%msg%n</pattern>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
+        </layout>
+    </appender>
+    
+    <appender name="FDS_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${catalina.home}/logs/sac/fds/fds.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/sac/fds/fds_%d{yyyyMMdd}.log</FileNamePattern>            
+        </rollingPolicy> 
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyyMMddHHmmssSSS}\t%-5level\t%X{GUID}\t%X{requesTenantId}\t%X{interfaceId}\t${hostName}\t${instanceName}\t%X{type}\t%file:%method:%line\t${logVersion}\t%X{requestSystemId}\t%X{insdMbrNo}\t%X{insdDeviceId}\t%X{mbrNo}\t%X{deviceId}\t%X{mbrId}\t%X{resultCode}\t%X{resultMessage}\t%msg%n</pattern>
         </layout>
     </appender>
     
@@ -52,6 +62,12 @@
     <logger name="OMC_요건1" additivity="false">
         <level value="INFO" />
         <appender-ref ref="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" />
+    </logger>
+    
+    <!-- FDS 로그 -->
+    <logger name="FDS_SAC_LOGGER" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="FDS_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     
     <!-- LOCAL 개발 CONSOL  로그 -->
