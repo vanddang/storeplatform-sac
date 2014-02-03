@@ -118,7 +118,7 @@
 		                            AND A.PROD_ID = J.PROD_ID
 		                            AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
 		                            AND F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' /* DP02 : 폰꾸미기 */
-		                          <if test="topMenuId != null">  
+		                          <if test='topMenuId != null and topMenuId != "" '>  
 		                            AND F.TOP_MENU_ID = #{topMenuId}
 		                          </if>
 		                            AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
