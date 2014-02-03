@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -88,7 +88,8 @@ public class UserSearchController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/member/user/detailByDeviceId/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req, BindingResult result) throws Exception {
+	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req,
+			BindingResult result) throws Exception {
 
 		LOGGER.info("##################################################");
 		LOGGER.info("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
@@ -120,9 +121,9 @@ public class UserSearchController extends ParameterExceptionHandling {
 
 	}
 
-	@RequestMapping(value = "/detail/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailRes exist(@RequestBody DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) throws Exception {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.9. 회원 정보 조회 #####");
 		LOGGER.info("####################################################");

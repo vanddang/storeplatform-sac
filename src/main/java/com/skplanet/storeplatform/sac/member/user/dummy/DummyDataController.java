@@ -20,15 +20,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.OneIdInfoSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
@@ -993,5 +996,174 @@ public class DummyDataController {
 	//
 	// return res;
 	// }
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ListAddtionalInformationRes
+	 */
+	@RequestMapping(value = "/member/user/listClause/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DetailClauseSacRes listClause() {
+
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.31.	약관목록 조회 #####");
+		LOGGER.info("####################################################");
+
+		DetailClauseSacRes res = new DetailClauseSacRes();
+		List<ClauseSacRes> clauseResList = new ArrayList<ClauseSacRes>();
+
+		ClauseSacRes clauseRes1 = new ClauseSacRes();
+		ClauseSacRes clauseRes2 = new ClauseSacRes();
+		ClauseSacRes clauseRes3 = new ClauseSacRes();
+
+		clauseRes1.setClauseId("1000000063");
+		clauseRes1.setClauseItemCd("US010601");
+		clauseRes1.setStartDay("20130514");
+		clauseRes1.setEndDay("20130526");
+		clauseRes1.setFilePath("/data/img/termsHTML/20130524111753_listNotice.htm");
+		clauseRes1.setFileNm("20130524111753_listNotice.htm");
+		clauseRes1.setClauseVer("1");
+		clauseRes1.setUpClauseId("1000000059");
+		clauseRes1.setDpYn("Y");
+		clauseRes1.setRegId("admin");
+		clauseRes1.setRegDt("20130524");
+		clauseRes1.setUpdId("admin");
+		clauseRes1.setUpdDt("20130528");
+
+		clauseRes2.setClauseId("1000000026");
+		clauseRes2.setClauseItemCd("US010602");
+		clauseRes2.setStartDay("20121130");
+		clauseRes2.setEndDay("20130430");
+		clauseRes2.setFilePath("/data/img/termsHTML/20121119114503_oneidinformation.html");
+		clauseRes2.setFileNm("20121119114503_oneidinformation.html");
+		clauseRes2.setClauseVer("1");
+		clauseRes2.setUpClauseId("1000000065");
+		clauseRes2.setDpYn("Y");
+		clauseRes2.setRegId("admin");
+		clauseRes2.setRegDt("20121119");
+		clauseRes2.setUpdId("admin");
+		clauseRes2.setUpdDt("20130524");
+
+		clauseRes3.setClauseId("1000000061");
+		clauseRes3.setClauseItemCd("US010609");
+		clauseRes3.setStartDay("20130502");
+		clauseRes3.setEndDay("20130430");
+		clauseRes3.setFilePath("/data/img/termsHTML/20130524110946_sample02.html");
+		clauseRes3.setFileNm("20130524110946_sample02.html");
+		clauseRes3.setClauseVer("1");
+		clauseRes3.setUpClauseId("1000000056");
+		clauseRes3.setDpYn("Y");
+		clauseRes3.setRegId("admin");
+		clauseRes3.setRegDt("20130524");
+		clauseRes3.setUpdId("admin");
+		clauseRes3.setUpdDt("20130524");
+
+		clauseResList.add(clauseRes1);
+		clauseResList.add(clauseRes2);
+		clauseResList.add(clauseRes3);
+
+		res.setListClauseList(clauseResList);
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ListAddtionalInformationRes
+	 */
+	@RequestMapping(value = "/member/user/detailClause/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DetailClauseSacRes detailClause() {
+
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.32.	약관목록 상세 조회 #####");
+		LOGGER.info("####################################################");
+
+		DetailClauseSacRes res = new DetailClauseSacRes();
+		List<ClauseSacRes> clauseResList = new ArrayList<ClauseSacRes>();
+
+		ClauseSacRes clauseRes1 = new ClauseSacRes();
+		ClauseSacRes clauseRes2 = new ClauseSacRes();
+		ClauseSacRes clauseRes3 = new ClauseSacRes();
+
+		clauseRes1.setClauseId("1000000059");
+		clauseRes1.setClauseItemCd("US010601");
+		clauseRes1.setStartDay("20130527");
+		clauseRes1.setEndDay("29991231");
+		clauseRes1.setFilePath("/data/img/termsHTML/20130523225047_sample03.html");
+		clauseRes1.setFileNm("20130523225047_sample03.html");
+		clauseRes1.setClauseVer("1");
+		clauseRes1.setUpClauseId("1000000059");
+		clauseRes1.setDpYn("Y");
+		clauseRes1.setRegId("admin");
+		clauseRes1.setRegDt("20130524");
+		clauseRes1.setUpdId("admin");
+		clauseRes1.setUpdDt("20130528");
+
+		clauseRes2.setClauseId("1000000063");
+		clauseRes2.setClauseItemCd("US010601");
+		clauseRes2.setStartDay("20121130");
+		clauseRes2.setEndDay("20130430");
+		clauseRes2.setFilePath("/data/img/termsHTML/20130524111753_listNotice.htm");
+		clauseRes2.setFileNm("20130524111753_listNotice.htm");
+		clauseRes2.setClauseVer("1");
+		clauseRes2.setUpClauseId("1000000065");
+		clauseRes2.setDpYn("Y");
+		clauseRes2.setRegId("admin");
+		clauseRes2.setRegDt("20121119");
+		clauseRes2.setUpdId("admin");
+		clauseRes2.setUpdDt("20130524");
+
+		clauseRes3.setClauseId("1000000066");
+		clauseRes3.setClauseItemCd("US010601");
+		clauseRes3.setStartDay("20130502");
+		clauseRes3.setEndDay("20130430");
+		clauseRes3.setFilePath("/data/img/termsHTML/20130526125332_sample04.html");
+		clauseRes3.setFileNm("20130526125332_sample04.html");
+		clauseRes3.setClauseVer("1");
+		clauseRes3.setUpClauseId("1000000056");
+		clauseRes3.setDpYn("Y");
+		clauseRes3.setRegId("admin");
+		clauseRes3.setRegDt("20130524");
+		clauseRes3.setUpdId("admin");
+		clauseRes3.setUpdDt("20130524");
+
+		clauseResList.add(clauseRes1);
+		clauseResList.add(clauseRes2);
+		clauseResList.add(clauseRes3);
+
+		res.setDetailClauseList(clauseResList);
+
+		return res;
+	}
+
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @return ListAddtionalInformationRes
+	 */
+	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OneIdInfoSacRes searchOneIdInfo() {
+
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 5.1.33.	OneId 정보 조회 #####");
+		LOGGER.info("####################################################");
+
+		OneIdInfoSacRes res = new OneIdInfoSacRes();
+		res.setIdctYn("Y");
+		res.setOcbYn("Y");
+		res.setCi("0MV9wnibpIbmH+0g1sSZ8NJkJ7MiFTjvWwgnrycdYQbusSpz0s9Vat0WX4bYVwoqpjfO3nanJKnJkHiQYWwR8g==");
+
+		return res;
+	}
 
 }

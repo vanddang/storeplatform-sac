@@ -1019,7 +1019,7 @@ public class DeviceServiceImpl implements DeviceService {
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
 			if (!res.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				throw new StorePlatformException("result_code : [" + res.getCommonResponse().getResultCode() + "] result_message : ["
+				throw new StorePlatformException("대표단말 설정 실패 result_code : [" + res.getCommonResponse().getResultCode() + "] result_message : ["
 						+ res.getCommonResponse().getResultMessage() + "]");
 			} else {
 				setMainDeviceRes.setDeviceKey(req.getDeviceKey());
@@ -1562,7 +1562,7 @@ public class DeviceServiceImpl implements DeviceService {
 			if (device.getAomSprtYn() != null) {
 				res.setIsAomSupport(device.getAomSprtYn());
 			} else {
-				throw new StorePlatformException("###### PhoneInfo.getAOmSprtYn is Null ");
+				throw new StorePlatformException("###### PhoneInfo.getAomSprtYn is Null ");
 			}
 
 		}
