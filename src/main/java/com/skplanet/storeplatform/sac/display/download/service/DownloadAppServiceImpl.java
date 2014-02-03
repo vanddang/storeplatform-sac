@@ -201,6 +201,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					throw new StorePlatformException("ERROR_0001", "1", "2", "3");
 				}
 
+				List<Identifier> seedIdentifierList = new ArrayList<Identifier>();
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				if (StringUtil.isEmpty(downloadAppInfo.getSeedProductId())) {
@@ -208,8 +209,22 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				} else {
 					identifier.setText(downloadAppInfo.getSeedProductId());
 				}
+				seedIdentifierList.add(identifier);
 
-				component.setIdentifier(identifier);
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_GAMECENTER_IDENTIFIER_CD);
+				if (StringUtil.isEmpty(downloadAppInfo.getGameCentrId())) {
+					identifier.setText("");
+				} else {
+					identifier.setText(downloadAppInfo.getGameCentrId());
+				}
+
+				seedIdentifierList.add(identifier);
+
+				component.setIdentifierList(seedIdentifierList);
+				component
+						.setGameCenterVerCd(StringUtils.isNotEmpty(downloadAppInfo.getGameCentrVerCd()) ? downloadAppInfo
+								.getGameCentrVerCd() : "");
 
 				if (StringUtil.isEmpty(downloadAppInfo.getSeedProductId())) {
 					component.setUseYn("");
@@ -228,6 +243,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 				identifier.setText(downloadAppInfo.getProdId());
 				identifierList.add(identifier);
+				identifier = new Identifier();
 				// identifier = new Identifier();
 				// identifier.setType("isPartOf");
 				// identifier.setText(downloadAppInfo.getProdId());
@@ -292,6 +308,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				product.setRights(rights);
 				product.setDistributor(distributor);
 				product.setPurchase(purchase);
+				product.setPlatClsfCd(downloadAppInfo.getPlatClsfCd());
 
 				commonResponse.setTotalCount(1);
 			} else {
@@ -315,9 +332,21 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			component = new Component(); // Seed App 정보
 
 			identifier = new Identifier();
-			identifier.setType("episode");
+			List<Identifier> seedIdentifierList = new ArrayList<Identifier>();
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 			identifier.setText("0000395599");
-			component.setIdentifier(identifier);
+			seedIdentifierList.add(identifier);
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_GAMECENTER_IDENTIFIER_CD);
+			identifier.setText("0000395599");
+
+			seedIdentifierList.add(identifier);
+
+			component.setIdentifierList(seedIdentifierList);
+			component.setIdentifierList(seedIdentifierList);
+			component.setGameCenterVerCd("3.1");
 			component.setUseYn("Y");
 			component.setCaseRefCd("PD013018");
 
@@ -385,6 +414,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			product.setRights(rights);
 			product.setDistributor(distributor);
 			product.setPurchase(purchase);
+			product.setPlatClsfCd("PD005606");
 
 			commonResponse.setTotalCount(1);
 		}

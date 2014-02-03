@@ -41,6 +41,9 @@ public class DownloadApp {
 	private String seedProductId; // Seed 상품 Id
 	private String seedCaseRefCd; // Seed 유형 참조 코드
 	private String seedUseYn; // 사용여부
+	private String platClsfCd; // 플랫폼 구분
+	private String gameCentrVerCd; // 게임센터 버전코드
+	private String gameCentrId; // 게임센터 Id
 
 	/**
 	 * 
@@ -640,5 +643,50 @@ public class DownloadApp {
 	 */
 	public void setSeedUseYn(String seedUseYn) {
 		this.seedUseYn = seedUseYn;
+	}
+
+	/**
+	 * @return the platClsfCd
+	 */
+	public String getPlatClsfCd() {
+		return this.platClsfCd;
+	}
+
+	/**
+	 * @param platClsfCd
+	 *            the platClsfCd to set
+	 */
+	public void setPlatClsfCd(String platClsfCd) {
+		this.platClsfCd = platClsfCd;
+	}
+
+	/**
+	 * @return the gameCentrVerCd
+	 */
+	public String getGameCentrVerCd() {
+		return this.gameCentrVerCd;
+	}
+
+	/**
+	 * @param gameCentrVerCd
+	 *            the gameCentrVerCd to set
+	 */
+	public void setGameCentrVerCd(String gameCentrVerCd) {
+		this.gameCentrVerCd = gameCentrVerCd;
+	}
+
+	/**
+	 * @return the gameCentrId
+	 */
+	public String getGameCentrId() {
+		return this.gameCentrId;
+	}
+
+	/**
+	 * @param gameCentrId
+	 *            the gameCentrId to set
+	 */
+	public void setGameCentrId(String gameCentrId) {
+		this.gameCentrId = gameCentrId;
 	}
 }

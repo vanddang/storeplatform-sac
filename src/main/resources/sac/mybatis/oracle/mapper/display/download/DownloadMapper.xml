@@ -66,6 +66,9 @@
 			                                                                                                 )
 			                                                                                          )
 			                                                                           ) AS SUPPORTED_OS      
+                  , KA.PLAT_CLSF_CD
+                  , KA.GAME_CENTR_VER_CD
+                  , KA.GAME_CENTR_ID         			                                                                           
 			      , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
 			      , KB.FILE_PATH AS FILE_PATH
 			      , KC.FILE_PATH AS IMAGE_PATH
@@ -86,6 +89,8 @@
 			               , E.PART_PARENT_CLSF_CD
 			               , E.PKG_VER_CD
 			               , E.PROD_CLSF_CD
+                           , E.GAME_CENTR_VER_CD
+                           , E.GAME_CENTR_ID			               
 			               , E.PKG_NM
 			               , E.PLAT_CLSF_CD
 			               , (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = E.PLAT_CLSF_CD) AS PLAT_CLSF_CD_NM
