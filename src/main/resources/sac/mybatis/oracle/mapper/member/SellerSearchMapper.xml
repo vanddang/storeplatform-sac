@@ -27,4 +27,19 @@
             AND lang_cd =#{koUsWhether} 
     </select>
     
+    <!-- 나라별 해외은행 정보 조회 -->
+    <select id="listBanksByCountry" parameterType="ListBanksByCountryReq" resultType="BanksByCountry">
+        SELECT 
+		    NATION_CD nationCode,
+		    NATION_NM nationName,
+		    ALPHA2_CD alphaCode,
+		    BANK_NO bankNo,
+		    NATION_TEL_NO nationTelNo,
+		    NATION_DESC nationDesc
+		FROM 
+		    TB_CM_NATION
+		WHERE 
+		  USE_YN=#{useYn} 
+    </select>
+    
 </mapper>
