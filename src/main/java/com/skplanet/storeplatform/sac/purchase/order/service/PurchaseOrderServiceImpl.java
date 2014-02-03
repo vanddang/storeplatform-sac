@@ -443,6 +443,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return eData;
 	}
 
-	public static final String DUMMY_PP_PAYMENT_PAGE_URL = "http://localhost:8080/payplanet/paymentPage";
-	public static final String DUMMY_SAC_PUR_PAYMENT_NOTIFY_URL = "http://localhost:8010/sp_sac/purchase/order/notifyPayment/v1";
+	public static final String DUMMY_PP_PAYMENT_PAGE_URL = "http://121.165.99.39:8080/payplanet/paymentPage";
+	public static final String DUMMY_SAC_PUR_PAYMENT_NOTIFY_URL = "http://121.165.99.39:8010/sp_sac/purchase/order/notifyPayment/v1";
 }
