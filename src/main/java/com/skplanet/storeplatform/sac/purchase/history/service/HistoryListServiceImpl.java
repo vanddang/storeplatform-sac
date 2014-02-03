@@ -33,7 +33,6 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacR
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistorySac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductCountSac;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService;
 
 /**
@@ -62,7 +61,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 	 * @return HistoryListSacRes
 	 */
 	@Override
-	public HistoryListSacRes searchHistoryList(HistoryListSacReq request, SacRequestHeader requestHeader) {
+	public HistoryListSacRes searchHistoryList(HistoryListSacReq request) {
 		this.LOGGER.debug("HistoryListSacRes : {}", request);
 
 		// SC request/response VO

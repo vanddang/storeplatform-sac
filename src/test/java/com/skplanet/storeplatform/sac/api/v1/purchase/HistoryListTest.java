@@ -12,6 +12,9 @@ package com.skplanet.storeplatform.sac.api.v1.purchase;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +39,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
@@ -87,15 +91,23 @@ public class HistoryListTest {
 					@Override
 					public Object requestBody() {
 						HistoryListSacReq req = new HistoryListSacReq();
+						List<ProductListSac> list = new ArrayList<ProductListSac>();
+						ProductListSac prod = new ProductListSac();
+
 						req.setTenantId("S01"); // 테넌트ID
-						req.setInsdUsermbrNo("IF1423020847420091202152309"); // 사용자번호
-						req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
+						req.setInsdUsermbrNo("IW102158844420091030165015"); // 사용자번호
+						// req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
 						req.setStartDt("20100101000000"); // 조회시작일시
 						req.setEndDt("20140113000000"); // 조회종료일시
-						req.setHidingYn("N"); // 숨김여부 Y:숨김 N:비숨김 null:전체
-						// req.setTenantProdGrpCd("GRP");
+						// req.setHidingYn("N"); // 숨김여부 Y:숨김 N:비숨김 null:전체
+						req.setPrchsProdType("OR020201"); // 보유상품 : OR020201, 미보유상품 : OR020202, 구매권한상품 : OR020203
+						req.setOffset(1);
+						req.setCount(10);
 
-						// req.setPrchsProdType("send");
+						prod.setProdId("H090108807");
+						list.add(prod);
+
+						req.setProductList(list);
 
 						return req;
 					}

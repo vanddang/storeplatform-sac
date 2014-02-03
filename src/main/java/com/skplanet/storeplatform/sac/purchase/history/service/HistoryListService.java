@@ -13,7 +13,6 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSac
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * 구매내역 Interface
@@ -31,7 +30,7 @@ public interface HistoryListService {
 	 *            공통헤더정보
 	 * @return HistoryListSacRes
 	 */
-	public HistoryListSacRes searchHistoryList(HistoryListSacReq request, SacRequestHeader requestHeader);
+	public HistoryListSacRes searchHistoryList(HistoryListSacReq request);
 
 	/**
 	 * 구매내역건수 조회 기능을 제공한다.

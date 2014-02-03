@@ -82,7 +82,7 @@ public class HistoryListController {
 		request.setSystemId(tenantHeader.getSystemId());
 		this.LOGGER.debug("TenantHeader :: " + tenantHeader.toString());
 
-		return this.historyListService.searchHistoryList(request, requestHeader);
+		return this.historyListService.searchHistoryList(request);
 	}
 
 	/**
