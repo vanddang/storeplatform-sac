@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -84,7 +85,6 @@ public class SellerServiceImpl implements SellerService {
 	 * @param header
 	 * @param req
 	 * @return CreateRes
-	 * @throws Exception
 	 */
 	@Override
 	public CreateRes createSeller(SacRequestHeader header, CreateReq req) {
@@ -125,25 +125,26 @@ public class SellerServiceImpl implements SellerService {
 
 		/** 실명인증정보 생성 및 주입 [끝]. */
 
+		// TODO 삭제 예정
 		/** 약관동의 정보 리스트 주입 - [시작]. */
-		// List<MbrClauseAgree> mbrClauseAgreeList = null;
-		// MbrClauseAgree mbrClauseAgree = null;
-		// if (req.getAgreementList() != null) {
-		// mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
-		// for (int i = 0; i < req.getAgreementList().size(); i++) {
-		// mbrClauseAgree = new MbrClauseAgree();
-		// // 약관동의 ID
-		// mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
-		// // 약관동의 여부
-		// mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
-		// // 약관 버전
-		// mbrClauseAgree.setExtraAgreementVersion(req.getAgreementList().get(i).getExtraAgreementVersion());
-		// mbrClauseAgreeList.add(mbrClauseAgree);
-		// LOGGER.debug("==>>[SC] CreateSellerRequest.mbrClauseAgree[{}].toString() : {}", i,
-		// mbrClauseAgree.toString());
-		// }
-		// createSellerRequest.setMbrClauseAgree(mbrClauseAgreeList);
-		// }
+		List<MbrClauseAgree> mbrClauseAgreeList = null;
+		MbrClauseAgree mbrClauseAgree = null;
+		if (req.getAgreementList() != null) {
+			mbrClauseAgreeList = new ArrayList<MbrClauseAgree>();
+			for (int i = 0; i < req.getAgreementList().size(); i++) {
+				mbrClauseAgree = new MbrClauseAgree();
+				// 약관동의 ID
+				mbrClauseAgree.setExtraAgreementID(req.getAgreementList().get(i).getExtraAgreementId());
+				// 약관동의 여부
+				mbrClauseAgree.setIsExtraAgreement(req.getAgreementList().get(i).getIsExtraAgreement());
+				// 약관 버전
+				mbrClauseAgree.setExtraAgreementVersion(req.getAgreementList().get(i).getExtraAgreementVersion());
+				mbrClauseAgreeList.add(mbrClauseAgree);
+				LOGGER.debug("==>>[SC] CreateSellerRequest.mbrClauseAgree[{}].toString() : {}", i,
+						mbrClauseAgree.toString());
+			}
+			createSellerRequest.setMbrClauseAgree(mbrClauseAgreeList);
+		}
 		/** 약관동의 정보 리스트 주입 - [끝]. */
 
 		/** 보안질문 리스트 주입 - [시작]. */
@@ -285,7 +286,6 @@ public class SellerServiceImpl implements SellerService {
 	 * @param header
 	 * @param req
 	 * @return AuthorizeRes
-	 * @throws Exception
 	 */
 	@Override
 	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) {
@@ -411,7 +411,6 @@ public class SellerServiceImpl implements SellerService {
 	 * @param header
 	 * @param req
 	 * @return ConfirmRes
-	 * @throws Exception
 	 */
 	@Override
 	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req) {
@@ -479,7 +478,6 @@ public class SellerServiceImpl implements SellerService {
 	 * @param header
 	 * @param req
 	 * @return LockAccountRes
-	 * @throws Exception
 	 */
 	@Override
 	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) {
@@ -545,14 +543,12 @@ public class SellerServiceImpl implements SellerService {
 	 * @param header
 	 * @param req
 	 * @return ModifyInformationRes
-	 * @throws Exception
 	 */
 	@Override
 	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) {
 
-		// getCommonRequest
 		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
-		/** 1. SC회원 Req 생성 및 주입. */
+		/** 1. SC-REQUEST 생성 및 주입. */
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
 
 		// 실명인증 정보
@@ -670,7 +666,6 @@ public class SellerServiceImpl implements SellerService {
 	 * @param header
 	 * @param req
 	 * @return ModifyAccountInformationRes
-	 * @throws Exception
 	 */
 	@Override
 	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req) {

@@ -64,8 +64,9 @@ public class SellerSearchController {
 	 * @return DuplicateByIdEmailRes
 	 */
 	@RequestMapping(value = "/duplicateByIdEmail/v1", method = RequestMethod.POST)
-	private @ResponseBody
-	DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, @RequestBody @Validated DuplicateByIdEmailReq req) {
+	@ResponseBody
+	private DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header,
+			@RequestBody @Validated DuplicateByIdEmailReq req) {
 		return this.sellerSearchService.duplicateByIdEmail(header, req);
 	}
 

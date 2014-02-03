@@ -279,8 +279,8 @@ public class MiscellaneousController {
 	 * @return GetIndividualPolicyRes
 	 */
 	@RequestMapping(value = "/getIndividualPolicy/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header,
+	@ResponseBody
+	public GetIndividualPolicyRes getIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated GetIndividualPolicyReq req) {
 		return this.service.getIndividualPolicy(header, req);
 	}
@@ -295,8 +295,8 @@ public class MiscellaneousController {
 	 * @return CreateIndividualPolicyRes
 	 */
 	@RequestMapping(value = "/createIndividualPolicy/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header,
+	@ResponseBody
+	public CreateIndividualPolicyRes createIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated CreateIndividualPolicyReq req) {
 		return this.service.createIndividualPolicy(header, req);
 	}
@@ -311,8 +311,8 @@ public class MiscellaneousController {
 	 * @return RemoveIndividualPolicyRes
 	 */
 	@RequestMapping(value = "/removeIndividualPolicy/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header,
+	@ResponseBody
+	public RemoveIndividualPolicyRes removeIndividualPolicy(SacRequestHeader header,
 			@RequestBody @Validated RemoveIndividualPolicyReq req) {
 		return this.service.removeIndividualPolicy(header, req);
 	}

@@ -65,8 +65,8 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) {
+	@ResponseBody
+	public CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) {
 		return this.sellerService.createSeller(header, req);
 	}
 
@@ -80,8 +80,8 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) throws Exception {
+	@ResponseBody
+	public AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) throws Exception {
 		return this.sellerService.authorize(header, req);
 	}
 
@@ -96,8 +96,8 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	ModifyInformationRes modifyInformation(SacRequestHeader header, @RequestBody @Valid ModifyInformationReq req)
+	@ResponseBody
+	public ModifyInformationRes modifyInformation(SacRequestHeader header, @RequestBody @Valid ModifyInformationReq req)
 			throws Exception {
 		return this.sellerService.modifyInformation(header, req);
 	}
@@ -112,8 +112,8 @@ public class SellerController {
 	 * @return ModifyAccountInformationRes
 	 */
 	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header,
+	@ResponseBody
+	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header,
 			@RequestBody @Valid ModifyAccountInformationReq req) {
 		return this.sellerService.modifyAccountInformation(header, req);
 	}
@@ -129,8 +129,8 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) {
+	@ResponseBody
+	public ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) {
 		return this.sellerService.confirm(header, req);
 	}
 
@@ -144,9 +144,9 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/lockAccount/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req, BindingResult result)
-			throws Exception {
+	@ResponseBody
+	public LockAccountRes lockAccount(SacRequestHeader header, @RequestBody @Validated LockAccountReq req,
+			BindingResult result) throws Exception {
 		return this.sellerService.lockAccount(header, req);
 	}
 
@@ -160,8 +160,8 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) throws Exception {
+	@ResponseBody
+	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) throws Exception {
 		LOGGER.debug("### 2.2.3. 판매자 회원 탈퇴 [authorize] START ###");
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
@@ -186,8 +186,8 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/createAuthorizationKey/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Validated CreateAuthKeyReq req)
+	@ResponseBody
+	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Validated CreateAuthKeyReq req)
 			throws Exception {
 
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
@@ -211,9 +211,9 @@ public class SellerController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, @RequestBody @Validated AbrogationAuthKeyReq req)
-			throws Exception {
+	@ResponseBody
+	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header,
+			@RequestBody @Validated AbrogationAuthKeyReq req) throws Exception {
 
 		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
