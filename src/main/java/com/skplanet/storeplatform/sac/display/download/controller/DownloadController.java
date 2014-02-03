@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicReq;
@@ -21,6 +23,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacR
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadAppService;
+import com.skplanet.storeplatform.sac.display.download.service.DownloadComicService;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadEbookService;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadMusicService;
 import com.skplanet.storeplatform.sac.display.download.service.DownloadVodService;
@@ -46,6 +49,9 @@ public class DownloadController {
 
 	@Autowired
 	private DownloadEbookService downloadEbookService;
+
+	@Autowired
+	private DownloadComicService downloadComicService;
 
 	/**
 	 * 
@@ -112,7 +118,7 @@ public class DownloadController {
 	 * @param requestHeader
 	 *            requestHeader
 	 * @param downloadEbookReq
-	 *            requestHeader
+	 *            downloadEbookReq
 	 * @return DownloadEbookRes
 	 */
 	@RequestMapping(value = "/ebook/detail/v1", method = RequestMethod.POST)
@@ -120,9 +126,31 @@ public class DownloadController {
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader,
 			@RequestBody DownloadEbookSacReq downloadEbookReq) {
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("getDownloadEbookInfo started");
+		this.logger.debug("getDownloadEbookInfo started.");
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.downloadEbookService.getDownloadEbookInfo(requestHeader, downloadEbookReq);
+	}
+
+	/**
+	 * <pre>
+	 * Comic 상품 정보 조회(for download).
+	 * </pre>
+	 * 
+	 * @param requestHeader
+	 *            requestHeader
+	 * @param downloadComicReq
+	 *            downloadComicReq
+	 * @return DownloadComicSacRes
+	 */
+	@RequestMapping(value = "/comic/detail/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader,
+			@RequestBody DownloadComicSacReq downloadComicReq) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getDownloadComicInfo started.");
+		this.logger.debug("----------------------------------------------------------------");
+
+		return this.downloadComicService.getDownloadComicInfo(requestHeader, downloadComicReq);
 	}
 }
