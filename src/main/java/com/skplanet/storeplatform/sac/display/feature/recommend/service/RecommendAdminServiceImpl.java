@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,22 +26,16 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.FeatureConstant;
-import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdminDTO;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * 
@@ -59,6 +55,12 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -71,11 +73,9 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		// TODO Auto-generated method stub
 
 		// 공통 응답 변수 선언
-		int totalCount = 0;
-		RecommendAdminRes responseVO = null;
-		CommonResponse commonResponse = null;
-		List<RecommendAdminDTO> resultList = null;
-		List<Product> listVO = new ArrayList<Product>();
+		// int totalCount = 0;
+		RecommendAdminRes responseVO = new RecommendAdminRes();
+		CommonResponse commonResponse = new CommonResponse();
 
 		// 헤더값 세팅
 		requestVO.setTenantId(header.getTenantHeader().getTenantId());
@@ -143,147 +143,48 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		String[] topMenuIdArr = requestVO.getTopMenuId().split(","); // 구분자 확인 필요 + 에러
 		requestVO.setTopMenuIdArr(topMenuIdArr);
 
-		resultList = this.commonDAO.queryForList("FeatureRecommend.selectRecommendAdminList", requestVO,
-				RecommendAdminDTO.class);
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
+				"FeatureRecommend.selectRecommendAdminList", requestVO, ProductBasicInfo.class);
 
-		RecommendAdminDTO recommendAdminDTO;
-		Product product;
-		Identifier identifier;
-		Title title;
-		App app;
-		Accrual accrual;
-		Rights rights;
-		Source source;
-		Price price;
-		Support support;
-		Menu menu;
-
-		// Response VO를 만들기위한 생성자
 		List<Product> productList = new ArrayList<Product>();
-		List<Menu> menuList;
-		List<Source> sourceList;
-		List<Support> supportList;
-		List<Identifier> identifierList;
 
-		for (int i = 0; resultList != null && i < resultList.size(); i++) {
+		// DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		reqMap.put("req", requestVO);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
 
-			recommendAdminDTO = resultList.get(i);
-			product = new Product();
-			identifier = new Identifier();
-			title = new Title();
-			app = new App();
-			accrual = new Accrual();
-			rights = new Rights();
-			source = new Source();
-			price = new Price();
-			support = new Support();
+		reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+		reqMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-			// 상품ID
-			identifier = new Identifier();
+		if (productBasicInfoList != null) {
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
 
-			// Response VO를 만들기위한 생성자
-			menuList = new ArrayList<Menu>();
-			sourceList = new ArrayList<Source>();
-			supportList = new ArrayList<Support>();
-			identifierList = new ArrayList<Identifier>();
+				// App Meta 정보 조회
+				MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
-			totalCount = recommendAdminDTO.getTotalCount();
-
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(recommendAdminDTO.getProdId());
-			title.setText(recommendAdminDTO.getProdNm());
-
-			menu = new Menu();
-			menu.setId(recommendAdminDTO.getTopMenuId());
-			menu.setName(recommendAdminDTO.getTopMenuNm());
-			menu.setType("topClass");
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId(recommendAdminDTO.getMenuId());
-			menu.setName(recommendAdminDTO.getMenuNm());
-			// menu.setType("");
-			menuList.add(menu);
-
-			app.setAid(recommendAdminDTO.getAid());
-			app.setPackageName(recommendAdminDTO.getApkPkgNm());
-			app.setVersionCode(recommendAdminDTO.getApkVer());
-			// app.setVersion(recommendAdminDTO.getProdVer());
-			app.setVersion(FeatureConstant.convertProdVer(recommendAdminDTO.getVerMajor(),
-					recommendAdminDTO.getVerMinor()));
-			product.setApp(app);
-
-			accrual.setVoterCount(recommendAdminDTO.getPrchsCnt());
-			accrual.setDownloadCount(recommendAdminDTO.getDwldCnt());
-			accrual.setScore(recommendAdminDTO.getAvgEvluScore());
-			// accrual.setScore(3.3);
-
-			/*
-			 * Rights grade
-			 */
-			// rights.setGrade(recommendAdminDTO.getProdGrdCd());
-			rights.setGrade(FeatureConstant.convertProdGrdCd(recommendAdminDTO.getProdGrdCd()));
-
-			source.setMediaType(DisplayCommonUtil.getMimeType(recommendAdminDTO.getFilePath()));
-			source.setSize(recommendAdminDTO.getFileSize());
-			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			source.setUrl(recommendAdminDTO.getFilePath());
-			sourceList.add(source);
-
-			/*
-			 * Price text
-			 */
-			price.setText(recommendAdminDTO.getProdAmt());
-
-			// identifier Lisst형으로 수정
-			// product.setIdentifier(identifier);
-			identifierList.add(identifier);
-			product.setIdentifierList(identifierList);
-
-			product.setTitle(title);
-			// support.setText(StringUtil.nvl(recommendAdminDTO.getDrmYn(), "") + "|" +
-			// StringUtil.nvl(recommendAdminDTO.getPartParentClsfCd(), ""));
-
-			if ("PD012301".equals(recommendAdminDTO.getPartParentClsfCd())) {
-				support = new Support();
-				support.setType("iab");
-				support.setText("Y");
-				supportList.add(support);
-			} else {
-				support = new Support();
-				support.setType("iab");
-				support.setText("N");
-				supportList.add(support);
+				if (retMetaInfo != null) {
+					// App Response Generate
+					Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+					productList.add(product);
+				}
 			}
-			if ("Y".equals(recommendAdminDTO.getDrmYn())) {
-				support = new Support();
-				support.setType("drm");
-				support.setText("Y");
-				supportList.add(support);
-			} else {
-				support = new Support();
-				support.setType("drm");
-				support.setText("N");
-				supportList.add(support);
-			}
-
-			product.setSupportList(supportList);
-			product.setMenuList(menuList);
-
-			product.setAccrual(accrual);
-			product.setRights(rights);
-			product.setProductExplain(recommendAdminDTO.getProdBaseDesc());
-			product.setSourceList(sourceList);
-			product.setPrice(price);
-
-			listVO.add(product);
+			commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
 		}
 
-		responseVO = new RecommendAdminRes();
-		commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(totalCount);
-
-		responseVO.setCommonResponse(commonResponse);
-		responseVO.setProductList(listVO);
 		return responseVO;
 	}
 
