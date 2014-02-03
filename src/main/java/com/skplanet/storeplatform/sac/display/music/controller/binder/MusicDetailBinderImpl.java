@@ -25,7 +25,6 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         music.setIdentifier(new Identifier("downloadId", musicDetail.getOutsdContentsId()));
 
         // Music Source List
-        /*
         music.setSourceList(new ArrayList<Source>());
         for (SubContent sc : contentList) {
             Source src = new Source();
@@ -34,7 +33,6 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
 
             music.getSourceList().add(src);
         }
-        */
 
         music.setServiceList(new ArrayList<Service>(
                 Arrays.asList(
