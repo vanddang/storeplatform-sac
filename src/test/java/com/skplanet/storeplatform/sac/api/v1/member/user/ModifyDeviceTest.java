@@ -94,12 +94,11 @@ public class ModifyDeviceTest {
 						public Object requestBody() {
 							ModifyDeviceReq req = new ModifyDeviceReq();
 							req.setUserAuthKey("263c4ed6240966f9d28b33650161c843fb37bed9");
-							req.setUserKey("US201401221721168550000323");
-							//req.setDeviceKey("DE201401221008185490000164");
+							req.setUserKey("US201401272100457410001091");
 
 							DeviceInfo deviceInfo = new DeviceInfo();
-							deviceInfo.setDeviceId("01066786220");
-							deviceInfo.setUserKey("US201401161113423010000110");
+							deviceInfo.setDeviceKey("DE201401272100457660000548");
+							deviceInfo.setDeviceId("01066786230");
 							deviceInfo.setDeviceIdType("msisdn ");
 							deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
 							deviceInfo.setIsPrimary("N");
