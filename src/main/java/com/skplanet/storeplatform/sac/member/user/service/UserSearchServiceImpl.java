@@ -43,6 +43,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
@@ -606,4 +608,37 @@ public class UserSearchServiceImpl implements UserSearchService {
 		return agreementRes;
 
 	}
+
+	@Override
+	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req) {
+
+		DetailByDeviceIdSacRes response = new DetailByDeviceIdSacRes();
+
+		/**
+		 * OPMD 여부 setting.
+		 */
+		response.setIsOpmd(this.getOpmdYn(req));
+
+		return response;
+	}
+
+	/**
+	 * <pre>
+	 * OPMD 단말 여부.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            Request Value Object
+	 * @return String (Y or N)
+	 */
+	private String getOpmdYn(DetailByDeviceIdSacReq req) {
+
+		if (StringUtils.substring(req.getDeviceId(), 0, 3).equals("989")) {
+			return MemberConstants.USE_Y;
+		} else {
+			return MemberConstants.USE_N;
+		}
+
+	}
+
 }

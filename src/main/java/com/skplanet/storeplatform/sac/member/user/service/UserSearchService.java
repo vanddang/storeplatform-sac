@@ -10,6 +10,8 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
@@ -98,4 +100,17 @@ public interface UserSearchService {
 	 * @throws Exception
 	 */
 	public SearchAgreementRes searchAgreement(SearchAgreementReq req, SacRequestHeader sacHeader) throws Exception;
+
+	/**
+	 * <pre>
+	 * 실명 인증 정보 등록.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return Response Value Object
+	 */
+	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req);
 }

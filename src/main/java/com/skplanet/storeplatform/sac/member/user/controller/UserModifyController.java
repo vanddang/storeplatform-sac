@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
@@ -80,7 +81,7 @@ public class UserModifyController {
 		 */
 		if (result.hasErrors()) {
 			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
@@ -129,7 +130,7 @@ public class UserModifyController {
 		 */
 		if (result.hasErrors()) {
 			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
@@ -178,7 +179,7 @@ public class UserModifyController {
 		 */
 		if (result.hasErrors()) {
 			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
@@ -212,7 +213,7 @@ public class UserModifyController {
 		 */
 		if (result.hasErrors()) {
 			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("Request Parameter Binding Exception!!!");
 		}
 
 		/**
