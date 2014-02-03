@@ -88,7 +88,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 		downloadVodSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadVodSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadVodSacReq.setLangCd(tanantHeader.getLangCd());
-		downloadVodSacReq.setImgCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+		downloadVodSacReq.setImageCd(DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 
 		DownloadVodSacRes response = new DownloadVodSacRes();
 		CommonResponse commonResponse = new CommonResponse();
@@ -248,11 +248,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				/*
 				 * source mediaType, size, type, url
 				 */
-				source.setMediaType(DisplayCommonUtil.getMimeType(downloadVodInfo.getImgPath()
-						+ downloadVodInfo.getImgNm()));
+				source.setMediaType(DisplayCommonUtil.getMimeType(downloadVodInfo.getImagePath()
+						+ downloadVodInfo.getImageNm()));
 				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(downloadVodInfo.getImgPath() + downloadVodInfo.getImgNm());
-				source.setSize(downloadVodInfo.getImgSize());
+				source.setUrl(downloadVodInfo.getImagePath() + downloadVodInfo.getImageNm());
+				source.setSize(downloadVodInfo.getImageSize());
 				sourceList.add(source);
 
 				runningTime.setText(downloadVodInfo.getEpsdPlayTm());
