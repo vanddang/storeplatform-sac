@@ -87,7 +87,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @throws Exception
 	 */
 	@Override
-	public CreateRes createSeller(SacRequestHeader header, CreateReq req) throws Exception {
+	public CreateRes createSeller(SacRequestHeader header, CreateReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.createSeller() [START] ############");
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -288,7 +288,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @throws Exception
 	 */
 	@Override
-	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) throws Exception {
+	public AuthorizeRes authorize(SacRequestHeader header, AuthorizeReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.authorize() [START] ############");
 
@@ -338,7 +338,7 @@ public class SellerServiceImpl implements SellerService {
 				if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse()
 						.getResultCode())) {
 					// TODO [김경복] Exception 재정의 필요
-					throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
+					// throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
 				}
 			}
 		}
@@ -414,7 +414,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @throws Exception
 	 */
 	@Override
-	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req) throws Exception {
+	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req) {
 		LOGGER.debug("############ SellerServiceImpl.confirm() [START] ############");
 
 		/** 1. SC회원 정보조회[Req] 생성 및 주입 */
@@ -436,7 +436,7 @@ public class SellerServiceImpl implements SellerService {
 						.equals(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING)) {
 			LOGGER.error("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
 			// TODO Exception 재정의 필요
-			throw new Exception("회원 메인 상태 :  " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			// throw new Exception("회원 메인 상태 :  " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
 		}
 
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -460,7 +460,7 @@ public class SellerServiceImpl implements SellerService {
 
 		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
 			// TODO [김경복] Exception 재정의 필요
-			throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
+			// throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		/** 4. TenantRes Response 생성 및 주입 */
@@ -482,7 +482,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @throws Exception
 	 */
 	@Override
-	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) throws Exception {
+	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
 
@@ -502,7 +502,7 @@ public class SellerServiceImpl implements SellerService {
 		if (!searchSellerResponse.getSellerMbr().getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_NORMAL)) {
 			LOGGER.error("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
 			// TODO [김경복] Exception 재정의 필요
-			throw new Exception("회원의 메인상태 : " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			// throw new Exception("회원의 메인상태 : " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
 		}
 
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -526,7 +526,7 @@ public class SellerServiceImpl implements SellerService {
 
 		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
 			// TODO [김경복] Exception 재정의 필요
-			throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
+			// throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		/** 4. TenantRes Response 생성 및 주입 */
@@ -548,7 +548,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @throws Exception
 	 */
 	@Override
-	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) throws Exception {
+	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) {
 
 		// getCommonRequest
 		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
@@ -651,7 +651,7 @@ public class SellerServiceImpl implements SellerService {
 
 		if (!MemberConstants.RESULT_SUCCES.equals(updateSellerResponse.getCommonResponse().getResultCode())) {
 			// TODO [김경복] Exception 재정의 필요
-			throw new Exception(updateSellerResponse.getCommonResponse().getResultMessage());
+			// throw new Exception(updateSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		/** 4. TenantRes Response 생성 및 주입 */
@@ -673,8 +673,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @throws Exception
 	 */
 	@Override
-	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req)
-			throws Exception {
+	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req) {
 		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
 
@@ -694,7 +693,7 @@ public class SellerServiceImpl implements SellerService {
 
 		if (!MemberConstants.RESULT_SUCCES.equals(updateAccountSellerResponse.getCommonResponse().getResultCode())) {
 			// TODO [김경복] Exception 재정의 필요
-			throw new Exception(updateAccountSellerResponse.getCommonResponse().getResultMessage());
+			// throw new Exception(updateAccountSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		/** 4. TenantRes Response 생성 및 주입 */

@@ -1,13 +1,11 @@
 package com.skplanet.storeplatform.sac.member.common.util;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
 /**
  * Convert Mapper Util
@@ -45,14 +43,8 @@ public class ConvertMapperUtils {
 					}
 				}
 			}
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_MEM_0098", e);
 		}
 		return returnObj;
 	}
@@ -70,12 +62,8 @@ public class ConvertMapperUtils {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			returnStr = mapper.writeValueAsString(obj);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_MEM_0099", e);
 		}
 		return returnStr;
 	}

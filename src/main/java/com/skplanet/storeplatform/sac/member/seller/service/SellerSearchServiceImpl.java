@@ -132,7 +132,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				.getResultCode())) {
 			response.setIsRegistered("N");
 		} else {
-			throw new RuntimeException(checkDuplicationSellerResponse.getCommonResponse().getResultMessage());
 		}
 
 		return response;

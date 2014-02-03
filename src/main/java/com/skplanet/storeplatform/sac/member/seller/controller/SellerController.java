@@ -66,7 +66,7 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) throws Exception {
+	CreateRes createSeller(SacRequestHeader header, @RequestBody @Validated CreateReq req) {
 		return this.sellerService.createSeller(header, req);
 	}
 
@@ -114,7 +114,7 @@ public class SellerController {
 	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header,
-			@RequestBody @Valid ModifyAccountInformationReq req) throws Exception {
+			@RequestBody @Valid ModifyAccountInformationReq req) {
 		return this.sellerService.modifyAccountInformation(header, req);
 	}
 
@@ -130,7 +130,7 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/confirm/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) throws Exception {
+	ConfirmRes confirm(SacRequestHeader header, @RequestBody @Validated ConfirmReq req) {
 		return this.sellerService.confirm(header, req);
 	}
 
