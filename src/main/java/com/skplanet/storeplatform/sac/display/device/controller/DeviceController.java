@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningReq;
+import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
 
 /**
@@ -35,6 +38,9 @@ public class DeviceController {
 	@Autowired
 	private DeviceProfileService deviceProfileService;
 
+	@Autowired
+	private DeviceProductProvisioningService deviceProductProvisioningService;
+
 	/**
 	 * <pre>
 	 * 특정 단말 조회.
@@ -48,8 +54,15 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/specific/detail/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DeviceProfileRes specificDetail(DeviceProfileReq request, SacRequestHeader header) {
-		return this.deviceProfileService.searchDeviceProfile(request, header);
+	public DeviceProfileRes searchSpecificDetail(DeviceProfileReq req, SacRequestHeader header) {
+		return this.deviceProfileService.searchDeviceProfile(req, header);
+	}
+
+	@RequestMapping(value = "/product/provisioning/get/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public DeviceProductProvisioningRes searchProductProvisioning(DeviceProductProvisioningReq req,
+			SacRequestHeader header) {
+		return this.deviceProductProvisioningService.searchProductProvisioning(req, header);
 	}
 
 }

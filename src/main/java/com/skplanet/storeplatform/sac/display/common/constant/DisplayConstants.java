@@ -328,4 +328,9 @@ public class DisplayConstants {
 	// ////////////////////////////////////// preview //////////////////////////////////////////
 	public static final String DP_PREVIEW_HQ = "video/x-freeview-hq";
 	public static final String DP_PREVIEW_LQ = "video/x-freeview-lq";
+
+	/**
+	 * 특정 상품 조회 API 파라미터 제한 개수
+	 */
+	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = new Integer(50);
 }

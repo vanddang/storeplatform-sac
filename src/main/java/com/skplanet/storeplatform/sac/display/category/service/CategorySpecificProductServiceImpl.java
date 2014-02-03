@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
@@ -87,9 +88,10 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 
 		if (req.getDummy() == null) {
 			List<String> prodIdList = Arrays.asList(StringUtils.split(req.getList(), "+"));
-			if (prodIdList.size() > 50) {
+			if (prodIdList.size() > DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT) {
 				// TODO osm1021 에러 처리 추가 필요
-				this.log.error("## prod id over 50 : {}" + prodIdList.size());
+				throw new StorePlatformException("SAC_DSP_0004", "list",
+						DisplayConstants.DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT);
 			}
 
 			// 상품 기본 정보 List 조회
