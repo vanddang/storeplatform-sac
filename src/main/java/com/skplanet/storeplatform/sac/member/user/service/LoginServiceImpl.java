@@ -146,8 +146,8 @@ public class LoginServiceImpl implements LoginService {
 		/* 원아이디인 경우 */
 		if (chkDupRes.getUserMbr().getImSvcNo() != null) {
 
-			/* 단말정보 merge */
-			this.mergeDeviceInfo(requestHeader, userKey, null, req);
+			/* 단말정보 update */
+			this.updateDeviceInfo(requestHeader, userKey, null, req);
 
 			/* 로그인 성공이력 저장 */
 			this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
@@ -168,8 +168,8 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
-				/* 단말정보 merge */
-				this.mergeDeviceInfo(requestHeader, userKey, null, req);
+				/* 단말정보 update */
+				this.updateDeviceInfo(requestHeader, userKey, null, req);
 
 				/* 로그인 성공이력 저장 */
 				this.insertloginHistory(requestHeader, deviceId, "", "Y", "Y", deviceId);
@@ -286,7 +286,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtils.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
 
-				this.mergeDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
+				this.updateDeviceInfo(requestHeader, userKey, imIdpReceiver.getResponseBody().getUser_auth_key(), req);
 
 				this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
@@ -384,7 +384,7 @@ public class LoginServiceImpl implements LoginService {
 
 			if (StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
 
-				this.mergeDeviceInfo(requestHeader, userKey, idpReceiver.getResponseBody().getUser_auth_key(), req);
+				this.updateDeviceInfo(requestHeader, userKey, idpReceiver.getResponseBody().getUser_auth_key(), req);
 
 				this.insertloginHistory(requestHeader, userId, userPw, "Y", "N", req.getIpAddress());
 
@@ -519,7 +519,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void mergeDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) throws Exception {
+	public void updateDeviceInfo(SacRequestHeader requestHeader, String userKey, String userAuthKey, Object obj) throws Exception {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userKey);
@@ -535,7 +535,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setNativeId(req.getNativeId());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
-			this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
+			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 		} else if (obj instanceof AuthorizeByIdReq) { // id인증
 
@@ -550,7 +550,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setNativeId(req.getNativeId());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 				deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
-				this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
+				this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 				/* 변경된 휴대기기 정보 IDP도 변경 */
 				this.userService.modifyProfileIdp(requestHeader, userKey, userAuthKey);
@@ -657,7 +657,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setUserKey(userKey);
 			deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
 			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, imMngNum, deviceInfo));
-			this.deviceService.mergeDeviceInfo(requestHeader, deviceInfo);
+			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 		} else {
 

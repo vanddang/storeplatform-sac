@@ -270,7 +270,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setUserKey(userKey);
 
 		/* 휴대기기 정보 수정 */
-		deviceKey = this.mergeDeviceInfo(requestHeader, deviceInfo);
+		deviceKey = this.updateDeviceInfo(requestHeader, deviceInfo);
 
 		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
 		if (req.getUserAuthKey() != null) {
@@ -548,13 +548,13 @@ public class DeviceServiceImpl implements DeviceService {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.skplanet.storeplatform.sac.member.user.service.DeviceService#
-	 * mergeDeviceInfo(java.lang.String, java.lang.String,
+	 * updateDeviceInfo(java.lang.String, java.lang.String,
 	 * com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo)
 	 */
 	@Override
-	public String mergeDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) throws Exception {
+	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo deviceInfo) throws Exception {
 
-		logger.info("################ mergeDeviceInfo start ##################");
+		logger.info("################ updateDeviceInfo start ##################");
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -625,7 +625,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getUserDeviceExtraInfo()); // rooting 여부
 
-		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
+		logger.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
 		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
 
@@ -798,7 +798,7 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
 
-		logger.info(":::::::::::::::::: device merge field ::::::::::::::::::");
+		logger.info(":::::::::::::::::: device update field end ::::::::::::::::::");
 
 		/* 기기정보 업데이트 */
 		CreateDeviceRequest createDeviceReq = new CreateDeviceRequest();
@@ -814,7 +814,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		logger.info("################ mergeDeviceInfo end ##################");
+		logger.info("################ updateDeviceInfo end ##################");
 
 		return createDeviceRes.getDeviceKey();
 
