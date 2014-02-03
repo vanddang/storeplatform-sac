@@ -30,8 +30,8 @@
                          WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
                          ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE     /* 평점 */
               ]]> 
-		      ,KA.DWLD_CNT /* 다운로드수 */
-		      ,KA.PATICPERS_CNT /* 참여자수 */
+		      ,NVL(KA.DWLD_CNT, 0) AS DWLD_CNT /* 다운로드수 */
+		      ,NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT /* 참여자수 */
 		      ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
 		      ,KC.FILE_NM AS IMG_NM /* 이미지 명 */
 		      ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
@@ -147,7 +147,7 @@
     <select id="selectBestDownloadMMList" parameterType="bestDownloadReq" resultType="BestDownload">
         SELECT  /* BestDownloadMapper.xml, selectBestDownloadMMList, SAC : 홍지호 , 2014-01-25 */
                 LA.TOTAL_COUNT
---              , LA.RNUM
+              , LA.RNUM
               , LA.TOP_MENU_ID
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
