@@ -24,7 +24,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 
 /**
  * Interface Message Product Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -88,7 +88,7 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	private String productDetailExplain;
 	/**
-	 * 상품소개내용
+	 * 상품소개내용.
 	 */
 	private String productIntroduction;
 	/**
@@ -199,6 +199,11 @@ public class Product extends CommonInfo implements Serializable {
 	 * 상품 유/무료 여부.
 	 */
 	private String prodChrgYn;
+
+	/**
+	 * 플랫폼 구분 코드.
+	 */
+	private String platClsfCd;
 
 	/**
 	 * @return Identifier
@@ -409,21 +414,21 @@ public class Product extends CommonInfo implements Serializable {
 	public void setProductDetailExplain(String productDetailExplain) {
 		this.productDetailExplain = productDetailExplain;
 	}
-	
-	
+
 	/**
-	 * 상품 소개 내용
-	 * @return
-	 * 		상품 소개 내용
+	 * 상품 소개 내용.
+	 * 
+	 * @return String
 	 */
 	public String getProductIntroduction() {
-		return productIntroduction;
+		return this.productIntroduction;
 	}
 
 	/**
-	 * 상품 소개 내용
+	 * 상품 소개 내용.
+	 * 
 	 * @param productIntroduction
-	 * 		상품 소개 내용
+	 *            productIntroduction
 	 */
 	public void setProductIntroduction(String productIntroduction) {
 		this.productIntroduction = productIntroduction;
@@ -767,7 +772,7 @@ public class Product extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param subProductTotalCount
 	 *            subProductTotalCount
 	 */
@@ -805,12 +810,34 @@ public class Product extends CommonInfo implements Serializable {
 		this.dateList = dateList;
 	}
 
+	/**
+	 * @return the prodChrgYn
+	 */
 	public String getProdChrgYn() {
 		return this.prodChrgYn;
 	}
 
+	/**
+	 * @param prodChrgYn
+	 *            the prodChrgYn to set
+	 */
 	public void setProdChrgYn(String prodChrgYn) {
 		this.prodChrgYn = prodChrgYn;
+	}
+
+	/**
+	 * @return the platClsfCd
+	 */
+	public String getPlatClsfCd() {
+		return this.platClsfCd;
+	}
+
+	/**
+	 * @param platClsfCd
+	 *            the platClsfCd to set
+	 */
+	public void setPlatClsfCd(String platClsfCd) {
+		this.platClsfCd = platClsfCd;
 	}
 
 }

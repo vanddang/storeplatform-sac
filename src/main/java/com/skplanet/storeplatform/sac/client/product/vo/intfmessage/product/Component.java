@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -33,6 +34,7 @@ public class Component extends CommonInfo implements Serializable {
 	 * 상품 ID
 	 */
 	private Identifier identifier;
+	private List<Identifier> identifierList;
 
 	/**
 	 * identifier 추가 기술.
@@ -153,6 +155,11 @@ public class Component extends CommonInfo implements Serializable {
 	private String caseRefCd; //
 
 	private Component component;
+
+	/**
+	 * 게임센터 버전코드.
+	 */
+	private String gameCenterVerCd;
 
 	/**
 	 * 
@@ -577,5 +584,35 @@ public class Component extends CommonInfo implements Serializable {
 	 */
 	public void setCaseRefCd(String caseRefCd) {
 		this.caseRefCd = caseRefCd;
+	}
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	/**
+	 * @param identifierList
+	 *            the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
+	}
+
+	/**
+	 * @return the gameCenterVerCd
+	 */
+	public String getGameCenterVerCd() {
+		return this.gameCenterVerCd;
+	}
+
+	/**
+	 * @param gameCenterVerCd
+	 *            the gameCenterVerCd to set
+	 */
+	public void setGameCenterVerCd(String gameCenterVerCd) {
+		this.gameCenterVerCd = gameCenterVerCd;
 	}
 }
