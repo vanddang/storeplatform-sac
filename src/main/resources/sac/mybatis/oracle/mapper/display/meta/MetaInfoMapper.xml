@@ -14,6 +14,7 @@
               , TB.MENU_ID
               , TB.MENU_NM
               , TB.PROD_ID
+              , TB.PROD_ID AS PART_PROD_ID
               , TB.AID
               , TB.PROD_NM
               , TB.PROD_BASE_DESC
