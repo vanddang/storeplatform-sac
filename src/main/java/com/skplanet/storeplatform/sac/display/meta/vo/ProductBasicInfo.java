@@ -6,6 +6,7 @@ package com.skplanet.storeplatform.sac.display.meta.vo;
  * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스
  */
 public class ProductBasicInfo {
+	private Integer totalCount;
 	private String tenantId;
 	private String menuId;
 	private String prodId;
@@ -16,6 +17,21 @@ public class ProductBasicInfo {
 	private String metaClsfCd;
 	private String topMenuId;
 	private String expoOrd;
+
+	/**
+	 * @return the totalCount
+	 */
+	public Integer getTotalCount() {
+		return this.totalCount;
+	}
+
+	/**
+	 * @param totalCount
+	 *            the totalCount to set
+	 */
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
 
 	/**
 	 * @return the tenantId
