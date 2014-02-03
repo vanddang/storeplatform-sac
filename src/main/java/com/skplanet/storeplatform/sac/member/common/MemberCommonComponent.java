@@ -104,7 +104,7 @@ public class MemberCommonComponent {
 			return this.miscellaneousService.getOpmd(req).getMsisdn();
 
 		} catch (Exception e) {
-			throw new StorePlatformException("미정의", e);
+			throw new StorePlatformException("SAC_MEM_", e);
 		}
 	}
 
