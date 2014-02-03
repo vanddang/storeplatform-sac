@@ -11,23 +11,23 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
 
 /**
  * 기구매체크 SAC Service 인터페이스
  * 
  * Updated on : 2013-09-01 Updated by :조용진, 엔텔스.
  */
-public interface ExistenceService {
+public interface ExistenceSacService {
 
 	/**
 	 * 기구매 체크 SAC Service.
 	 * 
-	 * @param existenceRequest
+	 * @param existenceScRequest
 	 *            요청정보
-	 * @return List<ExistenceResponse>
+	 * @return List<ExistenceScResponse>
 	 */
-	public List<ExistenceResponse> listExist(ExistenceRequest existenceRequest);
+	public List<ExistenceScResponse> searchExistenceList(ExistenceScRequest existenceScRequest);
 
 }

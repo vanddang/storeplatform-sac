@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.AutoPaymentCancelSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScResponse;
 
 /**
  * 기구매 SAC Service 인터페이스 구현체
@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelRe
  */
 @Service
 @Transactional
-public class AutoPaymentCancelServiceImpl implements AutoPaymentCancelService {
+public class AutoPaymentCancelSacServiceImpl implements AutoPaymentCancelSacService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -41,9 +41,9 @@ public class AutoPaymentCancelServiceImpl implements AutoPaymentCancelService {
 	 * @return AutoPaymentCancelResponse
 	 */
 	@Override
-	public AutoPaymentCancelResponse modifyReservation(AutoPaymentCancelRequest autoPaymentCancelRequest) {
-		AutoPaymentCancelResponse autoPaymentCancelResponse = new AutoPaymentCancelResponse();
-		autoPaymentCancelResponse = this.autoPaymentCancelSCI.modifyReservation(autoPaymentCancelRequest);
+	public AutoPaymentCancelScResponse updateReservation(AutoPaymentCancelScRequest autoPaymentCancelRequest) {
+		AutoPaymentCancelScResponse autoPaymentCancelResponse = new AutoPaymentCancelScResponse();
+		autoPaymentCancelResponse = this.autoPaymentCancelSCI.updateReservation(autoPaymentCancelRequest);
 		if (autoPaymentCancelResponse.getResultYn().equals("Y")) {
 			this.logger.debug("@@@@@@자동결재해지예약/예약취소/해지 이메일 발송 처리@@@@@@");
 			// 이메일 발송 및 성공실패에 대한 셋팅이 필요함

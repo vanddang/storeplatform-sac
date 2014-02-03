@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
 
 /**
  * 기구매 SAC Service 인터페이스 구현체
@@ -29,7 +29,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
  */
 @Service
 @Transactional
-public class ExistenceServiceImpl implements ExistenceService {
+public class ExistenceSacServiceImpl implements ExistenceSacService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -43,18 +43,20 @@ public class ExistenceServiceImpl implements ExistenceService {
 	 * @return List<ExistenceResponse>
 	 */
 	@Override
-	public List<ExistenceResponse> listExist(ExistenceRequest existenceRequest) {
-		List<ExistenceResponse> existenceListResponse = new ArrayList<ExistenceResponse>();
-		List<ExistenceResponse> resultList = new ArrayList<ExistenceResponse>();
-		resultList = this.existenceSCI.listExist(existenceRequest);
+	public List<ExistenceScResponse> searchExistenceList(ExistenceScRequest existenceRequest) {
+
+		// 구매완료건만을 넣기 위한 리스트
+		List<ExistenceScResponse> existenceListScResponse = new ArrayList<ExistenceScResponse>();
+		// SC에서 리턴받을 리스트
+		List<ExistenceScResponse> resultList = new ArrayList<ExistenceScResponse>();
+		resultList = this.existenceSCI.searchExistenceList(existenceRequest);
 		this.logger.debug("SAC size : {}", resultList.size());
 		for (int i = 0; i < resultList.size(); i++) {
 			this.logger.debug("resultList.get(i).getStatusCd() : {}", resultList.get(i).getStatusCd());
 			if (resultList.get(i).getStatusCd() != null && resultList.get(i).getStatusCd().equals("OR000301")) {
-				existenceListResponse.add(resultList.get(i));
+				existenceListScResponse.add(resultList.get(i));
 			}
 		}
-
-		return existenceListResponse;
+		return existenceListScResponse;
 	}
 }

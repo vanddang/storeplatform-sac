@@ -25,15 +25,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceList;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceResponse;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceService;
+import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 
 /**
  * 구매 SAC 컨트롤러
@@ -47,21 +47,23 @@ public class ExistenceController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private ExistenceService existenceService;
+	private ExistenceSacService existenceSacService;
 
 	/**
 	 * 기구매 체크 SAC.
 	 * 
 	 * @param existenceReq
 	 *            요청정보
+	 * @param bindingResult
+	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return List<ExistenceRes> 응답정보
 	 */
 	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistenceListRes listExist(@RequestBody @Validated ExistenceReq existenceReq, BindingResult bindingResult,
-			SacRequestHeader requestHeader) {
+	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
+			BindingResult bindingResult, SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 
@@ -72,50 +74,50 @@ public class ExistenceController {
 				throw new StorePlatformException("SAC_PUR_0001", error.getField());
 			}
 		}
-		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
-		ExistenceListRes existenceListRes = new ExistenceListRes();
-		ExistenceRequest req = this.reqConvert(existenceReq, header);
-		List<ExistenceResponse> existenceResponse = new ArrayList<ExistenceResponse>();
 
-		existenceResponse = this.existenceService.listExist(req);
+		List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
 
-		res = this.resConvert(existenceResponse);
-		this.logger.debug("@@@@@@@@@@@@@{} ", res.size());
+		ExistenceScRequest req = this.reqConvert(existenceSacReq, header);
+		res = this.resConvert(this.existenceSacService.searchExistenceList(req));
 
+		ExistenceListSacRes existenceListRes = new ExistenceListSacRes();
 		existenceListRes.setExistenceListRes(res);
+
 		return existenceListRes;
 	}
 
 	/**
 	 * reqConvert.
 	 * 
-	 * @param existenceReq
+	 * @param existenceSacReq
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return ExistenceRequest
+	 * @return ExistenceScRequest
 	 */
-	private ExistenceRequest reqConvert(ExistenceReq existenceReq, TenantHeader header) {
+	private ExistenceScRequest reqConvert(ExistenceSacReq existenceSacReq, TenantHeader header) {
 
-		ExistenceRequest req = new ExistenceRequest();
-		List<ExistenceList> list = new ArrayList<ExistenceList>();
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@ Start reqConvert @@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		ExistenceScRequest req = new ExistenceScRequest();
+		List<ExistenceItemSc> existenceItemListSc = new ArrayList<ExistenceItemSc>();
 
 		req.setTenantId(header.getTenantId());
-		req.setInsdUsermbrNo(existenceReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(existenceReq.getInsdDeviceId());
-		req.setPrchsId(existenceReq.getPrchsId());
-		// 삼품리스트가 없을시 제외
-		if (existenceReq.getExistenceList() != null) {
-			int size = existenceReq.getExistenceList().size();
-			this.logger.debug("@@@@@@reqConvert@@@@@@@{} ", size);
+		req.setInsdUsermbrNo(existenceSacReq.getInsdUsermbrNo());
+		req.setInsdDeviceId(existenceSacReq.getInsdDeviceId());
+		req.setPrchsId(existenceSacReq.getPrchsId());
+		// 상품리스트가 없을시 제외
+		if (existenceSacReq.getExistenceItemSac() != null) {
+			int size = existenceSacReq.getExistenceItemSac().size();
 			for (int i = 0; i < size; i++) {
-				ExistenceList existenceList = new ExistenceList();
-				existenceList.setProdId(existenceReq.getExistenceList().get(i).getProdId());
-				existenceList.setTenantProdGrpCd(existenceReq.getExistenceList().get(i).getTenantProdGrpCd());
-				list.add(existenceList);
+				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
+				existenceItemSc.setProdId(existenceSacReq.getExistenceItemSac().get(i).getProdId());
+				existenceItemSc.setTenantProdGrpCd(existenceSacReq.getExistenceItemSac().get(i).getTenantProdGrpCd());
+				existenceItemListSc.add(existenceItemSc);
 			}
 		}
-		req.setExistenceList(list);
+		req.setExistenceItemSc(existenceItemListSc);
 
 		return req;
 	}
@@ -123,20 +125,24 @@ public class ExistenceController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param existenceResponseList
+	 * @param existenceListScResponse
 	 *            요청정보
-	 * @return List<ExistenceRes>
+	 * @return List<ExistenceSacRes>
 	 */
-	private List<ExistenceRes> resConvert(List<ExistenceResponse> existenceResponseList) {
-		List<ExistenceRes> res = new ArrayList<ExistenceRes>();
-		int size = existenceResponseList.size();
-		this.logger.debug("@@@@@@resConvert@@@@@@@{} ", size);
-		for (int i = 0; i < size; i++) {
-			ExistenceRes existenceRes = new ExistenceRes();
-			existenceRes.setPrchsId(existenceResponseList.get(i).getPrchsId());
-			existenceRes.setProdId(existenceResponseList.get(i).getProdId());
+	private List<ExistenceSacRes> resConvert(List<ExistenceScResponse> existenceListScResponse) {
 
-			res.add(existenceRes);
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		this.logger.debug("@@@@@@ Start resConvert @@@@@@");
+		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+		List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
+		int size = existenceListScResponse.size();
+		for (int i = 0; i < size; i++) {
+			ExistenceSacRes existenceSacRes = new ExistenceSacRes();
+			existenceSacRes.setPrchsId(existenceListScResponse.get(i).getPrchsId());
+			existenceSacRes.setProdId(existenceListScResponse.get(i).getProdId());
+
+			res.add(existenceSacRes);
 		}
 
 		return res;
