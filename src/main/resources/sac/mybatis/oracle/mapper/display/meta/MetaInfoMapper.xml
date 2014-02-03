@@ -401,7 +401,7 @@
              , TB.CHNL_COMP_NM
              , TB.AGENCY_NM
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN 'serial' END ) AS BOOK_TYPE
-             , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 0 END ) AS BOOK_COUNT
+             , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN ( TB.EPSD_CNT + TB.STRM_EPSD_CNT ) ELSE 1 END ) AS BOOK_COUNT
              , ( CASE WHEN TB.EPSD_CNT > 0 THEN 'store' END ) AS SUPPORT_STORE
              , ( CASE WHEN TB.STRM_EPSD_CNT > 0 THEN 'play' END ) AS SUPPORT_PLAY
              , ( CASE WHEN TB.META_CLSF_CD IN ( 'CT20', 'CT21' ) THEN DECODE( TB.COMPT_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS                          
