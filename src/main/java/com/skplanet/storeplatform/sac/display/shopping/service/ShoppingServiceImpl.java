@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -32,6 +34,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -66,32 +69,51 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
 
 		if (req.getDummy() == null) {
+
+			// 공통 응답 변수 선언
+			Integer totalCount = 0;
 			ShoppingRes responseVO = null;
+			CommonResponse commonResponse = null;
+			List<Shopping> resultList = null;
+			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setSystemId(header.getTenantHeader().getSystemId());
+			req.setLangCd(header.getTenantHeader().getLangCd());
+			req.setImageCd("DP000164");
+			req.setDeviceModelCd("SHV-E330SSO");
 
-			/** TODO 2. 테스트용 if 헤더 셋팅 */
-			if (header.getTenantHeader() == null) {
-				req.setTenantId("S01");
-				req.setImageCd("DP000196");
-				req.setLangCd("ko");
-				req.setDeviceModelCd("SHV-E330SSO");
-			} else {
-				req.setTenantId(header.getTenantHeader().getTenantId());
-				req.setSystemId(header.getTenantHeader().getSystemId());
-				req.setLangCd(header.getTenantHeader().getLangCd());
-				req.setImageCd("DP000196");
-				req.setDeviceModelCd("SHV-E330SSO");
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getTenantId()) || StringUtils.isEmpty(req.getListId())) {
+				this.log.debug("----------------------------------------------------------------");
+				this.log.debug("필수 파라미터 부족");
+				this.log.debug("----------------------------------------------------------------");
+
+				responseVO = new ShoppingRes();
+				responseVO.setCommonResponse(new CommonResponse());
+				return responseVO;
+			}
+			if (StringUtils.isEmpty(req.getProdCharge())) {
+				req.setProdCharge(null);
+			}
+			if (StringUtils.isEmpty(req.getProdGradeCd())) {
+				req.setProdGradeCd(null);
 			}
 
-			String stdDt = "";
-			stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
-			if (stdDt == null) {
-				stdDt = "20130101000000";
+			String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
+
+			// 기준일시 체크
+			if (StringUtils.isEmpty(stdDt)) {
+				this.log.debug("----------------------------------------------------------------");
+				this.log.debug("배치완료 기준일시 정보 누락");
+				this.log.debug("----------------------------------------------------------------");
+
+				responseVO = new ShoppingRes();
+				responseVO.setCommonResponse(new CommonResponse());
+				return responseVO;
 			}
+
 			req.setStdDt(stdDt);
 
-			Integer totalCount = 0;
-			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getFeatureProductList", req,
-					Shopping.class);
+			resultList = this.commonDAO.queryForList("Shopping.getFeatureProductList", req, Shopping.class);
 
 			if (resultList != null) {
 				Shopping shopping = new Shopping();
@@ -154,7 +176,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-					source.setUrl(shopping.getFilePath() + shopping.getFileNm());
+					source.setUrl(shopping.getFilePos());
 					sourceList.add(source);
 
 					// 다운로드 수
@@ -198,7 +220,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				responseVO = new ShoppingRes();
 				responseVO.setProductList(productList);
 
-				CommonResponse commonResponse = new CommonResponse();
+				commonResponse = new CommonResponse();
 				commonResponse.setTotalCount(totalCount);
 				responseVO.setCommonResponse(commonResponse);
 			}
@@ -335,24 +357,36 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Override
 	public ShoppingRes getNewProductList(SacRequestHeader header, ShoppingReq req) {
 		if (req.getDummy() == null) {
+			// 공통 응답 변수 선언
+			Integer totalCount = 0;
 			ShoppingRes responseVO = null;
-			/** TODO 2. 테스트용 if 헤더 셋팅 */
-			if (header.getTenantHeader() == null) {
-				req.setTenantId("S01");
-				req.setImageCd("DP000196");
-				req.setLangCd("ko");
-				req.setDeviceModelCd("SHV-E330SSO");
-			} else {
-				req.setTenantId(header.getTenantHeader().getTenantId());
-				req.setSystemId(header.getTenantHeader().getSystemId());
-				req.setImageCd("DP000196");
-				req.setLangCd(header.getTenantHeader().getLangCd());
+			CommonResponse commonResponse = null;
+			List<Shopping> resultList = null;
 
-				req.setDeviceModelCd("SHV-E330SSO");
+			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setSystemId(header.getTenantHeader().getSystemId());
+			req.setLangCd(header.getTenantHeader().getLangCd());
+			req.setImageCd("DP000164");
+			req.setDeviceModelCd("SHV-E330SSO");
+
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getTenantId())) {
+				this.log.debug("----------------------------------------------------------------");
+				this.log.debug("필수 파라미터 부족");
+				this.log.debug("----------------------------------------------------------------");
+
+				responseVO = new ShoppingRes();
+				responseVO.setCommonResponse(new CommonResponse());
+				return responseVO;
+			}
+			if (StringUtils.isEmpty(req.getProdCharge())) {
+				req.setProdCharge(null);
+			}
+			if (StringUtils.isEmpty(req.getProdGradeCd())) {
+				req.setProdGradeCd(null);
 			}
 
-			Integer totalCount = 0;
-			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req, Shopping.class);
+			resultList = this.commonDAO.queryForList("Shopping.getNewProductList", req, Shopping.class);
 
 			if (resultList != null) {
 				Shopping shopping = new Shopping();
@@ -415,7 +449,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(shopping.getFilePath() + shopping.getFileNm());
+					source.setUrl(shopping.getFilePos());
 					sourceList.add(source);
 
 					// 다운로드 수
@@ -459,7 +493,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				responseVO = new ShoppingRes();
 				responseVO.setProductList(productList);
 
-				CommonResponse commonResponse = new CommonResponse();
+				commonResponse = new CommonResponse();
 				commonResponse.setTotalCount(totalCount);
 				responseVO.setCommonResponse(commonResponse);
 			}
@@ -596,33 +630,63 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Override
 	public ShoppingRes getSubProductList(SacRequestHeader header, ShoppingReq req) {
 		if (req.getDummy() == null) {
+			// 공통 응답 변수 선언
+			Integer totalCount = 0;
 			ShoppingRes responseVO = null;
+			CommonResponse commonResponse = null;
+			List<Shopping> resultList = null;
 
-			/** TODO 2. 테스트용 if 헤더 셋팅 */
-			if (header.getTenantHeader() == null) {
-				req.setTenantId("S01");
-				req.setImageCd("DP000196");
-				req.setLangCd("ko");
-				req.setDeviceModelCd("SHV-E330SSO");
-			} else {
-				req.setTenantId(header.getTenantHeader().getTenantId());
-				req.setSystemId(header.getTenantHeader().getSystemId());
-				req.setImageCd("DP000196");
-				req.setLangCd("ko");
-				req.setDeviceModelCd("SHV-E330SSO");
+			req.setTenantId(header.getTenantHeader().getTenantId());
+			req.setSystemId(header.getTenantHeader().getSystemId());
+			req.setLangCd(header.getTenantHeader().getLangCd());
+			req.setImageCd("DP000164");
+			req.setDeviceModelCd("SHV-E330SSO");
+
+			// 필수 파라미터 체크
+			if (StringUtils.isEmpty(req.getTenantId())) {
+				this.log.debug("----------------------------------------------------------------");
+				this.log.debug("필수 파라미터 부족");
+				this.log.debug("----------------------------------------------------------------");
+
+				responseVO = new ShoppingRes();
+				responseVO.setCommonResponse(new CommonResponse());
+				return responseVO;
+			}
+
+			if (StringUtils.isEmpty(req.getProdCharge())) {
+				req.setProdCharge(null);
+			}
+			if (StringUtils.isEmpty(req.getProdGradeCd())) {
+				req.setProdGradeCd(null);
 			}
 
 			if (req.getOrderedBy().equals("download")) {
-				String stdDt = "";
-				stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
-				if (stdDt == null) {
-					stdDt = "20130101000000";
+				// 필수 파라미터 체크
+				if (StringUtils.isEmpty(req.getListId())) {
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("필수 파라미터 부족");
+					this.log.debug("----------------------------------------------------------------");
+
+					responseVO = new ShoppingRes();
+					responseVO.setCommonResponse(new CommonResponse());
+					return responseVO;
+				}
+				String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
+
+				// 기준일시 체크
+				if (StringUtils.isEmpty(stdDt)) {
+					this.log.debug("----------------------------------------------------------------");
+					this.log.debug("배치완료 기준일시 정보 누락");
+					this.log.debug("----------------------------------------------------------------");
+
+					responseVO = new ShoppingRes();
+					responseVO.setCommonResponse(new CommonResponse());
+					return responseVO;
 				}
 				req.setStdDt(stdDt);
 			}
 
-			Integer totalCount = 0;
-			List<Shopping> resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req, Shopping.class);
+			resultList = this.commonDAO.queryForList("Shopping.getSubProductList", req, Shopping.class);
 
 			if (resultList != null) {
 				Shopping shopping = new Shopping();
@@ -683,7 +747,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					sourceList = new ArrayList<Source>();
 					source = new Source();
 					source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-					source.setUrl(shopping.getFilePath() + shopping.getFileNm());
+					source.setUrl(shopping.getFilePos());
 					sourceList.add(source);
 
 					// 다운로드 수
@@ -727,7 +791,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				responseVO = new ShoppingRes();
 				responseVO.setProductList(productList);
 
-				CommonResponse commonResponse = new CommonResponse();
+				commonResponse = new CommonResponse();
 				commonResponse.setTotalCount(totalCount);
 				responseVO.setCommonResponse(commonResponse);
 			}
@@ -873,117 +937,71 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 * </pre>
 	 */
 	@Override
-	public ShoppingRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
-		int totalCount = 0;
-		ShoppingRes responseVO = null;
-		ShoppingReq requestVO = new ShoppingReq();
-		requestVO.setOffset(1);
-		requestVO.setCount(20);
-		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
+	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
+		// 공통 응답 변수 선언
+		ShoppingThemeRes responseVO = null;
+		List<Shopping> resultList = new ArrayList<Shopping>();
+
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setSystemId(header.getTenantHeader().getSystemId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setImageCd("DP0001A8");
+		req.setDeviceModelCd("SHV-E330SSO");
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(req.getTenantId())) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("필수 파라미터 부족");
+			this.log.debug("----------------------------------------------------------------");
+
+			responseVO = new ShoppingThemeRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
 		}
-		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
+		if (StringUtils.isEmpty(req.getOrderedBy())) {
+			req.setOrderedBy("recent");
 		}
+		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
 
-		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// shopping.class);
-		// List<shopping> resultList = null;
+		if (resultList != null) {
+			Shopping shopping = new Shopping();
 
-		// if (resultList != null) {
-		// shopping shopping = new shopping();
+			// Response VO를 만들기위한 생성자
+			Promotion promotion = null;
+			Identifier identifier = null;
+			Title title = null;
+			Source source = null;
+			List<Promotion> promotionList = new ArrayList<Promotion>();
 
-		// Response VO를 만들기위한 생성자
-		Identifier identifier = new Identifier();
-		Identifier identifier1 = new Identifier();
-		Menu menu = new Menu();
-		Rights rights = new Rights();
-		Title title = new Title();
-		Source source = new Source();
-		Price price = new Price();
-		Product product = new Product();
-		Contributor contributor = new Contributor();
-		Accrual acc = new Accrual();
-		Date date = new Date();
-		SalesOption saleoption = new SalesOption();
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
 
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-		List<Product> productList = new ArrayList<Product>();
+				// 상품 정보 (상품ID)
+				promotion = new Promotion();
+				identifier = new Identifier();
+				identifier.setText(shopping.getPlanId());
 
-		for (int i = 0; i < 1; i++) {
-			// shopping = resultList.get(i);
-			// 상품 정보 (상품ID)
-			identifier.setType("product");
-			identifier.setText("S900000960");
+				// 상품 정보 (상품명)
+				title = new Title();
+				title.setText(shopping.getPlanName());
 
-			// 메뉴 정보
-			menu.setType("menuId");
-			menu.setId("MN28009");
-			menu.setName("편의점/마트");
-			menuList.add(menu);
+				// 이미지 정보
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setUrl(shopping.getFilePos());
 
-			// 상품 정보 (상품명)
-			title.setText("기획전  상품  조회");
-			// 상품 정보 (상품가격)
+				// 데이터 매핑
+				promotion.setIdentifier(identifier);
+				promotion.setTitle(title);
+				promotion.setPromotionExplain(shopping.getSubTitleName());
+				promotion.setUsagePeriod(shopping.getPlanStartDt() + "/" + shopping.getPlanEndDt());
+				promotion.setSource(source);
+				promotionList.add(i, promotion);
+			}
 
-			price.setFixedPrice(1000);
-			price.setDiscountRate(0d);
-			price.setDiscountPrice(0);
-			price.setText(1000);
-
-			// 이미지 정보
-			source.setType("thumbnail");
-			source.setUrl("inst_thumbnail_20111216154840.jpg");
-			sourceList.add(source);
-			// contributor
-
-			acc.setDownloadCount(6229);
-
-			// 이용권한 정보
-			date.setText("20130820190000/20131231235959");
-			rights.setGrade("PD004401");
-			rights.setDate(date);
-
-			// contributor
-			identifier1.setType("brand");
-			identifier1.setText("세븐일레븐 바이더웨이");
-			contributor.setIdentifier(identifier1);
-
-			// saleoption
-			saleoption.setType("delivery");
-
-			// 데이터 매핑
-			product.setIdentifier(identifier);
-			// product.setMenuList(menuList);
-			product.setTitle(title);
-			// product.setPrice(price);
-			// product.setRights(rights);
-			product.setSourceList(sourceList);
-			// product.setAccrual(acc);
-			// product.setRights(rights);
-			// product.setContributor(contributor);
-			// product.setSalesOption(saleoption);
-
-			productList.add(i, product);
-			identifier = new Identifier();
-			menu = new Menu();
-			menuList = new ArrayList<Menu>();
-			rights = new Rights();
-			title = new Title();
-			source = new Source();
-			sourceList = new ArrayList<Source>();
-			price = new Price();
-			product = new Product();
+			responseVO = new ShoppingThemeRes();
+			responseVO.setPromotionList(promotionList);
 		}
-
-		responseVO = new ShoppingRes();
-		responseVO.setProductList(productList);
-
-		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(20);
-		responseVO.setCommonResponse(commonResponse);
-		// }
 		return responseVO;
 	}
 
@@ -1114,116 +1132,108 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 */
 	@Override
 	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req) {
-		int totalCount = 0;
+		// 공통 응답 변수 선언
 		ShoppingRes responseVO = null;
-		ShoppingReq requestVO = new ShoppingReq();
-		requestVO.setOffset(1);
-		requestVO.setCount(20);
-		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
-		}
+		List<Shopping> resultList = new ArrayList<Shopping>();
+		List<Shopping> hotBrandList = new ArrayList<Shopping>();
+		List<Shopping> detailList = new ArrayList<Shopping>();
+		List<Shopping> menuBrandList = new ArrayList<Shopping>();
 
-		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// shopping.class);
-		// List<shopping> resultList = null;
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setSystemId(header.getTenantHeader().getSystemId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setImageCd("DP0001A4");
+		req.setDeviceModelCd("SHV-E330SSO");
 
-		// if (resultList != null) {
-		// shopping shopping = new shopping();
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(req.getTenantId())) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("필수 파라미터 부족");
+			this.log.debug("----------------------------------------------------------------");
 
-		// Response VO를 만들기위한 생성자
-		Identifier identifier = new Identifier();
-		Identifier identifier1 = new Identifier();
-		Menu menu = new Menu();
-		Rights rights = new Rights();
-		Title title = new Title();
-		Source source = new Source();
-		Price price = new Price();
-		Product product = new Product();
-		Contributor contributor = new Contributor();
-		Accrual acc = new Accrual();
-		Date date = new Date();
-		SalesOption saleoption = new SalesOption();
-
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-		List<Product> productList = new ArrayList<Product>();
-
-		for (int i = 0; i < 1; i++) {
-			// shopping = resultList.get(i);
-			// 상품 정보 (상품ID)
-			identifier.setType("product");
-			identifier.setText("S900000960");
-
-			// 메뉴 정보
-			menu.setType("menuId");
-			menu.setId("MN28009");
-			menu.setName("편의점/마트");
-			menuList.add(menu);
-
-			// 상품 정보 (상품명)
-			title.setText("브랜드샵 - 메인");
-			// 상품 정보 (상품가격)
-
-			price.setFixedPrice(1000);
-			price.setDiscountRate(0d);
-			price.setDiscountPrice(0);
-			price.setText(1000);
-
-			// 이미지 정보
-			source.setType("thumbnail");
-			source.setUrl("inst_thumbnail_20111216154840.jpg");
-			sourceList.add(source);
-			// contributor
-
-			acc.setDownloadCount(6229);
-
-			// 이용권한 정보
-			date.setText("20130820190000/20131231235959");
-			rights.setGrade("PD004401");
-			rights.setDate(date);
-
-			// contributor
-			identifier1.setType("brand");
-			identifier1.setText("세븐일레븐 바이더웨이");
-			contributor.setIdentifier(identifier1);
-
-			// saleoption
-			saleoption.setType("delivery");
-
-			// 데이터 매핑
-			product.setIdentifier(identifier);
-			product.setMenuList(menuList);
-			product.setTitle(title);
-			// product.setPrice(price);
-			// product.setRights(rights);
-			product.setSourceList(sourceList);
-			// product.setAccrual(acc);
-			// product.setRights(rights);
-			// product.setContributor(contributor);
-			// product.setSalesOption(saleoption);
-
-			productList.add(i, product);
-			identifier = new Identifier();
-			menu = new Menu();
-			menuList = new ArrayList<Menu>();
-			rights = new Rights();
-			title = new Title();
-			source = new Source();
-			sourceList = new ArrayList<Source>();
-			price = new Price();
-			product = new Product();
+			responseVO = new ShoppingRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
 		}
 
-		responseVO = new ShoppingRes();
-		responseVO.setProductList(productList);
+		if (!StringUtils.isEmpty(req.getMenuId())) {
+			resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
+		} else {
+			hotBrandList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
+			for (Shopping hotBrandShopping : hotBrandList) {
+				resultList.add(hotBrandShopping);
+			}
+			menuBrandList = this.commonDAO.queryForList("Shopping.getShoppingBrandMenuList", req, Shopping.class);
+			for (int i = 0; i < menuBrandList.size(); i++) {
+				req.setMenuId(menuBrandList.get(i).getMenuId());
+				detailList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
+				for (Shopping detailShopping : detailList) {
+					resultList.add(detailShopping);
+				}
+			}
+		}
 
-		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(20);
-		responseVO.setCommonResponse(commonResponse);
-		// }
+		if (resultList != null) {
+			Shopping shopping = new Shopping();
+
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			Identifier identifier = null;
+			Menu menu = null;
+			Title title = null;
+			Source source = null;
+			List<Identifier> identifierList = null;
+
+			List<Menu> menuList = null;
+			List<Source> sourceList = null;
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
+
+				// 상품 정보 (상품ID)
+				product = new Product();
+				identifierList = new ArrayList<Identifier>();
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
+				identifier.setText(shopping.getBrandId());
+				identifierList.add(identifier);
+
+				// 메뉴 정보
+				menuList = new ArrayList<Menu>();
+				menu = new Menu();
+				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+				menu.setId(shopping.getUpMenuId());
+				menu.setName(shopping.getUpMenuName());
+				menuList.add(menu);
+
+				menu = new Menu();
+				menu.setId(shopping.getMenuId());
+				menu.setName(shopping.getMenuName());
+				menuList.add(menu);
+
+				// 상품 정보 (상품명)
+				title = new Title();
+				title.setText(shopping.getBrandName());
+
+				// 이미지 정보
+				sourceList = new ArrayList<Source>();
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setUrl(shopping.getFilePos());
+				sourceList.add(source);
+
+				// 데이터 매핑
+				product.setIdentifierList(identifierList);
+				product.setMenuList(menuList);
+				product.setTitle(title);
+				product.setSourceList(sourceList);
+				productList.add(i, product);
+			}
+
+			responseVO = new ShoppingRes();
+			responseVO.setProductList(productList);
+		}
 		return responseVO;
 	}
 
@@ -1354,116 +1364,73 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 */
 	@Override
 	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req) {
-		int totalCount = 0;
+		// 공통 응답 변수 선언
 		ShoppingRes responseVO = null;
-		ShoppingReq requestVO = new ShoppingReq();
-		requestVO.setOffset(1);
-		requestVO.setCount(20);
-		if (null == req.getTenantId() || "".equals(req.getTenantId())) {
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		if (null == req.getSystemId() || "".equals(req.getSystemId())) {
-			// throw new Exception("systemId 는 필수 파라메터 입니다.");
-		}
+		List<Shopping> resultList = new ArrayList<Shopping>();
 
-		// List<shopping> resultList = this.commonDAO.queryForList("Shopping.selectShoppingList", requestVO,
-		// shopping.class);
-		// List<shopping> resultList = null;
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setSystemId(header.getTenantHeader().getSystemId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setImageCd("DP0001A7");
+		req.setDeviceModelCd("SHV-E330SSO");
 
-		// if (resultList != null) {
-		// shopping shopping = new shopping();
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(req.getTenantId())) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("필수 파라미터 부족");
+			this.log.debug("----------------------------------------------------------------");
 
-		// Response VO를 만들기위한 생성자
-		Identifier identifier = new Identifier();
-		Identifier identifier1 = new Identifier();
-		Menu menu = new Menu();
-		Rights rights = new Rights();
-		Title title = new Title();
-		Source source = new Source();
-		Price price = new Price();
-		Product product = new Product();
-		Contributor contributor = new Contributor();
-		Accrual acc = new Accrual();
-		Date date = new Date();
-		SalesOption saleoption = new SalesOption();
-
-		List<Menu> menuList = new ArrayList<Menu>();
-		List<Source> sourceList = new ArrayList<Source>();
-		List<Product> productList = new ArrayList<Product>();
-
-		for (int i = 0; i < 1; i++) {
-			// shopping = resultList.get(i);
-			// 상품 정보 (상품ID)
-			identifier.setType("product");
-			identifier.setText("S900000960");
-
-			// 메뉴 정보
-			menu.setType("menuId");
-			menu.setId("MN28009");
-			menu.setName("편의점/마트");
-			menuList.add(menu);
-
-			// 상품 정보 (상품명)
-			title.setText("쇼핑테마");
-			// 상품 정보 (상품가격)
-
-			price.setFixedPrice(1000);
-			price.setDiscountRate(0d);
-			price.setDiscountPrice(0);
-			price.setText(1000);
-
-			// 이미지 정보
-			source.setType("thumbnail");
-			source.setUrl("inst_thumbnail_20111216154840.jpg");
-			sourceList.add(source);
-			// contributor
-
-			acc.setDownloadCount(6229);
-
-			// 이용권한 정보
-			date.setText("20130820190000/20131231235959");
-			rights.setGrade("PD004401");
-			rights.setDate(date);
-
-			// contributor
-			identifier1.setType("brand");
-			identifier1.setText("세븐일레븐 바이더웨이");
-			contributor.setIdentifier(identifier1);
-
-			// saleoption
-			saleoption.setType("delivery");
-
-			// 데이터 매핑
-			product.setIdentifier(identifier);
-			// product.setMenuList(menuList);
-			product.setTitle(title);
-			// product.setPrice(price);
-			// product.setRights(rights);
-			product.setSourceList(sourceList);
-			// product.setAccrual(acc);
-			// product.setRights(rights);
-			// product.setContributor(contributor);
-			// product.setSalesOption(saleoption);
-
-			productList.add(i, product);
-			identifier = new Identifier();
-			menu = new Menu();
-			menuList = new ArrayList<Menu>();
-			rights = new Rights();
-			title = new Title();
-			source = new Source();
-			sourceList = new ArrayList<Source>();
-			price = new Price();
-			product = new Product();
+			responseVO = new ShoppingRes();
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
 		}
 
-		responseVO = new ShoppingRes();
-		responseVO.setProductList(productList);
+		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
 
-		CommonResponse commonResponse = new CommonResponse();
-		commonResponse.setTotalCount(20);
-		responseVO.setCommonResponse(commonResponse);
-		// }
+		if (resultList != null) {
+			Shopping shopping = new Shopping();
+
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			Identifier identifier = null;
+			Title title = null;
+			Source source = null;
+			List<Identifier> identifierList = null;
+			List<Source> sourceList = null;
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
+
+				// 상품 정보 (상품ID)
+				product = new Product();
+				identifierList = new ArrayList<Identifier>();
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_THEME_IDENTIFIER_CD);
+				identifier.setText(shopping.getThemeId());
+				identifierList.add(identifier);
+
+				// 상품 정보 (상품명)
+				title = new Title();
+				title.setText(shopping.getThemeName());
+
+				// 이미지 정보
+				sourceList = new ArrayList<Source>();
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setUrl(shopping.getFilePos());
+				sourceList.add(source);
+
+				// 데이터 매핑
+				product.setIdentifierList(identifierList);
+				product.setTitle(title);
+				product.setSourceList(sourceList);
+				productList.add(i, product);
+			}
+
+			responseVO = new ShoppingRes();
+			responseVO.setProductList(productList);
+		}
 		return responseVO;
 	}
 

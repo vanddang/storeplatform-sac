@@ -49,9 +49,17 @@ public class Shopping extends CommonInfo {
 	private String applyStartDt;
 	private String applyEndDt;
 	private String prodCaseCd;
+	private String themeId;
+	private String themeName;
+	private String linkUrl;
 
-	private String filePath;
-	private String fileNm;
+	private String planId;
+	private String PlanName;
+	private String subTitleName;
+	private String planStartDt;
+	private String planEndDt;
+	private String przwnerAnnoDt;
+	private String planGiftName;
 
 	public String getUpMenuId() {
 		return this.upMenuId;
@@ -277,20 +285,84 @@ public class Shopping extends CommonInfo {
 		this.prodCaseCd = prodCaseCd;
 	}
 
-	public String getFilePath() {
-		return this.filePath;
+	public String getThemeId() {
+		return this.themeId;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
 	}
 
-	public String getFileNm() {
-		return this.fileNm;
+	public String getThemeName() {
+		return this.themeName;
 	}
 
-	public void setFileNm(String fileNm) {
-		this.fileNm = fileNm;
+	public void setThemeName(String themeName) {
+		this.themeName = themeName;
+	}
+
+	public String getLinkUrl() {
+		return this.linkUrl;
+	}
+
+	public void setLinkUrl(String linkUrl) {
+		this.linkUrl = linkUrl;
+	}
+
+	public String getPlanId() {
+		return this.planId;
+	}
+
+	public void setPlanId(String planId) {
+		this.planId = planId;
+	}
+
+	public String getPlanName() {
+		return this.PlanName;
+	}
+
+	public void setPlanName(String planName) {
+		this.PlanName = planName;
+	}
+
+	public String getSubTitleName() {
+		return this.subTitleName;
+	}
+
+	public void setSubTitleName(String subTitleName) {
+		this.subTitleName = subTitleName;
+	}
+
+	public String getPlanStartDt() {
+		return this.planStartDt;
+	}
+
+	public void setPlanStartDt(String planStartDt) {
+		this.planStartDt = planStartDt;
+	}
+
+	public String getPlanEndDt() {
+		return this.planEndDt;
+	}
+
+	public void setPlanEndDt(String planEndDt) {
+		this.planEndDt = planEndDt;
+	}
+
+	public String getPrzwnerAnnoDt() {
+		return this.przwnerAnnoDt;
+	}
+
+	public void setPrzwnerAnnoDt(String przwnerAnnoDt) {
+		this.przwnerAnnoDt = przwnerAnnoDt;
+	}
+
+	public String getPlanGiftName() {
+		return this.planGiftName;
+	}
+
+	public void setPlanGiftName(String planGiftName) {
+		this.planGiftName = planGiftName;
 	}
 
 }

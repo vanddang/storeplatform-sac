@@ -44,8 +44,7 @@
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
                      , 'DP006303', 'delivery' ) AS prodCaseCd      
-                   ,FILE_PATH as filePath
-                   ,FILE_NM as fileNm                                                      
+                   ,FILE_PATH || FILE_NM as filePos
              FROM (
                   SELECT  * 
                    FROM (
@@ -144,6 +143,7 @@
                         AND I.PROD_ID = M.PROD_ID   
                         </if>                        
                         AND B.CATALOG_ID = PI.PROD_ID
+                        AND PI.IMG_CD=#{imageCd}
                         AND I.PROD_ID = N.PROD_ID(+)     
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/                  
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
@@ -220,8 +220,7 @@
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
                      , 'DP006303', 'delivery' ) AS prodCaseCd
-                   ,FILE_PATH as filePath
-                   ,FILE_NM as fileNm
+                   ,FILE_PATH || FILE_NM as filePos
              FROM (
                   SELECT  * 
                    FROM (
@@ -296,7 +295,8 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)  
-                        AND B.CATALOG_ID = PI.PROD_ID       
+                        AND B.CATALOG_ID = PI.PROD_ID   
+                        AND PI.IMG_CD=#{imageCd}    
                         AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/         
                         AND C.LANG_CD= #{langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{langCd}          /* ko : 한국어 */
@@ -373,8 +373,8 @@
                      , 'DP006301', 'giftcard'
                      , 'DP006302', 'exchange'
                      , 'DP006303', 'delivery' ) AS prodCaseCd   
-                   ,FILE_PATH as filePath
-                   ,FILE_NM as fileNm                                                         
+                   ,FILE_PATH || FILE_NM as filePos
+                                                              
              FROM (
                   SELECT  * 
                    FROM (
@@ -481,6 +481,7 @@
                         AND I.PROD_ID = K.PROD_ID
                         AND I.PROD_ID = L.PROD_ID
                         AND B.CATALOG_ID = PI.PROD_ID
+                        AND PI.IMG_CD=#{imageCd}
                          <if test='orderedBy == "recent"'>
                         AND I.PROD_ID = M.PROD_ID(+)        
                         </if>                                           
@@ -529,6 +530,140 @@
                </if>               
         ) WHERE RNUM BETWEEN #{offset} AND #{count}
     </select>            
+    
+    
+    <!-- 기획전 상품 조회-->
+    <select id="getSpecialSalesList" parameterType="ShoppingReq" resultType="Shopping">
+       /* ShoppingMapper.xml.getSpecialSalesList,기획전 상품 조회, 김형식/SK플래닛 , 2014-02-03 */
+      SELECT * FROM ( 
+	       SELECT 
+	             KK.*
+	            ,COUNT(planId) OVER() AS TOTALCOUNT
+	            ,ROWNUM AS RNUM   
+	        FROM(      
+		        SELECT PLAN_ID as planId
+		              ,PLAN_NM as PlanName
+		              ,SUB_TITL_NM as subTitleName
+		              ,LINK_URL as linkUrl
+		              ,PLAN_START_DT as planStartDt
+		              ,PLAN_END_DT as planEndDt
+		              ,PRZWNER_ANNO_DT przwnerAnnoDt
+		              ,PLAN_GIFT_NM as planGiftName
+		              ,FN_GETIMAGE(PLAN_ID, #{imageCd}) filePos
+		         FROM TB_DP_PLAN_INFO_MANG
+		        WHERE TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN PLAN_START_DT AND PLAN_END_DT
+		          AND PLAN_STATUS_CD = 'DP006501'
+		          AND DP_YN = 'Y'
+		        <if test='orderedBy == "recent"'>  
+		         order by REG_DT DESC , PLAN_NM
+		        </if>
+                <if test='orderedBy == "closingTime"'>  
+                 order by PLAN_END_DT , PLAN_NM
+                </if>		        
+		    )KK
+     ) WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select> 
+    
+    <!-- 브랜드샵 - 메인 메뉴 리스트 조회-->
+    <select id="getShoppingBrandMenuList" parameterType="ShoppingReq" resultType="Shopping">
+       /* ShoppingMapper.xml.getShoppingBrandMenuList,브랜드샵 - 메인 메뉴 리스트 조회, 김형식/SK플래닛 , 2014-01-30 */
+		SELECT  
+		        A.MENU_ID as menuId
+		       ,B.MENU_NM as menuName
+		  FROM  TB_DP_MENU_CATEGORY A
+		       ,TB_DP_MENU_CATEGORY_DESC B
+		 WHERE A.UP_MENU_ID ='DP28'
+		   AND A.MENU_ID = B.MENU_ID
+		   AND B.LANG_CD =#{langCd}          /* ko : 한국어 */
+		   AND A.USE_YN = 'Y'
+		   AND A.MENU_ID > ='DP28008'
+    </select> 
+    
+    <!-- 브랜드샵 - 메인 리스트 조회-->
+    <select id="getBrandshopMainList" parameterType="ShoppingReq" resultType="Shopping">
+       /* ShoppingMapper.xml.getBrandshopMainList,브랜드샵 - 메인 리스트 조회, 김형식/SK플래닛 , 2014-01-30 */
+       SELECT * FROM (
+	       SELECT 
+	                 KK.*
+	                ,COUNT(1) OVER() AS TOTALCOUNT
+	                ,ROWNUM AS RNUM         
+	         FROM(
+			    SELECT 
+			               BRAND_ID AS brandId
+			             , BRAND_NM AS brandNm
+			             , MENU_ID AS menuId
+			              <if test='menuId == null'> 
+			             , '쇼핑 HOT' AS menuName
+			             </if>
+			             <if test='menuId != null'>
+			             , MENU_NM AS menuName
+			             </if>
+		                 , TOP_MENU_ID as upMenuId
+		                 ,(SELECT MENU_NM
+		                      FROM TB_DP_MENU_CATEGORY_DESC
+		                     WHERE MENU_ID = TOP_MENU_ID
+		                       AND LANG_CD = #{langCd}          /* ko : 한국어 */
+		                       AND ROWNUM = 1
+		                   ) AS upMenuName                        
+			             ,(SELECT FILE_PATH||FILE_NM 
+			                 FROM TB_DP_PROD_IMG 
+			                WHERE PROD_ID = BRAND_ID 
+			                  AND IMG_CD =#{imageCd}
+			               )  as filePos
+			     FROM (
+			        SELECT *
+			        FROM (
+			            SELECT  
+			                  SB.BRAND_ID
+			                 ,SB.BRAND_NM
+			                 ,MC.MENU_ID
+			                 ,MCD.MENU_NM
+		                     ,MC.TOP_MENU_ID
+			                 ,(SELECT COUNT(CT.CATALOG_ID) FROM TB_DP_SHPG_CATALOG CT WHERE CT.BRAND_ID = SB.BRAND_ID AND NVL(CT.CHNL_CNT, 0) > 0) AS CNT
+			            FROM  TB_DP_SHPG_BRAND SB
+			                 ,TB_DP_MENU_CATEGORY MC
+			                 ,TB_DP_MENU_CATEGORY_DESC MCD
+			                  <if test='menuId == null'> 
+			                 ,TB_DP_RECOM_PROD_MANG PM
+			                 </if>
+			            WHERE SB.MENU_ID = MC.MENU_ID
+			              AND SB.MENU_ID = MCD.MENU_ID
+			              <if test='menuId == null'> 
+			              AND SB.BRAND_ID = PM.BRAND_ID
+			              </if>
+			              AND MC.USE_YN ='Y'
+			               <if test='menuId != null'> 
+			              AND MC.MENU_ID = #{menuId} 
+			              </if>
+			              AND MCD.LANG_CD =#{langCd}
+			       )WHERE CNT>0
+			        ORDER BY MENU_ID , BRAND_NM
+			    )
+			)KK
+		)WHERE RNUM BETWEEN #{offset} AND #{count}
+    </select>     
+
+    <!-- 쇼핑테마  리스트 조회-->
+    <select id="getThemeList" parameterType="ShoppingReq" resultType="Shopping">
+       /* ShoppingMapper.xml.getThemeList,쇼핑테마  리스트 조회, 김형식/SK플래닛 , 2014-02-03 */
+       SELECT * FROM (
+           SELECT 
+                     KK.*
+                    ,COUNT(1) OVER() AS TOTALCOUNT
+                    ,ROWNUM AS RNUM         
+             FROM(       
+		        SELECT THEME_ID as themeId
+		             , THEME_NM as themeName
+		             , LINK_URL as linkUrl
+		             , FN_GETIMAGE(THEME_ID, #{imageCd}) filePos
+		          FROM TB_DP_THEME_INFO
+		         WHERE EXPO_YN = 'Y'
+		           AND THEME_STATUS_CD = 'DP006501'
+		           AND TENANT_ID =#{tenantId}       /* INPUT 테넌트ID */
+		         ORDER BY THEME_ID DESC    
+            )KK
+        )WHERE RNUM BETWEEN #{offset} AND #{count}		         
+    </select>     
 
      
 </mapper>

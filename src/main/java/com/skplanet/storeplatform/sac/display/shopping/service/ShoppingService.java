@@ -2,17 +2,15 @@ package com.skplanet.storeplatform.sac.display.shopping.service;
 
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
  * <pre>
  * 쇼핑 서비스 인터페이스
  * </pre>
- *
- * Created on : 2013-12-23
- * Created by : 김형식, SK 플래닛.
- * Last Updated on :  2013-12-23
- * Last Updated by : 김형식, SK 플래닛
+ * 
+ * Created on : 2013-12-23 Created by : 김형식, SK 플래닛. Last Updated on : 2013-12-23 Last Updated by : 김형식, SK 플래닛
  */
 public interface ShoppingService {
 
@@ -49,7 +47,7 @@ public interface ShoppingService {
 	 * 기획전  상품  조회.
 	 * </pre>
 	 */
-	public ShoppingRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req);
+	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req);
 
 	/**
 	 * <pre>

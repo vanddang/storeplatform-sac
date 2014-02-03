@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
+import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.shopping.service.ShoppingService;
 
@@ -84,4 +85,174 @@ public class ShoppingController {
 
 	}
 
+	/**
+	 * <pre>
+	 * 기획전 상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specialSales/specialSalesList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSpecialSalesList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSpecialSalesList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 특정 기획전에 대한 상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specialSales/productList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getSpecialSalesProductList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSpecialSalesProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSpecialSalesProductList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 브랜드샵 - 메인  조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/brandshop/mainList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getBrandshopMainList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getBrandshopMainList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandshopMainList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 특정 브랜드샵 상품 리스트 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/brandshop/productList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getBrandshopProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandshopProductList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 쇼핑 테마 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/theme/themeList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getThemeList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getThemeList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getThemeList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 특정 테마에 대한 상품 리스트 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/theme/productList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getThemeProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getThemeProductList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 특정 카테고리의 다른 상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/category/anotherProductList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getCatagoryAnotherProductList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getCatagoryAnotherProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getCatagoryAnotherProductList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 특정 브랜드의 다른 상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/brandshop/anotherProductList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getBrandAnotherProductList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getCatagoryAnotherProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getBrandAnotherProductList(header, req);
+
+	}
+
+	/**
+	 * <pre>
+	 * 상품 상세 – GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/shoppingDetail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getShoppingDetail Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getShoppingDetail(header, req);
+
+	}
 }
