@@ -63,7 +63,7 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	 */
 	@Override
 	public MetaInfo getEbookComidMetaInfo(Map<String, Object> paramMap) {
-		return this.commonDAO.queryForObject("MetaInfo.getEbookComidMetaInfo", paramMap, MetaInfo.class);
+		return this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
 	}
 
 	/*
