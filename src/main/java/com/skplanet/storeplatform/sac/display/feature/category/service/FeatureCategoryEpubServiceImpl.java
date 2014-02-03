@@ -202,7 +202,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("만화/이북 > 추천 > 인기만화/인기도서 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
-			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubListDummy", requestVO,
+			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubBestList", requestVO,
 					CategoryEpubDTO.class);
 		}
 
