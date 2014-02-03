@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.integration.api.v1.purchase;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
@@ -24,9 +25,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmResponse;
-import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScResponse;
+import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
 
 /**
  * 
@@ -44,7 +47,7 @@ public class PurchaseGiftServiceTest {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private GiftService giftService;
+	private GiftSacService giftService;
 
 	/**
 	 * 
@@ -65,22 +68,23 @@ public class PurchaseGiftServiceTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	// @Test
-	// public void shouldObtainPurchaseGiftReceiveServiceTest() throws Exception {
-	//
-	// GiftReceiveRequest giftReceiveRequest = new GiftReceiveRequest();
-	//
-	// giftReceiveRequest.setTenantId("S01");
-	// giftReceiveRequest.setSendMbrNo("IF1023541315020111207133720");
-	// giftReceiveRequest.setSendDeviceNo("01046129571");
-	// giftReceiveRequest.setRecvMbrNo("IF1023541315020111207133720");
-	// giftReceiveRequest.setRecvDeviceNo("01033276046");
-	// giftReceiveRequest.setProdId("H900026621");
-	// giftReceiveRequest.setPrchsId("M1046129571541651515");
-	//
-	// this.giftService.searchGiftReceive(giftReceiveRequest);
-	//
-	// }
+	@Test
+	public void shouldObtainPurchaseGiftReceiveServiceTest() throws Exception {
+
+		GiftReceiveScRequest giftReceiveScRequest = new GiftReceiveScRequest();
+
+		giftReceiveScRequest.setTenantId("S01");
+		giftReceiveScRequest.setSendMbrNo("IW1425031723920130227143009");
+		giftReceiveScRequest.setSendDeviceNo("01020977752");
+		giftReceiveScRequest.setProdId("H090107203");
+		giftReceiveScRequest.setPrchsId("MI100000000000031936");
+
+		GiftReceiveScResponse giftReceiveScResponse = new GiftReceiveScResponse();
+		giftReceiveScResponse = this.giftService.searchGiftReceive(giftReceiveScRequest);
+
+		assertThat(giftReceiveScResponse, notNullValue());
+
+	}
 
 	/**
 	 * 
@@ -94,20 +98,20 @@ public class PurchaseGiftServiceTest {
 	@Test
 	public void shouldObtainPurchaseGiftConfirmServiceTest() throws Exception {
 
-		GiftConfirmRequest giftConfirmRequest = new GiftConfirmRequest();
+		GiftConfirmScRequest giftConfirmScRequest = new GiftConfirmScRequest();
 
-		giftConfirmRequest.setTenantId("S01");
-		giftConfirmRequest.setSystemId("S001");
-		giftConfirmRequest.setInsdUsermbrNo("IF1023541315020111207133720");
-		giftConfirmRequest.setInsdDeviceId("01046129571");
-		giftConfirmRequest.setProdId("H900026621");
-		giftConfirmRequest.setRecvDt("20140129225055");
-		giftConfirmRequest.setPrchsId("PI100000000000010571");
+		giftConfirmScRequest.setTenantId("S01");
+		giftConfirmScRequest.setSystemId("S001");
+		giftConfirmScRequest.setInsdUsermbrNo("IW1425031723920130227143009");
+		giftConfirmScRequest.setInsdDeviceId("01020977752");
+		giftConfirmScRequest.setProdId("H090107203");
+		giftConfirmScRequest.setRecvDt("20140129225055");
+		giftConfirmScRequest.setPrchsId("MI100000000000031936");
 
-		GiftConfirmResponse giftConfirmResponse = new GiftConfirmResponse();
-		giftConfirmResponse = this.giftService.modifyGiftConfirm(giftConfirmRequest);
+		GiftConfirmScResponse giftConfirmScResponse = new GiftConfirmScResponse();
+		giftConfirmScResponse = this.giftService.updateGiftConfirm(giftConfirmScRequest);
 
-		assertThat("Y", is(giftConfirmResponse.getResultYn()));
+		assertThat("Y", is(giftConfirmScResponse.getResultYn()));
 
 	}
 }

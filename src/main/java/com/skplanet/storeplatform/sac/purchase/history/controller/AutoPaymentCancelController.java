@@ -57,9 +57,9 @@ public class AutoPaymentCancelController {
 	 *            헤더정보
 	 * @return AutoPaymentCancelSacRes 응답값
 	 */
-	@RequestMapping(value = "/history/reservation/modify/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/history/reservation/update/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	AutoPaymentCancelSacRes modifyReservation(@RequestBody @Validated AutoPaymentCancelSacReq autoPaymentCancelSacReq,
+	AutoPaymentCancelSacRes updateReservation(@RequestBody @Validated AutoPaymentCancelSacReq autoPaymentCancelSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) throws Exception {
 
 		TenantHeader header = requestHeader.getTenantHeader();

@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.PaymentListSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScResponse;
 
 /**
  * 선물확인 SAC Service 인터페이스 구현체
@@ -38,14 +38,14 @@ public class PaymentSearchSacServiceImpl implements PaymentSearchSacService {
 	/**
 	 * 결제내역 조회.
 	 * 
-	 * @param paymentRequest
+	 * @param paymentScRequest
 	 *            요청정보
-	 * @return List<PaymentResponse>
+	 * @return List<PaymentScResponse>
 	 */
 	@Override
-	public List<PaymentResponse> searchPayment(PaymentRequest paymentRequest) {
+	public List<PaymentScResponse> searchPaymentList(PaymentScRequest paymentScRequest) {
 
-		return this.paymentListSCI.searchPayment(paymentRequest);
+		return this.paymentListSCI.searchPaymentList(paymentScRequest);
 	}
 
 }

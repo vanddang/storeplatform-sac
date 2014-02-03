@@ -11,8 +11,8 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScResponse;
 
 /**
  * 구매 서비스 인터페이스
@@ -24,9 +24,9 @@ public interface PaymentSearchSacService {
 	/**
 	 * 결제내역 조회.
 	 * 
-	 * @param paymentRequest
+	 * @param paymentScRequest
 	 *            요청정보
-	 * @return List<PaymentResponse>
+	 * @return List<PaymentScResponse>
 	 */
-	public List<PaymentResponse> searchPayment(PaymentRequest paymentRequest);
+	public List<PaymentScResponse> searchPaymentList(PaymentScRequest paymentScRequest);
 }

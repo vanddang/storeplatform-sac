@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacList;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListSac;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacReq;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 
 /**
@@ -47,36 +47,36 @@ public class PurchaseHidingControllerTest {
 	@Test
 	public void existenceControllerTest() throws Exception {
 
-		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/hiding/modify/v1")
+		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/hiding/update/v1")
 				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
 				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						HidingReq hidingReq = new HidingReq();
-						List<HidingSacList> list = new ArrayList<HidingSacList>();
-						HidingSacList hidingSacList = new HidingSacList();
+						HidingSacReq hidingSacReq = new HidingSacReq();
+						List<HidingListSac> list = new ArrayList<HidingListSac>();
+						HidingListSac hidingListSac = new HidingListSac();
 
-						hidingReq.setTenantId("S01");
-						hidingReq.setInsdUsermbrNo("IW1023795408420101206143202");
-						hidingReq.setInsdDeviceId("01040449015");
+						hidingSacReq.setTenantId("S01");
+						hidingSacReq.setInsdUsermbrNo("IW1023795408420101206143202");
+						hidingSacReq.setInsdDeviceId("01040449015");
 						// 숨길 구매내역 셋팅
-						hidingSacList.setPrchsId("M1040449015716287379");
-						hidingSacList.setPrchsDtlId(1);
-						hidingSacList.setHidingYn("Y");
-						list.add(hidingSacList);
+						hidingListSac.setPrchsId("M1040449015716287379");
+						hidingListSac.setPrchsDtlId(1);
+						hidingListSac.setHidingYn("Y");
+						list.add(hidingListSac);
 
-						hidingSacList = new HidingSacList();
-						hidingSacList.setPrchsId("M1040449015716735210");
-						hidingSacList.setPrchsDtlId(1);
-						hidingSacList.setHidingYn("Y");
-						list.add(hidingSacList);
+						hidingListSac = new HidingListSac();
+						hidingListSac.setPrchsId("M1040449015716735210");
+						hidingListSac.setPrchsDtlId(1);
+						hidingListSac.setHidingYn("Y");
+						list.add(hidingListSac);
 
-						hidingReq.setHidingSacList(list);
-						return hidingReq;
+						hidingSacReq.setHidingListSac(list);
+						return hidingSacReq;
 					}
-				}).success(HidingListRes.class, new SuccessCallbackForJson() {
+				}).success(HidingListSacRes.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
@@ -85,19 +85,19 @@ public class PurchaseHidingControllerTest {
 					@Override
 					public void success(Object result) throws Exception {
 						@SuppressWarnings("unchecked")
-						HidingListRes hidingListRes = (HidingListRes) result;
-						for (int i = 0; i < hidingListRes.getHidingRes().size(); i++) {
+						HidingListSacRes hidingListSacRes = (HidingListSacRes) result;
+						for (int i = 0; i < hidingListSacRes.getHidingSacRes().size(); i++) {
 							PurchaseHidingControllerTest.this.logger.debug(
-									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes.getHidingRes()
-											.get(i).getPrchsId());
+									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
+											.getHidingSacRes().get(i).getPrchsId());
 							PurchaseHidingControllerTest.this.logger.debug(
-									"@@@@@@@@@@@@ getPrchsDtlId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes
-											.getHidingRes().get(i).getPrchsDtlId());
+									"@@@@@@@@@@@@ getPrchsDtlId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
+											.getHidingSacRes().get(i).getPrchsDtlId());
 							PurchaseHidingControllerTest.this.logger.debug(
-									"@@@@@@@@@@@@ getResultYn  @@@@@@@@@@@@@@@@@@@ : {}", hidingListRes.getHidingRes()
-											.get(i).getResultYn());
+									"@@@@@@@@@@@@ getResultYn  @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
+											.getHidingSacRes().get(i).getResultYn());
 						}
-						assertThat(hidingListRes, notNullValue());
+						assertThat(hidingListSacRes, notNullValue());
 					}
 				}).run();
 	}

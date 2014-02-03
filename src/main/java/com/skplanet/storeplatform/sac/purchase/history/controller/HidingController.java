@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScList;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingListSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScResponse;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.purchase.history.service.HidingSacService;
@@ -52,16 +52,18 @@ public class HidingController {
 	/**
 	 * 구매내역 숨김처리 SAC.
 	 * 
-	 * @param hidingReq
+	 * @param hidingSacReq
 	 *            요청정보
+	 * @param bindingResult
+	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return List<HidingRes> 응답정보
 	 */
-	@RequestMapping(value = "/history/hiding/modify/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/history/hiding/update/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public HidingListRes modifyHiding(@RequestBody @Validated HidingReq hidingReq, BindingResult bindingResult,
-			SacRequestHeader requestHeader) {
+	public HidingListSacRes updateHiding(@RequestBody @Validated HidingSacReq hidingSacReq,
+			BindingResult bindingResult, SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
@@ -72,65 +74,48 @@ public class HidingController {
 			}
 		}
 
-		HidingRequest req = this.reqConvert(hidingReq, header);
-		List<HidingResponse> hidingResponse = new ArrayList<HidingResponse>();
-		List<HidingRes> hidingRes = new ArrayList<HidingRes>();
+		HidingScRequest req = this.reqConvert(hidingSacReq, header);
+		List<HidingScResponse> hidingScResponse = new ArrayList<HidingScResponse>();
+		List<HidingSacRes> hidingRes = new ArrayList<HidingSacRes>();
 
-		hidingResponse = this.hidingSacService.modifyHiding(req);
-		HidingListRes hidingListRes = new HidingListRes();
-		hidingRes = this.resConvert(hidingResponse);
-		hidingListRes.setHidingRes(hidingRes);
-		return hidingListRes;
+		hidingScResponse = this.hidingSacService.updateHiding(req);
+		HidingListSacRes hidingListSacRes = new HidingListSacRes();
+		hidingRes = this.resConvert(hidingScResponse);
+		hidingListSacRes.setHidingSacRes(hidingRes);
+		return hidingListSacRes;
 	}
 
 	/**
 	 * reqConvert.
 	 * 
-	 * @param hidingReq
+	 * @param hidingSacReq
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return HidingRequest
+	 * @return hidingSacRequest
 	 */
-	private HidingRequest reqConvert(HidingReq hidingReq, TenantHeader header) {
-		HidingRequest req = new HidingRequest();
-		List<HidingScList> list = new ArrayList<HidingScList>();
+	private HidingScRequest reqConvert(HidingSacReq hidingSacReq, TenantHeader header) {
+		HidingScRequest req = new HidingScRequest();
+		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
 		req.setTenantId(header.getTenantId());
-		req.setInsdUsermbrNo(hidingReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(hidingReq.getInsdDeviceId());
+		req.setInsdUsermbrNo(hidingSacReq.getInsdUsermbrNo());
+		req.setInsdDeviceId(hidingSacReq.getInsdDeviceId());
 		this.logger.debug("@@@@@@header.getSystemId()@@@@@@@" + header.getSystemId());
 		req.setSystemId(header.getSystemId());
-		int size = hidingReq.getHidingSacList().size();
+		int size = hidingSacReq.getHidingListSac().size();
 		this.logger.debug("@@@@@@reqConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
-			// 필수값 체크
-			if (hidingReq.getHidingSacList().get(i).getPrchsId() == null
-					|| hidingReq.getHidingSacList().get(i).getPrchsId() == "") {
-				throw new StorePlatformException("SAC_PUR_0001", "prchsId");
-			}
-			if (hidingReq.getHidingSacList().get(i).getPrchsDtlId() == null
-					|| hidingReq.getHidingSacList().get(i).getPrchsDtlId() <= 0) {
-				throw new StorePlatformException("SAC_PUR_0001", "prchsDtlId");
-			}
-			if (hidingReq.getHidingSacList().get(i).getHidingYn() == null
-					|| hidingReq.getHidingSacList().get(i).getHidingYn() == "") {
-				throw new StorePlatformException("SAC_PUR_0001", "hidingYn");
-			}
-			String yn = hidingReq.getHidingSacList().get(i).getHidingYn();
-			this.logger.debug("@@@@@@reqConver ynt@@@@@@@" + yn);
-			if (!yn.equals("Y") && !yn.equals("N")) {
-				throw new StorePlatformException("SAC_PUR_0003", "hidingYn", yn, "Y/N");
-			}
-			HidingScList hidingScList = new HidingScList();
 
-			hidingScList.setPrchsId(hidingReq.getHidingSacList().get(i).getPrchsId());
-			hidingScList.setPrchsDtlId(hidingReq.getHidingSacList().get(i).getPrchsDtlId());
-			hidingScList.setHidingYn(hidingReq.getHidingSacList().get(i).getHidingYn());
+			HidingListSc hidingListSc = new HidingListSc();
 
-			list.add(hidingScList);
+			hidingListSc.setPrchsId(hidingSacReq.getHidingListSac().get(i).getPrchsId());
+			hidingListSc.setPrchsDtlId(hidingSacReq.getHidingListSac().get(i).getPrchsDtlId());
+			hidingListSc.setHidingYn(hidingSacReq.getHidingListSac().get(i).getHidingYn());
+
+			list.add(hidingListSc);
 		}
-		req.setHidingScList(list);
+		req.setHidingListSc(list);
 
 		return req;
 	}
@@ -138,21 +123,21 @@ public class HidingController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param hidingResponseList
+	 * @param hidingListScResponse
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return List<HidingRes>
+	 * @return List<HidingSacRes>
 	 */
-	private List<HidingRes> resConvert(List<HidingResponse> hidingResponseList) {
-		List<HidingRes> res = new ArrayList<HidingRes>();
-		int size = hidingResponseList.size();
+	private List<HidingSacRes> resConvert(List<HidingScResponse> hidingListScResponse) {
+		List<HidingSacRes> res = new ArrayList<HidingSacRes>();
+		int size = hidingListScResponse.size();
 		this.logger.debug("@@@@@@resConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
-			HidingRes hidingRes = new HidingRes();
-			hidingRes.setPrchsId(hidingResponseList.get(i).getPrchsId());
-			hidingRes.setPrchsDtlId(hidingResponseList.get(i).getPrchsDtlId());
-			hidingRes.setResultYn(hidingResponseList.get(i).getResultYn());
+			HidingSacRes hidingRes = new HidingSacRes();
+			hidingRes.setPrchsId(hidingListScResponse.get(i).getPrchsId());
+			hidingRes.setPrchsDtlId(hidingListScResponse.get(i).getPrchsDtlId());
+			hidingRes.setResultYn(hidingListScResponse.get(i).getResultYn());
 			res.add(hidingRes);
 		}
 

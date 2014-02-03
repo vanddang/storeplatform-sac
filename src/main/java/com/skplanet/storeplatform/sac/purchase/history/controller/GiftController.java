@@ -24,17 +24,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveResponse;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScResponse;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
+import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
 
 /**
  * 구매 SAC 컨트롤러
@@ -46,34 +46,37 @@ import com.skplanet.storeplatform.sac.purchase.history.service.GiftService;
 public class GiftController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
-	private GiftService giftService;
+	private GiftSacService giftService;
 
 	/**
 	 * 선물수신확인 체크 SAC.
 	 * 
-	 * @param giftReceiveReq
+	 * @param giftReceiveSacReq
 	 *            요청정보
+	 * @param bindingResult
+	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
-	 * @return GiftReceiveRes
+	 * @return GiftReceiveSacRes
 	 */
-	@RequestMapping(value = "/history/gift/get/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/history/gift/search/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftReceiveRes searchGiftReceive(@RequestBody @Validated GiftReceiveReq giftReceiveReq,
+	public GiftReceiveSacRes searchGiftReceive(@RequestBody @Validated GiftReceiveSacReq giftReceiveSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField() + error.getCode());
+				throw new StorePlatformException("SAC_PUR_0001", error.getField());
 			}
 		}
-		GiftReceiveRequest req = this.reqConvert(giftReceiveReq, header);
-		GiftReceiveResponse giftReceiveResponse = new GiftReceiveResponse();
-		giftReceiveResponse = this.giftService.searchGiftReceive(req);
-		GiftReceiveRes res = this.resConvert(giftReceiveResponse);
+		GiftReceiveScRequest req = this.reqConvert(giftReceiveSacReq, header);
+		GiftReceiveScResponse giftReceiveScResponse = new GiftReceiveScResponse();
+		giftReceiveScResponse = this.giftService.searchGiftReceive(req);
+		GiftReceiveSacRes res = this.resConvert(giftReceiveScResponse);
 
 		return res;
 	}
@@ -81,22 +84,21 @@ public class GiftController {
 	/**
 	 * 선물수신 처리.
 	 * 
-	 * @param giftConfirmReq
+	 * @param giftConfirmSacReq
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return GiftConfirmRes
+	 * @return GiftConfirmSacRes
 	 */
-	@RequestMapping(value = "/history/gift/modify/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/history/gift/update/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GiftConfirmRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmReq giftConfirmReq,
+	public GiftConfirmSacRes modifyGiftConfirm(@RequestBody @Validated GiftConfirmSacReq giftConfirmSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			for (FieldError error : errors) {
-				this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@{} ", error.getObjectName());
 				if (error.getCode().equals("Pattern")) {
 					throw new StorePlatformException("SAC_PUR_0003", error.getField(), error.getRejectedValue(),
 							"YYYYMMDDHH24MISS");
@@ -107,10 +109,10 @@ public class GiftController {
 			}
 		}
 
-		GiftConfirmRequest req = this.reqConvert(giftConfirmReq, header);
-		GiftConfirmResponse giftConfirmResponse = new GiftConfirmResponse();
-		giftConfirmResponse = this.giftService.modifyGiftConfirm(req);
-		GiftConfirmRes res = this.resConvert(giftConfirmResponse);
+		GiftConfirmScRequest req = this.reqConvert(giftConfirmSacReq, header);
+		GiftConfirmScResponse giftConfirmScResponse = new GiftConfirmScResponse();
+		giftConfirmScResponse = this.giftService.updateGiftConfirm(req);
+		GiftConfirmSacRes res = this.resConvert(giftConfirmScResponse);
 
 		return res;
 	}
@@ -118,22 +120,22 @@ public class GiftController {
 	/**
 	 * 선물수신처리 reqConvert.
 	 * 
-	 * @param giftConfirmReq
+	 * @param giftConfirmSacReq
 	 *            선물수신처리 요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return GiftConfirmRequest
+	 * @return GiftConfirmScRequest
 	 */
-	private GiftConfirmRequest reqConvert(GiftConfirmReq giftConfirmReq, TenantHeader header) {
-		GiftConfirmRequest req = new GiftConfirmRequest();
+	private GiftConfirmScRequest reqConvert(GiftConfirmSacReq giftConfirmSacReq, TenantHeader header) {
+		GiftConfirmScRequest req = new GiftConfirmScRequest();
 
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
-		req.setInsdUsermbrNo(giftConfirmReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(giftConfirmReq.getInsdDeviceId());
-		req.setPrchsId(giftConfirmReq.getPrchsId());
-		req.setRecvDt(giftConfirmReq.getRecvDt());
-		req.setProdId(giftConfirmReq.getProdId());
+		req.setInsdUsermbrNo(giftConfirmSacReq.getInsdUsermbrNo());
+		req.setInsdDeviceId(giftConfirmSacReq.getInsdDeviceId());
+		req.setPrchsId(giftConfirmSacReq.getPrchsId());
+		req.setRecvDt(giftConfirmSacReq.getRecvDt());
+		req.setProdId(giftConfirmSacReq.getProdId());
 
 		return req;
 	}
@@ -141,15 +143,15 @@ public class GiftController {
 	/**
 	 * 선물수신처리 resConvert.
 	 * 
-	 * @param giftComfirmResponse
+	 * @param giftComfirmScResponse
 	 *            선물수신처리 응답정보
-	 * @return GiftConfirmRes
+	 * @return GiftConfirmSacRes
 	 */
-	private GiftConfirmRes resConvert(GiftConfirmResponse giftComfirmResponse) {
-		GiftConfirmRes res = new GiftConfirmRes();
-		res.setPrchsId(giftComfirmResponse.getPrchsId());
-		res.setProdId(giftComfirmResponse.getProdId());
-		res.setResultYn(giftComfirmResponse.getResultYn());
+	private GiftConfirmSacRes resConvert(GiftConfirmScResponse giftComfirmScResponse) {
+		GiftConfirmSacRes res = new GiftConfirmSacRes();
+		res.setPrchsId(giftComfirmScResponse.getPrchsId());
+		res.setProdId(giftComfirmScResponse.getProdId());
+		res.setResultYn(giftComfirmScResponse.getResultYn());
 
 		return res;
 	}
@@ -157,22 +159,20 @@ public class GiftController {
 	/**
 	 * reqConvert.
 	 * 
-	 * @param giftReceiveReq
+	 * @param giftReceiveSacReq
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return GiftReceiveRequest
+	 * @return giftReceiveSacRequest
 	 */
-	private GiftReceiveRequest reqConvert(GiftReceiveReq giftReceiveReq, TenantHeader header) {
-		GiftReceiveRequest req = new GiftReceiveRequest();
+	private GiftReceiveScRequest reqConvert(GiftReceiveSacReq giftReceiveSacReq, TenantHeader header) {
+		GiftReceiveScRequest req = new GiftReceiveScRequest();
 
 		req.setTenantId(header.getTenantId());
-		req.setSendMbrNo(giftReceiveReq.getSendMbrNo());
-		req.setSendDeviceNo(giftReceiveReq.getSendDeviceNo());
-		req.setRecvMbrNo(giftReceiveReq.getRecvMbrNo());
-		req.setRecvDeviceNo(giftReceiveReq.getRecvDeviceNo());
-		req.setPrchsId(giftReceiveReq.getPrchsId());
-		req.setProdId(giftReceiveReq.getProdId());
+		req.setSendMbrNo(giftReceiveSacReq.getSendMbrNo());
+		req.setSendDeviceNo(giftReceiveSacReq.getSendDeviceNo());
+		req.setPrchsId(giftReceiveSacReq.getPrchsId());
+		req.setProdId(giftReceiveSacReq.getProdId());
 
 		return req;
 	}
@@ -180,13 +180,13 @@ public class GiftController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param giftReceiveResponse
+	 * @param giftReceiveScResponse
 	 *            요청정보
-	 * @return GiftReceiveRes
+	 * @return GiftReceiveSacRes
 	 */
-	private GiftReceiveRes resConvert(GiftReceiveResponse giftReceiveResponse) {
-		GiftReceiveRes res = new GiftReceiveRes();
-		res.setRecvDt(giftReceiveResponse.getRecvDt());
+	private GiftReceiveSacRes resConvert(GiftReceiveScResponse giftReceiveScResponse) {
+		GiftReceiveSacRes res = new GiftReceiveSacRes();
+		res.setRecvDt(giftReceiveScResponse.getRecvDt());
 
 		return res;
 	}

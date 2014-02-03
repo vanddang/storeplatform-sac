@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmRequest;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmRes;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacRes;
 import com.skplanet.storeplatform.sac.integration.api.constant.TestConstants;
 
 /**
@@ -45,25 +45,23 @@ public class PurchaseGiftControllerTest {
 	@Test
 	public void giftReceive() throws Exception {
 
-		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/gift/get/v1")
+		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/gift/search/v1")
 				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
 				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						GiftReceiveReq giftReceiveReq = new GiftReceiveReq();
+						GiftReceiveSacReq giftReceiveReq = new GiftReceiveSacReq();
 
 						giftReceiveReq.setTenantId("S01");
 						giftReceiveReq.setSendMbrNo("IF1023541315020111207133720");
 						giftReceiveReq.setSendDeviceNo("01046129571");
-						giftReceiveReq.setRecvMbrNo("IF1023541315020111207133720");
-						giftReceiveReq.setRecvDeviceNo("01033276046");
 						giftReceiveReq.setProdId("H900026621");
 						giftReceiveReq.setPrchsId("M1046129571541651515");
 						return giftReceiveReq;
 					}
-				}).success(GiftReceiveRes.class, new SuccessCallbackForJson() {
+				}).success(GiftReceiveSacRes.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
@@ -71,7 +69,7 @@ public class PurchaseGiftControllerTest {
 
 					@Override
 					public void success(Object result) throws Exception {
-						GiftReceiveRes giftReceiveRes = (GiftReceiveRes) result;
+						GiftReceiveSacRes giftReceiveRes = (GiftReceiveSacRes) result;
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftReceiveRes.getRecvDt());
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftReceiveRes.getRecvDt());
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftReceiveRes.getRecvDt());
@@ -86,14 +84,14 @@ public class PurchaseGiftControllerTest {
 	@Test
 	public void giftConfirm() throws Exception {
 
-		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/gift/modify/v1")
+		StorePlatformAPIinvokorNew.create().url("http://localhost:8010/purchase/history/gift/update/v1")
 				.method(HttpPost.class).accepts(TestConstants.MEDIA_TYPE_APP_JSON)
 				.contentType(TestConstants.MEDIA_TYPE_APP_JSON)
 				.addHeader("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						GiftConfirmRequest giftConfirmRequest = new GiftConfirmRequest();
+						GiftConfirmScRequest giftConfirmRequest = new GiftConfirmScRequest();
 
 						giftConfirmRequest.setTenantId("S01");
 						giftConfirmRequest.setSystemId("S001");
@@ -104,7 +102,7 @@ public class PurchaseGiftControllerTest {
 						giftConfirmRequest.setPrchsId("PI100000000000010571");
 						return giftConfirmRequest;
 					}
-				}).success(GiftConfirmRes.class, new SuccessCallbackForJson() {
+				}).success(GiftConfirmSacRes.class, new SuccessCallbackForJson() {
 					@Override
 					public boolean isSuccess(int status) {
 						return 200 <= status && status < 300;
@@ -112,7 +110,7 @@ public class PurchaseGiftControllerTest {
 
 					@Override
 					public void success(Object result) throws Exception {
-						GiftConfirmRes giftConfirmRes = (GiftConfirmRes) result;
+						GiftConfirmSacRes giftConfirmRes = (GiftConfirmSacRes) result;
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getPrchsId());
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getProdId());
 						System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ : " + giftConfirmRes.getResultYn());
