@@ -385,7 +385,7 @@
              , TB.META_CLSF_CD
              , TB.PROD_ID
              , TB.PART_PROD_ID
-             , TB.CONTENTS_TYPE_CD
+             , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
              , TB.VOD_TITL_NM
              , TB.PROD_NM
              , TB.CHAPTER
