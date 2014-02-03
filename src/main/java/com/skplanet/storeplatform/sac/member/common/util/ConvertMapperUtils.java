@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.common.util;
+package com.skplanet.storeplatform.sac.member.common.util;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -14,7 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */
-public class ConvertMapperUtil {
+public class ConvertMapperUtils {
 
 	/**
 	 * <pre>

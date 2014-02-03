@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.common.util;
+package com.skplanet.storeplatform.sac.member.common.util;
 
 import java.util.Random;
 
@@ -7,7 +7,7 @@ import java.util.Random;
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */
-public class RandomString {
+public class RandomStringUtils {
 
 	private static Random RND = new Random(System.currentTimeMillis());
 
@@ -115,14 +115,14 @@ public class RandomString {
 	public static void main(String[] args) {
 		for (int i = 0; i < 100; i++) {
 			System.out.println("              round : " + i);
-			System.out.println("        Only number : " + RandomString.getString(4, RandomString.TYPE_NUMBER));
-			System.out.println("    Only lower case : " + RandomString.getString(10, RandomString.TYPE_LOWER_ALPHA));
-			System.out.println("    Only upper case : " + RandomString.getString(10, RandomString.TYPE_UPPER_ALPHA));
+			System.out.println("        Only number : " + RandomStringUtils.getString(4, RandomStringUtils.TYPE_NUMBER));
+			System.out.println("    Only lower case : " + RandomStringUtils.getString(10, RandomStringUtils.TYPE_LOWER_ALPHA));
+			System.out.println("    Only upper case : " + RandomStringUtils.getString(10, RandomStringUtils.TYPE_UPPER_ALPHA));
 			System.out.println("lower case + Number : "
-					+ RandomString.getString(10, RandomString.TYPE_NUMBER + RandomString.TYPE_LOWER_ALPHA));
+					+ RandomStringUtils.getString(10, RandomStringUtils.TYPE_NUMBER + RandomStringUtils.TYPE_LOWER_ALPHA));
 			System.out.println("upper case + Number : "
-					+ RandomString.getString(10, RandomString.TYPE_NUMBER + RandomString.TYPE_UPPER_ALPHA));
-			System.out.println("                all : " + RandomString.getString(10));
+					+ RandomStringUtils.getString(10, RandomStringUtils.TYPE_NUMBER + RandomStringUtils.TYPE_UPPER_ALPHA));
+			System.out.println("                all : " + RandomStringUtils.getString(10));
 		}
 	}
 }

@@ -27,7 +27,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
 
@@ -74,7 +74,7 @@ public class RemoveIndividualPolicyTest {
 	@After
 	public void after() {
 		// Debug [RESPONSE-SAC]
-		LOGGER.debug("[RESPONSE(SAC)-정책삭제] : \n{}", ConvertMapperUtil.convertObjectToJson(response));
+		LOGGER.debug("[RESPONSE(SAC)-정책삭제] : \n{}", ConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class RemoveIndividualPolicyTest {
 					public Object requestBody() {
 						request.setKey("010123456");
 						request.setPolicyCode("9");
-						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtil.convertObjectToJson(request));
+						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(RemoveIndividualPolicyRes.class, new SuccessCallback() {

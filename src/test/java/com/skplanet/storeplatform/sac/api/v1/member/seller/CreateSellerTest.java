@@ -34,7 +34,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
@@ -95,7 +95,7 @@ public class CreateSellerTest {
 	@After
 	public void after() {
 		// Debug - 가입 결과
-		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", ConvertMapperUtil.convertObjectToJson(res));
+		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", ConvertMapperUtils.convertObjectToJson(res));
 		if (res != null) {
 			CommonRequest commonRequest = new CommonRequest();
 			commonRequest.setSystemID("S001");
@@ -120,7 +120,7 @@ public class CreateSellerTest {
 
 			// Debug - 정상회원으로 변경 결과
 			LOGGER.debug("[RESPONSE(SC)-정상회원] : \n{}",
-					ConvertMapperUtil.convertObjectToJson(updateStatusSellerResponse));
+					ConvertMapperUtils.convertObjectToJson(updateStatusSellerResponse));
 
 			// 탈퇴 [REQUEST]
 			RemoveSellerRequest request = new RemoveSellerRequest();
@@ -135,7 +135,7 @@ public class CreateSellerTest {
 			LOGGER.debug("[sellerSCI.removeSeller()] CODE : {}, MESSAGE : {}", response.getCommonResponse()
 					.getResultCode(), response.getCommonResponse().getResultMessage());
 			// Debug - 회원탈퇴 결과
-			LOGGER.debug("[RESPONSE(SC)-회원탈퇴] : \n{}", ConvertMapperUtil.convertObjectToJson(response));
+			LOGGER.debug("[RESPONSE(SC)-회원탈퇴] : \n{}", ConvertMapperUtils.convertObjectToJson(response));
 		}
 	}
 
@@ -195,7 +195,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -267,7 +267,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -340,7 +340,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -413,7 +413,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -486,7 +486,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -559,7 +559,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -632,7 +632,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtil.convertObjectToJson(req));
+						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {

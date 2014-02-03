@@ -55,9 +55,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.util.RandomString;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.util.RandomStringUtils;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의
@@ -349,25 +349,26 @@ public class SellerServiceImpl implements SellerService {
 
 		if (logInSellerResponse != null) {
 			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
-			// 회원 인증 "Y" 일 경우
+			// 존재 하지 않는 회원일 경우
 			if (logInSellerResponse.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_UNKNOWN_USER_ID)) {
 				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 			} else {
+				// 회원 인증 "Y" 일 경우
 				if (logInSellerResponse.getIsLoginSuccess().equals(MemberConstants.USE_Y)) {
-					/** 3.1. SC-REQUEST 생성 및 주입 */
+					/** 3.1. 회원 인증키 생성을 위한 SC-REQUEST 생성 및 주입 */
 					UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
 					LoginInfo loginInfo = new LoginInfo();
 					loginInfo.setSellerKey(res.getSellerMbr().getSellerKey());
 					loginInfo.setIpAddress(req.getIpAddress());
-					loginInfo.setSessionKey(res.getSellerMbr().getSellerKey() + "_" + RandomString.getString(10));
+					loginInfo.setSessionKey(res.getSellerMbr().getSellerKey() + "_" + RandomStringUtils.getString(10));
 					loginInfo.setExpireDate(req.getExpireDate());
 					updateLoginInfoRequest.setLoginInfo(loginInfo);
 
 					/** 3.2. 공통 헤더 생성 및 주입. */
 					updateLoginInfoRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
-					/** 3.3. SC회원 - 상태변경 Call. */
+					/** 3.3. SC회원 - 상태변경(회원인증키) Call. */
 					UpdateLoginInfoResponse updateLoginInfoResponse = this.sellerSCI
 							.updateLoginInfo(updateLoginInfoRequest);
 					// [RESPONSE] Debug
@@ -752,7 +753,7 @@ public class SellerServiceImpl implements SellerService {
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
 		loginInfo.setIpAddress(req.getIpAddress());
-		loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomString.getString(10));
+		loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomStringUtils.getString(10));
 		loginInfo.setExpireDate(req.getExpireDate());
 
 		schReq.setLoginInfo(loginInfo);

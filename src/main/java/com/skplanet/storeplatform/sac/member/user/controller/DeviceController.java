@@ -28,7 +28,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SetMainDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.util.ConvertMapperUtil;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
@@ -76,7 +76,7 @@ public class DeviceController {
 		}
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader,
-				(ListDeviceReq) ConvertMapperUtil.convertObject(req));
+				(ListDeviceReq) ConvertMapperUtils.convertObject(req));
 
 		return res;
 	}

@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtil;
+import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
@@ -77,7 +77,7 @@ public class AuthorizeTest {
 	@After
 	public void after() {
 		// Debug
-		LOGGER.debug("[RESPONSE(SAC)-회원인증] : \n{}", ConvertMapperUtil.convertObjectToJson(authorizeRes));
+		LOGGER.debug("[RESPONSE(SAC)-회원인증] : \n{}", ConvertMapperUtils.convertObjectToJson(authorizeRes));
 	}
 
 	/**

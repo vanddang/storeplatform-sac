@@ -12,7 +12,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
-public class ConvertMapperUtil {
+public class ConvertMapperUtils {
 
 	/**
 	 * <pre>
