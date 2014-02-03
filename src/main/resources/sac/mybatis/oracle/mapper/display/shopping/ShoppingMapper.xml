@@ -98,7 +98,8 @@
                         AND I.PROD_ID = M.PROD_ID   
                         </if>                        
                         AND I.PROD_ID = N.PROD_ID(+)     
-                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/                  
+                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/
+                        AND NVL(B.CHNL_CNT, 0) > 0                  
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
@@ -206,7 +207,8 @@
                         AND I.PROD_ID = L.PROD_ID
                         AND I.PROD_ID = M.PROD_ID(+)                           
                         AND I.PROD_ID = N.PROD_ID(+)  
-                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/         
+                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/ 
+                        AND NVL(B.CHNL_CNT, 0) > 0          
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */
@@ -353,7 +355,8 @@
                         AND I.PROD_ID = M.PROD_ID                             
                         </if>                   
                         AND I.PROD_ID = N.PROD_ID(+)       
-                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/         
+                        AND H.PROD_RSHP_CD ='DP010802'    /*채널-에피소드 상품 관계*/   
+                        AND NVL(B.CHNL_CNT, 0) > 0        
                         AND C.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND F.LANG_CD= #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND D.BASE_YN='Y'                 /* Y : 기본(기본여부) */

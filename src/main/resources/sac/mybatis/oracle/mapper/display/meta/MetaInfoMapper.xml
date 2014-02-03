@@ -621,6 +621,7 @@
                       </if>
                         
                         AND H.PROD_RSHP_CD = #{prodRshpCd}    /*채널-에피소드 상품 관계*/
+                        AND NVL(B.CHNL_CNT, 0) > 0  
                         AND PI.LANG_CD = #{tenantHeader.langCd}         /* ko : 한국어 */         
                         AND C.LANG_CD = #{tenantHeader.langCd}          /* ko : 한국어 */
                         AND F.LANG_CD = #{tenantHeader.langCd}          /* ko : 한국어 */
