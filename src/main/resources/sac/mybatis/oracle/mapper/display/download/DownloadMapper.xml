@@ -34,7 +34,7 @@
 			      , (SELECT MENU_NM 
 			           FROM TB_DP_MENU_CATEGORY_DESC
 			          WHERE MENU_ID = KA.TOP_MENU_ID
-			            AND LANG_CD = 'ko'
+			            AND LANG_CD = #{langCd}
 			            AND ROWNUM = 1) AS TOP_MENU_NM        
 			      , KA.MENU_ID
 			      , KA.MENU_NM
@@ -68,7 +68,7 @@
 			                                                                           ) AS SUPPORTED_OS      
 			      , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
 			      , KB.FILE_PATH AS FILE_PATH
-			      , KC.FILE_PATH AS IMG_PATH
+			      , KC.FILE_PATH AS IMAGE_PATH
 			  FROM (
 			        SELECT  COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
 			               , A.MENU_ID
@@ -144,7 +144,7 @@
 			   AND  KA.PROD_ID = KC.PROD_ID
 			   AND  KC.EXPO_ORD = '1'
 			   AND  KC.LANG_CD = #{langCd}
-			   AND  KC.IMG_CD = #{imgCd} 
+			   AND  KC.IMG_CD = #{imageCd} 
            ) TA LEFT OUTER JOIN TB_DP_SEED_MAPP TB 
 		         ON TA.PROD_ID = TB.PROD_ID			              
     </select>
@@ -206,9 +206,9 @@
              , REGEXP_SUBSTR(HD_SUB_CONTS,'[^,]+',1,6) AS HD_BTV_CID
              , DECODE( DWLD_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS DWLD_NETWORK_CD
              , DECODE( STRM_NETWORK_CD , 'DP004402', 'restrict', NULL ) AS STRM_NETWORK_CD
-             , TB.FILE_PATH  AS IMG_PATH
-             , TB.FILE_NM AS IMG_NM
-             , TB.FILE_SIZE AS IMG_SIZE
+             , TB.FILE_PATH  AS IMAGE_PATH
+             , TB.FILE_NM AS IMAGE_NM
+             , TB.FILE_SIZE AS IMAGE_SIZE
              , TA.FILE_PATH
         FROM
              (
@@ -435,7 +435,8 @@
                                            AND DECODE( L.SD_VIDEO_SPRT_YN , 'Y' , DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( L.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1   
                                            AND (CASE WHEN L.VIDEO_DRM_SPRT_YN = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
                                                      ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */                                                                                                                                     
-                                           AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */   
+                                           AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
+                                           AND L.USE_YN ='Y'   
                                            AND M.SALE_YN ='Y'                                       
                                            AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
                                            AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
@@ -455,7 +456,7 @@
                ON  TA.CHNL_PROD_ID = TB.PROD_ID
               AND  TB.EXPO_ORD = '1'
               AND  TB.LANG_CD = #{langCd}
-              AND  TB.IMG_CD = #{imgCd}            
+              AND  TB.IMG_CD = #{imageCd}            
     </select>
     
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookSacReq" resultType="MetaInfo">
@@ -592,4 +593,109 @@
     <select id="selectDownloadComicInfo" parameterType="DownloadComicSacReq" resultType="MetaInfo">
         SELECT 1 FROM DUAL
     </select>
+
+    <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
+		SELECT /* DownloadMapper.xml, getDownloadMusicInfo, SAC : 이석희 , 2014-02-03 */
+		        TA.PROD_ID
+		      , TA.OUTSD_CONTENTS_ID
+		      , TA.PROD_NM
+		      , TA.PROD_GRD_CD
+		      , TA.ARTIST1_NM
+		      , TA.ARTIST2_NM
+		      , TA.ARTIST3_NM
+		      , TA.FILE_SIZE_H
+		      , TA.FILE_SIZE
+		      , TA.CHNL_PROD_ID
+		      , TA.MENU_ID
+		      , TA.TOP_MENU_ID
+		      , (SELECT MENU_NM 
+		           FROM TB_DP_MENU_CATEGORY_DESC
+		          WHERE MENU_ID = TA.TOP_MENU_ID
+		            AND LANG_CD = #{langCd}
+		            AND ROWNUM = 1) AS TOP_MENU_NM         
+		      , TA.META_CLSF_CD
+		      , TA.FILE_PATH
+		      , TB.FILE_PATH  AS IMG_PATH
+		      , TB.FILE_NM AS IMAGE_NM
+		      , TB.FILE_SIZE AS IMAGE_SIZE
+		  FROM
+		      (
+		      
+		        SELECT MAX(A.MENU_ID) AS MENU_ID
+		             , MAX(C.MENU_NM) AS MENU_NM
+		             , MAX(C.MENU_DESC) AS MENU_DESC                           
+		             , MAX(D.PROD_ID) AS CHNL_PROD_ID
+		             , J.PROD_ID             
+		             , MAX(J.PROD_GRD_CD) AS PROD_GRD_CD
+		             , MAX(J.TOP_MENU_ID) AS TOP_MENU_ID             
+		             , MAX(J.META_CLSF_CD) AS META_CLSF_CD
+		             , MAX(M.FILE_PATH) AS FILE_PATH
+		             , MAX(N.PROD_STATUS_CD) AS PROD_STATUS_CD
+		             , MAX(P.OUTSD_CONTENTS_ID) AS OUTSD_CONTENTS_ID
+		             , MAX(Q.ARTIST1_NM ) AS ARTIST1_NM
+		             , MAX(Q.ARTIST2_NM ) AS ARTIST2_NM
+		             , MAX(Q.ARTIST3_NM ) AS ARTIST3_NM
+		             , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009711', M.FILE_SIZE ) ) AS FILE_SIZE_H
+		             , MAX(DECODE( M.DP_PG_QULT_CD, 'PD009712', M.FILE_SIZE ) ) AS FILE_SIZE                  
+		             , MAX(Q.PROD_NM) AS PROD_NM
+		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
+		             , TB_DP_MENU_CATEGORY           B
+		             , TB_DP_MENU_CATEGORY_DESC      C
+		             , TB_DP_PROD                    D
+		             , TB_DP_MULTIMDA_PROD           E
+		             , TB_DP_TENANT_PROD             G
+		             , TB_DP_PROD_RSHP               I
+		             , TB_DP_PROD                    J
+		             , TB_DP_SPRT_DEVICE             K
+		             , TB_CM_DEVICE                  L
+		             , TB_DP_SUB_CONTENTS            M
+		             , TB_DP_TENANT_PROD             N
+		             , TB_DP_TENANT_PROD_PRICE       O
+		             , TB_DP_MULTIMDA_PROD           P
+		             , TB_DP_PROD_DESC               Q
+		         WHERE A.MENU_ID = B.MENU_ID
+		           AND A.MENU_ID = C.MENU_ID
+		           AND A.PROD_ID = D.PROD_ID
+		           AND D.PROD_ID = E.PROD_ID  
+		           AND D.PROD_ID = G.PROD_ID                                                                              
+		           AND D.PROD_ID = I.PROD_ID
+		           AND I.PART_PROD_ID = J.PROD_ID
+		           AND I.PART_PROD_ID = K.PROD_ID
+		           AND I.PART_PROD_ID = M.PROD_ID
+		           AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
+		           AND J.PROD_ID = N.PROD_ID
+		           AND J.PROD_ID = O.PROD_ID  
+		           AND N.TENANT_ID = 'S01'
+		           AND N.TENANT_ID = O.TENANT_ID                                         
+		           AND J.PROD_ID = P.PROD_ID
+		           AND J.PROD_ID = Q.PROD_ID                                     
+		           AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
+		           AND C.LANG_CD = #{langCd}                      /* ko : 한국어 */
+		           AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
+		           AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
+		           AND D.TOP_MENU_ID = 'DP16'
+		           AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
+		           AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */   
+		           AND G.TENANT_ID = 'S01'                                       
+		           AND J.SVC_GRP_CD = 'DP000203'       /* PD002501 : 에피소드타입 */  
+		           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드타입 */  
+		           AND J.TOP_MENU_ID = 'DP16'
+		           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */                                       
+		           AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */   
+		           AND L.MUSIC_SPRT_YN ='Y'
+		           AND L.USE_YN ='Y'
+		           AND M.SALE_YN ='Y'                                       
+		           AND N.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409') /* PD000403 : 판매중, PD000404 : 판매중지, PD000409 : 판매불가-다운허용 */
+		           AND N.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */                                         
+		           AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+		           AND Q.LANG_CD = #{langCd}                      /* ko : 한국어 */
+		           AND J.PROD_ID = #{productId} /* 상품 ID(에피소드) */ 
+		         GROUP BY J.PROD_ID
+		     ) TA  LEFT OUTER JOIN TB_DP_PROD_IMG TB 
+		       ON  TA.CHNL_PROD_ID = TB.PROD_ID
+		      AND  TB.EXPO_ORD = '1'
+		      AND  TB.LANG_CD = #{langCd}
+		      AND  TB.IMG_CD = #{imageCd}
+    </select>    
+    
 </mapper>
