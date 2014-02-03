@@ -19,7 +19,7 @@
 		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
  	
- 	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
+ 	<!-- <import resource="classpath*:runtime/context-runtime-amqp.xml"/> -->
  	
  	<bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
  	    <constructor-arg>
