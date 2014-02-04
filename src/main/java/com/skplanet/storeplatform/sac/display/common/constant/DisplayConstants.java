@@ -293,6 +293,8 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_DEFAULT_ORDERED_OPTION = "recent";
 
+	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
+
 	/*
 	 * 배너 타입 코드
 	 */
