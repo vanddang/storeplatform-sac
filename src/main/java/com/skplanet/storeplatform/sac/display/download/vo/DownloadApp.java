@@ -36,6 +36,7 @@ public class DownloadApp {
 	private Integer apkFileSize; // 앱 용량
 	private String filePath; // 앱 파일 경로
 	private String imagePath; // 앱 이미지 경로
+	private String sysDate;
 
 	// Seed 정보
 	private String seedProductId; // Seed 상품 Id
@@ -568,6 +569,21 @@ public class DownloadApp {
 	 */
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	/**
+	 * @return the sysDate
+	 */
+	public String getSysDate() {
+		return this.sysDate;
+	}
+
+	/**
+	 * @param sysDate
+	 *            the sysDate to set
+	 */
+	public void setSysDate(String sysDate) {
+		this.sysDate = sysDate;
 	}
 
 	/**

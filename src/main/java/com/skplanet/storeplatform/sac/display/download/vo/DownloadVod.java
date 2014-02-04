@@ -69,6 +69,7 @@ public class DownloadVod {
 	private String imageNm; // 이미지 명
 	private Integer imageSize; // 이미지 사이즈
 	private String filePath; // 파일 경로
+	private String sysDate; // 시스템 날짜
 
 	/**
 	 * 
@@ -1420,4 +1421,18 @@ public class DownloadVod {
 		this.filePath = filePath;
 	}
 
+	/**
+	 * @return the sysDate
+	 */
+	public String getSysDate() {
+		return this.sysDate;
+	}
+
+	/**
+	 * @param sysDate
+	 *            the sysDate to set
+	 */
+	public void setSysDate(String sysDate) {
+		this.sysDate = sysDate;
+	}
 }

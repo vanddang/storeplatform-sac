@@ -23,12 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
@@ -40,6 +38,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -47,7 +48,9 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.download.vo.DownloadApp;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
+import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -68,6 +71,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 	@Autowired
 	ExistenceSacService existenceSacService;
+
+	@Autowired
+	HistoryListService historyListService;
 
 	/*
 	 * (non-Javadoc)
@@ -112,6 +118,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		Purchase purchase = null;
 		Distributor distributor = null;
 		Component component = null;
+		Date date = null;
 
 		if (downloadAppSacReq.getDummy() == null) {
 
@@ -173,40 +180,51 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				purchase = new Purchase();
 				distributor = new Distributor();
 				component = new Component(); // Seed App 정보
+				date = new Date();
 
 				String prchsId = null;
+				String prchsDt = null;
+				String prchsState = null;
 
 				try {
-					// 기구매 체크를 위한 생성자
-					ExistenceScRequest existenceScRequest = new ExistenceScRequest();
-					existenceScRequest.setTenantId(downloadAppSacReq.getTenantId());
-					existenceScRequest.setInsdUsermbrNo(downloadAppSacReq.getUserKey());
-					existenceScRequest.setInsdDeviceId(downloadAppSacReq.getDeviceKey());
+					// 구매내역 조회를 위한 생성자
+					ProductListSac productListSac = new ProductListSac();
+					productListSac.setProdId(downloadAppInfo.getProdId());
 
-					ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-					existenceItemSc.setProdId(downloadAppSacReq.getProductId());
+					List<ProductListSac> productList = new ArrayList<ProductListSac>();
+					productList.add(productListSac);
 
-					List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
-					list.add(existenceItemSc);
-					existenceScRequest.setExistenceItemSc(list);
+					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+					historyListSacReq.setTenantId(downloadAppSacReq.getTenantId());
+					historyListSacReq.setInsdUsermbrNo(downloadAppSacReq.getUserKey());
+					historyListSacReq.setInsdDeviceId(downloadAppSacReq.getDeviceKey());
+					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+					historyListSacReq.setStartDt("19000101000000");
+					historyListSacReq.setEndDt(downloadAppInfo.getSysDate());
+					historyListSacReq.setOffset(1);
+					historyListSacReq.setCount(1);
+					historyListSacReq.setProductList(productList);
 
-					// 기구매 체크 실행
-					List<ExistenceScResponse> existenceResponseList = this.existenceSacService
-							.searchExistenceList(existenceScRequest);
+					// 구매내역 조회 실행
+					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
-					if (!existenceResponseList.isEmpty()) {
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
-						this.log.debug("----------------------------------------------------------------");
+					this.log.debug("##################################################################################");
+					this.log.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+					this.log.debug("##################################################################################");
 
-						prchsId = existenceResponseList.get(0).getPrchsId();
-					} else {
-						this.log.debug("----------------------------------------------------------------");
-						this.log.debug("미구매 상품");
-						this.log.debug("----------------------------------------------------------------");
+					if (historyListSacRes.getTotalCnt() > 0) {
+						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
+						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+
+						if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+							prchsState = "payment";
+						} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+							prchsState = "gift";
+						}
 					}
-				} catch (Exception e) {
-					throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", e);
+				} catch (Exception ex) {
+					throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 				}
 
 				List<Identifier> seedIdentifierList = new ArrayList<Identifier>();
@@ -299,12 +317,26 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				distributor.setEmail(downloadAppInfo.getExpoSellerEmail());
 				distributor.setRegNo(downloadAppInfo.getSellerMbrNo());
 
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-				identifier.setText(prchsId);
-				purchase.setIdentifier(identifier);
-				purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
-				product.setPurchase(purchase);
+				// 구매 정보
+				if (StringUtils.isNotEmpty(prchsId)) {
+					purchase.setState(prchsState);
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+					identifier.setText(prchsId);
+					purchase.setIdentifier(identifier);
+					date.setType("date/purchase");
+					date.setText(prchsDt);
+					purchase.setDate(date);
+				} else {
+					purchase.setState("");
+				}
+
+				// identifier = new Identifier();
+				// identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+				// identifier.setText(prchsId);
+				// purchase.setIdentifier(identifier);
+				// purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
+				// product.setPurchase(purchase);
 
 				product = new Product();
 				product.setIdentifierList(identifierList);
