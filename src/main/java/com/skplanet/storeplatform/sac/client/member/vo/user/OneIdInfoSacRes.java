@@ -19,7 +19,7 @@ public class OneIdInfoSacRes extends CommonInfo {
 	private String idctYn;
 
 	/* CI */
-	private String ci;
+	private String ciYn;
 
 	private String ocbYn;
 
@@ -31,12 +31,12 @@ public class OneIdInfoSacRes extends CommonInfo {
 		this.idctYn = idctYn;
 	}
 
-	public String getCi() {
-		return this.ci;
+	public String getCiYn() {
+		return this.ciYn;
 	}
 
-	public void setCi(String ci) {
-		this.ci = ci;
+	public void setCiYn(String ciYn) {
+		this.ciYn = ciYn;
 	}
 
 	public String getOcbYn() {
