@@ -43,6 +43,10 @@ public class FeatureCategoryVodReq extends CommonInfo {
 
 	private String imageCd; // 이미지 코드
 
+	private String langCd; // 언어
+
+	private String[] prodGradeCdArr; // 상품등급코드 배열
+
 	public String getProdGradeCd() {
 		return this.prodGradeCd;
 	}
@@ -138,4 +142,21 @@ public class FeatureCategoryVodReq extends CommonInfo {
 	public void setImageCd(String imageCd) {
 		this.imageCd = imageCd;
 	}
+
+	public String getLangCd() {
+		return this.langCd;
+	}
+
+	public void setLangCd(String langCd) {
+		this.langCd = langCd;
+	}
+
+	public String[] getProdGradeCdArr() {
+		return this.prodGradeCdArr;
+	}
+
+	public void setProdGradeCdArr(String[] prodGradeCdArr) {
+		this.prodGradeCdArr = prodGradeCdArr;
+	}
+
 }

@@ -25,6 +25,8 @@ public class FeatureCategoryEpubReq extends CommonInfo {
 	private String deviceModelCd; // 메뉴ID
 	private String stdDt; // 배치일자
 
+	private String[] prodGradeCdArr; // 상품등급코드 배열
+
 	// Dummy Data용
 	private String dummy; // 메뉴ID
 
@@ -126,6 +128,14 @@ public class FeatureCategoryEpubReq extends CommonInfo {
 
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
+	}
+
+	public String[] getProdGradeCdArr() {
+		return this.prodGradeCdArr;
+	}
+
+	public void setProdGradeCdArr(String[] prodGradeCdArr) {
+		this.prodGradeCdArr = prodGradeCdArr;
 	}
 
 }
