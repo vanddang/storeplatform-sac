@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,9 @@ public class IdpServiceImpl implements IdpService {
 
 	@Autowired
 	private UserSCI userSCI;
+
+	@Autowired
+	private MessageSourceAccessor messageSourceAccessor; // Message Properties
 
 	/*
 	 * 
@@ -770,7 +775,8 @@ public class IdpServiceImpl implements IdpService {
 			mbrAuth.setCi(map.get("user_ci").toString());
 			mbrAuth.setDi(map.get("user_di").toString());
 			// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
-			mbrAuth.setRealNameSite(map.get("rname_auth_sst_code").toString());
+			// systemid 입력
+			mbrAuth.setRealNameSite((String) map.get("systemID"));
 			mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
 			mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
 			mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
@@ -853,7 +859,7 @@ public class IdpServiceImpl implements IdpService {
 				mbrLglAgent.setParentCI(map.get("parent_rname_auth_key").toString());
 			}
 			// mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
-			mbrLglAgent.setParentRealNameSite(map.get("parent_approve_sst_code").toString());
+			mbrLglAgent.setParentRealNameSite((String) map.get("systemID"));
 			if (map.get("parent_approve_date").toString().length() == 8) {
 				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString() + "000000");
 			} else if (map.get("parent_approve_date").toString().length() > 8) {
@@ -1197,7 +1203,10 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 			imResult.setUserId(userID);
 			imResult.setIsCancelAble(delYN);
-			// imResult.setCancelRetUrl("http://"+Constants.USER_POC_IP +"/userpoc/mypage/goMemberSecessionSSO.omp");
+			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+					LocaleContextHolder.getLocale());
+			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
+			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
 			imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
 			imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
 
@@ -1264,7 +1273,10 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 			imResult.setUserId(userID);
 			imResult.setIsCancelAble(delYN);
-			// imResult.setCancelRetUrl("http://"+Constants.USER_POC_IP +"/userpoc/mypage/goMemberSecessionSSO.omp");
+			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+					LocaleContextHolder.getLocale());
+			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
+			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
 			imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
 			imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
 
