@@ -32,29 +32,26 @@ public class ModifyInformationReq extends CommonInfo {
 	@NotBlank
 	private String sellerSubStatus;
 	/** 판매자 ID. */
+	@NotBlank
 	private String sellerId;
 	/** 이동통신사. */
-	@NotBlank
 	private String sellerTelecom;
 	/** 전화번호 국가코드. */
 	private String sellerPhoneCountry;
 	/** 전화번호. */
 	private String sellerPhone;
 	/** SMS 수신 여부. */
-	@NotBlank
 	@Pattern(regexp = "^Y|^N")
 	private String isRecvSMS;
 	/** 판매자 이메일. */
 	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
 	private String sellerEmail;
 	/** 이메일수신 여부. */
-	@NotBlank
 	@Pattern(regexp = "^Y|^N")
 	private String isRecvEmail;
 	/** 판매자 이름. */
 	private String sellerName;
 	/** 판매자 성별. */
-	@NotBlank
 	@Pattern(regexp = "^M|^F")
 	private String sellerSex;
 	/** 판매자 생년월일. */
@@ -79,7 +76,7 @@ public class ModifyInformationReq extends CommonInfo {
 	/** 식별코드. */
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
-	private String isForeign;
+	private String isDomestic;
 	/** 법정대리인 동의여부. */
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
@@ -99,14 +96,12 @@ public class ModifyInformationReq extends CommonInfo {
 	/** 법정대리인 휴대폰 번호. */
 	private String parentMDN;
 	/** 법정대리인 이동통신사. */
-	@NotBlank
 	private String parentTelecom;
 	/** 법정대리인 실명인증 일시. */
 	private String parentRealNameDate;
 	/** 법정대리인 CI. */
 	private String parentCI;
 	/** 법정대리인 실명인증수단 코드. */
-	@NotBlank
 	private String parentRealNameMethod;
 	/** 법정대리인 실명인증 시스템 id. */
 	private String parentRealNameSystemId;
@@ -314,12 +309,12 @@ public class ModifyInformationReq extends CommonInfo {
 		this.sellerLanguage = sellerLanguage;
 	}
 
-	public String getIsForeign() {
-		return this.isForeign;
+	public String getIsDomestic() {
+		return this.isDomestic;
 	}
 
-	public void setIsForeign(String isForeign) {
-		this.isForeign = isForeign;
+	public void setIsDomestic(String isDomestic) {
+		this.isDomestic = isDomestic;
 	}
 
 	public String getIsParent() {
