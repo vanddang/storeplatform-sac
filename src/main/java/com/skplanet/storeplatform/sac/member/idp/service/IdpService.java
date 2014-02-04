@@ -191,4 +191,30 @@ public interface IdpService {
 	 */
 	public String ecgScededTStore(HashMap map);
 
+	/**
+	 * 
+	 * <pre>
+	 * 탈퇴가 가능한 통합회원 확인요청 - CMD : RXPreCheckDeleteUserIDP .
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	public ImResult rXPreCheckDeleteUserIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 이용해지가 가능한 통합회원 확인요청 - CMD : RXPreCheckDisagreeUserIDP .
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	public ImResult rXPreCheckDisagreeUserIDP(HashMap map);
+
 }
