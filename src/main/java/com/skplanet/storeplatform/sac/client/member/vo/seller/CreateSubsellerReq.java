@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -16,12 +17,14 @@ public class CreateSubsellerReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 키. */
+	@NotBlank
 	private String sellerKey;
 
 	/** 서브계정 키. */
 	private String subSellerKey;
 
 	/** 서브계정 ID. */
+	@NotBlank
 	private String subSellerID;
 
 	/** 서브계정 비밀번호. */
@@ -43,6 +46,7 @@ public class CreateSubsellerReq extends CommonInfo {
 	private String subSellerPhone; // WILS_TEL_NO 무선 전화번호
 
 	/** 신규 등록여부 Example : Y/N. */
+	@NotBlank
 	private String isNew;
 
 	/** 이전 비밀번호. */
