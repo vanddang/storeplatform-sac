@@ -31,48 +31,48 @@ public class Book extends CommonInfo implements Serializable {
 	private String type;
 
 	/**
-	 * 업데이트 주기
+	 * 업데이트 주기.
 	 */
 	private String updateCycle;
 	/**
-	 * 전체 페이지수
+	 * 전체 페이지수.
 	 */
 	private String totalPages;
 	/**
-	 * 버전
+	 * 버전.
 	 */
 	private String bookVersion;
 	/**
-	 * Sub Contents ID
+	 * Sub Contents ID.
 	 */
 	private String scid;
 	/**
-	 * 용량 (byte 단위)
+	 * 용량 (byte 단위).
 	 */
 	private Integer size;
 	/**
-	 * 회차 정보
+	 * 회차 정보.
 	 */
 	private Chapter chapter;
 	/**
-	 *
+	 * 판매일.
 	 */
 	private String saleDate;
 	/**
-	 * 정기 구독수
+	 * 정기 구독수.
 	 */
 	private Count subscriptionCount;
 	/**
-	 * 채널에 속해 있는 전체 책 권수
+	 * 채널에 속해 있는 전체 책 권수.
 	 */
 	private Count channelCount;
 	/**
-	 * 상태 > continue
+	 * 상태 > continue.
 	 */
 	private String status;
 
 	/**
-	 * 지원 >play >store
+	 * 지원 >play >store.
 	 */
 	private List<Support> supportList;
 
