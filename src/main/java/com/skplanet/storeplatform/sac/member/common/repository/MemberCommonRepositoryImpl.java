@@ -2,8 +2,6 @@ package com.skplanet.storeplatform.sac.member.common.repository;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,28 +21,26 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
 @Transactional
 public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MemberCommonRepositoryImpl.class);
-
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
 	@Override
-	public List<Clause> searchMandatoryAgreeList(String tenantId) throws Exception {
+	public List<Clause> searchMandatoryAgreeList(String tenantId) {
 		Clause dto = new Clause();
 		dto.setTenantId(tenantId);
 		return (List<Clause>) this.commonDAO.queryForList("MemberCommon.getMandAgreeList", dto);
 	}
 
 	@Override
-	public Device searchPhoneInfo(String deviceModelCd) throws Exception {
+	public Device searchPhoneInfo(String deviceModelCd) {
 		Device dto = new Device();
 		dto.setDeviceModelCd(deviceModelCd);
 		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
 	}
 
 	@Override
-	public int searchOmdCount(String uacd) throws Exception {
+	public int searchOmdCount(String uacd) {
 		return (Integer) this.commonDAO.queryForObject("MemberCommon.getOmdCount", uacd);
 	}
 

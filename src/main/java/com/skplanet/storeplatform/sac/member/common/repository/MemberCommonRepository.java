@@ -21,10 +21,8 @@ public interface MemberCommonRepository {
 	 * @param tenantId
 	 *            테넌트 아이디
 	 * @return List<ClauseDTO>
-	 * @throws Exception
-	 *             Exception
 	 */
-	public List<Clause> searchMandatoryAgreeList(String tenantId) throws Exception;
+	public List<Clause> searchMandatoryAgreeList(String tenantId);
 
 	/**
 	 * <pre>
@@ -34,10 +32,8 @@ public interface MemberCommonRepository {
 	 * @param deviceModelCd
 	 *            단말 모델 코드
 	 * @return DeviceHeader
-	 * @throws Exception
-	 *             Exception
 	 */
-	public Device searchPhoneInfo(String deviceModelCd) throws Exception;
+	public Device searchPhoneInfo(String deviceModelCd);
 
 	/**
 	 * <pre>
@@ -47,9 +43,7 @@ public interface MemberCommonRepository {
 	 * @param uacd
 	 *            String
 	 * @return int
-	 * @throws Exception
-	 *             Exception
 	 */
-	public int searchOmdCount(String uacd) throws Exception;
+	public int searchOmdCount(String uacd);
 
 }
