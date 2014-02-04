@@ -21,8 +21,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class Shopping extends CommonInfo {
 
 	private int totalCount;
-	private String catagoryId;
-	private String catagoryName;
+	private String catalogId;
+	private String catalogName;
 	private Integer prodNetAmt;
 	private Integer prodAmt;
 	private Double dcRate;
@@ -85,20 +85,27 @@ public class Shopping extends CommonInfo {
 		this.totalCount = totalCount;
 	}
 
-	public String getCatagoryId() {
-		return this.catagoryId;
+	public String getCatalogId() {
+		return this.catalogId;
 	}
 
-	public void setCatagoryId(String catagoryId) {
-		this.catagoryId = catagoryId;
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
 	}
 
-	public String getCatagoryName() {
-		return this.catagoryName;
+	/**
+	 * @return the catalogName
+	 */
+	public String getCatalogName() {
+		return this.catalogName;
 	}
 
-	public void setCatagoryName(String catagoryName) {
-		this.catagoryName = catagoryName;
+	/**
+	 * @param catalogName
+	 *            the catalogName to set
+	 */
+	public void setCatalogName(String catalogName) {
+		this.catalogName = catalogName;
 	}
 
 	public Integer getProdNetAmt() {
