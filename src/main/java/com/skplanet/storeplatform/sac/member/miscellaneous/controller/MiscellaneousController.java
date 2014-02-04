@@ -102,7 +102,7 @@ public class MiscellaneousController {
 		Matcher matcher = pattern.matcher(request.getMsisdn());
 		boolean isMdn = matcher.matches();
 		if (!isMdn) {
-			// TODO SAC_MEM_3008
+			// TODO SAC_MEM_3009
 			throw new StorePlatformException("MSISND값이 아닙니다.");
 		}
 

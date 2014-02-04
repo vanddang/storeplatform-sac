@@ -184,20 +184,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				searchDeviceRequest.setUserKey(userKey);
 
 				/** 5. deviceId와 userKey로 deviceModelNo 조회 */
-				SearchDeviceResponse searchDeviceResult = new SearchDeviceResponse();
-				searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
+				SearchDeviceResponse searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 				/** 6. deviceModelNo 조회 결과 확인 */
-				deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
-				LOGGER.debug("## [SAC] Response deviceModelNo {}: ", deviceModelNo);
-				if (deviceModelNo != null) {
+				if (searchDeviceResult != null && searchDeviceResult.getUserMbrDevice() != null) {
+					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
 					LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
 							.getUserMbrDeviceDetail());
 					String uaCode = null;
 					boolean isUaCode = false;
 					List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
 							.getUserMbrDeviceDetail();
-					LOGGER.info("## [SAC] SC 회원 DeviceMapper.searchDeviceList 연동.");
+					LOGGER.info("## [SAC] SC 회원 단말 상세정보 조회.");
 					for (int i = 0; i < deviceDetails.size(); i++) {
 						isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
 						if (isUaCode) {
@@ -212,8 +210,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 						throw new StorePlatformException("DeviceID에 해당하는 UA코드가 존재하지 않습니다.");
 					}
 				} else {
-					// TODO SAC_MEM_3001
-					throw new StorePlatformException("DeviceID에 해당하는 UA코드가 존재하지 않습니다.");
+					// TODO SAC_MEM_3005
+					throw new StorePlatformException("DeviceID에 해당하는 DeviceModel코드가 존재하지 않습니다.");
 				}
 
 			} else {
@@ -324,7 +322,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
-			// TODO SAC_MEM_3005
+			// TODO SAC_MEM_3008
 			throw new StorePlatformException("인증 코드가 일치 하지 않습니다. (존재하지 않는 인증번호, 인증코드 불일치, 인증 Sing 불일치)");
 		}
 
@@ -510,7 +508,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 			LOGGER.info("## 이메일 인증 완료.");
 		} else {
-			// TODO SAC_MEM_3005 :
+			// TODO SAC_MEM_3008
 			throw new StorePlatformException("인증 코드가 일치 하지 않습니다. (존재하지 않는 인증번호, 인증코드 불일치, 인증 Sing 불일치)");
 		}
 		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
