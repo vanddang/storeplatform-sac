@@ -115,6 +115,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
 				historyListSacReq.setTenantId(downloadComicReq.getTenantId());
 				historyListSacReq.setInsdUsermbrNo(downloadComicReq.getUserKey());
+				historyListSacReq.setInsdDeviceId(downloadComicReq.getDeviceKey());
 				historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
 				historyListSacReq.setStartDt("19000101000000");
 				historyListSacReq.setEndDt(metaInfo.getSysDate());
