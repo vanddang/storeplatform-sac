@@ -58,11 +58,7 @@ public class SellerSubController {
 	public @ResponseBody
 	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
 			BindingResult result) throws Exception {
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		// TODO Exception (01/17이후 적용)
-		if (result.hasErrors()) {
-			throw new RuntimeException("parameter error~~~");
-		}
+		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		return this.sellerSubService.createSubseller(header, req);
 	}
 
