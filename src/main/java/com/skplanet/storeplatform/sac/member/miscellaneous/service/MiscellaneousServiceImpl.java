@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -121,7 +123,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private CommonDAO commonDao;
 
 	@Override
-	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
+	public GetOpmdRes getOpmd(GetOpmdReq req) {
 		String msisdn = req.getMsisdn();
 
 		GetOpmdRes res = new GetOpmdRes();
@@ -144,7 +146,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq req) throws Exception {
+	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq req) {
 		String deviceModelNo = req.getDeviceModelNo();
 		String msisdn = req.getMsisdn();
 		String userKey = "";
@@ -161,11 +163,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		if (msisdn != null && deviceModelNo == null) {
 
 			/** 1. MSISDN 유효성 검사 */
-			String validation = this.mdnValidation(msisdn);
-			if (validation.equals("Y")) {
+			Pattern pattern = Pattern.compile("[0-9]{10,11}");
+			Matcher matcher = pattern.matcher(req.getMsisdn());
+			boolean isMdn = matcher.matches();
 
+			if (isMdn) {
 				/** 2. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-
 				userKey = this.getUserKey(commonRequest, msisdn);
 
 				/** 3. SC 회원 Request 생성 */
@@ -234,7 +237,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	// 헤더는 controller 에서 SacRequestHeader 셋팅된걸 사용한다. (tennatId, systemId 사용시에만 선언)
 	@Override
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader sacRequestHeader,
-			GetPhoneAuthorizationCodeReq request) throws Exception {
+			GetPhoneAuthorizationCodeReq request) {
 		String authCode = "";
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		String systemId = sacRequestHeader.getTenantHeader().getSystemId();
@@ -304,8 +307,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request)
-			throws Exception {
+	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request) {
 		ConfirmPhoneAuthorizationCodeRes res = new ConfirmPhoneAuthorizationCodeRes();
 		String authCode = request.getPhoneAuthCode();
 		String authSign = request.getPhoneSign();
@@ -420,7 +422,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 	@Override
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader sacRequestHeader,
-			GetEmailAuthorizationCodeReq request) throws Exception {
+			GetEmailAuthorizationCodeReq request) {
 
 		String tenantId = sacRequestHeader.getTenantHeader().getTenantId();
 		ServiceAuth serviceAuthReq = new ServiceAuth();
@@ -475,8 +477,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
-			throws Exception {
+	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request) {
 
 		/** 1. 인증 코드로 DB 확인하여 , 회원 key, 회원 email 조회 */
 		LOGGER.info("## 인증코드 정보 조회. Request : {}", request);
@@ -519,25 +520,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	/**
-	 * 
-	 * <pre>
-	 * 휴대폰번호 유효성 검사.
-	 * - 10자리 또는 11자리 인지 확인.
-	 * </pre>
-	 * 
-	 * @param mdn
-	 *            String
-	 * @return String
-	 */
-	public String mdnValidation(String mdn) {
-		String validation = "N";
-		if (mdn.length() == 10 || mdn.length() == 11) {
-			validation = "Y";
-		}
-		return validation;
-	}
-
-	/**
 	 * <pre>
 	 * msisdn으로 userKey 조회하기 - (기타 기능 내 공통 기능 함수로 생성).
 	 * </pre>
@@ -547,10 +529,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 * @param msisdn
 	 *            String
 	 * @return String
-	 * @throws Exception
-	 *             Exception
 	 */
-	public String getUserKey(CommonRequest commonReq, String msisdn) throws Exception {
+	public String getUserKey(CommonRequest commonReq, String msisdn) {
 		String userKey = "";
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
