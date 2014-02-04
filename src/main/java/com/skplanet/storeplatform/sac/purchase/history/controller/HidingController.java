@@ -85,7 +85,7 @@ public class HidingController {
 		hidingScRes = this.hidingSacService.updateHiding(req);
 		HidingListSacRes hidingListSacRes = new HidingListSacRes();
 		hidingRes = this.resConvert(hidingScRes);
-		hidingListSacRes.setHidingSacRes(hidingRes);
+		hidingListSacRes.setHidingListSacRes(hidingRes);
 		return hidingListSacRes;
 	}
 
@@ -103,8 +103,8 @@ public class HidingController {
 		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
 		req.setTenantId(header.getTenantId());
-		req.setInsdUsermbrNo(hidingSacReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(hidingSacReq.getInsdDeviceId());
+		req.setUserKey(hidingSacReq.getUserKey());
+		req.setDeviceKey(hidingSacReq.getDeviceKey());
 		this.logger.debug("@@@@@@header.getSystemId()@@@@@@@" + header.getSystemId());
 		req.setSystemId(header.getSystemId());
 		int size = hidingSacReq.getHidingListSac().size();

@@ -133,8 +133,8 @@ public class GiftController {
 
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
-		req.setInsdUsermbrNo(giftConfirmSacReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(giftConfirmSacReq.getInsdDeviceId());
+		req.setUserKey(giftConfirmSacReq.getUserKey());
+		req.setDeviceKey(giftConfirmSacReq.getDeviceKey());
 		req.setPrchsId(giftConfirmSacReq.getPrchsId());
 		req.setRecvDt(giftConfirmSacReq.getRecvDt());
 		req.setProdId(giftConfirmSacReq.getProdId());
@@ -171,8 +171,8 @@ public class GiftController {
 		GiftReceiveScReq req = new GiftReceiveScReq();
 
 		req.setTenantId(header.getTenantId());
-		req.setSendMbrNo(giftReceiveSacReq.getSendMbrNo());
-		req.setSendDeviceNo(giftReceiveSacReq.getSendDeviceNo());
+		req.setUserKey(giftReceiveSacReq.getUserKey());
+		req.setDeviceKey(giftReceiveSacReq.getDeviceKey());
 		req.setPrchsId(giftReceiveSacReq.getPrchsId());
 		req.setProdId(giftReceiveSacReq.getProdId());
 

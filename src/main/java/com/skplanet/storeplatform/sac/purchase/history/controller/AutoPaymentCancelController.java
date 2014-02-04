@@ -95,8 +95,8 @@ public class AutoPaymentCancelController {
 
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
-		req.setInsdUsermbrNo(autoPaymentCancelSacReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(autoPaymentCancelSacReq.getInsdDeviceId());
+		req.setUserKey(autoPaymentCancelSacReq.getUserKey());
+		req.setDeviceKey(autoPaymentCancelSacReq.getDeviceKey());
 		req.setPrchsId(autoPaymentCancelSacReq.getPrchsId());
 		req.setClosedCd(autoPaymentCancelSacReq.getClosedCd());
 		req.setClosedReasonCd(autoPaymentCancelSacReq.getClosedReasonCd());

@@ -104,8 +104,8 @@ public class ExistenceController {
 		List<ExistenceItemSc> existenceItemListSc = new ArrayList<ExistenceItemSc>();
 
 		req.setTenantId(header.getTenantId());
-		req.setInsdUsermbrNo(existenceSacReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(existenceSacReq.getInsdDeviceId());
+		req.setUserKey(existenceSacReq.getUserKey());
+		req.setDeviceKey(existenceSacReq.getDeviceKey());
 		req.setPrchsId(existenceSacReq.getPrchsId());
 		// 상품리스트가 없을시 제외
 		if (existenceSacReq.getExistenceItemSac() != null) {

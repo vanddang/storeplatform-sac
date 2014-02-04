@@ -95,8 +95,8 @@ public class PaymentListController {
 		PaymentScReq req = new PaymentScReq();
 
 		req.setTenantId(header.getTenantId());
-		req.setInsdUsermbrNo(paymentSacReq.getInsdUsermbrNo());
-		req.setInsdDeviceId(paymentSacReq.getInsdDeviceId());
+		req.setUserKey(paymentSacReq.getUserKey());
+		req.setDeviceKey(paymentSacReq.getDeviceKey());
 		req.setPrchsId(paymentSacReq.getPrchsId());
 
 		return req;
