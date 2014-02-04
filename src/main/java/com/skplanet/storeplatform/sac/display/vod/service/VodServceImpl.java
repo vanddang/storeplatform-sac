@@ -121,25 +121,25 @@ public class VodServceImpl implements VodService {
 	/**
 	 *
 	 * @param product
-	 * @param vodDetail
-	 * @param req
+	 * @param mapperVO
+	 * @param screenshotList
 	 * @return
 	 */
-	private void mapProduct(Product product, VodDetail vodDetail, List<ProductImage> screenshotList) {
+	private void mapProduct(Product product, VodDetail mapperVO, List<ProductImage> screenshotList) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, vodDetail.getProdId()));
-		product.setTitle(new Title(vodDetail.getProdNm()));
+		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+		product.setTitle(new Title(mapperVO.getProdNm()));
 
 		//-------------------------------------------
 		// 대표 이미지 (thumbnail)
 		//-------------------------------------------
 		List<Source> sourceList = new ArrayList<Source>();
 		Source source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(vodDetail.getImgPath()));
-		source.setSize(vodDetail.getImgSize());
+		source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+		source.setSize(mapperVO.getImgSize());
 		source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-		source.setUrl(vodDetail.getImgPath()+vodDetail.getImgNm());
+		source.setUrl(mapperVO.getImgPath()+mapperVO.getImgNm());
 		sourceList.add(source);
 
 		//-------------------------------------------
@@ -157,9 +157,9 @@ public class VodServceImpl implements VodService {
 		//-------------------------------------------
 		// 상품 설명
 		//-------------------------------------------
-		product.setProductExplain(vodDetail.getProdBaseDesc());
-		product.setProductDetailExplain(vodDetail.getProdDtlDesc());
-		product.setProductIntroduction(vodDetail.getProdIntrDscr());
+		product.setProductExplain(mapperVO.getProdBaseDesc());
+		product.setProductDetailExplain(mapperVO.getProdDtlDesc());
+		product.setProductIntroduction(mapperVO.getProdIntrDscr());
 
 
 		//-------------------------------------------
@@ -169,25 +169,25 @@ public class VodServceImpl implements VodService {
 		/** HDCP_YN */
 		Support support = new Support();
 		support.setType(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM);
-		support.setText(vodDetail.getHdcpYn());
+		support.setText(mapperVO.getHdcpYn());
 		supportList.add(support);
 
 		/** DOLBY_SPRT_YN */
 		support = new Support();
 		support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
-		support.setText(vodDetail.getHdvYn());
+		support.setText(mapperVO.getHdvYn());
 		supportList.add(support);
 
 		/** BTV_YN */
 		support = new Support();
 		support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
-		support.setText(vodDetail.getBtvYn());
+		support.setText(mapperVO.getBtvYn());
 		supportList.add(support);
 
 		/** DOLBY_SPRT_YN */
 		support = new Support();
 		support.setType(DisplayConstants.DP_VOD_DOLBY_NM);
-		support.setText(vodDetail.getDolbySprtYn());
+		support.setText(mapperVO.getDolbySprtYn());
 		supportList.add(support);
 		product.setSupportList(supportList);
 
@@ -196,26 +196,26 @@ public class VodServceImpl implements VodService {
 		//-------------------------------------------
 		List<Menu> menuList = new ArrayList<Menu>();
 		Menu menu = new Menu();
-		menu.setId(vodDetail.getTopMenuId());
-		menu.setName(vodDetail.getTopMenuNm());
+		menu.setId(mapperVO.getTopMenuId());
+		menu.setName(mapperVO.getTopMenuNm());
 		menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
 		menuList.add(menu);
 
 		menu = new Menu();
-		menu.setId(vodDetail.getMenuId());
-		menu.setName(vodDetail.getMenuNm());
+		menu.setId(mapperVO.getMenuId());
+		menu.setName(mapperVO.getMenuNm());
 		menuList.add(menu);
 
 		//Meta Class
 		menu = new Menu();
 		menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-		menu.setId(vodDetail.getMetaClsfCd());
+		menu.setId(mapperVO.getMetaClsfCd());
 		menuList.add(menu);
 
 		//Genre
 		menu = new Menu();
 		menu.setType(DisplayConstants.DP_MENU_TYPE_GENRE);
-		menu.setId(vodDetail.getGenreCd());
+		menu.setId(mapperVO.getGenreCd());
 		menuList.add(menu);
 
 		product.setMenuList(menuList);
@@ -226,17 +226,17 @@ public class VodServceImpl implements VodService {
 		//-------------------------------------------
 		List<Date> dateList = new ArrayList<Date>();
 		Date date = null;
-		if(vodDetail.getRegDt() != null) {
+		if(mapperVO.getRegDt() != null) {
 			date = new Date();
 			date.setType(DisplayConstants.DP_DATE_REG);
-			date.setText(sdf.format(vodDetail.getRegDt()));
+			date.setText(sdf.format(mapperVO.getRegDt()));
 			dateList.add(date);
 		}
 
-		if(vodDetail.getSvcStartDt() != null) {
+		if(mapperVO.getSvcStartDt() != null) {
 			date = new Date();
 			date.setType(DisplayConstants.DP_DATE_RELEASE);
-			date.setText(sdf.format(vodDetail.getSvcStartDt()));
+			date.setText(sdf.format(mapperVO.getSvcStartDt()));
 			dateList.add(date);
 		}
 
@@ -246,17 +246,17 @@ public class VodServceImpl implements VodService {
 		// Contributor
 		//-------------------------------------------
 		Contributor contributor = new Contributor();
-		contributor.setDirector(vodDetail.getArtist2Nm()); 	//감독
-		contributor.setArtist(vodDetail.getArtist1Nm()); 	//출연
+		contributor.setDirector(mapperVO.getArtist2Nm()); 	//감독
+		contributor.setArtist(mapperVO.getArtist1Nm()); 	//출연
 
 
 		//TODO: 코드값 상수처리?
-		if(vodDetail.getTopMenuId().equals("DP000518")) { //공통코드 : DP000518 (TV 방송)
-			contributor.setChannel(vodDetail.getBrdcCompCdNm()); //방송사
+		if(mapperVO.getTopMenuId().equals("DP000518")) { //공통코드 : DP000518 (TV 방송)
+			contributor.setChannel(mapperVO.getBrdcCompCdNm()); //방송사
 		}
-		if(vodDetail.getIssueDay() != null) {
+		if(mapperVO.getIssueDay() != null) {
 			date = new Date();
-			date.setText(sdf.format(vodDetail.getIssueDay()));
+			date.setText(sdf.format(mapperVO.getIssueDay()));
 			contributor.setDate(date);
 		}
 		product.setContributor(contributor);
@@ -266,10 +266,10 @@ public class VodServceImpl implements VodService {
 		// Distributor (판매자 정보)
 		//-------------------------------------------
 		Distributor distributor = new Distributor();
-        distributor.setIdentifier(vodDetail.getSellerMbrNo());
-        distributor.setName(vodDetail.getExpoSellerNm());
-        distributor.setTel(vodDetail.getExpoSellerTelno());
-        distributor.setEmail(vodDetail.getExpoSellerEmail());
+        distributor.setIdentifier(mapperVO.getSellerMbrNo());
+        distributor.setName(mapperVO.getExpoSellerNm());
+        distributor.setTel(mapperVO.getExpoSellerTelno());
+        distributor.setEmail(mapperVO.getExpoSellerEmail());
 		product.setDistributor(distributor);
 
 
@@ -277,10 +277,10 @@ public class VodServceImpl implements VodService {
 		// rights
 		//-------------------------------------------
 		Rights rights = new Rights();
-		rights.setGrade(vodDetail.getProdGrdCd());
+		rights.setGrade(mapperVO.getProdGrdCd());
 		/** dwldAreaLimitYn 다운로드 지역제한 == 'Y' 일 경우 domestic 리턴 */
-		if(StringUtils.isNotEmpty(vodDetail.getDwldAreaLimtYn())
-				&& vodDetail.getDwldAreaLimtYn().equals("Y")) {
+		if(StringUtils.isNotEmpty(mapperVO.getDwldAreaLimtYn())
+				&& mapperVO.getDwldAreaLimtYn().equals("Y")) {
 			rights.setAllow(DisplayConstants.DP_RIGHTS_ALLOW_DOMESTIC);
 		}
 
@@ -290,16 +290,16 @@ public class VodServceImpl implements VodService {
 		Preview preview = new Preview();
 
 		sourceList = new ArrayList<Source>();
-		if (StringUtils.isNotEmpty(vodDetail.getScSamplUrl())) {
+		if (StringUtils.isNotEmpty(mapperVO.getScSamplUrl())) {
 			source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
-			source.setUrl(vodDetail.getScSamplUrl());
+			source.setUrl(mapperVO.getScSamplUrl());
 			sourceList.add(source);
 		}
-		if (StringUtils.isNotEmpty(vodDetail.getSamplUrl())) {
+		if (StringUtils.isNotEmpty(mapperVO.getSamplUrl())) {
 			source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_HQ);
-			source.setUrl(vodDetail.getSamplUrl());
+			source.setUrl(mapperVO.getSamplUrl());
 			sourceList.add(source);
 		}
 		preview.setSourceList(sourceList);
@@ -311,25 +311,25 @@ public class VodServceImpl implements VodService {
 		//-------------------------------------------
 		/** play 정보 */
 		Play play = new Play();
-		if (StringUtils.isNotEmpty(vodDetail.getPlayProdId())) {
+		if (StringUtils.isNotEmpty(mapperVO.getPlayProdId())) {
 			Support playSupport = new Support();
 			Price playPrice = new Price();
 			playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			playSupport.setText(vodDetail.getPlayDrmYn());
+			playSupport.setText(mapperVO.getPlayDrmYn());
 			play.setSupport(playSupport);
 
 			date = new Date();
 			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-			date.setText(vodDetail.getUsagePeriod());
-			playPrice.setText(vodDetail.getPlayProdAmt() == null ? 0 : vodDetail.getPlayProdAmt());
+			date.setText(mapperVO.getUsagePeriod());
+			playPrice.setText(mapperVO.getPlayProdAmt() == null ? 0 : mapperVO.getPlayProdAmt());
 
 			Source playSource = new Source();
-			playSource.setUrl(vodDetail.getPlayProdId());
+			playSource.setUrl(mapperVO.getPlayProdId());
 
 			play.setDate(date); // 이용기간
 			play.setPrice(playPrice); // 바로보기 상품 금액
 			play.setSource(playSource); // 바로보기 상품 url
-			if (vodDetail.getStrmNetworkCd() != null) {
+			if (mapperVO.getStrmNetworkCd() != null) {
 				play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
 			rights.setPlay(play);
@@ -337,23 +337,23 @@ public class VodServceImpl implements VodService {
 
 		/** Store 정보 */
 		Store store = new Store();
-		if (StringUtils.isNotEmpty(vodDetail.getStoreProdId())) {
+		if (StringUtils.isNotEmpty(mapperVO.getStoreProdId())) {
 			Support storeSupport = new Support();
 			Price storePrice = new Price();
 			Source storeSource = new Source();
 
 			storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-			storeSupport.setText(vodDetail.getStoreDrmYn());
+			storeSupport.setText(mapperVO.getStoreDrmYn());
 			store.setSupport(storeSupport);
 
-			storePrice.setText(vodDetail.getStoreProdAmt() == null ? 0 : vodDetail.getStoreProdAmt());
-			storeSource.setUrl(vodDetail.getStoreProdId());
+			storePrice.setText(mapperVO.getStoreProdAmt() == null ? 0 : mapperVO.getStoreProdAmt());
+			storeSource.setUrl(mapperVO.getStoreProdId());
 
 			store.setPrice(storePrice);
 			store.setSource(storeSource);
 
 			// 네트워크 제한이 있을경우
-			if (vodDetail.getDwldNetworkCd() != null) {
+			if (mapperVO.getDwldNetworkCd() != null) {
 				store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 			}
 			rights.setStore(store);
@@ -362,9 +362,9 @@ public class VodServceImpl implements VodService {
 
 		//Accrual
 		Accrual accrual = new Accrual();
-		accrual.setVoterCount(vodDetail.getPaticpersCnt());
-		accrual.setDownloadCount(vodDetail.getPrchsCnt());
-		accrual.setScore(vodDetail.getAvgEvluScore());
+		accrual.setVoterCount(mapperVO.getPaticpersCnt());
+		accrual.setDownloadCount(mapperVO.getPrchsCnt());
+		accrual.setScore(mapperVO.getAvgEvluScore());
 		product.setAccrual(accrual);
 
 	}
