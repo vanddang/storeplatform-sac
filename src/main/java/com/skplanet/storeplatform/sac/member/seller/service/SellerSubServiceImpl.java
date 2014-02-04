@@ -72,15 +72,15 @@ public class SellerSubServiceImpl implements SellerSubService {
 		sellerMbr.setSellerKey(req.getSubSellerKey());
 		sellerMbr.setSubSellerMemo(req.getSubSellerMemo());
 		sellerMbr.setSellerEmail(req.getSubSellerEmail());
-
-		MbrPwd mbrPwd = new MbrPwd();
-		mbrPwd.setMemberPW(req.getMemberPW());
-		mbrPwd.setOldPW(req.getOldPW());
-
 		schReq.setSellerMbr(sellerMbr);
-		schReq.setMbrPwd(mbrPwd);
-
 		schReq.setIsNew(req.getIsNew());
+
+		if (req.getMemberPW() != null && req.getOldPW() != null) {
+			MbrPwd mbrPwd = new MbrPwd();
+			mbrPwd.setMemberPW(req.getMemberPW());
+			mbrPwd.setOldPW(req.getOldPW());
+			schReq.setMbrPwd(mbrPwd);
+		}
 
 		schRes = this.sellerSCI.createSubSeller(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
