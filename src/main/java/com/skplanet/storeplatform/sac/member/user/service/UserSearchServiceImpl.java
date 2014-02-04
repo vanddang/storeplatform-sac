@@ -925,7 +925,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/**
 		 * SC 공통 정보 setting.
 		 */
-		policyRequest.setCommonRequest(this.getCommonRequest(header));
+		policyRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
 		logger.info("## policyRequest : {}", policyRequest.toString());
 
 		/**
@@ -952,25 +952,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("## policyInfos : {}", policyInfos.toString());
 
 		return policyInfos;
-	}
-
-	/**
-	 * <pre>
-	 * SC 공통정보 setting.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @return CommonRequest
-	 */
-	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		logger.info("## SC Request 공통 정보 : {}", commonRequest.toString());
-
-		return commonRequest;
 	}
 
 }
