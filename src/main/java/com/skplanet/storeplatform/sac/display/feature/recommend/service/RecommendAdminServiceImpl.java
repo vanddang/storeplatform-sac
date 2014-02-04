@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
@@ -139,8 +141,17 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		}
 		requestVO.setStdDt(stdDt);
 
+		// topMenuId encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		if (!StringUtils.isEmpty(requestVO.getTopMenuId())) {
+			try {
+				requestVO.setTopMenuId(URLEncoder.encode(requestVO.getTopMenuId(), "UTF-8"));
+			} catch (Exception ex) {
+				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+			}
+		}
+
 		// topMenuId 배열로 변경
-		String[] topMenuIdArr = requestVO.getTopMenuId().split(","); // 구분자 확인 필요 + 에러
+		String[] topMenuIdArr = requestVO.getTopMenuId().split("\\+");
 		requestVO.setTopMenuIdArr(topMenuIdArr);
 
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
@@ -162,7 +173,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		reqMap.put("svcGrpCd", DisplayConstants.DP_APP_PROD_SVC_GRP_CD);
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-		if (productBasicInfoList != null) {
+		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
 			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
 				reqMap.put("productBasicInfo", productBasicInfo);
 
