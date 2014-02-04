@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
+import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
+import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
@@ -42,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserMbrPnsh;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -185,8 +188,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/* 회원 정보 + 부가정보 */
 			if ("Y".equals(req.getSearchExtent().getUserInfoYn())) {
 				UserInfo searchUser = this.searchUser(req, sacHeader);
-				//				UserExtraInfoRes userExtraInfoRes = this.listUserExtra(req, sacHeader);
-				//				searchUser.setUserExtraInfo(userExtraInfoRes.getAddInfoList());
+				// UserExtraInfoRes userExtraInfoRes = this.listUserExtra(req, sacHeader);
+				// searchUser.setUserExtraInfo(userExtraInfoRes.getAddInfoList());
 				res.setUserInfo(searchUser);
 			}
 			/* 단말 + 부가정보 */
@@ -518,13 +521,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		logger.debug("사용자 기본정보 조회 {}", schUserRes.toString());
 
-		//		if (schUserRes.getUserKey() == null) {
-		//			throw new RuntimeException("######## User Base Info Search : 사용자 데이터 없음");
+		// if (schUserRes.getUserKey() == null) {
+		// throw new RuntimeException("######## User Base Info Search : 사용자 데이터 없음");
 		if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
 			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
 					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
 		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-		//				&& schUserRes.getUserKey() != null) {
+		// && schUserRes.getUserKey() != null) {
 		) {
 			res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 			res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
@@ -708,9 +711,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 				logger.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
 				logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
 
-				//				if (ptcr.getExtraProfile() == null && ptcr.getExtraProfileValue() == null) {
-				//					throw new RuntimeException("######## 사용자 부가정보 조회 : ProfileCode, ProfileValue 없음");
-				//				}
+				// if (ptcr.getExtraProfile() == null && ptcr.getExtraProfileValue() == null) {
+				// throw new RuntimeException("######## 사용자 부가정보 조회 : ProfileCode, ProfileValue 없음");
+				// }
 
 				UserExtraInfo extra = new UserExtraInfo();
 				extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -845,11 +848,12 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/**
 		 * OPMD 단말 여부, OPMD 모번호, SKT 이용정지회원 여부 setting.
 		 */
-		DetailByDeviceIdSacRes response = this.getUapsInfo(req);
+		DetailByDeviceIdSacRes response = this.setUapsInfo(req);
 
 		/**
 		 * 사용자별 정책 리스트 setting.
 		 */
+		response.setPolicyCodeList(this.getIndividualPolicy(sacHeader, req));
 
 		return response;
 	}
@@ -863,7 +867,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 *            Request Value Object
 	 * @return DetailByDeviceIdSacRes
 	 */
-	private DetailByDeviceIdSacRes getUapsInfo(DetailByDeviceIdSacReq req) {
+	private DetailByDeviceIdSacRes setUapsInfo(DetailByDeviceIdSacReq req) {
 
 		DetailByDeviceIdSacRes response = new DetailByDeviceIdSacRes();
 
@@ -892,6 +896,83 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		return response;
 
+	}
+
+	/**
+	 * <pre>
+	 * 사용자별 정책 조회.
+	 * </pre>
+	 * 
+	 * @param header
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return List<IndividualPolicyInfo>
+	 */
+	public List<IndividualPolicyInfo> getIndividualPolicy(SacRequestHeader header, DetailByDeviceIdSacReq req) {
+
+		/**
+		 * Request setting.
+		 */
+		SearchPolicyRequest policyRequest = new SearchPolicyRequest();
+		List<String> codeList = new ArrayList<String>();
+		for (int i = 0; i < req.getPolicyCodeList().size(); i++) {
+			codeList.add(req.getPolicyCodeList().get(i).getPolicyCode());
+		}
+		policyRequest.setLimitPolicyCodeList(codeList);
+		policyRequest.setLimitPolicyKey(req.getKey());
+
+		/**
+		 * SC 공통 정보 setting.
+		 */
+		policyRequest.setCommonRequest(this.getCommonRequest(header));
+		logger.info("## policyRequest : {}", policyRequest.toString());
+
+		/**
+		 * SC 사용자 정책 리스트 조회 연동.
+		 */
+		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+
+		/**
+		 * 처리 결과 setting.
+		 */
+		List<IndividualPolicyInfo> policyInfos = null;
+		IndividualPolicyInfo policyInfo = null;
+		if (policyResponse.getLimitTargetList().size() > 0) {
+			policyInfos = new ArrayList<IndividualPolicyInfo>();
+			for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
+				policyInfo = new IndividualPolicyInfo();
+				policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
+				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
+				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+				policyInfos.add(policyInfo);
+			}
+		}
+
+		logger.info("## policyInfos : {}", policyInfos.toString());
+
+		return policyInfos;
+	}
+
+	/**
+	 * <pre>
+	 * SC 공통정보 setting.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            SacRequestHeader
+	 * @return CommonRequest
+	 * @throws Exception
+	 *             익셉션
+	 */
+	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) {
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+		logger.info("## SC Request 공통 정보 : {}", commonRequest.toString());
+
+		return commonRequest;
 	}
 
 }
