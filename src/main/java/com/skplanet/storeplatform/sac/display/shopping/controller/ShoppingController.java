@@ -87,6 +87,25 @@ public class ShoppingController {
 
 	/**
 	 * <pre>
+	 * 특가 상품 조회– GET.
+	 * </pre>
+	 * 
+	 * @param ShoppingReq
+	 *            req
+	 * @return ShoppingRes
+	 */
+	@RequestMapping(value = "/specialPriceProduct/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("getSubProductList Controller started!!");
+		this.logger.debug("----------------------------------------------------------------");
+		return this.shoppingService.getSecialPriceProductList(header, req);
+
+	}
+
+	/**
+	 * <pre>
 	 * 기획전 상품 조회– GET.
 	 * </pre>
 	 * 

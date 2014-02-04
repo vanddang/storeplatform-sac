@@ -343,17 +343,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 */
 	@Override
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
-		// 공통 응답 변수 선언
-		ShoppingRes res = new ShoppingRes();
-		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		ShoppingRes responseVO = null;
+		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		List<Shopping> resultList = new ArrayList<Shopping>();
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
-			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
-		}
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setSystemId(header.getTenantHeader().getSystemId());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setImageCd("DP0001A8");
+		req.setDeviceModelCd("SHV-E330SSO");
 
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -364,50 +362,126 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// offset, Count default setting
 		this.commonOffsetCount(req);
 
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
+		Integer totalCount = 0;
+		resultList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList", req, Shopping.class);
 
-		// DB 조회 파라미터 생성
-		Map<String, Object> reqMap = new HashMap<String, Object>();
-		reqMap.put("req", req);
-		reqMap.put("tenantHeader", tenantHeader);
-		reqMap.put("deviceHeader", deviceHeader);
-		reqMap.put("lang", tenantHeader.getLangCd());
+		if (resultList != null) {
+			Shopping shopping = new Shopping();
 
-		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
-		reqMap.put("imageCd", req.getImageCd());
-		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
-		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
-		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+			// Response VO를 만들기위한 생성자
+			Product product = null;
+			Identifier identifier = null;
+			Identifier identifier1 = null;
+			Menu menu = null;
+			Rights rights = null;
+			Title title = null;
+			Source source = null;
+			Price price = null;
+			Contributor contributor = null;
+			Accrual accrual = null;
+			Date date = null;
+			SalesOption saleoption = null;
+			List<Identifier> identifierList = null;
 
-		// ID list 조회
-		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList",
-				reqMap, ProductBasicInfo.class);
-		List<Product> productList = new ArrayList<Product>();
-		if (productBasicInfoList != null) {
-			if (productBasicInfoList.size() > 0) {
-				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					reqMap.put("productBasicInfo", productBasicInfo);
-					// 쇼핑 Meta 정보 조회
-					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
-					if (retMetaInfo != null) {
-						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
-						productList.add(product);
-					}
+			List<Menu> menuList = null;
+			List<Source> sourceList = null;
+			List<Product> productList = new ArrayList<Product>();
+
+			for (int i = 0; i < resultList.size(); i++) {
+				shopping = resultList.get(i);
+
+				// 상품 정보 (상품ID)
+				product = new Product();
+				identifierList = new ArrayList<Identifier>();
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_CATALOG_IDENTIFIER_CD);
+				identifier.setText(shopping.getCatalogId());
+				identifierList.add(identifier);
+
+				// 메뉴 정보
+				menuList = new ArrayList<Menu>();
+				menu = new Menu();
+				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+				menu.setId(shopping.getUpMenuId());
+				menu.setName(shopping.getUpMenuName());
+				menuList.add(menu);
+
+				menu = new Menu();
+				menu.setType(shopping.getSpecialSale());
+				menu.setId(shopping.getMenuId());
+				menu.setName(shopping.getMenuName());
+				menuList.add(menu);
+
+				// 상품 정보 (상품명)
+				title = new Title();
+				title.setText(shopping.getCatalogName());
+				// title.setPrefix(shopping.getNewYn());
+
+				// 상품 정보 (상품가격)
+				price = new Price();
+
+				price.setFixedPrice(shopping.getProdNetAmt());
+				price.setDiscountRate(shopping.getDcRate());
+				price.setText(shopping.getProdAmt());
+
+				// 이미지 정보
+				sourceList = new ArrayList<Source>();
+				source = new Source();
+				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+				source.setUrl(shopping.getFilePos());
+				sourceList.add(source);
+
+				// 다운로드 수
+				accrual = new Accrual();
+				accrual.setDownloadCount(shopping.getPrchsQty());
+
+				// 이용권한 정보
+				rights = new Rights();
+				date = new Date();
+				date.setType(DisplayConstants.DP_SHOPPING_RIGHTS_TYPE_NM);
+				date.setText(shopping.getApplyStartDt() + "/" + shopping.getApplyEndDt());
+				rights.setGrade(shopping.getProdGrdCd());
+				rights.setDate(date);
+
+				// contributor
+				contributor = new Contributor();
+				identifier1 = new Identifier();
+				identifier1.setType(DisplayConstants.DP_BRAND_IDENTIFIER_CD);
+				identifier1.setText(shopping.getBrandId());
+				contributor.setName(shopping.getBrandName());
+				contributor.setIdentifier(identifier1);
+
+				// saleoption
+				saleoption = new SalesOption();
+				saleoption.setType(shopping.getProdCaseCd());
+				if (shopping.getSoldOut().equals("Y")) {
+					saleoption.setSatus(DisplayConstants.DP_SOLDOUT);
+				} else {
+					saleoption.setSatus(DisplayConstants.DP_CONTINUE);
 				}
-				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
-			} else {
-				// 조회 결과 없음
-				commonResponse.setTotalCount(0);
-				res.setProductList(productList);
-				res.setCommonResponse(commonResponse);
+
+				// 데이터 매핑
+				product.setIdentifierList(identifierList);
+				product.setMenuList(menuList);
+				product.setTitle(title);
+				product.setPrice(price);
+				product.setSourceList(sourceList);
+				product.setAccrual(accrual);
+				product.setRights(rights);
+				product.setContributor(contributor);
+				product.setSalesOption(saleoption);
+				totalCount = shopping.getTotalCount();
+				productList.add(i, product);
 			}
+
+			responseVO = new ShoppingRes();
+			responseVO.setProductList(productList);
+
+			CommonResponse commonResponse = new CommonResponse();
+			commonResponse.setTotalCount(totalCount);
+			responseVO.setCommonResponse(commonResponse);
 		}
-		return res;
+		return responseVO;
 	}
 
 	/**

@@ -38,6 +38,7 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
@@ -82,6 +83,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		List<TbDpTenantProdInfo> tbDpTenantProdList = new ArrayList<TbDpTenantProdInfo>();
 		List<TbDpTenantProdPriceInfo> tbDpTenantProdPriceList = new ArrayList<TbDpTenantProdPriceInfo>();
 		List<DpCatalogTagInfo> tbDpProdTagList = new ArrayList<DpCatalogTagInfo>();
+		List<TbDpSprtDeviceInfo> tbDpSprtDeviceList = new ArrayList<TbDpSprtDeviceInfo>();
 
 		if (couponReq != null) {
 			List<DpItemInfo> itemInfoList = new ArrayList<DpItemInfo>(); // 아이템 정보 List;
@@ -148,6 +150,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			// TB_DP_PROD_TAG 값 셋팅
 			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
 			if (!this.setTbDpProdTagListValue(couponInfo, tbDpProdTagList)) {
+				throw new CouponException(this.errorCode, this.message, null);
+			}
+
+			// TB_DP_SPRT_DEVICE 값 셋팅
+			// log.info("■■■■■ setTbDpTenantProdPriceListValue 시작 ■■■■■");
+			if (!this.setTbDpSprtDeviceListValue(couponInfo, itemInfoList, tbDpSprtDeviceList, couponReq.getCudType())) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
 
@@ -746,6 +754,38 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		}
 		return true;
 	}// End setTbDpProdOptValue
+
+	/**
+	 * setTbDpSprtDeviceListValue Info value 셋팅
+	 * 
+	 * @param CouponInfo
+	 *            couponInfo, List<DpItemInfo> itemInfoList,List<TbDpProdRshpInfo> tbDpProdRshpList, String cudType
+	 * @return Boolean result @
+	 */
+	private boolean setTbDpSprtDeviceListValue(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList,
+			List<TbDpSprtDeviceInfo> tbDpSprtDeviceList, String cudType) {
+		TbDpSprtDeviceInfo tdsd = new TbDpSprtDeviceInfo();
+		try {
+
+			// ////////////////// Item 정보 S////////////////////////////
+			for (int i = 0; i < itemInfoList.size(); i++) {
+				DpItemInfo itemInfo = itemInfoList.get(i);
+				tdsd = new TbDpSprtDeviceInfo();
+				tdsd.setProdId(itemInfo.getProdId()); // 에피소드 상품
+				tdsd.setDeviceModelCd(CouponConstants.ANDROID_STANDARD2);
+				tdsd.setCudType(itemInfo.getCudType());
+				tbDpSprtDeviceList.add(tdsd);
+			}
+			// 저장
+			this.couponItemService.insertTbDpSprtDeviceInfo(tbDpSprtDeviceList);
+
+		} catch (CouponException e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_SPRT_DEVICE VO 셋팅 실패", null);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "TB_DP_SPRT_DEVICE VO 셋팅 실패", null);
+		}
+		return true;
+	}// End setTbDpProdDesc
 
 	/**
 	 * setTbDpProdTagListValue Info value 셋팅

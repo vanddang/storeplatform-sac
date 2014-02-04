@@ -61,6 +61,9 @@ public class Shopping extends CommonInfo {
 	private String przwnerAnnoDt;
 	private String planGiftName;
 
+	private String specialSale;
+	private String soldOut;
+
 	public String getUpMenuId() {
 		return this.upMenuId;
 	}
@@ -370,6 +373,36 @@ public class Shopping extends CommonInfo {
 
 	public void setPlanGiftName(String planGiftName) {
 		this.planGiftName = planGiftName;
+	}
+
+	/**
+	 * @return the specialSale
+	 */
+	public String getSpecialSale() {
+		return this.specialSale;
+	}
+
+	/**
+	 * @param specialSale
+	 *            the specialSale to set
+	 */
+	public void setSpecialSale(String specialSale) {
+		this.specialSale = specialSale;
+	}
+
+	/**
+	 * @return the soldOut
+	 */
+	public String getSoldOut() {
+		return this.soldOut;
+	}
+
+	/**
+	 * @param soldOut
+	 *            the soldOut to set
+	 */
+	public void setSoldOut(String soldOut) {
+		this.soldOut = soldOut;
 	}
 
 }

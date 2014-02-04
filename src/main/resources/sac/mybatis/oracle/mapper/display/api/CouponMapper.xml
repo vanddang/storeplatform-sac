@@ -407,6 +407,25 @@
           AND PROD_ID = #{prodId}
     </update>            
     
+        <!--TB_DP_SPRT_DEVICE 테이블에 INSERT-->    
+    <insert id="insertTbDpSprtDeviceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo">
+      /* CouponMapper.xml, insertTbDpProdRshpInfo,TB_DP_SPRT_DEVICE 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
+        insert into TB_DP_SPRT_DEVICE(
+             PROD_ID          /*상품ID  */
+            ,DEVICE_MODEL_CD  /**/
+            ,REG_ID              /* 등록_ID */
+            ,REG_DT              /* 등록_일시 */
+            ,UPD_ID              /* 수정_ID */
+            ,UPD_DT              /* 수정_일시 */
+        ) values (
+             #{prodId}
+            ,#{deviceModelCd}
+            ,#{regId}
+            ,sysdate
+            ,#{updId}
+            ,sysdate
+        )
+    </insert>    
     
     <!-- 전시단 쿠폰상품 상태변경 -->
     <update id="updateDPCouponStatus" parameterType="HashMap">

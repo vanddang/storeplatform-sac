@@ -12,6 +12,7 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
@@ -100,6 +101,13 @@ public interface CouponItemService {
 	 * </pre>
 	 */
 	public void insertTbDpProdOptInfo(List<TbDpProdOpt> tbDpProdOptList);
+
+	/**
+	 * <pre>
+	 * TB_DP_SPRT_DEVICE 테이블 입력한다.
+	 * </pre>
+	 */
+	public void insertTbDpSprtDeviceInfo(List<TbDpSprtDeviceInfo> tbDpSprtDeviceList);
 
 	/**
 	 * <pre>

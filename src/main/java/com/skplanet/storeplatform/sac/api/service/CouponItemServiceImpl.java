@@ -27,6 +27,7 @@ import com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt;
 import com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo;
+import com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo;
 import com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo;
 
@@ -261,6 +262,27 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 			if (StringUtils.isNotBlank(prodId)) {
 				this.commonDAO.update("Coupon.updateDPYNStatus", prodId);
+			}
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
+		}
+
+	}
+
+	/**
+	 * <pre>
+	 * TB_DP_SPRT_DEVICE 테이블 입력및 수정한다.
+	 * </pre>
+	 */
+
+	@Override
+	public void insertTbDpSprtDeviceInfo(List<TbDpSprtDeviceInfo> tbDpSprtDeviceList) {
+		try {
+			for (TbDpSprtDeviceInfo vo : tbDpSprtDeviceList) {
+
+				if ("C".equalsIgnoreCase(vo.getCudType())) {
+					this.commonDAO.insert("Coupon.insertTbDpSprtDeviceInfo", vo);
+				}
 			}
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
