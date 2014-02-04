@@ -158,7 +158,7 @@
                       ,(SELECT MENU_DESC FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = UP_MENU_ID AND ROWNUM=1)  as upMenuName 
                       ,UP_MENU_ID as  upMenuId                            /* 상위 메뉴ID */
                       ,MENU_ID as menuId                                  /* 메뉴ID */
-                      ,MENU_DESC as menuNm                                /* 메뉴명 */
+                      ,MENU_NM as menuNm                                /* 메뉴명 */
                       ,CHANNEL_ID as channelId                            /* 채널ID */
                       ,PROD_ID as prodId                                  /* 상품ID */
                       ,PROD_NM as prodNm                                  /* 상품명 */   
@@ -180,7 +180,7 @@
                         SELECT  
                                A.UP_MENU_ID
                               ,A.MENU_ID
-                              ,C.MENU_DESC 
+                              ,C.MENU_NM 
                               ,J.PROD_ID AS CHANNEL_ID
                               ,D.PROD_ID 
                               ,F.PROD_ALIAS
