@@ -986,9 +986,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 			 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
 			 */
 			SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
-
 			logger.info("### searchDeviceResponse : {}", searchDeviceResponse.toString());
 
+			/**
+			 * TODO DeviceId로 조회된 정보가 없을경우 처리 어떻게..??
+			 */
 			response.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey()); // 사용자 Key setting.
 			response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey()); // 기기 Key setting.
 			response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom()); // 이동통신사 setting.
