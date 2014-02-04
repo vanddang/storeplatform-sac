@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -15,6 +16,7 @@ public class DetailAccountInformationReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	@NotBlank
 	private String sellerKey;
 
 	public String getSellerKey() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
@@ -19,6 +20,7 @@ public class CheckPasswordReminderQuestionReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자회원 ID. */
+	@NotBlank
 	private String sellerID; // SELLERMBR_ID 판매자회원 id
 
 	/** 비밀번호 보안질문 Value Object. */
