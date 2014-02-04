@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
@@ -82,7 +83,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
+	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
@@ -91,7 +92,7 @@ public class SellerSearchController {
 		req.setAid(aid);
 		req.setSellerKey(sellerKey);
 		if (sellerKey.equals("") && aid.equals(""))
-			throw new Exception("필수 파라미터 미존재");
+			throw new StorePlatformException("SAC_MEM_2101");
 
 		return this.sellerSearchService.detailInformation(header, req);
 	}

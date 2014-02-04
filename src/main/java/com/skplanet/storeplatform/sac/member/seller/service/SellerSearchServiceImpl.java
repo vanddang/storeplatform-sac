@@ -150,7 +150,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return DetailInformationRes
 	 */
 	@Override
-	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception {
+	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
 
 		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
@@ -159,16 +159,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		KeySearch keySearch = new KeySearch();
 
-		if (!req.getSellerKey().equals("") || !req.getAid().equals("")) {
-			if (!req.getSellerKey().equals("")) {
-				keySearch.setKeyString(req.getSellerKey());
-			} else {
-				DetailInformationReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
-						DetailInformationReq.class);
-				keySearch.setKeyString(sellerDTO.getSellerKey());
-			}
+		if (!req.getSellerKey().equals("")) {
+			keySearch.setKeyString(req.getSellerKey());
 		} else {
-			throw new Exception("필수 파라미터 미존재");
+			DetailInformationReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
+					DetailInformationReq.class);
+			keySearch.setKeyString(sellerDTO.getSellerKey());
 		}
 
 		DetailInformationRes response = new DetailInformationRes();

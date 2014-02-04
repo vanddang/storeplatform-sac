@@ -35,7 +35,7 @@ public interface SellerSearchService {
 	 * 
 	 * @throws Exception
 	 */
-	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) throws Exception;
+	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req);
 
 	/**
 	 * 판매자 회원 정산정보조회.
