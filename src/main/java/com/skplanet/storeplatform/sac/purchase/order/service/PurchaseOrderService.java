@@ -11,7 +11,7 @@ package com.skplanet.storeplatform.sac.purchase.order.service;
 
 import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.NotifyPaymentSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
 
 /**
@@ -81,7 +81,7 @@ public interface PurchaseOrderService {
 	 * @param notifyParam
 	 *            결제정보
 	 */
-	public void createPayment(Prchs prchs, NotifyPaymentReq notifyParam);
+	public void createPayment(Prchs prchs, NotifyPaymentSacReq notifyParam);
 
 	/**
 	 * 

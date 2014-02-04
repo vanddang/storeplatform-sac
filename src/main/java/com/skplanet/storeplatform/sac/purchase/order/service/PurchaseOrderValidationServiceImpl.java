@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReqProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseMemberPartService;
@@ -135,7 +135,7 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		Double totAmt = 0.0;
 		// 상품 정보 조회
 		DummyProduct productInfo = null;
-		for (CreatePurchaseReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
+		for (CreatePurchaseSacReqProduct reqProduct : purchaseOrderInfo.getCreatePurchaseReq().getProductList()) {
 			productInfo = this.displayPartService.searchDummyProductDetail(tenantId, systemId, reqProduct.getProdId(),
 					deviceModelCd);
 
@@ -152,7 +152,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 				throw new StorePlatformException("SAC_PUR_0001", "지원하지 않는 상품입니다.");
 			}
 
-			productInfo.setProdAmt(reqProduct.getProdAmt()); // 임시
+			productInfo.setProdAmt(reqProduct.getProdAmt()); // 임시적. TAKTODO
+			productInfo.setProdQty(reqProduct.getProdQty());
+			productInfo.setTenantProdGrpCd(reqProduct.getTenantProdGrpCd());
 			totAmt += reqProduct.getProdAmt();
 
 			// 상품 가격 체크

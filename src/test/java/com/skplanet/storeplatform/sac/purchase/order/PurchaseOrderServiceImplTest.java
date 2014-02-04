@@ -21,8 +21,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReqProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
@@ -49,16 +49,16 @@ public class PurchaseOrderServiceImplTest {
 	@Autowired
 	private PurchaseOrderPolicyService purchasePolicyService;
 
-	CreatePurchaseReq createPurchaseReq;
+	CreatePurchaseSacReq createPurchaseReq;
 	PurchaseOrder purchaseInfo;
 
 	/**
 	 */
 	@Before
 	public void init() {
-		this.createPurchaseReq = new CreatePurchaseReq();
-		this.createPurchaseReq.setInsdUsermbrNo("TEST_MBR_NO_1"); // 내부 회원 번호
-		this.createPurchaseReq.setInsdDeviceId("1"); // 내부 디바이스 ID
+		this.createPurchaseReq = new CreatePurchaseSacReq();
+		this.createPurchaseReq.setUserKey("MBR01"); // 내부 회원 번호
+		this.createPurchaseReq.setDeviceKey("MBR01_1"); // 내부 디바이스 ID
 		this.createPurchaseReq.setPrchsReqPathCd("OR000401"); // 구매 요청 경로 코드
 		this.createPurchaseReq.setPrchsCaseCd(PurchaseConstants.PRCHS_CASE_PURCHASE_CD); // 구매 유형 코드
 		this.createPurchaseReq.setCurrencyCd("ko"); // 통화 코드
@@ -69,19 +69,19 @@ public class PurchaseOrderServiceImplTest {
 		this.createPurchaseReq.setAuthKey("MID01_KEY01");
 		this.createPurchaseReq.setResultUrl("http://localhost:8080/tenant/completePurchase");
 
-		List<CreatePurchaseReqProduct> productList = new ArrayList<CreatePurchaseReqProduct>();
-		productList.add(new CreatePurchaseReqProduct("0000044819", "DP000201", 0.0, 1));
-		productList.add(new CreatePurchaseReqProduct("0000044820", "DP000201", 0.0, 1));
+		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
+		productList.add(new CreatePurchaseSacReqProduct("0000044819", "DP000201", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044820", "DP000201", 0.0, 1));
 		this.createPurchaseReq.setProductList(productList);
 
 		this.purchaseInfo = new PurchaseOrder(this.createPurchaseReq);
 		this.purchaseInfo.setTenantId("S01"); // 구매(선물발신) 테넌트 ID
 		this.purchaseInfo.setSystemId("S01-01002"); // 구매(선물발신) 시스템 ID
-		this.purchaseInfo.setUserKey(this.createPurchaseReq.getInsdUsermbrNo()); // 구매(선물발신) 내부 회원 번호
-		this.purchaseInfo.setDeviceKey(this.createPurchaseReq.getInsdDeviceId()); // 구매(선물발신) 내부 디바이스 ID
+		this.purchaseInfo.setUserKey(this.createPurchaseReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
+		this.purchaseInfo.setDeviceKey(this.createPurchaseReq.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
 		this.purchaseInfo.setRecvTenantId("S01"); // 선물수신 테넌트 ID
-		this.purchaseInfo.setRecvUserKey(this.createPurchaseReq.getRecvInsdUsermbrNo()); // 선물수신 내부 회원 번호
-		this.purchaseInfo.setRecvDeviceKey(this.createPurchaseReq.getRecvInsdDeviceId()); // 선물수신 내부 디바이스 ID
+		this.purchaseInfo.setRecvUserKey(this.createPurchaseReq.getRecvUserKey()); // 선물수신 내부 회원 번호
+		this.purchaseInfo.setRecvDeviceKey(this.createPurchaseReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
 		this.purchaseInfo.setPrchsReqPathCd(this.createPurchaseReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
 		this.purchaseInfo.setMid(this.createPurchaseReq.getMid()); // 가맹점 ID
 		this.purchaseInfo.setAuthKey(this.createPurchaseReq.getAuthKey()); // 가맹점 인증키
@@ -99,9 +99,17 @@ public class PurchaseOrderServiceImplTest {
 
 		List<DummyProduct> dummyProductList = this.purchaseInfo.getProductList();
 		DummyProduct product = null;
-		for (CreatePurchaseReqProduct reqProduct : productList) {
+		for (CreatePurchaseSacReqProduct reqProduct : productList) {
 			product = displayPartService.searchDummyProductDetail(tenantId, systemId, reqProduct.getProdId(),
 					deviceModelCd);
+
+			product.setProdQty(reqProduct.getProdQty());
+			product.setTenantProdGrpCd(reqProduct.getTenantProdGrpCd());
+			product.setResvCol01(reqProduct.getResvCol01());
+			product.setResvCol02(reqProduct.getResvCol02());
+			product.setResvCol03(reqProduct.getResvCol03());
+			product.setResvCol04(reqProduct.getResvCol04());
+			product.setResvCol05(reqProduct.getResvCol05());
 
 			dummyProductList.add(product);
 		}

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyMember;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 
@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.purchase.order.dummy.vo.DummyProduct;
 public class PurchaseOrder extends CommonInfo {
 	private static final long serialVersionUID = 201401101L;
 
-	private final CreatePurchaseReq createPurchaseReq;
+	private final CreatePurchaseSacReq createPurchaseReq;
 
 	private String tenantId; // 테넌트 ID
 	private String systemId; // 시스템 ID
@@ -67,7 +67,7 @@ public class PurchaseOrder extends CommonInfo {
 	 * @param createPurchaseReq
 	 *            createPurchaseReq
 	 */
-	public PurchaseOrder(CreatePurchaseReq createPurchaseReq) {
+	public PurchaseOrder(CreatePurchaseSacReq createPurchaseReq) {
 		this.createPurchaseReq = createPurchaseReq;
 	}
 
@@ -466,7 +466,7 @@ public class PurchaseOrder extends CommonInfo {
 	/**
 	 * @return the createPurchaseReq
 	 */
-	public CreatePurchaseReq getCreatePurchaseReq() {
+	public CreatePurchaseSacReq getCreatePurchaseReq() {
 		return this.createPurchaseReq;
 	}
 

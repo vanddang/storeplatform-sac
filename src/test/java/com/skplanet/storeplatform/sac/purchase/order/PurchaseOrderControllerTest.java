@@ -31,8 +31,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReq;
-import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseReqProduct;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
@@ -68,10 +68,10 @@ public class PurchaseOrderControllerTest {
 	 */
 	@Test
 	public void testFreePurchase() throws Exception {
-		CreatePurchaseReq req = new CreatePurchaseReq();
+		CreatePurchaseSacReq req = new CreatePurchaseSacReq();
 
-		req.setInsdUsermbrNo("TEST_MBR_NO_1"); // 내부 회원 번호
-		req.setInsdDeviceId("1"); // 내부 디바이스 ID
+		req.setUserKey("MBR01"); // 내부 회원 번호
+		req.setDeviceKey("MBR01_1"); // 내부 디바이스 ID
 		req.setPrchsReqPathCd("OR000401"); // 구매 요청 경로 코드
 		req.setPrchsCaseCd(PurchaseConstants.PRCHS_CASE_PURCHASE_CD); // 구매 유형 코드
 		req.setCurrencyCd("ko"); // 통화 코드
@@ -82,9 +82,9 @@ public class PurchaseOrderControllerTest {
 		req.setAuthKey("MID01_KEY01");
 		req.setResultUrl("http://localhost:8080/tenant/completePurchase");
 
-		List<CreatePurchaseReqProduct> productList = new ArrayList<CreatePurchaseReqProduct>();
-		productList.add(new CreatePurchaseReqProduct("0000044819", "GRP-1", 0.0, 1));
-		productList.add(new CreatePurchaseReqProduct("0000044820", "GRP-1", 0.0, 1));
+		List<CreatePurchaseSacReqProduct> productList = new ArrayList<CreatePurchaseSacReqProduct>();
+		productList.add(new CreatePurchaseSacReqProduct("0000044819", "DP000201", 0.0, 1));
+		productList.add(new CreatePurchaseSacReqProduct("0000044820", "DP000201", 0.0, 1));
 		req.setProductList(productList);
 
 		ObjectMapper mapper = new ObjectMapper();
