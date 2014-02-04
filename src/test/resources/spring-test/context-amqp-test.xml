@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:int="http://www.springframework.org/schema/integration"    
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc                 http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context             http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/integration         http://www.springframework.org/schema/integration/spring-integration.xsd
+        http://www.springframework.org/schema/spring/config       http://www.springframework.org/schema/spring/config/spring-config.xsd
+        http://www.springframework.org/schema/util                http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
+        http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
+    
+    <rabbit:connection-factory id="testRabbitConnectionFactory" />
+    
+    <rabbit:admin connection-factory="testRabbitConnectionFactory" />   
+    
+    <bean id="testRabbitConnectionFactory"
+        class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+        <property name="addresses" value="211.110.115.151:5672,211.110.115.151:5672" />
+        <property name="username" value="guest" />
+        <property name="password" value="guest" />
+        <property name="virtualHost" value="/" />
+        <property name="channelCacheSize" value="10"/>
+    </bean>
+
+    <bean id="testJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
+    
+    <bean id="testRabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="testRabbitConnectionFactory" />
+        <property name="messageConverter" ref="testJsonMessageConverter" />
+        <property name="replyTimeout" value="300000" />
+        <!-- <property name="routingKey" value="cmsapp.sac.request.sync.content.test0001" /> -->
+    </bean>
+
+</beans>
