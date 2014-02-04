@@ -119,6 +119,8 @@ public class SellerServiceImpl implements SellerService {
 		mbrAuth.setRealNameSite(req.getRealNameSystemId());
 		// 실명 인증 일시
 		mbrAuth.setRealNameDate(req.getRealNameDate());
+		// 내국인 여부
+		mbrAuth.setIsDomestic(req.getIsForeign());
 		createSellerRequest.setMbrAuth(mbrAuth);
 
 		LOGGER.debug("==>>[SC] CreateSellerRequest.MbrAuth.toString() : {}", mbrAuth.toString());
