@@ -63,34 +63,29 @@ public class ConfirmCaptchaTest {
 	 */
 	@Test
 	public void simpleTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmCaptcha/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmCaptcha/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							ConfirmCaptchaReq request = new ConfirmCaptchaReq();
-							request.setAuthCode("n6yxe6");
-							request.setImageSign("88f4e72da1467f7ff05aebf0f72faf25f206588f");
-							request.setSignData("https://idp.innoace.com:8002/watermark/20140122/10573_1390394299869.jpeg|1390394299869");
+					@Override
+					public Object requestBody() {
+						ConfirmCaptchaReq request = new ConfirmCaptchaReq();
+						request.setAuthCode("n6yxe6");
+						request.setImageSign("88f4e72da1467f7ff05aebf0f72faf25f206588f");
+						request.setSignData("https://idp.innoace.com:8002/watermark/20140122/10573_1390394299869.jpeg|1390394299869");
 
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(ConfirmCaptchaRes.class, new SuccessCallback() {
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(ConfirmCaptchaRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							ConfirmCaptchaRes response = (ConfirmCaptchaRes) result;
-							// assertThat(response, notNullValue());d
-							assertEquals(response, null); // response 없는게 정상 Case임.
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ConfirmCaptchaRes response = (ConfirmCaptchaRes) result;
+						assertEquals(response, null); // response 없는게 정상 Case임.
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }
