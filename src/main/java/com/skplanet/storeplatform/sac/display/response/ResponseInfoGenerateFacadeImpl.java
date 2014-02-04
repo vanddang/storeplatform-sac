@@ -523,7 +523,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Product product = new Product();
 
 		// Identifier 설정
-		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
 		product.setPrice(this.shoppingGenerator.generatePrice(metaInfo));
 		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
@@ -532,8 +532,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setRights(this.shoppingGenerator.generateRights(metaInfo));
 		product.setContributor(this.shoppingGenerator.generateContributor(metaInfo));
 		product.setSalesOption(this.shoppingGenerator.generateSalesOption(metaInfo));
-		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+		// product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		return product;
 	}
-
 }
