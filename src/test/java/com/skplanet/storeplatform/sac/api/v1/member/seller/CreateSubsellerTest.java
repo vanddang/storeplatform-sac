@@ -67,8 +67,11 @@ public class CreateSubsellerTest {
 					public Object requestBody() {
 						CreateSubsellerReq req = new CreateSubsellerReq();
 
+						// 필수
 						req.setSellerKey("IF102102956220120711144039");
 						req.setSubSellerID("ID323R4118");
+						req.setIsNew("N");
+
 						req.setSubSellerMemo("test2");
 						req.setSubSellerEmail("ID11@qqq.com");
 
@@ -76,7 +79,6 @@ public class CreateSubsellerTest {
 						req.setSubSellerKey("SS201402041452205570000558");
 						// req.setMemberPW("12312312");
 						// req.setOldPW("a");
-						req.setIsNew("N");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
