@@ -15,11 +15,8 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * <pre>
  * 쇼핑 Value Object
  * </pre>
- *
- * Created on : 2014-01-02
- * Created by : 김형식, SK플래닛
- * Last Updated on : 2014-01-02
- * Last Updated by : 김형식, SK플래닛
+ * 
+ * Created on : 2014-01-02 Created by : 김형식, SK플래닛 Last Updated on : 2014-01-02 Last Updated by : 김형식, SK플래닛
  */
 
 public class ShoppingReq extends CommonInfo {
@@ -38,6 +35,13 @@ public class ShoppingReq extends CommonInfo {
 	private String langCd; // 언어코드
 	private String deviceModelCd; // 디바이스 모델 코드
 	private String dummy; // 더비 구분값
+	private String planId; // 기획전ID
+	private String brandId; // 브랜드샵 ID
+	private String themeId; // 테마 ID
+	private String exceptProdId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
+	private String prodId; // 상품 ID
+	private String specialProdId; // 특가상품 ID
+
 	private Integer offset; // offset
 	private Integer count; // count
 
@@ -145,8 +149,98 @@ public class ShoppingReq extends CommonInfo {
 		this.dummy = dummy;
 	}
 
+	/**
+	 * @return the planId
+	 */
+	public String getPlanId() {
+		return this.planId;
+	}
+
+	/**
+	 * @param planId
+	 *            the planId to set
+	 */
+	public void setPlanId(String planId) {
+		this.planId = planId;
+	}
+
+	/**
+	 * @return the brandId
+	 */
+	public String getBrandId() {
+		return this.brandId;
+	}
+
+	/**
+	 * @param brandId
+	 *            the brandId to set
+	 */
+	public void setBrandId(String brandId) {
+		this.brandId = brandId;
+	}
+
+	/**
+	 * @return the themeId
+	 */
+	public String getThemeId() {
+		return this.themeId;
+	}
+
+	/**
+	 * @param themeId
+	 *            the themeId to set
+	 */
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
+	}
+
 	public Integer getOffset() {
 		return this.offset;
+	}
+
+	/**
+	 * @return the exceptProdId
+	 */
+	public String getExceptProdId() {
+		return this.exceptProdId;
+	}
+
+	/**
+	 * @param exceptProdId
+	 *            the exceptProdId to set
+	 */
+	public void setExceptProdId(String exceptProdId) {
+		this.exceptProdId = exceptProdId;
+	}
+
+	/**
+	 * @return the prodId
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            the prodId to set
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
+
+	/**
+	 * @return the specialProdId
+	 */
+	public String getSpecialProdId() {
+		return this.specialProdId;
+	}
+
+	/**
+	 * @param specialProdId
+	 *            the specialProdId to set
+	 */
+	public void setSpecialProdId(String specialProdId) {
+		this.specialProdId = specialProdId;
 	}
 
 	public void setOffset(Integer offset) {
