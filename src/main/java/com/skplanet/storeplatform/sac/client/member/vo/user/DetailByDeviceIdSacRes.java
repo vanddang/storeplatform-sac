@@ -6,11 +6,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
-import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
-import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
-import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.IndividualPolicyInfo;
 
 /**
@@ -44,29 +39,19 @@ public class DetailByDeviceIdSacRes extends CommonInfo {
 	private List<IndividualPolicyInfo> policyCodeList = null;
 
 	/**
-	 * 휴대기기정보 리스트
+	 * 사용자 Key
 	 */
-	private List<DeviceInfo> deviceInfoList = null;
+	private String userKey = "";
 
 	/**
-	 * 사용자 정보
+	 * 기기 Key
 	 */
-	private UserInfo userInfo = null;
+	private String deviceKey = "";
 
 	/**
-	 * 약관동의정보 리스트
+	 * 이동 통신사
 	 */
-	private List<Agreement> agreementList = null;
-
-	/**
-	 * 사용자 인증정보
-	 */
-	private List<MbrAuth> mbrAuthInfo = null;
-
-	/**
-	 * 법정대리인 정보
-	 */
-	private List<MbrLglAgent> mbrLglAgentInfo = null;
+	private String deviceTelecom = "";
 
 	/**
 	 * @return String : isOpmd
@@ -129,78 +114,48 @@ public class DetailByDeviceIdSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return List<DeviceInfo> : deviceInfoList
+	 * @return String : userKey
 	 */
-	public List<DeviceInfo> getDeviceInfoList() {
-		return this.deviceInfoList;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param deviceInfoList
-	 *            List<DeviceInfo> : the deviceInfoList to set
+	 * @param userKey
+	 *            String : the userKey to set
 	 */
-	public void setDeviceInfoList(List<DeviceInfo> deviceInfoList) {
-		this.deviceInfoList = deviceInfoList;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
-	 * @return UserInfo : userInfo
+	 * @return String : deviceKey
 	 */
-	public UserInfo getUserInfo() {
-		return this.userInfo;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param userInfo
-	 *            UserInfo : the userInfo to set
+	 * @param deviceKey
+	 *            String : the deviceKey to set
 	 */
-	public void setUserInfo(UserInfo userInfo) {
-		this.userInfo = userInfo;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	/**
-	 * @return List<Agreement> : agreementList
+	 * @return String : deviceTelecom
 	 */
-	public List<Agreement> getAgreementList() {
-		return this.agreementList;
+	public String getDeviceTelecom() {
+		return this.deviceTelecom;
 	}
 
 	/**
-	 * @param agreementList
-	 *            List<Agreement> : the agreementList to set
+	 * @param deviceTelecom
+	 *            String : the deviceTelecom to set
 	 */
-	public void setAgreementList(List<Agreement> agreementList) {
-		this.agreementList = agreementList;
-	}
-
-	/**
-	 * @return List<MbrAuth> : mbrAuthInfo
-	 */
-	public List<MbrAuth> getMbrAuthInfo() {
-		return this.mbrAuthInfo;
-	}
-
-	/**
-	 * @param mbrAuthInfo
-	 *            List<MbrAuth> : the mbrAuthInfo to set
-	 */
-	public void setMbrAuthInfo(List<MbrAuth> mbrAuthInfo) {
-		this.mbrAuthInfo = mbrAuthInfo;
-	}
-
-	/**
-	 * @return List<MbrLglAgent> : mbrLglAgentInfo
-	 */
-	public List<MbrLglAgent> getMbrLglAgentInfo() {
-		return this.mbrLglAgentInfo;
-	}
-
-	/**
-	 * @param mbrLglAgentInfo
-	 *            List<MbrLglAgent> : the mbrLglAgentInfo to set
-	 */
-	public void setMbrLglAgentInfo(List<MbrLglAgent> mbrLglAgentInfo) {
-		this.mbrLglAgentInfo = mbrLglAgentInfo;
+	public void setDeviceTelecom(String deviceTelecom) {
+		this.deviceTelecom = deviceTelecom;
 	}
 
 }
