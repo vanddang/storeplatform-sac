@@ -256,13 +256,6 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("[SellerSCI.createSeller()] - Response CODE : {}, MESSAGE : {}", createSellerResponse
 				.getCommonResponse().getResultCode(), createSellerResponse.getCommonResponse().getResultMessage());
 
-		if (!MemberConstants.RESULT_SUCCES.equals(createSellerResponse.getCommonResponse().getResultCode())) {
-			LOGGER.error(createSellerResponse.getCommonResponse().getResultMessage());
-			// TODO [김경복] Exception 재정의 필요
-			throw new StorePlatformException("SAC_MEM_20002", createSellerResponse.getCommonResponse()
-					.getResultMessage());
-		}
-
 		// 결과 리턴 객체 생성 및 주입
 		CreateRes res = new CreateRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr resMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
@@ -309,40 +302,6 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("[SellerSCI.loginSeller()] - Response CODE : {}, MESSGE : {}", logInSellerResponse
 				.getCommonResponse().getResultCode(), logInSellerResponse.getCommonResponse().getResultMessage());
 
-		// 계정 잠금 해제 요청
-
-		if (req.getReleaseLock() != null) {
-			if (req.getReleaseLock().equals(MemberConstants.USE_Y)
-					&& logInSellerResponse.getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_PAUSE)
-					&& logInSellerResponse.getSellerSubStatus().equals(MemberConstants.SUB_STATUS_LOGIN_PAUSE)) {
-				/** 2.1. SC회원 Req 생성 및 주입. */
-				UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
-				updateStatusSellerRequest.setSellerID(req.getSellerId());
-				updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
-				updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
-
-				/** 2.2. 공통 헤더 생성 및 주입. */
-				updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
-
-				LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
-
-				/** 2.3. SC회원 - 상태변경 Call. */
-				UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
-						.updateStatusSeller(updateStatusSellerRequest);
-
-				// Response Debug
-				LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}",
-						updateStatusSellerResponse.getCommonResponse().getResultCode(), updateStatusSellerResponse
-								.getCommonResponse().getResultMessage());
-
-				if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse()
-						.getResultCode())) {
-					// TODO [김경복] Exception 재정의 필요
-					// throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
-				}
-			}
-		}
-
 		/** 3. SAC-[Response] 생성 및 주입. */
 		AuthorizeRes res = new AuthorizeRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr sellerMbr = null;
@@ -355,6 +314,40 @@ public class SellerServiceImpl implements SellerService {
 			} else {
 				// 회원 인증 "Y" 일 경우
 				if (logInSellerResponse.getIsLoginSuccess().equals(MemberConstants.USE_Y)) {
+
+					/** 4. 계정 잠금 해제 요청. */
+					if (req.getReleaseLock() != null) {
+						if (req.getReleaseLock().equals(MemberConstants.USE_Y)
+								&& logInSellerResponse.getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_PAUSE)
+								&& logInSellerResponse.getSellerSubStatus().equals(
+										MemberConstants.SUB_STATUS_LOGIN_PAUSE)) {
+							/** 4.1. SC회원 Req 생성 및 주입. */
+							UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+							updateStatusSellerRequest.setSellerID(req.getSellerId());
+							updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+							updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+
+							/** 4.2. 공통 헤더 생성 및 주입. */
+							updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
+
+							LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}",
+									updateStatusSellerRequest.toString());
+
+							/** 4.3. SC회원 - 상태변경 Call. */
+							UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
+									.updateStatusSeller(updateStatusSellerRequest);
+
+							// Response Debug
+							LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}",
+									updateStatusSellerResponse.getCommonResponse().getResultCode(),
+									updateStatusSellerResponse.getCommonResponse().getResultMessage());
+						} else {
+							// 계정 잠금 해제 불가 회원 상태
+							throw new StorePlatformException("SAC_MEM_2001", logInSellerResponse.getSellerMainStatus(),
+									logInSellerResponse.getSellerSubStatus());
+						}
+					}
+
 					/** 3.1. 회원 인증키 생성을 위한 SC-REQUEST 생성 및 주입 */
 					UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
@@ -376,12 +369,6 @@ public class SellerServiceImpl implements SellerService {
 							updateLoginInfoResponse.getCommonResponse().getResultCode(), updateLoginInfoResponse
 									.getCommonResponse().getResultMessage());
 
-					if (!MemberConstants.RESULT_SUCCES.equals(updateLoginInfoResponse.getCommonResponse()
-							.getResultCode())) {
-						// TODO [김경복] Exception 재정의 필요
-						// throw new
-						// StorePlatformException(updateLoginInfoResponse.getCommonResponse().getResultMessage());
-					}
 					res.setSessionKey(loginInfo.getSessionKey());
 					res.setExpireDate(req.getExpireDate());
 					sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
@@ -433,9 +420,11 @@ public class SellerServiceImpl implements SellerService {
 		if (!searchSellerResponse.getSellerMbr().getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_WATING)
 				&& !searchSellerResponse.getSellerMbr().getSellerSubStatus()
 						.equals(MemberConstants.SUB_STATUS_JOIN_APPLY_WATING)) {
-			LOGGER.error("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
-			// TODO Exception 재정의 필요
-			// throw new Exception("회원 메인 상태 :  " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
+
+			LOGGER.debug("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
+
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
 		/** 1. SC회원 Req 생성 및 주입. */
@@ -456,11 +445,6 @@ public class SellerServiceImpl implements SellerService {
 		// Response Debug
 		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
 				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
-
-		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
-			// TODO [김경복] Exception 재정의 필요
-			// throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
-		}
 
 		/** 4. TenantRes Response 생성 및 주입 */
 		ConfirmRes res = new ConfirmRes();
@@ -484,7 +468,7 @@ public class SellerServiceImpl implements SellerService {
 
 		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
 
-		// TODO [김경복 : 2014-01-23] 회원 조회 후 상태 체크 후 정상 회원만 계정잠금
+		/** 1. 회원 정보 조회 */
 		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
 		searchSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
@@ -497,24 +481,25 @@ public class SellerServiceImpl implements SellerService {
 
 		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
 
+		// 정상회원이 아닌경우 - 실패
 		if (!searchSellerResponse.getSellerMbr().getSellerMainStatus().equals(MemberConstants.MAIN_STATUS_NORMAL)) {
-			LOGGER.error("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
-			// TODO [김경복] Exception 재정의 필요
-			// throw new Exception("회원의 메인상태 : " + searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			LOGGER.debug("[SC] 회원메인 상태 : {}", searchSellerResponse.getSellerMbr().getSellerMainStatus());
+			throw new StorePlatformException("SAC_MEM_2001", searchSellerResponse.getSellerMbr().getSellerMainStatus(),
+					searchSellerResponse.getSellerMbr().getSellerSubStatus());
 		}
 
-		/** 1. SC회원 Req 생성 및 주입. */
+		/** 2. SC회원 Req 생성 및 주입. */
 		UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 		updateStatusSellerRequest.setSellerID(req.getSellerId());
 		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_PAUSE);
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_LOGIN_PAUSE);
 
-		/** 2. 공통 헤더 생성 및 주입. */
+		/** 3. 공통 헤더 생성 및 주입. */
 		updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
 
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
-		/** 3. SC회원 - 상태변경 Call. */
+		/** 4. SC회원 - 상태변경 Call. */
 		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
 				.updateStatusSeller(updateStatusSellerRequest);
 
@@ -522,16 +507,11 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
 				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
 
-		if (!MemberConstants.RESULT_SUCCES.equals(updateStatusSellerResponse.getCommonResponse().getResultCode())) {
-			// TODO [김경복] Exception 재정의 필요
-			// throw new Exception(updateStatusSellerResponse.getCommonResponse().getResultMessage());
-		}
-
-		/** 4. TenantRes Response 생성 및 주입 */
+		/** 5. TenantRes Response 생성 및 주입 */
 		LockAccountRes res = new LockAccountRes(updateStatusSellerRequest.getSellerID());
 		LOGGER.debug("==>>[SAC] LockAccountRes.toString() : {}", res.toString());
 
-		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
+		LOGGER.debug("############ SellerServiceImpl.lockAccount() [END] ############");
 		return res;
 	}
 
@@ -625,7 +605,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerState(req.getSellerState());
 		sellerMbr.setSellerCountry(req.getSellerCountry());
 		sellerMbr.setSellerLanguage(req.getSellerLanguage());
-		sellerMbr.setIsDomestic(req.getIsForeign());
+		sellerMbr.setIsDomestic(req.getIsDomestic());
 		sellerMbr.setIsParent(req.getIsParent());
 		sellerMbr.setSellerCompany(req.getSellerCompany());
 		sellerMbr.setSellerBizNumber(req.getSellerBizNumber());
@@ -645,10 +625,10 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.info("[SellerSCI.upgradeSeller()] - Response CODE : {}, MESSGE : {}", updateSellerResponse
 				.getCommonResponse().getResultCode(), updateSellerResponse.getCommonResponse().getResultMessage());
 
-		if (!MemberConstants.RESULT_SUCCES.equals(updateSellerResponse.getCommonResponse().getResultCode())) {
-			// TODO [김경복] Exception 재정의 필요
-			// throw new Exception(updateSellerResponse.getCommonResponse().getResultMessage());
-		}
+		// if (!MemberConstants.RESULT_SUCCES.equals(updateSellerResponse.getCommonResponse().getResultCode())) {
+		// TODO [김경복] Exception 재정의 필요
+		// throw new Exception(updateSellerResponse.getCommonResponse().getResultMessage());
+		// }
 
 		/** 4. TenantRes Response 생성 및 주입 */
 		ModifyInformationRes res = new ModifyInformationRes();
@@ -686,10 +666,10 @@ public class SellerServiceImpl implements SellerService {
 				.getCommonResponse().getResultCode(), updateAccountSellerResponse.getCommonResponse()
 				.getResultMessage());
 
-		if (!MemberConstants.RESULT_SUCCES.equals(updateAccountSellerResponse.getCommonResponse().getResultCode())) {
-			// TODO [김경복] Exception 재정의 필요
-			// throw new Exception(updateAccountSellerResponse.getCommonResponse().getResultMessage());
-		}
+		// if (!MemberConstants.RESULT_SUCCES.equals(updateAccountSellerResponse.getCommonResponse().getResultCode())) {
+		// TODO [김경복] Exception 재정의 필요
+		// throw new Exception(updateAccountSellerResponse.getCommonResponse().getResultMessage());
+		// }
 
 		/** 4. TenantRes Response 생성 및 주입 */
 		ModifyAccountInformationRes res = new ModifyAccountInformationRes();
