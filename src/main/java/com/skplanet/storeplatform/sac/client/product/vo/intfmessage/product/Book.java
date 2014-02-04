@@ -79,7 +79,12 @@ public class Book extends CommonInfo implements Serializable {
 	private Integer totalCount;
 
 	/**
-	 * @return String
+	 * 도서구분코드.
+	 */
+	private String bookClsfCd;
+
+	/**
+	 * @return the type
 	 */
 	public String getType() {
 		return this.type;
@@ -87,14 +92,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param type
-	 *            type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * @return String
+	 * @return the updateCycle
 	 */
 	public String getUpdateCycle() {
 		return this.updateCycle;
@@ -102,14 +107,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param updateCycle
-	 *            updateCycle
+	 *            the updateCycle to set
 	 */
 	public void setUpdateCycle(String updateCycle) {
 		this.updateCycle = updateCycle;
 	}
 
 	/**
-	 * @return String
+	 * @return the totalPages
 	 */
 	public String getTotalPages() {
 		return this.totalPages;
@@ -117,14 +122,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param totalPages
-	 *            totalPages
+	 *            the totalPages to set
 	 */
 	public void setTotalPages(String totalPages) {
 		this.totalPages = totalPages;
 	}
 
 	/**
-	 * @return String
+	 * @return the bookVersion
 	 */
 	public String getBookVersion() {
 		return this.bookVersion;
@@ -132,14 +137,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param bookVersion
-	 *            bookVersion
+	 *            the bookVersion to set
 	 */
 	public void setBookVersion(String bookVersion) {
 		this.bookVersion = bookVersion;
 	}
 
 	/**
-	 * @return String
+	 * @return the scid
 	 */
 	public String getScid() {
 		return this.scid;
@@ -147,14 +152,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param scid
-	 *            scid
+	 *            the scid to set
 	 */
 	public void setScid(String scid) {
 		this.scid = scid;
 	}
 
 	/**
-	 * @return int
+	 * @return the size
 	 */
 	public Integer getSize() {
 		return this.size;
@@ -162,14 +167,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param size
-	 *            size
+	 *            the size to set
 	 */
 	public void setSize(Integer size) {
 		this.size = size;
 	}
 
 	/**
-	 * @return Chapter
+	 * @return the chapter
 	 */
 	public Chapter getChapter() {
 		return this.chapter;
@@ -177,14 +182,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param chapter
-	 *            chapter
+	 *            the chapter to set
 	 */
 	public void setChapter(Chapter chapter) {
 		this.chapter = chapter;
 	}
 
 	/**
-	 * @return String
+	 * @return the saleDate
 	 */
 	public String getSaleDate() {
 		return this.saleDate;
@@ -192,14 +197,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param saleDate
-	 *            saleDate
+	 *            the saleDate to set
 	 */
 	public void setSaleDate(String saleDate) {
 		this.saleDate = saleDate;
 	}
 
 	/**
-	 * @return Count
+	 * @return the subscriptionCount
 	 */
 	public Count getSubscriptionCount() {
 		return this.subscriptionCount;
@@ -207,14 +212,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param subscriptionCount
-	 *            subscriptionCount
+	 *            the subscriptionCount to set
 	 */
 	public void setSubscriptionCount(Count subscriptionCount) {
 		this.subscriptionCount = subscriptionCount;
 	}
 
 	/**
-	 * @return Count
+	 * @return the channelCount
 	 */
 	public Count getChannelCount() {
 		return this.channelCount;
@@ -222,14 +227,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param channelCount
-	 *            channelCount
+	 *            the channelCount to set
 	 */
 	public void setChannelCount(Count channelCount) {
 		this.channelCount = channelCount;
 	}
 
 	/**
-	 * @return String
+	 * @return the status
 	 */
 	public String getStatus() {
 		return this.status;
@@ -237,14 +242,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param status
-	 *            status
+	 *            the status to set
 	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
 	/**
-	 * @return List<Support>
+	 * @return the supportList
 	 */
 	public List<Support> getSupportList() {
 		return this.supportList;
@@ -252,14 +257,14 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param supportList
-	 *            supportList
+	 *            the supportList to set
 	 */
 	public void setSupportList(List<Support> supportList) {
 		this.supportList = supportList;
 	}
 
 	/**
-	 * @return Integer
+	 * @return the totalCount
 	 */
 	public Integer getTotalCount() {
 		return this.totalCount;
@@ -267,10 +272,24 @@ public class Book extends CommonInfo implements Serializable {
 
 	/**
 	 * @param totalCount
-	 *            totalCount
+	 *            the totalCount to set
 	 */
 	public void setTotalCount(Integer totalCount) {
 		this.totalCount = totalCount;
 	}
 
+	/**
+	 * @return the bookClsfCd
+	 */
+	public String getBookClsfCd() {
+		return this.bookClsfCd;
+	}
+
+	/**
+	 * @param bookClsfCd
+	 *            the bookClsfCd to set
+	 */
+	public void setBookClsfCd(String bookClsfCd) {
+		this.bookClsfCd = bookClsfCd;
+	}
 }
