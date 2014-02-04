@@ -453,6 +453,8 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(userKey);
 
+		/* 게임센터 연동 API 확인필요!! */
+
 		deviceInfo.setUserKey(userKey);
 		deviceInfo.setTenantId(tenantId);
 
@@ -801,11 +803,7 @@ public class DeviceServiceImpl implements DeviceService {
 			createDeviceReq.setUserMbrDevice(userMbrDevice);
 			createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
-			if (!createDeviceRes.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				throw new StorePlatformException("휴대기기정보 업데이트 실패 [" + createDeviceRes.getCommonResponse().getResultCode() + "]"
-						+ createDeviceRes.getCommonResponse().getResultMessage());
-
-			}
+			/* 게임센터 연동 API 확인필요!! */
 
 		} catch (Exception ex) {
 			//throw new StorePlatformException(ex);
