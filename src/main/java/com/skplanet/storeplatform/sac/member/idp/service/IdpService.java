@@ -21,7 +21,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return One ID Rx 처리 결과
 	 */
-	public ImResult rXCreateUserIDP(HashMap map);
+	public ImResult rXCreateUserIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -126,7 +126,7 @@ public interface IdpService {
 	 * @param map
 	 * @return
 	 */
-	public ImResult rXActivateUserIdIDP(HashMap map);
+	public ImResult rXActivateUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -137,7 +137,7 @@ public interface IdpService {
 	 * @param map
 	 * @return
 	 */
-	public ImResult rXDeleteUserIdIDP(HashMap map);
+	public ImResult rXDeleteUserIdIDP(HashMap<String, String> map);
 
 	/**
 	 * 
