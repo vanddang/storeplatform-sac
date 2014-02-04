@@ -64,6 +64,7 @@ public class ISFServerServiceImpl implements ISFServerService {
 
 		if ("SVC_MAIN_0003".equals(request.getService().getId())) {
 			prop.setCount(2);
+			singles.setCount(1);
 			single.setName("recId");
 			single.setValue("000000000001");
 			singles.addSingleValue(single);
@@ -99,6 +100,7 @@ public class ISFServerServiceImpl implements ISFServerService {
 			prop.setMultiValues(multis);
 		} else { // SVC_CODI_0001
 			prop.setCount(2);
+			singles.setCount(1);
 			single.setName("recId");
 			single.setValue("000000000001");
 			singles.addSingleValue(single);

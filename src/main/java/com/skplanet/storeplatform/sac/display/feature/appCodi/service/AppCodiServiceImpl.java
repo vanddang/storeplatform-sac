@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
@@ -120,6 +123,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		HttpHeaders headers = new HttpHeaders();
 		// headers.setContentType(MediaType.ALL);
 		HttpEntity<ISFReq> requestEntity = new HttpEntity<ISFReq>(this.makeRequestParam(requestVO), headers);
+
 		ResponseEntity<ISFRes> res = this.restTemplate.exchange(this.domainName + "/isf/appCodi/v1", HttpMethod.POST,
 				requestEntity, ISFRes.class);
 
@@ -128,7 +132,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 		} else {
 			this.log.info("ISF 연동 오류~~!!");
 		}
-		this.log.debug(response.toString());
+
+		JAXBContext jc = JAXBContext.newInstance(ISFRes.class);
+		Marshaller m1 = jc.createMarshaller();
+		m1.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		m1.marshal(response, System.out);
 
 		return response;
 
