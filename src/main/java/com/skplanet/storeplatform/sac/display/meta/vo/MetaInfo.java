@@ -43,6 +43,7 @@ public class MetaInfo {
 	private String imageNm;
 	private Integer imageSize;
 	private String chnlProdId;
+	private String sysDate;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -573,6 +574,66 @@ public class MetaInfo {
 	 */
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
+	}
+
+	/**
+	 * @return the imageNm
+	 */
+	public String getImageNm() {
+		return this.imageNm;
+	}
+
+	/**
+	 * @param imageNm
+	 *            the imageNm to set
+	 */
+	public void setImageNm(String imageNm) {
+		this.imageNm = imageNm;
+	}
+
+	/**
+	 * @return the imageSize
+	 */
+	public Integer getImageSize() {
+		return this.imageSize;
+	}
+
+	/**
+	 * @param imageSize
+	 *            the imageSize to set
+	 */
+	public void setImageSize(Integer imageSize) {
+		this.imageSize = imageSize;
+	}
+
+	/**
+	 * @return the chnlProdId
+	 */
+	public String getChnlProdId() {
+		return this.chnlProdId;
+	}
+
+	/**
+	 * @param chnlProdId
+	 *            the chnlProdId to set
+	 */
+	public void setChnlProdId(String chnlProdId) {
+		this.chnlProdId = chnlProdId;
+	}
+
+	/**
+	 * @return the sysDate
+	 */
+	public String getSysDate() {
+		return this.sysDate;
+	}
+
+	/**
+	 * @param sysDate
+	 *            the sysDate to set
+	 */
+	public void setSysDate(String sysDate) {
+		this.sysDate = sysDate;
 	}
 
 	/**
@@ -1161,6 +1222,36 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the outsdContentsId
+	 */
+	public String getOutsdContentsId() {
+		return this.outsdContentsId;
+	}
+
+	/**
+	 * @param outsdContentsId
+	 *            the outsdContentsId to set
+	 */
+	public void setOutsdContentsId(String outsdContentsId) {
+		this.outsdContentsId = outsdContentsId;
+	}
+
+	/**
+	 * @return the fileSizeH
+	 */
+	public Integer getFileSizeH() {
+		return this.fileSizeH;
+	}
+
+	/**
+	 * @param fileSizeH
+	 *            the fileSizeH to set
+	 */
+	public void setFileSizeH(Integer fileSizeH) {
+		this.fileSizeH = fileSizeH;
+	}
+
+	/**
 	 * @return the dcRate
 	 */
 	public Double getDcRate() {
@@ -1401,86 +1492,17 @@ public class MetaInfo {
 	}
 
 	/**
-	 * @return the imageNm
+	 * @return the catalogNm
 	 */
-	public String getImageNm() {
-		return this.imageNm;
-	}
-
-	/**
-	 * @param imageNm
-	 *            the imageNm to set
-	 */
-	public void setImageNm(String imageNm) {
-		this.imageNm = imageNm;
-	}
-
-	/**
-	 * @return the imageSize
-	 */
-	public Integer getImageSize() {
-		return this.imageSize;
-	}
-
-	/**
-	 * @param imageSize
-	 *            the imageSize to set
-	 */
-	public void setImageSize(Integer imageSize) {
-		this.imageSize = imageSize;
-	}
-
-	/**
-	 * @return the chnlProdId
-	 */
-	public String getChnlProdId() {
-		return this.chnlProdId;
-	}
-
-	/**
-	 * @param chnlProdId
-	 *            the chnlProdId to set
-	 */
-	public void setChnlProdId(String chnlProdId) {
-		this.chnlProdId = chnlProdId;
-	}
-
-	/**
-	 * @return the outsdContentsId
-	 */
-	public String getOutsdContentsId() {
-		return this.outsdContentsId;
-	}
-
-	/**
-	 * @param outsdContentsId
-	 *            the outsdContentsId to set
-	 */
-	public void setOutsdContentsId(String outsdContentsId) {
-		this.outsdContentsId = outsdContentsId;
-	}
-
-	/**
-	 * @return the fileSizeH
-	 */
-	public Integer getFileSizeH() {
-		return this.fileSizeH;
-	}
-
-	/**
-	 * @param fileSizeH
-	 *            the fileSizeH to set
-	 */
-	public void setFileSizeH(Integer fileSizeH) {
-		this.fileSizeH = fileSizeH;
-	}
-
 	public String getCatalogNm() {
 		return this.catalogNm;
 	}
 
+	/**
+	 * @param catalogNm
+	 *            the catalogNm to set
+	 */
 	public void setCatalogNm(String catalogNm) {
 		this.catalogNm = catalogNm;
 	}
-
 }
