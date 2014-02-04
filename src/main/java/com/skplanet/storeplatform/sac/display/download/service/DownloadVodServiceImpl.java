@@ -128,16 +128,22 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			DownloadVod downloadVodInfo = null;
 
 			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(idType) || StringUtils.isEmpty(productId) || StringUtils.isEmpty(deviceKey)
-					|| StringUtils.isEmpty(userKey)) {
-
-				// throw new StorePlatformException("필수 파라미터가 부족합니다.");
-				throw new StorePlatformException("필수 파라미터가 부족합니다.", "1", "2", "3");
+			if (StringUtils.isEmpty(idType)) {
+				throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
 			}
+			if (StringUtils.isEmpty(productId)) {
+				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
+			}
+			if (StringUtils.isEmpty(deviceKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			}
+			if (StringUtils.isEmpty(userKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
+			}
+
 			// ID유형 유효값 체크
-			if (!DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equals(idType)
-					&& !DisplayConstants.DP_EPISODE_IDENTIFIER_CD.equals(idType)) {
-				throw new StorePlatformException("유효하지않은 ID유형 입니다.", "1", "2", "3");
+			if (!"channel".equals(idType) && !"episode".equals(idType)) {
+				throw new StorePlatformException("SAC_DSP_0003", "idType", idType);
 			}
 
 			// 다운로드 Vod 상품 조회
@@ -187,18 +193,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 								.searchExistenceList(existenceScRequest);
 
 						if (!existenceResponseList.isEmpty()) {
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
-							this.log.debug("----------------------------------------------------------------");
-
 							prchsId = existenceResponseList.get(0).getPrchsId();
-						} else {
-							this.log.debug("----------------------------------------------------------------");
-							this.log.debug("미구매 상품");
-							this.log.debug("----------------------------------------------------------------");
 						}
 					} catch (Exception e) {
-						throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+						throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", e);
 					}
 				}
 
@@ -206,6 +204,10 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 				identifier.setText(downloadVodInfo.getProdId());
+				identifierList.add(identifier);
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(downloadVodInfo.getEspdProdId());
 				identifierList.add(identifier);
 
 				supportList = new ArrayList<Support>();
@@ -326,12 +328,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					date.setText(downloadVodInfo.getUsagePeriod());
 					playPrice.setText(downloadVodInfo.getPlayProdAmt() == null ? 0 : downloadVodInfo.getPlayProdAmt());
 
-					Source playSource = new Source();
-					playSource.setUrl(downloadVodInfo.getPlayProdId());
+					// Source playSource = new Source();
+					// playSource.setUrl(downloadVodInfo.getPlayProdId());
 
 					play.setDate(date); // 이용기간
 					play.setPrice(playPrice); // 바로보기 상품 금액
-					play.setSource(playSource); // 바로보기 상품 url
+					// play.setSource(playSource); // 바로보기 상품 url
 					if (downloadVodInfo.getStrmNetworkCd() != null) {
 						play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 					}
@@ -344,7 +346,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				if (StringUtils.isNotEmpty(downloadVodInfo.getStoreProdId())) {
 					Support storeSupport = new Support();
 					Price storePrice = new Price();
-					Source storeSource = new Source();
 
 					storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 					storeSupport.setText(downloadVodInfo.getStoreDrmYn());
@@ -352,10 +353,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					storePrice.setText(downloadVodInfo.getStoreProdAmt() == null ? 0 : downloadVodInfo
 							.getStoreProdAmt());
-					storeSource.setUrl(downloadVodInfo.getStoreProdId());
+
+					// Source storeSource = new Source();
+					// storeSource.setUrl(downloadVodInfo.getStoreProdId());
 
 					store.setPrice(storePrice);
-					store.setSource(storeSource);
+					// store.setSource(storeSource);
 
 					// 네트워크 제한이 있을경우
 					if (downloadVodInfo.getDwldNetworkCd() != null) {

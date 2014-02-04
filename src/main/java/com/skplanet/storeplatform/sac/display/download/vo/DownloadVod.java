@@ -19,7 +19,7 @@ public class DownloadVod {
 	private String menuNm; // 메뉴 명
 	private String cid; // cid
 	private String prodId; // 상품 Id(channel)
-	private String epsdProdId; // 상품 Id(episode)
+	private String espdProdId; // 상품 Id(episode)
 	private String topMenuId; // Top Menu Id
 	private String topMenuNm; // Top Menu 명
 	private String metaClsfCd; // meta 구분 코드
@@ -178,8 +178,8 @@ public class DownloadVod {
 	 * 
 	 * @return String
 	 */
-	public String getEpsdProdId() {
-		return this.epsdProdId;
+	public String getEspdProdId() {
+		return this.espdProdId;
 	}
 
 	/**
@@ -188,11 +188,11 @@ public class DownloadVod {
 	 * 상품 Id(에피소드).
 	 * </pre>
 	 * 
-	 * @param epsdProdId
-	 *            epsdProdId
+	 * @param espdProdId
+	 *            espdProdId
 	 */
-	public void setEpsdProdId(String epsdProdId) {
-		this.epsdProdId = epsdProdId;
+	public void setEspdProdId(String espdProdId) {
+		this.espdProdId = espdProdId;
 	}
 
 	/**

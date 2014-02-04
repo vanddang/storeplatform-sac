@@ -118,19 +118,27 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			// dummy 호출이 아닐때
 			DownloadApp downloadAppInfo = null;
 			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(filteredBy) || StringUtils.isEmpty(deviceKey) || StringUtils.isEmpty(userKey)) {
-				// throw new StorePlatformException("ERROR_0001", "1", "2", "3");
-				throw new StorePlatformException("필수 파라미터가 부족합니다.");
+			if (StringUtils.isEmpty(filteredBy)) {
+				throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
+			}
+
+			if (StringUtils.isEmpty(deviceKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			}
+
+			if (StringUtils.isEmpty(userKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "userKey", productId);
 			}
 
 			// 조회 유효값 체크
 			if (!"package".equals(filteredBy) && !"id".equals(filteredBy)) {
-				throw new StorePlatformException("유효하지않은 조회유형 입니다.", "1", "2", "3");
+				throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 			}
 
+			// 파라미터 체크
 			if ("package".equals(filteredBy)) {
 				if (StringUtil.isEmpty(packageName)) {
-					throw new StorePlatformException("필수 파라미터가 부족합니다.");
+					throw new StorePlatformException("SAC_DSP_0002", "packageName", packageName);
 				}
 
 				productId = (String) this.commonDAO.queryForObject("Download.getProductIdForPackageName",
@@ -138,11 +146,11 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				downloadAppSacReq.setProductId(productId);
 
 				if (StringUtil.isEmpty(productId)) {
-					throw new StorePlatformException("해당 패키지 명의 상품이 존재하지 않습니다.");
+					throw new StorePlatformException("SAC_DSP_0005", packageName);
 				}
 			} else {
 				if (StringUtil.isEmpty(productId)) {
-					throw new StorePlatformException("상품 ID는 필수 파라미터 입니다.");
+					throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
 				}
 			}
 
@@ -198,7 +206,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						this.log.debug("----------------------------------------------------------------");
 					}
 				} catch (Exception e) {
-					throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+					throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", e);
 				}
 
 				List<Identifier> seedIdentifierList = new ArrayList<Identifier>();
