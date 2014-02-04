@@ -546,7 +546,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
-		schReq.setSessionKey(req.getSessionKey());
+		//TODO 임시 주석 [2014-02-04]
+		// schReq.setSessionKey(req.getSessionKey());
 
 		schRes = this.sellerSCI.searchLoginInfo(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
