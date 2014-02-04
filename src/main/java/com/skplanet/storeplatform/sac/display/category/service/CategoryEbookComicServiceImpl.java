@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.display.category.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +40,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Supp
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.CategoryEbookComic;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * CategoryEbookComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -55,6 +59,12 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 	@Autowired
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	@Override
 	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req, SacRequestHeader header) {
@@ -93,159 +103,186 @@ public class CategoryEbookComicServiceImpl implements CategoryEbookComicService 
 		count = offset + count - 1;
 		req.setCount(count);
 
-		// 이미지 사이즈
-		req.setImageCd("DP000101");
-
-		// 일반 카테고리 앱 상품 조회
-		List<CategoryEbookComic> ebookComicList = this.commonDAO.queryForList("Category.selectCategoryEbookComicList",
-				req, CategoryEbookComic.class);
+		// 일반 카테고리 이북/코믹 상품 조회
+		List<ProductBasicInfo> ebookComicList = this.commonDAO.queryForList("Category.selectCategoryEbookComicList",
+				req, ProductBasicInfo.class);
 
 		if (req.getDummy() == null) { // Dummy 가 아닐 경우
 
 			if (!ebookComicList.isEmpty()) {
-				CategoryEbookComic mapperVO = null;
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (ProductBasicInfo productBasicInfo : ebookComicList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
 
-				Identifier identifier = null;
-				Menu menu = null;
-				Contributor contributor = null;
-				Date date = null;
-				Accrual accrual = null;
-				Rights rights = null;
-				Title title = null;
-				Source source = null;
-				Price price = null;
-				Book book = null;
-				Support support = null;
-				Product product = null;
-
-				List<Identifier> identifierList = null;
-				List<Menu> menuList = null;
-				List<Source> sourceList = null;
-				List<Support> supportList = null;
-
-				for (int i = 0; i < ebookComicList.size(); i++) {
-					product = new Product();
-					mapperVO = ebookComicList.get(i);
-
-					// 상품 정보 (상품ID)
-					identifierList = new ArrayList<Identifier>();
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-					identifier.setText(mapperVO.getProdId());
-					identifierList.add(identifier);
-					product.setIdentifierList(identifierList);
-
-					// 메뉴 정보
-					menu = new Menu();
-					menuList = new ArrayList<Menu>();
-					menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-					menu.setId(mapperVO.getTopMenuId());
-					menu.setName(mapperVO.getTopMenuNm());
-					menuList.add(menu);
-
-					menu = new Menu();
-					menu.setId(mapperVO.getMenuId());
-					menu.setName(mapperVO.getMenuNm());
-					menuList.add(menu);
-
-					menu = new Menu();
-					menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-					menu.setId(mapperVO.getMetaClsfCd());
-					menuList.add(menu);
-					product.setMenuList(menuList);
-
-					// 저작권 정보
-					if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 이북
-						contributor = new Contributor();
-						contributor.setName(mapperVO.getArtist1Nm());
-						contributor.setPublisher(mapperVO.getChnlCompNm());
-
-						date = new Date();
-						date.setType("date/publish");
-						date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-						contributor.setDate(date);
-
-						product.setContributor(contributor);
-					} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 코믹
-						contributor = new Contributor();
-						contributor.setName(mapperVO.getArtist1Nm());
-						contributor.setPainter(mapperVO.getArtist2Nm());
-						contributor.setPublisher(mapperVO.getChnlCompNm());
-
-						date = new Date();
-						date.setType("date/publish");
-						date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-						contributor.setDate(date);
-
-						product.setContributor(contributor);
+					if (retMetaInfo != null) {
+						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+							Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+							productList.add(product);
+						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+							Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+							productList.add(product);
+						}
 					}
-
-					// 평점 정보
-					accrual = new Accrual();
-					accrual.setDownloadCount(mapperVO.getDwldCnt());
-					accrual.setScore(mapperVO.getAvgEvluScore());
-					accrual.setVoterCount(mapperVO.getPaticpersCnt());
-					product.setAccrual(accrual);
-
-					// 이용권한 정보
-					rights = new Rights();
-					rights.setGrade(mapperVO.getProdGrdCd());
-					product.setRights(rights);
-
-					// 상품 정보 (상품명)
-					title = new Title();
-					title.setText(mapperVO.getProdNm());
-					product.setTitle(title);
-
-					// 이미지 정보
-					source = new Source();
-					sourceList = new ArrayList<Source>();
-					source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-					source.setSize(mapperVO.getImgSize());
-					source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-					source.setUrl(mapperVO.getImgPath());
-					sourceList.add(source);
-					product.setSourceList(sourceList);
-
-					// 상품 정보 (상품설명)
-					product.setProductExplain(mapperVO.getProdBaseDesc());
-
-					// 상품 정보 (상품가격)
-					price = new Price();
-					price.setFixedPrice(mapperVO.getProdNetAmt());
-					price.setText(mapperVO.getProdAmt());
-					product.setPrice(price);
-
-					book = new Book();
-					book.setStatus(mapperVO.getBookStatus());
-					book.setType(mapperVO.getBookType());
-					book.setTotalCount(mapperVO.getBookCount());
-
-					supportList = new ArrayList<Support>();
-					support = new Support();
-					support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
-					support.setText(mapperVO.getSupportStore());
-					supportList.add(support);
-					support = new Support();
-					support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
-					support.setText(mapperVO.getSupportPlay());
-					supportList.add(support);
-
-					book.setSupportList(supportList);
-
-					product.setBook(book);
-
-					// 데이터 매핑
-					productList.add(i, product);
 				}
-				commonResponse.setTotalCount(mapperVO.getTotalCount());
+				commonResponse.setTotalCount(ebookComicList.get(0).getTotalCount());
 				caegoryEbookComicRes.setProductList(productList);
 				caegoryEbookComicRes.setCommonResponse(commonResponse);
 			} else {
-				commonResponse.setTotalCount(1);
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
 				caegoryEbookComicRes.setProductList(productList);
 				caegoryEbookComicRes.setCommonResponse(commonResponse);
 			}
+
+			// if (!ebookComicList.isEmpty()) {
+			// CategoryEbookComic mapperVO = null;
+			//
+			// Identifier identifier = null;
+			// Menu menu = null;
+			// Contributor contributor = null;
+			// Date date = null;
+			// Accrual accrual = null;
+			// Rights rights = null;
+			// Title title = null;
+			// Source source = null;
+			// Price price = null;
+			// Book book = null;
+			// Support support = null;
+			// Product product = null;
+			//
+			// List<Identifier> identifierList = null;
+			// List<Menu> menuList = null;
+			// List<Source> sourceList = null;
+			// List<Support> supportList = null;
+			//
+			// for (int i = 0; i < ebookComicList.size(); i++) {
+			// product = new Product();
+			// mapperVO = ebookComicList.get(i);
+			//
+			// // 상품 정보 (상품ID)
+			// identifierList = new ArrayList<Identifier>();
+			// identifier = new Identifier();
+			// identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+			// identifier.setText(mapperVO.getProdId());
+			// identifierList.add(identifier);
+			// product.setIdentifierList(identifierList);
+			//
+			// // 메뉴 정보
+			// menu = new Menu();
+			// menuList = new ArrayList<Menu>();
+			// menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
+			// menu.setId(mapperVO.getTopMenuId());
+			// menu.setName(mapperVO.getTopMenuNm());
+			// menuList.add(menu);
+			//
+			// menu = new Menu();
+			// menu.setId(mapperVO.getMenuId());
+			// menu.setName(mapperVO.getMenuNm());
+			// menuList.add(menu);
+			//
+			// menu = new Menu();
+			// menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+			// menu.setId(mapperVO.getMetaClsfCd());
+			// menuList.add(menu);
+			// product.setMenuList(menuList);
+			//
+			// // 저작권 정보
+			// if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 이북
+			// contributor = new Contributor();
+			// contributor.setName(mapperVO.getArtist1Nm());
+			// contributor.setPublisher(mapperVO.getChnlCompNm());
+			//
+			// date = new Date();
+			// date.setType("date/publish");
+			// date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
+			// contributor.setDate(date);
+			//
+			// product.setContributor(contributor);
+			// } else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(mapperVO.getTopMenuId())) { // 코믹
+			// contributor = new Contributor();
+			// contributor.setName(mapperVO.getArtist1Nm());
+			// contributor.setPainter(mapperVO.getArtist2Nm());
+			// contributor.setPublisher(mapperVO.getChnlCompNm());
+			//
+			// date = new Date();
+			// date.setType("date/publish");
+			// date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
+			// contributor.setDate(date);
+			//
+			// product.setContributor(contributor);
+			// }
+			//
+			// // 평점 정보
+			// accrual = new Accrual();
+			// accrual.setDownloadCount(mapperVO.getDwldCnt());
+			// accrual.setScore(mapperVO.getAvgEvluScore());
+			// accrual.setVoterCount(mapperVO.getPaticpersCnt());
+			// product.setAccrual(accrual);
+			//
+			// // 이용권한 정보
+			// rights = new Rights();
+			// rights.setGrade(mapperVO.getProdGrdCd());
+			// product.setRights(rights);
+			//
+			// // 상품 정보 (상품명)
+			// title = new Title();
+			// title.setText(mapperVO.getProdNm());
+			// product.setTitle(title);
+			//
+			// // 이미지 정보
+			// source = new Source();
+			// sourceList = new ArrayList<Source>();
+			// source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+			// source.setSize(mapperVO.getImgSize());
+			// source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			// source.setUrl(mapperVO.getImgPath());
+			// sourceList.add(source);
+			// product.setSourceList(sourceList);
+			//
+			// // 상품 정보 (상품설명)
+			// product.setProductExplain(mapperVO.getProdBaseDesc());
+			//
+			// // 상품 정보 (상품가격)
+			// price = new Price();
+			// price.setFixedPrice(mapperVO.getProdNetAmt());
+			// price.setText(mapperVO.getProdAmt());
+			// product.setPrice(price);
+			//
+			// book = new Book();
+			// book.setStatus(mapperVO.getBookStatus());
+			// book.setType(mapperVO.getBookType());
+			// book.setTotalCount(mapperVO.getBookCount());
+			//
+			// supportList = new ArrayList<Support>();
+			// support = new Support();
+			// support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
+			// support.setText(mapperVO.getSupportStore());
+			// supportList.add(support);
+			// support = new Support();
+			// support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
+			// support.setText(mapperVO.getSupportPlay());
+			// supportList.add(support);
+			//
+			// book.setSupportList(supportList);
+			//
+			// product.setBook(book);
+			//
+			// // 데이터 매핑
+			// productList.add(i, product);
+			// }
+			// commonResponse.setTotalCount(mapperVO.getTotalCount());
+			// caegoryEbookComicRes.setProductList(productList);
+			// caegoryEbookComicRes.setCommonResponse(commonResponse);
+			// } else {
+			// commonResponse.setTotalCount(1);
+			// caegoryEbookComicRes.setProductList(productList);
+			// caegoryEbookComicRes.setCommonResponse(commonResponse);
+			// }
 
 		} else {
 			// Dummy Data
