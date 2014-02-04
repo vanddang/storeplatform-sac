@@ -291,7 +291,9 @@ public class DisplayConstants {
 
 	public static final String DP_NETWORK_RESTRICT = "ota";
 
-	public static final String DP_SHOPPING_DEFAULT_ORDERED_OPTION = "recent";
+	public static final String DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION = "recent";
+
+	public static final String DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION = "download";
 
 	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
 
