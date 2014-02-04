@@ -9,34 +9,34 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.service;
 
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeyReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeyRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -52,13 +52,13 @@ public interface FeedbackService {
 	 * 사용후기/평점 등록.
 	 * </pre>
 	 * 
-	 * @param createFeedbackReq
-	 *            createFeedbackReq
+	 * @param createFeedbackSacReq
+	 *            createFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return CreateFeedbackRes
+	 * @return CreateFeedbackSacRes
 	 */
-	public CreateFeedbackRes create(CreateFeedbackReq createFeedbackReq, SacRequestHeader sacRequestHeader);
+	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader);
 
 	/**
 	 * 
@@ -66,13 +66,13 @@ public interface FeedbackService {
 	 * 사용후기/평점 수정.
 	 * </pre>
 	 * 
-	 * @param modifyFeedbackReq
-	 *            modifyFeedbackReq
+	 * @param modifyFeedbackSacReq
+	 *            modifyFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return ModifyFeedbackRes
+	 * @return ModifyFeedbackSacRes
 	 */
-	public ModifyFeedbackRes modify(ModifyFeedbackReq modifyFeedbackReq, SacRequestHeader sacRequestHeader);
+	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackSacReq, SacRequestHeader sacRequestHeader);
 
 	/**
 	 * 
@@ -80,13 +80,13 @@ public interface FeedbackService {
 	 * 사용후기/평점 삭제.
 	 * </pre>
 	 * 
-	 * @param removeFeedbackReq
-	 *            removeFeedbackReq
+	 * @param removeFeedbackSacReq
+	 *            removeFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return RemoveFeedbackRes
+	 * @return RemoveFeedbackSacRes
 	 */
-	public RemoveFeedbackRes remove(RemoveFeedbackReq removeFeedbackReq, SacRequestHeader sacRequestHeader);
+	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackSacReq, SacRequestHeader sacRequestHeader);
 
 	/**
 	 * 
@@ -94,13 +94,13 @@ public interface FeedbackService {
 	 * 사용후기 추천.
 	 * </pre>
 	 * 
-	 * @param createRecommendFeedbackReq
-	 *            createRecommendFeedbackReq
+	 * @param createRecommendFeedbackSacReq
+	 *            createRecommendFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return CreateRecommendFeedbackRes
+	 * @return CreateRecommendFeedbackSacRes
 	 */
-	public CreateRecommendFeedbackRes createRecommend(CreateRecommendFeedbackReq createRecommendFeedbackReq,
+	public CreateRecommendFeedbackSacRes createRecommend(CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**
@@ -109,13 +109,13 @@ public interface FeedbackService {
 	 * 사용후기 추천 취소.
 	 * </pre>
 	 * 
-	 * @param removeRecommendFeedbackReq
-	 *            removeRecommendFeedbackReq
+	 * @param removeRecommendFeedbackSacReq
+	 *            removeRecommendFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return RemoveRecommendFeedbackRes
+	 * @return RemoveRecommendFeedbackSacRes
 	 */
-	public RemoveRecommendFeedbackRes removeRecommend(RemoveRecommendFeedbackReq removeRecommendFeedbackReq,
+	public RemoveRecommendFeedbackSacRes removeRecommend(RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**
@@ -124,13 +124,13 @@ public interface FeedbackService {
 	 * 사용후기 전체 조회.
 	 * </pre>
 	 * 
-	 * @param listFeedbackReq
-	 *            listFeedbackReq
+	 * @param listFeedbackSacReq
+	 *            listFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return ListFeedbackRes
+	 * @return ListFeedbackSacRes
 	 */
-	public ListFeedbackRes list(ListFeedbackReq listFeedbackReq, SacRequestHeader sacRequestHeader);
+	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader);
 
 	/**
 	 * 
@@ -138,13 +138,14 @@ public interface FeedbackService {
 	 * 내 사용후기 조회.
 	 * </pre>
 	 * 
-	 * @param listMyFeedbackReq
-	 *            listMyFeedbackReq
+	 * @param listMyFeedbackSacReq
+	 *            listMyFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return ListMyFeedbackRes
+	 * @return ListMyFeedbackSacRes
 	 */
-	public ListMyFeedbackRes listMyFeedback(ListMyFeedbackReq listMyFeedbackReq, SacRequestHeader sacRequestHeader);
+	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
+			SacRequestHeader sacRequestHeader);
 
 	/**
 	 * 
@@ -152,13 +153,13 @@ public interface FeedbackService {
 	 * 판매자 댓글 등록.
 	 * </pre>
 	 * 
-	 * @param createSellerFeedbackReq
-	 *            createSellerFeedbackReq
+	 * @param createSellerFeedbackSacReq
+	 *            createSellerFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return CreateSellerFeedbackRes
+	 * @return CreateSellerFeedbackSacRes
 	 */
-	public CreateSellerFeedbackRes createSellerFeedback(CreateSellerFeedbackReq createSellerFeedbackReq,
+	public CreateSellerFeedbackSacRes createSellerFeedback(CreateSellerFeedbackSacReq createSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**
@@ -167,13 +168,13 @@ public interface FeedbackService {
 	 * 판매자 댓글 수정.
 	 * </pre>
 	 * 
-	 * @param modifySellerFeedbackReq
-	 *            modifySellerFeedbackReq
+	 * @param modifySellerFeedbackSacReq
+	 *            modifySellerFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return ModifySellerFeedbackRes
+	 * @return ModifySellerFeedbackSacRes
 	 */
-	public ModifySellerFeedbackRes modifySellerFeedback(ModifySellerFeedbackReq modifySellerFeedbackReq,
+	public ModifySellerFeedbackSacRes modifySellerFeedback(ModifySellerFeedbackSacReq modifySellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**
@@ -182,13 +183,13 @@ public interface FeedbackService {
 	 * 판매자 댓글 삭제.
 	 * </pre>
 	 * 
-	 * @param removeSellerFeedbackReq
-	 *            removeSellerFeedbackReq
+	 * @param removeSellerFeedbackSacReq
+	 *            removeSellerFeedbackSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return RemoveSellerFeedbackRes
+	 * @return RemoveSellerFeedbackSacRes
 	 */
-	public RemoveSellerFeedbackRes removeSellerFeedback(RemoveSellerFeedbackReq removeSellerFeedbackReq,
+	public RemoveSellerFeedbackSacRes removeSellerFeedback(RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**
@@ -197,13 +198,13 @@ public interface FeedbackService {
 	 * 평점 조회.
 	 * </pre>
 	 * 
-	 * @param getScoreReq
-	 *            getScoreReq
+	 * @param getScoreSacReq
+	 *            getScoreSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return GetScoreRes
+	 * @return GetScoreSacRes
 	 */
-	public GetScoreRes getScore(GetScoreReq getScoreReq, SacRequestHeader sacRequestHeader);
+	public GetScoreSacRes getScore(GetScoreSacReq getScoreSacReq, SacRequestHeader sacRequestHeader);
 
 	/**
 	 * 
@@ -211,13 +212,13 @@ public interface FeedbackService {
 	 * 평점별 참여수 조회.
 	 * </pre>
 	 * 
-	 * @param listScoreParticpersReq
-	 *            listScoreParticpersReq
+	 * @param listScoreParticpersSacReq
+	 *            listScoreParticpersSacReq
 	 * @param sacRequestHeader
 	 *            sacRequestHeader
-	 * @return ListScoreParticpersRes
+	 * @return ListScoreParticpersSacRes
 	 */
-	public ListScoreParticpersRes listScoreParticpers(ListScoreParticpersReq listScoreParticpersReq,
+	public ListScoreParticpersSacRes listScoreParticpers(ListScoreParticpersSacReq listScoreParticpersSacReq,
 			SacRequestHeader sacRequestHeader);
 
 	/**
@@ -226,11 +227,11 @@ public interface FeedbackService {
 	 * 사용자 ID 변경.
 	 * </pre>
 	 * 
-	 * @param changeFeedbackUserIdReq
-	 *            changeFeedbackUserIdReq
-	 * @return ChangeFeedbackUserIdRes
+	 * @param changeFeedbackUserIdSacReq
+	 *            changeFeedbackUserIdSacReq
+	 * @return ChangeFeedbackUserIdSacRes
 	 */
-	public ChangeFeedbackUserIdRes changeFeedbackUserId(ChangeFeedbackUserIdReq changeFeedbackUserIdReq);
+	public ChangeFeedbackUserIdSacRes changeFeedbackUserId(ChangeFeedbackUserIdSacReq changeFeedbackUserIdSacReq);
 
 	/**
 	 * 
@@ -238,10 +239,10 @@ public interface FeedbackService {
 	 * 사용자 Key 변경.
 	 * </pre>
 	 * 
-	 * @param changeFeedbackUserKeyReq
-	 *            changeFeedbackUserKeyReq
-	 * @return ChangeFeedbackUserKeyRes
+	 * @param changeFeedbackUserKeySacReq
+	 *            changeFeedbackUserKeySacReq
+	 * @return ChangeFeedbackUserKeySacRes
 	 */
-	public ChangeFeedbackUserKeyRes changeFeedbackUserKey(ChangeFeedbackUserKeyReq changeFeedbackUserKeyReq);
+	public ChangeFeedbackUserKeySacRes changeFeedbackUserKey(ChangeFeedbackUserKeySacReq changeFeedbackUserKeySacReq);
 
 }

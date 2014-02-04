@@ -17,35 +17,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeyReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeyRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserKeySacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.Feedback;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackRes;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackReq;
-import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.GetScoreSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListMyFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ListScoreParticpersSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -60,45 +60,45 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public class FeedbackServiceSampleImpl implements FeedbackService {
 
 	@Override
-	public CreateFeedbackRes create(CreateFeedbackReq createFeedbackReq, SacRequestHeader sacRequestHeader) {
-		CreateFeedbackRes createFeedbackRes = new CreateFeedbackRes();
+	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackReq, SacRequestHeader sacRequestHeader) {
+		CreateFeedbackSacRes createFeedbackRes = new CreateFeedbackSacRes();
 		createFeedbackRes.setNotiSeq(14275);
 		return createFeedbackRes;
 	}
 
 	@Override
-	public ModifyFeedbackRes modify(ModifyFeedbackReq modifyFeedbackReq, SacRequestHeader sacRequestHeader) {
-		ModifyFeedbackRes modifyFeedbackRes = new ModifyFeedbackRes();
+	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackReq, SacRequestHeader sacRequestHeader) {
+		ModifyFeedbackSacRes modifyFeedbackRes = new ModifyFeedbackSacRes();
 		modifyFeedbackRes.setNotiSeq(14275);
 		return modifyFeedbackRes;
 	}
 
 	@Override
-	public RemoveFeedbackRes remove(RemoveFeedbackReq removeFeedbackReq, SacRequestHeader sacRequestHeader) {
-		RemoveFeedbackRes removeFeedbackRes = new RemoveFeedbackRes();
+	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackReq, SacRequestHeader sacRequestHeader) {
+		RemoveFeedbackSacRes removeFeedbackRes = new RemoveFeedbackSacRes();
 		removeFeedbackRes.setNotiSeq(14275);
 		return removeFeedbackRes;
 	}
 
 	@Override
-	public CreateRecommendFeedbackRes createRecommend(CreateRecommendFeedbackReq createRecommendFeedbackReq,
+	public CreateRecommendFeedbackSacRes createRecommend(CreateRecommendFeedbackSacReq createRecommendFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
-		CreateRecommendFeedbackRes createRecommendFeedbackRes = new CreateRecommendFeedbackRes();
+		CreateRecommendFeedbackSacRes createRecommendFeedbackRes = new CreateRecommendFeedbackSacRes();
 		createRecommendFeedbackRes.setNotiList(this.getFeedbackList());
 		return createRecommendFeedbackRes;
 	}
 
 	@Override
-	public RemoveRecommendFeedbackRes removeRecommend(RemoveRecommendFeedbackReq feedbackRecommendReq,
+	public RemoveRecommendFeedbackSacRes removeRecommend(RemoveRecommendFeedbackSacReq feedbackRecommendReq,
 			SacRequestHeader sacRequestHeader) {
-		RemoveRecommendFeedbackRes removeRecommendFeedbackRes = new RemoveRecommendFeedbackRes();
+		RemoveRecommendFeedbackSacRes removeRecommendFeedbackRes = new RemoveRecommendFeedbackSacRes();
 		removeRecommendFeedbackRes.setNotiList(this.getFeedbackList());
 		return removeRecommendFeedbackRes;
 	}
 
 	@Override
-	public ListFeedbackRes list(ListFeedbackReq listFeedbackReq, SacRequestHeader sacRequestHeader) {
-		ListFeedbackRes listFeedbackRes = new ListFeedbackRes();
+	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackReq, SacRequestHeader sacRequestHeader) {
+		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
 		listFeedbackRes.setAvgScorePct("80.00");
 		listFeedbackRes.setNotiTot(10);
 		listFeedbackRes.setAvgScore(2);
@@ -109,40 +109,40 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	}
 
 	@Override
-	public ListMyFeedbackRes listMyFeedback(ListMyFeedbackReq listMyFeedbackReq, SacRequestHeader sacRequestHeader) {
-		ListMyFeedbackRes listMyFeedbackRes = new ListMyFeedbackRes();
+	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackReq, SacRequestHeader sacRequestHeader) {
+		ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
 		listMyFeedbackRes.setNotiTot(10);
 		listMyFeedbackRes.setNotiList(this.getFeedbackList());
 		return listMyFeedbackRes;
 	}
 
 	@Override
-	public CreateSellerFeedbackRes createSellerFeedback(CreateSellerFeedbackReq createSellerFeedbackReq,
+	public CreateSellerFeedbackSacRes createSellerFeedback(CreateSellerFeedbackSacReq createSellerFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
-		CreateSellerFeedbackRes createSellerFeedbackRes = new CreateSellerFeedbackRes();
+		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
 		createSellerFeedbackRes.setNotiSeq(14275);
 		return createSellerFeedbackRes;
 	}
 
 	@Override
-	public ModifySellerFeedbackRes modifySellerFeedback(ModifySellerFeedbackReq modifySellerFeedbackReq,
+	public ModifySellerFeedbackSacRes modifySellerFeedback(ModifySellerFeedbackSacReq modifySellerFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
-		ModifySellerFeedbackRes modifySellerFeedbackRes = new ModifySellerFeedbackRes();
+		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
 		modifySellerFeedbackRes.setNotiSeq(14275);
 		return modifySellerFeedbackRes;
 	}
 
 	@Override
-	public RemoveSellerFeedbackRes removeSellerFeedback(RemoveSellerFeedbackReq removeSellerFeedbackReq,
+	public RemoveSellerFeedbackSacRes removeSellerFeedback(RemoveSellerFeedbackSacReq removeSellerFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
-		RemoveSellerFeedbackRes removeSellerFeedbackRes = new RemoveSellerFeedbackRes();
+		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();
 		removeSellerFeedbackRes.setNotiSeq(14275);
 		return removeSellerFeedbackRes;
 	}
 
 	@Override
-	public GetScoreRes getScore(GetScoreReq getScoreReq, SacRequestHeader sacRequestHeader) {
-		GetScoreRes getScoreRes = new GetScoreRes();
+	public GetScoreSacRes getScore(GetScoreSacReq getScoreReq, SacRequestHeader sacRequestHeader) {
+		GetScoreSacRes getScoreRes = new GetScoreSacRes();
 		getScoreRes.setProdId(getScoreReq.getProdId());
 		getScoreRes.setTotEvluScore(20);
 		getScoreRes.setAvgEvluScore("4.0");
@@ -152,9 +152,9 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	}
 
 	@Override
-	public ListScoreParticpersRes listScoreParticpers(ListScoreParticpersReq listScoreParticpersReq,
+	public ListScoreParticpersSacRes listScoreParticpers(ListScoreParticpersSacReq listScoreParticpersReq,
 			SacRequestHeader sacRequestHeader) {
-		ListScoreParticpersRes listScoreRes = new ListScoreParticpersRes();
+		ListScoreParticpersSacRes listScoreRes = new ListScoreParticpersSacRes();
 		List<AvgScore> avgScoreList = new ArrayList<AvgScore>();
 		AvgScore avgScore1 = new AvgScore();
 		avgScore1.setAvgScore(5);
@@ -232,15 +232,15 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	}
 
 	@Override
-	public ChangeFeedbackUserIdRes changeFeedbackUserId(ChangeFeedbackUserIdReq changeFeedbackUserIdReq) {
-		ChangeFeedbackUserIdRes changeFeedbackUserIdRes = new ChangeFeedbackUserIdRes();
+	public ChangeFeedbackUserIdSacRes changeFeedbackUserId(ChangeFeedbackUserIdSacReq changeFeedbackUserIdReq) {
+		ChangeFeedbackUserIdSacRes changeFeedbackUserIdRes = new ChangeFeedbackUserIdSacRes();
 		changeFeedbackUserIdRes.setResultStatus("success");
 		return changeFeedbackUserIdRes;
 	}
 
 	@Override
-	public ChangeFeedbackUserKeyRes changeFeedbackUserKey(ChangeFeedbackUserKeyReq changeFeedbackUserKeyReq) {
-		ChangeFeedbackUserKeyRes changeFeedbackUserKeyRes = new ChangeFeedbackUserKeyRes();
+	public ChangeFeedbackUserKeySacRes changeFeedbackUserKey(ChangeFeedbackUserKeySacReq changeFeedbackUserKeyReq) {
+		ChangeFeedbackUserKeySacRes changeFeedbackUserKeyRes = new ChangeFeedbackUserKeySacRes();
 		changeFeedbackUserKeyRes.setResultStatus("success");
 		return changeFeedbackUserKeyRes;
 	}
