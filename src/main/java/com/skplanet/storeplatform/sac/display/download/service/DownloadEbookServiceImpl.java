@@ -137,8 +137,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
 					historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
-					historyListSacReq.setInsdUsermbrNo(downloadEbookReq.getUserKey());
-					historyListSacReq.setInsdDeviceId(downloadEbookReq.getDeviceKey());
+					historyListSacReq.setUserKey(downloadEbookReq.getUserKey());
+					historyListSacReq.setDeviceKey(downloadEbookReq.getDeviceKey());
 					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
 					historyListSacReq.setStartDt("19000101000000");
 					historyListSacReq.setEndDt(metaInfo.getSysDate());
