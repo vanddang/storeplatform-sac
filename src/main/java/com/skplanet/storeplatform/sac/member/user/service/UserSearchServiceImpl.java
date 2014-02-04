@@ -962,8 +962,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @return CommonRequest
-	 * @throws Exception
-	 *             익셉션
 	 */
 	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) {
 
