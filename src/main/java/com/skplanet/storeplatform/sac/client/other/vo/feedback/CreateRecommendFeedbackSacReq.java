@@ -13,11 +13,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * RemoveRecommendFeedbackReq Value Object
+ * CreateRecommendFeedbackReq Value Object
  * 
- * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
  */
-public class RemoveRecommendFeedbackReq extends CommonInfo {
+public class CreateRecommendFeedbackSacReq extends CommonInfo {
 	/**
 	 *
 	 */
@@ -27,7 +27,7 @@ public class RemoveRecommendFeedbackReq extends CommonInfo {
 	 */
 	private String prodId;
 	/**
-	 * 사용자 Key.
+	 * 회원 Key.
 	 */
 	private String userKey;
 	/**
@@ -35,7 +35,7 @@ public class RemoveRecommendFeedbackReq extends CommonInfo {
 	 */
 	private int notiSeq;
 	/**
-	 * 채널 ID.
+	 * 채널 ID, 쇼핑특가상품.
 	 */
 	private String chnlId;
 

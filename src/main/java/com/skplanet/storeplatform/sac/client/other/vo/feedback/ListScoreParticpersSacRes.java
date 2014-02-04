@@ -9,36 +9,41 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * CreateSellerFeedbackRes Value Object
+ * ListScoreRes Value Object
  * 
- * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 1. 20. Updated by : 김현일, 인크로스.
  */
-public class CreateSellerFeedbackRes extends CommonInfo {
+public class ListScoreParticpersSacRes extends CommonInfo {
+
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 사용후기 번호.
-	 */
-	private int notiSeq;
 
 	/**
-	 * @return int
+	 * 평점별 리스트.
 	 */
-	public int getNotiSeq() {
-		return this.notiSeq;
+	private List<AvgScore> avgScoreList;
+
+	/**
+	 * @return List<AvgScore>
+	 */
+	public List<AvgScore> getAvgScoreList() {
+		return this.avgScoreList;
 	}
 
 	/**
-	 * @param notiSeq
-	 *            notiSeq
+	 * @param avgScoreList
+	 *            avgScoreList
 	 */
-	public void setNotiSeq(int notiSeq) {
-		this.notiSeq = notiSeq;
+	public void setAvgScoreList(List<AvgScore> avgScoreList) {
+		this.avgScoreList = avgScoreList;
 	}
+
 }

@@ -13,33 +13,23 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * ListFeedbackReq Value Object
+ * ListMyFeedbackReq Value Object
  * 
  * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
  */
-public class ListFeedbackReq extends CommonInfo {
-
+public class ListMyFeedbackSacReq extends CommonInfo {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 상품 ID.
+	 * 상품ID 목록(구분자, ).
 	 */
-	private String prodId;
+	private String prodIds;
 	/**
 	 * 회원 Key.
 	 */
 	private String userKey;
-	/**
-	 * 정렬.
-	 */
-	private String orderedBy;
-	/**
-	 * 정렬 방식.
-	 */
-	private String orderedIn;
-
 	/**
 	 * 채널 ID.
 	 */
@@ -49,27 +39,27 @@ public class ListFeedbackReq extends CommonInfo {
 	 */
 	private String type;
 	/**
-	 * 페이징 시작위치.
+	 * 페이징 시작 위치.
 	 */
 	private int offset;
 	/**
-	 * 페이징 갯수.
+	 * 페이징 개수.
 	 */
 	private int count;
 
 	/**
 	 * @return String
 	 */
-	public String getProdId() {
-		return this.prodId;
+	public String getProdIds() {
+		return this.prodIds;
 	}
 
 	/**
-	 * @param prodId
-	 *            prodId
+	 * @param prodIds
+	 *            prodIds
 	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
+	public void setProdIds(String prodIds) {
+		this.prodIds = prodIds;
 	}
 
 	/**
@@ -85,36 +75,6 @@ public class ListFeedbackReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getOrderedBy() {
-		return this.orderedBy;
-	}
-
-	/**
-	 * @param orderedBy
-	 *            orderedBy
-	 */
-	public void setOrderedBy(String orderedBy) {
-		this.orderedBy = orderedBy;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getOrderedIn() {
-		return this.orderedIn;
-	}
-
-	/**
-	 * @param orderedIn
-	 *            orderedIn
-	 */
-	public void setOrderedIn(String orderedIn) {
-		this.orderedIn = orderedIn;
 	}
 
 	/**

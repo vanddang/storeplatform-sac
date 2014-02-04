@@ -9,38 +9,40 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * ListScoreReq Value Object
+ * RemoveRecommendFeedbackRes Value Object
  * 
  * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
-public class ListScoreParticpersReq extends CommonInfo {
+public class RemoveRecommendFeedbackSacRes extends CommonInfo {
+
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 상품 ID.
+	 * 사용후기 리스트.
 	 */
-	private String prodId;
+	private List<Feedback> notiList;
 
 	/**
-	 * @return String
+	 * @return List<Feedback>
 	 */
-	public String getProdId() {
-		return this.prodId;
+	public List<Feedback> getNotiList() {
+		return this.notiList;
 	}
 
 	/**
-	 * @param prodId
-	 *            prodId
+	 * @param notiList
+	 *            notiList
 	 */
-	public void setProdId(String prodId) {
-		this.prodId = prodId;
+	public void setNotiList(List<Feedback> notiList) {
+		this.notiList = notiList;
 	}
-
 }

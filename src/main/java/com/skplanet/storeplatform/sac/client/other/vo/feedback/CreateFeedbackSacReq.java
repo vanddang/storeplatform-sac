@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 20. Updated by : 김현일, 인크로스.
  */
-public class CreateFeedbackReq extends CommonInfo {
+public class CreateFeedbackSacReq extends CommonInfo {
 	/**
 	 *
 	 */

@@ -13,33 +13,34 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * ChangeFeedbackUserIdRes Value Object
+ * ListScoreReq Value Object
  * 
- * Updated on : 2014. 1. 28. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
-public class ChangeFeedbackUserIdRes extends CommonInfo {
+public class ListScoreParticpersSacReq extends CommonInfo {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
 	/**
-	 * 결과 상태.
+	 * 상품 ID.
 	 */
-	private String resultStatus;
+	private String prodId;
 
 	/**
 	 * @return String
 	 */
-	public String getResultStatus() {
-		return this.resultStatus;
+	public String getProdId() {
+		return this.prodId;
 	}
 
 	/**
-	 * @param resultStatus
-	 *            resultStatus
+	 * @param prodId
+	 *            prodId
 	 */
-	public void setResultStatus(String resultStatus) {
-		this.resultStatus = resultStatus;
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
 	}
 
 }

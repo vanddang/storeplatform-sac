@@ -13,11 +13,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * CreateRecommendFeedbackReq Value Object
+ * ModifyFeedbackReq Value Object
  * 
- * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스
  */
-public class CreateRecommendFeedbackReq extends CommonInfo {
+public class ModifyFeedbackSacReq extends CommonInfo {
 	/**
 	 *
 	 */
@@ -27,7 +27,7 @@ public class CreateRecommendFeedbackReq extends CommonInfo {
 	 */
 	private String prodId;
 	/**
-	 * 회원 Key.
+	 * 사용자 Key.
 	 */
 	private String userKey;
 	/**
@@ -35,9 +35,25 @@ public class CreateRecommendFeedbackReq extends CommonInfo {
 	 */
 	private int notiSeq;
 	/**
-	 * 채널 ID, 쇼핑특가상품.
+	 * 채널 ID.
 	 */
 	private String chnlId;
+	/**
+	 * 사용후기 제목.
+	 */
+	private String notiTitle;
+	/**
+	 * 사용후기 내용.
+	 */
+	private String notiDesc;
+	/**
+	 * 평점.
+	 */
+	private int score;
+	/**
+	 * 패키지 버전 코드.
+	 */
+	private String pkgVerCd;
 
 	/**
 	 * @return String
@@ -97,6 +113,66 @@ public class CreateRecommendFeedbackReq extends CommonInfo {
 	 */
 	public void setChnlId(String chnlId) {
 		this.chnlId = chnlId;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getNotiTitle() {
+		return this.notiTitle;
+	}
+
+	/**
+	 * @param notiTitle
+	 *            notiTitle
+	 */
+	public void setNotiTitle(String notiTitle) {
+		this.notiTitle = notiTitle;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getNotiDesc() {
+		return this.notiDesc;
+	}
+
+	/**
+	 * @param notiDesc
+	 *            notiDesc
+	 */
+	public void setNotiDesc(String notiDesc) {
+		this.notiDesc = notiDesc;
+	}
+
+	/**
+	 * @return int
+	 */
+	public int getScore() {
+		return this.score;
+	}
+
+	/**
+	 * @param score
+	 *            score
+	 */
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getPkgVerCd() {
+		return this.pkgVerCd;
+	}
+
+	/**
+	 * @param pkgVerCd
+	 *            pkgVerCd
+	 */
+	public void setPkgVerCd(String pkgVerCd) {
+		this.pkgVerCd = pkgVerCd;
 	}
 
 }

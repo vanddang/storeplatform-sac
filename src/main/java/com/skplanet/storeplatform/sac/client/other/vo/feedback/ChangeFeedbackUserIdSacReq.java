@@ -13,34 +13,33 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * RemoveFeedbackRes Value Object
+ * ChangeFeedbackUserIdReq Value Object
  * 
  * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
-public class RemoveFeedbackRes extends CommonInfo {
+public class ChangeFeedbackUserIdSacReq extends CommonInfo {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 사용자 ID.
+	 */
+	private String userId;
 
 	/**
-	 * 사용후기 번호.
+	 * @return String
 	 */
-	private int notiSeq;
-
-	/**
-	 * @return int
-	 */
-	public int getNotiSeq() {
-		return this.notiSeq;
+	public String getUserId() {
+		return this.userId;
 	}
 
 	/**
-	 * @param notiSeq
-	 *            notiSeq
+	 * @param userId
+	 *            userId
 	 */
-	public void setNotiSeq(int notiSeq) {
-		this.notiSeq = notiSeq;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 }

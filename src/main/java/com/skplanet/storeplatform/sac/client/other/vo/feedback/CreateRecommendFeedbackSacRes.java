@@ -9,37 +9,40 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * RemoveSellerFeedbackReq Value Object
+ * CreateRecommendFeedbackRes Value Object
  * 
- * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
+ * Updated on : 2014. 1. 23. Updated by : 김현일, 인크로스.
  */
-public class RemoveSellerFeedbackReq extends CommonInfo {
+public class CreateRecommendFeedbackSacRes extends CommonInfo {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 사용후기 번호.
-	 */
-	private int notiSeq;
 
 	/**
-	 * @return int
+	 * 사용후기 리스트.
 	 */
-	public int getNotiSeq() {
-		return this.notiSeq;
+	private List<Feedback> notiList;
+
+	/**
+	 * @return List<Feedback>
+	 */
+	public List<Feedback> getNotiList() {
+		return this.notiList;
 	}
 
 	/**
-	 * @param notiSeq
-	 *            notiSeq
+	 * @param notiList
+	 *            notiList
 	 */
-	public void setNotiSeq(int notiSeq) {
-		this.notiSeq = notiSeq;
+	public void setNotiList(List<Feedback> notiList) {
+		this.notiList = notiList;
 	}
 
 }

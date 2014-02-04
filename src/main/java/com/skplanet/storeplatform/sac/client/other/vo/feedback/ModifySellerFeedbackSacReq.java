@@ -13,11 +13,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * ModifyFeedbackRes Value Object
+ * ModifySellerFeedbackReq Value Object
  * 
  * Updated on : 2014. 1. 27. Updated by : 김현일, 인크로스.
  */
-public class ModifyFeedbackRes extends CommonInfo {
+public class ModifySellerFeedbackSacReq extends CommonInfo {
 	/**
 	 *
 	 */
@@ -26,6 +26,14 @@ public class ModifyFeedbackRes extends CommonInfo {
 	 * 사용후기 번호.
 	 */
 	private int notiSeq;
+	/**
+	 * 판매자 댓글 제목.
+	 */
+	private String sellerRespTitle;
+	/**
+	 * 판매자 댓글 내용.
+	 */
+	private String sellerRespOpin;
 
 	/**
 	 * @return int
@@ -42,4 +50,33 @@ public class ModifyFeedbackRes extends CommonInfo {
 		this.notiSeq = notiSeq;
 	}
 
+	/**
+	 * @return String
+	 */
+	public String getSellerRespTitle() {
+		return this.sellerRespTitle;
+	}
+
+	/**
+	 * @param sellerRespTitle
+	 *            sellerRespTitle
+	 */
+	public void setSellerRespTitle(String sellerRespTitle) {
+		this.sellerRespTitle = sellerRespTitle;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSellerRespOpin() {
+		return this.sellerRespOpin;
+	}
+
+	/**
+	 * @param sellerRespOpin
+	 *            sellerRespOpin
+	 */
+	public void setSellerRespOpin(String sellerRespOpin) {
+		this.sellerRespOpin = sellerRespOpin;
+	}
 }
