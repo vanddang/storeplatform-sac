@@ -22,12 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -41,11 +39,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -62,7 +64,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	ExistenceSacService existenceSacService;
+	HistoryListService historyListService;
 
 	/*
 	 * (non-Javadoc)
@@ -74,10 +76,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	 */
 	@Override
 	public DownloadEbookSacRes getDownloadEbookInfo(SacRequestHeader requestHeader, DownloadEbookSacReq downloadEbookReq) {
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchVodList Service started!!");
-		this.logger.debug("----------------------------------------------------------------");
-
 		DownloadEbookSacRes ebookRes = new DownloadEbookSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
@@ -85,6 +83,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 		String productId = downloadEbookReq.getProductId();
 		String deviceKey = downloadEbookReq.getDeviceKey();
 		String userKey = downloadEbookReq.getUserKey();
+
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[getDownloadEbookInfo] idType : {}", idType);
+		this.logger.debug("[getDownloadEbookInfo] productId : {}", productId);
+		this.logger.debug("[getDownloadEbookInfo] deviceKey : {}", deviceKey);
+		this.logger.debug("[getDownloadEbookInfo] userKey : {}", userKey);
+		this.logger.debug("----------------------------------------------------------------");
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(idType)) {
@@ -116,39 +121,69 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 		if (metaInfo != null) {
 			String prchsId = null;
+			String prchsDt = null;
+			String dwldExprDt = null;
+			String prchsState = null;
+			String usePeriodUnitCd = metaInfo.getUsePeriodUnitCd();
 
 			if ("episode".equals(idType)) {
 				try {
-					// 기구매 체크를 위한 생성자
-					ExistenceScRequest existenceScRequest = new ExistenceScRequest();
-					existenceScRequest.setTenantId(downloadEbookReq.getTenantId());
-					existenceScRequest.setInsdUsermbrNo(downloadEbookReq.getUserKey());
-					existenceScRequest.setInsdDeviceId(downloadEbookReq.getDeviceKey());
+					// 구매내역 조회를 위한 생성자
+					ProductListSac productListSac = new ProductListSac();
+					productListSac.setProdId(metaInfo.getPartProdId());
 
-					ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-					existenceItemSc.setProdId(downloadEbookReq.getProductId());
+					List<ProductListSac> productList = new ArrayList<ProductListSac>();
+					productList.add(productListSac);
 
-					List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
-					list.add(existenceItemSc);
-					existenceScRequest.setExistenceItemSc(list);
+					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+					historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
+					historyListSacReq.setInsdUsermbrNo(downloadEbookReq.getUserKey());
+					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+					historyListSacReq.setStartDt("19000101000000");
+					historyListSacReq.setEndDt(metaInfo.getSysDate());
+					historyListSacReq.setOffset(1);
+					historyListSacReq.setCount(1);
+					historyListSacReq.setProductList(productList);
 
-					// 기구매 체크 실행
-					List<ExistenceScResponse> existenceResponseList = this.existenceSacService
-							.searchExistenceList(existenceScRequest);
+					// 구매내역 조회 실행
+					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
-					if (!existenceResponseList.isEmpty()) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[getDownloadEbookInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+					this.logger.debug("----------------------------------------------------------------");
+
+					if (historyListSacRes.getTotalCnt() > 0) {
+						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
+						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+						dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
+						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+
 						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
+						this.logger.debug("[getDownloadEbookInfo] usePeriodUnitCd : {}", usePeriodUnitCd);
 						this.logger.debug("----------------------------------------------------------------");
 
-						prchsId = existenceResponseList.get(0).getPrchsId();
-					} else {
+						// 소장
+						if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
+							if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+								prchsState = "payment";
+							} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+								prchsState = "gift";
+							}
+						} else {
+							downloadEbookReq.setPrchsDt(prchsDt);
+							downloadEbookReq.setDwldExprDt(dwldExprDt);
+
+							// 대여 상품 구매상태 조회
+							prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
+									downloadEbookReq);
+						}
+
 						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("미구매 상품");
+						this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
 						this.logger.debug("----------------------------------------------------------------");
 					}
 				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", ex);
+					throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 				}
 			}
 
@@ -165,6 +200,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			Price price = new Price();
 			Distributor distributor = new Distributor();
 			Purchase purchase = new Purchase();
+			Date date = new Date();
 
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Source> sourceList = new ArrayList<Source>();
@@ -173,6 +209,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			// 상품 ID 정보
 			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 			identifier.setText(metaInfo.getProdId());
+			identifierList.add(identifier);
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getPartProdId());
 			identifierList.add(identifier);
 			product.setIdentifierList(identifierList);
 
@@ -208,17 +248,14 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			book.setSize(metaInfo.getFileSize());
 			product.setBook(book);
 
-			// 소장 대여 정보 (store : 소장, play : 대여)
-			if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
+			// 소장/대여 정보 (store : 소장, play : 대여)
+			if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
 				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 				support.setText(metaInfo.getStoreDrmYn());
 				store.setSupport(support);
 				price.setFixedPrice(metaInfo.getStoreProdNetAmt());
 				price.setText(metaInfo.getStoreProdAmt());
 				store.setPrice(price);
-				source = new Source();
-				source.setUrl(metaInfo.getStoreProdId());
-				store.setSource(source);
 				rights.setGrade(metaInfo.getProdGrdCd());
 				rights.setStore(store);
 			} else {
@@ -228,9 +265,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				price.setFixedPrice(metaInfo.getPlayProdNetAmt());
 				price.setText(metaInfo.getPlayProdAmt());
 				play.setPrice(price);
-				source = new Source();
-				source.setUrl(metaInfo.getStoreProdId());
-				play.setSource(source);
 				rights.setGrade(metaInfo.getProdGrdCd());
 				rights.setPlay(play);
 			}
@@ -244,11 +278,18 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			product.setDistributor(distributor);
 
 			// 구매 정보
-			purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			identifier.setText(prchsId);
-			purchase.setIdentifier(identifier);
+			if (StringUtils.isNotEmpty(prchsId)) {
+				purchase.setState(prchsState);
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+				identifier.setText(prchsId);
+				purchase.setIdentifier(identifier);
+				date.setType("date/purchase");
+				date.setText(prchsDt);
+				purchase.setDate(date);
+			} else {
+				purchase.setState("");
+			}
 			product.setPurchase(purchase);
 
 			ebookRes.setProduct(product);

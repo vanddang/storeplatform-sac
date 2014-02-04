@@ -22,12 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -38,11 +36,15 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Dist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
+import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -59,20 +61,22 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	ExistenceSacService existenceSacService;
+	HistoryListService historyListService;
 
 	@Override
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq) {
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchVodList Service started!!");
-		this.logger.debug("----------------------------------------------------------------");
-
 		DownloadComicSacRes comicRes = new DownloadComicSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		String productId = downloadComicReq.getProductId();
 		String deviceKey = downloadComicReq.getDeviceKey();
 		String userKey = downloadComicReq.getUserKey();
+
+		this.logger.debug("----------------------------------------------------------------");
+		this.logger.debug("[getDownloadComicInfo] productId : {}", productId);
+		this.logger.debug("[getDownloadComicInfo] deviceKey : {}", deviceKey);
+		this.logger.debug("[getDownloadComicInfo] userKey : {}", userKey);
+		this.logger.debug("----------------------------------------------------------------");
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(productId)) {
@@ -97,38 +101,47 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 		if (metaInfo != null) {
 			String prchsId = null;
+			String prchsDt = null;
+			String prchsState = null;
 
 			try {
-				// 기구매 체크를 위한 생성자
-				ExistenceScRequest existenceScRequest = new ExistenceScRequest();
-				existenceScRequest.setTenantId(downloadComicReq.getTenantId());
-				existenceScRequest.setInsdUsermbrNo(downloadComicReq.getUserKey());
-				existenceScRequest.setInsdDeviceId(downloadComicReq.getDeviceKey());
+				// 구매내역 조회를 위한 생성자
+				ProductListSac productListSac = new ProductListSac();
+				productListSac.setProdId(metaInfo.getPartProdId());
 
-				ExistenceItemSc existenceItemSc = new ExistenceItemSc();
-				existenceItemSc.setProdId(downloadComicReq.getProductId());
+				List<ProductListSac> productList = new ArrayList<ProductListSac>();
+				productList.add(productListSac);
 
-				List<ExistenceItemSc> list = new ArrayList<ExistenceItemSc>();
-				list.add(existenceItemSc);
-				existenceScRequest.setExistenceItemSc(list);
+				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+				historyListSacReq.setTenantId(downloadComicReq.getTenantId());
+				historyListSacReq.setInsdUsermbrNo(downloadComicReq.getUserKey());
+				historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				historyListSacReq.setStartDt("19000101000000");
+				historyListSacReq.setEndDt(metaInfo.getSysDate());
+				historyListSacReq.setOffset(1);
+				historyListSacReq.setCount(1);
+				historyListSacReq.setProductList(productList);
 
-				// 기구매 체크 실행
-				List<ExistenceScResponse> existenceResponseList = this.existenceSacService
-						.searchExistenceList(existenceScRequest);
+				// 구매내역 조회 실행
+				HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
-				if (!existenceResponseList.isEmpty()) {
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
-					this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+				this.logger.debug("----------------------------------------------------------------");
 
-					prchsId = existenceResponseList.get(0).getPrchsId();
-				} else {
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("미구매 상품");
-					this.logger.debug("----------------------------------------------------------------");
+				if (historyListSacRes.getTotalCnt() > 0) {
+					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
+					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+
+					if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+						prchsState = "payment";
+					} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+						prchsState = "gift";
+					}
 				}
 			} catch (Exception ex) {
-				throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", ex);
+				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 			}
 
 			Product product = new Product();
@@ -141,6 +154,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			Price price = new Price();
 			Distributor distributor = new Distributor();
 			Purchase purchase = new Purchase();
+			Date date = new Date();
 
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Source> sourceList = new ArrayList<Source>();
@@ -149,6 +163,10 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			// 상품 ID 정보
 			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 			identifier.setText(metaInfo.getProdId());
+			identifierList.add(identifier);
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText(metaInfo.getPartProdId());
 			identifierList.add(identifier);
 			product.setIdentifierList(identifierList);
 
@@ -196,16 +214,26 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			product.setDistributor(distributor);
 
 			// 구매 정보
-			purchase.setPurchaseFlag(StringUtils.isNotEmpty(prchsId) ? "payment" : "nonPayment");
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			identifier.setText(prchsId);
-			purchase.setIdentifier(identifier);
+			if (StringUtils.isNotEmpty(prchsId)) {
+				purchase.setState(prchsState);
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+				identifier.setText(prchsId);
+				purchase.setIdentifier(identifier);
+				date.setType("date/purchase");
+				date.setText(prchsDt);
+				purchase.setDate(date);
+			} else {
+				purchase.setState("");
+			}
 			product.setPurchase(purchase);
 
 			comicRes.setProduct(product);
 			commonResponse.setTotalCount(1);
 		} else {
+			this.logger.debug("----------------------------------------------------------------");
+			this.logger.debug("[getDownloadComicInfo] 조회된 내역이 없습니다.");
+			this.logger.debug("----------------------------------------------------------------");
 			commonResponse.setTotalCount(0);
 		}
 
