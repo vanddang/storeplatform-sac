@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserWithdrawService;
 
 /**
@@ -33,7 +32,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserWithdrawService;
  */
 @RequestMapping(value = "/member/user")
 @Controller
-public class UserWithdrawController extends ParameterExceptionHandling {
+public class UserWithdrawController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserWithdrawController.class);
 

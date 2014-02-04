@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
 
 /**
@@ -33,7 +32,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserExtraInfoService;
  */
 @RequestMapping(value = "/member/user")
 @Controller
-public class UserExtraInfoController extends ParameterExceptionHandling {
+public class UserExtraInfoController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserExtraInfoController.class);
 
@@ -42,8 +41,7 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception {
+	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.25. 회원 부가 정보 등록/수정 #####");
 		logger.debug("####################################################");
@@ -62,8 +60,8 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
 			if (extraProfileCode.equals("") && extraProfilValue.equals("")) {
-				throw new RuntimeException("회원 부가 정보 extraProfileCode, extraProfilValue is Null" + "extraProfileCode ["
-						+ extraProfileCode + "]" + " [" + extraProfilValue + "]");
+				throw new RuntimeException("회원 부가 정보 extraProfileCode, extraProfilValue is Null" + "extraProfileCode [" + extraProfileCode + "]"
+						+ " [" + extraProfilValue + "]");
 			}
 		}
 
@@ -80,8 +78,7 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/removeAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserExtraInfoRes removeAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception {
+	public UserExtraInfoRes removeAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.26. 회원 부가 정보 삭제 #####");
 		logger.debug("####################################################");
@@ -100,8 +97,7 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
 			if (extraProfileCode.equals("")) {
-				throw new RuntimeException("회원 부가 삭제 extraProfileCode is Null" + "extraProfileCode ["
-						+ extraProfileCode + "]");
+				throw new RuntimeException("회원 부가 삭제 extraProfileCode is Null" + "extraProfileCode [" + extraProfileCode + "]");
 			}
 		}
 
@@ -118,8 +114,7 @@ public class UserExtraInfoController extends ParameterExceptionHandling {
 
 	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception {
+	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.27. 회원 부가 정보 조회 #####");
 		logger.debug("####################################################");

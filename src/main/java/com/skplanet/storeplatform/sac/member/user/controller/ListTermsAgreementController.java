@@ -23,7 +23,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListR
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
@@ -33,7 +32,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
  */
 @RequestMapping(value = "/dev/member/user")
 @Controller
-public class ListTermsAgreementController extends ParameterExceptionHandling {
+public class ListTermsAgreementController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ListTermsAgreementController.class);
 
