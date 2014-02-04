@@ -25,6 +25,8 @@ import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcReq;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
+import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
+import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -171,11 +173,11 @@ public class MemberCommonComponent {
 	 *            pReqParam
 	 * @param type
 	 *            type
-	 * @return UserRes
+	 * @return UserEcRes
 	 */
-	public UserRes getMappingInfo(String pReqParam, String type) {
+	public UserEcRes getMappingInfo(String pReqParam, String type) {
 		LOGGER.info("## 기타 파트 API 미구현...... (1월 27일 완료 예정이라함.)");
-		UapsReq uapsReq = new UapsReq();
+		UapsEcReq uapsReq = new UapsEcReq();
 		uapsReq.setDeviceId(pReqParam);
 		uapsReq.setType(type);
 		return this.uapsSCI.getMappingInfo(uapsReq);
@@ -404,8 +406,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -430,14 +431,10 @@ public class MemberCommonComponent {
 				/**
 				 * TODO 기타 파트 API 호출 (방화벽이 뚤리지 않아 Dummy 데이타가 내려온다.)
 				 */
-				UserRes userRes = this.getMappingInfo(deviceId, "mdn");
-				if (userRes.getResultCode() == 0) {
-					// LOGGER.debug("## UAPS 연동 : {}", userRes.toString());
-					LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
-					majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
-				} else {
-					throw new RuntimeException("UAPS 연동 실패~!!!!");
-				}
+				UserEcRes userRes = this.getMappingInfo(deviceId, "mdn");
+				// LOGGER.debug("## UAPS 연동 : {}", userRes.toString());
+				LOGGER.debug("## UAPS 연동 SKT 서비스 관리번호 : {}", userRes.getSvcMngNum());
+				majorDeviceInfo.setImMngNum(userRes.getSvcMngNum());
 
 			}
 
