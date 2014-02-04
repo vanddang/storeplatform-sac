@@ -92,7 +92,7 @@ public class SellerSearchController {
 		req.setAid(aid);
 		req.setSellerKey(sellerKey);
 		if (sellerKey.equals("") && aid.equals(""))
-			throw new StorePlatformException("SAC_MEM_0001");
+			throw new StorePlatformException("SAC_MEM_0001", "aid:{0} 파라미터가 존재하지 않습니다.");
 
 		return this.sellerSearchService.detailInformation(header, req);
 	}
