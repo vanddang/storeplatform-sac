@@ -10,9 +10,9 @@
 package com.skplanet.storeplatform.sac.display.common.constant;
 
 /**
- * 
+ *
  * SAC 전시 상수 클래스 전시 파트 내에서 사용되는 상수는 여기에 정의한다.
- * 
+ *
  * Updated on : 2014. 1. 30. Updated by : 서대영, SK 플래닛.
  */
 public class DisplayConstants {
@@ -296,6 +296,8 @@ public class DisplayConstants {
 	public static final String DP_DATE_SALE_REG = "date/saleReg";
 	/** 개봉일 */
 	public static final String DP_DATE_RELEASE = "date/release";
+	/** 출판일 */
+	public static final String DP_DATE_PUBLISH = "date/publish";
 
 	// ////////////////////////////////// ETC //////////////////////////////////////////
 

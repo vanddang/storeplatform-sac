@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EpubDetail">
+    
+    <select id="selectEpubChannel" parameterType="EpubChannelReq" resultType="EpubDetail">
+		SELECT /* EpubDetailMapper.xml, selectEpubChannel, SAC : 임근대 , 2014-01-28 */
+		          P.TENANT_ID, P.LANG_CD
+		        , P.MENU_ID, P.MENU_NM, P2.TOP_MENU_ID, (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE MENU_ID = P2.TOP_MENU_ID AND LANG_CD = P.LANG_CD AND ROWNUM = 1) AS TOP_MENU_NM
+		        , P2.META_CLSF_CD, P2.CID, TP.PROD_STATUS_CD, P2.PROD_GRD_CD
+		        , P2.PROD_ID, P2.REG_DT, P2.SVC_GRP_CD, MP.GENRE_CD
+		        , PD.PROD_NM, PD.PROD_BASE_DESC, PD.PROD_DTL_DESC, PD.PROD_INTR_DSCR, PD.ARTIST1_NM, PD.ARTIST2_NM
+		        , MP.MGZIN_SUBSCRIP_CD, MP.SVC_START_DT
+		        /*
+		            , DECODE( P2.SUBSCRIP_TP
+		                    , 'DP005101', '매월 ' || P2.SALE_DT || '일'
+		                    , 'DP005102', '매주 ' || P2.SALE_DT || '요일'
+		                    , 'DP005103', '매월 ' || P2.SALE_DT || '일'
+		                    , P2.SALE_DT ) AS SALE_DT
+		        */
+		         , P2.PROD_ID, P2.REG_DT, P2.SVC_GRP_CD, MP.GENRE_CD
+		         , MP.CHNL_COMP_NM
+		         /*, P2.CONTS_LST */
+		         /*, DECODE( P2.CHNL_CLS_CD, 'DP001401', 'subscription', NULL ) AS ALLOW*/
+		         , MP.CHNL_CLSF_CD
+		         , ( CASE WHEN P2.META_CLSF_CD = 'CT20' THEN DECODE( MP.CAPTION_YN, 'Y', 'completed', 'continue' ) END ) AS BOOK_STATUS
+		         , P2.REG_DT
+		         , ( CASE WHEN P2.META_CLSF_CD = 'CT20' THEN 'serial' END ) AS BOOK_TYPE
+		         , ( CASE WHEN P2.META_CLSF_CD = 'CT20' THEN ( MP.EPSD_CNT + MP.STRM_EPSD_CNT ) END ) AS BOOK_COUNT
+		         , NVL(STAT.PATICPERS_CNT, 0) AS PATICPERS_CNT, NVL(STAT.PRCHS_CNT, 0) AS PRCHS_CNT
+		        , P2.SELLER_MBR_NO, P2.EXPO_SELLER_NM, P2.EXPO_SELLER_TELNO, P2.EXPO_SELLER_EMAIL
+		         <![CDATA[
+		         , NVL((CASE WHEN (STAT.AVG_EVLU_SCORE > 0 AND STAT.AVG_EVLU_SCORE < 1) THEN 1
+		                  WHEN STAT.AVG_EVLU_SCORE > 5 THEN 5
+		                  ELSE ROUND(STAT.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
+		        , PI.FILE_PATH AS IMG_PATH, PI.FILE_NM AS IMG_NM, PI.FILE_SIZE AS IMG_SIZE
+		         ]]>
+		        , P.BOOK_CNT
+		        , P.BOOK_FREE_CNT
+		        , P.SERIAL_FREE_CNT
+		         /*
+		         , ( CASE WHEN ( ( P.BOOK_CNT > 0 AND P.SERIAL_CNT = 0 ) AND P.BOOK_FREE_CNT > 0 ) THEN
+		                       '전체 '||P.BOOK_CNT||'권 중 무료 '||P.BOOK_FREE_CNT||'권'
+		                  WHEN ( ( P.SERIAL_CNT > 0 AND P.BOOK_CNT = 0 ) AND P.SERIAL_FREE_CNT > 0 ) THEN
+		                       '전체 '||P.SERIAL_CNT||'회 중 무료 '||P.SERIAL_FREE_CNT||'회'
+		                  WHEN ( P.SERIAL_CNT > 0 AND BOOK_CNT > 0 ) THEN
+		                       ( CASE WHEN P.SERIAL_FREE_CNT > 0 OR P.BOOK_FREE_CNT > 0 THEN
+		                              ( CASE WHEN P.SERIAL_FREE_CNT > 0 THEN '연재물 '|| P.SERIAL_FREE_CNT || '회' END )||
+		                              ( CASE WHEN P.BOOK_FREE_CNT > 0 THEN
+		                                          CONCAT( ( CASE WHEN P.SERIAL_FREE_CNT > 0 THEN ', ' END )
+		                                                , '단행본 '|| P.BOOK_FREE_CNT || '권' )
+		                                END ) || ' 무료'
+		                          END )
+		              END )  AS FREE_ITEM
+					*/
+		
+		      FROM
+		         (
+		         
+				SELECT  TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
+			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS BOOK_CNT
+			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND SALE_CNT > 0  ) THEN 1 ELSE 0 END ) AS SERIAL_CNT
+			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004301' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS BOOK_FREE_CNT
+			              , SUM( CASE WHEN ( BOOK_CLSF_CD = 'DP004302' AND FREE_CNT > 0 ) THEN 1 ELSE 0 END ) AS SERIAL_FREE_CNT
+				FROM (
+			
+					SELECT G.TENANT_ID, C.LANG_CD
+						, D.PROD_ID AS CHNL_PROD_ID
+						, A.MENU_ID, C.MENU_NM
+						, E.BOOK_CLSF_CD
+						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310'/*무제한*/ ) THEN 1 ELSE 0 END ) AS SALE_CNT
+						, SUM( CASE WHEN ( G.PROD_STATUS_CD = 'PD000403' AND D.USE_PERIOD_UNIT_CD = 'PD00310'/*무제한*/ AND O.PROD_AMT = 0 ) THEN 1 ELSE 0 END ) AS FREE_CNT
+					FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
+						INNER JOIN TB_DP_MENU_CATEGORY B		ON A.MENU_ID = B.MENU_ID
+						INNER JOIN TB_DP_MENU_CATEGORY_DESC C	ON A.MENU_ID = C.MENU_ID
+						INNER JOIN TB_DP_PROD D 				ON A.PROD_ID = D.PROD_ID
+						INNER JOIN TB_DP_MULTIMDA_PROD E		ON D.PROD_ID = E.PROD_ID
+						INNER JOIN TB_DP_TENANT_PROD G			ON D.PROD_ID = G.PROD_ID
+						INNER JOIN TB_DP_TENANT_PROD_PRICE O	ON D.PROD_ID = O.PROD_ID AND O.TENANT_ID = G.TENANT_ID
+						INNER JOIN TB_DP_SPRT_DEVICE K			ON D.PROD_ID = K.PROD_ID
+						INNER JOIN TB_CM_DEVICE L				ON K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD
+					WHERE 1=1
+					AND G.TENANT_ID = #{tenantId}				/* tenant ID */
+					AND D.PROD_ID = #{channelId} 				/* channel ID */
+					AND C.LANG_CD = #{langCd}					/* 언어 */
+					AND L.DEVICE_MODEL_CD = #{deviceModel} 		/* 단말모델코드 */
+					AND B.USE_YN = 'Y'                        	/* Y : 사용 (사용여부) */
+					AND D.SVC_GRP_CD = 'DP000203'             	/* DP000201 : 멀티미디어 */
+					AND D.CONTENTS_TYPE_CD = 'PD002501'       	/* PD002501 : 채널타입 */
+					AND D.SVC_TYPE_CD = 'DP001116'				/* 서비스 타입 : 이북/코믹 */
+					AND D.TOP_MENU_ID IN ('DP13')				/* 이북 */
+					AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
+					AND G.EXPO_YN = 'Y'                       	/* Y : 노출 (노출여부) */ 
+					AND K.PROD_ID IS NOT NULL                 	/* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+					AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+					GROUP BY G.TENANT_ID, C.LANG_CD, D.PROD_ID, A.MENU_ID, C.MENU_NM, E.BOOK_CLSF_CD
+				)
+		    GROUP BY TENANT_ID, LANG_CD, CHNL_PROD_ID, MENU_ID, MENU_NM
+				
+			) P
+			INNER JOIN TB_DP_PROD P2 		ON P2.PROD_ID = P.CHNL_PROD_ID
+			INNER JOIN TB_DP_MULTIMDA_PROD MP  ON P2.PROD_ID = MP.PROD_ID
+			INNER JOIN TB_DP_TENANT_PROD TP	ON P2.PROD_ID = TP.PROD_ID AND P.TENANT_ID = TP.TENANT_ID
+			INNER JOIN TB_DP_TENANT_PROD_PRICE TPP ON P2.PROD_ID = TPP.PROD_ID AND P.TENANT_ID = TPP.TENANT_ID
+			INNER JOIN TB_DP_PROD_DESC PD		ON P2.PROD_ID = PD.PROD_ID AND P.LANG_CD = PD.LANG_CD
+			LEFT OUTER JOIN TB_DP_PROD_IMG PI 		ON PI.PROD_ID = P.CHNL_PROD_ID /* FIXME:이미지 OUTER JOIN 제거 */ AND PI.EXPO_ORD = '1' AND PI.IMG_CD = 'DP006207'
+			INNER JOIN TB_DP_SPRT_DEVICE SPDV		ON P2.PROD_ID = SPDV.PROD_ID
+			INNER JOIN TB_CM_DEVICE DV		ON SPDV.DEVICE_MODEL_CD = DV.DEVICE_MODEL_CD
+			LEFT OUTER JOIN TB_DP_TENANT_PROD_STATS STAT ON STAT.PROD_ID = P2.PROD_ID AND P.TENANT_ID = STAT.TENANT_ID
+		WHERE 1=1
+		 AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT 
+		 
+		 AND DV.DEVICE_MODEL_CD = #{deviceModel}
+		 AND DV.USE_YN = 'Y'
+    </select>
+    
+	
+    <select id="selectEpubSubscription" parameterType="EpubChannelReq" resultType="MgzinSubscription">
+		SELECT /* EpubDetailMapper.xml, selectEpubSubscription, SAC : 임근대 , 2014-01-28 */
+			   EPI.MGZIN_SUBSCRIP_CD
+			 , P.USE_PERIOD
+			 , P.USE_PERIOD_UNIT_CD
+			 , PRC.CHNL_PERIOD_AMT
+			 , PRC.DC_AMT
+		  FROM TB_DP_PROD P
+		    INNER JOIN TB_DP_MULTIMDA_PROD EPI        ON P.PROD_ID = EPI.PROD_ID
+		    INNER JOIN TB_DP_TENANT_PROD_PRICE PRC  ON P.PROD_ID = PRC.PROD_ID
+		 WHERE 1=1
+		   AND PRC.TENANT_ID = #{tenantId}
+		   AND P.PROD_ID = #{channelId}
+		   AND EPI.CHNL_CLSF_CD = 'DP001401'
+		   AND SYSDATE BETWEEN PRC.APPLY_START_DT AND PRC.APPLY_END_DT 
+		 ORDER BY EPI.MGZIN_TYPE_CD, TO_NUMBER( P.USE_PERIOD )
+	</select>
+	
+    <select id="selectEpubSeries" parameterType="EpubChannelReq" resultType="EpubDetail">
+        
+	</select>
+    
+</mapper>

@@ -179,5 +179,12 @@
         <typeAlias alias="BannerReq"  type="com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq" />
         <typeAlias alias="Banner"  type="com.skplanet.storeplatform.sac.display.banner.vo.Banner" />
             
+        
+		<!-- 이북 상품상세 정보 조회 -->
+        <typeAlias alias="EpubChannelReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq" />
+        <typeAlias alias="EpubDetail"  type="com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail" />
+        <typeAlias alias="MgzinSubscription"  type="com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription" />
+        
+        
     </typeAliases>
 </configuration>

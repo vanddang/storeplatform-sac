@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.epub.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailReq;
-import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubDetailRes;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq;
+import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelRes;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesReq;
 import com.skplanet.storeplatform.sac.client.display.vo.epub.EpubSeriesRes;
 
@@ -29,7 +29,7 @@ public interface EpubService {
 	 * @return
 	 * 		EpubDetailRes EpubDetail
 	 */
-	public EpubDetailRes searchEpub(EpubDetailReq req);
+	public EpubChannelRes searchEpubChannel(EpubChannelReq req);
 
 	/**
 	 * 채널 상품ID를 조건으로 하여 시리즈 상품 상세 정보를 조회한다.
