@@ -61,6 +61,8 @@
 				AND D.TOP_MENU_ID IN ('DP17', 'DP18')	/* 영화,TV방송 */
 				AND SC.SALE_YN ='Y'
 				AND SYSDATE BETWEEN O.APPLY_START_DT AND O.APPLY_END_DT
+				AND L.DEVICE_MODEL_CD = #{deviceModel}
+				AND L.USE_YN = 'Y'
 				GROUP BY RSHP.PROD_ID, G.TENANT_ID, C.LANG_CD
 			) P
 			INNER JOIN TB_DP_PROD P2 		ON P2.PROD_ID = P.CHNL_PROD_ID
@@ -76,6 +78,7 @@
 		 AND PI.EXPO_ORD = '1' AND PI.IMG_CD = #{imgCd}
 		 AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 		 AND DV.DEVICE_MODEL_CD = #{deviceModel}
+		 AND DV.USE_YN = 'Y'
     </select>
     
     <select id="selectSourceList" parameterType="ProductImage" resultType="ProductImage">
@@ -259,6 +262,7 @@
 										   AND D.PROD_ID = #{channelId} 			/* channel ID */
 										   AND C.LANG_CD = #{langCd}                /* 언어 */
 										   AND L.DEVICE_MODEL_CD = #{deviceModel}	/* 단말모델코드 */
+										   AND L.USE_YN = 'Y'
 										   AND B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
 										   AND D.SVC_GRP_CD = 'DP000203'            /* DP000201 : 멀티미디어 */
 										   AND D.CONTENTS_TYPE_CD = 'PD002501'      /* PD002501 : 채널타입 */
