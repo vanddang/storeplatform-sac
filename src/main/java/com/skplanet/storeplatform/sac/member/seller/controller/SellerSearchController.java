@@ -92,7 +92,7 @@ public class SellerSearchController {
 		req.setAid(aid);
 		req.setSellerKey(sellerKey);
 		if (sellerKey.equals("") && aid.equals(""))
-			throw new StorePlatformException("SAC_MEM_2101");
+			throw new StorePlatformException("SAC_MEM_0001");
 
 		return this.sellerSearchService.detailInformation(header, req);
 	}
