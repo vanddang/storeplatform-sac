@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
@@ -101,7 +102,8 @@ public class MiscellaneousController {
 		Matcher matcher = pattern.matcher(request.getMsisdn());
 		boolean isMdn = matcher.matches();
 		if (!isMdn) {
-			throw new Exception("MDN값이 아닙니다.");
+			// TODO SAC_MEM_3008
+			throw new StorePlatformException("MSISND값이 아닙니다.");
 		}
 
 		GetOpmdRes response = this.service.getOpmd(request);
