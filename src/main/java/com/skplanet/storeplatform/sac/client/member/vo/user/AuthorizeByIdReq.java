@@ -20,13 +20,13 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	/**
 	 * 사용자 아이디
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String userId;
 
 	/**
 	 * 사용자 패스워드
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String userPw;
 
 	/**
@@ -58,6 +58,11 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	 * 클라이언트 ip
 	 */
 	private String ipAddress;
+
+	/**
+	 * 계정잠금 해제 요청(Y/N)
+	 */
+	private String releaseLock;
 
 	/**
 	 * 휴대기기 부가정보 리스트
@@ -134,6 +139,14 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 
 	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
+	}
+
+	public String getReleaseLock() {
+		return this.releaseLock;
+	}
+
+	public void setReleaseLock(String releaseLock) {
+		this.releaseLock = releaseLock;
 	}
 
 }

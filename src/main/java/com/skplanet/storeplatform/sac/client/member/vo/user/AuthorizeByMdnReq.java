@@ -19,19 +19,19 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	/**
 	 * 기기 ID
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String deviceId;
 
 	/**
 	 * 기기 ID 타입 (msisdn, uuid, macaddress)
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String deviceIdType;
 
 	/**
 	 * 이동 통신사
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String deviceTelecom;
 
 	/**

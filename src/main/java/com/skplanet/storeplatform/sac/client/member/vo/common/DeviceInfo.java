@@ -113,6 +113,16 @@ public class DeviceInfo extends CommonInfo {
 	private String makeComp;
 
 	/**
+	 * 모델 설명
+	 */
+	private String modelNm;
+
+	/**
+	 * OS 플랫폼
+	 */
+	private String vmType;
+
+	/**
 	 * 수정 일시
 	 */
 	private String updateDate;
@@ -327,6 +337,22 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setImMngNum(String imMngNum) {
 		this.imMngNum = imMngNum;
+	}
+
+	public String getModelNm() {
+		return this.modelNm;
+	}
+
+	public void setModelNm(String modelNm) {
+		this.modelNm = modelNm;
+	}
+
+	public String getVmType() {
+		return this.vmType;
+	}
+
+	public void setVmType(String vmType) {
+		this.vmType = vmType;
 	}
 
 }

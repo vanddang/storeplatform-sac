@@ -70,6 +70,16 @@ public class AuthorizeByIdRes extends CommonInfo {
 	 */
 	private String imIntSvcNo;
 
+	/**
+	 * 로그인 실패 카운트
+	 */
+	private String loginFailCount;
+
+	/**
+	 * 로그인 성공유무(Y/N)
+	 */
+	private String isLoginSuccess;
+
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -156,6 +166,22 @@ public class AuthorizeByIdRes extends CommonInfo {
 
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	public String getLoginFailCount() {
+		return this.loginFailCount;
+	}
+
+	public void setLoginFailCount(String loginFailCount) {
+		this.loginFailCount = loginFailCount;
+	}
+
+	public String getIsLoginSuccess() {
+		return this.isLoginSuccess;
+	}
+
+	public void setIsLoginSuccess(String isLoginSuccess) {
+		this.isLoginSuccess = isLoginSuccess;
 	}
 
 }

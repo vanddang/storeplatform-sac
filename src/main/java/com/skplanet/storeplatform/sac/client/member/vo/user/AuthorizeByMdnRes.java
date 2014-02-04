@@ -50,6 +50,11 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	 */
 	private String stopStatusCode;
 
+	/**
+	 * 로그인 성공여부(Y/N)
+	 */
+	private String isLoginSuccess;
+
 	public String getUserKey() {
 		return this.userKey;
 	}
@@ -104,6 +109,14 @@ public class AuthorizeByMdnRes extends CommonInfo {
 
 	public void setDeviceKey(String deviceKey) {
 		this.deviceKey = deviceKey;
+	}
+
+	public String getIsLoginSuccess() {
+		return this.isLoginSuccess;
+	}
+
+	public void setIsLoginSuccess(String isLoginSuccess) {
+		this.isLoginSuccess = isLoginSuccess;
 	}
 
 }
