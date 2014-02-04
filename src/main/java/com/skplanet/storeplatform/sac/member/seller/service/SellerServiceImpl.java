@@ -122,7 +122,7 @@ public class SellerServiceImpl implements SellerService {
 		// 실명 인증 일시
 		mbrAuth.setRealNameDate(req.getRealNameDate());
 		// 내국인 여부
-		mbrAuth.setIsDomestic(req.getIsDomestic());
+		// mbrAuth.setIsDomestic(req.getIsDomestic());
 		//
 		createSellerRequest.setMbrAuth(mbrAuth);
 
@@ -222,7 +222,7 @@ public class SellerServiceImpl implements SellerService {
 		// 지역
 		sellerMbr.setSellerState(req.getSellerState());
 		// 국내판매자 여부
-		sellerMbr.setIsDomestic(req.getIsDomestic());
+		// sellerMbr.setIsDomestic(req.getIsDomestic());
 		// 실명인증여부
 		sellerMbr.setIsRealName("Y");
 		// 국가코드
