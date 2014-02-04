@@ -937,8 +937,8 @@ public class IdpServiceImpl implements IdpService {
 		try {
 			searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 		} catch (StorePlatformException spe) { // 회원정보 조회시 오류발생시라도 프로비저닝은 성공으로 처리함.
-			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
-			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
+			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE);
+			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT);
 			return imResult;
 		}
 
