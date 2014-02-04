@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.conts.CouponConstants;
@@ -16,7 +15,6 @@ import com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo;
 import com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo;
 
 @Service
-@Transactional
 public class BrandCatalogServiceImpl implements BrandCatalogService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());

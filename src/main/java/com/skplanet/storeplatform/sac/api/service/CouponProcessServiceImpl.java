@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponReq;
 import com.skplanet.storeplatform.external.client.shopping.vo.CouponRes;
@@ -48,7 +47,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 
 @Service
-@Transactional
 public class CouponProcessServiceImpl implements CouponProcessService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private final boolean result = true;
