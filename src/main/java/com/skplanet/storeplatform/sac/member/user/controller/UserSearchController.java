@@ -29,7 +29,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.ParameterExceptionHandling;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
@@ -38,7 +37,7 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
 @Controller
-public class UserSearchController extends ParameterExceptionHandling {
+public class UserSearchController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserSearchController.class);
 
