@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
@@ -284,6 +286,19 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			return responseVO;
 		}
 		requestVO.setStdDt(stdDt);
+
+		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+			try {
+				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
+			} catch (Exception ex) {
+				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+			}
+
+			// prodGradeCd 배열로 변경
+			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
+			requestVO.setProdGradeCdArr(prodGradeCdArr);
+		}
 
 		List<ProductBasicInfo> productBasicInfoList;
 

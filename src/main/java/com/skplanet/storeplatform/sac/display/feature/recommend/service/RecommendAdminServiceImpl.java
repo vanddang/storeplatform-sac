@@ -148,11 +148,24 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			} catch (Exception ex) {
 				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
 			}
+
+			// topMenuId 배열로 변경
+			String[] topMenuIdArr = requestVO.getTopMenuId().split("\\+");
+			requestVO.setTopMenuIdArr(topMenuIdArr);
 		}
 
-		// topMenuId 배열로 변경
-		String[] topMenuIdArr = requestVO.getTopMenuId().split("\\+");
-		requestVO.setTopMenuIdArr(topMenuIdArr);
+		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+			try {
+				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
+			} catch (Exception ex) {
+				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+			}
+
+			// prodGradeCd 배열로 변경
+			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
+			requestVO.setProdGradeCdArr(prodGradeCdArr);
+		}
 
 		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList(
 				"FeatureRecommend.selectRecommendAdminList", requestVO, ProductBasicInfo.class);

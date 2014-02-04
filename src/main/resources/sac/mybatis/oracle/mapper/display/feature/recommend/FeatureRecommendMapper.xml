@@ -45,7 +45,10 @@
 		                   AND C.PROD_ID = E.PROD_ID
 		                   AND D.TOP_MENU_ID = E.TOP_MENU_ID
 		                   <if test='prodGradeCd != null and prodGradeCd != ""'>
-		                   AND E.PROD_GRD_CD = #{prodGradeCd}          /* 상품등급코드 */
+		                   AND E.PROD_GRD_CD IN
+		                      <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+		                      #{prodGradeCd}          
+		                      </foreach> /* 상품등급코드 */
 		                   </if>
 		                   <if test='prodCharge == "Y"'>
 		                   AND E.PROD_CHRG_YN = 'Y'       /* 유료 */
