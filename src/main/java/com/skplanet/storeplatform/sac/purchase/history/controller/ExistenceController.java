@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.ExistenceSacRes;
@@ -77,7 +77,7 @@ public class ExistenceController {
 
 		List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
 
-		ExistenceScRequest req = this.reqConvert(existenceSacReq, header);
+		ExistenceScReq req = this.reqConvert(existenceSacReq, header);
 		res = this.resConvert(this.existenceSacService.searchExistenceList(req));
 
 		ExistenceListSacRes existenceListRes = new ExistenceListSacRes();
@@ -93,14 +93,14 @@ public class ExistenceController {
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return ExistenceScRequest
+	 * @return ExistenceScReq
 	 */
-	private ExistenceScRequest reqConvert(ExistenceSacReq existenceSacReq, TenantHeader header) {
+	private ExistenceScReq reqConvert(ExistenceSacReq existenceSacReq, TenantHeader header) {
 
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		this.logger.debug("@@@@@@ Start reqConvert @@@@@@");
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-		ExistenceScRequest req = new ExistenceScRequest();
+		ExistenceScReq req = new ExistenceScReq();
 		List<ExistenceItemSc> existenceItemListSc = new ArrayList<ExistenceItemSc>();
 
 		req.setTenantId(header.getTenantId());
@@ -125,22 +125,22 @@ public class ExistenceController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param existenceListScResponse
+	 * @param existenceListScRes
 	 *            요청정보
 	 * @return List<ExistenceSacRes>
 	 */
-	private List<ExistenceSacRes> resConvert(List<ExistenceScResponse> existenceListScResponse) {
+	private List<ExistenceSacRes> resConvert(List<ExistenceScRes> existenceListScRes) {
 
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		this.logger.debug("@@@@@@ Start resConvert @@@@@@");
 		this.logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
 		List<ExistenceSacRes> res = new ArrayList<ExistenceSacRes>();
-		int size = existenceListScResponse.size();
+		int size = existenceListScRes.size();
 		for (int i = 0; i < size; i++) {
 			ExistenceSacRes existenceSacRes = new ExistenceSacRes();
-			existenceSacRes.setPrchsId(existenceListScResponse.get(i).getPrchsId());
-			existenceSacRes.setProdId(existenceListScResponse.get(i).getProdId());
+			existenceSacRes.setPrchsId(existenceListScRes.get(i).getPrchsId());
+			existenceSacRes.setProdId(existenceListScRes.get(i).getProdId());
 
 			res.add(existenceSacRes);
 		}

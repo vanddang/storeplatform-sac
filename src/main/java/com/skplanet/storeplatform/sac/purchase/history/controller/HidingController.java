@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.vo.HidingListSc;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.HidingSacRes;
@@ -78,13 +78,13 @@ public class HidingController {
 			}
 		}
 
-		HidingScRequest req = this.reqConvert(hidingSacReq, header);
-		List<HidingScResponse> hidingScResponse = new ArrayList<HidingScResponse>();
+		HidingScReq req = this.reqConvert(hidingSacReq, header);
+		List<HidingScRes> hidingScRes = new ArrayList<HidingScRes>();
 		List<HidingSacRes> hidingRes = new ArrayList<HidingSacRes>();
 
-		hidingScResponse = this.hidingSacService.updateHiding(req);
+		hidingScRes = this.hidingSacService.updateHiding(req);
 		HidingListSacRes hidingListSacRes = new HidingListSacRes();
-		hidingRes = this.resConvert(hidingScResponse);
+		hidingRes = this.resConvert(hidingScRes);
 		hidingListSacRes.setHidingSacRes(hidingRes);
 		return hidingListSacRes;
 	}
@@ -96,10 +96,10 @@ public class HidingController {
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return hidingSacRequest
+	 * @return hidingSacReq
 	 */
-	private HidingScRequest reqConvert(HidingSacReq hidingSacReq, TenantHeader header) {
-		HidingScRequest req = new HidingScRequest();
+	private HidingScReq reqConvert(HidingSacReq hidingSacReq, TenantHeader header) {
+		HidingScReq req = new HidingScReq();
 		List<HidingListSc> list = new ArrayList<HidingListSc>();
 
 		req.setTenantId(header.getTenantId());
@@ -127,19 +127,19 @@ public class HidingController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param hidingListScResponse
+	 * @param hidingListScRes
 	 *            요청정보
 	 * @return List<HidingSacRes>
 	 */
-	private List<HidingSacRes> resConvert(List<HidingScResponse> hidingListScResponse) {
+	private List<HidingSacRes> resConvert(List<HidingScRes> hidingListScRes) {
 		List<HidingSacRes> res = new ArrayList<HidingSacRes>();
-		int size = hidingListScResponse.size();
+		int size = hidingListScRes.size();
 		this.logger.debug("@@@@@@resConvert@@@@@@@" + size);
 		for (int i = 0; i < size; i++) {
 			HidingSacRes hidingRes = new HidingSacRes();
-			hidingRes.setPrchsId(hidingListScResponse.get(i).getPrchsId());
-			hidingRes.setPrchsDtlId(hidingListScResponse.get(i).getPrchsDtlId());
-			hidingRes.setResultYn(hidingListScResponse.get(i).getResultYn());
+			hidingRes.setPrchsId(hidingListScRes.get(i).getPrchsId());
+			hidingRes.setPrchsDtlId(hidingListScRes.get(i).getPrchsDtlId());
+			hidingRes.setResultYn(hidingListScRes.get(i).getResultYn());
 			res.add(hidingRes);
 		}
 

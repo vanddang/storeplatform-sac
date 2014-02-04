@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.PaymentScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.PaymentSacRes;
@@ -73,10 +73,10 @@ public class PaymentListController {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		PaymentListSacRes paymentListSacRes = new PaymentListSacRes();
-		List<PaymentScResponse> paymentListScResponse = new ArrayList<PaymentScResponse>();
+		List<PaymentScRes> paymentListScRes = new ArrayList<PaymentScRes>();
 
-		paymentListScResponse = this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header));
-		paymentListSacRes.setPaymentListSacRes(this.resConvert(paymentListScResponse));
+		paymentListScRes = this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header));
+		paymentListSacRes.setPaymentListSacRes(this.resConvert(paymentListScRes));
 		return paymentListSacRes;
 	}
 
@@ -87,12 +87,12 @@ public class PaymentListController {
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return PaymentScRequest
+	 * @return PaymentScReq
 	 */
-	private PaymentScRequest reqConvert(PaymentSacReq paymentSacReq, TenantHeader header) {
+	private PaymentScReq reqConvert(PaymentSacReq paymentSacReq, TenantHeader header) {
 
 		this.logger.debug("@@@@@@reqConvert@@@@@@@");
-		PaymentScRequest req = new PaymentScRequest();
+		PaymentScReq req = new PaymentScReq();
 
 		req.setTenantId(header.getTenantId());
 		req.setInsdUsermbrNo(paymentSacReq.getInsdUsermbrNo());
@@ -105,24 +105,24 @@ public class PaymentListController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param paymentListScResponse
+	 * @param paymentListScRes
 	 *            요청정보
 	 * @return List<PaymentSacRes>
 	 */
-	private List<PaymentSacRes> resConvert(List<PaymentScResponse> paymentListScResponse) {
+	private List<PaymentSacRes> resConvert(List<PaymentScRes> paymentListScRes) {
 		List<PaymentSacRes> res = new ArrayList<PaymentSacRes>();
 		this.logger.debug("@@@@@@resConvert@@@@@@@");
-		int size = paymentListScResponse.size();
+		int size = paymentListScRes.size();
 		for (int i = 0; i < size; i++) {
 			PaymentSacRes paymentSacRes = new PaymentSacRes();
-			paymentSacRes.setPaymentMtdCd(paymentListScResponse.get(i).getPaymentMtdCd());
-			paymentSacRes.setPaymentDt(paymentListScResponse.get(i).getPaymentDt());
-			paymentSacRes.setPaymentAmt(paymentListScResponse.get(i).getPaymentAmt());
-			paymentSacRes.setResvCol01(paymentListScResponse.get(i).getResvCol01());
-			paymentSacRes.setResvCol02(paymentListScResponse.get(i).getResvCol02());
-			paymentSacRes.setResvCol03(paymentListScResponse.get(i).getResvCol03());
-			paymentSacRes.setResvCol04(paymentListScResponse.get(i).getResvCol04());
-			paymentSacRes.setResvCol05(paymentListScResponse.get(i).getResvCol05());
+			paymentSacRes.setPaymentMtdCd(paymentListScRes.get(i).getPaymentMtdCd());
+			paymentSacRes.setPaymentDt(paymentListScRes.get(i).getPaymentDt());
+			paymentSacRes.setPaymentAmt(paymentListScRes.get(i).getPaymentAmt());
+			paymentSacRes.setResvCol01(paymentListScRes.get(i).getResvCol01());
+			paymentSacRes.setResvCol02(paymentListScRes.get(i).getResvCol02());
+			paymentSacRes.setResvCol03(paymentListScRes.get(i).getResvCol03());
+			paymentSacRes.setResvCol04(paymentListScRes.get(i).getResvCol04());
+			paymentSacRes.setResvCol05(paymentListScRes.get(i).getResvCol05());
 
 			res.add(paymentSacRes);
 		}

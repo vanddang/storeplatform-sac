@@ -11,8 +11,8 @@ package com.skplanet.storeplatform.sac.purchase.history.service;
 
 import java.util.List;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
 
 /**
  * 구매 서비스 인터페이스
@@ -24,10 +24,10 @@ public interface HidingSacService {
 	/**
 	 * 구매내역 숨김처리.
 	 * 
-	 * @param hidingRequest
+	 * @param hidingReq
 	 *            요청정보
-	 * @return HidingResponse
+	 * @return HidingRes
 	 */
-	public List<HidingScResponse> updateHiding(HidingScRequest hidingRequest);
+	public List<HidingScRes> updateHiding(HidingScReq hidingReq);
 
 }

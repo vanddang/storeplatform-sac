@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.HidingSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.HidingScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.HidingScRes;
 
 /**
  * 구매 서비스 인터페이스 구현체
@@ -37,13 +37,13 @@ public class HidingSacServiceImpl implements HidingSacService {
 	/**
 	 * 구매내역 숨김처리.
 	 * 
-	 * @param hidingRequest
+	 * @param hidingReq
 	 *            요청정보
-	 * @return List<HidingResponse>
+	 * @return List<HidingScRes>
 	 */
 	@Override
-	public List<HidingScResponse> updateHiding(HidingScRequest hidingRequest) {
+	public List<HidingScRes> updateHiding(HidingScReq hidingReq) {
 
-		return this.hidingSCI.updateHiding(hidingRequest);
+		return this.hidingSCI.updateHiding(hidingReq);
 	}
 }

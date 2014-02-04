@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.AutoPaymentCancelSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -71,11 +71,11 @@ public class AutoPaymentCancelController {
 			}
 		}
 
-		AutoPaymentCancelScRequest rea = this.reqConvert(autoPaymentCancelSacReq, header);
-		AutoPaymentCancelScResponse autoPaymentCancelResponse = new AutoPaymentCancelScResponse();
+		AutoPaymentCancelScReq rea = this.reqConvert(autoPaymentCancelSacReq, header);
+		AutoPaymentCancelScRes autoPaymentCancelRes = new AutoPaymentCancelScRes();
 
-		autoPaymentCancelResponse = this.autoPaymentCancelSacService.updateReservation(rea);
-		AutoPaymentCancelSacRes autoPaymentCancelSacRes = this.resConvert(autoPaymentCancelResponse);
+		autoPaymentCancelRes = this.autoPaymentCancelSacService.updateReservation(rea);
+		AutoPaymentCancelSacRes autoPaymentCancelSacRes = this.resConvert(autoPaymentCancelRes);
 
 		return autoPaymentCancelSacRes;
 	}
@@ -87,11 +87,11 @@ public class AutoPaymentCancelController {
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return AutoPaymentCancelScRequest
+	 * @return AutoPaymentCancelScReq
 	 */
-	private AutoPaymentCancelScRequest reqConvert(AutoPaymentCancelSacReq autoPaymentCancelSacReq, TenantHeader header) {
+	private AutoPaymentCancelScReq reqConvert(AutoPaymentCancelSacReq autoPaymentCancelSacReq, TenantHeader header) {
 
-		AutoPaymentCancelScRequest req = new AutoPaymentCancelScRequest();
+		AutoPaymentCancelScReq req = new AutoPaymentCancelScReq();
 
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
@@ -108,15 +108,15 @@ public class AutoPaymentCancelController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param autoPaymentCancelScResponse
+	 * @param autoPaymentCancelScRes
 	 *            요청정보
 	 * @return AutoPaymentCancelSacRes
 	 */
-	private AutoPaymentCancelSacRes resConvert(AutoPaymentCancelScResponse autoPaymentCancelScResponse) {
+	private AutoPaymentCancelSacRes resConvert(AutoPaymentCancelScRes autoPaymentCancelScRes) {
 		AutoPaymentCancelSacRes res = new AutoPaymentCancelSacRes();
 		this.logger.debug("@@@@@@resConvert@@@@@@@");
-		res.setPrchsId(autoPaymentCancelScResponse.getPrchsId());
-		res.setResultYn(autoPaymentCancelScResponse.getResultYn());
+		res.setPrchsId(autoPaymentCancelScRes.getPrchsId());
+		res.setResultYn(autoPaymentCancelScRes.getResultYn());
 
 		return res;
 	}

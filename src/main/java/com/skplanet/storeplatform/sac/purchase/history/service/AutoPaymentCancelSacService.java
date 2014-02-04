@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.service;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.AutoPaymentCancelScRes;
 
 /**
  * 자동결재해지예약/예약취소/해지 SAC Service 인터페이스
@@ -22,9 +22,9 @@ public interface AutoPaymentCancelSacService {
 	/**
 	 * 자동결재해지예약/예약취소/해지 SAC Service.
 	 * 
-	 * @param autoPaymentCancelScRequest
+	 * @param autoPaymentCancelScReq
 	 *            요청정보
-	 * @return AutoPaymentCancelScResponse
+	 * @return AutoPaymentCancelScRes
 	 */
-	public AutoPaymentCancelScResponse updateReservation(AutoPaymentCancelScRequest autoPaymentCancelScRequest);
+	public AutoPaymentCancelScRes updateReservation(AutoPaymentCancelScReq autoPaymentCancelScReq);
 }

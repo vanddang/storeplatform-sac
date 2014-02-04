@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.history.sci.GiftSCI;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRes;
 
 /**
  * 선물확인 SAC Service 인터페이스 구현체
@@ -37,32 +37,32 @@ public class GiftSacServiceImpl implements GiftSacService {
 	/**
 	 * 선물수신확인 체크.
 	 * 
-	 * @param giftReceiveScRequest
+	 * @param giftReceiveScReq
 	 *            요청정보
-	 * @return GiftReceiveScResponse
+	 * @return GiftReceiveScRes
 	 */
 	@Override
-	public GiftReceiveScResponse searchGiftReceive(GiftReceiveScRequest giftReceiveScRequest) {
+	public GiftReceiveScRes searchGiftReceive(GiftReceiveScReq giftReceiveScReq) {
 
-		GiftReceiveScResponse giftReceiveScResponse = new GiftReceiveScResponse();
-		giftReceiveScResponse = this.giftSCI.searchGiftReceive(giftReceiveScRequest);
+		GiftReceiveScRes giftReceiveScRes = new GiftReceiveScRes();
+		giftReceiveScRes = this.giftSCI.searchGiftReceive(giftReceiveScReq);
 
-		return giftReceiveScResponse;
+		return giftReceiveScRes;
 	}
 
 	/**
 	 * 선물수신 저장.
 	 * 
-	 * @param giftConfirmScRequest
+	 * @param giftConfirmScReq
 	 *            요청정보
-	 * @return GiftConfirmScResponse
+	 * @return GiftConfirmScRes
 	 */
 	@Override
-	public GiftConfirmScResponse updateGiftConfirm(GiftConfirmScRequest giftConfirmScRequest) {
-		GiftConfirmScResponse giftConfirmScResponse = new GiftConfirmScResponse();
-		giftConfirmScResponse = this.giftSCI.updateGiftConfirm(giftConfirmScRequest);
+	public GiftConfirmScRes updateGiftConfirm(GiftConfirmScReq giftConfirmScReq) {
+		GiftConfirmScRes giftConfirmScRes = new GiftConfirmScRes();
+		giftConfirmScRes = this.giftSCI.updateGiftConfirm(giftConfirmScReq);
 
-		return giftConfirmScResponse;
+		return giftConfirmScRes;
 	}
 
 }

@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacReq;
@@ -73,10 +73,10 @@ public class GiftController {
 				throw new StorePlatformException("SAC_PUR_0001", error.getField());
 			}
 		}
-		GiftReceiveScRequest req = this.reqConvert(giftReceiveSacReq, header);
-		GiftReceiveScResponse giftReceiveScResponse = new GiftReceiveScResponse();
-		giftReceiveScResponse = this.giftService.searchGiftReceive(req);
-		GiftReceiveSacRes res = this.resConvert(giftReceiveScResponse);
+		GiftReceiveScReq req = this.reqConvert(giftReceiveSacReq, header);
+		GiftReceiveScRes giftReceiveScRes = new GiftReceiveScRes();
+		giftReceiveScRes = this.giftService.searchGiftReceive(req);
+		GiftReceiveSacRes res = this.resConvert(giftReceiveScRes);
 
 		return res;
 	}
@@ -111,10 +111,10 @@ public class GiftController {
 			}
 		}
 
-		GiftConfirmScRequest req = this.reqConvert(giftConfirmSacReq, header);
-		GiftConfirmScResponse giftConfirmScResponse = new GiftConfirmScResponse();
-		giftConfirmScResponse = this.giftService.updateGiftConfirm(req);
-		GiftConfirmSacRes res = this.resConvert(giftConfirmScResponse);
+		GiftConfirmScReq req = this.reqConvert(giftConfirmSacReq, header);
+		GiftConfirmScRes giftConfirmScRes = new GiftConfirmScRes();
+		giftConfirmScRes = this.giftService.updateGiftConfirm(req);
+		GiftConfirmSacRes res = this.resConvert(giftConfirmScRes);
 
 		return res;
 	}
@@ -126,10 +126,10 @@ public class GiftController {
 	 *            선물수신처리 요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return GiftConfirmScRequest
+	 * @return GiftConfirmScReq
 	 */
-	private GiftConfirmScRequest reqConvert(GiftConfirmSacReq giftConfirmSacReq, TenantHeader header) {
-		GiftConfirmScRequest req = new GiftConfirmScRequest();
+	private GiftConfirmScReq reqConvert(GiftConfirmSacReq giftConfirmSacReq, TenantHeader header) {
+		GiftConfirmScReq req = new GiftConfirmScReq();
 
 		req.setTenantId(header.getTenantId());
 		req.setSystemId(header.getSystemId());
@@ -145,15 +145,15 @@ public class GiftController {
 	/**
 	 * 선물수신처리 resConvert.
 	 * 
-	 * @param giftComfirmScResponse
+	 * @param giftComfirmScRes
 	 *            선물수신처리 응답정보
 	 * @return GiftConfirmSacRes
 	 */
-	private GiftConfirmSacRes resConvert(GiftConfirmScResponse giftComfirmScResponse) {
+	private GiftConfirmSacRes resConvert(GiftConfirmScRes giftComfirmScRes) {
 		GiftConfirmSacRes res = new GiftConfirmSacRes();
-		res.setPrchsId(giftComfirmScResponse.getPrchsId());
-		res.setProdId(giftComfirmScResponse.getProdId());
-		res.setResultYn(giftComfirmScResponse.getResultYn());
+		res.setPrchsId(giftComfirmScRes.getPrchsId());
+		res.setProdId(giftComfirmScRes.getProdId());
+		res.setResultYn(giftComfirmScRes.getResultYn());
 
 		return res;
 	}
@@ -165,10 +165,10 @@ public class GiftController {
 	 *            요청정보
 	 * @param header
 	 *            테넌트 헤더정보
-	 * @return giftReceiveSacRequest
+	 * @return giftReceiveSacReq
 	 */
-	private GiftReceiveScRequest reqConvert(GiftReceiveSacReq giftReceiveSacReq, TenantHeader header) {
-		GiftReceiveScRequest req = new GiftReceiveScRequest();
+	private GiftReceiveScReq reqConvert(GiftReceiveSacReq giftReceiveSacReq, TenantHeader header) {
+		GiftReceiveScReq req = new GiftReceiveScReq();
 
 		req.setTenantId(header.getTenantId());
 		req.setSendMbrNo(giftReceiveSacReq.getSendMbrNo());
@@ -182,13 +182,13 @@ public class GiftController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param giftReceiveScResponse
+	 * @param giftReceiveScRes
 	 *            요청정보
 	 * @return GiftReceiveSacRes
 	 */
-	private GiftReceiveSacRes resConvert(GiftReceiveScResponse giftReceiveScResponse) {
+	private GiftReceiveSacRes resConvert(GiftReceiveScRes giftReceiveScRes) {
 		GiftReceiveSacRes res = new GiftReceiveSacRes();
-		res.setRecvDt(giftReceiveScResponse.getRecvDt());
+		res.setRecvDt(giftReceiveScRes.getRecvDt());
 
 		return res;
 	}
