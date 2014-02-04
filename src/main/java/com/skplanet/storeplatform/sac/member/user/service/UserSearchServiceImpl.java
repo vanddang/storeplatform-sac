@@ -33,6 +33,8 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
@@ -855,6 +857,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 */
 		response.setPolicyCodeList(this.getIndividualPolicy(sacHeader, req));
 
+		/**
+		 * 단말 정보 setting.
+		 */
+		this.setDeviceInfo(sacHeader, req, response);
+
 		return response;
 	}
 
@@ -952,6 +959,49 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("## policyInfos : {}", policyInfos.toString());
 
 		return policyInfos;
+	}
+
+	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
+
+		try {
+
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+
+			/**
+			 * SC 공통 정보 setting.
+			 */
+			searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+			/**
+			 * 검색조건 정보 setting.
+			 */
+			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+			KeySearch keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+			keySchUserKey.setKeyString(req.getDeviceId());
+			keySearchList.add(keySchUserKey);
+			searchDeviceRequest.setKeySearchList(keySearchList);
+
+			/**
+			 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
+			 */
+			SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+			logger.info("### searchDeviceResponse : {}", searchDeviceResponse.toString());
+
+			response.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey()); // 사용자 Key setting.
+			response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey()); // 기기 Key setting.
+			response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom()); // 이동통신사 setting.
+
+			return response;
+
+		} catch (Exception e) {
+			/**
+			 * TODO SC 익셉션 잡은거 빼야합니다.
+			 */
+			throw new StorePlatformException("SC_MEM_", e);
+		}
+
 	}
 
 }
