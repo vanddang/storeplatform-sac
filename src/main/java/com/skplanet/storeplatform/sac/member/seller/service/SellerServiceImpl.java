@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -116,11 +118,12 @@ public class SellerServiceImpl implements SellerService {
 		// 회원명
 		mbrAuth.setName(req.getSellerName());
 		// 실명 인증사이트
-		mbrAuth.setRealNameSite(req.getRealNameSystemId());
+		mbrAuth.setRealNameSite(header.getTenantHeader().getSystemId());
 		// 실명 인증 일시
 		mbrAuth.setRealNameDate(req.getRealNameDate());
 		// 내국인 여부
-		mbrAuth.setIsDomestic(req.getIsForeign());
+		mbrAuth.setIsDomestic(req.getIsDomestic());
+		//
 		createSellerRequest.setMbrAuth(mbrAuth);
 
 		LOGGER.debug("==>>[SC] CreateSellerRequest.MbrAuth.toString() : {}", mbrAuth.toString());
@@ -219,7 +222,7 @@ public class SellerServiceImpl implements SellerService {
 		// 지역
 		sellerMbr.setSellerState(req.getSellerState());
 		// 국내판매자 여부
-		sellerMbr.setIsDomestic(req.getIsForeign()); // ***
+		sellerMbr.setIsDomestic(req.getIsDomestic());
 		// 실명인증여부
 		sellerMbr.setIsRealName("Y");
 		// 국가코드
@@ -357,7 +360,7 @@ public class SellerServiceImpl implements SellerService {
 					loginInfo.setSellerKey(res.getSellerMbr().getSellerKey());
 					loginInfo.setIpAddress(req.getIpAddress());
 					loginInfo.setSessionKey(res.getSellerMbr().getSellerKey() + "_" + RandomStringUtils.getString(10));
-					loginInfo.setExpireDate(req.getExpireDate());
+					loginInfo.setExpireDate(this.getExpirationTime(Integer.parseInt(req.getExpireDate())));
 					updateLoginInfoRequest.setLoginInfo(loginInfo);
 
 					/** 3.2. 공통 헤더 생성 및 주입. */
@@ -776,5 +779,12 @@ public class SellerServiceImpl implements SellerService {
 		response.setSellerKey(loginInfo.getSellerKey());
 
 		return response;
+	}
+
+	private String getExpirationTime(int hour) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, hour);
+		return sdf.format(cal.getTime());
 	}
 }
