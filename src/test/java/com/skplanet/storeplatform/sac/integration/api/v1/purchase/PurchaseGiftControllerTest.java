@@ -55,8 +55,8 @@ public class PurchaseGiftControllerTest {
 						GiftReceiveSacReq giftReceiveReq = new GiftReceiveSacReq();
 
 						giftReceiveReq.setTenantId("S01");
-						giftReceiveReq.setSendMbrNo("IF1023541315020111207133720");
-						giftReceiveReq.setSendDeviceNo("01046129571");
+						giftReceiveReq.setUserKey("IF1023541315020111207133720");
+						giftReceiveReq.setDeviceKey("01046129571");
 						giftReceiveReq.setProdId("H900026621");
 						giftReceiveReq.setPrchsId("M1046129571541651515");
 						return giftReceiveReq;
@@ -95,8 +95,8 @@ public class PurchaseGiftControllerTest {
 
 						giftConfirmRequest.setTenantId("S01");
 						giftConfirmRequest.setSystemId("S001");
-						giftConfirmRequest.setInsdUsermbrNo("IF1023541315020111207133720");
-						giftConfirmRequest.setInsdDeviceId("01046129571");
+						giftConfirmRequest.setUserKey("IF1023541315020111207133720");
+						giftConfirmRequest.setDeviceKey("01046129571");
 						giftConfirmRequest.setProdId("H900026621");
 						giftConfirmRequest.setRecvDt("20140129225055");
 						giftConfirmRequest.setPrchsId("PI100000000000010571");

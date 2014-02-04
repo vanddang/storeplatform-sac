@@ -59,8 +59,8 @@ public class PurchaseExistenceControllerTest {
 						ExistenceItemSac existenceList = new ExistenceItemSac();
 
 						existenceReq.setTenantId("S01");
-						existenceReq.setInsdUsermbrNo("IW1023795408420101206143202");
-						existenceReq.setInsdDeviceId("01040449015");
+						existenceReq.setUserKey("IW1023795408420101206143202");
+						existenceReq.setDeviceKey("01040449015");
 						existenceReq.setPrchsId("");
 
 						existenceList.setProdId("H900000037");

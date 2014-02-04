@@ -53,8 +53,8 @@ public class PurchaseAutoPaymentCancelControllerTest {
 						AutoPaymentCancelSacReq autoPaymentCancelReq = new AutoPaymentCancelSacReq();
 
 						autoPaymentCancelReq.setTenantId("S01");
-						autoPaymentCancelReq.setInsdUsermbrNo("IF1423218743620101219191957");
-						autoPaymentCancelReq.setInsdDeviceId("01020977940");
+						autoPaymentCancelReq.setUserKey("IF1423218743620101219191957");
+						autoPaymentCancelReq.setDeviceKey("01020977940");
 						autoPaymentCancelReq.setPrchsId("MI100000000000036091");
 						autoPaymentCancelReq.setClosedCd("OR020101");
 						autoPaymentCancelReq.setClosedReasonCd("OR004601");

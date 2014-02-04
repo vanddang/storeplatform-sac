@@ -74,8 +74,8 @@ public class PurchaseGiftServiceTest {
 		GiftReceiveScReq giftReceiveScReq = new GiftReceiveScReq();
 
 		giftReceiveScReq.setTenantId("S01");
-		giftReceiveScReq.setSendMbrNo("IW1425031723920130227143009");
-		giftReceiveScReq.setSendDeviceNo("01020977752");
+		giftReceiveScReq.setUserKey("IW1425031723920130227143009");
+		giftReceiveScReq.setDeviceKey("01020977752");
 		giftReceiveScReq.setProdId("H090107203");
 		giftReceiveScReq.setPrchsId("MI100000000000031936");
 
@@ -102,8 +102,8 @@ public class PurchaseGiftServiceTest {
 
 		giftConfirmScReq.setTenantId("S01");
 		giftConfirmScReq.setSystemId("S001");
-		giftConfirmScReq.setInsdUsermbrNo("IW1425031723920130227143009");
-		giftConfirmScReq.setInsdDeviceId("01020977752");
+		giftConfirmScReq.setUserKey("IW1425031723920130227143009");
+		giftConfirmScReq.setDeviceKey("01020977752");
 		giftConfirmScReq.setProdId("H090107203");
 		giftConfirmScReq.setRecvDt("20140129225055");
 		giftConfirmScReq.setPrchsId("MI100000000000031936");

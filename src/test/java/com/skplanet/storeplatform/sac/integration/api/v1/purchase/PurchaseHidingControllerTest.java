@@ -59,8 +59,8 @@ public class PurchaseHidingControllerTest {
 						HidingListSac hidingListSac = new HidingListSac();
 
 						hidingSacReq.setTenantId("S01");
-						hidingSacReq.setInsdUsermbrNo("IW1023795408420101206143202");
-						hidingSacReq.setInsdDeviceId("01040449015");
+						hidingSacReq.setUserKey("IW1023795408420101206143202");
+						hidingSacReq.setDeviceKey("01040449015");
 						// 숨길 구매내역 셋팅
 						hidingListSac.setPrchsId("M1040449015716287379");
 						hidingListSac.setPrchsDtlId(1);
@@ -86,16 +86,16 @@ public class PurchaseHidingControllerTest {
 					public void success(Object result) throws Exception {
 						@SuppressWarnings("unchecked")
 						HidingListSacRes hidingListSacRes = (HidingListSacRes) result;
-						for (int i = 0; i < hidingListSacRes.getHidingSacRes().size(); i++) {
+						for (int i = 0; i < hidingListSacRes.getHidingListSacRes().size(); i++) {
 							PurchaseHidingControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getPrchsId @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
-											.getHidingSacRes().get(i).getPrchsId());
+											.getHidingListSacRes().get(i).getPrchsId());
 							PurchaseHidingControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getPrchsDtlId  @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
-											.getHidingSacRes().get(i).getPrchsDtlId());
+											.getHidingListSacRes().get(i).getPrchsDtlId());
 							PurchaseHidingControllerTest.this.logger.debug(
 									"@@@@@@@@@@@@ getResultYn  @@@@@@@@@@@@@@@@@@@ : {}", hidingListSacRes
-											.getHidingSacRes().get(i).getResultYn());
+											.getHidingListSacRes().get(i).getResultYn());
 						}
 						assertThat(hidingListSacRes, notNullValue());
 					}
