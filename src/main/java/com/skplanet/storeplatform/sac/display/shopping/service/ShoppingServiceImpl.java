@@ -146,7 +146,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -220,7 +220,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -318,7 +318,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -393,7 +393,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -583,7 +583,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -796,7 +796,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -973,7 +973,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -1074,7 +1074,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
@@ -1175,7 +1175,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
 					if (retMetaInfo != null) {
 						// 쇼핑 Response Generate
-						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						Product product = this.responseInfoGenerateFacade.generateShoppingProduct(retMetaInfo);
 						productList.add(product);
 					}
 				}
