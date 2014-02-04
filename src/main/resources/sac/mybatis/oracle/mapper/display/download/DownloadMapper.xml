@@ -421,7 +421,7 @@
                                            AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
                                            AND J.PROD_ID = N.PROD_ID
                                            AND J.PROD_ID = O.PROD_ID  
-                                           AND N.TENANT_ID = 'S01'
+                                           AND N.TENANT_ID = #{tenantId}
                                            AND N.TENANT_ID = O.TENANT_ID                                         
                                            AND J.PROD_ID = P.PROD_ID
                                            AND J.PROD_ID = Q.PROD_ID                                     
@@ -670,7 +670,7 @@
 		           AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
 		           AND J.PROD_ID = N.PROD_ID
 		           AND J.PROD_ID = O.PROD_ID  
-		           AND N.TENANT_ID = 'S01'
+		           AND N.TENANT_ID = #{tenantId}
 		           AND N.TENANT_ID = O.TENANT_ID                                         
 		           AND J.PROD_ID = P.PROD_ID
 		           AND J.PROD_ID = Q.PROD_ID                                     
@@ -681,7 +681,7 @@
 		           AND D.TOP_MENU_ID = 'DP16'
 		           AND G.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404') /* PD000402 : 판매대기 , PD000403 : 판매중, PD000404 : 판매중지 */
 		           AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */   
-		           AND G.TENANT_ID = 'S01'                                       
+		           AND G.TENANT_ID = #{tenantId}                                       
 		           AND J.SVC_GRP_CD = 'DP000203'       /* PD002501 : 에피소드타입 */  
 		           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드타입 */  
 		           AND J.TOP_MENU_ID = 'DP16'
