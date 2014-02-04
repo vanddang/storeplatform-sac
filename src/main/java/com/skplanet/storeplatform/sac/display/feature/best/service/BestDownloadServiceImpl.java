@@ -106,13 +106,13 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		if (bestDownloadReq.getOffset() != null) {
 			offset = bestDownloadReq.getOffset();
 		}
-		bestDownloadReq.setOffset(offset);
+		bestDownloadReq.setOffset(offset); // set offset
 
 		if (bestDownloadReq.getCount() != null) {
 			count = bestDownloadReq.getCount();
 		}
 		count = offset + count - 1;
-		bestDownloadReq.setCount(count);
+		bestDownloadReq.setCount(count); // set count
 
 		String stdDt = this.commonService.getBatchStandardDateString(bestDownloadReq.getTenantId(),
 				bestDownloadReq.getListId());
