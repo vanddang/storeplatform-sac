@@ -198,6 +198,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 			book.setScid(metaInfo.getSubContentsId());
 			book.setSize(metaInfo.getFileSize());
 			book.setType("DP004302".equals(metaInfo.getBookClsfCd()) ? "serial" : "");
+			book.setBookClsfCd(metaInfo.getBookClsfCd());
 			product.setBook(book);
 
 			// 상품금액 정보

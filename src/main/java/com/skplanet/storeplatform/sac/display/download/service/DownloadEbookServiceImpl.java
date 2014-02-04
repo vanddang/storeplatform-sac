@@ -247,6 +247,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			book.setBookVersion(metaInfo.getProdVer());
 			book.setScid(metaInfo.getSubContentsId());
 			book.setSize(metaInfo.getFileSize());
+			book.setBookClsfCd(metaInfo.getBookClsfCd());
 			product.setBook(book);
 
 			// 소장/대여 정보 (store : 소장, play : 대여)
