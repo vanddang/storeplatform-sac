@@ -185,6 +185,9 @@ public class DisplayConstants {
 
 	public static final String DP_DATE_UPT_NM = "date/upt";
 
+	public static final String DP_SOLDOUT = "soldout";
+
+	public static final String DP_CONTINUE = "continue";
 	/**
 	 * 채널-에피스도 상품 관계 코드.
 	 */
