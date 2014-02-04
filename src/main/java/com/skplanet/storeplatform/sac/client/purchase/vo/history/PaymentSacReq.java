@@ -29,9 +29,8 @@ public class PaymentSacReq extends CommonInfo implements Serializable {
 	private String tenantId; // Tenant ID
 	@NotNull
 	@NotEmpty
-	private String insdUsermbrNo; // 회원번호
-
-	private String insdDeviceId; // 디바이스 번호
+	private String userKey; // 내부사용자번호
+	private String deviceKey; // 내부디바이스ID
 	@NotNull
 	@NotEmpty
 	private String prchsId; // 구매ID
@@ -52,33 +51,33 @@ public class PaymentSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the insdUsermbrNo
+	 * @return the userKey
 	 */
-	public String getInsdUsermbrNo() {
-		return this.insdUsermbrNo;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param insdUsermbrNo
-	 *            the insdUsermbrNo to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setInsdUsermbrNo(String insdUsermbrNo) {
-		this.insdUsermbrNo = insdUsermbrNo;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
-	 * @return the insdDeviceId
+	 * @return the deviceKey
 	 */
-	public String getInsdDeviceId() {
-		return this.insdDeviceId;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param insdDeviceId
-	 *            the insdDeviceId to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
-	public void setInsdDeviceId(String insdDeviceId) {
-		this.insdDeviceId = insdDeviceId;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	/**

@@ -31,10 +31,10 @@ public class GiftReceiveSacReq extends CommonInfo implements Serializable {
 	private String tenantId; // Tenant ID
 	@NotNull
 	@NotEmpty
-	private String sendMbrNo; // 회원번호
+	private String userKey; // 내부사용자번호
 	@NotNull
 	@NotEmpty
-	private String sendDeviceNo; // 디바이스 번호
+	private String deviceKey; // 내부디바이스ID
 	@NotNull
 	@NotEmpty
 	private String prodId; // 상품 아이디
@@ -73,33 +73,33 @@ public class GiftReceiveSacReq extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the sendMbrNo
+	 * @return the userKey
 	 */
-	public String getSendMbrNo() {
-		return this.sendMbrNo;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param sendMbrNo
-	 *            the sendMbrNo to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setSendMbrNo(String sendMbrNo) {
-		this.sendMbrNo = sendMbrNo;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
-	 * @return the sendDeviceNo
+	 * @return the deviceKey
 	 */
-	public String getSendDeviceNo() {
-		return this.sendDeviceNo;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param sendDeviceNo
-	 *            the sendDeviceNo to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
-	public void setSendDeviceNo(String sendDeviceNo) {
-		this.sendDeviceNo = sendDeviceNo;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	/**

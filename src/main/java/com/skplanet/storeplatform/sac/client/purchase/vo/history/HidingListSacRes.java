@@ -23,21 +23,21 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class HidingListSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<HidingSacRes> hidingSacRes; // 숨김처리 응답리스트
+	private List<HidingSacRes> hidingListSacRes; // 숨김처리 응답리스트
 
 	/**
-	 * @return the hidingSacRes
+	 * @return the hidingListSacRes
 	 */
-	public List<HidingSacRes> getHidingSacRes() {
-		return this.hidingSacRes;
+	public List<HidingSacRes> getHidingListSacRes() {
+		return this.hidingListSacRes;
 	}
 
 	/**
-	 * @param hidingSacRes
-	 *            the hidingSacRes to set
+	 * @param hidingListSacRes
+	 *            the hidingListSacRes to set
 	 */
-	public void setHidingSacRes(List<HidingSacRes> hidingSacRes) {
-		this.hidingSacRes = hidingSacRes;
+	public void setHidingListSacRes(List<HidingSacRes> hidingListSacRes) {
+		this.hidingListSacRes = hidingListSacRes;
 	}
 
 }
