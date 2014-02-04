@@ -136,7 +136,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
 
@@ -160,7 +160,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return ListPasswordReminderQuestionRes
 	 */
-	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			@Validated ListPasswordReminderQuestionReq req) {
@@ -177,7 +177,7 @@ public class SellerSearchController {
 	 * @return CheckPasswordReminderQuestionRes
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated CheckPasswordReminderQuestionReq req, BindingResult result) {
@@ -193,7 +193,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	// @RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchPasswordRes searchPassword(SacRequestHeader header, @Validated SearchPasswordReq req) throws Exception {
 
