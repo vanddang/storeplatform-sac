@@ -18,7 +18,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  *
  * Updated on : 2014. 01. 07. Updated by : 임근대, SK 플래닛.
  */
-public class EpubDetailRes extends CommonInfo {
+public class EpubChannelRes extends CommonInfo {
 	private static final long serialVersionUID = -2524545955211375637L;
 	private CommonResponse commonResponse;
 	private Product product;
