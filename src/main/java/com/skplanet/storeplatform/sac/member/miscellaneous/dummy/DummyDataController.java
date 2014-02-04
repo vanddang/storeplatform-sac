@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAddition
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
@@ -408,10 +412,33 @@ public class DummyDataController {
 	public ConfirmCaptchaRes confirmCaptcha() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.16. Captcha 문자 확인     ################");
+		LOGGER.info("####### 5.3.17. Captcha 문자 확인     ################");
 		LOGGER.info("####################################################");
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 		return response;
 	}
+
+	/**
+	 * <pre>
+	 * 단말 모델코드 조회.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            GetModelCodeReq
+	 * @return GetModelCodeRes
+	 */
+	@RequestMapping(value = "/getModelCode/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public GetModelCodeRes getModelCode(@Validated @RequestBody GetModelCodeReq req) {
+
+		LOGGER.info("####################################################");
+		LOGGER.info("####### 5.3.18. 단말 모델코드 조회     ################");
+		LOGGER.info("####################################################");
+		LOGGER.info("[SAC] Request : {}", req);
+		GetModelCodeRes response = new GetModelCodeRes();
+		response.setDeviceModelNo("LG-SH810");
+		return response;
+	}
+
 }

@@ -21,6 +21,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
@@ -186,6 +188,8 @@ public interface MiscellaneousService {
 	 *             Exception
 	 */
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) throws Exception;
+
+	public GetModelCodeRes getModelCode(GetModelCodeReq request);
 
 	/**
 	 * <pre>

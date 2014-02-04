@@ -68,6 +68,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
@@ -113,7 +115,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private MessageSCI messageSCI; // 기타 Component 메시지전송 기능 Interface.
 
 	@Autowired
-	private ImageSCI imageSCI;
+	private ImageSCI imageSCI; // Captcha 이미지 정보 Interface.
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor; // Message Properties
@@ -489,22 +491,19 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		if (serviceAuthInfo != null) {
 
 			if (serviceAuthInfo.getAuthComptYn().equals("Y")) { // 기존 인증된 코드일 경우
-				// TODO SAC_MEM_3006
-				throw new StorePlatformException("기인증된 인증 코드 입니다.");
+				throw new StorePlatformException("SAC_MEM_3001");
 			}
 
 			/** timeToLive 값이 존재 할 경우 인증코드 유효기간 검사 */
 			if (timeToLive != null && (Double.parseDouble(serviceAuthInfo.getCurrDt()) < 0)) {
-				// TODO SAC_MEM_3007
-				throw new StorePlatformException("인증 시간이 만료된 인증 코드입니다.");
+				throw new StorePlatformException("SAC_MEM_3002");
 			}
 
 			String authSeq = serviceAuthInfo.getAuthSeq();
 			this.commonDao.update("Miscellaneous.updateServiceAuthYn", authSeq);
 			LOGGER.info("## 이메일 인증 완료.");
 		} else {
-			// TODO SAC_MEM_3008
-			throw new StorePlatformException("인증 코드가 일치 하지 않습니다. (존재하지 않는 인증번호, 인증코드 불일치, 인증 Sing 불일치)");
+			throw new StorePlatformException("SAC_MEM_3003");
 		}
 		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
 		response.setUserEmail(serviceAuthInfo.getAuthEmail());
@@ -543,8 +542,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 2. deviceId(msisdn)로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
 		searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
-		if (searchUserResponse.getUserMbr() == null) {
-			// TODO SAC_MEM_3004
+		if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
 			throw new StorePlatformException("SAC_MEM_0003", "DeviceID", msisdn);
 		} else {
 			userKey = searchUserResponse.getUserMbr().getUserKey();
@@ -557,16 +555,21 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) throws Exception {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 		// TODO IdpServie joinSupService 호출해서 부가서비스 가입 요청
-		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getDeviceId(), request.getSvcCode(), null);
-		idpReciver.getResponseBody().getSvc_code(); // 부가서비스 코드
+		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getDeviceId(), request.getSvcCode(),
+				request.getSvcMngNum());
+
+		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
+		response.setDeviceId(idpReciver.getResponseBody().getUser_phone()); // 사용자 휴대폰번호
 
 		return response;
 	}
 
 	@Override
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) throws Exception {
-		// TODO IdpServie tmapServiceCheck 호출해서 부가서비스 가입 조회 요청
+
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
+
+		// IDP 호출해서 부가서비스 가입 조회 요청
 		IDPReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getDeviceId(), request.getSvcCode());
 		idpReciver.getResponseBody().getSp_list(); // 타 채널 가입 리스트
 		idpReciver.getResponseBody().getCharge(); // SKT 사용자의 휴대폰 요금제 코드
@@ -581,9 +584,17 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
+	public GetModelCodeRes getModelCode(GetModelCodeReq Request) {
+		// MDN을 이용하여 Model Code를 조회
+		// TODO 1. MDN을 이용하여 UAPS에서 UACD 정보 조회
+		// TODO 2. UACD를 이용하여 TB_CM_DEVICE에서 Model Code 조회
+		return null;
+	}
+
+	@Override
 	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization(SendSmsForRealNameAuthorizationReq request) {
 		// TODO 1. 모번호 조회 UAPS 연동
-		// TODO 2. 실명인증 SMS 발송 요청 - EC (KMD 연동)
+		// TODO 2. 실명인증 SMS 발송 요청 - EC (KMC 연동)
 		// TODO 3. EC 발송 결과 Response
 		return null;
 	}
