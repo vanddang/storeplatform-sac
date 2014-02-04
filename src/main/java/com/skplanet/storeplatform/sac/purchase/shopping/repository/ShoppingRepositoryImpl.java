@@ -9,10 +9,17 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.repository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.external.client.shopping.sci.ShoppingSCI;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusDetailEcRes;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcReq;
+import com.skplanet.storeplatform.external.client.shopping.vo.CouponUseStatusEcRes;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusDetailSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
@@ -24,12 +31,46 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacRes
 @Component
 public class ShoppingRepositoryImpl implements ShoppingRepository {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private ShoppingSCI shoppingSCI;
 
 	@Override
 	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam) {
 
-		return null;
+		CouponUseStatusEcReq couponUseStatusEcReq = this.convertReq(couponUseStatusSacParam);
+
+		CouponUseStatusEcRes couponUseStatusEcRes = this.shoppingSCI.getCouponUseStatus(couponUseStatusEcReq);
+
+		return this.convertRes(couponUseStatusEcRes);
+
+	}
+
+	private CouponUseStatusEcReq convertReq(CouponUseStatusSacParam couponUseStatusSacParam) {
+
+		CouponUseStatusEcReq couponUseStatusEcReq = new CouponUseStatusEcReq();
+
+		couponUseStatusEcReq.setPrchsId(couponUseStatusSacParam.getPrchsId());
+		couponUseStatusEcReq.setCouponPublishCode(couponUseStatusSacParam.getCpnPublishCd());
+
+		return couponUseStatusEcReq;
+
+	}
+
+	private CouponUseStatusSacResult convertRes(CouponUseStatusEcRes couponUseStatusEcRes) {
+
+		CouponUseStatusSacResult couponUseStatusSacResult = new CouponUseStatusSacResult();
+		List<CouponUseStatusDetailSacResult> cpnUseStatusList = new ArrayList<CouponUseStatusDetailSacResult>();
+		for (CouponUseStatusDetailEcRes couponUseStatusDetailEcRes : couponUseStatusEcRes.getCouponUseStatusList()) {
+			CouponUseStatusDetailSacResult couponUseStatusDetailSacResult = new CouponUseStatusDetailSacResult();
+			couponUseStatusDetailSacResult.setCpnPublishCd(couponUseStatusDetailEcRes.getCouponPublishCode());
+			couponUseStatusDetailSacResult.setCpnUseStatusCd(couponUseStatusDetailEcRes.getCouponStatus());
+
+			cpnUseStatusList.add(couponUseStatusDetailSacResult);
+		}
+
+		couponUseStatusSacResult.setCpnUseStatusList(cpnUseStatusList);
+
+		return couponUseStatusSacResult;
 
 	}
 
