@@ -175,6 +175,19 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		}
 		requestVO.setStdDt(stdDt);
 
+		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
+			try {
+				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
+			} catch (Exception ex) {
+				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+			}
+
+			// prodGradeCd 배열로 변경
+			String[] prodGradeCdArr = requestVO.getProdGradeCd().split("\\+");
+			requestVO.setProdGradeCdArr(prodGradeCdArr);
+		}
+
 		// ADM000000013 : 운영자 추천, ADM000000002 : 신규 만화, RNK000000002 : 신규 이북, RNK000000006 : 인기코믹/인기도서
 		if (listId.equals("ADM000000013")) {
 			this.logger.debug("----------------------------------------------------------------");

@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
@@ -131,6 +133,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		req.setDeviceModelCd(header.getDeviceHeader().getModel());
 		req.setTenantId(header.getTenantHeader().getTenantId());
 		req.setImageCd("DP000101");
+		req.setLangCd(header.getTenantHeader().getLangCd());
 
 		// 배치완료 기준일시 조회
 		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), listId);
@@ -146,6 +149,19 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			return vodRes;
 		}
 		req.setStdDt(stdDt);
+
+		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		if (!StringUtils.isEmpty(req.getProdGradeCd())) {
+			try {
+				req.setProdGradeCd(URLEncoder.encode(req.getProdGradeCd(), "UTF-8"));
+			} catch (Exception ex) {
+				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+			}
+
+			// prodGradeCd 배열로 변경
+			String[] prodGradeCdArr = req.getProdGradeCd().split("\\+");
+			req.setProdGradeCdArr(prodGradeCdArr);
+		}
 
 		// DP17 : 영화, DP18 : 방송
 		if ("DP17".equals(topMenuId)) {
