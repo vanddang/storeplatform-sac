@@ -77,7 +77,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		// SC Request Set
 		scRequest.setTenantId(request.getTenantId());
-		scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
+		scRequest.setUserKey(request.getUserKey());
+		scRequest.setDeviceKey(request.getDeviceKey());
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
@@ -93,7 +94,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
-		scRequest.setFixrateProdId(request.getFixrateProdId());
+		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setOffset(request.getOffset());
@@ -118,12 +119,16 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setPrchsId(obj.getPrchsId());
 			historySac.setPrchsDtlId(obj.getPrchsDtlId());
 			historySac.setUseTenantId(obj.getUseTenantId());
-			historySac.setUseInsdUsermbrNo(obj.getUseInsdUsermbrNo());
-			historySac.setUseInsdDeviceId(obj.getUseInsdDeviceId());
+			historySac.setUseUserKey(obj.getUseUserKey());
+			historySac.setUseDeviceKey(obj.getUseDeviceKey());
+
+			scRequest.setUserKey(request.getUserKey());
+			scRequest.setDeviceKey(request.getDeviceKey());
+
 			historySac.setPrchsDt(obj.getPrchsDt());
 			historySac.setTotAmt(obj.getTotAmt());
-			historySac.setSendInsdUsermbrNo(obj.getSendInsdUsermbrNo());
-			historySac.setSendInsdDeviceId(obj.getSendInsdDeviceId());
+			historySac.setSendUserKey(obj.getSendUserKey());
+			historySac.setSendDeviceKey(obj.getSendDeviceKey());
 			historySac.setRecvDt(obj.getRecvDt());
 			historySac.setProdId(obj.getProdId());
 			historySac.setProdAmt(obj.getProdAmt());
@@ -142,7 +147,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 			historySac.setDwldStartDt(obj.getDwldStartDt());
 			historySac.setDwldExprDt(obj.getDwldExprDt());
 			historySac.setPrchsProdType(obj.getPrchsProdType());
-			historySac.setFixrateProdId(obj.getFixrateProdId());
+			historySac.setUseFixrateProdId(obj.getUseFixrateProdId());
 			historySac.setResvCol01(obj.getResvCol01());
 			historySac.setResvCol02(obj.getResvCol02());
 			historySac.setResvCol03(obj.getResvCol03());
@@ -151,8 +156,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 			// 수신자 정보 set
 			historySac.setRecvTenantId(obj.getRecvTenantId());
-			historySac.setRecvInsdUsermbrNo(obj.getRecvInsdUsermbrNo());
-			historySac.setRecvInsdDeviceId(obj.getRecvInsdDeviceId());
+			historySac.setRecvUserKey(obj.getRecvUserKey());
+			historySac.setRecvDeviceKey(obj.getRecvDeviceKey());
 
 			// 정액제 정보 set
 			historySac.setPaymentStartDt(obj.getPaymentStartDt());
@@ -224,7 +229,8 @@ public class HistoryListServiceImpl implements HistoryListService {
 
 		// SC Request Set
 		scRequest.setTenantId(request.getTenantId());
-		scRequest.setInsdUsermbrNo(request.getInsdUsermbrNo());
+		scRequest.setUserKey(request.getUserKey());
+		scRequest.setDeviceKey(request.getDeviceKey());
 		scRequest.setStartDt(request.getStartDt());
 		scRequest.setEndDt(request.getEndDt());
 		scRequest.setPrchsProdType(request.getPrchsProdType());
@@ -240,7 +246,7 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
-		scRequest.setFixrateProdId(request.getFixrateProdId());
+		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
 

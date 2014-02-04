@@ -95,7 +95,7 @@ public class HistoryListTest {
 						ProductListSac prod = new ProductListSac();
 
 						req.setTenantId("S01"); // 테넌트ID
-						req.setInsdUsermbrNo("IW102158844420091030165015"); // 사용자번호
+						req.setUserKey("IW102158844420091030165015"); // 사용자번호
 						// req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
 						req.setStartDt("20100101000000"); // 조회시작일시
 						req.setEndDt("20140113000000"); // 조회종료일시
@@ -137,7 +137,7 @@ public class HistoryListTest {
 					public Object requestBody() {
 						HistoryListSacReq req = new HistoryListSacReq();
 						req.setTenantId("S01"); // 테넌트ID
-						req.setInsdUsermbrNo("IF1423020847420091202152309"); // 사용자번호
+						req.setUserKey("IF1423020847420091202152309"); // 사용자번호
 						req.setPrchsStatusCd("OR000301"); // 구매상태 OR000301:구매완료 OR000302:구매취소 null:전체
 						req.setStartDt("20100101000000"); // 조회시작일시
 						req.setEndDt("20140113000000"); // 조회종료일시

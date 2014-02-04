@@ -9,27 +9,23 @@
  */
 package com.skplanet.storeplatform.sac.purchase.history.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
+import com.skplanet.storeplatform.sac.purchase.common.util.PurchaseCommonUtils;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
@@ -46,6 +42,9 @@ public class HistoryListController {
 	@Autowired
 	private HistoryListService historyListService;
 
+	@Autowired
+	private PurchaseCommonUtils purchaseCommonUtils;
+
 	/**
 	 * 구매내역 조회 기능을 제공한다.
 	 * 
@@ -59,28 +58,10 @@ public class HistoryListController {
 	@RequestMapping(value = "/list/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public HistoryListSacRes searchHistoryList(@RequestBody @Validated HistoryListSacReq request,
-			BindingResult bindingResult, SacRequestHeader requestHeader) {
+			BindingResult bindingResult, SacRequestHeader sacRequestHeader) {
 
-		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-
-				if (error.getCode().equals("Max")) {
-					throw new StorePlatformException("SAC_PUR_0004", error.getField(), error.getRejectedValue(), 100);
-				} else if (error.getCode().equals("Min")) {
-					throw new StorePlatformException("SAC_PUR_0005", error.getField(), error.getRejectedValue(), 1);
-				} else {
-					throw new StorePlatformException("SAC_PUR_0001", error.getField());
-				}
-			}
-		}
-
-		// tenantID, systemId Set
-		TenantHeader tenantHeader = requestHeader.getTenantHeader();
-		request.setTenantId(tenantHeader.getTenantId());
-		request.setSystemId(tenantHeader.getSystemId());
-		this.LOGGER.debug("TenantHeader :: " + tenantHeader.toString());
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryList(request);
 	}
@@ -97,21 +78,10 @@ public class HistoryListController {
 	@RequestMapping(value = "/count/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public HistoryCountSacRes searchHistoryCount(@RequestBody HistoryCountSacReq request, BindingResult bindingResult,
-			SacRequestHeader requestHeader) {
+			SacRequestHeader sacRequestHeader) {
 
-		// 필수값 체크
-		if (bindingResult.hasErrors()) {
-			List<FieldError> errors = bindingResult.getFieldErrors();
-			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField());
-			}
-		}
-
-		// tenantID, systemId Set
-		TenantHeader tenantHeader = requestHeader.getTenantHeader();
-		request.setTenantId(tenantHeader.getTenantId());
-		request.setSystemId(tenantHeader.getSystemId());
-		this.LOGGER.debug("TenantHeader :: " + tenantHeader.toString());
+		this.purchaseCommonUtils.getBindingValid(bindingResult);
+		this.purchaseCommonUtils.setHeader(request, sacRequestHeader);
 
 		return this.historyListService.searchHistoryCount(request);
 	}
