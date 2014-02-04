@@ -257,6 +257,8 @@ public class DisplayConstants {
 
 	public static final String DP_MUSIC_REPRESENT_IMAGE_CD = "DP000162";
 
+	public static final String DP_WEBTOON_REPRESENT_IMAGE_CD = "DP000196";
+
 	public static final String DP_SHOPPING_REPRESENT_IMAGE_CD = "DP0001A3";
 
 	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
