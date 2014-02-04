@@ -19,15 +19,15 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String prchsId;
 	private String prchsDtlId;
 	private String useTenantId;
-	private String useInsdUsermbrNo;
-	private String useInsdDeviceId;
+	private String useUserKey;
+	private String useDeviceKey;
 	private String recvTenantId;
-	private String recvInsdUsermbrNo;
-	private String recvInsdDeviceId;
+	private String recvUserKey;
+	private String recvDeviceKey;
 	private String prchsDt;
 	private String totAmt;
-	private String sendInsdUsermbrNo;
-	private String sendInsdDeviceId;
+	private String sendUserKey;
+	private String sendDeviceKey;
 	private String recvDt;
 	private String recvConfPathCd;
 	private String tenantProdGrpCd;
@@ -47,7 +47,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	private String cpnPublishCd;
 	private String cpnDlvUrl;
 	private String etcSeq;
-	private String fixrateProdId;
+	private String useFixrateProdId;
 	private String prchsProdType;
 	private String resvCol01;
 	private String resvCol02;
@@ -68,7 +68,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	// 상품정보
 	// private Product product;
 
-	private String prodNm; // 상품명
+	// private String prodNm; // 상품명
 	// private String prodImgUrl;
 	//
 	// private List<Menu> menuList;
@@ -78,7 +78,7 @@ public class HistorySac extends CommonInfo implements Serializable {
 	// private String menuId; // 메뉴ID
 	// private String menuName; // 메뉴명
 	//
-	private String grade; // 이용등급
+	// private String grade; // 이용등급
 
 	//
 	// // 앱정보
@@ -90,21 +90,6 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public String getTenantId() {
 		return this.tenantId;
-	}
-
-	/**
-	 * @return the prchsTme
-	 */
-	public String getPrchsTme() {
-		return this.prchsTme;
-	}
-
-	/**
-	 * @param prchsTme
-	 *            the prchsTme to set
-	 */
-	public void setPrchsTme(String prchsTme) {
-		this.prchsTme = prchsTme;
 	}
 
 	/**
@@ -176,33 +161,33 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the useInsdUsermbrNo
+	 * @return the useUserKey
 	 */
-	public String getUseInsdUsermbrNo() {
-		return this.useInsdUsermbrNo;
+	public String getUseUserKey() {
+		return this.useUserKey;
 	}
 
 	/**
-	 * @param useInsdUsermbrNo
-	 *            the useInsdUsermbrNo to set
+	 * @param useUserKey
+	 *            the useUserKey to set
 	 */
-	public void setUseInsdUsermbrNo(String useInsdUsermbrNo) {
-		this.useInsdUsermbrNo = useInsdUsermbrNo;
+	public void setUseUserKey(String useUserKey) {
+		this.useUserKey = useUserKey;
 	}
 
 	/**
-	 * @return the useInsdDeviceId
+	 * @return the useDeviceKey
 	 */
-	public String getUseInsdDeviceId() {
-		return this.useInsdDeviceId;
+	public String getUseDeviceKey() {
+		return this.useDeviceKey;
 	}
 
 	/**
-	 * @param useInsdDeviceId
-	 *            the useInsdDeviceId to set
+	 * @param useDeviceKey
+	 *            the useDeviceKey to set
 	 */
-	public void setUseInsdDeviceId(String useInsdDeviceId) {
-		this.useInsdDeviceId = useInsdDeviceId;
+	public void setUseDeviceKey(String useDeviceKey) {
+		this.useDeviceKey = useDeviceKey;
 	}
 
 	/**
@@ -221,33 +206,33 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the recvInsdUsermbrNo
+	 * @return the recvUserKey
 	 */
-	public String getRecvInsdUsermbrNo() {
-		return this.recvInsdUsermbrNo;
+	public String getRecvUserKey() {
+		return this.recvUserKey;
 	}
 
 	/**
-	 * @param recvInsdUsermbrNo
-	 *            the recvInsdUsermbrNo to set
+	 * @param recvUserKey
+	 *            the recvUserKey to set
 	 */
-	public void setRecvInsdUsermbrNo(String recvInsdUsermbrNo) {
-		this.recvInsdUsermbrNo = recvInsdUsermbrNo;
+	public void setRecvUserKey(String recvUserKey) {
+		this.recvUserKey = recvUserKey;
 	}
 
 	/**
-	 * @return the recvInsdDeviceId
+	 * @return the recvDeviceKey
 	 */
-	public String getRecvInsdDeviceId() {
-		return this.recvInsdDeviceId;
+	public String getRecvDeviceKey() {
+		return this.recvDeviceKey;
 	}
 
 	/**
-	 * @param recvInsdDeviceId
-	 *            the recvInsdDeviceId to set
+	 * @param recvDeviceKey
+	 *            the recvDeviceKey to set
 	 */
-	public void setRecvInsdDeviceId(String recvInsdDeviceId) {
-		this.recvInsdDeviceId = recvInsdDeviceId;
+	public void setRecvDeviceKey(String recvDeviceKey) {
+		this.recvDeviceKey = recvDeviceKey;
 	}
 
 	/**
@@ -281,33 +266,33 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the sendInsdUsermbrNo
+	 * @return the sendUserKey
 	 */
-	public String getSendInsdUsermbrNo() {
-		return this.sendInsdUsermbrNo;
+	public String getSendUserKey() {
+		return this.sendUserKey;
 	}
 
 	/**
-	 * @param sendInsdUsermbrNo
-	 *            the sendInsdUsermbrNo to set
+	 * @param sendUserKey
+	 *            the sendUserKey to set
 	 */
-	public void setSendInsdUsermbrNo(String sendInsdUsermbrNo) {
-		this.sendInsdUsermbrNo = sendInsdUsermbrNo;
+	public void setSendUserKey(String sendUserKey) {
+		this.sendUserKey = sendUserKey;
 	}
 
 	/**
-	 * @return the sendInsdDeviceId
+	 * @return the sendDeviceKey
 	 */
-	public String getSendInsdDeviceId() {
-		return this.sendInsdDeviceId;
+	public String getSendDeviceKey() {
+		return this.sendDeviceKey;
 	}
 
 	/**
-	 * @param sendInsdDeviceId
-	 *            the sendInsdDeviceId to set
+	 * @param sendDeviceKey
+	 *            the sendDeviceKey to set
 	 */
-	public void setSendInsdDeviceId(String sendInsdDeviceId) {
-		this.sendInsdDeviceId = sendInsdDeviceId;
+	public void setSendDeviceKey(String sendDeviceKey) {
+		this.sendDeviceKey = sendDeviceKey;
 	}
 
 	/**
@@ -596,153 +581,18 @@ public class HistorySac extends CommonInfo implements Serializable {
 	}
 
 	/**
-	 * @return the fixrateProdId
+	 * @return the useFixrateProdId
 	 */
-	public String getFixrateProdId() {
-		return this.fixrateProdId;
+	public String getUseFixrateProdId() {
+		return this.useFixrateProdId;
 	}
 
 	/**
-	 * @param fixrateProdId
-	 *            the fixrateProdId to set
+	 * @param useFixrateProdId
+	 *            the useFixrateProdId to set
 	 */
-	public void setFixrateProdId(String fixrateProdId) {
-		this.fixrateProdId = fixrateProdId;
-	}
-
-	/**
-	 * @return the prodNm
-	 */
-	public String getProdNm() {
-		return this.prodNm;
-	}
-
-	/**
-	 * @param prodNm
-	 *            the prodNm to set
-	 */
-	public void setProdNm(String prodNm) {
-		this.prodNm = prodNm;
-	}
-
-	/**
-	 * @return the grade
-	 */
-	public String getGrade() {
-		return this.grade;
-	}
-
-	/**
-	 * @param grade
-	 *            the grade to set
-	 */
-	public void setGrade(String grade) {
-		this.grade = grade;
-	}
-
-	/**
-	 * @return the paymentStartDt
-	 */
-	public String getPaymentStartDt() {
-		return this.paymentStartDt;
-	}
-
-	/**
-	 * @param paymentStartDt
-	 *            the paymentStartDt to set
-	 */
-	public void setPaymentStartDt(String paymentStartDt) {
-		this.paymentStartDt = paymentStartDt;
-	}
-
-	/**
-	 * @return the paymentEndDt
-	 */
-	public String getPaymentEndDt() {
-		return this.paymentEndDt;
-	}
-
-	/**
-	 * @param paymentEndDt
-	 *            the paymentEndDt to set
-	 */
-	public void setPaymentEndDt(String paymentEndDt) {
-		this.paymentEndDt = paymentEndDt;
-	}
-
-	/**
-	 * @return the afterPaymentDt
-	 */
-	public String getAfterPaymentDt() {
-		return this.afterPaymentDt;
-	}
-
-	/**
-	 * @param afterPaymentDt
-	 *            the afterPaymentDt to set
-	 */
-	public void setAfterPaymentDt(String afterPaymentDt) {
-		this.afterPaymentDt = afterPaymentDt;
-	}
-
-	/**
-	 * @return the closedCd
-	 */
-	public String getClosedCd() {
-		return this.closedCd;
-	}
-
-	/**
-	 * @param closedCd
-	 *            the closedCd to set
-	 */
-	public void setClosedCd(String closedCd) {
-		this.closedCd = closedCd;
-	}
-
-	/**
-	 * @return the closedDt
-	 */
-	public String getClosedDt() {
-		return this.closedDt;
-	}
-
-	/**
-	 * @param closedDt
-	 *            the closedDt to set
-	 */
-	public void setClosedDt(String closedDt) {
-		this.closedDt = closedDt;
-	}
-
-	/**
-	 * @return the closedReasonCd
-	 */
-	public String getClosedReasonCd() {
-		return this.closedReasonCd;
-	}
-
-	/**
-	 * @param closedReasonCd
-	 *            the closedReasonCd to set
-	 */
-	public void setClosedReasonCd(String closedReasonCd) {
-		this.closedReasonCd = closedReasonCd;
-	}
-
-	/**
-	 * @return the closedReqPathCd
-	 */
-	public String getClosedReqPathCd() {
-		return this.closedReqPathCd;
-	}
-
-	/**
-	 * @param closedReqPathCd
-	 *            the closedReqPathCd to set
-	 */
-	public void setClosedReqPathCd(String closedReqPathCd) {
-		this.closedReqPathCd = closedReqPathCd;
+	public void setUseFixrateProdId(String useFixrateProdId) {
+		this.useFixrateProdId = useFixrateProdId;
 	}
 
 	/**
@@ -833,6 +683,126 @@ public class HistorySac extends CommonInfo implements Serializable {
 	 */
 	public void setResvCol05(String resvCol05) {
 		this.resvCol05 = resvCol05;
+	}
+
+	/**
+	 * @return the paymentStartDt
+	 */
+	public String getPaymentStartDt() {
+		return this.paymentStartDt;
+	}
+
+	/**
+	 * @param paymentStartDt
+	 *            the paymentStartDt to set
+	 */
+	public void setPaymentStartDt(String paymentStartDt) {
+		this.paymentStartDt = paymentStartDt;
+	}
+
+	/**
+	 * @return the paymentEndDt
+	 */
+	public String getPaymentEndDt() {
+		return this.paymentEndDt;
+	}
+
+	/**
+	 * @param paymentEndDt
+	 *            the paymentEndDt to set
+	 */
+	public void setPaymentEndDt(String paymentEndDt) {
+		this.paymentEndDt = paymentEndDt;
+	}
+
+	/**
+	 * @return the afterPaymentDt
+	 */
+	public String getAfterPaymentDt() {
+		return this.afterPaymentDt;
+	}
+
+	/**
+	 * @param afterPaymentDt
+	 *            the afterPaymentDt to set
+	 */
+	public void setAfterPaymentDt(String afterPaymentDt) {
+		this.afterPaymentDt = afterPaymentDt;
+	}
+
+	/**
+	 * @return the prchsTme
+	 */
+	public String getPrchsTme() {
+		return this.prchsTme;
+	}
+
+	/**
+	 * @param prchsTme
+	 *            the prchsTme to set
+	 */
+	public void setPrchsTme(String prchsTme) {
+		this.prchsTme = prchsTme;
+	}
+
+	/**
+	 * @return the closedCd
+	 */
+	public String getClosedCd() {
+		return this.closedCd;
+	}
+
+	/**
+	 * @param closedCd
+	 *            the closedCd to set
+	 */
+	public void setClosedCd(String closedCd) {
+		this.closedCd = closedCd;
+	}
+
+	/**
+	 * @return the closedDt
+	 */
+	public String getClosedDt() {
+		return this.closedDt;
+	}
+
+	/**
+	 * @param closedDt
+	 *            the closedDt to set
+	 */
+	public void setClosedDt(String closedDt) {
+		this.closedDt = closedDt;
+	}
+
+	/**
+	 * @return the closedReasonCd
+	 */
+	public String getClosedReasonCd() {
+		return this.closedReasonCd;
+	}
+
+	/**
+	 * @param closedReasonCd
+	 *            the closedReasonCd to set
+	 */
+	public void setClosedReasonCd(String closedReasonCd) {
+		this.closedReasonCd = closedReasonCd;
+	}
+
+	/**
+	 * @return the closedReqPathCd
+	 */
+	public String getClosedReqPathCd() {
+		return this.closedReqPathCd;
+	}
+
+	/**
+	 * @param closedReqPathCd
+	 *            the closedReqPathCd to set
+	 */
+	public void setClosedReqPathCd(String closedReqPathCd) {
+		this.closedReqPathCd = closedReqPathCd;
 	}
 
 }

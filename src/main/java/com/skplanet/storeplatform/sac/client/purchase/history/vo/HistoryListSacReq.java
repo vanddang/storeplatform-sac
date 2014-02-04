@@ -7,22 +7,20 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
+import com.skplanet.storeplatform.sac.client.purchase.common.vo.PurchaseHeaderSacReq;
 
 /**
  * 구매내역 조회 요청 VO
  * 
  * Updated on : 2013. 12. 13. Updated by : ntels_yjw
  */
-public class HistoryListSacReq extends CommonInfo {
+public class HistoryListSacReq extends PurchaseHeaderSacReq {
 
 	private static final long serialVersionUID = 1L;
 
-	private String tenantId;
-	private String systemId;
 	@NotBlank
-	private String insdUsermbrNo; // 내부사용자번호
-	private String insdDeviceId; // 내부디바이스ID
+	private String userKey; // 내부사용자번호
+	private String deviceKey; // 내부디바이스ID
 	@NotBlank
 	private String startDt; // 조회시작일시
 	@NotBlank
@@ -34,27 +32,12 @@ public class HistoryListSacReq extends CommonInfo {
 	private String prchsProdType; // 구매상품타입
 	private String hidingYn; // 숨김여부
 	private String prchsStatusCd; // 구매상태
-	private String fixrateProdId; // 정액권ID
+	private String useFixrateProdId; // 정액권ID
 	@Min(1)
 	private int offset; // 오프셋
 	@Min(1)
 	@Max(100)
 	private int count; // 데이터갯수
-
-	/**
-	 * @return the tenantId
-	 */
-	public String getTenantId() {
-		return this.tenantId;
-	}
-
-	/**
-	 * @param tenantId
-	 *            the tenantId to set
-	 */
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
 
 	/**
 	 * @return the prchsCaseCd
@@ -72,48 +55,33 @@ public class HistoryListSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the systemId
+	 * @return the userKey
 	 */
-	public String getSystemId() {
-		return this.systemId;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param systemId
-	 *            the systemId to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
-	 * @return the insdUsermbrNo
+	 * @return the deviceKey
 	 */
-	public String getInsdUsermbrNo() {
-		return this.insdUsermbrNo;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param insdUsermbrNo
-	 *            the insdUsermbrNo to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
-	public void setInsdUsermbrNo(String insdUsermbrNo) {
-		this.insdUsermbrNo = insdUsermbrNo;
-	}
-
-	/**
-	 * @return the insdDeviceId
-	 */
-	public String getInsdDeviceId() {
-		return this.insdDeviceId;
-	}
-
-	/**
-	 * @param insdDeviceId
-	 *            the insdDeviceId to set
-	 */
-	public void setInsdDeviceId(String insdDeviceId) {
-		this.insdDeviceId = insdDeviceId;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 	/**
@@ -222,18 +190,18 @@ public class HistoryListSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the fixrateProdId
+	 * @return the useFixrateProdId
 	 */
-	public String getFixrateProdId() {
-		return this.fixrateProdId;
+	public String getUseFixrateProdId() {
+		return this.useFixrateProdId;
 	}
 
 	/**
-	 * @param fixrateProdId
-	 *            the fixrateProdId to set
+	 * @param useFixrateProdId
+	 *            the useFixrateProdId to set
 	 */
-	public void setFixrateProdId(String fixrateProdId) {
-		this.fixrateProdId = fixrateProdId;
+	public void setUseFixrateProdId(String useFixrateProdId) {
+		this.useFixrateProdId = useFixrateProdId;
 	}
 
 	/**
