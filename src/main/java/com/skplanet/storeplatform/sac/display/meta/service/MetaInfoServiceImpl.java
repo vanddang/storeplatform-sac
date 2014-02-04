@@ -59,11 +59,21 @@ public class MetaInfoServiceImpl implements MetaInfoService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getEbookComidMetaInfo(java.util.Map)
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getEbookComicMetaInfo(java.util.Map)
 	 */
 	@Override
-	public MetaInfo getEbookComidMetaInfo(Map<String, Object> paramMap) {
+	public MetaInfo getEbookComicMetaInfo(Map<String, Object> paramMap) {
 		return this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap, MetaInfo.class);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService#getWebtoonMetaInfo(java.util.Map)
+	 */
+	@Override
+	public MetaInfo getWebtoonMetaInfo(Map<String, Object> paramMap) {
+		return this.commonDAO.queryForObject("MetaInfo.getWebtoonMetaInfo", paramMap, MetaInfo.class);
 	}
 
 	/*

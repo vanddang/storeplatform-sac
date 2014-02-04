@@ -54,7 +54,18 @@ public interface MetaInfoService {
 	 *            paramMap
 	 * @return MetaInfo
 	 */
-	public MetaInfo getEbookComidMetaInfo(Map<String, Object> paramMap);
+	public MetaInfo getEbookComicMetaInfo(Map<String, Object> paramMap);
+
+	/**
+	 * <pre>
+	 * Webtoon Meta 정보 조회.
+	 * </pre>
+	 * 
+	 * @param paramMap
+	 *            paramMap
+	 * @return MetaInfo
+	 */
+	public MetaInfo getWebtoonMetaInfo(Map<String, Object> paramMap);
 
 	/**
 	 * <pre>

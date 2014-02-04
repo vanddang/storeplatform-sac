@@ -84,6 +84,9 @@ public class MetaInfo {
 	private String ebookFilePath;
 	private Integer ebookFileSize;
 
+	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
+	private String iconYn;
+
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
 	private String mp3SprtYn;
@@ -1159,6 +1162,21 @@ public class MetaInfo {
 	 */
 	public void setEbookFileSize(Integer ebookFileSize) {
 		this.ebookFileSize = ebookFileSize;
+	}
+
+	/**
+	 * @return the iconYn
+	 */
+	public String getIconYn() {
+		return this.iconYn;
+	}
+
+	/**
+	 * @param iconYn
+	 *            the iconYn to set
+	 */
+	public void setIconYn(String iconYn) {
+		this.iconYn = iconYn;
 	}
 
 	/**
