@@ -913,10 +913,14 @@ public class IdpServiceImpl implements IdpService {
 
 		searchUserRequest.setCommonRequest(commonRequest);
 
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySearch = new KeySearch();
 		keySearch.setKeyType("INTG_SVC_NO");
 		keySearch.setKeyString(imIntSvcNo); // 통합 서비스 번호
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		keySearchList.add(keySearch);
+		keySearch = new KeySearch();
+		keySearch.setKeyType("MBR_ID");
+		keySearch.setKeyString(responseUserId); // 사용자 ID추가
 		keySearchList.add(keySearch);
 
 		searchUserRequest.setKeySearchList(keySearchList);
