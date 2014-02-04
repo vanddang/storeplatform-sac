@@ -343,8 +343,71 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 */
 	@Override
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
-		// TODO Auto-generated method stub
-		return null;
+		// 공통 응답 변수 선언
+		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
+		req.setLangCd(header.getTenantHeader().getLangCd());
+		req.setImageCd("DP000164");
+		req.setDeviceModelCd("SHV-E330SSO");
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
+		}
+
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
+		if (StringUtils.isEmpty(req.getProdGradeCd())) {
+			req.setProdGradeCd(null);
+		}
+		// offset, Count default setting
+		this.commonOffsetCount(req);
+
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+
+		// DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("lang", tenantHeader.getLangCd());
+
+		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
+		reqMap.put("imageCd", req.getImageCd());
+		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
+
+		// ID list 조회
+		List<ProductBasicInfo> productBasicInfoList = this.commonDAO.queryForList("Shopping.getSecialPriceProductList",
+				reqMap, ProductBasicInfo.class);
+		List<Product> productList = new ArrayList<Product>();
+		if (productBasicInfoList != null) {
+			if (productBasicInfoList.size() > 0) {
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					// 쇼핑 Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getShoppingMetaInfo(reqMap);
+					if (retMetaInfo != null) {
+						// 쇼핑 Response Generate
+						Product product = this.responseInfoGenerateFacade.generateSpecificShoppingProduct(retMetaInfo);
+						productList.add(product);
+					}
+				}
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				res.setProductList(productList);
+				res.setCommonResponse(commonResponse);
+			}
+		}
+		return res;
 	}
 
 	/**
