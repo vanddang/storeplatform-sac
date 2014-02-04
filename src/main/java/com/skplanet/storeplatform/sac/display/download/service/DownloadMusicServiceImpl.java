@@ -151,8 +151,8 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
 				historyListSacReq.setTenantId(downloadMusicSacReq.getTenantId());
-				historyListSacReq.setInsdUsermbrNo(downloadMusicSacReq.getUserKey());
-				historyListSacReq.setInsdDeviceId(downloadMusicSacReq.getDeviceKey());
+				historyListSacReq.setUserKey(downloadMusicSacReq.getUserKey());
+				historyListSacReq.setDeviceKey(downloadMusicSacReq.getDeviceKey());
 				historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
 				historyListSacReq.setStartDt("19000101000000");
 				historyListSacReq.setEndDt(metaInfo.getSysDate());

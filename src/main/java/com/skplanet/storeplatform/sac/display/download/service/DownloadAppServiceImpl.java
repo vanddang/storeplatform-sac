@@ -196,8 +196,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
 					historyListSacReq.setTenantId(downloadAppSacReq.getTenantId());
-					historyListSacReq.setInsdUsermbrNo(downloadAppSacReq.getUserKey());
-					historyListSacReq.setInsdDeviceId(downloadAppSacReq.getDeviceKey());
+					historyListSacReq.setUserKey(downloadAppSacReq.getUserKey());
+					historyListSacReq.setDeviceKey(downloadAppSacReq.getDeviceKey());
 					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
 					historyListSacReq.setStartDt("19000101000000");
 					historyListSacReq.setEndDt(downloadAppInfo.getSysDate());

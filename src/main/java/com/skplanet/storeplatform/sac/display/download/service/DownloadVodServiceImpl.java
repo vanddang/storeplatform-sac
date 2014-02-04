@@ -190,8 +190,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
 					historyListSacReq.setTenantId(downloadVodSacReq.getTenantId());
-					historyListSacReq.setInsdUsermbrNo(downloadVodSacReq.getUserKey());
-					historyListSacReq.setInsdDeviceId(downloadVodSacReq.getDeviceKey());
+					historyListSacReq.setUserKey(downloadVodSacReq.getUserKey());
+					historyListSacReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
 					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
 					historyListSacReq.setStartDt("19000101000000");
 					historyListSacReq.setEndDt(downloadVodInfo.getSysDate());
