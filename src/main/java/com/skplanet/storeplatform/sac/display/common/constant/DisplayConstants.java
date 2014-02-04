@@ -136,6 +136,11 @@ public class DisplayConstants {
 	 */
 	public static final String DP_TV_TOP_MENU_ID = "DP18";
 	/**
+	 * 웹툰.
+	 */
+	public static final String DP_WEBTOON_MENU_ID = "DP26";
+
+	/**
 	 * 쇼핑.
 	 */
 	public static final String DP_SHOPPING_TOP_MENU_ID = "DP28";
