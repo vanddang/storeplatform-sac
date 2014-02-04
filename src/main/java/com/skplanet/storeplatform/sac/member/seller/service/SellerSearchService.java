@@ -42,22 +42,21 @@ public interface SellerSearchService {
 	 * 
 	 * @throws Exception
 	 */
-	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
-			throws Exception;
+	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req);
 
 	/**
 	 * 탈퇴 사유 목록 조회.
 	 * 
 	 * @throws Exception
 	 */
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) throws Exception;
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language);
 
 	/**
 	 * 판매자 회원 ID 찾기.
 	 * 
 	 * @throws Exception
 	 */
-	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception;
+	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req);
 
 	/**
 	 * Password 보안 질문 조회.
@@ -65,7 +64,7 @@ public interface SellerSearchService {
 	 * @throws Exception
 	 */
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			ListPasswordReminderQuestionReq req) throws Exception;
+			ListPasswordReminderQuestionReq req);
 
 	/**
 	 * Password 보안 질문 확인.
@@ -73,21 +72,21 @@ public interface SellerSearchService {
 	 * @throws Exception
 	 */
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
-			CheckPasswordReminderQuestionReq req) throws Exception;
+			CheckPasswordReminderQuestionReq req);
 
 	/**
 	 * 판매자 회원 Password 찾기.
 	 * 
 	 * @throws Exception
 	 */
-	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception;
+	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req);
 
 	/**
 	 * 판매자 회원 인증키 조회.
 	 * 
 	 * @throws Exception
 	 */
-	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception;
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req);
 
 	/**
 	 * 나라별 해외은행 정보 조회.

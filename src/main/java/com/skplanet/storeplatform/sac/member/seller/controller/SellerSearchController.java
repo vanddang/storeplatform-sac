@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import javax.validation.Valid;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -107,13 +104,8 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
-			throws Exception {
-
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-
-		if (sellerKey.equals(""))
-			throw new Exception("필수 파라미터 미존재");
+	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header,
+			@Validated DetailAccountInformationReq req) {
 
 		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
@@ -128,8 +120,8 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/listWithdrawalReason/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, SacRequestHeader requestHeader,
-			@RequestHeader("Accept-Language") String language) throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, SacRequestHeader requestHeader)
+			throws Exception {
 		TenantHeader theader = requestHeader.getTenantHeader();
 
 		LOGGER.debug("------------------------------------language : {}", theader.getLangCd());
@@ -154,7 +146,7 @@ public class SellerSearchController {
 		String sellerPhone = StringUtil.nvl(req.getSellerPhone(), "");
 
 		if (sellerBizNumber.equals("") & sellerCompany.equals("") & sellerEmail.equals("") & sellerPhone.equals("")) {
-			throw new Exception("필수 파라미터 미존재");
+			throw new StorePlatformException("SAC_MEM_0001");
 		}
 
 		return this.sellerSearchService.searchId(header, req);
@@ -171,7 +163,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			ListPasswordReminderQuestionReq req) throws Exception {
+			@Validated ListPasswordReminderQuestionReq req) {
 		LOGGER.debug("------------------------------------req : {}", req);
 		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
@@ -188,20 +180,7 @@ public class SellerSearchController {
 	@RequestMapping(value = "/checkPasswordReminderQuestion/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
-			@RequestBody @Valid CheckPasswordReminderQuestionReq req, BindingResult result) throws Exception {
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		String sellerId = StringUtil.nvl(req.getSellerID(), "");
-		String answerString = StringUtil.nvl(req.getpWReminderList().get(0).getAnswerString(), "");
-		String questionID = StringUtil.nvl(req.getpWReminderList().get(0).getQuestionID(), "");
-		String questionMessage = StringUtil.nvl(req.getpWReminderList().get(0).getQuestionMessage(), "");
-		String sellerIdList = StringUtil.nvl(req.getpWReminderList().get(0).getSellerID(), "");
-
-		if (sellerId.equals("") || sellerIdList.equals(""))
-			throw new Exception("필수 파라미터 미존재");
-		if (answerString.equals(""))
-			throw new Exception("필수 파라미터 미존재");
-		if (questionID.equals("") && questionMessage.equals(""))
-			throw new Exception("필수 파라미터 미존재");
+			@RequestBody @Validated CheckPasswordReminderQuestionReq req, BindingResult result) {
 
 		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
@@ -216,12 +195,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception {
-		String sellerId = StringUtil.nvl(req.getSellerId(), "");
-
-		if (sellerId.equals("")) {
-			throw new Exception("필수 파라미터 미존재");
-		}
+	public SearchPasswordRes searchPassword(SacRequestHeader header, @Validated SearchPasswordReq req) throws Exception {
 
 		return this.sellerSearchService.searchPassword(header, req);
 	}
@@ -236,12 +210,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception {
-
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-
-		if (sellerKey.equals(""))
-			throw new Exception("필수 파라미터 미존재");
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req) {
 
 		return this.sellerSearchService.searchAuthKey(header, req);
 	}

@@ -257,8 +257,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return DetailAccountInformationRes
 	 */
 	@Override
-	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req)
-			throws Exception {
+	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req) {
 
 		SearchAccountSellerResponse schRes = new SearchAccountSellerResponse();
 		SearchAccountSellerRequest schReq = new SearchAccountSellerRequest();
@@ -351,7 +350,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return ListWithdrawalReasonRes
 	 */
 	@Override
-	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) throws Exception {
+	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language) {
 
 		ListWithdrawalReasonReq req = new ListWithdrawalReasonReq();
 		req.setKoUsWhether(language);
@@ -382,7 +381,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return SearchIdRes
 	 */
 	@Override
-	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
+	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) {
 
 		SearchIDSellerResponse schRes = new SearchIDSellerResponse();
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
@@ -443,7 +442,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 */
 	@Override
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			ListPasswordReminderQuestionReq req) throws Exception {
+			ListPasswordReminderQuestionReq req) {
 
 		SearchPwdHintListResponse schRes = new SearchPwdHintListResponse();
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
@@ -484,7 +483,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 */
 	@Override
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
-			CheckPasswordReminderQuestionReq req) throws Exception {
+			CheckPasswordReminderQuestionReq req) {
 
 		CheckPasswordReminderSellerResponse schRes = new CheckPasswordReminderSellerResponse();
 		CheckPasswordReminderSellerRequest schReq = new CheckPasswordReminderSellerRequest();
@@ -528,7 +527,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return SearchPasswordRes
 	 */
 	@Override
-	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) throws Exception {
+	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req) {
 
 		ResetPasswordSellerResponse schRes = new ResetPasswordSellerResponse();
 		ResetPasswordSellerRequest schReq = new ResetPasswordSellerRequest();
@@ -562,7 +561,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return SearchAuthKeyRes
 	 */
 	@Override
-	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception {
+	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
 
 		SearchLoginInfoResponse schRes = new SearchLoginInfoResponse();
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
