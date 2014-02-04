@@ -464,9 +464,11 @@
               AND  TB.IMG_CD = #{imageCd}            
     </select>
     
+    <!-- ebook 상품 정보 조회(for download) -->
     <select id="selectDownloadEbookInfo" parameterType="DownloadEbookSacReq" resultType="MetaInfo">
         SELECT  /* DownloadMapper.xml, selectDownloadEbookInfo, tae hee Lee, 2014-01-28 */
                 KA.*
+              , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
               , CONCAT(KB.FILE_PATH, KB.FILE_NM) AS IMAGE_PATH
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
@@ -595,8 +597,107 @@
            AND KB.LANG_CD = #{langCd}
     </select>
     
+    <!-- ebook 대여 상품 구매상태 조회 -->
+    <select id="getEbookPurchaseState" parameterType="DownloadComicSacReq" resultType="java.lang.String">
+        SELECT /* DownloadMapper.xml, getEbookPurchaseState, tae hee Lee, 2014-02-03 */
+               CASE WHEN TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') BETWEEN #{prchsDt} AND #{dwldExprDt} THEN 'payment' ELSE 'expired' END
+          FROM DUAL
+    </select>
+    
+    <!-- Comic 상품 정보 조회(for download) -->
     <select id="selectDownloadComicInfo" parameterType="DownloadComicSacReq" resultType="MetaInfo">
-        SELECT 1 FROM DUAL
+        SELECT  /* DownloadMapper.xml, selectDownloadComicInfo, tae hee Lee, 2014-02-03 */
+                JA.*
+              , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
+              , CONCAT(JB.FILE_PATH, JB.FILE_NM) AS IMAGE_PATH
+              , (SELECT MENU_NM
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = JA.TOP_MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS TOP_MENU_NM
+              , (SELECT MENU_NM
+                   FROM TB_DP_MENU_CATEGORY_DESC
+                  WHERE MENU_ID = JA.MENU_ID
+                    AND LANG_CD = #{langCd}
+                    AND ROWNUM = 1) AS MENU_NM
+          FROM (SELECT IA.*, IC.TOP_MENU_ID, IC.MENU_ID
+                  FROM (SELECT  ROW_NUMBER() OVER(PARTITION BY C.PART_PROD_ID ORDER BY K.PROD_VER DESC) AS RNUM
+                              , A.SELLER_MBR_NO
+                              , A.EXPO_SELLER_NM
+                              , A.EXPO_SELLER_TELNO
+                              , A.EXPO_SELLER_EMAIL
+                              , A.CONTENTS_TYPE_CD
+                              , C.PROD_ID
+                              , C.PART_PROD_ID
+                              , D.META_CLSF_CD
+                              , D.PROD_GRD_CD
+                              , D.DRM_YN
+                              , D.USE_PERIOD_UNIT_CD
+                              , D.USE_PERIOD
+                              , E.PROD_NM
+                              , F.BOOK_CLSF_CD
+                              , G.PROD_STATUS_CD
+                              , H.PROD_AMT
+                              , H.PROD_NET_AMT
+                              , K.SUB_CONTENTS_ID
+                              , K.PROD_VER
+                              , K.FILE_SIZE
+                              , K.FILE_PATH
+                          FROM  TB_DP_PROD                    A
+                              , TB_DP_TENANT_PROD             B
+                              , TB_DP_PROD_RSHP               C
+                              , TB_DP_PROD                    D
+                              , TB_DP_PROD_DESC               E
+                              , TB_DP_MULTIMDA_PROD           F
+                              , TB_DP_TENANT_PROD             G
+                              , TB_DP_TENANT_PROD_PRICE       H
+                              , TB_DP_SPRT_DEVICE             I
+                              , TB_CM_DEVICE                  J
+                              , TB_DP_SUB_CONTENTS            K
+                         WHERE  A.PROD_ID = B.PROD_ID
+                           AND  A.PROD_ID = C.PROD_ID
+                           AND  C.PART_PROD_ID = D.PROD_ID
+                           AND  C.PART_PROD_ID = E.PROD_ID
+                           AND  C.PART_PROD_ID = F.PROD_ID
+                           AND  C.PART_PROD_ID = G.PROD_ID
+                           AND  C.PART_PROD_ID = H.PROD_ID
+                           AND  G.TENANT_ID = H.TENANT_ID
+                           AND  C.PART_PROD_ID = I.PROD_ID(+)
+                           AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+                           AND  C.PART_PROD_ID = K.PROD_ID
+                           AND  A.SVC_GRP_CD = 'DP000203'
+                           AND  A.CONTENTS_TYPE_CD = 'PD002501'
+                           AND  B.EXPO_YN = 'Y'
+                           AND  B.TENANT_ID = #{tenantId}
+                           AND  B.PROD_STATUS_CD IN ('PD000402', 'PD000403', 'PD000404')
+                           AND  C.PROD_RSHP_CD = 'DP010802'
+                           AND  D.SVC_GRP_CD = 'DP000203'
+                           AND  D.CONTENTS_TYPE_CD = 'PD002502'
+                           AND  E.LANG_CD = #{langCd}
+                           AND  G.EXPO_YN = 'Y'
+                           AND  G.TENANT_ID = #{tenantId}
+                           AND  G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
+                           AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
+                           AND  I.DEVICE_MODEL_CD(+) = #{deviceModelCd}
+                           AND  I.PROD_ID IS NOT NULL
+                           AND  J.COMIC_SPRT_YN = 'Y'
+                           AND  K.SALE_YN = 'Y'
+                           AND  C.PART_PROD_ID = #{productId}
+                       )                               IA
+                       , TB_DP_MENU_CATEGORY_PROD_MAPG IB
+                       , TB_DP_MENU_CATEGORY           IC
+                 WHERE IA.PART_PROD_ID = IB.PROD_ID
+                   AND IB.MENU_ID = IC.MENU_ID
+                   AND IA.RNUM = 1
+                   AND IB.USE_YN = 'Y'
+                   AND IC.USE_YN = 'Y'
+                   AND IC.TOP_MENU_ID = 'DP14'
+               )                JA
+               , TB_DP_PROD_IMG JB
+         WHERE JA.PROD_ID = JB.PROD_ID
+           AND JB.EXPO_ORD = 1
+           AND JB.IMG_CD = #{imageCd}
+           AND JB.LANG_CD = #{langCd}
     </select>
 
     <select id="getDownloadMusicInfo" parameterType="DownloadMusicSacReq" resultType="MetaInfo">
