@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.integration.StorePlatformAPIinvokorNew;
 import com.skplanet.storeplatform.framework.test.integration.SuccessCallbackForJson;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftConfirmSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.history.GiftReceiveSacRes;
@@ -91,7 +91,7 @@ public class PurchaseGiftControllerTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						GiftConfirmScRequest giftConfirmRequest = new GiftConfirmScRequest();
+						GiftConfirmScReq giftConfirmRequest = new GiftConfirmScReq();
 
 						giftConfirmRequest.setTenantId("S01");
 						giftConfirmRequest.setSystemId("S001");

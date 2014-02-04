@@ -25,10 +25,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScResponse;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRequest;
-import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScResponse;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftConfirmScRes;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.GiftReceiveScRes;
 import com.skplanet.storeplatform.sac.purchase.history.service.GiftSacService;
 
 /**
@@ -71,18 +71,18 @@ public class PurchaseGiftServiceTest {
 	@Test
 	public void shouldObtainPurchaseGiftReceiveServiceTest() throws Exception {
 
-		GiftReceiveScRequest giftReceiveScRequest = new GiftReceiveScRequest();
+		GiftReceiveScReq giftReceiveScReq = new GiftReceiveScReq();
 
-		giftReceiveScRequest.setTenantId("S01");
-		giftReceiveScRequest.setSendMbrNo("IW1425031723920130227143009");
-		giftReceiveScRequest.setSendDeviceNo("01020977752");
-		giftReceiveScRequest.setProdId("H090107203");
-		giftReceiveScRequest.setPrchsId("MI100000000000031936");
+		giftReceiveScReq.setTenantId("S01");
+		giftReceiveScReq.setSendMbrNo("IW1425031723920130227143009");
+		giftReceiveScReq.setSendDeviceNo("01020977752");
+		giftReceiveScReq.setProdId("H090107203");
+		giftReceiveScReq.setPrchsId("MI100000000000031936");
 
-		GiftReceiveScResponse giftReceiveScResponse = new GiftReceiveScResponse();
-		giftReceiveScResponse = this.giftService.searchGiftReceive(giftReceiveScRequest);
+		GiftReceiveScRes giftReceiveScRes = new GiftReceiveScRes();
+		giftReceiveScRes = this.giftService.searchGiftReceive(giftReceiveScReq);
 
-		assertThat(giftReceiveScResponse, notNullValue());
+		assertThat(giftReceiveScRes, notNullValue());
 
 	}
 
@@ -98,20 +98,20 @@ public class PurchaseGiftServiceTest {
 	@Test
 	public void shouldObtainPurchaseGiftConfirmServiceTest() throws Exception {
 
-		GiftConfirmScRequest giftConfirmScRequest = new GiftConfirmScRequest();
+		GiftConfirmScReq giftConfirmScReq = new GiftConfirmScReq();
 
-		giftConfirmScRequest.setTenantId("S01");
-		giftConfirmScRequest.setSystemId("S001");
-		giftConfirmScRequest.setInsdUsermbrNo("IW1425031723920130227143009");
-		giftConfirmScRequest.setInsdDeviceId("01020977752");
-		giftConfirmScRequest.setProdId("H090107203");
-		giftConfirmScRequest.setRecvDt("20140129225055");
-		giftConfirmScRequest.setPrchsId("MI100000000000031936");
+		giftConfirmScReq.setTenantId("S01");
+		giftConfirmScReq.setSystemId("S001");
+		giftConfirmScReq.setInsdUsermbrNo("IW1425031723920130227143009");
+		giftConfirmScReq.setInsdDeviceId("01020977752");
+		giftConfirmScReq.setProdId("H090107203");
+		giftConfirmScReq.setRecvDt("20140129225055");
+		giftConfirmScReq.setPrchsId("MI100000000000031936");
 
-		GiftConfirmScResponse giftConfirmScResponse = new GiftConfirmScResponse();
-		giftConfirmScResponse = this.giftService.updateGiftConfirm(giftConfirmScRequest);
+		GiftConfirmScRes giftConfirmScRes = new GiftConfirmScRes();
+		giftConfirmScRes = this.giftService.updateGiftConfirm(giftConfirmScReq);
 
-		assertThat("Y", is(giftConfirmScResponse.getResultYn()));
+		assertThat("Y", is(giftConfirmScRes.getResultYn()));
 
 	}
 }
