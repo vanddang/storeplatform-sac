@@ -80,6 +80,9 @@ public class IdpServiceImpl implements IdpService {
 		String responseImIntSvcNo = "";
 		String responseUserId = "";
 
+		String tenantID = map.get("tenantID").toString();
+		String systemID = map.get("systemID").toString();
+
 		// LOGGER.debug("JOIN_SST_LIST START");
 
 		String joinSiteTotalList = map.get("join_sst_list").toString(); // 이용동의사이트정보
@@ -129,14 +132,14 @@ public class IdpServiceImpl implements IdpService {
 
 			// 공통으로 사용되는 요청정보
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setTenantID(map.get("tenantID").toString());
-			commonRequest.setSystemID(map.get("systemID").toString());
+			commonRequest.setTenantID(tenantID);
+			commonRequest.setSystemID(systemID);
 
 			// 사용자 기본정보
 			UserMbr userMbr = new UserMbr();
 
-			userMbr.setTenantID(commonRequest.getTenantID()); // 테넌트 ID
-			userMbr.setSystemID(commonRequest.getSystemID()); // 테넌트의 시스템 ID
+			userMbr.setTenantID(tenantID); // 테넌트 ID
+			userMbr.setSystemID(systemID); // 테넌트의 시스템 ID
 
 			userMbr.setUserKey(""); // 사용자 Key
 			userMbr.setImMbrNo(map.get("user_key").toString()); // 외부(OneID/IDP)에서 할당된 사용자 Key IDP 통합서비스 키 USERMBR_NO
@@ -170,7 +173,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrAuth.setSex(map.get("user_sex").toString()); // SEX 성별
 			mbrAuth.setName(map.get("user_name").toString()); // MBR_NM 회원명
 			mbrAuth.setTenantID(commonRequest.getTenantID()); // TENANT_ID 테넌트 아이디
-			mbrAuth.setRealNameSite(map.get("rname_auth_sst_code").toString());
+			mbrAuth.setRealNameSite(systemID); // systemID 입력으로 변경 20140204
 
 			createUserRequest.setCommonRequest(commonRequest); // 공통요청
 			createUserRequest.setUserMbr(userMbr); // 사용자정보
@@ -215,8 +218,8 @@ public class IdpServiceImpl implements IdpService {
 
 		} else { // 전환가입/변경전환/변경 가입 oldId != "null" 이 아닌경우 분기
 			CommonRequest commonRequest = new CommonRequest();
-			commonRequest.setTenantID(map.get("tenantID").toString());
-			commonRequest.setSystemID(map.get("systemID").toString());
+			commonRequest.setTenantID(tenantID);
+			commonRequest.setSystemID(systemID);
 			map.put("im_reg_date", DateUtil.getToday()); // 전환가입일을 셋팅
 			String updateUserKey = "";
 			if (userId.equals(oldId)) { // 전환가입 userId - oldId 비교시 같은경우
@@ -389,7 +392,7 @@ public class IdpServiceImpl implements IdpService {
 		getMbrAuth.setSex(hashMap.get("user_sex").toString()); // SEX 성별
 		getMbrAuth.setName(hashMap.get("user_name").toString()); // MBR_NM 회원명
 		getMbrAuth.setUpdateDate(hashMap.get("modify_req_date").toString() + hashMap.get("modify_req_time").toString()); // UPD_DT
-		getMbrAuth.setRealNameSite(hashMap.get("rname_auth_sst_code").toString());
+		getMbrAuth.setRealNameSite(hashMap.get("systemID").toString()); // systemID 입력으로 변경 20140204
 
 		getMbrAuth.setTenantID(commonRequest.getTenantID()); // TENANT_ID 테넌트 아이디
 
@@ -426,6 +429,7 @@ public class IdpServiceImpl implements IdpService {
 			mbrLglAgent.setParentDate(hashMap.get("parent_approve_date").toString()); // LGL_AGENT_AGREE_DT 동의 일시
 			mbrLglAgent.setParentEmail(hashMap.get("parent_email").toString()); // LGL_AGENT_EMAIL
 			mbrLglAgent.setParentBirthDay(hashMap.get("parent_birthday").toString()); // LGL_AGENT_BIRTH
+			mbrLglAgent.setParentRealNameSite(hashMap.get("systemID").toString()); // AUTH_REQ_CHNL_CD
 			if (!hashMap.get("parent_rname_auth_type").toString().equals("6")) {
 				mbrLglAgent.setParentCI(hashMap.get("parent_rname_auth_key").toString());
 			}
