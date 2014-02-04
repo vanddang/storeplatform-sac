@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,8 +41,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveDeviceRes;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
@@ -75,8 +72,8 @@ public class CreateDeviceTest {
 	}
 
 	String userAuthKey = "114127c7ef42667669819dad5df8d820c";
-	String userKey = "US201401231758478870000470";
-	String mdn = "01012341235";
+	String userKey = "US201401280706367180001249";
+	String mdn = "01066786242";
 
 	@Test
 	public void shouldCreateDevice() {
@@ -104,7 +101,7 @@ public class CreateDeviceTest {
 							deviceInfo.setDeviceId(CreateDeviceTest.this.mdn);
 							deviceInfo.setDeviceIdType("msisdn ");
 							deviceInfo.setDeviceTelecom(MemberConstants.DEVICE_TELECOM_LGT);
-							deviceInfo.setIsPrimary("N");
+							deviceInfo.setIsPrimary("Y");
 							deviceInfo.setIsAuthenticated("Y");
 							deviceInfo.setAuthenticationDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 							deviceInfo.setIsUsed("Y");
@@ -160,25 +157,23 @@ public class CreateDeviceTest {
 		}
 	}
 
-	@After
-	public void after() {
-		//휴대기기 삭제
-		new TestCaseTemplate(this.mockMvc).url("/member/user/removeDevice/v1").httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-			@Override
-			public Object requestBody() {
-				RemoveDeviceReq req = new RemoveDeviceReq();
-				req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
-				req.setDeviceId(CreateDeviceTest.this.mdn);
-				logger.debug("request param : {}", req.toString());
-				return req;
-			}
-		}).success(RemoveDeviceRes.class, new SuccessCallback() {
-			@Override
-			public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-				RemoveDeviceRes res = (RemoveDeviceRes) result;
-				logger.debug("response param : {}", res.toString());
-			}
-		}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
+	/*
+	 * @After public void after() { //휴대기기 삭제 new
+	 * TestCaseTemplate(this.mockMvc).
+	 * url("/member/user/removeDevice/v1").httpMethod
+	 * (HttpMethod.POST).requestBody(new RequestBodySetter() {
+	 * 
+	 * @Override public Object requestBody() { RemoveDeviceReq req = new
+	 * RemoveDeviceReq(); req.setUserAuthKey(CreateDeviceTest.this.userAuthKey);
+	 * req.setDeviceId(CreateDeviceTest.this.mdn);
+	 * logger.debug("request param : {}", req.toString()); return req; }
+	 * }).success(RemoveDeviceRes.class, new SuccessCallback() {
+	 * 
+	 * @Override public void success(Object result, HttpStatus httpStatus,
+	 * RunMode runMode) { RemoveDeviceRes res = (RemoveDeviceRes) result;
+	 * logger.debug("response param : {}", res.toString()); } }, HttpStatus.OK,
+	 * HttpStatus.ACCEPTED).run(RunMode.JSON);
+	 * 
+	 * }
+	 */
 }

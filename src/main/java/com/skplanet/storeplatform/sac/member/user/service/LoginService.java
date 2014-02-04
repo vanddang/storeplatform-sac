@@ -21,10 +21,8 @@ public interface LoginService {
 	 * @param req
 	 *            AuthorizeByMdnReq
 	 * @return AuthorizeByMdnRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) throws Exception;
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req);
 
 	/**
 	 * ID 기반 회원 인증 (One ID, IDP 회원)
@@ -34,8 +32,6 @@ public interface LoginService {
 	 * @param req
 	 *            AuthorizeByIdReq
 	 * @return AuthorizeByIdRes
-	 * @throws Exception
-	 *             AuthorizeByIdRes
 	 */
-	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) throws Exception;
+	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req);
 }

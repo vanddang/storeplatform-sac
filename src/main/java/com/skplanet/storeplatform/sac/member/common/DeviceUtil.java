@@ -94,10 +94,8 @@ public class DeviceUtil {
 	 * @param userMbrDevice
 	 *            SC회원 휴대기기부가정보 객체
 	 * @return deviceInfo DeviceInfo SAC회원 휴대기기부가정보 객체
-	 * @throws Exception
-	 *             Exception
 	 */
-	public static DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) throws Exception {
+	public static DeviceInfo getConverterDeviceInfo(UserMbrDevice userMbrDevice) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 		deviceInfo.setUserKey(userMbrDevice.getUserKey());
@@ -132,7 +130,7 @@ public class DeviceUtil {
 	 *            SC회원 휴대기기 부가정보 리스트
 	 * @return List<DeviceExtraInfo> SAC회원 휴대기기 부가정보 리스트
 	 */
-	public static List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list) throws Exception {
+	public static List<DeviceExtraInfo> getConverterDeviceInfoDetailList(List<UserMbrDeviceDetail> list) {
 
 		List<DeviceExtraInfo> deviceExtraInfoList = null;
 		DeviceExtraInfo deviceExtraInfo = null;
@@ -161,10 +159,8 @@ public class DeviceUtil {
 	 * @param deviceInfo
 	 *            DeviceInfo SAC회원 휴대기기부가정보 객체
 	 * @return userMbrDevice SC회원 휴대기기부가정보 객체
-	 * @throws Exception
-	 *             Exception
 	 */
-	public static UserMbrDevice getConverterUserMbrDeviceInfo(DeviceInfo deviceInfo) throws Exception {
+	public static UserMbrDevice getConverterUserMbrDeviceInfo(DeviceInfo deviceInfo) {
 
 		UserMbrDevice userMbrDevice = new UserMbrDevice();
 		userMbrDevice.setUserKey(deviceInfo.getUserKey());
@@ -196,7 +192,7 @@ public class DeviceUtil {
 	 *            > SAC회원 휴대기기 정보 객체
 	 * @return userMbrDeviceDetailList SC회원 휴대기기 부가정보 리스트
 	 */
-	public static List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) throws Exception {
+	public static List<UserMbrDeviceDetail> getConverterUserMbrDeviceDetailList(DeviceInfo deviceInfo) {
 
 		List<UserMbrDeviceDetail> userMbrDeviceDetailList = null;
 		UserMbrDeviceDetail userMbrDeviceDetail = null;

@@ -41,7 +41,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req) throws Exception;
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req);
 
 	/**
 	 * 휴대기기 수정
@@ -54,7 +54,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req) throws Exception;
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req);
 
 	/**
 	 * 휴대기기 목록 조회
@@ -67,7 +67,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req) throws Exception;
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req);
 
 	/**
 	 * 휴대기기 단건 조회
@@ -84,7 +84,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) throws Exception;
+	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
 
 	/**
 	 * 휴대기기 등록 서브 모듈 SC회원콤포넌트에 휴대기기를 등록, 기등록된 회원의 휴대기기인 경우 구매이관처리, 약관이관, 통합회원인
@@ -102,7 +102,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo) throws Exception;
+	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo);
 
 	/**
 	 * 기기정보 update
@@ -115,7 +115,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req) throws Exception;
+	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
 	 * 휴대기기 대표단말 설정

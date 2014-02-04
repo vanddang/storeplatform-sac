@@ -29,5 +29,5 @@ public interface UserService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public void modifyProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) throws Exception;
+	public void modifyProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey);
 }

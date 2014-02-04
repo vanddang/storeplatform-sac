@@ -11,8 +11,6 @@ package com.skplanet.storeplatform.sac.member.user.controller;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,8 +33,6 @@ import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 @Controller
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-
 	@Autowired
 	private LoginService loginService;
 
@@ -48,12 +44,10 @@ public class LoginController {
 	 * @param req
 	 *            AuthorizeByMdnReq
 	 * @return AuthorizeByMdnRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/member/user/authorizeByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) throws Exception {
+	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByMdnReq req) {
 
 		AuthorizeByMdnRes res = this.loginService.authorizeByMdn(requestHeader, req);
 
@@ -68,12 +62,10 @@ public class LoginController {
 	 * @param req
 	 *            AuthorizeByIdReq
 	 * @return AuthorizeByIdRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/member/user/authorizeById/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) throws Exception {
+	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, @Valid @RequestBody AuthorizeByIdReq req) {
 
 		AuthorizeByIdRes res = this.loginService.authorizeById(requestHeader, req);
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
@@ -58,8 +59,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req)
-			throws Exception {
+	public ListDeviceRes listDevice(SacRequestHeader requestHeader, @Valid @RequestBody ListDeviceReq req) {
 
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
@@ -68,15 +68,14 @@ public class DeviceController {
 
 		if (!userId.equals("") && isMainDevice.equals("")) {
 			logger.info(":::: 1");
-			throw new Exception("isMainDevice 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "isMainDevice 필수 파라미터 입니다.");
 		}
 
 		if (deviceId.equals("") && deviceKey.equals("") && isMainDevice.equals("")) {
-			throw new Exception("isMainDevice 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "isMainDevice 필수 파라미터 입니다.");
 		}
 
-		ListDeviceRes res = this.deviceService.listDevice(requestHeader,
-				(ListDeviceReq) ConvertMapperUtils.convertObject(req));
+		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtils.convertObject(req));
 
 		return res;
 	}
@@ -94,37 +93,36 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req)
-			throws Exception {
+	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, @Valid @RequestBody CreateDeviceReq req) {
 
 		/* 휴대기기 정보 필수 파라메터 체크 */
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 		if (StringUtil.nvl(deviceInfo.getDeviceId(), "").equals("")) {
-			throw new Exception("deviceId 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "deviceId 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
-			throw new Exception("deviceIdType 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "deviceIdType 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getDeviceTelecom(), "").equals("")) {
-			throw new Exception("deviceTelecom 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "deviceTelecom 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsPrimary(), "").equals("")) {
-			throw new Exception("isPrimary 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "isPrimary 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsAuthenticated(), "").equals("")) {
-			throw new Exception("isAuthenticate 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "isAuthenticate 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsUsed(), "").equals("")) {
-			throw new Exception("isUsed 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "isUsed 필수 파라미터 입니다.");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getAuthenticationDate(), "").equals("")) {
-			throw new Exception("authenticationDate 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "authenticationDate 필수 파라미터 입니다.");
 		}
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
@@ -145,11 +143,10 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req)
-			throws Exception {
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) throws Exception {
 
 		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("")) {
-			throw new Exception("deviceKey 필수 파라미터 입니다.");
+			throw new StorePlatformException("", "deviceKey 필수 파라미터 입니다.");
 		}
 
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
@@ -170,8 +167,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req)
-			throws Exception {
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) throws Exception {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
@@ -203,8 +199,8 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader,
-			@RequestBody DetailRepresentationDeviceReq req) throws Exception {
+	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req)
+			throws Exception {
 
 		logger.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
 
@@ -234,8 +230,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req)
-			throws Exception {
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) throws Exception {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
