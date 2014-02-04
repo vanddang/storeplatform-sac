@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.member.common;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,9 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerCardEcReq;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerCardEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcReq;
+import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
+import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcReq;
+import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
-import com.skplanet.storeplatform.external.client.uaps.vo.UapsReq;
-import com.skplanet.storeplatform.external.client.uaps.vo.UserRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
@@ -305,12 +308,14 @@ public class MemberCommonComponent {
 	 * 
 	 * @param msisdn
 	 *            String
-	 * @return Map<String, String>
+	 * @return GetCustomerEcRes
 	 * @throws Exception
 	 *             Exception
 	 */
-	public Map<String, String> getCustomer(String msisdn) throws Exception {
-		return this.icasSCI.getCustomer(msisdn);
+	public GetCustomerEcRes getCustomer(String msisdn) throws Exception {
+		GetCustomerEcReq req = new GetCustomerEcReq();
+		req.setDeviceId(msisdn);
+		return this.icasSCI.getCustomer(req);
 	}
 
 	/**
@@ -320,12 +325,14 @@ public class MemberCommonComponent {
 	 * 
 	 * @param msisdn
 	 *            String
-	 * @return Map<String, String>
+	 * @return GetCustomerCardEcRes
 	 * @throws Exception
 	 *             Exception
 	 */
-	public Map<String, String> getCustomerCard(String msisdn) throws Exception {
-		return this.icasSCI.getCustomerCard(msisdn);
+	public GetCustomerCardEcRes getCustomerCard(String msisdn) throws Exception {
+		GetCustomerCardEcReq req = new GetCustomerCardEcReq();
+		req.setDeviceId(msisdn);
+		return this.icasSCI.getCustomerCard(req);
 	}
 
 	/**
@@ -339,8 +346,9 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public Map<String, String> getMvService(String msisdn) throws Exception {
-		return this.icasSCI.getMvService(msisdn);
+	public GetMvnoEcRes getMvService(String msisdn) throws Exception {
+		GetMvnoEcReq req = new GetMvnoEcReq();
+		return this.icasSCI.getMvService(req);
 	}
 
 	/**
@@ -396,7 +404,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
