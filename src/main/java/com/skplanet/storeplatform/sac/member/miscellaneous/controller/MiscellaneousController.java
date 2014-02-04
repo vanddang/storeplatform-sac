@@ -74,6 +74,11 @@ public class MiscellaneousController {
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request)
 			throws Exception {
 
+		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
+		if (request == null || request.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "msisdn or deviceModel");
+		}
+
 		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
 
 		return response;
@@ -102,8 +107,8 @@ public class MiscellaneousController {
 		Matcher matcher = pattern.matcher(request.getMsisdn());
 		boolean isMdn = matcher.matches();
 		if (!isMdn) {
-			// TODO SAC_MEM_3009
-			throw new StorePlatformException("MSISND값이 아닙니다.");
+			// TODO SAC_MEM_3004
+			throw new StorePlatformException("유효하지 않은 휴대폰 번호입니다.");
 		}
 
 		GetOpmdRes response = this.service.getOpmd(request);

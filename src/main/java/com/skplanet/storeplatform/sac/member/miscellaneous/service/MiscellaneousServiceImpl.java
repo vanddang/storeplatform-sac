@@ -209,17 +209,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 						response.setUaCd(uaCode);
 						LOGGER.info("## UA Code : {}", uaCode);
 					} else {
-						// TODO SAC_MEM_3001
-						throw new StorePlatformException("DeviceID에 해당하는 UA코드가 존재하지 않습니다.");
+						throw new StorePlatformException("SAC_MEM_3401", msisdn);
 					}
 				} else {
-					// TODO SAC_MEM_3005
-					throw new StorePlatformException("DeviceID에 해당하는 DeviceModel코드가 존재하지 않습니다.");
+					throw new StorePlatformException("SAC_MEM_3403", msisdn);
 				}
 
 			} else {
-				// TODO SAC_MEM_3002
-				throw new StorePlatformException("유효하지 않은 휴대폰 번호입니다.");
+				throw new StorePlatformException("SAC_MEM_3004");
 			}
 		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
@@ -227,8 +224,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			if (uaCode != null) {
 				response.setUaCd(uaCode);
 			} else {
-				// TODO SAC_MEM_3003
-				throw new StorePlatformException("DeviceModelCode에 해당하는 UA코드가 존재하지 않습니다.");
+				throw new StorePlatformException("SAC_MEM_3402", deviceModelNo);
 			}
 		}
 		return response;
@@ -324,18 +320,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				ServiceAuth.class);
 
 		if (resultInfo == null) {
-			// TODO SAC_MEM_3008
-			throw new StorePlatformException("인증 코드가 일치 하지 않습니다. (존재하지 않는 인증번호, 인증코드 불일치, 인증 Sing 불일치)");
+			// (인증코드 불일치, 인증Sign 불일치, 인증정보 없음)
+			throw new StorePlatformException("SAC_MEM_3003");
 		}
 
 		if (resultInfo.getAuthComptYn().equals("Y")) {
-			// TODO SAC_MEM_3006
-			throw new StorePlatformException("기인증된 인증 코드 입니다.");
+			throw new StorePlatformException("SAC_MEM_3001");
 		}
 
 		if (Double.parseDouble(resultInfo.getCurrDt()) < 0) {
-			// TODO SAC_MEM_3007
-			throw new StorePlatformException("인증 시간이 만료된 인증 코드입니다.");
+			throw new StorePlatformException("SAC_MEM_3002");
 		}
 
 		String authSeq = resultInfo.getAuthSeq();
@@ -551,7 +545,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		if (searchUserResponse.getUserMbr() == null) {
 			// TODO SAC_MEM_3004
-			throw new StorePlatformException("DeviceID에 해당하는 회원정보가 존재하지 않습니다.");
+			throw new StorePlatformException("SAC_MEM_0003", "DeviceID", msisdn);
 		} else {
 			userKey = searchUserResponse.getUserMbr().getUserKey();
 			LOGGER.debug("## [SAC] Response userKey:" + userKey);

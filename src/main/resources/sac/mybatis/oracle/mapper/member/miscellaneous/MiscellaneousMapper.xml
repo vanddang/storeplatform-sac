@@ -14,8 +14,8 @@
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 및 인증코드 만료시간 확인 -->
-	<select id="getPhoneAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
-       /* MiscellaneousMapper.xml, getPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
+	<select id="searchPhoneAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
+       /* MiscellaneousMapper.xml, searchPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
        SELECT 
            AUTH_SEQ,
            AUTH_SIGN,
@@ -47,8 +47,8 @@
     </update>
     
     <!-- 휴대폰 SMS & 이메일 인증 코드 정보 저장 -->
-    <insert id="insertServiceAuthCode" parameterType="ServiceAuth">
-        /* MiscellaneousMapper.xml, insertServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
+    <insert id="createServiceAuthCode" parameterType="ServiceAuth">
+        /* MiscellaneousMapper.xml, createServiceAuthCode, SAC : 김다슬 , 2014-01-21 */
         INSERT INTO
             TB_CM_SVC_AUTH(
                 AUTH_SEQ,
@@ -100,8 +100,8 @@
     
     
     <!-- 이메일 인증 여부 확인 (기존 인증회원 여부 체크)-->
-    <select id="getEmailAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
-    /* MiscellaneousMapper.xml, getEmailAuthYn, SAC : 김다슬 , 2014-01-23 */
+    <select id="searchEmailAuthYnList" parameterType="ServiceAuth" resultType="ServiceAuth">
+    /* MiscellaneousMapper.xml, searchEmailAuthYnList, SAC : 김다슬 , 2014-01-23 */
     SELECT 
         AUTH_COMPT_YN,
         AUTH_VALUE
@@ -113,8 +113,8 @@
     </select>
     
     <!-- 이메일 인증코드 정보 확인 -->
-    <select id="getEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
-    /* MiscellaneousMapper.xml, getEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
+    <select id="searchEmailAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
+    /* MiscellaneousMapper.xml, searchEmailAuthInfo, SAC : 김다슬 , 2014-01-23 */
     SELECT 
         AUTH_SEQ,
         MBR_NO,
