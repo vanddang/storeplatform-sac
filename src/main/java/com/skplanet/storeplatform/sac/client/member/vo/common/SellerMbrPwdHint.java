@@ -21,6 +21,9 @@ public class SellerMbrPwdHint extends CommonInfo {
 	/** 보안질문 ID. */
 	private String questionID;
 
+	/** 보안질문 직접입력 값. */
+	private String questionMessage;
+
 	/** 보안질문 명. */
 	private String questionName;
 
@@ -44,6 +47,14 @@ public class SellerMbrPwdHint extends CommonInfo {
 
 	/** 수정일시. */
 	private String updateDate; // UPD_DT
+
+	public String getQuestionMessage() {
+		return this.questionMessage;
+	}
+
+	public void setQuestionMessage(String questionMessage) {
+		this.questionMessage = questionMessage;
+	}
 
 	public String getLanguageCode() {
 		return this.languageCode;
