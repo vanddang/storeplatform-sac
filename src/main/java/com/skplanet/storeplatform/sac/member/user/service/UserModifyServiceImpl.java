@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
@@ -245,7 +244,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * 공통 정보 setting.
 		 */
-		updateUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+		updateUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		/**
 		 * 사용자 기본정보 setting.
@@ -274,27 +273,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 		}
 
-	}
-
-	/**
-	 * <pre>
-	 * SC 공통정보 setting.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @return CommonRequest
-	 * @throws Exception
-	 *             익셉션
-	 */
-	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) throws Exception {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		LOGGER.info("## SC Request 공통 정보 : {}", commonRequest.toString());
-
-		return commonRequest;
 	}
 
 	/**
