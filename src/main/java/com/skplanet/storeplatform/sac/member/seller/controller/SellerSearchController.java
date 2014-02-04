@@ -233,7 +233,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchAuthKeyRes
 	 */
-	@RequestMapping(value = "/getAuthorizationKey/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) throws Exception {
 
