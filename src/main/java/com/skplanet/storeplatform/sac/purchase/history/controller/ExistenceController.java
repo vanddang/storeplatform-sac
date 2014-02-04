@@ -60,7 +60,7 @@ public class ExistenceController {
 	 *            헤더정보
 	 * @return List<ExistenceRes> 응답정보
 	 */
-	@RequestMapping(value = "/history/existence/list/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/history/existence/search/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ExistenceListSacRes searchExistenceList(@RequestBody @Validated ExistenceSacReq existenceSacReq,
 			BindingResult bindingResult, SacRequestHeader requestHeader) {
