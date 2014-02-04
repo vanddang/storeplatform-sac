@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -100,8 +100,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			LOGGER.info("## 필수 약관 미동의");
-			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
 		/**
@@ -123,7 +122,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 공통 정보 setting
 			 */
-			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
 			 * 이용약관 정보 setting
@@ -161,13 +160,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## ResponseMsg  : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey      : {}", createUserResponse.getUserKey());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-				LOGGER.info("## 사용자 회원 가입 실패 ===========================");
-				throw new RuntimeException("사용자 회원 가입 실패");
-
-			}
-
 			/**
 			 * 휴대기기 등록.
 			 */
@@ -180,7 +172,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			response.setDeviceKey(deviceKey);
 
 		} else if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
-			LOGGER.info("## (기가입 상태) 이미 서비스에 등록한 MDN");
 
 			/**
 			 * (IDP 연동) 무선회원 해지
@@ -190,12 +181,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## secedeUser4Wap - Result Code : {}", secedeUser4WapInfo.getResponseHeader().getResult());
 			LOGGER.info("## secedeUser4Wap - Result Text : {}", secedeUser4WapInfo.getResponseHeader().getResult_text());
 
-			throw new RuntimeException("## (기가입 상태) 이미 서비스에 등록한 MDN");
-
-		} else { // 기타
-
-			LOGGER.info("## IDP 무선회원 가입 연동 실패");
-			throw new RuntimeException("IDP 무선회원 가입 실패");
+			throw new StorePlatformException("SAC_MEM_1101");
 
 		}
 
@@ -212,8 +198,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			LOGGER.info("## 필수 약관 미동의");
-			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
 		/**
@@ -250,7 +235,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 공통 정보 setting
 			 */
-			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
 			 * 이용약관 정보 setting
@@ -294,22 +279,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-				LOGGER.info("## OneID 약관동의 가입 실패 ===========================");
-				throw new RuntimeException("사용자 회원 가입 실패");
-
-			}
-
 			/**
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
-
-		} else {
-
-			LOGGER.info("## 통합 서비스 이용동의 가입 실패!!");
-			throw new RuntimeException("통합 서비스 이용동의 가입 실패");
 
 		}
 
@@ -336,8 +309,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * 필수 약관 동의여부 체크
 		 */
 		if (this.checkAgree(req.getAgreementList(), sacHeader.getTenantHeader().getTenantId())) {
-			LOGGER.info("## 필수 약관 미동의");
-			throw new RuntimeException("회원 가입 실패 - 필수 약관 미동의");
+			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
 		/**
@@ -385,7 +357,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 공통 정보 setting
 			 */
-			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
 			 * 이용약관 정보 setting
@@ -429,13 +401,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-				LOGGER.info("## OneID 약관동의 가입 실패 ===========================");
-				throw new RuntimeException("사용자 회원 가입 실패");
-
-			}
-
 			/**
 			 * 휴대기기 등록.
 			 */
@@ -446,11 +411,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
 			response.setDeviceKey(deviceKey);
-
-		} else {
-
-			LOGGER.info("## 통합 서비스 이용동의 가입 실패!!");
-			throw new RuntimeException("통합 서비스 이용동의 가입 실패");
 
 		}
 
@@ -464,7 +424,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		CreateBySimpleRes response = new CreateBySimpleRes();
 
 		/**
-		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
+		 * IDP 중복 아이디 체크.
 		 */
 		this.checkDuplicateId(req.getUserId());
 
@@ -493,7 +453,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 공통 정보 setting
 			 */
-			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
 			 * SC 사용자 기본정보 setting
@@ -521,22 +481,10 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-				LOGGER.info("## 간편 가입 실패 ===========================");
-				throw new RuntimeException("사용자 회원 가입 실패");
-
-			}
-
 			/**
 			 * 결과 세팅
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
-
-		} else {
-
-			LOGGER.info("## IDP - 간편회원가입 실패~!!!");
-			throw new RuntimeException("IDP - 간편회원가입 실패");
 
 		}
 
@@ -549,7 +497,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		CreateBySimpleRes response = new CreateBySimpleRes();
 
 		/**
-		 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
+		 * IDP 중복 아이디 체크.
 		 */
 		this.checkDuplicateId(req.getUserId());
 
@@ -603,7 +551,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 공통 정보 setting
 			 */
-			createUserRequest.setCommonRequest(this.getCommonRequest(sacHeader));
+			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
 			 * SC 사용자 기본정보 setting
@@ -631,13 +579,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
 			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
 
-			if (!StringUtils.equals(createUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-				LOGGER.info("## 간편 가입 실패 ===========================");
-				throw new RuntimeException("사용자 회원 가입 실패");
-
-			}
-
 			/**
 			 * 휴대기기 등록.
 			 */
@@ -648,11 +589,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			response.setUserKey(createUserResponse.getUserKey());
 			response.setDeviceKey(deviceKey);
-
-		} else {
-
-			LOGGER.info("## IDP - 간편회원가입 실패~!!!");
-			throw new RuntimeException("IDP - 간편회원가입 실패");
 
 		}
 
@@ -669,10 +605,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 * @param tenantId
 	 *            테넌트 아이디
 	 * @return boolean
-	 * @throws Exception
-	 *             Exception
 	 */
-	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) throws Exception {
+	private boolean checkAgree(List<AgreementInfo> agreementList, String tenantId) {
 
 		/**
 		 * DB 약관 목록 조회 sorting
@@ -739,25 +673,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 			return false;
 		}
 
-	}
-
-	/**
-	 * <pre>
-	 * SC 공통정보 setting.
-	 * </pre>
-	 * 
-	 * @param sacHeader
-	 *            SacRequestHeader
-	 * @return CommonRequest
-	 */
-	private CommonRequest getCommonRequest(SacRequestHeader sacHeader) {
-
-		CommonRequest commonRequest = new CommonRequest();
-		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
-		LOGGER.info("## SC Request 공통 정보 : {}", commonRequest.toString());
-
-		return commonRequest;
 	}
 
 	/**
@@ -839,10 +754,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 	 *            사용자 등록키
 	 * @param majorDeviceInfo
 	 *            단말 주요 정보
-	 * @throws Exception
-	 *             Exception
 	 */
-	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey, MajorDeviceInfo majorDeviceInfo) throws Exception {
+	private String createDeviceSubmodule(Object obj, SacRequestHeader sacHeader, String userKey, MajorDeviceInfo majorDeviceInfo) {
 
 		DeviceInfo deviceInfo = new DeviceInfo();
 
@@ -930,9 +843,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		} catch (Exception e) {
 
-			LOGGER.info("## ===================== 휴대기기 등록 실패!!! (모듈 호출시 Error) ");
-			e.printStackTrace();
-			throw new RuntimeException("## 휴대기기 등록 실패 ================");
+			throw new StorePlatformException("SAC_MEM_1102", e);
 
 		}
 
@@ -952,17 +863,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private List<DeviceExtraInfo> getDeviceExtra(List<DeviceExtraInfo> deviceExtraInfoList, MajorDeviceInfo majorDeviceInfo) {
 
 		LOGGER.info("## 세팅 전 deviceExtraInfoList : {}", deviceExtraInfoList.toString());
-
-		// /**
-		// * SKT 회원관리번호 추가.
-		// */
-		// if (!StringUtils.equals(ObjectUtils.toString(majorDeviceInfo.getImMngNum()), "")) {
-		// LOGGER.info("## SKT 회원관리번호 추가.");
-		// DeviceExtraInfo imMngNum = new DeviceExtraInfo();
-		// imMngNum.setExtraProfile(MemberConstants.DEVICE_EXTRA_IMMNGNUM);
-		// imMngNum.setExtraProfileValue(majorDeviceInfo.getImMngNum());
-		// deviceExtraInfoList.add(imMngNum);
-		// }
 
 		/**
 		 * UA 코드 추가.
@@ -994,27 +894,22 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	/**
 	 * <pre>
-	 * IDP 중복 아이디 체크및 6개월 이내 동일 가입요청 체크.
+	 * IDP 중복 아이디 체크.
 	 * </pre>
 	 * 
 	 * @param userId
 	 *            유저 아이디
-	 * @throws Exception
-	 *             Exception
 	 */
-	private void checkDuplicateId(String userId) throws Exception {
+	private void checkDuplicateId(String userId) {
 
-		LOGGER.info("## ID 중복확인 =================================");
-		/**
-		 * (IDP 연동) IDP - ID 중복확인
-		 */
-		IDPReceiverM checkDupIdInfo = this.idpService.checkDupID(URLEncoder.encode(userId, "UTF-8"));
-		LOGGER.info("## checkDupID - Result Code : {}", checkDupIdInfo.getResponseHeader().getResult());
-		LOGGER.info("## checkDupID - Result Text : {}", checkDupIdInfo.getResponseHeader().getResult_text());
-		if (!StringUtils.equals(checkDupIdInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+		try {
 
-			LOGGER.info("## ===================== ID 중복 체크 실패");
-			throw new RuntimeException(checkDupIdInfo.getResponseHeader().getResult_text());
+			LOGGER.info("## ID 중복확인 =================================");
+			this.idpService.checkDupID(URLEncoder.encode(userId, "UTF-8"));
+
+		} catch (Exception e) {
+
+			throw new StorePlatformException("SAC_MEM_1104", e);
 
 		}
 
