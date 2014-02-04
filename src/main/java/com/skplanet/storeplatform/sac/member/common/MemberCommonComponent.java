@@ -140,10 +140,8 @@ public class MemberCommonComponent {
 	 * @param tenantId
 	 *            tenantId
 	 * @return List<ClauseDTO>
-	 * @throws Exception
-	 *             Exception
 	 */
-	public List<Clause> getMandAgreeList(String tenantId) throws Exception {
+	public List<Clause> getMandAgreeList(String tenantId) {
 		return this.repository.searchMandatoryAgreeList(tenantId);
 	}
 
@@ -155,10 +153,8 @@ public class MemberCommonComponent {
 	 * @param deviceModelCd
 	 *            deviceModelCd
 	 * @return DeviceHeader
-	 * @throws Exception
-	 *             Exception
 	 */
-	public Device getPhoneInfo(String deviceModelCd) throws Exception {
+	public Device getPhoneInfo(String deviceModelCd) {
 		return this.repository.searchPhoneInfo(deviceModelCd);
 	}
 
@@ -183,17 +179,6 @@ public class MemberCommonComponent {
 		return this.uapsSCI.getMappingInfo(uapsReq);
 	}
 
-	/**
-	 * 
-	 * <pre>
-	 * </pre>
-	 * 
-	 * @param systemId
-	 * @param tenantId
-	 * @param userKey
-	 * @param deviceInfo
-	 * @throws Exception
-	 */
 	/**
 	 * <pre>
 	 * 휴대기기 등록 서브 모듈.
@@ -367,11 +352,9 @@ public class MemberCommonComponent {
 	 * @param deviceIdType
 	 *            (msisdn or uuid or mac type)
 	 * @return MajorDeviceInfo
-	 * @throws Exception
-	 *             익셉션
 	 * 
 	 */
-	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) throws Exception {
+	public MajorDeviceInfo getDeviceBaseInfo(String model, String deviceTelecom, String deviceId, String deviceIdType) {
 
 		MajorDeviceInfo majorDeviceInfo = new MajorDeviceInfo();
 
@@ -467,7 +450,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String convertDeviceTelecom(String deviceTelecom) throws Exception {
+	public String convertDeviceTelecom(String deviceTelecom) {
 		if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_SKT)) {
 			return MemberConstants.NM_DEVICE_TELECOM_SKT;
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_KT)) {
@@ -483,8 +466,7 @@ public class MemberCommonComponent {
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
 			return MemberConstants.NM_DEVICE_TELECOM_IOS;
 		} else {
-			LOGGER.info("## Convert Device Telecom Exception!!!");
-			throw new RuntimeException("Convert Device Telecom Exception!!!");
+			throw new StorePlatformException("SAC_MEM_1104", deviceTelecom);
 		}
 	}
 
