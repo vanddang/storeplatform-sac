@@ -116,19 +116,20 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			DownloadMusic downloadMusic = null;
 
 			// 필수 파라미터 체크
-			if (StringUtils.isEmpty(productId) || StringUtils.isEmpty(deviceKey) || StringUtils.isEmpty(userKey)) {
-
-				// throw new StorePlatformException("필수 파라미터가 부족합니다.");
-				throw new StorePlatformException("필수 파라미터가 부족합니다.", "1", "2", "3");
+			if (StringUtils.isEmpty(productId)) {
+				throw new StorePlatformException("SAC_DSP_0002", "productId", productId);
+			}
+			if (StringUtils.isEmpty(deviceKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "deviceKey", deviceKey);
+			}
+			if (StringUtils.isEmpty(userKey)) {
+				throw new StorePlatformException("SAC_DSP_0002", "userKey", userKey);
 			}
 
 			// 다운로드 Music 상품 조회
 			MetaInfo metaInfo = (MetaInfo) this.commonDAO.queryForObject("Download.getDownloadMusicInfo",
 					downloadMusicSacReq);
 
-			this.log.debug("###################################################");
-			this.log.debug("metaInfo	:	" + metaInfo);
-			this.log.debug("###################################################");
 			String prchsId = null;
 
 			try {
@@ -150,18 +151,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 						.searchExistenceList(existenceScRequest);
 
 				if (!existenceResponseList.isEmpty()) {
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("구매 상품 ({}", existenceResponseList.toString(), ")");
-					this.log.debug("----------------------------------------------------------------");
-
 					prchsId = existenceResponseList.get(0).getPrchsId();
-				} else {
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("미구매 상품");
-					this.log.debug("----------------------------------------------------------------");
 				}
 			} catch (Exception e) {
-				throw new StorePlatformException("ERROR_0001", "1", "2", "3");
+				throw new StorePlatformException("SAC_DSP_0001", "구매여부 확인 ", e);
 			}
 
 			menuList = new ArrayList<Menu>();
