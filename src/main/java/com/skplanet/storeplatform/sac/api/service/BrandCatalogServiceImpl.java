@@ -96,7 +96,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 			// CUD가 C로 왔을경우 해당 BRAND_ID로 등록된 브랜드가 없을 때
 			if (this.selectBrandCountCudType(dpBrandInfo.getBrandId()) < 1) {
 				if (this.selectCountBrandCategory(dpBrandInfo.getDpCatNo()) > 0) {
-					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_BRAND", dpBrandInfo);
+					this.commonDAO.insert("BrandCatalog.createTbShpgBrand", dpBrandInfo);
 				} else {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 							"등록된 CATEGORY가 아닙니다. Category_Id = " + dpBrandInfo.getDpCatNo(), null);
@@ -126,7 +126,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 		try {
 			if (this.selectBrandCountCudType(dpBrandInfo.getBrandId()) > 0) {
 				if (this.selectCountBrandCategory(dpBrandInfo.getDpCatNo()) > 0) {
-					this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_BRAND", dpBrandInfo);
+					this.commonDAO.update("BrandCatalog.updateTbDpShpgBrand", dpBrandInfo);
 				} else {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 							"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpBrandInfo.getDpCatNo(), null);
@@ -167,9 +167,9 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 			// CUD가 C로 왔을경우 해당 CATALOG_ID로 등록된 브랜드가 없을 때
 			if (this.selectCatalogCountCudType(dpCatalogInfo.getCatalogId()) < 1) {
 				if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
-					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG", dpCatalogInfo);
-					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_SHPG_CATALOG_DESC", dpCatalogInfo);
-					this.commonDAO.insert("BrandCatalog.INSERT_TB_DP_MENU_SHPG_MAPG", dpCatalogInfo);
+					this.commonDAO.insert("BrandCatalog.createTbDpShpgCatalog", dpCatalogInfo);
+					this.commonDAO.insert("BrandCatalog.createTbDpShpgCatalogDesc", dpCatalogInfo);
+					this.commonDAO.insert("BrandCatalog.createTbDpMenuShpgMapg", dpCatalogInfo);
 				} else {
 					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 							"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
@@ -198,9 +198,9 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 			if (this.selectCatalogCountCudType(dpCatalogInfo.getCatalogId()) > 0) {
 				if (this.selectBrandCountCudType(dpCatalogInfo.getBrandId()) > 0) {
 					if (this.selectCountBrandCategory(dpCatalogInfo.getDpCatNo()) > 0) {
-						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_CATALOG", dpCatalogInfo);
-						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_SHPG_CATALOG_DESC", dpCatalogInfo);
-						this.commonDAO.update("BrandCatalog.UPDATE_TB_DP_MENU_SHPG_MAPG", dpCatalogInfo);
+						this.commonDAO.update("BrandCatalog.updateTbDpShpgCatalog", dpCatalogInfo);
+						this.commonDAO.update("BrandCatalog.updateTbDpShpgCatalogDesc", dpCatalogInfo);
+						this.commonDAO.update("BrandCatalog.updateTbDpMenuShpgMapg", dpCatalogInfo);
 					} else {
 						throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATID,
 								"등록된 CATEGORY가 아닙니다. CATEGORY_ID = " + dpCatalogInfo.getDpCatNo(), null);
@@ -232,7 +232,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 
 		try {
 
-			this.commonDAO.update("BrandCatalog.INSERT_TBL_TAG_INFO", tagInfo);
+			this.commonDAO.update("BrandCatalog.createTbDpProdTag", tagInfo);
 
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
@@ -247,7 +247,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 
 		try {
 			this.log.info("catalogId = " + cid);
-			this.commonDAO.delete("BrandCatalog.DELETE_TBL_TAG_INFO", cid);
+			this.commonDAO.delete("BrandCatalog.removeTbDpProdTag", cid);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -262,7 +262,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	@Override
 	public void insertTblDpProdImg(BrandCatalogProdImgInfo brandCatalogProdImgInfo) {
 		try {
-			this.commonDAO.insert("BrandCatalog.INSERT_BRAND_CATALOG_TB_DP_PROD_IMG", brandCatalogProdImgInfo);
+			this.commonDAO.insert("BrandCatalog.createBrandCatalogTbDpProdImg", brandCatalogProdImgInfo);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}
@@ -278,7 +278,7 @@ public class BrandCatalogServiceImpl implements BrandCatalogService {
 	public void deleteDpProdImg(String prodId) {
 		try {
 			this.log.info("prodId = " + prodId);
-			this.commonDAO.delete("BrandCatalog.DELETE_BRAND_CATALOG_TB_DP_PROD_IMG", prodId);
+			this.commonDAO.delete("BrandCatalog.removeBrandCatalogTbDpProdImg", prodId);
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);
 		}

@@ -31,8 +31,8 @@
     </select>
 
     <!--브랜드 테이블에 INSERT-->    
-    <insert id="INSERT_TB_DP_SHPG_BRAND" parameterType="com.skplanet.storeplatform.sac.api.vo.DpBrandInfo">
-      /* BrandCatalogMapper.xml, INSERT_TB_DP_SHPG_BRAND, 브랜드 테이블에 INSERT, 김형식/SK플래닛  , 2013-12-30 */
+    <insert id="createTbShpgBrand" parameterType="com.skplanet.storeplatform.sac.api.vo.DpBrandInfo">
+      /* BrandCatalogMapper.xml, createTbShpgBrand, 브랜드 테이블에 INSERT, 김형식/SK플래닛  , 2013-12-30 */
          INSERT INTO TB_DP_SHPG_BRAND(
 	         BRAND_ID
 	        ,MENU_ID
@@ -55,8 +55,8 @@
     </insert>
     
     <!--브랜드 테이블에 UPDATE-->
-    <update id="UPDATE_TB_DP_SHPG_BRAND" parameterType="com.skplanet.storeplatform.sac.api.vo.DpBrandInfo">
-       /* BrandCatalogMapper.xml, UPDATE_TB_DP_SHPG_BRAND, 브랜드 테이블에 UPDATE, 김형식/SK플래닛  , 2013-12-30 */
+    <update id="updateTbDpShpgBrand" parameterType="com.skplanet.storeplatform.sac.api.vo.DpBrandInfo">
+       /* BrandCatalogMapper.xml, updateTbDpShpgBrand, 브랜드 테이블에 UPDATE, 김형식/SK플래닛  , 2013-12-30 */
         UPDATE 
             TB_DP_SHPG_BRAND
         SET 
@@ -102,8 +102,8 @@
     </select>    
    
     <!--카탈로그 정보 테이블에 INSERT-->
-    <insert id="INSERT_TB_DP_SHPG_CATALOG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
-        /* BrandCatalogMapper.xml, INSERT_TB_DP_SHPG_CATALOG,카탈로그 정보 테이블에 INSERT, 김형식/SK플래닛 , 2013-12-30 */
+    <insert id="createTbDpShpgCatalog" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+        /* BrandCatalogMapper.xml, createTbDpShpgCatalog,카탈로그 정보 테이블에 INSERT, 김형식/SK플래닛 , 2013-12-30 */
         INSERT INTO TB_DP_SHPG_CATALOG(
 	         CATALOG_ID
 	        ,ORG_CATALOG_ID
@@ -127,8 +127,8 @@
     </insert>
 
     <!--카탈로그 상세 테이블에 INSERT-->
-    <insert id="INSERT_TB_DP_SHPG_CATALOG_DESC" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
-        /* BrandCatalogMapper.xml, INSERT_TB_DP_SHPG_CATALOG_DESC,카탈로그 상세 테이블에 INSERT, 김형식/SK플래닛 , 2013-12-30 */
+    <insert id="createTbDpShpgCatalogDesc" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+        /* BrandCatalogMapper.xml, createTbDpShpgCatalogDesc,카탈로그 상세 테이블에 INSERT, 김형식/SK플래닛 , 2013-12-30 */
         INSERT INTO TB_DP_SHPG_CATALOG_DESC(
 	         CATALOG_ID
 	        ,LANG_CD
@@ -154,8 +154,8 @@
     </insert>   
     
     <!--카탈로그_카테고리 매핑 테이블에 INSERT-->
-    <insert id="INSERT_TB_DP_MENU_SHPG_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
-        /* BrandCatalogMapper.xml, INSERT_TB_DP_MENU_SHPG_MAPG,카탈로그_카테고리 매핑 테이블에 INSERT, 김형식/SK플래닛 , 2013-12-30 */
+    <insert id="createTbDpMenuShpgMapg" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+        /* BrandCatalogMapper.xml, createTbDpMenuShpgMapg,카탈로그_카테고리 매핑 테이블에 INSERT, 김형식/SK플래닛 , 2013-12-30 */
         INSERT INTO TB_DP_MENU_SHPG_MAPG(
    	         MENU_ID
 	        ,CATALOG_ID
@@ -179,8 +179,8 @@
     </insert>         
    
     <!--카탈로그 정보 테이블에 UPDATE-->
-    <update id="UPDATE_TB_DP_SHPG_CATALOG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
-       /* BrandCatalogMapper.xml, UPDATE_TB_DP_SHPG_CATALOG,카탈로그 정보 테이블에 UPDATE, 김형식/SK플래닛 , 2013-12-30 */
+    <update id="updateTbDpShpgCatalog" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+       /* BrandCatalogMapper.xml, updateTbDpShpgCatalog,카탈로그 정보 테이블에 UPDATE, 김형식/SK플래닛 , 2013-12-30 */
         UPDATE 
             TB_DP_SHPG_CATALOG
         SET 
@@ -190,8 +190,8 @@
     </update>
            
     <!--카탈로그 상세 테이블에 UPDATE-->
-    <update id="UPDATE_TB_DP_SHPG_CATALOG_DESC" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
-       /* BrandCatalogMapper.xml, UPDATE_TB_DP_SHPG_CATALOG_DESC,카탈로그 상세 테이블에 UPDATE, 김형식/SK플래닛 , 2013-12-30 */
+    <update id="updateTbDpShpgCatalogDesc" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+       /* BrandCatalogMapper.xml, updateTbDpShpgCatalogDesc,카탈로그 상세 테이블에 UPDATE, 김형식/SK플래닛 , 2013-12-30 */
         UPDATE 
             TB_DP_SHPG_CATALOG_DESC
         SET 
@@ -203,8 +203,8 @@
     </update>       
            
     <!--카탈로그_카테고리 매핑 테이블에 UPDATE-->
-    <update id="UPDATE_TB_DP_MENU_SHPG_MAPG" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
-       /* BrandCatalogMapper.xml, UPDATE_TB_DP_MENU_SHPG_MAPG,카탈로그_카테고리 매핑 테이블에 UPDATE, 김형식/SK플래닛 , 2013-12-30 */
+    <update id="updateTbDpMenuShpgMapg" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogInfo">
+       /* BrandCatalogMapper.xml, updateTbDpMenuShpgMapg,카탈로그_카테고리 매핑 테이블에 UPDATE, 김형식/SK플래닛 , 2013-12-30 */
         UPDATE 
             TB_DP_MENU_SHPG_MAPG
         SET 
@@ -214,8 +214,8 @@
     </update>             
    
     <!--브랜드 카탈로그 이미지 테이블-->
-    <insert id="INSERT_BRAND_CATALOG_TB_DP_PROD_IMG" parameterType="com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo">
-       /* BrandCatalogMapper.xml, INSERT_BRAND_CATALOG_TB_DP_PROD_IMG,브랜드 카탈로그 이미지 테이블, 김형식/SK플래닛 , 2013-12-30 */
+    <insert id="createBrandCatalogTbDpProdImg" parameterType="com.skplanet.storeplatform.sac.api.vo.BrandCatalogProdImgInfo">
+       /* BrandCatalogMapper.xml, createBrandCatalogTbDpProdImg,브랜드 카탈로그 이미지 테이블, 김형식/SK플래닛 , 2013-12-30 */
         INSERT INTO TB_DP_PROD_IMG(
 	         PROD_ID
 	        ,IMG_CD
@@ -245,16 +245,16 @@
     </insert>   
    
     <!-- 브랜드 카탈로그 상품 이미지 삭제  -->
-    <delete id="DELETE_BRAND_CATALOG_TB_DP_PROD_IMG" parameterType="string">
-        /* BrandCatalogMapper.xml, DELETE_BRAND_CATALOG_TB_DP_PROD_IMG,브랜드 카탈로그 상품 이미지 삭제, 김형식/SK플래닛 , 2013-12-30 */
+    <delete id="removeBrandCatalogTbDpProdImg" parameterType="string">
+        /* BrandCatalogMapper.xml, removeBrandCatalogTbDpProdImg,브랜드 카탈로그 상품 이미지 삭제, 김형식/SK플래닛 , 2013-12-30 */
         DELETE
         FROM TB_DP_PROD_IMG
         WHERE PROD_ID = #{prodId}
     </delete>   
    
     <!--카탈로그 관련 태그 테이블에 INSERT-->
-    <insert id="INSERT_TBL_TAG_INFO" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo">
-       /* BrandCatalogMapper.xml, INSERT_TBL_TAG_INFO,카탈로그 관련 태그 테이블에 INSERT, 김형식/SK플래닛  , 2013-12-30 */
+    <insert id="createTbDpProdTag" parameterType="com.skplanet.storeplatform.sac.api.vo.DpCatalogTagInfo">
+       /* BrandCatalogMapper.xml, createTbDpProdTag,카탈로그 관련 태그 테이블에 INSERT, 김형식/SK플래닛  , 2013-12-30 */
         INSERT INTO TB_DP_PROD_TAG
             (
                  TAG_SEQ
@@ -281,8 +281,8 @@
     </insert>      
     
     <!-- TAG 정보 입력 전에 기존의 TAG 정보를 모두 삭제 -->
-    <delete id="DELETE_TBL_TAG_INFO" parameterType="string">
-        /* BrandCatalogMapper.xml, DELETE_TBL_TAG_INFO,TAG 정보 입력 전에 기존의 TAG 정보를 모두 삭, 김형식/SK플래닛  , 2013-12-30 */
+    <delete id="removeTbDpProdTag" parameterType="string">
+        /* BrandCatalogMapper.xml, removeTbDpProdTag,TAG 정보 입력 전에 기존의 TAG 정보를 모두 삭, 김형식/SK플래닛  , 2013-12-30 */
         DELETE FROM TB_DP_PROD_TAG
         WHERE CID = #{cid}
     </delete>   

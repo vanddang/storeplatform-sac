@@ -91,7 +91,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 		try {
 			for (TbDpProdInfo vo : tblDpProdList) {
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpProdInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdInfo", vo);
 				}
@@ -114,7 +114,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpShpgProdInfo vo : tbDpShpgProdList) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpShpgProdInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpShpgProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpShpgProdInfo", vo);
 				}
@@ -137,7 +137,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdDescInfo vo : tbDpProdDescList) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpProdDescInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpProdDescInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdDescInfo", vo);
 				}
@@ -160,7 +160,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdRshpInfo vo : tbDpProdRshpList) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpProdRshpInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpProdRshpInfo", vo);
 				}
 			}
 		} catch (Exception e) {
@@ -181,7 +181,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpTenantProdInfo vo : tbDpTenantProdList) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpTenantProdInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpTenantProdInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdInfo", vo);
 				}
@@ -204,7 +204,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpTenantProdPriceInfo vo : tbDpTenantProdPriceList) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpTenantProdPriceInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpTenantProdPriceInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpTenantProdPriceInfo", vo);
 				}
@@ -227,7 +227,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpProdCatalogMapgInfo vo : tbDpProdCatalogMapg) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpProdCatalogMapgInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpProdCatalogMapgInfo", vo);
 				} else { // 수정
 					this.commonDAO.update("Coupon.updateTbDpProdCatalogMapgInfo", vo);
 				}
@@ -250,11 +250,11 @@ public class CouponItemServiceImpl implements CouponItemService {
 		try {
 			String prodId = "";
 			for (TbDpProdOpt vo : tbDpProdOptList) {
-				this.commonDAO.delete("Coupon.deleteTbDpProdOpt", vo);
+				this.commonDAO.delete("Coupon.removeTbDpProdOpt", vo);
 				break;
 			}
 			for (TbDpProdOpt vo : tbDpProdOptList) {
-				this.commonDAO.insert("Coupon.insertTbDpProdOpt", vo);
+				this.commonDAO.insert("Coupon.createTbDpProdOpt", vo);
 				prodId = vo.getChnlProdId();
 			}
 
@@ -279,7 +279,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (TbDpSprtDeviceInfo vo : tbDpSprtDeviceList) {
 
 				if ("C".equalsIgnoreCase(vo.getCudType())) {
-					this.commonDAO.insert("Coupon.insertTbDpSprtDeviceInfo", vo);
+					this.commonDAO.insert("Coupon.createTbDpSprtDeviceInfo", vo);
 				}
 			}
 		} catch (Exception e) {
@@ -300,10 +300,10 @@ public class CouponItemServiceImpl implements CouponItemService {
 			for (DpCatalogTagInfo vo : tagList) {
 				if (delOK) {
 					String cId = vo.getCid();
-					this.commonDAO.delete("BrandCatalog.DELETE_TBL_TAG_INFO", cId);
+					this.commonDAO.delete("BrandCatalog.removeTbDpProdTag", cId);
 					delOK = false;
 				}
-				this.commonDAO.insert("BrandCatalog.INSERT_TBL_TAG_INFO", vo);
+				this.commonDAO.insert("BrandCatalog.createTbDpProdTag", vo);
 			}
 		} catch (Exception e) {
 			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_QUESTION, e.getMessage(), null);

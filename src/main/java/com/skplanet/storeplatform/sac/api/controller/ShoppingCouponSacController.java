@@ -966,8 +966,8 @@ public class ShoppingCouponSacController {
 					result = false;
 				}
 			}
-			if (!itemInfo.getMaxCountDaily().equals("")) {
-				message = "유효성 검사 실패 [maxCountMonthly : 일간 상품 최대 판매 수량 ]이 XML에 존재하지 않습니다.";
+			if (itemInfo.getMaxCountDaily().equals("")) {
+				message = "유효성 검사 실패 [maxCountDaily : 일간 상품 최대 판매 수량 ]이 XML에 존재하지 않습니다.";
 				result = false;
 			}
 			if (!itemInfo.getMaxCountDaily().equals("")) {

@@ -21,8 +21,8 @@
     </select>       
     
     <!--TB_DP_PROD 테이블에 INSERT-->    
-    <insert id="insertTbDpProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo">
-      /* CouponMapper.xml, insertTbDpProdInfo, TB_DP_PROD 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
+    <insert id="createTbDpProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdInfo">
+      /* CouponMapper.xml, createTbDpProdInfo, TB_DP_PROD 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
         insert into TB_DP_PROD(
              PROD_ID                /* 상품_ID */
             ,PROD_CHRG_YN           /* 상품_유료_여부 */
@@ -88,8 +88,8 @@
     </update>    
     
         <!--TB_DP_SHPG_PROD 테이블에 INSERT-->    
-    <insert id="insertTbDpShpgProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo">
-      /* CouponMapper.xml, insertTbDpShpgProdInfo,TB_DP_SHPG_PROD 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
+    <insert id="createTbDpShpgProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpShpgProdInfo">
+      /* CouponMapper.xml, createTbDpShpgProdInfo,TB_DP_SHPG_PROD 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
         insert into TB_DP_SHPG_PROD(
              PROD_ID                      /* 상품_ID */
             ,EPSD_CNT                     /* 에피소드_수 */
@@ -169,8 +169,8 @@
     </update>    
     
         <!--TB_DP_PROD_DESC 테이블에 INSERT-->    
-    <insert id="insertTbDpProdDescInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo">
-      /* CouponMapper.xml, insertTbDpProdDescInfo,TB_DP_PROD_DESC 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
+    <insert id="createTbDpProdDescInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdDescInfo">
+      /* CouponMapper.xml, createTbDpProdDescInfo,TB_DP_PROD_DESC 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
         insert into TB_DP_PROD_DESC(
              PROD_ID            /*  */
             ,LANG_CD            /*  */
@@ -215,8 +215,8 @@
     </update>        
     
     <!--TB_DP_PROD_CATALOG_MAPG 테이블에 INSERT-->    
-    <insert id="insertTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo">
-      /* CouponMapper.xml, insertTbDpProdCatalogMapgInfo,TB_DP_PROD_CATALOG_MAPG 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
+    <insert id="createTbDpProdCatalogMapgInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdCatalogMapgInfo">
+      /* CouponMapper.xml, createTbDpProdCatalogMapgInfo,TB_DP_PROD_CATALOG_MAPG 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
         insert into TB_DP_PROD_CATALOG_MAPG(
              PROD_ID        /* 상품_ID */
             ,CATALOG_ID     /* 카탈로그_ID */
@@ -252,8 +252,8 @@
     </update>           
     
     <!--TB_DP_PROD_RSHP 테이블에 INSERT-->    
-    <insert id="insertTbDpProdRshpInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo">
-      /* CouponMapper.xml, insertTbDpProdRshpInfo,TB_DP_PROD_RSHP 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
+    <insert id="createTbDpProdRshpInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdRshpInfo">
+      /* CouponMapper.xml, createTbDpProdRshpInfo,TB_DP_PROD_RSHP 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
         insert into TB_DP_PROD_RSHP(
              PROD_ID          /*상품ID  */
             ,PART_PROD_ID     /*부분_상품_ID  */
@@ -271,14 +271,14 @@
     
      <!--TB_DP_PROD_OPT 테이블에 DELETE--> 
      <!-- 쇼핑 옵션 정보 UPDATE 없이 무조건 INSERT 하는걸로 함 2013.05.31 서영배차장요청 -->
-    <delete id="deleteTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
-     /* CouponMapper.xml, deleteTbDpProdOpt,TB_DP_PROD_OPT 테이블에 DELETE, 김형식/SK플래닛 , 2013-01-08 */
+    <delete id="removeTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
+     /* CouponMapper.xml, removeTbDpProdOpt,TB_DP_PROD_OPT 테이블에 DELETE, 김형식/SK플래닛 , 2013-01-08 */
         DELETE FROM TB_DP_PROD_OPT WHERE CHNL_PROD_ID = #{chnlProdId}
     </delete>     
     
     <!--TB_DP_PROD_OPT 테이블에 INSERT-->    
-    <insert id="insertTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
-      /* CouponMapper.xml, TB_DP_PROD_OPT 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
+    <insert id="createTbDpProdOpt" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpProdOpt">
+      /* CouponMapper.xml, createTbDpProdOpt, TB_DP_PROD_OPT 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
         insert into TB_DP_PROD_OPT(
              CHNL_PROD_ID     /* 채널_상품_ID */
             ,EPSD_PROD_ID     /* 에피소드_상품_ID */
@@ -305,8 +305,8 @@
     </insert>
     
     <!--TB_DP_TENANT_PROD 테이블에 INSERT-->    
-    <insert id="insertTbDpTenantProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo">
-      /* CouponMapper.xml, insertTbDpTenantProdInfo, TB_DP_TENANT_PROD 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
+    <insert id="createTbDpTenantProdInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdInfo">
+      /* CouponMapper.xml, createTbDpTenantProdInfo, TB_DP_TENANT_PROD 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
         insert into TB_DP_TENANT_PROD(
              PROD_ID            /*  */
             ,TENANT_ID          /*  */
@@ -346,8 +346,8 @@
     </update>      
     
    <!--TB_DP_TENANT_PROD_PRICE 테이블에 INSERT-->    
-    <insert id="insertTbDpTenantProdPriceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo">
-      /* CouponMapper.xml, insertTbDpTenantProdPriceInfo, TB_DP_TENANT_PROD_PRICE 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
+    <insert id="createTbDpTenantProdPriceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpTenantProdPriceInfo">
+      /* CouponMapper.xml, createTbDpTenantProdPriceInfo, TB_DP_TENANT_PROD_PRICE 테이블에 INSERT, 김형식/SK플래닛 , 2013-01-08 */
         insert into TB_DP_TENANT_PROD_PRICE(
              TENANT_ID           /* 테넌트_ID */
             ,PROD_ID             /* 상품_ID */
@@ -408,8 +408,8 @@
     </update>            
     
         <!--TB_DP_SPRT_DEVICE 테이블에 INSERT-->    
-    <insert id="insertTbDpSprtDeviceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo">
-      /* CouponMapper.xml, insertTbDpProdRshpInfo,TB_DP_SPRT_DEVICE 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
+    <insert id="createTbDpSprtDeviceInfo" parameterType="com.skplanet.storeplatform.sac.api.vo.TbDpSprtDeviceInfo">
+      /* CouponMapper.xml, createTbDpSprtDeviceInfo,TB_DP_SPRT_DEVICE 테이블에 INSERT, 김형식/SK플래닛  , 2013-01-08 */
         insert into TB_DP_SPRT_DEVICE(
              PROD_ID          /*상품ID  */
             ,DEVICE_MODEL_CD  /**/

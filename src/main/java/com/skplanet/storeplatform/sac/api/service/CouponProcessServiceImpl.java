@@ -772,6 +772,8 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 				tdsd.setProdId(itemInfo.getProdId()); // 에피소드 상품
 				tdsd.setDeviceModelCd(CouponConstants.ANDROID_STANDARD2);
 				tdsd.setCudType(itemInfo.getCudType());
+				tdsd.setRegId(couponInfo.getBpId());
+				tdsd.setUpdId(couponInfo.getBpId());
 				tbDpSprtDeviceList.add(tdsd);
 			}
 			// 저장
