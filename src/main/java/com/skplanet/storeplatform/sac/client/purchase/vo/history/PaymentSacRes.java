@@ -14,13 +14,13 @@ public class PaymentSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String paymentMtdCd; // 결제방법코드
-	private String paymentDt;// 결제일시
+	private String paymentDt; // 결제일시
 	private Integer paymentAmt; // 결제금액
 	private String resvCol01; // 예빌컬럼01
-	private String resvCol02;// 예빌컬럼02
-	private String resvCol03;// 예빌컬럼03
-	private String resvCol04;// 예빌컬럼04
-	private String resvCol05;// 예빌컬럼05
+	private String resvCol02; // 예빌컬럼02
+	private String resvCol03; // 예빌컬럼03
+	private String resvCol04; // 예빌컬럼04
+	private String resvCol05; // 예빌컬럼05
 
 	/**
 	 * @return the paymentMtdCd

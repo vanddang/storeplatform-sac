@@ -14,13 +14,13 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class PaymentListSacRes extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private List<PaymentSacRes> PaymentListSacRes; // 결제내역 리스트
+	private List<PaymentSacRes> paymentListSacRes; // 결제내역 리스트
 
 	/**
 	 * @return the paymentListSacRes
 	 */
 	public List<PaymentSacRes> getPaymentListSacRes() {
-		return this.PaymentListSacRes;
+		return this.paymentListSacRes;
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class PaymentListSacRes extends CommonInfo implements Serializable {
 	 *            the paymentListSacRes to set
 	 */
 	public void setPaymentListSacRes(List<PaymentSacRes> paymentListSacRes) {
-		this.PaymentListSacRes = paymentListSacRes;
+		this.paymentListSacRes = paymentListSacRes;
 	}
 
 }
