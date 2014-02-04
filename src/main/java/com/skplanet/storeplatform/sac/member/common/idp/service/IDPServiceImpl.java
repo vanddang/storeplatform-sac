@@ -29,11 +29,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param email
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
+	public IDPReceiverM alredyJoinCheckByEmail(String email) {
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
 		sendData.setCmd(IDPConstants.IDP_REQ_CMD_ALEADY_JOIN_CHECK);
@@ -50,11 +49,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param id
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM checkDupID(String id) throws Exception {
+	public IDPReceiverM checkDupID(String id) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
@@ -71,11 +69,10 @@ public class IDPServiceImpl implements IDPService {
 	 * 2.1.8. 자동 가입 방지 Image 발급.
 	 * </pre>
 	 * 
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM warterMarkImageUrl() throws Exception {
+	public IDPReceiverM warterMarkImageUrl() {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_WATERMARK_AUTH);
@@ -94,11 +91,10 @@ public class IDPServiceImpl implements IDPService {
 	 * @param authCode
 	 * @param imageSign
 	 * @param signData
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) throws Exception {
+	public IDPReceiverM warterMarkAuth(String authCode, String imageSign, String signData) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_WATERMARK_AUTH);
@@ -117,11 +113,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM deviceCompare(String mdn) throws Exception {
+	public IDPReceiverM deviceCompare(String mdn) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -139,11 +134,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM simpleJoin(Map<String, Object> param) throws Exception {
+	public IDPReceiverM simpleJoin(Map<String, Object> param) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
@@ -166,11 +160,10 @@ public class IDPServiceImpl implements IDPService {
 	 * 
 	 * @param userId
 	 * @param userPwd
-	 * @return 2.3.1. 유선 회원의 로그인.
-	 * @throws Exception
+	 * @return 2.3.1. 유선 회원의 로그인. @
 	 */
 	@Override
-	public IDPReceiverM userAuthForId(String userId, String userPwd) throws Exception {
+	public IDPReceiverM userAuthForId(String userId, String userPwd) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
@@ -190,11 +183,10 @@ public class IDPServiceImpl implements IDPService {
 	 * 
 	 * @param id
 	 * @param pwd
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM authPwd(String id, String pwd) throws Exception {
+	public IDPReceiverM authPwd(String id, String pwd) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
@@ -215,11 +207,10 @@ public class IDPServiceImpl implements IDPService {
 	 * @param userAuthKey
 	 * @param queryKeyType
 	 * @param queryKeyValue
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM searchUserCommonInfo(String queryKeyType, String queryKeyValue) throws Exception {
+	public IDPReceiverM searchUserCommonInfo(String queryKeyType, String queryKeyValue) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -239,11 +230,10 @@ public class IDPServiceImpl implements IDPService {
 	 * 
 	 * @param queryKeyType
 	 * @param queryKeyValue
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM searchSpecialProfile(String queryKeyType, String queryKeyValue) throws Exception {
+	public IDPReceiverM searchSpecialProfile(String queryKeyType, String queryKeyValue) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -264,11 +254,10 @@ public class IDPServiceImpl implements IDPService {
 	 * @param user_auth_key
 	 * @param key_type
 	 * @param key
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM modifyAuthInfo(String user_auth_key, String key_type, String key) throws Exception {
+	public IDPReceiverM modifyAuthInfo(String user_auth_key, String key_type, String key) {
 		IDPSenderM sendData = new IDPSenderM();
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(IDPConstants.IDP_REQ_CMD_MODIFY_AUTH_INFO);
@@ -288,11 +277,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM modifyProfile(Map<String, Object> param) throws Exception {
+	public IDPReceiverM modifyProfile(Map<String, Object> param) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
@@ -446,11 +434,10 @@ public class IDPServiceImpl implements IDPService {
 	 * @param userAuthKey
 	 * @param secedeKeyType
 	 * @param secedeKeyValue
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) throws Exception {
+	public IDPReceiverM secedeUser(String userAuthKey, String secedeKeyType, String secedeKeyValue) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
@@ -469,11 +456,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM aleadyJoinCheckForMdn(String mdn) throws Exception {
+	public IDPReceiverM aleadyJoinCheckForMdn(String mdn) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
@@ -490,11 +476,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM join4Wap(String mdn, String mdnCorp) throws Exception {
+	public IDPReceiverM join4Wap(String mdn, String mdnCorp) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
@@ -513,11 +498,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM authForWap(String mdn) throws Exception {
+	public IDPReceiverM authForWap(String mdn) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_AUTH);
@@ -535,11 +519,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM findProfileForWap(String mdn) throws Exception {
+	public IDPReceiverM findProfileForWap(String mdn) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -558,11 +541,10 @@ public class IDPServiceImpl implements IDPService {
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM secedeUser4Wap(String mdn) throws Exception {
+	public IDPReceiverM secedeUser4Wap(String mdn) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
@@ -581,11 +563,10 @@ public class IDPServiceImpl implements IDPService {
 	 * @param mdn
 	 * @param svcCd
 	 * @param svcMngNum
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM joinSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
+	public IDPReceiverM joinSupService(String mdn, String svcCd, String svcMngNum) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_JOIN);
@@ -609,11 +590,10 @@ public class IDPServiceImpl implements IDPService {
 	 * @param mdn
 	 * @param svcCd
 	 * @param svcMngNum
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM secedeSupService(String mdn, String svcCd, String svcMngNum) throws Exception {
+	public IDPReceiverM secedeSupService(String mdn, String svcCd, String svcMngNum) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);
@@ -636,11 +616,10 @@ public class IDPServiceImpl implements IDPService {
 	 * 
 	 * @param mdn
 	 * @param svcCode
-	 * @return IDPReceiverM
-	 * @throws Exception
+	 * @return IDPReceiverM @
 	 */
 	@Override
-	public IDPReceiverM serviceSubscriptionCheck(String mdn, String svcCode) throws Exception {
+	public IDPReceiverM serviceSubscriptionCheck(String mdn, String svcCode) {
 		IDPSenderM sendData = new IDPSenderM();
 
 		sendData.setUrl(IDPConstants.IDP_REQ_URL_SECEDE);

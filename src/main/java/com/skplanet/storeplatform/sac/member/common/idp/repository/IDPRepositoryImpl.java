@@ -17,10 +17,12 @@ import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.SendReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SendRes;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
  * SAC => E/C Outbound
@@ -53,11 +55,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * </pre>
 	 * 
 	 * @param sendData
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	@Override
-	public IDPReceiverM sendIDP(IDPSenderM sendData) throws Exception {
+	public IDPReceiverM sendIDP(IDPSenderM sendData) {
 
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
@@ -81,11 +82,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * </pre>
 	 * 
 	 * @param sendData
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	@Override
-	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) throws Exception {
+	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) {
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
@@ -94,7 +94,8 @@ public class IDPRepositoryImpl implements IDPRepository {
 		sendReq.setIm(true);
 		sendReq.setUrl(sendData.getUrl());
 		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
-
+		System.out.println("!@#!@#!@#!#!@#!#!@#!@#!@#!@#");
+		System.out.println(ConvertMapperUtils.convertObject(sendReq));
 		SendRes sendRes = this.idpSCI.send(sendReq);
 
 		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
@@ -121,15 +122,20 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * SP_AUTH_KEY 작성시 호출해야할 Mac 생성 API
 	 * 
 	 */
-	private String generateMacSignature(String key, String message) throws Exception {
+	private String generateMacSignature(String key, String message) {
 		LOGGER.info("key : " + key);
 		LOGGER.info("message : " + message);
 		SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(), "HmacSHA1");
 
-		Mac mac = Mac.getInstance("HmacSHA1");
-		mac.init(skeySpec);
-
-		byte[] result = mac.doFinal(message.getBytes("euc-kr"));
+		Mac mac = null;
+		byte[] result = null;
+		try {
+			mac = Mac.getInstance("HmacSHA1");
+			mac.init(skeySpec);
+			result = mac.doFinal(message.getBytes("euc-kr"));
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_MEM_", e);
+		}
 
 		return this.toHex(result);
 	}
@@ -138,11 +144,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * 휴대폰 인증결과 암호화
 	 * 
 	 * @param phoneMeta
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	@Override
-	public String makePhoneAuthKey(String phoneMeta) throws Exception {
+	public String makePhoneAuthKey(String phoneMeta) {
 		String time = Long.toString(System.currentTimeMillis());
 
 		StringBuffer sb = new StringBuffer();
@@ -159,11 +164,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * 
 	 * @param mbrNm
 	 * @param ssn
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	@Override
-	public String makeSnAuthKey(String mbrNm, String userId) throws Exception {
+	public String makeSnAuthKey(String mbrNm, String userId) {
 		String time = Long.toString(System.currentTimeMillis());
 
 		StringBuffer sb = new StringBuffer();
@@ -183,12 +187,11 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * make mac signature key <br />
 	 * override func - support domain parameters
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 * @history 1. ? <br />
 	 *          2. nefer 2009-12-08 override func - override func - support domain parameters
 	 */
-	public String makeSpAuthKey() throws Exception {
+	public String makeSpAuthKey() {
 		LOGGER.debug("IDPManager.OMP_SERVICE_DOMAIN : " + this.OMP_SERVICE_DOMAIN);
 		LOGGER.debug("makeSpAuthKey(IDPManager.OMP_SERVICE_DOMAIN) : " + this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN));
 		return this.makeSpAuthKey(this.OMP_SERVICE_DOMAIN);
@@ -197,12 +200,11 @@ public class IDPRepositoryImpl implements IDPRepository {
 	/**
 	 * make mac signature key
 	 * 
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 * @history 1. ? <br />
 	 *          2. nefer 2009-12-08 override func - override func - support domain parameters
 	 */
-	public String makeSpAuthKey(String domain) throws Exception {
+	public String makeSpAuthKey(String domain) {
 		String time = Long.toString(System.currentTimeMillis());
 
 		StringBuffer sb = new StringBuffer();
@@ -223,11 +225,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * idp에 전달할 파라미터를 설정한다.
 	 * 
 	 * @param sendData
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	@SuppressWarnings("rawtypes")
-	public Hashtable<String, String> makeIDPSendParam(IDPSenderM sendData) throws Exception {
+	public Hashtable<String, String> makeIDPSendParam(IDPSenderM sendData) {
 		Hashtable<String, String> param = new Hashtable<String, String>();
 
 		String cmd = sendData.getCmd();
@@ -481,11 +482,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * idp에 전달할 파라미터를 설정한다.
 	 * 
 	 * @param sendData
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	@SuppressWarnings("rawtypes")
-	public Hashtable<String, String> makeImIDPSendParam(ImIDPSenderM sendData) throws Exception {
+	public Hashtable<String, String> makeImIDPSendParam(ImIDPSenderM sendData) {
 
 		Hashtable<String, String> param = new Hashtable<String, String>();
 
@@ -866,11 +866,10 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * </pre>
 	 * 
 	 * @param email
-	 * @return
-	 * @throws Exception
+	 * @return @
 	 */
 	// @Override
-	// public IDPReceiverM alredyJoinCheckByEmail(String email) throws Exception {
+	// public IDPReceiverM alredyJoinCheckByEmail(String email) {
 	// return this.idpSCI.alredyJoinCheckByEmail(email, 1).getIdpReceiverM();
 	// }
 }

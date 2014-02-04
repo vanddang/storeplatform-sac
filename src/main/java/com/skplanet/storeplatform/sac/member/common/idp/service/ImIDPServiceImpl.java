@@ -39,7 +39,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM agreeUser(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM agreeUser(Map<String, Object> param) {
 		/** param Key. */
 		// operator_id
 		// key_type
@@ -89,7 +89,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM discardUser(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM discardUser(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String term_reason_cd = (String) param.get("term_reason_cd");
@@ -120,7 +120,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM userInfoSearchServer(String imServiceNo) throws Exception {
+	public ImIDPReceiverM userInfoSearchServer(String imServiceNo) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
@@ -144,7 +144,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM updateUserInfo(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM updateUserInfo(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String user_tn = (String) param.get("user_tn");
@@ -241,7 +241,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM updateAdditionalInfo(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM updateAdditionalInfo(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String user_mdn = (String) param.get("user_mdn");
@@ -290,7 +290,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM modifyPwd(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM modifyPwd(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String user_passwd = (String) param.get("user_passwd");
@@ -328,7 +328,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM setLoginStatus(String key, String login_status_code) throws Exception {
+	public ImIDPReceiverM setLoginStatus(String key, String login_status_code) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_SET_LOGIN_STATUS);
@@ -362,7 +362,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 */
 	@Override
 	public ImIDPReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
-			String user_auth_key, String rname_auth_mns_code, String ci, String di, HashMap map) throws Exception {
+			String user_auth_key, String rname_auth_mns_code, String ci, String di, HashMap map) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_UPDATE_USER_NAME);
@@ -416,7 +416,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 */
 	@Override
 	public ImIDPReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
-			String parent_name, String parent_email, String user_auth_key, String parent_birthday) throws Exception {
+			String parent_name, String parent_email, String user_auth_key, String parent_birthday) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_UPDATE_GUARDIAN);
@@ -450,7 +450,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM authForId(String key, String pwd) throws Exception {
+	public ImIDPReceiverM authForId(String key, String pwd) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_AUTH);
@@ -474,7 +474,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM findJoinServiceListIDP(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM findJoinServiceListIDP(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String keyType = (String) param.get("keyType");
 		ImIDPSenderM sendData = new ImIDPSenderM();
@@ -497,7 +497,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM checkIdStatusIdpIm(String id) throws Exception {
+	public ImIDPReceiverM checkIdStatusIdpIm(String id) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_JOIN);
@@ -519,7 +519,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM getMdnInfoIDP(String mdn) throws Exception {
+	public ImIDPReceiverM getMdnInfoIDP(String mdn) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
@@ -532,7 +532,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	}
 
 	@Override
-	public ImIDPReceiverM findUserIdByMdn(Map<String, Object> param) throws Exception {
+	public ImIDPReceiverM findUserIdByMdn(Map<String, Object> param) {
 		String user_mdn = (String) param.get("user_mdn");
 		String user_code = (String) param.get("user_code");
 		String mobile_sign = (String) param.get("mobile_sign");
@@ -567,7 +567,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM userInfoIdpSearchServer(String imServiceNo) throws Exception {
+	public ImIDPReceiverM userInfoIdpSearchServer(String imServiceNo) {
 		ImIDPSenderM sendData = new ImIDPSenderM();
 		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
 		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER);

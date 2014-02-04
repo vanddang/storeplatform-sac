@@ -197,7 +197,8 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo) throws Exception {
+	public String insertDeviceInfo(String systemId, String tenantId, String userKey, DeviceInfo deviceInfo)
+			throws Exception {
 		return this.deviceService.insertDeviceInfo(systemId, tenantId, userKey, deviceInfo);
 	}
 
@@ -220,8 +221,10 @@ public class MemberCommonComponent {
 	 *             Exception
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) throws Exception {
-		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
+		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType,
+				keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
@@ -390,8 +393,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -501,7 +503,7 @@ public class MemberCommonComponent {
 
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
 		schReq.setCommonRequest(commonRequest);
-		schReq.setSellerKey(sellerKey);
+		schReq.setSessionKey(sellerKey);
 
 		SearchLoginInfoResponse schRes = this.sellerSCI.searchLoginInfo(schReq);
 		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
