@@ -1161,7 +1161,7 @@ public class DummyDataController {
 		OneIdInfoSacRes res = new OneIdInfoSacRes();
 		res.setIdctYn("Y");
 		res.setOcbYn("Y");
-		res.setCi("0MV9wnibpIbmH+0g1sSZ8NJkJ7MiFTjvWwgnrycdYQbusSpz0s9Vat0WX4bYVwoqpjfO3nanJKnJkHiQYWwR8g==");
+		res.setCiYn("Y");
 
 		return res;
 	}
