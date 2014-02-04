@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class CreatePurchaseReqProduct extends CommonInfo {
+public class CreatePurchaseSacReqProduct extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
 	@NotBlank
@@ -39,12 +39,12 @@ public class CreatePurchaseReqProduct extends CommonInfo {
 
 	/**
 	 */
-	public CreatePurchaseReqProduct() {
+	public CreatePurchaseSacReqProduct() {
 	}
 
 	/**
 	 */
-	public CreatePurchaseReqProduct(String prodId, String tenantProdGrpCd, Double prodAmt, Integer prodQty) {
+	public CreatePurchaseSacReqProduct(String prodId, String tenantProdGrpCd, Double prodAmt, Integer prodQty) {
 		this.prodId = prodId;
 		this.tenantProdGrpCd = tenantProdGrpCd;
 		this.prodAmt = prodAmt;

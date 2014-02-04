@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class CreatePurchaseRes extends CommonInfo {
+public class CreatePurchaseSacRes extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
 	private String resultType; // 결과 타입: payment-결제Page 요청 진행, free-무료구매 완료

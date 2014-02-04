@@ -23,15 +23,15 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 1. 16. Updated by : 이승택, nTels.
  */
-public class CreatePurchaseReq extends CommonInfo {
+public class CreatePurchaseSacReq extends CommonInfo {
 	private static final long serialVersionUID = 201401031L;
 
 	@NotBlank
-	private String insdUsermbrNo; // 내부 회원 번호
+	private String userKey; // 내부 회원 번호
 	@NotBlank
-	private String insdDeviceId; // 내부 디바이스 ID
-	private String recvInsdUsermbrNo; // (선물 경우 필수) 수신자 내부 회원 번호
-	private String recvInsdDeviceId; // (선물 경우 필수) 수신자 내부 디바이스 ID
+	private String deviceKey; // 내부 디바이스 ID
+	private String recvUserKey; // (선물 경우 필수) 수신자 내부 회원 번호
+	private String recvDeviceKey; // (선물 경우 필수) 수신자 내부 디바이스 ID
 	@NotBlank
 	private String prchsReqPathCd; // 구매 요청 경로 코드
 	private String mid; // 가맹점 ID
@@ -48,36 +48,66 @@ public class CreatePurchaseReq extends CommonInfo {
 	@NotBlank
 	private String prchsCaseCd; // 구매 유형 코드
 	@NotNull
-	private List<CreatePurchaseReqProduct> productList; // 구매할 상품 리스트
+	private List<CreatePurchaseSacReqProduct> productList; // 구매할 상품 리스트
 
 	/**
-	 * @return the insdUsermbrNo
+	 * @return the userKey
 	 */
-	public String getInsdUsermbrNo() {
-		return this.insdUsermbrNo;
+	public String getUserKey() {
+		return this.userKey;
 	}
 
 	/**
-	 * @param insdUsermbrNo
-	 *            the insdUsermbrNo to set
+	 * @param userKey
+	 *            the userKey to set
 	 */
-	public void setInsdUsermbrNo(String insdUsermbrNo) {
-		this.insdUsermbrNo = insdUsermbrNo;
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 	/**
-	 * @return the insdDeviceId
+	 * @return the deviceKey
 	 */
-	public String getInsdDeviceId() {
-		return this.insdDeviceId;
+	public String getDeviceKey() {
+		return this.deviceKey;
 	}
 
 	/**
-	 * @param insdDeviceId
-	 *            the insdDeviceId to set
+	 * @param deviceKey
+	 *            the deviceKey to set
 	 */
-	public void setInsdDeviceId(String insdDeviceId) {
-		this.insdDeviceId = insdDeviceId;
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the recvUserKey
+	 */
+	public String getRecvUserKey() {
+		return this.recvUserKey;
+	}
+
+	/**
+	 * @param recvUserKey
+	 *            the recvUserKey to set
+	 */
+	public void setRecvUserKey(String recvUserKey) {
+		this.recvUserKey = recvUserKey;
+	}
+
+	/**
+	 * @return the recvDeviceKey
+	 */
+	public String getRecvDeviceKey() {
+		return this.recvDeviceKey;
+	}
+
+	/**
+	 * @param recvDeviceKey
+	 *            the recvDeviceKey to set
+	 */
+	public void setRecvDeviceKey(String recvDeviceKey) {
+		this.recvDeviceKey = recvDeviceKey;
 	}
 
 	/**
@@ -216,39 +246,9 @@ public class CreatePurchaseReq extends CommonInfo {
 	}
 
 	/**
-	 * @return the recvInsdUsermbrNo
-	 */
-	public String getRecvInsdUsermbrNo() {
-		return this.recvInsdUsermbrNo;
-	}
-
-	/**
-	 * @param recvInsdUsermbrNo
-	 *            the recvInsdUsermbrNo to set
-	 */
-	public void setRecvInsdUsermbrNo(String recvInsdUsermbrNo) {
-		this.recvInsdUsermbrNo = recvInsdUsermbrNo;
-	}
-
-	/**
-	 * @return the recvInsdDeviceId
-	 */
-	public String getRecvInsdDeviceId() {
-		return this.recvInsdDeviceId;
-	}
-
-	/**
-	 * @param recvInsdDeviceId
-	 *            the recvInsdDeviceId to set
-	 */
-	public void setRecvInsdDeviceId(String recvInsdDeviceId) {
-		this.recvInsdDeviceId = recvInsdDeviceId;
-	}
-
-	/**
 	 * @return the productList
 	 */
-	public List<CreatePurchaseReqProduct> getProductList() {
+	public List<CreatePurchaseSacReqProduct> getProductList() {
 		return this.productList;
 	}
 
@@ -256,7 +256,7 @@ public class CreatePurchaseReq extends CommonInfo {
 	 * @param productList
 	 *            the productList to set
 	 */
-	public void setProductList(List<CreatePurchaseReqProduct> productList) {
+	public void setProductList(List<CreatePurchaseSacReqProduct> productList) {
 		this.productList = productList;
 	}
 

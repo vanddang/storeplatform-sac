@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class NotifyPaymentReq extends CommonInfo {
+public class NotifyPaymentSacReq extends CommonInfo {
 	private static final long serialVersionUID = 201401231L;
 
 	private String code; // 결제요청 결과코드

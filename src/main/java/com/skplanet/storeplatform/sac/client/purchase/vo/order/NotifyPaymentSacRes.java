@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.client.purchase.vo.order;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
-public class NotifyPaymentRes extends CommonInfo {
+public class NotifyPaymentSacRes extends CommonInfo {
 	private static final long serialVersionUID = 201401231L;
 
 	private String code; // 결제알림 처리 결과
@@ -10,7 +10,7 @@ public class NotifyPaymentRes extends CommonInfo {
 
 	/**
 	 */
-	public NotifyPaymentRes() {
+	public NotifyPaymentSacRes() {
 	}
 
 	/**
@@ -20,7 +20,7 @@ public class NotifyPaymentRes extends CommonInfo {
 	 * @param msg
 	 *            msg
 	 */
-	public NotifyPaymentRes(String code, String msg) {
+	public NotifyPaymentSacRes(String code, String msg) {
 		this.code = code;
 		this.msg = msg;
 	}
