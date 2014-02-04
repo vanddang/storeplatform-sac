@@ -69,14 +69,13 @@ public class CreateSubsellerTest {
 
 						req.setSellerKey("IF102102956220120711144039");
 						req.setSubSellerID("ID323R4118");
-						req.setSubSellerPW("12312312");
-						req.setSubSellerMemo("test");
+						req.setSubSellerMemo("test2");
 						req.setSubSellerEmail("ID11@qqq.com");
 
 						// 새로 추가됨
 						req.setSubSellerKey("SS201402041452205570000558");
-						req.setMemberPW("12312312");
-						req.setOldPW("a");
+						// req.setMemberPW("12312312");
+						// req.setOldPW("a");
 						req.setIsNew("N");
 
 						LOGGER.debug("request param : {}", req.toString());
