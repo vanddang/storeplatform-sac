@@ -72,6 +72,9 @@ public class SellerSubServiceImpl implements SellerSubService {
 		sellerMbr.setSellerKey(req.getSubSellerKey());
 		sellerMbr.setSubSellerMemo(req.getSubSellerMemo());
 		sellerMbr.setSellerEmail(req.getSubSellerEmail());
+		sellerMbr.setRightProfileList(req.getSubSellerCateList());
+		sellerMbr.setSellerPhone(req.getSubSellerPhone());
+		sellerMbr.setSellerPhoneCountry(req.getSubSellerPhoneCountry());
 		schReq.setSellerMbr(sellerMbr);
 		schReq.setIsNew(req.getIsNew());
 
