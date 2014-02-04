@@ -67,7 +67,7 @@ public class CheckPasswordReminderQuestionTest {
 	public void CheckPasswordReminderQuestion() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/checkPasswordReminderQuestion/v1")
+				.url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH + "/checkPasswordReminderQuestion/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

@@ -61,7 +61,7 @@ public class CreateSubsellerTest {
 	@Test
 	public void createSubseller() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH + "/createSubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

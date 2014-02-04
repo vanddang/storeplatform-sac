@@ -61,8 +61,9 @@ public class ListSubsellerTest {
 	public void listSubseller() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/listSubseller/v1?sellerKey=IF102102956220120711144039")
-				.httpMethod(HttpMethod.GET).success(ListSubsellerRes.class, new SuccessCallback() {
+				.url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH
+						+ "/listSubseller/v1?sellerKey=IF102102956220120711144039").httpMethod(HttpMethod.GET)
+				.success(ListSubsellerRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ListSubsellerRes res = (ListSubsellerRes) result;

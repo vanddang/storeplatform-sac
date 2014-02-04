@@ -61,7 +61,7 @@ public class SearchIdTest {
 	public void searchId() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
+				.url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH
 						+ "/searchId/v1?sellerEmail=omc97@hanmail.net&sellerCompany=&sellerBizNumber=&sellerPhone=")
 				.httpMethod(HttpMethod.GET).success(SearchIdRes.class, new SuccessCallback() {
 					@Override

@@ -67,7 +67,7 @@ public class RemoveSubsellerTest {
 	@Test
 	public void removeSubseller() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/removeSubseller/v1")
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH + "/removeSubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

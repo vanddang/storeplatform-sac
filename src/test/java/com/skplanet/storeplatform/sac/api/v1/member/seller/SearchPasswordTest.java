@@ -58,7 +58,7 @@ public class SearchPasswordTest {
 	public void searchPassword() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/searchPassword/v1?sellerId=biz_7908")
+				.url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH + "/searchPassword/v1?sellerId=biz_7908")
 				.httpMethod(HttpMethod.GET).success(SearchPasswordRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
