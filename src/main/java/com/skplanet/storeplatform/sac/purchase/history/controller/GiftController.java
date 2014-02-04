@@ -86,8 +86,10 @@ public class GiftController {
 	 * 
 	 * @param giftConfirmSacReq
 	 *            요청정보
-	 * @param header
-	 *            테넌트 헤더정보
+	 * @param bindingResult
+	 *            Validated Result
+	 * @param requestHeader
+	 *            헤더정보
 	 * @return GiftConfirmSacRes
 	 */
 	@RequestMapping(value = "/history/gift/update/v1", method = RequestMethod.POST)

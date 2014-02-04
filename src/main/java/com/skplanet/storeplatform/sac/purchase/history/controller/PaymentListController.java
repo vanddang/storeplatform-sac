@@ -53,6 +53,8 @@ public class PaymentListController {
 	 * 
 	 * @param paymentSacReq
 	 *            요청정보
+	 * @param bindingResult
+	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
 	 * @return PaymentListSacRes 응답정보
@@ -71,10 +73,10 @@ public class PaymentListController {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		PaymentListSacRes paymentListSacRes = new PaymentListSacRes();
-		List<PaymentScResponse> PaymentListScResponse = new ArrayList<PaymentScResponse>();
+		List<PaymentScResponse> paymentListScResponse = new ArrayList<PaymentScResponse>();
 
-		PaymentListScResponse = this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header));
-		paymentListSacRes.setPaymentListSacRes(this.resConvert(PaymentListScResponse));
+		paymentListScResponse = this.paymentSearchSacService.searchPaymentList(this.reqConvert(paymentSacReq, header));
+		paymentListSacRes.setPaymentListSacRes(this.resConvert(paymentListScResponse));
 		return paymentListSacRes;
 	}
 
@@ -103,7 +105,7 @@ public class PaymentListController {
 	/**
 	 * resConvert.
 	 * 
-	 * @param paymentScResponse
+	 * @param paymentListScResponse
 	 *            요청정보
 	 * @return List<PaymentSacRes>
 	 */

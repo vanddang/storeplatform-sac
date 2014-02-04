@@ -52,7 +52,7 @@ public class ExistenceController {
 	/**
 	 * 기구매 체크 SAC.
 	 * 
-	 * @param existenceReq
+	 * @param existenceSacReq
 	 *            요청정보
 	 * @param bindingResult
 	 *            Validated Result

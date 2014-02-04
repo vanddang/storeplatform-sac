@@ -58,7 +58,7 @@ public class HidingController {
 	 *            Validated Result
 	 * @param requestHeader
 	 *            헤더정보
-	 * @return List<HidingRes> 응답정보
+	 * @return HidingListSacRes 응답정보
 	 */
 	@RequestMapping(value = "/history/hiding/update/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -129,8 +129,6 @@ public class HidingController {
 	 * 
 	 * @param hidingListScResponse
 	 *            요청정보
-	 * @param header
-	 *            테넌트 헤더정보
 	 * @return List<HidingSacRes>
 	 */
 	private List<HidingSacRes> resConvert(List<HidingScResponse> hidingListScResponse) {

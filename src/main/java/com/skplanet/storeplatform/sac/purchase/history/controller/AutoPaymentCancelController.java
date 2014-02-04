@@ -49,7 +49,7 @@ public class AutoPaymentCancelController {
 	/**
 	 * 자동결재해지예약/예약취소/해지 SAC.
 	 * 
-	 * @param autoPaymentCancelReq
+	 * @param autoPaymentCancelSacReq
 	 *            요청정보
 	 * @param bindingResult
 	 *            Validated Result
@@ -60,7 +60,7 @@ public class AutoPaymentCancelController {
 	@RequestMapping(value = "/history/reservation/update/v1", method = RequestMethod.POST)
 	public @ResponseBody
 	AutoPaymentCancelSacRes updateReservation(@RequestBody @Validated AutoPaymentCancelSacReq autoPaymentCancelSacReq,
-			BindingResult bindingResult, SacRequestHeader requestHeader) throws Exception {
+			BindingResult bindingResult, SacRequestHeader requestHeader) {
 
 		TenantHeader header = requestHeader.getTenantHeader();
 		// 필수값 체크
