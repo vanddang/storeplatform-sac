@@ -70,7 +70,11 @@ public class HidingController {
 		if (bindingResult.hasErrors()) {
 			List<FieldError> errors = bindingResult.getFieldErrors();
 			for (FieldError error : errors) {
-				throw new StorePlatformException("SAC_PUR_0001", error.getField());
+				if (error.getCode().equals("Min")) {
+					throw new StorePlatformException("SAC_PUR_0005", error.getField(), error.getRejectedValue(), "1");
+				} else {
+					throw new StorePlatformException("SAC_PUR_0001", error.getField());
+				}
 			}
 		}
 
