@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationR
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
@@ -169,9 +170,9 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listPasswordReminderQuestion/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			@RequestHeader("Accept-Language") String language) throws Exception {
-		LOGGER.debug("------------------------------------language : {}", language);
-		return this.sellerSearchService.listPasswordReminderQuestion(header, language);
+			ListPasswordReminderQuestionReq req) throws Exception {
+		LOGGER.debug("------------------------------------req : {}", req);
+		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
 
 	/**

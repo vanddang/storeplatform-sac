@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmail
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
@@ -445,13 +446,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return ListPasswordReminderQuestionRes
 	 */
 	@Override
-	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header, String language)
-			throws Exception {
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
+			ListPasswordReminderQuestionReq req) throws Exception {
 
 		SearchPwdHintListResponse schRes = new SearchPwdHintListResponse();
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
 
-		schReq.setLanguageCode(language);
+		schReq.setSellerKey(req.getSellerKey());
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schRes = this.sellerSCI.searchPwdHintList(schReq);
@@ -461,26 +462,17 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
 		SellerMbrPwdHint sellerMbrPwdHint = null;
-		if (schRes.getSellerMbrPwdHintList() != null)
-			for (int i = 0; i < schRes.getSellerMbrPwdHintList().size(); i++) {
+		if (schRes.getPWReminderList() != null)
+			for (int i = 0; i < schRes.getPWReminderList().size(); i++) {
 				sellerMbrPwdHint = new SellerMbrPwdHint();
-				sellerMbrPwdHint.setDisplayOrder(schRes.getSellerMbrPwdHintList().get(i).getDisplayOrder());
-				sellerMbrPwdHint.setIsDisplay(schRes.getSellerMbrPwdHintList().get(i).getIsDisplay());
-				// sellerMbrPwdHint.setLanguageCode(schRes.getSellerMbrPwdHintList().get(i).getLanguageCode());
-				sellerMbrPwdHint.setQuestionDescription(schRes.getSellerMbrPwdHintList().get(i)
-						.getQuestionDescription());
-				sellerMbrPwdHint.setQuestionID(schRes.getSellerMbrPwdHintList().get(i).getQuestionID());
-				sellerMbrPwdHint.setQuestionName(schRes.getSellerMbrPwdHintList().get(i).getQuestionName());
-				// sellerMbrPwdHint.setRegDate(schRes.getSellerMbrPwdHintList().get(i).getRegDate());
-				// sellerMbrPwdHint.setRegID(schRes.getSellerMbrPwdHintList().get(i).getRegID());
-				// sellerMbrPwdHint.setUpdateDate(schRes.getSellerMbrPwdHintList().get(i).getUpdateDate());
-				// sellerMbrPwdHint.setUpdateID(schRes.getSellerMbrPwdHintList().get(i).getUpdateID());
+				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderList().get(i).getQuestionID());
+				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionMessage());
+				sellerMbrPwdHint.setUpdateDate(schRes.getPWReminderList().get(i).getUpdateDate());
 				sList.add(sellerMbrPwdHint);
 			}
 
 		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
 		response.setSellerMbrPwdHintList(sList);
-		response.setLanguageCode(schRes.getLanguageCode());
 
 		return response;
 
