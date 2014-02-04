@@ -24,6 +24,8 @@ public class FeatureCategoryAppReq extends CommonInfo {
 	private String deviceModelCd; // 메뉴ID
 	private String stdDt; // 배치일자
 
+	private String[] prodGradeCdArr;
+
 	// Dummy Data용
 	private String dummy; // 메뉴ID
 
@@ -117,6 +119,14 @@ public class FeatureCategoryAppReq extends CommonInfo {
 
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
+	}
+
+	public String[] getProdGradeCdArr() {
+		return this.prodGradeCdArr;
+	}
+
+	public void setProdGradeCdArr(String[] prodGradeCdArr) {
+		this.prodGradeCdArr = prodGradeCdArr;
 	}
 
 }
