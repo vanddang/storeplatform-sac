@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.display.vo.vod;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,9 +23,11 @@ public class VodDetailReq extends CommonInfo {
 	private static final long serialVersionUID = 3567228512653706925L;
 
 	/** 체널 ID */
+	@NotEmpty
 	private String channelId;
 
 	/** 상품 정렬 순서 */
+	@NotEmpty
 	private String orderedBy;
 
 	/** 시작점 ROW, default : 1 */
