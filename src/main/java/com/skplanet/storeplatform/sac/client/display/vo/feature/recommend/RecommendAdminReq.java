@@ -23,6 +23,7 @@ public class RecommendAdminReq {
 	private String stdDt; // 배치일자
 
 	private String[] topMenuIdArr;
+	private String[] prodGradeCdArr;
 
 	public String getListId() {
 		return this.listId;
@@ -114,6 +115,14 @@ public class RecommendAdminReq {
 
 	public void setTopMenuIdArr(String[] topMenuIdArr) {
 		this.topMenuIdArr = topMenuIdArr;
+	}
+
+	public String[] getProdGradeCdArr() {
+		return this.prodGradeCdArr;
+	}
+
+	public void setProdGradeCdArr(String[] prodGradeCdArr) {
+		this.prodGradeCdArr = prodGradeCdArr;
 	}
 
 }
