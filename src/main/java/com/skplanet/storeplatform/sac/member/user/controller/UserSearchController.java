@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 
 /**
@@ -40,11 +40,6 @@ import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
 public class UserSearchController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserSearchController.class);
-
-	/**
-	 * Data Binding.
-	 */
-	ObjectMapper objMapper = new ObjectMapper();
 
 	@Autowired
 	private UserSearchService svc;
@@ -84,41 +79,6 @@ public class UserSearchController {
 		return res;
 	}
 
-	@RequestMapping(value = "/member/user/detailByDeviceId/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req,
-			BindingResult result) throws Exception {
-
-		LOGGER.info("##################################################");
-		LOGGER.info("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
-		LOGGER.info("##################################################");
-
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
-		}
-
-		/**
-		 * Header 정보
-		 */
-		LOGGER.info("Headers : {}", sacHeader.toString());
-
-		/**
-		 * DeviceId를 이용하여 회원 정보 조회 Biz
-		 */
-		DetailByDeviceIdSacRes res = this.svc.detailByDeviceId(sacHeader, req);
-
-		LOGGER.info("Response : {}", res.toString());
-
-		return res;
-
-	}
-
 	@RequestMapping(value = "/member/user/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
@@ -152,6 +112,52 @@ public class UserSearchController {
 		LOGGER.info("Final Response : {}", res.toString());
 
 		return res;
+	}
+
+	/**
+	 * <pre>
+	 * DeviceId를 이용하여 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Vaule Object
+	 * @param result
+	 *            BindingResult
+	 * @return Response Value Object
+	 */
+	@RequestMapping(value = "/member/user/detailByDeviceId/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req, BindingResult result) {
+
+		LOGGER.info("##################################################");
+		LOGGER.info("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
+		LOGGER.info("##################################################");
+
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		/**
+		 * DeviceId를 이용하여 회원 정보 조회 Biz
+		 */
+		DetailByDeviceIdSacRes res = this.svc.detailByDeviceId(sacHeader, req);
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
+
 	}
 
 }

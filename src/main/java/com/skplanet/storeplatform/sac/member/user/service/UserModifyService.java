@@ -40,10 +40,8 @@ public interface UserModifyService {
 	 * @param req
 	 *            Request Value Object
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
-	public ModifyRes modify(SacRequestHeader sacHeader, ModifyReq req) throws Exception;
+	public ModifyRes modify(SacRequestHeader sacHeader, ModifyReq req);
 
 	/**
 	 * <pre>
@@ -55,10 +53,8 @@ public interface UserModifyService {
 	 * @param req
 	 *            Request Value Object
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
-	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req) throws Exception;
+	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req);
 
 	/**
 	 * <pre>
@@ -70,10 +66,8 @@ public interface UserModifyService {
 	 * @param req
 	 *            Request Value Object
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
-	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) throws Exception;
+	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req);
 
 	/**
 	 * <pre>
@@ -85,10 +79,8 @@ public interface UserModifyService {
 	 * @param req
 	 *            Request Value Object
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
-	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) throws Exception;
+	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req);
 
 	/**
 	 * <pre>
@@ -100,10 +92,8 @@ public interface UserModifyService {
 	 * @param req
 	 *            Request Value Object
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
-	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) throws Exception;
+	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req);
 
 	/**
 	 * <pre>
@@ -115,9 +105,7 @@ public interface UserModifyService {
 	 * @param req
 	 *            Request Value Object
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
-	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) throws Exception;
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req);
 
 }

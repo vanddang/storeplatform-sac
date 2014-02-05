@@ -9,7 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.member.user.controller;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserModifyService;
 
 /**
@@ -47,11 +47,6 @@ public class UserModifyController {
 	private UserModifyService svc;
 
 	/**
-	 * Data Binding.
-	 */
-	ObjectMapper objMapper = new ObjectMapper();
-
-	/**
 	 * <pre>
 	 * 회원 정보 수정.
 	 * </pre>
@@ -63,25 +58,22 @@ public class UserModifyController {
 	 * @param result
 	 *            BindingResult
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyRes modify(SacRequestHeader sacHeader, @Validated @RequestBody ModifyReq req, BindingResult result) throws Exception {
+	public ModifyRes modify(SacRequestHeader sacHeader, @Validated @RequestBody ModifyReq req, BindingResult result) {
 
 		LOGGER.info("#################################");
 		LOGGER.info("##### 2.1.13. 회원 정보 수정 #####");
 		LOGGER.info("#################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new StorePlatformException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**
@@ -112,25 +104,22 @@ public class UserModifyController {
 	 * @param result
 	 *            BindingResult
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
 	@RequestMapping(value = "/dev/member/user/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req, BindingResult result) throws Exception {
+	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req, BindingResult result) {
 
 		LOGGER.info("################################");
 		LOGGER.info("##### 2.1.14. 비밀번호 수정 #####");
 		LOGGER.info("################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new StorePlatformException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**
@@ -161,25 +150,22 @@ public class UserModifyController {
 	 * @param result
 	 *            BindingResult
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
 	@RequestMapping(value = "/dev/member/user/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req, BindingResult result) throws Exception {
+	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req, BindingResult result) {
 
 		LOGGER.info("##################################");
 		LOGGER.info("##### 2.1.15. 이메일 주소 수정 #####");
 		LOGGER.info("##################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new StorePlatformException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**
@@ -198,22 +184,34 @@ public class UserModifyController {
 
 	}
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @param result
+	 *            BindingResult
+	 * @return Response Value Object
+	 */
 	@RequestMapping(value = "/dev/member/user/createRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req, BindingResult result) throws Exception {
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req, BindingResult result) {
 
 		LOGGER.info("####################################");
 		LOGGER.info("##### 2.1.18 실명 인증 정보 등록 #####");
 		LOGGER.info("####################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new StorePlatformException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**

@@ -955,6 +955,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 			searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
+			 * TODO 이게왜...???? 필수 값인지...?? (회원정보를 먼저 찾은후.....단말 정보를 뽑을것....)
+			 */
+			searchDeviceRequest.setUserKey("US201401272022242690001079");
+
+			/**
 			 * 검색조건 정보 setting.
 			 */
 			List<KeySearch> keySearchList = new ArrayList<KeySearch>();

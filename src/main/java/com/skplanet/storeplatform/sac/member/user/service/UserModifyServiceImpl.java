@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
@@ -40,7 +41,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreement
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
-import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -72,7 +72,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	private IDPRepository idpRepository;
 
 	@Override
-	public ModifyRes modify(SacRequestHeader sacHeader, ModifyReq req) throws Exception {
+	public ModifyRes modify(SacRequestHeader sacHeader, ModifyReq req) {
 
 		ModifyRes response = new ModifyRes();
 
@@ -80,7 +80,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
 		 */
 		if (StringUtils.equals(req.getUserAuthKey(), "")) {
-			throw new RuntimeException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+			throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
 		}
 
 		/**
@@ -191,7 +191,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	}
 
 	@Override
-	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req) throws Exception {
+	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, ModifyPasswordReq req) {
 
 		ModifyPasswordRes response = new ModifyPasswordRes();
 
@@ -199,7 +199,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	}
 
 	@Override
-	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) throws Exception {
+	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, ModifyEmailReq req) {
 
 		ModifyEmailRes response = new ModifyEmailRes();
 
@@ -207,7 +207,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	}
 
 	@Override
-	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) throws Exception {
+	public CreateTermsAgreementRes createTermsAgreement(SacRequestHeader sacHeader, CreateTermsAgreementReq req) {
 
 		CreateTermsAgreementRes response = new CreateTermsAgreementRes();
 
@@ -215,7 +215,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 	}
 
 	@Override
-	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) throws Exception {
+	public ModifyTermsAgreementRes modifyTermsAgreement(SacRequestHeader sacHeader, ModifyTermsAgreementReq req) {
 
 		ModifyTermsAgreementRes response = new ModifyTermsAgreementRes();
 
@@ -223,13 +223,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 	}
 
 	@Override
-	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) throws Exception {
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) {
 
 		/**
 		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
 		 */
 		if (StringUtils.equals(req.getUserAuthKey(), "")) {
-			throw new RuntimeException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+			throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
 		}
 
 		CreateRealNameRes response = new CreateRealNameRes();
@@ -237,7 +237,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		return response;
 	}
 
-	private String updateUser(SacRequestHeader sacHeader, ModifyReq req) throws Exception {
+	private String updateUser(SacRequestHeader sacHeader, ModifyReq req) {
 
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 
@@ -255,23 +255,14 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 * SC 사용자 회원 기본정보 수정 요청.
 		 */
 		UpdateUserResponse updateUserResponse = this.userSCI.updateUser(updateUserRequest);
-		LOGGER.info("## ResponseCode : {}", updateUserResponse.getCommonResponse().getResultCode());
-		LOGGER.info("## ResponseMsg  : {}", updateUserResponse.getCommonResponse().getResultMessage());
-		LOGGER.info("## UserKey      : {}", updateUserResponse.getUserKey());
-
-		if (StringUtils.equals(updateUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-
-			/**
-			 * 결과 세팅
-			 */
-			return updateUserResponse.getUserKey();
-
-		} else {
-
-			LOGGER.info("## 사용자 기본정보 수정 실패 ===========================");
-			throw new RuntimeException("사용자 기본정보 수정 실패");
-
+		if (updateUserResponse.getUserKey() == null || StringUtils.equals(updateUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
+
+		/**
+		 * 결과 세팅
+		 */
+		return updateUserResponse.getUserKey();
 
 	}
 
@@ -283,10 +274,8 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * @param req
 	 *            ModifyReq
 	 * @return UserMbr
-	 * @throws Exception
-	 *             익셉션
 	 */
-	private UserMbr getUserMbr(ModifyReq req) throws Exception {
+	private UserMbr getUserMbr(ModifyReq req) {
 
 		UserMbr userMbr = new UserMbr();
 		userMbr.setUserKey(req.getUserKey());
