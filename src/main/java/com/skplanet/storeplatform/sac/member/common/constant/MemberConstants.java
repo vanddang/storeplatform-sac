@@ -134,6 +134,9 @@ public final class MemberConstants {
 	public static final String USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
 	public static final String USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
 
+	/** EC IDP 에러 코드 문자열 */
+	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
+
 	/**
 	 * 판매자 회원 상수들
 	 * 
