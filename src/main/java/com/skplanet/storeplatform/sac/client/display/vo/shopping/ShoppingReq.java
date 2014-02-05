@@ -27,6 +27,7 @@ public class ShoppingReq extends CommonInfo {
 	private String listId; // 리스트아이디
 	private String imageCd; // 이미지코드
 	private String menuId; // 메뉴아이디
+	private String osVersion; // os 버전
 	private String prodCharge; // 유료/무료 구분
 	private String prodGradeCd; // 상품등급코드
 	private String b2bProd; // B2B 상품 구분
@@ -83,6 +84,21 @@ public class ShoppingReq extends CommonInfo {
 
 	public void setMenuId(String menuId) {
 		this.menuId = menuId;
+	}
+
+	/**
+	 * @return the osVersion
+	 */
+	public String getOsVersion() {
+		return this.osVersion;
+	}
+
+	/**
+	 * @param osVersion
+	 *            the osVersion to set
+	 */
+	public void setOsVersion(String osVersion) {
+		this.osVersion = osVersion;
 	}
 
 	public String getProdCharge() {
