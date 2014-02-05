@@ -59,7 +59,7 @@ public class RXActivateUserIdIDPTest {
 
 	/**
 	 * <pre>
-	 * 활성화된 통합회원 통합ID 가입자 상태 정보 배포
+	 * 활성화된 통합회원 통합ID 가입자 상태 정보 배포.
 	 * </pre>
 	 */
 	@Test
