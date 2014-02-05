@@ -235,6 +235,17 @@ public class UserModifyServiceImpl implements UserModifyService {
 		return response;
 	}
 
+	/**
+	 * <pre>
+	 * 사용자 기본정보 수정.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return String (userKey)
+	 */
 	private String updateUser(SacRequestHeader sacHeader, ModifyReq req) {
 
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
