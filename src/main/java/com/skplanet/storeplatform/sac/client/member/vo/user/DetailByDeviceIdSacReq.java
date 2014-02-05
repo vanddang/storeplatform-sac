@@ -30,7 +30,6 @@ public class DetailByDeviceIdSacReq extends CommonInfo {
 	/**
 	 * 확인할 정책의 Key 값
 	 */
-	@NotEmpty
 	private String key = "";
 
 	/**
