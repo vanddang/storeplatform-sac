@@ -56,9 +56,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
-			BindingResult result) {
-		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
+	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
 		return this.sellerSubService.createSubseller(header, req);
 	}
 
