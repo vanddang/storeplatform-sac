@@ -260,12 +260,15 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			if (StringUtils.isNotEmpty(prchsId)) {
 				purchase.setState(prchsState);
 				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
 				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 				identifier.setText(prchsId);
-				purchase.setIdentifier(identifier);
+				identifierList.add(identifier);
+				purchase.setIdentifierList(identifierList);
 				date.setType("date/purchase");
 				date.setText(prchsDt);
 				purchase.setDate(date);
+				product.setPurchase(purchase);
 			}
 
 			// identifier = new Identifier();
@@ -363,9 +366,11 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 			purchase.setState("payment");
 			identifier = new Identifier();
+			identifierList = new ArrayList<Identifier>();
 			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 			identifier.setText("MI100000000000048053");
-			purchase.setIdentifier(identifier);
+			identifierList.add(identifier);
+			purchase.setIdentifierList(identifierList);
 			date = new Date();
 			date.setType("date/purchase");
 			date.setText("20130722143732");

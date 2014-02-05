@@ -417,13 +417,16 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				if (StringUtils.isNotEmpty(prchsId)) {
 					purchase.setState(prchsState);
 					identifier = new Identifier();
-					Date purchaseDate = new Date();
+					List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
 					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 					identifier.setText(prchsId);
-					purchase.setIdentifier(identifier);
-					purchaseDate.setType("date/purchase");
-					purchaseDate.setText(prchsDt);
-					purchase.setDate(purchaseDate);
+					purchaseIdentifierList.add(identifier);
+					purchase.setIdentifierList(purchaseIdentifierList);
+					date = new Date();
+					date.setType("date/purchase");
+					date.setText(prchsDt);
+					purchase.setDate(date);
+					product.setPurchase(purchase);
 				}
 
 				product = new Product();
@@ -598,9 +601,11 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			// 구매 정보
 			purchase.setState("payment");
 			identifier = new Identifier();
+			List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
 			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 			identifier.setText("M1020954107328402159");
-			purchase.setIdentifier(identifier);
+			purchaseIdentifierList.add(identifier);
+			purchase.setIdentifierList(purchaseIdentifierList);
 			Date purchaseDate = new Date();
 			purchaseDate.setType("date/purchase");
 			purchaseDate.setText("20130604154645");

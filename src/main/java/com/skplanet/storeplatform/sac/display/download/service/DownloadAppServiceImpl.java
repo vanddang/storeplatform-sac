@@ -321,12 +321,15 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				if (StringUtils.isNotEmpty(prchsId)) {
 					purchase.setState(prchsState);
 					identifier = new Identifier();
+					identifierList = new ArrayList<Identifier>();
 					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 					identifier.setText(prchsId);
-					purchase.setIdentifier(identifier);
+					identifierList.add(identifier);
+					purchase.setIdentifierList(identifierList);
 					date.setType("date/purchase");
 					date.setText(prchsDt);
 					purchase.setDate(date);
+					product.setPurchase(purchase);
 				}
 
 				// identifier = new Identifier();
@@ -436,12 +439,13 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			distributor.setEmail("SEO-OperatorInfo@gameloft.com");
 			distributor.setRegNo("2009-서울강남-03038");
 
-			// 구매 정보
 			purchase.setState("payment");
 			identifier = new Identifier();
+			identifierList = new ArrayList<Identifier>();
 			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 			identifier.setText("MI100000000000044286");
-			purchase.setIdentifier(identifier);
+			identifierList.add(identifier);
+			purchase.setIdentifierList(identifierList);
 			date = new Date();
 			date.setType("date/purchase");
 			date.setText("20130701165632");
