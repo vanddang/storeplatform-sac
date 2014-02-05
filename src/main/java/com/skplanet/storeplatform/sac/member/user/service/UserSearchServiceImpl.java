@@ -879,7 +879,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/**
 			 * SKT 이용정지회원 여부 setting.
 			 */
-			response.setIsSktPause(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getPauseYN());
+			// response.setIsSktPause(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getPauseYN());
 
 		}
 
@@ -945,51 +945,40 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
 
-		try {
+		/********************
+		 * 휴대기기 상세 조회
+		 ********************/
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
-			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		/**
+		 * SC 공통 정보 setting.
+		 */
+		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-			/**
-			 * SC 공통 정보 setting.
-			 */
-			searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		/**
+		 * 검색조건 정보 setting.
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+		keySchUserKey.setKeyString(req.getDeviceId());
+		keySearchList.add(keySchUserKey);
+		searchDeviceRequest.setKeySearchList(keySearchList);
 
-			/**
-			 * TODO 이게왜...???? 필수 값인지...?? (회원정보를 먼저 찾은후.....단말 정보를 뽑을것....)
-			 */
-			searchDeviceRequest.setUserKey("US201401272022242690001079");
+		/**
+		 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
+		 */
+		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
+		logger.info("### searchDeviceResponse : {}", searchDeviceResponse.toString());
 
-			/**
-			 * 검색조건 정보 setting.
-			 */
-			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-			KeySearch keySchUserKey = new KeySearch();
-			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-			keySchUserKey.setKeyString(req.getDeviceId());
-			keySearchList.add(keySchUserKey);
-			searchDeviceRequest.setKeySearchList(keySearchList);
+		/**
+		 * TODO DeviceId로 조회된 정보가 없을경우 처리 어떻게..??
+		 */
+		response.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey()); // 사용자 Key setting.
+		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey()); // 기기 Key setting.
+		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom()); // 이동통신사 setting.
 
-			/**
-			 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
-			 */
-			SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
-			logger.info("### searchDeviceResponse : {}", searchDeviceResponse.toString());
-
-			/**
-			 * TODO DeviceId로 조회된 정보가 없을경우 처리 어떻게..??
-			 */
-			response.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey()); // 사용자 Key setting.
-			response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey()); // 기기 Key setting.
-			response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom()); // 이동통신사 setting.
-
-			return response;
-
-		} catch (Exception e) {
-			/**
-			 * TODO SC 익셉션 잡은거 빼야합니다.
-			 */
-			throw new StorePlatformException("SC_MEM_", e);
-		}
+		return response;
 
 	}
 

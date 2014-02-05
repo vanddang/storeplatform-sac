@@ -867,11 +867,20 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	}
 
+	/**
+	 * <pre>
+	 * URL Encode.
+	 * </pre>
+	 * 
+	 * @param value
+	 *            String
+	 * @return String
+	 */
 	private String getUrlEncode(String value) {
 		try {
 			return URLEncoder.encode(value, "UTF-8");
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_MEM_", e);
+			throw new StorePlatformException("SAC_MEM_0004", e);
 		}
 	}
 
