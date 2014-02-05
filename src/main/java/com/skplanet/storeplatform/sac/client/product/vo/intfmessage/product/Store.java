@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -36,6 +37,7 @@ public class Store extends CommonInfo implements Serializable {
 	private String durationUsagePeriodUI; // 이용기간의 UI 표시
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
 	private Source source; // store의 source
+	private List<Support> supportList; // 지원매체 리스트
 
 	/**
 	 * Store().
@@ -164,4 +166,18 @@ public class Store extends CommonInfo implements Serializable {
 		this.source = source;
 	}
 
+	/**
+	 * @return the supportList
+	 */
+	public List<Support> getSupportList() {
+		return this.supportList;
+	}
+
+	/**
+	 * @param supportList
+	 *            the supportList to set
+	 */
+	public void setSupportList(List<Support> supportList) {
+		this.supportList = supportList;
+	}
 }
