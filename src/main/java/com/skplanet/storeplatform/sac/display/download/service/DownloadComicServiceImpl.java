@@ -225,10 +225,8 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				date.setType("date/purchase");
 				date.setText(prchsDt);
 				purchase.setDate(date);
-			} else {
-				purchase.setState("");
+				product.setPurchase(purchase);
 			}
-			product.setPurchase(purchase);
 
 			comicRes.setProduct(product);
 			commonResponse.setTotalCount(1);

@@ -289,10 +289,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				date.setType("date/purchase");
 				date.setText(prchsDt);
 				purchase.setDate(date);
-			} else {
-				purchase.setState("");
+				product.setPurchase(purchase);
 			}
-			product.setPurchase(purchase);
 
 			ebookRes.setProduct(product);
 			commonResponse.setTotalCount(1);
