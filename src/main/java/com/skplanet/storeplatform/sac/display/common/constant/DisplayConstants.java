@@ -249,6 +249,8 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_MUSIC = "music";
 	/** 바코드이미지 */
 	public static final String DP_SOURCE_TYPE_BARCODE = "barcode";
+	/** 배너이미지 */
+	public static final String DP_SOURCE_TYPE_BANNER = "banner";
 	/** 음악 mp3-192 */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
 	/** 음악 mp3-128 */
