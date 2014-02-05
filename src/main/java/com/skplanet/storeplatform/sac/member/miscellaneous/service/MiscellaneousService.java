@@ -55,11 +55,9 @@ public interface MiscellaneousService {
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @return GetUaCodeRes
-	 * @throws Exception
-	 *             Exception
 	 * 
 	 */
-	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq request) throws Exception;
+	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, GetUaCodeReq request);
 
 	/**
 	 * <pre>
@@ -71,10 +69,8 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            GetOpmdReq
 	 * @return GetOpmdRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public GetOpmdRes getOpmd(GetOpmdReq request) throws Exception;
+	public GetOpmdRes getOpmd(GetOpmdReq request);
 
 	/**
 	 * <pre>
@@ -90,11 +86,9 @@ public interface MiscellaneousService {
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @return GetPhoneAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode(SacRequestHeader requestHeader,
-			GetPhoneAuthorizationCodeReq request) throws Exception;
+			GetPhoneAuthorizationCodeReq request);
 
 	/**
 	 * <pre>
@@ -104,11 +98,8 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            ConfirmPhoneAuthorizationCodeReq
 	 * @return ConfirmPhoneAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request)
-			throws Exception;
+	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(ConfirmPhoneAuthorizationCodeReq request);
 
 	/**
 	 * <pre>
@@ -116,10 +107,8 @@ public interface MiscellaneousService {
 	 * </pre>
 	 * 
 	 * @return GetCaptchaRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public GetCaptchaRes getCaptcha() throws Exception;
+	public GetCaptchaRes getCaptcha();
 
 	/**
 	 * <pre>
@@ -129,10 +118,8 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            ConfirmCaptchaReq
 	 * @return ConfirmCaptchaRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) throws Exception;
+	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request);
 
 	/**
 	 * <pre>
@@ -144,10 +131,9 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            GetPhoneAuthorizationCodeReq
 	 * @return GetEmailAuthorizationCodeRes
-	 * @throws Exception
 	 */
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader requestHeader,
-			GetEmailAuthorizationCodeReq request) throws Exception;
+			GetEmailAuthorizationCodeReq request);
 
 	/**
 	 * <pre>
@@ -157,11 +143,8 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            ConfirmEmailAuthorizationCodeReq
 	 * @return ConfirmEmailAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request)
-			throws Exception;
+	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(ConfirmEmailAuthorizationCodeReq request);
 
 	/**
 	 * <pre>
@@ -171,10 +154,8 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            CreateAdditionalServiceReq
 	 * @return CreateAdditionalServiceRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) throws Exception;
+	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request);
 
 	/**
 	 * <pre>
@@ -184,10 +165,8 @@ public interface MiscellaneousService {
 	 * @param request
 	 *            GetAdditionalServiceReq
 	 * @return GetAdditionalServiceRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) throws Exception;
+	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request);
 
 	public GetModelCodeRes getModelCode(GetModelCodeReq request);
 

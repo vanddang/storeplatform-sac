@@ -125,7 +125,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private CommonDAO commonDao;
 
 	@Override
-	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
+	public GetOpmdRes getOpmd(GetOpmdReq req) {
 		String msisdn = req.getMsisdn();
 
 		GetOpmdRes res = new GetOpmdRes();
@@ -140,6 +140,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
 				res.setMsisdn(opmdRes.getMobileMdn());
+				// response setting 예정
 				LOGGER.info("## [SAC] Response {}", opmdRes);
 			}
 		} else {
@@ -336,7 +337,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetCaptchaRes getCaptcha() throws Exception {
+	public GetCaptchaRes getCaptcha() {
 		String waterMarkImageUrl = "";
 		String waterMarkImageSign = "";
 		String waterMarkImageString = "";
@@ -395,7 +396,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) throws Exception {
+	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
 
 		/* IDP 호출 ( Request 파라미터 전달 ) */
 		IDPReceiverM idpReciver = new IDPReceiverM();
@@ -546,7 +547,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) throws Exception {
+	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 		// TODO IdpServie joinSupService 호출해서 부가서비스 가입 요청
 		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getDeviceId(), request.getSvcCode(),
@@ -559,7 +560,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) throws Exception {
+	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request) {
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 
