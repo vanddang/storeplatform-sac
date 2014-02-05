@@ -269,6 +269,8 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_REPRESENT_IMAGE_CD = "DP0001A3";
 
+	public static final String DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD = "DP0001B9";
+
 	// //////////////////////////////////// VOD 화질 유형 //////////////////////////////////////////
 	public static final String DP_VOD_QUALITY_NORMAL = "normal";
 
