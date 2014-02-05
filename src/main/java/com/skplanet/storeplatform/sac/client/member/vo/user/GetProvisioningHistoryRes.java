@@ -15,11 +15,13 @@ public class GetProvisioningHistoryRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	/* 프로비저닝 구분 */
+	private String workdCd;
 	/* 사용자 신규 Key */
 	private String mbrNo;
 	/* 사용자 기존 Key */
 	private String oldMbrNo;
-	/* 등록일자 */
+	/* 변경일자 */
 	private String regDate;
 
 	public String getMbrNo() {
@@ -48,6 +50,14 @@ public class GetProvisioningHistoryRes extends CommonInfo {
 
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+
+	public String getWorkdCd() {
+		return this.workdCd;
+	}
+
+	public void setWorkdCd(String workdCd) {
+		this.workdCd = workdCd;
 	}
 
 }
