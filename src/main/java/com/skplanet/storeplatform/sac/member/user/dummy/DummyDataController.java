@@ -801,6 +801,7 @@ public class DummyDataController {
 		LOGGER.info("####################################################");
 
 		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
+		res.setWorkdCd("US003206");
 		res.setMbrNo("");
 		res.setOldMbrNo("");
 		res.setRegDate("20131226154512");
