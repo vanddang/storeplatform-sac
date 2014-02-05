@@ -10,7 +10,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 
 /**
@@ -105,8 +104,6 @@ public class CreateReq extends CommonInfo {
 	/** 법인등록번호. */
 	private String sellerBizCorpNumber;
 
-	/** 약관 정보들. */
-	private List<AgreementInfo> agreementList;
 	/** 보안질문 정보들. */
 	private List<PwReminder> pwReminderList;
 
@@ -364,14 +361,6 @@ public class CreateReq extends CommonInfo {
 
 	public void setSellerBizCorpNumber(String sellerBizCorpNumber) {
 		this.sellerBizCorpNumber = sellerBizCorpNumber;
-	}
-
-	public List<AgreementInfo> getAgreementList() {
-		return this.agreementList;
-	}
-
-	public void setAgreementList(List<AgreementInfo> agreementList) {
-		this.agreementList = agreementList;
 	}
 
 	public List<PwReminder> getPwReminderList() {
