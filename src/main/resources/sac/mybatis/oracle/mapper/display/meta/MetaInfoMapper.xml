@@ -298,9 +298,10 @@
             , 'Y' AS MP3_SPRT_YN
             , MP.BELL_SPRT_YN
             , MP.COLORRING_SPRT_YN
-            , PI.FILE_PATH
+            , CONCAT(PI.FILE_PATH, PI.FILE_NM) AS FILE_PATH
             , PI.FILE_NM
             , PI.FILE_SIZE
+            , P.CONTENTS_TYPE_CD
          FROM TB_DP_MULTIMDA_PROD MP
             , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
@@ -341,8 +342,8 @@
        -- ( 멜론 TOP 100 : CHART_CLSF_CD = DP004901, BATCH_ID = MELON_DP004901 )
        -- ( 최신    음악 : CHART_CLSF_CD = DP004904, BATCH_ID = MELON_DP004904 )
        ----------------------------------------------------------------------------- 
-          <if test='productBasicInfo.menuId != null'>
-          AND MCI.CHART_CLSF_CD = #{productBasicInfo.menuId} -- 멜론 TOP 100
+          <if test='chartClsfCd != null and chartClsfCd != ""'>
+          AND MCI.CHART_CLSF_CD = #{chartClsfCd} -- 멜론 TOP 100
           </if>
            AND MCI.RANK_START_DAY = #{stdDt}
        -----------------------------------------------------------------------------
@@ -373,6 +374,7 @@
           AND TP.TENANT_ID = #{tenantHeader.tenantId}
           AND PD.LANG_CD = #{tenantHeader.langCd}
           AND CD.LANG_CD = #{tenantHeader.langCd}
+          AND ROWNUM = 1
        
     </select>
     <select id="getEbookComicMetaInfo" parameterType="Map" resultType="MetaInfo">
