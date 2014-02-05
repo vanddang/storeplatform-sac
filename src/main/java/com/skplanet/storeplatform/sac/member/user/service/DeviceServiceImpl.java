@@ -764,14 +764,16 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceInfo.setDeviceModelNo(deviceheader.getModel());
 		}
 
-		if (deviceheader.getOsVersion() != null) { // OS버젼
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION, deviceheader.getOsVersion(),
-					deviceInfo));
+		String osVersion = deviceheader.getOsVersion();
+		if (osVersion != null) { // OS버젼
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_OSVERSION,
+					osVersion.substring(osVersion.lastIndexOf("/") + 1, osVersion.length()), deviceInfo));
 		}
 
-		if (deviceheader.getSvcVersion() != null) { //SC버젼
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION, deviceheader.getSvcVersion(),
-					deviceInfo));
+		String svcVersion = deviceheader.getSvcVersion();
+		if (svcVersion != null) { //SC버젼
+			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_SCVERSION,
+					svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()), deviceInfo));
 		}
 
 		return deviceInfo;
