@@ -53,8 +53,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	 * 사용자 부가정보 등록/수정
 	 */
 	@Override
-	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception {
+	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -79,8 +78,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	 * 사용자 부가정보 리스트
 	 */
 	@Override
-	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception {
+	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -101,8 +99,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	 * 사용자 부가정보 삭제
 	 */
 	@Override
-	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception {
+	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
@@ -125,7 +122,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원정보 조회 */
 	@Override
-	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
@@ -134,7 +131,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원부가정보 조회 */
 	@Override
-	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		UserExtraInfoRes extraRes = this.mcc.getUserExtraInfo(req.getUserKey(), sacHeader);
 
 		return extraRes;
@@ -142,7 +139,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원부가정보 삭제 */
 	@Override
-	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		RemoveManagementRequest removeReq = new RemoveManagementRequest();
 		RemoveManagementResponse removeRes = new RemoveManagementResponse();
@@ -172,8 +169,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		removeRes = this.userSCI.removeManagement(removeReq);
 
-		if (StringUtils.equals(removeRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& removeRes.getUserKey() != null) {
+		if (StringUtils.equals(removeRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES) && removeRes.getUserKey() != null) {
 
 			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultCode());
 			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
@@ -184,8 +180,8 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 			LOGGER.debug("###### 회원부가정보 삭제 SC API Fail Res : {}", removeRes.getCommonResponse().getResultCode());
 			LOGGER.debug("###### 회원부가정보 삭제 SC API Fail Res : {}", removeRes.getCommonResponse().getResultMessage());
 
-			throw new RuntimeException("회원부가정보 삭제 SC API Fail : [" + removeRes.getCommonResponse().getResultCode()
-					+ "]" + "[" + removeRes.getCommonResponse().getResultMessage() + "]");
+			throw new RuntimeException("회원부가정보 삭제 SC API Fail : [" + removeRes.getCommonResponse().getResultCode() + "]" + "["
+					+ removeRes.getCommonResponse().getResultMessage() + "]");
 		}
 
 		return res;
@@ -193,7 +189,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* SC API 회원부가정보 등록/수정 */
 	@Override
-	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		UpdateManagementRequest updateReq = new UpdateManagementRequest();
 		UpdateManagementResponse updateRes = new UpdateManagementResponse();
@@ -223,12 +219,10 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		updateRes = this.userSCI.updateManagement(updateReq);
 
-		if (StringUtils.equals(updateRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& updateRes.getUserKey() != null) {
+		if (StringUtils.equals(updateRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES) && updateRes.getUserKey() != null) {
 
 			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getCommonResponse().getResultCode());
-			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getCommonResponse()
-					.getResultMessage());
+			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getCommonResponse().getResultMessage());
 			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getUserKey());
 
 			res.setUserKey(updateRes.getUserKey());
@@ -236,8 +230,8 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Fail Res : {}", updateRes.getCommonResponse().getResultCode());
 			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Fail Res : {}", updateRes.getCommonResponse().getResultMessage());
 
-			throw new RuntimeException("회원부가정보 등록/수정 SC API Fail : [" + updateRes.getCommonResponse().getResultCode()
-					+ "]" + "[" + updateRes.getCommonResponse().getResultMessage() + "]");
+			throw new RuntimeException("회원부가정보 등록/수정 SC API Fail : [" + updateRes.getCommonResponse().getResultCode() + "]" + "["
+					+ updateRes.getCommonResponse().getResultMessage() + "]");
 		}
 
 		return res;
@@ -245,7 +239,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 	/* 입력받은 profileCode 정상인지 체크 */
 	@Override
-	public String validProfileCode(UserExtraInfoReq req) throws Exception {
+	public String validProfileCode(UserExtraInfoReq req) {
 		String validProfileCode = "";
 
 		for (UserExtraInfo info : req.getAddInfoList()) {

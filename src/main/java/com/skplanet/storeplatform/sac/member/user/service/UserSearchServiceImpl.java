@@ -109,7 +109,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * 회원 가입 조회
 	 */
 	@Override
-	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) throws Exception {
+	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) {
 		ExistRes result = new ExistRes();
 		DetailReq detailReq = new DetailReq();
 
@@ -163,7 +163,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * 회원 정보 조회
 	 */
 	@Override
-	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) throws Exception {
+	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) {
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
@@ -225,7 +225,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	// 사용자 인증정보 세팅
-	public MbrAuth mbrAuth(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public MbrAuth mbrAuth(DetailReq req, SacRequestHeader sacHeader) {
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -302,7 +302,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	// 법정 대리인정보 세팅
-	public MbrLglAgent searchUsermbrLglAgent(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public MbrLglAgent searchUsermbrLglAgent(DetailReq req, SacRequestHeader sacHeader) {
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();
@@ -384,7 +384,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 회원 징계정보 조회 */
 	@Override
-	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) {
 
 		String keyType = "";
 		String keyValue = "";
@@ -468,7 +468,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 회원 기본정보 조회 */
 	@Override
-	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) {
 
 		String keyType = "";
 		String keyValue = "";
@@ -544,7 +544,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 회원정보 조회 */
 	@Override
-	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader) {
 
 		String keyType = "";
 		String keyValue = "";
@@ -660,7 +660,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 회원부가정보 조회 Request : userKey */
 	@Override
-	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) {
 
 		/**
 		 * SearchManagementListRequest setting
@@ -715,7 +715,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 디바이스 리스트 조회 */
 	@Override
-	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 
 		ExistReq existReq = new ExistReq();
@@ -752,7 +752,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	/* SC API 약관동의 목록 조회 */
 	@Override
-	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader) {
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		CommonRequest commonRequest = new CommonRequest();

@@ -20,8 +20,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception;
+	public UserExtraInfoRes modifyAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 조회
@@ -31,8 +30,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception;
+	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 삭제
@@ -42,8 +40,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader)
-			throws Exception;
+	public UserExtraInfoRes removeAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 회원조회 SC API
@@ -53,7 +50,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserInfo searchUser(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 부가정보리스트 SC API
@@ -63,7 +60,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserExtraInfoRes listUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 부가정보등록/수정 SC API
@@ -73,7 +70,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 부가정보 삭제 SC API
@@ -83,7 +80,7 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * profileCode 정상 데이터인지 체크
@@ -93,5 +90,5 @@ public interface UserExtraInfoService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String validProfileCode(UserExtraInfoReq req) throws Exception;
+	public String validProfileCode(UserExtraInfoReq req);
 }

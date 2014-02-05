@@ -43,7 +43,7 @@ public class UserWithdrawController {
 
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public WithdrawRes exist(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) throws Exception {
+	public WithdrawRes exist(@RequestBody WithdrawReq req, SacRequestHeader sacHeader) {
 		logger.info("####################################################");
 		logger.info("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
 		logger.info("####################################################");

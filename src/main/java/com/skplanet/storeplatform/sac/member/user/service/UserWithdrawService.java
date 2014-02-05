@@ -22,7 +22,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req) throws Exception;
+	public WithdrawRes withdraw(SacRequestHeader requestHeader, WithdrawReq req);
 
 	/**
 	 * 회원존재여부 체크
@@ -32,7 +32,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public SearchUserResponse searchUser(SacRequestHeader requestHeader, WithdrawReq req) throws Exception;
+	public SearchUserResponse searchUser(SacRequestHeader requestHeader, WithdrawReq req);
 
 	/**
 	 * OneId 연동
@@ -42,8 +42,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ImIDPReceiverM oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req)
-			throws Exception;
+	public ImIDPReceiverM oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
 
 	/**
 	 * IDP 연동 모바일회원(무선)
@@ -54,8 +53,7 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IDPReceiverM idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req)
-			throws Exception;
+	public IDPReceiverM idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
 
 	/**
 	 * IDP 연동 아이디회원
@@ -66,7 +64,6 @@ public interface UserWithdrawService {
 	 * @return
 	 * @throws Exception
 	 */
-	public IDPReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req)
-			throws Exception;
+	public IDPReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req);
 
 }

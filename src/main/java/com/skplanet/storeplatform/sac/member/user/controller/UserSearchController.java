@@ -51,7 +51,7 @@ public class UserSearchController {
 
 	@RequestMapping(value = "/member/user/exist/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ExistRes exist(@RequestBody ExistReq req, SacRequestHeader sacHeader) throws Exception {
+	public ExistRes exist(@RequestBody ExistReq req, SacRequestHeader sacHeader) {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
 		LOGGER.info("####################################################");
@@ -121,7 +121,7 @@ public class UserSearchController {
 
 	@RequestMapping(value = "/member/user/detail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) throws Exception {
+	public DetailRes detail(@RequestBody DetailReq req, SacRequestHeader sacHeader) {
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.9. 회원 정보 조회 #####");
 		LOGGER.info("####################################################");

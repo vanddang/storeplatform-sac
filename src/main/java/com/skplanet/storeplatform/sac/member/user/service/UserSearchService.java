@@ -39,7 +39,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req) throws Exception;
+	public ExistRes exist(SacRequestHeader sacHeader, ExistReq req);
 
 	/**
 	 * 
@@ -51,7 +51,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -63,7 +63,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req) throws Exception;
+	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req);
 
 	/**
 	 * 
@@ -75,7 +75,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -87,7 +87,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserExtraInfoRes listUserExtra(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -99,7 +99,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -111,7 +111,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 
@@ -123,7 +123,7 @@ public interface UserSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader) throws Exception;
+	public SearchAgreementRes searchUserAgreement(DetailReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * <pre>

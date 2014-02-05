@@ -229,7 +229,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) throws Exception {
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, @RequestBody RemoveDeviceReq req) {
 
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
@@ -268,7 +268,7 @@ public class DeviceController {
 	 */
 	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req) throws Exception {
+	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req) {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");

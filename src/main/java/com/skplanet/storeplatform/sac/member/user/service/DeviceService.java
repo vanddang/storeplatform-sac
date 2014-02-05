@@ -128,7 +128,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) throws Exception;
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req);
 
 	/**
 	 * 휴대기기 삭제
@@ -141,7 +141,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception;
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req);
 
 	/**
 	 * 사용자 정보 조회
@@ -154,7 +154,7 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader) throws Exception;
+	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader);
 
 	/**
 	 * 휴대기기 목록 세팅 : 삭제요청 디바이스를 제외하고 리스트로 세팅
@@ -169,7 +169,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) throws Exception;
+	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo);
 
 	/**
 	 * 휴대기기 목록
@@ -184,7 +184,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ListDeviceRes deviceList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) throws Exception;
+	public ListDeviceRes deviceList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo);
 
 	/**
 	 * 휴대기기 디바이스 키 추출
@@ -193,7 +193,7 @@ public interface DeviceService {
 	 * @param schUserRes
 	 * @return
 	 */
-	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req) throws Exception;
+	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req);
 
 	/**
 	 * IDP 연동 데이터 세팅
@@ -202,7 +202,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getUserPhoneStr(List<DeviceInfo> deviceModifyList) throws Exception;
+	public String getUserPhoneStr(List<DeviceInfo> deviceModifyList);
 
 	/**
 	 * IDP 휴대기기 정보 등록 세팅
@@ -212,7 +212,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, UserInfo userInfo) throws Exception;
+	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, UserInfo userInfo);
 
 	/**
 	 * ImIdp 디바이스 업데이트(삭제대상 제외)
@@ -226,8 +226,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr)
-			throws Exception;
+	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr);
 
 	/**
 	 * 
@@ -240,7 +239,7 @@ public interface DeviceService {
 	 * @return
 	 * @throws Exception
 	 */
-	public RemoveDeviceResponse removeDeviceSC(UserInfo userInfo, RemoveDeviceRes removeDeviceRes) throws Exception;
+	public RemoveDeviceResponse removeDeviceSC(UserInfo userInfo, RemoveDeviceRes removeDeviceRes);
 
 	/**
 	 * 대표단말 조회
@@ -253,8 +252,7 @@ public interface DeviceService {
 	 * @param req
 	 * @return
 	 */
-	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req)
-			throws Exception;
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req);
 
 	/**
 	 * 대표기기 여부
@@ -267,7 +265,7 @@ public interface DeviceService {
 	 * @param req
 	 * @return
 	 */
-	public ListDeviceRes isPrimaryDevice(RemoveDeviceRes res, UserInfo userInfo, SacRequestHeader sacHeader) throws Exception;
+	public ListDeviceRes isPrimaryDevice(RemoveDeviceRes res, UserInfo userInfo, SacRequestHeader sacHeader);
 
 	/**
 	 * 단말 AOM 확인
@@ -280,5 +278,5 @@ public interface DeviceService {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req) throws Exception;
+	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req);
 }

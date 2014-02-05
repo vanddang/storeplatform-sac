@@ -826,8 +826,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * 대표단말 조회
 	 */
 	@Override
-	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req)
-			throws Exception {
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -913,7 +912,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) throws Exception {
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req) {
 
 		SetMainDeviceRequest setMainDeviceRequest = new SetMainDeviceRequest();
 		SetMainDeviceRes setMainDeviceRes = new SetMainDeviceRes();
@@ -982,7 +981,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @return
 	 */
 	@Override
-	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) throws Exception {
+	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req) {
 
 		logger.info("============================================ DeviceServiceImpl.removeDevice() Start");
 
@@ -1201,7 +1200,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * 휴대기기 목록 조회 : 삭제요청한 디바이스를 제외하고 List로 세팅
 	 */
 	@Override
-	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) throws Exception {
+	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) {
 		/* SC 회원 컴포넌트 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 
@@ -1256,7 +1255,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * 휴대기기 목록 조회
 	 */
 	@Override
-	public ListDeviceRes deviceList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) throws Exception {
+	public ListDeviceRes deviceList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo) {
 		/* SC 회원 컴포넌트 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 
@@ -1271,17 +1270,13 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("###### DeviceInfo List Res : {}", listDeviceRes.toString());
 		logger.info("###### DeviceInfo List Res Size : {}", listDeviceRes.getDeviceInfoList().size());
 
-		if (listDeviceRes.getDeviceInfoList() == null && listDeviceRes.getDeviceInfoList().size() < 0) {
-			throw new Exception("[ SC Device Search is Null");
-		}
-
 		logger.info("###### deviceList Res : {}", listDeviceRes.getDeviceInfoList().toString());
 		return listDeviceRes;
 	}
 
 	/* 디바이스 아이디로 디바이스 키 추출 */
 	@Override
-	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req) throws Exception {
+	public ListDeviceRes searchDeviceKeyResponse(SacRequestHeader requestHeader, UserInfo userInfo, RemoveDeviceReq req) {
 		ListDeviceReq schDeviceListKeyRequest = new ListDeviceReq();
 		schDeviceListKeyRequest.setUserKey(req.getUserKey());
 		schDeviceListKeyRequest.setDeviceId(req.getDeviceId());
@@ -1298,7 +1293,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/* IDP 연동 데이터 세팅 */
 	@Override
-	public String getUserPhoneStr(List<DeviceInfo> deviceModifyList) throws Exception {
+	public String getUserPhoneStr(List<DeviceInfo> deviceModifyList) {
 		logger.debug("###### IDP 연동 데이터 세팅 Start {}", deviceModifyList.toString());
 		String userPhoneStr = null;
 		StringBuffer sbUserPhone = new StringBuffer();
@@ -1350,7 +1345,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/* IDP 휴대기기 정보 등록 세팅 */
 	@Override
-	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, UserInfo userInfo) throws Exception {
+	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, UserInfo userInfo) {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("user_auth_key", req.getUserAuthKey());
 
@@ -1381,8 +1376,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/* ImIdp 디바이스 업데이트(삭제대상 제외) */
 	@Override
-	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr)
-			throws Exception {
+	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr) {
 
 		/* IDP에 무선 회원 해지 요청 - 자동 해지 안된다고 함 */
 		IDPReceiverM idpReceiver = this.idpService.authForWap(req.getDeviceId());
@@ -1421,7 +1415,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * SC 디바이스 삭제
 	 */
 	@Override
-	public RemoveDeviceResponse removeDeviceSC(UserInfo userInfo, RemoveDeviceRes removeDeviceRes) throws Exception {
+	public RemoveDeviceResponse removeDeviceSC(UserInfo userInfo, RemoveDeviceRes removeDeviceRes) {
 		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
 		RemoveDeviceResponse removeDeviceResponse = new RemoveDeviceResponse();
 		List<String> deviceKeyList = new ArrayList<String>();
@@ -1450,7 +1444,7 @@ public class DeviceServiceImpl implements DeviceService {
 	 * 단말 AOM 지원여부 확인
 	 */
 	@Override
-	public SupportAomRes getSupportAom(SacRequestHeader sacHeader, SupportAomReq req) throws Exception {
+	public SupportAomRes getSupportAom(SacRequestHeader sacHeader, SupportAomReq req) {
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
@@ -1498,7 +1492,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/* SC API 회원정보 조회 */
 	@Override
-	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader) {
 
 		UserInfo userInfo = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
@@ -1507,7 +1501,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/* SC API 대표기기 여부 */
 	@Override
-	public ListDeviceRes isPrimaryDevice(RemoveDeviceRes res, UserInfo userInfo, SacRequestHeader sacHeader) throws Exception {
+	public ListDeviceRes isPrimaryDevice(RemoveDeviceRes res, UserInfo userInfo, SacRequestHeader sacHeader) {
 
 		DetailRepresentationDeviceReq detailRepresentationDeviceReq = new DetailRepresentationDeviceReq();
 		detailRepresentationDeviceReq.setDeviceKey(res.getDeviceKey());

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoReq;
@@ -41,7 +42,7 @@ public class UserExtraInfoController {
 
 	@RequestMapping(value = "/modifyAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes modifyAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.25. 회원 부가 정보 등록/수정 #####");
 		logger.debug("####################################################");
@@ -66,9 +67,9 @@ public class UserExtraInfoController {
 		}
 
 		if (userKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+			throw new StorePlatformException("필수요청 파라메터 부족 : userKey" + req.getUserKey());
 		} else if (req.getAddInfoList() == null) {
-			throw new Exception("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
+			throw new StorePlatformException("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
 		}
 
 		res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
@@ -78,7 +79,7 @@ public class UserExtraInfoController {
 
 	@RequestMapping(value = "/removeAdditionalInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public UserExtraInfoRes removeAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes removeAdditionalInformation(@RequestBody UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.26. 회원 부가 정보 삭제 #####");
 		logger.debug("####################################################");
@@ -102,9 +103,9 @@ public class UserExtraInfoController {
 		}
 
 		if (userKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+			throw new StorePlatformException("필수요청 파라메터 부족 : userKey" + req.getUserKey());
 		} else if (req.getAddInfoList() == null) {
-			throw new Exception("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
+			throw new StorePlatformException("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
 		}
 
 		res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
@@ -114,7 +115,7 @@ public class UserExtraInfoController {
 
 	@RequestMapping(value = "/listAdditionalInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes listAdditionalInformation(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.27. 회원 부가 정보 조회 #####");
 		logger.debug("####################################################");
@@ -124,7 +125,7 @@ public class UserExtraInfoController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if (userKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+			throw new StorePlatformException("필수요청 파라메터 부족 : userKey" + req.getUserKey());
 		}
 
 		res = this.userExtraService.listAdditionalInformation(req, sacHeader);
