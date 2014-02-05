@@ -133,14 +133,16 @@
 			            AND  J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
 			            AND  J.USE_YN ='Y'
 			            AND DECODE( J.UA_CD , '9999' , NVL2( E.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( D.DRM_YN, 'N', 1, 0 ) + DECODE( D.PROD_CHRG_YN, 'N', 1, 0 ) , 3 ) = 3    
-	--		            AND EXISTS
-	--		                  (
-	--		                  SELECT 'X'
-	--		                    FROM TB_DP_SUB_CONTENTS SC
-	--		                   WHERE SC.PROD_ID = B.PROD_ID
-	--		                     AND SC.SALE_YN = 'Y'
-	--		                     AND VM_VER LIKE '%'||'4.0.4'||'%'
-	--		                  )            
+			            AND EXISTS
+			                  (
+			                  SELECT 'X'
+			                    FROM TB_DP_SUB_CONTENTS SC
+			                   WHERE SC.PROD_ID = B.PROD_ID
+			                     AND SC.SALE_YN = 'Y'
+			                     AND VM_VER LIKE '%'||#{osVersion}||'%'
+    --                           AND 해상도코드 = ''
+			                  )
+	                                
 			       )                   KA
 			      , TB_DP_SUB_CONTENTS KB
 			      , TB_DP_PROD_IMG     KC
@@ -723,7 +725,7 @@
 		            AND ROWNUM = 1) AS TOP_MENU_NM         
 		      , TA.META_CLSF_CD
 		      , TA.FILE_PATH
-		      , TB.FILE_PATH  AS IMG_PATH
+		      , TB.FILE_PATH  AS IMAGE_PATH
 		      , TB.FILE_NM AS IMAGE_NM
 		      , TB.FILE_SIZE AS IMAGE_SIZE
 		      , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
