@@ -206,6 +206,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			List<Identifier> identifierList = new ArrayList<Identifier>();
 			List<Source> sourceList = new ArrayList<Source>();
 			List<Menu> menuList = new ArrayList<Menu>();
+			List<Support> supportList = new ArrayList<Support>();
 
 			// 상품 ID 정보
 			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
@@ -247,6 +248,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			book.setBookVersion(metaInfo.getProdVer());
 			book.setScid(metaInfo.getSubContentsId());
 			book.setSize(metaInfo.getFileSize());
+			book.setType("DP004302".equals(metaInfo.getBookClsfCd()) ? "serial" : "");
 			book.setBookClsfCd(metaInfo.getBookClsfCd());
 			product.setBook(book);
 
@@ -254,7 +256,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
 				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 				support.setText(metaInfo.getStoreDrmYn());
-				store.setSupport(support);
+				supportList.add(support);
+				store.setSupportList(supportList);
 				price.setFixedPrice(metaInfo.getStoreProdNetAmt());
 				price.setText(metaInfo.getStoreProdAmt());
 				store.setPrice(price);
@@ -263,7 +266,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			} else {
 				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 				support.setText(metaInfo.getPlayDrmYn());
-				play.setSupport(support);
+				supportList.add(support);
+				play.setSupportList(supportList);
 				price.setFixedPrice(metaInfo.getPlayProdNetAmt());
 				price.setText(metaInfo.getPlayProdAmt());
 				play.setPrice(price);
