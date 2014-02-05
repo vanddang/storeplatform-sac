@@ -77,6 +77,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
 		 */
+		if (StringUtils.equals(req.getUserAuthKey(), "")) {
+			throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+		}
 
 		/**
 		 * 회원 정보 조회.
@@ -223,6 +226,9 @@ public class UserModifyServiceImpl implements UserModifyService {
 		/**
 		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
 		 */
+		if (StringUtils.equals(req.getUserAuthKey(), "")) {
+			throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+		}
 
 		CreateRealNameRes response = new CreateRealNameRes();
 
