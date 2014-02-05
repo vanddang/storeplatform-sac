@@ -3,7 +3,7 @@
 <mapper namespace="MenuCategory">
 
     <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
-    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
         SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
              , MENU_ID
              , MENU_NM
@@ -38,7 +38,7 @@
     </select>
     
     <!-- Music 상세 카테고리 조회-->
-    <select id="getMusicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <select id="getMusicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
         /* MenuCategoryMapper.xml, getMusicDetailCategoryList, JuYoungYun, 2014-01-08 */
         SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT
              , MENU_ID
@@ -179,7 +179,7 @@
     
     
     <!-- 영화/방송 상세 카테고리 조회-->
-    <select id="getMovieTvDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <select id="getMovieTvDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
 		    /* MenuCategoryMapper.xml, getMovieDetailCategoryList, JuYoungYun, 2014-01-09 */
 		    SELECT COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
 		         , SUM( C.MENU_PROD_CNT ) OVER ( ) AS TOTAL_PROD_CNT
@@ -340,7 +340,7 @@
     
     
     <!-- EBOOK/Comic 상세 카테고리 조회-->
-    <select id="getEBookComicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <select id="getEBookComicDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
         /* MenuCategoryMapper.xml, getEBookDetailCategoryList, JuYoungYun, 2014-01-10 */
         SELECT COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
              , C.MENU_ID
@@ -442,7 +442,7 @@
 
 
     <!-- Shopping 상세 카테고리 조회 -->
-    <select id="getShoppingDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <select id="getShoppingDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
 	    SELECT /* MenuCategoryMapper.xml, getShoppingDetailCategoryList, JuYoungYun, 2014-01-13 */
 	           COUNT(C.MENU_ID) OVER() AS TOTAL_COUNT
 	         , C.MENU_ID
@@ -519,7 +519,7 @@
     
     
     <!-- App 상세 카테고리 조회 -->
-    <select id="getAppDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategoryDTO">
+    <select id="getAppDetailCategoryList" parameterType="MenuRequest" resultType="MenuCategory">
         SELECT /* MenuCategoryMapper.xml, getAppDetailCategoryList, JuYoungYun, 2014-01-14 */
                COUNT(MENU_ID) OVER() AS TOTAL_COUNT
              , MENU_ID

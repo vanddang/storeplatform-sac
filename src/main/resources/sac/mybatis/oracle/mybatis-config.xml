@@ -27,7 +27,7 @@
     <typeAliases>
                 
         <!-- ################################################# -->
-        <!-- SAC 공통										   -->
+        <!-- SAC 공통                                        -->
         <!-- ################################################# -->
         <!-- ACL 관련 조회-->
         <typeAlias alias="AclAuthKeyInfo"     type="com.skplanet.storeplatform.sac.runtime.acl.vo.AclAuthKeyInfo" />
@@ -38,7 +38,7 @@
         
         
         <!-- ################################################# -->
-        <!-- 회원											   -->
+        <!-- 회원                                            -->
         <!-- ################################################# -->
         
         <!-- 공통 관련 조회 -->
@@ -61,14 +61,14 @@
         
         
         
-		<!-- ################################################# -->
-        <!-- 구매											   -->
+        <!-- ################################################# -->
+        <!-- 구매                                            -->
         <!-- ################################################# -->
         
         
         
         <!-- ################################################# -->
-        <!-- 전시											   -->
+        <!-- 전시                                            -->
         <!-- ################################################# -->
         
         <!-- 전시 상품 공통 -->
@@ -93,14 +93,14 @@
         
         <!-- 일반카테고리 음원 상품 조회 -->
         <typeAlias alias="MusicContentsRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq" />
-        <typeAlias alias="MusicContentsDTO"  type="com.skplanet.storeplatform.sac.display.category.vo.MusicContentsDTO" />
+        <typeAlias alias="MusicContents"  type="com.skplanet.storeplatform.sac.display.category.vo.MusicContents" />
 
         <!-- 메뉴/카테고리 조회 -->
         <typeAlias alias="MenuRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq" />
-        <typeAlias alias="MenuDetailDTO"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO" />
-        <typeAlias alias="MenuCategoryDTO"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuCategoryDTO" />
-                			
-        <!-- 일반카테고리 웹툰 상품 조회 -->        													
+        <typeAlias alias="MenuDetailInfo"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailInfo" />
+        <typeAlias alias="MenuCategory"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory" />
+                            
+        <!-- 일반카테고리 웹툰 상품 조회 -->                                                            
         <typeAlias alias="CategoryWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq" />
         <typeAlias alias="CategoryWebtoon"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoon" />
         <!-- 운영자 추천 웹툰 상품 조회 -->   
@@ -180,7 +180,7 @@
         <typeAlias alias="Banner"  type="com.skplanet.storeplatform.sac.display.banner.vo.Banner" />
             
         
-		<!-- 이북 상품상세 정보 조회 -->
+        <!-- 이북 상품상세 정보 조회 -->
         <typeAlias alias="EpubChannelReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq" />
         <typeAlias alias="EpubDetail"  type="com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail" />
         <typeAlias alias="MgzinSubscription"  type="com.skplanet.storeplatform.sac.display.epub.vo.MgzinSubscription" />

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Menu">
     <!-- Menu 리스트 조회-->
-    <select id="selectMenuList" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="selectMenuList" parameterType="MenuRequest" resultType="MenuDetailInfo">
         SELECT 
                 COUNT(TENANT_MENU_ID) OVER() AS TOTAL_COUNT,
                 TENANT_ID  ,
@@ -40,7 +40,7 @@
     </select>
     
     <!-- Menu Detail 조회-->
-    <select id="selectMenu" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="selectMenu" parameterType="MenuRequest" resultType="MenuDetailInfo">
         SELECT TENANT_ID  ,
                TENANT_MENU_ID AS MENU_ID,           
                SYSTEM_ID  ,          
@@ -76,7 +76,7 @@
     </select>
 
     <!-- 대분류 카테고리정보 조회 -->
-    <select id="getTopCategoryList" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="getTopCategoryList" parameterType="MenuRequest" resultType="MenuDetailInfo">
         SELECT 
                COUNT(M.MENU_ID) OVER() AS TOTAL_COUNT,
                M.MENU_ID,
@@ -95,7 +95,7 @@
     </select>
 
     <!-- 세부 카테고리정보 조회 - (카테고리별 별도의 쿼리문 존재함) - 추가 수정 필요 -->
-    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="getDetailCategoryList" parameterType="MenuRequest" resultType="MenuDetailInfo">
         SELECT COUNT(MENU_ID) OVER() AS TOTAL_COUNT,
                MENU_ID,
                MENU_NM,
@@ -129,7 +129,7 @@
     
     
     <!-- 3depth 메뉴 조회 -->
-    <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailDTO">
+    <select id="getTopMenu3Detph" parameterType="MenuRequest" resultType="MenuDetailInfo">
 		SELECT M.TENANT_MENU_ID AS MENU_ID
 		  FROM TB_DP_TENANT_MENU M,
 		      (
