@@ -233,8 +233,6 @@ public class MemberCommonComponent {
 			req.setDeviceKey(keyValue);
 		} else if ("deviceId".equals(keyType)) {
 			req.setDeviceId(keyValue);
-		} else {
-			throw new StorePlatformException("SAC_MEM_1300", "userId, userKey, deviceKey, deviceId is Not Equal");
 		}
 
 		UserInfo userInfo = this.userSearchService.searchUser(req, sacHeader);
