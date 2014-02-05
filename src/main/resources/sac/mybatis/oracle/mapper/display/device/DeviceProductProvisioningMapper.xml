@@ -25,7 +25,6 @@
 		       AND P.PROD_ID = TP.PROD_ID
 		       AND TP.PROD_ID = TPC.PROD_ID
 		       AND TP.TENANT_ID = TPC.TENANT_ID  
-		       AND SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
 		       AND PCM.USE_YN = 'Y'
 		       AND SC.CHNL_CNT > 0
 		       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
@@ -59,7 +58,6 @@
 			       AND P.PROD_ID = TP.PROD_ID
 			       AND TP.PROD_ID = TPC.PROD_ID
 			       AND TP.TENANT_ID = TPC.TENANT_ID
-			       AND SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
 			       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 			       AND CD.DEVICE_MODEL_CD = #{req.deviceModelNo}
 			       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
