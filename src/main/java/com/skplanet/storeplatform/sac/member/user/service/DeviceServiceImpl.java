@@ -514,13 +514,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		UserMbrDevice userMbrDevice = schDeviceRes.getUserMbrDevice();
 
-		/* deviceKey로 조회시 파라메터로 넘어온 deviceId와 DB deviceId 비교 */
-		if (deviceKey != null) {
-			if (!deviceId.equals(userMbrDevice.getDeviceID())) {
-				throw new StorePlatformException("SAC_MEM_1503");
-			}
-		}
-
 		// 부가정보 등록시 셋팅할 값들
 		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
 		deviceInfo.setDeviceKey(userMbrDevice.getDeviceKey());
@@ -639,7 +632,7 @@ public class DeviceServiceImpl implements DeviceService {
 					}
 
 					if (icasImei.equals(nativeId)) {
-						throw new StorePlatformException("SAC_MEM_1504");
+						throw new StorePlatformException("SAC_MEM_1503");
 					}
 
 				}
@@ -652,7 +645,7 @@ public class DeviceServiceImpl implements DeviceService {
 				} else {
 					if (rooting.equals("Y") && !nativeId.equals(userMbrDevice.getNativeID())) {
 						// 루팅된 단말 & DB의 IMEI와 단말 IMEI값 불일치
-						throw new StorePlatformException("SAC_MEM_1505");
+						throw new StorePlatformException("SAC_MEM_1504");
 					}
 				}
 			}
