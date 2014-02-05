@@ -97,19 +97,11 @@ public class MemberCommonComponent {
 	 * @return String
 	 */
 	public String getOpmdMdnInfo(String msisdn) { // 2014. 01. 09. 김다슬, 인크로스. 수정
-		/**
-		 * TODO try catch 절은 삭제 해야함.
-		 */
-		try {
 
-			GetOpmdReq req = new GetOpmdReq();
-			req.setMsisdn(msisdn);
+		GetOpmdReq req = new GetOpmdReq();
+		req.setMsisdn(msisdn);
 
-			return this.miscellaneousService.getOpmd(req).getMsisdn();
-
-		} catch (Exception e) {
-			throw new StorePlatformException("SAC_MEM_", e);
-		}
+		return this.miscellaneousService.getOpmd(req).getMsisdn();
 	}
 
 	/**
@@ -123,7 +115,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public String getUaCode(String tenantId, String deviceModelNo) throws Exception { // 2014. 01. 14. 김다슬, 인크로스. 추가
+	public String getUaCode(String tenantId, String deviceModelNo) { // 2014. 01. 14. 김다슬, 인크로스. 추가
 		GetUaCodeReq request = new GetUaCodeReq();
 		request.setDeviceModelNo(deviceModelNo);
 
@@ -216,9 +208,10 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
-		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
+		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType,
+				keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
