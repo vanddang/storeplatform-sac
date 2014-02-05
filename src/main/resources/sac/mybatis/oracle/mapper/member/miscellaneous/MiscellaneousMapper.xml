@@ -14,8 +14,8 @@
 	</select>
 	
 	<!-- 휴대폰 SMS 인증 코드 및 Signature 일치 여부 및 인증코드 만료시간 확인 -->
-	<select id="searchPhoneAuthYn" parameterType="ServiceAuth" resultType="ServiceAuth">
-       /* MiscellaneousMapper.xml, searchPhoneAuthYn, SAC : 김다슬 , 2014-01-16 */
+	<select id="searchPhoneAuthInfo" parameterType="ServiceAuth" resultType="ServiceAuth">
+       /* MiscellaneousMapper.xml, searchPhoneAuthInfo, SAC : 김다슬 , 2014-01-16 */
        SELECT 
            AUTH_SEQ,
            AUTH_SIGN,
