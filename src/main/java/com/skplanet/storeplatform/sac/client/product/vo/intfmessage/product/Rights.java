@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -35,6 +36,7 @@ public class Rights extends CommonInfo implements Serializable {
 	private String additionalUsagePeriod; // 전시를 목적으로 이용 기간을 표기할 경우 사용한다.
 	private String durationUsagePeriodView; // 전시를 목적으로 추가 이용 기간을 표기할 경우 사용한다.
 	private String subscription; // 정기구독정보
+	private List<Date> dateList; // 사용가능 시작/만료 일자 LIST
 
 	/**
 	 * @return String
@@ -184,6 +186,21 @@ public class Rights extends CommonInfo implements Serializable {
 	 */
 	public void setSubscription(String subscription) {
 		this.subscription = subscription;
+	}
+
+	/**
+	 * @return the dateList
+	 */
+	public List<Date> getDateList() {
+		return this.dateList;
+	}
+
+	/**
+	 * @param dateList
+	 *            the dateList to set
+	 */
+	public void setDateList(List<Date> dateList) {
+		this.dateList = dateList;
 	}
 
 }
