@@ -46,6 +46,8 @@ public class MusicContentsReq extends CommonInfo {
 
 	private String batchId;
 
+	private String stdDt; // 배치일자
+
 	public String getFilteredBy() {
 		return this.filteredBy;
 	}
@@ -148,6 +150,14 @@ public class MusicContentsReq extends CommonInfo {
 
 	public void setBatchId(String batchId) {
 		this.batchId = batchId;
+	}
+
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
 	}
 
 }

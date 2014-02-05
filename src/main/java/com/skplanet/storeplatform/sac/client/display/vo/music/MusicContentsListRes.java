@@ -32,7 +32,7 @@ public class MusicContentsListRes extends CommonInfo {
 		return this.commonResponse;
 	}
 
-	public void setCommonRes(CommonResponse commonResponse) {
+	public void setCommonResponse(CommonResponse commonResponse) {
 		this.commonResponse = commonResponse;
 	}
 
