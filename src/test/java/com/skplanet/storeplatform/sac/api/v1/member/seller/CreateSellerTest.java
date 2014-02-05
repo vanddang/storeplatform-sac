@@ -152,7 +152,7 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
-						req.setSellerId("sellerPersonNoPay01");
+						req.setSellerId("sellerPersonNoPay33");
 						// req.setSellerId("sellerTest0003");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
@@ -184,7 +184,7 @@ public class CreateSellerTest {
 						agreement3.setExtraAgreementVersion("0.1");
 						agreement3.setIsExtraAgreement("Y");
 						agreementList.add(agreement3);
-						 req.setAgreementList(agreementList);
+						req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
