@@ -188,14 +188,6 @@ public class SellerController {
 	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, @RequestBody @Validated CreateAuthKeyReq req)
 			throws Exception {
 
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-		String ipAddress = StringUtil.nvl(req.getIpAddress(), "");
-		String expireDate = StringUtil.nvl(req.getExpireDate(), "");
-		if (sellerKey.equals("") || ipAddress.equals("") || expireDate.equals("")) {
-			throw new Exception("필수 파라미터 미존재");
-		}
-
 		return this.sellerService.createAuthKey(header, req);
 	}
 
