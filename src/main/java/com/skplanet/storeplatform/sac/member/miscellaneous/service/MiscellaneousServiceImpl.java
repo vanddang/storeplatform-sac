@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -125,7 +123,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private CommonDAO commonDao;
 
 	@Override
-	public GetOpmdRes getOpmd(GetOpmdReq req) {
+	public GetOpmdRes getOpmd(GetOpmdReq req) throws Exception {
 		String msisdn = req.getMsisdn();
 
 		GetOpmdRes res = new GetOpmdRes();
@@ -138,12 +136,16 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			uapsReq.setDeviceId(msisdn);
 			LOGGER.info("## [SAC] Request : {}", uapsReq);
 			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
-			LOGGER.info("## [SAC] Response {}", opmdRes);
+			if (opmdRes != null) {
+				res.setMsisdn(opmdRes.getMobileMdn());
+				LOGGER.info("## [SAC] Response {}", opmdRes);
+			}
 		} else {
 			/** 2. OPMD 번호가 아닐경우, Request msisdn을 그대로 반환 */
 			res.setMsisdn(msisdn);
 			LOGGER.info("OPMD 번호 아님, Request값 그대로 내려줌.");
 		}
+
 		return res;
 	}
 
@@ -164,61 +166,51 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 파라미터로 MSISDN만 넘어온 경우 */
 		if (msisdn != null && deviceModelNo == null) {
 
-			/** 1. MSISDN 유효성 검사 */
-			Pattern pattern = Pattern.compile("[0-9]{10,11}");
-			Matcher matcher = pattern.matcher(req.getMsisdn());
-			boolean isMdn = matcher.matches();
+			/* deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
+			userKey = this.getUserKey(commonRequest, msisdn);
 
-			if (isMdn) {
-				/** 2. deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-				userKey = this.getUserKey(commonRequest, msisdn);
+			/* SC 회원 Request 생성 */
+			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
 
-				/** 3. SC 회원 Request 생성 */
-				SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+			/* 공통헤더 Request 파라미터 셋팅 */
+			searchDeviceRequest.setCommonRequest(commonRequest);
 
-				/** 4. 공통헤더 Request 파라미터 셋팅 */
-				searchDeviceRequest.setCommonRequest(commonRequest);
+			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+			KeySearch keySearch = new KeySearch();
+			keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
+			keySearch.setKeyString(msisdn);
+			keySearchList.add(keySearch);
 
-				List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-				KeySearch keySearch = new KeySearch();
-				keySearch.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-				keySearch.setKeyString(msisdn);
-				keySearchList.add(keySearch);
+			searchDeviceRequest.setKeySearchList(keySearchList);
+			searchDeviceRequest.setUserKey(userKey);
 
-				searchDeviceRequest.setKeySearchList(keySearchList);
-				searchDeviceRequest.setUserKey(userKey);
+			/* deviceId와 userKey로 deviceModelNo 조회 */
+			SearchDeviceResponse searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
 
-				/** 5. deviceId와 userKey로 deviceModelNo 조회 */
-				SearchDeviceResponse searchDeviceResult = this.deviceSCI.searchDevice(searchDeviceRequest);
-
-				/** 6. deviceModelNo 조회 결과 확인 */
-				if (searchDeviceResult != null && searchDeviceResult.getUserMbrDevice() != null) {
-					deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
-					LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
-							.getUserMbrDeviceDetail());
-					String uaCode = null;
-					boolean isUaCode = false;
-					List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
-							.getUserMbrDeviceDetail();
-					LOGGER.info("## [SAC] SC 회원 단말 상세정보 조회.");
-					for (int i = 0; i < deviceDetails.size(); i++) {
-						isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
-						if (isUaCode) {
-							uaCode = deviceDetails.get(i).getExtraProfileValue();
-						}
+			/* deviceModelNo 조회 결과 확인 */
+			if (searchDeviceResult != null && searchDeviceResult.getUserMbrDevice() != null) {
+				deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
+				LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
+						.getUserMbrDeviceDetail());
+				String uaCode = null;
+				boolean isUaCode = false;
+				List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
+						.getUserMbrDeviceDetail();
+				LOGGER.info("## [SAC] SC 회원 단말 상세정보 조회.");
+				for (int i = 0; i < deviceDetails.size(); i++) {
+					isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
+					if (isUaCode) {
+						uaCode = deviceDetails.get(i).getExtraProfileValue();
 					}
-					if (uaCode != null) {
-						response.setUaCd(uaCode);
-						LOGGER.info("## UA Code : {}", uaCode);
-					} else {
-						throw new StorePlatformException("SAC_MEM_3401", msisdn);
-					}
-				} else {
-					throw new StorePlatformException("SAC_MEM_3403", msisdn);
 				}
-
+				if (uaCode != null) {
+					response.setUaCd(uaCode);
+					LOGGER.info("## UA Code : {}", uaCode);
+				} else {
+					throw new StorePlatformException("SAC_MEM_3401", msisdn);
+				}
 			} else {
-				throw new StorePlatformException("SAC_MEM_3004");
+				throw new StorePlatformException("SAC_MEM_3403", msisdn);
 			}
 		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회

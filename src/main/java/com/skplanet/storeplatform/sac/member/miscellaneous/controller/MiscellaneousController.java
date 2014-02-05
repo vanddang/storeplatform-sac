@@ -79,6 +79,15 @@ public class MiscellaneousController {
 			throw new StorePlatformException("SAC_MEM_0001", "msisdn or deviceModel");
 		}
 
+		if (request.getMsisdn() != null) {
+			Pattern pattern = Pattern.compile("[0-9]{10,11}");
+			Matcher matcher = pattern.matcher(request.getMsisdn());
+			boolean isMdn = matcher.matches();
+			if (!isMdn) {
+				throw new StorePlatformException("SAC_MEM_3004");
+			}
+		}
+
 		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
 
 		return response;
@@ -102,13 +111,11 @@ public class MiscellaneousController {
 	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request)
 			throws Exception {
 
-		// MDN 이외의 값일 경우 Error Return - 2014.01.28
 		Pattern pattern = Pattern.compile("[0-9]{10,11}");
 		Matcher matcher = pattern.matcher(request.getMsisdn());
 		boolean isMdn = matcher.matches();
 		if (!isMdn) {
-			// TODO SAC_MEM_3004
-			throw new StorePlatformException("유효하지 않은 휴대폰 번호입니다.");
+			throw new StorePlatformException("SAC_MEM_3004");
 		}
 
 		GetOpmdRes response = this.service.getOpmd(request);
@@ -132,6 +139,14 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) throws Exception {
+
+		Pattern pattern = Pattern.compile("[0-9]{10,11}");
+		Matcher matcher = pattern.matcher(request.getRecvMdn());
+		boolean isMdn = matcher.matches();
+		if (!isMdn) {
+			throw new StorePlatformException("SAC_MEM_3004");
+		}
+
 		GetPhoneAuthorizationCodeRes response = this.service.getPhoneAuthorizationCode(requestHeader, request);
 
 		return response;
