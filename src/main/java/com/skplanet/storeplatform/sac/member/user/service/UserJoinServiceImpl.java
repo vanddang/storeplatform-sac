@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
@@ -60,7 +59,6 @@ import com.skplanet.storeplatform.sac.member.common.vo.Clause;
  * Updated on : 2013. 12. 31. Updated by : 심대진, 다모아 솔루션.
  */
 @Service
-@Transactional
 public class UserJoinServiceImpl implements UserJoinService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserJoinServiceImpl.class);

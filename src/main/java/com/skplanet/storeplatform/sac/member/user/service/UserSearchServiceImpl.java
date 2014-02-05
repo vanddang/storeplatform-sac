@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
@@ -32,6 +31,8 @@ import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyRequest;
 import com.skplanet.storeplatform.member.client.common.vo.SearchPolicyResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
@@ -72,7 +73,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
 @Service
-@Transactional
 public class UserSearchServiceImpl implements UserSearchService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserSearchServiceImpl.class);
@@ -820,33 +820,42 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req) {
 
 		/**
-		 * OPMD 단말 여부, OPMD 모번호, SKT 이용정지회원 여부 setting.
+		 * OPMD 단말 여부, OPMD 모번호 setting.
 		 */
-		DetailByDeviceIdSacRes response = this.setUapsInfo(req);
+		DetailByDeviceIdSacRes response = this.setOmpdInfo(req);
 
 		/**
 		 * 사용자별 정책 리스트 setting.
 		 */
-		response.setPolicyCodeList(this.getIndividualPolicy(sacHeader, req));
+		if (!StringUtils.equals(req.getKey(), "") && req.getPolicyCodeList() != null) {
+			response.setPolicyCodeList(this.getIndividualPolicy(sacHeader, req));
+		}
 
 		/**
 		 * 단말 정보 setting.
 		 */
 		this.setDeviceInfo(sacHeader, req, response);
 
+		/**
+		 * SKT 이용정지회원 여부 setting.
+		 */
+		if (StringUtils.equals(response.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
+			response.setIsSktPause(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getPauseYN());
+		}
+
 		return response;
 	}
 
 	/**
 	 * <pre>
-	 * OPMD 단말 여부, OPMD 모번호, SKT 이용정지회원 여부 setting.
+	 * OPMD 단말 여부, OPMD 모번호 setting.
 	 * </pre>
 	 * 
 	 * @param req
 	 *            Request Value Object
 	 * @return DetailByDeviceIdSacRes
 	 */
-	private DetailByDeviceIdSacRes setUapsInfo(DetailByDeviceIdSacReq req) {
+	private DetailByDeviceIdSacRes setOmpdInfo(DetailByDeviceIdSacReq req) {
 
 		DetailByDeviceIdSacRes response = new DetailByDeviceIdSacRes();
 
@@ -865,11 +874,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 				response.setIsOpmd(MemberConstants.USE_N);
 
 			}
-
-			/**
-			 * SKT 이용정지회원 여부 setting.
-			 */
-			// response.setIsSktPause(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getPauseYN());
 
 		}
 
@@ -918,32 +922,35 @@ public class UserSearchServiceImpl implements UserSearchService {
 		List<IndividualPolicyInfo> policyInfos = null;
 		IndividualPolicyInfo policyInfo = null;
 		if (policyResponse.getLimitTargetList().size() > 0) {
-			policyInfos = new ArrayList<IndividualPolicyInfo>();
-			for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
-				policyInfo = new IndividualPolicyInfo();
-				policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
-				policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
-				policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
-				policyInfos.add(policyInfo);
-			}
-		}
 
-		logger.info("## policyInfos : {}", policyInfos.toString());
+			if (policyResponse.getLimitTargetList().size() > 0) {
+				policyInfos = new ArrayList<IndividualPolicyInfo>();
+				for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
+					policyInfo = new IndividualPolicyInfo();
+					policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
+					policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
+					policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+					policyInfos.add(policyInfo);
+				}
+			}
+
+			logger.info("## policyInfos : {}", policyInfos.toString());
+		}
 
 		return policyInfos;
 	}
 
+	/**
+	 * <pre>
+	 * 휴대기기 정보 setting.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 * @param req
+	 * @param response
+	 * @return DetailByDeviceIdSacRes
+	 */
 	public DetailByDeviceIdSacRes setDeviceInfo(SacRequestHeader sacHeader, DetailByDeviceIdSacReq req, DetailByDeviceIdSacRes response) {
-
-		/********************
-		 * 휴대기기 상세 조회
-		 ********************/
-		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
-
-		/**
-		 * SC 공통 정보 setting.
-		 */
-		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 		/**
 		 * 검색조건 정보 setting.
@@ -951,18 +958,34 @@ public class UserSearchServiceImpl implements UserSearchService {
 		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
 		KeySearch keySchUserKey = new KeySearch();
 		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_DEVICE_ID);
-		keySchUserKey.setKeyString(req.getDeviceId());
+		keySchUserKey.setKeyString(this.mcc.getOpmdMdnInfo(req.getDeviceId())); // 모번호 조회.
 		keySearchList.add(keySchUserKey);
-		searchDeviceRequest.setKeySearchList(keySearchList);
+
+		/**
+		 * 회원 조회 연동.
+		 */
+		CheckDuplicationRequest chkDupReq = new CheckDuplicationRequest();
+		chkDupReq.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		chkDupReq.setKeySearchList(keySearchList);
+		CheckDuplicationResponse chkDupRes = this.userSCI.checkDuplication(chkDupReq);
+		if (StringUtils.equals(chkDupRes.getIsRegistered(), "N")) {
+
+			logger.info("## 회원 정보가 존재 하지 않습니다. userKey, deviceKey, deviceTelecom 정보 없이 내려줌.");
+			return response;
+
+		}
 
 		/**
 		 * SC 회원의 등록된 휴대기기 상세정보를 조회 연동.
 		 */
+		SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
+		searchDeviceRequest.setUserKey(chkDupRes.getUserMbr().getUserKey()); // 회원 조회시 내려온 UserKey setting.
+		searchDeviceRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		searchDeviceRequest.setKeySearchList(keySearchList);
 		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
-		logger.info("### searchDeviceResponse : {}", searchDeviceResponse.toString());
 
 		/**
-		 * TODO DeviceId로 조회된 정보가 없을경우 처리 어떻게..??
+		 * 휴대기기 정보 setting.
 		 */
 		response.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey()); // 사용자 Key setting.
 		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey()); // 기기 Key setting.
