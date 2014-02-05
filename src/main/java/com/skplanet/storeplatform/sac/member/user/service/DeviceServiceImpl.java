@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
@@ -90,7 +89,6 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
 @Service
-@Transactional
 public class DeviceServiceImpl implements DeviceService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
