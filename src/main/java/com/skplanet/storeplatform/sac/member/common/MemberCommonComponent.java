@@ -37,6 +37,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -94,14 +95,14 @@ public class MemberCommonComponent {
 	 * 
 	 * @param msisdn
 	 *            msisdn
-	 * @return String
+	 * @return GetOpmdRes
 	 */
-	public String getOpmdMdnInfo(String msisdn) { // 2014. 01. 09. 김다슬, 인크로스. 수정
+	public GetOpmdRes getOpmdMdnInfo(String msisdn) { // 2014. 01. 09. 김다슬, 인크로스. 수정
 
 		GetOpmdReq req = new GetOpmdReq();
 		req.setMsisdn(msisdn);
 
-		return this.miscellaneousService.getOpmd(req).getMsisdn();
+		return this.miscellaneousService.getOpmd(req);
 	}
 
 	/**

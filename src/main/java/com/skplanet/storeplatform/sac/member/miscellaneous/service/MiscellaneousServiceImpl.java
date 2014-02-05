@@ -140,7 +140,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
 				res.setMsisdn(opmdRes.getMobileMdn());
-				// response setting 예정
+				res.setOpmdMdn(opmdRes.getOpmdMdn());
+				res.setMobileSvcMngNum(opmdRes.getMobileSvcMngNum());
+				res.setPauseYN(opmdRes.getPauseYN());
 				LOGGER.info("## [SAC] Response {}", opmdRes);
 			}
 		} else {
