@@ -70,7 +70,7 @@ public class CreateAuthKeyTest {
 					public Object requestBody() {
 						CreateAuthKeyReq req = new CreateAuthKeyReq();
 
-						req.setIpAddress("127.0.0.1");
+						// req.setIpAddress("127.0.0.1");
 						req.setSellerKey("IF1023501629320130913143329");
 						req.setExpireDate("20130102150000");
 

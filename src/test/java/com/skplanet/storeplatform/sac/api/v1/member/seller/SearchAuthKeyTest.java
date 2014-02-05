@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -62,12 +62,12 @@ public class SearchAuthKeyTest {
 
 		new TestCaseTemplate(this.mockMvc)
 				.url(MemberTestConstant.PREFIX_SELLER_PATH
-						+ "/detailInfomationByAuthorizationKey/v1?sellerKey=IF1023501629320130913143329")
-				.httpMethod(HttpMethod.GET).success(SearchAuthKeyRes.class, new SuccessCallback() {
+						+ "/detailInfomationByAuthorizationKey/v1?sessionKey=IF1023501629320130913143329_slW7PebOeR&extraDate=1")
+				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						SearchAuthKeyRes res = (SearchAuthKeyRes) result;
-						assertThat(res.getSessionKey(), notNullValue());
+						DetailInformationRes res = (DetailInformationRes) result;
+						assertThat(res.getSellerKey(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
