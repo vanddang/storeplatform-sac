@@ -414,7 +414,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						.getSellerMbrNo());
 
 				// 구매 정보
-				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
 					purchase.setState(prchsState);
 					identifier = new Identifier();
@@ -425,8 +424,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					purchaseDate.setType("date/purchase");
 					purchaseDate.setText(prchsDt);
 					purchase.setDate(purchaseDate);
-				} else {
-					purchase.setState("");
 				}
 
 				product = new Product();

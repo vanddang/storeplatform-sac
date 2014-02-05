@@ -327,8 +327,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					date.setType("date/purchase");
 					date.setText(prchsDt);
 					purchase.setDate(date);
-				} else {
-					purchase.setState("");
 				}
 
 				// identifier = new Identifier();
