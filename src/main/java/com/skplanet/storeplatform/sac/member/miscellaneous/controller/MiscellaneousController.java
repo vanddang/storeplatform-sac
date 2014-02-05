@@ -66,13 +66,10 @@ public class MiscellaneousController {
 	 * @param request
 	 *            GetUaCodeReq
 	 * @return GetUaCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/getUaCode/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request)
-			throws Exception {
+	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request) {
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
 		if (request == null || request.equals("")) {
@@ -103,13 +100,10 @@ public class MiscellaneousController {
 	 * @param request
 	 *            GetOpmdReq
 	 * @return GetOpmdRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/getOpmd/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request)
-			throws Exception {
+	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request) {
 
 		Pattern pattern = Pattern.compile("[0-9]{10,11}");
 		Matcher matcher = pattern.matcher(request.getMsisdn());
@@ -132,13 +126,11 @@ public class MiscellaneousController {
 	 * @param request
 	 *            GetPhoneAuthorizationCodeReq
 	 * @return GetPhoneAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/getPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
-			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) throws Exception {
+			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) {
 
 		Pattern pattern = Pattern.compile("[0-9]{10,11}");
 		Matcher matcher = pattern.matcher(request.getRecvMdn());
@@ -163,13 +155,11 @@ public class MiscellaneousController {
 	 * @param request
 	 *            ConfirmPhoneAuthorizationCodeReq
 	 * @return ConfirmPhoneAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/confirmPhoneAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAutorizationCode(SacRequestHeader requestHeader,
-			@Validated @RequestBody ConfirmPhoneAuthorizationCodeReq request) throws Exception {
+			@Validated @RequestBody ConfirmPhoneAuthorizationCodeReq request) {
 
 		ConfirmPhoneAuthorizationCodeRes response = this.service.confirmPhoneAutorizationCode(request);
 
@@ -183,12 +173,10 @@ public class MiscellaneousController {
 	 * </pre>
 	 * 
 	 * @return GetCaptchaRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/getCaptcha/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public GetCaptchaRes getCaptcha() throws Exception {
+	public GetCaptchaRes getCaptcha() {
 
 		GetCaptchaRes res = this.service.getCaptcha();
 		return res;
@@ -202,12 +190,10 @@ public class MiscellaneousController {
 	 * @param request
 	 *            ConfirmCaptchaReq
 	 * @return ConfirmCaptchaRes - 인증 성공:null, 인증 실패:Exception
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/confirmCaptcha/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ConfirmCaptchaRes confirmCaptcha(@Validated @RequestBody ConfirmCaptchaReq request) throws Exception {
+	public ConfirmCaptchaRes confirmCaptcha(@Validated @RequestBody ConfirmCaptchaReq request) {
 		ConfirmCaptchaRes res = this.service.confirmCaptcha(request);
 		return res;
 	}
@@ -220,13 +206,11 @@ public class MiscellaneousController {
 	 * @param request
 	 *            GetEmailAuthorizationCodeReq
 	 * @return GetEmailAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/getEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode(SacRequestHeader requestHeader,
-			@Validated @RequestBody GetEmailAuthorizationCodeReq request) throws Exception {
+			@Validated @RequestBody GetEmailAuthorizationCodeReq request) {
 		GetEmailAuthorizationCodeRes res = this.service.getEmailAuthorizationCode(requestHeader, request);
 		return res;
 
@@ -240,13 +224,11 @@ public class MiscellaneousController {
 	 * @param request
 	 *            ConfirmEmailAuthorizationCodeReq
 	 * @return ConfirmEmailAuthorizationCodeRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/confirmEmailAuthorizationCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode(
-			@Validated @RequestBody ConfirmEmailAuthorizationCodeReq request) throws Exception {
+			@Validated @RequestBody ConfirmEmailAuthorizationCodeReq request) {
 		ConfirmEmailAuthorizationCodeRes res = this.service.confirmEmailAuthorizationCode(request);
 		return res;
 	}
@@ -259,13 +241,10 @@ public class MiscellaneousController {
 	 * @param request
 	 *            CreateAdditionalServiceReq
 	 * @return CreateAdditionalServiceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/dev/createAdditionalService/v1")
 	@ResponseBody
-	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request)
-			throws Exception {
+	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
 
 		CreateAdditionalServiceRes response = this.service.createAdditionalService(request);
 		return response;
@@ -279,13 +258,10 @@ public class MiscellaneousController {
 	 * @param request
 	 *            GetAdditionalServiceReq
 	 * @return GetAdditionalServiceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/dev/getAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request)
-			throws Exception {
+	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request) {
 		GetAdditionalServiceRes response = this.service.getAdditionalService(request);
 
 		return response;
