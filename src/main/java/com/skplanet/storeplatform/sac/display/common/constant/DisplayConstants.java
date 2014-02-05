@@ -352,4 +352,14 @@ public class DisplayConstants {
 	 * 특정 상품 조회 API 파라미터 제한 개수
 	 */
 	public static final Integer DP_CATEGORY_SPECIFIC_PRODUCT_PARAMETER_LIMIT = new Integer(50);
+
+	/**
+	 * 미지원 단말
+	 */
+	public static final String DP_ANDROID_STANDARD_NM = "android_standard";
+
+	/**
+	 * 가상 모델명
+	 */
+	public static final String DP_ANDROID_STANDARD2_NM = "android_standard2";
 }

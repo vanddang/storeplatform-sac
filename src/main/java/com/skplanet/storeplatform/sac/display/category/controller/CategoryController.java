@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -197,7 +198,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificRes searchSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
+	public CategorySpecificRes searchSpecificProductList(@Validated CategorySpecificReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificProductList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

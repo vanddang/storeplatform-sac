@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DeviceProductProvisioning">
+	<select id="searchProductProvisioning" parameterType="Map" resultType="MetaInfo">
+		   <if test = "req.productType=='shopping'">  
+			 SELECT /* DeviceProductProvisioningMapper.xml, , Oh Seung Min, 2014-02-04 */
+		            P.PROD_ID AS PART_PROD_ID
+		          , P.PROD_GRD_CD
+		          , P.CONTENTS_TYPE_CD
+		      FROM 
+		             TB_DP_PROD_CATALOG_MAPG            PCM
+		           , TB_DP_SHPG_CATALOG                 SC
+		           , TB_DP_SHPG_PROD                    SP
+		           , TB_DP_PROD_RSHP                    PR
+		           , TB_DP_PROD                         P
+		           , TB_DP_SPRT_DEVICE                  SD
+		           , TB_CM_DEVICE                       CD
+		           , TB_DP_TENANT_PROD                  TP
+		           , TB_DP_TENANT_PROD_PRICE            TPC
+		     WHERE SC.CATALOG_ID = PCM.CATALOG_ID
+		       AND SP.PROD_ID = PCM.PROD_ID 
+		       AND SP.PROD_ID = PR.PROD_ID
+		       AND PR.PART_PROD_ID = P.PROD_ID
+		       AND P.PROD_ID = SD.PROD_ID 
+		       AND P.PROD_ID = TP.PROD_ID
+		       AND TP.PROD_ID = TPC.PROD_ID
+		       AND TP.TENANT_ID = TPC.TENANT_ID  
+		       AND SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+		       AND PCM.USE_YN = 'Y'
+		       AND SC.CHNL_CNT > 0
+		       <if test = "contentTypeCd !=null">
+		       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
+		       </if>
+		       <if test = "list !=null">
+		       AND PR.PART_PROD_ID IN
+		           <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
+		                #{item}
+		           </foreach>
+		       </if>
+		       AND NVL(SP.B2B_PROD_YN, 'N') != 'Y'
+		       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 
+		       AND CD.USE_YN = 'Y'
+		       AND CD.SCL_SHPG_SPRT_YN = 'Y'
+		       <if test = "prodStatusCd !=null">
+		       AND TP.PROD_STATUS_CD = #{prodStatusCd}
+		       </if>
+		       AND TP.EXPO_YN = 'Y'
+		       AND TP.TENANT_ID = #{tenantHeader.tenantId}
+		       AND SYSDATE BETWEEN TPC.APPLY_START_DT AND TPC.APPLY_END_DT
+		    </if>     
+		    <if test = "req.productType=='normal'">
+		    SELECT   /* DeviceProductProvisioningMapper.xml, , Oh Seung Min, 2014-02-04 */
+			       P.PROD_ID AS PART_PROD_ID,
+			       P.PROD_GRD_CD,
+			       P.CONTENTS_TYPE_CD
+			  FROM TB_DP_PROD P,
+			       TB_DP_SPRT_DEVICE SD,
+			       TB_CM_DEVICE CD,
+			       TB_DP_TENANT_PROD TP,
+			       TB_DP_TENANT_PROD_PRICE TPC
+			 WHERE     P.PROD_ID = SD.PROD_ID
+			       AND P.PROD_ID = TP.PROD_ID
+			       AND TP.PROD_ID = TPC.PROD_ID
+			       AND TP.TENANT_ID = TPC.TENANT_ID
+			       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+			       AND SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+			       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
+			       AND CD.USE_YN = 'Y'
+			       AND TP.PROD_STATUS_CD = #{prodStatusCd}
+			       AND TP.TENANT_ID = #{tenantHeader.tenantId}
+			       AND SYSDATE BETWEEN TPC.APPLY_START_DT AND TPC.APPLY_END_DT
+			        <if test = "list !=null">
+	               AND P.PROD_ID IN
+	                   <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
+	                        #{item}
+	                   </foreach>
+	               </if>
+			       AND DECODE (
+			              P.TOP_MENU_ID,
+			              'DP13', CD.EBOOK_SPRT_YN,                                                                   -- 이북(eBook) TOP
+			              'DP14', CD.COMIC_SPRT_YN,                                                                   -- 툰도시(Comic) TOP
+			              'DP16', DECODE (P.META_CLSF_CD, 'CT25', CD.MUSIC_SPRT_YN,'Y'),                              -- 통합뮤직 TOP
+			              'DP17', DECODE (
+			                         CD.VIDEO_DRM_SPRT_YN,
+			                         'N', DECODE (NVL (P.DRM_YN, 'N'), 'N', 'Y', 'N'),
+			                         'Y'),                                           -- 영화
+			              'DP18', DECODE (
+			                         CD.VIDEO_DRM_SPRT_YN,
+			                         'N', DECODE (NVL (P.DRM_YN, 'N'), 'N', 'Y', 'N'),
+			                         'Y'),                                        -- TV 방송
+			              'DP09', DECODE (
+			                         CD.VIDEO_DRM_SPRT_YN,
+			                         'N', DECODE (NVL (P.DRM_YN, 'N'), 'N', 'Y', 'N'),
+			                         'Y'),                                  -- 고화질 동영상 TOP
+			              'Y') = 'Y'
+			      AND (  CASE WHEN P.TOP_MENU_ID IN ('DP17','DP18','DP09')                                            -- 영화 / TV 방송 / 고화질 동영상 TOP
+			                  THEN ( SELECT  'Y' 
+			                           FROM TB_DP_SUB_CONTENTS SC
+			                           WHERE   
+			                                   SC.PROD_ID = P.PROD_ID
+			                               AND    SC.SALE_YN = 'Y'
+			                               AND DECODE( CD.SD_VIDEO_SPRT_YN              --  SD_동영상_지원_여부
+			                                         ,'Y', DECODE ( SC.DP_PG_QULT_CD     -- 전시 화면 품질 코드
+			                                                     , 'PD009701', 'Y'      -- 일반화질
+			                                                     , 'PD009702', 'Y'      -- 고화질 SD
+			                                                     , CD.HDV_SPRT_YN),    -- 고화질 HD 지원
+			                                         DECODE( SC.DP_PG_QULT_CD ,    
+			                                                 'PD009701', 'Y' ,         -- 일반화질
+			                                                 'N' ) ) = 'Y'
+			                            AND ROWNUM <![CDATA[<=]]> 1  )
+			                  ELSE 'Y'
+                         END ) = 'Y'
+		    </if>
+  </select>
+ 	
+</mapper>

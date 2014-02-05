@@ -84,7 +84,7 @@ public class DeviceProfileServiceImpl implements DeviceProfileService {
 
 			commonResponse.setTotalCount(1);
 		} else { // 미지원단말
-			device.setIdentifier("android_standard");
+			device.setIdentifier(DisplayConstants.DP_ANDROID_STANDARD_NM);
 			device.setType("restrict");
 			commonResponse.setTotalCount(0);
 		}
