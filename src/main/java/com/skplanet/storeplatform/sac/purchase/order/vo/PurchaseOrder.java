@@ -37,7 +37,7 @@ public class PurchaseOrder extends CommonInfo {
 	private String authKey; // 가맹점 인증키
 	private String resultUrl; // 결과처리 URL
 	private String currencyCd; // 통화 코드
-	private Double totAmt; // 총 결제 금액
+	private double totAmt; // 총 결제 금액
 	private String clientIp; // 클라이언트 IP
 	private String networkTypeCd; // 네트워크 타입 코드
 	private String prchsCaseCd; // 구매 유형 코드
@@ -211,7 +211,7 @@ public class PurchaseOrder extends CommonInfo {
 	/**
 	 * @return the totAmt
 	 */
-	public Double getTotAmt() {
+	public double getTotAmt() {
 		return this.totAmt;
 	}
 
@@ -219,7 +219,7 @@ public class PurchaseOrder extends CommonInfo {
 	 * @param totAmt
 	 *            the totAmt to set
 	 */
-	public void setTotAmt(Double totAmt) {
+	public void setTotAmt(double totAmt) {
 		this.totAmt = totAmt;
 	}
 

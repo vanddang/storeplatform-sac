@@ -9,14 +9,20 @@
  */
 package com.skplanet.storeplatform.sac.purchase.order.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceItemSc;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScReq;
+import com.skplanet.storeplatform.purchase.client.history.vo.ExistenceScRes;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReqProduct;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartService;
 import com.skplanet.storeplatform.sac.purchase.common.service.PurchaseDisplayPartServiceImpl;
@@ -40,6 +46,9 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 	private final PurchaseMemberPartService memberPartService = new PurchaseMemberPartServiceImpl();
 	private final PurchaseDisplayPartService displayPartService = new PurchaseDisplayPartServiceImpl();
+
+	@Autowired
+	private ExistenceSCI existenceSCI;
 
 	/**
 	 * 
@@ -167,7 +176,8 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 		// 결제 총 금액 & 상품 가격 총합 체크
 		if (totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액정보가 잘못되었습니다.");
+			throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액정보가 잘못되었습니다.(" + totAmt + ":"
+					+ purchaseOrderInfo.getCreatePurchaseReq().getTotAmt() + ")");
 		}
 
 		purchaseOrderInfo.setRealTotAmt(totAmt);
@@ -184,17 +194,58 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 	 */
 	@Override
 	public void validatePurchase(PurchaseOrder purchaseOrderInfo) {
-		DummyMember userInfo = PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd()) ? purchaseOrderInfo
-				.getPurchaseMember() : purchaseOrderInfo.getRecvMember();
+		DummyMember useUserInfo = null;
+		String useTenantId = null;
+		String useUserKey = null;
+
+		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd())) {
+			useUserInfo = purchaseOrderInfo.getRecvMember();
+			useTenantId = purchaseOrderInfo.getRecvTenantId();
+			useUserKey = purchaseOrderInfo.getRecvUserKey();
+		} else {
+			useUserInfo = purchaseOrderInfo.getPurchaseMember();
+			useTenantId = purchaseOrderInfo.getTenantId();
+			useUserKey = purchaseOrderInfo.getUserKey();
+		}
+
+		List<ExistenceItemSc> existenceItemScList = new ArrayList<ExistenceItemSc>();
+		ExistenceItemSc existenceItemSc = null;
 
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			// 연령 체크
-			if ("PD004404".equals(product) && userInfo.getAge() < 20) {
-				throw new StorePlatformException("SAC_PUR_0001", "이용불가한 연령입니다: " + userInfo.getAge());
+			if ("PD004404".equals(product) && useUserInfo.getAge() < 20) {
+				throw new StorePlatformException("SAC_PUR_0001", "이용불가한 연령입니다: " + useUserInfo.getAge());
 			}
 
 			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
 			this.logger.debug("PRCHS,SAC,ORDER,VALID,SHOPPING,{}", true);
+
+			// 기구매 체크 대상 add: 동일상품 중복구매 불가 상품
+			if (product.getbDupleProd() == false) {
+				existenceItemSc = new ExistenceItemSc();
+				existenceItemSc.setProdId(product.getProdId());
+				existenceItemSc.setTenantProdGrpCd(product.getTenantProdGrpCd());
+				existenceItemScList.add(existenceItemSc);
+			}
+		}
+
+		// 기구매 체크
+		if (existenceItemScList.size() > 0) {
+
+			ExistenceScReq existenceScReq = new ExistenceScReq();
+			existenceScReq.setTenantId(useTenantId);
+			existenceScReq.setUserKey(useUserKey);
+			existenceScReq.setExistenceItemSc(existenceItemScList);
+
+			List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
+			this.logger.debug("TAKTEST,{}", checkPurchaseResultList);
+			for (ExistenceScRes checkRes : checkPurchaseResultList) {
+				if (PurchaseConstants.PRCHS_STATUS_COMPT.equals(checkRes.getStatusCd())) {
+					throw new StorePlatformException("SAC_PUR_0001", "이미 보유한 상품입니다: " + checkRes.getPrchsId());
+				}
+
+				// TAKTODO:: 예약 상태 경우 해당 구매ID 사용... 복수 구매 시 일부 예약상태일 때 처리 방안?
+			}
 		}
 
 	}

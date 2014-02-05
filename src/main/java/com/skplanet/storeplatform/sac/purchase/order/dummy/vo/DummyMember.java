@@ -30,8 +30,8 @@ public class DummyMember extends CommonInfo {
 	private String userTypeCd; // 사용자 구분 코드: US011501-기기 사용자, US011502-IDP 사용자, US011503-OneID 사용자, null-Tstore 회원 아님
 	private String userStatusCd; // 회원상태코드: US010701-정상, US010702-탈퇴, US010703-대기(가가입), US010704-가입, US010705-전환,
 								 // US010706 : 탈퇴 - US010707-승인대기
-	private Integer age; // 연령
-	private Boolean bLogin; // 로그인 여부
+	private int age; // 연령
+	private boolean bLogin; // 로그인 여부
 
 	/**
 	 * @return the tenantId
@@ -156,7 +156,7 @@ public class DummyMember extends CommonInfo {
 	/**
 	 * @return the age
 	 */
-	public Integer getAge() {
+	public int getAge() {
 		return this.age;
 	}
 
@@ -164,14 +164,14 @@ public class DummyMember extends CommonInfo {
 	 * @param age
 	 *            the age to set
 	 */
-	public void setAge(Integer age) {
+	public void setAge(int age) {
 		this.age = age;
 	}
 
 	/**
 	 * @return the bLogin
 	 */
-	public Boolean getbLogin() {
+	public boolean getbLogin() {
 		return this.bLogin;
 	}
 
@@ -179,7 +179,7 @@ public class DummyMember extends CommonInfo {
 	 * @param bLogin
 	 *            the bLogin to set
 	 */
-	public void setbLogin(Boolean bLogin) {
+	public void setbLogin(boolean bLogin) {
 		this.bLogin = bLogin;
 	}
 

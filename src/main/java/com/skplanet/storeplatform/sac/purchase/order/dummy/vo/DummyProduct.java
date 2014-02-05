@@ -21,23 +21,23 @@ public class DummyProduct extends CommonInfo {
 	private static final long serialVersionUID = 201401101L;
 
 	private String prodId; // 상품 ID
-	private Double prodAmt; // 상품 가격
+	private double prodAmt; // 상품 가격
 	private String prodGrdCd; // 상품 연령 등급 코드
 	private String availableLimitPrchsPathCd; // 구매 가능 경로 (웹 / 단말)
 	private String svcGrpCd; // 서비스 그룹 코드
 	private String svcTypeCd; // 서비스 타입 코드
-	private Boolean bSell; // 판매중 여부
+	private boolean bSell; // 판매중 여부
 	private String topCategoryNo; // TOP 카테고리 번호
-	private Boolean bLimitProd; // 한정수량 판매 여부
-	private Integer availableLimitCnt; // (한정판매 경우) 구매 가능한 수량
+	private boolean bLimitProd; // 한정수량 판매 여부
+	private int availableLimitCnt; // (한정판매 경우) 구매 가능한 수량
 	private String usePeriodUnit; // 사용기간 단위
-	private Integer usePeriodCnt; // 사용기간 값
-	private Boolean bDupleProd; // 중복구매 허용 상품 여부
-	private Boolean bMdnProd; // MDN 기반 상품 여부: true-MDN기반상품, false-ID기반상품
-	private Boolean bSupport; // 단말 지원 상품 여부
+	private int usePeriodCnt; // 사용기간 값
+	private boolean bDupleProd; // 중복구매 허용 상품 여부
+	private boolean bMdnProd; // MDN 기반 상품 여부: true-MDN기반상품, false-ID기반상품
+	private boolean bSupport; // 단말 지원 상품 여부
 
 	// REQ
-	private Integer prodQty; // 구매 수량
+	private int prodQty; // 구매 수량
 	private String tenantProdGrpCd;
 	private String resvCol01;
 	private String resvCol02;
@@ -63,7 +63,7 @@ public class DummyProduct extends CommonInfo {
 	/**
 	 * @return the prodAmt
 	 */
-	public Double getProdAmt() {
+	public double getProdAmt() {
 		return this.prodAmt;
 	}
 
@@ -71,7 +71,7 @@ public class DummyProduct extends CommonInfo {
 	 * @param prodAmt
 	 *            the prodAmt to set
 	 */
-	public void setProdAmt(Double prodAmt) {
+	public void setProdAmt(double prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
@@ -138,7 +138,7 @@ public class DummyProduct extends CommonInfo {
 	/**
 	 * @return the bSell
 	 */
-	public Boolean getbSell() {
+	public boolean getbSell() {
 		return this.bSell;
 	}
 
@@ -146,7 +146,7 @@ public class DummyProduct extends CommonInfo {
 	 * @param bSell
 	 *            the bSell to set
 	 */
-	public void setbSell(Boolean bSell) {
+	public void setbSell(boolean bSell) {
 		this.bSell = bSell;
 	}
 
@@ -168,7 +168,7 @@ public class DummyProduct extends CommonInfo {
 	/**
 	 * @return the bLimitProd
 	 */
-	public Boolean getbLimitProd() {
+	public boolean getbLimitProd() {
 		return this.bLimitProd;
 	}
 
@@ -176,14 +176,14 @@ public class DummyProduct extends CommonInfo {
 	 * @param bLimitProd
 	 *            the bLimitProd to set
 	 */
-	public void setbLimitProd(Boolean bLimitProd) {
+	public void setbLimitProd(boolean bLimitProd) {
 		this.bLimitProd = bLimitProd;
 	}
 
 	/**
 	 * @return the availableLimitCnt
 	 */
-	public Integer getAvailableLimitCnt() {
+	public int getAvailableLimitCnt() {
 		return this.availableLimitCnt;
 	}
 
@@ -191,7 +191,7 @@ public class DummyProduct extends CommonInfo {
 	 * @param availableLimitCnt
 	 *            the availableLimitCnt to set
 	 */
-	public void setAvailableLimitCnt(Integer availableLimitCnt) {
+	public void setAvailableLimitCnt(int availableLimitCnt) {
 		this.availableLimitCnt = availableLimitCnt;
 	}
 
@@ -213,7 +213,7 @@ public class DummyProduct extends CommonInfo {
 	/**
 	 * @return the usePeriodCnt
 	 */
-	public Integer getUsePeriodCnt() {
+	public int getUsePeriodCnt() {
 		return this.usePeriodCnt;
 	}
 
@@ -221,14 +221,14 @@ public class DummyProduct extends CommonInfo {
 	 * @param usePeriodCnt
 	 *            the usePeriodCnt to set
 	 */
-	public void setUsePeriodCnt(Integer usePeriodCnt) {
+	public void setUsePeriodCnt(int usePeriodCnt) {
 		this.usePeriodCnt = usePeriodCnt;
 	}
 
 	/**
 	 * @return the bDupleProd
 	 */
-	public Boolean getbDupleProd() {
+	public boolean getbDupleProd() {
 		return this.bDupleProd;
 	}
 
@@ -236,14 +236,14 @@ public class DummyProduct extends CommonInfo {
 	 * @param bDupleProd
 	 *            the bDupleProd to set
 	 */
-	public void setbDupleProd(Boolean bDupleProd) {
+	public void setbDupleProd(boolean bDupleProd) {
 		this.bDupleProd = bDupleProd;
 	}
 
 	/**
 	 * @return the bMdnProd
 	 */
-	public Boolean getbMdnProd() {
+	public boolean getbMdnProd() {
 		return this.bMdnProd;
 	}
 
@@ -251,14 +251,14 @@ public class DummyProduct extends CommonInfo {
 	 * @param bMdnProd
 	 *            the bMdnProd to set
 	 */
-	public void setbMdnProd(Boolean bMdnProd) {
+	public void setbMdnProd(boolean bMdnProd) {
 		this.bMdnProd = bMdnProd;
 	}
 
 	/**
 	 * @return the bSupport
 	 */
-	public Boolean getbSupport() {
+	public boolean getbSupport() {
 		return this.bSupport;
 	}
 
@@ -266,7 +266,7 @@ public class DummyProduct extends CommonInfo {
 	 * @param bSupport
 	 *            the bSupport to set
 	 */
-	public void setbSupport(Boolean bSupport) {
+	public void setbSupport(boolean bSupport) {
 		this.bSupport = bSupport;
 	}
 
@@ -275,7 +275,7 @@ public class DummyProduct extends CommonInfo {
 	/**
 	 * @return the prodQty
 	 */
-	public Integer getProdQty() {
+	public int getProdQty() {
 		return this.prodQty;
 	}
 
@@ -283,7 +283,7 @@ public class DummyProduct extends CommonInfo {
 	 * @param prodQty
 	 *            the prodQty to set
 	 */
-	public void setProdQty(Integer prodQty) {
+	public void setProdQty(int prodQty) {
 		this.prodQty = prodQty;
 	}
 
