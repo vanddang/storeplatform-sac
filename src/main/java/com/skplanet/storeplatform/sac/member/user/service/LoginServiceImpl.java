@@ -123,11 +123,17 @@ public class LoginServiceImpl implements LoginService {
 		loginStatusCode = chkDupRes.getUserMbr().getLoginStatusCode();
 		stopStatusCode = chkDupRes.getUserMbr().getStopStatusCode();
 
-		/* 로그인 제한, 직권중지 인경우 */
-		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)
-				|| StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+		/* 로그인 제한 인경우 */
+		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 
 			res.setLoginStatusCode(loginStatusCode);
+			res.setIsLoginSuccess("N");
+			return res;
+		}
+
+		/* 직권중지 인경우 */
+		if (StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
+
 			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
@@ -274,8 +280,8 @@ public class LoginServiceImpl implements LoginService {
 
 				// 가가입 상태 - 가입신청 사이트 정보
 				String joinSst = chkDupRes.getMbrOneID().getIntgSiteCode();
-				String joinSstCd = "";
-				String joinSstNm = "";
+				String joinSstCd = null;
+				String joinSstNm = null;
 
 				for (Entry<String, String> entry : mapSiteCd.entrySet()) {
 					if (StringUtils.contains(joinSst, entry.getKey())) {
@@ -329,7 +335,6 @@ public class LoginServiceImpl implements LoginService {
 		if (!StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 
 			res.setLoginStatusCode(loginStatusCode);
-			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
 		}
@@ -337,7 +342,6 @@ public class LoginServiceImpl implements LoginService {
 		/* 직권중지 상태인 경우 */
 		if (StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
-			res.setLoginStatusCode(loginStatusCode);
 			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
