@@ -78,7 +78,7 @@ public class CreateReq extends CommonInfo {
 	/** 식별코드. */
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
-	private String isForeign;
+	private String isDomestic;
 
 	/** 실명인증 일시 */
 	@Size(max = 14)
@@ -90,8 +90,7 @@ public class CreateReq extends CommonInfo {
 	private String sellerDI;
 	/** 실명인증수단 코드. */
 	private String realNameMethod;
-	/** 실명인증사이트 코드. */
-	private String realNameSystemId;
+
 	/** 회사명. */
 	private String sellerCompany;
 	/** 사업자 등록번호. */
@@ -279,12 +278,12 @@ public class CreateReq extends CommonInfo {
 		this.sellerLanguage = sellerLanguage;
 	}
 
-	public String getIsForeign() {
-		return this.isForeign;
+	public String getIsDomestic() {
+		return this.isDomestic;
 	}
 
-	public void setIsForeign(String isForeign) {
-		this.isForeign = isForeign;
+	public void setIsDomestic(String isDomestic) {
+		this.isDomestic = isDomestic;
 	}
 
 	public String getRealNameDate() {
@@ -317,14 +316,6 @@ public class CreateReq extends CommonInfo {
 
 	public void setRealNameMethod(String realNameMethod) {
 		this.realNameMethod = realNameMethod;
-	}
-
-	public String getRealNameSystemId() {
-		return this.realNameSystemId;
-	}
-
-	public void setRealNameSystemId(String realNameSystemId) {
-		this.realNameSystemId = realNameSystemId;
 	}
 
 	public String getSellerCompany() {

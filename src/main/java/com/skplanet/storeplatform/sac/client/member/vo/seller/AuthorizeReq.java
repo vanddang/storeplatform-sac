@@ -32,9 +32,9 @@ public class AuthorizeReq extends CommonInfo {
 	private String releaseLock;
 	/** 만료일시. */
 	// @NotBlank
+	// @Pattern(regexp = "^d")
 	private String expireDate;
 	/** IP 주소. */
-	// @NotBlank
 	private String ipAddress;
 
 	public String getSellerId() {
