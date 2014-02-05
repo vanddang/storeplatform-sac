@@ -13,18 +13,17 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailReq;
 import com.skplanet.storeplatform.sac.client.display.vo.app.AppDetailRes;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.display.app.vo.AppDetail;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSource;
 import com.skplanet.storeplatform.sac.display.app.vo.ImageSourceReq;
 import com.skplanet.storeplatform.sac.display.app.vo.UpdateHistory;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
-import freemarker.template.SimpleDate;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.DatatypeConverter;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -45,10 +42,16 @@ import java.util.*;
 @Transactional
 public class AppServiceImpl implements AppService {
 
-	private static Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(AppServiceImpl.class);
+
     private static final Set<String> SOURCE_LIST_SCREENSHOT_ORIGINAL;
+    private static final String[] SOURCE_REQUEST;
     static {
         SOURCE_LIST_SCREENSHOT_ORIGINAL = new HashSet<String>(Arrays.asList("DP000103" ,"DP000104" ,"DP000105" ,"DP000106" ,"DP0001C1" ,"DP0001C2" ,"DP0001C3" ,"DP0001C4"));
+        List<String> reqList = new ArrayList<String>();
+        reqList.add(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);    // for Thumbnail original
+        reqList.addAll(SOURCE_LIST_SCREENSHOT_ORIGINAL);
+        SOURCE_REQUEST = reqList.toArray(new String[reqList.size()]);
     }
 
 	@Autowired
@@ -91,8 +94,7 @@ public class AppServiceImpl implements AppService {
         }
 
         // Source
-        // TODO screenshot, thumbnail
-        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getEpisodeId(), SOURCE_LIST_SCREENSHOT_ORIGINAL.toArray(new String[SOURCE_LIST_SCREENSHOT_ORIGINAL.size()]), request.getLangCd()), ImageSource.class);
+        List<ImageSource> imageSourceList = commonDAO.queryForList("AppDetail.getSourceList", new ImageSourceReq(request.getEpisodeId(), SOURCE_REQUEST, request.getLangCd()), ImageSource.class);
         List<Source> sourceList = new ArrayList<Source>();
         for (ImageSource imgSrc : imageSourceList) {
             Source source = new Source();
@@ -100,7 +102,9 @@ public class AppServiceImpl implements AppService {
             source.setUrl(imgSrc.getFilePath());
 
             if(SOURCE_LIST_SCREENSHOT_ORIGINAL.contains(imgSrc.getImgCd()))
-                source.setType("screenshot/large");
+                source.setType(DisplayConstants.DP_SOURCE_TYPE_SCREENSHOT);
+            else
+                source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
 
             sourceList.add(source);
         }
@@ -134,7 +138,7 @@ public class AppServiceImpl implements AppService {
             Update update = new Update();
 
             update.setUpdateExplain(uh.getUpdtText());
-            update.setDate(new Date("date/reg", uh.getProdUpdDt()));
+            update.setDate(new Date(DisplayConstants.DP_DATE_REG, uh.getProdUpdDt()));
 
             updateList.add(update);
         }

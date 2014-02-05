@@ -245,8 +245,6 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_MOVIE = "movie";
 	/** 스크린샷 */
 	public static final String DP_SOURCE_TYPE_SCREENSHOT = "screenshot";
-	/** 스크린샷(큰사이즈) */
-	public static final String DP_SOURCE_TYPE_SCREENSHOT_LARGE = "screenshot/large";
 	/** 음악 */
 	public static final String DP_SOURCE_TYPE_MUSIC = "music";
 	/** 바코드이미지 */
