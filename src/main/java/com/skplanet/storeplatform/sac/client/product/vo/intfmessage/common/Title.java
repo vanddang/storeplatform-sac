@@ -29,6 +29,7 @@ public class Title extends CommonInfo implements Serializable {
 	private String postfix; // 제목 뒤에 붙는 추가 노출 문구. 예) 열혈강호 59권
 	private String text; // 제목
 	private String name; // title의 분류명
+	private String alias; // 별명
 
 	public Title() {
 	}
@@ -75,6 +76,14 @@ public class Title extends CommonInfo implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 }
