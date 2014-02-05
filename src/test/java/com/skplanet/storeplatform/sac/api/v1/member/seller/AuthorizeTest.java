@@ -82,7 +82,7 @@ public class AuthorizeTest {
 
 	/**
 	 * <pre>
-	 * 회원 인증.
+	 * 회원 인증(주계정).
 	 * </pre>
 	 */
 	@Test
@@ -93,8 +93,38 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						authorizeReq.setSellerId("qatestqwe");
-						authorizeReq.setSellerPW("LmmYUGEXDpT/HvybdNVG7nfq8KwfR5EFtcrXCne9LVs=");
+						authorizeReq.setSellerId("sctest1");
+						authorizeReq.setSellerPW("123456");
+						authorizeReq.setExpireDate("1");
+						return authorizeReq;
+					}
+				}).success(AuthorizeRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						authorizeRes = (AuthorizeRes) result;
+						assertThat(authorizeRes.getSellerMbr(), notNullValue());
+						assertEquals("Y", authorizeRes.getIsLoginSuccess());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 회원 인증(부계정).
+	 * </pre>
+	 */
+	@Test
+	public void authorizeSub() {
+
+		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						authorizeReq.setSellerId("subsctest1");
+						authorizeReq.setSellerPW("123456");
+						authorizeReq.setExpireDate("1");
 						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {

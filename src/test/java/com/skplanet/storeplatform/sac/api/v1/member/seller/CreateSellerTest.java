@@ -162,7 +162,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("개인무료");
 						req.setSellerCI("1231323123");
@@ -231,7 +231,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("개인유료");
 						req.setSellerCI("1231323123");
@@ -304,7 +304,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("개사무료");
 						req.setSellerCI("1231323123");
@@ -377,7 +377,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("개사유료");
 						req.setSellerCI("1231323123");
@@ -450,7 +450,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("법사무료");
 						req.setSellerCI("1231323123");
@@ -523,7 +523,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("법사유료");
 						req.setSellerCI("1231323123");
@@ -596,7 +596,7 @@ public class CreateSellerTest {
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");
 						req.setSellerLanguage("US004301");
-						req.setIsForeign("Y");
+						req.setIsDomestic("Y");
 						req.setRealNameMethod("US011101");
 						req.setSellerName("법사BP");
 						req.setSellerCI("1231323123");

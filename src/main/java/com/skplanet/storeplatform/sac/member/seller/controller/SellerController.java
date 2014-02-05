@@ -79,7 +79,7 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/authorize/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) throws Exception {
+	public AuthorizeRes authorize(SacRequestHeader header, @RequestBody @Validated AuthorizeReq req) {
 		return this.sellerService.authorize(header, req);
 	}
 
@@ -96,7 +96,7 @@ public class SellerController {
 	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyInformationRes modifyInformation(SacRequestHeader header,
-			@RequestBody @Validated ModifyInformationReq req) throws Exception {
+			@RequestBody @Validated ModifyInformationReq req) {
 		return this.sellerService.modifyInformation(header, req);
 	}
 
