@@ -57,7 +57,7 @@ public interface SellerService {
 	 * 
 	 * @throws Exception
 	 */
-	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) throws Exception;
+	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req);
 
 	/**
 	 * 2.2.28. 판매자 회원 인증키 폐기.
