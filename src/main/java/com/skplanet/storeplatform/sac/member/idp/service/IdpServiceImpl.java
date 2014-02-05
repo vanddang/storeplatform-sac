@@ -158,7 +158,7 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // * 사용자 구분 코드 ONEID회원으로 셋팅
 			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 사용자 메인 상태 코드 가입시 바로 가입됨 정상
 			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 사용자 서브 상태 코드 정상
-			userMbr.setImSvcNo(map.get("im_int_svc_no").toString()); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
+			userMbr.setImSvcNo(imIntSvcNo); // 통합 서비스 관리번호 INTG_SVC_NO : 통합서비스 관리번호
 			userMbr.setIsImChanged(map.get("is_im_changed").toString()); // 전환가입코드 * * - 전환가입 : Y, 신규가입 : N, 변경가입 : C,
 																		 // 변경전환 : H
 			userMbr.setUserID(userId); // 사용자 ID
@@ -217,10 +217,18 @@ public class IdpServiceImpl implements IdpService {
 				updateMbrOneIDRequest.setCommonRequest(commonRequest);
 				MbrOneID mbrOneID = new MbrOneID();
 				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
-				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
+				mbrOneID.setIntgSvcNumber(imIntSvcNo);
 				mbrOneID.setUserKey(create.getUserKey()); // 신규가입때 생성된 내부사용자키를 셋팅
 				mbrOneID.setUserID(userId); // userID
-				mbrOneID.setIsMemberPoint(ocbJoinCodeYn);
+				mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+				mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+
+				if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+					mbrOneID.setIsCi("Y");
+				} else {
+					mbrOneID.setIsCi("N");
+				}
+
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
 				try {
@@ -335,10 +343,18 @@ public class IdpServiceImpl implements IdpService {
 				updateMbrOneIDRequest.setCommonRequest(commonRequest);
 				MbrOneID mbrOneID = new MbrOneID();
 				mbrOneID.setStopStatusCode(IdpConstants.SUS_STATUS_RELEASE); // 직권중지해제 기본셋팅
-				mbrOneID.setIntgSvcNumber(map.get("im_int_svc_no"));
+				mbrOneID.setIntgSvcNumber(imIntSvcNo);
 				mbrOneID.setUserKey(updateUserKey); // 내부사용자키를 셋팅
 				mbrOneID.setUserID(userId); // 사용자 ID 셋팅
-				mbrOneID.setIsMemberPoint(ocbJoinCodeYn);
+				mbrOneID.setIsMemberPoint(ocbJoinCodeYn); // 통합포인트 여부
+				mbrOneID.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부
+
+				if (map.get("user_ci").toString().length() > 0) { // 사용자 CI
+					mbrOneID.setIsCi("Y");
+				} else {
+					mbrOneID.setIsCi("N");
+				}
+
 				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 				updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
