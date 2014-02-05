@@ -205,29 +205,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	}
 
-	/**
-	 * SC회원정보 조회
-	 * 
-	 * @param commonRequest
-	 *            CommonRequest
-	 * @param keyType
-	 *            조회타입
-	 * @param keyString
-	 *            조회값
-	 * @return SearchUserResponse
-	 */
-	public SearchUserResponse searchUser(CommonRequest commonRequest, String keyType, String keyString) {
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(keyType);
-		key.setKeyString(keyString);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
-		return this.userSCI.searchUser(schUserReq);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -773,6 +750,29 @@ public class DeviceServiceImpl implements DeviceService {
 
 		return createDeviceRes.getDeviceKey();
 
+	}
+
+	/**
+	 * SC회원정보 조회
+	 * 
+	 * @param commonRequest
+	 *            CommonRequest
+	 * @param keyType
+	 *            조회타입
+	 * @param keyString
+	 *            조회값
+	 * @return SearchUserResponse
+	 */
+	public SearchUserResponse searchUser(CommonRequest commonRequest, String keyType, String keyString) {
+		SearchUserRequest schUserReq = new SearchUserRequest();
+		schUserReq.setCommonRequest(commonRequest);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(keyType);
+		key.setKeyString(keyString);
+		keySearchList.add(key);
+		schUserReq.setKeySearchList(keySearchList);
+		return this.userSCI.searchUser(schUserReq);
 	}
 
 	/**
