@@ -180,7 +180,7 @@ public class DeviceController {
 		logger.info("###### modifyRepresentationDevice Request : {}", req.toString());
 
 		if (userKey.equals("") && deviceKey.equals("") && deviceId.equals("")) {
-			throw new RuntimeException("필수요청 파라메터 부족");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
@@ -212,7 +212,7 @@ public class DeviceController {
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 
 		if (userId.equals("") && userKey.equals("")) {
-			throw new RuntimeException("필수요청 파라메터 부족");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);

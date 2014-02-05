@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
@@ -61,7 +62,7 @@ public class UserWithdrawController {
 		logger.info("###### Start UserWithdraw Request : {}", req.toString());
 
 		if (userId.equals("") && userAuthKey.equals("") && deviceId.equals("")) {
-			throw new RuntimeException("필수요청 파라메터 부족");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		res = this.svc.withdraw(sacHeader, req);

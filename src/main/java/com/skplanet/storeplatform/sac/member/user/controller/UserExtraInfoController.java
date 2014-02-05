@@ -61,15 +61,14 @@ public class UserExtraInfoController {
 			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
 			if (extraProfileCode.equals("") && extraProfilValue.equals("")) {
-				throw new RuntimeException("회원 부가 정보 extraProfileCode, extraProfilValue is Null" + "extraProfileCode [" + extraProfileCode + "]"
-						+ " [" + extraProfilValue + "]");
+				throw new StorePlatformException("SAC_MEM_0001", infoReq.toString());
 			}
 		}
 
 		if (userKey.equals("")) {
-			throw new StorePlatformException("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
 		} else if (req.getAddInfoList() == null) {
-			throw new StorePlatformException("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
+			throw new StorePlatformException("SAC_MEM_0001" + req.getAddInfoList().toString());
 		}
 
 		res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
@@ -88,24 +87,22 @@ public class UserExtraInfoController {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfileCode = "";
-		String extraProfilValue = "";
 
-		logger.debug("###### 회원부가정보 삭제 Req Object : {}", req.getUserKey());
-		logger.debug("###### 회원부가정보 삭제 Req List : {}", req.getAddInfoList().toString());
+		logger.debug("###### removeAdditionalInformation Req Object : {}", req.getUserKey());
+		logger.debug("###### removeAdditionalInformation Req List : {}", req.getAddInfoList().toString());
 
 		for (UserExtraInfo infoReq : req.getAddInfoList()) {
 			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileCode(), "");
-			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
 			if (extraProfileCode.equals("")) {
-				throw new RuntimeException("회원 부가 삭제 extraProfileCode is Null" + "extraProfileCode [" + extraProfileCode + "]");
+				throw new StorePlatformException("SAC_MEM_0001", extraProfileCode);
 			}
 		}
 
 		if (userKey.equals("")) {
-			throw new StorePlatformException("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
 		} else if (req.getAddInfoList() == null) {
-			throw new StorePlatformException("필수요청 파라메터 부족 : addInfoList" + req.getAddInfoList().toString());
+			throw new StorePlatformException("SAC_MEM_0001", req.getAddInfoList().toString());
 		}
 
 		res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
@@ -125,7 +122,7 @@ public class UserExtraInfoController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if (userKey.equals("")) {
-			throw new StorePlatformException("필수요청 파라메터 부족 : userKey" + req.getUserKey());
+			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
 		}
 
 		res = this.userExtraService.listAdditionalInformation(req, sacHeader);
