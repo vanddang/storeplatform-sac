@@ -152,11 +152,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* 회원 정보 조회 */
 		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
-		/* 회원정보 없음 */
-		if (schUserRes.getUserMbr() == null) {
-			throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
-		}
-
 		/* 등록 가능한 휴대기기 개수 초과 */
 		if (req.getRegMaxCnt().equals("0")
 				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= Integer
@@ -225,11 +220,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 회원 정보 조회 */
 		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-
-		/* 회원정보 없음 */
-		if (schUserRes.getUserMbr() == null) {
-			throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
-		}
 
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
