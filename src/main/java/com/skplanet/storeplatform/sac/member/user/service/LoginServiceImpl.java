@@ -624,7 +624,11 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIsSuccess(isSuccess);
 		loginReq.setIsOneID("Y");
 		loginReq.setIsMobile(isMobile);
-		loginReq.setScVersion(requestHeader.getDeviceHeader().getSvcVersion());
+
+		String svcVersion = requestHeader.getDeviceHeader().getSvcVersion();
+		if (svcVersion != null) {
+			loginReq.setScVersion(svcVersion.substring(svcVersion.lastIndexOf("/") + 1, svcVersion.length()));
+		}
 		loginReq.setIpAddress(ipAddress);
 
 		LoginUserResponse loginRes = this.userSCI.updateLoginUser(loginReq);
