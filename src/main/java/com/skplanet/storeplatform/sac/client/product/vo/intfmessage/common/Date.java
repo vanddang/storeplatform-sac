@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -23,6 +24,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Date extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+    /**
+     * ISO8601 Basic 형태의 포매팅을 지원하는 SimpleDateForm인스턴스. 차후 상속으로 인한 확장을 고려하여 protected로 선언함.
+     */
+    protected static final SimpleDateFormat DATE_FORMAT_ISO8601BASIC = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
 
 	/*
 	 * 날짜타입 (date/reg : 등록일, date/saleReg : 판매등록 날짜, date/purchase : 구매날짜,
@@ -49,6 +55,29 @@ public class Date extends CommonInfo implements Serializable {
 		this.text = text;
 	}
 
+    /**
+     * 특정 일시를 표현하는 생성자. ISO8601Basic으로 변환함.
+     * @param type 유형
+     * @param date 일시
+     */
+    public Date(String type, java.util.Date date) {
+        super();
+        this.type = type;
+        this.setText(date);
+    }
+
+    /**
+     * 기간을 표현하는 생성자. ISO8601Basic으로 변환함.
+     * @param type 유형
+     * @param fromDt 시작일시. null일 경우 지정되지 않음
+     * @param toDt 종료일시. null일 경우 지정되지 않음
+     */
+    public Date(String type, java.util.Date fromDt, java.util.Date toDt) {
+        super();
+        this.type = type;
+        this.setText(fromDt, toDt);
+    }
+
 	public String getType() {
 		return this.type;
 	}
@@ -64,4 +93,28 @@ public class Date extends CommonInfo implements Serializable {
 	public void setText(String text) {
 		this.text = text;
 	}
+
+    /**
+     * ISO8601 Basic형태의 일시를 지정합니다.
+     * @param dt 일시
+     */
+    public void setText(java.util.Date dt) {
+        this.text = DATE_FORMAT_ISO8601BASIC.format(dt);
+    }
+
+    /**
+     * ISO8601 Basic형태의 기간 일시를 지정합니다.
+     * @param fromDt 시작일시. null일 경우 지정되지 않음
+     * @param toDt 종료일시. null일 경우 지정되지 않음
+     */
+    public void setText(java.util.Date fromDt, java.util.Date toDt) {
+        StringBuilder sb = new StringBuilder();
+        if(fromDt != null)
+            sb.append(DATE_FORMAT_ISO8601BASIC.format(fromDt));
+        sb.append("/");
+        if(toDt != null)
+            sb.append(DATE_FORMAT_ISO8601BASIC.format(toDt));
+
+        this.text = sb.toString();
+    }
 }
