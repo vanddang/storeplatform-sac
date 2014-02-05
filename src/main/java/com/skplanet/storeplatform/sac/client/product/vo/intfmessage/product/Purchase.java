@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -28,7 +29,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 public class Purchase extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private Identifier identifier; // 구매ID
+	private List<Identifier> identifierList; // 구매ID
 	/*
 	 * 구매상태 (1 : 구매 (payment), 2 : 선물 (gift), 3 : 만료 (expired), 4 : 취소 (cancel))
 	 */
@@ -46,18 +47,18 @@ public class Purchase extends CommonInfo implements Serializable {
 	private String purchaseFlag; // payment : 구매, nonPayment : 미구매
 
 	/**
-	 * @return the identifier
+	 * @return the identifierList
 	 */
-	public Identifier getIdentifier() {
-		return this.identifier;
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
 	}
 
 	/**
-	 * @param identifier
-	 *            the identifier to set
+	 * @param identifierList
+	 *            the identifierList to set
 	 */
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 	/**
