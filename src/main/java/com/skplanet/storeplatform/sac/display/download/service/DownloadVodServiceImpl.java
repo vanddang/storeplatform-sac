@@ -352,10 +352,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				 */
 				if (StringUtils.isNotEmpty(downloadVodInfo.getPlayProdId())) {
 					Support playSupport = new Support();
+					List<Support> playSupportList = new ArrayList<Support>();
 					Price playPrice = new Price();
 					playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 					playSupport.setText(downloadVodInfo.getPlayDrmYn());
-					play.setSupport(playSupport);
+					playSupportList.add(playSupport);
+					play.setSupportList(playSupportList);
+					// play.setSupport(playSupport);
 
 					date = new Date();
 					date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
@@ -379,11 +382,14 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				 */
 				if (StringUtils.isNotEmpty(downloadVodInfo.getStoreProdId())) {
 					Support storeSupport = new Support();
+					List<Support> storeSupportList = new ArrayList<Support>();
 					Price storePrice = new Price();
 
 					storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 					storeSupport.setText(downloadVodInfo.getStoreDrmYn());
-					store.setSupport(storeSupport);
+					storeSupportList.add(storeSupport);
+					store.setSupportList(storeSupportList);
+					// store.setSupport(storeSupport);
 
 					storePrice.setText(downloadVodInfo.getStoreProdAmt() == null ? 0 : downloadVodInfo
 							.getStoreProdAmt());
@@ -558,10 +564,13 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			rights.setAllow("Y");
 			rights.setGrade("PD004401");
 
-			Support playSupport = new Support();
+			List<Support> playSupportList = new ArrayList<Support>();
 			Price playPrice = new Price();
+			Support playSupport = new Support();
 			playSupport.setType("drm");
 			playSupport.setText("Y");
+			playSupportList.add(playSupport);
+			play.setSupportList(playSupportList);
 
 			date = new Date();
 			date.setType("duration/usagePeriod");
@@ -581,14 +590,21 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 			Price storePrice = new Price();
 			storePrice.setText(1200);
+
 			Support storeSupport = new Support();
+			List<Support> storeSupportList = new ArrayList<Support>();
+			
+			storePrice.setText(1200);
+
 			storeSupport.setType("drm");
 			storeSupport.setText("Y");
-			store.setSupport(storeSupport);
+			storeSupportList.add(storeSupport);
+			store.setSupportList(storeSupportList);
+
 			source = new Source();
-			source.setUrl("/movie/drama/H001373322");
-			store.setPrice(price);
-			store.setSource(source);
+			// source.setUrl("/movie/drama/H001373322");
+			store.setPrice(storePrice);
+			// store.setSource(source);
 			store.setNetworkRestrict("ota");
 
 			rights.setStore(store);
