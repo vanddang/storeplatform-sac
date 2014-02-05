@@ -896,6 +896,16 @@ public class DeviceServiceImpl implements DeviceService {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
+			ExistReq existReq = new ExistReq();
+			existReq.setDeviceId(req.getDeviceId());
+			this.userSearchService.exist(requestHeader, existReq);
+		}
+
+		if (req.getDeviceKey() != null) {
+			ExistReq existReq = new ExistReq();
+			existReq.setDeviceKey(req.getDeviceKey());
+			this.userSearchService.exist(requestHeader, existReq);
 		}
 
 		/* 헤더 정보 셋팅 */
@@ -907,7 +917,6 @@ public class DeviceServiceImpl implements DeviceService {
 		/* userKey, deviceKey 회원존재여부 체크 */
 		ExistReq existReq = new ExistReq();
 		existReq.setUserKey(req.getUserKey());
-
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
 		/* userKey, deviceId 로 디바이스 리스트 조회 -> getDeviceKey */
