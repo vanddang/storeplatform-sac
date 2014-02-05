@@ -16,9 +16,9 @@ public class AdditionalServicInfo extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	/**
-	 * 기기 ID (mdn)
+	 * 휴대폰 번호
 	 */
-	private String deviceId;
+	private String msisdn;
 
 	/**
 	 * 부가서비스 코드
@@ -26,18 +26,18 @@ public class AdditionalServicInfo extends CommonInfo {
 	private String svcCode;
 
 	/**
-	 * @return the deviceId
+	 * @return the msisdn
 	 */
-	public String getDeviceId() {
-		return this.deviceId;
+	public String getMsisdn() {
+		return this.msisdn;
 	}
 
 	/**
-	 * @param deviceId
-	 *            the deviceId to set
+	 * @param msisdn
+	 *            the msisdn to set
 	 */
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
 	}
 
 	/**
