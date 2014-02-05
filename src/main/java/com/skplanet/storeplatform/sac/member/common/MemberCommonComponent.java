@@ -214,8 +214,6 @@ public class MemberCommonComponent {
 	 * @param sacHeader
 	 *            공통 헤더
 	 * @return UserInfo Value Object
-	 * @throws Exception
-	 *             Exception
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
 		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
