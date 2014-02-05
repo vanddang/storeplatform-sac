@@ -37,7 +37,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Dist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
@@ -86,8 +85,27 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
+		this.log.debug("######################################################################");
+		this.log.debug("deviceHeader.getResolution()	:	" + deviceHeader.getResolution());
+		this.log.debug("deviceHeader.getDpi()	:	" + deviceHeader.getDpi());
+
+		this.log.debug("######################################################################");
+
+		// OS VERSION 가공
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
 		String osVersion = temp[1];
+
+		String[] resolutionTemp = deviceHeader.getResolution().trim().split("/");
+
+		// int iDpiEnd = NumberUtils.toInt(map.get("ADD_FIELD1"), 0);
+		// int iDpiBegin = NumberUtils.toInt(map.get("ADD_FIELD2"), 0);
+
+		String osVersionOrginal = osVersion;
+		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
+		if (osVersionTemp.length == 3) {
+			osVersion = osVersionTemp[0] + "." + osVersionTemp[1];
+		}
+
 		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
@@ -105,7 +123,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 
 		List<Identifier> identifierList = null;
 		List<Menu> menuList = null;
-		List<Support> supportList = null;
 		List<Source> sourceList = null;
 
 		Product product = null;
@@ -185,6 +202,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				String prchsId = null;
 				String prchsDt = null;
 				String prchsState = null;
+				String prchsProdId = null;
 
 				try {
 					// 구매내역 조회를 위한 생성자
@@ -216,6 +234,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+						prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
 						if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 							prchsState = "payment";
@@ -320,12 +339,21 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
 					purchase.setState(prchsState);
+					List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+
 					identifier = new Identifier();
-					identifierList = new ArrayList<Identifier>();
 					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 					identifier.setText(prchsId);
-					identifierList.add(identifier);
-					purchase.setIdentifierList(identifierList);
+					purchaseIdentifierList.add(identifier);
+
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					identifier.setText(prchsProdId);
+					purchaseIdentifierList.add(identifier);
+
+					purchase.setIdentifierList(purchaseIdentifierList);
+
+					date = new Date();
 					date.setType("date/purchase");
 					date.setText(prchsDt);
 					purchase.setDate(date);
@@ -440,16 +468,26 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			distributor.setRegNo("2009-서울강남-03038");
 
 			purchase.setState("payment");
+			List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+
 			identifier = new Identifier();
-			identifierList = new ArrayList<Identifier>();
 			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 			identifier.setText("MI100000000000044286");
-			identifierList.add(identifier);
-			purchase.setIdentifierList(identifierList);
+			purchaseIdentifierList.add(identifier);
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText("0000395599");
+			purchaseIdentifierList.add(identifier);
+
+			purchase.setIdentifierList(purchaseIdentifierList);
+
 			date = new Date();
 			date.setType("date/purchase");
 			date.setText("20130701165632");
 			purchase.setDate(date);
+
+			product.setPurchase(purchase);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);

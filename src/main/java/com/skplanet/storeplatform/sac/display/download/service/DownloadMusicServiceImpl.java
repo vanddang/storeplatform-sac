@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq;
@@ -35,7 +36,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
@@ -45,7 +45,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.download.vo.DownloadMusic;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
@@ -101,11 +100,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		List<Identifier> identifierList = null;
 		List<Menu> menuList = null;
-		List<Support> supportList = null;
 		List<Source> sourceList = null;
-
-		// 다운로드 Music 상품 조회
-		DownloadMusic downloadMusicInfo = null;
 
 		Product product = null;
 		Identifier identifier = null;
@@ -120,7 +115,6 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 		if (downloadMusicSacReq.getDummy() == null) {
 			// dummy 호출이 아닐때
-			DownloadMusic downloadMusic = null;
 
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(productId)) {
@@ -140,6 +134,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			String prchsId = null;
 			String prchsDt = null;
 			String prchsState = null;
+			String prchsProdId = null;
 
 			try {
 				// 구매내역 조회를 위한 생성자
@@ -171,6 +166,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
 					if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 						prchsState = "payment";
@@ -201,10 +197,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 			identifier.setText(metaInfo.getProdId());
 			identifierList.add(identifier);
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-			identifier.setText(metaInfo.getChnlProdId());
-			identifierList.add(identifier);
+			// identifier = new Identifier();
+			// identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+			// identifier.setText(metaInfo.getChnlProdId());
+			// identifierList.add(identifier);
 
 			title.setText(metaInfo.getProdNm());
 
@@ -238,16 +234,16 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 
 			identifier = new Identifier();
 			identifier.setType(DisplayConstants.DP_DOWNLOAD_IDENTIFIER_CD);
-			identifier.setText(metaInfo.getOutsdContentsId());
-			sourceList = new ArrayList<Source>();
+			identifier.setText(StringUtil.isEmpty(metaInfo.getOutsdContentsId()) ? "" : metaInfo.getOutsdContentsId());
+			List<Source> mussicSourceList = new ArrayList<Source>();
 			source = new Source();
 			source.setSize(metaInfo.getFileSize());
 			source.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128);
-			sourceList.add(source);
+			mussicSourceList.add(source);
 			source = new Source();
 			source.setSize(metaInfo.getFileSizeH());
 			source.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192);
-			sourceList.add(source);
+			mussicSourceList.add(source);
 			music.setIdentifier(identifier);
 			music.setSourceList(sourceList);
 
@@ -259,16 +255,26 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			// 구매 정보
 			if (StringUtils.isNotEmpty(prchsId)) {
 				purchase.setState(prchsState);
+				List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+
 				identifier = new Identifier();
-				identifierList = new ArrayList<Identifier>();
 				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 				identifier.setText(prchsId);
-				identifierList.add(identifier);
-				purchase.setIdentifierList(identifierList);
+				purchaseIdentifierList.add(identifier);
+
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(prchsProdId);
+				purchaseIdentifierList.add(identifier);
+
+				purchase.setIdentifierList(purchaseIdentifierList);
+
+				date = new Date();
 				date.setType("date/purchase");
 				date.setText(prchsDt);
 				purchase.setDate(date);
 				product.setPurchase(purchase);
+
 			}
 
 			// identifier = new Identifier();
@@ -310,10 +316,10 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			identifier.setType("episode");
 			identifier.setText("H001601609");
 			identifierList.add(identifier);
-			identifier = new Identifier();
-			identifier.setType("isPartOf");
-			identifier.setText("H001601608");
-			identifierList.add(identifier);
+			// identifier = new Identifier();
+			// identifier.setType("isPartOf");
+			// identifier.setText("H001601608");
+			// identifierList.add(identifier);
 
 			title.setText("조금 이따 샤워해 (Feat. Crush)");
 
@@ -365,12 +371,20 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			rights.setGrade("PD004401");
 
 			purchase.setState("payment");
+			List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+
 			identifier = new Identifier();
-			identifierList = new ArrayList<Identifier>();
 			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			identifier.setText("MI100000000000048053");
-			identifierList.add(identifier);
-			purchase.setIdentifierList(identifierList);
+			identifier.setText("MI100000000000044286");
+			purchaseIdentifierList.add(identifier);
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText("0000395599");
+			purchaseIdentifierList.add(identifier);
+
+			purchase.setIdentifierList(purchaseIdentifierList);
+
 			date = new Date();
 			date.setType("date/purchase");
 			date.setText("20130722143732");

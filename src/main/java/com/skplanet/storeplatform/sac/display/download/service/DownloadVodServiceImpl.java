@@ -180,14 +180,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String prchsDt = null;
 				String dwldExprDt = null;
 				String prchsState = null;
+				String prchsProdId = null;
 				String usePeriodUnitCd = downloadVodInfo.getUsePeriodUnitCd();
 
 				try {
 					// 구매내역 조회를 위한 생성자
 					ProductListSac productListSac = new ProductListSac();
-					productListSac.setProdId(downloadVodInfo.getEspdProdId());
-
 					List<ProductListSac> productList = new ArrayList<ProductListSac>();
+					// productListSac.setProdId(downloadVodInfo.getEspdProdId());
+					productListSac.setProdId(downloadVodInfo.getStoreProdId());
+					productList.add(productListSac);
+
+					productListSac = new ProductListSac();
+					// productListSac.setProdId(downloadVodInfo.getEspdProdId());
+					productListSac.setProdId(downloadVodInfo.getPlayProdId());
 					productList.add(productListSac);
 
 					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
@@ -204,15 +210,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					// 구매내역 조회 실행
 					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
-					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("usePeriodUnitCd	:	" + usePeriodUnitCd);
-					this.log.debug("----------------------------------------------------------------");
-
 					if (historyListSacRes.getTotalCnt() > 0) {
 						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 						dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+						prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
 						// 소장
 						if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
@@ -238,10 +241,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				identifier = new Identifier();
 				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 				identifier.setText(downloadVodInfo.getProdId());
-				identifierList.add(identifier);
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(downloadVodInfo.getEspdProdId());
 				identifierList.add(identifier);
 
 				supportList = new ArrayList<Support>();
@@ -353,24 +352,27 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				if (StringUtils.isNotEmpty(downloadVodInfo.getPlayProdId())) {
 					Support playSupport = new Support();
 					List<Support> playSupportList = new ArrayList<Support>();
+					List<Identifier> playIdentifierList = new ArrayList<Identifier>();
 					Price playPrice = new Price();
+
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					identifier.setText(downloadVodInfo.getPlayProdId());
+					playIdentifierList.add(identifier);
+
 					playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 					playSupport.setText(downloadVodInfo.getPlayDrmYn());
 					playSupportList.add(playSupport);
-					play.setSupportList(playSupportList);
-					// play.setSupport(playSupport);
 
 					date = new Date();
 					date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
 					date.setText(downloadVodInfo.getUsagePeriod());
 					playPrice.setText(downloadVodInfo.getPlayProdAmt() == null ? 0 : downloadVodInfo.getPlayProdAmt());
 
-					// Source playSource = new Source();
-					// playSource.setUrl(downloadVodInfo.getPlayProdId());
-
+					play.setIdentifierList(playIdentifierList);
+					play.setSupportList(playSupportList);
 					play.setDate(date); // 이용기간
 					play.setPrice(playPrice); // 바로보기 상품 금액
-					// play.setSource(playSource); // 바로보기 상품 url
 					if (downloadVodInfo.getStrmNetworkCd() != null) {
 						play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
 					}
@@ -383,22 +385,24 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				if (StringUtils.isNotEmpty(downloadVodInfo.getStoreProdId())) {
 					Support storeSupport = new Support();
 					List<Support> storeSupportList = new ArrayList<Support>();
+					List<Identifier> storeIdentifierList = new ArrayList<Identifier>();
 					Price storePrice = new Price();
+
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					identifier.setText(downloadVodInfo.getStoreProdId());
+					storeIdentifierList.add(identifier);
 
 					storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 					storeSupport.setText(downloadVodInfo.getStoreDrmYn());
 					storeSupportList.add(storeSupport);
-					store.setSupportList(storeSupportList);
-					// store.setSupport(storeSupport);
 
 					storePrice.setText(downloadVodInfo.getStoreProdAmt() == null ? 0 : downloadVodInfo
 							.getStoreProdAmt());
 
-					// Source storeSource = new Source();
-					// storeSource.setUrl(downloadVodInfo.getStoreProdId());
-
+					store.setIdentifierList(storeIdentifierList);
+					store.setSupportList(storeSupportList);
 					store.setPrice(storePrice);
-					// store.setSource(storeSource);
 
 					// 네트워크 제한이 있을경우
 					if (downloadVodInfo.getDwldNetworkCd() != null) {
@@ -422,12 +426,20 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
 					purchase.setState(prchsState);
-					identifier = new Identifier();
 					List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+
+					identifier = new Identifier();
 					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 					identifier.setText(prchsId);
 					purchaseIdentifierList.add(identifier);
+
+					identifier = new Identifier();
+					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+					identifier.setText(prchsProdId);
+					purchaseIdentifierList.add(identifier);
+
 					purchase.setIdentifierList(purchaseIdentifierList);
+
 					date = new Date();
 					date.setType("date/purchase");
 					date.setText(prchsDt);
@@ -474,7 +486,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 			// 상품ID
 			identifier = new Identifier();
-			identifier.setType("episode");
+			identifier.setType("channel");
 			identifier.setText("H001601609");
 			identifierList.add(identifier);
 
@@ -510,6 +522,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			menu = new Menu();
 			menu.setId("DP17004");
 			menu.setName("드라마");
+			menuList.add(menu);
 			menu = new Menu();
 			menu.setId("CT13");
 			menu.setType("metaClass");
@@ -564,47 +577,56 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			rights.setAllow("Y");
 			rights.setGrade("PD004401");
 
-			List<Support> playSupportList = new ArrayList<Support>();
-			Price playPrice = new Price();
 			Support playSupport = new Support();
-			playSupport.setType("drm");
+			List<Support> playSupportList = new ArrayList<Support>();
+			List<Identifier> playIdentifierList = new ArrayList<Identifier>();
+			Price playPrice = new Price();
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText("H001601609");
+			playIdentifierList.add(identifier);
+
+			playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 			playSupport.setText("Y");
 			playSupportList.add(playSupport);
-			play.setSupportList(playSupportList);
 
 			date = new Date();
-			date.setType("duration/usagePeriod");
+			date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
 			date.setText("30일");
 			playPrice.setText(800);
 
-			Source playSource = new Source();
-			playSource.setUrl("/movie/drama/H001373322");
+			play.setIdentifierList(playIdentifierList);
+			play.setSupportList(playSupportList);
+			play.setDate(date); // 이용기간
+			play.setPrice(playPrice); // 바로보기 상품 금액
 
 			play.setSupport(playSupport);
 			play.setDate(date); // 이용기간
 			play.setPrice(playPrice); // 바로보기 상품 금액
-			play.setSource(playSource); // 바로보기 상품 url
 			play.setNetworkRestrict("ota");
 
 			rights.setPlay(play);
 
-			Price storePrice = new Price();
-			storePrice.setText(1200);
-
 			Support storeSupport = new Support();
 			List<Support> storeSupportList = new ArrayList<Support>();
-			
-			storePrice.setText(1200);
+			List<Identifier> storeIdentifierList = new ArrayList<Identifier>();
+			Price storePrice = new Price();
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText("H001601609");
+			storeIdentifierList.add(identifier);
 
 			storeSupport.setType("drm");
 			storeSupport.setText("Y");
 			storeSupportList.add(storeSupport);
-			store.setSupportList(storeSupportList);
 
-			source = new Source();
-			// source.setUrl("/movie/drama/H001373322");
+			storePrice.setText(1200);
+
+			store.setIdentifierList(storeIdentifierList);
+			store.setSupportList(storeSupportList);
 			store.setPrice(storePrice);
-			// store.setSource(source);
 			store.setNetworkRestrict("ota");
 
 			rights.setStore(store);
@@ -616,16 +638,24 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 			// 구매 정보
 			purchase.setState("payment");
-			identifier = new Identifier();
 			List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+
+			identifier = new Identifier();
 			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-			identifier.setText("M1020954107328402159");
+			identifier.setText("MI100000000000044286");
 			purchaseIdentifierList.add(identifier);
+
+			identifier = new Identifier();
+			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+			identifier.setText("0000395599");
+			purchaseIdentifierList.add(identifier);
+
 			purchase.setIdentifierList(purchaseIdentifierList);
-			Date purchaseDate = new Date();
-			purchaseDate.setType("date/purchase");
-			purchaseDate.setText("20130604154645");
-			purchase.setDate(purchaseDate);
+
+			date = new Date();
+			date.setType("date/purchase");
+			date.setText("20130722143732");
+			purchase.setDate(date);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);
