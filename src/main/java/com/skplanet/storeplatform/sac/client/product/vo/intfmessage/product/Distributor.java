@@ -65,8 +65,10 @@ public class Distributor extends CommonInfo implements Serializable {
 	 */
 	private String company;
 
+	private String sellerKey;
+
 	/**
-	 * @return String
+	 * @return the identifier
 	 */
 	public String getIdentifier() {
 		return this.identifier;
@@ -74,14 +76,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param identifier
-	 *            identifier
+	 *            the identifier to set
 	 */
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
 
 	/**
-	 * @return String
+	 * @return the type
 	 */
 	public String getType() {
 		return this.type;
@@ -89,14 +91,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param type
-	 *            type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * @return String
+	 * @return the name
 	 */
 	public String getName() {
 		return this.name;
@@ -104,14 +106,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param name
-	 *            name
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return String
+	 * @return the nickName
 	 */
 	public String getNickName() {
 		return this.nickName;
@@ -119,14 +121,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param nickName
-	 *            nickName
+	 *            the nickName to set
 	 */
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
 
 	/**
-	 * @return String
+	 * @return the tel
 	 */
 	public String getTel() {
 		return this.tel;
@@ -134,14 +136,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param tel
-	 *            tel
+	 *            the tel to set
 	 */
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
 
 	/**
-	 * @return String
+	 * @return the email
 	 */
 	public String getEmail() {
 		return this.email;
@@ -149,14 +151,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param email
-	 *            email
+	 *            the email to set
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	/**
-	 * @return String
+	 * @return the country
 	 */
 	public String getCountry() {
 		return this.country;
@@ -164,14 +166,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param country
-	 *            country
+	 *            the country to set
 	 */
 	public void setCountry(String country) {
 		this.country = country;
 	}
 
 	/**
-	 * @return String
+	 * @return the address
 	 */
 	public String getAddress() {
 		return this.address;
@@ -179,14 +181,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param address
-	 *            address
+	 *            the address to set
 	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
 	/**
-	 * @return String
+	 * @return the regNo
 	 */
 	public String getRegNo() {
 		return this.regNo;
@@ -194,14 +196,14 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param regNo
-	 *            regNo
+	 *            the regNo to set
 	 */
 	public void setRegNo(String regNo) {
 		this.regNo = regNo;
 	}
 
 	/**
-	 * @return String
+	 * @return the company
 	 */
 	public String getCompany() {
 		return this.company;
@@ -209,10 +211,24 @@ public class Distributor extends CommonInfo implements Serializable {
 
 	/**
 	 * @param company
-	 *            company
+	 *            the company to set
 	 */
 	public void setCompany(String company) {
 		this.company = company;
 	}
 
+	/**
+	 * @return the sellerKey
+	 */
+	public String getSellerKey() {
+		return this.sellerKey;
+	}
+
+	/**
+	 * @param sellerKey
+	 *            the sellerKey to set
+	 */
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
+	}
 }
