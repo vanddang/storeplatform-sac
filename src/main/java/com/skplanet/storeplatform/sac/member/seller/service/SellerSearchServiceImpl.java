@@ -178,9 +178,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				schReq.setKeySearchList(list);
 
 				schRes = this.sellerSCI.searchSeller(schReq);
-				if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-					throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-				}
 				// 판매자 멀티미디어정보
 				List<ExtraRight> eList = new ArrayList<ExtraRight>();
 				ExtraRight extraRightList = null;
@@ -245,9 +242,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchAccountSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 		// 판매자 문서정보
 		List<Document> dList = new ArrayList<Document>();
 		Document document = null;
@@ -392,10 +386,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		if (reqStat)
 			schRes = this.sellerSCI.searchIDSeller(schReq);
 
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
-
 		List<SellerMbr> sList = new ArrayList<SellerMbr>();
 		SellerMbr sellerMbrRes = null;
 		if (schRes.getSellerMbr() != null)
@@ -431,9 +421,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schRes = this.sellerSCI.searchPwdHintList(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
 		SellerMbrPwdHint sellerMbrPwdHint = null;
@@ -488,9 +475,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schRes = this.sellerSCI.checkPasswordReminderSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		CheckPasswordReminderQuestionRes response = new CheckPasswordReminderQuestionRes();
 		response.setIsCorrect(schRes.getIsCorrect());
@@ -521,9 +505,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		schRes = this.sellerSCI.resetPasswordSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		SearchPasswordRes response = new SearchPasswordRes();
 		response.setNewPassword(schRes.getSellerPW());
