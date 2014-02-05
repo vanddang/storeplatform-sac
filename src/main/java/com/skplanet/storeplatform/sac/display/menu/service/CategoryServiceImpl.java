@@ -35,8 +35,8 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
-import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategoryDTO;
-import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailInfo;
 
 /**
  * Category Service 인터페이스(CoreStoreBusiness) 구현체
@@ -85,8 +85,8 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.getTopCategoryList", requestVO,
-				MenuDetailDTO.class);
+		List<MenuDetailInfo> resultList = this.commonDAO.queryForList("Menu.getTopCategoryList", requestVO,
+				MenuDetailInfo.class);
 		if (resultList != null) {
 
 			// Response VO를 만들기위한 생성자
@@ -94,9 +94,9 @@ public class CategoryServiceImpl implements CategoryService {
 			Source source = null;
 			List<Object> listVO = new ArrayList<Object>();
 
-			Iterator<MenuDetailDTO> iterator = resultList.iterator();
+			Iterator<MenuDetailInfo> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MenuDetailDTO mapperVO = iterator.next();
+				MenuDetailInfo mapperVO = iterator.next();
 
 				category = new Menu();
 				source = new Source();
@@ -173,7 +173,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		statementId = "Menu.getDetailCategoryList";
 
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList(statementId, requestVO, MenuDetailDTO.class);
+		List<MenuDetailInfo> resultList = this.commonDAO.queryForList(statementId, requestVO, MenuDetailInfo.class);
 		if (resultList != null) {
 
 			threeDepth = this.check3DepthMenu(requestVO);
@@ -194,9 +194,9 @@ public class CategoryServiceImpl implements CategoryService {
 			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
 
 			responseVO = new CategoryDetailListRes();
-			Iterator<MenuDetailDTO> iterator = resultList.iterator();
+			Iterator<MenuDetailInfo> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MenuDetailDTO mapperVO = iterator.next();
+				MenuDetailInfo mapperVO = iterator.next();
 
 				String mapperJson = objectMapper.writeValueAsString(mapperVO);
 				this.log.debug(mapperJson);
@@ -334,8 +334,8 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new Exception("menuId 는 필수 파라메터 입니다.");
 		}
 
-		List<MenuCategoryDTO> resultList = this.commonDAO.queryForList(this.getStatementId(requestVO), requestVO,
-				MenuCategoryDTO.class);
+		List<MenuCategory> resultList = this.commonDAO.queryForList(this.getStatementId(requestVO), requestVO,
+				MenuCategory.class);
 		if (resultList != null) {
 
 			threeDepth = this.check3DepthMenu(requestVO);
@@ -357,9 +357,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 			responseVO = new CategoryDetailListRes();
 
-			Iterator<MenuCategoryDTO> iterator = resultList.iterator();
+			Iterator<MenuCategory> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MenuCategoryDTO mapperVO = iterator.next();
+				MenuCategory mapperVO = iterator.next();
 
 				String mapperJson = objectMapper.writeValueAsString(mapperVO);
 				this.log.debug(mapperJson);
@@ -471,7 +471,7 @@ public class CategoryServiceImpl implements CategoryService {
 	private boolean check3DepthMenu(MenuReq requestVO) {
 		boolean result = false;
 
-		MenuDetailDTO mapperVO = this.commonDAO.queryForObject("Menu.getTopMenu3Detph", requestVO, MenuDetailDTO.class);
+		MenuDetailInfo mapperVO = this.commonDAO.queryForObject("Menu.getTopMenu3Detph", requestVO, MenuDetailInfo.class);
 
 		if (mapperVO != null && mapperVO.getMenuId().equals(requestVO.getMenuId())) {
 			result = true;

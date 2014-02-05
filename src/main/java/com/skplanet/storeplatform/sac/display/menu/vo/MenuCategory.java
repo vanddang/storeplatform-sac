@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.display.menu.vo;
  * 
  * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
  */
-public class MenuCategoryDTO {
+public class MenuCategory {
 
 	private int totalCount;
 

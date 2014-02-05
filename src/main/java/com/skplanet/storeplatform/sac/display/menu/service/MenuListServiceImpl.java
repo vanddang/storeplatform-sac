@@ -32,7 +32,7 @@ import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.menu.MenuReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailDTO;
+import com.skplanet.storeplatform.sac.display.menu.vo.MenuDetailInfo;
 
 /**
  * MenuList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -82,17 +82,17 @@ public class MenuListServiceImpl implements MenuListService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		List<MenuDetailDTO> resultList = this.commonDAO.queryForList("Menu.selectMenuList", requestVO,
-				MenuDetailDTO.class);
+		List<MenuDetailInfo> resultList = this.commonDAO.queryForList("Menu.selectMenuList", requestVO,
+				MenuDetailInfo.class);
 		if (resultList != null) {
 
 			// Response VO를 만들기위한 생성자
 			MenuDetail menu = null;
 			List<MenuDetail> listVO = new ArrayList<MenuDetail>();
 
-			Iterator<MenuDetailDTO> iterator = resultList.iterator();
+			Iterator<MenuDetailInfo> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MenuDetailDTO mapperVO = iterator.next();
+				MenuDetailInfo mapperVO = iterator.next();
 
 				menu = new MenuDetail();
 
@@ -180,7 +180,7 @@ public class MenuListServiceImpl implements MenuListService {
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
 
-		MenuDetailDTO mapperVO = this.commonDAO.queryForObject("Menu.selectMenu", requestVO, MenuDetailDTO.class);
+		MenuDetailInfo mapperVO = this.commonDAO.queryForObject("Menu.selectMenu", requestVO, MenuDetailInfo.class);
 
 		MenuDetail menu = null;
 		if (null != mapperVO) {
