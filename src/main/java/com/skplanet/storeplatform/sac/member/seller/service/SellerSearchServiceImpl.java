@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSe
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckDuplicationSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.CheckPasswordReminderSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginInfo;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.ResetPasswordSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.ResetPasswordSellerResponse;
@@ -31,6 +34,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListR
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Document;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
@@ -54,7 +59,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
@@ -539,24 +543,82 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	 * @return SearchAuthKeyRes
 	 */
 	@Override
-	public SearchAuthKeyRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
+	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req) {
 
 		SearchLoginInfoResponse schRes = new SearchLoginInfoResponse();
 		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
-
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
-
-		//TODO 임시 주석 [2014-02-04]
-		// schReq.setSessionKey(req.getSessionKey());
-
+		schReq.setSessionKey(req.getSessionKey());
 		schRes = this.sellerSCI.searchLoginInfo(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+
+		if (Integer.parseInt(req.getExtraDate()) > 0) {
+			UpdateLoginInfoResponse schRes2 = new UpdateLoginInfoResponse();
+			UpdateLoginInfoRequest schReq2 = new UpdateLoginInfoRequest();
+			schReq2.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+			LoginInfo loginInfo = new LoginInfo();
+			loginInfo.setSellerKey(schRes.getLoginInfo().getSellerKey());
+			loginInfo.setSessionKey(req.getSessionKey());
+			loginInfo.setExpireDate(this.getExpirationTime(Integer.parseInt(req.getExtraDate())));
+			schReq2.setLoginInfo(loginInfo);
+			schRes2 = this.sellerSCI.updateLoginInfo(schReq2);
 		}
 
-		SearchAuthKeyRes response = new SearchAuthKeyRes();
-		response.setSessionKey(schRes.getLoginInfo().getSessionKey());
-		response.setExpireDate(schRes.getLoginInfo().getExpireDate());
+		SearchSellerResponse schRes3 = new SearchSellerResponse();
+		SearchSellerRequest schReq3 = new SearchSellerRequest();
+		schReq3.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType("INSD_SELLERMBR_NO");
+		keySearch.setKeyString(schRes.getLoginInfo().getSellerKey());
+		List<KeySearch> list = new ArrayList<KeySearch>();
+		list.add(keySearch);
+		schReq3.setKeySearchList(list);
+
+		schRes3 = this.sellerSCI.searchSeller(schReq3);
+
+		DetailInformationRes response = new DetailInformationRes();
+
+		// 판매자 멀티미디어정보
+		List<ExtraRight> eList = new ArrayList<ExtraRight>();
+		ExtraRight extraRightList = null;
+		if (schRes3.getExtraRightList() != null)
+			for (int i = 0; i < schRes3.getExtraRightList().size(); i++) {
+				extraRightList = new ExtraRight();
+				extraRightList.setEndDate(schRes3.getExtraRightList().get(i).getEndDate());
+				extraRightList.setRegDate(schRes3.getExtraRightList().get(i).getRegDate());
+				extraRightList.setRegID(schRes3.getExtraRightList().get(i).getRegID());
+				extraRightList.setRightProfileCode(schRes3.getExtraRightList().get(i).getRightProfileCode());
+				extraRightList.setSellerKey(schRes3.getExtraRightList().get(i).getSellerKey());
+				extraRightList.setSellerRate(schRes3.getExtraRightList().get(i).getSellerRate());
+				extraRightList.setStartDate(schRes3.getExtraRightList().get(i).getStartDate());
+				extraRightList.setTenantID(schRes3.getExtraRightList().get(i).getTenantID());
+				extraRightList.setTenantRate(schRes3.getExtraRightList().get(i).getTenantRate());
+				extraRightList.setUpdateDate(schRes3.getExtraRightList().get(i).getUpdateDate());
+				extraRightList.setUpdateID(schRes3.getExtraRightList().get(i).getUpdateID());
+				eList.add(extraRightList);
+			}
+
+		// 법정대리인정보
+		MbrLglAgent mbrLglAgent = new MbrLglAgent();
+		if (schRes3.getMbrLglAgent() != null) {
+			mbrLglAgent.setMemberKey(schRes3.getMbrLglAgent().getMemberKey());
+			mbrLglAgent.setParentBirthDay(schRes3.getMbrLglAgent().getParentBirthDay());
+			mbrLglAgent.setParentCI(schRes3.getMbrLglAgent().getParentCI());
+			mbrLglAgent.setParentDate(schRes3.getMbrLglAgent().getParentDate());
+			mbrLglAgent.setParentEmail(schRes3.getMbrLglAgent().getParentEmail());
+			mbrLglAgent.setParentMDN(schRes3.getMbrLglAgent().getParentMDN());
+			mbrLglAgent.setParentName(schRes3.getMbrLglAgent().getParentName());
+			mbrLglAgent.setParentRealNameDate(schRes3.getMbrLglAgent().getParentRealNameDate());
+			mbrLglAgent.setParentRealNameMethod(schRes3.getMbrLglAgent().getParentRealNameMethod());
+			mbrLglAgent.setParentRealNameSite(schRes3.getMbrLglAgent().getParentRealNameSite());
+			mbrLglAgent.setParentTelecom(schRes3.getMbrLglAgent().getParentTelecom());
+			mbrLglAgent.setParentType(schRes3.getMbrLglAgent().getParentType());
+			mbrLglAgent.setSequence(schRes3.getMbrLglAgent().getSequence());
+		}
+
+		response.setExtraRightList(eList);// 판매자 멀티미디어정보
+		response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
+		response.setSellerKey(schRes3.getSellerKey());// 판매자Key
+		response.setSellerMbr(this.sellerMbr(schRes3.getSellerMbr()));// 판매자 정보
 
 		return response;
 
@@ -758,4 +820,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 		return sellerMbrRes;
 	}
+
+	private String getExpirationTime(int hour) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, hour);
+		return sdf.format(cal.getTime());
+	}
+
 }
