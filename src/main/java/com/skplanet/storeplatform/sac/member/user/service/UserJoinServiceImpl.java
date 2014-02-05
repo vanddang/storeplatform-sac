@@ -782,21 +782,16 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		}
 
-		try {
-
-			/**
-			 * 휴대기기 등록 모듈 호출.
-			 */
-			LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
-			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
-			LOGGER.info("## 휴대기기 등록 DeviceKey : {}", deviceKey);
-			return deviceKey;
-
-		} catch (Exception e) {
-
-			throw new StorePlatformException("SAC_MEM_1102", e);
-
+		/**
+		 * 휴대기기 등록 모듈 호출.
+		 */
+		LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
+		String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
+		if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
+			throw new StorePlatformException("SAC_MEM_1102");
 		}
+
+		return deviceKey;
 
 	}
 
