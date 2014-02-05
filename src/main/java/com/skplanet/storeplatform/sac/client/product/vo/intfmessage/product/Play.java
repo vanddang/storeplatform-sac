@@ -37,6 +37,7 @@ public class Play extends CommonInfo implements Serializable {
 	private String durationUsagePeriodUI; // 이용기간의 UI 표시
 	private String networkRestrict; // 네트워크 제한 구분 (ota : 무선망)
 	private Source source;
+	private List<Identifier> identifierList; // 상품의 에피소드 ID 리스트
 	private List<Support> supportList; // 지원매체 리스트
 
 	/**
@@ -165,6 +166,21 @@ public class Play extends CommonInfo implements Serializable {
 	 */
 	public void setSource(Source source) {
 		this.source = source;
+	}
+
+	/**
+	 * @return the identifierList
+	 */
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	/**
+	 * @param identifierList
+	 *            the identifierList to set
+	 */
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 	/**
