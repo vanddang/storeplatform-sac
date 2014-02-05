@@ -217,7 +217,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) throws Exception {
+	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
 		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
 		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
@@ -246,7 +246,7 @@ public class MemberCommonComponent {
 	 * @return UserExtraInfoRes
 	 * @throws Exception
 	 */
-	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) throws Exception {
+	public UserExtraInfoRes getUserExtraInfo(String userKey, SacRequestHeader sacHeader) {
 
 		DetailReq req = new DetailReq();
 		UserExtraInfoRes res = new UserExtraInfoRes();
@@ -275,7 +275,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public SearchAgreementRes getSearchAgreement(String userKey, SacRequestHeader sacHeader) throws Exception {
+	public SearchAgreementRes getSearchAgreement(String userKey, SacRequestHeader sacHeader) {
 
 		DetailReq req = new DetailReq();
 		SearchAgreementRes res = new SearchAgreementRes();
