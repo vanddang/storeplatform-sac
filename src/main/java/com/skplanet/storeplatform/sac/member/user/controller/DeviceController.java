@@ -148,6 +148,11 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey");
 		}
 
+		/* imei값은 수정 불가이므로 빈값처리 */
+		DeviceInfo deviceInfo = req.getDeviceInfo();
+		deviceInfo.setNativeId("");
+		req.setDeviceInfo(deviceInfo);
+
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);
 
 		return res;
