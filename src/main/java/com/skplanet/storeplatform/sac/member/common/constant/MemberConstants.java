@@ -137,6 +137,16 @@ public final class MemberConstants {
 	/** EC IDP 에러 코드 문자열 */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
 
+	/** 탈퇴 사유 코드 */
+	public static final String WITHDRAW_REASON_OTHER = "US010408"; // 기타
+
+	/** 탈퇴유형 코드 */
+	public static final String USER_WITHDRAW_CLASS_CHANGE_ID = ""; // ID 전환
+	public static final String USER_WITHDRAW_CLASS_USER_SELECTED = ""; // 사용자선택
+	public static final String USER_WITHDRAW_CLASS_PROVISIONING = "US010703"; // 프로비저닝
+	public static final String USER_WITHDRAW_CLASS_USER_DEVICE = ""; // 단말이동
+	public static final String USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED = ""; // 가입승인만료
+
 	/**
 	 * 판매자 회원 상수들
 	 * 
