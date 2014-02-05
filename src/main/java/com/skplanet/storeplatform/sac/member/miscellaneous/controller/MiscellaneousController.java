@@ -242,7 +242,7 @@ public class MiscellaneousController {
 	 *            CreateAdditionalServiceReq
 	 * @return CreateAdditionalServiceRes
 	 */
-	@RequestMapping(value = "/dev/createAdditionalService/v1")
+	@RequestMapping(value = "/dev/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
 
