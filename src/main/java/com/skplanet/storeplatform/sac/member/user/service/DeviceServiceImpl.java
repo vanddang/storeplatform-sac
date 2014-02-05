@@ -150,15 +150,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceId = this.commService.getOpmdMdnInfo(deviceId);
 
 		/* 회원 정보 조회 */
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(userKey);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 		/* 회원정보 없음 */
 		if (schUserRes.getUserMbr() == null) {
@@ -213,6 +205,29 @@ public class DeviceServiceImpl implements DeviceService {
 
 	}
 
+	/**
+	 * SC회원정보 조회
+	 * 
+	 * @param commonRequest
+	 *            CommonRequest
+	 * @param keyType
+	 *            조회타입
+	 * @param keyString
+	 *            조회값
+	 * @return SearchUserResponse
+	 */
+	public SearchUserResponse searchUser(CommonRequest commonRequest, String keyType, String keyString) {
+		SearchUserRequest schUserReq = new SearchUserRequest();
+		schUserReq.setCommonRequest(commonRequest);
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch key = new KeySearch();
+		key.setKeyType(keyType);
+		key.setKeyString(keyString);
+		keySearchList.add(key);
+		schUserReq.setKeySearchList(keySearchList);
+		return this.userSCI.searchUser(schUserReq);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -232,15 +247,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceKey = req.getDeviceInfo().getDeviceKey();
 
 		/* 회원 정보 조회 */
-		SearchUserRequest schUserReq = new SearchUserRequest();
-		schUserReq.setCommonRequest(commonRequest);
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch key = new KeySearch();
-		key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-		key.setKeyString(userKey);
-		keySearchList.add(key);
-		schUserReq.setKeySearchList(keySearchList);
-		SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
+		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 		/* 회원정보 없음 */
 		if (schUserRes.getUserMbr() == null) {
@@ -479,19 +486,9 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			/* 5. 통합회원인 경우 무선회원 해지 */
-			SearchUserRequest schUserReq = new SearchUserRequest();
-			schUserReq.setCommonRequest(commonRequest);
-			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-			KeySearch key = new KeySearch();
-			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-			key.setKeyString(userKey);
-			keySearchList.add(key);
-			schUserReq.setKeySearchList(keySearchList);
-			SearchUserResponse schUserRes = this.userSCI.searchUser(schUserReq);
 
-			if (schUserRes.getUserMbr() == null) {
-				throw new StorePlatformException("SAC_MEM_0003", "userKey", userKey);
-			}
+			/* 회원정보 조회 */
+			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 			/* 통합 회원 아이디의 휴대기기인 경우 IDP에 무선 회원 해지 요청 - 자동 해지 안된다고 함 */
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
