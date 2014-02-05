@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.MbrMangItemPtcr;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -196,9 +197,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
-		LOGGER.debug("###### 회원부가정보 등록/수정 Req : {}", req.getUserKey());
-		LOGGER.debug("###### 회원부가정보 등록/수정 Req : {}", req.getAddInfoList().toString());
-
 		for (UserExtraInfo info : req.getAddInfoList()) {
 			MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
 			ptcr.setExtraProfile(info.getExtraProfileCode());
@@ -213,26 +211,17 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		updateReq.setMbrMangItemPtcr(ptcrList);
 		updateReq.setCommonRequest(commonRequest);
 
-		LOGGER.debug("###### 회원부가정보 등록/수정 SC API ptcrList Req : {}", ptcrList.toString());
-		LOGGER.debug("###### 회원부가정보 등록/수정 SC API update Req : {}", updateReq.getUserKey());
-		LOGGER.debug("###### 회원부가정보 등록/수정 SC API update Req : {}", updateReq.getMbrMangItemPtcr().toString());
+		LOGGER.debug("###### SC API ptcrList Req : {}", ptcrList.toString());
+		LOGGER.debug("###### SC API update Req : {}", updateReq.getUserKey());
+		LOGGER.debug("###### SC API update Req : {}", updateReq.getMbrMangItemPtcr().toString());
 
 		updateRes = this.userSCI.updateManagement(updateReq);
 
-		if (StringUtils.equals(updateRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES) && updateRes.getUserKey() != null) {
+		LOGGER.debug("###### SC API Success Code : {}", updateRes.getCommonResponse().getResultCode());
+		LOGGER.debug("###### SC API Success Msg : {}", updateRes.getCommonResponse().getResultMessage());
+		LOGGER.debug("###### SC API Success Res : {}", updateRes.getUserKey());
 
-			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getCommonResponse().getResultCode());
-			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getCommonResponse().getResultMessage());
-			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Success Res : {}", updateRes.getUserKey());
-
-			res.setUserKey(updateRes.getUserKey());
-		} else {
-			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Fail Res : {}", updateRes.getCommonResponse().getResultCode());
-			LOGGER.debug("###### 회원부가정보 등록/수정 SC API Fail Res : {}", updateRes.getCommonResponse().getResultMessage());
-
-			throw new RuntimeException("회원부가정보 등록/수정 SC API Fail : [" + updateRes.getCommonResponse().getResultCode() + "]" + "["
-					+ updateRes.getCommonResponse().getResultMessage() + "]");
-		}
+		res.setUserKey(updateRes.getUserKey());
 
 		return res;
 	}
@@ -255,8 +244,8 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 			} else {
 				validProfileCode = "N";
-				LOGGER.debug("###### 회원부가정보 ProfileCode 잘못된 코드 : {}", info.getExtraProfileCode());
-				throw new RuntimeException("###### 회원부가정보 ProfileCode 잘못된 코드 : " + info.getExtraProfileCode());
+				LOGGER.debug("###### inValid ProfileCode : {}", info.getExtraProfileCode());
+				throw new StorePlatformException("SAC_MEM_0002", info.getExtraProfileCode());
 			}
 		}
 

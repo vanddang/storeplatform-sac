@@ -839,42 +839,34 @@ public class DeviceServiceImpl implements DeviceService {
 			logger.info("### userKey Res : {}", listRes.toString());
 		}
 
-		if (listRes.getDeviceInfoList() == null) {
-			throw new StorePlatformException("대표단말 정보가 없습니다.");
-		} else if (listRes.getDeviceInfoList().size() == 1 && listRes.getDeviceInfoList() != null) {
-			for (DeviceInfo info : listRes.getDeviceInfoList()) {
-				DeviceInfo addData = new DeviceInfo();
-				List<DeviceExtraInfo> listExtraInfo = new ArrayList<DeviceExtraInfo>();
+		for (DeviceInfo info : listRes.getDeviceInfoList()) {
+			DeviceInfo addData = new DeviceInfo();
+			List<DeviceExtraInfo> listExtraInfo = new ArrayList<DeviceExtraInfo>();
 
-				addData.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
-				addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
-				addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
-				addData.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
-				addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
-				addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
-				addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
-				addData.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
-				addData.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
-				addData.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSms()));
-				addData.setNativeId(StringUtil.setTrim(info.getNativeId()));
-				addData.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
-				addData.setJoinId(StringUtil.setTrim(info.getJoinId()));
+			addData.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
+			addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
+			addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
+			addData.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
+			addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
+			addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
+			addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
+			addData.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
+			addData.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
+			addData.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSms()));
+			addData.setNativeId(StringUtil.setTrim(info.getNativeId()));
+			addData.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
+			addData.setJoinId(StringUtil.setTrim(info.getJoinId()));
 
-				for (DeviceExtraInfo extraInfo : info.getUserDeviceExtraInfo()) {
-					DeviceExtraInfo addExtraInfo = new DeviceExtraInfo();
-					addExtraInfo.setExtraProfile(extraInfo.getExtraProfile());
-					addExtraInfo.setExtraProfileValue(extraInfo.getExtraProfileValue());
-					listExtraInfo.add(addExtraInfo);
-				}
-
-				addData.setUserDeviceExtraInfo(listExtraInfo);
-
-				res.setUserDeviceInfo(addData);
+			for (DeviceExtraInfo extraInfo : info.getUserDeviceExtraInfo()) {
+				DeviceExtraInfo addExtraInfo = new DeviceExtraInfo();
+				addExtraInfo.setExtraProfile(extraInfo.getExtraProfile());
+				addExtraInfo.setExtraProfileValue(extraInfo.getExtraProfileValue());
+				listExtraInfo.add(addExtraInfo);
 			}
-		} else if (listRes.getDeviceInfoList().size() > 1) {
-			throw new StorePlatformException("조회된 리스트가 1개 이상 입니다.");
-		} else {
-			throw new StorePlatformException("대표단말 조회에서 알수 없는 오류 발생");
+
+			addData.setUserDeviceExtraInfo(listExtraInfo);
+
+			res.setUserDeviceInfo(addData);
 		}
 
 		logger.info("###### Start detailRepresentationDevice Request : {}", req.toString());
@@ -932,22 +924,13 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("###### 2. exist Request : {}", existReq.toString());
 		logger.info("###### 2. exist Respone : {}", existRes.toString());
 
-		if (existRes == null) {
-			throw new StorePlatformException("회원정보 없음.");
-		}
-
 		if (existRes.getUserKey() != null) {
 			setMainDeviceRequest.setDeviceKey(req.getDeviceKey());
 			setMainDeviceRequest.setUserKey(req.getUserKey());
 
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
-			if (!res.getCommonResponse().getResultCode().equals(MemberConstants.RESULT_SUCCES)) {
-				throw new StorePlatformException("대표단말 설정 실패 result_code : [" + res.getCommonResponse().getResultCode() + "] result_message : ["
-						+ res.getCommonResponse().getResultMessage() + "]");
-			} else {
-				setMainDeviceRes.setDeviceKey(req.getDeviceKey());
-			}
+			setMainDeviceRes.setDeviceKey(req.getDeviceKey());
 		}
 
 		return setMainDeviceRes;
