@@ -22,7 +22,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
 import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
-import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 
 /**
  * SAC => E/C Outbound
@@ -94,8 +93,6 @@ public class IDPRepositoryImpl implements IDPRepository {
 		sendReq.setIm(true);
 		sendReq.setUrl(sendData.getUrl());
 		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
-		System.out.println("!@#!@#!@#!#!@#!#!@#!@#!@#!@#");
-		System.out.println(ConvertMapperUtils.convertObject(sendReq));
 		SendRes sendRes = this.idpSCI.send(sendReq);
 
 		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
