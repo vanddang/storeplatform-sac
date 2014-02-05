@@ -188,6 +188,8 @@ public class DisplayConstants {
 	 */
 	public static final String DP_SHOPPING_RIGHTS_TYPE_NM = "duration/salePeriod";
 
+	public static final String DP_SHOPPING_RIGHTS_TYPE_UNIT_NM = "unit/usagePeriod";
+
 	public static final String DP_DATE_UPT_NM = "date/upt";
 
 	public static final String DP_SOLDOUT = "soldout";
