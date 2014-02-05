@@ -560,29 +560,22 @@ public class DeviceServiceImpl implements DeviceService {
 					if (!MemberConstants.DEVICE_TELECOM_OMD.equals(device.getCmntCompCd())) {
 
 						IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
-						if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							String idpModelId = idpReceiver.getResponseBody().getModel_id();
+						String idpModelId = idpReceiver.getResponseBody().getModel_id();
 
-							if (idpModelId != null && !idpModelId.equals("")) {
-								// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-								if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
-									idpModelId = "SSNL";
-								} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
-									idpModelId = "SSO0";
-								}
-
-								// uacd 부가속성 추가
-								deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId,
-										deviceInfo));
-
-								logger.info("[change uacd] {}", idpModelId);
+						if (idpModelId != null && !idpModelId.equals("")) {
+							// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
+							if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
+								idpModelId = "SSNL";
+							} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
+								idpModelId = "SSO0";
 							}
 
-						} else {
-							throw new StorePlatformException("[" + idpReceiver.getResponseHeader().getResult() + "] "
-									+ idpReceiver.getResponseHeader().getResult_text());
-						}
+							// uacd 부가속성 추가
+							deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId,
+									deviceInfo));
 
+							logger.info("[change uacd] {}", idpModelId);
+						}
 					}
 				}
 
