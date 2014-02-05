@@ -18,39 +18,11 @@ public class GetProvisioningHistoryRes extends CommonInfo {
 	/* 프로비저닝 구분 */
 	private String workdCd;
 	/* 사용자 신규 Key */
-	private String mbrNo;
+	private String afterUserKey;
 	/* 사용자 기존 Key */
-	private String oldMbrNo;
-	/* 변경일자 */
-	private String regDate;
-
-	public String getMbrNo() {
-		return this.mbrNo;
-	}
-
-	public void setMbrNo(String mbrNo) {
-		this.mbrNo = mbrNo;
-	}
-
-	public String getOldMbrNo() {
-		return this.oldMbrNo;
-	}
-
-	public void setOldMbrNo(String oldMbrNo) {
-		this.oldMbrNo = oldMbrNo;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public String getRegDate() {
-		return this.regDate;
-	}
-
-	public void setRegDate(String regDate) {
-		this.regDate = regDate;
-	}
+	private String preUserKey;
+	/* 수정일시 */
+	private String updateDate;
 
 	public String getWorkdCd() {
 		return this.workdCd;
@@ -58,6 +30,34 @@ public class GetProvisioningHistoryRes extends CommonInfo {
 
 	public void setWorkdCd(String workdCd) {
 		this.workdCd = workdCd;
+	}
+
+	public String getAfterUserKey() {
+		return this.afterUserKey;
+	}
+
+	public void setAfterUserKey(String afterUserKey) {
+		this.afterUserKey = afterUserKey;
+	}
+
+	public String getPreUserKey() {
+		return this.preUserKey;
+	}
+
+	public void setPreUserKey(String preUserKey) {
+		this.preUserKey = preUserKey;
+	}
+
+	public String getUpdateDate() {
+		return this.updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

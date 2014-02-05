@@ -15,4 +15,17 @@ public class GetProvisioningHistoryReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
+	private String deviceId;
+
+	public String getDeviceId() {
+		return this.deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 }
