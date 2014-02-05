@@ -90,10 +90,16 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// COUPON 기본정보 등록상태확인
 			this.log.info("■■■■■ validateContentInfo 시작 ■■■■■");
-			if (!this.validateCouponInfo(couponInfo, itemInfoList)) {
+			if (!this.validateCouponInfo(couponInfo)) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
 			this.log.info("■■■■■ validateContentInfo 패스 ■■■■■");
+
+			// 쿠폰 , 아이템 유효성 검증
+			if (!this.validateCouponItemCount(couponInfo, itemInfoList, couponReq.getCudType())) { // CatalogCode 확인 해야
+																								   // 함
+				throw new CouponException(this.errorCode, this.message, null);
+			}
 
 			// TB_DP_PROD 값 셋팅
 			// log.info("■■■■■ setTbDpProdInfoValue 시작 ■■■■■");
@@ -172,7 +178,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @param ContentInfo
 	 * @return Boolean result @
 	 */
-	private boolean validateCouponInfo(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList) {
+	private boolean validateCouponInfo(DpCouponInfo couponInfo) {
 
 		// B2B상품 유효성 검증
 		if (StringUtils.equalsIgnoreCase(couponInfo.getStoreb2bFlag(), "Y")) {
@@ -192,12 +198,6 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		// 카탈로그 유효성 검증
 		if (!this.validateCatalog(couponInfo)) { // CatalogCode 확인 해야 함
-			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID;
-			return false;
-		}
-
-		// 쿠폰 , 아이템 유효성 검증
-		if (!this.validateCouponItemCount(couponInfo, itemInfoList)) { // CatalogCode 확인 해야 함
 			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID;
 			return false;
 		}
@@ -896,15 +896,19 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @return Boolean result
 	 * 
 	 */
-	private boolean validateCouponItemCount(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList) {
-		if (this.couponItemService.getCouponItemCountCudType(couponInfo.getCouponCode()) < 1) {
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_COUPONID,
-					"해당 Coupon_Id로 등록한 coupon가 있습니다.", couponInfo.getBpId());
+	private boolean validateCouponItemCount(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList, String cudType) {
+		if ("C".equals(cudType)) {
+			if (this.couponItemService.getCouponItemCountCudType(couponInfo.getCouponCode()) > 0) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_COUPONID,
+						"해당 Coupon_Id로 등록한 coupon가 있습니다.", couponInfo.getCouponCode());
+			}
 		}
 		for (int i = 0; i < itemInfoList.size(); i++) {
-			if (this.couponItemService.getCouponItemCountCudType(itemInfoList.get(i).getItemCode()) < 1) {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_ITEMID,
-						"해당 Item_Id로 등록한 item이 있습니다.", couponInfo.getBpId());
+			if ("C".equals(itemInfoList.get(i).getCudType())) {
+				if (this.couponItemService.getCouponItemCountCudType(itemInfoList.get(i).getItemCode()) > 0) {
+					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_ITEMID,
+							"해당 Item_Id로 등록한 item이 있습니다.", itemInfoList.get(i).getItemCode());
+				}
 			}
 		}
 		return true;
