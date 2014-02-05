@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
@@ -73,6 +74,7 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
 @Service
+@Transactional
 public class UserSearchServiceImpl implements UserSearchService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserSearchServiceImpl.class);

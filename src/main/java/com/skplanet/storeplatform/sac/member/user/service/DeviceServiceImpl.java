@@ -1396,11 +1396,6 @@ public class DeviceServiceImpl implements DeviceService {
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 
-		SupportAomRes res = new SupportAomRes();
-
-		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
@@ -1408,26 +1403,34 @@ public class DeviceServiceImpl implements DeviceService {
 			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+
 		}
+
+		SupportAomRes res = new SupportAomRes();
+
+		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
+		UserInfo searchUser = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 
 		/*
 		 * userKey, deviceId 두개의 코드로 디바이스 리스트 조회 --> getDeviceModelNo(휴대기기 모델
 		 * 코드)
 		 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setUserKey(searchUser.getUserKey());
+		listDeviceReq.setUserKey(req.getUserKey());
 		listDeviceReq.setDeviceId(req.getDeviceId());
 		listDeviceReq.setIsMainDevice("N");
+		logger.info("============================================ listDeviceReq {}", listDeviceReq.toString());
 		ListDeviceRes listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
-		logger.debug("============================================ listDeviceReq {}", listDeviceReq.toString());
-		logger.debug("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
+		logger.info("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
 
 		/* PhoneInfo 조회 */
 		if (searchUser != null && listDeviceRes.getDeviceInfoList().size() == 1 && listDeviceRes.getDeviceInfoList() != null) {
 			Device device = this.commService.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
-			logger.debug("============================================Phoneinfo getAomSprtYn Res {}", device.getAomSprtYn());
+			logger.info("============================================Phoneinfo getAomSprtYn Res {}", device.getAomSprtYn());
 
 			res.setIsAomSupport(device.getAomSprtYn());
 
