@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
@@ -38,7 +37,6 @@ import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 
 @Service
-@Transactional
 public class SellerSubServiceImpl implements SellerSubService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSubServiceImpl.class);

@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -73,7 +72,6 @@ import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
  * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */
 @Service
-@Transactional
 public class SellerSearchServiceImpl implements SellerSearchService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerSearchServiceImpl.class);
