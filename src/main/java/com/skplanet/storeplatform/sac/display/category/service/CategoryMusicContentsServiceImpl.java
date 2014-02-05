@@ -11,13 +11,13 @@ package com.skplanet.storeplatform.sac.display.category.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +28,16 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.MusicContents;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
+import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * Music Contents Service 인터페이스(CoreStoreBusiness)
@@ -56,6 +53,15 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 	@Qualifier("sac")
 	private CommonDAO commonDAO;
 
+	@Autowired
+	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -66,7 +72,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
-		int totalCount = 0;
+		// int totalCount = 0;
 
 		String filteredBy; // 차트 구분 코드
 		String purchase;
@@ -99,8 +105,8 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		requestVO.setTenantId(tenantId);
 		requestVO.setDpi(dpi);
 
-		MusicContentsListRes responseVO = null;
-		CommonResponse commonResponse = null;
+		MusicContentsListRes responseVO = new MusicContentsListRes();
+		CommonResponse commonResponse = new CommonResponse();
 
 		if (null == filteredBy || "".equals(filteredBy)) {
 			throw new Exception("filteredBy 는 필수 파라메터 입니다.");
@@ -150,145 +156,68 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 			}
 		}
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(requestVO.getTenantId(),
+				requestVO.getBatchId());
+
+		// 기준일시 체크
+		if (StringUtils.isEmpty(stdDt)) {
+			this.log.debug("----------------------------------------------------------------");
+			this.log.debug("배치완료 기준일시 정보 누락");
+			this.log.debug("----------------------------------------------------------------");
+
+			responseVO.setCommonResponse(new CommonResponse());
+			return responseVO;
+		}
+		// 뮤직 배치일자는 년월일만 필요
+		requestVO.setStdDt(stdDt.substring(0, 8));
+
+		List<ProductBasicInfo> productBasicInfoList;
+
+		productBasicInfoList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
+				ProductBasicInfo.class);
 
 		List<Product> productList = new ArrayList<Product>();
 
-		List<MusicContents> resultList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
-				MusicContents.class);
-		if (resultList != null) {
+		// Meta DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		TenantHeader tenantHeader = requestHeader.getTenantHeader();
+		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
+		reqMap.put("req", requestVO);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", requestVO.getStdDt());
+		reqMap.put("lang", tenantHeader.getLangCd());
+		reqMap.put("chartClsfCd", requestVO.getChartClsfCd());
 
-			Iterator<MusicContents> iterator = resultList.iterator();
-			while (iterator.hasNext()) {
-				MusicContents mapperVO = iterator.next();
+		reqMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
 
-				totalCount = mapperVO.getTotalCount();
+		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
 
-				// Response VO를 만들기위한 생성자
-				List<Menu> menuList = new ArrayList<Menu>();
-				List<Source> sourceList = new ArrayList<Source>();
-				List<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service> serviceList = new ArrayList<com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service>();
-				Music music = new Music();
+				// Meta 정보 조회
+				MetaInfo retMetaInfo = this.metaInfoService.getMusicMetaInfo(reqMap);
 
-				Product product = new Product();
-				List<Identifier> identifierList = new ArrayList<Identifier>();
-				Identifier identifier = new Identifier();
-
-				// App app = new App();
-				Accrual accrual = new Accrual();
-				// Rights rights = new Rights();
-				Source source = new Source();
-				Price price = new Price();
-				Title title = new Title();
-				Contributor contributor = new Contributor();
-				com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
-
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD); // 에피소드 상품 ID
-				identifier.setText(mapperVO.getEpsdProdId());
-				identifierList.add(identifier);
-
-				// 채널 상품 ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD); // 채널 상품 ID
-				identifier.setText(mapperVO.getChnlProdId());
-				identifierList.add(identifier);
-
-				// SONG ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_SONG_IDENTIFIER_CD); // SONG ID
-				identifier.setText(mapperVO.getOutsdContentsId());
-				identifierList.add(identifier);
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				Menu menu = new Menu();
-				menu.setId(mapperVO.getTopMenuId());
-				menu.setName(mapperVO.getTopMenuNm());
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId(mapperVO.getMenuId());
-				menu.setName(mapperVO.getMenuNm());
-				menu.setType("");
-				menuList.add(menu);
-
-				/*
-				 * TITLE
-				 */
-				title.setText(mapperVO.getProdNm());
-
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getFilePos()));
-				source.setSize(mapperVO.getFileSize());
-				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-				source.setUrl(mapperVO.getFilePos());
-				sourceList.add(source);
-
-				/*
-				 * Accrual changeRank 변동 순위, 하락은 음수로 표현한다.
-				 */
-				accrual.setChangeRank(mapperVO.getRankChgCnt());
-				accrual.setScore(0.0); // 값이 없을 경우 오류 발생 - 임시로 추가
-
-				/*
-				 * Contributor name : 제작자 또는 저자 이름 album : 앨범명
-				 */
-				contributor.setName(mapperVO.getArtist1Nm()); // 가수
-				contributor.setAlbum(mapperVO.getArtist3Nm()); // 앨범명
-				contributor.setPublisher(mapperVO.getChnlCompNm()); // 발행인
-				contributor.setAgency(mapperVO.getAgencyNm()); // 에이전시
-
-				/*
-				 * music
-				 */
-				service.setName(DisplayConstants.DP_MUSIC_SERVICE_MP3);
-				service.setType(mapperVO.getMp3Sprt());
-				serviceList.add(service);
-
-				service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
-				service.setName(DisplayConstants.DP_MUSIC_SERVICE_BELL);
-				service.setType(mapperVO.getBellSprt());
-				serviceList.add(service);
-
-				service = new com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service();
-				service.setName(DisplayConstants.DP_MUSIC_SERVICE_RING);
-				service.setType(mapperVO.getRingSprt());
-				serviceList.add(service);
-				music.setServiceList(serviceList);
-
-				/*
-				 * price
-				 */
-				price.setText(Integer.valueOf(mapperVO.getProdAmt()));
-
-				product.setIdentifierList(identifierList);
-				product.setMenuList(menuList);
-				product.setAccrual(accrual);
-				product.setTitle(title);
-				product.setSourceList(sourceList);
-				product.setContributor(contributor);
-				product.setMusic(music);
-
-				productList.add(product);
-
+				if (retMetaInfo != null) {
+					// Response Generate
+					Product product = this.responseInfoGenerateFacade.generateMusicProduct(retMetaInfo);
+					productList.add(product);
+				}
 			}
-
-			responseVO = new MusicContentsListRes();
-			commonResponse = new CommonResponse();
+			commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 			responseVO.setProductList(productList);
-			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonRes(commonResponse);
-
-			String json = objectMapper.writeValueAsString(responseVO);
-
-			this.log.debug("test json : {}", json);
-			// System.out.println(json);
-
+			responseVO.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			responseVO.setProductList(productList);
+			responseVO.setCommonResponse(commonResponse);
 		}
+
 		return responseVO;
 	}
 

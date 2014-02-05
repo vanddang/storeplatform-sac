@@ -3,159 +3,90 @@
 <mapper namespace="MusicMain">
 
     <!-- Music Main -->
-    <select id="getMusicMainList" parameterType="MusicContentsRequest" resultType="MusicContents">
-        SELECT /* MusicMainMapper.xml, getMusicMainList, JuYoungYun, 2014-01-16 */
-               P.TOTAL_COUNT
-             , P.TOP_MENU_ID
-             , (SELECT MENU_NM 
-                  FROM TB_DP_MENU_CATEGORY_DESC
-                 WHERE MENU_ID = P.TOP_MENU_ID
-                   AND LANG_CD = #{langCd}) AS TOP_MENU_NM 
-             , P.MENU_ID
-             , (SELECT MENU_NM
-                  FROM TB_DP_MENU_CATEGORY_DESC
-                 WHERE MENU_ID = P.MENU_ID
-                   AND LANG_CD = #{langCd}) AS MENU_NM 
-             , P.CHNL_PROD_ID
-             , P.EPSD_PROD_ID
-             , P.OUTSD_CONTENTS_ID
-             , P.PROD_NM
-             , DECODE( P.PROD_GRD_CD
-                     , 'PD004401', 0
-                     , 'PD004404', 4 ) AS PROD_GRD_CD
-             , P.PROD_DTL_DESC
-             , P.PROD_AMT
-             , ( SELECT MAI.ARTIST_ID
-                   FROM TB_DP_ARTIST MAI
-                  WHERE MAI.ARTIST_ID = P.ARTIST_ID ) AS ARTIST_ID
-             , P.ARTIST1_NM
-             , P.ARTIST2_NM
-             , P.ARTIST3_NM
-             , P.CHNL_COMP_NM
-             , P.AGENCY_NM
-             , P.ISSUE_DAY
-             , DECODE( P.RANK_CHG_CLSF_CD
-                     , 'DP005301', P.RANK_CHG_CNT              /* UP : 상승곡 */
-                     , 'DP005303', ( P.RANK_CHG_CNT * -1 )     /* DN : 하락곡 */
-                     , P.RANK_CHG_CNT ) AS RANK_CHG_CNT
-             , 'support' AS MP3_SPRT
-             , DECODE( P.BELL_SPRT_YN, 'Y', 'support', 'restrict' ) AS BELL_SPRT
-             , DECODE( P.COLORRING_SPRT_YN, 'Y', 'support', 'restrict' ) AS RING_SPRT
-             , CONCAT( PI.FILE_PATH, PI.FILE_NM ) AS FILE_POS
-             , PI.FILE_SIZE
-          FROM
-             (
-             SELECT B.*
-               FROM
-                  (
-                  SELECT A.*
-                       , ROWNUM AS RNUM
-                       , COUNT(*) OVER () AS TOTAL_COUNT
-                    FROM
-                       (
-                       SELECT MCI.RANK_CHG_CNT
-                            , MCI.RANK_CHG_CLSF_CD
-                            , MCI.ARTIST_ID
-                            , CP.PROD_ID AS CHNL_PROD_ID
-                            , CP.PART_PROD_ID AS EPSD_PROD_ID
-                            , C.MENU_ID
-                            , C.TOP_MENU_ID
-                            , MP.OUTSD_CONTENTS_ID -- 외부_컨텐츠_ID
-                            , PD.PROD_NM
-                            , PD.PROD_DTL_DESC
-                            , TPP.PROD_AMT
-                            , P.PROD_GRD_CD
-                            , PD.ARTIST1_NM
-                            , PD.ARTIST2_NM
-                            , PD.ARTIST3_NM                        
-                            , MP.CHNL_COMP_NM
-                            , MP.AGENCY_NM
-                            , MP.ISSUE_DAY
-                            , MP.BELL_SPRT_YN
-                            , MP.COLORRING_SPRT_YN
-                         FROM TB_DP_MULTIMDA_PROD MP
-                            , TB_DP_MUSIC_CHART MCI
-                            , TB_DP_PROD P
-                            , TB_DP_PROD_DESC PD
-                            , TB_DP_PROD_RSHP CP
-                            , TB_DP_TENANT_PROD TP
-                            , TB_DP_TENANT_PROD_PRICE TPP
-                            , TB_DP_MENU_CATEGORY_PROD_MAPG CPM
-                            , TB_DP_MENU_CATEGORY C
-                            , TB_DP_SPRT_DEVICE SH
-                            , TB_CM_DEVICE PHI
-                            , TB_DP_MULTIMDA_PROD MP2
-                            , TB_DP_PROD P2
-                            , TB_DP_TENANT_PROD TP2
-                        WHERE MP.PROD_ID = CP.PART_PROD_ID
-                          AND P.PROD_ID = CP.PART_PROD_ID
-                          AND MCI.PROD_ID = CP.PART_PROD_ID -- EPISODE PROD ID
-                          AND CPM.PROD_ID = CP.PART_PROD_ID
-                          AND P2.PROD_ID = CP.PROD_ID -- CHANNEL PROD ID
-                          AND TP2.PROD_ID = P2.PROD_ID
-                          AND MP2.PROD_ID = P2.PROD_ID
-                          AND C.MENU_ID = CPM.MENU_ID
-                          AND TP.PROD_ID = P.PROD_ID
-                          AND TPP.PROD_ID = TP.PROD_ID
-                          AND TPP.TENANT_ID = TP.TENANT_ID
-                          AND PD.PROD_ID = P.PROD_ID
-                          AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
-                          AND SH.PROD_ID = P.PROD_ID
-                          AND SH.DEVICE_MODEL_CD = #{deviceModelCd}
-                          AND MCI.CHART_CLSF_CD = #{chartClsfCd}
-                          AND MCI.RANK_START_DAY = ( SELECT MAX(TO_CHAR(STD_DT,'YYYYMMDD'))
-                                                       FROM TB_DP_BATCH_COMPT
-                                                      WHERE TENANT_ID = #{tenantId}
-                                                        AND BATCH_ID = #{batchId} )                   
-                          AND C.MENU_ID LIKE #{menuId}||'%'
-                          AND PHI.USE_YN = 'Y'
-                          AND PHI.MUSIC_SPRT_YN = 'Y'
-                          AND TP.TENANT_ID = #{tenantId}
-                          AND TP.PROD_STATUS_CD = 'PD000403'
-                          AND TP.EXPO_YN = 'Y'
-                          AND P.CONTENTS_TYPE_CD = 'PD002502'
-                          AND P.META_CLSF_CD = 'CT25'
-                          AND PD.LANG_CD = #{langCd}
-                          AND CPM.USE_YN = 'Y'
-                          AND C.USE_YN = 'Y'
-                          AND TP2.TENANT_ID = #{tenantId}
-                          AND TP2.PROD_STATUS_CD = 'PD000403'
-                          AND TP2.EXPO_YN = 'Y'
-                          AND P2.CONTENTS_TYPE_CD = 'PD002501'
-                          AND P2.META_CLSF_CD = 'CT25' 
-                        ORDER BY
-                    <!-- TOP Music -->
-                    <if test='filteredBy == "top"'>
-                             MCI.RANK_CHG_CNT, PD.PROD_NM
-                    </if>
-                    <!-- 최신음악, 장르별 -->
-                    <if test='filteredBy == "recent" || filteredBy == "genre"'>
-                        <!-- 인기도 -->
-                        <if test='orderedBy == "popular"'>
-                        MCI.NOW_RANK ASC, MP.ISSUE_DAY, PD.PROD_NM
-                        </if>
-                        <!-- 아티스트명 -->
-                        <if test='orderedBy == "artist"'>
-                        PD.ARTIST1_NM, PD.PROD_NM
-                        </if>
-                        <!-- 곡명 -->
-                        <if test='orderedBy == "title"'>
-                        PD.PROD_NM, PD.ARTIST1_NM
-                        </if>
-                        <!-- 음악 > 최신음악 -->
-                        <if test='orderedBy == null || orderedBy == ""'>
-                        MP.ISSUE_DAY DESC, PD.PROD_NM
-                        </if>
-                    </if>
+    <select id="getMusicMainList" parameterType="MusicContentsRequest" resultType="ProductBasicInfo">
+        SELECT /* MusicMainMapper.xml, getMusicMainList, 조준일, 2014-02-05 */
+               B.TENANT_ID
+             , B.MENU_ID
+             , B.PROD_ID
+             , B.PART_PROD_ID
+             , B.TOP_MENU_ID
+             , B.META_CLSF_CD
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+          FROM (SELECT A.*
+                     , COUNT(*) OVER () AS TOTAL_COUNT
+                     , ROWNUM AS RNUM
+                  FROM (SELECT F.TENANT_ID
+                             , C.MENU_ID
+                             , I.PROD_ID
+                             , I.PART_PROD_ID
+                             , C.TOP_MENU_ID
+                             , D.META_CLSF_CD
+                             , D.CONTENTS_TYPE_CD
+                          FROM TB_DP_MUSIC_CHART A  /* 에피소드 */
+                             , TB_DP_MENU_CATEGORY_PROD_MAPG B
+                             , TB_DP_MENU_CATEGORY C
+                             , TB_DP_PROD D
+                             , TB_DP_PROD_DESC E
+                             , TB_DP_TENANT_PROD F
+                             , TB_DP_MULTIMDA_PROD G
+                             , (SELECT SD.PROD_ID
+                                  FROM TB_DP_SPRT_DEVICE SD
+                                    , TB_CM_DEVICE CD
+                                WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+                                  AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                  AND CD.USE_YN = 'Y'
+                                  AND CD.MUSIC_SPRT_YN = 'Y'
+                              ) H
+                             , TB_DP_PROD_RSHP I
+                         WHERE A.CHART_CLSF_CD = #{chartClsfCd}
+                           AND A.RANK_START_DAY = #{stdDt}
+                           AND A.PROD_ID = B.PROD_ID
+                           AND B.USE_YN = 'Y'
+                           AND B.MENU_ID = C.MENU_ID
+                           AND C.USE_YN = 'Y'
+                           AND C.MENU_ID LIKE CONCAT(#{menuId}, '%')
+                           AND B.PROD_ID = D.PROD_ID
+                           AND D.CONTENTS_TYPE_CD = 'PD002502'
+                           AND D.META_CLSF_CD = 'CT25'
+                           AND D.PROD_ID = E.PROD_ID
+                           AND E.LANG_CD = #{langCd}
+                           AND E.PROD_ID = F.PROD_ID
+                           AND F.TENANT_ID = #{tenantId}
+                           AND F.EXPO_YN = 'Y'
+                           AND F.PROD_STATUS_CD = 'PD000403' 
+                           AND A.PROD_ID = G.PROD_ID
+                           AND A.PROD_ID = H.PROD_ID
+                           AND H.PROD_ID = I.PART_PROD_ID
+                           AND I.PROD_RSHP_CD = 'DP010802'
+                           <!-- TOP Music -->
+                           <if test='filteredBy == "top"'>
+                         ORDER BY A.RANK_CHG_CNT, E.PROD_NM
+                           </if>
+                           <!-- 최신음악, 장르별 -->
+                           <if test='filteredBy == "recent" || filteredBy == "genre"'>
+                             <!-- 인기도 -->
+                             <if test='orderedBy == "popular"'>
+                         ORDER BY A.NOW_RANK ASC, G.ISSUE_DAY, E.PROD_NM
+                             </if>
+                             <!-- 아티스트명 -->
+                             <if test='orderedBy == "artist"'>
+                         ORDER BY E.ARTIST1_NM, E.PROD_NM
+                             </if>
+                             <!-- 곡명 -->
+                             <if test='orderedBy == "title"'>
+                         ORDER BY E.PROD_NM, E.ARTIST1_NM
+                             </if>
+                             <!-- 음악 > 최신음악 -->
+                             <if test='orderedBy == null || orderedBy == ""'>
+                         ORDER BY G.ISSUE_DAY DESC, E.PROD_NM
+                             </if>
+                           </if>   
                        ) A
-                  ) B
-              WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
-            ) P
-            , TB_DP_PROD_IMG PI
-        WHERE PI.PROD_ID = P.CHNL_PROD_ID
-          AND PI.IMG_CD = #{imageCd}
+               ) B
+         WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+         ORDER BY RNUM
     </select>
-
 
     <!-- Dummy Data -->
     <select id="getMusicMainDummyList" parameterType="MusicContentsRequest" resultType="MusicContents">
