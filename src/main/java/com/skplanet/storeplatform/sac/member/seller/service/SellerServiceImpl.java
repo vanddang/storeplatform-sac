@@ -721,7 +721,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return CreateAuthKeyRes
 	 */
 	@Override
-	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) throws Exception {
+	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) {
 
 		UpdateLoginInfoResponse schRes = new UpdateLoginInfoResponse();
 		UpdateLoginInfoRequest schReq = new UpdateLoginInfoRequest();
@@ -737,10 +737,6 @@ public class SellerServiceImpl implements SellerService {
 		schReq.setLoginInfo(loginInfo);
 
 		schRes = this.sellerSCI.updateLoginInfo(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
-
 		CreateAuthKeyRes response = new CreateAuthKeyRes();
 
 		response.setSessionKey(loginInfo.getSessionKey());
@@ -786,4 +782,4 @@ public class SellerServiceImpl implements SellerService {
 		cal.add(Calendar.HOUR, hour);
 		return sdf.format(cal.getTime());
 	}
- }
+}
