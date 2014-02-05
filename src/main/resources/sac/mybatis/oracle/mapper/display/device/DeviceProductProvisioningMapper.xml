@@ -28,9 +28,7 @@
 		       AND SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
 		       AND PCM.USE_YN = 'Y'
 		       AND SC.CHNL_CNT > 0
-		       <if test = "contentTypeCd !=null">
 		       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
-		       </if>
 		       <if test = "list !=null">
 		       AND PR.PART_PROD_ID IN
 		           <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 
@@ -38,12 +36,11 @@
 		           </foreach>
 		       </if>
 		       AND NVL(SP.B2B_PROD_YN, 'N') != 'Y'
-		       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo}) 
+		       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+		       AND CD.DEVICE_MODEL_CD = #{req.deviceModelNo} 
 		       AND CD.USE_YN = 'Y'
 		       AND CD.SCL_SHPG_SPRT_YN = 'Y'
-		       <if test = "prodStatusCd !=null">
 		       AND TP.PROD_STATUS_CD = #{prodStatusCd}
-		       </if>
 		       AND TP.EXPO_YN = 'Y'
 		       AND TP.TENANT_ID = #{tenantHeader.tenantId}
 		       AND SYSDATE BETWEEN TPC.APPLY_START_DT AND TPC.APPLY_END_DT
@@ -62,8 +59,9 @@
 			       AND P.PROD_ID = TP.PROD_ID
 			       AND TP.PROD_ID = TPC.PROD_ID
 			       AND TP.TENANT_ID = TPC.TENANT_ID
-			       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 			       AND SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
+			       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
+			       AND CD.DEVICE_MODEL_CD = #{req.deviceModelNo}
 			       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
 			       AND CD.USE_YN = 'Y'
 			       AND TP.PROD_STATUS_CD = #{prodStatusCd}
