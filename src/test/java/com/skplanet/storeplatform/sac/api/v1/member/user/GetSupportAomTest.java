@@ -61,7 +61,7 @@ public class GetSupportAomTest {
 	 */
 	@Test
 	public void getSupportAom() {
-		new TestCaseTemplate(this.mockMvc).url("/member/user/getSupportAom/v1?userKey=US201401241840125650000649&deviceId=01001232112")
+		new TestCaseTemplate(this.mockMvc).url("/member/user/getSupportAom/v1?userKey=IW1023488227020101201163815&deviceId=01094992228")
 				.httpMethod(HttpMethod.GET).success(SupportAomRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

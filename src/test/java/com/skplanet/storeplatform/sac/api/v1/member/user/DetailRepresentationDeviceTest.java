@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -60,100 +61,18 @@ public class DetailRepresentationDeviceTest {
 
 	/**
 	 * <pre>
-	 * 대표단말 정보조회 userId & userAuthKey.
-	 * </pre>
-	 */
-	@Test
-	public void detailRepresentationDevice1() throws Exception {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
-						req.setUserId("tstore44");
-						req.setUserKey("IF1023002708420090928145937");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
 	 * 대표단말 정보조회 userKey
 	 * </pre>
 	 */
 	@Test
-	public void detailRepresentationDevice2() throws Exception {
+	public void detailRepresentationDevice() throws Exception {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
 						req.setUserKey("IF1023002708420090928145937");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * userId && userKey is Null
-	 */
-	@Test(expected = RuntimeException.class)
-	public void detailRepresentationDeviceError1() throws Exception {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
-						req.setUserId("");
-						req.setUserKey("");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * userId is Null
-	 */
-	@Test(expected = RuntimeException.class)
-	public void detailRepresentationDeviceError2() throws Exception {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
-						req.setUserId("");
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
 					}
@@ -171,11 +90,11 @@ public class DetailRepresentationDeviceTest {
 	/**
 	 * userKey is Null
 	 */
-	@Test(expected = RuntimeException.class)
-	public void detailRepresentationDeviceError3() throws Exception {
+	@Test(expected = StorePlatformException.class)
+	public void detailRepresentationDeviceUserKeyNull() throws Exception {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
@@ -198,10 +117,10 @@ public class DetailRepresentationDeviceTest {
 	 * userKey is inValid
 	 */
 	@Test(expected = RuntimeException.class)
-	public void detailRepresentationDeviceError4() throws Exception {
+	public void detailRepresentationUserKeyInvalid() throws Exception {
 
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
@@ -220,29 +139,4 @@ public class DetailRepresentationDeviceTest {
 
 	}
 
-	/**
-	 * userId is inValid
-	 */
-	@Test(expected = RuntimeException.class)
-	public void detailRepresentationDeviceError5() throws Exception {
-
-		new TestCaseTemplate(this.mockMvc).url("/member/user/detailRepresentationDevice/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-					@Override
-					public Object requestBody() {
-						DetailRepresentationDeviceReq req = new DetailRepresentationDeviceReq();
-						req.setUserId("tstore4444");
-						LOGGER.debug("request param : {}", req.toString());
-						return req;
-					}
-				}).success(DetailRepresentationDeviceRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailRepresentationDeviceRes res = (DetailRepresentationDeviceRes) result;
-						assertThat(res.getUserDeviceInfo().getDeviceKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
 }
