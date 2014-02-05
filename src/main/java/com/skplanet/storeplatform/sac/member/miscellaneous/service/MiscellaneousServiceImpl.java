@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
@@ -93,7 +92,6 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
  * Updated on : 2014. 1. 7. Updated by : 김다슬, 인크로스.
  */
 @Service
-@Transactional
 public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
 
@@ -207,10 +205,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 					response.setUaCd(uaCode);
 					LOGGER.info("## UA Code : {}", uaCode);
 				} else {
-					throw new StorePlatformException("SAC_MEM_3401", msisdn);
+					throw new StorePlatformException("SAC_MEM_3401", "msisdn", msisdn);
 				}
 			} else {
-				throw new StorePlatformException("SAC_MEM_3403", msisdn);
+				throw new StorePlatformException("SAC_MEM_3402", "msisdn", msisdn);
 			}
 		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
@@ -218,7 +216,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			if (uaCode != null) {
 				response.setUaCd(uaCode);
 			} else {
-				throw new StorePlatformException("SAC_MEM_3402", deviceModelNo);
+				throw new StorePlatformException("SAC_MEM_3401", "deviceModelNo", deviceModelNo);
 			}
 		}
 		return response;
