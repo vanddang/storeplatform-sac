@@ -410,7 +410,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						.getExpoSellerTelno());
 				distributor.setEmail(StringUtils.isEmpty(downloadVodInfo.getExpoSellerEmail()) ? "" : downloadVodInfo
 						.getExpoSellerEmail());
-				distributor.setRegNo(StringUtils.isEmpty(downloadVodInfo.getSellerMbrNo()) ? "" : downloadVodInfo
+				distributor.setSellerKey(StringUtils.isEmpty(downloadVodInfo.getSellerMbrNo()) ? "" : downloadVodInfo
 						.getSellerMbrNo());
 
 				// 구매 정보

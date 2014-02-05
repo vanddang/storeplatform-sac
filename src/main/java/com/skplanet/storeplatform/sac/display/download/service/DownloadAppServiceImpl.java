@@ -315,7 +315,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				distributor.setName(downloadAppInfo.getExpoSellerNm());
 				distributor.setTel(downloadAppInfo.getExpoSellerTelNo());
 				distributor.setEmail(downloadAppInfo.getExpoSellerEmail());
-				distributor.setRegNo(downloadAppInfo.getSellerMbrNo());
+				distributor.setSellerKey(downloadAppInfo.getSellerMbrNo());
 
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
