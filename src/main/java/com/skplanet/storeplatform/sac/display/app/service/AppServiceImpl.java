@@ -126,8 +126,6 @@ public class AppServiceImpl implements AppService {
         app.setVersion(appDetail.getApkVerNm());
         app.setSize(appDetail.getFileSize());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-
         // Update History
         History history = new History();
         List<UpdateHistory> updateHistoryList = commonDAO.queryForList("AppDetail.getUpdateHistoryList", request, UpdateHistory.class);
@@ -136,7 +134,7 @@ public class AppServiceImpl implements AppService {
             Update update = new Update();
 
             update.setUpdateExplain(uh.getUpdtText());
-            update.setDate(new Date("date/reg", sdf.format(uh.getProdUpdDt())));
+            update.setDate(new Date("date/reg", uh.getProdUpdDt()));
 
             updateList.add(update);
         }
