@@ -37,6 +37,8 @@ public class DownloadVodSacReq extends CommonInfo {
 	private String userKey; // 사용자 Key
 	private String imageCd; // 이미지 코드
 	private String dummy; // dummy data check
+	private String prchsDt; // 구매일시
+	private String dwldExprDt; // 다운로드 만료일시
 
 	/**
 	 * 
@@ -313,4 +315,33 @@ public class DownloadVodSacReq extends CommonInfo {
 		this.imageCd = imageCd;
 	}
 
+	/**
+	 * @return the prchsDt
+	 */
+	public String getPrchsDt() {
+		return this.prchsDt;
+	}
+
+	/**
+	 * @param prchsDt
+	 *            the prchsDt to set
+	 */
+	public void setPrchsDt(String prchsDt) {
+		this.prchsDt = prchsDt;
+	}
+
+	/**
+	 * @return the dwldExprDt
+	 */
+	public String getDwldExprDt() {
+		return this.dwldExprDt;
+	}
+
+	/**
+	 * @param dwldExprDt
+	 *            the dwldExprDt to set
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
+	}
 }
