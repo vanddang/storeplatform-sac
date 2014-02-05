@@ -18,14 +18,25 @@ public class SearchAuthKeyReq extends CommonInfo {
 
 	/** 판매자 회원키. */
 	@NotBlank
-	private String sellerKey;
+	private String sessionKey;
 
-	public String getSellerKey() {
-		return this.sellerKey;
+	@NotBlank
+	private String extraDate;
+
+	public String getSessionKey() {
+		return this.sessionKey;
 	}
 
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
+	}
+
+	public String getExtraDate() {
+		return this.extraDate;
+	}
+
+	public void setExtraDate(String extraDate) {
+		this.extraDate = extraDate;
 	}
 
 }
