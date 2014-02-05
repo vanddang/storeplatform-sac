@@ -65,7 +65,8 @@
         <!-- 구매                                            -->
         <!-- ################################################# -->
         
-        
+        <!-- 구매Part 테넌트 정책 조회 -->
+        <typeAlias alias="PurchaseTenantPolicy" type="com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy" />
         
         <!-- ################################################# -->
         <!-- 전시                                            -->

@@ -82,27 +82,7 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 구매정보 개체 세팅
 
-		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(req);
-		purchaseOrderInfo.setTenantId(tenantHeader.getTenantId()); // 구매(선물발신) 테넌트 ID
-		purchaseOrderInfo.setSystemId(tenantHeader.getSystemId()); // 구매(선물발신) 시스템 ID
-		purchaseOrderInfo.setUserKey(req.getUserKey()); // 구매(선물발신) 내부 회원 번호
-		purchaseOrderInfo.setDeviceKey(req.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
-		purchaseOrderInfo.setPrchsReqPathCd(req.getPrchsReqPathCd()); // 구매 요청 경로 코드
-		purchaseOrderInfo.setMid(req.getMid()); // 가맹점 ID
-		purchaseOrderInfo.setAuthKey(req.getAuthKey()); // 가맹점 인증키
-		purchaseOrderInfo.setResultUrl(req.getResultUrl()); // 결과처리 URL
-		purchaseOrderInfo.setCurrencyCd(req.getCurrencyCd()); // 통화 코드
-		purchaseOrderInfo.setTotAmt(req.getTotAmt()); // 총 결제 금액
-		purchaseOrderInfo.setClientIp(req.getClientIp()); // 클라이언트 IP
-		purchaseOrderInfo.setNetworkTypeCd(req.getNetworkTypeCd()); // 네트워크 타입 코드
-		purchaseOrderInfo.setPrchsCaseCd(req.getPrchsCaseCd()); // 구매 유형 코드
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(req.getPrchsCaseCd())) {
-			purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
-			purchaseOrderInfo.setRecvUserKey(req.getRecvUserKey()); // 선물수신 내부 회원 번호
-			purchaseOrderInfo.setRecvDeviceKey(req.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
-		}
-
-		purchaseOrderInfo.setRealTotAmt(req.getTotAmt()); // 최종 결제 총 금액
+		PurchaseOrder purchaseOrderInfo = this.setPurchaseOrderInfo(req, tenantHeader);
 
 		// ------------------------------------------------------------------------------
 		// 적합성 체크
@@ -165,27 +145,7 @@ public class PurchaseOrderController {
 		// ------------------------------------------------------------------------------
 		// 구매정보 개체 세팅
 
-		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(req);
-		purchaseOrderInfo.setTenantId(tenantHeader.getTenantId()); // 구매(선물발신) 테넌트 ID
-		purchaseOrderInfo.setSystemId(tenantHeader.getSystemId()); // 구매(선물발신) 시스템 ID
-		purchaseOrderInfo.setUserKey(req.getUserKey()); // 구매(선물발신) 내부 회원 번호
-		purchaseOrderInfo.setDeviceKey(req.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
-		purchaseOrderInfo.setPrchsReqPathCd(req.getPrchsReqPathCd()); // 구매 요청 경로 코드
-		purchaseOrderInfo.setMid(req.getMid()); // 가맹점 ID
-		purchaseOrderInfo.setAuthKey(req.getAuthKey()); // 가맹점 인증키
-		purchaseOrderInfo.setResultUrl(req.getResultUrl()); // 결과처리 URL
-		purchaseOrderInfo.setCurrencyCd(req.getCurrencyCd()); // 통화 코드
-		purchaseOrderInfo.setTotAmt(req.getTotAmt()); // 총 결제 금액
-		purchaseOrderInfo.setClientIp(req.getClientIp()); // 클라이언트 IP
-		purchaseOrderInfo.setNetworkTypeCd(req.getNetworkTypeCd()); // 네트워크 타입 코드
-		purchaseOrderInfo.setPrchsCaseCd(req.getPrchsCaseCd()); // 구매 유형 코드
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(req.getPrchsCaseCd())) {
-			purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
-			purchaseOrderInfo.setRecvUserKey(req.getRecvUserKey()); // 선물수신 내부 회원 번호
-			purchaseOrderInfo.setRecvDeviceKey(req.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
-		}
-
-		purchaseOrderInfo.setRealTotAmt(0); // 최종 결제 총 금액 : 0원 처리
+		PurchaseOrder purchaseOrderInfo = this.setPurchaseOrderInfo(req, tenantHeader);
 
 		// ------------------------------------------------------------------------------
 		// 적합성 체크
@@ -300,5 +260,43 @@ public class PurchaseOrderController {
 		// 응답
 
 		return new NotifyPaymentSacRes("0", "SUCCESS");
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 구매요청 파라미터와 헤더 정보로 구매처리 진행을 위한 정보 개체 세팅.
+	 * </pre>
+	 * 
+	 * @param createPurchaseSacReq
+	 *            구매요청 VO
+	 * @param tenantHeader
+	 *            헤더 테넌트 정보
+	 * @return 구매처리 진행 정보 VO
+	 */
+	private PurchaseOrder setPurchaseOrderInfo(CreatePurchaseSacReq createPurchaseSacReq, TenantHeader tenantHeader) {
+		PurchaseOrder purchaseOrderInfo = new PurchaseOrder(createPurchaseSacReq);
+		purchaseOrderInfo.setTenantId(tenantHeader.getTenantId()); // 구매(선물발신) 테넌트 ID
+		purchaseOrderInfo.setSystemId(tenantHeader.getSystemId()); // 구매(선물발신) 시스템 ID
+		purchaseOrderInfo.setUserKey(createPurchaseSacReq.getUserKey()); // 구매(선물발신) 내부 회원 번호
+		purchaseOrderInfo.setDeviceKey(createPurchaseSacReq.getDeviceKey()); // 구매(선물발신) 내부 디바이스 ID
+		purchaseOrderInfo.setPrchsReqPathCd(createPurchaseSacReq.getPrchsReqPathCd()); // 구매 요청 경로 코드
+		purchaseOrderInfo.setMid(createPurchaseSacReq.getMid()); // 가맹점 ID
+		purchaseOrderInfo.setAuthKey(createPurchaseSacReq.getAuthKey()); // 가맹점 인증키
+		purchaseOrderInfo.setResultUrl(createPurchaseSacReq.getResultUrl()); // 결과처리 URL
+		purchaseOrderInfo.setCurrencyCd(createPurchaseSacReq.getCurrencyCd()); // 통화 코드
+		purchaseOrderInfo.setTotAmt(createPurchaseSacReq.getTotAmt()); // 총 결제 금액
+		purchaseOrderInfo.setClientIp(createPurchaseSacReq.getClientIp()); // 클라이언트 IP
+		purchaseOrderInfo.setNetworkTypeCd(createPurchaseSacReq.getNetworkTypeCd()); // 네트워크 타입 코드
+		purchaseOrderInfo.setPrchsCaseCd(createPurchaseSacReq.getPrchsCaseCd()); // 구매 유형 코드
+		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(createPurchaseSacReq.getPrchsCaseCd())) {
+			purchaseOrderInfo.setRecvTenantId(tenantHeader.getTenantId()); // 선물수신 테넌트 ID
+			purchaseOrderInfo.setRecvUserKey(createPurchaseSacReq.getRecvUserKey()); // 선물수신 내부 회원 번호
+			purchaseOrderInfo.setRecvDeviceKey(createPurchaseSacReq.getRecvDeviceKey()); // 선물수신 내부 디바이스 ID
+		}
+
+		purchaseOrderInfo.setRealTotAmt(createPurchaseSacReq.getTotAmt()); // 최종 결제 총 금액
+
+		return purchaseOrderInfo;
 	}
 }

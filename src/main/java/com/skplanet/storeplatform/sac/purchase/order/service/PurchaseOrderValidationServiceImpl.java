@@ -164,6 +164,12 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 
 			productInfoList.add(productInfo);
 		}
+
+		// 결제 총 금액 & 상품 가격 총합 체크
+		if (totAmt != purchaseOrderInfo.getCreatePurchaseReq().getTotAmt()) {
+			throw new StorePlatformException("SAC_PUR_0001", "구매요청 금액정보가 잘못되었습니다.");
+		}
+
 		purchaseOrderInfo.setRealTotAmt(totAmt);
 	}
 
@@ -181,23 +187,16 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 		DummyMember userInfo = PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(purchaseOrderInfo.getPrchsCaseCd()) ? purchaseOrderInfo
 				.getPurchaseMember() : purchaseOrderInfo.getRecvMember();
 
-		double totAmt = purchaseOrderInfo.getTotAmt();
-		double sumAmt = 0.0;
 		for (DummyProduct product : purchaseOrderInfo.getProductList()) {
 			// 연령 체크
 			if ("PD004404".equals(product) && userInfo.getAge() < 20) {
 				throw new StorePlatformException("SAC_PUR_0001", "이용불가한 연령입니다: " + userInfo.getAge());
 			}
 
-			sumAmt += product.getProdAmt();
-
-			// 쇼핑상품 경우, 발급 가능 여부 확인
+			// TAKTODO:: 쇼핑상품 경우, 발급 가능 여부 확인
+			this.logger.debug("PRCHS,SAC,ORDER,VALID,SHOPPING,{}", true);
 		}
 
-		// 상품금액 & 총 금액 체크
-		if (totAmt != sumAmt) {
-			throw new StorePlatformException("SAC_PUR_0001", "구매금액 정보가 잘못되었습니다.");
-		}
 	}
 
 }
