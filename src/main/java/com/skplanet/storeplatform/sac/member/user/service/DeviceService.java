@@ -38,8 +38,6 @@ public interface DeviceService {
 	 * @param req
 	 *            CreateDeviceReq
 	 * @return CreateDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req);
 
@@ -51,8 +49,6 @@ public interface DeviceService {
 	 * @param req
 	 *            ModifyDeviceReq
 	 * @return ModifyDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req);
 
@@ -64,8 +60,6 @@ public interface DeviceService {
 	 * @param req
 	 *            ListDeviceReq
 	 * @return ListDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req);
 
@@ -81,8 +75,6 @@ public interface DeviceService {
 	 * @param userKey
 	 *            String
 	 * @return DeviceInfo
-	 * @throws Exception
-	 *             Exception
 	 */
 	public DeviceInfo searchDevice(SacRequestHeader requestHeader, String keyType, String keyString, String userKey);
 
@@ -99,8 +91,6 @@ public interface DeviceService {
 	 * @param deviceInfo
 	 *            DeviceInfo
 	 * @return deviceKey String
-	 * @throws Exception
-	 *             Exception
 	 */
 	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo);
 
@@ -112,8 +102,6 @@ public interface DeviceService {
 	 * @param req
 	 *            DeviceInfo
 	 * @return deviceKey String
-	 * @throws Exception
-	 *             Exception
 	 */
 	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
 
@@ -125,8 +113,6 @@ public interface DeviceService {
 	 * @param req
 	 *            SetMainDeviceReq
 	 * @return SetMainDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req);
 
@@ -138,8 +124,6 @@ public interface DeviceService {
 	 * @param req
 	 *            RemoveDeviceReq
 	 * @return List<DeviceInfo>
-	 * @throws Exception
-	 *             Exception
 	 */
 	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req);
 
@@ -151,8 +135,6 @@ public interface DeviceService {
 	 * @param req
 	 *            RemoveDeviceReq
 	 * @return List<DeviceInfo>
-	 * @throws Exception
-	 *             Exception
 	 */
 	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader);
 
@@ -167,7 +149,6 @@ public interface DeviceService {
 	 * @param req
 	 * @param schUserRes
 	 * @return
-	 * @throws Exception
 	 */
 	public List<DeviceInfo> deviceModifyList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo);
 
@@ -182,7 +163,6 @@ public interface DeviceService {
 	 * @param req
 	 * @param schUserRes
 	 * @return
-	 * @throws Exception
 	 */
 	public ListDeviceRes deviceList(SacRequestHeader requestHeader, RemoveDeviceReq req, UserInfo userInfo);
 
@@ -200,7 +180,6 @@ public interface DeviceService {
 	 * 
 	 * @param deviceModifyList
 	 * @return
-	 * @throws Exception
 	 */
 	public String getUserPhoneStr(List<DeviceInfo> deviceModifyList);
 
@@ -210,7 +189,6 @@ public interface DeviceService {
 	 * @param req
 	 * @param schUserRes
 	 * @return
-	 * @throws Exception
 	 */
 	public HashMap<String, Object> getDeviceParam(RemoveDeviceReq req, UserInfo userInfo);
 
@@ -224,7 +202,6 @@ public interface DeviceService {
 	 * @param req
 	 * @param param
 	 * @return
-	 * @throws Exception
 	 */
 	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr);
 
@@ -237,7 +214,6 @@ public interface DeviceService {
 	 * @param schUserRes
 	 * @param removeDeviceRes
 	 * @return
-	 * @throws Exception
 	 */
 	public RemoveDeviceResponse removeDeviceSC(UserInfo userInfo, RemoveDeviceRes removeDeviceRes);
 
@@ -275,8 +251,6 @@ public interface DeviceService {
 	 * @param req
 	 *            RemoveDeviceReq
 	 * @return List<DeviceInfo>
-	 * @throws Exception
-	 *             Exception
 	 */
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req);
 }
