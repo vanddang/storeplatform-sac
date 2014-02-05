@@ -100,68 +100,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
+		IDPReceiverM join4WapInfo = null;
+
 		try {
 
 			/**
 			 * (IDP 연동) 무선회원 가입
 			 */
-			IDPReceiverM join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
-
-			CreateUserRequest createUserRequest = new CreateUserRequest();
-
-			/**
-			 * 공통 정보 setting
-			 */
-			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-			/**
-			 * 이용약관 정보 setting
-			 */
-			createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
-
-			/**
-			 * 법정대리인 setting.
-			 */
-			createUserRequest.setMbrLglAgent(this.getMbrLglAgent(req));
-
-			/**
-			 * SC 사용자 기본정보 setting
-			 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key()); // MBR_NO
-			userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
-			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
-			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
-			userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
-			userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
-			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
-			createUserRequest.setUserMbr(userMbr);
-			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
-
-			/**
-			 * SC 사용자 가입요청
-			 */
-			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
-				throw new StorePlatformException("SAC_MEM_0002", "userKey");
-			}
-
-			/**
-			 * 휴대기기 등록.
-			 */
-			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
-
-			/**
-			 * 결과 세팅
-			 */
-			CreateByMdnRes response = new CreateByMdnRes();
-			response.setUserKey(createUserResponse.getUserKey());
-			response.setDeviceKey(deviceKey);
-			return response;
+			join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
 
 		} catch (StorePlatformException spe) {
 
@@ -188,6 +134,62 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw spe;
 
 		}
+
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+
+		/**
+		 * 공통 정보 setting
+		 */
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		/**
+		 * 이용약관 정보 setting
+		 */
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+
+		/**
+		 * 법정대리인 setting.
+		 */
+		createUserRequest.setMbrLglAgent(this.getMbrLglAgent(req));
+
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setImMbrNo(join4WapInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setUserBirthDay(req.getOwnBirth()); // 사용자 생년월일
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_MOBILE); // 모바일 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setUserID(req.getDeviceId()); // 회원 컴포넌트에서 새로운 MBR_ID 를 생성하여 넣는다.
+		userMbr.setIsParent(req.getIsParent()); // 부모동의 여부
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록일시
+		createUserRequest.setUserMbr(userMbr);
+		LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
+
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		/**
+		 * 휴대기기 등록.
+		 */
+		String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateByMdnRes response = new CreateByMdnRes();
+		response.setUserKey(createUserResponse.getUserKey());
+		response.setDeviceKey(deviceKey);
+		return response;
 
 	}
 
