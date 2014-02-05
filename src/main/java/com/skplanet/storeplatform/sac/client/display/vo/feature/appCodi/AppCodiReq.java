@@ -24,7 +24,7 @@ public class AppCodiReq extends CommonInfo {
 
 	private String msisdn; // 전화번호
 
-	private String type;
+	private String filteredBy; // 서비스 구분 (short|long)
 
 	private int offset = 1; // 시작점 ROW
 
@@ -46,12 +46,12 @@ public class AppCodiReq extends CommonInfo {
 		this.msisdn = msisdn;
 	}
 
-	public String getType() {
-		return this.type;
+	public String getFilteredBy() {
+		return this.filteredBy;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setFilteredBy(String filteredBy) {
+		this.filteredBy = filteredBy;
 	}
 
 	public int getOffset() {
