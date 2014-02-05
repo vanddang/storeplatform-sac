@@ -49,7 +49,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -82,9 +81,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private IDPRepository idpRepository;
 
 	@Override
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) throws Exception {
-
-		CreateByMdnRes response = new CreateByMdnRes();
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -103,19 +100,12 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
-		/**
-		 * (IDP 연동) 무선회원 가입
-		 */
-		IDPReceiverM join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
-		LOGGER.info("## join4Wap - Result Code : {}", join4WapInfo.getResponseHeader().getResult());
-		LOGGER.info("## join4Wap - Result Text : {}", join4WapInfo.getResponseHeader().getResult_text());
+		try {
 
-		/**
-		 * 무선회원 연동 성공 여부에 따라 분기
-		 */
-		if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
-
-			LOGGER.info("## IDP 연동 성공 ==============================================");
+			/**
+			 * (IDP 연동) 무선회원 가입
+			 */
+			IDPReceiverM join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
 
 			CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -156,9 +146,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * SC 사용자 가입요청
 			 */
 			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			LOGGER.info("## ResponseCode : {}", createUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg  : {}", createUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey      : {}", createUserResponse.getUserKey());
+			if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+				throw new StorePlatformException("SAC_MEM_0002", "userKey");
+			}
 
 			/**
 			 * 휴대기기 등록.
@@ -168,31 +158,41 @@ public class UserJoinServiceImpl implements UserJoinService {
 			/**
 			 * 결과 세팅
 			 */
+			CreateByMdnRes response = new CreateByMdnRes();
 			response.setUserKey(createUserResponse.getUserKey());
 			response.setDeviceKey(deviceKey);
+			return response;
 
-		} else if (StringUtils.equals(join4WapInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) { // 기가입
+		} catch (StorePlatformException spe) {
 
 			/**
-			 * (IDP 연동) 무선회원 해지
+			 * 가가입일 경우 처리.
 			 */
-			LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
-			IDPReceiverM secedeUser4WapInfo = this.idpService.secedeUser4Wap(req.getDeviceId());
-			LOGGER.info("## secedeUser4Wap - Result Code : {}", secedeUser4WapInfo.getResponseHeader().getResult());
-			LOGGER.info("## secedeUser4Wap - Result Text : {}", secedeUser4WapInfo.getResponseHeader().getResult_text());
+			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
+			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
-			throw new StorePlatformException("SAC_MEM_1101");
+				/**
+				 * (IDP 연동) 무선회원 해지
+				 */
+				LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
+				this.idpService.secedeUser4Wap(req.getDeviceId());
+
+				/**
+				 * 가가입 에러 발생.
+				 */
+				throw new StorePlatformException("SAC_MEM_1101");
+
+			}
+
+			throw spe;
 
 		}
-
-		return response;
 
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
-
-		CreateByAgreementRes response = new CreateByAgreementRes();
+	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) {
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -215,85 +215,66 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * (통합 IDP 연동) 이용동의 가입
 		 */
 		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
-		LOGGER.info("## Im Result Code   : {}", agreeUserInfo.getResponseHeader().getResult());
-		LOGGER.info("## Im Result Text   : {}", agreeUserInfo.getResponseHeader().getResult_text());
+
+		CreateUserRequest createUserRequest = new CreateUserRequest();
 
 		/**
-		 * (통합 IDP 연동) 이용동의 가입 성공시....
+		 * 공통 정보 setting
 		 */
-		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-			LOGGER.info("## IDP 연동 성공 ==============================================");
+		/**
+		 * 이용약관 정보 setting
+		 */
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
-			LOGGER.info("## Im user_key      : {}", agreeUserInfo.getResponseBody().getUser_key());
-			LOGGER.info("## Im im_int_svc_no : {}", agreeUserInfo.getResponseBody().getIm_int_svc_no());
-			LOGGER.info("## Im user_tn       : {}", agreeUserInfo.getResponseBody().getUser_tn());
-			LOGGER.info("## Im user_email    : {}", agreeUserInfo.getResponseBody().getUser_email());
+		/**
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+		 */
+		ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
-			CreateUserRequest createUserRequest = new CreateUserRequest();
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserID(req.getUserId()); // 사용자 아이디
+		userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
+		userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
+		userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
+		userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
+		userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // OneID 통합서비스 관리번호
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+		createUserRequest.setUserMbr(userMbr);
+		LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
-			/**
-			 * 공통 정보 setting
-			 */
-			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
-
-			/**
-			 * 이용약관 정보 setting
-			 */
-			createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
-
-			/**
-			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
-			 */
-			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
-			LOGGER.info("## Im Result Code   : {}", profileInfo.getResponseHeader().getResult());
-			LOGGER.info("## Im Result Text   : {}", profileInfo.getResponseHeader().getResult_text());
-
-			/**
-			 * SC 사용자 기본정보 setting
-			 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserID(req.getUserId()); // 사용자 아이디
-			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
-			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
-			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
-			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
-			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
-			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // OneID 통합서비스 관리번호
-			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
-			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
-			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
-			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
-			createUserRequest.setUserMbr(userMbr);
-			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
-
-			/**
-			 * SC 사용자 가입요청
-			 */
-			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
-
-			/**
-			 * 결과 세팅
-			 */
-			response.setUserKey(createUserResponse.getUserKey());
-
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateByAgreementRes response = new CreateByAgreementRes();
+		response.setUserKey(createUserResponse.getUserKey());
 
 		return response;
 
 	}
 
 	@Override
-	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception {
-
-		CreateByAgreementRes response = new CreateByAgreementRes();
+	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) {
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -337,91 +318,77 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 		LOGGER.info("## param : {}", param.entrySet());
-		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
-		LOGGER.info("## Im Result Code   : {}", agreeUserInfo.getResponseHeader().getResult());
-		LOGGER.info("## Im Result Text   : {}", agreeUserInfo.getResponseHeader().getResult_text());
 
 		/**
-		 * 이용동의 가입 성공시...
+		 * (통합 IDP) 이용동의 가입 요청
 		 */
-		if (StringUtils.equals(agreeUserInfo.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
 
-			LOGGER.info("## IDP 연동 성공 ==============================================");
-			LOGGER.info("## Im user_key      : {}", agreeUserInfo.getResponseBody().getUser_key());
-			LOGGER.info("## Im im_int_svc_no : {}", agreeUserInfo.getResponseBody().getIm_int_svc_no());
-			LOGGER.info("## Im user_tn       : {}", agreeUserInfo.getResponseBody().getUser_tn());
-			LOGGER.info("## Im user_email    : {}", agreeUserInfo.getResponseBody().getUser_email());
+		CreateUserRequest createUserRequest = new CreateUserRequest();
 
-			CreateUserRequest createUserRequest = new CreateUserRequest();
+		/**
+		 * 공통 정보 setting
+		 */
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-			/**
-			 * 공통 정보 setting
-			 */
-			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		/**
+		 * 이용약관 정보 setting
+		 */
+		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
-			/**
-			 * 이용약관 정보 setting
-			 */
-			createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
+		/**
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+		 */
+		ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
-			/**
-			 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
-			 */
-			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
-			LOGGER.info("## Im Result Code   : {}", profileInfo.getResponseHeader().getResult());
-			LOGGER.info("## Im Result Text   : {}", profileInfo.getResponseHeader().getResult_text());
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserID(req.getUserId()); // 사용자 아이디
+		userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
+		userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
+		userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
+		userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
+		userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // 통합 서비스 관리 번호
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+		createUserRequest.setUserMbr(userMbr);
+		LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
-			/**
-			 * SC 사용자 기본정보 setting
-			 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserID(req.getUserId()); // 사용자 아이디
-			userMbr.setUserEmail(agreeUserInfo.getResponseBody().getUser_email()); // 사용자 이메일
-			userMbr.setUserPhone(agreeUserInfo.getResponseBody().getUser_tn()); // 사용자 전화번호 (AS-IS 로직 반영.)
-			userMbr.setUserName(profileInfo.getResponseBody().getUser_name()); // 사용자 이름
-			userMbr.setUserBirthDay(profileInfo.getResponseBody().getUser_birthday()); // 사용자 생년월일
-			userMbr.setImMbrNo(agreeUserInfo.getResponseBody().getUser_key()); // MBR_NO
-			userMbr.setImSvcNo(agreeUserInfo.getResponseBody().getIm_int_svc_no()); // 통합 서비스 관리 번호
-			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_ONEID); // One ID 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
-			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
-			userMbr.setIsParent(MemberConstants.USE_N); // 부모동의 여부 (AI-IS 로직 반영).
-			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
-			createUserRequest.setUserMbr(userMbr);
-			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
-
-			/**
-			 * SC 사용자 가입요청
-			 */
-			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
-
-			/**
-			 * 휴대기기 등록.
-			 */
-			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
-
-			/**
-			 * 결과 세팅
-			 */
-			response.setUserKey(createUserResponse.getUserKey());
-			response.setDeviceKey(deviceKey);
-
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
+
+		/**
+		 * 휴대기기 등록.
+		 */
+		String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateByAgreementRes response = new CreateByAgreementRes();
+		response.setUserKey(createUserResponse.getUserKey());
+		response.setDeviceKey(deviceKey);
 
 		return response;
 
 	}
 
 	@Override
-	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) throws Exception {
-
-		CreateBySimpleRes response = new CreateBySimpleRes();
+	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) {
 
 		/**
 		 * IDP 중복 아이디 체크.
@@ -432,69 +399,60 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP - 간편회원가입
 		 */
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("user_id", URLEncoder.encode(req.getUserId(), "UTF-8"));
-		param.put("user_passwd", URLEncoder.encode(req.getUserPw(), "UTF-8"));
-		param.put("user_email", URLEncoder.encode(req.getUserEmail(), "UTF-8"));
+		param.put("user_id", this.getUrlEncode(req.getUserId()));
+		param.put("user_passwd", this.getUrlEncode(req.getUserPw()));
+		param.put("user_email", this.getUrlEncode(req.getUserEmail()));
 		LOGGER.info("## param : {}", param.entrySet());
 
 		/**
 		 * IDP 간편회원 가입 연동
 		 */
 		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
-		LOGGER.info("## Im Result Code   : {}", simpleJoinInfo.getResponseHeader().getResult());
-		LOGGER.info("## Im Result Text   : {}", simpleJoinInfo.getResponseHeader().getResult_text());
-		if (StringUtils.equals(simpleJoinInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
 
-			LOGGER.info("## IDP 간편가입 연동 성공 ==============================================");
-			LOGGER.info("## MBR_NO : {}", simpleJoinInfo.getResponseBody().getUser_key());
+		CreateUserRequest createUserRequest = new CreateUserRequest();
 
-			CreateUserRequest createUserRequest = new CreateUserRequest();
+		/**
+		 * 공통 정보 setting
+		 */
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-			/**
-			 * 공통 정보 setting
-			 */
-			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserID(req.getUserId()); // 사용자 아이디
+		userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setUserEmail(req.getUserEmail()); // 사용자 이메일
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+		createUserRequest.setUserMbr(userMbr);
+		LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
-			/**
-			 * SC 사용자 기본정보 setting
-			 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserID(req.getUserId()); // 사용자 아이디
-			userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
-			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setUserEmail(req.getUserEmail()); // 사용자 이메일
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
-			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
-			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
-			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
-			createUserRequest.setUserMbr(userMbr);
-			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
-
-			/**
-			 * SC 사용자 가입요청
-			 */
-			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
-
-			/**
-			 * 결과 세팅
-			 */
-			response.setUserKey(createUserResponse.getUserKey());
-
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateBySimpleRes response = new CreateBySimpleRes();
+		response.setUserKey(createUserResponse.getUserKey());
 
 		return response;
 	}
 
 	@Override
-	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) throws Exception {
-
-		CreateBySimpleRes response = new CreateBySimpleRes();
+	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) {
 
 		/**
 		 * IDP 중복 아이디 체크.
@@ -528,9 +486,9 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP - 간편회원가입 setting
 		 */
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("user_id", URLEncoder.encode(req.getUserId(), "UTF-8"));
-		param.put("user_passwd", URLEncoder.encode(req.getUserPw(), "UTF-8"));
-		param.put("user_email", URLEncoder.encode(req.getUserEmail(), "UTF-8"));
+		param.put("user_id", this.getUrlEncode(req.getUserId()));
+		param.put("user_passwd", this.getUrlEncode(req.getUserPw()));
+		param.put("user_email", this.getUrlEncode(req.getUserEmail()));
 		param.put("user_phone", sbUserPhone.toString());
 		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		LOGGER.info("## param : {}", param.entrySet());
@@ -539,58 +497,51 @@ public class UserJoinServiceImpl implements UserJoinService {
 		 * IDP 간편 회원가입 연동
 		 */
 		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
-		LOGGER.info("## Im Result Code   : {}", simpleJoinInfo.getResponseHeader().getResult());
-		LOGGER.info("## Im Result Text   : {}", simpleJoinInfo.getResponseHeader().getResult_text());
-		if (StringUtils.equals(simpleJoinInfo.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) { // 정상가입
 
-			LOGGER.info("## IDP 간편가입 연동 성공 ==============================================");
-			LOGGER.info("## MBR_NO : {}", simpleJoinInfo.getResponseBody().getUser_key());
+		CreateUserRequest createUserRequest = new CreateUserRequest();
 
-			CreateUserRequest createUserRequest = new CreateUserRequest();
+		/**
+		 * 공통 정보 setting
+		 */
+		createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
-			/**
-			 * 공통 정보 setting
-			 */
-			createUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		/**
+		 * SC 사용자 기본정보 setting
+		 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserID(req.getUserId()); // 사용자 아이디
+		userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
+		userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
+		userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
+		userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
+		userMbr.setUserEmail(req.getUserEmail()); // 사용자 이메일
+		userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
+		userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
+		userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
+		userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
+		createUserRequest.setUserMbr(userMbr);
+		LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
 
-			/**
-			 * SC 사용자 기본정보 setting
-			 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserID(req.getUserId()); // 사용자 아이디
-			userMbr.setImMbrNo(simpleJoinInfo.getResponseBody().getUser_key()); // MBR_NO
-			userMbr.setIsRealName(MemberConstants.USE_N); // 실명인증 여부
-			userMbr.setUserType(MemberConstants.USER_TYPE_IDPID); // IDP 회원
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL); // 정상
-			userMbr.setUserSubStatus(MemberConstants.SUB_STATUS_NORMAL); // 정상
-			userMbr.setUserEmail(req.getUserEmail()); // 사용자 이메일
-			userMbr.setIsRecvEmail(MemberConstants.USE_N); // 이메일 수신 여부 (AI-IS 로직 반영).
-			userMbr.setIsRecvSMS(req.getIsRecvSms()); // SMS 수신 여부
-			userMbr.setIsParent(MemberConstants.USE_N); // 부모 동의 여부 (AI-IS 로직 반영).
-			userMbr.setRegDate(DateUtil.getToday("yyyyMMddHHmmss")); // 등록 일시
-			createUserRequest.setUserMbr(userMbr);
-			LOGGER.info("## SC Request userMbr : {}", createUserRequest.getUserMbr().toString());
-
-			/**
-			 * SC 사용자 가입요청
-			 */
-			CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
-			LOGGER.info("## ResponseCode   : {}", createUserResponse.getCommonResponse().getResultCode());
-			LOGGER.info("## ResponseMsg    : {}", createUserResponse.getCommonResponse().getResultMessage());
-			LOGGER.info("## UserKey        : {}", createUserResponse.getUserKey());
-
-			/**
-			 * 휴대기기 등록.
-			 */
-			String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
-
-			/**
-			 * 결과 세팅
-			 */
-			response.setUserKey(createUserResponse.getUserKey());
-			response.setDeviceKey(deviceKey);
-
+		/**
+		 * SC 사용자 가입요청
+		 */
+		CreateUserResponse createUserResponse = this.userSCI.create(createUserRequest);
+		if (createUserResponse.getUserKey() == null || StringUtils.equals(createUserResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
 		}
+
+		/**
+		 * 휴대기기 등록.
+		 */
+		String deviceKey = this.createDeviceSubmodule(req, sacHeader, createUserResponse.getUserKey(), majorDeviceInfo);
+
+		/**
+		 * 결과 세팅
+		 */
+		CreateBySimpleRes response = new CreateBySimpleRes();
+		response.setUserKey(createUserResponse.getUserKey());
+		response.setDeviceKey(deviceKey);
 
 		return response;
 	}
@@ -913,6 +864,14 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 		}
 
+	}
+
+	private String getUrlEncode(String value) {
+		try {
+			return URLEncoder.encode(value, "UTF-8");
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_MEM_", e);
+		}
 	}
 
 	// /**

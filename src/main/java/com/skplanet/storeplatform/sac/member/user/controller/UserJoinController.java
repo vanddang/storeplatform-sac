@@ -10,7 +10,6 @@
 package com.skplanet.storeplatform.sac.member.user.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserJoinService;
 
 /**
@@ -45,11 +45,6 @@ public class UserJoinController {
 	private UserJoinService svc;
 
 	/**
-	 * Data Binding.
-	 */
-	ObjectMapper objMapper = new ObjectMapper();
-
-	/**
 	 * <pre>
 	 * 모바일 전용 회원 가입 (MDN 회원 가입).
 	 * </pre>
@@ -61,18 +56,16 @@ public class UserJoinController {
 	 * @param result
 	 *            BindingResult
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req, BindingResult result) throws Exception {
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req, BindingResult result) {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
 		LOGGER.info("####################################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리
@@ -113,18 +106,16 @@ public class UserJoinController {
 	 * @param result
 	 *            BindingResult
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req, BindingResult result) throws Exception {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req, BindingResult result) {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
 		LOGGER.info("####################################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리
@@ -186,18 +177,16 @@ public class UserJoinController {
 	 * @param result
 	 *            BindingResult
 	 * @return Response Value Object
-	 * @throws Exception
-	 *             익셉션
 	 */
 	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req, BindingResult result) throws Exception {
+	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req, BindingResult result) {
 
 		LOGGER.info("#############################################");
 		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
 		LOGGER.info("#############################################");
 
-		LOGGER.info("Request : {}", this.objMapper.writeValueAsString(req));
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
 		 * BindException 처리

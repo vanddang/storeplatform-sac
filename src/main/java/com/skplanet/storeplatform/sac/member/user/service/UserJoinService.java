@@ -34,11 +34,9 @@ public interface UserJoinService {
 	 * @param req
 	 *            CreateByMdnReq
 	 * @return CreateByMdnRes
-	 * @throws Exception
-	 *             Exception
 	 * 
 	 */
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) throws Exception;
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req);
 
 	/**
 	 * <pre>
@@ -50,10 +48,8 @@ public interface UserJoinService {
 	 * @param req
 	 *            CreateByAgreementReq
 	 * @return CreateByAgreementRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
+	public CreateByAgreementRes createByAgreementId(SacRequestHeader sacHeader, CreateByAgreementReq req);
 
 	/**
 	 * <pre>
@@ -65,10 +61,8 @@ public interface UserJoinService {
 	 * @param req
 	 *            CreateByAgreementReq
 	 * @return CreateByAgreementRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req) throws Exception;
+	public CreateByAgreementRes createByAgreementDevice(SacRequestHeader sacHeader, CreateByAgreementReq req);
 
 	/**
 	 * <pre>
@@ -80,10 +74,8 @@ public interface UserJoinService {
 	 * @param req
 	 *            CreateBySimpleReq
 	 * @return CreateBySimpleRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) throws Exception;
+	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req);
 
 	/**
 	 * <pre>
@@ -95,9 +87,7 @@ public interface UserJoinService {
 	 * @param req
 	 *            CreateBySimpleReq
 	 * @return CreateBySimpleRes
-	 * @throws Exception
-	 *             Exception
 	 */
-	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req) throws Exception;
+	public CreateBySimpleRes createBySimpleDevice(SacRequestHeader sacHeader, CreateBySimpleReq req);
 
 }
