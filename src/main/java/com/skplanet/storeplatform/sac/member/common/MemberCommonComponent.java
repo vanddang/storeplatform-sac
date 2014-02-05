@@ -105,6 +105,21 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
+	 * SKT 이용정지회원 여부 조회.
+	 * </pre>
+	 * 
+	 * @param msisdn
+	 * @return String
+	 */
+	public String getIsSktPause(String msisdn) {
+
+		GetOpmdReq req = new GetOpmdReq();
+		req.setMsisdn(msisdn);
+		return this.miscellaneousService.getOpmd(req).getPauseYN();
+	}
+
+	/**
+	 * <pre>
 	 * deviceModelNo로 UA 코드 정보 조회.
 	 * </pre>
 	 * 

@@ -830,7 +830,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * SKT 이용정지회원 여부 setting.
 		 */
 		if (StringUtils.equals(response.getDeviceTelecom(), MemberConstants.DEVICE_TELECOM_SKT)) {
-			response.setIsSktPause(this.mcc.getMappingInfo(req.getDeviceId(), "mdn").getPauseYN());
+			response.setIsSktPause(this.mcc.getIsSktPause(req.getDeviceId()));
 		}
 
 		return response;
