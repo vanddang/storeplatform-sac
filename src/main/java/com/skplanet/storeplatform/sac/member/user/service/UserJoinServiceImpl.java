@@ -395,7 +395,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * IDP 중복 아이디 체크.
 		 */
-		this.checkDuplicateId(req.getUserId());
+		this.idpService.checkDupID(this.getUrlEncode(req.getUserId()));
 
 		/**
 		 * IDP - 간편회원가입
@@ -459,7 +459,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * IDP 중복 아이디 체크.
 		 */
-		this.checkDuplicateId(req.getUserId());
+		this.idpService.checkDupID(this.getUrlEncode(req.getUserId()));
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
@@ -848,29 +848,6 @@ public class UserJoinServiceImpl implements UserJoinService {
 
 	/**
 	 * <pre>
-	 * IDP 중복 아이디 체크.
-	 * </pre>
-	 * 
-	 * @param userId
-	 *            유저 아이디
-	 */
-	private void checkDuplicateId(String userId) {
-
-		try {
-
-			LOGGER.info("## ID 중복확인 =================================");
-			this.idpService.checkDupID(URLEncoder.encode(userId, "UTF-8"));
-
-		} catch (Exception e) {
-
-			throw new StorePlatformException("SAC_MEM_1104", e);
-
-		}
-
-	}
-
-	/**
-	 * <pre>
 	 * URL Encode.
 	 * </pre>
 	 * 
@@ -885,52 +862,5 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_0004", e);
 		}
 	}
-
-	// /**
-	// * <pre>
-	// * 사용자 아이디 중복 체크.
-	// * </pre>
-	// *
-	// * @param userId
-	// * 사용자 아이디
-	// * @param sacHeader
-	// * 공통 헤더
-	// * @throws Exception
-	// * 익셉션
-	// */
-	// private void checkDuplicationId(String userId, SacRequestHeader sacHeader) throws Exception {
-	//
-	// CheckDuplicationRequest checkDuplicationRequest = new CheckDuplicationRequest();
-	//
-	// /**
-	// * 공통 정보 setting
-	// */
-	// checkDuplicationRequest.setCommonRequest(this.getCommonRequest(sacHeader));
-	//
-	// /**
-	// * 검색 조건 setting
-	// */
-	// List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-	// KeySearch keySchUserKey = new KeySearch();
-	// keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-	// keySchUserKey.setKeyString(userId);
-	// keySearchList.add(keySchUserKey);
-	// checkDuplicationRequest.setKeySearchList(keySearchList);
-	//
-	// /**
-	// * ID가 중복 체크 SC 연동.
-	// */
-	// CheckDuplicationResponse res = this.userSCI.checkDuplication(checkDuplicationRequest);
-	//
-	// /**
-	// * SC 연동결과가 성공이고 ID 존재 여부가 N 이면 에러를 발생 한다.
-	// */
-	// if (StringUtils.equals(res.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-	// if (StringUtils.equals(res.getIsRegistered(), MemberConstants.USE_N)) {
-	// throw new RuntimeException("## (" + userId + ") 이미 존재 하는 ID 입니다.");
-	// }
-	// }
-	//
-	// }
 
 }
