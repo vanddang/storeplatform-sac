@@ -17,6 +17,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
@@ -64,6 +66,18 @@ public interface UserSearchService {
 	 * @throws Exception
 	 */
 	public DetailRes detail(SacRequestHeader sacHeader, DetailReq req);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회원 프로비저닝 이력 조회
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return
+	 * @throws Exception
+	 */
+	public GetProvisioningHistoryRes getProvisioningHistory(SacRequestHeader sacHeader, GetProvisioningHistoryReq req);
 
 	/**
 	 * 

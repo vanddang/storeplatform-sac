@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -39,6 +38,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementList
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
@@ -53,6 +54,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
@@ -186,8 +189,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 			/* 회원 정보 + 부가정보 */
 			if ("Y".equals(req.getSearchExtent().getUserInfoYn())) {
 				UserInfo searchUser = this.searchUser(req, sacHeader);
-				// UserExtraInfoRes userExtraInfoRes = this.listUserExtra(req, sacHeader);
-				// searchUser.setUserExtraInfo(userExtraInfoRes.getAddInfoList());
 				res.setUserInfo(searchUser);
 			}
 			/* 단말 + 부가정보 */
@@ -220,6 +221,44 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 
 		}
+
+		return res;
+	}
+
+	/**
+	 * 회원 프로비저닝 이력 조회
+	 */
+	@Override
+	public GetProvisioningHistoryRes getProvisioningHistory(SacRequestHeader sacHeader, GetProvisioningHistoryReq req) {
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		/**
+		 * 모번호 조회 (989 일 경우만)
+		 */
+		if (req.getDeviceId() != null) {
+			String opmdMdnInfo = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+			req.setDeviceId(opmdMdnInfo);
+			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdnInfo);
+		}
+
+		/* 회원 기본 정보 */
+		this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+
+		SearchUserkeyTrackRequest scReq = new SearchUserkeyTrackRequest();
+		SearchUserkeyTrackResponse scRes = new SearchUserkeyTrackResponse();
+		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
+
+		scReq.setCommonRequest(commonRequest);
+		scReq.setDeviceID(req.getDeviceId());
+		scRes = this.userSCI.searchUserkeyTrack(scReq);
+
+		res.setWorkdCd("US003206");
+		res.setAfterUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getAfterUserKey()));
+		res.setPreUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getPreUserKey()));
+		res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
 
 		return res;
 	}
@@ -272,31 +311,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 		logger.info("###### schUserRes.getMbrAuth : " + schUserRes.getCommonResponse().getResultCode());
 		logger.info("###### schUserRes.getMbrAuth : " + schUserRes.getCommonResponse().getResultMessage());
 
-		if (schUserRes.getMbrAuth() == null) {
-			throw new RuntimeException("######## 사용자 실명인증정보 조회 : 사용자 데이터 없음");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
-					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
-		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& schUserRes.getMbrAuth() != null) {
-			mbrAuth.setBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
-			mbrAuth.setCi(StringUtil.setTrim(schUserRes.getMbrAuth().getCi()));
-			mbrAuth.setDi(StringUtil.setTrim(schUserRes.getMbrAuth().getDi()));
-			mbrAuth.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrAuth().getIsDomestic()));
-			mbrAuth.setIsRealName(StringUtil.setTrim(schUserRes.getMbrAuth().getIsRealName()));
-			mbrAuth.setMemberCategory(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberCategory()));
-			mbrAuth.setMemberKey(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberKey()));
-			mbrAuth.setName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
-			mbrAuth.setPhone(StringUtil.setTrim(schUserRes.getMbrAuth().getPhone()));
-			mbrAuth.setRealNameDate(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameDate()));
-			mbrAuth.setRealNameMethod(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameMethod()));
-			mbrAuth.setRealNameSite(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameSite()));
-			mbrAuth.setSequence(StringUtil.setTrim(schUserRes.getMbrAuth().getSequence()));
-			mbrAuth.setSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
-			mbrAuth.setTelecom(StringUtil.setTrim(schUserRes.getMbrAuth().getTelecom()));
-			mbrAuth.setTenantID(StringUtil.setTrim(schUserRes.getMbrAuth().getTenantID()));
-			mbrAuth.setUpdateDate(StringUtil.setTrim(schUserRes.getMbrAuth().getUpdateDate()));
-		}
+		mbrAuth.setBirthDay(StringUtil.setTrim(schUserRes.getMbrAuth().getBirthDay()));
+		mbrAuth.setCi(StringUtil.setTrim(schUserRes.getMbrAuth().getCi()));
+		mbrAuth.setDi(StringUtil.setTrim(schUserRes.getMbrAuth().getDi()));
+		mbrAuth.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrAuth().getIsDomestic()));
+		mbrAuth.setIsRealName(StringUtil.setTrim(schUserRes.getMbrAuth().getIsRealName()));
+		mbrAuth.setMemberCategory(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberCategory()));
+		mbrAuth.setMemberKey(StringUtil.setTrim(schUserRes.getMbrAuth().getMemberKey()));
+		mbrAuth.setName(StringUtil.setTrim(schUserRes.getMbrAuth().getName()));
+		mbrAuth.setPhone(StringUtil.setTrim(schUserRes.getMbrAuth().getPhone()));
+		mbrAuth.setRealNameDate(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameDate()));
+		mbrAuth.setRealNameMethod(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameMethod()));
+		mbrAuth.setRealNameSite(StringUtil.setTrim(schUserRes.getMbrAuth().getRealNameSite()));
+		mbrAuth.setSequence(StringUtil.setTrim(schUserRes.getMbrAuth().getSequence()));
+		mbrAuth.setSex(StringUtil.setTrim(schUserRes.getMbrAuth().getSex()));
+		mbrAuth.setTelecom(StringUtil.setTrim(schUserRes.getMbrAuth().getTelecom()));
+		mbrAuth.setTenantID(StringUtil.setTrim(schUserRes.getMbrAuth().getTenantID()));
+		mbrAuth.setUpdateDate(StringUtil.setTrim(schUserRes.getMbrAuth().getUpdateDate()));
 
 		return mbrAuth;
 	}
@@ -348,36 +379,27 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 		MbrLglAgent mbrLglAgent = new MbrLglAgent();
 
-		if (schUserRes.getMbrLglAgent() == null) {
-			throw new RuntimeException("######## 사용자 법정대리인정보 조회 : 사용자 데이터 없음");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
-					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
-		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& schUserRes.getMbrLglAgent() != null) {
-			mbrLglAgent.setIsParent(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsParent()));
-			mbrLglAgent.setMemberKey(StringUtil.setTrim(schUserRes.getMbrLglAgent().getMemberKey()));
-			mbrLglAgent.setParentBirthDay(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentBirthDay()));
-			mbrLglAgent.setParentCI(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentCI()));
-			mbrLglAgent.setParentDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentDate()));
-			mbrLglAgent.setParentEmail(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentEmail()));
-			mbrLglAgent.setParentMDN(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
-			mbrLglAgent.setParentName(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentName()));
-			mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameDate()));
-			mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameMethod()));
-			mbrLglAgent.setParentRealNameSite(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameSite()));
-			mbrLglAgent.setParentTelecom(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentTelecom()));
-			mbrLglAgent.setParentType(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentType()));
-			mbrLglAgent.setSequence(StringUtil.setTrim(schUserRes.getMbrLglAgent().getSequence()));
-			mbrLglAgent.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsDomestic()));
-			mbrLglAgent.setTenantId(StringUtil.setTrim(schUserRes.getMbrLglAgent().getTenantID()));
+		mbrLglAgent.setIsParent(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsParent()));
+		mbrLglAgent.setMemberKey(StringUtil.setTrim(schUserRes.getMbrLglAgent().getMemberKey()));
+		mbrLglAgent.setParentBirthDay(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentBirthDay()));
+		mbrLglAgent.setParentCI(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentCI()));
+		mbrLglAgent.setParentDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentDate()));
+		mbrLglAgent.setParentEmail(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentEmail()));
+		mbrLglAgent.setParentMDN(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentMDN()));
+		mbrLglAgent.setParentName(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentName()));
+		mbrLglAgent.setParentRealNameDate(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameDate()));
+		mbrLglAgent.setParentRealNameMethod(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameMethod()));
+		mbrLglAgent.setParentRealNameSite(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentRealNameSite()));
+		mbrLglAgent.setParentTelecom(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentTelecom()));
+		mbrLglAgent.setParentType(StringUtil.setTrim(schUserRes.getMbrLglAgent().getParentType()));
+		mbrLglAgent.setSequence(StringUtil.setTrim(schUserRes.getMbrLglAgent().getSequence()));
+		mbrLglAgent.setIsDomestic(StringUtil.setTrim(schUserRes.getMbrLglAgent().getIsDomestic()));
+		mbrLglAgent.setTenantId(StringUtil.setTrim(schUserRes.getMbrLglAgent().getTenantID()));
 
-		}
-
-		logger.info("###### schUserRes.getMbrLglAgent Code : " + schUserRes.getCommonResponse().getResultCode());
-		logger.info("###### schUserRes.getMbrLglAgent Message : " + schUserRes.getCommonResponse().getResultMessage());
-		logger.info("###### schUserRes.getMbrLglAgent Req : " + searchUserRequest.toString());
-		logger.info("###### schUserRes.getMbrLglAgent Res : " + schUserRes.getMbrLglAgent().toString());
+		logger.debug("###### schUserRes.getMbrLglAgent Code : " + schUserRes.getCommonResponse().getResultCode());
+		logger.debug("###### schUserRes.getMbrLglAgent Message : " + schUserRes.getCommonResponse().getResultMessage());
+		logger.debug("###### schUserRes.getMbrLglAgent Req : " + searchUserRequest.toString());
+		logger.debug("###### schUserRes.getMbrLglAgent Res : " + schUserRes.getMbrLglAgent().toString());
 
 		return mbrLglAgent;
 	}
@@ -435,29 +457,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		logger.debug("사용자 징계정보 조회 {}", schUserRes.getUserMbrPnsh().toString());
 
-		if (schUserRes.getUserMbrPnsh() == null) {
-			throw new RuntimeException("######## User MbrPnsh Info Search : 사용자 데이터 없음");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
-					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
-		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& schUserRes.getUserMbrPnsh() != null) {
-			res.setIsRestricted(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getIsRestricted()));
-			res.setRestrictCount(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictCount()));
-			res.setRestrictEndDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictEndDate()));
-			res.setRestrictId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictID()));
-			res.setRestrictOwner(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictOwner()));
-			res.setRestrictRegisterDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictRegisterDate()));
-			res.setRestrictStartDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
-			res.setTenantId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getTenantID()));
-			res.setUserKey(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getUserKey()));
-
-		} else {
-			logger.debug("###### 사용자 징계정보 조회 오류 : {}", searchUserRequest.toString());
-			logger.debug("###### 사용자 징계정보 조회 오류 : {}", schUserRes.getUserMbr().toString());
-			logger.debug("###### 사용자 징계정보 조회 오류 : {}", schUserRes.getCommonResponse().toString());
-			throw new StorePlatformException("사용자 징계정보 조회 오류");
-		}
+		res.setIsRestricted(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getIsRestricted()));
+		res.setRestrictCount(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictCount()));
+		res.setRestrictEndDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictEndDate()));
+		res.setRestrictId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictID()));
+		res.setRestrictOwner(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictOwner()));
+		res.setRestrictRegisterDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictRegisterDate()));
+		res.setRestrictStartDate(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getRestrictStartDate()));
+		res.setTenantId(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getTenantID()));
+		res.setUserKey(StringUtil.setTrim(schUserRes.getUserMbrPnsh().getUserKey()));
 
 		logger.debug("###### 회원징계정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
 		logger.debug("###### 회원징계정보조회 Res : {}", res.toString());
@@ -519,21 +527,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		logger.debug("사용자 기본정보 조회 {}", schUserRes.toString());
 
-		if (schUserRes.getUserKey() == null) {
-			throw new StorePlatformException("SAC_MEM_0002", searchUserRequest.getKeySearchList().toString());
-		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& schUserRes.getUserKey() != null) {
-
-			res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
-			res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
-			res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
-
-		} else {
-			logger.debug("###### 사용자 기본 정보 조회 오류 : {}", searchUserRequest.toString());
-			logger.debug("###### 사용자 기본 정보 조회 오류 : {}", schUserRes.getUserMbr().toString());
-			logger.debug("###### 사용자 기본 정보 조회 오류 : {}", schUserRes.getCommonResponse().toString());
-			throw new StorePlatformException("사용자 기본 정보 조회 오류");
-		}
+		res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
+		res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
+		res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
 
 		logger.debug("###### 회원기본정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
 		logger.debug("###### 회원기본정보조회 Res : {}", res.toString());
@@ -797,31 +793,25 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 */
 		SearchUserResponse searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 		SearchAgreementRes searchAgreementRes = new SearchAgreementRes();
-		List<Agreement> listAgreement = new ArrayList();
+		List<Agreement> listAgreement = new ArrayList<Agreement>();
 
 		logger.debug("############ 약관동의 리스트 Size : {}", searchUserResponse.getMbrClauseAgreeList().size());
 
-		if (!StringUtils.equals(searchUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new StorePlatformException("######## 사용자 약관동의목록 조회실패 : " + searchUserResponse.getCommonResponse().getResultCode() + " MSG : "
-					+ searchUserResponse.getCommonResponse().getResultMessage());
-		} else if (StringUtils.equals(searchUserResponse.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+		/* 유저키 세팅 */
+		searchAgreementRes.setUserKey(searchUserResponse.getUserKey());
+		/* 약관동의 세팅 */
+		for (MbrClauseAgree mbrAgree : searchUserResponse.getMbrClauseAgreeList()) {
 
-			/* 유저키 세팅 */
-			searchAgreementRes.setUserKey(searchUserResponse.getUserKey());
-			/* 약관동의 세팅 */
-			for (MbrClauseAgree mbrAgree : searchUserResponse.getMbrClauseAgreeList()) {
+			Agreement agree = new Agreement();
+			agree.setExtraAgreementId(StringUtil.setTrim(mbrAgree.getExtraAgreementID()));
+			agree.setExtraAgreementVersion(StringUtil.setTrim(mbrAgree.getExtraAgreementVersion()));
+			agree.setIsExtraAgreement(StringUtil.setTrim(mbrAgree.getIsExtraAgreement()));
 
-				Agreement agree = new Agreement();
-				agree.setExtraAgreementId(StringUtil.setTrim(mbrAgree.getExtraAgreementID()));
-				agree.setExtraAgreementVersion(StringUtil.setTrim(mbrAgree.getExtraAgreementVersion()));
-				agree.setIsExtraAgreement(StringUtil.setTrim(mbrAgree.getIsExtraAgreement()));
-
-				listAgreement.add(agree);
-			}
-
-			searchAgreementRes.setAgreementList(listAgreement);
-
+			listAgreement.add(agree);
 		}
+
+		searchAgreementRes.setAgreementList(listAgreement);
+
 		return searchAgreementRes;
 
 	}

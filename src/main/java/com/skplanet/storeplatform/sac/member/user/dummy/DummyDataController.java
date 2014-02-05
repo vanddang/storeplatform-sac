@@ -26,7 +26,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
@@ -792,22 +791,22 @@ public class DummyDataController {
 	 * 
 	 * @return GetProvisioningHistoryRes
 	 */
-	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public GetProvisioningHistoryRes getProvisioningHistory() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.3.14.	회원 프로비저닝 이력 조회. #####");
-		LOGGER.info("####################################################");
-
-		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
-		res.setWorkdCd("US003206");
-		res.setMbrNo("");
-		res.setOldMbrNo("");
-		res.setRegDate("20131226154512");
-
-		return res;
-	}
+	//	@RequestMapping(value = "/member/user/getProvisioningHistory/v1", method = RequestMethod.GET)
+	//	@ResponseBody
+	//	public GetProvisioningHistoryRes getProvisioningHistory() {
+	//
+	//		LOGGER.info("####################################################");
+	//		LOGGER.info("##### 5.3.14.	회원 프로비저닝 이력 조회. #####");
+	//		LOGGER.info("####################################################");
+	//
+	//		GetProvisioningHistoryRes res = new GetProvisioningHistoryRes();
+	//		res.setWorkdCd("US003206");
+	//		res.setMbrNo("");
+	//		res.setOldMbrNo("");
+	//		res.setRegDate("20131226154512");
+	//
+	//		return res;
+	//	}
 
 	/**
 	 * <pre>

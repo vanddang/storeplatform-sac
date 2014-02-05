@@ -1056,25 +1056,19 @@ public class DeviceServiceImpl implements DeviceService {
 
 				/* 단말리스트가 한개가 아니고 삭제요청 단말이 대표단말일 경우 */
 				if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-					throw new StorePlatformException("SAC_MEM_1301", listRes.getDeviceInfoList().get(0).getDeviceId());
+					throw new StorePlatformException("SAC_MEM_1510");
 				} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
 					/* 단말리스트가 한개가 아니고 삭제요청 단말이 대표단말일 경우 */
 					imIdpReceiver = this.imIdpDeviceUpdate(req, param, userInfo, userPhoneStr);
 				}
 			}
 
-			if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-				throw new StorePlatformException("SAC_MEM_4002");
-			} else {
-				logger.info("###### 디바이스업데이트 [ImIDP] RESULT HEADER : Code : {}, Message : {} ", imIdpReceiver.getResponseHeader().getResult(),
-						imIdpReceiver.getResponseHeader().getResult_text());
+			logger.info("###### [ONEID_imIdpDeviceUpdate] RESULT HEADER : Code : {}, Message : {} ", imIdpReceiver.getResponseHeader().getResult(),
+					imIdpReceiver.getResponseHeader().getResult_text());
 
-				logger.info("###### 디바이스업데이트 [ImIDP] RESULT BODY : {}", imIdpReceiver.getResponseBody().toString());
-
-				removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-				logger.info("###### 디바이스 삭제 [ImIDP] SC Remove Req Code : {}, Mesasage : {}",
-						removeDeviceResponse.getCommonResponse().getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-			}
+			removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
+			logger.info("###### [ONEID_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
+					.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
 
 		} else {
 			if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
@@ -1089,25 +1083,19 @@ public class DeviceServiceImpl implements DeviceService {
 						param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 					}
 					IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-					if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-						throw new StorePlatformException("SAC_MEM_4002");
-					} else {
-						removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
+					removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
 
-						logger.info("###### [IDP ID회원] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(), idpReceiver
-								.getResponseHeader().getResult_text());
+					logger.info("###### [ID_idpService.modifyProfile] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(),
+							idpReceiver.getResponseHeader().getResult_text());
 
-						logger.info("###### [IDP ID회원] IDP RESULT BODY : {}", idpReceiver.getResponseBody().toString());
-
-						logger.info("###### 디바이스 삭제 [IDP ID회원] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
-								.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-					}
+					logger.info("###### [ID_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
+							.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
 				} else if (deviceList.getDeviceInfoList().size() > 1) {
 					/* 대표기기 여부 */
 					ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
 
 					if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						throw new StorePlatformException("SAC_MEM_1301", listRes.getDeviceInfoList().get(0).getDeviceId());
+						throw new StorePlatformException("SAC_MEM_1510");
 					} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
 						param.put("key_type", "1");
 						param.put("key", userInfo.getUserId());
@@ -1117,18 +1105,12 @@ public class DeviceServiceImpl implements DeviceService {
 							param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 						}
 						IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							throw new StorePlatformException("SAC_MEM_4002");
-						} else {
-							logger.info("###### [IDP ID회원] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(), idpReceiver
-									.getResponseHeader().getResult_text());
+						logger.info("###### [ID_idpService.modifyProfile] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(),
+								idpReceiver.getResponseHeader().getResult_text());
 
-							logger.info("###### [IDP ID회원] IDP RESULT BODY : {}", idpReceiver.getResponseBody().toString());
-
-							removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-							logger.info("###### 디바이스 삭제 [IDP ID회원] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
-									.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-						}
+						removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
+						logger.info("###### [ID_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
+								.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
 					}
 				}
 			} else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
@@ -1136,13 +1118,13 @@ public class DeviceServiceImpl implements DeviceService {
 
 				// - 단말 1개(대표단말 포함) : 단말기 삭제 불가
 				if (deviceList.getDeviceInfoList().size() == 1) {
-					throw new StorePlatformException("SAC_MEM_0003", deviceList.getDeviceInfoList().size());
+					throw new StorePlatformException("SAC_MEM_1511");
 				} else if (deviceList.getDeviceInfoList().size() > 1) {
 					/* 대표기기 여부 */
 					ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
 
 					if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						throw new StorePlatformException("SAC_MEM1301", listRes.getDeviceInfoList().get(0).getDeviceId());
+						throw new StorePlatformException("SAC_MEM_1511");
 					} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
 						param.put("key_type", "1");
 						param.put("key", userInfo.getUserId());
@@ -1152,18 +1134,12 @@ public class DeviceServiceImpl implements DeviceService {
 							param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 						}
 						IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-						if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-							throw new StorePlatformException("SAC_MEM_4002");
-						} else {
-							logger.info("###### [IDP Mobile회원] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(), idpReceiver
-									.getResponseHeader().getResult_text());
+						logger.info("###### [Mobile_idpService.modifyProfile] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader()
+								.getResult(), idpReceiver.getResponseHeader().getResult_text());
 
-							logger.info("###### [IDP Mobile회원] IDP RESULT BODY : {}", idpReceiver.getResponseBody().toString());
-
-							removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-							logger.info("###### 디바이스 삭제 [IDP Mobile회원] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse
-									.getCommonResponse().getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-						}
+						removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
+						logger.info("###### [Mobile_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
+								.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
 					}
 				}
 
@@ -1308,8 +1284,6 @@ public class DeviceServiceImpl implements DeviceService {
 					sbUserPhone.append("|");
 				} else if (deviceInfo.getDeviceTelecom() == null) {
 					throw new StorePlatformException("SAC_MEM_0002", "getDeviceTelecom() is Null");
-				} else {
-					logger.info("###### sbUserPhone Setting : unKnown Error");
 				}
 
 			}
