@@ -163,37 +163,38 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			req.setProdGradeCdArr(prodGradeCdArr);
 		}
 
+		// ADM000000008 : 운영자 추천, ADM000000003 운영자 신규
 		// DP17 : 영화, DP18 : 방송
-		if ("DP17".equals(topMenuId)) {
-			if ("recommend".equals(filteredBy)) {
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("영화 > 추천 상품 조회");
-				this.logger.debug("----------------------------------------------------------------");
+		if ("ADM000000008".equals(listId)) {
+			if ("DP17".equals(topMenuId)) {
+				if ("recommend".equals(filteredBy)) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("영화 > 추천 상품 조회");
+					this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
+					List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+							"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
 
-				vodRes = this.generateVO("movieRecommend", vodList);
-			} else if ("movie1000".equals(filteredBy)) {
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("영화 > 1000원관 상품 조회");
-				this.logger.debug("----------------------------------------------------------------");
+					vodRes = this.generateVO("movieRecommend", vodList);
+				} else if ("movie1000".equals(filteredBy)) {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("영화 > 1000원관 상품 조회");
+					this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
+					List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+							"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
 
-				vodRes = this.generateVO("movie1000", vodList);
+					vodRes = this.generateVO("movie1000", vodList);
+				} else {
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("유효하지않은 조회유형");
+					this.logger.debug("----------------------------------------------------------------");
+
+					vodRes = new FeatureCategoryVodRes();
+					vodRes.setCommonResponse(new CommonResponse());
+					return vodRes;
+				}
 			} else {
-				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("유효하지않은 조회유형");
-				this.logger.debug("----------------------------------------------------------------");
-
-				vodRes = new FeatureCategoryVodRes();
-				vodRes.setCommonResponse(new CommonResponse());
-				return vodRes;
-			}
-		} else {
-			if ("ADM000000008".equals(listId)) {
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("방송 > 카테고리별 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
@@ -202,17 +203,28 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 						"FeatureCategory.selectFeatureBroadcastList", req, FeatureCategoryVod.class);
 
 				vodRes = this.generateVO("broadcastRecommend", vodList);
-			} else {
+			}
+		} else {
+			if (!"".equals(filteredBy) && filteredBy != null) {
 				this.logger.debug("----------------------------------------------------------------");
-				this.logger.debug("방송 > 방송사별 최신Up 상품 조회");
+				this.logger.debug("방송 > 방송사별 최신 UP 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				FeatureCategoryVod dto = new FeatureCategoryVod();
-				List<FeatureCategoryVod> vodList = new ArrayList<FeatureCategoryVod>();
-				vodList.add(dto);
+				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+						"FeatureCategory.selectFeatureMovieListDummy", req, FeatureCategoryVod.class);
+
+				vodRes = this.generateVO("broadcastNew", vodList);
+			} else {
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("영화/방송 > 신규 상품 조회");
+				this.logger.debug("----------------------------------------------------------------");
+
+				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+						"FeatureCategory.selectFeatureMovieListDummy", req, FeatureCategoryVod.class);
 
 				vodRes = this.generateVO("broadcastNew", vodList);
 			}
+
 		}
 
 		return vodRes;
