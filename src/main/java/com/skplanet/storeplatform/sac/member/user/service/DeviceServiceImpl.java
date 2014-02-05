@@ -753,12 +753,8 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param deviceInfo
 	 *            DeviceInfo
 	 * @return DeviceInfo
-	 * @throws Exception
-	 *             Exception
 	 */
 	public DeviceInfo setDeviceHeader(DeviceHeader deviceheader, DeviceInfo deviceInfo) {
-
-		deviceInfo.setDeviceModelNo(deviceheader.getModel());
 
 		if (deviceheader.getModel() != null) { // 단말모델
 			deviceInfo.setDeviceModelNo(deviceheader.getModel());
@@ -785,8 +781,6 @@ public class DeviceServiceImpl implements DeviceService {
 	 * @param deviceInfo
 	 *            DeviceInfo
 	 * @return DeviceInfo
-	 * @throws Exception
-	 *             Exception
 	 */
 	public DeviceInfo getDeviceMajorInfo(DeviceInfo deviceInfo) {
 
