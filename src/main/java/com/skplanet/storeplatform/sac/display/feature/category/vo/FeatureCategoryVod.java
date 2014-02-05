@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.display.feature.category.vo;
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class FeatureCategoryVodDTO {
+public class FeatureCategoryVod {
 	private int totalCount;
 	private String topMenuId;
 	private String menuId;

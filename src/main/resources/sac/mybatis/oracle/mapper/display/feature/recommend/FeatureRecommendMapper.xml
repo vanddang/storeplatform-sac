@@ -75,7 +75,7 @@
     </select>    
     
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectRecommendAdminListDummy" parameterType="FeatureRecommendAdminReq" resultType="FeatureRecommendAdminDTO">
+    <select id="selectRecommendAdminListDummy" parameterType="FeatureRecommendAdminReq" resultType="FeatureRecommendAdmin">
        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
         SELECT
 			PROD.*

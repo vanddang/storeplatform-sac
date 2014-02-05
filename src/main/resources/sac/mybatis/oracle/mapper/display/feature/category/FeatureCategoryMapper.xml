@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FeatureCategory">
     <!-- 영화 추천 및 영화 1000원관 상품 조회 -->
-    <select id="selectFeatureMovieList" parameterType="FeatureCategoryVodReq" resultType="FeatureCategoryVodDTO">
+    <select id="selectFeatureMovieList" parameterType="FeatureCategoryVodReq" resultType="FeatureCategoryVod">
         SELECT  /* FeatureCategoryMapper.xml, selectFeatureMovieList, tae hee Lee, 2014-01-07 */
                 LA.TOTAL_COUNT
               , LA.RNUM
@@ -158,7 +158,7 @@
     </select>
     
     <!-- 방송 추천 상품 조회 -->
-    <select id="selectFeatureBroadcastList" parameterType="FeatureCategoryVodReq" resultType="FeatureCategoryVodDTO">
+    <select id="selectFeatureBroadcastList" parameterType="FeatureCategoryVodReq" resultType="FeatureCategoryVod">
         SELECT  /* FeatureCategoryMapper.xml, selectFeatureBroadcastList, tae hee Lee, 2014-01-14 */
                 LA.TOTAL_COUNT
               , LA.RNUM
@@ -326,7 +326,7 @@
     </select>
     
     <!--운영자 추천 이북/코믹 더미 조회-->
-    <select id="selectCategoryEpubListDummy" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpubDTO">
+    <select id="selectCategoryEpubListDummy" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpub">
        /* FeatureCategoryMapper.xml, selectCategoryEpubListDummy, SAC : 서영배 , 2014-01-03 */
        SELECT
             PROD.*
@@ -627,7 +627,7 @@
     </select>
     
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectCategoryAppListDummy" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryAppDTO">
+    <select id="selectCategoryAppListDummy" parameterType="FeatureCategoryAppReq" resultType="FeatureCategoryApp">
        /* FeatureCategoryMapper.xml, selectCategoryAppListDummy, SAC : 서영배 , 2014-01-03 */
         SELECT
             PROD.*
@@ -691,7 +691,7 @@
     </select>
     
     <!--운영자 추천 만화/이북 리스트 조회-->
-    <select id="selectCategoryEpubRecomList" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpubDTO">
+    <select id="selectCategoryEpubRecomList" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpub">
         /* FeatureCategoryMapper.xml, selectCategoryEpubRecomList, SAC : JJI , 2014-01-22 */
         SELECT B.TOP_MENU_ID
              , B.MENU_ID
@@ -865,7 +865,7 @@
     </select>
     
     <!-- 코믹/이북 인기만화/도서 리스트 조회-->
-    <select id="selectCategoryEpubBestList" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpubDTO">
+    <select id="selectCategoryEpubBestList" parameterType="FeatureCategoryEpubReq" resultType="FeatureCategoryEpub">
         /* FeatureCategoryMapper.xml, selectCategoryEpubBestList, SAC : JJI , 2014-02-03 */
         SELECT B.TOP_MENU_ID
              , B.MENU_ID

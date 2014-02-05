@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.display.feature.recommend.vo;
  * 
  * Updated on : 2014. 1. 6. Updated by : 서영배, GTSOFT.
  */
-public class RecommendAdminDTO {
+public class RecommendAdmin {
 
 	private int totalCount;
 	private Integer dwldCnt;

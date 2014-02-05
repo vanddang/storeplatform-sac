@@ -42,7 +42,7 @@ import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServic
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVodDTO;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVod;
 
 /**
  * 
@@ -170,8 +170,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("영화 > 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVodDTO> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVodDTO.class);
+				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+						"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
 
 				vodRes = this.generateVO("movieRecommend", vodList);
 			} else if ("movie1000".equals(filteredBy)) {
@@ -179,8 +179,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("영화 > 1000원관 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVodDTO> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVodDTO.class);
+				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+						"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
 
 				vodRes = this.generateVO("movie1000", vodList);
 			} else {
@@ -198,8 +198,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("방송 > 카테고리별 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVodDTO> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureBroadcastList", req, FeatureCategoryVodDTO.class);
+				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+						"FeatureCategory.selectFeatureBroadcastList", req, FeatureCategoryVod.class);
 
 				vodRes = this.generateVO("broadcastRecommend", vodList);
 			} else {
@@ -207,8 +207,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("방송 > 방송사별 최신Up 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				FeatureCategoryVodDTO dto = new FeatureCategoryVodDTO();
-				List<FeatureCategoryVodDTO> vodList = new ArrayList<FeatureCategoryVodDTO>();
+				FeatureCategoryVod dto = new FeatureCategoryVod();
+				List<FeatureCategoryVod> vodList = new ArrayList<FeatureCategoryVod>();
 				vodList.add(dto);
 
 				vodRes = this.generateVO("broadcastNew", vodList);
@@ -221,12 +221,12 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	/*
 	 * Feature VOD 카테고리 상품 VO 생성 Method.
 	 */
-	private FeatureCategoryVodRes generateVO(String apiGb, List<FeatureCategoryVodDTO> vodList) {
+	private FeatureCategoryVodRes generateVO(String apiGb, List<FeatureCategoryVod> vodList) {
 		FeatureCategoryVodRes vodRes = new FeatureCategoryVodRes();
 		CommonResponse commonRes = new CommonResponse();
 
 		if (!vodList.isEmpty()) {
-			FeatureCategoryVodDTO vodDto = null;
+			FeatureCategoryVod vodDto = null;
 
 			Identifier identifier = null;
 			Support support = null;

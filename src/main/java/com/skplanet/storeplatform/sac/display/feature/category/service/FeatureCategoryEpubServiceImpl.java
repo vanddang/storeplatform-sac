@@ -40,7 +40,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryEpubDTO;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryEpub;
 
 /**
  * 
@@ -79,7 +79,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 		String topMenuId = requestVO.getTopMenuId();
 		String listId = requestVO.getListId();
 
-		List<CategoryEpubDTO> resultList;
+		List<FeatureCategoryEpub> resultList;
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(topMenuId) || StringUtils.isEmpty(listId)) {
@@ -195,33 +195,33 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("----------------------------------------------------------------");
 
 			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList", requestVO,
-					CategoryEpubDTO.class);
+					FeatureCategoryEpub.class);
 		} else if (listId.equals("ADM000000002")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("만화 > 최신 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
 			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList", requestVO,
-					CategoryEpubDTO.class);
+					FeatureCategoryEpub.class);
 		} else if (listId.equals("RNK000000002")) {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("eBook > 최신 > 일반/장르 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
 			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubRecomList", requestVO,
-					CategoryEpubDTO.class);
+					FeatureCategoryEpub.class);
 		} else {
 			this.logger.debug("----------------------------------------------------------------");
 			this.logger.debug("만화/이북 > 추천 > 인기만화/인기도서 조회");
 			this.logger.debug("----------------------------------------------------------------");
 
 			resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryEpubBestList", requestVO,
-					CategoryEpubDTO.class);
+					FeatureCategoryEpub.class);
 		}
 
 		List<Product> listVO = new ArrayList<Product>();
 
-		CategoryEpubDTO categoryEpubDTO;
+		FeatureCategoryEpub FeatureCategoryEpub;
 		Product product;
 		Identifier identifier;
 		Title title;
@@ -242,7 +242,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		for (int i = 0; resultList != null && i < resultList.size(); i++) {
 
-			categoryEpubDTO = resultList.get(i);
+			FeatureCategoryEpub = resultList.get(i);
 			product = new Product();
 			identifier = new Identifier();
 			title = new Title();
@@ -263,82 +263,82 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			sourceList = new ArrayList<Source>();
 			supportList = new ArrayList<Support>();
 
-			totalCount = categoryEpubDTO.getTotalCount();
+			totalCount = FeatureCategoryEpub.getTotalCount();
 
 			identifier.setType("channel");
-			identifier.setText(categoryEpubDTO.getProdId());
-			title.setText(categoryEpubDTO.getProdNm());
+			identifier.setText(FeatureCategoryEpub.getProdId());
+			title.setText(FeatureCategoryEpub.getProdNm());
 
 			menu = new Menu();
-			menu.setId(categoryEpubDTO.getTopMenuId());
-			menu.setName(categoryEpubDTO.getTopMenuNm());
+			menu.setId(FeatureCategoryEpub.getTopMenuId());
+			menu.setName(FeatureCategoryEpub.getTopMenuNm());
 			menu.setType("topClass");
 			menuList.add(menu);
 			menu = new Menu();
-			menu.setId(categoryEpubDTO.getMenuId());
-			menu.setName(categoryEpubDTO.getMenuNm());
+			menu.setId(FeatureCategoryEpub.getMenuId());
+			menu.setName(FeatureCategoryEpub.getMenuNm());
 			// menu.setType("");
 			menuList.add(menu);
 			menu = new Menu();
-			menu.setId(categoryEpubDTO.getMetaClsfCd());
+			menu.setId(FeatureCategoryEpub.getMetaClsfCd());
 			menu.setName("ebook/series");
 			menu.setType("metaClass");
 			menuList.add(menu);
 
-			book.setType(categoryEpubDTO.getBookType());
-			book.setTotalPages(categoryEpubDTO.getBookPageCnt());
+			book.setType(FeatureCategoryEpub.getBookType());
+			book.setTotalPages(FeatureCategoryEpub.getBookPageCnt());
 
-			book.setStatus(categoryEpubDTO.getBookStatus());
+			book.setStatus(FeatureCategoryEpub.getBookStatus());
 
-			support.setText(categoryEpubDTO.getSupportPlay());
+			support.setText(FeatureCategoryEpub.getSupportPlay());
 
 			supportList.add(support);
 			book.setSupportList(supportList);
 			product.setBook(book);
 			this.log.debug("setBook");
-			contributor.setName(categoryEpubDTO.getArtist1Nm());
-			contributor.setCompany(categoryEpubDTO.getChnlCompNm());
-			if (!"".equals(StringUtil.nvl(categoryEpubDTO.getIssueDay(), ""))) {
+			contributor.setName(FeatureCategoryEpub.getArtist1Nm());
+			contributor.setCompany(FeatureCategoryEpub.getChnlCompNm());
+			if (!"".equals(StringUtil.nvl(FeatureCategoryEpub.getIssueDay(), ""))) {
 				Date date = new Date();
 				date.setType("date/reg");
-				date.setText(categoryEpubDTO.getIssueDay());
+				date.setText(FeatureCategoryEpub.getIssueDay());
 				contributor.setDate(date);
 			}
 			this.log.debug("setCompany");
 
-			accrual.setVoterCount(categoryEpubDTO.getPrchsCnt());
-			accrual.setDownloadCount(categoryEpubDTO.getDwldCnt());
+			accrual.setVoterCount(FeatureCategoryEpub.getPrchsCnt());
+			accrual.setDownloadCount(FeatureCategoryEpub.getDwldCnt());
 			accrual.setScore(3.3);
 			this.log.debug("accrual");
 			/*
 			 * Rights grade
 			 */
-			rights.setGrade(categoryEpubDTO.getProdGrdCd());
+			rights.setGrade(FeatureCategoryEpub.getProdGrdCd());
 
 			source.setMediaType("image/jpeg");
-			source.setSize(categoryEpubDTO.getFileSize());
+			source.setSize(FeatureCategoryEpub.getFileSize());
 			source.setType("thumbNail");
-			source.setUrl(categoryEpubDTO.getFilePath());
+			source.setUrl(FeatureCategoryEpub.getFilePath());
 			sourceList.add(source);
 			this.log.debug("sourceList");
 			/*
 			 * Price text
 			 */
-			price.setText(categoryEpubDTO.getProdAmt());
-			price.setFixedPrice(categoryEpubDTO.getProdNetAmt());
+			price.setText(FeatureCategoryEpub.getProdAmt());
+			price.setFixedPrice(FeatureCategoryEpub.getProdNetAmt());
 			this.log.debug("price");
 			// product = new Product();
 			identifierList.add(identifier);
 			product.setIdentifierList(identifierList);
 			product.setTitle(title);
-			// support.setText(categoryEpubDTO.getDrmYn() + "|" + categoryEpubDTO.getPartParentClsfCd());
+			// support.setText(FeatureCategoryEpub.getDrmYn() + "|" + FeatureCategoryEpub.getPartParentClsfCd());
 			// supportList.add(support);
 			// product.setSupportList(supportList);
 			product.setMenuList(menuList);
 
 			product.setAccrual(accrual);
 			product.setRights(rights);
-			product.setProductExplain(categoryEpubDTO.getProdBaseDesc());
+			product.setProductExplain(FeatureCategoryEpub.getProdBaseDesc());
 			product.setSourceList(sourceList);
 			product.setPrice(price);
 			product.setContributor(contributor);

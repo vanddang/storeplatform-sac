@@ -43,7 +43,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.category.vo.CategoryAppDTO;
+import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryApp;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
@@ -88,11 +88,11 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 		FeatureCategoryAppRes responseVO = null;
 		CommonResponse commonResponse = null;
 
-		List<CategoryAppDTO> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryAppListDummy",
-				requestVO, CategoryAppDTO.class);
+		List<FeatureCategoryApp> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryAppListDummy",
+				requestVO, FeatureCategoryApp.class);
 		List<Product> listVO = new ArrayList<Product>();
 
-		CategoryAppDTO categoryAppDTO;
+		FeatureCategoryApp categoryAppDTO;
 		Product product;
 		Identifier identifier;
 		Title title;

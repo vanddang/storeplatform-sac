@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.display.feature.category.vo;
  * 
  * Updated on : 2014. 1. 7. Updated by : 서영배, GTSOFT.
  */
-public class CategoryEpubDTO {
+public class FeatureCategoryEpub {
 
 	private String topMenuId;
 	private String menuId;
