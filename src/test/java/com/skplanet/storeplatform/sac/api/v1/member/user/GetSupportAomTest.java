@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
@@ -60,8 +61,47 @@ public class GetSupportAomTest {
 	 */
 	@Test
 	public void getSupportAom() {
-		new TestCaseTemplate(this.mockMvc)
-				.url("/member/user/getSupportAom/v1?userKey=US201401241840125650000649&deviceId=01001232112")
+		new TestCaseTemplate(this.mockMvc).url("/member/user/getSupportAom/v1?userKey=US201401241840125650000649&deviceId=01001232112")
+				.httpMethod(HttpMethod.GET).success(SupportAomRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SupportAomRes res = (SupportAomRes) result;
+						assertThat(res.getIsAomSupport(), notNullValue());
+						logger.info("단말 AOM 확인 response param : {}", res.toString());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 단말 AOM 확인 - UserKey Null
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void getSupportAomExceptionUserKey() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/getSupportAom/v1?userKey=&deviceId=01001232112").httpMethod(HttpMethod.GET)
+				.success(SupportAomRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						SupportAomRes res = (SupportAomRes) result;
+						assertThat(res.getIsAomSupport(), notNullValue());
+						logger.info("단말 AOM 확인 response param : {}", res.toString());
+						logger.info("{}", res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 단말 AOM 확인 - DeviceId Null
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void getSupportAomExceptionDeviceId() {
+		new TestCaseTemplate(this.mockMvc).url("/member/user/getSupportAom/v1?userKey=US201401241840125650000649&deviceId=")
 				.httpMethod(HttpMethod.GET).success(SupportAomRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

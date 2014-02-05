@@ -65,7 +65,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setUserKey("IF1023002708420090928145937");
+				req.setUserKey("IW1023284651220101007215215");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
@@ -92,7 +92,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setUserId("tstore44");
+				req.setUserId("shop_3292");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
@@ -118,7 +118,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setDeviceId("01088902431");
+				req.setDeviceId("01094993599");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
@@ -173,7 +173,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setUserKey("IF102300270842009092814593711");
+				req.setUserKey("");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
@@ -198,7 +198,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setUserId("tstore4444");
+				req.setUserId("");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
@@ -221,7 +221,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setDeviceId("0108890243111");
+				req.setDeviceId("");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
@@ -245,7 +245,7 @@ public class ExistTest {
 			@Override
 			public Object requestBody() {
 				ExistReq req = new ExistReq();
-				req.setDeviceKey("DE20140122185851660000016011");
+				req.setDeviceKey("");
 				logger.debug("request param : {}", req.toString());
 				return req;
 			}
