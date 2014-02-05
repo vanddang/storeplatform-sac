@@ -19,11 +19,20 @@
 		http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
  	
- 	<!-- <import resource="classpath*:runtime/context-runtime-amqp.xml"/> -->
+ 	<import resource="classpath*:runtime/context-runtime-amqp.xml"/>
  	
- 	<bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
- 	    <constructor-arg>
+ 	<bean class="com.rabbitmq.client.ConnectionFactory">
+        <property name="host" value="211.110.115.151" />
+        <property name="port" value="5672" />
+        <property name="username" value="guest" />
+        <property name="password" value="guest" />
+        <property name="virtualHost" value="/" />
+    </bean>
+    
+    <bean id="inboundQueueNames" class="com.skplanet.storeplatform.framework.core.util.StringUtils" factory-method="convertArrayListToString">
+        <constructor-arg>
             <list>
+                <value>cmsapp.sac.request.sync.content.test99999</value>
                 <value>cmsapp.sac.request.sync.content.test0001</value>
                 <value>cmsapp.sac.response.sync.content.test0001</value>
                 <value>tenant1.sac.request.sync.content.test0001</value>
@@ -33,9 +42,12 @@
         <constructor-arg type="java.lang.String">
             <value>,</value>
         </constructor-arg>
- 	</bean>
- 	
-	<rabbit:queue id="cmsapp.sac.request.sync.content.test0001" name="cmsapp.sac.request.sync.content.test0001" >
+    </bean>
+    
+    <rabbit:queue id="cmsapp.sac.request.sync.content.test99999" name="cmsapp.sac.request.sync.content.test99999" >
+        <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
+    </rabbit:queue>
+    <rabbit:queue id="cmsapp.sac.request.sync.content.test0001" name="cmsapp.sac.request.sync.content.test0001" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
     <rabbit:queue id="cmsapp.sac.response.sync.content.test0001" name="cmsapp.sac.response.sync.content.test0001" >
@@ -48,5 +60,20 @@
     <rabbit:queue id="tenant1.sac.response.sync.content.test0001" name="tenant1.sac.response.sync.content.test0001" >
         <rabbit:queue-arguments><entry key="x-ha-policy" value="all" /></rabbit:queue-arguments>
     </rabbit:queue>
+    
+    
+    
+    <rabbit:admin connection-factory="sacRabbitConnectionFactory" auto-startup="true" />
+            
+    <rabbit:connection-factory id="sacRabbitConnectionFactory" />
+    
+    <bean id="sacRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory" >
+        <constructor-arg ref="com.rabbitmq.client.ConnectionFactory" />
+        <property name="channelCacheSize" value="10"/>
+    </bean>
+    
+    <rabbit:template id="storeplatformRabbitTemplate" connection-factory="sacRabbitConnectionFactory" message-converter="sacRabbitJsonMessageConverter" reply-timeout="60000" />
+    
+    <bean id="sacRabbitJsonMessageConverter" class="org.springframework.amqp.support.converter.JsonMessageConverter" />
 
 </beans> 

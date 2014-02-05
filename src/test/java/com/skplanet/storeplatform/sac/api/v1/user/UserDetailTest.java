@@ -94,6 +94,7 @@ public class UserDetailTest {
 
 		new TestCaseTemplate(this.mockMvc).url("/bypass/user/detail/1").httpMethod(HttpMethod.POST)
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
+				.addHeaders("x-guid", "1389333380620-5b365f77-29ca-42af-866f-133260ec8ddf")
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {

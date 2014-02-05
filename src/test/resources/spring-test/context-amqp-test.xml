@@ -18,16 +18,20 @@
         http://www.springframework.org/schema/integration/amqp    http://www.springframework.org/schema/integration/amqp/spring-integration-amqp-2.2.xsd
         http://www.springframework.org/schema/rabbit              http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd">
     
-    <rabbit:connection-factory id="testRabbitConnectionFactory" />
-    
-    <rabbit:admin connection-factory="testRabbitConnectionFactory" />   
-    
-    <bean id="testRabbitConnectionFactory"
-        class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
-        <property name="addresses" value="211.110.115.151:5672,211.110.115.151:5672" />
+    <bean class="com.rabbitmq.client.ConnectionFactory">
+        <property name="host" value="211.110.115.151" />
+        <property name="port" value="5672" />
         <property name="username" value="guest" />
         <property name="password" value="guest" />
         <property name="virtualHost" value="/" />
+    </bean>
+    
+    <rabbit:connection-factory id="testRabbitConnectionFactory" />
+    
+    <rabbit:admin connection-factory="testRabbitConnectionFactory" />   
+ 
+    <bean id="testRabbitConnectionFactory" class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+        <constructor-arg ref="com.rabbitmq.client.ConnectionFactory" />
         <property name="channelCacheSize" value="10"/>
     </bean>
 
