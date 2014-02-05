@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class CategorySpecificReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String list;
 	// TODO osm1021 dummy data가 필요없어지면 삭제할것
 	private String dummy;

@@ -15,7 +15,7 @@ public class DeviceProductProvisioningReq extends CommonInfo {
 	 */
 	private String productType;
 	/**
-	 * 상품 Id list.
+	 * 상품 Id list.(episode ID만 가능)
 	 */
 	private String list;
 	/**
