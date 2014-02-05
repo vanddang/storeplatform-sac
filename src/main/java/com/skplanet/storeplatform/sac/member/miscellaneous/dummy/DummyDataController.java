@@ -330,7 +330,7 @@ public class DummyDataController {
 		LOGGER.info("####################################################");
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
-		response.setDeviceId("0101231234");
+		response.setMsisdn("0101231234");
 		response.setSvcCode("NA00004184");
 
 		return response;
@@ -352,7 +352,7 @@ public class DummyDataController {
 		LOGGER.info("####################################################");
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
-		response.setDeviceId("0101231234");
+		response.setMsisdn("0101231234");
 		response.setSvcJoinResult("NA00004184=T");
 
 		return response;

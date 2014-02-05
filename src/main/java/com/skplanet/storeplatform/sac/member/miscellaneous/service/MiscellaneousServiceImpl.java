@@ -552,11 +552,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 		// TODO IdpServie joinSupService 호출해서 부가서비스 가입 요청
-		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getDeviceId(), request.getSvcCode(),
+		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getMsisdn(), request.getSvcCode(),
 				request.getSvcMngNum());
 
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
-		response.setDeviceId(idpReciver.getResponseBody().getUser_phone()); // 사용자 휴대폰번호
+		response.setMsisdn(idpReciver.getResponseBody().getUser_phone()); // 사용자 휴대폰번호
 
 		return response;
 	}
@@ -567,12 +567,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 
 		// IDP 호출해서 부가서비스 가입 조회 요청
-		IDPReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getDeviceId(), request.getSvcCode());
+		IDPReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getMsisdn(), request.getSvcCode());
 		idpReciver.getResponseBody().getSp_list(); // 타 채널 가입 리스트
 		idpReciver.getResponseBody().getCharge(); // SKT 사용자의 휴대폰 요금제 코드
 		idpReciver.getResponseBody().getServiceCD(); // SKT 사용자의 휴대폰 요금제에 따른 부가서비스 코드
 
-		response.setDeviceId(request.getDeviceId());
+		response.setMsisdn(request.getMsisdn());
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
 		response.setSvcJoinResult(idpReciver.getResponseBody().getSvc_result()); // 부가서비스 결과 : 하나 또는 복수 파이프(|)로 구분함 /
 																				 // 결과는 (=) 로 구분
