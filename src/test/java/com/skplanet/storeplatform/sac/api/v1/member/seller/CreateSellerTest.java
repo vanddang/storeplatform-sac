@@ -36,7 +36,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSeller
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
 import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
-import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
@@ -168,23 +167,6 @@ public class CreateSellerTest {
 						req.setSellerCI("1231323123");
 
 						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-						req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
@@ -235,28 +217,6 @@ public class CreateSellerTest {
 						req.setRealNameMethod("US011101");
 						req.setSellerName("개인유료");
 						req.setSellerCI("1231323123");
-
-						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-
-						req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
@@ -309,28 +269,6 @@ public class CreateSellerTest {
 						req.setSellerName("개사무료");
 						req.setSellerCI("1231323123");
 
-						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-
-						req.setAgreementList(agreementList);
-
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
@@ -381,28 +319,6 @@ public class CreateSellerTest {
 						req.setRealNameMethod("US011101");
 						req.setSellerName("개사유료");
 						req.setSellerCI("1231323123");
-
-						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-
-						req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
@@ -455,28 +371,6 @@ public class CreateSellerTest {
 						req.setSellerName("법사무료");
 						req.setSellerCI("1231323123");
 
-						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-
-						req.setAgreementList(agreementList);
-
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
@@ -528,28 +422,6 @@ public class CreateSellerTest {
 						req.setSellerName("법사유료");
 						req.setSellerCI("1231323123");
 
-						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-
-						req.setAgreementList(agreementList);
-
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
@@ -600,28 +472,6 @@ public class CreateSellerTest {
 						req.setRealNameMethod("US011101");
 						req.setSellerName("법사BP");
 						req.setSellerCI("1231323123");
-
-						// 약관정보
-						List<AgreementInfo> agreementList = new ArrayList<AgreementInfo>();
-						AgreementInfo agreement = new AgreementInfo();
-						agreement.setExtraAgreementId("US010607");
-						agreement.setExtraAgreementVersion("0.1");
-						agreement.setIsExtraAgreement("Y");
-						agreementList.add(agreement);
-
-						AgreementInfo agreement2 = new AgreementInfo();
-						agreement2.setExtraAgreementId("US010608");
-						agreement2.setExtraAgreementVersion("0.1");
-						agreement2.setIsExtraAgreement("Y");
-						agreementList.add(agreement2);
-
-						AgreementInfo agreement3 = new AgreementInfo();
-						agreement3.setExtraAgreementId("US010609");
-						agreement3.setExtraAgreementVersion("0.1");
-						agreement3.setIsExtraAgreement("Y");
-						agreementList.add(agreement3);
-
-						req.setAgreementList(agreementList);
 
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
