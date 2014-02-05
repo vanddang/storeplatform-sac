@@ -217,4 +217,17 @@ public interface IdpService {
 	 */
 	public ImResult rXPreCheckDisagreeUserIDP(HashMap map);
 
+	/**
+	 * 
+	 * <pre>
+	 * OCB 해지 및 철회 요청 설정 배포 - CMD : RXSetOCBDisagreeIDP .
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+
+	public ImResult rXSetOCBDisagreeIDP(HashMap map);
 }
