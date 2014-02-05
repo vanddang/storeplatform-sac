@@ -1207,6 +1207,7 @@ public class IdpServiceImpl implements IdpService {
 
 		// 회원 정보 존재
 		if (getUserMbr != null) {
+			LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 존재");
 			delYN = "Y";
 			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
@@ -1218,6 +1219,7 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setUserId(userID);
 			imResult.setIsCancelAble(delYN);
 		} else {
+			LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 없음");
 			imResult.setCmd("RXPreCheckDeleteUserIDP");
 			imResult.setResult(idpResult);
 			imResult.setResultText(idpResultText);
