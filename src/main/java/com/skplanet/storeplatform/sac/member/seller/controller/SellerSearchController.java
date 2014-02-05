@@ -135,7 +135,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	// @RequestMapping(value = "/searchId/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchId2/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
 
