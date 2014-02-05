@@ -38,7 +38,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Music;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.category.vo.MusicContentsDTO;
+import com.skplanet.storeplatform.sac.display.category.vo.MusicContents;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 
@@ -155,13 +155,13 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		List<Product> productList = new ArrayList<Product>();
 
-		List<MusicContentsDTO> resultList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
-				MusicContentsDTO.class);
+		List<MusicContents> resultList = this.commonDAO.queryForList("MusicMain.getMusicMainList", requestVO,
+				MusicContents.class);
 		if (resultList != null) {
 
-			Iterator<MusicContentsDTO> iterator = resultList.iterator();
+			Iterator<MusicContents> iterator = resultList.iterator();
 			while (iterator.hasNext()) {
-				MusicContentsDTO mapperVO = iterator.next();
+				MusicContents mapperVO = iterator.next();
 
 				totalCount = mapperVO.getTotalCount();
 
