@@ -72,6 +72,20 @@ public class CouponItemServiceImpl implements CouponItemService {
 	 * </pre>
 	 */
 	@Override
+	public int getCouponItemCountCudType(String scrContentId) {
+		try {
+			return (Integer) this.commonDAO.queryForObject("Coupon.getCouponItemCountCudType", scrContentId);
+		} catch (Exception e) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, e.getMessage(), null);
+		}
+	}
+
+	/**
+	 * <pre>
+	 * 쿠폰ID,아이템ID 가져오기
+	 * </pre>
+	 */
+	@Override
 	public String getGenerateId(String scrContentId) {
 		try {
 			return (String) this.commonDAO.queryForObject("Coupon.getGenerateId", scrContentId);

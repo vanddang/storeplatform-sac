@@ -118,7 +118,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -227,7 +227,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND  EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -375,7 +375,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND  EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -553,7 +553,7 @@
                         <if test="prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -697,7 +697,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -886,7 +886,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -1021,7 +1021,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -1170,7 +1170,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM
@@ -1324,7 +1324,7 @@
                         <if test="req.prodGradeCd != null">
                         AND J.PROD_GRD_CD =#{req.prodGradeCd}
                         </if>   
-                        AND NOT EXISTS (
+                        AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
                                  ,TB_CM_DEVICE CM

@@ -83,11 +83,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getFeatureProductList(SacRequestHeader header, ShoppingReq req) {
 
 		// 공통 응답 변수 선언
+
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -113,9 +120,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(stdDt)) {
 			throw new StorePlatformException("SAC_DSP_0003", "stdDt", stdDt);
 		}
-
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -171,9 +175,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -188,9 +198,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
-
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -246,9 +253,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -286,8 +299,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			req.setStdDt(stdDt);
 		}
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -341,15 +352,26 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 */
 	@Override
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
-		ShoppingRes responseVO = null;
 		/** TODO 2. 테스트용 if 헤더 셋팅 */
+		ShoppingRes res = new ShoppingRes();
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+
 		List<Shopping> resultList = new ArrayList<Shopping>();
 
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setSystemId(header.getTenantHeader().getSystemId());
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP0001A8");
-		req.setDeviceModelCd("SHV-E330SSO");
+		// req.setTenantId(header.getTenantHeader().getTenantId());
+		// req.setSystemId(header.getTenantHeader().getSystemId());
+		// req.setLangCd(header.getTenantHeader().getLangCd());
+		// req.setImageCd("DP0001A8");
+		// req.setDeviceModelCd("SHV-E330SSO");
 
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
@@ -472,14 +494,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 				productList.add(i, product);
 			}
 
-			responseVO = new ShoppingRes();
-			responseVO.setProductList(productList);
+			res = new ShoppingRes();
+			res.setProductList(productList);
 
-			CommonResponse commonResponse = new CommonResponse();
 			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonResponse(commonResponse);
+			res.setCommonResponse(commonResponse);
 		}
-		return responseVO;
+		return res;
 	}
 
 	/**
@@ -490,14 +511,24 @@ public class ShoppingServiceImpl implements ShoppingService {
 	@Override
 	public ShoppingThemeRes getSpecialSalesList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
-		ShoppingThemeRes responseVO = null;
+		ShoppingThemeRes res = null;
 		List<Shopping> resultList = new ArrayList<Shopping>();
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setSystemId(header.getTenantHeader().getSystemId());
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP0001A8");
-		req.setDeviceModelCd("SHV-E330SSO");
+		// req.setTenantId(header.getTenantHeader().getTenantId());
+		// req.setSystemId(header.getTenantHeader().getSystemId());
+		// req.setLangCd(header.getTenantHeader().getLangCd());
+		// req.setImageCd("DP0001A8");
+		// req.setDeviceModelCd("SHV-E330SSO");
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
@@ -547,10 +578,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 				promotionList.add(i, promotion);
 			}
 
-			responseVO = new ShoppingThemeRes();
-			responseVO.setPromotionList(promotionList);
+			res = new ShoppingThemeRes();
+			res.setPromotionList(promotionList);
 		}
-		return responseVO;
+		return res;
 	}
 
 	/**
@@ -563,9 +594,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingThemeRes res = new ShoppingThemeRes();
 		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		List<Shopping> resultList = new ArrayList<Shopping>();
 
 		// 필수 파라미터 체크
@@ -584,9 +621,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
-
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// 프로모션 리스트 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getSpecialSalesList", req, Shopping.class);
@@ -686,11 +720,22 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Shopping> detailList = new ArrayList<Shopping>();
 		List<Shopping> menuBrandList = new ArrayList<Shopping>();
 
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setSystemId(header.getTenantHeader().getSystemId());
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP0001A4");
-		req.setDeviceModelCd("SHV-E330SSO");
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
+
+		// req.setTenantId(header.getTenantHeader().getTenantId());
+		// req.setSystemId(header.getTenantHeader().getSystemId());
+		// req.setLangCd(header.getTenantHeader().getLangCd());
+		// req.setImageCd("DP0001A4");
+		// req.setDeviceModelCd("SHV-E330SSO");
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -790,12 +835,17 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getBrandshopProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
 		List<Shopping> resultList = new ArrayList<Shopping>();
-
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
@@ -809,9 +859,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		// offset, Count default setting
 		this.commonOffsetCount(req);
-
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// 브랜드샵 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getBrandshopMainList", req, Shopping.class);
@@ -896,11 +943,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes responseVO = null;
 		List<Shopping> resultList = new ArrayList<Shopping>();
 
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setSystemId(header.getTenantHeader().getSystemId());
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP0001A7");
-		req.setDeviceModelCd("SHV-E330SSO");
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_THEME_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -968,13 +1020,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getThemeProductList(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		CommonResponse commonResponse = new CommonResponse();
-		req.setTenantId(header.getTenantHeader().getTenantId());
-		req.setSystemId(header.getTenantHeader().getSystemId());
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
 		List<Shopping> resultList = new ArrayList<Shopping>();
+
+		CommonResponse commonResponse = new CommonResponse();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -992,9 +1049,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
-
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// 테마 정보 가져오기
 		resultList = this.commonDAO.queryForList("Shopping.getThemeList", req, Shopping.class);
@@ -1073,9 +1127,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1116,8 +1176,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			req.setStdDt(stdDt);
 		}
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();
@@ -1174,9 +1232,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
-		req.setLangCd(header.getTenantHeader().getLangCd());
-		req.setImageCd("DP000164");
-		req.setDeviceModelCd("SHV-E330SSO");
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		String[] temp = deviceHeader.getOsVersion().trim().split("/");
+		String osVersion = temp[1];
+		req.setTenantId(tenantHeader.getTenantId());
+		req.setDeviceModelCd(deviceHeader.getModel());
+		req.setLangCd(tenantHeader.getLangCd());
+		req.setOsVersion(osVersion);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1217,8 +1281,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			}
 			req.setStdDt(stdDt);
 		}
-		TenantHeader tenantHeader = header.getTenantHeader();
-		DeviceHeader deviceHeader = header.getDeviceHeader();
 
 		// DB 조회 파라미터 생성
 		Map<String, Object> reqMap = new HashMap<String, Object>();

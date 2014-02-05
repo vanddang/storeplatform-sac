@@ -90,7 +90,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 			// COUPON 기본정보 등록상태확인
 			this.log.info("■■■■■ validateContentInfo 시작 ■■■■■");
-			if (!this.validateCouponInfo(couponInfo)) {
+			if (!this.validateCouponInfo(couponInfo, itemInfoList)) {
 				throw new CouponException(this.errorCode, this.message, null);
 			}
 			this.log.info("■■■■■ validateContentInfo 패스 ■■■■■");
@@ -172,7 +172,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 	 * @param ContentInfo
 	 * @return Boolean result @
 	 */
-	private boolean validateCouponInfo(DpCouponInfo couponInfo) {
+	private boolean validateCouponInfo(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList) {
 
 		// B2B상품 유효성 검증
 		if (StringUtils.equalsIgnoreCase(couponInfo.getStoreb2bFlag(), "Y")) {
@@ -192,6 +192,12 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		// 카탈로그 유효성 검증
 		if (!this.validateCatalog(couponInfo)) { // CatalogCode 확인 해야 함
+			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID;
+			return false;
+		}
+
+		// 쿠폰 , 아이템 유효성 검증
+		if (!this.validateCouponItemCount(couponInfo, itemInfoList)) { // CatalogCode 확인 해야 함
 			this.errorCode = CouponConstants.COUPON_IF_ERROR_CODE_NOT_CATALOGID;
 			return false;
 		}
@@ -864,14 +870,13 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		return true;
 	}// End validateBusinessPartner
 
-	// /**
-	// * 해당 카탈로그가 존재 하는지 체크 한다.
-	// *
-	// * @param String
-	// * catalogCode
-	// * @return Boolean result
-	// * @
-	// */
+	/**
+	 * 해당 카탈로그가 존재 하는지 체크 한다.
+	 * 
+	 * @param DpCouponInfo
+	 *            couponInfo
+	 * @return Boolean result @
+	 */
 	private boolean validateCatalog(DpCouponInfo couponInfo) {
 		String catalogID = this.brandCatalogService.getCreateCatalogId(couponInfo.getStoreCatalogCode());
 		if (StringUtils.isNotBlank(catalogID)) {
@@ -879,6 +884,28 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			couponInfo.setStoreCatalogCode(catalogID);
 		} else {
 			return false;
+		}
+		return true;
+	}// End validateCatalog
+
+	/**
+	 * 쿠폰 , 아이템 유효성 검증
+	 * 
+	 * @param DpCouponInfo
+	 *            couponInfo, List<DpItemInfo> itemInfoList
+	 * @return Boolean result
+	 * 
+	 */
+	private boolean validateCouponItemCount(DpCouponInfo couponInfo, List<DpItemInfo> itemInfoList) {
+		if (this.couponItemService.getCouponItemCountCudType(couponInfo.getCouponCode()) < 1) {
+			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_COUPONID,
+					"해당 Coupon_Id로 등록한 coupon가 있습니다.", couponInfo.getBpId());
+		}
+		for (int i = 0; i < itemInfoList.size(); i++) {
+			if (this.couponItemService.getCouponItemCountCudType(itemInfoList.get(i).getItemCode()) < 1) {
+				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DUP_ITEMID,
+						"해당 Item_Id로 등록한 item이 있습니다.", couponInfo.getBpId());
+			}
 		}
 		return true;
 	}// End validateCatalog

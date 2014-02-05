@@ -41,6 +41,13 @@ public interface CouponItemService {
 
 	/**
 	 * <pre>
+	 * 쿠폰 , 아이템 유효성 검증
+	 * </pre>
+	 */
+	public int getCouponItemCountCudType(String scrContentId);
+
+	/**
+	 * <pre>
 	 * 쿠폰ID,아이템ID 가져오기
 	 * </pre>
 	 */
