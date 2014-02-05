@@ -144,7 +144,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			try {
 				// 구매내역 조회를 위한 생성자
 				ProductListSac productListSac = new ProductListSac();
-				productListSac.setProdId(metaInfo.getPartProdId());
+				productListSac.setProdId(metaInfo.getProdId());
 
 				List<ProductListSac> productList = new ArrayList<ProductListSac>();
 				productList.add(productListSac);
@@ -164,7 +164,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 				HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
 				this.log.debug("----------------------------------------------------------------");
-				this.log.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+				this.log.debug("[getDownloadMusicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
 				this.log.debug("----------------------------------------------------------------");
 
 				if (historyListSacRes.getTotalCnt() > 0) {
@@ -363,11 +363,15 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			 */
 			rights.setGrade("PD004401");
 
+			purchase.setState("payment");
 			identifier = new Identifier();
-			identifier.setType("purchase");
-			identifier.setText("GI100000000265812187");
+			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+			identifier.setText("MI100000000000048053");
 			purchase.setIdentifier(identifier);
-			purchase.setPurchaseFlag("payment");
+			date = new Date();
+			date.setType("date/purchase");
+			date.setText("20130722143732");
+			purchase.setDate(date);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);

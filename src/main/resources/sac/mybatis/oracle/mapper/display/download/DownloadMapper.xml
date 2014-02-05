@@ -182,7 +182,8 @@
              , ( CASE WHEN CHAPTER IS NOT NULL THEN '회' END ) AS CHAPTER_UNIT
              , DECODE( USE_PERIOD_UNIT_CD
                      , 'PD00310', NULL
-                     , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USAGE_PERIOD            
+                     , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USAGE_PERIOD
+             , USE_PERIOD_UNIT_CD            
              , DWLD_AREA_LIMT_YN 
              , EPSD_PLAY_TM
              , PROD_GRD_CD

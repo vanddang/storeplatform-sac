@@ -70,6 +70,7 @@ public class DownloadVod {
 	private Integer imageSize; // 이미지 사이즈
 	private String filePath; // 파일 경로
 	private String sysDate; // 시스템 날짜
+	private String usePeriodUnitCd; // 기간 단위코드
 
 	/**
 	 * 
@@ -1434,5 +1435,20 @@ public class DownloadVod {
 	 */
 	public void setSysDate(String sysDate) {
 		this.sysDate = sysDate;
+	}
+
+	/**
+	 * @return the usePeriodUnitCd
+	 */
+	public String getUsePeriodUnitCd() {
+		return this.usePeriodUnitCd;
+	}
+
+	/**
+	 * @param usePeriodUnitCd
+	 *            the usePeriodUnitCd to set
+	 */
+	public void setUsePeriodUnitCd(String usePeriodUnitCd) {
+		this.usePeriodUnitCd = usePeriodUnitCd;
 	}
 }

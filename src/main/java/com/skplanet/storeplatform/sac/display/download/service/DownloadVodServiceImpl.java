@@ -178,7 +178,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 				String prchsId = null;
 				String prchsDt = null;
+				String dwldExprDt = null;
 				String prchsState = null;
+				String usePeriodUnitCd = downloadVodInfo.getUsePeriodUnitCd();
 
 				try {
 					// 구매내역 조회를 위한 생성자
@@ -203,18 +205,29 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
 					this.log.debug("----------------------------------------------------------------");
-					this.log.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+					this.log.debug("usePeriodUnitCd	:	" + usePeriodUnitCd);
 					this.log.debug("----------------------------------------------------------------");
 
 					if (historyListSacRes.getTotalCnt() > 0) {
 						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+						dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
 						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 
-						if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-							prchsState = "payment";
-						} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-							prchsState = "gift";
+						// 소장
+						if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
+							if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+								prchsState = "payment";
+							} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+								prchsState = "gift";
+							}
+						} else {
+							downloadVodSacReq.setPrchsDt(prchsDt);
+							downloadVodSacReq.setDwldExprDt(dwldExprDt);
+
+							// 대여 상품 구매상태 조회
+							prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
+									downloadVodSacReq);
 						}
 					}
 				} catch (Exception ex) {
@@ -585,11 +598,16 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			distributor.setEmail("skplanet_vod@tstore.co.kr");
 			distributor.setRegNo("중구-02923호");
 
+			// 구매 정보
+			purchase.setState("payment");
 			identifier = new Identifier();
-			identifier.setType("purchase");
-			identifier.setText("GI100000000265812187");
+			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+			identifier.setText("M1020954107328402159");
 			purchase.setIdentifier(identifier);
-			purchase.setPurchaseFlag("payment");
+			Date purchaseDate = new Date();
+			purchaseDate.setType("date/purchase");
+			purchaseDate.setText("20130604154645");
+			purchase.setDate(purchaseDate);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);

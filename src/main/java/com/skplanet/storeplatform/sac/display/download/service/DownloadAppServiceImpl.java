@@ -209,7 +209,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
 					this.log.debug("##################################################################################");
-					this.log.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+					this.log.debug("[getDownloadAppInfo] purchase count : {}", historyListSacRes.getTotalCnt());
 					this.log.debug("##################################################################################");
 
 					if (historyListSacRes.getTotalCnt() > 0) {
@@ -438,11 +438,16 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			distributor.setEmail("SEO-OperatorInfo@gameloft.com");
 			distributor.setRegNo("2009-서울강남-03038");
 
+			// 구매 정보
+			purchase.setState("payment");
 			identifier = new Identifier();
-			identifier.setType("purchase");
-			identifier.setText("GI100000000265812187");
+			identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+			identifier.setText("MI100000000000044286");
 			purchase.setIdentifier(identifier);
-			purchase.setPurchaseFlag("payment");
+			date = new Date();
+			date.setType("date/purchase");
+			date.setText("20130701165632");
+			purchase.setDate(date);
 
 			product = new Product();
 			product.setIdentifierList(identifierList);
