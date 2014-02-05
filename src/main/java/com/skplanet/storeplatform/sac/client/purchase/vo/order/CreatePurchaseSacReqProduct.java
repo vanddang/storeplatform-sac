@@ -28,9 +28,9 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	private String prodId; // 상품 ID
 	private String tenantProdGrpCd; // 테넌트 상품그룹 코드
 	@NotNull
-	private Double prodAmt; // 상품 가격
+	private double prodAmt; // 상품 가격
 	@NotNull
-	private Integer prodQty; // 상품 수량
+	private int prodQty; // 상품 수량
 	private String resvCol01; // 예비컬럼01
 	private String resvCol02; // 예비컬럼02
 	private String resvCol03; // 예비컬럼03
@@ -44,7 +44,7 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 
 	/**
 	 */
-	public CreatePurchaseSacReqProduct(String prodId, String tenantProdGrpCd, Double prodAmt, Integer prodQty) {
+	public CreatePurchaseSacReqProduct(String prodId, String tenantProdGrpCd, double prodAmt, int prodQty) {
 		this.prodId = prodId;
 		this.tenantProdGrpCd = tenantProdGrpCd;
 		this.prodAmt = prodAmt;
@@ -84,7 +84,7 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	/**
 	 * @return the prodAmt
 	 */
-	public Double getProdAmt() {
+	public double getProdAmt() {
 		return this.prodAmt;
 	}
 
@@ -92,14 +92,14 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	 * @param prodAmt
 	 *            the prodAmt to set
 	 */
-	public void setProdAmt(Double prodAmt) {
+	public void setProdAmt(double prodAmt) {
 		this.prodAmt = prodAmt;
 	}
 
 	/**
 	 * @return the prodQty
 	 */
-	public Integer getProdQty() {
+	public int getProdQty() {
 		return this.prodQty;
 	}
 
@@ -107,7 +107,7 @@ public class CreatePurchaseSacReqProduct extends CommonInfo {
 	 * @param prodQty
 	 *            the prodQty to set
 	 */
-	public void setProdQty(Integer prodQty) {
+	public void setProdQty(int prodQty) {
 		this.prodQty = prodQty;
 	}
 

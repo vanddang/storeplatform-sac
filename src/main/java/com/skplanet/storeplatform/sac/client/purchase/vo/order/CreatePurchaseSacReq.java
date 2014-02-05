@@ -40,7 +40,7 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	@NotBlank
 	private String currencyCd; // 통화 코드
 	@NotNull
-	private Double totAmt; // 총 결제 금액
+	private double totAmt; // 총 결제 금액
 	@NotBlank
 	private String clientIp; // 클라이언트 IP
 	@NotBlank
@@ -188,7 +188,7 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	/**
 	 * @return the totAmt
 	 */
-	public Double getTotAmt() {
+	public double getTotAmt() {
 		return this.totAmt;
 	}
 
@@ -196,7 +196,7 @@ public class CreatePurchaseSacReq extends CommonInfo {
 	 * @param totAmt
 	 *            the totAmt to set
 	 */
-	public void setTotAmt(Double totAmt) {
+	public void setTotAmt(double totAmt) {
 		this.totAmt = totAmt;
 	}
 
