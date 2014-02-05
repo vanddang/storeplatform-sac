@@ -81,6 +81,7 @@ public class MetaInfo {
 	private String playProdStatusCd;
 	private String usePeriodUnitCd;
 	private String usePeriod;
+	private String usePeriodNm;
 	private String ebookFilePath;
 	private Integer ebookFileSize;
 
@@ -1132,6 +1133,21 @@ public class MetaInfo {
 	 */
 	public void setUsePeriod(String usePeriod) {
 		this.usePeriod = usePeriod;
+	}
+
+	/**
+	 * @return the usePeriodNm
+	 */
+	public String getUsePeriodNm() {
+		return this.usePeriodNm;
+	}
+
+	/**
+	 * @param usePeriodNm
+	 *            the usePeriodNm to set
+	 */
+	public void setUsePeriodNm(String usePeriodNm) {
+		this.usePeriodNm = usePeriodNm;
 	}
 
 	/**
