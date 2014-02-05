@@ -678,29 +678,19 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		logger.debug("############ 부가정보 리스트 Size : {}", schUserExtraRes.getMbrMangItemPtcrList().size());
 
-		if (!StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-			throw new RuntimeException("######## 사용자 부가정보 조회실패 : " + schUserExtraRes.getCommonResponse().getResultCode() + " MSG : "
-					+ schUserExtraRes.getCommonResponse().getResultMessage());
-		} else if (StringUtils.equals(schUserExtraRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
+		/* 유저키 세팅 */
+		extraRes.setUserKey(schUserExtraRes.getUserKey());
+		/* 부가정보 값 세팅 */
+		for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
 
-			/* 유저키 세팅 */
-			extraRes.setUserKey(schUserExtraRes.getUserKey());
-			/* 부가정보 값 세팅 */
-			for (MbrMangItemPtcr ptcr : schUserExtraRes.getMbrMangItemPtcrList()) {
+			logger.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
+			logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
 
-				logger.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-				logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
+			UserExtraInfo extra = new UserExtraInfo();
+			extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
+			extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
 
-				// if (ptcr.getExtraProfile() == null && ptcr.getExtraProfileValue() == null) {
-				// throw new RuntimeException("######## 사용자 부가정보 조회 : ProfileCode, ProfileValue 없음");
-				// }
-
-				UserExtraInfo extra = new UserExtraInfo();
-				extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
-				extra.setExtraProfileValue(StringUtil.setTrim(ptcr.getExtraProfileValue()));
-
-				listExtraInfo.add(extra);
-			}
+			listExtraInfo.add(extra);
 
 			extraRes.setAddInfoList(listExtraInfo);
 
