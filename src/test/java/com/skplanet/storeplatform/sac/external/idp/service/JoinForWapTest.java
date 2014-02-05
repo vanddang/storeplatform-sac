@@ -37,14 +37,10 @@ public class JoinForWapTest {
 
 	@Test
 	public void joinForWap() {
-		try {
 
-			IDPReceiverM receiverM = this.idpService.join4Wap("01088870008", "SKT");
-			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
-			logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
-			logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		IDPReceiverM receiverM = this.idpService.join4Wap("01088870008", "SKT");
+		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
+		logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
+		logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
 	}
 }

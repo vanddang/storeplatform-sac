@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.external.idp.service;
+package com.skplanet.storeplatform.sac.external.imidp.service;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -22,52 +22,41 @@ import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
 /**
- * ImIDP - 서비스 이용 동의, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
+ * Calss 설명
  * 
- * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.
+ * Updated on : 2014. 1. 15. Updated by : 김경복, 부르칸.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class TXAgreeUserIDPTest {
+public class DiscardUserTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(TXAgreeUserIDPTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DiscardUserTest.class);
 
 	@Autowired
 	private ImIDPService imIDPService;
 
+	/**
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 */
 	@Test
-	public void TXAgreeUserIDP() {
+	public void discardUser() {
 		try {
 			Map<String, Object> param = new HashMap<String, Object>();
-
-			/** param Key. */
-			// operator_id
-			// key_type
-			// key
-			// user_mdn
-			// user_ci
-			// user_di
-			// join_sst_list
-			// ocb_join_code
-			// os_code
-			// browser_code
-			// user_mdn_auth_key
-			// modify_req_date
-			// modify_req_time
-			// service_profiles
-
-			// TODO 임시 테스트용
-			param.put("key", "01088870008");
-			param.put("key_type", "1");
-			param.put("is_parent_approve", "N");
-
-			ImIDPReceiverM receiverM = this.imIDPService.agreeUser(param);
+			param.put("key", "");
+			param.put("user_auth_key", "");
+			param.put("term_reason_cd", "");
+			// String key = (String) param.get("key");
+			// String user_auth_key = (String) param.get("user_auth_key");
+			// String term_reason_cd = (String) param.get("term_reason_cd");
+			ImIDPReceiverM receiverM = this.imIDPService.discardUser(param);
 			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
-			logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
-			logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
+			LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
+			LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

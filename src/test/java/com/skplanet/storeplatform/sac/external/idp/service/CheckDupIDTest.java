@@ -1,9 +1,5 @@
 package com.skplanet.storeplatform.sac.external.idp.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,8 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
 
 /**
  * IDP - 아이디중복체크, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -34,20 +29,20 @@ public class CheckDupIDTest {
 	private static final Logger logger = LoggerFactory.getLogger(CheckDupIDTest.class);
 
 	@Autowired
-	private IDPService idpService;
-
+	private IdpSCI idpSCI;
 
 	@Test
 	public void checkDupID() {
-		try {
-
-			IDPReceiverM receiverM = this.idpService.checkDupID("asd");
-			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
-			assertThat(receiverM.getResponseHeader().getCmd(), is("duplicateIDCheck"));
-			logger.info("result code : {}", receiverM.getResponseHeader().getResult());
-			logger.info("result message : {}", receiverM.getResponseHeader().getResult_text());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// CheckDupIDReq req = new CheckDupIDReq();
+		// req.setUser_id("asdasd");
+		// CommonHeaderRes res = this.idpSCI.checkDupId(req);
+		// assertThat(res.getResult(), notNullValue());
+		// assertThat(res.getCmd(), is("duplicateIDCheck"));
+		// logger.info("result code : {}", res.getResult());
+		// logger.info("result message : {}", res.getResult_text());
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 	}
 }

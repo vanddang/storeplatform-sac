@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.external.idp.service;
+package com.skplanet.storeplatform.sac.external.imidp.service;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -15,11 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
 
 /**
- * IDP - 모바일 회원 가입, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
+ * ImIDP - 기본 프로파일 조회(for Server), EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
  * 
  * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.
  */
@@ -28,19 +28,19 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class AuthForWapTest {
+public class CheckIdStatusIdpImTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(AuthForWapTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CheckIdStatusIdpImTest.class);
 
 	@Autowired
-	private IDPService idpService;
+	private ImIDPService imIDPService;
 
 	@Test
-	public void authForWap() {
+	public void checkIdStatusIdpIm() {
 
-		IDPReceiverM receiverM = this.idpService.authForWap("01088870008");
+		ImIDPReceiverM receiverM = this.imIDPService.checkIdStatusIdpIm("awdawdawdawdw");
 		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
-		logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
-		logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
+		LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
+		LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
 	}
 }

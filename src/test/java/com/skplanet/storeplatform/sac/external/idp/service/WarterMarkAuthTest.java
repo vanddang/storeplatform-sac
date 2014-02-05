@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,7 +22,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
  * Updated on : 2014. 1. 14. Updated by : 김경복, 부르칸.
  */
 @ActiveProfiles(value = "local")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -42,16 +39,11 @@ public class WarterMarkAuthTest {
 	 */
 	@Test
 	public void warterMarkAuth() {
-		try {
 
-			IDPReceiverM receiverM = this.idpService.warterMarkAuth("pgw25x",
-					"34c7d500aa3c5085704ea4bec29adc5d923d5614",
-					"http://idp.innoace.com/watermark/20140114/10742_1389663959668.jpeg|1389663959668");
-			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
-			LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
-			LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		IDPReceiverM receiverM = this.idpService.warterMarkAuth("pgw25x", "34c7d500aa3c5085704ea4bec29adc5d923d5614",
+				"http://idp.innoace.com/watermark/20140114/10742_1389663959668.jpeg|1389663959668");
+		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
+		LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
+		LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
 	}
 }

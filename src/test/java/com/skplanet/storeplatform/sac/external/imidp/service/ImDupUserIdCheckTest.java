@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.external.idp.service;
+package com.skplanet.storeplatform.sac.external.imidp.service;
 
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;

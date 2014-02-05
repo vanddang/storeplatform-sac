@@ -37,14 +37,10 @@ public class SecedeForWapTest {
 
 	@Test
 	public void secedeForWap() {
-		try {
 
-			IDPReceiverM receiverM = this.idpService.secedeUser4Wap("01088870008");
-			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
-			logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
-			logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		IDPReceiverM receiverM = this.idpService.secedeUser4Wap("01088870008");
+		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
+		logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
+		logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());
 	}
 }
