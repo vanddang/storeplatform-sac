@@ -96,7 +96,7 @@ public class DeviceServiceImpl implements DeviceService {
 	private static final Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
 	@Autowired
-	MemberCommonComponent commService; // 회원 공통 서비스
+	private MemberCommonComponent commService; // 회원 공통 서비스
 
 	@Autowired
 	private UserSCI userSCI; // 회원 콤포넌트 사용자 기능 인터페이스
@@ -118,9 +118,6 @@ public class DeviceServiceImpl implements DeviceService {
 
 	@Autowired
 	private UserSearchService userSearchService;
-
-	@Autowired
-	private MemberCommonComponent mcc;
 
 	@Value("#{propertiesForSac['idp.im.request.operation']}")
 	public String IDP_OPERATION_MODE;
@@ -928,7 +925,7 @@ public class DeviceServiceImpl implements DeviceService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		if (req.getDeviceId() != null) {
-			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 		}
@@ -1001,7 +998,7 @@ public class DeviceServiceImpl implements DeviceService {
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		if (req.getDeviceId() != null) {
-			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 		}
@@ -1465,13 +1462,13 @@ public class DeviceServiceImpl implements DeviceService {
 		SupportAomRes res = new SupportAomRes();
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+		UserInfo searchUser = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		/**
 		 * 모번호 조회 (989 일 경우만)
 		 */
 		if (req.getDeviceId() != null) {
-			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
+			String opmdMdn = this.commService.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
 			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
 		}
@@ -1491,7 +1488,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* PhoneInfo 조회 */
 		if (searchUser != null && listDeviceRes.getDeviceInfoList().size() == 1 && listDeviceRes.getDeviceInfoList() != null) {
-			Device device = this.mcc.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
+			Device device = this.commService.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
 			logger.debug("============================================Phoneinfo getAomSprtYn Res {}", device.getAomSprtYn());
 
@@ -1506,7 +1503,7 @@ public class DeviceServiceImpl implements DeviceService {
 	@Override
 	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader) throws Exception {
 
-		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+		UserInfo userInfo = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 		return userInfo;
 	}
