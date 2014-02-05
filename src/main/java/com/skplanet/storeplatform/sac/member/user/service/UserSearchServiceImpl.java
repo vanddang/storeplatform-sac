@@ -595,10 +595,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
-		if (schUserRes.getUserMbr() == null) {
-			throw new StorePlatformException("SAC_MEM_0002", searchUserRequest.getKeySearchList());
-		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-				&& schUserRes.getUserMbr() != null) {
+		if (schUserRes.getUserMbr() != null) {
 			userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
 			userInfo.setImMbrNo(StringUtil.setTrim(schUserRes.getUserMbr().getImMbrNo()));
 			userInfo.setImRegDate(StringUtil.setTrim(schUserRes.getUserMbr().getImRegDate()));
