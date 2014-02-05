@@ -18,7 +18,7 @@ public interface AppCodiService {
 
 	/**
 	 * <pre>
-	 * 대분류 전시 Menu 조회.
+	 * App Codi 조회.
 	 * </pre>
 	 * 
 	 * @param AppCodiReq
@@ -29,4 +29,17 @@ public interface AppCodiService {
 	 */
 	public AppCodiListRes searchAppCodiList(AppCodiReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+
+	/**
+	 * <pre>
+	 * App Codi Dummy 조회.
+	 * </pre>
+	 * 
+	 * @param AppCodiReq
+	 *            requestVO
+	 * @param SacRequestHeader
+	 *            requestHeader
+	 * @return AppCodiListRes
+	 */
+	public AppCodiListRes searchDummyAppCodiList(AppCodiReq requestVO, SacRequestHeader requestHeader);
 }

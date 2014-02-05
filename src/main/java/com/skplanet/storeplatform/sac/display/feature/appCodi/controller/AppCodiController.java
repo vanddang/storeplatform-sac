@@ -49,7 +49,9 @@ public class AppCodiController {
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		this.logger.debug("AppCodiController.searchAppCodiList start !!");
-
-		return this.appCodiService.searchAppCodiList(requestVO, requestHeader);
+		if (requestVO.getFilteredBy().equals("dummy")) {
+			return this.appCodiService.searchDummyAppCodiList(requestVO, requestHeader);
+		} else
+			return this.appCodiService.searchAppCodiList(requestVO, requestHeader);
 	}
 }
