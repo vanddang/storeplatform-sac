@@ -151,12 +151,12 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
-						req.setSellerId("sellerPersonNoPay33");
+						req.setSellerId("sellerPersonNoPay34");
 						// req.setSellerId("sellerTest0003");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
-						req.setSellerEmail("abc@acd.com");
+						req.setSellerEmail("abc@a122311cd.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");

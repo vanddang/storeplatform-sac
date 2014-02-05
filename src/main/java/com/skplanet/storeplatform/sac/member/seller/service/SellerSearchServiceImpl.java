@@ -102,7 +102,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		/** 1. ID/Email Req 생성 및 주입 */
 		CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
 
-		/** 2. SC 헤더 셋팅 */
+		/** 1-2. SC 헤더 셋팅 */
 		checkDuplicationSellerRequest.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
 		KeySearch keySearch = new KeySearch();
@@ -117,28 +117,18 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		checkDuplicationSellerRequest.setKeySearchList(keySearchs);
 
-		/** 3. SC회원(ID/Email중복) Call */
+		/** 1-3. SC회원(ID/Email중복) Call */
 		CheckDuplicationSellerResponse checkDuplicationSellerResponse = this.sellerSCI
 				.checkDuplicationSeller(checkDuplicationSellerRequest);
 
-		// Response Debug
-		LOGGER.info("checkDuplicationSellerResponse Code : {}", checkDuplicationSellerResponse.getCommonResponse()
-				.getResultCode());
-		LOGGER.info("checkDuplicationSellerResponse Messge : {}", checkDuplicationSellerResponse.getCommonResponse()
+		// Debug
+		LOGGER.info("checkDuplicationSellerResponse CODE : {}, MESSAGE : {}", checkDuplicationSellerResponse
+				.getCommonResponse().getResultCode(), checkDuplicationSellerResponse.getCommonResponse()
 				.getResultMessage());
 
-		/** 4. TenantRes Response 생성 및 주입 */
+		/** 1-4. [RESPONSE] 생성 및 주입 */
 		DuplicateByIdEmailRes response = new DuplicateByIdEmailRes();
-
-		// TODO Exception 재정의 - 성공또는 값없음의 경우
-		if (MemberConstants.RESULT_SUCCES.equals(checkDuplicationSellerResponse.getCommonResponse().getResultCode())) {
-			response.setIsRegistered(checkDuplicationSellerResponse.getIsRegistered());
-		} else if (MemberConstants.RESULT_FAIL.equals(checkDuplicationSellerResponse.getCommonResponse()
-				.getResultCode())) {
-			response.setIsRegistered("N");
-		} else {
-		}
-
+		response.setIsRegistered(checkDuplicationSellerResponse.getIsRegistered());
 		return response;
 	}
 
