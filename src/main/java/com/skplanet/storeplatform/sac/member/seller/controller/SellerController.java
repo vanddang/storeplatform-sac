@@ -1,7 +1,5 @@
 package com.skplanet.storeplatform.sac.member.seller.controller;
 
-import javax.validation.Valid;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +95,8 @@ public class SellerController {
 	 */
 	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyInformationRes modifyInformation(SacRequestHeader header, @RequestBody @Valid ModifyInformationReq req)
-			throws Exception {
+	public ModifyInformationRes modifyInformation(SacRequestHeader header,
+			@RequestBody @Validated ModifyInformationReq req) throws Exception {
 		return this.sellerService.modifyInformation(header, req);
 	}
 
@@ -114,7 +112,7 @@ public class SellerController {
 	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header,
-			@RequestBody @Valid ModifyAccountInformationReq req) {
+			@RequestBody @Validated ModifyAccountInformationReq req) {
 		return this.sellerService.modifyAccountInformation(header, req);
 	}
 
