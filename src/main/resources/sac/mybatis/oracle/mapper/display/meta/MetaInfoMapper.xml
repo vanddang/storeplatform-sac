@@ -785,6 +785,7 @@
                         AND E.USE_YN ='Y'                  /* Y : 기본(기본여부) */
                         AND G.BASE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND G.USE_YN ='Y'                  /* Y : 기본(기본여부) */
+                        AND I.SALE_YN ='Y'                 /* Y : 기본(기본여부) */
                         AND NVL(I.B2B_PROD_YN, 'N') <![CDATA[ <> ]]>  'Y'
                         AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantHeader.tenantId}       /* INPUT 테넌트ID */
