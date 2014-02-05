@@ -215,9 +215,6 @@ public class DeviceServiceImpl implements DeviceService {
 		String userKey = req.getUserKey();
 		String deviceKey = req.getDeviceInfo().getDeviceKey();
 
-		/* 회원 정보 조회 */
-		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
-
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 
 		/* 모번호 조회 */
