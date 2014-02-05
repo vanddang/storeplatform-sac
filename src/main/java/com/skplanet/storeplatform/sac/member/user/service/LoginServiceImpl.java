@@ -184,7 +184,8 @@ public class LoginServiceImpl implements LoginService {
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 
 					/* 미가입 회원인 경우 로그 님김 */
 					logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
@@ -194,8 +195,6 @@ public class LoginServiceImpl implements LoginService {
 					throw ex;
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 		}
@@ -382,7 +381,8 @@ public class LoginServiceImpl implements LoginService {
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+				if (StringUtils
+						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
 					LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
@@ -391,7 +391,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
 					res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
-				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 님김 */
 					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
@@ -401,8 +402,6 @@ public class LoginServiceImpl implements LoginService {
 					throw ex;
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 		} else { // 기존 IDP 계정인 경우
@@ -436,7 +435,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
 					LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
@@ -445,7 +444,8 @@ public class LoginServiceImpl implements LoginService {
 					res.setLoginFailCount(String.valueOf(loginUserRes.getLoginFailCount()));
 					res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
-				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
+						+ IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 님김 */
 					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
@@ -455,8 +455,6 @@ public class LoginServiceImpl implements LoginService {
 					throw ex;
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 		}
@@ -630,7 +628,6 @@ public class LoginServiceImpl implements LoginService {
 		loginReq.setIpAddress(ipAddress);
 
 		LoginUserResponse loginRes = this.userSCI.updateLoginUser(loginReq);
-
 		return loginRes;
 	}
 

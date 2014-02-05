@@ -67,12 +67,11 @@ public class DeviceController {
 		String isMainDevice = StringUtil.nvl(req.getIsMainDevice(), "");
 
 		if (!userId.equals("") && isMainDevice.equals("")) {
-			logger.info(":::: 1");
-			throw new StorePlatformException("", "isMainDevice 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 		}
 
 		if (deviceId.equals("") && deviceKey.equals("") && isMainDevice.equals("")) {
-			throw new StorePlatformException("", "isMainDevice 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "isMainDevice");
 		}
 
 		ListDeviceRes res = this.deviceService.listDevice(requestHeader, (ListDeviceReq) ConvertMapperUtils.convertObject(req));
@@ -98,31 +97,31 @@ public class DeviceController {
 		/* 휴대기기 정보 필수 파라메터 체크 */
 		DeviceInfo deviceInfo = req.getDeviceInfo();
 		if (StringUtil.nvl(deviceInfo.getDeviceId(), "").equals("")) {
-			throw new StorePlatformException("", "deviceId 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getDeviceIdType(), "").equals("")) {
-			throw new StorePlatformException("", "deviceIdType 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "deviceIdType");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getDeviceTelecom(), "").equals("")) {
-			throw new StorePlatformException("", "deviceTelecom 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsPrimary(), "").equals("")) {
-			throw new StorePlatformException("", "isPrimary 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "isPrimary");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsAuthenticated(), "").equals("")) {
-			throw new StorePlatformException("", "isAuthenticate 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "isAuthenticate");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getIsUsed(), "").equals("")) {
-			throw new StorePlatformException("", "isUsed 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "isUsed");
 		}
 
 		if (StringUtil.nvl(deviceInfo.getAuthenticationDate(), "").equals("")) {
-			throw new StorePlatformException("", "authenticationDate 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "authenticationDate");
 		}
 
 		CreateDeviceRes res = this.deviceService.createDevice(requestHeader, req);
@@ -146,7 +145,7 @@ public class DeviceController {
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) throws Exception {
 
 		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("")) {
-			throw new StorePlatformException("", "deviceKey 필수 파라미터 입니다.");
+			throw new StorePlatformException("SAC_MEM_0001", "deviceKey");
 		}
 
 		ModifyDeviceRes res = this.deviceService.modifyDevice(requestHeader, req);

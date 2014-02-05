@@ -299,7 +299,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public GetCustomerEcRes getCustomer(String msisdn) throws Exception {
+	public GetCustomerEcRes getCustomer(String msisdn) {
 		GetCustomerEcReq req = new GetCustomerEcReq();
 		req.setDeviceId(msisdn);
 		return this.icasSCI.getCustomer(req);
@@ -316,7 +316,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public GetCustomerCardEcRes getCustomerCard(String msisdn) throws Exception {
+	public GetCustomerCardEcRes getCustomerCard(String msisdn) {
 		GetCustomerCardEcReq req = new GetCustomerCardEcReq();
 		req.setDeviceId(msisdn);
 		return this.icasSCI.getCustomerCard(req);
@@ -333,7 +333,7 @@ public class MemberCommonComponent {
 	 * @throws Exception
 	 *             Exception
 	 */
-	public GetMvnoEcRes getMvService(String msisdn) throws Exception {
+	public GetMvnoEcRes getMvService(String msisdn) {
 		GetMvnoEcReq req = new GetMvnoEcReq();
 		return this.icasSCI.getMvService(req);
 	}

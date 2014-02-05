@@ -5,14 +5,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -27,8 +24,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -124,64 +119,53 @@ public class UserServiceImpl implements UserService {
 		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 		String userPhoneStr = null;
 
-		try {
-			if (deviceInfoList != null) {
-				StringBuffer sbUserPhone = new StringBuffer();
-				for (DeviceInfo deviceInfo : deviceInfoList) {
+		if (deviceInfoList != null) {
+			StringBuffer sbUserPhone = new StringBuffer();
+			for (DeviceInfo deviceInfo : deviceInfoList) {
 
-					String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, deviceInfo.getUserDeviceExtraInfo());
-					String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUserDeviceExtraInfo());
+				String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, deviceInfo.getUserDeviceExtraInfo());
+				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUserDeviceExtraInfo());
 
-					sbUserPhone.append(deviceInfo.getDeviceId());
-					sbUserPhone.append(",");
-					sbUserPhone.append(imMngNum == null ? "" : imMngNum);
-					sbUserPhone.append(",");
-					sbUserPhone.append(uacd == null ? "" : uacd);
-					sbUserPhone.append(",");
-					sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
-					sbUserPhone.append("|");
-				}
-				userPhoneStr = sbUserPhone.toString();
-				userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+				sbUserPhone.append(deviceInfo.getDeviceId());
+				sbUserPhone.append(",");
+				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
+				sbUserPhone.append(",");
+				sbUserPhone.append(uacd == null ? "" : uacd);
+				sbUserPhone.append(",");
+				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
+				sbUserPhone.append("|");
+			}
+			userPhoneStr = sbUserPhone.toString();
+			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+		}
+
+		param.put("user_auth_key", userAuthKey);
+
+		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
+
+			param.put("key", schUserRes.getUserMbr().getImSvcNo());
+			param.put("operation_mode", this.IDP_OPERATION_MODE);
+			if (userPhoneStr != null) {
+				param.put("user_mdn", userPhoneStr);
+				param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 			}
 
-			param.put("user_auth_key", userAuthKey);
+			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
+			param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
 
-			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
+			this.imIdpService.updateAdditionalInfo(param);
 
-				param.put("key", schUserRes.getUserMbr().getImSvcNo());
-				param.put("operation_mode", this.IDP_OPERATION_MODE);
-				if (userPhoneStr != null) {
-					param.put("user_mdn", userPhoneStr);
-					param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-				}
+		} else {
 
-				param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
-				param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
-
-				ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
-				if (!StringUtils.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
-					throw new RuntimeException("[" + imIdpReceiver.getResponseHeader().getResult() + "] "
-							+ imIdpReceiver.getResponseHeader().getResult_text());
-				}
-
-			} else {
-
-				param.put("key_type", "2");
-				param.put("key", schUserRes.getUserMbr().getImMbrNo());
-				if (userPhoneStr != null) {
-					param.put("user_phone", userPhoneStr);
-					param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-				}
-				IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-				if (!StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
-					throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
-							+ idpReceiver.getResponseHeader().getResult_text());
-				}
-
+			param.put("key_type", "2");
+			param.put("key", schUserRes.getUserMbr().getImMbrNo());
+			if (userPhoneStr != null) {
+				param.put("user_phone", userPhoneStr);
+				param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+			this.idpService.modifyProfile(param);
+
 		}
 
 	}
