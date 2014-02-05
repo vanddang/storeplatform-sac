@@ -276,7 +276,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			distributor.setName(metaInfo.getExpoSellerNm());
 			distributor.setTel(metaInfo.getExpoSellerTelNo());
 			distributor.setEmail(metaInfo.getExpoSellerEmail());
-			distributor.setRegNo(metaInfo.getSellerMbrNo());
+			distributor.setSellerKey(metaInfo.getSellerMbrNo());
 			product.setDistributor(distributor);
 
 			// 구매 정보
