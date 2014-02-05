@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByMdnReq;
@@ -71,22 +72,23 @@ public class UserJoinController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		CreateByMdnRes res = new CreateByMdnRes();
 		if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-			throw new RuntimeException("[model] 미존재.");
+			throw new StorePlatformException("SAC_MEM_0001", "model");
 		}
 
 		/**
 		 * 모바일 전용회원 Biz
 		 */
-		CreateByMdnRes res = this.svc.createByMdn(sacHeader, req);
+		res = this.svc.createByMdn(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 
@@ -121,8 +123,7 @@ public class UserJoinController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**
@@ -137,13 +138,13 @@ public class UserJoinController {
 			 * [[ 단말정보 포함 ]] Biz
 			 */
 			if (StringUtils.equals(req.getDeviceId(), "")) {
-				throw new RuntimeException("[deviceId] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 			} else if (StringUtils.equals(req.getDeviceIdType(), "")) {
-				throw new RuntimeException("[deviceIdType] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
-				throw new RuntimeException("[deviceTelecom] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-				throw new RuntimeException("[model] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "model");
 			}
 
 			LOGGER.info("## 단말정보 존재  ==========================================");
@@ -192,8 +193,7 @@ public class UserJoinController {
 		 * BindException 처리
 		 */
 		if (result.hasErrors()) {
-			LOGGER.info("## Request Parameter Binding Exception!!! {}", result.getFieldError());
-			throw new RuntimeException("Request Parameter Binding Exception!!!");
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
 
 		/**
@@ -208,13 +208,13 @@ public class UserJoinController {
 			 * [[ 단말정보 포함 ]] Biz
 			 */
 			if (StringUtils.equals(req.getDeviceId(), "")) {
-				throw new RuntimeException("[deviceId] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceId");
 			} else if (StringUtils.equals(req.getDeviceIdType(), "")) {
-				throw new RuntimeException("[deviceIdType] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceType");
 			} else if (StringUtils.equals(req.getDeviceTelecom(), "")) {
-				throw new RuntimeException("[deviceTelecom] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "deviceTelecom");
 			} else if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
-				throw new RuntimeException("[model] 미존재.");
+				throw new StorePlatformException("SAC_MEM_0001", "model");
 			}
 
 			LOGGER.info("## 단말정보 존재  ==========================================");
