@@ -123,7 +123,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		if (req.getDeviceId() != null) {
 			String opmdMdn = this.mcc.getOpmdMdnInfo(req.getDeviceId());
 			req.setDeviceId(opmdMdn);
-			logger.info("모번호 조회 getOpmdMdnInfo: {}", opmdMdn);
+			logger.info("============================================ getOpmdMdnInfo: {}", opmdMdn);
 		}
 
 		String userKey = StringUtil.setTrim(req.getUserKey());
@@ -144,21 +144,17 @@ public class UserSearchServiceImpl implements UserSearchService {
 		// 회원정보 세팅
 		UserInfo userInfo = this.searchUser(detailReq, sacHeader);
 
-		logger.info("###### userInfo Request : {}", detailReq.toString());
-		logger.info("###### userInfo Response : {}", userInfo.toString());
+		logger.info("============================================ userInfo Request : {}", detailReq.toString());
+		logger.info("============================================ userInfo Response : {}", userInfo.toString());
 
-		if ("".equals(userInfo) || userInfo == null) {
-			throw new RuntimeException("SC 회원조회 실패 : 해당 회원이 없음");
-		} else {
-			result.setUserKey(userInfo.getUserKey());
-			result.setUserType(userInfo.getUserType());
-			result.setUserId(userInfo.getUserId());
-			result.setIsRealName(userInfo.getIsRealName());
-			result.setAgencyYn(userInfo.getIsParent());
-			result.setUserEmail(userInfo.getUserEmail());
-			result.setUserMainStatus(userInfo.getUserMainStatus());
-			result.setUserSubStatus(userInfo.getUserSubStatus());
-		}
+		result.setUserKey(userInfo.getUserKey());
+		result.setUserType(userInfo.getUserType());
+		result.setUserId(userInfo.getUserId());
+		result.setIsRealName(userInfo.getIsRealName());
+		result.setAgencyYn(userInfo.getIsParent());
+		result.setUserEmail(userInfo.getUserEmail());
+		result.setUserMainStatus(userInfo.getUserMainStatus());
+		result.setUserSubStatus(userInfo.getUserSubStatus());
 
 		return result;
 	}
@@ -523,14 +519,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 		logger.debug("사용자 기본정보 조회 {}", schUserRes.toString());
 
-		// if (schUserRes.getUserKey() == null) {
-		// throw new RuntimeException("######## User Base Info Search : 사용자 데이터 없음");
-		if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
-					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
+		if (schUserRes.getUserKey() == null) {
+			throw new StorePlatformException("SAC_MEM_0002", searchUserRequest.getKeySearchList().toString());
 		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
-		// && schUserRes.getUserKey() != null) {
-		) {
+				&& schUserRes.getUserKey() != null) {
+
 			res.setIsChangeSubject(StringUtil.setTrim(schUserRes.getIsChangeSubject()));
 			res.setPwRegDate(StringUtil.setTrim(schUserRes.getPwRegDate()));
 			res.setUserKey(StringUtil.setTrim(schUserRes.getUserKey()));
@@ -603,10 +596,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
 		if (schUserRes.getUserMbr() == null) {
-			throw new RuntimeException("######## 사용자 기본정보 조회 : 사용자 데이터 없음");
-		} else if (MemberConstants.SUB_STATUS_SECEDE_FINISH.equals(schUserRes.getUserMbr().getUserSubStatus())) {
-			throw new RuntimeException("탈퇴완료 회원 : MainStatusCode [" + schUserRes.getUserMbr().getUserMainStatus() + "]" + "SubStatusCode ["
-					+ schUserRes.getUserMbr().getUserSubStatus() + "]");
+			throw new StorePlatformException("SAC_MEM_0002", searchUserRequest.getKeySearchList());
 		} else if (StringUtils.equals(schUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)
 				&& schUserRes.getUserMbr() != null) {
 			userInfo.setDeviceCount(StringUtil.setTrim(schUserRes.getUserMbr().getDeviceCount()));
@@ -649,8 +639,8 @@ public class UserSearchServiceImpl implements UserSearchService {
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
 
-					logger.debug("###### SC 부가정보 데이터 검증 CODE {}", ptcr.getExtraProfile());
-					logger.debug("###### SC 부가정보 데이터 검증 VALUE {}", ptcr.getExtraProfileValue());
+					logger.debug("============================================ UserExtraInfo CODE : {}", ptcr.getExtraProfile());
+					logger.debug("============================================ UserExtraInfo VALUE : {}", ptcr.getExtraProfileValue());
 
 					UserExtraInfo extra = new UserExtraInfo();
 					extra.setExtraProfileCode(StringUtil.setTrim(ptcr.getExtraProfile()));
@@ -662,15 +652,10 @@ public class UserSearchServiceImpl implements UserSearchService {
 				userInfo.setUserExtraInfo(listExtraInfo);
 			}
 
-		} else {
-			logger.debug("###### 사용자 정보 조회 오류 : {}", searchUserRequest.toString());
-			logger.debug("###### 사용자 정보 조회 오류 : {}", schUserRes.getUserMbr().toString());
-			logger.debug("###### 사용자 정보 조회 오류 : {}", schUserRes.getCommonResponse().toString());
-			throw new StorePlatformException("사용자 기본 정보 조회 오류");
 		}
 
-		logger.debug("###### 회원정보조회 Req - keyType : {}, keyValue : {}", keyType, keyValue);
-		logger.debug("###### 회원정보조회 Res : {}", userInfo.toString());
+		logger.debug("============================================ UserSearch Req : {}", searchUserRequest.getKeySearchList().toString());
+		logger.debug("============================================ UserSearch Res : {}", userInfo.toString());
 
 		return userInfo;
 

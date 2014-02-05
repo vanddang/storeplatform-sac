@@ -70,15 +70,14 @@ public class UserSearchController {
 			paramCnt += 1;
 		} else if (!"".equals(req.getDeviceId()) && req.getDeviceId() != null) {
 			paramCnt += 1;
-			// throw new RuntimeException("입력된 [ deviceId ] 파라미터가 없습니다.");
 		}
 
-		LOGGER.info("###### ExistReq : {}", req.toString());
+		LOGGER.info("============================================ ExistReq : {}", req.toString());
 
 		if (paramCnt > 0) {
 			res = this.svc.exist(sacHeader, req);
 		} else {
-			throw new StorePlatformException("입력된 파라미터가 없습니다.");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 		LOGGER.info("Final Response : {}", res.toString());
 
@@ -141,15 +140,14 @@ public class UserSearchController {
 			paramCnt += 1;
 		} else if (!"".equals(req.getDeviceId()) && req.getDeviceId() != null) {
 			paramCnt += 1;
-			// throw new RuntimeException("입력된 [ deviceId ] 파라미터가 없습니다.");
 		}
 
-		LOGGER.info("###### DetailReq : {}", req.toString());
+		LOGGER.info("============================================ DetailReq : {}", req.toString());
 
 		if (paramCnt > 0) {
 			res = this.svc.detail(sacHeader, req);
 		} else {
-			throw new StorePlatformException("입력된 파라미터가 없습니다.");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 		LOGGER.info("Final Response : {}", res.toString());
 

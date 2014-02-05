@@ -236,14 +236,14 @@ public class DeviceController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
-		logger.info("###### Start removeDevice Request : {}", req.toString());
+		logger.info("============================================ Start removeDevice Request : {}", req.toString());
 
 		if (userAuthKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족 userAuthKey");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		} else if (userKey.equals("")) {
-			throw new Exception("필수요청 파라메터 부족 userKey");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		} else if (deviceId.equals("")) {
-			throw new Exception("필수요청 파라메터 부족 deviceId");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		req.setUserAuthKey(userAuthKey);
@@ -252,7 +252,7 @@ public class DeviceController {
 
 		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);
 
-		logger.info("###### Final removeDevice Response : {}", res.toString());
+		logger.info("============================================ Final removeDevice Response : {}", res.toString());
 		return res;
 	}
 
@@ -275,17 +275,17 @@ public class DeviceController {
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
 		if (userKey.equals("") || deviceId.equals("")) {
-			throw new Exception("필수요청 파라메터 부족");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
-		logger.info("###### Start getSupportAom Request : {}", req.toString());
+		logger.info("============================================ Start getSupportAom Request : {}", req.toString());
 
 		req.setUserKey(userKey);
 		req.setDeviceId(deviceId);
 
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
 
-		logger.info("###### Final getSupportAom Response : {}", res.toString());
+		logger.info("============================================ Final getSupportAom Response : {}", res.toString());
 		return res;
 	}
 }
