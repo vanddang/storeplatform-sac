@@ -192,7 +192,7 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	// @RequestMapping(value = "/searchPassword/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchPassword2/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public SearchPasswordRes searchPassword(SacRequestHeader header, @Validated SearchPasswordReq req) throws Exception {
 
