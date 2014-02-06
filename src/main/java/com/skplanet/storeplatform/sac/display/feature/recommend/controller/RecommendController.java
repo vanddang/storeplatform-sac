@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
+import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendTodayService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendWebtoonService;
 
 /**
@@ -34,6 +37,8 @@ public class RecommendController {
 	private RecommendWebtoonService recommendWebtoonService;
 	@Autowired
 	private RecommendAdminService recommendAdminService;
+	@Autowired
+	private RecommendTodayService recommendTodayService;
 
 	/**
 	 * <pre>
@@ -73,6 +78,26 @@ public class RecommendController {
 
 		RecommendAdminRes responseVO;
 		responseVO = this.recommendAdminService.searchAdminList(requestVO, header);
+		return responseVO;
+	}
+
+	/**
+	 * <pre>
+	 * TODAY 상품 조회 – GET.
+	 * </pre>
+	 * 
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
+	 * @return RecommendTodaySacRes 조회 결과
+	 */
+	@RequestMapping(value = "/today/list/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public RecommendTodaySacRes searchTodayList(RecommendTodaySacReq requestVO, SacRequestHeader header) {
+
+		RecommendTodaySacRes responseVO;
+		responseVO = this.recommendTodayService.searchTodayList(requestVO, header);
 		return responseVO;
 	}
 }
