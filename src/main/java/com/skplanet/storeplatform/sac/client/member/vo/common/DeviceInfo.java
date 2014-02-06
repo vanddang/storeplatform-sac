@@ -18,11 +18,6 @@ public class DeviceInfo extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * SKT 관리번호
-	 */
-	private String imMngNum;
-
-	/**
 	 * 사용자 Id
 	 */
 	private String userId;
@@ -329,14 +324,6 @@ public class DeviceInfo extends CommonInfo {
 
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
-	}
-
-	public String getImMngNum() {
-		return this.imMngNum;
-	}
-
-	public void setImMngNum(String imMngNum) {
-		this.imMngNum = imMngNum;
 	}
 
 	public String getModelNm() {
