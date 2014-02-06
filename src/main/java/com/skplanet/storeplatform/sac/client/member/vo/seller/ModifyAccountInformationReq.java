@@ -24,6 +24,9 @@ public class ModifyAccountInformationReq extends CommonInfo {
 	/** 판매자 key. */
 	@NotBlank
 	private String sellerKey;
+	/** 인증키. */
+	@NotBlank
+	private String sessionKey;
 	/** 판매자 구분코드. */
 	@NotBlank
 	private String sellerClass;
@@ -123,6 +126,14 @@ public class ModifyAccountInformationReq extends CommonInfo {
 
 	public void setSellerKey(String sellerKey) {
 		this.sellerKey = sellerKey;
+	}
+
+	public String getSessionKey() {
+		return this.sessionKey;
+	}
+
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 
 	public String getSellerClass() {
