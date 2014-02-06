@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
@@ -71,8 +70,7 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req)
-			throws Exception {
+	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
 		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		return this.sellerSubService.removeSubseller(header, req);
 	}
@@ -88,13 +86,8 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) throws Exception {
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-
-		if (sellerKey.equals(""))
-			throw new Exception("필수 파라미터 미존재");
+	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) {
+		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
 		return this.sellerSubService.listSubseller(header, req);
 	}
@@ -110,13 +103,8 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) throws Exception {
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-
-		if (sellerKey.equals(""))
-			throw new Exception("필수 파라미터 미존재");
+	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
+		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
 		return this.sellerSubService.detailSubseller(header, req);
 	}
