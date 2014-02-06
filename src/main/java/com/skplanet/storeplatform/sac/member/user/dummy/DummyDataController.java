@@ -267,7 +267,7 @@ public class DummyDataController {
 	 * 
 	 * @return CreateRealNameRes
 	 */
-	@RequestMapping(value = "/member/user/reateRealName/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRealNameRes createRealName() {
 
