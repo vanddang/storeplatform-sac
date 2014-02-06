@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.member.common;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +40,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
@@ -511,22 +512,37 @@ public class MemberCommonComponent {
 	 * @param sellerKey
 	 * @return SearchAuthKeyRes
 	 */
-	public SearchAuthKeyRes searchSessionKey(CommonRequest commonRequest, String sellerKey) {
+	public void checkSessionKey(CommonRequest commonRequest, String sessionKey, String sellerKey) {
+		SearchLoginInfoRequest req = new SearchLoginInfoRequest();
+		req.setCommonRequest(commonRequest);
+		req.setSessionKey(sessionKey);
+		SearchLoginInfoResponse res = this.sellerSCI.searchLoginInfo(req);
 
-		SearchLoginInfoRequest schReq = new SearchLoginInfoRequest();
-		schReq.setCommonRequest(commonRequest);
-		schReq.setSessionKey(sellerKey);
-
-		SearchLoginInfoResponse schRes = this.sellerSCI.searchLoginInfo(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			// TODO Exception Code 재정의
-			throw new StorePlatformException("SC ERROR~~~~~~ : " + schRes.getCommonResponse().getResultMessage());
+		if (!StringUtils.equals(sellerKey, res.getLoginInfo().getSellerKey())) {
+			// 인증키가 유효하지 않습니다.
+			throw new StorePlatformException("SAC_MEM_2002");
 		}
-
-		SearchAuthKeyRes response = new SearchAuthKeyRes();
-		response.setSessionKey(schRes.getLoginInfo().getSessionKey());
-		response.setExpireDate(schRes.getLoginInfo().getExpireDate());
-		return response;
+		Double expireDate = Double.parseDouble(res.getLoginInfo().getExpireDate());
+		Double sysdate = Double.parseDouble(this.getExpirationTime(0));
+		if (expireDate < sysdate) {
+			// 인증 만료시간 오버
+			throw new StorePlatformException("SAC_MEM_2003");
+		}
 	}
 
+	/**
+	 * <pre>
+	 * 인증 만료 시간 연장 .
+	 * </pre>
+	 * 
+	 * @param hour
+	 *            : 연장할 시간
+	 * @return String : 현재시간 + 연장시간
+	 */
+	public String getExpirationTime(int hour) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR, hour);
+		return sdf.format(cal.getTime());
+	}
 }

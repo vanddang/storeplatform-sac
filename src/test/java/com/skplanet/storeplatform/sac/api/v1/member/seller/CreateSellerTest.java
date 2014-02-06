@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -91,7 +90,7 @@ public class CreateSellerTest {
 	 * 2. 회원탈퇴 요청
 	 * </pre>
 	 */
-	@After
+	// @After
 	public void after() {
 		// Debug - 가입 결과
 		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", ConvertMapperUtils.convertObjectToJson(res));
@@ -151,12 +150,12 @@ public class CreateSellerTest {
 					@Override
 					public Object requestBody() {
 						req.setSellerClass("US010101");
-						req.setSellerId("sellerPersonNoPay34");
-						// req.setSellerId("sellerTest0003");
+						// req.setSellerId("sellerPersonNoPay34");
+						req.setSellerId("sellerTest0005");
 						req.setSellerPW("1234");
 						req.setSellerTelecom("US001201");
 						req.setIsRecvSMS("Y");
-						req.setSellerEmail("abc@a122311cd.com");
+						req.setSellerEmail("abc@acd001.com");
 						req.setIsRecvEmail("N");
 						req.setSellerSex("F");
 						req.setSellerCountry("USA");

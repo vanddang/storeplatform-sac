@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 
 /**
@@ -34,7 +35,11 @@ public class CheckDupIDTest {
 
 	@Test
 	public void checkDupID() {
-		IDPReceiverM res = this.idpService.checkDupID("asdw1231dawd2");
-		res.getResponseHeader().getResult();
+		try {
+			IDPReceiverM res = this.idpService.checkDupID("asd");
+		} catch (StorePlatformException e) {
+			logger.debug(e.getErrorInfo().getCode());
+			logger.debug(e.getErrorInfo().getMessage());
+		}
 	}
 }

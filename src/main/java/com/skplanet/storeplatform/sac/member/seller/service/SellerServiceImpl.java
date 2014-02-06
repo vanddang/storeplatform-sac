@@ -1,9 +1,8 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,7 +38,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRes
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -61,7 +59,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.util.RandomStringUtils;
 
 /**
  * 판매자 회원의 가입/수정/탈퇴/인증 기능정의
@@ -73,9 +70,15 @@ public class SellerServiceImpl implements SellerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SellerServiceImpl.class);
 
+	/**
+	 * SC-SCI.
+	 */
 	@Autowired
 	private SellerSCI sellerSCI;
 
+	/**
+	 * 회원 공통 Component.
+	 */
 	@Autowired
 	private MemberCommonComponent component;
 
@@ -254,10 +257,6 @@ public class SellerServiceImpl implements SellerService {
 		/** 2-5. SC회원[createSeller] Call. */
 		CreateSellerResponse createSellerResponse = this.sellerSCI.createSeller(createSellerRequest);
 
-		// SC 결과 - Debug
-		LOGGER.info("[SellerSCI.createSeller()] - Response CODE : {}, MESSAGE : {}", createSellerResponse
-				.getCommonResponse().getResultCode(), createSellerResponse.getCommonResponse().getResultMessage());
-
 		/** 3. 가입 결과 [RESPONSE] 생성 및 주입. */
 		CreateRes res = new CreateRes();
 		com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr resMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
@@ -267,7 +266,7 @@ public class SellerServiceImpl implements SellerService {
 		resMbr.setSellerSubStatus(createSellerResponse.getSellerSubStatus());
 		res.setSellerMbr(resMbr);
 		// Debug
-		LOGGER.debug("==>>[SAC] CreateRes.toString() : {}", res.toString());
+		LOGGER.debug("==>>[SAC] CreateRes.toString() : \n{}", res.toString());
 
 		LOGGER.debug("############ SellerServiceImpl.createSeller() [END] ############");
 		return res;
@@ -320,44 +319,33 @@ public class SellerServiceImpl implements SellerService {
 				if (StringUtils.equals(logInSellerResponse.getIsLoginSuccess(), MemberConstants.USE_Y)) {
 
 					/** 3. 계정 잠금 해제 요청. */
-					if (StringUtils.isNotBlank(req.getReleaseLock())) {
-						if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
-								&& StringUtils.equals(logInSellerResponse.getLoginStatusCode(),
-										MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-							/** 3-1. SC회원 Req 생성 및 주입. */
-							UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
-							updateStatusSellerRequest.setSellerID(req.getSellerId());
-							updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
+					if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
+							&& StringUtils.equals(logInSellerResponse.getLoginStatusCode(),
+									MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+						/** 3-1. SC회원 Req 생성 및 주입. */
+						UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
+						updateStatusSellerRequest.setSellerID(req.getSellerId());
+						updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 
-							/** 3-2. 공통 헤더 생성 및 주입. */
-							updateStatusSellerRequest.setCommonRequest(commonRequest);
+						/** 3-2. 공통 헤더 생성 및 주입. */
+						updateStatusSellerRequest.setCommonRequest(commonRequest);
 
-							LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}",
-									updateStatusSellerRequest.toString());
+						LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}",
+								updateStatusSellerRequest.toString());
 
-							/** 3-3. SC회원 - 상태변경 Call. */
-							UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
-									.updateStatusSeller(updateStatusSellerRequest);
-
-							// Response Debug
-							LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}",
-									updateStatusSellerResponse.getCommonResponse().getResultCode(),
-									updateStatusSellerResponse.getCommonResponse().getResultMessage());
-						} else {
-							/** 3-4. 계정 잠금 해제 상태. */
-							throw new StorePlatformException("SAC_MEM_2013", req.getSellerId());
-						}
+						/** 3-3. SC회원 - 상태변경 Call. */
+						this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
 					}
 
 					/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
 					UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
 					LoginInfo loginInfo = new LoginInfo();
+					// 만료일시 생성
+					String expireDate = this.component.getExpirationTime(Integer.parseInt(req.getExpireDate()));
 					loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
 					loginInfo.setIpAddress(req.getIpAddress());
-					loginInfo.setSessionKey(logInSellerResponse.getSellerKey() + "_" + RandomStringUtils.getString(10));
-					// 만료일시
-					String expireDate = this.getExpirationTime(Integer.parseInt(req.getExpireDate()));
+					loginInfo.setSessionKey(UUID.randomUUID().toString().replaceAll("-", ""));
 					loginInfo.setExpireDate(expireDate);
 					updateLoginInfoRequest.setLoginInfo(loginInfo);
 
@@ -365,12 +353,7 @@ public class SellerServiceImpl implements SellerService {
 					updateLoginInfoRequest.setCommonRequest(commonRequest);
 
 					/** 4-2. SC회원 - 상태변경(회원인증키) Call. */
-					UpdateLoginInfoResponse updateLoginInfoResponse = this.sellerSCI
-							.updateLoginInfo(updateLoginInfoRequest);
-					// [RESPONSE] Debug
-					LOGGER.info("[SellerSCI.updateLoginInfo()] - Response CODE : {}, MESSGE : {}",
-							updateLoginInfoResponse.getCommonResponse().getResultCode(), updateLoginInfoResponse
-									.getCommonResponse().getResultMessage());
+					this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
 
 					/** 4-3. [RESPONSE] 회원 인증키 주입. */
 					res.setSessionKey(loginInfo.getSessionKey());
@@ -378,15 +361,16 @@ public class SellerServiceImpl implements SellerService {
 					sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
 
 				}
+				/** 2-1. [RESPONSE] 회원 상태 및 로그인 상태 주입. */
 				sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
 				sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
 				sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
 				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 				res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
-				// 서브계정여부
 				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
+				res.setLoginStatusCode(logInSellerResponse.getLoginStatusCode());
 			}
-			/** 2-1. [RESPONSE] 회원 정보 주입. */
+			/** 2-2. [RESPONSE] 회원 정보 주입. */
 			res.setSellerMbr(sellerMbr);
 			LOGGER.debug("==>>[SAC] SellerMbr.toString() : {}", sellerMbr.toString());
 		}
@@ -422,7 +406,7 @@ public class SellerServiceImpl implements SellerService {
 		keySearchList.add(keySearch);
 		searchSellerRequest.setKeySearchList(keySearchList);
 
-		/** 1. SC-회원정보조회 생성 및 주입 */
+		/** 2. SC-회원정보조회 생성 및 주입 */
 		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
 
 		if (!StringUtils.equals(searchSellerResponse.getSellerMbr().getSellerMainStatus(),
@@ -448,12 +432,7 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
 		/** 3. SC회원 - 상태변경 Call. */
-		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
-				.updateStatusSeller(updateStatusSellerRequest);
-
-		// Response Debug
-		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
-				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
+		this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
 
 		/** 4. TenantRes Response 생성 및 주입 */
 		ConfirmRes res = new ConfirmRes();
@@ -507,12 +486,7 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
 		/** 4. SC회원[로그인 제한] - 상태변경 Call. */
-		UpdateStatusSellerResponse updateStatusSellerResponse = this.sellerSCI
-				.updateStatusSeller(updateStatusSellerRequest);
-
-		// Response Debug
-		LOGGER.info("[SellerSCI.updateStatusSeller()] - Response CODE : {}, MESSGE : {}", updateStatusSellerResponse
-				.getCommonResponse().getResultCode(), updateStatusSellerResponse.getCommonResponse().getResultMessage());
+		this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
 
 		/** 5. TenantRes Response 생성 및 주입 */
 		LockAccountRes res = new LockAccountRes(updateStatusSellerRequest.getSellerID());
@@ -535,10 +509,37 @@ public class SellerServiceImpl implements SellerService {
 	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
-		/** 1. SC-REQUEST 생성 및 주입. */
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
+		if (!StringUtils.isEmpty(req.getSellerEmail())) {
+			/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
+			CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
+
+			/** 1-2. SC 헤더 셋팅 */
+			checkDuplicationSellerRequest.setCommonRequest(commonRequest);
+
+			KeySearch keySearch = new KeySearch();
+			keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
+			keySearch.setKeyString(req.getSellerEmail());
+			List<KeySearch> keySearchs = new ArrayList<KeySearch>();
+			keySearchs.add(keySearch);
+			checkDuplicationSellerRequest.setKeySearchList(keySearchs);
+
+			/** 1-3. SC회원(Email 중복) Call */
+			if (StringUtils.equals(MemberConstants.USE_Y,
+					this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
+				throw new StorePlatformException("SAC_MEM_2012", req.getSellerEmail());
+			}
+		}
+
+		/** 2. 기본정보수정 [REQUEST] 생성 및 주입. */
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
 
-		// 실명인증 정보
+		/** 2-1. 실명인증 정보 생성 및 주입. */
 		if (StringUtils.equals(req.getIsRealName(), MemberConstants.USE_Y)) {
 			MbrAuth mbrAuth = new MbrAuth();
 			// 실명인증여부
@@ -567,7 +568,7 @@ public class SellerServiceImpl implements SellerService {
 			updateSellerRequest.setMbrAuth(mbrAuth);
 		}
 
-		// 법정 대리인 정보
+		/** 2-2. 법정 대리인 정보 생성 및 주입. */
 		if (StringUtils.equals(req.getIsParent(), MemberConstants.USE_Y)) {
 			MbrLglAgent mbrLglAgent = new MbrLglAgent();
 
@@ -589,7 +590,7 @@ public class SellerServiceImpl implements SellerService {
 			updateSellerRequest.setMbrLglAgent(mbrLglAgent);
 		}
 
-		// 판매자 정보
+		/** 2-3. 판매자 정보 생성 및 주입. */
 		SellerMbr sellerMbr = new SellerMbr();
 		sellerMbr.setSellerKey(req.getSellerKey());
 		sellerMbr.setSellerClass(req.getSellerClass());
@@ -622,18 +623,18 @@ public class SellerServiceImpl implements SellerService {
 
 		updateSellerRequest.setSellerMbr(sellerMbr);
 
-		/** 2. 공통 헤더 생성 및 주입. */
-		updateSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
+		/** 2-4. 공통 헤더 생성 및 주입. */
+		updateSellerRequest.setCommonRequest(commonRequest);
 
-		/** 3. SC회원 - 상태변경 Call. */
+		/** 2-5. SC회원 - 기본정보변경 Call. */
 		UpdateSellerResponse updateSellerResponse = this.sellerSCI.updateSeller(updateSellerRequest);
 
-		// Response Debug
-		LOGGER.info("[SellerSCI.upgradeSeller()] - Response CODE : {}, MESSGE : {}", updateSellerResponse
-				.getCommonResponse().getResultCode(), updateSellerResponse.getCommonResponse().getResultMessage());
+		// Debug
+		LOGGER.debug("[SC-UpdateSellerResponse] : \n{}", updateSellerResponse.toString());
 
-		/** 4. TenantRes Response 생성 및 주입 */
+		/** 2-6. Tenant [RESPONSE] 생성 및 주입 */
 		ModifyInformationRes res = new ModifyInformationRes();
+		res.setSellerKey(updateSellerResponse.getSellerKey());
 
 		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
 		return res;
@@ -652,6 +653,11 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req) {
 		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
+		// SC공통 헤더
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
+		// SessionKey 유효성 체크
+		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
+
 		UpdateAccountSellerRequest updateAccountSellerRequest = new UpdateAccountSellerRequest();
 
 		updateAccountSellerRequest.setSellerKey(req.getSellerKey());
@@ -663,14 +669,9 @@ public class SellerServiceImpl implements SellerService {
 		UpdateAccountSellerResponse updateAccountSellerResponse = this.sellerSCI
 				.updateAccountSeller(updateAccountSellerRequest);
 
-		// Response Debug
-		LOGGER.info("[SellerSCI.upgradeSeller()] - Response CODE : {}, MESSGE : {}", updateAccountSellerResponse
-				.getCommonResponse().getResultCode(), updateAccountSellerResponse.getCommonResponse()
-				.getResultMessage());
-
 		/** 4. TenantRes Response 생성 및 주입 */
 		ModifyAccountInformationRes res = new ModifyAccountInformationRes();
-
+		res.setSellerKey(updateAccountSellerResponse.getSellerKey());
 		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [END] ############");
 		return res;
 	}
@@ -695,6 +696,9 @@ public class SellerServiceImpl implements SellerService {
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
 
 		schRes = this.sellerSCI.removeSeller(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		WithdrawRes response = new WithdrawRes();
 		response.setSellerKey(req.getSellerKey());
@@ -721,7 +725,7 @@ public class SellerServiceImpl implements SellerService {
 		LoginInfo loginInfo = new LoginInfo();
 		loginInfo.setSellerKey(req.getSellerKey());
 		loginInfo.setIpAddress(req.getIpAddress());
-		loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomStringUtils.getString(10));
+		// loginInfo.setSessionKey(req.getSellerKey() + "_" + RandomStringUtils.getString(10));
 		loginInfo.setExpireDate(req.getExpireDate());
 
 		schReq.setLoginInfo(loginInfo);
@@ -755,6 +759,9 @@ public class SellerServiceImpl implements SellerService {
 		schReq.setLoginInfo(loginInfo);
 
 		schRes = this.sellerSCI.removeLoginInfo(schReq);
+		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
+			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
+		}
 
 		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
 
@@ -763,19 +770,4 @@ public class SellerServiceImpl implements SellerService {
 		return response;
 	}
 
-	/**
-	 * <pre>
-	 * 인증 만료 시간 연장 .
-	 * </pre>
-	 * 
-	 * @param hour
-	 *            : 연장할 시간
-	 * @return String : 현재시간 + 연장시간
-	 */
-	private String getExpirationTime(int hour) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR, hour);
-		return sdf.format(cal.getTime());
-	}
 }

@@ -1,11 +1,10 @@
 package com.skplanet.storeplatform.sac.api.v1.member;
 
-import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 
 /**
  * ConvertMapper Object To JSON
@@ -28,12 +27,8 @@ public class ConvertMapperUtils {
 			ObjectMapper mapper = new ObjectMapper();
 			if (obj != null)
 				returnStr = mapper.writeValueAsString(obj);
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new StorePlatformException("", e);
 		}
 		return returnStr;
 	}

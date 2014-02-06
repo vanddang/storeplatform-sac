@@ -90,8 +90,8 @@ public class RemoveIndividualPolicyTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						request.setKey("010123456");
-						request.setPolicyCode("9");
+						request.setKey("01012341234");
+						request.setPolicyCode("US011702");
 						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}

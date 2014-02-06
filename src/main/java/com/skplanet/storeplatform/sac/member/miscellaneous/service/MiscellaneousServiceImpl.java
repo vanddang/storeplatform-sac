@@ -652,10 +652,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 3. SC회원[searchPolicyList] Call. */
 		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
 
-		// Debug
-		LOGGER.info("[UserSCI.searchPolicyList()] - Response CODE : {}, MESSAGE : {}", policyResponse
-				.getCommonResponse().getResultCode(), policyResponse.getCommonResponse().getResultMessage());
-
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		GetIndividualPolicyRes res = new GetIndividualPolicyRes();
 		List<IndividualPolicyInfo> policyInfos = null;
@@ -716,10 +712,6 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 3. SC회원[updatePolicy] Call. */
 		UpdatePolicyResponse updatePolicyResponse = this.userSCI.updatePolicy(updatePolicyRequest);
 
-		// Debug
-		LOGGER.info("[UserSCI.updatePolicy()] - Response CODE : {}, MESSAGE : {}", updatePolicyResponse
-				.getCommonResponse().getResultCode(), updatePolicyResponse.getCommonResponse().getResultMessage());
-
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		CreateIndividualPolicyRes res = new CreateIndividualPolicyRes();
 
@@ -768,14 +760,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/** 3. SC회원[updatePolicy] Call. */
 		RemovePolicyResponse removePolicyResponse = this.userSCI.removePolicy(removePolicyRequest);
 
-		// Debug
-		LOGGER.info("[UserSCI.removePolicy()] - Response CODE : {}, MESSAGE : {}", removePolicyResponse
-				.getCommonResponse().getResultCode(), removePolicyResponse.getCommonResponse().getResultMessage());
-
 		/** 4. SC회원 Call 결과 값으로 Response 생성 및 주입. */
 		RemoveIndividualPolicyRes res = new RemoveIndividualPolicyRes();
 		res.setPolicyCode(removePolicyResponse.getLimitPolicyCodeList().get(0));
-		res.setKey(removePolicyResponse.getLimitPolicyCodeList().get(0));
+		res.setKey(req.getKey());
 
 		LOGGER.debug("==>>[SAC] RemoveIndividualPolicyRes.toString() : {}", res.toString());
 		LOGGER.debug("###### MiscellaneousServiceImpl.removeIndividualPolicy [END] ######");

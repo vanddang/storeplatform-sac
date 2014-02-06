@@ -95,7 +95,8 @@ public class AuthorizeTest {
 					public Object requestBody() {
 						authorizeReq.setSellerId("sctest1");
 						authorizeReq.setSellerPW("123456");
-						authorizeReq.setExpireDate("1");
+						 authorizeReq.setExpireDate("2");
+						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}", ConvertMapperUtils.convertObjectToJson(authorizeReq));
 						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
@@ -124,7 +125,7 @@ public class AuthorizeTest {
 					public Object requestBody() {
 						authorizeReq.setSellerId("subsctest1");
 						authorizeReq.setSellerPW("123456");
-						authorizeReq.setExpireDate("1");
+						// authorizeReq.setExpireDate("1");
 						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {

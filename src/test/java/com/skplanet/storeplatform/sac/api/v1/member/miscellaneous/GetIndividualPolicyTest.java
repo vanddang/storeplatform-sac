@@ -102,16 +102,16 @@ public class GetIndividualPolicyTest {
 					public Object requestBody() {
 						List<PolicyCode> policyCodeList = new ArrayList<GetIndividualPolicyReq.PolicyCode>();
 						PolicyCode policyCode1 = new PolicyCode();
-						policyCode1.setPolicyCode("8");
+						policyCode1.setPolicyCode("US011701");
 						PolicyCode policyCode2 = new PolicyCode();
-						policyCode2.setPolicyCode("9");
+						policyCode2.setPolicyCode("US011702");
 						PolicyCode policyCode3 = new PolicyCode();
-						policyCode3.setPolicyCode("5");
+						policyCode3.setPolicyCode("US011703");
 						policyCodeList.add(policyCode1);
 						policyCodeList.add(policyCode2);
 						policyCodeList.add(policyCode3);
 						request.setPolicyCodeList(policyCodeList);
-						request.setKey("010123456");
+						request.setKey("01012341234");
 						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}

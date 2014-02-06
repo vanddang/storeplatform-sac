@@ -97,9 +97,9 @@ public class CreateIndividualPolicyTest {
 					@Override
 					public Object requestBody() {
 						// key(30), code(10), value(100)
-						request.setKey("seller");
-						request.setPolicyCode("01");
-						request.setValue("제한");
+						request.setKey("01012341234");
+						request.setPolicyCode("US011702");
+						request.setValue("Y");
 						request.setRegId("test");
 
 						// Debug
