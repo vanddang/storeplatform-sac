@@ -50,7 +50,7 @@ public interface SellerService {
 	 * 
 	 * @throws Exception
 	 */
-	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception;
+	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req);
 
 	/**
 	 * 2.2.26. 판매자 회원 인증키 생성/연장.
@@ -64,5 +64,5 @@ public interface SellerService {
 	 * 
 	 * @throws Exception
 	 */
-	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) throws Exception;
+	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req);
 }

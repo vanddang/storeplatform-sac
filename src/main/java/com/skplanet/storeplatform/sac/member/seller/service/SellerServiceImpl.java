@@ -673,7 +673,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return WithdrawRes
 	 */
 	@Override
-	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) throws Exception {
+	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) {
 
 		RemoveSellerResponse schRes = new RemoveSellerResponse();
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
@@ -735,7 +735,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return AbrogationAuthKeyRes
 	 */
 	@Override
-	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) throws Exception {
+	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) {
 
 		RemoveLoginInfoResponse schRes = new RemoveLoginInfoResponse();
 		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();

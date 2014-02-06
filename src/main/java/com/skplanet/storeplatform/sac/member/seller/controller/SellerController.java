@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -159,17 +158,9 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) throws Exception {
+	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) {
 		LOGGER.debug("### 2.2.3. 판매자 회원 탈퇴 [authorize] START ###");
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-
-		String secedeReasonCode = StringUtil.nvl(req.getSecedeReasonCode(), "");
-		String secedeReasonMessage = StringUtil.nvl(req.getSecedeReasonMessage(), "");
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-
-		if (secedeReasonCode.equals("") | secedeReasonMessage.equals("") | sellerKey.equals("")) {
-			throw new Exception("필수 파라미터 미존재");
-		}
+		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 
 		return this.sellerService.withdraw(header, req);
 	}
@@ -203,13 +194,7 @@ public class SellerController {
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header,
-			@RequestBody @Validated AbrogationAuthKeyReq req) throws Exception {
-
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
-		if (sellerKey.equals("")) {
-			throw new Exception("필수 파라미터 미존재");
-		}
+			@RequestBody @Validated AbrogationAuthKeyReq req) {
 
 		return this.sellerService.abrogationAuthKey(header, req);
 	}
