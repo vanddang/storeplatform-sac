@@ -324,40 +324,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 			userMbr.setUserBirthDay(req.getUserBirthDay());
 		}
 
-		/**
-		 * 우편번호 (Sync 대상)
-		 */
-		if (!StringUtils.equals(req.getUserZip(), "")) {
-			userMbr.setUserZip(req.getUserZip());
-		}
-
-		/**
-		 * 거주지 주소 (Sync 대상)
-		 */
-		if (!StringUtils.equals(req.getUserAddress(), "")) {
-			userMbr.setUserAddress(req.getUserAddress());
-		}
-
-		/**
-		 * 거주지 상세주소 (Sync 대상)
-		 */
-		if (!StringUtils.equals(req.getUserDetailAddress(), "")) {
-			userMbr.setUserDetailAddress(req.getUserDetailAddress());
-		}
-
-		/**
-		 * (외국인) 도시
-		 */
-		if (!StringUtils.equals(req.getUserCity(), "")) {
-			userMbr.setUserCity(req.getUserCity());
-		}
-
-		/**
-		 * (외국인) 주
-		 */
-		if (!StringUtils.equals(req.getUserState(), "")) {
-			userMbr.setUserState(req.getUserState());
-		}
 		LOGGER.info("## SC Request 사용자 기본정보 : {}", userMbr.toString());
 
 		return userMbr;
