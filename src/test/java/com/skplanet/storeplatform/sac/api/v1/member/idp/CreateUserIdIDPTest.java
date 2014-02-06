@@ -72,8 +72,8 @@ public class CreateUserIdIDPTest {
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "900000083476");
-						resultMap.put("user_id", "sacagreeuser012301");
+						resultMap.put("im_int_svc_no", "100000003280");
+						resultMap.put("user_id", "1234");
 						resultMap.put("idp_id", "test01");
 						resultMap.put("im_mem_type_cd", "100");
 
