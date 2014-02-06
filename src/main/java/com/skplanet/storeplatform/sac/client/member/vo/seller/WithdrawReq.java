@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -14,9 +15,11 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class WithdrawReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
-
+	@NotBlank
 	private String sellerKey;
+	@NotBlank
 	private String secedeReasonCode;
+	@NotBlank
 	private String secedeReasonMessage;
 
 	public String getSellerKey() {
