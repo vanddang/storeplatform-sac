@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.seller;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -15,6 +17,7 @@ public class AbrogationAuthKeyReq extends CommonInfo {
 	private static final long serialVersionUID = 4577513919241061044L;
 
 	/** 판매자 회원키. */
+	@NotBlank
 	private String sellerKey;
 
 	public String getSellerKey() {
