@@ -503,27 +503,6 @@ public class SellerServiceImpl implements SellerService {
 		// SessionKey 유효성 체크
 		this.component.checkSessionKey(commonRequest, req.getSessionKey(), req.getSellerKey());
 
-		if (!StringUtils.isEmpty(req.getSellerEmail())) {
-			/** 1. Email 중복체크 [REQUEST] 생성 및 주입 */
-			CheckDuplicationSellerRequest checkDuplicationSellerRequest = new CheckDuplicationSellerRequest();
-
-			/** 1-2. SC 헤더 셋팅 */
-			checkDuplicationSellerRequest.setCommonRequest(commonRequest);
-
-			KeySearch keySearch = new KeySearch();
-			keySearch.setKeyType(MemberConstants.KEY_TYPE_EMAIL);
-			keySearch.setKeyString(req.getSellerEmail());
-			List<KeySearch> keySearchs = new ArrayList<KeySearch>();
-			keySearchs.add(keySearch);
-			checkDuplicationSellerRequest.setKeySearchList(keySearchs);
-
-			/** 1-3. SC회원(Email 중복) Call */
-			if (StringUtils.equals(MemberConstants.USE_Y,
-					this.sellerSCI.checkDuplicationSeller(checkDuplicationSellerRequest).getIsRegistered())) {
-				throw new StorePlatformException("SAC_MEM_2012", req.getSellerEmail());
-			}
-		}
-
 		/** 2. 기본정보수정 [REQUEST] 생성 및 주입. */
 		UpdateSellerRequest updateSellerRequest = new UpdateSellerRequest();
 
@@ -590,7 +569,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setSellerPhoneCountry(req.getSellerPhoneCountry());
 		sellerMbr.setSellerPhone(req.getSellerPhone());
 		sellerMbr.setIsRecvSMS(req.getIsRecvSMS());
-		sellerMbr.setSellerEmail(req.getSellerEmail());
 		sellerMbr.setSellerName(req.getSellerName());
 		sellerMbr.setSellerSex(req.getSellerSex());
 		sellerMbr.setSellerBirthDay(req.getSellerBirthDay());
