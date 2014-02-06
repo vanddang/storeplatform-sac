@@ -34,6 +34,7 @@ public class App extends CommonInfo implements Serializable {
 	private History history; // update history
 	private Install install; // Install 정보
 	private String filePath; // 파일경로
+	private String scId; // sub contents Id
 
 	/**
 	 * 
@@ -283,6 +284,21 @@ public class App extends CommonInfo implements Serializable {
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	/**
+	 * @return the scId
+	 */
+	public String getScId() {
+		return this.scId;
+	}
+
+	/**
+	 * @param scId
+	 *            the scId to set
+	 */
+	public void setScId(String scId) {
+		this.scId = scId;
 	}
 
 }
