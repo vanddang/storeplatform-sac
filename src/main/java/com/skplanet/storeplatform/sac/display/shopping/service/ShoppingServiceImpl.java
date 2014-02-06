@@ -219,7 +219,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품명)
 				title.setText("추천/인기 카탈로그 상품");
-				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
 				price.setFixedPrice(1000);
@@ -413,7 +412,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 				// 상품 정보 (상품명)
 				title.setText("추천/인기 카탈로그 상품");
-				title.setPrefix("Y");
 				// 상품 정보 (상품가격)
 
 				price.setFixedPrice(1000);
