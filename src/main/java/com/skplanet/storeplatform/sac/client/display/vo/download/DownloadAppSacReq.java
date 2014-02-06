@@ -26,6 +26,7 @@ public class DownloadAppSacReq extends CommonInfo {
 	private String deviceModelCd; // 단말모델코드
 	private String langCd; // 언어코드
 	private String osVersion; // os 버전
+	private String lcdSize; // lcd 크기
 	private String category; // 상품 유형
 
 	@NotEmpty(message = "필수 파라미터 입니다.")
@@ -137,6 +138,21 @@ public class DownloadAppSacReq extends CommonInfo {
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
+	}
+
+	/**
+	 * @return the lcdSize
+	 */
+	public String getLcdSize() {
+		return this.lcdSize;
+	}
+
+	/**
+	 * @param lcdSize
+	 *            the lcdSize to set
+	 */
+	public void setLcdSize(String lcdSize) {
+		this.lcdSize = lcdSize;
 	}
 
 	/**
