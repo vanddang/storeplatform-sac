@@ -487,7 +487,7 @@ public class MemberCommonComponent {
 		} else if (StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
 			return MemberConstants.NM_DEVICE_TELECOM_IOS;
 		} else {
-			throw new StorePlatformException("SAC_MEM_1104", deviceTelecom);
+			throw new StorePlatformException("SAC_MEM_1103", deviceTelecom);
 		}
 	}
 

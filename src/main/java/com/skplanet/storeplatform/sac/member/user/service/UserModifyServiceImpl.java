@@ -21,7 +21,11 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
+import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbr;
@@ -40,6 +44,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreement
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
+import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
@@ -119,7 +124,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			this.imIdpService.updateUserInfo(param);
 
 			/**
-			 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
+			 * 통합IDP 회원정보 조회 연동 (cmd - (cmd - findCommonProfileForServerIDP))
 			 */
 			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
 			LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
@@ -224,13 +229,65 @@ public class UserModifyServiceImpl implements UserModifyService {
 	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) {
 
 		/**
-		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
+		 * 회원 정보 조회.
 		 */
-		if (StringUtils.equals(req.getUserAuthKey(), "")) {
-			throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		/**
+		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+		 * 
+		 * 통합회원일경우만 처리한다.
+		 */
+		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
+		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+
+			/**
+			 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
+			 */
+			if (StringUtils.equals(req.getUserAuthKey(), "")) {
+				throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
+			}
+
+			LOGGER.info("## ====================================================");
+			LOGGER.info("## One ID 통합회원일 경우만 통합 IDP 연동을 한다.");
+			LOGGER.info("## ====================================================");
+
+			/**
+			 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인)
+			 */
+			if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) { // 본인
+
+				// /**
+				// * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP)
+				// */
+				// ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+				// LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseHeader().getResult_text());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_sex());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_calendar());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_birthday());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_zipcode());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address());
+				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address2());
+
+			} else { // 법정대리인
+
+			}
+
 		}
 
+		/**
+		 * SC 실명인증 연동.
+		 */
+		// String userKey = this.updateRealName(sacHeader, req);
+
+		/**
+		 * 결과 정보 setting.
+		 */
 		CreateRealNameRes response = new CreateRealNameRes();
+		// response.setUserKey(userKey);
+		response.setUserKey("");
 
 		return response;
 	}
@@ -327,6 +384,85 @@ public class UserModifyServiceImpl implements UserModifyService {
 		LOGGER.info("## SC Request 사용자 기본정보 : {}", userMbr.toString());
 
 		return userMbr;
+	}
+
+	/**
+	 * <pre>
+	 * 실명인증 연동 처리.
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param req
+	 *            Request Value Object
+	 * @return String (userKey)
+	 */
+	private String updateRealName(SacRequestHeader sacHeader, CreateRealNameReq req) {
+
+		/**
+		 * 실명인증 setting.
+		 */
+		UpdateRealNameRequest updateRealNameRequest = new UpdateRealNameRequest();
+		updateRealNameRequest = new UpdateRealNameRequest();
+		updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+		updateRealNameRequest.setIsOwn(req.getIsOwn());
+		updateRealNameRequest.setIsRealName(req.getIsRealName());
+		updateRealNameRequest.setUserKey(req.getUserKey());
+
+		/**
+		 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인)
+		 */
+		if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) {
+
+			/**
+			 * 실명인증 (본인)
+			 */
+			MbrAuth mbrAuth = new MbrAuth();
+			mbrAuth.setTenantID(sacHeader.getTenantHeader().getTenantId()); // 테넌트 아이디
+			mbrAuth.setBirthDay(req.getUserBirthDay()); // 생년월일
+			mbrAuth.setTelecom(req.getDeviceTelecom()); // 이동 통신사
+			mbrAuth.setPhone(req.getUserPhone()); // 사용자 휴대폰
+			mbrAuth.setName(req.getUserName()); // 사용자 이름
+			mbrAuth.setSex(req.getUserSex()); // 사용자 성별
+			mbrAuth.setCi(req.getUserCi()); // CI
+			mbrAuth.setDi(req.getUserDi()); // DI
+			mbrAuth.setRealNameSite(req.getRealNameSite()); // 실명인증 사이트 코드
+			mbrAuth.setRealNameDate(req.getRealNameDate()); // 실명인증 일시
+			mbrAuth.setRealNameMethod(req.getRealNameMethod()); // 실명인증 수단코드
+
+			updateRealNameRequest.setUserMbrAuth(mbrAuth);
+
+		} else {
+
+			/**
+			 * 실명인증 (법정대리인)
+			 */
+			MbrLglAgent mbrLglAgent = new MbrLglAgent();
+			mbrLglAgent.setParentBirthDay(req.getUserBirthDay()); // 법정대리인 생년월일
+			mbrLglAgent.setParentMDN(req.getUserPhone()); // 법정대리인 전화번호
+			mbrLglAgent.setParentTelecom(req.getDeviceTelecom()); // 법정대리인 이동 통신사
+			mbrLglAgent.setParentCI(req.getUserCi()); // 법정대리인 CI
+			mbrLglAgent.setParentName(req.getUserName()); // 법정대리인 이름
+			mbrLglAgent.setParentType(req.getParentType()); // 법정대리인 관계코드
+			mbrLglAgent.setParentEmail(req.getParentEmail()); // 법정대리인 이메일
+			mbrLglAgent.setParentRealNameDate(req.getRealNameDate()); // 법정대리인 실명인증 일시
+			mbrLglAgent.setParentRealNameSite(req.getRealNameSite()); // 법정대리인 실명인증 사이트 코드
+			mbrLglAgent.setParentRealNameMethod(req.getRealNameMethod()); // 법정대리인 실명인증 수단코드
+
+			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
+
+		}
+
+		/**
+		 * SC 실명인증정보 수정 연동.
+		 */
+		UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+		if (updateRealNameResponse.getUserKey() == null || StringUtils.equals(updateRealNameResponse.getUserKey(), "")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userKey");
+		}
+
+		return updateRealNameResponse.getUserKey();
+
 	}
 
 }

@@ -126,6 +126,10 @@ public final class MemberConstants {
 	public static final String AUTH_CHNL_MOBILE_WEB = "US011204"; // 모바일웹
 	public static final String AUTH_CHNL_MOBILE_OPENAPI = "US011205"; // OPENAPI
 
+	/** 실명인증 대상. */
+	public static final String AUTH_TYPE_OWN = "OWN"; // 본인
+	public static final String AUTH_TYPE_PARENT = "PARENT"; // 법정대리인
+
 	/** 통합회원 로그인 상태코드 */
 	public static final String USER_LOGIN_STATUS_NOMAL = "10"; // 로그인 가능
 	public static final String USER_LOGIN_STATUS_PAUSE = "20"; // 로그인 제한
