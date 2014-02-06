@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
 
 /**
  * 휴대폰 인증 코드 확인 JUnit Test.
@@ -75,35 +75,30 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	 * 정상 파라미터 전달.
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void simpleTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
-							request.setUserPhone("01012344241");
-							request.setPhoneAuthCode("707539");
-							request.setPhoneSign("f59e3e2bee644efa8922cfc4e23787df");
-							request.setTimeToLive("3");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
+						request.setUserPhone("01012344241");
+						request.setPhoneAuthCode("707539");
+						request.setPhoneSign("f59e3e2bee644efa8922cfc4e23787df");
+						request.setTimeToLive("3");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
-							assertThat(response.getPhoneSign(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
+						assertThat(response.getUserPhone(), notNullValue());
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
@@ -113,35 +108,30 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	 * 기존 인증된 인증 코드.
 	 * </pre>
 	 */
-	// @Test(expected = Exception.class)
+	@Test(expected = StorePlatformException.class)
 	public void terminatedAuthCodeTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
-					.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
-							request.setUserPhone("01012344241");
-							request.setPhoneAuthCode("805531");
-							request.setPhoneSign("b3685c54bf7c491d8a97cc5211449864");
-							request.setTimeToLive("3");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
+						request.setUserPhone("01012344241");
+						request.setPhoneAuthCode("805531");
+						request.setPhoneSign("b3685c54bf7c491d8a97cc5211449864");
+						request.setTimeToLive("3");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
-							assertThat(response.getPhoneSign(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
+						assertThat(response.getUserPhone(), notNullValue());
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 }

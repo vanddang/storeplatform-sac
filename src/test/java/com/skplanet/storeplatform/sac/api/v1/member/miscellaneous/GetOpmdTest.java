@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -64,32 +65,28 @@ public class GetOpmdTest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void requestOpmdMsisdnTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetOpmdReq request = new GetOpmdReq();
-							request.setMsisdn("98999720228");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetOpmdRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetOpmdReq request = new GetOpmdReq();
+						request.setMsisdn("98999720228");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetOpmdRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetOpmdRes response = (GetOpmdRes) result;
-							assertThat(response.getMsisdn(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetOpmdRes response = (GetOpmdRes) result;
+						assertThat(response.getMsisdn(), notNullValue());
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -99,32 +96,28 @@ public class GetOpmdTest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void requestMsisdnTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetOpmdReq request = new GetOpmdReq();
-							request.setMsisdn("01020284222");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetOpmdRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetOpmdReq request = new GetOpmdReq();
+						request.setMsisdn("01020284222");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetOpmdRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetOpmdRes response = (GetOpmdRes) result;
-							assertThat(response.getMsisdn(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetOpmdRes response = (GetOpmdRes) result;
+						assertThat(response.getMsisdn(), notNullValue());
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -135,32 +128,28 @@ public class GetOpmdTest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void requestinvalidMsisdnTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetOpmdReq request = new GetOpmdReq();
-							request.setMsisdn("10122223333");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetOpmdRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetOpmdReq request = new GetOpmdReq();
+						request.setMsisdn("10122223333");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetOpmdRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetOpmdRes response = (GetOpmdRes) result;
-							assertThat(response.getMsisdn(), notNullValue());
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetOpmdRes response = (GetOpmdRes) result;
+						assertThat(response.getMsisdn(), notNullValue());
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }

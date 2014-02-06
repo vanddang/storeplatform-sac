@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
@@ -61,7 +62,7 @@ public class GetCaptchaTest {
 	 * 성공 CASE.
 	 * </pre>
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void successTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getCaptcha/v1").httpMethod(HttpMethod.GET)
 				.success(GetCaptchaRes.class, new SuccessCallback() {
