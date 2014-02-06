@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -18,11 +19,13 @@ public class AdditionalServicInfo extends CommonInfo {
 	/**
 	 * 휴대폰 번호
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String msisdn;
 
 	/**
 	 * 부가서비스 코드
 	 */
+	@NotEmpty(message = "필수 파라미터 입니다.")
 	private String svcCode;
 
 	/**
