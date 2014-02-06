@@ -32,7 +32,7 @@ public class AuthorizeReq extends CommonInfo {
 	private String releaseLock;
 	/** 만료일시. */
 	@NotBlank
-	@Pattern(regexp = "^\\d")
+	@Pattern(regexp = "^\\d*")
 	private String expireDate;
 	/** IP 주소. */
 	private String ipAddress;
