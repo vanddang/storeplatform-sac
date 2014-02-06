@@ -76,11 +76,9 @@
 			  FROM (
 			        SELECT  COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
 			               , A.MENU_ID
-			               , A.UP_MENU_ID
-			               , A.TOP_MENU_ID
+                           , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD= #{langCd}) AS MENU_NM
+			               , D.TOP_MENU_ID
 			               , B.PROD_ID
-			               , C.MENU_NM
-			               , C.MENU_DESC
 			               , D.PROD_CHRG_YN
 			               , D.PROD_GRD_CD
 			               , D.REG_DT
@@ -101,7 +99,6 @@
 			               , I.SUB_CONTENTS_ID
 			           FROM  TB_DP_MENU_CATEGORY           A
 			               , TB_DP_MENU_CATEGORY_PROD_MAPG B
-			               , TB_DP_MENU_CATEGORY_DESC      C
 			               , TB_DP_PROD                    D
 			               , TB_DP_APP_PROD                E
 			               , TB_DP_PROD_DESC               F
@@ -110,7 +107,6 @@
 			               , TB_DP_SPRT_DEVICE             I
 			               , TB_CM_DEVICE                  J
 			          WHERE  A.MENU_ID = B.MENU_ID
-			            AND  A.MENU_ID = C.MENU_ID
 			            AND  B.PROD_ID = D.PROD_ID
 			            AND  B.PROD_ID = E.PROD_ID
 			            AND  B.PROD_ID = F.PROD_ID
@@ -120,7 +116,6 @@
 			            AND  B.PROD_ID = I.PROD_ID
 			            AND  A.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
 			            AND  B.USE_YN = 'Y'                       /* Y : 사용 (사용여부) */
-			            AND  C.LANG_CD = #{langCd}                     /* ko : 한국어 */
 			            AND  D.SVC_GRP_CD = 'DP000201'            /* DP000201 : 애플리캐이션 */
 			            AND  D.PROD_ID = #{productId}             /* param : product Id */
 			            AND  F.LANG_CD = #{langCd}                     /* ko : 한국어 */
@@ -146,7 +141,6 @@
 			       )                   KA
 			      , TB_DP_SUB_CONTENTS KB
 			      , TB_DP_PROD_IMG     KC
-			--      , TB_DP_PROD_RSHP    KD
 			 WHERE  KA.PROD_ID = KB.PROD_ID(+)
 			   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID(+)
 			   AND  KA.PROD_ID = KC.PROD_ID
@@ -345,8 +339,7 @@
                                   FROM
                                        (
                                         SELECT A.MENU_ID
-                                             , C.MENU_NM
-                                             , C.MENU_DESC                                    
+                                             , (SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD=#{langCd}) AS MENU_NM                                    
                                              , D.PROD_ID AS CHNL_PROD_ID
                                              , E.BTV_YN
                                              , E.HDCP_YN
@@ -400,7 +393,6 @@
                                              , M.FILE_PATH
                                           FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
                                              , TB_DP_MENU_CATEGORY           B
-                                             , TB_DP_MENU_CATEGORY_DESC      C
                                              , TB_DP_PROD                    D
                                              , TB_DP_MULTIMDA_PROD           E
                                              , TB_DP_TENANT_PROD             G
@@ -414,7 +406,6 @@
                                              , TB_DP_MULTIMDA_PROD           P
                                              , TB_DP_PROD_DESC               Q
                                          WHERE A.MENU_ID = B.MENU_ID
-                                           AND A.MENU_ID = C.MENU_ID
                                            AND A.PROD_ID = D.PROD_ID
                                            AND D.PROD_ID = E.PROD_ID  
                                            AND D.PROD_ID = G.PROD_ID                                                                              
@@ -422,7 +413,7 @@
                                            AND I.PART_PROD_ID = J.PROD_ID
                                            AND I.PART_PROD_ID = K.PROD_ID
                                            AND I.PART_PROD_ID = M.PROD_ID
-                                           AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
+                                           --AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
                                            AND J.PROD_ID = N.PROD_ID
                                            AND J.PROD_ID = O.PROD_ID  
                                            AND N.TENANT_ID = #{tenantId}
@@ -430,7 +421,6 @@
                                            AND J.PROD_ID = P.PROD_ID
                                            AND J.PROD_ID = Q.PROD_ID                                     
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-                                           AND C.LANG_CD = #{langCd}                      /* ko : 한국어 */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
                                            AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                                            AND D.TOP_MENU_ID IN ('DP17', 'DP18')
@@ -440,7 +430,8 @@
                                            AND J.SVC_GRP_CD = 'DP000203'       /* PD002501 : 에피소드타입 */  
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 에피소드타입 */  
                                            AND J.TOP_MENU_ID IN ('DP17', 'DP18')
-                                           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */                                       
+                                           --AND K.PROD_ID IS NOT NULL                
+                                           AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2')                                       
                                            AND DECODE( L.SD_VIDEO_SPRT_YN , 'Y' , DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 'PD009702', 1, DECODE( L.HDV_SPRT_YN, 'Y', 1, 0 ) ), DECODE( M.DP_PG_QULT_CD, 'PD009701', 1, 0 ) ) = 1   
                                            AND (CASE WHEN L.VIDEO_DRM_SPRT_YN = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
                                                      ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */                                                                                                                                     
@@ -718,6 +709,7 @@
 		      , TA.FILE_SIZE
 		      , TA.CHNL_PROD_ID
 		      , TA.MENU_ID
+		      , TA.MENU_NM
 		      , TA.TOP_MENU_ID
 		      , (SELECT MENU_NM 
 		           FROM TB_DP_MENU_CATEGORY_DESC
@@ -734,8 +726,7 @@
 		      (
 		      
 		        SELECT MAX(A.MENU_ID) AS MENU_ID
-		             , MAX(C.MENU_NM) AS MENU_NM
-		             , MAX(C.MENU_DESC) AS MENU_DESC                           
+		             , MAX((SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC T WHERE T.MENU_ID = A.MENU_ID AND LANG_CD=#{langCd})) AS MENU_NM                           
 		             , MAX(D.PROD_ID) AS CHNL_PROD_ID
 		             , J.PROD_ID             
 		             , MAX(J.PROD_GRD_CD) AS PROD_GRD_CD
@@ -752,7 +743,6 @@
 		             , MAX(Q.PROD_NM) AS PROD_NM
 		          FROM TB_DP_MENU_CATEGORY_PROD_MAPG A
 		             , TB_DP_MENU_CATEGORY           B
-		             , TB_DP_MENU_CATEGORY_DESC      C
 		             , TB_DP_PROD                    D
 		             , TB_DP_MULTIMDA_PROD           E
 		             , TB_DP_TENANT_PROD             G
@@ -766,7 +756,6 @@
 		             , TB_DP_MULTIMDA_PROD           P
 		             , TB_DP_PROD_DESC               Q
 		         WHERE A.MENU_ID = B.MENU_ID
-		           AND A.MENU_ID = C.MENU_ID
 		           AND A.PROD_ID = D.PROD_ID
 		           AND D.PROD_ID = E.PROD_ID  
 		           AND D.PROD_ID = G.PROD_ID                                                                              
@@ -774,7 +763,7 @@
 		           AND I.PART_PROD_ID = J.PROD_ID
 		           AND I.PART_PROD_ID = K.PROD_ID
 		           AND I.PART_PROD_ID = M.PROD_ID
-		           AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
+--		           AND K.DEVICE_MODEL_CD = L.DEVICE_MODEL_CD                                    
 		           AND J.PROD_ID = N.PROD_ID
 		           AND J.PROD_ID = O.PROD_ID  
 		           AND N.TENANT_ID = #{tenantId}
@@ -782,7 +771,6 @@
 		           AND J.PROD_ID = P.PROD_ID
 		           AND J.PROD_ID = Q.PROD_ID                                     
 		           AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
-		           AND C.LANG_CD = #{langCd}                      /* ko : 한국어 */
 		           AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
 		           AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
 		           AND D.TOP_MENU_ID = 'DP16'
@@ -792,7 +780,8 @@
 		           AND J.SVC_GRP_CD = 'DP000203'       /* PD002501 : 에피소드타입 */  
 		           AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드타입 */  
 		           AND J.TOP_MENU_ID = 'DP16'
-		           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */                                       
+--		           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+                   AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2')                                       
 		           AND L.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */   
 		           AND L.MUSIC_SPRT_YN ='Y'
 		           AND L.USE_YN ='Y'

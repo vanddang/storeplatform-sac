@@ -442,6 +442,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 					date = new Date();
 					date.setType("date/purchase");
+					// date.setText(DateUtils.parseDate(prchsDt));
 					date.setText(prchsDt);
 					purchase.setDate(date);
 					product.setPurchase(purchase);

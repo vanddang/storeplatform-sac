@@ -224,6 +224,7 @@ public class DownloadMusicServiceImpl implements DownloadMusicService {
 			menu = new Menu();
 			menu.setId(metaInfo.getMenuId());
 			menu.setName(metaInfo.getMenuNm());
+			menuList.add(menu);
 			menu = new Menu();
 			menu.setId(metaInfo.getMetaClsfCd());
 			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
