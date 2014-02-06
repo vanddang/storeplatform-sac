@@ -74,8 +74,8 @@ public class MiscellaneousController {
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request) {
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
-		if (request == null || request.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001", "msisdn or deviceModel");
+		if (request.getDeviceModelNo() == null && request.getMsisdn() == null) {
+			throw new StorePlatformException("SAC_MEM_0001", "deviceModel 또는 msisdn");
 		}
 
 		if (request.getMsisdn() != null) {
