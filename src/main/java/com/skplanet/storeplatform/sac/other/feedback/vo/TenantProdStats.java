@@ -28,7 +28,7 @@ public class TenantProdStats extends CommonInfo {
 	private String strmClientNm;
 	private int dwldCnt;
 	private int prchsCnt;
-	private int avgEvluScore;
+	private double avgEvluScore;
 	private int totEvluScore;
 	private int paticpersCnt;
 	private String regId;
@@ -127,17 +127,17 @@ public class TenantProdStats extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return the avgEvluScore
 	 */
-	public int getAvgEvluScore() {
+	public double getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
 	/**
 	 * @param avgEvluScore
-	 *            avgEvluScore
+	 *            the avgEvluScore to set
 	 */
-	public void setAvgEvluScore(int avgEvluScore) {
+	public void setAvgEvluScore(double avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
 

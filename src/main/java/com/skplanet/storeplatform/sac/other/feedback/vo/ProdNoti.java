@@ -61,6 +61,9 @@ public class ProdNoti extends CommonInfo {
 	private String delDt;
 	private String delYn;
 
+	// 검색 조건 추가.
+	private String chnlId;
+
 	/**
 	 * @return String
 	 */
@@ -629,6 +632,21 @@ public class ProdNoti extends CommonInfo {
 	 */
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getChnlId() {
+		return this.chnlId;
+	}
+
+	/**
+	 * @param chnlId
+	 *            chnlId
+	 */
+	public void setChnlId(String chnlId) {
+		this.chnlId = chnlId;
 	}
 
 }

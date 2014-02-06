@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
@@ -56,7 +55,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  */
 @Profile(value = { "dev", "local" })
 @Service
-@Transactional
 public class FeedbackServiceSampleImpl implements FeedbackService {
 
 	@Override
@@ -99,9 +97,9 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	@Override
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackReq, SacRequestHeader sacRequestHeader) {
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
-		listFeedbackRes.setAvgScorePct("80.00");
+		listFeedbackRes.setAvgEvluScorePct("80.00");
 		listFeedbackRes.setNotiTot(10);
-		listFeedbackRes.setAvgScore(2);
+		listFeedbackRes.setAvgEvluScore(2);
 		listFeedbackRes.setDwldCnt(11103);
 		listFeedbackRes.setParticpersCnt(105);
 		listFeedbackRes.setNotiList(this.getFeedbackList());
@@ -209,7 +207,7 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 			feedback.setUserKey("IW11000162200905070014211" + i);
 			feedback.setSellerKey("IF111111111111111111111" + i);
 			feedback.setNotiTitle("좋아요!!(" + i + ")");
-			feedback.setNotiDesc("프로야구 게임 재밌네요~ ㅋㅋ(" + i + ")");
+			feedback.setNotiDscr("프로야구 게임 재밌네요~ ㅋㅋ(" + i + ")");
 			feedback.setNotiScore(0);
 			feedback.setRegId("011****5052");
 			feedback.setRegDt("20090606035251");
@@ -217,13 +215,13 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 			feedback.setSellerRespOpin("");
 			feedback.setSellerRespRegDt("");
 			feedback.setCid("0000000001");
-			feedback.setSelfYN("N");
-			feedback.setSaleYN("N");
+			feedback.setSelfYn("N");
+			feedback.setSaleYn("N");
 			feedback.setWhose("mine");
-			feedback.setSelfRecomYN("N");
-			feedback.setScore(5);
+			feedback.setSelfRecomYn("N");
+			feedback.setAvgScore(5);
 			feedback.setNickNm("");
-			feedback.setFbSendYN("N");
+			feedback.setFbPostYn("N");
 			feedback.setProdId("0000000001");
 			feedback.setCompNm("");
 			notiList.add(feedback);

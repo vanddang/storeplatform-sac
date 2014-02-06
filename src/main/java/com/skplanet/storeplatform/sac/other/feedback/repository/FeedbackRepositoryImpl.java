@@ -48,6 +48,11 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
+	public Object deleteProdNoti(ProdNoti prodNoti) {
+		return this.commonDAO.delete("Feedback.deleteProdNoti", prodNoti);
+	}
+
+	@Override
 	public Object deleteProdNotiGood(ProdNotiGood prodNotiGood) {
 		return this.commonDAO.delete("Feedback.deleteProdNotiGood", prodNotiGood);
 	}
@@ -78,8 +83,8 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	}
 
 	@Override
-	public Object updateRegTenantProdStats(TenantProdStats tenantProdStats) {
-		return this.commonDAO.update("Feedback.updateRegTenantProdStats", tenantProdStats);
+	public Object updateTenantProdStats(TenantProdStats tenantProdStats) {
+		return this.commonDAO.update("Feedback.updateTenantProdStats", tenantProdStats);
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
-	 * 사용후기 수정 / 삭제.
+	 * 사용후기 수정.
 	 * </pre>
 	 * 
 	 * @param prodNoti
@@ -57,6 +57,18 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object updateProdNoti(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 삭제.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object deleteProdNoti(ProdNoti prodNoti);
 
 	/**
 	 * 
@@ -140,7 +152,7 @@ public interface FeedbackRepository {
 	 *            tenantProdStats
 	 * @return Object
 	 */
-	public Object updateRegTenantProdStats(TenantProdStats tenantProdStats);
+	public Object updateTenantProdStats(TenantProdStats tenantProdStats);
 
 	/**
 	 * 
