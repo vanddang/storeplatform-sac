@@ -1567,6 +1567,7 @@ public class IdpServiceImpl implements IdpService {
 			this.userSCI.removeMbrOneID(removeMbrOneIDRequest);
 
 		} catch (StorePlatformException spe) {
+
 			imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
 			imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 			return imResult;
