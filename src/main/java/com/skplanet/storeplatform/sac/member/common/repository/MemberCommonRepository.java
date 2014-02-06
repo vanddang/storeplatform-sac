@@ -37,6 +37,17 @@ public interface MemberCommonRepository {
 
 	/**
 	 * <pre>
+	 * 폰 정보 조회.
+	 * </pre>
+	 * 
+	 * @param uacd
+	 *            단말 모델 코드
+	 * @return DeviceHeader
+	 */
+	public Device searchPhoneInfoByUacd(String uacd);
+
+	/**
+	 * <pre>
 	 * OMD 단말여부 확인.
 	 * </pre>
 	 * 

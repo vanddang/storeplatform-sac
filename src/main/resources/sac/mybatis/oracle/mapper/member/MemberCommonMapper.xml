@@ -100,7 +100,13 @@
             (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = VM_TYPE_CD) AS VM_TYPE_CD
         FROM TB_CM_DEVICE
         WHERE REP_DEVICE_YN = 'Y'
+        <if test='deviceModelCd != null'>
         AND DEVICE_MODEL_CD = #{deviceModelCd}
+        </if>
+        <if test='uaCd != null'>
+        AND UA_CD = #{uaCd}
+        </if>
+        
     </select>
 
     <!-- OMD 단말여부 확인 -->

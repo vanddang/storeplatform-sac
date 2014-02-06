@@ -44,4 +44,11 @@ public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 		return (Integer) this.commonDAO.queryForObject("MemberCommon.getOmdCount", uacd);
 	}
 
+	@Override
+	public Device searchPhoneInfoByUacd(String uacd) {
+		Device dto = new Device();
+		dto.setUaCd(uacd);
+		return (Device) this.commonDAO.queryForObject("MemberCommon.getPhoneInfo", dto);
+	}
+
 }

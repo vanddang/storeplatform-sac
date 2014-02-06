@@ -166,6 +166,19 @@ public class MemberCommonComponent {
 
 	/**
 	 * <pre>
+	 * 폰 정보 조회.
+	 * </pre>
+	 * 
+	 * @param uacd
+	 *            uacd
+	 * @return Device
+	 */
+	public Device getPhoneInfoByUacd(String uacd) {
+		return this.repository.searchPhoneInfoByUacd(uacd);
+	}
+
+	/**
+	 * <pre>
 	 * 고객정보조회
 	 * 모번호 조회및 단말 정보 조회(USPS 정보와 서비스 관리번호 UA_CD 값이 같이 들어와야함.)
 	 * TODO 기타 파트에서 api 개발 완료되면 확인해봐야함.
@@ -222,10 +235,9 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
+		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
-		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType,
-				keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
@@ -392,7 +404,8 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
+			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
