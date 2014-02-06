@@ -684,9 +684,6 @@ public class SellerServiceImpl implements SellerService {
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
 
 		schRes = this.sellerSCI.removeSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		WithdrawRes response = new WithdrawRes();
 		response.setSellerKey(req.getSellerKey());
@@ -747,9 +744,6 @@ public class SellerServiceImpl implements SellerService {
 		schReq.setLoginInfo(loginInfo);
 
 		schRes = this.sellerSCI.removeLoginInfo(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
 
