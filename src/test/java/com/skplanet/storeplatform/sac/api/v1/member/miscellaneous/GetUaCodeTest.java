@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -61,31 +62,27 @@ public class GetUaCodeTest {
 	 * </pre>
 	 * 
 	 */
-	@Test
+	@Test(expected = StorePlatformException.class)
 	public void requestMsisdnTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetUaCodeReq request = new GetUaCodeReq();
-							request.setMsisdn("01088902431");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetUaCodeReq request = new GetUaCodeReq();
+						request.setMsisdn("01088902431");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
