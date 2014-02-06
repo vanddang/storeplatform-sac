@@ -453,10 +453,8 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			/* 5. 통합회원인 경우 무선회원 해지 */
-			/* 회원정보 조회 */
 			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
-			/* 통합 회원 아이디의 휴대기기인 경우 IDP에 무선 회원 해지 요청 - 자동 해지 안된다고 함 */
 			if (schUserRes.getUserMbr().getImSvcNo() != null) {
 
 				try {
@@ -989,167 +987,47 @@ public class DeviceServiceImpl implements DeviceService {
 		removeDeviceReq.setUserKey(req.getUserKey());
 		UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
 
-		/* 삭제요청한 디바이스 아이디로 디바이스 키 추출 */
-		ListDeviceRes schDeviceListKeyResponse = this.searchDeviceKeyResponse(requestHeader, userInfo, req);
+		/* 휴대기기 조회 */
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
+		listDeviceReq.setUserKey(req.getUserKey());
+		listDeviceReq.setDeviceId(req.getDeviceId());
+		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
+		String IsPrimary = listDeviceRes.getDeviceInfoList().get(0).getIsPrimary();//대표기기 여부
+		String deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();//deviceKey
 
-		/* 디바이스 키 세팅 */
+		/* 삭제 가능여부 판단 */
+		Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
+		if ((userInfo.getImSvcNo() != null && !"".equals(userInfo.getImSvcNo())) || userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) { // 통합/IDP 회원
+
+			/* 단말 1개이상 보유이고, 삭제할 단말이 대표기기인 경우 에러 */
+			if (deviceCount > 1 && IsPrimary.equals("Y")) {
+				throw new StorePlatformException("SAC_MEM_1510");
+			}
+
+		} else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+			/* 모바일회원 단말삭제 불가 */
+			throw new StorePlatformException("SAC_MEM_1511");
+		}
+
+		/* SC 휴대기기 삭제요청 */
+		RemoveDeviceRequest removeDeviceRequest = new RemoveDeviceRequest();
+		removeDeviceRequest.setCommonRequest(commonRequest);
+		removeDeviceRequest.setUserKey(req.getUserKey());
+		List<String> removeKeyList = new ArrayList<String>();
+		removeKeyList.add(deviceKey);
+		removeDeviceRequest.setDeviceKey(removeKeyList);
+		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
+
+		/* IDP 회원정보 수정 */
+		this.userService.modifyProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
+
 		RemoveDeviceRes removeDeviceRes = new RemoveDeviceRes();
-		removeDeviceRes.setDeviceKey(schDeviceListKeyResponse.getDeviceInfoList().get(0).getDeviceKey());
-
-		/* 휴대기기 목록 세팅 : 삭제대상 디바이스는 제외시킴 */
-		List<DeviceInfo> deviceModifyList = this.deviceModifyList(requestHeader, req, userInfo);
-		String userPhoneStr = null;
-		if (deviceModifyList == null) {
-
-			logger.debug("============================================ IDP Peristalsis Data : NULL Setting {}", schDeviceListKeyResponse
-					.getDeviceInfoList().toString());
-			StringBuffer sbUserPhone = new StringBuffer();
-			DeviceInfo deviceInfo = schDeviceListKeyResponse.getDeviceInfoList().get(0);
-			String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, deviceInfo.getUserDeviceExtraInfo());
-			String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUserDeviceExtraInfo());
-
-			if (deviceInfo.getDeviceTelecom() == null) {
-				throw new StorePlatformException("SAC_MEM_0002", "getDeviceTelecom is Null");
-			}
-
-			if (deviceInfo.getDeviceTelecom().equals(MemberConstants.DEVICE_TELECOM_SKT) && imMngNum != null && uacd != null) {
-				sbUserPhone.append("");
-				sbUserPhone.append(",");
-				sbUserPhone.append(imMngNum == null ? "" : imMngNum);
-				sbUserPhone.append(",");
-				if (MemberConstants.RESULT_FAIL.equals(uacd)) {
-					sbUserPhone.append(MemberConstants.NM_DEVICE_TELECOM_NSH);
-				} else {
-					sbUserPhone.append(uacd == null ? "" : uacd);
-				}
-				sbUserPhone.append(",");
-				sbUserPhone.append(this.commService.convertDeviceTelecom(deviceInfo.getDeviceTelecom()));
-
-				sbUserPhone.append("|");
-			} else if (!deviceInfo.getDeviceTelecom().equals(MemberConstants.DEVICE_TELECOM_SKT)) {
-				sbUserPhone.append("");
-				sbUserPhone.append("|");
-			}
-
-			sbUserPhone.append("");
-			sbUserPhone.append("|");
-
-			userPhoneStr = sbUserPhone.toString();
-			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
-
-		} else {
-			/* IDP 연동 데이터 세팅 */
-			userPhoneStr = this.getUserPhoneStr(deviceModifyList);
-		}
-
-		/* 휴대기기 목록 */
-		ListDeviceRes deviceList = this.deviceList(requestHeader, req, userInfo);
-
-		/* IDP 휴대기기 정보 등록 세팅 */
-		HashMap<String, Object> param = this.getDeviceParam(req, userInfo);
-		RemoveDeviceResponse removeDeviceResponse = new RemoveDeviceResponse();
-
-		/* 통합회원 삭제 */
-		if (userInfo.getImSvcNo() != null && !"".equals(userInfo.getImSvcNo())) {
-			ImIDPReceiverM imIdpReceiver = new ImIDPReceiverM();
-			/* 단말리스트 1이면 삭제 */
-			if (deviceList.getDeviceInfoList().size() == 1) {
-				imIdpReceiver = this.imIdpDeviceUpdate(req, param, userInfo, userPhoneStr);
-			} else if (deviceList.getDeviceInfoList().size() > 1) {
-				/* 대표기기 여부 */
-				ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
-
-				/* 단말리스트가 한개가 아니고 삭제요청 단말이 대표단말일 경우 */
-				if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-					throw new StorePlatformException("SAC_MEM_1510");
-				} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-					/* 단말리스트가 한개가 아니고 삭제요청 단말이 대표단말일 경우 */
-					imIdpReceiver = this.imIdpDeviceUpdate(req, param, userInfo, userPhoneStr);
-				}
-			}
-
-			logger.info("###### [ONEID_imIdpDeviceUpdate] RESULT HEADER : Code : {}, Message : {} ", imIdpReceiver.getResponseHeader().getResult(),
-					imIdpReceiver.getResponseHeader().getResult_text());
-
-			removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-			logger.info("###### [ONEID_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
-					.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-
-		} else {
-			if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
-				/* IDP ID회원 삭제 */
-				// - 단말 1개(대표단말 포함) : 삭제
-				if (deviceList.getDeviceInfoList().size() == 1) {
-					param.put("key_type", "1");
-					param.put("key", userInfo.getUserId());
-					param.put("user_auth_key", req.getUserAuthKey());
-					if (userPhoneStr != null) {
-						param.put("user_phone", userPhoneStr);
-						param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-					}
-					IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-					removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-
-					logger.info("###### [ID_idpService.modifyProfile] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(),
-							idpReceiver.getResponseHeader().getResult_text());
-
-					logger.info("###### [ID_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
-							.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-				} else if (deviceList.getDeviceInfoList().size() > 1) {
-					/* 대표기기 여부 */
-					ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
-
-					if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						throw new StorePlatformException("SAC_MEM_1510");
-					} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						param.put("key_type", "1");
-						param.put("key", userInfo.getUserId());
-						param.put("user_auth_key", req.getUserAuthKey());
-						if (userPhoneStr != null) {
-							param.put("user_phone", userPhoneStr);
-							param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-						}
-						IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-						logger.info("###### [ID_idpService.modifyProfile] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader().getResult(),
-								idpReceiver.getResponseHeader().getResult_text());
-
-						removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-						logger.info("###### [ID_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
-								.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-					}
-				}
-			} else if (userInfo.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-				/* IDP Mobile회원 삭제 */
-
-				// - 단말 1개(대표단말 포함) : 단말기 삭제 불가
-				if (deviceList.getDeviceInfoList().size() == 1) {
-					throw new StorePlatformException("SAC_MEM_1511");
-				} else if (deviceList.getDeviceInfoList().size() > 1) {
-					/* 대표기기 여부 */
-					ListDeviceRes listRes = this.isPrimaryDevice(removeDeviceRes, userInfo, requestHeader);
-
-					if ("Y".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						throw new StorePlatformException("SAC_MEM_1511");
-					} else if ("N".equals(listRes.getDeviceInfoList().get(0).getIsPrimary())) {
-						param.put("key_type", "1");
-						param.put("key", userInfo.getUserId());
-						param.put("user_auth_key", req.getUserAuthKey());
-						if (userPhoneStr != null) {
-							param.put("user_phone", userPhoneStr);
-							param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-						}
-						IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-						logger.info("###### [Mobile_idpService.modifyProfile] IDP RESULT HEADER : {} , {}", idpReceiver.getResponseHeader()
-								.getResult(), idpReceiver.getResponseHeader().getResult_text());
-
-						removeDeviceResponse = this.removeDeviceSC(userInfo, removeDeviceRes);
-						logger.info("###### [Mobile_removeDeviceSC] SC Remove Req Code : {}, Mesasage : {}", removeDeviceResponse.getCommonResponse()
-								.getResultCode(), removeDeviceResponse.getCommonResponse().getResultMessage());
-					}
-				}
-
-			}
-		}
+		removeDeviceRes.setDeviceKey(deviceKey);
+		/*
+		 * RemoveDeviceRes에 삭제 카운트 추가하면 어떨지..
+		 * removeDeviceRes.setDelDeviceCount(removeDeviceResponse
+		 * .getDelDeviceCount());
+		 */
 
 		logger.info("######################## 결과 : " + removeDeviceResponse.getDelDeviceCount());
 		logger.info("######################## DeviceServiceImpl 휴대기기 삭제 End ############################");
