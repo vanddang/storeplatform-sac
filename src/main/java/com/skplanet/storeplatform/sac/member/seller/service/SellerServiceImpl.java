@@ -322,10 +322,8 @@ public class SellerServiceImpl implements SellerService {
 					/** 3. 계정 잠금 해제 요청. */
 					if (StringUtils.isNotBlank(req.getReleaseLock())) {
 						if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
-								&& StringUtils.equals(logInSellerResponse.getSellerMainStatus(),
-										MemberConstants.MAIN_STATUS_PAUSE)
-								&& StringUtils.equals(logInSellerResponse.getSellerSubStatus(),
-										MemberConstants.SUB_STATUS_LOGIN_PAUSE)) {
+								&& StringUtils.equals(logInSellerResponse.getLoginStatusCode(),
+										MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 							/** 3-1. SC회원 Req 생성 및 주입. */
 							UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 							updateStatusSellerRequest.setSellerID(req.getSellerId());
@@ -346,9 +344,8 @@ public class SellerServiceImpl implements SellerService {
 									updateStatusSellerResponse.getCommonResponse().getResultCode(),
 									updateStatusSellerResponse.getCommonResponse().getResultMessage());
 						} else {
-							/** 3-4. 계정 잠금 해제 불가 회원 상태. */
-							throw new StorePlatformException("SAC_MEM_2001", logInSellerResponse.getSellerMainStatus(),
-									logInSellerResponse.getSellerSubStatus());
+							/** 3-4. 계정 잠금 해제 상태. */
+							throw new StorePlatformException("SAC_MEM_2013", req.getSellerId());
 						}
 					}
 
