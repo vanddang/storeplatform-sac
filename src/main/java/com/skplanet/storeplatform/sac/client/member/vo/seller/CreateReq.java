@@ -42,6 +42,7 @@ public class CreateReq extends CommonInfo {
 	private String isRecvSMS;
 	/** 판매자 이메일. */
 	@Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$")
+	@NotBlank
 	private String sellerEmail;
 	/** 이메일수신 여부. */
 	@Pattern(regexp = "^Y|^N")
@@ -74,7 +75,7 @@ public class CreateReq extends CommonInfo {
 	/** 언어코드. */
 	@NotBlank
 	private String sellerLanguage;
-	/** 식별코드. */
+	/** 내국인 식별. */
 	@NotBlank
 	@Pattern(regexp = "^Y|^N")
 	private String isDomestic;

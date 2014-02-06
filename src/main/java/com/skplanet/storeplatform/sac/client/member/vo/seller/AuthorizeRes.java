@@ -25,13 +25,10 @@ public class AuthorizeRes extends CommonInfo {
 	private String sessionKey;
 	/** 만료일시. */
 	private String expireDate;
-	// 서브계정여부
+	/** 서브계정여부. */
 	private String isSubSeller;
-
-	// 로그인 상태
-	// private String loginStatusCode;
-	// 직권중인 상태
-	// private String stopStatusCode;
+	/** 로그인 상태. */
+	private String loginStatusCode;
 
 	public SellerMbr getSellerMbr() {
 		return this.sellerMbr;
@@ -79,5 +76,13 @@ public class AuthorizeRes extends CommonInfo {
 
 	public void setIsSubSeller(String isSubSeller) {
 		this.isSubSeller = isSubSeller;
+	}
+
+	public String getLoginStatusCode() {
+		return this.loginStatusCode;
+	}
+
+	public void setLoginStatusCode(String loginStatusCode) {
+		this.loginStatusCode = loginStatusCode;
 	}
 }
