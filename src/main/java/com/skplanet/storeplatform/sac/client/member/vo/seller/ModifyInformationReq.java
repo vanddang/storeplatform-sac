@@ -87,7 +87,6 @@ public class ModifyInformationReq extends CommonInfo {
 	/** 법정대리인 동의일시. */
 	private String parentDate;
 	/** 법정대리인 관계코드. */
-	@NotBlank
 	private String parentType;
 	/** 법정대리인 이름. */
 	private String parentName;
