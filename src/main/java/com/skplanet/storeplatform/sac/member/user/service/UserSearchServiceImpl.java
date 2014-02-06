@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
@@ -74,7 +73,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
  * Updated on : 2014. 1. 7. Updated by : 강신완, 부르칸.
  */
 @Service
-@Transactional
 public class UserSearchServiceImpl implements UserSearchService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserSearchServiceImpl.class);
@@ -260,7 +258,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setWorkdCd("US003206");
 		res.setAfterUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getAfterUserKey()));
 		res.setPreUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getPreUserKey()));
-		//		res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
+		// res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
 
 		return res;
 	}
@@ -611,11 +609,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 			userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 			userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 			userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
-			//			userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
+			// userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
 			userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
-			//			userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
+			// userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
 			userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-			//			userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
+			// userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
 			userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 			userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 			userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
@@ -625,11 +623,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 			userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
 			userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
 			userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
-			//			userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
+			// userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
 			userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 			userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 			userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
-			//			userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
+			// userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
 
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
