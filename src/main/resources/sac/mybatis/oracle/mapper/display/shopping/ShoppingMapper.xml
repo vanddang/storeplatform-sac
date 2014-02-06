@@ -1447,6 +1447,7 @@
 		                               ( KK.DLY_PRCHS_CNT >= KK.DLY_MAX_CNT ) ) THEN 'Y'
 		                    END )
 		               , 'N' )AS soldOut 
+		       ,KK.SPECIAL_SALE_YN AS specialSale
            FROM (
                   SELECT 
                          D.MENU_ID

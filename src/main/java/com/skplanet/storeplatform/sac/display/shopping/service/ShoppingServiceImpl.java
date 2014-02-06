@@ -35,6 +35,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
@@ -863,7 +864,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		// 공통 응답 변수 선언
 		ShoppingThemeRes res = null;
 		List<Shopping> resultList = new ArrayList<Shopping>();
-		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1070,7 +1070,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		List<Shopping> detailList = new ArrayList<Shopping>();
 		List<Shopping> menuBrandList = new ArrayList<Shopping>();
 
-		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1293,7 +1292,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		ShoppingRes responseVO = null;
 		List<Shopping> resultList = new ArrayList<Shopping>();
 
-		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1685,7 +1683,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, ShoppingReq req) {
 		// 공통 응답 변수 선언
 		ShoppingRes res = new ShoppingRes();
-		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
 		DeviceHeader deviceHeader = header.getDeviceHeader();
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
@@ -1738,12 +1735,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Source source = null;
 				Contributor contributor = null;
 				Accrual accrual = null;
+				Distributor distributor = null;
 				List<Identifier> identifierList = null;
 
 				// / 에피소드용
 				Product episodeProduct = null;
 				Identifier episodeIdentifier = null;
 				List<Identifier> episodeIdentifierList = null;
+				Menu episodeMenu = null;
+				List<Menu> episodeMenuList = new ArrayList<Menu>();
 				Price episodePrice = null;
 				Rights episodeRights = null;
 				Date episodeDate = null;
@@ -1753,7 +1753,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// / 옵션용
 				SelectOption selectOption = null;
 				SubSelectOption subSelectOption = null;
-				List<SelectOption> selectOptionList = new ArrayList<SelectOption>();
 				List<SubSelectOption> subSelectOptionList = new ArrayList<SubSelectOption>();
 				Title option1Title = null;
 				Price option1Price = null;
@@ -1826,6 +1825,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 					if (resultEpisodeList != null) {
 						for (int kk = 0; kk < resultEpisodeList.size(); kk++) {
 							Shopping episodeShopping = resultEpisodeList.get(kk);
+
+							// // 특가 상품일 경우
+							// episodeMenu = new Menu();
+							// episodeMenu.setType(episodeShopping.getSpecialSale());
+							// episodeMenuList.add(episodeMenu);
+							// episodeProduct.setMenuList(episodeMenuList);
+
 							// 에피소드 상품 정보 (상품ID)
 							episodeProduct = new Product();
 							episodeIdentifierList = new ArrayList<Identifier>();
@@ -1943,13 +1949,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 										if (nextFlag) {
 											selectOption.setSubSelectOptionList(subSelectOptionList);
-											selectOptionList.add(selectOption);
 											subSelectOptionList = new ArrayList<SubSelectOption>();
 										}
 									}
 								}
 							}
-							subProductList.add(kk, episodeProduct);
+							episodeProduct.setSelectOption(selectOption);
+							subProductList.add(episodeProduct);
 						}
 					}
 					// 데이터 매핑
@@ -1960,7 +1966,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					product.setAccrual(accrual);
 					product.setContributor(contributor);
 					product.setSubProductList(subProductList);
-					product.setSelectOptionList(selectOptionList);
 					productList.add(i, product);
 				}
 				res.setProductList(productList);
