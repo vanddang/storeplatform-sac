@@ -91,15 +91,6 @@ public class UserServiceImpl implements UserService {
 		if (userMbr.getUserBirthDay() != null) {
 			param.put("user_birthday", userMbr.getUserBirthDay());
 		}
-		//		if (userMbr.getUserZip() != null) {
-		//			param.put("user_zipcode", userMbr.getUserZip());
-		//		}
-		//		if (userMbr.getUserAddress() != null) {
-		//			param.put("user_address", userMbr.getUserAddress());
-		//		}
-		//		if (userMbr.getUserDetailAddress() != null) {
-		//			param.put("user_address2", userMbr.getUserDetailAddress());
-		//		}
 		if (userMbr.getUserPhone() != null) {
 			param.put("user_tel", userMbr.getUserPhone());
 		}
