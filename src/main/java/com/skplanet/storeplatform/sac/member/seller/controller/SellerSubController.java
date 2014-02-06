@@ -71,13 +71,9 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req,
-			BindingResult result) throws Exception {
-		LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-		// TODO Exception (01/17이후 적용)
-		if (result.hasErrors()) {
-			throw new RuntimeException("parameter error~~~");
-		}
+	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req)
+			throws Exception {
+		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
 		return this.sellerSubService.removeSubseller(header, req);
 	}
 
