@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -18,9 +19,11 @@ public class RemoveSubsellerReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/** 판매자 키. */
+	@NotBlank
 	private String sellerKey;
 
 	/** 삭제할 서브계정 키 목록. */
+	@NotBlank
 	private List<String> subSellerKey;
 
 	public String getSellerKey() {
