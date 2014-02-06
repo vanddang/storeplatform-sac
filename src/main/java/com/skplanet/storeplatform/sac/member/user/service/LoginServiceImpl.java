@@ -125,15 +125,23 @@ public class LoginServiceImpl implements LoginService {
 
 		/* 로그인 제한 인경우 */
 		if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
-
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
 			res.setLoginStatusCode(loginStatusCode);
+			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
 		}
 
 		/* 직권중지 인경우 */
 		if (StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
-
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
+			res.setLoginStatusCode(loginStatusCode);
 			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
@@ -334,7 +342,12 @@ public class LoginServiceImpl implements LoginService {
 		/* 로그인 제한상태인 경우 */
 		if (!StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
 			res.setLoginStatusCode(loginStatusCode);
+			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
 		}
@@ -342,6 +355,11 @@ public class LoginServiceImpl implements LoginService {
 		/* 직권중지 상태인 경우 */
 		if (StringUtils.equals(stopStatusCode, MemberConstants.USER_STOP_STATUS_PAUSE)) {
 
+			res.setUserKey(userKey);
+			res.setUserType(userType);
+			res.setUserMainStatus(userMainStatus);
+			res.setUserSubStatus(userSubStatus);
+			res.setLoginStatusCode(loginStatusCode);
 			res.setStopStatusCode(stopStatusCode);
 			res.setIsLoginSuccess("N");
 			return res;
