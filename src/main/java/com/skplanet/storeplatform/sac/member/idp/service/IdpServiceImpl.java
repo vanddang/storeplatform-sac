@@ -1396,4 +1396,52 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 		return imResult;
 	}
+
+	/*
+	 * 
+	 * <pre> Retry 완료 알림 배포 - CMD : RXTerminateRetryIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXTerminateRetryIDP(HashMap map) {
+		IdpConstants idpConstant = new IdpConstants();
+		String idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("RXTerminateRetryIDP");
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+
+		return imResult;
+	}
+
+	/*
+	 * 
+	 * <pre> 비밀번호 변경 배포 - oneID 회원 - CMD : RXUpdateUserPwdIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXUpdateUserPwdIDP(HashMap map) {
+		return null;
+	}
+
+	/*
+	 * 
+	 * <pre> 비밀번호 변경 알림 배포 -기존 IDP 회원 - CMD : RXChangePWDIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXChangePWDIDP(HashMap map) {
+		return null;
+	}
 }

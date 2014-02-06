@@ -242,4 +242,42 @@ public interface IdpService {
 	 */
 	public ImResult rXUpdateDisagreeUserIDP(HashMap<String, String> map);
 
+	/**
+	 * 
+	 * <pre>
+	 * Retry 완료 알림 배포 - CMD : RXTerminateRetryIDP .
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	public ImResult rXTerminateRetryIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 비밀번호 변경 배포 - oneID 회원 - CMD : RXUpdateUserPwdIDP .
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	public ImResult rXUpdateUserPwdIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 비밀번호 변경 알림 배포 -기존 IDP 회원 - CMD : RXChangePWDIDP .
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	public ImResult rXChangePWDIDP(HashMap map);
 }
