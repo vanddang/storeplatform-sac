@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.member.common;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -31,9 +32,12 @@ import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.external.client.uaps.vo.UserEcRes;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MajorDeviceInfo;
@@ -236,9 +240,10 @@ public class MemberCommonComponent {
 	 * @return UserInfo Value Object
 	 */
 	public UserInfo getUserBaseInfo(String keyType, String keyValue, SacRequestHeader sacHeader) {
-		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader().toString());
-		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
+		LOGGER.debug("###### getUserBaseInfo Req : {}, {}, {}", keyType, keyValue, sacHeader.getTenantHeader()
 				.toString());
+		LOGGER.debug("============================================ getUserBaseInfo Req : {}, {}, {}", keyType,
+				keyValue, sacHeader.getTenantHeader().toString());
 
 		DetailReq req = new DetailReq();
 		if ("userKey".equals(keyType)) {
@@ -405,8 +410,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -528,6 +532,32 @@ public class MemberCommonComponent {
 			// 인증 만료시간 오버
 			throw new StorePlatformException("SAC_MEM_2003");
 		}
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 회원 정보 조회.
+	 * </pre>
+	 * 
+	 * @param commonRequest
+	 * @param keyType
+	 *            : 검색조건
+	 * @param key
+	 *            : 검색값
+	 * @return SearchSellerResponse
+	 */
+	public SearchSellerResponse searchSeller(CommonRequest commonRequest, String keyType, String key) {
+		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
+		searchSellerRequest.setCommonRequest(commonRequest);
+
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType(keyType);
+		keySearch.setKeyString(key);
+		keySearchList.add(keySearch);
+		searchSellerRequest.setKeySearchList(keySearchList);
+
+		return this.sellerSCI.searchSeller(searchSellerRequest);
 	}
 
 	/**

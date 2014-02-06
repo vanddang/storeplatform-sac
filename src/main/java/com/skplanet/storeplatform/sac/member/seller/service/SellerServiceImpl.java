@@ -28,7 +28,6 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoReq
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
@@ -310,6 +309,7 @@ public class SellerServiceImpl implements SellerService {
 
 		if (logInSellerResponse != null) {
 			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
+			String loginStatusCode = logInSellerResponse.getLoginStatusCode();
 			// 존재 하지 않는 회원일 경우
 			if (StringUtils.equals(logInSellerResponse.getCommonResponse().getResultCode(),
 					MemberConstants.RESULT_UNKNOWN_USER_ID)) {
@@ -320,8 +320,7 @@ public class SellerServiceImpl implements SellerService {
 
 					/** 3. 계정 잠금 해제 요청. */
 					if (StringUtils.equals(req.getReleaseLock(), MemberConstants.USE_Y)
-							&& StringUtils.equals(logInSellerResponse.getLoginStatusCode(),
-									MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
+							&& StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 						/** 3-1. SC회원 Req 생성 및 주입. */
 						UpdateStatusSellerRequest updateStatusSellerRequest = new UpdateStatusSellerRequest();
 						updateStatusSellerRequest.setSellerID(req.getSellerId());
@@ -335,6 +334,12 @@ public class SellerServiceImpl implements SellerService {
 
 						/** 3-3. SC회원 - 상태변경 Call. */
 						this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
+
+						/** 3-4. 회원 정보 조회 */
+						SearchSellerResponse searchSellerResponse = this.component.searchSeller(commonRequest,
+								MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, logInSellerResponse.getSellerKey());
+						/** 3-5. 로그인 상태 코드 주입. */
+						loginStatusCode = searchSellerResponse.getSellerMbr().getLoginStatusCode();
 					}
 
 					/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
@@ -368,7 +373,7 @@ public class SellerServiceImpl implements SellerService {
 				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
 				res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
 				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
-				res.setLoginStatusCode(logInSellerResponse.getLoginStatusCode());
+				res.setLoginStatusCode(loginStatusCode);
 			}
 			/** 2-2. [RESPONSE] 회원 정보 주입. */
 			res.setSellerMbr(sellerMbr);
@@ -395,19 +400,10 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.debug("############ SellerServiceImpl.confirm() [START] ############");
 		// SC 공통 헤더 생성
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
-		/** 1. SC회원 정보조회[Req] 생성 및 주입 */
-		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
-		searchSellerRequest.setCommonRequest(commonRequest);
-		/** 1-1. 회원 정보 조회값 주입. */
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO);
-		keySearch.setKeyString(req.getSellerKey());
-		keySearchList.add(keySearch);
-		searchSellerRequest.setKeySearchList(keySearchList);
 
-		/** 2. SC-회원정보조회 생성 및 주입 */
-		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
+		/** 1. 회원 정보 조회 */
+		SearchSellerResponse searchSellerResponse = this.component.searchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
 		if (!StringUtils.equals(searchSellerResponse.getSellerMbr().getSellerMainStatus(),
 				MemberConstants.MAIN_STATUS_WATING)
@@ -455,19 +451,11 @@ public class SellerServiceImpl implements SellerService {
 	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.lockAccount() [START] ############");
+		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
 		/** 1. 회원 정보 조회 */
-		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
-		searchSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
-
-		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
-		KeySearch keySearch = new KeySearch();
-		keySearch.setKeyType(MemberConstants.KEY_TYPE_SELLERMBR_ID);
-		keySearch.setKeyString(req.getSellerId());
-		keySearchList.add(keySearch);
-		searchSellerRequest.setKeySearchList(keySearchList);
-
-		SearchSellerResponse searchSellerResponse = this.sellerSCI.searchSeller(searchSellerRequest);
+		SearchSellerResponse searchSellerResponse = this.component.searchSeller(commonRequest,
+				MemberConstants.KEY_TYPE_SELLERMBR_ID, req.getSellerId());
 
 		// 로그인 잠금 상태 확인
 		if (StringUtils.equals(MemberConstants.USER_LOGIN_STATUS_PAUSE, searchSellerResponse.getSellerMbr()
@@ -481,7 +469,7 @@ public class SellerServiceImpl implements SellerService {
 		updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
 
 		/** 3. 공통 헤더 생성 및 주입. */
-		updateStatusSellerRequest.setCommonRequest(this.component.getSCCommonRequest(header));
+		updateStatusSellerRequest.setCommonRequest(commonRequest);
 
 		LOGGER.debug("==>>[SC] UpdateStatusSellerRequest.toString() : {}", updateStatusSellerRequest.toString());
 
