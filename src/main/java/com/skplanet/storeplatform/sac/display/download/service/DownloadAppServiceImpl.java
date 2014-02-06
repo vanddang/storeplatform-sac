@@ -85,20 +85,9 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		TenantHeader tanantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
-		this.log.debug("######################################################################");
-		this.log.debug("deviceHeader.getResolution()	:	" + deviceHeader.getResolution());
-		this.log.debug("deviceHeader.getDpi()	:	" + deviceHeader.getDpi());
-
-		this.log.debug("######################################################################");
-
 		// OS VERSION 가공
 		String[] temp = deviceHeader.getOsVersion().trim().split("/");
 		String osVersion = temp[1];
-
-		String[] resolutionTemp = deviceHeader.getResolution().trim().split("/");
-
-		// int iDpiEnd = NumberUtils.toInt(map.get("ADD_FIELD1"), 0);
-		// int iDpiBegin = NumberUtils.toInt(map.get("ADD_FIELD2"), 0);
 
 		String osVersionOrginal = osVersion;
 		String[] osVersionTemp = StringUtils.split(osVersionOrginal, ".");
@@ -109,7 +98,8 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 		downloadAppSacReq.setTenantId(tanantHeader.getTenantId());
 		downloadAppSacReq.setDeviceModelCd(deviceHeader.getModel());
 		downloadAppSacReq.setLangCd(tanantHeader.getLangCd());
-		downloadAppSacReq.setOsVersion(osVersion);
+		downloadAppSacReq.setOsVersion(osVersion); // OS Version
+		downloadAppSacReq.setLcdSize(deviceHeader.getResolution()); // LCD SIZE
 		downloadAppSacReq.setImageCd(DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 
 		DownloadAppSacRes response = new DownloadAppSacRes();
@@ -226,10 +216,6 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 					// 구매내역 조회 실행
 					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
 
-					this.log.debug("##################################################################################");
-					this.log.debug("[getDownloadAppInfo] purchase count : {}", historyListSacRes.getTotalCnt());
-					this.log.debug("##################################################################################");
-
 					if (historyListSacRes.getTotalCnt() > 0) {
 						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
@@ -325,6 +311,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 				app.setVersionCode(downloadAppInfo.getApkVerCd());
 				app.setSize(downloadAppInfo.getApkFileSize());
 				app.setFilePath(downloadAppInfo.getFilePath());
+				app.setScId(downloadAppInfo.getSubContentsId());
 
 				/*
 				 * Rights grade
@@ -451,6 +438,7 @@ public class DownloadAppServiceImpl implements DownloadAppService {
 			/*
 			 * App aid, packagename, versioncode, version
 			 */
+			app.setScId("0000392242");
 			app.setSupportedOs("Android 2.3~4.4");
 			app.setPackageName("com.gameloft.android.SKTS.GloftA8SK");
 			app.setVersionCode("12006");

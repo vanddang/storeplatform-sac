@@ -71,6 +71,7 @@
                   , KA.GAME_CENTR_VER_CD
                   , KA.GAME_CENTR_ID         			                                                                           
 			      , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
+			      , KB.SUB_CONTENTS_ID
 			      , KB.FILE_PATH AS FILE_PATH
 			      , KC.FILE_PATH AS IMAGE_PATH
 			  FROM (
@@ -128,15 +129,15 @@
 			            AND  J.DEVICE_MODEL_CD = #{deviceModelCd} /* 단말모델코드 */
 			            AND  J.USE_YN ='Y'
 			            AND DECODE( J.UA_CD , '9999' , NVL2( E.PART_PARENT_CLSF_CD, 0, 1 ) + DECODE( D.DRM_YN, 'N', 1, 0 ) + DECODE( D.PROD_CHRG_YN, 'N', 1, 0 ) , 3 ) = 3    
-			            AND EXISTS
-			                  (
-			                  SELECT 'X'
-			                    FROM TB_DP_SUB_CONTENTS SC
-			                   WHERE SC.PROD_ID = B.PROD_ID
-			                     AND SC.SALE_YN = 'Y'
-			                     AND VM_VER LIKE '%'||#{osVersion}||'%'
-    --                           AND 해상도코드 = ''
-			                  )
+	--		            AND EXISTS
+	--		                  (
+	--		                  SELECT 'X'
+	--		                    FROM TB_DP_SUB_CONTENTS SC
+	--		                   WHERE SC.PROD_ID = B.PROD_ID
+	--		                     AND SC.SALE_YN = 'Y'
+	--		                     AND VM_VER LIKE '%'||'4.0'||'%'
+    --                           AND LCD_SIZE = ''
+	--		                  )
 	                                
 			       )                   KA
 			      , TB_DP_SUB_CONTENTS KB
@@ -144,6 +145,9 @@
 			 WHERE  KA.PROD_ID = KB.PROD_ID(+)
 			   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID(+)
 			   AND  KA.PROD_ID = KC.PROD_ID
+               AND  KB.SALE_YN = 'Y'
+               AND  KB.VM_VER  LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
+               AND  KB.LCD_SIZE LIKE '%'|| (SELECT REPLACE(#{lcdSize}, '*', 'X') FROM DUAL) ||'%' /* Provisioning  LCD SIZE 체크 */			   
 			   AND  KC.EXPO_ORD = '1'
 			   AND  KC.LANG_CD = #{langCd}
 			   AND  KC.IMG_CD = #{imageCd} 

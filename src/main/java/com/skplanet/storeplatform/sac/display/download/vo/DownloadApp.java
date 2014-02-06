@@ -37,6 +37,7 @@ public class DownloadApp {
 	private String filePath; // 앱 파일 경로
 	private String imagePath; // 앱 이미지 경로
 	private String sysDate;
+	private String subContentsId; // sub contents Id
 
 	// Seed 정보
 	private String seedProductId; // Seed 상품 Id
@@ -584,6 +585,21 @@ public class DownloadApp {
 	 */
 	public void setSysDate(String sysDate) {
 		this.sysDate = sysDate;
+	}
+
+	/**
+	 * @return the subContentsId
+	 */
+	public String getSubContentsId() {
+		return this.subContentsId;
+	}
+
+	/**
+	 * @param subContentsId
+	 *            the subContentsId to set
+	 */
+	public void setSubContentsId(String subContentsId) {
+		this.subContentsId = subContentsId;
 	}
 
 	/**
