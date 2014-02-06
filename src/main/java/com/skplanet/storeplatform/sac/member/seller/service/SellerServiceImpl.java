@@ -310,6 +310,7 @@ public class SellerServiceImpl implements SellerService {
 		if (logInSellerResponse != null) {
 			sellerMbr = new com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr();
 			String loginStatusCode = logInSellerResponse.getLoginStatusCode();
+			String isLoginSuccess = logInSellerResponse.getIsLoginSuccess();
 			// 존재 하지 않는 회원일 경우
 			if (StringUtils.equals(logInSellerResponse.getCommonResponse().getResultCode(),
 					MemberConstants.RESULT_UNKNOWN_USER_ID)) {
@@ -342,37 +343,40 @@ public class SellerServiceImpl implements SellerService {
 						loginStatusCode = searchSellerResponse.getSellerMbr().getLoginStatusCode();
 					}
 
-					/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
-					UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
+					if (StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_NOMAL)) {
+						/** 4. 회원 인증키 생성[SC-REQUEST] 생성 및 주입 */
+						UpdateLoginInfoRequest updateLoginInfoRequest = new UpdateLoginInfoRequest();
 
-					LoginInfo loginInfo = new LoginInfo();
-					// 만료일시 생성
-					String expireDate = this.component.getExpirationTime(Integer.parseInt(req.getExpireDate()));
-					loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
-					loginInfo.setIpAddress(req.getIpAddress());
-					loginInfo.setSessionKey(UUID.randomUUID().toString().replaceAll("-", ""));
-					loginInfo.setExpireDate(expireDate);
-					updateLoginInfoRequest.setLoginInfo(loginInfo);
+						LoginInfo loginInfo = new LoginInfo();
+						// 만료일시 생성
+						String expireDate = this.component.getExpirationTime(Integer.parseInt(req.getExpireDate()));
+						loginInfo.setSellerKey(logInSellerResponse.getSellerKey());
+						loginInfo.setIpAddress(req.getIpAddress());
+						loginInfo.setSessionKey(UUID.randomUUID().toString().replaceAll("-", ""));
+						loginInfo.setExpireDate(expireDate);
+						updateLoginInfoRequest.setLoginInfo(loginInfo);
 
-					/** 4-1. 공통 헤더 생성 및 주입. */
-					updateLoginInfoRequest.setCommonRequest(commonRequest);
+						/** 4-1. 공통 헤더 생성 및 주입. */
+						updateLoginInfoRequest.setCommonRequest(commonRequest);
 
-					/** 4-2. SC회원 - 상태변경(회원인증키) Call. */
-					this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
+						/** 4-2. SC회원 - 상태변경(회원인증키) Call. */
+						this.sellerSCI.updateLoginInfo(updateLoginInfoRequest);
 
-					/** 4-3. [RESPONSE] 회원 인증키 주입. */
-					res.setSessionKey(loginInfo.getSessionKey());
-					res.setExpireDate(expireDate);
-					sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
-
+						/** 4-3. [RESPONSE] 회원 인증키 주입. */
+						res.setSessionKey(loginInfo.getSessionKey());
+						res.setExpireDate(expireDate);
+						sellerMbr.setSellerKey(logInSellerResponse.getSellerKey());
+					} else {
+						isLoginSuccess = MemberConstants.USE_N;
+					}
 				}
 				/** 2-1. [RESPONSE] 회원 상태 및 로그인 상태 주입. */
 				sellerMbr.setSellerClass(logInSellerResponse.getSellerClass());
 				sellerMbr.setSellerMainStatus(logInSellerResponse.getSellerMainStatus());
 				sellerMbr.setSellerSubStatus(logInSellerResponse.getSellerSubStatus());
 				res.setLoginFailCount(String.valueOf(logInSellerResponse.getLoginFailCount()));
-				res.setIsLoginSuccess(logInSellerResponse.getIsLoginSuccess());
 				res.setIsSubSeller(logInSellerResponse.getIsSubSeller());
+				res.setIsLoginSuccess(isLoginSuccess);
 				res.setLoginStatusCode(loginStatusCode);
 			}
 			/** 2-2. [RESPONSE] 회원 정보 주입. */
