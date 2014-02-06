@@ -426,16 +426,24 @@ public class DeviceServiceImpl implements DeviceService {
 			SearchAgreementListRequest schAgreeListReq = new SearchAgreementListRequest();
 			schAgreeListReq.setCommonRequest(commonRequest);
 			schAgreeListReq.setUserKey(previousUserKey);
-			SearchAgreementListResponse schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
 
-			List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
+			SearchAgreementListResponse schAgreeListRes = null;
+			try {
+				schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
+			} catch (StorePlatformException ex) {
+				/* 약관 조회 결과 없는경우를 제외하고 throw */
+				if (!ex.getErrorInfo().getCode().equals("SC_MEM_9982")) {
+					throw ex;
+				}
+			}
 
-			if (schAgreeListRes.getMbrClauseAgreeList() != null && schAgreeListRes.getMbrClauseAgreeList().size() > 0) {
+			if (schAgreeListRes != null) {
+
+				List<MbrClauseAgree> agreeList = new ArrayList<MbrClauseAgree>();
 				for (MbrClauseAgree agreeInfo : schAgreeListRes.getMbrClauseAgreeList()) {
 					agreeInfo.setMemberKey(nowUserKey);
 					agreeList.add(agreeInfo);
 				}
-
 				UpdateAgreementRequest updAgreeReq = new UpdateAgreementRequest();
 				updAgreeReq.setCommonRequest(commonRequest);
 				updAgreeReq.setUserKey(nowUserKey);
@@ -445,7 +453,6 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 			/* 5. 통합회원인 경우 무선회원 해지 */
-
 			/* 회원정보 조회 */
 			SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
