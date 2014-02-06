@@ -484,6 +484,8 @@
                   WHERE MENU_ID = KA.MENU_ID
                     AND LANG_CD = #{langCd}
                     AND ROWNUM = 1) AS MENU_NM
+              , CASE WHEN KA.USE_PERIOD_UNIT_CD != 'PD00310' THEN CONCAT(USE_PERIOD, (SELECT CD_NM FROM TB_CM_CD WHERE CD_ID = KA.USE_PERIOD_UNIT_CD AND LANG_CD = #{langCd}))
+                     ELSE '' END AS USE_PERIOD_NM
           FROM (SELECT  MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PART_PROD_ID)) AS STORE_PROD_ID
                       , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', NULL, JA.PART_PROD_ID)) AS PLAY_PROD_ID
                       , MAX(DECODE(JA.USE_PERIOD_UNIT_CD, 'PD00310', JA.PROD_AMT)) AS STORE_PROD_AMT
@@ -556,8 +558,7 @@
                                    AND  C.PART_PROD_ID = G.PROD_ID
                                    AND  C.PART_PROD_ID = H.PROD_ID
                                    AND  G.TENANT_ID = H.TENANT_ID
-                                   AND  C.PART_PROD_ID = I.PROD_ID(+)
-                                   AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+                                   AND  C.PART_PROD_ID = I.PROD_ID
                                    AND  C.PART_PROD_ID = K.PROD_ID
                                    AND  A.SVC_GRP_CD = 'DP000203'
                                    AND  A.CONTENTS_TYPE_CD = 'PD002501'
@@ -572,8 +573,8 @@
                                    AND  G.TENANT_ID = #{tenantId}
                                    AND  G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
                                    AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-                                   AND  I.DEVICE_MODEL_CD(+) = #{deviceModelCd}
-                                   AND  I.PROD_ID IS NOT NULL
+                                   AND  (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = 'android_standard2')
+                                   AND  J.DEVICE_MODEL_CD = #{deviceModelCd}
                                    AND  DECODE(J.EBOOK_SPRT_YN, 'Y', DECODE(A.META_CLSF_CD, 'CT24', DECODE(J.MAGAZINE_SPRT_YN, 'Y', 1, 0), 'CT26', DECODE(J.MAGAZINE_SPRT_YN, 'Y', 1, 0), 1), 0) = 1
                                    AND  K.SALE_YN = 'Y'
                                    <if test='idType == "channel"'>
@@ -666,8 +667,7 @@
                            AND  C.PART_PROD_ID = G.PROD_ID
                            AND  C.PART_PROD_ID = H.PROD_ID
                            AND  G.TENANT_ID = H.TENANT_ID
-                           AND  C.PART_PROD_ID = I.PROD_ID(+)
-                           AND  I.DEVICE_MODEL_CD = J.DEVICE_MODEL_CD
+                           AND  C.PART_PROD_ID = I.PROD_ID
                            AND  C.PART_PROD_ID = K.PROD_ID
                            AND  A.SVC_GRP_CD = 'DP000203'
                            AND  A.CONTENTS_TYPE_CD = 'PD002501'
@@ -682,7 +682,8 @@
                            AND  G.TENANT_ID = #{tenantId}
                            AND  G.PROD_STATUS_CD IN ('PD000403', 'PD000404', 'PD000409')
                            AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-                           AND  I.DEVICE_MODEL_CD(+) = #{deviceModelCd}
+                           AND  (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = 'android_standard2')
+                           AND  J.DEVICE_MODEL_CD = #{deviceModelCd}
                            AND  I.PROD_ID IS NOT NULL
                            AND  J.COMIC_SPRT_YN = 'Y'
                            AND  K.SALE_YN = 'Y'

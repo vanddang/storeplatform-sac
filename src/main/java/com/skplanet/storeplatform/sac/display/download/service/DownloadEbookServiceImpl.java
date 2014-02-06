@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,68 +125,72 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			String prchsDt = null;
 			String dwldExprDt = null;
 			String prchsState = null;
+			String prchsProdId = null;
 			String usePeriodUnitCd = metaInfo.getUsePeriodUnitCd();
 
-			if ("episode".equals(idType)) {
-				try {
-					// 구매내역 조회를 위한 생성자
-					ProductListSac productListSac = new ProductListSac();
-					productListSac.setProdId(metaInfo.getPartProdId());
+			try {
+				// 구매내역 조회를 위한 생성자
+				List<ProductListSac> productList = new ArrayList<ProductListSac>();
 
-					List<ProductListSac> productList = new ArrayList<ProductListSac>();
-					productList.add(productListSac);
+				ProductListSac productListSac = new ProductListSac();
+				productListSac.setProdId(metaInfo.getStoreProdId());
+				productList.add(productListSac);
 
-					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
-					historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
-					historyListSacReq.setUserKey(downloadEbookReq.getUserKey());
-					historyListSacReq.setDeviceKey(downloadEbookReq.getDeviceKey());
-					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
-					historyListSacReq.setStartDt("19000101000000");
-					historyListSacReq.setEndDt(metaInfo.getSysDate());
-					historyListSacReq.setOffset(1);
-					historyListSacReq.setCount(1);
-					historyListSacReq.setProductList(productList);
+				productListSac = new ProductListSac();
+				productListSac.setProdId(metaInfo.getPlayProdId());
+				productList.add(productListSac);
 
-					// 구매내역 조회 실행
-					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+				historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
+				historyListSacReq.setUserKey(downloadEbookReq.getUserKey());
+				historyListSacReq.setDeviceKey(downloadEbookReq.getDeviceKey());
+				historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				historyListSacReq.setStartDt("19000101000000");
+				historyListSacReq.setEndDt(metaInfo.getSysDate());
+				historyListSacReq.setOffset(1);
+				historyListSacReq.setCount(1);
+				historyListSacReq.setProductList(productList);
+
+				// 구매내역 조회 실행
+				HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+
+				this.logger.debug("----------------------------------------------------------------");
+				this.logger.debug("[getDownloadEbookInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+				this.logger.debug("----------------------------------------------------------------");
+
+				if (historyListSacRes.getTotalCnt() > 0) {
+					prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
+					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+					dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
+					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
 					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("[getDownloadEbookInfo] purchase count : {}", historyListSacRes.getTotalCnt());
+					this.logger.debug("[getDownloadEbookInfo] usePeriodUnitCd : {}", usePeriodUnitCd);
 					this.logger.debug("----------------------------------------------------------------");
 
-					if (historyListSacRes.getTotalCnt() > 0) {
-						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-						prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-						dwldExprDt = historyListSacRes.getHistoryList().get(0).getDwldExprDt();
-						prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
-
-						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("[getDownloadEbookInfo] usePeriodUnitCd : {}", usePeriodUnitCd);
-						this.logger.debug("----------------------------------------------------------------");
-
-						// 소장
-						if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
-							if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-								prchsState = "payment";
-							} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-								prchsState = "gift";
-							}
-						} else {
-							downloadEbookReq.setPrchsDt(prchsDt);
-							downloadEbookReq.setDwldExprDt(dwldExprDt);
-
-							// 대여 상품 구매상태 조회
-							prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
-									downloadEbookReq);
+					// 소장
+					if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
+						if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+							prchsState = "payment";
+						} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+							prchsState = "gift";
 						}
+					} else {
+						downloadEbookReq.setPrchsDt(prchsDt);
+						downloadEbookReq.setDwldExprDt(dwldExprDt);
 
-						this.logger.debug("----------------------------------------------------------------");
-						this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
-						this.logger.debug("----------------------------------------------------------------");
+						// 대여 상품 구매상태 조회
+						prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
+								downloadEbookReq);
 					}
-				} catch (Exception ex) {
-					throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+
+					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
+					this.logger.debug("----------------------------------------------------------------");
 				}
+			} catch (Exception ex) {
+				throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 			}
 
 			Product product = new Product();
@@ -211,10 +216,6 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			// 상품 ID 정보
 			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
 			identifier.setText(metaInfo.getProdId());
-			identifierList.add(identifier);
-			identifier = new Identifier();
-			identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-			identifier.setText(metaInfo.getPartProdId());
 			identifierList.add(identifier);
 			product.setIdentifierList(identifierList);
 
@@ -252,25 +253,55 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			book.setBookClsfCd(metaInfo.getBookClsfCd());
 			product.setBook(book);
 
-			// 소장/대여 정보 (store : 소장, play : 대여)
-			if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
+			// 소장 정보
+			if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
+				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
+
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(metaInfo.getStoreProdId());
+				identifierList.add(identifier);
+				store.setIdentifierList(identifierList);
+
 				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 				support.setText(metaInfo.getStoreDrmYn());
 				supportList.add(support);
 				store.setSupportList(supportList);
+
 				price.setFixedPrice(metaInfo.getStoreProdNetAmt());
 				price.setText(metaInfo.getStoreProdAmt());
 				store.setPrice(price);
+
 				rights.setGrade(metaInfo.getProdGrdCd());
 				rights.setStore(store);
-			} else {
+			}
+
+			// 대여 정보
+			if (StringUtils.isNotEmpty(metaInfo.getPlayProdId())) {
+				identifier = new Identifier();
+				support = new Support();
+				price = new Price();
+				supportList = new ArrayList<Support>();
+				identifierList = new ArrayList<Identifier>();
+
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(metaInfo.getPlayProdId());
+				identifierList.add(identifier);
+				play.setIdentifierList(identifierList);
+
 				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
 				support.setText(metaInfo.getPlayDrmYn());
 				supportList.add(support);
 				play.setSupportList(supportList);
+
+				date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
+				date.setText(metaInfo.getUsePeriodNm());
+				play.setDate(date);
+
 				price.setFixedPrice(metaInfo.getPlayProdNetAmt());
 				price.setText(metaInfo.getPlayProdAmt());
 				play.setPrice(price);
+
 				rights.setGrade(metaInfo.getProdGrdCd());
 				rights.setPlay(play);
 			}
@@ -285,15 +316,24 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 			// 구매 정보
 			if (StringUtils.isNotEmpty(prchsId)) {
-				purchase.setState(prchsState);
 				identifier = new Identifier();
 				identifierList = new ArrayList<Identifier>();
+
+				purchase.setState(prchsState);
+
 				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 				identifier.setText(prchsId);
 				identifierList.add(identifier);
+
+				identifier = new Identifier();
+				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+				identifier.setText(prchsProdId);
+				identifierList.add(identifier);
 				purchase.setIdentifierList(identifierList);
+
+				date = new Date();
 				date.setType("date/purchase");
-				date.setText(prchsDt);
+				date.setText(DateUtils.parseDate(prchsDt));
 				purchase.setDate(date);
 				product.setPurchase(purchase);
 			}

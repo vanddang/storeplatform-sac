@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,16 +218,18 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 			// 구매 정보
 			if (StringUtils.isNotEmpty(prchsId)) {
-				purchase.setState(prchsState);
 				identifier = new Identifier();
 				identifierList = new ArrayList<Identifier>();
+
+				purchase.setState(prchsState);
+
 				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
 				identifier.setText(prchsId);
 				identifierList.add(identifier);
 				purchase.setIdentifierList(identifierList);
+
 				date.setType("date/purchase");
-				date.setText(prchsDt);
-				purchase.setDate(date);
+				date.setText(DateUtils.parseDate(prchsDt));
 				product.setPurchase(purchase);
 			}
 
