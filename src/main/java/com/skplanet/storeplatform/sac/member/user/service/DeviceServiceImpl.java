@@ -846,7 +846,7 @@ public class DeviceServiceImpl implements DeviceService {
 			addData.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
 			addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
 			addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
-			addData.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
+			//addData.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
 			addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
 			addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
 			addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
