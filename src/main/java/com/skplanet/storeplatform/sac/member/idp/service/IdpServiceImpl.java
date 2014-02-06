@@ -605,7 +605,17 @@ public class IdpServiceImpl implements IdpService {
 		String loginStatusCode = (String) map.get("login_status_code");
 		updateUserVo.setLoginStatusCode(loginStatusCode);
 
-		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+		// 결과값 세팅
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		UpdateStatusUserResponse updateStatusResponse = new UpdateStatusUserResponse();
+
+		try {
+			updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+		} catch (StorePlatformException spe) {
+
+		}
 
 		// 미동의 회원 정보 수정
 		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -615,19 +625,18 @@ public class IdpServiceImpl implements IdpService {
 		mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
 		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
-		UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+		try {
+			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-		// 결과값 세팅
-		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
-		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
-
-		if (updateStatusResponse.getCommonResponse().getResultCode()
-				.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
-				&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
-			// 성공이면
-			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
+					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+				// 성공이면
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			}
+		} catch (StorePlatformException spe) {
+			idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
 
 		ImResult imResult = new ImResult();
@@ -749,7 +758,15 @@ public class IdpServiceImpl implements IdpService {
 		String susStatusCode = (String) map.get("sus_status_code");
 		updateUserVo.setStopStatusCode(susStatusCode);
 
-		UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+		// 결과값 세팅
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		try {
+			UpdateStatusUserResponse updateStatusResponse = this.userSCI.updateStatus(updateUserVo);
+		} catch (StorePlatformException spe) {
+
+		}
 
 		// 미동의 회원 정보 수정
 		UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
@@ -759,19 +776,18 @@ public class IdpServiceImpl implements IdpService {
 		mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
 		updateMbrOneIDRequest.setMbrOneID(mbrOneID);
 
-		UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+		try {
+			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-		// 결과값 세팅
-		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
-		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
-
-		if (updateStatusResponse.getCommonResponse().getResultCode()
-				.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
-				&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
-			// 성공이면
-			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
+					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+				// 성공이면
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			}
+		} catch (StorePlatformException spe) {
+			idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
 
 		ImResult imResult = new ImResult();
@@ -821,81 +837,87 @@ public class IdpServiceImpl implements IdpService {
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
 		searchUserRequest.setCommonRequest(commonRequest);
-		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-		if (searchUserRespnse.getUserMbr() != null) {
+		try {
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			// 실명인증 대상 본인/법정대리인 여부
-			// 본인
-			updateRealNameRequest.setIsOwn("OWN");
-			// updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
-			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+			if (searchUserRespnse.getUserMbr() != null) {
 
-			MbrAuth mbrAuth = new MbrAuth();
-			if (map.get("user_birthday") != null)
-				mbrAuth.setBirthDay(map.get("user_birthday").toString());
-			// ci는 DB 필수 값임으로 없을 경우 공백 입력
-			if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
-				mbrAuth.setCi(" ");
-			} else {
-				mbrAuth.setCi(map.get("user_ci").toString());
-			}
-			if (map.get("user_di") != null)
-				mbrAuth.setDi(map.get("user_di").toString());
-			// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
-			// 내국인여부
-			if (map.get("rname_auth_mbr_code") != null) {
-				// 내국인
-				if (map.get("rname_auth_mbr_code").toString().equals("10")) {
-					mbrAuth.setIsDomestic("Y");
-				} else {// 외국인
-					mbrAuth.setIsDomestic("N");
+				// 실명인증 대상 본인/법정대리인 여부
+				// 본인
+				updateRealNameRequest.setIsOwn("OWN");
+				// updateRealNameRequest.setIsRealName(map.get("is_rname_auth").toString());
+				updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+
+				MbrAuth mbrAuth = new MbrAuth();
+				if (map.get("user_birthday") != null)
+					mbrAuth.setBirthDay(map.get("user_birthday").toString());
+				// ci는 DB 필수 값임으로 없을 경우 공백 입력
+				if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
+					mbrAuth.setCi(" ");
+				} else {
+					mbrAuth.setCi(map.get("user_ci").toString());
+				}
+				if (map.get("user_di") != null)
+					mbrAuth.setDi(map.get("user_di").toString());
+				// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
+				// 내국인여부
+				if (map.get("rname_auth_mbr_code") != null) {
+					// 내국인
+					if (map.get("rname_auth_mbr_code").toString().equals("10")) {
+						mbrAuth.setIsDomestic("Y");
+					} else {// 외국인
+						mbrAuth.setIsDomestic("N");
+					}
+				}
+				// systemid 입력
+				mbrAuth.setRealNameSite((String) map.get("systemID"));
+				if (map.get("rname_auth_date") != null)
+					mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
+				mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
+				mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
+				mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
+				if (map.get("user_sex") != null)
+					mbrAuth.setSex(map.get("user_sex").toString());
+				if (map.get("user_name") != null)
+					mbrAuth.setName(map.get("user_name").toString());
+				mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
+				if (map.get("rname_auth_mns_code") != null)
+					mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
+
+				updateRealNameRequest.setUserMbrAuth(mbrAuth);
+
+				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+				LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
+
+				// oneID 테이블 업데이트
+				UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+				updateMbrOneIDRequest.setCommonRequest(commonRequest);
+				MbrOneID mbrOneID = new MbrOneID();
+				mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+				// 실명 인증여부
+				mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
+				// CI 존재 여부
+				if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
+					mbrOneID.setIsCi("N");
+				} else {
+					mbrOneID.setIsCi("Y");
+				}
+				updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+				UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+				if (updateRealNameResponse.getCommonResponse().getResultCode()
+						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
+						&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
+								.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 				}
 			}
-			// systemid 입력
-			mbrAuth.setRealNameSite((String) map.get("systemID"));
-			if (map.get("rname_auth_date") != null)
-				mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
-			mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
-			mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
-			mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
-			if (map.get("user_sex") != null)
-				mbrAuth.setSex(map.get("user_sex").toString());
-			if (map.get("user_name") != null)
-				mbrAuth.setName(map.get("user_name").toString());
-			mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
-			if (map.get("rname_auth_mns_code") != null)
-				mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
-
-			updateRealNameRequest.setUserMbrAuth(mbrAuth);
-
-			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-			LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
-
-			// oneID 테이블 업데이트
-			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
-			updateMbrOneIDRequest.setCommonRequest(commonRequest);
-			MbrOneID mbrOneID = new MbrOneID();
-			mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
-			// 실명 인증여부
-			mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
-			// CI 존재 여부
-			if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
-				mbrOneID.setIsCi("N");
-			} else {
-				mbrOneID.setIsCi("Y");
-			}
-			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
-
-			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
-
-			if (updateRealNameResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
-					&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
-							.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
-				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
-			}
+		} catch (StorePlatformException spe) {
+			idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
 
 		ImResult imResult = new ImResult();
@@ -945,43 +967,49 @@ public class IdpServiceImpl implements IdpService {
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
 		searchUserRequest.setCommonRequest(commonRequest);
-		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-		if (searchUserRespnse.getUserMbr() != null) {
+		try {
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			// 실명인증 대상 본인/법정대리인 여부
-			// 법정대리인
-			updateRealNameRequest.setIsOwn("PARENT");
-			// updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
-			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+			if (searchUserRespnse.getUserMbr() != null) {
 
-			MbrLglAgent mbrLglAgent = new MbrLglAgent();
-			mbrLglAgent.setParentBirthDay(map.get("parent_birthday").toString());
-			if (map.get("parent_rname_auth_key") != null) {
-				mbrLglAgent.setParentCI(map.get("parent_rname_auth_key").toString());
+				// 실명인증 대상 본인/법정대리인 여부
+				// 법정대리인
+				updateRealNameRequest.setIsOwn("PARENT");
+				// updateRealNameRequest.setIsRealName(map.get("is_parent_approve").toString());
+				updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
+
+				MbrLglAgent mbrLglAgent = new MbrLglAgent();
+				mbrLglAgent.setParentBirthDay(map.get("parent_birthday").toString());
+				if (map.get("parent_rname_auth_key") != null) {
+					mbrLglAgent.setParentCI(map.get("parent_rname_auth_key").toString());
+				}
+				// mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
+				mbrLglAgent.setParentRealNameSite((String) map.get("systemID"));
+				if (map.get("parent_approve_date").toString().length() == 8) {
+					mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString() + "000000");
+				} else if (map.get("parent_approve_date").toString().length() > 8) {
+					mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString());
+				}
+				mbrLglAgent.setParentName(map.get("parent_name").toString());
+				mbrLglAgent.setParentType(map.get("parent_type").toString());
+				mbrLglAgent.setParentRealNameMethod(map.get("parent_rname_auth_type").toString());
+				if (map.get("parent_email") != null)
+					mbrLglAgent.setParentEmail(map.get("parent_email").toString());
+
+				updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
+
+				UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
+				LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
+				if (updateRealNameResponse.getCommonResponse().getResultCode()
+						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				}
 			}
-			// mbrLglAgent.setIsParent(map.get("is_parent_approve").toString());
-			mbrLglAgent.setParentRealNameSite((String) map.get("systemID"));
-			if (map.get("parent_approve_date").toString().length() == 8) {
-				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString() + "000000");
-			} else if (map.get("parent_approve_date").toString().length() > 8) {
-				mbrLglAgent.setParentRealNameDate(map.get("parent_approve_date").toString());
-			}
-			mbrLglAgent.setParentName(map.get("parent_name").toString());
-			mbrLglAgent.setParentType(map.get("parent_type").toString());
-			mbrLglAgent.setParentRealNameMethod(map.get("parent_rname_auth_type").toString());
-			if (map.get("parent_email") != null)
-				mbrLglAgent.setParentEmail(map.get("parent_email").toString());
-
-			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
-
-			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
-			LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
-			if (updateRealNameResponse.getCommonResponse().getResultCode()
-					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
-				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
-			}
+		} catch (StorePlatformException spe) {
+			idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		}
 
 		ImResult imResult = new ImResult();
