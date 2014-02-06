@@ -96,8 +96,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			this.log.info("■■■■■ validateContentInfo 패스 ■■■■■");
 
 			// 쿠폰 , 아이템 유효성 검증
-			if (!this.validateCouponItemCount(couponInfo, itemInfoList, couponReq.getCudType())) { // CatalogCode 확인 해야
-																								   // 함
+			if (!this.validateCouponItemCount(couponInfo, itemInfoList, couponReq.getCudType())) { // 쿠폰 , 아이템 유효성 확인 해야
 				throw new CouponException(this.errorCode, this.message, null);
 			}
 

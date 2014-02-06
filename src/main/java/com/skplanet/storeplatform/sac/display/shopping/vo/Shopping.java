@@ -63,6 +63,23 @@ public class Shopping extends CommonInfo {
 
 	private String specialSale;
 	private String soldOut;
+	private String usePeriod;
+	private String allow;
+	private String b2bProdYn;
+	private String mthMaxCnt;// 월_최대_판매_수량
+	private String dlyMaxCnt;// 일_최대_판매_수량
+	private String mthUsrMaxCnt;// 월_회원_최대_구매_수량
+	private String dlyUsrMaxCnt;// 일_회원_최대_구매_수량
+	private String eachMaxCnt;// 1차_최대_구매_수량
+
+	private String usrPlac;// 사용_장소
+	private String useLimtDesc;// 사용_제한_설명
+	private String noticeMatt;// 공지_사항
+	private String prchsCancelDrbkReason;// 구매_취소_환불_사유
+
+	private String opt1Nm;// 옵션 기준점
+	private String optPdNm;// 옵션 값
+	private String subYn;// 옵션 하위 여부
 
 	public String getUpMenuId() {
 		return this.upMenuId;
@@ -403,6 +420,231 @@ public class Shopping extends CommonInfo {
 	 */
 	public void setSoldOut(String soldOut) {
 		this.soldOut = soldOut;
+	}
+
+	/**
+	 * @return the usePeriod
+	 */
+	public String getUsePeriod() {
+		return this.usePeriod;
+	}
+
+	/**
+	 * @param usePeriod
+	 *            the usePeriod to set
+	 */
+	public void setUsePeriod(String usePeriod) {
+		this.usePeriod = usePeriod;
+	}
+
+	/**
+	 * @return the allow
+	 */
+	public String getAllow() {
+		return this.allow;
+	}
+
+	/**
+	 * @param allow
+	 *            the allow to set
+	 */
+	public void setAllow(String allow) {
+		this.allow = allow;
+	}
+
+	/**
+	 * @return the b2bProdYn
+	 */
+	public String getB2bProdYn() {
+		return this.b2bProdYn;
+	}
+
+	/**
+	 * @param b2bProdYn
+	 *            the b2bProdYn to set
+	 */
+	public void setB2bProdYn(String b2bProdYn) {
+		this.b2bProdYn = b2bProdYn;
+	}
+
+	/**
+	 * @return the mthMaxCnt
+	 */
+	public String getMthMaxCnt() {
+		return this.mthMaxCnt;
+	}
+
+	/**
+	 * @param mthMaxCnt
+	 *            the mthMaxCnt to set
+	 */
+	public void setMthMaxCnt(String mthMaxCnt) {
+		this.mthMaxCnt = mthMaxCnt;
+	}
+
+	/**
+	 * @return the dlyMaxCnt
+	 */
+	public String getDlyMaxCnt() {
+		return this.dlyMaxCnt;
+	}
+
+	/**
+	 * @param dlyMaxCnt
+	 *            the dlyMaxCnt to set
+	 */
+	public void setDlyMaxCnt(String dlyMaxCnt) {
+		this.dlyMaxCnt = dlyMaxCnt;
+	}
+
+	/**
+	 * @return the mthUsrMaxCnt
+	 */
+	public String getMthUsrMaxCnt() {
+		return this.mthUsrMaxCnt;
+	}
+
+	/**
+	 * @param mthUsrMaxCnt
+	 *            the mthUsrMaxCnt to set
+	 */
+	public void setMthUsrMaxCnt(String mthUsrMaxCnt) {
+		this.mthUsrMaxCnt = mthUsrMaxCnt;
+	}
+
+	/**
+	 * @return the dlyUsrMaxCnt
+	 */
+	public String getDlyUsrMaxCnt() {
+		return this.dlyUsrMaxCnt;
+	}
+
+	/**
+	 * @param dlyUsrMaxCnt
+	 *            the dlyUsrMaxCnt to set
+	 */
+	public void setDlyUsrMaxCnt(String dlyUsrMaxCnt) {
+		this.dlyUsrMaxCnt = dlyUsrMaxCnt;
+	}
+
+	/**
+	 * @return the eachMaxCnt
+	 */
+	public String getEachMaxCnt() {
+		return this.eachMaxCnt;
+	}
+
+	/**
+	 * @param eachMaxCnt
+	 *            the eachMaxCnt to set
+	 */
+	public void setEachMaxCnt(String eachMaxCnt) {
+		this.eachMaxCnt = eachMaxCnt;
+	}
+
+	/**
+	 * @return the usrPlac
+	 */
+	public String getUsrPlac() {
+		return this.usrPlac;
+	}
+
+	/**
+	 * @param usrPlac
+	 *            the usrPlac to set
+	 */
+	public void setUsrPlac(String usrPlac) {
+		this.usrPlac = usrPlac;
+	}
+
+	/**
+	 * @return the useLimtDesc
+	 */
+	public String getUseLimtDesc() {
+		return this.useLimtDesc;
+	}
+
+	/**
+	 * @param useLimtDesc
+	 *            the useLimtDesc to set
+	 */
+	public void setUseLimtDesc(String useLimtDesc) {
+		this.useLimtDesc = useLimtDesc;
+	}
+
+	/**
+	 * @return the noticeMatt
+	 */
+	public String getNoticeMatt() {
+		return this.noticeMatt;
+	}
+
+	/**
+	 * @param noticeMatt
+	 *            the noticeMatt to set
+	 */
+	public void setNoticeMatt(String noticeMatt) {
+		this.noticeMatt = noticeMatt;
+	}
+
+	/**
+	 * @return the prchsCancelDrbkReason
+	 */
+	public String getPrchsCancelDrbkReason() {
+		return this.prchsCancelDrbkReason;
+	}
+
+	/**
+	 * @param prchsCancelDrbkReason
+	 *            the prchsCancelDrbkReason to set
+	 */
+	public void setPrchsCancelDrbkReason(String prchsCancelDrbkReason) {
+		this.prchsCancelDrbkReason = prchsCancelDrbkReason;
+	}
+
+	/**
+	 * @return the opt1Nm
+	 */
+	public String getOpt1Nm() {
+		return this.opt1Nm;
+	}
+
+	/**
+	 * @param opt1Nm
+	 *            the opt1Nm to set
+	 */
+	public void setOpt1Nm(String opt1Nm) {
+		this.opt1Nm = opt1Nm;
+	}
+
+	/**
+	 * @return the optPdNm
+	 */
+	public String getOptPdNm() {
+		return this.optPdNm;
+	}
+
+	/**
+	 * @param optPdNm
+	 *            the optPdNm to set
+	 */
+	public void setOptPdNm(String optPdNm) {
+		this.optPdNm = optPdNm;
+	}
+
+	/**
+	 * @return the subYn
+	 */
+	public String getSubYn() {
+		return this.subYn;
+	}
+
+	/**
+	 * @param subYn
+	 *            the subYn to set
+	 */
+	public void setSubYn(String subYn) {
+		this.subYn = subYn;
 	}
 
 }
