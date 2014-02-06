@@ -104,7 +104,14 @@ public class SellerSearchController {
 	@RequestMapping(value = "/detailAccountInformation/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header,
-			@Validated DetailAccountInformationReq req) {
+			@Validated DetailAccountInformationReq req, BindingResult result) {
+
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 
 		return this.sellerSearchService.detailAccountInformation(header, req);
 	}
@@ -162,8 +169,13 @@ public class SellerSearchController {
 	@RequestMapping(value = "/listPasswordReminderQuestion2/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
-			@Validated ListPasswordReminderQuestionReq req) {
-		LOGGER.debug("------------------------------------req : {}", req);
+			@Validated ListPasswordReminderQuestionReq req, BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerSearchService.listPasswordReminderQuestion(header, req);
 	}
 
@@ -180,7 +192,12 @@ public class SellerSearchController {
 	public @ResponseBody
 	CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated CheckPasswordReminderQuestionReq req, BindingResult result) {
-
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerSearchService.checkPasswordReminderQuestion(header, req);
 	}
 
@@ -194,8 +211,14 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/searchPassword2/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchPasswordRes searchPassword(SacRequestHeader header, @Validated SearchPasswordReq req) throws Exception {
-
+	public SearchPasswordRes searchPassword(SacRequestHeader header, @Validated SearchPasswordReq req,
+			BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerSearchService.searchPassword(header, req);
 	}
 
@@ -209,8 +232,14 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/detailInfomationByAuthorizationKey/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailInformationRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req) {
-
+	public DetailInformationRes searchAuthKey(SacRequestHeader header, @Validated SearchAuthKeyReq req,
+			BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerSearchService.searchAuthKey(header, req);
 	}
 
