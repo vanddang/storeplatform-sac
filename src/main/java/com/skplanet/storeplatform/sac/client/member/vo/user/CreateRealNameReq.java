@@ -1,5 +1,9 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -14,6 +18,7 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * 사용자 고유 Key
 	 */
+	@NotEmpty
 	private String userKey = "";
 
 	/**
@@ -22,39 +27,54 @@ public class CreateRealNameReq extends CommonInfo {
 	private String userAuthKey = "";
 
 	/**
-	 * 기기 ID
+	 * 실명인증 여부
 	 */
-	private String deviceId = "";
+	@NotEmpty
+	@Pattern(regexp = "^Y|N")
+	private String isRealName = "";
 
 	/**
-	 * 기기 ID 타입
+	 * 실명인증 대상 (OWN/PARENT)
 	 */
-	private String deviceIdType = "";
-
-	/**
-	 * 사용자 생년월일
-	 */
-	private String userBirth = "";
-
-	/**
-	 * 실명인증 대상
-	 */
+	@NotEmpty
+	@Pattern(regexp = "^OWN|PARENT")
 	private String isOwn = "";
 
 	/**
-	 * 이름
+	 * 법정대리인 관계코드 (F/M/O)
 	 */
-	private String userName = "";
+	private String parentType = "";
 
 	/**
-	 * 성별
+	 * 법정대리인 이메일 (isOwn=PARENT 경우 필수)
 	 */
-	private String userSex = "";
+	private String parentEmail = "";
 
 	/**
-	 * 내/외국인 구분
+	 * 실명인증 일시
 	 */
-	private String resident = "";
+	private String realNameDate = "";
+
+	/**
+	 * CI
+	 */
+	@NotEmpty
+	private String userCi = "";
+
+	/**
+	 * DI
+	 */
+	private String userDi = "";
+
+	/**
+	 * 실명인증 수단코드
+	 */
+	private String realNameMethod = "";
+
+	/**
+	 * 실명인증 사이트 코드
+	 */
+	private String realNameSite = "";
 
 	/**
 	 * 이동 통신사
@@ -62,24 +82,24 @@ public class CreateRealNameReq extends CommonInfo {
 	private String deviceTelecom = "";
 
 	/**
-	 * 법정대리인 이메일
+	 * 사용자 전화번호
 	 */
-	private String parentEmail = "";
+	private String userPhone = "";
 
 	/**
-	 * 법정대리인 생년월일
+	 * 사용자 이름
 	 */
-	private String parentBirthday = "";
+	private String userName = "";
 
 	/**
-	 * 실명인증 CI
+	 * 사용자/법정대리인 생년월일
 	 */
-	private String userCi = "";
+	private String userBirthDay = "";
 
 	/**
-	 * 실명인증 DI
+	 * 사용자 성별 (M/F)
 	 */
-	private String userDi = "";
+	private String userSex = "";
 
 	/**
 	 * @return String : userKey
@@ -112,48 +132,18 @@ public class CreateRealNameReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : deviceId
+	 * @return String : isRealName
 	 */
-	public String getDeviceId() {
-		return this.deviceId;
+	public String getIsRealName() {
+		return this.isRealName;
 	}
 
 	/**
-	 * @param deviceId
-	 *            String : the deviceId to set
+	 * @param isRealName
+	 *            String : the isRealName to set
 	 */
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
-
-	/**
-	 * @return String : deviceIdType
-	 */
-	public String getDeviceIdType() {
-		return this.deviceIdType;
-	}
-
-	/**
-	 * @param deviceIdType
-	 *            String : the deviceIdType to set
-	 */
-	public void setDeviceIdType(String deviceIdType) {
-		this.deviceIdType = deviceIdType;
-	}
-
-	/**
-	 * @return String : userBirth
-	 */
-	public String getUserBirth() {
-		return this.userBirth;
-	}
-
-	/**
-	 * @param userBirth
-	 *            String : the userBirth to set
-	 */
-	public void setUserBirth(String userBirth) {
-		this.userBirth = userBirth;
+	public void setIsRealName(String isRealName) {
+		this.isRealName = isRealName;
 	}
 
 	/**
@@ -172,63 +162,18 @@ public class CreateRealNameReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : userName
+	 * @return String : parentType
 	 */
-	public String getUserName() {
-		return this.userName;
+	public String getParentType() {
+		return this.parentType;
 	}
 
 	/**
-	 * @param userName
-	 *            String : the userName to set
+	 * @param parentType
+	 *            String : the parentType to set
 	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	/**
-	 * @return String : userSex
-	 */
-	public String getUserSex() {
-		return this.userSex;
-	}
-
-	/**
-	 * @param userSex
-	 *            String : the userSex to set
-	 */
-	public void setUserSex(String userSex) {
-		this.userSex = userSex;
-	}
-
-	/**
-	 * @return String : resident
-	 */
-	public String getResident() {
-		return this.resident;
-	}
-
-	/**
-	 * @param resident
-	 *            String : the resident to set
-	 */
-	public void setResident(String resident) {
-		this.resident = resident;
-	}
-
-	/**
-	 * @return String : deviceTelecom
-	 */
-	public String getDeviceTelecom() {
-		return this.deviceTelecom;
-	}
-
-	/**
-	 * @param deviceTelecom
-	 *            String : the deviceTelecom to set
-	 */
-	public void setDeviceTelecom(String deviceTelecom) {
-		this.deviceTelecom = deviceTelecom;
+	public void setParentType(String parentType) {
+		this.parentType = parentType;
 	}
 
 	/**
@@ -247,18 +192,18 @@ public class CreateRealNameReq extends CommonInfo {
 	}
 
 	/**
-	 * @return String : parentBirthday
+	 * @return String : realNameDate
 	 */
-	public String getParentBirthday() {
-		return this.parentBirthday;
+	public String getRealNameDate() {
+		return this.realNameDate;
 	}
 
 	/**
-	 * @param parentBirthday
-	 *            String : the parentBirthday to set
+	 * @param realNameDate
+	 *            String : the realNameDate to set
 	 */
-	public void setParentBirthday(String parentBirthday) {
-		this.parentBirthday = parentBirthday;
+	public void setRealNameDate(String realNameDate) {
+		this.realNameDate = realNameDate;
 	}
 
 	/**
@@ -289,6 +234,111 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public void setUserDi(String userDi) {
 		this.userDi = userDi;
+	}
+
+	/**
+	 * @return String : realNameMethod
+	 */
+	public String getRealNameMethod() {
+		return this.realNameMethod;
+	}
+
+	/**
+	 * @param realNameMethod
+	 *            String : the realNameMethod to set
+	 */
+	public void setRealNameMethod(String realNameMethod) {
+		this.realNameMethod = realNameMethod;
+	}
+
+	/**
+	 * @return String : realNameSite
+	 */
+	public String getRealNameSite() {
+		return this.realNameSite;
+	}
+
+	/**
+	 * @param realNameSite
+	 *            String : the realNameSite to set
+	 */
+	public void setRealNameSite(String realNameSite) {
+		this.realNameSite = realNameSite;
+	}
+
+	/**
+	 * @return String : deviceTelecom
+	 */
+	public String getDeviceTelecom() {
+		return this.deviceTelecom;
+	}
+
+	/**
+	 * @param deviceTelecom
+	 *            String : the deviceTelecom to set
+	 */
+	public void setDeviceTelecom(String deviceTelecom) {
+		this.deviceTelecom = deviceTelecom;
+	}
+
+	/**
+	 * @return String : userPhone
+	 */
+	public String getUserPhone() {
+		return this.userPhone;
+	}
+
+	/**
+	 * @param userPhone
+	 *            String : the userPhone to set
+	 */
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
+	}
+
+	/**
+	 * @return String : userName
+	 */
+	public String getUserName() {
+		return this.userName;
+	}
+
+	/**
+	 * @param userName
+	 *            String : the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * @return String : userBirthDay
+	 */
+	public String getUserBirthDay() {
+		return this.userBirthDay;
+	}
+
+	/**
+	 * @param userBirthDay
+	 *            String : the userBirthDay to set
+	 */
+	public void setUserBirthDay(String userBirthDay) {
+		this.userBirthDay = userBirthDay;
+	}
+
+	/**
+	 * @return String : userSex
+	 */
+	public String getUserSex() {
+		return this.userSex;
+	}
+
+	/**
+	 * @param userSex
+	 *            String : the userSex to set
+	 */
+	public void setUserSex(String userSex) {
+		this.userSex = userSex;
 	}
 
 }
