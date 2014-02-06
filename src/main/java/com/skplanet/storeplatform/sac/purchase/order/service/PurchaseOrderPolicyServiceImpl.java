@@ -14,7 +14,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyAdminServiceImpl;
 import com.skplanet.storeplatform.sac.purchase.order.dummy.service.DummyMemberServiceImpl;
@@ -28,7 +27,6 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrderPolicy;
  * Updated on : 2014. 1. 22. Updated by : 이승택, nTels.
  */
 @Service
-@Transactional
 public class PurchaseOrderPolicyServiceImpl implements PurchaseOrderPolicyService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

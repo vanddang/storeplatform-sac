@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.common.vo.AutoPrchs;
@@ -56,7 +55,6 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
  * Updated on : 2014. 1. 3. Updated by : 이승택, nTels.
  */
 @Service
-@Transactional
 public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -95,7 +93,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            구매요청 정보
 	 */
 	@Override
-	public void freePurchase(PurchaseOrder purchaseOrderInfo) {
+	public void createFreePurchase(PurchaseOrder purchaseOrderInfo) {
 		this.logger.debug("PRCHS,ORDER,FREE,START,{}", purchaseOrderInfo);
 
 		// 구매ID 생성
@@ -167,7 +165,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            구매요청 정보
 	 */
 	@Override
-	public void reservePurchase(PurchaseOrder purchaseOrderInfo) {
+	public void createReservedPurchase(PurchaseOrder purchaseOrderInfo) {
 		this.logger.debug("PRCHS,ORDER,RESERVE,START,{}", purchaseOrderInfo);
 
 		// 구매ID 생성
@@ -276,7 +274,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 	 *            네트워크 타입 코드
 	 */
 	@Override
-	public void confirmPurchase(PrchsDtl prchsDtl, NotifyPaymentSacReq notifyPaymentReq, String currencyCd,
+	public void updateConfirmPurchase(PrchsDtl prchsDtl, NotifyPaymentSacReq notifyPaymentReq, String currencyCd,
 			String networkTypeCd) {
 		this.logger.debug("PRCHS,ORDER,CONFIRM,START,{}", prchsDtl);
 

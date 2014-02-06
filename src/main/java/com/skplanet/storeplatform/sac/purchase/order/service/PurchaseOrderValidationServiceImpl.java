@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.purchase.client.history.sci.ExistenceSCI;
@@ -40,7 +39,6 @@ import com.skplanet.storeplatform.sac.purchase.order.vo.PurchaseOrder;
  * Updated on : 2014. 1. 22. Updated by : 이승택, nTels.
  */
 @Service
-@Transactional
 public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidationService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

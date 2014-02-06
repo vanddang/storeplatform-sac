@@ -100,7 +100,7 @@ public class PurchaseOrderController {
 			purchaseOrderInfo.setResultType("payment");
 
 			// 구매예약
-			this.orderService.reservePurchase(purchaseOrderInfo);
+			this.orderService.createReservedPurchase(purchaseOrderInfo);
 
 			// 결제Page 정보 세팅
 			this.orderService.setPaymentPageInfo(purchaseOrderInfo);
@@ -108,7 +108,7 @@ public class PurchaseOrderController {
 		} else {
 			purchaseOrderInfo.setResultType("free");
 			// 구매생성 (무료)
-			this.orderService.freePurchase(purchaseOrderInfo);
+			this.orderService.createFreePurchase(purchaseOrderInfo);
 		}
 
 		// ------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ public class PurchaseOrderController {
 
 		purchaseOrderInfo.setResultType("free");
 		// 구매생성 (무료)
-		this.orderService.freePurchase(purchaseOrderInfo);
+		this.orderService.createFreePurchase(purchaseOrderInfo);
 
 		// ------------------------------------------------------------------------------
 		// 응답 세팅
@@ -233,7 +233,7 @@ public class PurchaseOrderController {
 		prchsDtl.setResvCol05(systemId); // TAKTODO:: 테이블 및 VO에 system_id 추가 후 사용
 
 		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
-		this.orderService.confirmPurchase(prchsDtl, notifyPaymentReq, currencyCd, networkTypeCd);
+		this.orderService.updateConfirmPurchase(prchsDtl, notifyPaymentReq, currencyCd, networkTypeCd);
 
 		// ------------------------------------------------------------------------------
 		// 응답

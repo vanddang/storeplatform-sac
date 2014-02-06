@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.purchase.client.prototype.sci.PurchasePrototypeSCI;
 import com.skplanet.storeplatform.purchase.client.prototype.vo.CheckPurchaseRequest;
@@ -40,7 +39,6 @@ import com.skplanet.storeplatform.sac.client.purchase.vo.prototype.MyPagePurchas
  * Updated on : 2013. 12. 10. Updated by : 이승택, nTels.
  */
 @Service
-@Transactional
 public class PurchasePrototypeServiceImpl implements PurchasePrototypeService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

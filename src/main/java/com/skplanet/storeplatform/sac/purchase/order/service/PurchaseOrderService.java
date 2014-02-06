@@ -31,7 +31,7 @@ public interface PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void freePurchase(PurchaseOrder purchaseOrderInfo);
+	public void createFreePurchase(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -42,7 +42,7 @@ public interface PurchaseOrderService {
 	 * @param purchaseOrderInfo
 	 *            구매요청 정보
 	 */
-	public void reservePurchase(PurchaseOrder purchaseOrderInfo);
+	public void createReservedPurchase(PurchaseOrder purchaseOrderInfo);
 
 	/**
 	 * 
@@ -74,7 +74,7 @@ public interface PurchaseOrderService {
 	 * @param networkTypeCd
 	 *            네트워크 타입 코드
 	 */
-	public void confirmPurchase(PrchsDtl prchsDtl, NotifyPaymentSacReq notifyPaymentReq, String currencyCd,
+	public void updateConfirmPurchase(PrchsDtl prchsDtl, NotifyPaymentSacReq notifyPaymentReq, String currencyCd,
 			String networkTypeCd);
 
 	/**
