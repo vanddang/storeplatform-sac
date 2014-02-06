@@ -29,20 +29,50 @@ public class Url extends CommonInfo implements Serializable {
 	 */
 	private String type;
 	private String text; // URL
+	private Date date;
 
+	/**
+	 * @return the type
+	 */
 	public String getType() {
 		return this.type;
 	}
 
+	/**
+	 * @param type
+	 *            the type to set
+	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * @return the text
+	 */
 	public String getText() {
 		return this.text;
 	}
 
+	/**
+	 * @param text
+	 *            the text to set
+	 */
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * @param date
+	 *            the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }
