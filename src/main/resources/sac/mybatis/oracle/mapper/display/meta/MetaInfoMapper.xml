@@ -707,8 +707,8 @@
                                ,I.DLV_PROD_YN
                                ,NVL(M.PRCHS_CNT, 0)  PRCHS_CNT
                                ,J.PROD_GRD_CD
-                               ,L.APPLY_START_DT     
-                               ,L.APPLY_END_DT 
+		                       ,NVL( N.SPRC_APPLY_START_DT, L.APPLY_START_DT  ) AS APPLY_START_DT
+		                       ,NVL( N.SPRC_APPLY_END_DT , L.APPLY_END_DT ) AS APPLY_END_DT      
                                ,N.SPRC_APPLY_START_DT
                                ,N.SPRC_APPLY_END_DT   
                                ,DECODE(I.PROD_CASE_CD
