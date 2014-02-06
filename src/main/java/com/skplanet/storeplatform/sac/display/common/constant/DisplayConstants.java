@@ -273,6 +273,8 @@ public class DisplayConstants {
 
 	public static final String DP_SHOPPING_REPRESENT_IMAGE_CD = "DP0001A3";
 
+	public static final String DP_SHOPPING_SPECIAL_REPRESENT_IMAGE_CD = "DP0001A8";
+
 	public static final String DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD = "DP0001B9";
 
 	public static final String DP_SHOPPING_THEME_REPRESENT_IMAGE_CD = "DP0001A7";
