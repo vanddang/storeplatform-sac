@@ -89,10 +89,8 @@ public class SellerSubServiceImpl implements SellerSubService {
 		}
 
 		schRes = this.sellerSCI.createSubSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
+		LOGGER.info("---------" + schRes.getSellerKey());
 		CreateSubsellerRes response = new CreateSubsellerRes();
 
 		response.setSubSellerKey(schRes.getSellerKey());
@@ -123,9 +121,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerKeyList(removeKeyList);
 
 		schRes = this.sellerSCI.removeSubSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		RemoveSubsellerRes response = new RemoveSubsellerRes();
 
@@ -152,9 +147,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setParentSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchSubSellerList(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		ListSubsellerRes response = new ListSubsellerRes();
 		response.setSellerID(schRes.getSellerID());
@@ -183,9 +175,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 		schReq.setSellerKey(req.getSellerKey());
 
 		schRes = this.sellerSCI.searchSubSeller(schReq);
-		if (!MemberConstants.RESULT_SUCCES.equals(schRes.getCommonResponse().getResultCode())) {
-			throw new RuntimeException(schRes.getCommonResponse().getResultMessage());
-		}
 
 		DetailSubsellerRes response = new DetailSubsellerRes();
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
