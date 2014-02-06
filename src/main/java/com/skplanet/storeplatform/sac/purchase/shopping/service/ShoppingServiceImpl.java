@@ -9,12 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.purchase.shopping.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.sac.purchase.shopping.repository.ShoppingRepository;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacParam;
+import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponPublishAvailableSacResult;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacParam;
 import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacResult;
 
@@ -26,8 +26,6 @@ import com.skplanet.storeplatform.sac.purchase.shopping.vo.CouponUseStatusSacRes
 @Service
 public class ShoppingServiceImpl implements ShoppingService {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
 	private ShoppingRepository shoppingRepository;
 
@@ -35,6 +33,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 	public CouponUseStatusSacResult getCouponUseStatus(CouponUseStatusSacParam couponUseStatusSacParam) {
 
 		return this.shoppingRepository.getCouponUseStatus(couponUseStatusSacParam);
+
+	}
+
+	@Override
+	public CouponPublishAvailableSacResult getCouponPublishAvailable(
+			CouponPublishAvailableSacParam couponPublishAvailableSacParam) {
+
+		return this.shoppingRepository.getCouponPublishAvailable(couponPublishAvailableSacParam);
 
 	}
 
