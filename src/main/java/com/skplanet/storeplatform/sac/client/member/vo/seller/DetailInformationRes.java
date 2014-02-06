@@ -12,6 +12,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrPwd;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
+import com.skplanet.storeplatform.sac.client.member.vo.common.TabAuth;
 
 /**
  * 판매자회원 기본 정보 조회
@@ -46,6 +47,17 @@ public class DetailInformationRes extends CommonInfo {
 
 	/** 판매자 비밀번호 보안질문 확인 Value Object 목록. */
 	// private List<PWReminder> pWReminderList;
+
+	/** 탭권한 Value Object 목록. */
+	private List<TabAuth> tabAuthList;
+
+	public List<TabAuth> getTabAuthList() {
+		return this.tabAuthList;
+	}
+
+	public void setTabAuthList(List<TabAuth> tabAuthList) {
+		this.tabAuthList = tabAuthList;
+	}
 
 	public List<ExtraRight> getExtraRightList() {
 		return this.extraRightList;
