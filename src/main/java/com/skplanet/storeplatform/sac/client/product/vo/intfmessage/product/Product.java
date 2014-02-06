@@ -167,6 +167,12 @@ public class Product extends CommonInfo implements Serializable {
 	 * 상품 선택 옵션 정보.
 	 */
 	private SelectOption selectOption;
+
+	/**
+	 * 상품 선택 옵션 정보 List
+	 */
+	private List<SelectOption> selectOptionList;
+
 	/**
 	 * Restrict 유형 > ota : 네트워크 제한 > sales : 판매 중지.
 	 */
@@ -717,6 +723,21 @@ public class Product extends CommonInfo implements Serializable {
 	 */
 	public void setSelectOption(SelectOption selectOption) {
 		this.selectOption = selectOption;
+	}
+
+	/**
+	 * @return the selectOptionList
+	 */
+	public List<SelectOption> getSelectOptionList() {
+		return this.selectOptionList;
+	}
+
+	/**
+	 * @param selectOptionList
+	 *            the selectOptionList to set
+	 */
+	public void setSelectOptionList(List<SelectOption> selectOptionList) {
+		this.selectOptionList = selectOptionList;
 	}
 
 	/**
