@@ -125,7 +125,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 				/**
 				 * 가가입 에러 발생.
 				 */
-				throw new StorePlatformException("SAC_MEM_1101");
+				throw new StorePlatformException("SAC_MEM_1101", spe);
 
 			}
 
