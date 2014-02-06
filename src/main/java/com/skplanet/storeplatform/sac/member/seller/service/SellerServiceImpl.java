@@ -241,7 +241,7 @@ public class SellerServiceImpl implements SellerService {
 		sellerMbr.setCustomerPhone(req.getCustomerPhone());
 		// 법인등록번호
 		sellerMbr.setSellerBizCorpNumber(req.getSellerBizCorpNumber());
-		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
+		sellerMbr.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_PAUSE);
 		sellerMbr.setStopStatusCode(MemberConstants.USER_STOP_STATUS_NOMAL);
 		createSellerRequest.setSellerMbr(sellerMbr);
 		// Debug
@@ -425,6 +425,7 @@ public class SellerServiceImpl implements SellerService {
 		updateStatusSellerRequest.setSellerID(searchSellerResponse.getSellerMbr().getSellerID());
 		updateStatusSellerRequest.setSellerMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 		updateStatusSellerRequest.setSellerSubStatus(MemberConstants.SUB_STATUS_NORMAL);
+		updateStatusSellerRequest.setLoginStatusCode(MemberConstants.USER_LOGIN_STATUS_NOMAL);
 
 		/** 2. 공통 헤더 생성 및 주입. */
 		updateStatusSellerRequest.setCommonRequest(commonRequest);
