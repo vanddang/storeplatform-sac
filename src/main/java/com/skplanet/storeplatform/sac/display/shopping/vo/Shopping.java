@@ -72,7 +72,7 @@ public class Shopping extends CommonInfo {
 	private String dlyUsrMaxCnt;// 일_회원_최대_구매_수량
 	private String eachMaxCnt;// 1차_최대_구매_수량
 
-	private String usrPlac;// 사용_장소
+	private String usePlac;// 사용_장소
 	private String useLimtDesc;// 사용_제한_설명
 	private String noticeMatt;// 공지_사항
 	private String prchsCancelDrbkReason;// 구매_취소_환불_사유
@@ -543,18 +543,18 @@ public class Shopping extends CommonInfo {
 	}
 
 	/**
-	 * @return the usrPlac
+	 * @return the usePlac
 	 */
-	public String getUsrPlac() {
-		return this.usrPlac;
+	public String getUsePlac() {
+		return this.usePlac;
 	}
 
 	/**
-	 * @param usrPlac
-	 *            the usrPlac to set
+	 * @param usePlac
+	 *            the usePlac to set
 	 */
-	public void setUsrPlac(String usrPlac) {
-		this.usrPlac = usrPlac;
+	public void setUsePlac(String usePlac) {
+		this.usePlac = usePlac;
 	}
 
 	/**

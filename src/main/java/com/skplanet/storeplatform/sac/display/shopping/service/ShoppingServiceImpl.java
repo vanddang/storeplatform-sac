@@ -39,6 +39,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Dist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Layout;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Promotion;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
@@ -718,12 +719,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 		List<Shopping> resultList = new ArrayList<Shopping>();
 
-		// req.setTenantId(header.getTenantHeader().getTenantId());
-		// req.setSystemId(header.getTenantHeader().getSystemId());
-		// req.setLangCd(header.getTenantHeader().getLangCd());
-		// req.setImageCd("DP0001A8");
-		// req.setDeviceModelCd("SHV-E330SSO");
-
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
@@ -786,7 +781,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 				// 상품 정보 (상품명)
 				title = new Title();
 				title.setText(shopping.getCatalogName());
-				// title.setPrefix(shopping.getNewYn());
 
 				// 상품 정보 (상품가격)
 				price = new Price();
@@ -832,6 +826,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				}
 
 				// 데이터 매핑
+				product.setId(shopping.getPartProdId()); // 특가 상품 ID
 				product.setIdentifierList(identifierList);
 				product.setMenuList(menuList);
 				product.setTitle(title);
@@ -873,12 +868,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
-
-		// req.setTenantId(header.getTenantHeader().getTenantId());
-		// req.setSystemId(header.getTenantHeader().getSystemId());
-		// req.setLangCd(header.getTenantHeader().getLangCd());
-		// req.setImageCd("DP0001A8");
-		// req.setDeviceModelCd("SHV-E330SSO");
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
@@ -1079,12 +1068,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
 		req.setImageCd(DisplayConstants.DP_SHOPPING_BRAND_REPRESENT_IMAGE_CD);
-
-		// req.setTenantId(header.getTenantHeader().getTenantId());
-		// req.setSystemId(header.getTenantHeader().getSystemId());
-		// req.setLangCd(header.getTenantHeader().getLangCd());
-		// req.setImageCd("DP0001A4");
-		// req.setDeviceModelCd("SHV-E330SSO");
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(header.getTenantHeader().getTenantId())) {
@@ -1735,7 +1718,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Source source = null;
 				Contributor contributor = null;
 				Accrual accrual = null;
-				Distributor distributor = null;
+
 				List<Identifier> identifierList = null;
 
 				// / 에피소드용
@@ -1747,12 +1730,18 @@ public class ShoppingServiceImpl implements ShoppingService {
 				Price episodePrice = null;
 				Rights episodeRights = null;
 				Date episodeDate = null;
+				Distributor distributor = null;
+				Purchase purchase = null;
+				Identifier purchaseIdentifier = null;
+				List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
+				Date purchaseDate = null;
 				List<Date> episodeDateList = new ArrayList<Date>();
 				SalesOption episodeSaleOption = null;
 
 				// / 옵션용
 				SelectOption selectOption = null;
 				SubSelectOption subSelectOption = null;
+				List<SelectOption> selectOptionList = new ArrayList<SelectOption>();
 				List<SubSelectOption> subSelectOptionList = new ArrayList<SubSelectOption>();
 				Title option1Title = null;
 				Price option1Price = null;
@@ -1826,14 +1815,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 						for (int kk = 0; kk < resultEpisodeList.size(); kk++) {
 							Shopping episodeShopping = resultEpisodeList.get(kk);
 
-							// // 특가 상품일 경우
-							// episodeMenu = new Menu();
-							// episodeMenu.setType(episodeShopping.getSpecialSale());
-							// episodeMenuList.add(episodeMenu);
-							// episodeProduct.setMenuList(episodeMenuList);
+							episodeProduct = new Product();
+
+							// 특가 상품일 경우
+							episodeMenu = new Menu();
+							episodeMenu.setType(episodeShopping.getSpecialSale());
+							episodeMenuList.add(episodeMenu);
+							episodeProduct.setMenuList(episodeMenuList);
 
 							// 에피소드 상품 정보 (상품ID)
-							episodeProduct = new Product();
 							episodeIdentifierList = new ArrayList<Identifier>();
 							episodeIdentifier = new Identifier();
 							episodeIdentifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
@@ -1847,6 +1837,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodePrice.setDiscountRate(episodeShopping.getDcRate());
 							episodePrice.setText(episodeShopping.getProdAmt());
 							episodeProduct.setPrice(episodePrice);
+
+							// 에피소드 구매내역 정보
+							purchase = new Purchase();
+							purchaseIdentifier = new Identifier();
+							purchaseIdentifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
+							purchaseIdentifier.setText("M1020979172447970523");
+							purchaseIdentifierList.add(purchaseIdentifier);
+							purchase.setIdentifierList(purchaseIdentifierList);
+							purchase.setState("payment");
+							purchaseDate = new Date();
+							purchaseDate.setType(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM);
+							purchaseDate.setText("20121017T132615+0900");
+							purchase.setDate(purchaseDate);
+							episodeProduct.setPurchase(purchase);
 
 							// 에피소드 날짜 권한 정보
 							episodeDateList = new ArrayList<Date>();
@@ -1885,7 +1889,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeSaleOption.setMaxMonthlyBuy(episodeShopping.getMthUsrMaxCnt()); // 월_회원_최대_구매_수량
 							episodeSaleOption.setMaxDailyBuy(episodeShopping.getDlyUsrMaxCnt()); // 일_회원_최대_구매_수량
 							episodeSaleOption.setMaxOnceBuy(episodeShopping.getEachMaxCnt()); // 1차_최대_구매_수량
-							episodeSaleOption.setPlaceUsage(episodeShopping.getUsrPlac()); // 사용_장소
+							episodeSaleOption.setPlaceUsage(episodeShopping.getUsePlac()); // 사용_장소
 							episodeSaleOption.setRestrictUsage(episodeShopping.getUseLimtDesc()); // 사용_제한_설명
 							episodeSaleOption.setPrincipleUsage(episodeShopping.getNoticeMatt()); // 공지_사항
 							episodeSaleOption.setRefundUsage(episodeShopping.getPrchsCancelDrbkReason()); // 구매_취소_환불_사유
@@ -1950,12 +1954,27 @@ public class ShoppingServiceImpl implements ShoppingService {
 										if (nextFlag) {
 											selectOption.setSubSelectOptionList(subSelectOptionList);
 											subSelectOptionList = new ArrayList<SubSelectOption>();
+											selectOptionList.add(selectOption);
 										}
 									}
 								}
 							}
-							episodeProduct.setSelectOption(selectOption);
+							episodeProduct.setSelectOptionList(selectOptionList);
+
+							// 판매자정보 셋팅
+							distributor = new Distributor();
+							distributor.setType("corporation");
+							distributor.setIdentifier("판매자ID");
+							distributor.setName("판매자명");
+							distributor.setCompany("상호");
+							distributor.setTel("전화번호");
+							distributor.setEmail("tstore@skplanet.co.kr");
+							distributor.setAddress("서울시 중구 을지로2가 11");
+							distributor.setRegNo("제2009-서울중구-1000호");
+							episodeProduct.setDistributor(distributor);
+							episodeProduct.setId(episodeShopping.getPartProdId());// 에피소드 특가상품
 							subProductList.add(episodeProduct);
+
 						}
 					}
 					// 데이터 매핑
