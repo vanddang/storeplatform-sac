@@ -9,6 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.intimateMessage.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,8 +25,10 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.IntimateMessage;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessageDefault;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -71,14 +74,48 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		if (!"msisdn".equals(deviceIdType) && !"mac".equals(deviceIdType)) {
 			throw new StorePlatformException("SAC_DSP_0003", "deviceIdType", deviceIdType);
 		}
+		// offset Default 값 세팅
+		if (intimateMessageReq.getOffset() == null) {
+			intimateMessageReq.setOffset(1);
+		}
+		// count Default 값 세팅
+		if (intimateMessageReq.getCount() == null) {
+			intimateMessageReq.setCount(20);
+		}
 
 		// 헤더정보 세팅
 		intimateMessageReq.setTenantId(requestHeader.getTenantHeader().getTenantId());
 
-		List<MetaInfo> intimateMessageList = this.commonDAO.queryForList("IntimateMessage.selectIntimateMessageList",
-				intimateMessageReq, MetaInfo.class);
+		List<IntimateMessageDefault> resultList = this.commonDAO.queryForList(
+				"IntimateMessage.selectIntimateMessageList", intimateMessageReq, IntimateMessageDefault.class);
 
-		if (!intimateMessageList.isEmpty()) {
+		if (!resultList.isEmpty()) {
+			IntimateMessageDefault messageDefault = new IntimateMessageDefault();
+
+			IntimateMessage intimateMessage = null;
+			Identifier identifier = null;
+
+			List<IntimateMessage> intimateMessageList = null;
+			List<Identifier> identifierList = null;
+
+			for (int i = 0; i < resultList.size(); i++) {
+				messageDefault = resultList.get(i);
+
+				intimateMessage = new IntimateMessage();
+				intimateMessageList = new ArrayList<IntimateMessage>();
+
+				identifier = new Identifier();
+				identifierList = new ArrayList<Identifier>();
+
+				identifier.setType(messageDefault.getMsgTypeCd());
+				identifier.setText(messageDefault.getMsgId());
+				identifierList.add(identifier);
+
+				intimateMessage.setIdentifierList(identifierList);
+				intimateMessageList.add(intimateMessage);
+
+				intimateMessageRes.setIntimateMessageList(intimateMessageList);
+			}
 
 		} else {
 			intimateMessageRes.setCommonResponse(commonResponse);
