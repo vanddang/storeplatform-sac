@@ -260,7 +260,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setWorkdCd("US003206");
 		res.setAfterUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getAfterUserKey()));
 		res.setPreUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getPreUserKey()));
-		res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
+		//		res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
 
 		return res;
 	}
@@ -611,11 +611,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 			userInfo.setSecedeReasonCode(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonCode()));
 			userInfo.setSecedeReasonMessage(StringUtil.setTrim(schUserRes.getUserMbr().getSecedeReasonMessage()));
 			userInfo.setStopStatusCode(StringUtil.setTrim(schUserRes.getUserMbr().getStopStatusCode()));
-			userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
+			//			userInfo.setUserAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserAddress()));
 			userInfo.setUserBirthDay(StringUtil.setTrim(schUserRes.getUserMbr().getUserBirthDay()));
-			userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
+			//			userInfo.setUserCity(StringUtil.setTrim(schUserRes.getUserMbr().getUserCity()));
 			userInfo.setUserCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserCountry()));
-			userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
+			//			userInfo.setUserDetailAddress(StringUtil.setTrim(schUserRes.getUserMbr().getUserDetailAddress()));
 			userInfo.setUserEmail(StringUtil.setTrim(schUserRes.getUserMbr().getUserEmail()));
 			userInfo.setUserId(StringUtil.setTrim(schUserRes.getUserMbr().getUserID()));
 			userInfo.setUserKey(StringUtil.setTrim(schUserRes.getUserMbr().getUserKey()));
@@ -625,11 +625,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 			userInfo.setUserPhone(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhone()));
 			userInfo.setUserPhoneCountry(StringUtil.setTrim(schUserRes.getUserMbr().getUserPhoneCountry()));
 			userInfo.setUserSex(StringUtil.setTrim(schUserRes.getUserMbr().getUserSex()));
-			userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
+			//			userInfo.setUserState(StringUtil.setTrim(schUserRes.getUserMbr().getUserState()));
 			userInfo.setUserSubStatus(StringUtil.setTrim(schUserRes.getUserMbr().getUserSubStatus()));
 			userInfo.setUserTelecom(StringUtil.setTrim(schUserRes.getUserMbr().getUserTelecom()));
 			userInfo.setUserType(StringUtil.setTrim(schUserRes.getUserMbr().getUserType()));
-			userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
+			//			userInfo.setUserZip(StringUtil.setTrim(schUserRes.getUserMbr().getUserZip()));
 
 			if (schUserRes.getMbrMangItemPtcrList() != null) {
 				for (MbrMangItemPtcr ptcr : schUserRes.getMbrMangItemPtcrList()) {
