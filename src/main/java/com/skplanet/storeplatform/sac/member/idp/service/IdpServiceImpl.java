@@ -168,8 +168,8 @@ public class IdpServiceImpl implements IdpService {
 			userMbr.setUserName(map.get("user_name").toString()); // 사용자 이름
 			userMbr.setUserSex(map.get("user_sex").toString()); // 사용자 성별
 			userMbr.setUserBirthDay(map.get("user_birthday").toString()); // 사용자 생년월일
-			userMbr.setUserCity(map.get("user_city_name").toString()); // (외국인)도시
-			userMbr.setUserState(map.get("user_area_name").toString()); // (외국인)주
+			// userMbr.setUserCity(map.get("user_city_name").toString()); // (외국인)도시
+			// userMbr.setUserState(map.get("user_area_name").toString()); // (외국인)주
 			userMbr.setUserCountry(map.get("user_nation_code").toString()); // 사용자 국가 코드
 			userMbr.setImSiteCode(map.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
 			userMbr.setIsRealName(map.get("is_rname_auth").toString()); // 실명인증 여부 (사용자정보는 그대로 전달하는게 맞는지 확인필요)
@@ -418,8 +418,8 @@ public class IdpServiceImpl implements IdpService {
 		getUserMbr.setUserName(hashMap.get("user_name").toString()); // 사용자 이름
 		getUserMbr.setUserSex(hashMap.get("user_sex").toString()); // 사용자 성별
 		getUserMbr.setUserBirthDay(hashMap.get("user_birthday").toString()); // 사용자 생년월일
-		getUserMbr.setUserCity(hashMap.get("user_city_name").toString()); // (외국인)도시
-		getUserMbr.setUserState(hashMap.get("user_area_name").toString()); // (외국인)주
+		// getUserMbr.setUserCity(hashMap.get("user_city_name").toString()); // (외국인)도시
+		// getUserMbr.setUserState(hashMap.get("user_area_name").toString()); // (외국인)주
 		getUserMbr.setUserCountry(hashMap.get("user_nation_code").toString()); // 사용자 국가 코드
 		getUserMbr.setImSiteCode(hashMap.get("join_sst_list").toString()); // OneID 이용동의 사이트 정보
 		getUserMbr.setIsParent(hashMap.get("is_parent_approve").toString()); // 법정대리인 동의여부(Y/N)
@@ -1078,8 +1078,8 @@ public class IdpServiceImpl implements IdpService {
 		RemoveUserRequest removeUserreq = new RemoveUserRequest();
 		removeUserreq.setCommonRequest(commonRequest);
 		removeUserreq.setUserKey(schUserRes.getUserMbr().getUserKey());
-		removeUserreq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); //가입승인만료
-		removeUserreq.setSecedeReasonCode("US010409"); //기타
+		removeUserreq.setSecedeTypeCode(MemberConstants.USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED); // 가입승인만료
+		removeUserreq.setSecedeReasonCode("US010409"); // 기타
 		removeUserreq.setSecedeReasonMessage("가입승인만료");
 
 		this.userSCI.remove(removeUserreq);
@@ -1374,6 +1374,29 @@ public class IdpServiceImpl implements IdpService {
 		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 		imResult.setImIntSvcNo(map.get("user_id").toString());
 
+		return imResult;
+	}
+
+	/*
+	 * 
+	 * <pre> 이용해지변경 프로파일 배포 - CMD : RXUpdateDisagreeUserIDP . </pre>
+	 * 
+	 * @param map Request로 받은 Parameter Map
+	 * 
+	 * @return HashMap
+	 */
+	@Override
+	public ImResult rXUpdateDisagreeUserIDP(HashMap<String, String> map) {
+		ImResult imResult = new ImResult();
+		String imIntSvcNo = map.get("im_int_svc_no").toString(); // 통합 서비스 번호
+		String userId = map.get("user_id").toString(); // 회원 ID
+
+		imResult.setCmd("RXUpdateDisagreeUserIDP");
+		imResult.setImIntSvcNo(imIntSvcNo);
+		imResult.setUserId(userId);
+
+		imResult.setResult(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE);
+		imResult.setResultText(IdpConstants.IM_IDP_RESPONSE_FAIL_CODE_TEXT);
 		return imResult;
 	}
 }

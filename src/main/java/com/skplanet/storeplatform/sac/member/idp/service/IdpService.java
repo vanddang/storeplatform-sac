@@ -230,4 +230,16 @@ public interface IdpService {
 	 */
 
 	public ImResult rXSetOCBDisagreeIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 이용해지변경 프로파일 배포.
+	 * </pre>
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public ImResult rXUpdateDisagreeUserIDP(HashMap<String, String> map);
+
 }
