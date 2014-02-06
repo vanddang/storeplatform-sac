@@ -258,13 +258,13 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		if (schRes.getExtraRight() != null)
 			for (int i = 0; i < schRes.getExtraRight().size(); i++) {
 				extraRightList = new ExtraRight();
-				extraRightList.setEndDate(schRes.getExtraRight().get(i).getEndDate());
-				extraRightList.setRegDate(schRes.getExtraRight().get(i).getRegDate());
+				// extraRightList.setEndDate(schRes.getExtraRight().get(i).getEndDate());
+				// extraRightList.setRegDate(schRes.getExtraRight().get(i).getRegDate());
 				extraRightList.setRegID(schRes.getExtraRight().get(i).getRegID());
 				extraRightList.setRightProfileCode(schRes.getExtraRight().get(i).getRightProfileCode());
-				extraRightList.setSellerKey(schRes.getExtraRight().get(i).getSellerKey());
-				extraRightList.setSellerRate(schRes.getExtraRight().get(i).getSellerRate());
-				extraRightList.setStartDate(schRes.getExtraRight().get(i).getStartDate());
+				// extraRightList.setSellerKey(schRes.getExtraRight().get(i).getSellerKey());
+				// extraRightList.setSellerRate(schRes.getExtraRight().get(i).getSellerRate());
+				// extraRightList.setStartDate(schRes.getExtraRight().get(i).getStartDate());
 				extraRightList.setTenantID(schRes.getExtraRight().get(i).getTenantID());
 				extraRightList.setTenantRate(schRes.getExtraRight().get(i).getTenantRate());
 				extraRightList.setUpdateDate(schRes.getExtraRight().get(i).getUpdateDate());
@@ -285,12 +285,12 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerAccount.setBankCode(schRes.getSellerAccount().getBankCode());
 			sellerAccount.setBankLocation(schRes.getSellerAccount().getBankLocation());
 			sellerAccount.setBankName(schRes.getSellerAccount().getBankName());
-			sellerAccount.setEndDate(schRes.getSellerAccount().getEndDate());
+			// sellerAccount.setEndDate(schRes.getSellerAccount().getEndDate());
 			sellerAccount.setIbanCode(schRes.getSellerAccount().getIbanCode());
 			sellerAccount.setIsUsed(schRes.getSellerAccount().getIsUsed());
 			sellerAccount.setReason(schRes.getSellerAccount().getReason());
-			sellerAccount.setSellerKey(schRes.getSellerAccount().getSellerKey());
-			sellerAccount.setStartDate(schRes.getSellerAccount().getStartDate());
+			// sellerAccount.setSellerKey(schRes.getSellerAccount().getSellerKey());
+			// sellerAccount.setStartDate(schRes.getSellerAccount().getStartDate());
 			sellerAccount.setSwiftCode(schRes.getSellerAccount().getSwiftCode());
 			sellerAccount.setTpinCode(schRes.getSellerAccount().getTpinCode());
 		}
