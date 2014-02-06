@@ -179,7 +179,7 @@
 		                         FROM TB_DP_SPRT_DEVICE SD
 		                             , TB_CM_DEVICE CD
 		                         WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-		                           AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+		                           AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
 		                           AND CD.USE_YN = 'Y'
 		                           <if test='topMenuId == "DP13"'>
 		                           AND CD.EBOOK_SPRT_YN = 'Y'
@@ -277,7 +277,7 @@
                                   FROM TB_DP_SPRT_DEVICE SD
                                     , TB_CM_DEVICE CD
                                 WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
-                                  AND SD.DEVICE_MODEL_CD = #{deviceModelCd}
+                                  AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
                                   AND CD.USE_YN = 'Y'
                                   AND CD.MUSIC_SPRT_YN = 'Y'
                               ) H
