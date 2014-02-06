@@ -62,6 +62,7 @@ public class IdpServiceImpl implements IdpService {
 	public String SUCCESS_STR = "100"; // SP 프로비져닝 성공
 	public String FAIL_STR = "109"; // SP 프로비져닝 실패(FAIL응답 받음)
 	public String FAIL_NODATA_STR = "600"; // SP 프로비져닝 실패(데이터 없음)
+	public String SC_RETURN = "SC_MEM_";
 
 	@Autowired
 	private UserSCI userSCI;
@@ -610,9 +611,11 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
-		if (updateStatusResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)
-				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) { // SC반환값이
-																														// 성공이면
+		if (updateStatusResponse.getCommonResponse().getResultCode()
+				.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
+				&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
+						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+			// 성공이면
 			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 		}
@@ -684,7 +687,8 @@ public class IdpServiceImpl implements IdpService {
 
 			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
 
-			if (updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) { // SC반환값이
+			if (updateMbrOneIDResponse.getCommonResponse().getResultCode()
+					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
@@ -749,9 +753,11 @@ public class IdpServiceImpl implements IdpService {
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 
-		if (updateStatusResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)
-				&& updateMbrOneIDResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) { // SC반환값이
-																														// 성공이면
+		if (updateStatusResponse.getCommonResponse().getResultCode()
+				.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
+				&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
+						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) { // SC반환값이
+			// 성공이면
 			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 		}
@@ -814,26 +820,67 @@ public class IdpServiceImpl implements IdpService {
 			updateRealNameRequest.setUserKey(searchUserRespnse.getUserMbr().getUserKey());
 
 			MbrAuth mbrAuth = new MbrAuth();
-			mbrAuth.setBirthDay(map.get("user_birthday").toString());
-			mbrAuth.setCi(map.get("user_ci").toString());
-			mbrAuth.setDi(map.get("user_di").toString());
+			if (map.get("user_birthday") != null)
+				mbrAuth.setBirthDay(map.get("user_birthday").toString());
+			// ci는 DB 필수 값임으로 없을 경우 공백 입력
+			if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
+				mbrAuth.setCi(" ");
+			} else {
+				mbrAuth.setCi(map.get("user_ci").toString());
+			}
+			if (map.get("user_di") != null)
+				mbrAuth.setDi(map.get("user_di").toString());
 			// mbrAuth.setIsRealName(map.get("is_rname_auth").toString());
+			// 내국인여부
+			if (map.get("rname_auth_mbr_code") != null) {
+				// 내국인
+				if (map.get("rname_auth_mbr_code").toString().equals("10")) {
+					mbrAuth.setIsDomestic("Y");
+				} else {// 외국인
+					mbrAuth.setIsDomestic("N");
+				}
+			}
 			// systemid 입력
 			mbrAuth.setRealNameSite((String) map.get("systemID"));
-			mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
+			if (map.get("rname_auth_date") != null)
+				mbrAuth.setRealNameDate(map.get("rname_auth_date").toString());
 			mbrAuth.setMemberCategory(searchUserRespnse.getMbrAuth().getMemberCategory());
 			mbrAuth.setTelecom(searchUserRespnse.getMbrAuth().getTelecom());
 			mbrAuth.setPhone(searchUserRespnse.getMbrAuth().getPhone());
-			mbrAuth.setSex(map.get("user_sex").toString());
-			mbrAuth.setName(map.get("user_name").toString());
+			if (map.get("user_sex") != null)
+				mbrAuth.setSex(map.get("user_sex").toString());
+			if (map.get("user_name") != null)
+				mbrAuth.setName(map.get("user_name").toString());
 			mbrAuth.setMemberKey(searchUserRespnse.getMbrAuth().getMemberKey());
-			mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
+			if (map.get("rname_auth_mns_code") != null)
+				mbrAuth.setRealNameMethod(map.get("rname_auth_mns_code").toString());
 
 			updateRealNameRequest.setUserMbrAuth(mbrAuth);
 
 			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
 			LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
-			if (updateRealNameResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {
+
+			// oneID 테이블 업데이트
+			UpdateMbrOneIDRequest updateMbrOneIDRequest = new UpdateMbrOneIDRequest();
+			updateMbrOneIDRequest.setCommonRequest(commonRequest);
+			MbrOneID mbrOneID = new MbrOneID();
+			mbrOneID.setIntgSvcNumber((String) map.get("im_int_svc_no"));
+			// 실명 인증여부
+			mbrOneID.setIsRealName(map.get("is_rname_auth").toString());
+			// CI 존재 여부
+			if (map.get("user_ci") == null || map.get("user_ci").toString().length() <= 0) {
+				mbrOneID.setIsCi("N");
+			} else {
+				mbrOneID.setIsCi("Y");
+			}
+			updateMbrOneIDRequest.setMbrOneID(mbrOneID);
+
+			UpdateMbrOneIDResponse updateMbrOneIDResponse = this.userSCI.createAgreeSite(updateMbrOneIDRequest);
+
+			if (updateRealNameResponse.getCommonResponse().getResultCode()
+					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)
+					&& updateMbrOneIDResponse.getCommonResponse().getResultCode()
+							.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
@@ -911,13 +958,15 @@ public class IdpServiceImpl implements IdpService {
 			mbrLglAgent.setParentName(map.get("parent_name").toString());
 			mbrLglAgent.setParentType(map.get("parent_type").toString());
 			mbrLglAgent.setParentRealNameMethod(map.get("parent_rname_auth_type").toString());
-			mbrLglAgent.setParentEmail(map.get("parent_email").toString());
+			if (map.get("parent_email") != null)
+				mbrLglAgent.setParentEmail(map.get("parent_email").toString());
 
 			updateRealNameRequest.setMbrLglAgent(mbrLglAgent);
 
 			UpdateRealNameResponse updateRealNameResponse = this.userSCI.updateRealName(updateRealNameRequest);
 			LOGGER.info("response param : {}", updateRealNameResponse.getUserKey());
-			if (updateRealNameResponse.getCommonResponse().getResultCode().equals(memberConstant.RESULT_SUCCES)) {
+			if (updateRealNameResponse.getCommonResponse().getResultCode()
+					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
 				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
 				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
 			}
@@ -1548,7 +1597,8 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 			imResult.setUserId(userID);
 			imResult.setIsCancelAble(delYN);
-			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"), LocaleContextHolder.getLocale());
+			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+					LocaleContextHolder.getLocale());
 			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
 			LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
@@ -1618,7 +1668,8 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
 			imResult.setUserId(userID);
 			imResult.setIsCancelAble(delYN);
-			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"), LocaleContextHolder.getLocale());
+			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+					LocaleContextHolder.getLocale());
 			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
 			LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
