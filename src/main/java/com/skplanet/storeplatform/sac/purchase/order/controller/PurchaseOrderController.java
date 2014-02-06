@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.purchase.client.common.vo.Prchs;
 import com.skplanet.storeplatform.purchase.client.common.vo.PrchsDtl;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.vo.order.CreatePurchaseSacRes;
@@ -184,21 +183,21 @@ public class PurchaseOrderController {
 	 * Pay Planet 측으로부터 결제 진행 결과 응답 받음.
 	 * </pre>
 	 * 
-	 * @param notifyParam
+	 * @param notifyPaymentReq
 	 *            결제 결과 정보
 	 * @return 결제 결과 처리 응답
 	 */
 	@RequestMapping(value = "/notifyPayment/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public NotifyPaymentSacRes notifyPayment(@RequestBody NotifyPaymentSacReq notifyParam) {
-		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyParam);
+	public NotifyPaymentSacRes notifyPayment(@RequestBody NotifyPaymentSacReq notifyPaymentReq) {
+		this.logger.debug("PRCHS,INFO,NOTI_PAY,REQ,{}", notifyPaymentReq);
 
-		if ("0".equals(notifyParam.getCode()) == false) {
+		if ("0".equals(notifyPaymentReq.getCode()) == false) {
 			return new NotifyPaymentSacRes("0", "SUCCESS");
 		}
 
 		// 가맹점용 파라미터 추출
-		String mctSpareParam = notifyParam.getMctSpareParam();
+		String mctSpareParam = notifyPaymentReq.getMctSpareParam();
 		String[] arSpareParam = null;
 		String[] arParamKeyValue = null;
 		Map<String, String> spareParamMap = new HashMap<String, String>();
@@ -212,7 +211,7 @@ public class PurchaseOrderController {
 			}
 		}
 
-		String prchsId = notifyParam.getOrderId();
+		String prchsId = notifyPaymentReq.getOrderId();
 		String tenantId = spareParamMap.get("tenantId");
 		String systemId = spareParamMap.get("systemId");
 		String useUserKey = spareParamMap.get("useUserKey");
@@ -226,35 +225,15 @@ public class PurchaseOrderController {
 		}
 
 		// ------------------------------------------------------------------------------
-		// 구매 후 처리: 쇼핑상품 쿠폰 발급요청, 씨네21, 인터파크, 이메일 등등
-
-		// TAKTODO::
+		// TAKTODO:: 구매 후 처리- 쇼핑상품 쿠폰 발급요청, 씨네21, 인터파크, 이메일 등등
 
 		// ------------------------------------------------------------------------------
 		// 구매 확정 및 결제 내역 저장
 
-		Prchs prchs = new Prchs();
-		prchs.setTenantId(tenantId);
-		prchs.setPrchsId(prchsId);
-		prchs.setInsdUsermbrNo(useUserKey);
-		prchs.setNetworkTypeCd(networkTypeCd);
-		prchs.setCurrencyCd(currencyCd);
-		prchs.setResvCol05(systemId); // TAKTODO:: 테이블 및 VO에 system_id 추가 후 사용
+		prchsDtl.setResvCol05(systemId); // TAKTODO:: 테이블 및 VO에 system_id 추가 후 사용
 
-		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장
-		this.orderService.confirmPurchase(prchs);
-
-		// 결제 내역 저장
-		prchs.setPrchsDt(prchsDtl.getPrchsDt());
-		prchs.setTotAmt(prchsDtl.getTotAmt());
-		if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsDtl.getPrchsCaseCd())) { // 선물경우, 발신자 기준
-			prchs.setInsdUsermbrNo(prchsDtl.getSendInsdUsermbrNo());
-			prchs.setInsdDeviceId(prchsDtl.getSendInsdDeviceId());
-		} else {
-			prchs.setInsdUsermbrNo(prchsDtl.getUseInsdUsermbrNo());
-			prchs.setInsdDeviceId(prchsDtl.getUseInsdDeviceId());
-		}
-		this.orderService.createPayment(prchs, notifyParam);
+		// 구매 확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장
+		this.orderService.confirmPurchase(prchsDtl, notifyPaymentReq, currencyCd, networkTypeCd);
 
 		// ------------------------------------------------------------------------------
 		// 응답

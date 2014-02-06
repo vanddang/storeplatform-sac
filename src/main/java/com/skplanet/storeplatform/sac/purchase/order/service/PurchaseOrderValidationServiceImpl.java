@@ -238,7 +238,6 @@ public class PurchaseOrderValidationServiceImpl implements PurchaseOrderValidati
 			existenceScReq.setExistenceItemSc(existenceItemScList);
 
 			List<ExistenceScRes> checkPurchaseResultList = this.existenceSCI.searchExistenceList(existenceScReq);
-			this.logger.debug("TAKTEST,{}", checkPurchaseResultList);
 			for (ExistenceScRes checkRes : checkPurchaseResultList) {
 				if (PurchaseConstants.PRCHS_STATUS_COMPT.equals(checkRes.getStatusCd())) {
 					throw new StorePlatformException("SAC_PUR_0001", "이미 보유한 상품입니다: " + checkRes.getPrchsId());

@@ -62,13 +62,20 @@ public interface PurchaseOrderService {
 	/**
 	 * 
 	 * <pre>
-	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장.
+	 * 유료구매 - 구매확정: 구매상세 내역 상태변경 & 구매 내역 저장 & (선물 경우)발송 상세 내역 저장, 결제내역 저장.
 	 * </pre>
 	 * 
-	 * @param prchs
-	 *            구매 정보
+	 * @param prchsDtl
+	 *            구매상세 정보
+	 * @param notifyPaymentReq
+	 *            결제결과 정보
+	 * @param currencyCd
+	 *            통화코드
+	 * @param networkTypeCd
+	 *            네트워크 타입 코드
 	 */
-	public void confirmPurchase(Prchs prchs);
+	public void confirmPurchase(PrchsDtl prchsDtl, NotifyPaymentSacReq notifyPaymentReq, String currencyCd,
+			String networkTypeCd);
 
 	/**
 	 * 
