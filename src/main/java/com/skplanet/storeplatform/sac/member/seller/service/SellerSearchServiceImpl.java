@@ -43,6 +43,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerAccount;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbr;
 import com.skplanet.storeplatform.sac.client.member.vo.common.SellerMbrPwdHint;
+import com.skplanet.storeplatform.sac.client.member.vo.common.TabAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CheckPasswordReminderQuestionRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationReq;
@@ -206,10 +207,21 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 					mbrLglAgent.setSequence(schRes.getMbrLglAgent().getSequence());
 				}
 
+				// 판매자 탭권한
+				List<TabAuth> tList = new ArrayList<TabAuth>();
+				TabAuth tabAuthList = null;
+				if (schRes.getTabAuthList() != null)
+					for (int i = 0; i < schRes.getTabAuthList().size(); i++) {
+						tabAuthList = new TabAuth();
+						tabAuthList.setTabCode(schRes.getTabAuthList().get(i).getTabCode());
+						tList.add(tabAuthList);
+					}
+
 				response.setExtraRightList(eList);// 판매자 멀티미디어정보
 				response.setMbrLglAgent(mbrLglAgent);// 법정대리인정보
 				response.setSellerKey(schRes.getSellerKey());// 판매자Key
 				response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));// 판매자 정보
+				response.setTabAuthList(tList);
 			}
 		return response;
 
