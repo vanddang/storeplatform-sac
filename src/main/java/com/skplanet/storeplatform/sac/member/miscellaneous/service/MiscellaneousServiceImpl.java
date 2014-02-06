@@ -25,6 +25,7 @@ import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcReq;
 import com.skplanet.storeplatform.external.client.message.vo.SmsSendEcRes;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.external.client.uaps.vo.OpmdEcRes;
+import com.skplanet.storeplatform.external.client.uaps.vo.UafmapEcRes;
 import com.skplanet.storeplatform.external.client.uaps.vo.UapsEcReq;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
@@ -84,6 +85,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
 /**
@@ -95,6 +97,9 @@ import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 @Service
 public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MiscellaneousServiceImpl.class);
+
+	@Autowired
+	private MemberCommonComponent commService; // 회원 공통 서비스
 
 	@Autowired
 	private UapsSCI uapsSCI; // UAPS 연동 Interface.
@@ -160,10 +165,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String msisdn = req.getMsisdn();
 		String userKey = "";
 
-		CommonRequest commonRequest = new CommonRequest();
 		/* 헤더 정보 셋팅 */
-		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
-		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
+		CommonRequest commonRequest = this.commonComponent.getSCCommonRequest(requestHeader);
 
 		GetUaCodeRes response = new GetUaCodeRes();
 		LOGGER.debug("## [SAC] GetUaCodeReq {}", req);
@@ -172,7 +175,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		if (msisdn != null && deviceModelNo == null) {
 
 			/* deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
-			userKey = this.getUserKey(commonRequest, msisdn);
+			userKey = this.searchUserKey(commonRequest, msisdn);
 
 			/* SC 회원 Request 생성 */
 			SearchDeviceRequest searchDeviceRequest = new SearchDeviceRequest();
@@ -198,13 +201,11 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
 						.getUserMbrDeviceDetail());
 				String uaCode = null;
-				boolean isUaCode = false;
 				List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
 						.getUserMbrDeviceDetail();
 				LOGGER.info("## [SAC] SC 회원 단말 상세정보 조회.");
 				for (int i = 0; i < deviceDetails.size(); i++) {
-					isUaCode = deviceDetails.get(i).getExtraProfile().equals("US011404"); // UA코드 인지 여부
-					if (isUaCode) {
+					if (deviceDetails.get(i).getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)) { // UA코드여부
 						uaCode = deviceDetails.get(i).getExtraProfileValue();
 					}
 				}
@@ -217,6 +218,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 			} else {
 				throw new StorePlatformException("SAC_MEM_3402", "msisdn", msisdn);
 			}
+
 		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
@@ -520,7 +522,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	 *            String
 	 * @return String
 	 */
-	public String getUserKey(CommonRequest commonReq, String msisdn) {
+	public String searchUserKey(CommonRequest commonReq, String msisdn) {
 		String userKey = "";
 
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
@@ -581,11 +583,20 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetModelCodeRes getModelCode(GetModelCodeReq Request) {
-		// MDN을 이용하여 Model Code를 조회
-		// TODO 1. MDN을 이용하여 UAPS에서 UACD 정보 조회
-		// TODO 2. UACD를 이용하여 TB_CM_DEVICE에서 Model Code 조회
-		return null;
+	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, GetModelCodeReq request) {
+		GetModelCodeRes response = new GetModelCodeRes();
+
+		// 1. mdn으로 UA코드 조회 - UAPS 연동
+		UapsEcReq uapsReq = new UapsEcReq();
+		uapsReq.setDeviceId(request.getMsisdn());
+		uapsReq.setType("mdn");
+		UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
+		String uaCd = uapsRes.getDeviceModel();
+
+		// 2. UA 코드로 deviceModelNo 조회
+		Device device = this.commonComponent.getPhoneInfoByUacd(uaCd);
+		response.setDeviceModelNo(device.getDeviceModelCd());
+		return response;
 	}
 
 	@Override

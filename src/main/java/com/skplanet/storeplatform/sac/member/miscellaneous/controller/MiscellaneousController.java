@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAut
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
@@ -112,7 +114,8 @@ public class MiscellaneousController {
 			throw new StorePlatformException("SAC_MEM_3004");
 		}
 
-		GetOpmdRes response = this.service.getOpmd(request);
+		GetOpmdRes response = new GetOpmdRes();
+		response.setMsisdn(this.service.getOpmd(request).getMsisdn());
 		return response;
 	}
 
@@ -203,6 +206,8 @@ public class MiscellaneousController {
 	 * 이메일 인증 코드 생성.
 	 * </pre>
 	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
 	 * @param request
 	 *            GetEmailAuthorizationCodeReq
 	 * @return GetEmailAuthorizationCodeRes
@@ -262,9 +267,24 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/dev/getAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetAdditionalServiceRes getAdditionalService(@Validated @RequestBody GetAdditionalServiceReq request) {
-		GetAdditionalServiceRes response = this.service.getAdditionalService(request);
 
-		return response;
+		return this.service.getAdditionalService(request);
+	}
+
+	/**
+	 * <pre>
+	 * 단말 모델코드 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetModelCodeReq
+	 * @return GetModelCodeRes
+	 */
+	@RequestMapping(value = "/dev/getModelCode/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, @RequestBody @Validated GetModelCodeReq request) {
+
+		return this.service.getModelCode(requestHeader, request);
 	}
 
 	/**

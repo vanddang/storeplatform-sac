@@ -168,7 +168,16 @@ public interface MiscellaneousService {
 	 */
 	public GetAdditionalServiceRes getAdditionalService(GetAdditionalServiceReq request);
 
-	public GetModelCodeRes getModelCode(GetModelCodeReq request);
+	/**
+	 * <pre>
+	 * 단말 모델코드 조회.
+	 * </pre>
+	 * 
+	 * @param request
+	 *            GetModelCodeReq
+	 * @return GetModelCodeRes
+	 */
+	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, GetModelCodeReq request);
 
 	/**
 	 * <pre>
