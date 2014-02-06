@@ -42,7 +42,7 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 사용후기 내용.
 	 */
-	private String notiDesc;
+	private String notiDscr;
 	/**
 	 * 사용후기 점수.
 	 */
@@ -74,11 +74,11 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 본인여부.
 	 */
-	private String selfYN;
+	private String selfYn;
 	/**
 	 * 판매자여부.
 	 */
-	private String saleYN;
+	private String saleYn;
 	/**
 	 * 본인/판매자 여부.
 	 */
@@ -86,11 +86,11 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 본인추천여부.
 	 */
-	private String selfRecomYN;
+	private String selfRecomYn;
 	/**
 	 * 평점.
 	 */
-	private int score;
+	private int avgScore;
 	/**
 	 * 닉네임.
 	 */
@@ -98,7 +98,7 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 페이스북 전송 여부.
 	 */
-	private String fbSendYN;
+	private String fbPostYn;
 	/**
 	 * 상품ID.
 	 */
@@ -171,16 +171,16 @@ public class Feedback extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getNotiDesc() {
-		return this.notiDesc;
+	public String getNotiDscr() {
+		return this.notiDscr;
 	}
 
 	/**
-	 * @param notiDesc
-	 *            notiDesc
+	 * @param notiDscr
+	 *            notiDscr
 	 */
-	public void setNotiDesc(String notiDesc) {
-		this.notiDesc = notiDesc;
+	public void setNotiDscr(String notiDscr) {
+		this.notiDscr = notiDscr;
 	}
 
 	/**
@@ -291,31 +291,31 @@ public class Feedback extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getSelfYN() {
-		return this.selfYN;
+	public String getSelfYn() {
+		return this.selfYn;
 	}
 
 	/**
-	 * @param selfYN
-	 *            selfYN
+	 * @param selfYn
+	 *            selfYn
 	 */
-	public void setSelfYN(String selfYN) {
-		this.selfYN = selfYN;
+	public void setSelfYn(String selfYn) {
+		this.selfYn = selfYn;
 	}
 
 	/**
 	 * @return String
 	 */
-	public String getSaleYN() {
-		return this.saleYN;
+	public String getSaleYn() {
+		return this.saleYn;
 	}
 
 	/**
-	 * @param saleYN
-	 *            saleYN
+	 * @param saleYn
+	 *            saleYn
 	 */
-	public void setSaleYN(String saleYN) {
-		this.saleYN = saleYN;
+	public void setSaleYn(String saleYn) {
+		this.saleYn = saleYn;
 	}
 
 	/**
@@ -336,31 +336,31 @@ public class Feedback extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getSelfRecomYN() {
-		return this.selfRecomYN;
+	public String getSelfRecomYn() {
+		return this.selfRecomYn;
 	}
 
 	/**
-	 * @param selfRecomYN
-	 *            selfRecomYN
+	 * @param selfRecomYn
+	 *            selfRecomYn
 	 */
-	public void setSelfRecomYN(String selfRecomYN) {
-		this.selfRecomYN = selfRecomYN;
+	public void setSelfRecomYn(String selfRecomYn) {
+		this.selfRecomYn = selfRecomYn;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getScore() {
-		return this.score;
+	public int getAvgScore() {
+		return this.avgScore;
 	}
 
 	/**
-	 * @param score
-	 *            score
+	 * @param avgScore
+	 *            avgScore
 	 */
-	public void setScore(int score) {
-		this.score = score;
+	public void setAvgScore(int avgScore) {
+		this.avgScore = avgScore;
 	}
 
 	/**
@@ -381,16 +381,16 @@ public class Feedback extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getFbSendYN() {
-		return this.fbSendYN;
+	public String getFbPostYn() {
+		return this.fbPostYn;
 	}
 
 	/**
-	 * @param fbSendYN
-	 *            fbSendYN
+	 * @param fbPostYn
+	 *            fbPostYn
 	 */
-	public void setFbSendYN(String fbSendYN) {
-		this.fbSendYN = fbSendYN;
+	public void setFbPostYn(String fbPostYn) {
+		this.fbPostYn = fbPostYn;
 	}
 
 	/**
@@ -422,4 +422,5 @@ public class Feedback extends CommonInfo {
 	public void setCompNm(String compNm) {
 		this.compNm = compNm;
 	}
+
 }

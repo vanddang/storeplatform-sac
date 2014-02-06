@@ -27,7 +27,7 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * 평균평점 퍼센트.
 	 */
-	private String avgScorePct;
+	private String avgEvluScorePct;
 	/**
 	 * 사용후기 전체개수.
 	 */
@@ -39,7 +39,7 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * 평균평점.
 	 */
-	private int avgScore;
+	private int avgEvluScore;
 	/**
 	 * 참여자수.
 	 */
@@ -52,16 +52,16 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getAvgScorePct() {
-		return this.avgScorePct;
+	public String getAvgEvluScorePct() {
+		return this.avgEvluScorePct;
 	}
 
 	/**
-	 * @param avgScorePct
-	 *            avgScorePct
+	 * @param avgEvluScorePct
+	 *            avgEvluScorePct
 	 */
-	public void setAvgScorePct(String avgScorePct) {
-		this.avgScorePct = avgScorePct;
+	public void setAvgEvluScorePct(String avgEvluScorePct) {
+		this.avgEvluScorePct = avgEvluScorePct;
 	}
 
 	/**
@@ -97,16 +97,16 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * @return int
 	 */
-	public int getAvgScore() {
-		return this.avgScore;
+	public int getAvgEvluScore() {
+		return this.avgEvluScore;
 	}
 
 	/**
-	 * @param avgScore
-	 *            avgScore
+	 * @param avgEvluScore
+	 *            avgEvluScore
 	 */
-	public void setAvgScore(int avgScore) {
-		this.avgScore = avgScore;
+	public void setAvgEvluScore(int avgEvluScore) {
+		this.avgEvluScore = avgEvluScore;
 	}
 
 	/**

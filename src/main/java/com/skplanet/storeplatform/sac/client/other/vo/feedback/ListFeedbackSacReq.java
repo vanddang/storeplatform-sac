@@ -47,7 +47,7 @@ public class ListFeedbackSacReq extends CommonInfo {
 	/**
 	 * 상품 타입.
 	 */
-	private String type;
+	private String prodType;
 	/**
 	 * 페이징 시작위치.
 	 */
@@ -135,16 +135,16 @@ public class ListFeedbackSacReq extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getType() {
-		return this.type;
+	public String getProdType() {
+		return this.prodType;
 	}
 
 	/**
-	 * @param type
-	 *            type
+	 * @param prodType
+	 *            prodType
 	 */
-	public void setType(String type) {
-		this.type = type;
+	public void setProdType(String prodType) {
+		this.prodType = prodType;
 	}
 
 	/**

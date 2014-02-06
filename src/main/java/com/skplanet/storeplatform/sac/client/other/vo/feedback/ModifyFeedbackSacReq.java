@@ -45,15 +45,15 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 내용.
 	 */
-	private String notiDesc;
+	private String notiDscr;
 	/**
 	 * 평점.
 	 */
-	private int score;
+	private int avgScore;
 	/**
 	 * 패키지 버전 코드.
 	 */
-	private String pkgVerCd;
+	private String pkgVer;
 
 	/**
 	 * @return String
@@ -133,46 +133,46 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getNotiDesc() {
-		return this.notiDesc;
+	public String getNotiDscr() {
+		return this.notiDscr;
 	}
 
 	/**
-	 * @param notiDesc
-	 *            notiDesc
+	 * @param notiDscr
+	 *            notiDscr
 	 */
-	public void setNotiDesc(String notiDesc) {
-		this.notiDesc = notiDesc;
+	public void setNotiDscr(String notiDscr) {
+		this.notiDscr = notiDscr;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getScore() {
-		return this.score;
+	public int getAvgScore() {
+		return this.avgScore;
 	}
 
 	/**
-	 * @param score
-	 *            score
+	 * @param avgScore
+	 *            avgScore
 	 */
-	public void setScore(int score) {
-		this.score = score;
+	public void setAvgScore(int avgScore) {
+		this.avgScore = avgScore;
 	}
 
 	/**
 	 * @return String
 	 */
-	public String getPkgVerCd() {
-		return this.pkgVerCd;
+	public String getPkgVer() {
+		return this.pkgVer;
 	}
 
 	/**
-	 * @param pkgVerCd
-	 *            pkgVerCd
+	 * @param pkgVer
+	 *            pkgVer
 	 */
-	public void setPkgVerCd(String pkgVerCd) {
-		this.pkgVerCd = pkgVerCd;
+	public void setPkgVer(String pkgVer) {
+		this.pkgVer = pkgVer;
 	}
 
 }

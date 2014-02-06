@@ -50,19 +50,19 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 내용.
 	 */
-	private String notiDesc;
+	private String notiDscr;
 	/**
 	 * 페이스북 전송 여부.
 	 */
-	private String fbSendYN;
+	private String fbPostYn;
 	/**
 	 * 패키지 버전 코드.
 	 */
-	private String pkgVerCd;
+	private String pkgVer;
 	/**
 	 * 평점.
 	 */
-	private int score;
+	private int avgScore;
 
 	/**
 	 * @return String
@@ -157,61 +157,61 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	/**
 	 * @return String
 	 */
-	public String getNotiDesc() {
-		return this.notiDesc;
+	public String getNotiDscr() {
+		return this.notiDscr;
 	}
 
 	/**
-	 * @param notiDesc
-	 *            notiDesc
+	 * @param notiDscr
+	 *            notiDscr
 	 */
-	public void setNotiDesc(String notiDesc) {
-		this.notiDesc = notiDesc;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getFbSendYN() {
-		return this.fbSendYN;
-	}
-
-	/**
-	 * @param fbSendYN
-	 *            fbSendYN
-	 */
-	public void setFbSendYN(String fbSendYN) {
-		this.fbSendYN = fbSendYN;
+	public void setNotiDscr(String notiDscr) {
+		this.notiDscr = notiDscr;
 	}
 
 	/**
 	 * @return String
 	 */
-	public String getPkgVerCd() {
-		return this.pkgVerCd;
+	public String getFbPostYn() {
+		return this.fbPostYn;
 	}
 
 	/**
-	 * @param pkgVerCd
-	 *            pkgVerCd
+	 * @param fbPostYn
+	 *            fbPostYn
 	 */
-	public void setPkgVerCd(String pkgVerCd) {
-		this.pkgVerCd = pkgVerCd;
+	public void setFbPostYn(String fbPostYn) {
+		this.fbPostYn = fbPostYn;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getPkgVer() {
+		return this.pkgVer;
+	}
+
+	/**
+	 * @param pkgVer
+	 *            pkgVer
+	 */
+	public void setPkgVer(String pkgVer) {
+		this.pkgVer = pkgVer;
 	}
 
 	/**
 	 * @return int
 	 */
-	public int getScore() {
-		return this.score;
+	public int getAvgScore() {
+		return this.avgScore;
 	}
 
 	/**
-	 * @param score
-	 *            score
+	 * @param avgScore
+	 *            avgScore
 	 */
-	public void setScore(int score) {
-		this.score = score;
+	public void setAvgScore(int avgScore) {
+		this.avgScore = avgScore;
 	}
 
 }
