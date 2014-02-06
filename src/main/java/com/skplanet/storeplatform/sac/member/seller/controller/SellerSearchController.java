@@ -88,7 +88,7 @@ public class SellerSearchController {
 		req.setAid(aid);
 		req.setSellerKey(sellerKey);
 		if (sellerKey.equals("") && aid.equals(""))
-			throw new StorePlatformException("SAC_MEM_0001");
+			throw new StorePlatformException("SAC_MEM_0001", "aid,sellerKey");
 
 		return this.sellerSearchService.detailInformation(header, req);
 	}
@@ -145,7 +145,7 @@ public class SellerSearchController {
 		String sellerPhone = StringUtil.nvl(req.getSellerPhone(), "");
 
 		if (sellerBizNumber.equals("") & sellerCompany.equals("") & sellerEmail.equals("") & sellerPhone.equals("")) {
-			throw new StorePlatformException("SAC_MEM_0001");
+			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber,sellerCompany,sellerEmail,sellerPhone");
 		}
 
 		return this.sellerSearchService.searchId(header, req);
