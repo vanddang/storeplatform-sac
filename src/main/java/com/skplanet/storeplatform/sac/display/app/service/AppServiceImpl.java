@@ -147,8 +147,8 @@ public class AppServiceImpl implements AppService {
 
         // Distributor
         Distributor distributor = new Distributor();
-        distributor.setIdentifier(appDetail.getSellerMbrNo());
-        distributor.setName(appDetail.getExpoSellerNm()); // TODO name or nickname
+        distributor.setSellerKey(appDetail.getSellerMbrNo());
+        distributor.setName(appDetail.getExpoSellerNm());
         distributor.setTel(appDetail.getExpoSellerTelno());
         distributor.setEmail(appDetail.getExpoSellerEmail());
         product.setDistributor(distributor);
