@@ -675,7 +675,6 @@
                            AND  SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
                            AND  (I.DEVICE_MODEL_CD = #{deviceModelCd} OR I.DEVICE_MODEL_CD = 'android_standard2')
                            AND  J.DEVICE_MODEL_CD = #{deviceModelCd}
-                           AND  I.PROD_ID IS NOT NULL
                            AND  J.COMIC_SPRT_YN = 'Y'
                            AND  K.SALE_YN = 'Y'
                            AND  C.PART_PROD_ID = #{productId}
