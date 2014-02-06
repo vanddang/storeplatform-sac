@@ -73,11 +73,11 @@ public class RemoveSubsellerTest {
 					public Object requestBody() {
 						RemoveSubsellerReq req = new RemoveSubsellerReq();
 
-						req.setSellerKey("IF1023501437920130904104346");
+						req.setSellerKey("IF1023501184720130823173955");
 
 						List<String> removeKeyList;
 						removeKeyList = new ArrayList<String>();
-						removeKeyList.add("US201312311522096210000038");
+						removeKeyList.add("SS201402061427346800000640");
 						req.setSubSellerKey(removeKeyList);
 
 						LOGGER.debug("request param : {}", req.toString());
