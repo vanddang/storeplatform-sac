@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AbrogationAuthKeyRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
@@ -158,10 +159,15 @@ public class SellerController {
 	 */
 	@RequestMapping(value = "/withdraw/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req) {
+	public WithdrawRes withdraw(SacRequestHeader header, @RequestBody @Validated WithdrawReq req, BindingResult result) {
 		LOGGER.debug("### 2.2.3. 판매자 회원 탈퇴 [authorize] START ###");
 		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
-
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerService.withdraw(header, req);
 	}
 
@@ -194,8 +200,13 @@ public class SellerController {
 	@RequestMapping(value = "/removeAuthorizationKey/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header,
-			@RequestBody @Validated AbrogationAuthKeyReq req) {
-
+			@RequestBody @Validated AbrogationAuthKeyReq req, BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerService.abrogationAuthKey(header, req);
 	}
 
