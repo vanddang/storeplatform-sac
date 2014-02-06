@@ -78,9 +78,8 @@ public class CheckPasswordReminderQuestionTest {
 						// 보안질문
 						List<PwReminder> pwReminders = new ArrayList<PwReminder>();
 						PwReminder pwReminder = new PwReminder();
-						pwReminder.setAnswerString("temp");
-						pwReminder.setQuestionID("Q123");
-						pwReminder.setQuestionMessage("qwdwd");
+						pwReminder.setAnswerString("Seoul - Korea");
+						pwReminder.setQuestionID("QUESTION4");
 						pwReminder.setSellerID("seller_test");
 						pwReminders.add(pwReminder);
 						req.setpWReminderList(pwReminders);
