@@ -190,6 +190,6 @@
         
         <!-- Intimate Message 조회 -->
         <typeAlias alias="IntimateMessageSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.intimateMessage.IntimateMessageSacReq" />
-        <typeAlias alias="IntimateMessage"  type="com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessage" />
+        <typeAlias alias="IntimateMessageDefault"  type="com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo.IntimateMessageDefault" />
     </typeAliases>
 </configuration>

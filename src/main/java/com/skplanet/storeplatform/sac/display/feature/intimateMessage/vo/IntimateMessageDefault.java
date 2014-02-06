@@ -14,7 +14,7 @@ package com.skplanet.storeplatform.sac.display.feature.intimateMessage.vo;
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class IntimateMessage {
+public class IntimateMessageDefault {
 	private int totalCount;
 	private String msgId;
 	private String msgTypeCd;
