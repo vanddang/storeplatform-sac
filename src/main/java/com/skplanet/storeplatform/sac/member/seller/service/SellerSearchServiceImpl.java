@@ -455,7 +455,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				PWReminder pwReminder = new PWReminder();
 				pwReminder.setAnswerString(req.getpWReminderList().get(i).getAnswerString());
 				pwReminder.setQuestionID(req.getpWReminderList().get(i).getQuestionID());
-				pwReminder.setQuestionMessage(req.getpWReminderList().get(i).getQuestionMessage());
+				// pwReminder.setQuestionMessage(req.getpWReminderList().get(i).getQuestionMessage());
 				pwReminder.setSellerID(req.getpWReminderList().get(i).getSellerID());
 				pWReminderList.add(pwReminder);
 			}
