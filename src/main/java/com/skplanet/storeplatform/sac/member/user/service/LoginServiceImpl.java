@@ -355,7 +355,7 @@ public class LoginServiceImpl implements LoginService {
 				ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
 
 				/* 잠금해지 요청인 경우 처리 */
-				if (StringUtils.equals(req.getReleaseLock(), "Y")) {
+				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 
 					/* 로그인 상태코드 정상처리 */
 					this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_MBR_ID, userId);
@@ -413,7 +413,7 @@ public class LoginServiceImpl implements LoginService {
 				IDPReceiverM idpReceiver = this.idpService.userAuthForId(userId, userPw);
 
 				/* 잠금해지 요청인 경우 */
-				if (StringUtils.equals(req.getReleaseLock(), "Y")) {
+				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
 					/* 로그인 상태코드 정상처리 */
 					this.updateLoginStatus(requestHeader, MemberConstants.USER_LOGIN_STATUS_NOMAL, MemberConstants.KEY_TYPE_MBR_ID, userId);
 				}
