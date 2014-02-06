@@ -86,7 +86,7 @@ public class DetailByDeviceIdTest {
 
 						DetailByDeviceIdSacReq reqJson = new DetailByDeviceIdSacReq();
 
-						reqJson.setDeviceId("01023624159");
+						reqJson.setDeviceId("01076771470");
 						reqJson.setDeviceIdType("msisdn");
 
 						/**

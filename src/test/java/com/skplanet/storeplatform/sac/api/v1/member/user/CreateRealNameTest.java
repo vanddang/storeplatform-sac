@@ -14,6 +14,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -32,9 +33,10 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.api.util.DateUtil;
 import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 
 /**
  * 실명인증정보 수정 테스트.
@@ -65,12 +67,13 @@ public class CreateRealNameTest {
 
 	/**
 	 * <pre>
-	 * 실명인증정보 수정 테스트.
+	 * 실명인증정보 수정 테스트 (IDP회원 - 본인).
 	 * </pre>
 	 * 
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test1_createRealName() throws Exception {
 
@@ -85,15 +88,183 @@ public class CreateRealNameTest {
 						/**
 						 * 기존 IDP 회원
 						 */
-						reqJson.setUserKey("US201401231555153430000447");
-						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+						reqJson.setUserKey("US201402061538552970001711");
+
+						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsOwn("OWN"); // 실명인증 대상
+						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
+						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
+						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
+						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
+						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
+						reqJson.setUserPhone("0101231232"); // 사용자 전화번호
+						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
+						reqJson.setUserName("아무개"); // 사용자 이름
+						reqJson.setUserBirthDay("19820324"); // 사용자 생년월일
+						reqJson.setUserSex("M"); // 사용자 성별
 
 						return reqJson;
 					}
-				}).success(ModifyRes.class, new SuccessCallback() {
+				}).success(CreateRealNameRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						ModifyRes res = (ModifyRes) result;
+						CreateRealNameRes res = (CreateRealNameRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 실명인증정보 수정 테스트 (IDP회원 - 법정대리인).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Ignore
+	@Test
+	public void test2_createRealName() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateRealNameReq reqJson = new CreateRealNameReq();
+
+						/**
+						 * 기존 IDP 회원
+						 */
+						reqJson.setUserKey("US201402061538552970001711");
+
+						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsOwn("PARENT"); // 실명인증 대상
+						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
+						reqJson.setParentEmail("tlaeo00@naver.com"); // 법정대리인 이메일
+						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
+						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
+						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
+						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
+						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
+						reqJson.setUserPhone("0101231232"); // 법정대리인 전화번호
+						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
+						reqJson.setUserName("태백산"); // 사용자 이름
+						reqJson.setUserBirthDay("19870506"); // 법정대리인 생년월일
+
+						return reqJson;
+					}
+				}).success(CreateRealNameRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateRealNameRes res = (CreateRealNameRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 실명인증정보 수정 테스트 (통합회원 - 본인).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Test
+	public void test3_createRealName() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateRealNameReq reqJson = new CreateRealNameReq();
+
+						/**
+						 * 통합 IDP 회원
+						 */
+						reqJson.setUserKey("US201401241550022950000616");
+						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+
+						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsOwn("OWN"); // 실명인증 대상
+						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
+						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
+						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
+						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
+						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
+						reqJson.setUserPhone("0101231232"); // 사용자 전화번호
+						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
+						reqJson.setUserName("아무개"); // 사용자 이름
+						reqJson.setUserBirthDay("19820324"); // 사용자 생년월일
+						reqJson.setUserSex("M"); // 사용자 성별
+
+						return reqJson;
+					}
+				}).success(CreateRealNameRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateRealNameRes res = (CreateRealNameRes) result;
+						assertThat(res.getUserKey(), notNullValue());
+						System.out.println(res.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 실명인증정보 수정 테스트 (통합회원 - 법정대리인).
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 *             Exception
+	 */
+	@Ignore
+	@Test
+	public void test4_createRealName() throws Exception {
+
+		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+				.addHeaders("Accept", "application/json")
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+
+						CreateRealNameReq reqJson = new CreateRealNameReq();
+
+						/**
+						 * 통합 IDP 회원
+						 */
+						reqJson.setUserKey("US201401241550022950000616");
+						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
+
+						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsOwn("PARENT"); // 실명인증 대상
+						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
+						reqJson.setParentEmail("tlaeo00@naver.com"); // 법정대리인 이메일
+						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
+						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
+						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
+						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
+						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
+						reqJson.setUserPhone("0101231232"); // 법정대리인 전화번호
+						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
+						reqJson.setUserName("태백산"); // 사용자 이름
+						reqJson.setUserBirthDay("19870506"); // 법정대리인 생년월일
+
+						return reqJson;
+					}
+				}).success(CreateRealNameRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						CreateRealNameRes res = (CreateRealNameRes) result;
 						assertThat(res.getUserKey(), notNullValue());
 						System.out.println(res.toString());
 					}
