@@ -127,7 +127,7 @@ public class DownloadController {
 			@RequestBody DownloadEbookSacReq downloadEbookReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getDownloadEbookInfo started.");
-		this.logger.debug("downloadEbookReq : {}", downloadEbookReq);
+		this.logger.debug("downloadEbookReq : {}", downloadEbookReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.downloadEbookService.getDownloadEbookInfo(requestHeader, downloadEbookReq);
@@ -150,7 +150,7 @@ public class DownloadController {
 			@RequestBody DownloadComicSacReq downloadComicReq) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getDownloadComicInfo started.");
-		this.logger.debug("downloadComicReq : {}", downloadComicReq);
+		this.logger.debug("downloadComicReq : {}", downloadComicReq.toString());
 		this.logger.debug("----------------------------------------------------------------");
 
 		return this.downloadComicService.getDownloadComicInfo(requestHeader, downloadComicReq);
