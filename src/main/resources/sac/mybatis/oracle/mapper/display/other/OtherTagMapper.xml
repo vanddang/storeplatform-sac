@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherTag">
+	<!-- 특정 단말 정보 조회-->
+	<select id="searchTagList" parameterType="Map" resultType="MetaInfo">
+		SELECT /*  */
+            TAG_CD
+           ,TAG_NM
+           ,TAG_TYPE_CD
+           ,TAG_NM
+      FROM TB_DP_PROD_TAG
+     WHERE CID =#{prodId}
+       AND TAG_TYPE_CD = #{sellerTagCd}   -- 셀러 태그
+       AND ROWNUM <![CDATA[<=]]> 5
+    UNION ALL
+    SELECT  TAG_CD
+           ,TAG_NM
+           ,TAG_TYPE_CD
+           ,TAG_NM
+      FROM TB_DP_PROD_TAG
+     WHERE CID = #{prodId}
+       AND TAG_TYPE_CD = #{keywordTagCd} -- 키워드 태그
+       AND ROWNUM <![CDATA[<=]]> 5
+    UNION ALL
+    SELECT  TAG_CD
+           ,TAG_NM
+           ,TAG_TYPE_CD
+           ,TAG_NM
+      FROM TB_DP_PROD_TAG
+     WHERE CID = #{prodId}
+       AND TAG_TYPE_CD = #{shoppingCouponTagCd} -- 쇼핑 쿠폰 태그
+       AND ROWNUM <![CDATA[<=]]> 5
+ 	</select>
+</mapper>

@@ -17,10 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.display.other.service.OtherArtistService;
 import com.skplanet.storeplatform.sac.display.other.service.OtherServiceGroupService;
+import com.skplanet.storeplatform.sac.display.other.service.OtherTagService;
 
 /**
  * 기타 카테고리 Controller
@@ -34,6 +40,12 @@ public class OtherController {
 
 	@Autowired
 	private OtherServiceGroupService otherServiceGroupService;
+
+	@Autowired
+	private OtherTagService otherTagService;
+
+	@Autowired
+	private OtherArtistService otherArtistService;
 
 	/**
 	 * <pre>
@@ -56,4 +68,39 @@ public class OtherController {
 
 		return this.otherServiceGroupService.searchServiceGroupList(req, header);
 	}
+
+	/**
+	 * <pre>
+	 * Tag 조회
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceProductProvisioningRes
+	 */
+	@RequestMapping(value = "/tagList/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OtherTagRes searchTagList(OtherTagReq req, SacRequestHeader header) {
+		return this.otherTagService.searchTagList(req, header);
+	}
+
+	/**
+	 * <pre>
+	 * 아티스트별 정보 조회
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceProductProvisioningRes
+	 */
+	@RequestMapping(value = "/artist/detail/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public OtherArtistRes searchArtistDetail(OtherArtistReq req, SacRequestHeader header) {
+		return this.otherArtistService.searchArtistDetail(req, header);
+	}
+
 }

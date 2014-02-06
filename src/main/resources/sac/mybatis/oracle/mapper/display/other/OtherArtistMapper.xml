@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OtherArtist">
+	<select id="searchArtistDetail" parameterType="Map" resultType="MetaInfo">
+		   SELECT ACTY_TYPE
+			      ,ACTY_YYPRD
+			      ,ARTIST_ID
+			      ,ARTIST_NM
+			      ,BIRTH
+			      ,CMPS_ARTIST_ID
+			      ,CMPS_ARTIST_NM
+			      ,DEBUT_DAY
+			      ,DEBUT_MUSIC_ID
+			      ,DEBUT_MUSIC_NM
+			      ,IMG_FILE_PATH as filePath
+			      ,NATY as country
+			FROM  TB_DP_ARTIST
+           WHERE  ARTIST_ID = #{artistId}
+                 
+  </select>
+ 	
+</mapper>

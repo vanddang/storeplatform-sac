@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
@@ -28,6 +29,10 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
  */
 @Component
 public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -104,6 +109,27 @@ public class MusicInfoGeneratorImpl implements MusicInfoGenerator {
 		contributor.setAlbum(metaInfo.getArtist3Nm()); // 앨범명
 		contributor.setPublisher(metaInfo.getChnlCompNm()); // 발행인
 		contributor.setAgency(metaInfo.getAgencyNm()); // 에이전시
+		return contributor;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.MusicInfoGenerator#generateArtistDetailContributor(com.skplanet
+	 * .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Contributor generateArtistDetailContributor(MetaInfo metaInfo) {
+		Contributor contributor = new Contributor();
+		contributor.setIdentifier(this.commonGenerator.generateIdentifier(DisplayConstants.DP_ARTIST_IDENTIFIER_CD,
+				metaInfo.getArtistId()));
+		contributor.setName(metaInfo.getArtistNm());
+		contributor.setDebutYear(metaInfo.getDebutDay());
+		contributor.setDebutMusicNm(metaInfo.getDebutMusicNm());
+		contributor.setCountry(metaInfo.getCountry());
+		contributor.setSource(this.commonGenerator.generateSource(metaInfo));
+
 		return contributor;
 	}
 }

@@ -46,8 +46,8 @@ public class DeviceController {
 	 * 특정 단말 조회.
 	 * </pre>
 	 * 
-	 * @param request
-	 *            request
+	 * @param req
+	 *            req
 	 * @param header
 	 *            header
 	 * @return DeviceProfileRes
@@ -58,6 +58,17 @@ public class DeviceController {
 		return this.deviceProfileService.searchDeviceProfile(req, header);
 	}
 
+	/**
+	 * <pre>
+	 * 상품 ID에 대한 단말 Provisioning.
+	 * </pre>
+	 * 
+	 * @param req
+	 *            req
+	 * @param header
+	 *            header
+	 * @return DeviceProductProvisioningRes
+	 */
 	@RequestMapping(value = "/product/provisioning/get/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public DeviceProductProvisioningRes searchProductProvisioning(DeviceProductProvisioningReq req,

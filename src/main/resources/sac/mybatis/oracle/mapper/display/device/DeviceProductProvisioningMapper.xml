@@ -16,15 +16,15 @@
 		           , TB_DP_SPRT_DEVICE                  SD
 		           , TB_CM_DEVICE                       CD
 		           , TB_DP_TENANT_PROD                  TP
-		           , TB_DP_TENANT_PROD_PRICE            TPC
+		           , TB_DP_TENANT_PROD_PRICE            TPP
 		     WHERE SC.CATALOG_ID = PCM.CATALOG_ID
 		       AND SP.PROD_ID = PCM.PROD_ID 
 		       AND SP.PROD_ID = PR.PROD_ID
 		       AND PR.PART_PROD_ID = P.PROD_ID
 		       AND P.PROD_ID = SD.PROD_ID 
 		       AND P.PROD_ID = TP.PROD_ID
-		       AND TP.PROD_ID = TPC.PROD_ID
-		       AND TP.TENANT_ID = TPC.TENANT_ID  
+		       AND TP.PROD_ID = TPP.PROD_ID
+		       AND TP.TENANT_ID = TPP.TENANT_ID  
 		       AND PCM.USE_YN = 'Y'
 		       AND SC.CHNL_CNT > 0
 		       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
@@ -42,7 +42,7 @@
 		       AND TP.PROD_STATUS_CD = #{prodStatusCd}
 		       AND TP.EXPO_YN = 'Y'
 		       AND TP.TENANT_ID = #{tenantHeader.tenantId}
-		       AND SYSDATE BETWEEN TPC.APPLY_START_DT AND TPC.APPLY_END_DT
+		       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 		    </if>     
 		    <if test = "req.productType=='normal'">
 		    SELECT   /* DeviceProductProvisioningMapper.xml, , Oh Seung Min, 2014-02-04 */
@@ -53,18 +53,18 @@
 			       TB_DP_SPRT_DEVICE SD,
 			       TB_CM_DEVICE CD,
 			       TB_DP_TENANT_PROD TP,
-			       TB_DP_TENANT_PROD_PRICE TPC
+			       TB_DP_TENANT_PROD_PRICE TPP
 			 WHERE     P.PROD_ID = SD.PROD_ID
 			       AND P.PROD_ID = TP.PROD_ID
-			       AND TP.PROD_ID = TPC.PROD_ID
-			       AND TP.TENANT_ID = TPC.TENANT_ID
+			       AND TP.PROD_ID = TPP.PROD_ID
+			       AND TP.TENANT_ID = TPP.TENANT_ID
 			       AND (SD.DEVICE_MODEL_CD = #{req.deviceModelNo} OR SD.DEVICE_MODEL_CD = #{virtualDeviceModelNo})
 			       AND CD.DEVICE_MODEL_CD = #{req.deviceModelNo}
 			       AND P.CONTENTS_TYPE_CD = #{contentTypeCd}
 			       AND CD.USE_YN = 'Y'
 			       AND TP.PROD_STATUS_CD = #{prodStatusCd}
 			       AND TP.TENANT_ID = #{tenantHeader.tenantId}
-			       AND SYSDATE BETWEEN TPC.APPLY_START_DT AND TPC.APPLY_END_DT
+			       AND SYSDATE BETWEEN TPP.APPLY_START_DT AND TPP.APPLY_END_DT
 			        <if test = "list !=null">
 	               AND P.PROD_ID IN
 	                   <foreach collection="list" item="item" index="index" open="(" separator="," close=")"> 

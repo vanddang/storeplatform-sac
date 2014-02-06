@@ -368,4 +368,33 @@ public class DisplayConstants {
 	 * 가상 모델명
 	 */
 	public static final String DP_ANDROID_STANDARD2_NM = "android_standard2";
+
+	/**
+	 * 카테고리 태그
+	 */
+	public static final String DP_CATEGORY_TAG_CD = "DP004501";
+	/**
+	 * 키워드 태그
+	 */
+	public static final String DP_KEYWORD_TAG_CD = "DP004502";
+	/**
+	 * 셀러 태그
+	 */
+	public static final String DP_SELLER_TAG_CD = "DP004503";
+	/**
+	 * 테이스트 대상 태그
+	 */
+	public static final String DP_TASTE_TARGET_CD = "DP004504";
+	/**
+	 * 테이스트 장소 태그
+	 */
+	public static final String DP_TASTE_PLACE_CD = "DP004505";
+	/**
+	 * 테이스트 목적 태그
+	 */
+	public static final String DP_TASTE_PURPOSE_CD = "DP004506";
+	/**
+	 * 쇼핑/쿠폰 태그
+	 */
+	public static final String DP_SHOPPING_COUPON_CD = "DP004507";
 }

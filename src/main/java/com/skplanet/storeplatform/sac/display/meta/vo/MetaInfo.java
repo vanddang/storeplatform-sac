@@ -95,6 +95,11 @@ public class MetaInfo {
 	private String colorringSprtYn;
 	private String outsdContentsId;
 	private Integer fileSizeH;
+	private String artistId;
+	private String artistNm;
+	private String debutDay;
+	private String debutMusicNm;
+	private String country;
 
 	// ////////////////////////// 쇼핑 상품 변수 ////////////////////////////
 	private Double dcRate;
@@ -114,6 +119,11 @@ public class MetaInfo {
 	private Integer prodNetAmt;
 	private String catalogId;
 	private String catalogNm;
+
+	// ////////////////////////// 태그 관련 변수 ////////////////////////////
+	private String tagCd;
+	private String tagNm;
+	private String tagTypeCd;
 
 	/**
 	 * @return the topMenuId
@@ -1286,6 +1296,81 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the artistId
+	 */
+	public String getArtistId() {
+		return this.artistId;
+	}
+
+	/**
+	 * @param artistId
+	 *            the artistId to set
+	 */
+	public void setArtistId(String artistId) {
+		this.artistId = artistId;
+	}
+
+	/**
+	 * @return the artistNm
+	 */
+	public String getArtistNm() {
+		return this.artistNm;
+	}
+
+	/**
+	 * @param artistNm
+	 *            the artistNm to set
+	 */
+	public void setArtistNm(String artistNm) {
+		this.artistNm = artistNm;
+	}
+
+	/**
+	 * @return the debutDay
+	 */
+	public String getDebutDay() {
+		return this.debutDay;
+	}
+
+	/**
+	 * @param debutDay
+	 *            the debutDay to set
+	 */
+	public void setDebutDay(String debutDay) {
+		this.debutDay = debutDay;
+	}
+
+	/**
+	 * @return the debutMusicNm
+	 */
+	public String getDebutMusicNm() {
+		return this.debutMusicNm;
+	}
+
+	/**
+	 * @param debutMusicNm
+	 *            the debutMusicNm to set
+	 */
+	public void setDebutMusicNm(String debutMusicNm) {
+		this.debutMusicNm = debutMusicNm;
+	}
+
+	/**
+	 * @return the country
+	 */
+	public String getCountry() {
+		return this.country;
+	}
+
+	/**
+	 * @param country
+	 *            the country to set
+	 */
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	/**
 	 * @return the dcRate
 	 */
 	public Double getDcRate() {
@@ -1539,4 +1624,50 @@ public class MetaInfo {
 	public void setCatalogNm(String catalogNm) {
 		this.catalogNm = catalogNm;
 	}
+
+	/**
+	 * @return the tagCd
+	 */
+	public String getTagCd() {
+		return this.tagCd;
+	}
+
+	/**
+	 * @param tagCd
+	 *            the tagCd to set
+	 */
+	public void setTagCd(String tagCd) {
+		this.tagCd = tagCd;
+	}
+
+	/**
+	 * @return the tagNm
+	 */
+	public String getTagNm() {
+		return this.tagNm;
+	}
+
+	/**
+	 * @param tagNm
+	 *            the tagNm to set
+	 */
+	public void setTagNm(String tagNm) {
+		this.tagNm = tagNm;
+	}
+
+	/**
+	 * @return the tagTypeCd
+	 */
+	public String getTagTypeCd() {
+		return this.tagTypeCd;
+	}
+
+	/**
+	 * @param tagTypeCd
+	 *            the tagTypeCd to set
+	 */
+	public void setTagTypeCd(String tagTypeCd) {
+		this.tagTypeCd = tagTypeCd;
+	}
+
 }

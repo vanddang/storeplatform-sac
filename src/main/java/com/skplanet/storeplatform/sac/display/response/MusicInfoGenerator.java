@@ -79,4 +79,15 @@ public interface MusicInfoGenerator {
 	 * @return Contributor
 	 */
 	public Contributor generateContributor(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 음원 상품 아티스트 상세 정보 Contributor 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Contributor
+	 */
+	public Contributor generateArtistDetailContributor(MetaInfo metaInfo);
 }
