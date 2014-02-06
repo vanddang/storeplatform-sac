@@ -796,7 +796,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			return deviceKey;
 
 		} catch (Exception e) {
-			throw new StorePlatformException("SAC_MEM_1102");
+			throw new StorePlatformException("SAC_MEM_1102", e);
 		}
 
 	}
