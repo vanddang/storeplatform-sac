@@ -62,7 +62,7 @@ public class GetUaCodeTest {
 	 * </pre>
 	 * 
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void requestMsisdnTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -70,7 +70,7 @@ public class GetUaCodeTest {
 					@Override
 					public Object requestBody() {
 						GetUaCodeReq request = new GetUaCodeReq();
-						request.setMsisdn("01088902431");
+						request.setMsisdn("01001231116");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}
@@ -93,29 +93,24 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestDeviceModelNoTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetUaCodeReq request = new GetUaCodeReq();
-							request.setDeviceModelNo("SCH-B750");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetUaCodeReq request = new GetUaCodeReq();
+						request.setDeviceModelNo("SCH-B750");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 	/**
@@ -126,30 +121,25 @@ public class GetUaCodeTest {
 	 */
 	@Test
 	public void requestMsisdnDeviceModelNoTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetUaCodeReq request = new GetUaCodeReq();
-							request.setDeviceModelNo("SCH-B750");
-							request.setMsisdn("01088902431");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetUaCodeReq request = new GetUaCodeReq();
+						request.setDeviceModelNo("SCH-B750");
+						request.setMsisdn("01088902431");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 	/**
@@ -163,7 +153,7 @@ public class GetUaCodeTest {
 	 * 2. 010/011/016/017/018
 	 * </pre>
 	 */
-	// @Test
+	@Test(expected = StorePlatformException.class)
 	public void requestInvalidMsisdnTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
 				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -183,31 +173,27 @@ public class GetUaCodeTest {
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
-	// @Test
+	@Test(expected = StorePlatformException.class)
 	public void requestNonDbMsisdnTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetUaCodeReq request = new GetUaCodeReq();
-							request.setMsisdn("01011112222");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetUaCodeReq request = new GetUaCodeReq();
+						request.setMsisdn("01011112222");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -217,31 +203,26 @@ public class GetUaCodeTest {
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
-	// @Test
+	@Test(expected = StorePlatformException.class)
 	public void requestNonTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetUaCodeReq request = new GetUaCodeReq();
-							request.setMsisdn("01011112222");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetUaCodeReq request = new GetUaCodeReq();
+						request.setMsisdn("01011112222");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
 
 	/**
@@ -251,30 +232,26 @@ public class GetUaCodeTest {
 	 * Biz.Logic - Exception 처리
 	 * </pre>
 	 */
-	// @Test
+	@Test(expected = StorePlatformException.class)
 	public void responseNonUaCodeTest() {
-		try {
-			new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
-					.requestBody(new RequestBodySetter() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
 
-						@Override
-						public Object requestBody() {
-							GetUaCodeReq request = new GetUaCodeReq();
-							request.setDeviceModelNo("SCH-W777");
-							LOGGER.debug("request param : {}", request.toString());
-							return request;
-						}
-					}).success(GetUaCodeRes.class, new SuccessCallback() {
+					@Override
+					public Object requestBody() {
+						GetUaCodeReq request = new GetUaCodeReq();
+						request.setDeviceModelNo("SCH-W777");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
-						@Override
-						public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-							GetUaCodeRes response = (GetUaCodeRes) result;
-							LOGGER.debug("response param : {} ", response.toString());
-						}
-					}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

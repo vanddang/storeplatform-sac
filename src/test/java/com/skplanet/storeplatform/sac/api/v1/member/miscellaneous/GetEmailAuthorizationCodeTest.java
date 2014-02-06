@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
@@ -60,10 +59,10 @@ public class GetEmailAuthorizationCodeTest {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * 성공 CASE.
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void simpleTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getEmailAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -72,7 +71,7 @@ public class GetEmailAuthorizationCodeTest {
 					public Object requestBody() {
 						GetEmailAuthorizationCodeReq request = new GetEmailAuthorizationCodeReq();
 						request.setUserEmail("daseul428@incross.com");
-						request.setUserKey("US201401161113423010000110");
+						request.setUserKey("US201401232110223470000502");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}
@@ -80,7 +79,7 @@ public class GetEmailAuthorizationCodeTest {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
+						GetEmailAuthorizationCodeRes response = (GetEmailAuthorizationCodeRes) result;
 						assertThat(response.getEmailAuthCode(), notNullValue());
 						LOGGER.debug("response param : {}", response.toString());
 					}

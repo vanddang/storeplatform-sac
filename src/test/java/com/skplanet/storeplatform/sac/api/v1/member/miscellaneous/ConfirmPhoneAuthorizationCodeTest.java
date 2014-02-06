@@ -72,10 +72,10 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 정상 파라미터 전달.
+	 * 정상 파라미터 전달. - exception??? 왜
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void simpleTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {

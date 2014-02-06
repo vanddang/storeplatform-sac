@@ -65,7 +65,7 @@ public class GetOpmdTest {
 	 * </pre>
 	 * 
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void requestOpmdMsisdnTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -96,7 +96,7 @@ public class GetOpmdTest {
 	 * </pre>
 	 * 
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void requestMsisdnTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
@@ -136,7 +136,7 @@ public class GetOpmdTest {
 					@Override
 					public Object requestBody() {
 						GetOpmdReq request = new GetOpmdReq();
-						request.setMsisdn("10122223333");
+						request.setMsisdn("E1HHADEFVA9");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}

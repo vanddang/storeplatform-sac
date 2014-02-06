@@ -1,7 +1,7 @@
+/**
+ * 
+ */
 package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,23 +21,26 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
 
 /**
- * Captcha 문자 발급 JUnit Test.
+ * 부가서비스 가입 조회
  * 
- * Updated on : 2014. 1. 13. Updated by : 김다슬, 인크로스.
+ * Updated on : 2014. 2. 6. Updated by : 김다슬, 인크로스.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class GetCaptchaTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GetOpmdTest.class);
+public class GetAdditionalServiceTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GetAdditionalServiceTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -58,21 +61,29 @@ public class GetCaptchaTest {
 	/**
 	 * 
 	 * <pre>
-	 * 성공 CASE.
+	 * 성공 CASE
 	 * </pre>
+	 * 
 	 */
 	@Test
-	public void successTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getCaptcha/v1").httpMethod(HttpMethod.GET)
-				.success(GetCaptchaRes.class, new SuccessCallback() {
+	public void requestMsisdnTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getAdditionalService/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						GetAdditionalServiceReq request = new GetAdditionalServiceReq();
+						request.setMsisdn("");
+						request.setSvcCode("");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(GetAdditionalServiceRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetCaptchaRes res = (GetCaptchaRes) result;
-						assertThat(res.getImageData(), notNullValue());
-						assertThat(res.getImageSign(), notNullValue());
-						assertThat(res.getSignData(), notNullValue());
-						LOGGER.info("response :{}", res.getImageData());
+						GetAdditionalServiceRes response = (GetAdditionalServiceRes) result;
+						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}

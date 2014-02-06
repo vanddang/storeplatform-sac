@@ -63,10 +63,10 @@ public class ConfirmEmailAuthorizationCodeTest {
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 정상 파라미터 전달.
+	 * 정상 파라미터 전달. - exception??? 왜
 	 * </pre>
 	 */
-	@Test(expected = StorePlatformException.class)
+	@Test
 	public void simpleTest() {
 		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmEmailAuthorizationCode/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
@@ -74,7 +74,38 @@ public class ConfirmEmailAuthorizationCodeTest {
 					@Override
 					public Object requestBody() {
 						ConfirmEmailAuthorizationCodeReq request = new ConfirmEmailAuthorizationCodeReq();
-						request.setEmailAuthCode("a597e5bfb4b94b1ba2cbef5");
+						request.setEmailAuthCode("84f9f1febcfe4d129e84138cc7baf3da");
+						LOGGER.debug("request param : {}", request.toString());
+						return request;
+					}
+				}).success(ConfirmEmailAuthorizationCodeRes.class, new SuccessCallback() {
+
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
+						assertThat(response.getUserEmail(), notNullValue());
+						assertThat(response.getUserKey(), notNullValue());
+						LOGGER.debug("response param : {} ", response.toString());
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
+	}
+
+	/**
+	 * <pre>
+	 * 성공 CASE
+	 * 기 인증 회원.
+	 * </pre>
+	 */
+	@Test(expected = StorePlatformException.class)
+	public void confirmedAuthUserTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmEmailAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						ConfirmEmailAuthorizationCodeReq request = new ConfirmEmailAuthorizationCodeReq();
+						request.setEmailAuthCode("c4a566d90d2a4440991eca80f404611a");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}
