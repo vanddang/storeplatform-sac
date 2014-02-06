@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerReq;
@@ -55,7 +56,14 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req) {
+	CreateSubsellerRes createSubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
+			BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerSubService.createSubseller(header, req);
 	}
 
@@ -70,8 +78,14 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/removeSubseller/v1", method = RequestMethod.POST)
 	public @ResponseBody
-	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req) {
-		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
+	RemoveSubsellerRes removeSubseller(SacRequestHeader header, @RequestBody @Validated RemoveSubsellerReq req,
+			BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 		return this.sellerSubService.removeSubseller(header, req);
 	}
 
@@ -86,8 +100,13 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/listSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) {
-		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
+	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req, BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 
 		return this.sellerSubService.listSubseller(header, req);
 	}
@@ -103,8 +122,13 @@ public class SellerSubController {
 	 */
 	@RequestMapping(value = "/detailSubseller/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
-		// LOGGER.debug("Request : {}", this.objMapper.writeValueAsString(req));
+	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req, BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
 
 		return this.sellerSubService.detailSubseller(header, req);
 	}
