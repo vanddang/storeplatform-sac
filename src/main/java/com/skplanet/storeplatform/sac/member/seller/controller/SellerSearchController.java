@@ -137,7 +137,7 @@ public class SellerSearchController {
 	 */
 	@RequestMapping(value = "/searchId2/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) throws Exception {
+	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) {
 
 		String sellerBizNumber = StringUtil.nvl(req.getSellerBizNumber(), "");
 		String sellerCompany = StringUtil.nvl(req.getSellerCompany(), "");
