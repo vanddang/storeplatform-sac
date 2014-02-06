@@ -546,7 +546,7 @@ public class MemberCommonComponent {
 	 *            : 검색값
 	 * @return SearchSellerResponse
 	 */
-	public SearchSellerResponse searchSeller(CommonRequest commonRequest, String keyType, String key) {
+	public SearchSellerResponse getSearchSeller(CommonRequest commonRequest, String keyType, String key) {
 		SearchSellerRequest searchSellerRequest = new SearchSellerRequest();
 		searchSellerRequest.setCommonRequest(commonRequest);
 

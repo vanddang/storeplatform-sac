@@ -336,7 +336,7 @@ public class SellerServiceImpl implements SellerService {
 						this.sellerSCI.updateStatusSeller(updateStatusSellerRequest);
 
 						/** 3-4. 회원 정보 조회 */
-						SearchSellerResponse searchSellerResponse = this.component.searchSeller(commonRequest,
+						SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 								MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, logInSellerResponse.getSellerKey());
 						/** 3-5. 로그인 상태 코드 주입. */
 						loginStatusCode = searchSellerResponse.getSellerMbr().getLoginStatusCode();
@@ -402,7 +402,7 @@ public class SellerServiceImpl implements SellerService {
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
 		/** 1. 회원 정보 조회 */
-		SearchSellerResponse searchSellerResponse = this.component.searchSeller(commonRequest,
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_INSD_SELLERMBR_NO, req.getSellerKey());
 
 		if (!StringUtils.equals(searchSellerResponse.getSellerMbr().getSellerMainStatus(),
@@ -454,7 +454,7 @@ public class SellerServiceImpl implements SellerService {
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
 
 		/** 1. 회원 정보 조회 */
-		SearchSellerResponse searchSellerResponse = this.component.searchSeller(commonRequest,
+		SearchSellerResponse searchSellerResponse = this.component.getSearchSeller(commonRequest,
 				MemberConstants.KEY_TYPE_SELLERMBR_ID, req.getSellerId());
 
 		// 로그인 잠금 상태 확인
