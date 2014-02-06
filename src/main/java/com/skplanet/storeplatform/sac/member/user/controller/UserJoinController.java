@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -229,6 +230,46 @@ public class UserJoinController {
 			res = this.svc.createBySimpleId(sacHeader, req);
 
 		}
+
+		LOGGER.info("Response : {}", res.toString());
+
+		return res;
+
+	}
+
+	/**
+	 * <pre>
+	 * ID 회원 간편 가입 (IDP 회원) QA 테스트 페이지용.
+	 * </pre>
+	 * 
+	 * @param userId
+	 * @param userPw
+	 * @param userEmail
+	 * @param model
+	 * @param sacHeader
+	 *            void
+	 */
+	@RequestMapping(value = "/member/user/createBySimple/qa", method = RequestMethod.GET)
+	@ResponseBody
+	public CreateBySimpleRes createBySimpleQaTestPage(SacRequestHeader sacHeader, @Validated @ModelAttribute CreateBySimpleReq req) {
+
+		LOGGER.info("#####################################################");
+		LOGGER.info("##### QA 테스트 페이지 용 회원 간편 가입 (IDP 회원) #####");
+		LOGGER.info("#####################################################");
+
+		/**
+		 * Header 정보
+		 */
+		LOGGER.info("Headers : {}", sacHeader.toString());
+
+		/**
+		 * Request
+		 */
+		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
+
+		CreateBySimpleRes res = new CreateBySimpleRes();
+
+		res = this.svc.createBySimpleId(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 
