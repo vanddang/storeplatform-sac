@@ -4,6 +4,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.*;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Service;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.vo.MenuItem;
 import com.skplanet.storeplatform.sac.display.music.vo.MusicDetail;
 import com.skplanet.storeplatform.sac.display.music.vo.SubContent;
@@ -29,7 +30,10 @@ public class MusicDetailBinderImpl implements MusicDetailBinder {
         for (SubContent sc : contentList) {
             Source src = new Source();
             src.setSize(sc.getFileSize());
-            src.setType("PD009711".equals(sc.getDpPgQultCd()) ? "audio/mp3-192" : "audio/mp3-128"); // TODO Util로 만들어야 함.
+            if("PD009711".equals(sc.getDpPgQultCd()))
+                src.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_192);
+            else if("PD009712".equals(sc.getDpPgQultCd()))
+                src.setType(DisplayConstants.DP_SOURCE_TYPE_AUDIO_MP3_128);
 
             music.getSourceList().add(src);
         }
