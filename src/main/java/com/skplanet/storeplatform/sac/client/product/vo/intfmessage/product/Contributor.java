@@ -81,6 +81,16 @@ public class Contributor extends CommonInfo implements Serializable {
 	 * 국가명.
 	 */
 	private String country;
+
+	/**
+	 * 데뷔 년도.
+	 */
+	private String debutYear;
+
+	/**
+	 * 데뷔 곡.
+	 */
+	private String debutMusicNm;
 	/*
 	 * 이미지url
 	 */private Source source;
@@ -282,6 +292,36 @@ public class Contributor extends CommonInfo implements Serializable {
 	 */
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	/**
+	 * @return the debutYear
+	 */
+	public String getDebutYear() {
+		return this.debutYear;
+	}
+
+	/**
+	 * @param debutYear
+	 *            the debutYear to set
+	 */
+	public void setDebutYear(String debutYear) {
+		this.debutYear = debutYear;
+	}
+
+	/**
+	 * @return the debutMusicNm
+	 */
+	public String getDebutMusicNm() {
+		return this.debutMusicNm;
+	}
+
+	/**
+	 * @param debutMusicNm
+	 *            the debutMusicNm to set
+	 */
+	public void setDebutMusicNm(String debutMusicNm) {
+		this.debutMusicNm = debutMusicNm;
 	}
 
 	/**
