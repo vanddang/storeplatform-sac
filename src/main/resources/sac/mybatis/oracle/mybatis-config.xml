@@ -125,6 +125,9 @@
         
         <!--  특정 상품 조회 -->
         <typeAlias alias="CategorySpecificProduct"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct" />
+
+        <!--  feature app App Codi 상품 조회 -->
+        <typeAlias alias="AppCodiRes"  type="com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes" />
         
         <!-- feature app 카테고리 상품 조회 -->
         <typeAlias alias="FeatureCategoryAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq" />
