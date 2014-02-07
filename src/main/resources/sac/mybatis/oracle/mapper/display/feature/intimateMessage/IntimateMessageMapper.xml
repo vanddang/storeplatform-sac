@@ -2,6 +2,126 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="IntimateMessage">
     <select id="selectIntimateMessageList" parameterType="IntimateMessageSacReq" resultType="IntimateMessageDefault">
-        SELECT 1 AS TOTAL_COUNT FROM DUAL
+		SELECT  JA.TOTAL_COUNT
+		      , JA.MSG_ID
+		      , DECODE(JA.MSG_TYPE_CD, '1', 'personal', '2', 'seasonal', '3', 'general', '4', 'deviceChanged') AS MSG_TYPE_CD
+		      , JA.MAIN_MSG
+		      , JA.INFR_MSG
+		      , JA.OFR_DESC
+		      , DECODE(JA.OFR_TYPE_CD, '1', 'url', '2', 'themeRecomm', '3', 'appCodi', '4', 'url', '5', 'purchaseHistory') AS OFR_TYPE_CD
+		      , JA.MAIN_COLOR
+		      , JA.INFR_COLOR
+		      , JA.BI_IMG_PATH
+		      , JA.GNB_IMG_PATH
+		      , TO_CHAR(JA.REG_DT, 'YYYYMMDDHH24MISS') REG_DT
+		  FROM (SELECT  IA.TOTAL_COUNT
+		              , IA.MSG_ID
+		              , IA.MSG_TYPE_CD
+		              , IA.MAIN_MSG
+		              , IA.INFR_MSG
+		              , DECODE(IA.OFR_TYPE_CD, '3', IA.USE_DA, IA.OFR_DESC) AS OFR_DESC
+		              , IA.OFR_TYPE_CD
+		              , NULL AS MAIN_COLOR
+		              , NULL AS INFR_COLOR
+		              , NULL AS BI_IMG_PATH
+		              , NULL AS GNB_IMG_PATH
+		              , IA.REG_DT
+		          FROM (SELECT  COUNT(1) OVER() AS TOTAL_COUNT
+		                      , A.MSG_ID
+		                      , B.MSG_TYPE_CD
+		                      , A.MAIN_MSG
+		                      , A.INFR_MSG
+		                      , A.OFR_TYPE_CD
+		                      , A.OFR_DESC
+		                      , A.USE_DA
+		                      , A.REG_DT
+		                  FROM  TB_DP_MSG A
+		                      , (SELECT  FLAG1 AS USE_DA, '1' AS MSG_TYPE_CD
+		                           FROM  TB_DP_MSG_MBR_MAPG X
+		                               , TB_DP_BATCH_COMPT  Y
+		                          WHERE  X.STD_DT = Y.STD_DT
+		                            AND  X.TENANT_ID = #{tenantId}
+		                            AND  Y.BATCH_ID = 'MBR0000001'
+		                            AND  X.MBR_NO = #{userKey}
+		                         UNION ALL
+		                         SELECT  FLAG2 AS USE_DA, '1' AS MSG_TYPE_CD
+		                           FROM  TB_DP_MSG_MBR_MAPG X
+		                               , TB_DP_BATCH_COMPT  Y
+		                          WHERE  X.STD_DT = Y.STD_DT
+		                            AND  X.TENANT_ID = #{tenantId}
+		                            AND  Y.BATCH_ID = 'MBR0000001'
+		                            AND  X.MBR_NO = #{userKey}
+		                        ) B
+		                 WHERE  A.USE_DA = B.USE_DA
+		                   AND  A.MSG_TYPE_CD = '1'
+		                   AND  A.USE_YN = 'Y'
+		                   AND  A.TENANT_ID = #{tenantId}
+		                 ORDER BY MSG_ID DESC
+		               ) IA
+		         WHERE ROWNUM BETWEEN #{offset} AND #{count}
+		        UNION ALL
+		        SELECT  0 AS TOTAL_COUNT
+		              , MAX(IB.MSG_ID) AS MSG_ID
+		              , MAX(IB.MSG_TYPE_CD) AS MSG_TYPE_CD
+		              , MAX(IB.MAIN_MSG) AS MAIN_MSG
+		              , MAX(IB.INFR_MSG) AS INFR_MSG
+		              , MAX(IB.OFR_DESC) AS OFR_DESC
+		              , MAX(IB.OFR_TYPE_CD) AS OFR_TYPE_CD
+		              , MAX(IB.MAIN_COLOR) AS MAIN_COLOR
+		              , MAX(IB.INFR_COLOR) AS INFR_COLOR
+		              , MAX(IB.BI_IMG_PATH) AS BI_IMG_PATH
+		              , MAX(IB.GNB_IMG_PATH) AS GNB_IMG_PATH
+		              , MAX(IB.REG_DT) AS REG_DT
+		          FROM (SELECT  A.MSG_ID
+		                      , A.MSG_TYPE_CD
+		                      , A.MAIN_MSG
+		                      , A.INFR_MSG
+		                      , A.OFR_DESC
+		                      , A.OFR_TYPE_CD
+		                      , A.MAIN_COLOR
+		                      , A.INFR_COLOR
+		                      , DECODE(B.IMG_CLSF_CD, DECODE('PD002111', 'PI000103', 'GS002030', 'PI000102', 'GS002032', 'PI000101', 'GS002034', 'GS002034'), IMG_PATH, '') AS BI_IMG_PATH
+		                      , DECODE(B.IMG_CLSF_CD, DECODE('PD002111', 'PI000103', 'GS002031', 'PI000102', 'GS002033', 'PI000101', 'GS002035', 'GS002035'), IMG_PATH, '') AS GNB_IMG_PATH
+		                      , A.REG_DT
+		                  FROM  TB_DP_MSG     A
+		                      , TB_DP_MSG_IMG B
+		                 WHERE  A.TENANT_ID = B.TENANT_ID(+)
+		                   AND  A.MSG_ID = B.MSG_ID(+)
+		                   AND  A.MSG_TYPE_CD = '2'
+		                   AND  A.USE_YN = 'Y'
+		                   AND  A.TENANT_ID = #{tenantId}
+		                   AND  SYSDATE BETWEEN USE_START_DT AND USE_END_DT
+		               ) IB
+		         GROUP BY MSG_ID
+		        UNION ALL
+		        SELECT  0 AS TOTAL_COUNT
+		              , IC.MSG_ID
+		              , IC.MSG_TYPE_CD
+		              , IC.MAIN_MSG
+		              , IC.INFR_MSG
+		              , IC.OFR_DESC
+		              , IC.OFR_TYPE_CD
+		              , NULL AS MAIN_COLOR
+		              , NULL AS INFR_COLOR
+		              , NULL AS BI_IMG_PATH
+		              , NULL AS GNB_IMG_PATH
+		              , IC.REG_DT
+		          FROM (SELECT  DBMS_RANDOM.VALUE AS RN
+		                      , MSG_ID
+		                      , MSG_TYPE_CD
+		                      , MAIN_MSG
+		                      , INFR_MSG
+		                      , OFR_DESC
+		                      , OFR_TYPE_CD
+		                      , REG_DT
+		                  FROM  TB_DP_MSG
+		                 WHERE  MSG_TYPE_CD = '3'
+		                   AND  USE_YN = 'Y'
+		                   AND  TENANT_ID = #{tenantId}
+		                 ORDER BY RN
+		               ) IC
+		         WHERE ROWNUM = 1
+		       ) JA
+		 ORDER BY JA.MSG_TYPE_CD DESC, JA.MSG_ID DESC
     </select>
 </mapper>
