@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.member.common.idp.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
@@ -38,8 +37,7 @@ public interface ImIdpService {
 
 	/** 2.1.23 ID 전환불가설정/해제 요청. */
 	/** 2.1.24 실명변경 요청. */
-	public ImIdpReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
-			String user_auth_key, String rname_auth_mns_code, String ci, String di, HashMap map);
+	public ImIdpReceiverM updateUserName(Map<String, Object> param);
 
 	/** 2.1.25 법정대리인 동의정보 변경 요청. */
 	public ImIdpReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
