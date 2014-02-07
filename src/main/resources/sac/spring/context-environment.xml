@@ -45,11 +45,11 @@
 	            <list>
 	               <value>sac/log/logback-stag.xml</value>
 		           <value>member/log/logback-stag.xml</value>
-		           <value>purchase/log/logback-stag.xml</value>               
+		           <value>purchase/log/logback-stag.xml</value>
 	            </list>
 	        </property>
-	    </bean>    
-    </beans>    
+	    </bean>
+    </beans>
         
     <beans profile="real"> 
 	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
@@ -58,7 +58,7 @@
 	            <list>
 	               <value>sac/log/logback-real.xml</value>
 		           <value>member/log/logback-real.xml</value>
-		           <value>purchase/log/logback-real.xml</value>               
+		           <value>purchase/log/logback-real.xml</value>
 	            </list>
 	        </property>
 	    </bean>    
