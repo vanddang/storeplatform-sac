@@ -90,7 +90,7 @@ public class CreateRealNameTest {
 						 */
 						reqJson.setUserKey("US201402061538552970001711");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
 						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
@@ -141,7 +141,7 @@ public class CreateRealNameTest {
 						 */
 						reqJson.setUserKey("US201402061538552970001711");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
 						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
 						reqJson.setParentEmail("tlaeo00@naver.com"); // 법정대리인 이메일
@@ -176,6 +176,7 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test3_createRealName() throws Exception {
 
@@ -190,19 +191,19 @@ public class CreateRealNameTest {
 						/**
 						 * 통합 IDP 회원
 						 */
-						reqJson.setUserKey("US201402071133550360001951");
+						reqJson.setUserKey("US201402061958132010001823");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
-						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00002590"); // CI
-						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
+						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
+						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDDIDIDIDIDIDID0000003631"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
 						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
-						reqJson.setUserPhone("01087878490"); // 사용자 전화번호
-						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
-						reqJson.setUserName("라길동"); // 사용자 이름
+						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
+						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
+						reqJson.setUserName("심대진"); // 사용자 이름
 						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
 
@@ -227,7 +228,6 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test4_createRealName() throws Exception {
 
@@ -242,22 +242,21 @@ public class CreateRealNameTest {
 						/**
 						 * 통합 IDP 회원
 						 */
-						reqJson.setUserKey("US201401241550022950000616");
+						reqJson.setUserKey("US201402061958132010001823");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부
+						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
-						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
-						reqJson.setParentEmail("tlaeo00@naver.com"); // 법정대리인 이메일
-						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
-						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
-						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
+						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMdd")); // 실명인증 일시 (YYYYMMDD)
+						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
+						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDIDDIDIDIDIDIDID0000003631"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
 						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
-						reqJson.setUserPhone("0101231232"); // 법정대리인 전화번호
-						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
-						reqJson.setUserName("태백산"); // 사용자 이름
-						reqJson.setUserBirthDay("19870506"); // 법정대리인 생년월일
+						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
+						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
+						reqJson.setUserName("심대진"); // 사용자 이름
+						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
+						reqJson.setUserSex("M"); // 사용자 성별
 
 						return reqJson;
 					}
