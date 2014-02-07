@@ -843,29 +843,29 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 
 		DetailInformationReq req = new DetailInformationReq();
 		DetailInformationRes res = new DetailInformationRes();
-		try {
-			req.setSellerKey(couponInfo.getBpId());
-			// req.setKeyType("SELLERMBR_ID");
-			res = this.sellerSearchService.detailInformation(header, req);
-			if (res != null) {
-				if (StringUtils.isBlank(res.getSellerMbr().getSellerName())) {
-					throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
-							couponInfo.getBpId());
-				}
-
-				this.compNm = res.getSellerMbr().getSellerCompany();
-				this.mbrNo = res.getSellerMbr().getSellerKey();
-			} else {
-				throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
-						couponInfo.getBpId());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
-
-		}
-		// this.compNm = "GTSOFT";
-		// this.mbrNo = "IF1023541432620111207152255";
+		// try {
+		// req.setSellerKey(couponInfo.getBpId());
+		// // req.setKeyType("SELLERMBR_ID");
+		// res = this.sellerSearchService.detailInformation(header, req);
+		// if (res != null) {
+		// if (StringUtils.isBlank(res.getSellerMbr().getSellerName())) {
+		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+		// couponInfo.getBpId());
+		// }
+		//
+		// this.compNm = res.getSellerMbr().getSellerCompany();
+		// this.mbrNo = res.getSellerMbr().getSellerKey();
+		// } else {
+		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.",
+		// couponInfo.getBpId());
+		// }
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// throw new CouponException(CouponConstants.COUPON_IF_ERROR_CODE_DB_ETC, "상호명이 없습니다.", couponInfo.getBpId());
+		//
+		// }
+		this.compNm = "GTSOFT";
+		this.mbrNo = "IF1023541432620111207152255";
 		return true;
 	}// End validateBusinessPartner
 

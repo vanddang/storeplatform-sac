@@ -175,6 +175,7 @@ public class ShoppingCouponSacController {
 					}
 					if (success) {
 						couponRes.setCatalogId(catalogInfo.getCreateCatalogId());
+						couponRes.setBrandId(catalogInfo.getCreateBrandId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 						map.put("ERROR_MSG", errorData.getErrorMsg());
@@ -626,7 +627,8 @@ public class ShoppingCouponSacController {
 																						   // 가포함되어 마지막에 , put
 																						   // 해준다.
 					this.log.debug("-------------------jade 추가 S---------------------------------------------");
-					couponRes.setCouponId(couponReq.getDpCouponInfo().getProdId());
+					couponRes.setCouponId(couponReq.getDpCouponInfo().getProdId() + ":"
+							+ couponReq.getDpCouponInfo().getCouponCode());
 					String itemProdId = "";
 					for (int i = 0; i < couponReq.getDpItemInfo().size(); i++) {
 						if (i == 0) {

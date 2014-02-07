@@ -1909,7 +1909,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 								if (resultOptionList != null) {
 									for (int mm = 0; mm < resultOptionList.size(); mm++) {
 										Shopping optionShopping = resultOptionList.get(mm);
-
 										if (optionShopping.getSubYn().equals("Y")) { // 옵션 1 인 경우
 											selectOption = new SelectOption();
 											// 옵션1 상품 ID
@@ -1927,7 +1926,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 											option1Price.setText(optionShopping.getProdAmt());
 											selectOption.setPrice(option1Price);
 										}
-
 										if (optionShopping.getSubYn().equals("N")) { // 옵션 2 인 경우
 											subSelectOption = new SubSelectOption();
 											// 옵션2 상품 ID
@@ -1964,6 +1962,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 									}
 								}
 							}
+
 							episodeProduct.setSelectOptionList(selectOptionList);
 
 							// 판매자정보 셋팅
@@ -1979,7 +1978,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setDistributor(distributor);
 							episodeProduct.setId(episodeShopping.getPartProdId());// 에피소드 특가상품
 							subProductList.add(episodeProduct);
-
 						}
 					}
 					// 데이터 매핑
