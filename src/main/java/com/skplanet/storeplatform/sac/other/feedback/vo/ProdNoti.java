@@ -23,7 +23,7 @@ public class ProdNoti extends CommonInfo {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String tenantId;
-	private int notiSeq;
+	private String notiSeq;
 	private String notiTypeCd;
 	private String mbrNo;
 	private String prodId;
@@ -80,17 +80,17 @@ public class ProdNoti extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return the notiSeq
 	 */
-	public int getNotiSeq() {
+	public String getNotiSeq() {
 		return this.notiSeq;
 	}
 
 	/**
 	 * @param notiSeq
-	 *            notiSeq
+	 *            the notiSeq to set
 	 */
-	public void setNotiSeq(int notiSeq) {
+	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
 	}
 

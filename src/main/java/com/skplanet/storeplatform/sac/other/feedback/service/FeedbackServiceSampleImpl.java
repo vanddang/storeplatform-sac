@@ -12,9 +12,14 @@ package com.skplanet.storeplatform.sac.other.feedback.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.NumberUtils;
+import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.AvgScore;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacRes;
@@ -46,6 +51,10 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
+import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
+import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
+import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 
 /**
  * 
@@ -57,24 +66,53 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 @Service
 public class FeedbackServiceSampleImpl implements FeedbackService {
 
+	@Autowired
+	private FeedbackRepository feedbackRepository;
+
 	@Override
 	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackReq, SacRequestHeader sacRequestHeader) {
-		CreateFeedbackSacRes createFeedbackRes = new CreateFeedbackSacRes();
-		createFeedbackRes.setNotiSeq(14275);
-		return createFeedbackRes;
+		// 평점 저장
+		this.setMbrAvgTenantProdStats(createFeedbackReq, sacRequestHeader);
+
+		// 사용후기 내용이 있을 경우에만 등록한다.
+		// 필수 파라미터이기 때문에 if 로직은 빠져되 된다.
+		// if (StringUtils.isNotEmpty(createFeedbackSacReq.getNotiDesc())) {
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setMbrNo(createFeedbackReq.getUserKey());
+		prodNoti.setProdId(createFeedbackReq.getProdId());
+		prodNoti.setTitle(createFeedbackReq.getNotiTitle());
+		prodNoti.setNotiDscr(createFeedbackReq.getNotiDscr());
+		prodNoti.setRegId(createFeedbackReq.getUserId());
+		prodNoti.setMbrTelno(createFeedbackReq.getDeviceId());
+		prodNoti.setFbPostYn(createFeedbackReq.getFbPostYn());
+		prodNoti.setDeviceModelCd(sacRequestHeader.getDeviceHeader().getModel());
+		prodNoti.setPkgVer(createFeedbackReq.getPkgVer());
+		prodNoti.setChnlId(createFeedbackReq.getChnlId());
+		ProdNoti getRegProdNoti = this.feedbackRepository.getRegProdNoti(prodNoti);
+		if (getRegProdNoti == null) {
+			int affectedRow = (Integer) this.feedbackRepository.insertProdNoti(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		} else {
+			throw new StorePlatformException("SAC_OTH_1001");
+		}
+		CreateFeedbackSacRes createFeedbackSacRes = new CreateFeedbackSacRes();
+		createFeedbackSacRes.setNotiSeq(prodNoti.getNotiSeq());
+		return createFeedbackSacRes;
 	}
 
 	@Override
 	public ModifyFeedbackSacRes modify(ModifyFeedbackSacReq modifyFeedbackReq, SacRequestHeader sacRequestHeader) {
 		ModifyFeedbackSacRes modifyFeedbackRes = new ModifyFeedbackSacRes();
-		modifyFeedbackRes.setNotiSeq(14275);
+		modifyFeedbackRes.setNotiSeq("14275");
 		return modifyFeedbackRes;
 	}
 
 	@Override
 	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackReq, SacRequestHeader sacRequestHeader) {
 		RemoveFeedbackSacRes removeFeedbackRes = new RemoveFeedbackSacRes();
-		removeFeedbackRes.setNotiSeq(14275);
+		removeFeedbackRes.setNotiSeq("14275");
 		return removeFeedbackRes;
 	}
 
@@ -98,10 +136,10 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackReq, SacRequestHeader sacRequestHeader) {
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
 		listFeedbackRes.setAvgEvluScorePct("80.00");
-		listFeedbackRes.setNotiTot(10);
-		listFeedbackRes.setAvgEvluScore(2);
-		listFeedbackRes.setDwldCnt(11103);
-		listFeedbackRes.setParticpersCnt(105);
+		listFeedbackRes.setNotiTot("10");
+		listFeedbackRes.setAvgEvluScore("2");
+		listFeedbackRes.setDwldCnt("11103");
+		listFeedbackRes.setParticpersCnt("105");
 		listFeedbackRes.setNotiList(this.getFeedbackList());
 		return listFeedbackRes;
 	}
@@ -109,7 +147,7 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	@Override
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackReq, SacRequestHeader sacRequestHeader) {
 		ListMyFeedbackSacRes listMyFeedbackRes = new ListMyFeedbackSacRes();
-		listMyFeedbackRes.setNotiTot(10);
+		listMyFeedbackRes.setNotiTot("10");
 		listMyFeedbackRes.setNotiList(this.getFeedbackList());
 		return listMyFeedbackRes;
 	}
@@ -118,7 +156,7 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	public CreateSellerFeedbackSacRes createSellerFeedback(CreateSellerFeedbackSacReq createSellerFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
 		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
-		createSellerFeedbackRes.setNotiSeq(14275);
+		createSellerFeedbackRes.setNotiSeq("14275");
 		return createSellerFeedbackRes;
 	}
 
@@ -126,7 +164,7 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	public ModifySellerFeedbackSacRes modifySellerFeedback(ModifySellerFeedbackSacReq modifySellerFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
 		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
-		modifySellerFeedbackRes.setNotiSeq(14275);
+		modifySellerFeedbackRes.setNotiSeq("14275");
 		return modifySellerFeedbackRes;
 	}
 
@@ -134,7 +172,7 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	public RemoveSellerFeedbackSacRes removeSellerFeedback(RemoveSellerFeedbackSacReq removeSellerFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
 		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();
-		removeSellerFeedbackRes.setNotiSeq(14275);
+		removeSellerFeedbackRes.setNotiSeq("14275");
 		return removeSellerFeedbackRes;
 	}
 
@@ -142,10 +180,10 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	public GetScoreSacRes getScore(GetScoreSacReq getScoreReq, SacRequestHeader sacRequestHeader) {
 		GetScoreSacRes getScoreRes = new GetScoreSacRes();
 		getScoreRes.setProdId(getScoreReq.getProdId());
-		getScoreRes.setTotEvluScore(20);
+		getScoreRes.setTotEvluScore("20");
 		getScoreRes.setAvgEvluScore("4.0");
 		getScoreRes.setAvgEvluScorePct("80.00");
-		getScoreRes.setParticpersCnt(5);
+		getScoreRes.setParticpersCnt("5");
 		return getScoreRes;
 	}
 
@@ -155,29 +193,29 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 		ListScoreParticpersSacRes listScoreRes = new ListScoreParticpersSacRes();
 		List<AvgScore> avgScoreList = new ArrayList<AvgScore>();
 		AvgScore avgScore1 = new AvgScore();
-		avgScore1.setAvgScore(5);
-		avgScore1.setAvgScorePct(0);
-		avgScore1.setParticpersCnt(0);
+		avgScore1.setAvgScore("5");
+		avgScore1.setAvgScorePct("0");
+		avgScore1.setParticpersCnt("0");
 
 		AvgScore avgScore2 = new AvgScore();
-		avgScore2.setAvgScore(4);
-		avgScore2.setAvgScorePct(100);
-		avgScore2.setParticpersCnt(1);
+		avgScore2.setAvgScore("4");
+		avgScore2.setAvgScorePct("100");
+		avgScore2.setParticpersCnt("1");
 
 		AvgScore avgScore3 = new AvgScore();
-		avgScore3.setAvgScore(3);
-		avgScore3.setAvgScorePct(0);
-		avgScore3.setParticpersCnt(0);
+		avgScore3.setAvgScore("3");
+		avgScore3.setAvgScorePct("0");
+		avgScore3.setParticpersCnt("0");
 
 		AvgScore avgScore4 = new AvgScore();
-		avgScore4.setAvgScore(2);
-		avgScore4.setAvgScorePct(100);
-		avgScore4.setParticpersCnt(1);
+		avgScore4.setAvgScore("2");
+		avgScore4.setAvgScorePct("100");
+		avgScore4.setParticpersCnt("1");
 
 		AvgScore avgScore5 = new AvgScore();
-		avgScore5.setAvgScore(1);
-		avgScore5.setAvgScorePct(0);
-		avgScore5.setParticpersCnt(0);
+		avgScore5.setAvgScore("1");
+		avgScore5.setAvgScorePct("0");
+		avgScore5.setParticpersCnt("0");
 
 		avgScoreList.add(avgScore1);
 		avgScoreList.add(avgScore2);
@@ -202,13 +240,14 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 
 		List<Feedback> notiList = new ArrayList<Feedback>();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 2; i++) {
 			Feedback feedback = new Feedback();
+			feedback.setNotiSeq("" + i);
 			feedback.setUserKey("IW11000162200905070014211" + i);
 			feedback.setSellerKey("IF111111111111111111111" + i);
 			feedback.setNotiTitle("좋아요!!(" + i + ")");
 			feedback.setNotiDscr("프로야구 게임 재밌네요~ ㅋㅋ(" + i + ")");
-			feedback.setNotiScore(0);
+			feedback.setNotiScore("0");
 			feedback.setRegId("011****5052");
 			feedback.setRegDt("20090606035251");
 			feedback.setSellerRespTitle("");
@@ -219,7 +258,7 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 			feedback.setSaleYn("N");
 			feedback.setWhose("mine");
 			feedback.setSelfRecomYn("N");
-			feedback.setAvgScore(5);
+			feedback.setAvgScore("5");
 			feedback.setNickNm("");
 			feedback.setFbPostYn("N");
 			feedback.setProdId("0000000001");
@@ -243,4 +282,41 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 		return changeFeedbackUserKeyRes;
 	}
 
+	private void setMbrAvgTenantProdStats(Object object, SacRequestHeader sacRequestHeader) {
+		BeanWrapperImpl beanWrapperImpl = new BeanWrapperImpl();
+		beanWrapperImpl.setWrappedInstance(object);
+		String score = (String) beanWrapperImpl.getPropertyValue("avgScore");
+		// 채널ID는 평점 테이블 저장시에만 사용된다.
+		String chnlId = (String) beanWrapperImpl.getPropertyValue("chnlId");
+		String userKey = (String) beanWrapperImpl.getPropertyValue("userKey");
+		String prodId = (String) beanWrapperImpl.getPropertyValue("prodId");
+		if (StringUtils.isEmpty(chnlId)) {
+			String avgScore = "1";
+			if (NumberUtils.toInt(score, 0) > 5) {
+				avgScore = "5";
+			} else if (NumberUtils.toInt(score, 0) <= 0) {
+				avgScore = "1";
+			}
+			MbrAvg mbrAvg = new MbrAvg();
+			mbrAvg.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			mbrAvg.setMbrNo(userKey);
+			mbrAvg.setProdId(prodId);
+			mbrAvg.setAvgScore(avgScore);
+
+			MbrAvg getRegMbrAvg = this.feedbackRepository.getRegMbrAvg(mbrAvg);
+			this.feedbackRepository.mergeMbrAvg(mbrAvg);
+
+			TenantProdStats tenantProdStats = new TenantProdStats();
+			tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			tenantProdStats.setProdId(prodId);
+			if (getRegMbrAvg != null) {
+				tenantProdStats.setAvgEvluScore(avgScore);
+				tenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
+				this.feedbackRepository.updateTenantProdStats(tenantProdStats);
+			} else {
+				tenantProdStats.setAvgEvluScore(avgScore);
+				this.feedbackRepository.mergeTenantProdStats(tenantProdStats);
+			}
+		}
+	}
 }

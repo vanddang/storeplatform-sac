@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,6 +55,8 @@ import com.skplanet.storeplatform.sac.other.feedback.service.FeedbackService;
 @RequestMapping(value = "/other/feedback")
 public class FeedbackController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackController.class);
+
 	@Autowired
 	private FeedbackService feedbackService;
 
@@ -72,6 +76,8 @@ public class FeedbackController {
 	@ResponseBody
 	public CreateFeedbackSacRes create(@RequestBody CreateFeedbackSacReq createFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 사용후기/평점 등록. ##");
+		LOGGER.info("### req : {}", createFeedbackSacReq);
 		return this.feedbackService.create(createFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -91,6 +97,8 @@ public class FeedbackController {
 	@ResponseBody
 	public ModifyFeedbackSacRes modify(@RequestBody ModifyFeedbackSacReq modifyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 사용후기/평점 수정. ##");
+		LOGGER.info("### req : {}", modifyFeedbackSacReq);
 		return this.feedbackService.modify(modifyFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -110,6 +118,8 @@ public class FeedbackController {
 	@ResponseBody
 	public RemoveFeedbackSacRes remove(@RequestBody RemoveFeedbackSacReq removeFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 사용후기/평점 삭제. ##");
+		LOGGER.info("### req : {}", removeFeedbackSacReq);
 		return this.feedbackService.remove(removeFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -129,6 +139,8 @@ public class FeedbackController {
 	@ResponseBody
 	public CreateRecommendFeedbackSacRes createRecommend(
 			@RequestBody CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 사용후기 추천. ##");
+		LOGGER.info("### req : {}", createRecommendFeedbackSacReq);
 		return this.feedbackService.createRecommend(createRecommendFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -148,6 +160,8 @@ public class FeedbackController {
 	@ResponseBody
 	public RemoveRecommendFeedbackSacRes removeRecommend(
 			@RequestBody RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 사용후기 추천 취소. ##");
+		LOGGER.info("### req : {}", removeRecommendFeedbackSacReq);
 		return this.feedbackService.removeRecommend(removeRecommendFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -166,6 +180,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 사용후기 전체 조회. ##");
+		LOGGER.info("### req : {}", listFeedbackSacReq);
 		return this.feedbackService.list(listFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -185,6 +201,8 @@ public class FeedbackController {
 	@ResponseBody
 	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 내 사용후기 조회. ##");
+		LOGGER.info("### req : {}", listMyFeedbackSacReq);
 		return this.feedbackService.listMyFeedback(listMyFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -204,6 +222,8 @@ public class FeedbackController {
 	@ResponseBody
 	public CreateSellerFeedbackSacRes createSellerFeedback(
 			@RequestBody CreateSellerFeedbackSacReq createSellerFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 판매자 댓글 등록. ##");
+		LOGGER.info("### req : {}", createSellerFeedbackSacReq);
 		return this.feedbackService.createSellerFeedback(createSellerFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -223,6 +243,8 @@ public class FeedbackController {
 	@ResponseBody
 	public ModifySellerFeedbackSacRes modifySellerFeedback(
 			@RequestBody ModifySellerFeedbackSacReq modifySellerFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 판매자 댓글 수정. ##");
+		LOGGER.info("### req : {}", modifySellerFeedbackSacReq);
 		return this.feedbackService.modifySellerFeedback(modifySellerFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -242,6 +264,8 @@ public class FeedbackController {
 	@ResponseBody
 	public RemoveSellerFeedbackSacRes removeSellerFeedback(
 			@RequestBody RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 판매자 댓글 삭제. ##");
+		LOGGER.info("### req : {}", removeSellerFeedbackSacReq);
 		return this.feedbackService.removeSellerFeedback(removeSellerFeedbackSacReq, sacRequestHeader);
 	}
 
@@ -260,6 +284,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/getScore/v1", method = RequestMethod.GET)
 	@ResponseBody
 	public GetScoreSacRes getScore(GetScoreSacReq getScoreSacReq, SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 평점 조회. ##");
+		LOGGER.info("### req : {}", getScoreSacReq);
 		return this.feedbackService.getScore(getScoreSacReq, sacRequestHeader);
 	}
 
@@ -279,6 +305,8 @@ public class FeedbackController {
 	@ResponseBody
 	public ListScoreParticpersSacRes listScoreParticpers(ListScoreParticpersSacReq listScoreParticpersSacReq,
 			SacRequestHeader sacRequestHeader) {
+		LOGGER.info("### 평점별 참여수 조회. ##");
+		LOGGER.info("### req : {}", listScoreParticpersSacReq);
 		return this.feedbackService.listScoreParticpers(listScoreParticpersSacReq, sacRequestHeader);
 	}
 }

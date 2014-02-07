@@ -24,17 +24,20 @@ public class TenantProdStats extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	private String tenantId;
 	private String prodId;
-	private int strmCnt;
+	private String strmCnt;
 	private String strmClientNm;
-	private int dwldCnt;
-	private int prchsCnt;
-	private double avgEvluScore;
-	private int totEvluScore;
-	private int paticpersCnt;
+	private String dwldCnt;
+	private String prchsCnt;
+	private String avgEvluScore;
+	private String totEvluScore;
+	private String paticpersCnt;
 	private String regId;
 	private String regDt;
 	private String updId;
 	private String updDt;
+
+	//
+	private String preAvgScore;
 
 	/**
 	 * @return String
@@ -67,9 +70,9 @@ public class TenantProdStats extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getStrmCnt() {
+	public String getStrmCnt() {
 		return this.strmCnt;
 	}
 
@@ -77,7 +80,7 @@ public class TenantProdStats extends CommonInfo {
 	 * @param strmCnt
 	 *            strmCnt
 	 */
-	public void setStrmCnt(int strmCnt) {
+	public void setStrmCnt(String strmCnt) {
 		this.strmCnt = strmCnt;
 	}
 
@@ -97,9 +100,9 @@ public class TenantProdStats extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getDwldCnt() {
+	public String getDwldCnt() {
 		return this.dwldCnt;
 	}
 
@@ -107,14 +110,14 @@ public class TenantProdStats extends CommonInfo {
 	 * @param dwldCnt
 	 *            dwldCnt
 	 */
-	public void setDwldCnt(int dwldCnt) {
+	public void setDwldCnt(String dwldCnt) {
 		this.dwldCnt = dwldCnt;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getPrchsCnt() {
+	public String getPrchsCnt() {
 		return this.prchsCnt;
 	}
 
@@ -122,29 +125,29 @@ public class TenantProdStats extends CommonInfo {
 	 * @param prchsCnt
 	 *            prchsCnt
 	 */
-	public void setPrchsCnt(int prchsCnt) {
+	public void setPrchsCnt(String prchsCnt) {
 		this.prchsCnt = prchsCnt;
 	}
 
 	/**
-	 * @return the avgEvluScore
+	 * @return String
 	 */
-	public double getAvgEvluScore() {
+	public String getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
 	/**
 	 * @param avgEvluScore
-	 *            the avgEvluScore to set
+	 *            avgEvluScore
 	 */
-	public void setAvgEvluScore(double avgEvluScore) {
+	public void setAvgEvluScore(String avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getTotEvluScore() {
+	public String getTotEvluScore() {
 		return this.totEvluScore;
 	}
 
@@ -152,14 +155,14 @@ public class TenantProdStats extends CommonInfo {
 	 * @param totEvluScore
 	 *            totEvluScore
 	 */
-	public void setTotEvluScore(int totEvluScore) {
+	public void setTotEvluScore(String totEvluScore) {
 		this.totEvluScore = totEvluScore;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getPaticpersCnt() {
+	public String getPaticpersCnt() {
 		return this.paticpersCnt;
 	}
 
@@ -167,7 +170,7 @@ public class TenantProdStats extends CommonInfo {
 	 * @param paticpersCnt
 	 *            paticpersCnt
 	 */
-	public void setPaticpersCnt(int paticpersCnt) {
+	public void setPaticpersCnt(String paticpersCnt) {
 		this.paticpersCnt = paticpersCnt;
 	}
 
@@ -229,6 +232,21 @@ public class TenantProdStats extends CommonInfo {
 	 */
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getPreAvgScore() {
+		return this.preAvgScore;
+	}
+
+	/**
+	 * @param preAvgScore
+	 *            preAvgScore
+	 */
+	public void setPreAvgScore(String preAvgScore) {
+		this.preAvgScore = preAvgScore;
 	}
 
 }

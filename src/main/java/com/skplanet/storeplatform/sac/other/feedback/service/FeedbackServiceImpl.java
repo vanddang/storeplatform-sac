@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.framework.core.util.NumberUtils;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ChangeFeedbackUserIdSacRes;
@@ -130,7 +131,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		}
 
 		ModifyFeedbackSacRes modifyFeedbackSacRes = new ModifyFeedbackSacRes();
-		modifyFeedbackSacRes.setNotiSeq(prodNoti.getNotiScore());
+		modifyFeedbackSacRes.setNotiSeq(prodNoti.getNotiSeq());
 		return modifyFeedbackSacRes;
 	}
 
@@ -149,13 +150,14 @@ public class FeedbackServiceImpl implements FeedbackService {
 			tenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
 			TenantProdStats getTenantProdStats = this.feedbackRepository.getTenantProdStats(tenantProdStats);
 			if (getTenantProdStats != null) {
-				if (getTenantProdStats.getPaticpersCnt() == 1) {
+				if (NumberUtils.toInt(getTenantProdStats.getPaticpersCnt(), 0) == 1) {
 					this.feedbackRepository.deleteTenantProdStats(tenantProdStats);
 				} else {
 					TenantProdStats updateTenantProdStats = new TenantProdStats();
 					updateTenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 					updateTenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
-					updateTenantProdStats.setAvgEvluScore(0 - getRegMbrAvg.getAvgScore());
+					updateTenantProdStats.setAvgEvluScore("0");
+					updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
 					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
 			}
@@ -253,17 +255,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 	private void setMbrAvgTenantProdStats(Object object, SacRequestHeader sacRequestHeader) {
 		BeanWrapperImpl beanWrapperImpl = new BeanWrapperImpl();
 		beanWrapperImpl.setWrappedInstance(object);
-		int score = (Integer) beanWrapperImpl.getPropertyValue("avgScore");
+		String score = (String) beanWrapperImpl.getPropertyValue("avgScore");
 		// 채널ID는 평점 테이블 저장시에만 사용된다.
 		String chnlId = (String) beanWrapperImpl.getPropertyValue("chnlId");
 		String userKey = (String) beanWrapperImpl.getPropertyValue("userKey");
 		String prodId = (String) beanWrapperImpl.getPropertyValue("prodId");
 		if (StringUtils.isEmpty(chnlId)) {
-			int avgScore = 1;
-			if (score > 5) {
-				avgScore = 5;
-			} else if (score <= 0) {
-				avgScore = 1;
+			String avgScore = "1";
+			if (NumberUtils.toInt(score, 0) > 5) {
+				avgScore = "5";
+			} else if (NumberUtils.toInt(score, 0) <= 0) {
+				avgScore = "1";
 			}
 			MbrAvg mbrAvg = new MbrAvg();
 			mbrAvg.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
@@ -278,7 +280,8 @@ public class FeedbackServiceImpl implements FeedbackService {
 			tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
 			tenantProdStats.setProdId(prodId);
 			if (getRegMbrAvg != null) {
-				tenantProdStats.setAvgEvluScore(avgScore - getRegMbrAvg.getAvgScore());
+				tenantProdStats.setAvgEvluScore(avgScore);
+				tenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
 				this.feedbackRepository.updateTenantProdStats(tenantProdStats);
 			} else {
 				tenantProdStats.setAvgEvluScore(avgScore);

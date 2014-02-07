@@ -238,4 +238,16 @@ public interface FeedbackRepository {
 	 */
 	public Object changeMbrAvgUserKey(MbrAvg mbrAvg);
 
+	/**
+	 * 
+	 * <pre>
+	 * (탈퇴회원 사용후기)기 추천 여부.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object getProdNotiWDGoodCount(ProdNoti prodNoti);
+
 }

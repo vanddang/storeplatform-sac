@@ -26,7 +26,7 @@ public class MbrAvg extends CommonInfo {
 	private String tenantId;
 	private String prodId;
 	private String mbrNo;
-	private int avgScore;
+	private String avgScore;
 	private String regId;
 	private String regDt;
 
@@ -76,9 +76,9 @@ public class MbrAvg extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgScore() {
+	public String getAvgScore() {
 		return this.avgScore;
 	}
 
@@ -86,7 +86,7 @@ public class MbrAvg extends CommonInfo {
 	 * @param avgScore
 	 *            avgScore
 	 */
-	public void setAvgScore(int avgScore) {
+	public void setAvgScore(String avgScore) {
 		this.avgScore = avgScore;
 	}
 
