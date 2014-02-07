@@ -119,6 +119,7 @@ public class FeedbackRepositoryTest {
 		mbrAvg.setMbrNo("IF1023064687020100310145002");
 		mbrAvg.setProdId("0000017953");
 		mbrAvg.setAvgScore("2");
+		mbrAvg.setRegId("test1");
 
 		int ret = (Integer) this.feedbackRepository.mergeMbrAvg(mbrAvg);
 
@@ -132,6 +133,7 @@ public class FeedbackRepositoryTest {
 		tenantProdStats.setProdId("S000000439");
 		tenantProdStats.setAvgEvluScore("0");
 		tenantProdStats.setPreAvgScore("4");
+		tenantProdStats.setUpdId("test1");
 		int ret = (Integer) this.feedbackRepository.updateTenantProdStats(tenantProdStats);
 
 		assertTrue(ret > 0);
@@ -144,6 +146,8 @@ public class FeedbackRepositoryTest {
 		tenantProdStats.setProdId("S000000439");
 		tenantProdStats.setAvgEvluScore("0");
 		tenantProdStats.setPreAvgScore("4");
+		tenantProdStats.setRegId("test1");
+		tenantProdStats.setUpdId("test1");
 		int ret = (Integer) this.feedbackRepository.mergeTenantProdStats(tenantProdStats);
 
 		assertTrue(ret > 0);
@@ -179,9 +183,19 @@ public class FeedbackRepositoryTest {
 		prodNotiGood.setTenantId("S01");
 		prodNotiGood.setNotiSeq("3068");
 		prodNotiGood.setMbrNo("IF1028159484200908201035255");
+		prodNotiGood.setRegId("test1");
 
 		int ret = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
 
 		assertTrue(ret > 0);
 	}
+
+	@Test
+	public void updateProdNotiWDGood() {
+		ProdNotiGood prodNotiGood = new ProdNotiGood();
+		prodNotiGood.setTenantId("S01");
+		prodNotiGood.setNotiSeq("14262");
+		this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+	}
+
 }
