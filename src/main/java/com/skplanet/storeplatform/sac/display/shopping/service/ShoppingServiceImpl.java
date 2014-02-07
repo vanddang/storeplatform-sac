@@ -865,7 +865,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 		req.setDeviceModelCd(deviceHeader.getModel());
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setOsVersion(osVersion);
-		req.setImageCd(DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
+		req.setImageCd(DisplayConstants.DP_SHOPPING_SPECIAL_REPRESENT_IMAGE_CD);
 
 		// 필수 파라미터 체크
 		if (StringUtils.isEmpty(req.getTenantId())) {
