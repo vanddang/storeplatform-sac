@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 이메일 인증 코드 생성.
@@ -47,6 +49,11 @@ public class GetEmailAuthorizationCodeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetEmailAuthorizationCodeReq request;
+	/** [RESPONSE]. */
+	private static GetEmailAuthorizationCodeRes response;
+
 	/**
 	 * <pre>
 	 * Initialize parameter before JUnit Test.
@@ -55,6 +62,19 @@ public class GetEmailAuthorizationCodeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetEmailAuthorizationCodeReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -69,10 +89,9 @@ public class GetEmailAuthorizationCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetEmailAuthorizationCodeReq request = new GetEmailAuthorizationCodeReq();
 						request.setUserEmail("daseul428@incross.com");
 						request.setUserKey("US201401232110223470000502");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetEmailAuthorizationCodeRes.class, new SuccessCallback() {
@@ -81,7 +100,6 @@ public class GetEmailAuthorizationCodeTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetEmailAuthorizationCodeRes response = (GetEmailAuthorizationCodeRes) result;
 						assertThat(response.getEmailAuthCode(), notNullValue());
-						LOGGER.debug("response param : {}", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}

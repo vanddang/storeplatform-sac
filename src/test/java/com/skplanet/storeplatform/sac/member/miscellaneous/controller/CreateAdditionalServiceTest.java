@@ -107,7 +107,6 @@ public class CreateAdditionalServiceTest {
 						CreateAdditionalServiceRes response = (CreateAdditionalServiceRes) result;
 						assertEquals(response.getMsisdn(), request.getMsisdn());
 						assertEquals(response.getClass(), request.getSvcCode());
-						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}

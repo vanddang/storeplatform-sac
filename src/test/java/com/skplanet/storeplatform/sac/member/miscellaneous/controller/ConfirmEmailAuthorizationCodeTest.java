@@ -6,6 +6,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmEmailAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 이메일 인증코드 확인 JUnit Test.
@@ -50,6 +52,11 @@ public class ConfirmEmailAuthorizationCodeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static ConfirmEmailAuthorizationCodeReq request;
+	/** [RESPONSE]. */
+	private static ConfirmEmailAuthorizationCodeRes response;
+
 	/**
 	 * <pre>
 	 * Initialize parameter before JUnit Test.
@@ -58,12 +65,25 @@ public class ConfirmEmailAuthorizationCodeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new ConfirmEmailAuthorizationCodeReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
 	 * <pre>
 	 * 성공 CASE
-	 * 정상 파라미터 전달. - exception??? 왜
+	 * 정상 파라미터 전달.
 	 * </pre>
 	 */
 	@Test
@@ -73,9 +93,8 @@ public class ConfirmEmailAuthorizationCodeTest {
 
 					@Override
 					public Object requestBody() {
-						ConfirmEmailAuthorizationCodeReq request = new ConfirmEmailAuthorizationCodeReq();
 						request.setEmailAuthCode("84f9f1febcfe4d129e84138cc7baf3da");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(ConfirmEmailAuthorizationCodeRes.class, new SuccessCallback() {
@@ -85,7 +104,6 @@ public class ConfirmEmailAuthorizationCodeTest {
 						ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
 						assertThat(response.getUserEmail(), notNullValue());
 						assertThat(response.getUserKey(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -104,9 +122,8 @@ public class ConfirmEmailAuthorizationCodeTest {
 
 					@Override
 					public Object requestBody() {
-						ConfirmEmailAuthorizationCodeReq request = new ConfirmEmailAuthorizationCodeReq();
 						request.setEmailAuthCode("c4a566d90d2a4440991eca80f404611a");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(ConfirmEmailAuthorizationCodeRes.class, new SuccessCallback() {
@@ -116,7 +133,6 @@ public class ConfirmEmailAuthorizationCodeTest {
 						ConfirmEmailAuthorizationCodeRes response = (ConfirmEmailAuthorizationCodeRes) result;
 						assertThat(response.getUserEmail(), notNullValue());
 						assertThat(response.getUserKey(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 단말 모델코드 조회.
@@ -46,6 +48,11 @@ public class GetModelCodeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetModelCodeReq request;
+	/** [RESPONSE]. */
+	private static GetModelCodeRes response;
+
 	/**
 	 * 
 	 * <pre>
@@ -55,6 +62,19 @@ public class GetModelCodeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetModelCodeReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -70,9 +90,8 @@ public class GetModelCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetModelCodeReq request = new GetModelCodeReq();
 						request.setMsisdn("01020284280");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetModelCodeRes.class, new SuccessCallback() {
@@ -81,7 +100,7 @@ public class GetModelCodeTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetModelCodeRes response = (GetModelCodeRes) result;
 						assertThat(response.getDeviceModelNo(), notNullValue());
-						LOGGER.debug("response param : {}", response.toString());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}

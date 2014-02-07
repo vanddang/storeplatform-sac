@@ -3,6 +3,7 @@
  */
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 부가서비스 가입 조회
@@ -47,6 +49,11 @@ public class GetAdditionalServiceTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetAdditionalServiceReq request;
+	/** [RESPONSE]. */
+	private static GetAdditionalServiceRes response;
+
 	/**
 	 * 
 	 * <pre>
@@ -56,6 +63,19 @@ public class GetAdditionalServiceTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetAdditionalServiceReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -72,10 +92,9 @@ public class GetAdditionalServiceTest {
 
 					@Override
 					public Object requestBody() {
-						GetAdditionalServiceReq request = new GetAdditionalServiceReq();
 						request.setMsisdn("");
 						request.setSvcCode("");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetAdditionalServiceRes.class, new SuccessCallback() {
@@ -83,7 +102,6 @@ public class GetAdditionalServiceTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetAdditionalServiceRes response = (GetAdditionalServiceRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}

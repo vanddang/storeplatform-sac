@@ -3,6 +3,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * OPMD 모회선 번호 조회 JUnit Test.
@@ -47,6 +49,11 @@ public class GetOpmdTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetOpmdReq request;
+	/** [RESPONSE]. */
+	private static GetOpmdRes response;
+
 	/**
 	 * 
 	 * <pre>
@@ -56,6 +63,19 @@ public class GetOpmdTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetOpmdReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -72,9 +92,8 @@ public class GetOpmdTest {
 
 					@Override
 					public Object requestBody() {
-						GetOpmdReq request = new GetOpmdReq();
 						request.setMsisdn("98999720228");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetOpmdRes.class, new SuccessCallback() {
@@ -82,8 +101,6 @@ public class GetOpmdTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetOpmdRes response = (GetOpmdRes) result;
-						assertThat(response.getMsisdn(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -103,9 +120,8 @@ public class GetOpmdTest {
 
 					@Override
 					public Object requestBody() {
-						GetOpmdReq request = new GetOpmdReq();
 						request.setMsisdn("01020284222");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetOpmdRes.class, new SuccessCallback() {
@@ -114,7 +130,6 @@ public class GetOpmdTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetOpmdRes response = (GetOpmdRes) result;
 						assertThat(response.getMsisdn(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -135,9 +150,8 @@ public class GetOpmdTest {
 
 					@Override
 					public Object requestBody() {
-						GetOpmdReq request = new GetOpmdReq();
 						request.setMsisdn("E1HHADEFVA9");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetOpmdRes.class, new SuccessCallback() {
@@ -146,7 +160,6 @@ public class GetOpmdTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetOpmdRes response = (GetOpmdRes) result;
 						assertThat(response.getMsisdn(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

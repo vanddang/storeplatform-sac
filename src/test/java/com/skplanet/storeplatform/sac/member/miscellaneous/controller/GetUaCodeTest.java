@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
+import static org.junit.Assert.assertSame;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetUaCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * UA 코드 정보 조회 JUnit Test.
@@ -44,6 +48,11 @@ public class GetUaCodeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetUaCodeReq request;
+	/** [RESPONSE]. */
+	private static GetUaCodeRes response;
+
 	/**
 	 * 
 	 * <pre>
@@ -53,6 +62,19 @@ public class GetUaCodeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetUaCodeReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -69,9 +91,8 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetUaCodeReq request = new GetUaCodeReq();
 						request.setMsisdn("01001231116");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -79,7 +100,8 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -98,9 +120,8 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetUaCodeReq request = new GetUaCodeReq();
 						request.setDeviceModelNo("SCH-B750");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -108,7 +129,8 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -126,10 +148,9 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetUaCodeReq request = new GetUaCodeReq();
 						request.setDeviceModelNo("SCH-B750");
 						request.setMsisdn("01088902431");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -137,7 +158,8 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -150,18 +172,27 @@ public class GetUaCodeTest {
 	 * 
 	 * [유효한 MDN]
 	 * 1. 10자리 또는 11자리
-	 * 2. 010/011/016/017/018
+	 * 2. 010/011/016/017/018/019
 	 * </pre>
 	 */
 	@Test(expected = StorePlatformException.class)
 	public void requestInvalidMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1?msisdn=0018890240")
-				.httpMethod(HttpMethod.GET).success(GetUaCodeRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getUaCode/v1").httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+
+					@Override
+					public Object requestBody() {
+						request.setMsisdn("0000");
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
+						return request;
+					}
+				}).success(GetUaCodeRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetUaCodeRes res = (GetUaCodeRes) result;
-						LOGGER.debug("{}", res.toString());
+						GetUaCodeRes response = (GetUaCodeRes) result;
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -180,9 +211,8 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetUaCodeReq request = new GetUaCodeReq();
 						request.setMsisdn("01011112222");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -190,7 +220,8 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -210,9 +241,7 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetUaCodeReq request = new GetUaCodeReq();
-						request.setMsisdn("01011112222");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -220,7 +249,8 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
@@ -239,9 +269,8 @@ public class GetUaCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetUaCodeReq request = new GetUaCodeReq();
 						request.setDeviceModelNo("SCH-W777");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetUaCodeRes.class, new SuccessCallback() {
@@ -249,7 +278,8 @@ public class GetUaCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetUaCodeRes response = (GetUaCodeRes) result;
-						LOGGER.debug("response param : {} ", response.toString());
+						assertSame(response, null);
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

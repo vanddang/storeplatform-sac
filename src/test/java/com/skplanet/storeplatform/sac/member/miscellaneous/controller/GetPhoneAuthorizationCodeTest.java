@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 휴대폰 인증 SMS 발송 JUnit Test.
@@ -56,6 +58,11 @@ public class GetPhoneAuthorizationCodeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static GetPhoneAuthorizationCodeReq request;
+	/** [RESPONSE]. */
+	private static GetPhoneAuthorizationCodeRes response;
+
 	/**
 	 * <pre>
 	 * method 설명.
@@ -64,6 +71,19 @@ public class GetPhoneAuthorizationCodeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new GetPhoneAuthorizationCodeReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -79,12 +99,11 @@ public class GetPhoneAuthorizationCodeTest {
 
 					@Override
 					public Object requestBody() {
-						GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
 						request.setSrcId("US004504"); // 휴대폰 인증 SMS
 						request.setTeleSvcId("0"); // 단건 발송
 						request.setRecvMdn("01020284280");
 						request.setCarrier("SKT");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
@@ -93,41 +112,10 @@ public class GetPhoneAuthorizationCodeTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
 						assertThat(response.getPhoneSign(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
+						LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
 	}
 
-	/**
-	 * <pre>
-	 * 실패 CASE
-	 * 유효하지 않은 통신사 정보 전달.
-	 * </pre>
-	 */
-	@Test(expected = StorePlatformException.class)
-	public void invalidTelecomTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getPhoneAuthorizationCode/v1")
-				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
-
-					@Override
-					public Object requestBody() {
-						GetPhoneAuthorizationCodeReq request = new GetPhoneAuthorizationCodeReq();
-						request.setSrcId("US004504"); // 휴대폰 인증 SMS
-						request.setTeleSvcId("0"); // 단건 발송
-						request.setCarrier("A");
-						LOGGER.debug("request param : {}", request.toString());
-						return request;
-					}
-				}).success(GetPhoneAuthorizationCodeRes.class, new SuccessCallback() {
-
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetPhoneAuthorizationCodeRes response = (GetPhoneAuthorizationCodeRes) result;
-						assertThat(response.getPhoneSign(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
 }

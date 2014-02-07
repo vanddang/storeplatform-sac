@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * Captcha 문자 확인 JUnit Test.
@@ -47,6 +49,11 @@ public class ConfirmCaptchaTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static ConfirmCaptchaReq request;
+	/** [RESPONSE]. */
+	private static ConfirmCaptchaRes response;
+
 	/**
 	 * <pre>
 	 * Initialize parameter before JUnit Test.
@@ -55,6 +62,19 @@ public class ConfirmCaptchaTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new ConfirmCaptchaReq();
+	}
+
+	/**
+	 * <pre>
+	 * After method.
+	 * </pre>
+	 */
+	@After
+	public void after() {
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -69,12 +89,11 @@ public class ConfirmCaptchaTest {
 
 					@Override
 					public Object requestBody() {
-						ConfirmCaptchaReq request = new ConfirmCaptchaReq();
 						request.setAuthCode("n6yxe6");
 						request.setImageSign("88f4e72da1467f7ff05aebf0f72faf25f206588f");
 						request.setSignData("https://idp.innoace.com:8002/watermark/20140122/10573_1390394299869.jpeg|1390394299869");
 
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(ConfirmCaptchaRes.class, new SuccessCallback() {
@@ -83,7 +102,6 @@ public class ConfirmCaptchaTest {
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ConfirmCaptchaRes response = (ConfirmCaptchaRes) result;
 						assertEquals(response, null); // response 없는게 정상 Case임.
-						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 

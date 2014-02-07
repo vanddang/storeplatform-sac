@@ -1,7 +1,6 @@
 package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,6 +28,7 @@ import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 휴대폰 인증 코드 확인 JUnit Test.
@@ -49,6 +49,11 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 	private MockMvc mockMvc;
 
+	/** [REQUEST]. */
+	private static ConfirmPhoneAuthorizationCodeReq request;
+	/** [RESPONSE]. */
+	private static ConfirmPhoneAuthorizationCodeRes response;
+
 	/**
 	 * <pre>
 	 * Initialize parameter before JUnit Test.
@@ -57,6 +62,8 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// [REQUEST] 초기화
+		request = new ConfirmPhoneAuthorizationCodeReq();
 	}
 
 	/**
@@ -66,7 +73,8 @@ public class ConfirmPhoneAuthorizationCodeTest {
 	 */
 	@After
 	public void after() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -82,12 +90,11 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 					@Override
 					public Object requestBody() {
-						ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
 						request.setUserPhone("01012344241");
 						request.setPhoneAuthCode("707539");
 						request.setPhoneSign("f59e3e2bee644efa8922cfc4e23787df");
 						request.setTimeToLive("3");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
@@ -95,8 +102,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
-						assertThat(response.getUserPhone(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
+						assertEquals(response.getUserPhone(), request.getUserPhone());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
@@ -115,12 +121,11 @@ public class ConfirmPhoneAuthorizationCodeTest {
 
 					@Override
 					public Object requestBody() {
-						ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
 						request.setUserPhone("01012344241");
 						request.setPhoneAuthCode("805531");
 						request.setPhoneSign("b3685c54bf7c491d8a97cc5211449864");
 						request.setTimeToLive("3");
-						LOGGER.debug("request param : {}", request.toString());
+						LOGGER.debug("[REQUEST(SAC)] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
@@ -128,8 +133,7 @@ public class ConfirmPhoneAuthorizationCodeTest {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
-						assertThat(response.getUserPhone(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
+						assertEquals(response.getUserPhone(), request.getUserPhone());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
