@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member;
+package com.skplanet.storeplatform.sac.member.common.util;
 
 import java.util.regex.Pattern;
 
@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
  * 
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
-public class ConvertMapperUtils {
+public class TestConvertMapperUtils {
 
 	/**
 	 * <pre>

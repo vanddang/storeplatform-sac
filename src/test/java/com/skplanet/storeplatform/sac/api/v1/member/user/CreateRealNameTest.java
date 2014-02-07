@@ -34,9 +34,9 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
  * 실명인증정보 수정 테스트.
@@ -77,7 +77,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test1_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -128,7 +128,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test2_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -179,7 +179,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test3_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -231,7 +231,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test4_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override

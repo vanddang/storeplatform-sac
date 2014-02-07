@@ -1,6 +1,6 @@
-package com.skplanet.storeplatform.sac.api.v1.member.constant;
+package com.skplanet.storeplatform.sac.member.common.constant;
 
-public final class MemberTestConstant {
+public final class TestMemberConstant {
 
 	public static final String PREFIX_SELLER_LOCAL_PATH = "/dev/member/seller";
 	public static final String PREFIX_SELLER_PATH = "/member/seller";

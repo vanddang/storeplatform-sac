@@ -36,11 +36,11 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.AgreementInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateByAgreementRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 /**
  * ID 회원 약관 동의 가입 (One ID 회원) 테스트.
@@ -81,7 +81,7 @@ public class CreateByAgreementTest {
 	@Test
 	public void test1_createByAgreementId() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -153,7 +153,7 @@ public class CreateByAgreementTest {
 	@Test
 	public void test2_createByAgreementDeviceMdn() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.addHeaders("x-planet-device-info", "model=\"SHW-M190S\",fwVersion=\"2.1.3_20101005f\",pkgVersion=\"com.skplanet.tstore.mobile/38\",rootDetection=\"no\"")
 				.requestBody(new RequestBodySetter() {
@@ -227,7 +227,7 @@ public class CreateByAgreementTest {
 	@Test
 	public void test4_errorTestCase() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(MemberTestConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createByAgreement/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override

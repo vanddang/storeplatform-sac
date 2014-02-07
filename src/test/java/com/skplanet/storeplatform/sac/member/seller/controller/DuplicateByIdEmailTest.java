@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.seller;
+package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -27,10 +27,10 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DuplicateByIdEmailRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 2.2.2. ID / Email 중복체크.
@@ -71,7 +71,7 @@ public class DuplicateByIdEmailTest {
 
 	@After
 	public void after() {
-		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.debug("[RESPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateById() {
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -108,7 +108,7 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateByIdEmpty() {
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -135,7 +135,7 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateByEmail() {
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -161,7 +161,7 @@ public class DuplicateByIdEmailTest {
 	 */
 	@Test
 	public void duplicateByEmailEmpty() {
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/duplicateByIdEmail/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override

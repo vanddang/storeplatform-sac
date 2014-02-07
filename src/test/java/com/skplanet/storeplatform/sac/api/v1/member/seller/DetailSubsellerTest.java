@@ -24,8 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailSubsellerRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -61,7 +61,7 @@ public class DetailSubsellerTest {
 	public void detailSubseller() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_LOCAL_PATH
+				.url(TestMemberConstant.PREFIX_SELLER_LOCAL_PATH
 						+ "/detailSubseller/v1?sellerKey=US2013122616445132200000141").httpMethod(HttpMethod.GET)
 				.success(DetailSubsellerRes.class, new SuccessCallback() {
 					@Override

@@ -24,8 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -61,7 +61,7 @@ public class DetailInformationTest {
 	public void detailInformationFull() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
 						+ "/detailInformation/v1?sellerKey=IF1023038273420100111202617&aid=OA00049881")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
@@ -83,7 +83,7 @@ public class DetailInformationTest {
 	public void detailInformationSellerKey() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
 						+ "/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
@@ -105,7 +105,7 @@ public class DetailInformationTest {
 	public void detailInformationAid() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?aid=OM00044495")
+				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?aid=OM00044495")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
@@ -126,7 +126,7 @@ public class DetailInformationTest {
 	public void detailInformationEmpty() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=")
+				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=")
 				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

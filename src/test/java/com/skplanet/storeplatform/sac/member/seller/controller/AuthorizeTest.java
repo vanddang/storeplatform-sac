@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.seller;
+package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -25,10 +25,10 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 2.2.3. 판매자 회원 인증
@@ -77,7 +77,7 @@ public class AuthorizeTest {
 	@After
 	public void after() {
 		// Debug
-		LOGGER.debug("[RESPONSE(SAC)-회원인증] : \n{}", ConvertMapperUtils.convertObjectToJson(authorizeRes));
+		LOGGER.debug("[RESPONSE(SAC)-회원인증] : \n{}", TestConvertMapperUtils.convertObjectToJson(authorizeRes));
 	}
 
 	/**
@@ -88,15 +88,15 @@ public class AuthorizeTest {
 	@Test
 	public void authorize() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						authorizeReq.setSellerId("sctest1");
 						authorizeReq.setSellerPW("123456");
-						 authorizeReq.setExpireDate("2");
-						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}", ConvertMapperUtils.convertObjectToJson(authorizeReq));
+						authorizeReq.setExpireDate("2");
+						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}", TestConvertMapperUtils.convertObjectToJson(authorizeReq));
 						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
@@ -118,7 +118,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeSub() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -147,7 +147,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeNonId() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -176,7 +176,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeNonPw() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -206,7 +206,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeNonIdPw() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -236,7 +236,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeTurnMotion() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -266,7 +266,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeSevenMotionAgain() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -296,7 +296,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeTurnReject() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -326,7 +326,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeSecedeMotion() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -356,7 +356,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeSecedeFinish() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -386,7 +386,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeJoinApplyEtc() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -416,7 +416,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeJoinApplyWating() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -446,7 +446,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeEmailCertWating() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -476,7 +476,7 @@ public class AuthorizeTest {
 	@Test
 	public void authorizeLoginPause() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override

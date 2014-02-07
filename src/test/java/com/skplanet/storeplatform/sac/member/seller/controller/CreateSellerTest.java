@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.seller;
+package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -33,12 +33,12 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerReques
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerResponse;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.common.PwReminder;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 2.2.1. 판매자 회원 가입
@@ -93,7 +93,7 @@ public class CreateSellerTest {
 	// @After
 	public void after() {
 		// Debug - 가입 결과
-		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.debug("[RESPONSE(SAC)-가입] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 		if (res != null) {
 			CommonRequest commonRequest = new CommonRequest();
 			commonRequest.setSystemID("S001");
@@ -118,7 +118,7 @@ public class CreateSellerTest {
 
 			// Debug - 정상회원으로 변경 결과
 			LOGGER.debug("[RESPONSE(SC)-정상회원] : \n{}",
-					ConvertMapperUtils.convertObjectToJson(updateStatusSellerResponse));
+					TestConvertMapperUtils.convertObjectToJson(updateStatusSellerResponse));
 
 			// 탈퇴 [REQUEST]
 			RemoveSellerRequest request = new RemoveSellerRequest();
@@ -133,7 +133,7 @@ public class CreateSellerTest {
 			LOGGER.debug("[sellerSCI.removeSeller()] CODE : {}, MESSAGE : {}", response.getCommonResponse()
 					.getResultCode(), response.getCommonResponse().getResultMessage());
 			// Debug - 회원탈퇴 결과
-			LOGGER.debug("[RESPONSE(SC)-회원탈퇴] : \n{}", ConvertMapperUtils.convertObjectToJson(response));
+			LOGGER.debug("[RESPONSE(SC)-회원탈퇴] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 		}
 	}
 
@@ -144,7 +144,7 @@ public class CreateSellerTest {
 	 */
 	@Test
 	public void createSellerPersonNopay() {
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -176,7 +176,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -197,7 +197,7 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerPersonPay() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -226,7 +226,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -248,7 +248,7 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerBusinessNoPay() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -277,7 +277,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -299,7 +299,7 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerBusinessPay() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -328,7 +328,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -350,7 +350,7 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerLegalBusinessNoPay() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -379,7 +379,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -401,7 +401,7 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerLegalBusinessPay() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -430,7 +430,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {
@@ -452,7 +452,7 @@ public class CreateSellerTest {
 	@Test
 	public void createSellerLegalBusinessBP() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/create/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/create/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -481,7 +481,7 @@ public class CreateSellerTest {
 						pwReminders.add(pwReminder);
 						req.setPwReminderList(pwReminders);
 
-						LOGGER.debug(ConvertMapperUtils.convertObjectToJson(req));
+						LOGGER.debug(TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(CreateRes.class, new SuccessCallback() {

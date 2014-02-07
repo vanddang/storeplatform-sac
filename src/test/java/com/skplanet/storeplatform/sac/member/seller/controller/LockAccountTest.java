@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.seller;
+package com.skplanet.storeplatform.sac.member.seller.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -25,10 +25,10 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 2.2.16. 판매자 계정 잠금
@@ -72,7 +72,7 @@ public class LockAccountTest {
 	 */
 	@After
 	public void after() {
-		LOGGER.debug("[RESPONSE] : \n{}", ConvertMapperUtils.convertObjectToJson(res));
+		LOGGER.debug("[RESPONSE] : \n{}", TestConvertMapperUtils.convertObjectToJson(res));
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class LockAccountTest {
 	@Test
 	public void lockAccount() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
@@ -111,7 +111,7 @@ public class LockAccountTest {
 	@Test
 	public void lockAccountWrongId() {
 
-		new TestCaseTemplate(this.mockMvc).url(MemberTestConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/lockAccount/v1")
 				.addHeaders("x-store-auth-info", "authKey=114127c7ef42667669819dad5df8d820c;ist=N")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override

@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
+package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -30,10 +30,10 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyReq.PolicyCode;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
  * 2.3.8. 사용자별 정책 조회
@@ -83,7 +83,7 @@ public class GetIndividualPolicyTest {
 	@After
 	public void after() {
 		// Debug SAC 결과
-		LOGGER.debug("[RESPONSE(SAC)-정책조회] : \n{}", ConvertMapperUtils.convertObjectToJson(response));
+		LOGGER.debug("[RESPONSE(SAC)-정책조회] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class GetIndividualPolicyTest {
 						policyCodeList.add(policyCode3);
 						request.setPolicyCodeList(policyCodeList);
 						request.setKey("01012341234");
-						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+						LOGGER.debug("[REQUEST] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetIndividualPolicyRes.class, new SuccessCallback() {
@@ -147,7 +147,7 @@ public class GetIndividualPolicyTest {
 						}
 						request.setPolicyCodeList(policyCodeList);
 						request.setKey("5123");
-						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+						LOGGER.debug("[REQUEST] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
 				}).success(GetIndividualPolicyRes.class, new SuccessCallback() {

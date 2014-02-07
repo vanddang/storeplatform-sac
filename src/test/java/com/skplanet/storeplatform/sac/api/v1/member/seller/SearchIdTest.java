@@ -24,8 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -61,7 +61,7 @@ public class SearchIdTest {
 	public void searchId() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
 						+ "/searchId2/v1?sellerEmail=omc97@hanmail.net&sellerCompany=&sellerBizNumber=&sellerPhone=")
 				.httpMethod(HttpMethod.GET).success(SearchIdRes.class, new SuccessCallback() {
 					@Override

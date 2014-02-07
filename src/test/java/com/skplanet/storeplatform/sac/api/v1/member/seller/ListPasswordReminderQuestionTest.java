@@ -24,8 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordReminderQuestionRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -61,7 +61,7 @@ public class ListPasswordReminderQuestionTest {
 	public void ListPasswordReminderQuestion() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
 						+ "/listPasswordReminderQuestion2/v1?sellerKey=SE201401272205138350000394")
 				.httpMethod(HttpMethod.GET).success(ListPasswordReminderQuestionRes.class, new SuccessCallback() {
 					@Override

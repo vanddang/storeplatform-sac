@@ -24,8 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.constant.MemberTestConstant;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailAccountInformationRes;
+import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -61,7 +61,7 @@ public class DetailAccountInformationTest {
 	public void detailAccountInformation() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH
+				.url(TestMemberConstant.PREFIX_SELLER_PATH
 						+ "/detailAccountInformation/v1?sellerKey=IF102102956220120711144039")
 				.httpMethod(HttpMethod.GET).success(DetailAccountInformationRes.class, new SuccessCallback() {
 					@Override
@@ -83,7 +83,7 @@ public class DetailAccountInformationTest {
 	public void detailAccountInformationEmpty() {
 
 		new TestCaseTemplate(this.mockMvc)
-				.url(MemberTestConstant.PREFIX_SELLER_PATH + "/detailAccountInformation/v1?sellerKey=")
+				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailAccountInformation/v1?sellerKey=")
 				.httpMethod(HttpMethod.GET).success(DetailAccountInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {

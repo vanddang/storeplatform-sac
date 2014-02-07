@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
+package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -27,12 +27,12 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.api.v1.member.ConvertMapperUtils;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.RemoveIndividualPolicyRes;
+import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
- * 2.3.9. 사용자별 정책 등록 / 수정
+ * 2.3.10. 사용자별 정책 삭제
  * 
  * Updated on : 2014. 1. 21. Updated by : 김경복, 부르칸.
  */
@@ -41,9 +41,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateIndiv
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class CreateIndividualPolicyTest {
+public class RemoveIndividualPolicyTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateIndividualPolicyTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoveIndividualPolicyTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -51,35 +51,30 @@ public class CreateIndividualPolicyTest {
 	private MockMvc mockMvc;
 
 	/** [REQUEST]. */
-	private static CreateIndividualPolicyReq request;
-
+	private static RemoveIndividualPolicyReq request;
 	/** [RESPONSE]. */
-	private static CreateIndividualPolicyRes response;
+	private static RemoveIndividualPolicyRes response;
 	/** [x-store-auth-info]. */
 	private static String xStoreAuthInfo;
 
 	/**
 	 * <pre>
-	 * before method 설명.
+	 * method 설명.
 	 * </pre>
 	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 		// [REQUEST] 초기화
-		request = new CreateIndividualPolicyReq();
+		request = new RemoveIndividualPolicyReq();
 		// [HEADER] 주입
 		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
 	}
 
-	/**
-	 * <pre>
-	 * After method 설명.
-	 * </pre>
-	 */
 	@After
 	public void after() {
-		LOGGER.debug("[RESPONSE(SAC)-정책등록/수정] : \n{} ", response.toString());
+		// Debug [RESPONSE-SAC]
+		LOGGER.debug("[RESPONSE(SAC)-정책삭제] : \n{}", TestConvertMapperUtils.convertObjectToJson(response));
 	}
 
 	/**
@@ -89,32 +84,24 @@ public class CreateIndividualPolicyTest {
 	 * </pre>
 	 */
 	@Test
-	public void createIndividualPolicy() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createIndividualPolicy/v1")
+	public void removeIndividualPolicy() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/removeIndividualPolicy/v1")
 				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
-
 					@Override
 					public Object requestBody() {
-						// key(30), code(10), value(100)
 						request.setKey("01012341234");
 						request.setPolicyCode("US011702");
-						request.setValue("Y");
-						request.setRegId("test");
-
-						// Debug
-						LOGGER.debug("[REQUEST] JSON : \n{}", ConvertMapperUtils.convertObjectToJson(request));
+						LOGGER.debug("[REQUEST] JSON : \n{}", TestConvertMapperUtils.convertObjectToJson(request));
 						return request;
 					}
-				}).success(CreateIndividualPolicyRes.class, new SuccessCallback() {
+				}).success(RemoveIndividualPolicyRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						response = (CreateIndividualPolicyRes) result;
+						RemoveIndividualPolicyRes response = (RemoveIndividualPolicyRes) result;
 						assertThat(response.getPolicyCode(), notNullValue());
-						assertEquals(response.getKey(), request.getKey());
 						assertEquals(response.getPolicyCode(), request.getPolicyCode());
-						assertEquals(response.getValue(), request.getValue());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 
