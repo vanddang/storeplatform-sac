@@ -361,7 +361,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
 		LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
 
-		if (waterMarkImageUrl != null) {
+		if (idpReciver != null && waterMarkImageUrl != null) {
 			LOGGER.info("## waterMarkImageUrl 정상 발급.");
 			HTTP_PROTOCOL protocol = null;
 			HTTP_METHOD method = null;
@@ -408,6 +408,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.info("## IDP Service 호출.");
 		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
 				request.getSignData());
+
 		LOGGER.info("## IDP Service 결과. Response{}", idpReciver);
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
 
@@ -553,12 +554,18 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	@Override
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
-		// TODO IdpServie joinSupService 호출해서 부가서비스 가입 요청
+
+		// // TEST를 위해 기존 가입된 부가서비스 탈퇴
+		// IdpReceiverM secede = this.idpService.secedeSupService(request.getMsisdn(), request.getSvcCode(),
+		// request.getSvcMngNum());
+		// LOGGER.info("부가서비스 탈퇴 완료. : secede {}", secede);
+
+		// IdpServie joinSupService 호출해서 부가서비스 가입 요청
 		IdpReceiverM idpReciver = this.idpService.joinSupService(request.getMsisdn(), request.getSvcCode(),
 				request.getSvcMngNum());
 
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
-		response.setMsisdn(idpReciver.getResponseBody().getUser_phone()); // 사용자 휴대폰번호
+		response.setMsisdn(idpReciver.getResponseBody().getUser_mdn()); // 사용자 휴대폰번호
 
 		return response;
 	}
@@ -568,13 +575,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 
-		// IDP 호출해서 부가서비스 가입 조회 요청
+		// IDP 호출해서 부가서비스 가입여부 조회 요청
 		IdpReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getMsisdn(), request.getSvcCode());
 		idpReciver.getResponseBody().getSp_list(); // 타 채널 가입 리스트
 		idpReciver.getResponseBody().getCharge(); // SKT 사용자의 휴대폰 요금제 코드
 		idpReciver.getResponseBody().getServiceCD(); // SKT 사용자의 휴대폰 요금제에 따른 부가서비스 코드
 
-		response.setMsisdn(request.getMsisdn());
+		response.setMsisdn(idpReciver.getResponseBody().getUser_mdn());
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
 		response.setSvcJoinResult(idpReciver.getResponseBody().getSvc_result()); // 부가서비스 결과 : 하나 또는 복수 파이프(|)로 구분함 /
 																				 // 결과는 (=) 로 구분

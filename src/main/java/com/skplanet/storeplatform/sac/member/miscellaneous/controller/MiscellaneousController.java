@@ -251,8 +251,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
 
-		CreateAdditionalServiceRes response = this.service.createAdditionalService(request);
-		return response;
+		return this.service.createAdditionalService(request);
 	}
 
 	/**
