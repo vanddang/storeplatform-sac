@@ -23,7 +23,7 @@ public class RemoveSubsellerReq extends CommonInfo {
 	private String sellerKey;
 
 	/** 삭제할 서브계정 키 목록. */
-	@NotBlank
+
 	private List<String> subSellerKey;
 
 	public String getSellerKey() {
