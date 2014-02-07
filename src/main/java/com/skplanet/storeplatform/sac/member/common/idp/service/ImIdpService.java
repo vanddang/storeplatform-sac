@@ -46,7 +46,6 @@ public interface ImIdpService {
 			String parent_name, String parent_email, String user_auth_key, String parent_birthday);
 
 	/** 2.1.26 RX 배포 Retry 요청. */
-	/** 2.2 SP 요구사항 API. */
 
 	/** 2.2 SP 요구사항 API. */
 	/** 2.2.3 MDN 중복체크. */
