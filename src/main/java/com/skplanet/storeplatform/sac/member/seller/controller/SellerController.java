@@ -25,10 +25,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -95,8 +95,8 @@ public class SellerController {
 	 */
 	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyInformationRes modifyInformation(SacRequestHeader header,
-			@RequestBody @Validated ModifyInformationReq req) {
+	public ModifyInformationSacRes modifyInformation(SacRequestHeader header,
+			@RequestBody @Validated ModifyInformationSacReq req) {
 		return this.sellerService.modifyInformation(header, req);
 	}
 
@@ -111,8 +111,8 @@ public class SellerController {
 	 */
 	// @RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header,
-			@RequestBody @Validated ModifyAccountInformationReq req) {
+	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
+			@RequestBody @Validated ModifyAccountInformationSacReq req) {
 		return this.sellerService.modifyAccountInformation(header, req);
 	}
 

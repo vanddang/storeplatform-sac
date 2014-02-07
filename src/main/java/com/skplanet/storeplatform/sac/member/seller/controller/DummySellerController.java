@@ -36,11 +36,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.ListPasswordRemind
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyEmailSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyPasswordSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyRealNameSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifySubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.RemoveSubsellerRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchAuthKeyRes;
@@ -466,9 +466,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyInformationRes modifyInformation() {
+	public ModifyInformationSacRes modifyInformation() {
 
-		ModifyInformationRes responseVO = new ModifyInformationRes();
+		ModifyInformationSacRes responseVO = new ModifyInformationSacRes();
 
 		responseVO.setSellerKey("IF102158942020090723111912");
 
@@ -484,9 +484,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/modifyAccountInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyAccountInformationRes modifyAccountInformation() {
+	public ModifyAccountInformationSacRes modifyAccountInformation() {
 
-		ModifyAccountInformationRes responseVO = new ModifyAccountInformationRes();
+		ModifyAccountInformationSacRes responseVO = new ModifyAccountInformationSacRes();
 		responseVO.setSellerKey("IF102158942020090723111912");
 
 		return responseVO;
@@ -501,9 +501,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyEmailRes modifyEmail() {
+	public ModifyEmailSacRes modifyEmail() {
 
-		ModifyEmailRes responseVO = new ModifyEmailRes();
+		ModifyEmailSacRes responseVO = new ModifyEmailSacRes();
 		responseVO.setSellerKey("User1");
 
 		return responseVO;
@@ -518,9 +518,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyPasswordRes modifyPassword() {
+	public ModifyPasswordSacRes modifyPassword() {
 
-		ModifyPasswordRes responseVO = new ModifyPasswordRes();
+		ModifyPasswordSacRes responseVO = new ModifyPasswordSacRes();
 		responseVO.setSellerKey("User1");
 
 		return responseVO;
@@ -582,9 +582,9 @@ public class DummySellerController {
 	 */
 	@RequestMapping(value = "/modifyRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyRealNameRes modifyRealName() {
+	public ModifyRealNameSacRes modifyRealName() {
 
-		ModifyRealNameRes responseVO = new ModifyRealNameRes();
+		ModifyRealNameSacRes responseVO = new ModifyRealNameSacRes();
 		responseVO.setSellerKey("User1");
 
 		return responseVO;

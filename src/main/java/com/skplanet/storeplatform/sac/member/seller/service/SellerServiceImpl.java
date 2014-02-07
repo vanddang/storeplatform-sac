@@ -49,10 +49,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.CreateRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.LockAccountRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationReq;
-import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyAccountInformationSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -499,7 +499,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyInformationRes
 	 */
 	@Override
-	public ModifyInformationRes modifyInformation(SacRequestHeader header, ModifyInformationReq req) {
+	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req) {
 
 		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
 		// SC공통 헤더
@@ -604,7 +604,7 @@ public class SellerServiceImpl implements SellerService {
 		LOGGER.debug("[SC-UpdateSellerResponse] : \n{}", updateSellerResponse.toString());
 
 		/** 2-6. Tenant [RESPONSE] 생성 및 주입 */
-		ModifyInformationRes res = new ModifyInformationRes();
+		ModifyInformationSacRes res = new ModifyInformationSacRes();
 		res.setSellerKey(updateSellerResponse.getSellerKey());
 
 		LOGGER.debug("############ SellerServiceImpl.modifyInformation() [START] ############");
@@ -622,7 +622,7 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyAccountInformationRes
 	 */
 	@Override
-	public ModifyAccountInformationRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationReq req) {
+	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationSacReq req) {
 		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -641,7 +641,7 @@ public class SellerServiceImpl implements SellerService {
 				.updateAccountSeller(updateAccountSellerRequest);
 
 		/** 4. TenantRes Response 생성 및 주입 */
-		ModifyAccountInformationRes res = new ModifyAccountInformationRes();
+		ModifyAccountInformationSacRes res = new ModifyAccountInformationSacRes();
 		res.setSellerKey(updateAccountSellerResponse.getSellerKey());
 		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [END] ############");
 		return res;
