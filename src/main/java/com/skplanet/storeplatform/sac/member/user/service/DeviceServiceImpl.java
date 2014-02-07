@@ -1015,6 +1015,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 휴대기기 조회 */
 		DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
+		if (deviceInfo == null) {
+			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+		}
 		String IsPrimary = deviceInfo.getIsPrimary();//대표기기 여부
 		String deviceKey = deviceInfo.getDeviceKey();//deviceKey
 
