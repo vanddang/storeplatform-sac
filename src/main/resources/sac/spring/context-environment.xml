@@ -12,15 +12,57 @@
 
     <context:property-placeholder properties-ref="propertiesForSac" /> 
     
-    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
-        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>
-        <property name="logbackPath">
-            <list>
-                <value>member/log/logback-${spring.profiles.active}.xml</value>
-                <value>purchase/log/logback-${spring.profiles.active}.xml</value>
-            </list>
-        </property>
-    </bean>
+    <beans profile="local"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-local.xml</value>
+		           <value>member/log/logback-local.xml</value>
+		           <value>purchase/log/logback-local.xml</value>               
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
+        
+    <beans profile="dev"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-dev.xml</value>
+		           <value>member/log/logback-dev.xml</value>
+		           <value>purchase/log/logback-dev.xml</value>               
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
+        
+    <beans profile="stag"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-stag.xml</value>
+		           <value>member/log/logback-stag.xml</value>
+		           <value>purchase/log/logback-stag.xml</value>               
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
+        
+    <beans profile="real"> 
+	    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
+	        <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>        
+	        <property name="logbackPath">
+	            <list>
+	               <value>sac/log/logback-real.xml</value>
+		           <value>member/log/logback-real.xml</value>
+		           <value>purchase/log/logback-real.xml</value>               
+	            </list>
+	        </property>
+	    </bean>    
+    </beans>    
         
     <beans profile="local"> 
         <util:properties id="propertiesForSac" location="classpath:sac/properties/app.local.properties" /> 
