@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -74,7 +75,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/create/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateFeedbackSacRes create(@RequestBody CreateFeedbackSacReq createFeedbackSacReq,
+	public CreateFeedbackSacRes create(@RequestBody @Validated CreateFeedbackSacReq createFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 사용후기/평점 등록. ##");
 		LOGGER.info("### req : {}", createFeedbackSacReq);
@@ -95,7 +96,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyFeedbackSacRes modify(@RequestBody ModifyFeedbackSacReq modifyFeedbackSacReq,
+	public ModifyFeedbackSacRes modify(@RequestBody @Validated ModifyFeedbackSacReq modifyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 사용후기/평점 수정. ##");
 		LOGGER.info("### req : {}", modifyFeedbackSacReq);
@@ -116,7 +117,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/remove/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public RemoveFeedbackSacRes remove(@RequestBody RemoveFeedbackSacReq removeFeedbackSacReq,
+	public RemoveFeedbackSacRes remove(@RequestBody @Validated RemoveFeedbackSacReq removeFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 사용후기/평점 삭제. ##");
 		LOGGER.info("### req : {}", removeFeedbackSacReq);
@@ -138,7 +139,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/createRecommend/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRecommendFeedbackSacRes createRecommend(
-			@RequestBody CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+			@RequestBody @Validated CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 사용후기 추천. ##");
 		LOGGER.info("### req : {}", createRecommendFeedbackSacReq);
 		return this.feedbackService.createRecommend(createRecommendFeedbackSacReq, sacRequestHeader);
@@ -159,7 +161,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/removeRecommend/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveRecommendFeedbackSacRes removeRecommend(
-			@RequestBody RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+			@RequestBody @Validated RemoveRecommendFeedbackSacReq removeRecommendFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 사용후기 추천 취소. ##");
 		LOGGER.info("### req : {}", removeRecommendFeedbackSacReq);
 		return this.feedbackService.removeRecommend(removeRecommendFeedbackSacReq, sacRequestHeader);
@@ -179,7 +182,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+	public ListFeedbackSacRes list(@Validated ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 사용후기 전체 조회. ##");
 		LOGGER.info("### req : {}", listFeedbackSacReq);
 		return this.feedbackService.list(listFeedbackSacReq, sacRequestHeader);
@@ -199,7 +202,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/listMyFeedback/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListMyFeedbackSacRes listMyFeedback(ListMyFeedbackSacReq listMyFeedbackSacReq,
+	public ListMyFeedbackSacRes listMyFeedback(@Validated ListMyFeedbackSacReq listMyFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 내 사용후기 조회. ##");
 		LOGGER.info("### req : {}", listMyFeedbackSacReq);
@@ -221,7 +224,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/createSellerFeedback/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateSellerFeedbackSacRes createSellerFeedback(
-			@RequestBody CreateSellerFeedbackSacReq createSellerFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+			@RequestBody @Validated CreateSellerFeedbackSacReq createSellerFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 판매자 댓글 등록. ##");
 		LOGGER.info("### req : {}", createSellerFeedbackSacReq);
 		return this.feedbackService.createSellerFeedback(createSellerFeedbackSacReq, sacRequestHeader);
@@ -242,7 +246,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/modifySellerFeedback/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifySellerFeedbackSacRes modifySellerFeedback(
-			@RequestBody ModifySellerFeedbackSacReq modifySellerFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+			@RequestBody @Validated ModifySellerFeedbackSacReq modifySellerFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 판매자 댓글 수정. ##");
 		LOGGER.info("### req : {}", modifySellerFeedbackSacReq);
 		return this.feedbackService.modifySellerFeedback(modifySellerFeedbackSacReq, sacRequestHeader);
@@ -263,7 +268,8 @@ public class FeedbackController {
 	@RequestMapping(value = "/removeSellerFeedback/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public RemoveSellerFeedbackSacRes removeSellerFeedback(
-			@RequestBody RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+			@RequestBody @Validated RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq,
+			SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 판매자 댓글 삭제. ##");
 		LOGGER.info("### req : {}", removeSellerFeedbackSacReq);
 		return this.feedbackService.removeSellerFeedback(removeSellerFeedbackSacReq, sacRequestHeader);
@@ -283,7 +289,7 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/getScore/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public GetScoreSacRes getScore(GetScoreSacReq getScoreSacReq, SacRequestHeader sacRequestHeader) {
+	public GetScoreSacRes getScore(@Validated GetScoreSacReq getScoreSacReq, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 평점 조회. ##");
 		LOGGER.info("### req : {}", getScoreSacReq);
 		return this.feedbackService.getScore(getScoreSacReq, sacRequestHeader);
@@ -303,8 +309,8 @@ public class FeedbackController {
 	 */
 	@RequestMapping(value = "/listScoreParticpers/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public ListScoreParticpersSacRes listScoreParticpers(ListScoreParticpersSacReq listScoreParticpersSacReq,
-			SacRequestHeader sacRequestHeader) {
+	public ListScoreParticpersSacRes listScoreParticpers(
+			@Validated ListScoreParticpersSacReq listScoreParticpersSacReq, SacRequestHeader sacRequestHeader) {
 		LOGGER.info("### 평점별 참여수 조회. ##");
 		LOGGER.info("### req : {}", listScoreParticpersSacReq);
 		return this.feedbackService.listScoreParticpers(listScoreParticpersSacReq, sacRequestHeader);

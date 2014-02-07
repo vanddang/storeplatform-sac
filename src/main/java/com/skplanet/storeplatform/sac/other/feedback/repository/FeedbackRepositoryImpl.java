@@ -122,7 +122,18 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 		return this.commonDAO.update("Feedback.changeMbrAvgUserKey", mbrAvg);
 	}
 
+	@Override
+	public Object getProdNotiWDCount(ProdNoti prodNoti) {
+		return this.commonDAO.queryForInt("Feedback.getProdNotiWDCount", prodNoti);
+	}
+
+	@Override
 	public Object getProdNotiWDGoodCount(ProdNoti prodNoti) {
 		return this.commonDAO.queryForInt("Feedback.getProdNotiWDGoodCount", prodNoti);
+	}
+
+	@Override
+	public Object insertProdNotiGood(ProdNotiGood prodNotiGood) {
+		return this.commonDAO.insert("Feedback.insertProdNotiGood", prodNotiGood);
 	}
 }

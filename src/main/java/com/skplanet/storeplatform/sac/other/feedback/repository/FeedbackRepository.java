@@ -241,6 +241,18 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
+	 * (탈퇴회원 사용후기) 등록 여부.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object getProdNotiWDCount(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
 	 * (탈퇴회원 사용후기)기 추천 여부.
 	 * </pre>
 	 * 
@@ -249,5 +261,17 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object getProdNotiWDGoodCount(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 추천 등록.
+	 * </pre>
+	 * 
+	 * @param prodNotiGood
+	 *            prodNotiGood
+	 * @return Object
+	 */
+	public Object insertProdNotiGood(ProdNotiGood prodNotiGood);
 
 }
