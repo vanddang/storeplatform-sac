@@ -16,6 +16,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
@@ -64,31 +65,32 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
  */
 @Profile(value = { "dev", "local" })
 @Service
+@Transactional
 public class FeedbackServiceSampleImpl implements FeedbackService {
 
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
 	@Override
-	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackReq, SacRequestHeader sacRequestHeader) {
+	public CreateFeedbackSacRes create(CreateFeedbackSacReq createFeedbackSacReq, SacRequestHeader sacRequestHeader) {
 		// 평점 저장
-		this.setMbrAvgTenantProdStats(createFeedbackReq, sacRequestHeader);
+		this.setMbrAvgTenantProdStats(createFeedbackSacReq, sacRequestHeader);
 
 		// 사용후기 내용이 있을 경우에만 등록한다.
 		// 필수 파라미터이기 때문에 if 로직은 빠져되 된다.
 		// if (StringUtils.isNotEmpty(createFeedbackSacReq.getNotiDesc())) {
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
-		prodNoti.setMbrNo(createFeedbackReq.getUserKey());
-		prodNoti.setProdId(createFeedbackReq.getProdId());
-		prodNoti.setTitle(createFeedbackReq.getNotiTitle());
-		prodNoti.setNotiDscr(createFeedbackReq.getNotiDscr());
-		prodNoti.setRegId(createFeedbackReq.getUserId());
-		prodNoti.setMbrTelno(createFeedbackReq.getDeviceId());
-		prodNoti.setFbPostYn(createFeedbackReq.getFbPostYn());
+		prodNoti.setMbrNo(createFeedbackSacReq.getUserKey());
+		prodNoti.setProdId(createFeedbackSacReq.getProdId());
+		prodNoti.setTitle(createFeedbackSacReq.getNotiTitle());
+		prodNoti.setNotiDscr(createFeedbackSacReq.getNotiDscr());
+		prodNoti.setRegId(createFeedbackSacReq.getUserId());
+		prodNoti.setMbrTelno(createFeedbackSacReq.getDeviceId());
+		prodNoti.setFbPostYn(createFeedbackSacReq.getFbPostYn());
 		prodNoti.setDeviceModelCd(sacRequestHeader.getDeviceHeader().getModel());
-		prodNoti.setPkgVer(createFeedbackReq.getPkgVer());
-		prodNoti.setChnlId(createFeedbackReq.getChnlId());
+		prodNoti.setPkgVer(createFeedbackSacReq.getPkgVer());
+		prodNoti.setChnlId(createFeedbackSacReq.getChnlId());
 		ProdNoti getRegProdNoti = this.feedbackRepository.getRegProdNoti(prodNoti);
 		if (getRegProdNoti == null) {
 			int affectedRow = (Integer) this.feedbackRepository.insertProdNoti(prodNoti);
@@ -110,10 +112,47 @@ public class FeedbackServiceSampleImpl implements FeedbackService {
 	}
 
 	@Override
-	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackReq, SacRequestHeader sacRequestHeader) {
-		RemoveFeedbackSacRes removeFeedbackRes = new RemoveFeedbackSacRes();
-		removeFeedbackRes.setNotiSeq("14275");
-		return removeFeedbackRes;
+	public RemoveFeedbackSacRes remove(RemoveFeedbackSacReq removeFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+		// 기 평가여부 조회
+		MbrAvg mbrAvg = new MbrAvg();
+		mbrAvg.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		mbrAvg.setMbrNo(removeFeedbackSacReq.getUserKey());
+		mbrAvg.setProdId(removeFeedbackSacReq.getProdId());
+		MbrAvg getRegMbrAvg = this.feedbackRepository.getRegMbrAvg(mbrAvg);
+		if (getRegMbrAvg != null) {
+			this.feedbackRepository.deleteMbrAvg(mbrAvg);
+			TenantProdStats tenantProdStats = new TenantProdStats();
+			tenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+			tenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
+			TenantProdStats getTenantProdStats = this.feedbackRepository.getTenantProdStats(tenantProdStats);
+			if (getTenantProdStats != null) {
+				if (NumberUtils.toInt(getTenantProdStats.getPaticpersCnt(), 0) == 1) {
+					this.feedbackRepository.deleteTenantProdStats(tenantProdStats);
+				} else {
+					TenantProdStats updateTenantProdStats = new TenantProdStats();
+					updateTenantProdStats.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+					updateTenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
+					updateTenantProdStats.setAvgEvluScore("0");
+					updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
+					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
+				}
+			}
+		}
+
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
+		prodNoti.setNotiDscr(StringUtils.EMPTY);
+		prodNoti.setMbrNo(removeFeedbackSacReq.getUserKey());
+		int affectedRow = (Integer) this.feedbackRepository.deleteProdNoti(prodNoti);
+		if (affectedRow <= 0) {
+			throw new StorePlatformException("SAC_OTH_1002");
+		}
+
+		RemoveFeedbackSacRes removeFeedbackSacRes = new RemoveFeedbackSacRes();
+		removeFeedbackSacRes.setNotiSeq(removeFeedbackSacReq.getNotiSeq());
+
+		return removeFeedbackSacRes;
 	}
 
 	@Override

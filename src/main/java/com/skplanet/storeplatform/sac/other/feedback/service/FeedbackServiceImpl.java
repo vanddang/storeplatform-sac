@@ -13,6 +13,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
@@ -60,6 +61,7 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
  */
 @Profile(value = { "stag", "real" })
 @Service
+@Transactional
 public class FeedbackServiceImpl implements FeedbackService {
 
 	@Autowired
