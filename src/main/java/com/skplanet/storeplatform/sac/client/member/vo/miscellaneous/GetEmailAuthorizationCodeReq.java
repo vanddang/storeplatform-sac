@@ -3,7 +3,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -20,14 +20,14 @@ public class GetEmailAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 사용자 고유 Key
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userKey;
 
 	/**
 	 * 인증 코드를 발송할 회원 이메일 주소
 	 */
 	@Email
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String userEmail;
 
 	public String getUserKey() {

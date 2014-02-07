@@ -20,7 +20,7 @@ public class GetUaCodeReq extends CommonInfo {
 	/**
 	 * 휴대폰 번호
 	 */
-	@Pattern(regexp = "[0-9]{10,11}")
+	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String msisdn;
 
 	/**

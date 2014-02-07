@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -19,19 +19,19 @@ public class ConfirmCaptchaReq extends CommonInfo {
 	/**
 	 * 인증 코드 (사용자가 입력한 Captcha 문자)
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String authCode;
 
 	/**
 	 * 인증 코드 확인을 위한 Signature
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String imageSign;
 
 	/**
 	 * 인증 코드 확인을 위한 Signature Data
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String signData;
 
 	/**

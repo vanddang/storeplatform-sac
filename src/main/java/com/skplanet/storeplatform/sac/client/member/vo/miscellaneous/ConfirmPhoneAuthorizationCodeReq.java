@@ -4,7 +4,7 @@ import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -21,25 +21,26 @@ public class ConfirmPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 인증코드 수신 휴대폰 번호.
 	 */
-	@Pattern(regexp = "[0-9]{10,11}")
+	@NotBlank
+	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String userPhone;
 
 	/**
 	 * 인증코드.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String phoneAuthCode;
 
 	/**
 	 * 인증코드 Signature.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String phoneSign;
 
 	/**
 	 * 인증 코드 유효시간 (분).
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String timeToLive;
 
 	public String getUserPhone() {

@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -19,7 +19,7 @@ public class ConfirmEmailAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 이메일 인증 코드
 	 */
-	@NotEmpty(message = "필수 파라메터 입니다.")
+	@NotBlank
 	private String emailAuthCode;
 	/**
 	 * 인증 코드 생존 시간 ( 일 단위 )

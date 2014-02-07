@@ -4,7 +4,7 @@ import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -21,25 +21,26 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 수신자 휴대폰 번호.
 	 */
-	@Pattern(regexp = "[0-9]{10,11}")
+	@NotBlank
+	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String recvMdn;
 
 	/**
 	 * 통신사명.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String carrier;
 
 	/**
 	 * 요청측ID.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String srcId;
 
 	/**
 	 * 텔레서비스ID.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String teleSvcId;
 
 	/**

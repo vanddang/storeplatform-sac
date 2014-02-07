@@ -2,7 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -19,7 +19,7 @@ public class GetOpmdReq extends CommonInfo {
 	/**
 	 * 자회선 번호
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String msisdn;
 
 	/**

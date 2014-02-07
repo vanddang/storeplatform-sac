@@ -5,7 +5,6 @@ import javax.validation.constraints.Pattern;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -23,13 +22,13 @@ public class AdditionalServicInfo extends CommonInfo {
 	 * 휴대폰 번호
 	 */
 	@NotBlank
-	@Pattern(regexp = "[0-9]{10,11}")
+	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String msisdn;
 
 	/**
 	 * 부가서비스 코드
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotBlank
 	private String svcCode;
 
 	/**
