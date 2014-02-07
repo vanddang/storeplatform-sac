@@ -36,7 +36,14 @@
         <typeAlias alias="ServiceInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.ServiceInfo" />
         <typeAlias alias="BypassInfo"      type="com.skplanet.storeplatform.sac.runtime.cache.vo.BypassInfo" />
         
-        
+        <!-- ################################################# -->
+        <!-- 기타                                            -->
+        <!-- ################################################# -->
+        <typeAlias alias="ProdNoti" type="com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti" />
+        <typeAlias alias="ProdNotiGood" type="com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood" />
+        <typeAlias alias="MbrAvg" type="com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg" />
+        <typeAlias alias="TenantProdStats" type="com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats" />
+     
         <!-- ################################################# -->
         <!-- 회원                                            -->
         <!-- ################################################# -->

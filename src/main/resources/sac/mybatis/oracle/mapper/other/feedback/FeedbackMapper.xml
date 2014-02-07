@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Feedback">
+
+	<!-- 사용후기 기등록 여부 조회  -->
+	<select id="getRegProdNoti" parameterType="ProdNoti" resultType="ProdNoti">
+		SELECT /* FeedbackMapper.xml, getRegProdNoti, SAC : 김현일 , 2014-02-04 */ 
+	           *
+	      FROM
+	         (
+	         SELECT N.NOTI_SEQ
+	              , N.NOTI_DSCR
+	           FROM TB_DP_PROD_NOTI N
+	                 WHERE 1 = 1
+	            AND N.MBR_NO = #{mbrNo}
+	            AND N.TENANT_ID = #{tenantId}
+	        <if test="chnlId != null">
+	            AND N.PROD_ID = #{chnlId}
+	            AND N.CATALOG_ID = #{prodId}
+	        </if>
+	        <if test="chnlId == null">
+	            AND N.PROD_ID = #{prodId}
+	        </if>
+	            AND N.NOTI_TYPE_CD = 'DP000401'
+	            AND N.DEL_YN = 'N'
+	            AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+	            AND N.SPAM_YN = 'N'
+	            AND EXISTS (
+	                       <if test="chnlId != null">
+	                       SELECT 'X'
+	                         FROM TB_DP_SHPG_CATALOG P
+	                        WHERE P.CATALOG_ID = #{prodId}
+	                          AND P.CHNL_CNT > 0
+	                       </if>
+	                       <if test="chnlId == null">
+                           SELECT 'X'
+	                         FROM TB_DP_PROD P
+	                        WHERE P.PROD_ID = N.PROD_ID
+	                       </if>
+	                       )
+	          ORDER BY REG_DT DESC
+	         )
+	     WHERE ROWNUM <![CDATA[<=]]> 1
+	</select>
+	
+	<!-- 사용후기 등록  -->
+	<insert id="insertProdNoti" parameterType="ProdNoti">
+	   /* FeedbackMapper.xml, insertProdNoti, SAC : 김현일 , 2014-02-04 */
+	   <selectKey keyProperty="notiSeq" resultType="string" order="BEFORE">
+	       SELECT SQ_DP_PROD_NOTI.NEXTVAL
+             FROM DUAL
+	   </selectKey>
+       INSERT INTO TB_DP_PROD_NOTI ( TENANT_ID
+                                     , NOTI_SEQ
+                                     , NOTI_TYPE_CD
+                                     , MBR_NO
+                                     <!-- Shopping -->
+                                     <if test="chnlId != null">
+                                     , PROD_ID
+                                     , CATALOG_ID
+                                     </if>
+                                     <!-- Shopping 외 -->
+                                     <if test="chnlId == null">
+                                     , PROD_ID
+                                     </if>
+                                     <if test="title">
+                                     , TITLE
+                                     </if>
+                                     , NOTI_DSCR
+                                     , SPAM_YN
+                                     , DEL_YN
+                                     , REG_ID
+                                     , REG_DT
+                                     , MBR_TELNO
+                                     <if test="fbPostYn != null">
+                                     , FB_POST_YN
+                                     </if>
+                                     , REG_LOC
+                                     , DEVICE_MODEL_CD
+                                     <if test="pkgVer">
+                                     , PKG_VER
+                                     </if>
+                                     )
+                              VALUES ( #{tenantId}
+                                     , #{notiSeq}
+                                     , 'DP000401'
+                                     , #{mbrNo}
+                                     <!-- Shopping -->
+                                     <if test="chnlId != null">
+                                     , #{chnlId}
+                                     , #{prodId}
+                                     </if>
+                                     <!-- Shopping 외 -->
+                                     <if test="chnlId == null">
+                                     , #{prodId}
+                                     </if>
+                                     <if test="title != null">
+                                     , #{title}
+                                     </if>
+                                     , #{notiDscr}
+                                     , 'N'
+                                     , 'N'
+                                     , #{regId}
+                                     , SYSDATE
+                                     , #{mbrTelno}
+                                     <if test="fbPostYn != null">
+                                     , #{fbPostYn}
+                                     </if>
+                                     , 'US004201'
+                                     , #{deviceModelCd}
+                                     <if test="pkgVer != null">
+                                     , #{pkgVer}
+                                     </if>
+                                     )
+	</insert>
+	
+    <!-- 사용후기 수정 -->
+    <update id="updateProdNoti"  parameterType="ProdNoti">
+        /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
+	    UPDATE 
+	           TB_DP_PROD_NOTI
+	       SET NOTI_DSCR = #{notiDscr}
+	         <if test="title != null">
+	         , TITLE = #{title}
+	         </if>
+	         , UPD_DT = SYSDATE
+	         , REG_DT = SYSDATE
+	         , NOTI_SCORE = 0
+	         , SELLER_RESP_OPIN = NULL
+	         , SELLER_RESP_REG_DT = NULL
+	         , REG_LOC = 'US004201'
+	         , DEVICE_MODEL_CD = #{deviceModelCd}
+	         <if test="pkgVer != null">
+	         , PKG_VER = #{pkgVer}
+	         </if>
+	     WHERE TENANT_ID = #{tenantId}
+	       AND NOTI_SEQ = #{notiSeq}
+	       AND MBR_NO = #{mbrNo}
+    </update>
+	
+	<!-- 사용후기 삭제 -->
+	<delete id="deleteProdNoti" parameterType="ProdNoti">
+        /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
+        UPDATE 
+               TB_DP_PROD_NOTI
+           SET NOTI_DSCR = #{notiDscr}
+             <if test="title != null">
+             , TITLE = #{title}
+             </if>
+             , UPD_DT = SYSDATE
+             , DEL_YN = 'Y'
+         WHERE TENANT_ID = #{tenantId}
+           AND NOTI_SEQ = #{notiSeq}
+           AND MBR_NO = #{mbrNo}	   
+	</delete>
+	 
+	<!-- 사용후기 추천이력 삭제 -->  
+	<delete id="deleteProdNotiGood" parameterType="ProdNotiGood">
+	     /* FeedbackMapper.xml, deleteProdNotiGood, SAC : 김현일 , 2014-02-04 */
+	    DELETE FROM TB_DP_PROD_NOTIGOOD
+         WHERE TENANT_ID = #{tenantId}
+           AND NOTI_SEQ = #{notiSeq}
+           <if test="mbrNo != null">
+           AND MBR_NO = #{mbrNo}
+           </if>
+	</delete>
+	
+	<!-- 기 평가 평점 조회 -->
+	<select id="getRegMbrAvg" parameterType="MbrAvg" resultType="MbrAvg">
+	    SELECT /* FeedbackMapper.xml, getRegMbrAvg, SAC : 김현일 , 2014-02-04 */
+	           AVG_SCORE
+	      FROM TB_DP_MBR_AVG
+	     WHERE TENANT_ID = #{tenantId} 
+	       AND MBR_NO = #{mbrNo}
+	       AND PROD_ID = #{prodId}	
+	</select>
+	
+	<!-- 회원별 평가 저장 -->
+	<insert id="mergeMbrAvg" parameterType="MbrAvg" useGeneratedKeys="false">
+	    /* FeedbackMapper.xml, mergeMbrAvg, SAC : 김현일 , 2014-02-04 */
+	    MERGE INTO TB_DP_MBR_AVG
+	    USING DUAL
+	       ON ( TENANT_ID = #{tenantId} AND PROD_ID = #{prodId} AND MBR_NO = #{mbrNo} )
+	     WHEN NOT MATCHED THEN
+	        INSERT ( TENANT_ID
+	               , MBR_NO
+	               , PROD_ID
+	               , AVG_SCORE
+	               , REG_DT )
+	        VALUES ( #{tenantId}
+	               , #{mbrNo}
+	               , #{prodId}
+	               , #{avgScore}
+	               , SYSDATE )
+	     WHEN MATCHED THEN
+	        UPDATE
+	           SET AVG_SCORE = #{avgScore}
+	             , REG_DT = SYSDATE
+	</insert>
+
+    <!-- 회원평가정보 삭제 -->
+    <delete id="deleteMbrAvg" parameterType="MbrAvg">
+        DELETE /* FeedbackMapper.xml, deleteMbrAvg, SAC : 김현일 , 2014-02-04 */
+          FROM TB_DP_MBR_AVG
+         WHERE TENANT_ID = #{tenantId}
+           AND PROD_ID = #{prodId}
+           AND MBR_NO = #{mbrNo}
+    </delete>
+	
+	
+	<!-- 평점저장(기평가평점 수정) -->
+	<update id="updateTenantProdStats" parameterType="TenantProdStats">
+        UPDATE /* FeedbackMapper.xml, updateTenantProdStats, SAC : 김현일 , 2014-02-04 */
+	           TB_DP_TENANT_PROD_STATS
+	       SET TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore}
+	           , UPD_DT = SYSDATE
+	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT )
+	     WHERE TENANT_ID = #{tenantId}
+	       AND PROD_ID = #{prodId}
+    </update>
+	
+	<!-- 평점저장 -->
+	<insert id="mergeTenantProdStats" parameterType="TenantProdStats" useGeneratedKeys="false">
+	    /* FeedbackMapper.xml, mergeTenantProdStats, SAC : 김현일 , 2014-02-04 */
+	    MERGE INTO TB_DP_TENANT_PROD_STATS
+	    USING DUAL
+	       ON ( TENANT_ID = #{tenantId} AND PROD_ID = #{prodId} )
+	    WHEN NOT MATCHED THEN
+	        INSERT ( TENANT_ID
+	               , PROD_ID
+	               , AVG_EVLU_SCORE
+	               , TOT_EVLU_SCORE
+	               , PATICPERS_CNT
+	                , UPD_DT )
+	        VALUES ( #{tenantId}
+	               , #{prodId}
+	               , #{avgEvluScore}
+	               , #{avgEvluScore}
+	               , 1
+	               , SYSDATE )
+	    WHEN MATCHED THEN
+	        UPDATE
+	           SET AVG_EVLU_SCORE = ((TOT_EVLU_SCORE + #{avgEvluScore}) / (PATICPERS_CNT + 1))
+	                , TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore}
+	                , PATICPERS_CNT = PATICPERS_CNT+1
+	             , UPD_DT = SYSDATE
+	</insert>
+	
+	<!-- 평점 조회 -->
+    <select id="getTenantProdStats" parameterType="TenantProdStats" resultType="TenantProdStats">
+	    SELECT /* FeedbackMapper.xml, getTenantProdStats, SAC : 김현일 , 2014-02-04 */
+	           AVG_EVLU_SCORE
+	         , PATICPERS_CNT
+	      FROM TB_DP_TENANT_PROD_STATS
+	     WHERE TENANT_ID = #{tenantId} 
+	       AND PROD_ID = #{prodId}
+    </select>
+    
+    <!-- 평점 삭제 -->
+    <delete id="deleteTenantProdStats" parameterType="TenantProdStats">
+        DELETE /* FeedbackMapper.xml, deleteTenantProdStats, SAC : 김현일 , 2014-02-04 */
+          FROM TB_DP_TENANT_PROD_STATS
+         WHERE TENANT_ID = #{tenantId} 
+           AND PROD_ID = #{prodId}    
+    </delete>
+	
+    <!-- (탈퇴회원 사용후기) 기 추천 여부 Check -->
+    <select id="getProdNotiWDGoodCount" parameterType="ProdNoti" resultType="int">
+	    SELECT /* FeedbackMapper.xml, deleteTenantProdStats, SAC : 김현일 , 2014-02-04 */
+	           COUNT(*)
+	      FROM TB_DP_PROD_NOTI_WD N
+	         , TB_DP_PROD_NOTIGOOD NG
+	     WHERE N.TENANT_ID = NG.TENANT_ID
+	       AND N.NOTI_SEQ = NG.NOTI_SEQ
+	       AND N.NOTI_TYPE_CD = 'DP000401'
+	       AND N.DEL_YN = 'N'
+	       AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+	       AND N.SPAM_YN = 'N'
+	       AND N.PROD_ID = #{prodId}
+	       AND NG.NOTI_SEQ = #{notiSeq}
+	       AND NG.MBR_NO = #{mbrNo}
+	       AND NG.TENANT_ID = #{tenantId}
+    </select>	
+	
+</mapper>
