@@ -543,7 +543,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		searchUserResponse = this.userSCI.searchUser(searchUserRequest);
 
 		if (searchUserResponse == null || searchUserResponse.getUserMbr() == null) {
-			throw new StorePlatformException("SAC_MEM_0003", "DeviceID", msisdn);
+			throw new StorePlatformException("SAC_MEM_0003", "deviceId", msisdn);
 		} else {
 			userKey = searchUserResponse.getUserMbr().getUserKey();
 			LOGGER.debug("## [SAC] Response userKey:" + userKey);
@@ -563,6 +563,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		// IdpServie joinSupService 호출해서 부가서비스 가입 요청
 		IdpReceiverM idpReciver = this.idpService.joinSupService(request.getMsisdn(), request.getSvcCode(),
 				request.getSvcMngNum());
+		LOGGER.info("## 부가서비스 가입 요청 - IDP 연동. response {}", idpReciver);
 
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
 		response.setMsisdn(idpReciver.getResponseBody().getUser_mdn()); // 사용자 휴대폰번호
@@ -577,9 +578,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		// IDP 호출해서 부가서비스 가입여부 조회 요청
 		IdpReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getMsisdn(), request.getSvcCode());
-		idpReciver.getResponseBody().getSp_list(); // 타 채널 가입 리스트
-		idpReciver.getResponseBody().getCharge(); // SKT 사용자의 휴대폰 요금제 코드
-		idpReciver.getResponseBody().getServiceCD(); // SKT 사용자의 휴대폰 요금제에 따른 부가서비스 코드
+		LOGGER.info("## 부가서비스 가입여부 조회 - IDP 연동. response {}", idpReciver);
 
 		response.setMsisdn(idpReciver.getResponseBody().getUser_mdn());
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
@@ -593,14 +592,14 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, GetModelCodeReq request) {
 		GetModelCodeRes response = new GetModelCodeRes();
 
-		// 1. mdn으로 UA코드 조회 - UAPS 연동
 		UapsEcReq uapsReq = new UapsEcReq();
 		uapsReq.setDeviceId(request.getMsisdn());
 		uapsReq.setType("mdn");
+		LOGGER.info("## mdn으로 UA코드 조회 - UAPS 연동. request {}", uapsReq);
 		UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
 		String uaCd = uapsRes.getDeviceModel();
 
-		// 2. UA 코드로 deviceModelNo 조회
+		LOGGER.info("## UA 코드로 deviceModelNo 조회 - TB_CM_DEVICE. uaCd {}", uaCd);
 		Device device = this.commonComponent.getPhoneInfoByUacd(uaCd);
 		response.setDeviceModelNo(device.getDeviceModelCd());
 		return response;
