@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,14 +27,22 @@ public class RemoveFeedbackSacReq extends CommonInfo {
 	/**
 	 * 상품 ID.
 	 */
+	@NotBlank
 	private String prodId;
 	/**
 	 * 사용자 Key.
 	 */
+	@NotBlank
 	private String userKey;
+	/**
+	 * 사용자 ID.
+	 */
+	@NotBlank
+	private String userId;
 	/**
 	 * 사용후기 번호.
 	 */
+	@NotBlank
 	private String notiSeq;
 
 	/**
@@ -63,6 +73,21 @@ public class RemoveFeedbackSacReq extends CommonInfo {
 	 */
 	public void setUserKey(String userKey) {
 		this.userKey = userKey;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
+
+	/**
+	 * @param userId
+	 *            userId
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	/**

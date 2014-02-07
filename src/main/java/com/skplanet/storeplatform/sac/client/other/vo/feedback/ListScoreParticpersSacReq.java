@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -26,6 +28,7 @@ public class ListScoreParticpersSacReq extends CommonInfo {
 	/**
 	 * 상품 ID.
 	 */
+	@NotBlank
 	private String prodId;
 
 	/**

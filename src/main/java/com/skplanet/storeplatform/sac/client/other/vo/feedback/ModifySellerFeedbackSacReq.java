@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,14 +27,17 @@ public class ModifySellerFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
+	@NotBlank
 	private String notiSeq;
 	/**
 	 * 판매자 댓글 제목.
 	 */
+	@NotBlank
 	private String sellerRespTitle;
 	/**
 	 * 판매자 댓글 내용.
 	 */
+	@NotBlank
 	private String sellerRespOpin;
 
 	/**

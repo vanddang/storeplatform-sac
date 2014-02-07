@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -26,14 +28,17 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	/**
 	 * 상품 ID.
 	 */
+	@NotBlank
 	private String prodId;
 	/**
 	 * 사용자 Key.
 	 */
+	@NotBlank
 	private String userKey;
 	/**
 	 * 사용자 ID.
 	 */
+	@NotBlank
 	private String userId;
 	/**
 	 * 기기 ID.

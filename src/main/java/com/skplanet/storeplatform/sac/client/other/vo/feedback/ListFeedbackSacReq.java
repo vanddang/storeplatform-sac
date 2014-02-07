@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -26,36 +30,44 @@ public class ListFeedbackSacReq extends CommonInfo {
 	/**
 	 * 상품 ID.
 	 */
+	@NotBlank
 	private String prodId;
 	/**
 	 * 회원 Key.
 	 */
+	@NotBlank
 	private String userKey;
 	/**
 	 * 정렬.
 	 */
+	@NotBlank
 	private String orderedBy;
 	/**
 	 * 정렬 방식.
 	 */
+	@NotBlank
 	private String orderedIn;
 
 	/**
 	 * 채널 ID.
 	 */
+	@NotBlank
 	private String chnlId;
 	/**
 	 * 상품 타입.
 	 */
+	@NotBlank
 	private String prodType;
 	/**
 	 * 페이징 시작위치.
 	 */
-	private int offset;
+	@NotNull
+	private Integer offset;
 	/**
 	 * 페이징 갯수.
 	 */
-	private int count;
+	@NotNull
+	private Integer count;
 
 	/**
 	 * @return String
@@ -148,9 +160,9 @@ public class ListFeedbackSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return Integer
 	 */
-	public int getOffset() {
+	public Integer getOffset() {
 		return this.offset;
 	}
 
@@ -158,14 +170,14 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 * @param offset
 	 *            offset
 	 */
-	public void setOffset(int offset) {
+	public void setOffset(Integer offset) {
 		this.offset = offset;
 	}
 
 	/**
-	 * @return int
+	 * @return Integer
 	 */
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
@@ -173,7 +185,7 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 * @param count
 	 *            count
 	 */
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
 

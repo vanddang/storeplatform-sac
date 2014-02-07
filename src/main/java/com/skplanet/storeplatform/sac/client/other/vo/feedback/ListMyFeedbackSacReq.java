@@ -9,6 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -25,10 +29,12 @@ public class ListMyFeedbackSacReq extends CommonInfo {
 	/**
 	 * 상품ID 목록(구분자, ).
 	 */
+	@NotBlank
 	private String prodIds;
 	/**
 	 * 회원 Key.
 	 */
+	@NotBlank
 	private String userKey;
 	/**
 	 * 채널 ID.
@@ -41,11 +47,13 @@ public class ListMyFeedbackSacReq extends CommonInfo {
 	/**
 	 * 페이징 시작 위치.
 	 */
-	private int offset;
+	@NotNull
+	private Integer offset;
 	/**
 	 * 페이징 개수.
 	 */
-	private int count;
+	@NotNull
+	private Integer count;
 
 	/**
 	 * @return String
@@ -123,9 +131,9 @@ public class ListMyFeedbackSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return Integer
 	 */
-	public int getCount() {
+	public Integer getCount() {
 		return this.count;
 	}
 
@@ -133,8 +141,16 @@ public class ListMyFeedbackSacReq extends CommonInfo {
 	 * @param count
 	 *            count
 	 */
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	/**
+	 * @param offset
+	 *            offset
+	 */
+	public void setOffset(Integer offset) {
+		this.offset = offset;
 	}
 
 }
