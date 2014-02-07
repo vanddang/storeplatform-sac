@@ -44,6 +44,7 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackRe
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserkeyTrackResponse;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
+import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserExtraInfo;
@@ -741,6 +742,11 @@ public class UserSearchServiceImpl implements UserSearchService {
 		}
 
 		ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
+
+		if (listDeviceRes.getDeviceInfoList() == null) {
+			List<DeviceInfo> listDeviceInfo = new ArrayList<DeviceInfo>();
+			listDeviceRes.setDeviceInfoList(listDeviceInfo);
+		}
 
 		return listDeviceRes;
 	}
