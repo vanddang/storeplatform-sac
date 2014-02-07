@@ -1821,12 +1821,19 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeMenuList.add(episodeMenu);
 							episodeProduct.setMenuList(episodeMenuList);
 
-							// 에피소드 상품 정보 (상품ID)
+							// 채널 상품 정보 (상품ID)
 							episodeIdentifierList = new ArrayList<Identifier>();
+							episodeIdentifier = new Identifier();
+							episodeIdentifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
+							episodeIdentifier.setText(episodeShopping.getProdId());
+							episodeIdentifierList.add(episodeIdentifier);
+
+							// 에피소드 상품 정보 (상품ID)
 							episodeIdentifier = new Identifier();
 							episodeIdentifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
 							episodeIdentifier.setText(episodeShopping.getPartProdId());
 							episodeIdentifierList.add(episodeIdentifier);
+
 							episodeProduct.setIdentifierList(episodeIdentifierList);
 
 							// 에피소드 상품 가격 정보
