@@ -1593,6 +1593,7 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
+		ImResult imResult = new ImResult();
 
 		// 회원 정보 조회
 		// 공통 헤더
@@ -1610,30 +1611,32 @@ public class IdpServiceImpl implements IdpService {
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
-		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
-
-		UserMbr getUserMbr = new UserMbr();
-		getUserMbr = searchUserRespnse.getUserMbr();
 
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		String delYN = "N";
-		ImResult imResult = new ImResult();
 
-		// 회원 정보 존재
-		if (getUserMbr != null) {
-			LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 존재");
-			delYN = "Y";
-			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+		try {
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			imResult.setCmd("RXPreCheckDeleteUserIDP");
-			imResult.setResult(idpResult);
-			imResult.setResultText(idpResultText);
-			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
-			imResult.setUserId(userID);
-			imResult.setIsCancelAble(delYN);
-		} else {
+			UserMbr getUserMbr = new UserMbr();
+			getUserMbr = searchUserRespnse.getUserMbr();
+
+			// 회원 정보 존재
+			if (getUserMbr != null) {
+				LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 존재");
+				delYN = "Y";
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
+				imResult.setCmd("RXPreCheckDeleteUserIDP");
+				imResult.setResult(idpResult);
+				imResult.setResultText(idpResultText);
+				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+				imResult.setUserId(userID);
+				imResult.setIsCancelAble(delYN);
+			}
+		} catch (StorePlatformException spe) {
 			LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 없음");
 			imResult.setCmd("RXPreCheckDeleteUserIDP");
 			imResult.setResult(idpResult);
@@ -1648,8 +1651,8 @@ public class IdpServiceImpl implements IdpService {
 			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
 			imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
 			imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
-
 		}
+
 		return imResult;
 	}
 
@@ -1666,6 +1669,7 @@ public class IdpServiceImpl implements IdpService {
 		SearchUserRequest searchUserRequest = new SearchUserRequest();
 		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
+		ImResult imResult = new ImResult();
 
 		// 회원 정보 조회
 		// 공통 헤더
@@ -1683,30 +1687,34 @@ public class IdpServiceImpl implements IdpService {
 
 		keySearchList.add(keySearch);
 		searchUserRequest.setKeySearchList(keySearchList);
-		SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
-
-		UserMbr getUserMbr = new UserMbr();
-		getUserMbr = searchUserRespnse.getUserMbr();
 
 		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
 		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
 		String delYN = "N";
-		ImResult imResult = new ImResult();
 
-		// 회원 정보 존재
-		if (getUserMbr != null) {
-			delYN = "Y";
-			idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
-			idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+		try {
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
 
-			imResult.setCmd("RXPreCheckDeleteUserIDP");
-			imResult.setResult(idpResult);
-			imResult.setResultText(idpResultText);
-			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
-			imResult.setUserId(userID);
-			imResult.setIsCancelAble(delYN);
-		} else {
-			imResult.setCmd("RXPreCheckDeleteUserIDP");
+			UserMbr getUserMbr = new UserMbr();
+			getUserMbr = searchUserRespnse.getUserMbr();
+
+			// 회원 정보 존재
+			if (getUserMbr != null) {
+				LOGGER.debug("RXPreCheckDisagreeUserIDP ------- 회원 정보 존재");
+				delYN = "Y";
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+
+				imResult.setCmd("RXPreCheckDisagreeUserIDP");
+				imResult.setResult(idpResult);
+				imResult.setResultText(idpResultText);
+				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+				imResult.setUserId(userID);
+				imResult.setIsCancelAble(delYN);
+			}
+		} catch (StorePlatformException spe) {
+			LOGGER.debug("RXPreCheckDisagreeUserIDP ------- 회원 정보 없음");
+			imResult.setCmd("RXPreCheckDisagreeUserIDP");
 			imResult.setResult(idpResult);
 			imResult.setResultText(idpResultText);
 			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
@@ -1715,12 +1723,12 @@ public class IdpServiceImpl implements IdpService {
 			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
 					LocaleContextHolder.getLocale());
 			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
-			LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
+			LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
 			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
 			imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
 			imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
-
 		}
+
 		return imResult;
 	}
 
