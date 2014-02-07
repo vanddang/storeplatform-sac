@@ -93,7 +93,7 @@ public class SellerController {
 	 * @return ModifyInformationRes
 	 * @throws Exception
 	 */
-	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyInformationSacRes modifyInformation(SacRequestHeader header,
 			@RequestBody @Validated ModifyInformationSacReq req) {

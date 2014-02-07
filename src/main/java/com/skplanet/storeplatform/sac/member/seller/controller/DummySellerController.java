@@ -464,7 +464,7 @@ public class DummySellerController {
 	 * 
 	 * @return ModifyInformationRes
 	 */
-	@RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/modifyInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifyInformationSacRes modifyInformation() {
 
