@@ -34,8 +34,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM agreeUser(Map<String, Object> param) {
@@ -81,11 +80,11 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.1.4 개별약관해지요청..
+	 * [POST]
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM discardUser(Map<String, Object> param) {
@@ -105,7 +104,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 			sendData.setTerm_reason_cd(term_reason_cd);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-
+		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
@@ -115,8 +114,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * </pre>
 	 * 
 	 * @param imServiceNo
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM userInfoSearchServer(String imServiceNo) {
@@ -136,11 +134,11 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.1.7 공통프로파일정보수정요청.
+	 * [POST]
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM updateUserInfo(Map<String, Object> param) {
@@ -226,18 +224,18 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		sendData.setUser_type(user_type);
 		sendData.setIs_biz_auth(is_biz_auth);
-
+		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
 	 * <pre>
-	 * 2.1.8 부가프로파일정보수정요청
+	 * 2.1.8 부가프로파일정보수정요청.
+	 * [POST]
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM updateAdditionalInfo(Map<String, Object> param) {
@@ -276,17 +274,18 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
+		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
 	 * <pre>
 	 * 2.1.9 비밀번호변경요청.
+	 * [POST]
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM modifyPwd(Map<String, Object> param) {
@@ -312,7 +311,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 			sendData.setUser_passwd_modify_date(user_passwd_modify_date);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-
+		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
@@ -323,8 +322,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * 
 	 * @param key
 	 * @param login_status_code
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM setLoginStatus(String key, String login_status_code) {
@@ -345,6 +343,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.1.24 실명변경 요청.
+	 * [POST]
 	 * </pre>
 	 * 
 	 * @param key
@@ -356,8 +355,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * @param ci
 	 * @param di
 	 * @param map
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
@@ -401,6 +399,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.1.25 법정대리인 동의정보 변경 요청.
+	 * [POST]
 	 * </pre>
 	 * 
 	 * @param key
@@ -410,8 +409,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * @param parent_email
 	 * @param user_auth_key
 	 * @param parent_birthday
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
@@ -435,18 +433,19 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setParent_approve_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
+		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
 	 * <pre>
 	 * 2.2.5 통합 ID회원로그인
+	 * API - POST, Example - GET
 	 * </pre>
 	 * 
 	 * @param key
 	 * @param pwd
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM authForId(String key, String pwd) {
@@ -466,11 +465,11 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.2.6. 통합 ID 서비스 가입리스트 조회.
+	 * API - POST, Example - GET
 	 * </pre>
 	 * 
 	 * @param param
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM findJoinServiceListIDP(Map<String, Object> param) {
@@ -489,11 +488,11 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.2.9 ID 가입여부 체크.
+	 * API - POST, Example - GET
 	 * </pre>
 	 * 
 	 * @param id
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM checkIdStatusIdpIm(String id) {
@@ -511,11 +510,11 @@ public class ImIdpServiceImpl implements ImIdpService {
 	/**
 	 * <pre>
 	 * 2.2.11 MDN 정보 조회 (SKT 가입자)
+	 * API - POST , Example - GET
 	 * </pre>
 	 * 
 	 * @param mdn
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM getMdnInfoIDP(String mdn) {
@@ -527,10 +526,19 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setMdn(mdn);
 
-//		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
+		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
+	/**
+	 * <pre>
+	 * 2.2.12 IM 통합회원 ID 찾기.
+	 * API - POST, Example - GET
+	 * </pre>
+	 * 
+	 * @param param
+	 * @return ImIdpReceiverM
+	 */
 	@Override
 	public ImIdpReceiverM findUserIdByMdn(Map<String, Object> param) {
 		String user_mdn = (String) param.get("user_mdn");
@@ -563,8 +571,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * </pre>
 	 * 
 	 * @param imServiceNo
-	 * @return ImIDPReceiverM
-	 * @throws Exception
+	 * @return ImIdpReceiverM
 	 */
 	@Override
 	public ImIdpReceiverM userInfoIdpSearchServer(String imServiceNo) {

@@ -59,14 +59,14 @@ public final class ImIdpConstants {
 	// 통합 ID 서비스가입리스트조회
 	public static final String IDP_REQ_CMD_FIND_JOIN_SERVICE_LIST = "findJoinServiceListIDP";
 	// MDN 정보 조회 (SKT 가입자)
-	public static final String IDP_REQ_CMD_GET_MDN_INFO_IDP = "getMdnInfoIDP";// IMDN 정보 조회 (SKT 가입자)
+	public static final String IDP_REQ_CMD_GET_MDN_INFO_IDP = "getMdnInfoIDP"; // IMDN 정보 조회 (SKT 가입자)
 	// IM통합회원 ID 찾기
 	public static final String IDP_REQ_CMD_FIND_USERID_BY_MDN = "findUserIdByMdn";
 	// chkExistAgreeUserIDP 이용동의 가능여부 조회
 	// 기본 프로파일 조회(for Server)
 	public static final String IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER = "findCommonProfileForServerIDP";// 기본프로파일조회(for
 	// ID 가입여부 체크
-	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP";
+	public static final String IDP_REQ_CMD_ID_STATUS_IDP_IM = "joinIDCheckIDP"; // API[POST] - example 는 GET
 
 	/** 2.3. IDP 정책 설계 API(RX). */
 	// public static final String IDP_REQ_RX_CMD_CREATE_USER = "RXCreateUserIDP";
