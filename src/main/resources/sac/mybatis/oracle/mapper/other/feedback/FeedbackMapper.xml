@@ -140,7 +140,7 @@
     </update>
 	
 	<!-- 사용후기 삭제 -->
-	<delete id="deleteProdNoti" parameterType="ProdNoti">
+	<update id="deleteProdNoti" parameterType="ProdNoti">
         /* FeedbackMapper.xml, updateProdNoti, SAC : 김현일 , 2014-02-04 */
         UPDATE 
                TB_DP_PROD_NOTI
@@ -153,7 +153,7 @@
          WHERE TENANT_ID = #{tenantId}
            AND NOTI_SEQ = #{notiSeq}
            AND MBR_NO = #{mbrNo}	   
-	</delete>
+	</update>
 	 
 	<!-- 사용후기 추천이력 삭제 -->  
 	<delete id="deleteProdNotiGood" parameterType="ProdNotiGood">
@@ -312,4 +312,15 @@
 	                                     , #{regId}
 	                                     , SYSDATE )
 	</insert>
+	
+	
+	  <!-- 탈퇴 회원 후기 추천 수 증감처리 -->
+    <update id="updateProdNotiWDGood" parameterType="ProdNotiGood">
+	    /* FeedbackMapper.xml, updateProdNotiWDGood, SAC : 김현일 , 2014-02-04 */
+	    UPDATE TB_DP_PROD_NOTI_WD
+	       SET NOTI_SCORE = NOTI_SCORE + 1
+	           , UPD_DT = SYSDATE
+	     WHERE TENANT_ID = #{tenantId} 
+	       AND NOTI_SEQ = #{notiSeq}   
+    </update>
 </mapper>
