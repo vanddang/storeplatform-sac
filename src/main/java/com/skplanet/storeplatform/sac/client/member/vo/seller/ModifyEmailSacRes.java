@@ -6,12 +6,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 2.2.11. 판매자 회원 정산 정보 수정 [RESPONSE]
+ * 2.2.12. 판매자 회원 이메일 수정 [REPONSE]
  * 
- * Updated on : 2014. 1. 7. Updated by : 한서구, 부르칸.
+ * Updated on : 2014. 2. 6. Updated by : 김경복, 부르칸
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class ModifyAccountInformationRes extends CommonInfo {
+public class ModifyEmailSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

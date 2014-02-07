@@ -17,16 +17,16 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 23. Updated by : 김경복, 부르칸.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class ModifyAccountInformationReq extends CommonInfo {
+public class ModifyAccountInformationSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = -4035947141521875296L;
 
-	/** 판매자 key. */
-	@NotBlank
-	private String sellerKey;
 	/** 인증키. */
 	@NotBlank
 	private String sessionKey;
+	/** 판매자 key. */
+	@NotBlank
+	private String sellerKey;
 	/** 판매자 구분코드. */
 	@NotBlank
 	private String sellerClass;
@@ -120,20 +120,20 @@ public class ModifyAccountInformationReq extends CommonInfo {
 	/** 서류 관련 리스트. */
 	private List<ExtraDocument> extraDocumentList;
 
-	public String getSellerKey() {
-		return this.sellerKey;
-	}
-
-	public void setSellerKey(String sellerKey) {
-		this.sellerKey = sellerKey;
-	}
-
 	public String getSessionKey() {
 		return this.sessionKey;
 	}
 
 	public void setSessionKey(String sessionKey) {
 		this.sessionKey = sessionKey;
+	}
+
+	public String getSellerKey() {
+		return this.sellerKey;
+	}
+
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
 	}
 
 	public String getSellerClass() {

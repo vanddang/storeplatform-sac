@@ -19,7 +19,7 @@ public class DuplicateByIdEmailReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 	/** 검색구분 (id / email). */
 	@NotBlank
-	@Pattern(regexp = "^id|^email", message = "keyType is email or id  value is allowed.")
+	@Pattern(regexp = "^id|^email")
 	private String keyType;
 	/** 검색 값. */
 	@NotBlank

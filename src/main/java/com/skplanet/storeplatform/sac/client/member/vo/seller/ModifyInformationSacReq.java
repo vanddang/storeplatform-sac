@@ -8,11 +8,11 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * 5.2.10. 판매자회원 기본정보 수정 [REQUEST]
+ * 2.2.10. 판매자회원 기본정보 수정 [REQUEST]
  * 
  * Updated on : 2014. 1. 24. Updated by : 김경복, 부르칸
  */
-public class ModifyInformationReq extends CommonInfo {
+public class ModifyInformationSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = -6272645047957208675L;
 
