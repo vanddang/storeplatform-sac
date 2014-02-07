@@ -79,67 +79,42 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		List<FeatureCategoryEpub> resultList;
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(topMenuId) || StringUtils.isEmpty(listId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("필수 파라미터 부족");
-			this.logger.debug("----------------------------------------------------------------");
+		// topMenuId 필수 파라미터 체크
+		if (StringUtils.isEmpty(topMenuId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", topMenuId);
+		}
 
-			responseVO = new FeatureCategoryEpubSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+		// listId 필수 파라미터 체크
+		if (StringUtils.isEmpty(listId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
 		}
 
 		// 메뉴ID 유효값 체크 DP13 : 이북, DP14 : 만화
 		if (!"DP13".equals(topMenuId) && !"DP14".equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("유효하지않은 탑메뉴ID");
-			this.logger.debug("----------------------------------------------------------------");
-
-			responseVO = new FeatureCategoryEpubSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0003", "topMenuId", topMenuId);
 		}
 
 		// 리스트ID 유효값 체크
 		if (!"ADM000000013".equals(listId) && !"ADM000000002".equals(listId) && !"RNK000000002".equals(listId)
 				&& !"RNK000000006".equals(listId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("유효하지않은 리스트ID");
-			this.logger.debug("----------------------------------------------------------------");
-
-			responseVO = new FeatureCategoryEpubSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
 		}
 
 		// ADM000000002 만화만 조회되어야 함 topMenuId DP13(이북) 넘어온 경우 체크
 		if ("ADM000000002".equals(listId) && "DP13".equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("리스트ID에 유효하지않은 탑메뉴ID");
-			this.logger.debug("----------------------------------------------------------------");
-
-			responseVO = new FeatureCategoryEpubSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId);
 		}
 
 		// RNK000000002 이북만 조회되어야 함 topMenuId DP14(코믹) 넘어온 경우 체크
 		if ("RNK000000002".equals(listId) && "DP14".equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("리스트ID에 유효하지않은 탑메뉴ID");
-			this.logger.debug("----------------------------------------------------------------");
-
-			responseVO = new FeatureCategoryEpubSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0003", "listId", listId, "topMenuId", topMenuId);
 		}
 
 		if (!StringUtils.isEmpty(requestVO.getFilteredBy())) {
 			try {
 				requestVO.setFilteredBy(URLEncoder.encode(requestVO.getFilteredBy(), "UTF-8"));
 			} catch (Exception ex) {
-				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+				throw new StorePlatformException("SAC_DSP_9999", ex);
 			}
 		}
 
@@ -163,22 +138,17 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("배치완료 기준일시 정보 누락");
-			this.logger.debug("----------------------------------------------------------------");
-
-			responseVO = new FeatureCategoryEpubSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			requestVO.setStdDt(stdDt);
 		}
-		requestVO.setStdDt(stdDt);
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
-				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+				throw new StorePlatformException("SAC_DSP_9999", ex);
 			}
 
 			// prodGradeCd 배열로 변경

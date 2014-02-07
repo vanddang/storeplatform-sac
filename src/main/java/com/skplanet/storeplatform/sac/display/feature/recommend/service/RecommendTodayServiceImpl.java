@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
@@ -38,7 +35,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 @Service
 public class RecommendTodayServiceImpl implements RecommendTodayService {
 
-	private transient Logger log = LoggerFactory.getLogger(CategoryAppServiceImpl.class);
+	// private transient Logger log = LoggerFactory.getLogger(CategoryAppServiceImpl.class);
 
 	@Autowired
 	@Qualifier("sac")
@@ -72,16 +69,19 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 		requestVO.setDeviceModelCd(header.getDeviceHeader().getModel());
 		requestVO.setLangCd(header.getTenantHeader().getLangCd());
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())
-				|| StringUtils.isEmpty(requestVO.getTopMenuId())) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("필수 파라미터 부족");
-			this.log.debug("----------------------------------------------------------------");
+		// tenantId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
+		}
 
-			responseVO = new RecommendTodaySacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+		// listId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getListId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
+		}
+
+		// topMenuId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
 		}
 
 		// 시작점 ROW Default 세팅
@@ -99,22 +99,17 @@ public class RecommendTodayServiceImpl implements RecommendTodayService {
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("배치완료 기준일시 정보 누락");
-			this.log.debug("----------------------------------------------------------------");
-
-			responseVO = new RecommendTodaySacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			requestVO.setStdDt(stdDt);
 		}
-		requestVO.setStdDt(stdDt);
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
-				throw new StorePlatformException("EX_DSP_CD_9999", ex); // 코드 확인 후 변경 필요
+				throw new StorePlatformException("SAC_DSP_9999", ex);
 			}
 
 			// prodGradeCd 배열로 변경

@@ -68,9 +68,6 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	 */
 	@Override
 	public FeatureCategoryVodSacRes searchVodList(FeatureCategoryVodSacReq req, SacRequestHeader header) {
-		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("searchVodList Service started!!");
-		this.logger.debug("----------------------------------------------------------------");
 
 		FeatureCategoryVodSacRes vodRes = null;
 
@@ -78,46 +75,31 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 		String listId = req.getListId();
 		String filteredBy = req.getFilteredBy();
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(topMenuId) || StringUtils.isEmpty(listId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("필수 파라미터 부족");
-			this.logger.debug("----------------------------------------------------------------");
-
-			vodRes = new FeatureCategoryVodSacRes();
-			vodRes.setCommonResponse(new CommonResponse());
-			return vodRes;
+		// topMenuId 필수 파라미터 체크
+		if (StringUtils.isEmpty(topMenuId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", topMenuId);
 		}
+
+		// listId 필수 파라미터 체크
+		if (StringUtils.isEmpty(listId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", listId);
+		}
+
 		// 메뉴ID 유효값 체크
 		if (!"DP17".equals(topMenuId) && !"DP18".equals(topMenuId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("유효하지않은 탑메뉴ID");
-			this.logger.debug("----------------------------------------------------------------");
-
-			vodRes = new FeatureCategoryVodSacRes();
-			vodRes.setCommonResponse(new CommonResponse());
-			return vodRes;
+			throw new StorePlatformException("SAC_DSP_0003", "topMenuId", topMenuId);
 		}
+
 		// 리스트ID 유효값 체크
 		if (!"ADM000000003".equals(listId) && !"ADM000000008".equals(listId)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("유효하지않은 리스트ID");
-			this.logger.debug("----------------------------------------------------------------");
-
-			vodRes = new FeatureCategoryVodSacRes();
-			vodRes.setCommonResponse(new CommonResponse());
-			return vodRes;
+			throw new StorePlatformException("SAC_DSP_0003", "listId", listId);
 		}
+
 		// 영화>추천, 영화>1000원관, 방송>카테고리별 추천, 방송>방송사별 최신Up API는 filteredBy 필수
 		if (StringUtils.isEmpty(req.getMenuId()) && StringUtils.isEmpty(filteredBy)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("filteredBy 파라미터 정보 누락");
-			this.logger.debug("----------------------------------------------------------------");
-
-			vodRes = new FeatureCategoryVodSacRes();
-			vodRes.setCommonResponse(new CommonResponse());
-			return vodRes;
+			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
 		}
+
 		// 시작점 ROW Default 세팅
 		if (req.getOffset() == null) {
 			req.setOffset(1);
@@ -138,22 +120,17 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("배치완료 기준일시 정보 누락");
-			this.logger.debug("----------------------------------------------------------------");
-
-			vodRes = new FeatureCategoryVodSacRes();
-			vodRes.setCommonResponse(new CommonResponse());
-			return vodRes;
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			req.setStdDt(stdDt);
 		}
-		req.setStdDt(stdDt);
 
 		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
 		if (!StringUtils.isEmpty(req.getProdGradeCd())) {
 			try {
 				req.setProdGradeCd(URLEncoder.encode(req.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
-				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+				throw new StorePlatformException("SAC_DSP_9999", ex);
 			}
 
 			// prodGradeCd 배열로 변경

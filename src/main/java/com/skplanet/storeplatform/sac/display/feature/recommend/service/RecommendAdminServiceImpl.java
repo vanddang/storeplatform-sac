@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -46,7 +44,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 @org.springframework.stereotype.Service
 public class RecommendAdminServiceImpl implements RecommendAdminService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -91,27 +89,22 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 		if (StringUtils.isEmpty(requestVO.getTopMenuId()))
 			requestVO.setTopMenuId(StringUtil.nvl(requestVO.getTopMenuId(), "DP01"));
 
-		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(requestVO.getTenantId()) || StringUtils.isEmpty(requestVO.getListId())
-				|| StringUtils.isEmpty(requestVO.getTopMenuId())) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("필수 파라미터 부족");
-			this.log.debug("----------------------------------------------------------------");
-
-			responseVO = new RecommendAdminSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+		// tenantId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
+		}
+		// listId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getListId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", requestVO.getListId());
+		}
+		// topMenuId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTopMenuId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "topMenuId", requestVO.getTopMenuId());
 		}
 
 		// 리스트ID 유효값 체크
 		if (!"ADM000000013".equals(requestVO.getListId())) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("유효하지않은 리스트ID");
-			this.log.debug("----------------------------------------------------------------");
-
-			responseVO = new RecommendAdminSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0003", "listId", requestVO.getListId());
 		}
 
 		// 시작점 ROW Default 세팅
@@ -129,22 +122,17 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("배치완료 기준일시 정보 누락");
-			this.log.debug("----------------------------------------------------------------");
-
-			responseVO = new RecommendAdminSacRes();
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			requestVO.setStdDt(stdDt);
 		}
-		requestVO.setStdDt(stdDt);
 
-		// topMenuId encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		// topMenuId encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
 		if (!StringUtils.isEmpty(requestVO.getTopMenuId())) {
 			try {
 				requestVO.setTopMenuId(URLEncoder.encode(requestVO.getTopMenuId(), "UTF-8"));
 			} catch (Exception ex) {
-				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+				throw new StorePlatformException("SAC_DSP_9999", ex);
 			}
 
 			// topMenuId 배열로 변경
@@ -152,12 +140,12 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			requestVO.setTopMenuIdArr(topMenuIdArr);
 		}
 
-		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 제거 필요)
+		// prodGradeCd encode 처리(테넌트에서 인코딩하여 넘길 시 encode 제거 필요)
 		if (!StringUtils.isEmpty(requestVO.getProdGradeCd())) {
 			try {
 				requestVO.setProdGradeCd(URLEncoder.encode(requestVO.getProdGradeCd(), "UTF-8"));
 			} catch (Exception ex) {
-				throw new StorePlatformException("EX_ERR_CD_9999", ex); // 코드 확인 후 변경 필요
+				throw new StorePlatformException("SAC_DSP_9999", ex);
 			}
 
 			// prodGradeCd 배열로 변경

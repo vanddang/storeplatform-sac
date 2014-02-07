@@ -12,12 +12,12 @@ package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
@@ -46,7 +46,7 @@ import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebt
 @Service
 public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -68,6 +68,11 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 
 		RecommendWebtoonSacRes responseVO = null;
 
+		// 헤더값 세팅
+		req.setTenantId(header.getTenantHeader().getTenantId());
+		req.setDeviceModelCd(header.getDeviceHeader().getModel());
+		req.setLangCd(header.getTenantHeader().getLangCd());
+
 		/** TODO 2. 테스트용 if 헤더 셋팅 */
 		if (header.getTenantHeader() == null) {
 			req.setTenantId("S01");
@@ -82,13 +87,25 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			req.setDeviceModelCd("SHV-E330SSO");
 		}
 
-		String stdDt = "";
-
-		stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
-		if (stdDt == null) {
-			stdDt = "20130101000000";
+		// tenantId 필수 파라미터 체크
+		if (StringUtils.isEmpty(req.getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", req.getTenantId());
 		}
-		req.setStdDt(stdDt);
+
+		// listId 필수 파라미터 체크
+		if (StringUtils.isEmpty(req.getListId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "listId", req.getListId());
+		}
+
+		// 배치완료 기준일시 조회
+		String stdDt = this.displayCommonService.getBatchStandardDateString(req.getTenantId(), req.getListId());
+
+		// 기준일시 체크
+		if (StringUtils.isEmpty(stdDt)) {
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			req.setStdDt(stdDt);
+		}
 
 		Integer totalCount = 0;
 		List<RecommendWebtoon> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
