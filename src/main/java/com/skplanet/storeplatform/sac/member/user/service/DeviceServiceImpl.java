@@ -432,7 +432,7 @@ public class DeviceServiceImpl implements DeviceService {
 				schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
 			} catch (StorePlatformException ex) {
 				/* 약관 조회 결과 없는경우를 제외하고 throw */
-				if (!ex.getErrorInfo().getCode().equals("SC_MEM_9982")) {
+				if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 					throw ex;
 				}
 			}

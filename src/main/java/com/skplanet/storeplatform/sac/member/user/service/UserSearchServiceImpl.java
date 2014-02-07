@@ -200,7 +200,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 					res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
 				} catch (StorePlatformException ex) {
 					/* 결과가 없는 경우만 제외하고 throw */
-					if (!ex.getErrorInfo().getCode().equals("SC_MEM_9982")) {
+					if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 						throw ex;
 					}
 				}

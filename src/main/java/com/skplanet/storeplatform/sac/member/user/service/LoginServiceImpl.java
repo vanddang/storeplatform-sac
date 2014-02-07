@@ -728,11 +728,6 @@ public class LoginServiceImpl implements LoginService {
 			updUserReq.setUserMbr(userMbr);
 			UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
 
-			if (!StringUtils.equals(updUserRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES)) {
-				throw new StorePlatformException("[" + updUserRes.getCommonResponse().getResultCode() + "] "
-						+ updUserRes.getCommonResponse().getResultMessage());
-			}
-
 			/* 3. imMngNum 부가속성 추가 */
 			DeviceInfo deviceInfo = new DeviceInfo();
 			deviceInfo.setDeviceId(deviceId);

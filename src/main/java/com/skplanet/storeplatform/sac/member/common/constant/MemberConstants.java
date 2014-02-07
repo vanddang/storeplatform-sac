@@ -24,6 +24,11 @@ public final class MemberConstants {
 	public static final String RESULT_UNKNOWN_ERR = "9991"; // 알수 없는 에러
 	public static final String RESULT_UNKNOWN_USER_ID = "9990"; // 존재하지 않는 사용자ID
 
+	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; //SC 검색결과 없음
+
+	/** EC IDP 에러 코드 문자열 */
+	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
+
 	/** 사용자구분코드. */
 	public static final String USER_TYPE_MOBILE = "US011501"; // 기기사용자
 	public static final String USER_TYPE_IDPID = "US011502"; // IDP사용자
@@ -137,9 +142,6 @@ public final class MemberConstants {
 	/** 통합회원 직권중지 상태코드 */
 	public static final String USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
 	public static final String USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
-
-	/** EC IDP 에러 코드 문자열 */
-	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
 
 	/** 탈퇴 사유 코드 */
 	public static final String WITHDRAW_REASON_OTHER = "US010408"; // 기타
