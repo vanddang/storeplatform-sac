@@ -965,30 +965,46 @@ public class UserSearchServiceImpl implements UserSearchService {
 		policyRequest.setCommonRequest(this.mcc.getSCCommonRequest(header));
 		logger.info("## policyRequest : {}", policyRequest.toString());
 
-		/**
-		 * SC 사용자 정책 리스트 조회 연동.
-		 */
-		SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
-
-		/**
-		 * 처리 결과 setting.
-		 */
 		List<IndividualPolicyInfo> policyInfos = null;
-		IndividualPolicyInfo policyInfo = null;
-		if (policyResponse.getLimitTargetList().size() > 0) {
 
+		try {
+
+			/**
+			 * SC 사용자 정책 리스트 조회 연동.
+			 */
+			SearchPolicyResponse policyResponse = this.userSCI.searchPolicyList(policyRequest);
+
+			/**
+			 * 처리 결과 setting.
+			 */
+			IndividualPolicyInfo policyInfo = null;
 			if (policyResponse.getLimitTargetList().size() > 0) {
-				policyInfos = new ArrayList<IndividualPolicyInfo>();
-				for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
-					policyInfo = new IndividualPolicyInfo();
-					policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
-					policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
-					policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
-					policyInfos.add(policyInfo);
+
+				if (policyResponse.getLimitTargetList().size() > 0) {
+					policyInfos = new ArrayList<IndividualPolicyInfo>();
+					for (int i = 0; i < policyResponse.getLimitTargetList().size(); i++) {
+						policyInfo = new IndividualPolicyInfo();
+						policyInfo.setKey(policyResponse.getLimitTargetList().get(i).getLimitPolicyKey());
+						policyInfo.setPolicyCode(policyResponse.getLimitTargetList().get(i).getLimitPolicyCode());
+						policyInfo.setValue(policyResponse.getLimitTargetList().get(i).getPolicyApplyValue());
+						policyInfos.add(policyInfo);
+					}
 				}
+
+				logger.info("## policyInfos : {}", policyInfos.toString());
 			}
 
-			logger.info("## policyInfos : {}", policyInfos.toString());
+		} catch (StorePlatformException spe) {
+
+			/**
+			 * 조회된 데이타가 없을경우 Skip.
+			 */
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
+				logger.info("## 조회된 사용자 정책이 없습니다. [{}]", spe.getErrorInfo().getCode());
+			} else {
+				throw spe;
+			}
+
 		}
 
 		return policyInfos;
