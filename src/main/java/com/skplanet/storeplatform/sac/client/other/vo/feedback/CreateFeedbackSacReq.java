@@ -62,7 +62,7 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	/**
 	 * 평점.
 	 */
-	private int avgScore;
+	private String avgScore;
 
 	/**
 	 * @return String
@@ -200,9 +200,9 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgScore() {
+	public String getAvgScore() {
 		return this.avgScore;
 	}
 
@@ -210,7 +210,7 @@ public class CreateFeedbackSacReq extends CommonInfo {
 	 * @param avgScore
 	 *            avgScore
 	 */
-	public void setAvgScore(int avgScore) {
+	public void setAvgScore(String avgScore) {
 		this.avgScore = avgScore;
 	}
 

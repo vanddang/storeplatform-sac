@@ -25,21 +25,21 @@ public class AvgScore extends CommonInfo {
 	/**
 	 * 평점.
 	 */
-	private int avgScore;
+	private String avgScore;
 
 	/**
 	 * 평점 퍼센트.
 	 */
-	private int avgScorePct;
+	private String avgScorePct;
 	/**
 	 * 참여수.
 	 */
-	private int particpersCnt;
+	private String particpersCnt;
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgScore() {
+	public String getAvgScore() {
 		return this.avgScore;
 	}
 
@@ -47,14 +47,14 @@ public class AvgScore extends CommonInfo {
 	 * @param avgScore
 	 *            avgScore
 	 */
-	public void setAvgScore(int avgScore) {
+	public void setAvgScore(String avgScore) {
 		this.avgScore = avgScore;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgScorePct() {
+	public String getAvgScorePct() {
 		return this.avgScorePct;
 	}
 
@@ -62,14 +62,14 @@ public class AvgScore extends CommonInfo {
 	 * @param avgScorePct
 	 *            avgScorePct
 	 */
-	public void setAvgScorePct(int avgScorePct) {
+	public void setAvgScorePct(String avgScorePct) {
 		this.avgScorePct = avgScorePct;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getParticpersCnt() {
+	public String getParticpersCnt() {
 		return this.particpersCnt;
 	}
 
@@ -77,7 +77,7 @@ public class AvgScore extends CommonInfo {
 	 * @param particpersCnt
 	 *            particpersCnt
 	 */
-	public void setParticpersCnt(int particpersCnt) {
+	public void setParticpersCnt(String particpersCnt) {
 		this.particpersCnt = particpersCnt;
 	}
 

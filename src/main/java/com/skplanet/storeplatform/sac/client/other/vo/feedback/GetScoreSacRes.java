@@ -29,7 +29,7 @@ public class GetScoreSacRes extends CommonInfo {
 	/**
 	 * 총 평균 평점.
 	 */
-	private int totEvluScore;
+	private String totEvluScore;
 
 	/**
 	 * 평균 평점.
@@ -42,7 +42,7 @@ public class GetScoreSacRes extends CommonInfo {
 	/**
 	 * 참여자 수.
 	 */
-	private int particpersCnt;
+	private String particpersCnt;
 
 	/**
 	 * @return String
@@ -60,9 +60,9 @@ public class GetScoreSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getTotEvluScore() {
+	public String getTotEvluScore() {
 		return this.totEvluScore;
 	}
 
@@ -70,7 +70,7 @@ public class GetScoreSacRes extends CommonInfo {
 	 * @param totEvluScore
 	 *            totEvluScore
 	 */
-	public void setTotEvluScore(int totEvluScore) {
+	public void setTotEvluScore(String totEvluScore) {
 		this.totEvluScore = totEvluScore;
 	}
 
@@ -105,9 +105,9 @@ public class GetScoreSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getParticpersCnt() {
+	public String getParticpersCnt() {
 		return this.particpersCnt;
 	}
 
@@ -115,7 +115,7 @@ public class GetScoreSacRes extends CommonInfo {
 	 * @param particpersCnt
 	 *            particpersCnt
 	 */
-	public void setParticpersCnt(int particpersCnt) {
+	public void setParticpersCnt(String particpersCnt) {
 		this.particpersCnt = particpersCnt;
 	}
 

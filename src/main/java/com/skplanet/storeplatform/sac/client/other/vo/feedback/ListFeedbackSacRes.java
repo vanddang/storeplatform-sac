@@ -31,19 +31,19 @@ public class ListFeedbackSacRes extends CommonInfo {
 	/**
 	 * 사용후기 전체개수.
 	 */
-	private int notiTot;
+	private String notiTot;
 	/**
 	 * 다운로드 수.
 	 */
-	private int dwldCnt;
+	private String dwldCnt;
 	/**
 	 * 평균평점.
 	 */
-	private int avgEvluScore;
+	private String avgEvluScore;
 	/**
 	 * 참여자수.
 	 */
-	private int particpersCnt;
+	private String particpersCnt;
 	/**
 	 * 사용후기 리스트.
 	 */
@@ -65,9 +65,9 @@ public class ListFeedbackSacRes extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiTot() {
+	public String getNotiTot() {
 		return this.notiTot;
 	}
 
@@ -75,14 +75,14 @@ public class ListFeedbackSacRes extends CommonInfo {
 	 * @param notiTot
 	 *            notiTot
 	 */
-	public void setNotiTot(int notiTot) {
+	public void setNotiTot(String notiTot) {
 		this.notiTot = notiTot;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getDwldCnt() {
+	public String getDwldCnt() {
 		return this.dwldCnt;
 	}
 
@@ -90,14 +90,14 @@ public class ListFeedbackSacRes extends CommonInfo {
 	 * @param dwldCnt
 	 *            dwldCnt
 	 */
-	public void setDwldCnt(int dwldCnt) {
+	public void setDwldCnt(String dwldCnt) {
 		this.dwldCnt = dwldCnt;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgEvluScore() {
+	public String getAvgEvluScore() {
 		return this.avgEvluScore;
 	}
 
@@ -105,14 +105,14 @@ public class ListFeedbackSacRes extends CommonInfo {
 	 * @param avgEvluScore
 	 *            avgEvluScore
 	 */
-	public void setAvgEvluScore(int avgEvluScore) {
+	public void setAvgEvluScore(String avgEvluScore) {
 		this.avgEvluScore = avgEvluScore;
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getParticpersCnt() {
+	public String getParticpersCnt() {
 		return this.particpersCnt;
 	}
 
@@ -120,7 +120,7 @@ public class ListFeedbackSacRes extends CommonInfo {
 	 * @param particpersCnt
 	 *            particpersCnt
 	 */
-	public void setParticpersCnt(int particpersCnt) {
+	public void setParticpersCnt(String particpersCnt) {
 		this.particpersCnt = particpersCnt;
 	}
 
@@ -138,5 +138,4 @@ public class ListFeedbackSacRes extends CommonInfo {
 	public void setNotiList(List<Feedback> notiList) {
 		this.notiList = notiList;
 	}
-
 }

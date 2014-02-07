@@ -33,7 +33,7 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
-	private int notiSeq;
+	private String notiSeq;
 	/**
 	 * 채널 ID.
 	 */
@@ -49,7 +49,7 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	/**
 	 * 평점.
 	 */
-	private int avgScore;
+	private String avgScore;
 	/**
 	 * 패키지 버전 코드.
 	 */
@@ -86,9 +86,9 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiSeq() {
+	public String getNotiSeq() {
 		return this.notiSeq;
 	}
 
@@ -96,7 +96,7 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	 * @param notiSeq
 	 *            notiSeq
 	 */
-	public void setNotiSeq(int notiSeq) {
+	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
 	}
 
@@ -146,9 +146,9 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgScore() {
+	public String getAvgScore() {
 		return this.avgScore;
 	}
 
@@ -156,7 +156,7 @@ public class ModifyFeedbackSacReq extends CommonInfo {
 	 * @param avgScore
 	 *            avgScore
 	 */
-	public void setAvgScore(int avgScore) {
+	public void setAvgScore(String avgScore) {
 		this.avgScore = avgScore;
 	}
 

@@ -33,7 +33,7 @@ public class RemoveFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
-	private int notiSeq;
+	private String notiSeq;
 
 	/**
 	 * @return String
@@ -66,9 +66,9 @@ public class RemoveFeedbackSacReq extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiSeq() {
+	public String getNotiSeq() {
 		return this.notiSeq;
 	}
 
@@ -76,7 +76,7 @@ public class RemoveFeedbackSacReq extends CommonInfo {
 	 * @param notiSeq
 	 *            notiSeq
 	 */
-	public void setNotiSeq(int notiSeq) {
+	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
 	}
 

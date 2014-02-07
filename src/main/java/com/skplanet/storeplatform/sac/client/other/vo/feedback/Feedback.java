@@ -26,7 +26,7 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
-	private int notiSeq;
+	private String notiSeq;
 	/**
 	 * 회원 Key.
 	 */
@@ -46,7 +46,7 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 사용후기 점수.
 	 */
-	private int notiScore;
+	private String notiScore;
 	/**
 	 * 등록 ID.
 	 */
@@ -90,7 +90,7 @@ public class Feedback extends CommonInfo {
 	/**
 	 * 평점.
 	 */
-	private int avgScore;
+	private String avgScore;
 	/**
 	 * 닉네임.
 	 */
@@ -109,9 +109,9 @@ public class Feedback extends CommonInfo {
 	private String compNm;
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiSeq() {
+	public String getNotiSeq() {
 		return this.notiSeq;
 	}
 
@@ -119,7 +119,7 @@ public class Feedback extends CommonInfo {
 	 * @param notiSeq
 	 *            notiSeq
 	 */
-	public void setNotiSeq(int notiSeq) {
+	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
 	}
 
@@ -184,9 +184,9 @@ public class Feedback extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiScore() {
+	public String getNotiScore() {
 		return this.notiScore;
 	}
 
@@ -194,7 +194,7 @@ public class Feedback extends CommonInfo {
 	 * @param notiScore
 	 *            notiScore
 	 */
-	public void setNotiScore(int notiScore) {
+	public void setNotiScore(String notiScore) {
 		this.notiScore = notiScore;
 	}
 
@@ -349,9 +349,9 @@ public class Feedback extends CommonInfo {
 	}
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getAvgScore() {
+	public String getAvgScore() {
 		return this.avgScore;
 	}
 
@@ -359,7 +359,7 @@ public class Feedback extends CommonInfo {
 	 * @param avgScore
 	 *            avgScore
 	 */
-	public void setAvgScore(int avgScore) {
+	public void setAvgScore(String avgScore) {
 		this.avgScore = avgScore;
 	}
 

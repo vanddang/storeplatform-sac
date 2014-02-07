@@ -28,7 +28,7 @@ public class ListMyFeedbackSacRes extends CommonInfo {
 	/**
 	 * 사용후기 전체개수.
 	 */
-	private int notiTot;
+	private String notiTot;
 
 	/**
 	 * 사용후기 리스트.
@@ -36,9 +36,9 @@ public class ListMyFeedbackSacRes extends CommonInfo {
 	private List<Feedback> notiList;
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiTot() {
+	public String getNotiTot() {
 		return this.notiTot;
 	}
 
@@ -46,7 +46,7 @@ public class ListMyFeedbackSacRes extends CommonInfo {
 	 * @param notiTot
 	 *            notiTot
 	 */
-	public void setNotiTot(int notiTot) {
+	public void setNotiTot(String notiTot) {
 		this.notiTot = notiTot;
 	}
 
@@ -64,4 +64,5 @@ public class ListMyFeedbackSacRes extends CommonInfo {
 	public void setNotiList(List<Feedback> notiList) {
 		this.notiList = notiList;
 	}
+
 }

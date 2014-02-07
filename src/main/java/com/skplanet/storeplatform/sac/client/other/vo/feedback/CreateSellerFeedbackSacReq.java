@@ -25,7 +25,7 @@ public class CreateSellerFeedbackSacReq extends CommonInfo {
 	/**
 	 * 사용후기 번호.
 	 */
-	private int notiSeq;
+	private String notiSeq;
 	/**
 	 * 판매자 댓글 제목.
 	 */
@@ -36,9 +36,9 @@ public class CreateSellerFeedbackSacReq extends CommonInfo {
 	private String sellerRespOpin;
 
 	/**
-	 * @return int
+	 * @return String
 	 */
-	public int getNotiSeq() {
+	public String getNotiSeq() {
 		return this.notiSeq;
 	}
 
@@ -46,7 +46,7 @@ public class CreateSellerFeedbackSacReq extends CommonInfo {
 	 * @param notiSeq
 	 *            notiSeq
 	 */
-	public void setNotiSeq(int notiSeq) {
+	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
 	}
 
