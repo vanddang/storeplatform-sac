@@ -159,11 +159,14 @@ public class DeviceServiceImpl implements DeviceService {
 		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
 		listDeviceReq.setUserKey(userKey);
 		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
-		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
-		if (deviceInfoList != null) {
-			for (DeviceInfo deviceInfo : deviceInfoList) {
-				if (deviceInfo.getDeviceId().equals(deviceId)) {
-					throw new StorePlatformException("SAC_MEM_1502");
+
+		if (listDeviceRes.getDeviceInfoList() != null) {
+			List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
+			if (deviceInfoList != null) {
+				for (DeviceInfo deviceInfo : deviceInfoList) {
+					if (deviceInfo.getDeviceId().equals(deviceId)) {
+						throw new StorePlatformException("SAC_MEM_1502");
+					}
 				}
 			}
 		}
@@ -270,20 +273,24 @@ public class DeviceServiceImpl implements DeviceService {
 		if (req.getDeviceId() != null) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
-			res.setUserId(deviceInfo.getUserId());
-			res.setUserKey(deviceInfo.getUserKey());
-			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-			deviceInfoList.add(deviceInfo);
-			res.setDeviceInfoList(deviceInfoList);
+			if (deviceInfo != null) {
+				res.setUserId(deviceInfo.getUserId());
+				res.setUserKey(deviceInfo.getUserKey());
+				List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+				deviceInfoList.add(deviceInfo);
+				res.setDeviceInfoList(deviceInfoList);
+			}
 			return res;
 		} else if (req.getDeviceKey() != null) {
 			/* 단건 조회 처리 */
 			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
-			res.setUserId(deviceInfo.getUserId());
-			res.setUserKey(deviceInfo.getUserKey());
-			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-			deviceInfoList.add(deviceInfo);
-			res.setDeviceInfoList(deviceInfoList);
+			if (deviceInfo != null) {
+				res.setUserId(deviceInfo.getUserId());
+				res.setUserKey(deviceInfo.getUserKey());
+				List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+				deviceInfoList.add(deviceInfo);
+				res.setDeviceInfoList(deviceInfoList);
+			}
 			return res;
 		} else if (req.getUserId() != null) {
 			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
@@ -298,13 +305,19 @@ public class DeviceServiceImpl implements DeviceService {
 		schDeviceListReq.setCommonRequest(commonRequest);
 
 		/* 사용자 휴대기기 목록 조회 */
-		SearchDeviceListResponse schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
+		SearchDeviceListResponse schDeviceListRes = null;
+		try {
+			schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
+		}
 
 		/* response 셋팅 */
-		res.setUserId(schDeviceListRes.getUserID());
-		res.setUserKey(schDeviceListRes.getUserKey());
-
-		if (schDeviceListRes.getUserMbrDevice() != null && schDeviceListRes.getUserMbrDevice().size() > 0) {
+		if (schDeviceListRes != null) {
+			res.setUserId(schDeviceListRes.getUserID());
+			res.setUserKey(schDeviceListRes.getUserKey());
 
 			List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
 			DeviceInfo deviceInfo = null;
@@ -321,7 +334,6 @@ public class DeviceServiceImpl implements DeviceService {
 				deviceInfoList.add(deviceInfo);
 			}
 			res.setDeviceInfoList(deviceInfoList);
-
 		}
 
 		logger.info("######################## DeviceServiceImpl listDevice end ############################");
@@ -359,19 +371,28 @@ public class DeviceServiceImpl implements DeviceService {
 		searchDeviceRequest.setUserKey(userKey);
 		searchDeviceRequest.setKeySearchList(keySearchList);
 
-		DeviceInfo deviceInfo = new DeviceInfo();
+		DeviceInfo deviceInfo = null;
+		SearchDeviceResponse schDeviceRes = null;
+		try {
+			schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
+		}
 
-		SearchDeviceResponse schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+		if (schDeviceRes != null) {
+			deviceInfo = new DeviceInfo();
+			deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+			deviceInfo.setUserId(schDeviceRes.getUserID());
+			deviceInfo.setUserKey(schDeviceRes.getUserKey());
 
-		deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
-		deviceInfo.setUserId(schDeviceRes.getUserID());
-		deviceInfo.setUserKey(schDeviceRes.getUserKey());
-
-		/* 폰정보 DB 조회하여 추가 정보 반영 */
-		Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
-		deviceInfo.setMakeComp(device.getMnftCompCd());
-		deviceInfo.setModelNm(device.getModelNm());
-		deviceInfo.setVmType(device.getVmTypeCd());
+			/* 폰정보 DB 조회하여 추가 정보 반영 */
+			Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
+			deviceInfo.setMakeComp(device.getMnftCompCd());
+			deviceInfo.setModelNm(device.getModelNm());
+			deviceInfo.setVmType(device.getVmTypeCd());
+		}
 
 		logger.info("######################## DeviceServiceImpl searchDevice start ############################");
 
@@ -850,34 +871,36 @@ public class DeviceServiceImpl implements DeviceService {
 			logger.info("### userKey Res : {}", listRes.toString());
 		}
 
-		for (DeviceInfo info : listRes.getDeviceInfoList()) {
-			DeviceInfo addData = new DeviceInfo();
-			List<DeviceExtraInfo> listExtraInfo = new ArrayList<DeviceExtraInfo>();
+		if (listRes.getDeviceInfoList() != null) {
+			for (DeviceInfo info : listRes.getDeviceInfoList()) {
+				DeviceInfo addData = new DeviceInfo();
+				List<DeviceExtraInfo> listExtraInfo = new ArrayList<DeviceExtraInfo>();
 
-			addData.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
-			addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
-			addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
-			//addData.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
-			addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
-			addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
-			addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
-			addData.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
-			addData.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
-			addData.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSms()));
-			addData.setNativeId(StringUtil.setTrim(info.getNativeId()));
-			addData.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
-			addData.setJoinId(StringUtil.setTrim(info.getJoinId()));
+				addData.setDeviceKey(StringUtil.setTrim(info.getDeviceKey()));
+				addData.setDeviceId(StringUtil.setTrim(info.getDeviceId()));
+				addData.setDeviceModelNo(StringUtil.setTrim(info.getDeviceModelNo()));
+				//addData.setImMngNum(StringUtil.setTrim(info.getImMngNum()));
+				addData.setDeviceTelecom(StringUtil.setTrim(info.getDeviceTelecom()));
+				addData.setDeviceNickName(StringUtil.setTrim(info.getDeviceNickName()));
+				addData.setIsPrimary(StringUtil.setTrim(info.getIsPrimary()));
+				addData.setIsAuthenticated(StringUtil.setTrim(info.getIsAuthenticated()));
+				addData.setAuthenticationDate(StringUtil.setTrim(info.getAuthenticationDate()));
+				addData.setIsRecvSms(StringUtil.setTrim(info.getIsRecvSms()));
+				addData.setNativeId(StringUtil.setTrim(info.getNativeId()));
+				addData.setDeviceAccount(StringUtil.setTrim(info.getDeviceAccount()));
+				addData.setJoinId(StringUtil.setTrim(info.getJoinId()));
 
-			for (DeviceExtraInfo extraInfo : info.getUserDeviceExtraInfo()) {
-				DeviceExtraInfo addExtraInfo = new DeviceExtraInfo();
-				addExtraInfo.setExtraProfile(extraInfo.getExtraProfile());
-				addExtraInfo.setExtraProfileValue(extraInfo.getExtraProfileValue());
-				listExtraInfo.add(addExtraInfo);
+				for (DeviceExtraInfo extraInfo : info.getUserDeviceExtraInfo()) {
+					DeviceExtraInfo addExtraInfo = new DeviceExtraInfo();
+					addExtraInfo.setExtraProfile(extraInfo.getExtraProfile());
+					addExtraInfo.setExtraProfileValue(extraInfo.getExtraProfileValue());
+					listExtraInfo.add(addExtraInfo);
+				}
+
+				addData.setUserDeviceExtraInfo(listExtraInfo);
+
+				res.setUserDeviceInfo(addData);
 			}
-
-			addData.setUserDeviceExtraInfo(listExtraInfo);
-
-			res.setUserDeviceInfo(addData);
 		}
 
 		logger.info("###### Start detailRepresentationDevice Request : {}", req.toString());
@@ -937,8 +960,11 @@ public class DeviceServiceImpl implements DeviceService {
 			deviceReq.setUserKey(req.getUserKey());
 			deviceReq.setDeviceId(req.getDeviceId());
 			deviceRes = this.listDevice(requestHeader, deviceReq);
-			String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
-			req.setDeviceKey(deviceKey);
+			if (deviceRes != null) {
+				String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
+				req.setDeviceKey(deviceKey);
+			}
+
 		}
 
 		logger.info("###### 2. exist Request : {}", existReq.toString());
@@ -1120,7 +1146,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		logger.info("============================================ listDevice From DeviceKey Request : {}", schDeviceListKeyRequest.toString());
 		ListDeviceRes schDeviceListKeyResponse = this.listDevice(requestHeader, schDeviceListKeyRequest);
-		if (schDeviceListKeyResponse.getDeviceInfoList().size() == 0 && schDeviceListKeyResponse.getDeviceInfoList().size() > 1) {
+		if (schDeviceListKeyResponse.getDeviceInfoList() != null) {
 			throw new StorePlatformException("SAC_MEM_0002", schDeviceListKeyRequest.toString());
 		}
 
@@ -1315,7 +1341,7 @@ public class DeviceServiceImpl implements DeviceService {
 		logger.info("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());
 
 		/* PhoneInfo 조회 */
-		if (searchUser != null && listDeviceRes.getDeviceInfoList().size() == 1 && listDeviceRes.getDeviceInfoList() != null) {
+		if (listDeviceRes.getDeviceInfoList() != null) {
 			Device device = this.commService.getPhoneInfo(listDeviceRes.getDeviceInfoList().get(0).getDeviceModelNo());
 
 			logger.info("============================================Phoneinfo getAomSprtYn Res {}", device.getAomSprtYn());
