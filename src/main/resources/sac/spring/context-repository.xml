@@ -20,12 +20,11 @@
     <!-- 명시적 transaction 선언(선언적 transaction 으로 모두 변환 예정 입니다.) -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
     
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager" >
         <tx:attributes>
            <tx:method name="create*" propagation="REQUIRED" read-only="false" />
            <tx:method name="update*" propagation="REQUIRED" read-only="false" />
            <tx:method name="remove*" propagation="REQUIRED" read-only="false" />
-           <tx:method name="*"       propagation="REQUIRED" read-only="false"  />
         </tx:attributes>
     </tx:advice>
         
