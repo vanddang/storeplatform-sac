@@ -560,7 +560,7 @@
                             WHERE 1=1
                               AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
                               AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
-                              AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
+                              AND (DV.DEVICE_MODEL_CD  = #{deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2') 
                               AND PROD_ID = I.PROD_ID
                             )                        
                    ) 
