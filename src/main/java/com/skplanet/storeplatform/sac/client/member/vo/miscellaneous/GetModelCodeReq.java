@@ -3,9 +3,10 @@
  */
 package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
+import javax.validation.constraints.Pattern;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -22,7 +23,8 @@ public class GetModelCodeReq extends CommonInfo {
 	/**
 	 * MDN
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	// @NotEmpty(message = "필수 파라미터 입니다.")
+	@Pattern(regexp = "[0-9]{10,11}")
 	private String msisdn;
 
 	/**

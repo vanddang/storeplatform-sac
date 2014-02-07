@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.miscellaneous;
 
+import javax.validation.constraints.Pattern;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
@@ -18,6 +20,7 @@ public class GetUaCodeReq extends CommonInfo {
 	/**
 	 * 휴대폰 번호
 	 */
+	@Pattern(regexp = "[0-9]{10,11}")
 	private String msisdn;
 
 	/**
