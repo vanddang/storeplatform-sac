@@ -153,6 +153,7 @@ public class ShoppingCouponSacController {
 						success = this.insertBrandInfo(brandInfo);
 					}
 					if (success) {
+						couponRes.setFlag(true);
 						couponRes.setBrandId(brandInfo.getCreateBrandId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
@@ -174,6 +175,7 @@ public class ShoppingCouponSacController {
 						success = this.insertCatalogInfo(catalogInfo);
 					}
 					if (success) {
+						couponRes.setFlag(true);
 						couponRes.setCatalogId(catalogInfo.getCreateCatalogId());
 						couponRes.setBrandId(catalogInfo.getCreateBrandId());
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
@@ -194,6 +196,7 @@ public class ShoppingCouponSacController {
 					}
 
 					if (success) {
+						couponRes.setFlag(true);
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 						map.put("ERROR_MSG", errorData.getErrorMsg());
@@ -208,6 +211,7 @@ public class ShoppingCouponSacController {
 					// 쿠폰 상태 변경 호출한다
 					success = this.updateForCouponStatus(couponReq);
 					if (success) {
+						couponRes.setFlag(true);
 						map.put("TX_STATUS", CouponConstants.COUPON_IF_TX_STATUS_SUCCESS);
 						map.put("ERROR_CODE", CouponConstants.COUPON_IF_ERROR_CODE_OK);
 						map.put("ERROR_MSG", errorData.getErrorMsg());
