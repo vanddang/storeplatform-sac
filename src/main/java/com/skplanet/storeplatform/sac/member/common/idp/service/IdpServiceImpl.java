@@ -206,6 +206,7 @@ public class IdpServiceImpl implements IdpService {
 	 * 
 	 * @param userAuthKey
 	 * @param queryKeyType
+	 *            : 1=id, 2=Email, 3=User Key, default=1
 	 * @param queryKeyValue
 	 * @return IdpReceiverM
 	 */
@@ -229,6 +230,7 @@ public class IdpServiceImpl implements IdpService {
 	 * </pre>
 	 * 
 	 * @param queryKeyType
+	 *            : 1=id, 2=Email, 3=User Key, default=1
 	 * @param queryKeyValue
 	 * @return IdpReceiverM
 	 */
@@ -254,6 +256,7 @@ public class IdpServiceImpl implements IdpService {
 	 * 
 	 * @param user_auth_key
 	 * @param key_type
+	 *            : 1=Email, 2=password, default=1
 	 * @param key
 	 * @return IdpReceiverM
 	 */
@@ -436,6 +439,7 @@ public class IdpServiceImpl implements IdpService {
 	 * 
 	 * @param userAuthKey
 	 * @param secedeKeyType
+	 *            : 1=User ID, 2=User Key, default=1
 	 * @param secedeKeyValue
 	 * @return IdpReceiverM
 	 */
@@ -480,6 +484,8 @@ public class IdpServiceImpl implements IdpService {
 	 * </pre>
 	 * 
 	 * @param mdn
+	 * @param mdnCorp
+	 *            : [SKT, KTF, LGT]
 	 * @return IdpReceiverM
 	 */
 	@Override
