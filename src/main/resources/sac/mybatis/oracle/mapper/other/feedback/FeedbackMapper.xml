@@ -14,11 +14,11 @@
 	                 WHERE 1 = 1
 	            AND N.MBR_NO = #{mbrNo}
 	            AND N.TENANT_ID = #{tenantId}
-	        <if test="chnlId != null">
+	        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
 	            AND N.PROD_ID = #{chnlId}
 	            AND N.CATALOG_ID = #{prodId}
 	        </if>
-	        <if test="chnlId == null">
+	        <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
 	            AND N.PROD_ID = #{prodId}
 	        </if>
 	            AND N.NOTI_TYPE_CD = 'DP000401'
@@ -26,13 +26,13 @@
 	            AND N.BAD_NOTI_YN IN ( 'N', 'R' )
 	            AND N.SPAM_YN = 'N'
 	            AND EXISTS (
-	                       <if test="chnlId != null">
+	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
 	                       SELECT 'X'
 	                         FROM TB_DP_SHPG_CATALOG P
 	                        WHERE P.CATALOG_ID = #{prodId}
 	                          AND P.CHNL_CNT > 0
 	                       </if>
-	                       <if test="chnlId == null">
+	                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                            SELECT 'X'
 	                         FROM TB_DP_PROD P
 	                        WHERE P.PROD_ID = N.PROD_ID
@@ -55,29 +55,30 @@
                                      , NOTI_TYPE_CD
                                      , MBR_NO
                                      <!-- Shopping -->
-                                     <if test="chnlId != null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
                                      , PROD_ID
                                      , CATALOG_ID
                                      </if>
                                      <!-- Shopping 외 -->
-                                     <if test="chnlId == null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                                      , PROD_ID
                                      </if>
-                                     <if test="title">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
                                      , TITLE
                                      </if>
                                      , NOTI_DSCR
                                      , SPAM_YN
+                                     , BAD_NOTI_YN
                                      , DEL_YN
                                      , REG_ID
                                      , REG_DT
                                      , MBR_TELNO
-                                     <if test="fbPostYn != null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
                                      , FB_POST_YN
                                      </if>
                                      , REG_LOC
                                      , DEVICE_MODEL_CD
-                                     <if test="pkgVer">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
                                      , PKG_VER
                                      </if>
                                      )
@@ -86,29 +87,30 @@
                                      , 'DP000401'
                                      , #{mbrNo}
                                      <!-- Shopping -->
-                                     <if test="chnlId != null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
                                      , #{chnlId}
                                      , #{prodId}
                                      </if>
                                      <!-- Shopping 외 -->
-                                     <if test="chnlId == null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(chnlId)">
                                      , #{prodId}
                                      </if>
-                                     <if test="title != null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
                                      , #{title}
                                      </if>
                                      , #{notiDscr}
                                      , 'N'
                                      , 'N'
+                                     , 'N'
                                      , #{regId}
                                      , SYSDATE
                                      , #{mbrTelno}
-                                     <if test="fbPostYn != null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(fbPostYn)">
                                      , #{fbPostYn}
                                      </if>
                                      , 'US004201'
                                      , #{deviceModelCd}
-                                     <if test="pkgVer != null">
+                                     <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
                                      , #{pkgVer}
                                      </if>
                                      )
@@ -120,7 +122,7 @@
 	    UPDATE 
 	           TB_DP_PROD_NOTI
 	       SET NOTI_DSCR = #{notiDscr}
-	         <if test="title != null">
+	         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
 	         , TITLE = #{title}
 	         </if>
 	         , UPD_DT = SYSDATE
@@ -130,7 +132,7 @@
 	         , SELLER_RESP_REG_DT = NULL
 	         , REG_LOC = 'US004201'
 	         , DEVICE_MODEL_CD = #{deviceModelCd}
-	         <if test="pkgVer != null">
+	         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(pkgVer)">
 	         , PKG_VER = #{pkgVer}
 	         </if>
 	     WHERE TENANT_ID = #{tenantId}
@@ -144,7 +146,7 @@
         UPDATE 
                TB_DP_PROD_NOTI
            SET NOTI_DSCR = #{notiDscr}
-             <if test="title != null">
+             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
              , TITLE = #{title}
              </if>
              , UPD_DT = SYSDATE
@@ -160,7 +162,7 @@
 	    DELETE FROM TB_DP_PROD_NOTIGOOD
          WHERE TENANT_ID = #{tenantId}
            AND NOTI_SEQ = #{notiSeq}
-           <if test="mbrNo != null">
+           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(mbrNo)">
            AND MBR_NO = #{mbrNo}
            </if>
 	</delete>
