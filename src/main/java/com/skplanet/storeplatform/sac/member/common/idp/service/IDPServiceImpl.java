@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
@@ -17,7 +16,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
 @Service
-@Transactional
 public class IDPServiceImpl implements IDPService {
 
 	@Autowired

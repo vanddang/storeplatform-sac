@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
@@ -21,7 +20,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
 @Service
-@Transactional
 public class ImIDPServiceImpl implements ImIDPService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImIDPServiceImpl.class);
