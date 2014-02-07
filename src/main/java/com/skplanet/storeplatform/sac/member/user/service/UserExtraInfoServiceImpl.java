@@ -3,7 +3,6 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +167,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		removeRes = this.userSCI.removeManagement(removeReq);
 
-		if (StringUtils.equals(removeRes.getCommonResponse().getResultCode(), MemberConstants.RESULT_SUCCES) && removeRes.getUserKey() != null) {
+		if (removeRes.getUserKey() != null) {
 
 			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultCode());
 			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
