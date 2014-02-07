@@ -46,7 +46,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.1. 실명 인증용 휴대폰 인증 SMS 발송.
+	 * 2.3.1. 실명 인증용 휴대폰 인증 SMS 발송.
 	 * </pre>
 	 * 
 	 * @return SendSmsForRealNameAuthorizationRes
@@ -55,7 +55,7 @@ public class DummyDataController {
 	@ResponseBody
 	public SendSmsForRealNameAuthorizationRes sendSmsForRealNameAuthorization() {
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.1. 실명 인증용 휴대폰 인증 SMS 발송 ########");
+		LOGGER.info("####### 2.3.1. 실명 인증용 휴대폰 인증 SMS 발송 ########");
 		LOGGER.info("####################################################");
 
 		SendSmsForRealNameAuthorizationRes response = new SendSmsForRealNameAuthorizationRes();
@@ -68,7 +68,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.2. 실명 인증용 휴대폰 인증 코드 확인.
+	 * 2.3.2. 실명 인증용 휴대폰 인증 코드 확인.
 	 * </pre>
 	 * 
 	 * @param ConfirmRealNameAuthorizationReq
@@ -78,7 +78,7 @@ public class DummyDataController {
 	@ResponseBody
 	public ConfirmRealNameAuthorizationRes confirmRealNameAuthorization() {
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.2. 실명 인증용 휴대폰 인증 코드 확인 ########");
+		LOGGER.info("####### 2.3.2. 실명 인증용 휴대폰 인증 코드 확인 ########");
 		LOGGER.info("####################################################");
 
 		ConfirmRealNameAuthorizationRes response = new ConfirmRealNameAuthorizationRes();
@@ -90,7 +90,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.3. 실명 인증용 휴대폰 인증 SMS 재발송.
+	 * 2.3.3. 실명 인증용 휴대폰 인증 SMS 재발송.
 	 * </pre>
 	 * 
 	 * @param ResendSmsForRealNameAuthorizationReq
@@ -101,7 +101,7 @@ public class DummyDataController {
 	public ResendSmsForRealNameAuthorizationRes resendSmsForRealNameAuthorization() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.3. 실명 인증용 휴대폰 인증 SMS 재발송  ######");
+		LOGGER.info("####### 2.3.3. 실명 인증용 휴대폰 인증 SMS 재발송  ######");
 		LOGGER.info("####################################################");
 
 		ResendSmsForRealNameAuthorizationRes response = new ResendSmsForRealNameAuthorizationRes();
@@ -113,7 +113,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.4. 휴대폰 인증 SMS 발송.
+	 * 2.3.4. 휴대폰 인증 SMS 발송.
 	 * </pre>
 	 * 
 	 * @param GetPhoneAuthorizationCodeReq
@@ -124,7 +124,7 @@ public class DummyDataController {
 	public GetPhoneAuthorizationCodeRes getPhoneAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.4. 휴대폰 인증 SMS 발송   #################");
+		LOGGER.info("####### 2.3.4. 휴대폰 인증 SMS 발송   #################");
 		LOGGER.info("####################################################");
 
 		GetPhoneAuthorizationCodeRes response = new GetPhoneAuthorizationCodeRes();
@@ -135,7 +135,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.5. 휴대폰 인증 코드 확인.
+	 * 2.3.5. 휴대폰 인증 코드 확인.
 	 * </pre>
 	 * 
 	 * @return ConfirmPhoneAuthorizationCodeRes
@@ -145,7 +145,7 @@ public class DummyDataController {
 	public ConfirmPhoneAuthorizationCodeRes confirmPhoneAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.5. 휴대폰 인증 코드 확인  #################");
+		LOGGER.info("####### 2.3.5. 휴대폰 인증 코드 확인  #################");
 		LOGGER.info("####################################################");
 
 		ConfirmPhoneAuthorizationCodeRes response = new ConfirmPhoneAuthorizationCodeRes();
@@ -156,7 +156,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.6. 이메일 인증 코드 생성.
+	 * 2.3.6. 이메일 인증 코드 생성.
 	 * </pre>
 	 * 
 	 * @return GetEmailAuthorizationCodeRes
@@ -166,7 +166,7 @@ public class DummyDataController {
 	public GetEmailAuthorizationCodeRes getEmailAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.6. 이메일 인증 코드 생성  #################");
+		LOGGER.info("####### 2.3.6. 이메일 인증 코드 생성  #################");
 		LOGGER.info("####################################################");
 
 		GetEmailAuthorizationCodeRes response = new GetEmailAuthorizationCodeRes();
@@ -176,7 +176,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.7. 이메일 인증 코드 확인.
+	 * 2.3.7. 이메일 인증 코드 확인.
 	 * </pre>
 	 * 
 	 * @return ConfirmEmailAuthorizationCodeRes
@@ -186,7 +186,7 @@ public class DummyDataController {
 	public ConfirmEmailAuthorizationCodeRes confirmEmailAuthorizationCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.7. 이메일 인증 코드 확인  #################");
+		LOGGER.info("####### 2.3.7. 이메일 인증 코드 확인  #################");
 		LOGGER.info("####################################################");
 
 		ConfirmEmailAuthorizationCodeRes response = new ConfirmEmailAuthorizationCodeRes();
@@ -198,7 +198,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.8. 사용자별 정책 조회.
+	 * 2.3.8. 사용자별 정책 조회.
 	 * </pre>
 	 * 
 	 * @return GetIndividualPolicyRes
@@ -208,7 +208,7 @@ public class DummyDataController {
 	public GetIndividualPolicyRes getIndividualPolicy() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.8. 사용자별 정책 조회     #################");
+		LOGGER.info("####### 2.3.8. 사용자별 정책 조회     #################");
 		LOGGER.info("####################################################");
 
 		GetIndividualPolicyRes response = new GetIndividualPolicyRes();
@@ -227,7 +227,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.9. 사용자별 정책 등록/수정.
+	 * 2.3.9. 사용자별 정책 등록/수정.
 	 * </pre>
 	 * 
 	 * @return CreateIndividualPolicyRes
@@ -237,7 +237,7 @@ public class DummyDataController {
 	public CreateIndividualPolicyRes createIndividualPolicy() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.9. 사용자별 정책 등록/수정#################");
+		LOGGER.info("####### 2.3.9. 사용자별 정책 등록/수정#################");
 		LOGGER.info("####################################################");
 
 		CreateIndividualPolicyRes response = new CreateIndividualPolicyRes();
@@ -250,7 +250,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.10. 사용자별 정책 삭제.
+	 * 2.3.10. 사용자별 정책 삭제.
 	 * </pre>
 	 * 
 	 * @return RemoveIndividualPolicyRes
@@ -260,7 +260,7 @@ public class DummyDataController {
 	public RemoveIndividualPolicyRes removeIndividualPolicy() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.10. 사용자별 정책 삭제    #################");
+		LOGGER.info("####### 2.3.10. 사용자별 정책 삭제    #################");
 		LOGGER.info("####################################################");
 
 		RemoveIndividualPolicyRes response = new RemoveIndividualPolicyRes();
@@ -272,7 +272,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.11. UA 코드 정보 조회.
+	 * 2.3.11. UA 코드 정보 조회.
 	 * </pre>
 	 * 
 	 * @param GetUaCodeReq
@@ -284,7 +284,7 @@ public class DummyDataController {
 	public GetUaCodeRes getUaCode() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.11. UA 코드 정보 조회     #################");
+		LOGGER.info("####### 2.3.11. UA 코드 정보 조회     #################");
 		LOGGER.info("####################################################");
 
 		GetUaCodeRes response = new GetUaCodeRes();
@@ -294,7 +294,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.12. OPMD 모회선 번호 조회.
+	 * 2.3.12. OPMD 모회선 번호 조회.
 	 * </pre>
 	 * 
 	 * @param GetOpmdReq
@@ -305,7 +305,7 @@ public class DummyDataController {
 	public GetOpmdRes getOpmd() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.12. OPMD 모회선 번호 조회 ################");
+		LOGGER.info("####### 2.3.12. OPMD 모회선 번호 조회 ################");
 		LOGGER.info("####################################################");
 
 		GetOpmdRes response = new GetOpmdRes();
@@ -316,17 +316,17 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.13. 부가서비스 가입.
+	 * 2.3.13. 부가서비스 가입.
 	 * </pre>
 	 * 
 	 * @return CreateAdditionalServiceRes
 	 */
-	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.13. 부가서비스 가입        ################");
+		LOGGER.info("####### 2.3.13. 부가서비스 가입        ################");
 		LOGGER.info("####################################################");
 
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
@@ -338,7 +338,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.14. 부가서비스 가입 조회.
+	 * 2.3.14. 부가서비스 가입 조회.
 	 * </pre>
 	 * 
 	 * @return GetAdditionalServiceRes
@@ -348,11 +348,11 @@ public class DummyDataController {
 	public GetAdditionalServiceRes getAdditionalService() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.14. 부가서비스 가입 조회   ################");
+		LOGGER.info("####### 2.3.14. 부가서비스 가입 조회   ################");
 		LOGGER.info("####################################################");
 
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
-		response.setMsisdn("0101231234");
+		response.setMsisdn("01032954056");
 		response.setSvcJoinResult("NA00004184=T");
 
 		return response;
@@ -360,7 +360,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.15. 결제 계좌 정보 인증.
+	 * 2.3.15. 결제 계좌 정보 인증.
 	 * </pre>
 	 * 
 	 * @return AuthorizeAccountRes
@@ -370,7 +370,7 @@ public class DummyDataController {
 	public AuthorizeAccountRes authorizeAccount() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.15. 결제 계좌 정보 인증    ################");
+		LOGGER.info("####### 2.3.15. 결제 계좌 정보 인증    ################");
 		LOGGER.info("####################################################");
 
 		AuthorizeAccountRes response = new AuthorizeAccountRes();
@@ -380,7 +380,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.16. Captcha 문자 발급.
+	 * 2.3.16. Captcha 문자 발급.
 	 * </pre>
 	 * 
 	 * @return GetCaptchaRes
@@ -390,7 +390,7 @@ public class DummyDataController {
 	public GetCaptchaRes getCaptcha() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.16. Captcha 문자 발급     ################");
+		LOGGER.info("####### 2.3.16. Captcha 문자 발급     ################");
 		LOGGER.info("####################################################");
 
 		GetCaptchaRes response = new GetCaptchaRes();
@@ -402,7 +402,7 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 5.3.16. Captcha 문자 확인.
+	 * 2.3.16. Captcha 문자 확인.
 	 * </pre>
 	 * 
 	 * @return ConfirmCaptchaRes
@@ -412,7 +412,7 @@ public class DummyDataController {
 	public ConfirmCaptchaRes confirmCaptcha() {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.17. Captcha 문자 확인     ################");
+		LOGGER.info("####### 2.3.17. Captcha 문자 확인     ################");
 		LOGGER.info("####################################################");
 
 		ConfirmCaptchaRes response = new ConfirmCaptchaRes();
@@ -421,19 +421,19 @@ public class DummyDataController {
 
 	/**
 	 * <pre>
-	 * 단말 모델코드 조회.
+	 * 2.3.18. 단말 모델코드 조회.
 	 * </pre>
 	 * 
 	 * @param req
 	 *            GetModelCodeReq
 	 * @return GetModelCodeRes
 	 */
-	@RequestMapping(value = "/getModelCode/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/getModelCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetModelCodeRes getModelCode(@Validated @RequestBody GetModelCodeReq req) {
 
 		LOGGER.info("####################################################");
-		LOGGER.info("####### 5.3.18. 단말 모델코드 조회     ################");
+		LOGGER.info("####### 2.3.18. 단말 모델코드 조회     ################");
 		LOGGER.info("####################################################");
 		LOGGER.info("[SAC] Request : {}", req);
 		GetModelCodeRes response = new GetModelCodeRes();

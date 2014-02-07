@@ -247,7 +247,7 @@ public class MiscellaneousController {
 	 *            CreateAdditionalServiceReq
 	 * @return CreateAdditionalServiceRes
 	 */
-	@RequestMapping(value = "/dev/createAdditionalService/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
 
@@ -279,7 +279,7 @@ public class MiscellaneousController {
 	 *            GetModelCodeReq
 	 * @return GetModelCodeRes
 	 */
-	@RequestMapping(value = "/dev/getModelCode/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/getModelCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, @RequestBody @Validated GetModelCodeReq request) {
 
