@@ -81,8 +81,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
-//import com.skplanet.storeplatform.framework.core.util.StringUtil;
-
 /**
  * 휴대기기 관련 인터페이스 구현체
  * 
