@@ -30,5 +30,13 @@
             MC.MENU_ID in (select MP.MENU_ID from TB_DP_MENU_CATEGORY_PROD_MAPG MP where MP.PROD_ID=#{prodId})
         connect by prior MC.up_menu_id = MC.MENU_ID
     </select>
+    
+    <!-- 해상도 코드 조회 -->
+    <select id="getResolutionCode" parameterType="HashMap" resultType="String">
+     SELECT CD_ID
+       FROM TB_CM_CD
+      WHERE (ADD_FIELD_01 =#{pixel1} OR ADD_FIELD_02=#{pixel1})
+        AND (ADD_FIELD_01 =#{pixel2} OR ADD_FIELD_02=#{pixel2})                        
+    </select>        
 
 </mapper>
