@@ -40,6 +40,7 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacR
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -228,7 +229,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				purchase.setIdentifierList(identifierList);
 
 				date.setType("date/purchase");
-				date.setText(prchsDt);
+				date.setText(DateUtils.parseDate(prchsDt));
+				purchase.setDate(date);
+
 				product.setPurchase(purchase);
 			}
 
