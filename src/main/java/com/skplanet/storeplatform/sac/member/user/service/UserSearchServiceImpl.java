@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
@@ -193,8 +194,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 			/* 단말 + 부가정보 */
 			if ("Y".equals(req.getSearchExtent().getDeviceInfoYn())) {
-				ListDeviceRes listDeviceRes = this.listDevice(req, sacHeader);
-				res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
+				try {
+					ListDeviceRes listDeviceRes = this.listDevice(req, sacHeader);
+					res.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
+				} catch (StorePlatformException ex) {
+					/* 결과가 없는 경우만 제외하고 throw */
+					if (!ex.getErrorInfo().getCode().equals("SC_MEM_9982")) {
+						throw ex;
+					}
+				}
 			}
 			/* 약관동의정보 */
 			if ("Y".equals(req.getSearchExtent().getAgreementInfoYn())) {
