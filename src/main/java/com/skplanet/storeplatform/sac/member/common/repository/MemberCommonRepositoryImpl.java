@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
@@ -18,7 +17,6 @@ import com.skplanet.storeplatform.sac.member.common.vo.Device;
  */
 @SuppressWarnings("unchecked")
 @Component
-@Transactional
 public class MemberCommonRepositoryImpl implements MemberCommonRepository {
 
 	@Autowired
