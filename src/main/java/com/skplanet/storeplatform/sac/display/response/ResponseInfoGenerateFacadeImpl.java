@@ -83,6 +83,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Rights rights = this.commonGenerator.generateRights(metaInfo);
 		// App용 MenuList 설정
 		List<Menu> menuList = this.appGenerator.generateMenuList(metaInfo);
+
+		// App 판매자 설정
+		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		// App 상품설명
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 
@@ -504,6 +507,33 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
 		product.setRights(this.commonGenerator.generateRights(metaInfo));
 		product.setContributor(this.ebookComicGenerator.generateComicContributor(metaInfo));
+		product.setProductExplain(metaInfo.getProdBaseDesc());
+		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
+		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));
+		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateSpecificWebtoonProduct(com
+	 * .skplanet .storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateSpecificWebtoonProduct(MetaInfo metaInfo) {
+		Product product = new Product();
+
+		List<Identifier> identifierList = this.commonGenerator.generateIdentifierList(metaInfo);
+		product.setIdentifierList(identifierList);
+		product.setTitle(this.commonGenerator.generateTitle(metaInfo));
+		product.setPrice(this.commonGenerator.generatePrice(metaInfo));
+		product.setMenuList(this.commonGenerator.generateMenuList(metaInfo));
+		product.setSourceList(this.commonGenerator.generateSourceList(metaInfo));
+		product.setAccrual(this.commonGenerator.generateAccrual(metaInfo));
+		product.setRights(this.commonGenerator.generateRights(metaInfo));
+		product.setContributor(this.ebookComicGenerator.generateEbookContributor(metaInfo));
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setDistributor(this.commonGenerator.generateDistributor(metaInfo));
 		product.setBook(this.ebookComicGenerator.generateBook(metaInfo));

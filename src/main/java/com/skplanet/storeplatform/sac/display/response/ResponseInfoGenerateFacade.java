@@ -166,6 +166,17 @@ public interface ResponseInfoGenerateFacade {
 
 	/**
 	 * <pre>
+	 * 특정 상품 조회 API용 Webtoon 상품 Product 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Product
+	 */
+	public Product generateSpecificWebtoonProduct(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * 특정 상품 조회 API용 Shopping 상품 Product 생성.
 	 * </pre>
 	 * 
