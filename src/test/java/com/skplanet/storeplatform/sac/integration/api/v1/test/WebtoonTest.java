@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryWebtoonService;
 
 @ActiveProfiles(value = "local")
@@ -36,7 +36,7 @@ public class WebtoonTest {
 	 */
 	@Test
 	public void shouldOptianUserCareer() throws JsonGenerationException, JsonMappingException, IOException, Exception {
-		CategoryWebtoonReq WebtoonReqVO = new CategoryWebtoonReq();
+		CategoryWebtoonSacReq WebtoonReqVO = new CategoryWebtoonSacReq();
 		System.out.println("++++dfsdfsd++");
 		// CategoryWebtoonRes voRes = this.WebtoonService.getWebtoonList(WebtoonReqVO);
 		// System.out.println("++++++" + voRes.getWebtoonList().size());
