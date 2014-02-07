@@ -43,13 +43,13 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.AuthorizeByMdnRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
+import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
  * 회원 로그인 관련 인터페이스 구현체

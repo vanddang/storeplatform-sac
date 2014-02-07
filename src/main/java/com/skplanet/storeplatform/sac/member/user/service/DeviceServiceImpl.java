@@ -71,7 +71,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
@@ -79,6 +78,7 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants
 import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
+import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 //import com.skplanet.storeplatform.framework.core.util.StringUtil;

@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.member.common;
+package com.skplanet.storeplatform.sac.member.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 public class DeviceUtil {
 
 	/**
-	 * 휴대기기 부가속성값을 구한다
+	 * SAC 휴대기기 부가속성값을 구한다
 	 * 
 	 * @param extraProfile
 	 *            기타 기기 부가속성 key
@@ -39,6 +39,32 @@ public class DeviceUtil {
 
 		if (deviceExtraInfoList != null) {
 			for (DeviceExtraInfo info : deviceExtraInfoList) {
+
+				if (info.getExtraProfile().equals(extraProfile)) {
+					extraProfileValue = info.getExtraProfileValue();
+					break;
+				}
+			}
+		}
+
+		return extraProfileValue;
+	}
+
+	/**
+	 * SC 휴대기기 부가속성값을 구한다
+	 * 
+	 * @param extraProfile
+	 *            기타 기기 부가속성 key
+	 * @param deviceExtraInfoList
+	 *            휴대기기 부가속성 리스트
+	 * @return extraProfileValue String
+	 */
+	public static String getUserMbrDeviceDetailValue(String extraProfile, List<UserMbrDeviceDetail> userMbrDeviceDetailList) {
+
+		String extraProfileValue = null;
+
+		if (userMbrDeviceDetailList != null) {
+			for (UserMbrDeviceDetail info : userMbrDeviceDetailList) {
 
 				if (info.getExtraProfile().equals(extraProfile)) {
 					extraProfileValue = info.getExtraProfileValue();
