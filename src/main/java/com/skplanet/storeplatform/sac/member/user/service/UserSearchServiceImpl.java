@@ -34,6 +34,8 @@ import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
@@ -61,6 +63,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -268,6 +272,47 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setAfterUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getAfterUserKey()));
 		res.setPreUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getPreUserKey()));
 		// res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
+
+		return res;
+	}
+
+	/**
+	 * OneId 정보조회
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param userKey
+	 * @return
+	 */
+	@Override
+	public MbrOneidSacRes searchUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req) {
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		/* 회원 기본 정보 */
+		UserInfo info = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
+			throw new StorePlatformException("SAC_MEM_0002", "userInfo.getImSvcNo()");
+		}
+
+		/* OneId 정보조회 */
+		SearchAgreeSiteRequest scReq = new SearchAgreeSiteRequest();
+		SearchAgreeSiteResponse scRes = new SearchAgreeSiteResponse();
+		scReq.setCommonRequest(commonRequest);
+		scReq.setImSvcNo(info.getImSvcNo());
+		scRes = this.userSCI.searchAgreeSite(scReq);
+
+		/* OneId 데이터 세팅 */
+		MbrOneidSacRes res = new MbrOneidSacRes();
+		res.setIsCi(StringUtil.setTrim(scRes.getMbrOneID().getIsCi()));
+		res.setIsRealName(StringUtil.setTrim(scRes.getMbrOneID().getIsRealName()));
+		res.setIsMemberPoint(StringUtil.setTrim(scRes.getMbrOneID().getIsMemberPoint()));
+
+		logger.info("MbrOneidSacRes : ", res.toString());
 
 		return res;
 	}

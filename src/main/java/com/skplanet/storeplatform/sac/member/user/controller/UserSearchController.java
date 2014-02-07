@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -160,7 +162,8 @@ public class UserSearchController {
 	 */
 	@RequestMapping(value = "/member/user/detailByDeviceId/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req, BindingResult result) {
+	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req,
+			BindingResult result) {
 
 		LOGGER.info("##################################################");
 		LOGGER.info("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
@@ -189,6 +192,24 @@ public class UserSearchController {
 
 		return res;
 
+	}
+
+	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public MbrOneidSacRes detail(SacRequestHeader sacHeader, MbrOneidSacReq req) {
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 2.1.35. OneID 정보조회 #####");
+		LOGGER.info("####################################################");
+
+		MbrOneidSacRes res = new MbrOneidSacRes();
+
+		LOGGER.info("============================================ MbrOneidSacReq : {}", req.toString());
+
+		res = this.svc.searchUserOneId(sacHeader, req);
+
+		LOGGER.info("Final MbrOneidSacRes Response : {}", res.toString());
+
+		return res;
 	}
 
 }
