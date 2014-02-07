@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherArtistRes;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagReq;
 import com.skplanet.storeplatform.sac.client.display.vo.other.OtherTagRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -56,11 +56,11 @@ public class OtherController {
 	 *            req
 	 * @param header
 	 *            header
-	 * @return OtherServiceGroupRes
+	 * @return OtherServiceGroupSacRes
 	 */
 	@RequestMapping(value = "/serviceGroup/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public OtherServiceGroupRes searchServiceGroupList(OtherServiceGroupReq req, SacRequestHeader header) {
+	public OtherServiceGroupSacRes searchServiceGroupList(OtherServiceGroupSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchServiceGroupList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
