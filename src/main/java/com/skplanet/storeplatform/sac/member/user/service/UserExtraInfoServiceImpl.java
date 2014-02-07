@@ -110,8 +110,11 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		/* 입력받은 profileCode 정상인지 확인 */
 		String validProfileCode = this.validProfileCode(req);
 
+		/* 입력받은 profileCode 가 등록이 되어 있는지 확인 : 등록이 되어 있어야 삭제가 가능. */
+		String registerdProfileCode = this.registeredProfileCode(searchUser, req);
+
 		/* 정상회원이면 SC 회원 부가 정보 삭제 호출 */
-		if (searchUser != null && "Y".equals(validProfileCode)) {
+		if (searchUser != null && "Y".equals(validProfileCode) && "Y".equals(registerdProfileCode)) {
 			res = this.removeUserExtra(req, sacHeader);
 		}
 
@@ -247,5 +250,24 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		}
 
 		return validProfileCode;
+	}
+
+	/* 입력받은 profileCode 가 등록이 되어 있는지 확인 : 등록이 되어 있어야 삭제가 가능. */
+	@Override
+	public String registeredProfileCode(UserInfo searchUser, UserExtraInfoReq req) {
+		List<UserExtraInfo> extraInfo = searchUser.getUserExtraInfo();
+		List<UserExtraInfo> reqInfo = req.getAddInfoList();
+		String registeredProfileCode = "";
+
+		for (UserExtraInfo infoSearchUser : extraInfo) {
+			for (UserExtraInfo infoReqUser : reqInfo) {
+				if (!infoSearchUser.getExtraProfileCode().equals(infoReqUser.getExtraProfileCode())) {
+					throw new StorePlatformException("SAC_MEM_0002", infoReqUser.getExtraProfileCode());
+				} else {
+					registeredProfileCode = "Y";
+				}
+			}
+		}
+		return registeredProfileCode;
 	}
 }

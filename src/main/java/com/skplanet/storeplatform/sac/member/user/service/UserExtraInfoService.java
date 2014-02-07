@@ -91,4 +91,14 @@ public interface UserExtraInfoService {
 	 * @throws Exception
 	 */
 	public String validProfileCode(UserExtraInfoReq req);
+
+	/**
+	 * 입력받은 profileCode 가 등록이 되어 있는지 확인 : 등록이 되어 있어야 삭제가 가능.
+	 * 
+	 * @param headerVo
+	 * @param UserExtraInfoReq
+	 * @return
+	 * @throws Exception
+	 */
+	public String registeredProfileCode(UserInfo searchUser, UserExtraInfoReq req);
 }
