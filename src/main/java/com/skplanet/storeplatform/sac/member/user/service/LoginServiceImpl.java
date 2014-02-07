@@ -396,7 +396,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserSubStatus(userSubStatus);
 				res.setLoginStatusCode(loginStatusCode);
 				res.setStopStatusCode(stopStatusCode);
-				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, null));
+				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, userKey));
 				res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
 			} catch (StorePlatformException ex) {
@@ -450,7 +450,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserSubStatus(userSubStatus);
 				res.setLoginStatusCode(loginStatusCode);
 				res.setStopStatusCode(stopStatusCode);
-				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, null));
+				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey, userKey));
 				res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
 			} catch (StorePlatformException ex) {
@@ -500,25 +500,19 @@ public class LoginServiceImpl implements LoginService {
 	public String getLoginDeviceKey(SacRequestHeader requestHeader, String keyType, String keyString, String userKey) {
 
 		String deviceKey = null;
+		ListDeviceReq listDeviceReq = new ListDeviceReq();
 
 		if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_DEVICE_ID)) {
-			/* mdn 로그인시에는 휴대기기 단건 조회 */
-			DeviceInfo deviceInfo = this.deviceService.searchDevice(requestHeader, keyType, keyString, userKey);
-			if (deviceInfo != null) {
-				deviceKey = deviceInfo.getDeviceKey();
-			}
-
+			listDeviceReq.setUserKey(userKey);
+			listDeviceReq.setDeviceId(keyString);
 		} else if (StringUtils.equals(keyType, MemberConstants.KEY_TYPE_INSD_USERMBR_NO)) {
-			/* id 로그인시에는 대표휴대기기 조회 */
-			ListDeviceReq listDeviceReq = new ListDeviceReq();
-			listDeviceReq.setUserKey(keyString);
+			listDeviceReq.setUserKey(userKey);
 			listDeviceReq.setIsMainDevice("Y");
-			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-			if (listDeviceRes.getDeviceInfoList() != null) {
-				deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();
-			}
 		}
-
+		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+		if (listDeviceRes.getDeviceInfoList() != null) {
+			deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();
+		}
 		return deviceKey;
 
 	}
