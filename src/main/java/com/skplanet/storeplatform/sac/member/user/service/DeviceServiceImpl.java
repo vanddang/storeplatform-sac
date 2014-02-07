@@ -151,9 +151,10 @@ public class DeviceServiceImpl implements DeviceService {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
 		listDeviceReq.setUserKey(userKey);
-		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
 
-		if (listDeviceRes.getDeviceInfoList() != null) {
+		ListDeviceRes listDeviceRes = null;
+		try {
+			listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
 			List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 			if (deviceInfoList != null) {
 				for (DeviceInfo deviceInfo : deviceInfoList) {
@@ -161,6 +162,10 @@ public class DeviceServiceImpl implements DeviceService {
 						throw new StorePlatformException("SAC_MEM_1502");
 					}
 				}
+			}
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
 			}
 		}
 
@@ -263,52 +268,49 @@ public class DeviceServiceImpl implements DeviceService {
 
 		ListDeviceRes res = new ListDeviceRes();
 
-		if (req.getDeviceId() != null) {
-			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
-			if (deviceInfo != null) {
-				res.setUserId(deviceInfo.getUserId());
-				res.setUserKey(deviceInfo.getUserKey());
-				List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-				deviceInfoList.add(deviceInfo);
-				res.setDeviceInfoList(deviceInfoList);
-			}
-			return res;
-		} else if (req.getDeviceKey() != null) {
-			/* 단건 조회 처리 */
-			DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
-			if (deviceInfo != null) {
-				res.setUserId(deviceInfo.getUserId());
-				res.setUserKey(deviceInfo.getUserKey());
-				List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
-				deviceInfoList.add(deviceInfo);
-				res.setDeviceInfoList(deviceInfoList);
-			}
-			return res;
-		} else if (req.getUserId() != null) {
-			key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
-			key.setKeyString(req.getUserId());
-		} else if (req.getUserKey() != null) {
-			key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
-			key.setKeyString(req.getUserKey());
-		}
-
-		keySearchList.add(key);
-		schDeviceListReq.setKeySearchList(keySearchList);
-		schDeviceListReq.setCommonRequest(commonRequest);
-
-		/* 사용자 휴대기기 목록 조회 */
-		SearchDeviceListResponse schDeviceListRes = null;
 		try {
-			schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
-		} catch (StorePlatformException ex) {
-			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				throw ex;
-			}
-		}
 
-		/* response 셋팅 */
-		if (schDeviceListRes != null) {
+			if (req.getDeviceId() != null) {
+				/* 단건 조회 처리 */
+				DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), userKey);
+				if (deviceInfo != null) {
+					res.setUserId(deviceInfo.getUserId());
+					res.setUserKey(deviceInfo.getUserKey());
+					List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+					deviceInfoList.add(deviceInfo);
+					res.setDeviceInfoList(deviceInfoList);
+				}
+
+				return res;
+			} else if (req.getDeviceKey() != null) {
+				/* 단건 조회 처리 */
+				DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_INSD_DEVICE_ID, req.getDeviceKey(), userKey);
+				if (deviceInfo != null) {
+					res.setUserId(deviceInfo.getUserId());
+					res.setUserKey(deviceInfo.getUserKey());
+					List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>();
+					deviceInfoList.add(deviceInfo);
+					res.setDeviceInfoList(deviceInfoList);
+				}
+				return res;
+			} else if (req.getUserId() != null) {
+				key.setKeyType(MemberConstants.KEY_TYPE_MBR_ID);
+				key.setKeyString(req.getUserId());
+			} else if (req.getUserKey() != null) {
+				key.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+				key.setKeyString(req.getUserKey());
+			}
+
+			keySearchList.add(key);
+			schDeviceListReq.setKeySearchList(keySearchList);
+			schDeviceListReq.setCommonRequest(commonRequest);
+
+			/* 사용자 휴대기기 목록 조회 */
+			SearchDeviceListResponse schDeviceListRes = null;
+
+			schDeviceListRes = this.deviceSCI.searchDeviceList(schDeviceListReq);
+
+			/* response 셋팅 */
 			res.setUserId(schDeviceListRes.getUserID());
 			res.setUserKey(schDeviceListRes.getUserKey());
 
@@ -327,8 +329,10 @@ public class DeviceServiceImpl implements DeviceService {
 				deviceInfoList.add(deviceInfo);
 			}
 			res.setDeviceInfoList(deviceInfoList);
-		}
 
+		} catch (StorePlatformException ex) {
+			throw ex;
+		}
 		logger.info("######################## DeviceServiceImpl listDevice end ############################");
 
 		return res;
@@ -384,9 +388,7 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 
 		} catch (StorePlatformException ex) {
-			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
-				throw ex;
-			}
+			throw ex;
 		}
 
 		logger.info("######################## DeviceServiceImpl searchDevice start ############################");
@@ -1009,10 +1011,15 @@ public class DeviceServiceImpl implements DeviceService {
 		UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
 
 		/* 휴대기기 조회 */
-		DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
-		if (deviceInfo == null) {
-			throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+		DeviceInfo deviceInfo = null;
+		try {
+			deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
+		} catch (StorePlatformException ex) {
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
+			}
 		}
+
 		String IsPrimary = deviceInfo.getIsPrimary();//대표기기 여부
 		String deviceKey = deviceInfo.getDeviceKey();//deviceKey
 

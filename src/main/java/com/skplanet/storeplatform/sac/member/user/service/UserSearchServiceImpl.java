@@ -786,11 +786,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 			listDeviceReq.setDeviceId(req.getDeviceId());
 		}
 
-		ListDeviceRes listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
-
-		if (listDeviceRes.getDeviceInfoList() == null) {
+		ListDeviceRes listDeviceRes = null;
+		try {
+			listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
 			List<DeviceInfo> listDeviceInfo = new ArrayList<DeviceInfo>();
 			listDeviceRes.setDeviceInfoList(listDeviceInfo);
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
 		}
 
 		return listDeviceRes;

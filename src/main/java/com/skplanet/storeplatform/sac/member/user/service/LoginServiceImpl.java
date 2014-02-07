@@ -509,10 +509,16 @@ public class LoginServiceImpl implements LoginService {
 			listDeviceReq.setUserKey(userKey);
 			listDeviceReq.setIsMainDevice("Y");
 		}
-		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
-		if (listDeviceRes.getDeviceInfoList() != null) {
+
+		try {
+			ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 			deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
 		}
+
 		return deviceKey;
 
 	}

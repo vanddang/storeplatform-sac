@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -105,9 +106,9 @@ public class UserServiceImpl implements UserService {
 
 		String userPhoneStr = "";
 		ListDeviceRes listDeviceRes = null;
-		listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 
-		if (listDeviceRes.getDeviceInfoList() != null) {
+		try {
+			listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
 			StringBuffer sbUserPhone = new StringBuffer();
 			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
@@ -125,6 +126,10 @@ public class UserServiceImpl implements UserService {
 			}
 			userPhoneStr = sbUserPhone.toString();
 			userPhoneStr = userPhoneStr.substring(0, userPhoneStr.lastIndexOf("|"));
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
 		}
 
 		param.put("user_auth_key", userAuthKey);
