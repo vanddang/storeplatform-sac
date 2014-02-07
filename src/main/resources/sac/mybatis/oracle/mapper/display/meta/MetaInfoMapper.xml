@@ -111,12 +111,13 @@
                    -----------------------------------------------------------------------------
                    -- INPUT PARAMETER
                    -----------------------------------------------------------------------------
-                   <if test='menuId != null'>
+                   <if test='productBasicInfo.menuId != null'>
                    AND  A.MENU_ID = #{productBasicInfo.menuId}            /* 메뉴ID */
                    </if>
                    AND  B.PROD_ID = #{productBasicInfo.prodId}            /* 상품ID */
                    AND  G.TENANT_ID = #{tenantHeader.tenantId}            /* 테넌트ID */
                    AND  I.DEVICE_MODEL_CD = #{deviceHeader.model}         /* 단말모델코드 */
+                   AND ROWNUM = 1
        ) TB
     </select>
     <select id="getVODMetaInfo" parameterType="Map" resultType="MetaInfo">
