@@ -54,8 +54,6 @@ public class DeviceController {
 	 * @param req
 	 *            ListDeviceReq
 	 * @return ListDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/listDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -87,8 +85,6 @@ public class DeviceController {
 	 * @param req
 	 *            CreateDeviceReq
 	 * @return CreateDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -137,12 +133,10 @@ public class DeviceController {
 	 * @param req
 	 *            ModifyDeviceReq
 	 * @return ModifyDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/modifyDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) throws Exception {
+	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, @Valid @RequestBody ModifyDeviceReq req) {
 
 		if (StringUtil.nvl(req.getDeviceInfo().getDeviceKey(), "").equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceKey");
@@ -166,12 +160,10 @@ public class DeviceController {
 	 * @param req
 	 *            SetMainDeviceReq
 	 * @return SetMainDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/modifyRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) throws Exception {
+	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, @RequestBody SetMainDeviceReq req) {
 
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
@@ -198,13 +190,10 @@ public class DeviceController {
 	 * @param req
 	 *            DetailRepresentationDeviceReq
 	 * @return DetailRepresentationDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/detailRepresentationDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req)
-			throws Exception {
+	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req) {
 
 		logger.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
 
@@ -229,8 +218,6 @@ public class DeviceController {
 	 * @param req
 	 *            RemoveDeviceReq
 	 * @return RemoveDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/removeDevice/v1", method = RequestMethod.POST)
 	@ResponseBody
@@ -268,8 +255,6 @@ public class DeviceController {
 	 * @param req
 	 *            RemoveDeviceReq
 	 * @return RemoveDeviceRes
-	 * @throws Exception
-	 *             Exception
 	 */
 	@RequestMapping(value = "/getSupportAom/v1", method = RequestMethod.GET)
 	@ResponseBody
