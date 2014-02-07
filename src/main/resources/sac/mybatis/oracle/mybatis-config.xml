@@ -177,7 +177,7 @@
         <typeAlias alias="DownloadMusicSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq" />    
         
         <!-- 기타 상품서비스군 정보 조회 -->
-        <typeAlias alias="ServiceGroupReq"  type="com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupReq" />
+        <typeAlias alias="ServiceGroupReq"  type="com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq" />
         <typeAlias alias="ServiceGroup"  type="com.skplanet.storeplatform.sac.display.other.vo.OtherServiceGroup" />           
         
         <!-- for download Ebook 정보 조회 -->
