@@ -150,6 +150,17 @@ public class FeedbackRepositoryTest {
 	}
 
 	@Test
+	public void testGetProdNotiWDCount() {
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId("S01");
+		prodNoti.setNotiSeq("14262");
+
+		int ret = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+
+		assertTrue(ret > 0);
+	}
+
+	@Test
 	public void testGetProdNotiWDGoodCount() {
 		ProdNoti prodNoti = new ProdNoti();
 		prodNoti.setTenantId("S01");
@@ -158,6 +169,18 @@ public class FeedbackRepositoryTest {
 		prodNoti.setProdId("H900000017");
 
 		int ret = (Integer) this.feedbackRepository.getProdNotiWDGoodCount(prodNoti);
+
+		assertTrue(ret > 0);
+	}
+
+	@Test
+	public void testInsertProdNotiGood() {
+		ProdNotiGood prodNotiGood = new ProdNotiGood();
+		prodNotiGood.setTenantId("S01");
+		prodNotiGood.setNotiSeq("3068");
+		prodNotiGood.setMbrNo("IF1028159484200908201035255");
+
+		int ret = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
 
 		assertTrue(ret > 0);
 	}
