@@ -102,8 +102,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setUser_code(authCode);
 		sendData.setImage_sign(imageSign);
 		sendData.setSign_data(signData);
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -173,8 +172,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setUser_id(userId);
 		sendData.setUser_passwd(userPwd);
 
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -198,8 +196,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setUser_id(id);
 		sendData.setUser_passwd(pwd);
 
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -272,8 +269,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setKey_type(key_type);
 		sendData.setKey(key);
 
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -429,8 +425,7 @@ public class IdpServiceImpl implements IdpService {
 		if (user_ci != null) {
 			sendData.setUser_ci(user_ci);
 		}
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -455,8 +450,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setUser_auth_key(userAuthKey);
 		sendData.setKey_type(secedeKeyType);
 		sendData.setKey(secedeKeyValue);
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -499,8 +493,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setMdn_corp(mdnCorp);
 		sendData.setUser_mdn(mdn);
 
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -522,8 +515,7 @@ public class IdpServiceImpl implements IdpService {
 		sendData.setResp_flow(IdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(mdn);
 
-		// return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**

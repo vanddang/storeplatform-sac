@@ -103,8 +103,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 			sendData.setTerm_reason_cd(term_reason_cd);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -223,8 +222,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		sendData.setUser_type(user_type);
 		sendData.setIs_biz_auth(is_biz_auth);
-		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -273,8 +271,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
-		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -310,8 +307,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 			sendData.setUser_passwd_modify_date(user_passwd_modify_date);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -421,8 +417,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setParent_approve_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**
@@ -514,8 +509,7 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setMdn(mdn);
 
-		// return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
-		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
 	/**

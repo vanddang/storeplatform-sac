@@ -95,11 +95,11 @@ public class IdpRepositoryImpl implements IdpRepository {
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
 		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
-		// sendReq.setMethod(SendReq.HTTP_METHOD.GET);
 		if (StringUtil.equalsIgnoreCase(sendReq.getMethod().GET.name(), httpMethod)) {
 			sendReq.setMethod(sendReq.getMethod().GET);
 		} else if (StringUtil.equalsIgnoreCase(sendReq.getMethod().POST.name(), httpMethod)) {
-			sendReq.setMethod(sendReq.getMethod().POST);
+			sendReq.setMethod(sendReq.getMethod().GET);
+			// sendReq.setMethod(sendReq.getMethod().POST);
 		}
 		sendReq.setIm(true);
 		sendReq.setUrl(sendData.getUrl());
