@@ -597,7 +597,7 @@ public class DummySellerController {
 	 * 
 	 * @return CreateSubsellerRes
 	 */
-	@RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/createSubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateSubsellerRes createSubseller() {
 
@@ -614,7 +614,7 @@ public class DummySellerController {
 	 * 
 	 * @return ModifySubsellerRes
 	 */
-	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
+	// @RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public ModifySubsellerRes modifySubseller() {
 
