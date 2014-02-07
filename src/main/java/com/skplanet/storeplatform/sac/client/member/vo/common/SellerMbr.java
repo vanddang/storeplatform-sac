@@ -229,10 +229,18 @@ public class SellerMbr extends CommonInfo {
 	private String ceoBirthDay; // CEO_BIRTH
 
 	/** 서브계정 권한. */
-	private String rightProfileList; // 서브계정 권한
+	private String rightProfile; // 서브계정 권한
 
 	/** 서브계정 설명. */
 	private String subSellerMemo; // SUB_ACCT_DESC 서브계정에서 사용 아직 db table 컬럼 추가안됨
+
+	public String getRightProfile() {
+		return this.rightProfile;
+	}
+
+	public void setRightProfile(String rightProfile) {
+		this.rightProfile = rightProfile;
+	}
 
 	public String getSellerId() {
 		return this.sellerId;
@@ -488,14 +496,6 @@ public class SellerMbr extends CommonInfo {
 
 	public void setRepPhoneArea(String repPhoneArea) {
 		this.repPhoneArea = repPhoneArea;
-	}
-
-	public String getRightProfileList() {
-		return this.rightProfileList;
-	}
-
-	public void setRightProfileList(String rightProfileList) {
-		this.rightProfileList = rightProfileList;
 	}
 
 	public String getSecedeDate() {
