@@ -274,4 +274,16 @@ public interface FeedbackRepository {
 	 */
 	public Object insertProdNotiGood(ProdNotiGood prodNotiGood);
 
+	/**
+	 * 
+	 * <pre>
+	 * 탈퇴 회원 후기 추천 수 증감처리.
+	 * </pre>
+	 * 
+	 * @param prodNotiGood
+	 *            prodNotiGood
+	 * @return Object
+	 */
+	public Object updateProdNotiWDGood(ProdNotiGood prodNotiGood);
+
 }

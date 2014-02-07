@@ -165,6 +165,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 					updateTenantProdStats.setProdId(removeFeedbackSacReq.getProdId());
 					updateTenantProdStats.setAvgEvluScore("0");
 					updateTenantProdStats.setPreAvgScore(getRegMbrAvg.getAvgScore());
+					updateTenantProdStats.setUpdId(removeFeedbackSacReq.getUserId());
 					this.feedbackRepository.updateTenantProdStats(updateTenantProdStats);
 				}
 			}
@@ -189,6 +190,23 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public CreateRecommendFeedbackSacRes createRecommend(CreateRecommendFeedbackSacReq createRecommendFeedbackReq,
 			SacRequestHeader sacRequestHeader) {
+
+		// ProdNoti prodNoti = new ProdNoti();
+		// int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		//
+		// if (count > 0) {
+		// throw new StorePlatformException("SAC_OTH_1001");
+		// }
+		//
+		// ProdNotiGood prodNotiGood = new ProdNotiGood();
+		// int affectedRow = (Integer) this.feedbackRepository.insertProdNotiGood(prodNotiGood);
+		//
+		// if (affectedRow <= 0) {
+		// throw new StorePlatformException("SAC_OTH_1001");
+		// }
+
+		// affectedRow = (Integer)feedbackRepository.update
+
 		CreateRecommendFeedbackSacRes createRecommendFeedbackRes = new CreateRecommendFeedbackSacRes();
 		createRecommendFeedbackRes.setNotiList(this.getFeedbackList());
 		return createRecommendFeedbackRes;
