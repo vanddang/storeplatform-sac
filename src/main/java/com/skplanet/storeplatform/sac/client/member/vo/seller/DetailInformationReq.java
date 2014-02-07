@@ -30,6 +30,17 @@ public class DetailInformationReq extends CommonInfo {
 	/** App ID */
 	private String aid;
 
+	/** 판매자 ID. */
+	private String sellerId;
+
+	public String getSellerId() {
+		return this.sellerId;
+	}
+
+	public void setSellerId(String sellerId) {
+		this.sellerId = sellerId;
+	}
+
 	public String getSellerKey() {
 		return this.sellerKey;
 	}
