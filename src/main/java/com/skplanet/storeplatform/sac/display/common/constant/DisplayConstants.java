@@ -259,6 +259,10 @@ public class DisplayConstants {
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_192 = "audio/mp3-192";
 	/** 음악 mp3-128 */
 	public static final String DP_SOURCE_TYPE_AUDIO_MP3_128 = "audio/mp3-128";
+	/** Intimate Message 배경이미지 */
+	public static final String DP_SOURCE_TYPE_GNB_BG = "gnb/bg";
+	/** Intimate Message 아이콘 이미지 */
+	public static final String DP_SOURCE_TYPE_GNB_ICON = "gnb/icon";
 
 	// //////////////////////////////////// 이미지 코드 //////////////////////////////////////////
 	public static final String DP_APP_REPRESENT_IMAGE_CD = "DP000101";
