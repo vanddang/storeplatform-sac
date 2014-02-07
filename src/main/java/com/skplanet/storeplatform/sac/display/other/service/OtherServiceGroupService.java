@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.other.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -24,13 +24,13 @@ public interface OtherServiceGroupService {
 	 * 기타 카테고리 상품서비스군 상품 조회.
 	 * </pre>
 	 * 
-	 * @param OtherServiceGroupReq
-	 * @return OtherServiceGroupRes
+	 * @param OtherServiceGroupSacReq
+	 * @return OtherServiceGroupSacRes
 	 * 
 	 * @param req
 	 *            req
 	 * @param header
 	 *            header
 	 */
-	OtherServiceGroupRes searchServiceGroupList(OtherServiceGroupReq req, SacRequestHeader header);
+	OtherServiceGroupSacRes searchServiceGroupList(OtherServiceGroupSacReq req, SacRequestHeader header);
 }

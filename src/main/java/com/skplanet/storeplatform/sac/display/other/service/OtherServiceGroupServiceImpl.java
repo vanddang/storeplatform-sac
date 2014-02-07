@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupReq;
-import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupRes;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.other.OtherServiceGroupSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -51,8 +51,8 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 	 * 기타 카테고리 상품서비스군 상품 조회.
 	 * </pre>
 	 * 
-	 * @param OtherServiceGroupReq
-	 * @return OtherServiceGroupRes
+	 * @param OtherServiceGroupSacReq
+	 * @return OtherServiceGroupSacRes
 	 * 
 	 * @param req
 	 *            req
@@ -60,9 +60,9 @@ public class OtherServiceGroupServiceImpl implements OtherServiceGroupService {
 	 *            header
 	 */
 	@Override
-	public OtherServiceGroupRes searchServiceGroupList(OtherServiceGroupReq req, SacRequestHeader header) {
+	public OtherServiceGroupSacRes searchServiceGroupList(OtherServiceGroupSacReq req, SacRequestHeader header) {
 
-		OtherServiceGroupRes appRes = new OtherServiceGroupRes();
+		OtherServiceGroupSacRes appRes = new OtherServiceGroupSacRes();
 		CommonResponse commonRes = new CommonResponse();
 
 		// 필수 파라미터 체크
