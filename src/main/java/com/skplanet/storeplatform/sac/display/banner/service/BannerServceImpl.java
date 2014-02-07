@@ -310,7 +310,7 @@ public class BannerServceImpl implements BannerService {
 						&& resultInfo.getTopMenuId().equals(DisplayConstants.DP_MUSIC_TOP_MENU_ID)) {
 					music = new Music();
 					identifier = new Identifier();
-					identifier.setType("downloadId");
+					identifier.setType("song");
 					identifier.setText(resultInfo.getOutsdContentsId());
 					music.setIdentifier(identifier);
 					this.log.debug("5");
