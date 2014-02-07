@@ -24,7 +24,7 @@ public final class MemberConstants {
 	public static final String RESULT_UNKNOWN_ERR = "9991"; // 알수 없는 에러
 	public static final String RESULT_UNKNOWN_USER_ID = "9990"; // 존재하지 않는 사용자ID
 
-	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; //SC 검색결과 없음
+	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; // SC 검색결과 없음
 
 	/** EC IDP 에러 코드 문자열 */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
@@ -152,6 +152,17 @@ public final class MemberConstants {
 	public static final String USER_WITHDRAW_CLASS_PROVISIONING = "US010703"; // 프로비저닝
 	public static final String USER_WITHDRAW_CLASS_USER_DEVICE = "US010704"; // 단말이동
 	public static final String USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED = "US010705"; // 가입승인만료
+
+	/** 약관 항목 코드 */
+	public static final String POLICY_AGREEMENT_CLAUSE_ONEID = "US010601"; // ONEID이용약관
+	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID = "US010602"; // ONEID개인정보취급방침
+	public static final String POLICY_AGREEMENT_CLAUSE_TSTORE = "US010603"; // TSTORE이용약관(TAC001)
+	public static final String POLICY_AGREEMENT_CLAUSE_CASH = "US010604"; // TSTORE캐쉬이용약관(TAC003)
+	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_TSTORE = "US010605"; // TSTORE개인정보취급방침(TAC004)
+	public static final String POLICY_AGREEMENT_CLAUSE_PROTECT_YOUTH = "US010606"; // TSTORE청소년보호정책
+	public static final String POLICY_AGREEMENT_CLAUSE_APP_STATS_INFO_USE = "US010607"; // TSTORE앱이용통계정보활용
+	public static final String POLICY_AGREEMENT_CLAUSE_MARKETING = "US010608"; // TSTORE정보광고활용(TAC006)
+	public static final String POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE = "US010609"; // TSTORE통신과금서비스(TAC002)
 
 	/**
 	 * 판매자 회원 상수들
