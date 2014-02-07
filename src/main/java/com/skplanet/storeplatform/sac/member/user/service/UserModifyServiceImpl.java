@@ -258,18 +258,49 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 */
 			if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) { // 본인
 
-				// /**
-				// * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP)
-				// */
-				// ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
-				// LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseHeader().getResult_text());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_sex());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_calendar());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_birthday());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_zipcode());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address());
-				// LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address2());
+				/**
+				 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP)
+				 * 
+				 * TODO 인증여부, 생년월일, CI 등...비교후에 같지 않으면 에러 발생한다....왜...???
+				 * 
+				 */
+				ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+				LOGGER.info("## IDP searchUserInfo is_rname_auth : {}", profileInfo.getResponseBody().getIs_rname_auth()); // 비교대상
+				LOGGER.info("## IDP searchUserInfo user_birthday : {}", profileInfo.getResponseBody().getUser_birthday()); // 비교대상
+				LOGGER.info("## IDP searchUserInfo ci            : {}", profileInfo.getResponseBody().getUser_ci()); // 비교대상
+
+				LOGGER.info("## IDP searchUserInfo di            : {}", profileInfo.getResponseBody().getUser_di()); // DI
+
+				// 인증유형코드
+				// 1: 휴대폰 인증
+				// 2: 이메일 즉시인증,
+				// 3: 이메일 후인증,
+				// 4: KMC 기인증
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getAuth_type());
+
+				// 가입자이름 (법인일경우가입한사람의이름)
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_name());
+
+				// 이메일인증여부
+				// (이메일로발송한인증번호에대해확인완료)
+				// 승인=Y, 미승인=N
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getIs_email_auth());
+
+				/**
+				 * 통합IDP 실명인증 변경 연동 (cmd = TXUpdateUserNameIDP)
+				 * 
+				 * is_rname_auth, user_birthday, user_ci 가 동일해야만 업데이트
+				 * 
+				 * 실명인증을 받았다 하더라도 개명 등의 이유로 이름은 변경될 수 있다.
+				 */
+				HashMap requestUserMap = new HashMap();
+				// String rname_auth_mns_code=(auth_type!=null && auth_type.length()>1 ? auth_type.substring(1):""); //
+				// KMC, IPIN
+
+				// sn_auth_key
+
+				String snAuthKey = this.idpRepository.makeSnAuthKey(userInfo.getUserName(), userInfo.getUserId());
+				ImIDPReceiverM updateUserNameInfo = this.imIdpService.updateUserName(userInfo.getImSvcNo(), req.getUserName(), req.getUserBirthDay(), snAuthKey, req.getUserAuthKey(), "1", req.getUserCi(), req.getUserDi(), requestUserMap);
 
 			} else { // 법정대리인
 
