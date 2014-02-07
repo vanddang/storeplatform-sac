@@ -20,13 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -45,7 +44,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2013. 12. 19. Updated by : 서영배, GTSOFT.
  */
 @org.springframework.stereotype.Service
-@Transactional
 public class RecommendAdminServiceImpl implements RecommendAdminService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -71,12 +69,12 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header) {
+	public RecommendAdminSacRes searchAdminList(RecommendAdminSacReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 
 		// 공통 응답 변수 선언
 		// int totalCount = 0;
-		RecommendAdminRes responseVO = new RecommendAdminRes();
+		RecommendAdminSacRes responseVO = new RecommendAdminSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		// 헤더값 세팅
@@ -100,7 +98,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			this.log.debug("필수 파라미터 부족");
 			this.log.debug("----------------------------------------------------------------");
 
-			responseVO = new RecommendAdminRes();
+			responseVO = new RecommendAdminSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -111,7 +109,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			this.log.debug("유효하지않은 리스트ID");
 			this.log.debug("----------------------------------------------------------------");
 
-			responseVO = new RecommendAdminRes();
+			responseVO = new RecommendAdminSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -135,7 +133,7 @@ public class RecommendAdminServiceImpl implements RecommendAdminService {
 			this.log.debug("배치완료 기준일시 정보 누락");
 			this.log.debug("----------------------------------------------------------------");
 
-			responseVO = new RecommendAdminRes();
+			responseVO = new RecommendAdminSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}

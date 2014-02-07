@@ -20,13 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
@@ -55,7 +54,6 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
  * Updated on : 2013. 12. 24. Updated by : 서영배, GTSOFT.
  */
 @org.springframework.stereotype.Service
-@Transactional
 public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -81,11 +79,11 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO) {
+	public FeatureCategoryAppSacRes searchAppList(FeatureCategoryAppSacReq requestVO) {
 		// TODO Auto-generated method stub
 		// 공통 응답 변수 선언
 		int totalCount = 0;
-		FeatureCategoryAppRes responseVO = null;
+		FeatureCategoryAppSacRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		List<FeatureCategoryApp> resultList = this.commonDAO.queryForList("FeatureCategory.selectCategoryAppListDummy",
@@ -218,7 +216,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			listVO.add(product);
 		}
 
-		responseVO = new FeatureCategoryAppRes();
+		responseVO = new FeatureCategoryAppSacRes();
 		commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(totalCount);
 
@@ -235,10 +233,10 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public FeatureCategoryAppRes searchMenuAppList(FeatureCategoryAppReq requestVO, SacRequestHeader header) {
+	public FeatureCategoryAppSacRes searchMenuAppList(FeatureCategoryAppSacReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 		// 공통 응답 변수 선언
-		FeatureCategoryAppRes responseVO = new FeatureCategoryAppRes();
+		FeatureCategoryAppSacRes responseVO = new FeatureCategoryAppSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		// 헤더값 세팅
@@ -252,7 +250,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			this.log.debug("필수 파라미터 부족");
 			this.log.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryAppRes();
+			responseVO = new FeatureCategoryAppSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -281,7 +279,7 @@ public class FeatureCategoryAppServiceImpl implements FeatureCategoryAppService 
 			this.log.debug("배치완료 기준일시 정보 누락");
 			this.log.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryAppRes();
+			responseVO = new FeatureCategoryAppSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}

@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendAdminService;
 import com.skplanet.storeplatform.sac.display.feature.recommend.service.RecommendTodayService;
@@ -53,7 +53,7 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendWebtoonRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonReq req) {
+	public RecommendWebtoonSacRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonSacReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAdminWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -74,9 +74,9 @@ public class RecommendController {
 	 */
 	@RequestMapping(value = "/admin/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header) {
+	public RecommendAdminSacRes searchAdminList(RecommendAdminSacReq requestVO, SacRequestHeader header) {
 
-		RecommendAdminRes responseVO;
+		RecommendAdminSacRes responseVO;
 		responseVO = this.recommendAdminService.searchAdminList(requestVO, header);
 		return responseVO;
 	}

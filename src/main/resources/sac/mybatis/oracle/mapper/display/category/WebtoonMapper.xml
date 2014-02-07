@@ -78,7 +78,7 @@
     </select>
     
     <!-- 운영자 웹툰 상품 리스트 조회-->
-    <select id="getAdminWebtoonList" parameterType="RecommendWebtoonReq" resultType="RecommendWebtoon">
+    <select id="getAdminWebtoonList" parameterType="RecommendWebtoonSacReq" resultType="RecommendWebtoon">
         /* WebtoonMapper.xml.getAdminWebtoonList, 운영자 웹툰 상품 리스트 조회, 김형식/SK플래닛 , 2013-12-26 */
         SELECT
                ka.*

@@ -19,12 +19,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -50,7 +49,6 @@ import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategor
  * Updated on : 2014. 01. 27. Updated by : , GTSOFT.
  */
 @Service
-@Transactional
 public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService {
 	private transient Logger logger = LoggerFactory.getLogger(CategoryAppServiceImpl.class);
 
@@ -69,12 +67,12 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	 * .storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq)
 	 */
 	@Override
-	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header) {
+	public FeatureCategoryVodSacRes searchVodList(FeatureCategoryVodSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
 
-		FeatureCategoryVodRes vodRes = null;
+		FeatureCategoryVodSacRes vodRes = null;
 
 		String topMenuId = req.getTopMenuId();
 		String listId = req.getListId();
@@ -86,7 +84,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("필수 파라미터 부족");
 			this.logger.debug("----------------------------------------------------------------");
 
-			vodRes = new FeatureCategoryVodRes();
+			vodRes = new FeatureCategoryVodSacRes();
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
 		}
@@ -96,7 +94,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("유효하지않은 탑메뉴ID");
 			this.logger.debug("----------------------------------------------------------------");
 
-			vodRes = new FeatureCategoryVodRes();
+			vodRes = new FeatureCategoryVodSacRes();
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
 		}
@@ -106,7 +104,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("유효하지않은 리스트ID");
 			this.logger.debug("----------------------------------------------------------------");
 
-			vodRes = new FeatureCategoryVodRes();
+			vodRes = new FeatureCategoryVodSacRes();
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
 		}
@@ -116,7 +114,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("filteredBy 파라미터 정보 누락");
 			this.logger.debug("----------------------------------------------------------------");
 
-			vodRes = new FeatureCategoryVodRes();
+			vodRes = new FeatureCategoryVodSacRes();
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
 		}
@@ -144,7 +142,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			this.logger.debug("배치완료 기준일시 정보 누락");
 			this.logger.debug("----------------------------------------------------------------");
 
-			vodRes = new FeatureCategoryVodRes();
+			vodRes = new FeatureCategoryVodSacRes();
 			vodRes.setCommonResponse(new CommonResponse());
 			return vodRes;
 		}
@@ -190,7 +188,7 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 					this.logger.debug("유효하지않은 조회유형");
 					this.logger.debug("----------------------------------------------------------------");
 
-					vodRes = new FeatureCategoryVodRes();
+					vodRes = new FeatureCategoryVodSacRes();
 					vodRes.setCommonResponse(new CommonResponse());
 					return vodRes;
 				}
@@ -233,8 +231,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	/*
 	 * Feature VOD 카테고리 상품 VO 생성 Method.
 	 */
-	private FeatureCategoryVodRes generateVO(String apiGb, List<FeatureCategoryVod> vodList) {
-		FeatureCategoryVodRes vodRes = new FeatureCategoryVodRes();
+	private FeatureCategoryVodSacRes generateVO(String apiGb, List<FeatureCategoryVod> vodList) {
+		FeatureCategoryVodSacRes vodRes = new FeatureCategoryVodSacRes();
 		CommonResponse commonRes = new CommonResponse();
 
 		if (!vodList.isEmpty()) {

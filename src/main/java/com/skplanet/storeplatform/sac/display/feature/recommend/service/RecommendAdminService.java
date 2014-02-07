@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -32,5 +32,5 @@ public interface RecommendAdminService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	RecommendAdminRes searchAdminList(RecommendAdminReq requestVO, SacRequestHeader header);
+	RecommendAdminSacRes searchAdminList(RecommendAdminSacReq requestVO, SacRequestHeader header);
 }

@@ -100,7 +100,7 @@
         <typeAlias alias="FeatureVodProductDTO"  type="com.skplanet.storeplatform.sac.product.vo.FeatureVodProductDTO" />
         
         <!-- 일반카테고리 음원 상품 조회 -->
-        <typeAlias alias="MusicContentsRequest"  type="com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq" />
+        <typeAlias alias="MusicContentsSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq" />
         <typeAlias alias="MusicContents"  type="com.skplanet.storeplatform.sac.display.category.vo.MusicContents" />
 
         <!-- 메뉴/카테고리 조회 -->
@@ -112,7 +112,7 @@
         <typeAlias alias="CategoryWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq" />
         <typeAlias alias="CategoryWebtoon"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoon" />
         <!-- 운영자 추천 웹툰 상품 조회 -->   
-        <typeAlias alias="RecommendWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq" />
+        <typeAlias alias="RecommendWebtoonSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq" />
         <typeAlias alias="RecommendWebtoon"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon" />   
         
         <!-- TODAY 상품 조회 -->
@@ -126,19 +126,19 @@
         <typeAlias alias="CategorySpecificProduct"  type="com.skplanet.storeplatform.sac.display.category.vo.CategorySpecificProduct" />
         
         <!-- feature app 카테고리 상품 조회 -->
-        <typeAlias alias="FeatureCategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq" />
+        <typeAlias alias="FeatureCategoryAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq" />
         <typeAlias alias="FeatureCategoryApp"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryApp" />
         
         <!-- feature epub 카테고리 상품 조회 -->
-        <typeAlias alias="FeatureCategoryEpubReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq" />
+        <typeAlias alias="FeatureCategoryEpubSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacReq" />
         <typeAlias alias="FeatureCategoryEpub"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryEpub" />
         
         <!-- feature vod 카테고리 상품 조회 -->
-        <typeAlias alias="FeatureCategoryVodReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq" />
+        <typeAlias alias="FeatureCategoryVodSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq" />
         <typeAlias alias="FeatureCategoryVod"  type="com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVod" />
         
         <!-- 운영자 추천 전체 조회 -->
-        <typeAlias alias="FeatureRecommendAdminReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminReq" />
+        <typeAlias alias="FeatureRecommendAdminSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendAdminSacReq" />
         <typeAlias alias="FeatureRecommendAdmin"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendAdmin" />
 
        <!-- 쇼핑 상품 조회 -->                                                         

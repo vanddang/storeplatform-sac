@@ -3,7 +3,7 @@
 <mapper namespace="MusicMain">
 
     <!-- Music Main -->
-    <select id="getMusicMainList" parameterType="MusicContentsRequest" resultType="ProductBasicInfo">
+    <select id="getMusicMainList" parameterType="MusicContentsSacReq" resultType="ProductBasicInfo">
         SELECT /* MusicMainMapper.xml, getMusicMainList, 조준일, 2014-02-05 */
                B.TENANT_ID
              , B.MENU_ID
@@ -89,7 +89,7 @@
     </select>
 
     <!-- Dummy Data -->
-    <select id="getMusicMainDummyList" parameterType="MusicContentsRequest" resultType="MusicContents">
+    <select id="getMusicMainDummyList" parameterType="MusicContentsSacReq" resultType="MusicContents">
         SELECT /* MusicMainMapper.xml, getMusicMainDummyList, JuYoungYun, 2014-01-16 */
                COUNT(*) OVER () AS TOTAL_COUNT
              , P.TOP_MENU_ID

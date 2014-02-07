@@ -18,13 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -48,7 +47,6 @@ import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategor
  * Updated on : 2013. 12. 24. Updated by : 서영배, GTSOFT.
  */
 @org.springframework.stereotype.Service
-@Transactional
 public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubService {
 	private transient Logger logger = LoggerFactory.getLogger(FeatureCategoryEpubServiceImpl.class);
 
@@ -69,11 +67,11 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, int)
 	 */
 	@Override
-	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header) {
+	public FeatureCategoryEpubSacRes searchEpubList(FeatureCategoryEpubSacReq requestVO, SacRequestHeader header) {
 		// TODO Auto-generated method stub
 		// 공통 응답 변수 선언
 		int totalCount = 0;
-		FeatureCategoryEpubRes responseVO = null;
+		FeatureCategoryEpubSacRes responseVO = null;
 		CommonResponse commonResponse = null;
 
 		String topMenuId = requestVO.getTopMenuId();
@@ -87,7 +85,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("필수 파라미터 부족");
 			this.logger.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryEpubRes();
+			responseVO = new FeatureCategoryEpubSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -98,7 +96,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("유효하지않은 탑메뉴ID");
 			this.logger.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryEpubRes();
+			responseVO = new FeatureCategoryEpubSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -110,7 +108,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("유효하지않은 리스트ID");
 			this.logger.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryEpubRes();
+			responseVO = new FeatureCategoryEpubSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -121,7 +119,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("리스트ID에 유효하지않은 탑메뉴ID");
 			this.logger.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryEpubRes();
+			responseVO = new FeatureCategoryEpubSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -132,7 +130,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("리스트ID에 유효하지않은 탑메뉴ID");
 			this.logger.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryEpubRes();
+			responseVO = new FeatureCategoryEpubSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -169,7 +167,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			this.logger.debug("배치완료 기준일시 정보 누락");
 			this.logger.debug("----------------------------------------------------------------");
 
-			responseVO = new FeatureCategoryEpubRes();
+			responseVO = new FeatureCategoryEpubSacRes();
 			responseVO.setCommonResponse(new CommonResponse());
 			return responseVO;
 		}
@@ -346,7 +344,7 @@ public class FeatureCategoryEpubServiceImpl implements FeatureCategoryEpubServic
 			listVO.add(product);
 
 		}
-		responseVO = new FeatureCategoryEpubRes();
+		responseVO = new FeatureCategoryEpubSacRes();
 		commonResponse = new CommonResponse();
 		commonResponse.setTotalCount(totalCount);
 		this.log.debug(String.valueOf(listVO.size()));

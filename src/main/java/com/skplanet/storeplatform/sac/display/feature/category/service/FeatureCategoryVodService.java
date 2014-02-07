@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -30,5 +30,5 @@ public interface FeatureCategoryVodService {
 	 *            공통헤더
 	 * @return FeatureCategoryVodRes
 	 */
-	FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header);
+	FeatureCategoryVodSacRes searchVodList(FeatureCategoryVodSacReq req, SacRequestHeader header);
 }

@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -32,5 +32,5 @@ public interface FeatureCategoryEpubService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header);
+	FeatureCategoryEpubSacRes searchEpubList(FeatureCategoryEpubSacReq requestVO, SacRequestHeader header);
 }

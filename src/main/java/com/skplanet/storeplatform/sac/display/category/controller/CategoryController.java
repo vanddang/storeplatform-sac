@@ -31,8 +31,8 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoon
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -205,7 +205,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/music/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
+	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 		return this.categoryMusicContentsService.searchMusicContentsList(requestVO, requestHeader);
 	}

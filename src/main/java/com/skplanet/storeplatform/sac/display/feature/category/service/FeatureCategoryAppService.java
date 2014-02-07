@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.feature.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -29,7 +29,7 @@ public interface FeatureCategoryAppService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO);
+	FeatureCategoryAppSacRes searchAppList(FeatureCategoryAppSacReq requestVO);
 
 	/**
 	 * <pre>
@@ -43,6 +43,6 @@ public interface FeatureCategoryAppService {
 	 * 
 	 * @return 운영자 추천 전체 카테고리 상품 리스트
 	 */
-	FeatureCategoryAppRes searchMenuAppList(FeatureCategoryAppReq requestVO, SacRequestHeader header);
+	FeatureCategoryAppSacRes searchMenuAppList(FeatureCategoryAppSacReq requestVO, SacRequestHeader header);
 
 }

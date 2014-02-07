@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -59,14 +59,14 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	 * 운영자 추천 웹툰 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param RecommendWebtoonReq
+	 * @param RecommendWebtoonSacReq
 	 * @return RecommendWebtoonRes 리스트
 	 */
 
 	@Override
-	public RecommendWebtoonRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonReq req) {
+	public RecommendWebtoonSacRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonSacReq req) {
 
-		RecommendWebtoonRes responseVO = null;
+		RecommendWebtoonSacRes responseVO = null;
 
 		/** TODO 2. 테스트용 if 헤더 셋팅 */
 		if (header.getTenantHeader() == null) {
@@ -182,7 +182,7 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 				productList.add(i, product);
 			}
 
-			responseVO = new RecommendWebtoonRes();
+			responseVO = new RecommendWebtoonSacRes();
 			responseVO.setProductList(productList);
 
 			CommonResponse commonResponse = new CommonResponse();

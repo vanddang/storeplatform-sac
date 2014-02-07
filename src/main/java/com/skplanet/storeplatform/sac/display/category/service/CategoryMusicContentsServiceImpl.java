@@ -25,8 +25,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -69,7 +69,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 	 * MusicContentsRequest requestVO)
 	 */
 	@Override
-	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
+	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception {
 
 		// int totalCount = 0;
@@ -105,7 +105,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		requestVO.setTenantId(tenantId);
 		requestVO.setDpi(dpi);
 
-		MusicContentsListRes responseVO = new MusicContentsListRes();
+		MusicContentsSacRes responseVO = new MusicContentsSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		if (null == filteredBy || "".equals(filteredBy)) {

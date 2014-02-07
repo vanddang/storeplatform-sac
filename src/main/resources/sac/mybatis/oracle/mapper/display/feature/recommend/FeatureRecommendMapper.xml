@@ -3,7 +3,7 @@
 <mapper namespace="FeatureRecommend">
 
     <!--운영자 추천 앱상품 조회 -->
-    <select id="selectRecommendAdminList" parameterType="FeatureRecommendAdminReq" resultType="ProductBasicInfo">
+    <select id="selectRecommendAdminList" parameterType="FeatureRecommendAdminSacReq" resultType="ProductBasicInfo">
        /* FeatureRecommendMapper.xml, selectRecommendAdminList, SAC : 조준일 , 2014-02-03 */
        SELECT B.TENANT_ID
 		     , B.MENU_ID
@@ -75,7 +75,7 @@
     </select>    
     
     <!--운영자 추천 앱상품 조회-->
-    <select id="selectRecommendAdminListDummy" parameterType="FeatureRecommendAdminReq" resultType="FeatureRecommendAdmin">
+    <select id="selectRecommendAdminListDummy" parameterType="FeatureRecommendAdminSacReq" resultType="FeatureRecommendAdmin">
        /* FeatureRecommendMapper.xml, selectAdminAppList, SAC : 서영배 , 2014-01-03 */
         SELECT
 			PROD.*

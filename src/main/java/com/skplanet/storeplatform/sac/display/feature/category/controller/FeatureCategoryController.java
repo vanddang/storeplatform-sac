@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.sac.api.util.StringUtil;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubRes;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodReq;
-import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryEpubSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.feature.category.FeatureCategoryVodSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryAppService;
 import com.skplanet.storeplatform.sac.display.feature.category.service.FeatureCategoryEpubService;
@@ -59,7 +59,7 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/vod/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryVodRes searchVodList(FeatureCategoryVodReq req, SacRequestHeader header) {
+	public FeatureCategoryVodSacRes searchVodList(FeatureCategoryVodSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchVodList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -82,9 +82,9 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryAppRes searchAppList(FeatureCategoryAppReq requestVO, SacRequestHeader header) {
+	public FeatureCategoryAppSacRes searchAppList(FeatureCategoryAppSacReq requestVO, SacRequestHeader header) {
 
-		FeatureCategoryAppRes responseVO;
+		FeatureCategoryAppSacRes responseVO;
 
 		if ("".equals(StringUtil.nvl(requestVO.getDummy(), ""))) {
 
@@ -122,9 +122,9 @@ public class FeatureCategoryController {
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public FeatureCategoryEpubRes searchEpubList(FeatureCategoryEpubReq requestVO, SacRequestHeader header) {
+	public FeatureCategoryEpubSacRes searchEpubList(FeatureCategoryEpubSacReq requestVO, SacRequestHeader header) {
 
-		FeatureCategoryEpubRes responseVO;
+		FeatureCategoryEpubSacRes responseVO;
 		responseVO = this.categoryEpubService.searchEpubList(requestVO, header);
 		return responseVO;
 	}

@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsListRes;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -25,7 +25,7 @@ public interface CategoryMusicContentsService {
 	 *            requestVO
 	 * @return MusicContentsListResponse
 	 */
-	public MusicContentsListRes searchMusicContentsList(MusicContentsReq requestVO, SacRequestHeader requestHeader)
+	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader)
 			throws JsonGenerationException, JsonMappingException, IOException, Exception;
 
 }
