@@ -60,7 +60,7 @@ public class UserExtraInfoController {
 			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileCode(), "");
 			extraProfilValue = StringUtil.nvl(infoReq.getExtraProfileValue(), "");
 
-			if (extraProfileCode.equals("") && extraProfilValue.equals("")) {
+			if (extraProfileCode.equals("") || extraProfilValue.equals("")) {
 				throw new StorePlatformException("SAC_MEM_0001", infoReq.toString());
 			}
 		}
