@@ -18,12 +18,11 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
@@ -47,7 +46,7 @@ import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacad
 @Service
 public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsService {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	// private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	@Qualifier("sac")
@@ -75,62 +74,23 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		// int totalCount = 0;
 
 		String filteredBy; // 차트 구분 코드
-		String purchase;
 		String orderedBy;
 		String menuId;
-		String imageCd; // 이미지 사이즈 코드
-		String dpi;
-		String langCd;
-		String deviceModelCd;
-		String tenantId;
 		int offset; // 시작점 ROW
 		int count; // 페이지당 노출 ROW 수
 
 		filteredBy = requestVO.getFilteredBy(); // 차트 구분 코드
-		purchase = requestVO.getPurchase();
 		orderedBy = requestVO.getOrderedBy();
-		langCd = requestVO.getLangCd();
 		menuId = requestVO.getMenuId();
-		imageCd = requestVO.getImageCd(); // dpi 코드를 받아서 이미지 사이즈 코드를 알아내는 로직 추가 되어야 함.
 
 		// 헤더값 세팅
-		deviceModelCd = requestHeader.getDeviceHeader().getModel();
-		tenantId = requestHeader.getTenantHeader().getTenantId();
-		dpi = requestHeader.getDeviceHeader().getDpi();
+		requestVO.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		requestVO.setDeviceModelCd(requestHeader.getDeviceHeader().getModel());
+		requestVO.setLangCd(requestHeader.getTenantHeader().getLangCd());
 
 		offset = requestVO.getOffset(); // 시작점 ROW
 		count = requestVO.getCount(); // 페이지당 노출 ROW 수
 
-		requestVO.setDeviceModelCd(deviceModelCd);
-		requestVO.setTenantId(tenantId);
-		requestVO.setDpi(dpi);
-
-		MusicContentsSacRes responseVO = new MusicContentsSacRes();
-		CommonResponse commonResponse = new CommonResponse();
-
-		if (null == filteredBy || "".equals(filteredBy)) {
-			throw new Exception("filteredBy 는 필수 파라메터 입니다.");
-		}
-		if (null == purchase || "".equals(purchase)) {
-			// throw new Exception("purchase 는 필수 파라메터 입니다.");
-		}
-		if (null == tenantId || "".equals(tenantId)) {
-			requestVO.setTenantId("S01");
-			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
-		}
-		if (null == deviceModelCd || "".equals(deviceModelCd)) {
-			requestVO.setDeviceModelCd("SHW-M250S");
-		}
-		if (null == langCd || "".equals(langCd)) {
-			requestVO.setLangCd("ko");
-		}
-		if (null == menuId || "".equals(menuId)) {
-			requestVO.setMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
-		}
-		if (null == imageCd || "".equals(imageCd)) {
-			imageCd = "DP000191";
-			requestVO.setImageCd(imageCd);
-		}
 		// rownum 디폴트값 세팅
 		if (offset <= 0) {
 			offset = 1;
@@ -139,6 +99,23 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 		if (count <= 0) {
 			count = 20;
 			requestVO.setCount(count);
+		}
+
+		MusicContentsSacRes responseVO = new MusicContentsSacRes();
+		CommonResponse commonResponse = new CommonResponse();
+
+		// filteredBy 필수 파라미터 체크
+		if (StringUtils.isEmpty(filteredBy)) {
+			throw new StorePlatformException("SAC_DSP_0002", "filteredBy", filteredBy);
+		}
+
+		// tenantId 필수 파라미터 체크
+		if (StringUtils.isEmpty(requestVO.getTenantId())) {
+			throw new StorePlatformException("SAC_DSP_0002", "tenantId", requestVO.getTenantId());
+		}
+
+		if (null == menuId || "".equals(menuId)) {
+			requestVO.setMenuId(DisplayConstants.DP_MUSIC_TOP_MENU_ID);
 		}
 
 		// 챠트구분, 배치ID 세팅
@@ -162,15 +139,11 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 
 		// 기준일시 체크
 		if (StringUtils.isEmpty(stdDt)) {
-			this.log.debug("----------------------------------------------------------------");
-			this.log.debug("배치완료 기준일시 정보 누락");
-			this.log.debug("----------------------------------------------------------------");
-
-			responseVO.setCommonResponse(new CommonResponse());
-			return responseVO;
+			throw new StorePlatformException("SAC_DSP_0002", "stdDt", stdDt);
+		} else {
+			// 뮤직 배치일자는 년월일만 필요
+			requestVO.setStdDt(stdDt.substring(0, 8));
 		}
-		// 뮤직 배치일자는 년월일만 필요
-		requestVO.setStdDt(stdDt.substring(0, 8));
 
 		List<ProductBasicInfo> productBasicInfoList;
 
