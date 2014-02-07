@@ -243,7 +243,7 @@
                          <if test="weekDayCd != null">
                          AND  E.SERIALLY_WKDY LIKE '%' || (SELECT cd_nm FROM tb_cm_cd WHERE cd_id =#{weekDayCd} )|| '%'     /* DP010101 ~DP010107  :월~토*/
                         </if>
-                         AND  NOT EXISTS (SELECT 1 FROM  TB_DP_SPRT_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd} AND PROD_ID = D.PROD_ID )     
+                         AND  EXISTS (SELECT 1 FROM  TB_DP_SPRT_DEVICE WHERE (DEVICE_MODEL_CD = #{deviceModelCd} OR DEVICE_MODEL_CD = 'android_standard2') AND PROD_ID = D.PROD_ID )    
                    )
                ) ka
          WHERE RNUM BETWEEN #{offset} AND #{count}
