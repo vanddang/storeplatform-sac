@@ -8,11 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.sac.api.util.DateUtil;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIdpSenderM;
 
 /**
  * ImIDP API
@@ -20,12 +21,12 @@ import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
 @Service
-public class ImIDPServiceImpl implements ImIDPService {
+public class ImIdpServiceImpl implements ImIdpService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImIDPServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ImIdpServiceImpl.class);
 
 	@Autowired
-	private IDPRepository repository;
+	private IdpRepository repository;
 
 	/**
 	 * <pre>
@@ -37,7 +38,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM agreeUser(Map<String, Object> param) {
+	public ImIdpReceiverM agreeUser(Map<String, Object> param) {
 		/** param Key. */
 		// operator_id
 		// key_type
@@ -54,11 +55,11 @@ public class ImIDPServiceImpl implements ImIDPService {
 		// modify_req_time
 		// service_profiles
 
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_JOIN);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_AGREE_USER);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_AGREE_USER);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 
 		sendData.setOperator_id((String) param.get("operator_id"));
 		sendData.setOcb_join_code((String) param.get("ocb_join_code"));
@@ -74,7 +75,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setUser_mdn_auth_key((String) param.get("user_mdn_auth_key"));
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -87,25 +88,25 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM discardUser(Map<String, Object> param) {
+	public ImIdpReceiverM discardUser(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String term_reason_cd = (String) param.get("term_reason_cd");
 
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_SECEDE);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_DISAGREE_USER);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_SECEDE);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_DISAGREE_USER);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setUser_auth_key(user_auth_key);
 		if (term_reason_cd != null)
 			sendData.setTerm_reason_cd(term_reason_cd);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -118,18 +119,18 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM userInfoSearchServer(String imServiceNo) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+	public ImIdpReceiverM userInfoSearchServer(String imServiceNo) {
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_FIND_COMMON_PROFILE_FOR_SERVER);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(imServiceNo);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM updateUserInfo(Map<String, Object> param) {
+	public ImIdpReceiverM updateUserInfo(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String user_tn = (String) param.get("user_tn");
@@ -179,13 +180,13 @@ public class ImIDPServiceImpl implements ImIDPService {
 			is_biz_auth = "N";
 		}
 
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_MODIFY_PROFILE);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_MODIFY_PROFILE);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setUser_auth_key(user_auth_key);
 		if (user_tn != null)
 			sendData.setUser_tn(user_tn);
@@ -226,7 +227,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setUser_type(user_type);
 		sendData.setIs_biz_auth(is_biz_auth);
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -239,7 +240,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM updateAdditionalInfo(Map<String, Object> param) {
+	public ImIdpReceiverM updateAdditionalInfo(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String user_mdn = (String) param.get("user_mdn");
@@ -250,13 +251,13 @@ public class ImIDPServiceImpl implements ImIDPService {
 		String user_address = (String) param.get("user_address");
 		String user_address2 = (String) param.get("user_address2");
 
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_MODIFY_ADDITIONAL);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_MODIFY_ADDITIONAL);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setUser_auth_key(user_auth_key);
 		if (user_mdn != null)
 			sendData.setUser_mdn(user_mdn);
@@ -275,7 +276,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -288,20 +289,20 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM modifyPwd(Map<String, Object> param) {
+	public ImIdpReceiverM modifyPwd(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String user_auth_key = (String) param.get("user_auth_key");
 		String user_passwd = (String) param.get("user_passwd");
 		String user_passwd_type = (String) param.get("user_passwd_type");
 		String user_passwd_modify_date = (String) param.get("user_passwd_modify_date");
 
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_MODIFY_PWD);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_MODIFY_PWD);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setUser_auth_key(user_auth_key);
 		if (user_passwd != null)
 			sendData.setUser_passwd(user_passwd);
@@ -312,7 +313,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -326,19 +327,19 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM setLoginStatus(String key, String login_status_code) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_SET_LOGIN_STATUS);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setLogin_limit_sst_code(ImIDPConstants.SSO_SST_CD_TSTORE_WEB);
+	public ImIdpReceiverM setLoginStatus(String key, String login_status_code) {
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_SET_LOGIN_STATUS);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setLogin_limit_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setLogin_status_code(login_status_code);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_ID);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_ID);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -359,22 +360,22 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
+	public ImIdpReceiverM updateUserName(String key, String user_name, String user_birthday, String sn_auth_key,
 			String user_auth_key, String rname_auth_mns_code, String ci, String di, HashMap map) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_UPDATE_USER_NAME);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_UPDATE_USER_NAME);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_auth_key(user_auth_key);
 		sendData.setUser_name(user_name);
 		sendData.setUser_birthday(user_birthday);
 		sendData.setUser_calendar("1");
 		sendData.setIs_rname_auth("Y");
-		sendData.setRname_auth_sst_code(ImIDPConstants.SSO_SST_CD_TSTORE_WEB);
+		sendData.setRname_auth_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setSn_auth_key(sn_auth_key);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 		sendData.setRname_auth_mns_code((rname_auth_mns_code == null || rname_auth_mns_code.equals("") ? "2" : rname_auth_mns_code));
@@ -394,7 +395,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		}
 		sendData.setRname_auth_date(DateUtil.getToday("yyyyMMdd") + "" + DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -413,16 +414,16 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
+	public ImIdpReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
 			String parent_name, String parent_email, String user_auth_key, String parent_birthday) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_MODIFY);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_UPDATE_GUARDIAN);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_UPDATE_GUARDIAN);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_auth_key(user_auth_key);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setParent_type(parent_type);
 		sendData.setParent_rname_auth_type("5"); // IPIN
 		sendData.setParent_rname_auth_key(parent_rname_auth_key);
@@ -431,10 +432,10 @@ public class ImIDPServiceImpl implements ImIDPService {
 		sendData.setParent_email(parent_email);
 		sendData.setParent_approve_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setIs_parent_approve("Y");
-		sendData.setParent_approve_sst_code(ImIDPConstants.SSO_SST_CD_TSTORE_WEB);
+		sendData.setParent_approve_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -448,18 +449,18 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM authForId(String key, String pwd) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
+	public ImIdpReceiverM authForId(String key, String pwd) {
+		ImIdpSenderM sendData = new ImIdpSenderM();
 
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_AUTH);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_AUTH_FOR_ID);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_AUTH);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_AUTH_FOR_ID);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_ID);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_ID);
 		sendData.setUser_passwd(pwd);
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -472,17 +473,17 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM findJoinServiceListIDP(Map<String, Object> param) {
+	public ImIdpReceiverM findJoinServiceListIDP(Map<String, Object> param) {
 		String key = (String) param.get("key");
 		String keyType = (String) param.get("keyType");
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_JOIN_SERVICE_LIST);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_FIND_JOIN_SERVICE_LIST);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(key);
 		sendData.setKey_type(keyType);
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -495,16 +496,16 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM checkIdStatusIdpIm(String id) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
+	public ImIdpReceiverM checkIdStatusIdpIm(String id) {
+		ImIdpSenderM sendData = new ImIdpSenderM();
 
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_JOIN);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_ID_STATUS_IDP_IM);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_JOIN);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_ID_STATUS_IDP_IM);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_id(id);
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -517,20 +518,21 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM getMdnInfoIDP(String mdn) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
+	public ImIdpReceiverM getMdnInfoIDP(String mdn) {
+		ImIdpSenderM sendData = new ImIdpSenderM();
 
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_GET_MDN_INFO_IDP);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_GET_MDN_INFO_IDP);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setMdn(mdn);
 
-		return this.repository.sendImIDP(sendData);
+//		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	@Override
-	public ImIDPReceiverM findUserIdByMdn(Map<String, Object> param) {
+	public ImIdpReceiverM findUserIdByMdn(Map<String, Object> param) {
 		String user_mdn = (String) param.get("user_mdn");
 		String user_code = (String) param.get("user_code");
 		String mobile_sign = (String) param.get("mobile_sign");
@@ -538,11 +540,11 @@ public class ImIDPServiceImpl implements ImIDPService {
 		String svc_mng_num = (String) param.get("svc_mng_num");
 		String model_id = (String) param.get("model_id");
 
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_USERID_BY_MDN);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_FIND_USERID_BY_MDN);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setUser_mdn(user_mdn);
 		sendData.setUser_code(user_code);
 		sendData.setMobile_sign(mobile_sign);
@@ -552,7 +554,7 @@ public class ImIDPServiceImpl implements ImIDPService {
 		if (null != model_id)
 			sendData.setModel_id(model_id);
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 	/**
@@ -565,18 +567,18 @@ public class ImIDPServiceImpl implements ImIDPService {
 	 * @throws Exception
 	 */
 	@Override
-	public ImIDPReceiverM userInfoIdpSearchServer(String imServiceNo) {
-		ImIDPSenderM sendData = new ImIDPSenderM();
-		sendData.setUrl(ImIDPConstants.IDP_REQ_URL_USER_INFO_SEARCH);
-		sendData.setCmd(ImIDPConstants.IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER);
-		sendData.setResp_type(ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
-		sendData.setResp_flow(ImIDPConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
+	public ImIdpReceiverM userInfoIdpSearchServer(String imServiceNo) {
+		ImIdpSenderM sendData = new ImIdpSenderM();
+		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_SEARCH);
+		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_FIND_COMMON_IDP_PROFILE_FOR_SERVER);
+		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
+		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
 		sendData.setKey(imServiceNo);
-		sendData.setKey_type(ImIDPConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
+		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
 		sendData.setReq_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setReq_time(DateUtil.getToday("hhmmss"));
 
-		return this.repository.sendImIDP(sendData);
+		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_GET);
 	}
 
 }

@@ -12,9 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 
 /**
  * IDP - 아이디중복체크, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -31,12 +31,12 @@ public class CheckDupIDTest {
 	private static final Logger logger = LoggerFactory.getLogger(CheckDupIDTest.class);
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Test
 	public void checkDupID() {
 		try {
-			IDPReceiverM res = this.idpService.checkDupID("asd");
+			IdpReceiverM res = this.idpService.checkDupID("asd");
 		} catch (StorePlatformException e) {
 			logger.debug(e.getErrorInfo().getCode());
 			logger.debug(e.getErrorInfo().getMessage());

@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -66,8 +66,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 회원 조회 서비스 인터페이스(CoreStoreBusiness) 구현체
@@ -98,17 +98,17 @@ public class UserSearchServiceImpl implements UserSearchService {
 	private DeviceSCI deviceSCI;
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Autowired
 	private MemberCommonComponent memberCommonComponent;
 
-	private IDPReceiverM idpReceiverM;
+	private IdpReceiverM idpReceiverM;
 
 	@Autowired
-	private ImIDPService imIdpService;
+	private ImIdpService imIdpService;
 
-	private ImIDPReceiverM imIdpReceiverM;
+	private ImIdpReceiverM imIdpReceiverM;
 
 	/**
 	 * 회원 가입 조회

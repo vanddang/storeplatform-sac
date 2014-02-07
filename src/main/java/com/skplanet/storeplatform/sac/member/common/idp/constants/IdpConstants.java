@@ -5,7 +5,7 @@ package com.skplanet.storeplatform.sac.member.common.idp.constants;
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
-public final class IDPConstants {
+public final class IdpConstants {
 
 	/** API URL. */
 	public static final String IDP_REQ_URL_JOIN = "/web/Join.api";
@@ -22,6 +22,9 @@ public final class IDPConstants {
 	public static final String IDP_REQ_URL_MAPPING_TOKEN = "/web/TokenMapping.api";
 	public static final String IDP_REQ_URL_SEARCH_TOKEN = "/web/SpTokenCheck.api";
 	public static final String IDP_REQ_URL_DELETE_TOKEN = "/web/MappingDel.api";
+
+	public static final String HTTP_METHOD_GET = "GET";
+	public static final String HTTP_METHOD_POST = "POST";
 
 	/** API COMMAND. */
 	/** 2.1. 기본 API. */
@@ -50,13 +53,10 @@ public final class IDPConstants {
 	/** 모바일. */
 	/** 3.1. 기본 API. */
 	public static final String IDP_REQ_CMD_ALEADY_JOIN_MDN = "aleadyJoinCheckForMdn";
-
 	/** 3.2. 회원 가입 API. */
 	public static final String IDP_REQ_CMD_JOIN_FOR_WAP = "joinForWap"; // 가입
-
 	/** 3.3. 회원 인증 API. */
 	public static final String IDP_REQ_CMD_AUTH_FOR_WAP = "authForWap"; // 인증
-
 	/** 3.4. 회원 정보 조회 API. */
 	public static final String IDP_REQ_CMD_FIND_PROFILE_FOR_WAP = "findProfileForWap"; // 정보조회
 
@@ -69,7 +69,7 @@ public final class IDPConstants {
 	/** 4.2. 부가 서비스 해지 API. */
 	public static final String IDP_REQ_CMD_SECEDE_SUP_SERVICE = "secedeSupServiceRequest";
 	/** 4.3. 부가서비스 조회 API. */
-	public static final String IDP_REQ_CMD_SERVICE_SUBSCRIPTION_CHECK = "secedeSupServiceRequest";
+	public static final String IDP_REQ_CMD_SERVICE_SUBSCRIPTION_CHECK = "serviceSubscriptionCheck";
 
 	/** API RESP_TYPE. */
 	public static final String IDP_PARAM_RESP_TYPE_NAMEVALUE = "1"; // default

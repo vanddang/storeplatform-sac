@@ -18,8 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * ImIDP - 서비스 이용 동의, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -36,7 +36,7 @@ public class TXAgreeUserIDPTest {
 	private static final Logger logger = LoggerFactory.getLogger(TXAgreeUserIDPTest.class);
 
 	@Autowired
-	private ImIDPService imIDPService;
+	private ImIdpService imIDPService;
 
 	@Test
 	public void TXAgreeUserIDP() {
@@ -63,7 +63,7 @@ public class TXAgreeUserIDPTest {
 		param.put("key_type", "1");
 		param.put("is_parent_approve", "N");
 
-		ImIDPReceiverM receiverM = this.imIDPService.agreeUser(param);
+		ImIdpReceiverM receiverM = this.imIDPService.agreeUser(param);
 		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 		logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
 		logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());

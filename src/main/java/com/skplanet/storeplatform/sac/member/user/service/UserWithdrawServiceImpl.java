@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -34,9 +34,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.WithdrawRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 회원탈퇴 관련 인터페이스 구현체
@@ -64,13 +64,13 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
 
 	@Autowired
-	private IDPService idpService; // IDP 연동 클래스
+	private IdpService idpService; // IDP 연동 클래스
 
 	@Autowired
-	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
+	private ImIdpService imIdpService; // 통합 IDP 연동 클래스
 
 	@Autowired
-	private IDPRepository idpRepository;
+	private IdpRepository idpRepository;
 
 	@Autowired
 	private UapsSCI uapsSCI;
@@ -108,8 +108,8 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
 
 		/* IMIDP 회원탈퇴 연동 */
-		IDPReceiverM idpReceiver = new IDPReceiverM();
-		ImIDPReceiverM imIdpReceiver = new ImIDPReceiverM();
+		IdpReceiverM idpReceiver = new IdpReceiverM();
+		ImIdpReceiverM imIdpReceiver = new ImIdpReceiverM();
 
 		/* Return Value */
 		WithdrawRes withdrawRes = new WithdrawRes();
@@ -187,7 +187,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 * IMIDP 연동(통합회원)
 	 */
 	@Override
-	public ImIDPReceiverM oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+	public ImIdpReceiverM oneIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
 
 		Map<String, Object> param = new HashMap<String, Object>();
 
@@ -196,7 +196,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		param.put("user_auth_key", req.getUserAuthKey());
 		// param.put("term_reason_cd", "1"); // 1=IM통합서비스번호, 2=IM통합ID
 
-		ImIDPReceiverM imIdpReceiver = this.imIdpService.discardUser(param);
+		ImIdpReceiverM imIdpReceiver = this.imIdpService.discardUser(param);
 
 		return imIdpReceiver;
 
@@ -206,9 +206,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 * IDP 모바일 회원(무선)
 	 */
 	@Override
-	public IDPReceiverM idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+	public IdpReceiverM idpMobileUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
 
-		IDPReceiverM idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
+		IdpReceiverM idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
 
 		return idpReceiver;
 	}
@@ -217,9 +217,9 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 	 * IDP 아이디 회원
 	 */
 	@Override
-	public IDPReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
+	public IdpReceiverM idpIdUser(SacRequestHeader requestHeader, SearchUserResponse schUserRes, WithdrawReq req) {
 
-		IDPReceiverM idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr().getUserID());
+		IdpReceiverM idpReceiver = this.idpService.secedeUser(req.getUserAuthKey(), "1", schUserRes.getUserMbr().getUserID());
 
 		return idpReceiver;
 	}

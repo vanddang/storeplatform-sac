@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -46,10 +46,10 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 회원 로그인 관련 인터페이스 구현체
@@ -74,10 +74,10 @@ public class LoginServiceImpl implements LoginService {
 	private DeviceService deviceService;
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Autowired
-	private ImIDPService imIdpService;
+	private ImIdpService imIdpService;
 
 	/*
 	 * (non-Javadoc)
@@ -197,7 +197,7 @@ public class LoginServiceImpl implements LoginService {
 			} catch (StorePlatformException ex) {
 
 				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-						+ IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+						+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 
 					/* 미가입 회원인 경우 로그 님김 */
 					logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
@@ -370,7 +370,7 @@ public class LoginServiceImpl implements LoginService {
 
 			try {
 
-				ImIDPReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
+				ImIdpReceiverM imIdpReceiver = this.imIdpService.authForId(userId, userPw);
 
 				/* 잠금해지 요청인 경우 처리 */
 				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
@@ -402,7 +402,7 @@ public class LoginServiceImpl implements LoginService {
 			} catch (StorePlatformException ex) {
 
 				if (StringUtils
-						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+						.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + ImIdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
 					LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
@@ -412,7 +412,7 @@ public class LoginServiceImpl implements LoginService {
 					res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
 				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-						+ ImIDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+						+ ImIdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 님김 */
 					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
@@ -428,7 +428,7 @@ public class LoginServiceImpl implements LoginService {
 
 			try {
 
-				IDPReceiverM idpReceiver = this.idpService.userAuthForId(userId, userPw);
+				IdpReceiverM idpReceiver = this.idpService.userAuthForId(userId, userPw);
 
 				/* 잠금해지 요청인 경우 */
 				if (StringUtils.equals(req.getReleaseLock(), "Y") && StringUtils.equals(loginStatusCode, MemberConstants.USER_LOGIN_STATUS_PAUSE)) {
@@ -455,7 +455,7 @@ public class LoginServiceImpl implements LoginService {
 
 			} catch (StorePlatformException ex) {
 
-				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IDPConstants.IDP_RES_CODE_WRONG_PASSWD)) {
+				if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_WRONG_PASSWD)) {
 
 					/* 로그인 실패이력 저장 */
 					LoginUserResponse loginUserRes = this.insertloginHistory(requestHeader, userId, userPw, "N", "N", req.getIpAddress());
@@ -465,7 +465,7 @@ public class LoginServiceImpl implements LoginService {
 					res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
 				} else if (StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-						+ IDPConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
+						+ IdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 님김 */
 					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
@@ -711,7 +711,7 @@ public class LoginServiceImpl implements LoginService {
 		/* 1. 무선회원 가입 */
 		try {
 
-			IDPReceiverM idpReceiver = this.idpService.join4Wap(deviceId, this.commService.convertDeviceTelecom(deviceTelecom));
+			IdpReceiverM idpReceiver = this.idpService.join4Wap(deviceId, this.commService.convertDeviceTelecom(deviceTelecom));
 			String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
 			String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); // SKT사용자의 경우 사용자 관리번호
 

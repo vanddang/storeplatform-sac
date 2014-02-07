@@ -15,7 +15,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.sci.ImageSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_METHOD;
 import com.skplanet.storeplatform.external.client.idp.vo.ImageReq.HTTP_PROTOCOL;
@@ -84,7 +84,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.SendSmsForR
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 import com.skplanet.storeplatform.sac.member.miscellaneous.vo.ServiceAuth;
 
@@ -111,7 +111,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	private DeviceSCI deviceSCI; // 회원 Component 휴대기기 기능 Interface.
 
 	@Autowired
-	private IDPService idpService; // IDP 연동 class.
+	private IdpService idpService; // IDP 연동 class.
 
 	@Autowired
 	private MessageSCI messageSCI; // 기타 Component 메시지전송 기능 Interface.
@@ -345,7 +345,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String waterMarkImageUrl = "";
 		String waterMarkImageSign = "";
 		String waterMarkImageString = "";
-		IDPReceiverM idpReciver = new IDPReceiverM();
+		IdpReceiverM idpReciver = new IdpReceiverM();
 		GetCaptchaRes response = new GetCaptchaRes();
 
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
@@ -403,7 +403,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
 
 		/* IDP 호출 ( Request 파라미터 전달 ) */
-		IDPReceiverM idpReciver = new IDPReceiverM();
+		IdpReceiverM idpReciver = new IdpReceiverM();
 
 		LOGGER.info("## IDP Service 호출.");
 		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
@@ -554,7 +554,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public CreateAdditionalServiceRes createAdditionalService(CreateAdditionalServiceReq request) {
 		CreateAdditionalServiceRes response = new CreateAdditionalServiceRes();
 		// TODO IdpServie joinSupService 호출해서 부가서비스 가입 요청
-		IDPReceiverM idpReciver = this.idpService.joinSupService(request.getMsisdn(), request.getSvcCode(),
+		IdpReceiverM idpReciver = this.idpService.joinSupService(request.getMsisdn(), request.getSvcCode(),
 				request.getSvcMngNum());
 
 		response.setSvcCode(idpReciver.getResponseBody().getSvc_code()); // 부가서비스 코드
@@ -569,7 +569,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		GetAdditionalServiceRes response = new GetAdditionalServiceRes();
 
 		// IDP 호출해서 부가서비스 가입 조회 요청
-		IDPReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getMsisdn(), request.getSvcCode());
+		IdpReceiverM idpReciver = this.idpService.serviceSubscriptionCheck(request.getMsisdn(), request.getSvcCode());
 		idpReciver.getResponseBody().getSp_list(); // 타 채널 가입 리스트
 		idpReciver.getResponseBody().getCharge(); // SKT 사용자의 휴대폰 요금제 코드
 		idpReciver.getResponseBody().getServiceCD(); // SKT 사용자의 휴대폰 요금제에 따른 부가서비스 코드

@@ -15,4 +15,6 @@ public final class TestMemberConstant {
 	 */
 	public static final String PREFIX_USER_PATH_REAL = "/member/user";
 
+	public static final String USE_Y = "Y";
+	public static final String USE_N = "N";
 }

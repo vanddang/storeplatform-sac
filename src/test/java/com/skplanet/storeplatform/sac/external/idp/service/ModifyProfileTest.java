@@ -18,8 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 
 /**
  * IDP - 프로파일 수정, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -36,7 +36,7 @@ public class ModifyProfileTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ModifyProfileTest.class);
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	/**
 	 * <pre>
@@ -75,7 +75,7 @@ public class ModifyProfileTest {
 			param.put("user_id", "");
 			param.put("user_ci", "");
 
-			IDPReceiverM receiverM = this.idpService.modifyProfile(param);
+			IdpReceiverM receiverM = this.idpService.modifyProfile(param);
 			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 			LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
 			LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());

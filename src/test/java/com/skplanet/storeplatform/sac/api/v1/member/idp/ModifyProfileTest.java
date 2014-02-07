@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.framework.core.util.StringUtils;
 import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
@@ -34,9 +34,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningReq;
 import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
@@ -57,13 +57,13 @@ public class ModifyProfileTest {
 	private MemberCommonComponent commService;
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Autowired
 	private DeviceService deviceService;
 
 	@Autowired
-	IDPRepository idpRepository;
+	IdpRepository idpRepository;
 
 	private MockMvc mockMvc;
 
@@ -180,8 +180,8 @@ public class ModifyProfileTest {
 		param.put("user_phone", userPhoneStr);
 		param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 		}
-		IDPReceiverM idpReceiver = this.idpService.modifyProfile(param);
-		if (!StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+		IdpReceiverM idpReceiver = this.idpService.modifyProfile(param);
+		if (!StringUtils.equals(idpReceiver.getResponseHeader().getResult(), IdpConstants.IDP_RES_CODE_OK)) {
 		throw new RuntimeException("[" + idpReceiver.getResponseHeader().getResult() + "] "
 				+ idpReceiver.getResponseHeader().getResult_text());
 		}

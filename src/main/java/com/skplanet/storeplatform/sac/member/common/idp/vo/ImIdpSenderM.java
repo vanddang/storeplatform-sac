@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.member.common.idp.vo;
 
 
-public class ImIDPSenderM {
+public class ImIdpSenderM {
 	/* 연동 요청 (공통 결과 API) */
 	/** 세부 요청 command */
 	private String cmd;

@@ -3,7 +3,7 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import java.util.HashMap;
 import java.util.List;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.member.client.user.sci.vo.RemoveDeviceResponse;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
@@ -203,7 +203,7 @@ public interface DeviceService {
 	 * @param param
 	 * @return
 	 */
-	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr);
+	public ImIdpReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr);
 
 	/**
 	 * 

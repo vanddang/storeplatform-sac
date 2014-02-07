@@ -1,6 +1,6 @@
 package com.skplanet.storeplatform.sac.member.common.idp.constants;
 
-public final class ImIDPConstants {
+public final class ImIdpConstants {
 
 	public static final String IDP_CHECK_SERVER_DEV = "OMP10000";
 	public static final String IDP_CHECK_SERVER_STAG = "OMP10000";
@@ -10,6 +10,9 @@ public final class ImIDPConstants {
 	public static final String IDP_PARAM_OPERATION_MODE_TEST = "test";
 	public static final String IDP_PARAM_OPERATION_MODE_STAG = "staging";
 	public static final String IDP_PARAM_OPERATION_MODE_REAL = "real";
+
+	public static final String HTTP_METHOD_GET = "GET";
+	public static final String HTTP_METHOD_POST = "POST";
 
 	/** API URL. */
 	public static final String IDP_REQ_URL_JOIN = "/web/IMJoin.api";

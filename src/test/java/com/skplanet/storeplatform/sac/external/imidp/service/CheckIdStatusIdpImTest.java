@@ -15,8 +15,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * ImIDP - 기본 프로파일 조회(for Server), EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -33,12 +33,12 @@ public class CheckIdStatusIdpImTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CheckIdStatusIdpImTest.class);
 
 	@Autowired
-	private ImIDPService imIDPService;
+	private ImIdpService imIDPService;
 
 	@Test
 	public void checkIdStatusIdpIm() {
 
-		ImIDPReceiverM receiverM = this.imIDPService.checkIdStatusIdpIm("awdawdawdawdw");
+		ImIdpReceiverM receiverM = this.imIDPService.checkIdStatusIdpIm("awdawdawdawdw");
 		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 		LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
 		LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());

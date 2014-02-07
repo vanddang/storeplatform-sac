@@ -3,7 +3,9 @@ package com.skplanet.storeplatform.sac.member.seller.controller;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +30,6 @@ import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
 import com.skplanet.storeplatform.member.client.seller.sci.SellerSCI;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.AuthorizeRes;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.ModifyInformationSacReq;
@@ -37,7 +38,7 @@ import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 import com.skplanet.storeplatform.sac.member.common.util.TestConvertMapperUtils;
 
 /**
- * 2.2.10. 판매자 회원 기본정보 수정
+ * 2.2.10. 판매자 회원 기본정보 수정 ,before - 로그인 [sellerId, sellerPW, expireDate] 필요
  * 
  * Updated on : 2014. 2. 3. Updated by : 김경복, 부르칸
  */
@@ -64,23 +65,45 @@ public class ModifyInformationTest {
 	/** [RESPONSE]. */
 	public static ModifyInformationSacRes res;
 
-	/** [x-store-auth-info]. */
+	/** LOGIN-[REQUEST]. */
+	public static AuthorizeReq authorizeReq;
+	/** LOGIN-[RESPONSE]. */
+	public static AuthorizeRes authorizeRes;
+
+	/** [HEADER]. */
 	private static String xStoreAuthInfo;
 
+	/**
+	 * <pre>
+	 * before method.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-		// [REQUEST] 초기화
-		req = new ModifyInformationSacReq();
 		// TODO 임시 [HEADER] 주입
 		xStoreAuthInfo = "authKey=114127c7ef42667669819dad5df8d820c;ist=N";
-		// 회원인증 필요**
-		AuthorizeReq authorizeReq = new AuthorizeReq();
-		authorizeReq.setSellerId("sctest1");
+
+		// [REQUEST] 초기화
+		req = new ModifyInformationSacReq();
+		authorizeReq = new AuthorizeReq();
+
+		// 로그인 데이터 주입
+		authorizeReq.setSellerId("sctest5");
 		authorizeReq.setSellerPW("123456");
 		authorizeReq.setExpireDate("2");
-		LoginSellerRequest loginSellerRequest = new LoginSellerRequest();
-		this.sellerSCI.loginSeller(loginSellerRequest);
+
+		// 로그인 콜
+		this.authorize();
+
+		if (StringUtils.equals(TestMemberConstant.USE_Y, authorizeRes.getIsLoginSuccess())) {
+			// 정보수정의 위한 데이터 주입
+			req.setSellerId(authorizeRes.getSellerMbr().getSellerId());
+			req.setSellerKey(authorizeRes.getSellerMbr().getSellerKey());
+			req.setSessionKey(authorizeRes.getSessionKey());
+		} else {
+			fail("수정 불가 회원입니다.");
+		}
 	}
 
 	@After
@@ -101,16 +124,10 @@ public class ModifyInformationTest {
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						// 국내, 개인(US010101), 무료(US011301), sctest1, 123456 , 국내개인무료사용자 , SE201402051026319660000583
-						// sctest1, 123456
-						req.setSessionKey("9af2454c073b4c46a73fe41c57f8ff4f");
-						req.setSellerKey("SE201402051026319660000583");
-						req.setSessionKey("9af2454c073b4c46a73fe41c57f8ff4f");
 						req.setSellerClass("US010101");
 						req.setSellerCategory("US011301");
 						req.setSellerMainStatus("US010201");
 						req.setSellerSubStatus("US010301");
-						req.setSellerId("qatestqwe");
 						req.setSellerTelecom("US001201");
 						req.setSellerEmail("test@testgmail.com");
 						req.setSellerCountry("ko");
@@ -141,7 +158,9 @@ public class ModifyInformationTest {
 						req.setIsRecvSMS("Y");
 						req.setIsRecvEmail("Y");
 
-						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}", TestConvertMapperUtils.convertObjectToJson(req));
+						// Debug
+						LOGGER.debug("[REQUEST (SAC)-회원기본정보 수정] : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(req));
 						return req;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {
@@ -152,5 +171,29 @@ public class ModifyInformationTest {
 						assertEquals(res.getSellerKey(), req.getSellerKey());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+	}
+
+	/**
+	 * <pre>
+	 * 회원 정보 수정을 위한 사전 작업 - 로그인.
+	 * </pre>
+	 */
+	public void authorize() {
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/authorize/v1")
+				.addHeaders("x-store-auth-info", xStoreAuthInfo).httpMethod(HttpMethod.POST)
+				.requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(authorizeReq));
+						return authorizeReq;
+					}
+				}).success(AuthorizeRes.class, new SuccessCallback() {
+					@Override
+					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
+						authorizeRes = (AuthorizeRes) result;
+					}
+				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
+
 	}
 }

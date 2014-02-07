@@ -93,10 +93,11 @@ public class AuthorizeTest {
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
-						authorizeReq.setSellerId("sctest1");
+						authorizeReq.setSellerId("sctest5");
 						authorizeReq.setSellerPW("123456");
 						authorizeReq.setExpireDate("2");
-						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}", TestConvertMapperUtils.convertObjectToJson(authorizeReq));
+						LOGGER.debug("[REQUEST(SAC)-회원인증] : \n{}",
+								TestConvertMapperUtils.convertObjectToJson(authorizeReq));
 						return authorizeReq;
 					}
 				}).success(AuthorizeRes.class, new SuccessCallback() {

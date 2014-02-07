@@ -16,7 +16,7 @@ package com.skplanet.storeplatform.sac.member.common.idp.vo;
  * 
  * Updated on : 2014. 1. 13. Updated by : 김경복, 부르칸.
  */
-public class IDPSenderM {
+public class IdpSenderM {
 	/* 연동 요청 (공통 결과 API) */
 	/** 세부 요청 command. */
 	private String cmd;

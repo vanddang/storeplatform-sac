@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
@@ -47,10 +47,10 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateBySimpleRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.vo.Clause;
 
 /**
@@ -70,13 +70,13 @@ public class UserJoinServiceImpl implements UserJoinService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Autowired
-	private ImIDPService imIdpService;
+	private ImIdpService imIdpService;
 
 	@Autowired
-	private IDPRepository idpRepository;
+	private IdpRepository idpRepository;
 
 	@Override
 	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, CreateByMdnReq req) {
@@ -98,7 +98,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			throw new StorePlatformException("SAC_MEM_1100");
 		}
 
-		IDPReceiverM join4WapInfo = null;
+		IdpReceiverM join4WapInfo = null;
 
 		try {
 
@@ -114,7 +114,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 */
 			LOGGER.info("## errorCode : {}", spe.getErrorInfo().getCode());
 			LOGGER.info("## errorMsg  : {}", spe.getErrorInfo().getMessage());
-			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IDPConstants.IDP_RES_CODE_ALREADY_JOIN)) {
+			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
 				 * (IDP 연동) 무선회원 해지
@@ -214,7 +214,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * (통합 IDP 연동) 이용동의 가입
 		 */
-		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
+		ImIdpReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -231,7 +231,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 		 */
-		ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
+		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
 		/**
 		 * SC 사용자 기본정보 setting
@@ -322,7 +322,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * (통합 IDP) 이용동의 가입 요청
 		 */
-		ImIDPReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
+		ImIdpReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -339,7 +339,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
 		 */
-		ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
+		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
 		/**
 		 * SC 사용자 기본정보 setting
@@ -407,7 +407,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * IDP 간편회원 가입 연동
 		 */
-		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
+		IdpReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 
@@ -496,7 +496,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * IDP 간편 회원가입 연동
 		 */
-		IDPReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
+		IdpReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
 
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 

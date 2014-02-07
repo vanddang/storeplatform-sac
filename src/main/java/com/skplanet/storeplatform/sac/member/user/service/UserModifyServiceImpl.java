@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
@@ -45,9 +45,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreement
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 회원 정보 수정 서비스 (CoreStoreBusiness) 구현체
@@ -66,13 +66,13 @@ public class UserModifyServiceImpl implements UserModifyService {
 	private UserSCI userSCI;
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Autowired
-	private ImIDPService imIdpService;
+	private ImIdpService imIdpService;
 
 	@Autowired
-	private IDPRepository idpRepository;
+	private IdpRepository idpRepository;
 
 	@Override
 	public ModifyRes modify(SacRequestHeader sacHeader, ModifyReq req) {
@@ -126,7 +126,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			/**
 			 * 통합IDP 회원정보 조회 연동 (cmd - (cmd - findCommonProfileForServerIDP))
 			 */
-			ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
 			LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
 			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseHeader().getResult_text());
 			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_sex());
@@ -171,7 +171,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			/**
 			 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
 			 */
-			IDPReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
+			IdpReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
 			LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
 			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseHeader().getResult_text());
 			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_sex());
@@ -264,7 +264,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				 * TODO 인증여부, 생년월일, CI 등...비교후에 같지 않으면 에러 발생한다....왜...???
 				 * 
 				 */
-				ImIDPReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+				ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
 				LOGGER.info("## IDP searchUserInfo is_rname_auth : {}", profileInfo.getResponseBody().getIs_rname_auth()); // 비교대상
 				LOGGER.info("## IDP searchUserInfo user_birthday : {}", profileInfo.getResponseBody().getUser_birthday()); // 비교대상
 				LOGGER.info("## IDP searchUserInfo ci            : {}", profileInfo.getResponseBody().getUser_ci()); // 비교대상
@@ -300,7 +300,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 				// sn_auth_key
 
 				String snAuthKey = this.idpRepository.makeSnAuthKey(userInfo.getUserName(), userInfo.getUserId());
-				ImIDPReceiverM updateUserNameInfo = this.imIdpService.updateUserName(userInfo.getImSvcNo(), req.getUserName(), req.getUserBirthDay(), snAuthKey, req.getUserAuthKey(), "1", req.getUserCi(), req.getUserDi(), requestUserMap);
+				ImIdpReceiverM updateUserNameInfo = this.imIdpService.updateUserName(userInfo.getImSvcNo(), req.getUserName(), req.getUserBirthDay(), snAuthKey, req.getUserAuthKey(), "1", req.getUserCi(), req.getUserDi(), requestUserMap);
 
 			} else { // 법정대리인
 

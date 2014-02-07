@@ -13,15 +13,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.skplanet.storeplatform.external.client.idp.sci.IdpSCI;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.SendReq;
 import com.skplanet.storeplatform.external.client.idp.vo.SendRes;
+import com.skplanet.storeplatform.external.client.shopping.util.StringUtil;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.vo.IDPSenderM;
-import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.IdpSenderM;
+import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIdpSenderM;
 
 /**
  * SAC => E/C Outbound
@@ -29,9 +30,9 @@ import com.skplanet.storeplatform.sac.member.common.idp.vo.ImIDPSenderM;
  * Updated on : 2014. 1. 16. Updated by : 김경복, 부르칸.
  */
 @Repository
-public class IDPRepositoryImpl implements IDPRepository {
+public class IdpRepositoryImpl implements IdpRepository {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(IDPRepositoryImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(IdpRepositoryImpl.class);
 
 	@Value("#{propertiesForSac['idp.service_domain']}")
 	public String OMP_SERVICE_DOMAIN;
@@ -50,52 +51,62 @@ public class IDPRepositoryImpl implements IDPRepository {
 
 	/**
 	 * <pre>
-	 * IDP _HTTP
+	 * IDP
 	 * </pre>
 	 * 
 	 * @param sendData
 	 * @return @
 	 */
 	@Override
-	public IDPReceiverM sendIDP(IDPSenderM sendData) {
+	public IdpReceiverM sendIDP(IdpSenderM sendData, String httpMethod) {
 
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
 		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
-		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
+		if (StringUtil.equalsIgnoreCase(sendReq.getMethod().GET.name(), httpMethod)) {
+			sendReq.setMethod(sendReq.getMethod().GET);
+		} else if (StringUtil.equalsIgnoreCase(sendReq.getMethod().POST.name(), httpMethod)) {
+			// sendReq.setMethod(sendReq.getMethod().POST);
+			sendReq.setMethod(sendReq.getMethod().GET);
+		}
 		sendReq.setIm(false);
 		sendReq.setUrl(sendData.getUrl());
 		sendReq.setReqParam(this.makeIDPSendParam(sendData));
 
 		SendRes sendRes = this.idpSCI.send(sendReq);
 
-		IDPReceiverM receiveData = sendRes.getIdpReceiverM();
+		IdpReceiverM receiveData = sendRes.getIdpReceiverM();
 
 		return receiveData;
 	}
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * OneID.
 	 * </pre>
 	 * 
 	 * @param sendData
 	 * @return @
 	 */
 	@Override
-	public ImIDPReceiverM sendImIDP(ImIDPSenderM sendData) {
+	public ImIdpReceiverM sendImIDP(ImIdpSenderM sendData, String httpMethod) {
 		SendReq sendReq = new SendReq();
 		sendReq.setProtocol(SendReq.HTTP_PROTOCOL.HTTPS);
 		// TODO : IDP 연동시 POST로 전달하면 에러 발생하여 무조건 GET으로 가도록 셋팅 함 - 임재호 2014.1.8
 		// TODO : IDP 연동시 POST로 전달할지 GET으로 전달할지 로직이나 메서드에서 판단 하여 넘겨 주어야 함, 임시로 하드코딩함 - 임재호 2014.1.8
-		sendReq.setMethod(SendReq.HTTP_METHOD.GET);
+		// sendReq.setMethod(SendReq.HTTP_METHOD.GET);
+		if (StringUtil.equalsIgnoreCase(sendReq.getMethod().GET.name(), httpMethod)) {
+			sendReq.setMethod(sendReq.getMethod().GET);
+		} else if (StringUtil.equalsIgnoreCase(sendReq.getMethod().POST.name(), httpMethod)) {
+			sendReq.setMethod(sendReq.getMethod().POST);
+		}
 		sendReq.setIm(true);
 		sendReq.setUrl(sendData.getUrl());
 		sendReq.setReqParam(this.makeImIDPSendParam(sendData));
 		SendRes sendRes = this.idpSCI.send(sendReq);
 
-		ImIDPReceiverM receiveData = sendRes.getImIDPReceiverM();
+		ImIdpReceiverM receiveData = sendRes.getImIDPReceiverM();
 
 		return receiveData;
 	}
@@ -225,7 +236,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * @return @
 	 */
 	@SuppressWarnings("rawtypes")
-	public Hashtable<String, String> makeIDPSendParam(IDPSenderM sendData) {
+	public Hashtable<String, String> makeIDPSendParam(IdpSenderM sendData) {
 		Hashtable<String, String> param = new Hashtable<String, String>();
 
 		String cmd = sendData.getCmd();
@@ -351,7 +362,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 		if (respType != null && !"".equals(respType))
 			param.put("resp_type", respType);
 		else
-			param.put("resp_type", IDPConstants.IDP_PARAM_RESP_TYPE_XML);
+			param.put("resp_type", IdpConstants.IDP_PARAM_RESP_TYPE_XML);
 		if (respFlow != null && !"".equals(respFlow))
 			param.put("resp_flow", respFlow);
 		if (respUrl != null && !"".equals(respUrl))
@@ -482,7 +493,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 	 * @return @
 	 */
 	@SuppressWarnings("rawtypes")
-	public Hashtable<String, String> makeImIDPSendParam(ImIDPSenderM sendData) {
+	public Hashtable<String, String> makeImIDPSendParam(ImIdpSenderM sendData) {
 
 		Hashtable<String, String> param = new Hashtable<String, String>();
 
@@ -685,7 +696,7 @@ public class IDPRepositoryImpl implements IDPRepository {
 		if (resp_type != null && !"".equals(resp_type))
 			param.put("resp_type", resp_type);
 		else
-			param.put("resp_type", ImIDPConstants.IDP_PARAM_RESP_TYPE_XML);
+			param.put("resp_type", ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
 		if (resp_flow != null && !"".equals(resp_flow))
 			param.put("resp_flow", resp_flow);
 		if (resp_url != null && !"".equals(resp_url))

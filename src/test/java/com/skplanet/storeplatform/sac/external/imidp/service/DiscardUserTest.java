@@ -18,8 +18,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * Calss 설명
@@ -36,7 +36,7 @@ public class DiscardUserTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DiscardUserTest.class);
 
 	@Autowired
-	private ImIDPService imIDPService;
+	private ImIdpService imIDPService;
 
 	/**
 	 * <pre>
@@ -53,7 +53,7 @@ public class DiscardUserTest {
 			// String key = (String) param.get("key");
 			// String user_auth_key = (String) param.get("user_auth_key");
 			// String term_reason_cd = (String) param.get("term_reason_cd");
-			ImIDPReceiverM receiverM = this.imIDPService.discardUser(param);
+			ImIdpReceiverM receiverM = this.imIDPService.discardUser(param);
 			assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 			LOGGER.debug("result code : {}", receiverM.getResponseHeader().getResult());
 			LOGGER.debug("result message : {}", receiverM.getResponseHeader().getResult_text());

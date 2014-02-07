@@ -15,8 +15,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 
 /**
  * IDP - 모바일 회원 가입, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -33,12 +33,12 @@ public class AuthForWapTest {
 	private static final Logger logger = LoggerFactory.getLogger(AuthForWapTest.class);
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Test
 	public void authForWap() {
 
-		IDPReceiverM receiverM = this.idpService.authForWap("01088870008");
+		IdpReceiverM receiverM = this.idpService.authForWap("01088870008");
 		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 		logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
 		logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());

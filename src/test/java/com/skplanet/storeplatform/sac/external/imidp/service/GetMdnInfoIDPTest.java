@@ -13,8 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * ImIDP - MDN 정보 조회, EC 로컬 서버가 8210 포트로 떠 있을 때만 성공
@@ -30,11 +30,11 @@ public class GetMdnInfoIDPTest {
 	private static final Logger logger = LoggerFactory.getLogger(GetMdnInfoIDPTest.class);
 
 	@Autowired
-	private ImIDPService imIDPService;
+	private ImIdpService imIDPService;
 
 	@Test
 	public void getMdnInfoIDP() {
-		ImIDPReceiverM receiverM = this.imIDPService.getMdnInfoIDP("01088870012");
+		ImIdpReceiverM receiverM = this.imIDPService.getMdnInfoIDP("01088870012");
 		assertThat(receiverM.getResponseHeader().getResult(), notNullValue());
 		logger.debug("result code : {}", receiverM.getResponseHeader().getResult());
 		logger.debug("result message : {}", receiverM.getResponseHeader().getResult_text());

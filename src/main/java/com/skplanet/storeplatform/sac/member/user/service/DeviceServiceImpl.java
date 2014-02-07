@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.icas.vo.GetCustomerEcRes;
 import com.skplanet.storeplatform.external.client.icas.vo.GetMvnoEcRes;
-import com.skplanet.storeplatform.external.client.idp.vo.IDPReceiverM;
-import com.skplanet.storeplatform.external.client.idp.vo.ImIDPReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
+import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
@@ -74,11 +74,11 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.IDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIDPConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.vo.Device;
 
 //import com.skplanet.storeplatform.framework.core.util.StringUtil;
@@ -103,16 +103,16 @@ public class DeviceServiceImpl implements DeviceService {
 	private DeviceSCI deviceSCI; // 회원 콤포넌트 휴대기기 기능 인터페이스
 
 	@Autowired
-	private IDPService idpService; // IDP 연동 클래스
+	private IdpService idpService; // IDP 연동 클래스
 
 	@Autowired
-	private ImIDPService imIdpService; // 통합 IDP 연동 클래스
+	private ImIdpService imIdpService; // 통합 IDP 연동 클래스
 
 	@Autowired
 	private UserService userService;
 
 	@Autowired
-	private IDPRepository idpRepository;
+	private IdpRepository idpRepository;
 
 	@Autowired
 	private UserSearchService userSearchService;
@@ -465,7 +465,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 				} catch (StorePlatformException ex) {
 					if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE
-							+ IDPConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
+							+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 						throw ex;
 					}
 				}
@@ -568,7 +568,7 @@ public class DeviceServiceImpl implements DeviceService {
 					// OMD 단말이 아닐 경우만
 					if (!MemberConstants.DEVICE_TELECOM_OMD.equals(device.getCmntCompCd())) {
 
-						IDPReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
+						IdpReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
 						String idpModelId = idpReceiver.getResponseBody().getModel_id();
 
 						if (idpModelId != null && !idpModelId.equals("")) {
@@ -1210,14 +1210,14 @@ public class DeviceServiceImpl implements DeviceService {
 
 	/* ImIdp 디바이스 업데이트(삭제대상 제외) */
 	@Override
-	public ImIDPReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr) {
+	public ImIdpReceiverM imIdpDeviceUpdate(RemoveDeviceReq req, HashMap<String, Object> param, UserInfo userInfo, String userPhoneStr) {
 
 		/* IDP에 무선 회원 해지 요청 - 자동 해지 안된다고 함 */
-		IDPReceiverM idpReceiver = this.idpService.authForWap(req.getDeviceId());
-		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+		IdpReceiverM idpReceiver = this.idpService.authForWap(req.getDeviceId());
+		if (StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IdpConstants.IDP_RES_CODE_OK)) {
 
 			idpReceiver = this.idpService.secedeUser4Wap(req.getDeviceId());
-			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IDPConstants.IDP_RES_CODE_OK)) {
+			if (!StringUtil.equals(idpReceiver.getResponseHeader().getResult(), IdpConstants.IDP_RES_CODE_OK)) {
 				throw new StorePlatformException("SAC_MEM_4002");
 			}
 		}
@@ -1234,8 +1234,8 @@ public class DeviceServiceImpl implements DeviceService {
 		param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
 		param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
 
-		ImIDPReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
-		if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIDPConstants.IDP_RES_CODE_OK)) {
+		ImIdpReceiverM imIdpReceiver = this.imIdpService.updateAdditionalInfo(param);
+		if (!StringUtil.equals(imIdpReceiver.getResponseHeader().getResult(), ImIdpConstants.IDP_RES_CODE_OK)) {
 			throw new StorePlatformException("SAC_MEM_4002");
 		} else {
 			logger.info("[ 디바이스삭제 IMIDP 연동결과 : {}, {}", imIdpReceiver.getResponseHeader().getResult(), imIdpReceiver.getResponseHeader()

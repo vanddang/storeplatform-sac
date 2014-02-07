@@ -23,9 +23,9 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.DeviceUtil;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
 import com.skplanet.storeplatform.sac.member.common.constant.MemberConstants;
-import com.skplanet.storeplatform.sac.member.common.idp.repository.IDPRepository;
-import com.skplanet.storeplatform.sac.member.common.idp.service.IDPService;
-import com.skplanet.storeplatform.sac.member.common.idp.service.ImIDPService;
+import com.skplanet.storeplatform.sac.member.common.idp.repository.IdpRepository;
+import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
+import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
  * 사용자 공통 서비스 인터페이스 구현체
@@ -42,13 +42,13 @@ public class UserServiceImpl implements UserService {
 	private DeviceService deviceService;
 
 	@Autowired
-	private IDPService idpService;
+	private IdpService idpService;
 
 	@Autowired
-	private ImIDPService imIdpService;
+	private ImIdpService imIdpService;
 
 	@Autowired
-	private IDPRepository idpRepository;
+	private IdpRepository idpRepository;
 
 	@Autowired
 	private UserSCI userSCI;
