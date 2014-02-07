@@ -190,20 +190,20 @@ public class CreateRealNameTest {
 						/**
 						 * 통합 IDP 회원
 						 */
-						reqJson.setUserKey("US201401241550022950000616");
+						reqJson.setUserKey("US201402071133550360001951");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsRealName("Y"); // 실명인증 여부
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
-						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
+						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00002590"); // CI
 						reqJson.setUserDi("DIDIDIDIDIDIDIDIDIDIDI"); // DI
 						reqJson.setRealNameMethod("US011101"); // 실명인증 수단코드 (휴대폰 인증, IPIN 인증)
 						reqJson.setRealNameSite("US011203"); // 실명인증 사이트 코드
-						reqJson.setUserPhone("0101231232"); // 사용자 전화번호
+						reqJson.setUserPhone("01087878490"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001201"); // 이동 통신사
-						reqJson.setUserName("아무개"); // 사용자 이름
-						reqJson.setUserBirthDay("19820324"); // 사용자 생년월일
+						reqJson.setUserName("라길동"); // 사용자 이름
+						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
 
 						return reqJson;

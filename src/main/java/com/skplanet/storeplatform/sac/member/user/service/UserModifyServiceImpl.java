@@ -268,23 +268,38 @@ public class UserModifyServiceImpl implements UserModifyService {
 				LOGGER.info("## IDP searchUserInfo is_rname_auth : {}", profileInfo.getResponseBody().getIs_rname_auth()); // 비교대상
 				LOGGER.info("## IDP searchUserInfo user_birthday : {}", profileInfo.getResponseBody().getUser_birthday()); // 비교대상
 				LOGGER.info("## IDP searchUserInfo ci            : {}", profileInfo.getResponseBody().getUser_ci()); // 비교대상
-
 				LOGGER.info("## IDP searchUserInfo di            : {}", profileInfo.getResponseBody().getUser_di()); // DI
 
-				// 인증유형코드
-				// 1: 휴대폰 인증
-				// 2: 이메일 즉시인증,
-				// 3: 이메일 후인증,
-				// 4: KMC 기인증
-				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getAuth_type());
-
-				// 가입자이름 (법인일경우가입한사람의이름)
-				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_name());
-
-				// 이메일인증여부
-				// (이메일로발송한인증번호에대해확인완료)
-				// 승인=Y, 미승인=N
-				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getIs_email_auth());
+				/**
+				 * OnedID 조회 정보와 Request 로 받은 정보와 비교함.
+				 */
+				// String sOneIdRealNameType = "";
+				// String sOneIdCi = profileInfo.getResponseBody().getUser_ci();
+				//
+				// if (StringUtils.equals(profileInfo.getResponseBody().getIs_rname_auth(), MemberConstants.USE_Y)) {
+				// // One ID CI, birthday 비교
+				// if (!this.compareRealName(req.getUserBirthDay(), req.getUserCi(),
+				// profileInfo.getResponseBody().getUser_birthday(), sOneIdCi)) {
+				// throw new StorePlatformException("기존 데이타와 정보가 일치 하지 않습니다.");
+				// }
+				//
+				// if (StringUtils.equals(sName, mapParse.get("user_name"))) {
+				// if (StringUtils.isEmpty(sOneIdCi)) { // CI 기보유
+				// sOneIdRealNameType = "E";
+				// }
+				// } else { // 개명
+				// sOneIdRealNameType = "R";
+				// }
+				//
+				// } else { // 최초 인증
+				// // T store DB CI, SOCIAL_DATE 비교
+				// if (StringUtils.isNotEmpty(sDbSocialDate)) {
+				// if (!this.compareRealName(sSocialDate, sCi, sDbSocialDate, sDbCi)) {
+				// throw new BaseException("", "30006");
+				// }
+				// }
+				// sOneIdRealNameType = "R";
+				// }
 
 				/**
 				 * 통합IDP 실명인증 변경 연동 (cmd = TXUpdateUserNameIDP)
@@ -293,14 +308,21 @@ public class UserModifyServiceImpl implements UserModifyService {
 				 * 
 				 * 실명인증을 받았다 하더라도 개명 등의 이유로 이름은 변경될 수 있다.
 				 */
-				HashMap requestUserMap = new HashMap();
-				// String rname_auth_mns_code=(auth_type!=null && auth_type.length()>1 ? auth_type.substring(1):""); //
-				// KMC, IPIN
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("key", userInfo.getImSvcNo());
+				param.put("user_auth_key", req.getUserAuthKey());
+				param.put("user_name", req.getUserName());
+				param.put("user_birthday", req.getUserBirthDay());
+				param.put("user_sex", "1"); // 하드코딩 변경
+				param.put("sn_auth_key", this.idpRepository.makeSnAuthKey(userInfo.getUserName(), userInfo.getUserId()));
+				param.put("rname_auth_mns_code", "1"); // 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
+				param.put("rname_auth_mns_code", "10"); // 실명인증 회원 코드 10 :내국인, 20: 외국인
+				param.put("rname_auth_type_cd", "R"); // 실명 인증 유형 코드 R=회원 개명 E=CI 기보유
+				param.put("user_ci", req.getUserCi());
+				param.put("user_di", req.getUserDi());
+				param.put("rname_auth_date", req.getRealNameDate());
 
-				// sn_auth_key
-
-				String snAuthKey = this.idpRepository.makeSnAuthKey(userInfo.getUserName(), userInfo.getUserId());
-				ImIdpReceiverM updateUserNameInfo = this.imIdpService.updateUserName(userInfo.getImSvcNo(), req.getUserName(), req.getUserBirthDay(), snAuthKey, req.getUserAuthKey(), "1", req.getUserCi(), req.getUserDi(), requestUserMap);
+				ImIdpReceiverM updateUserNameInfo = this.imIdpService.updateUserName(param);
 
 			} else { // 법정대리인
 
@@ -495,5 +517,60 @@ public class UserModifyServiceImpl implements UserModifyService {
 		return updateRealNameResponse.getUserKey();
 
 	}
+
+	/**
+	 * 
+	 * @param birth
+	 *            생년월일
+	 * @param ci
+	 *            ci
+	 * @param preBirth
+	 *            기존 생년월일
+	 * @param preCi
+	 *            기존 ci
+	 * @return 일치 여부
+	 */
+	// private String compareRealName(CreateRealNameReq req, ImIDPReceiverM profileInfo) {
+	//
+	// ResponseBody idpResult = profileInfo.getResponseBody();
+	//
+	// String oneIdRealNameType = "";
+	//
+	// if (StringUtils.equals(req.getIsRealName(), MemberConstants.USE_Y)) {
+	//
+	// // One ID CI, birthday 비교
+	// if (StringUtils.isNotEmpty(idpResult.getUser_ci())) { // 기 등록 된 CI가 존재하는 경우는 CI + 생년월일(social_date) 비교
+	// if (!StringUtils.equals(req.getUserCi(), idpResult.getUser_ci()) && !StringUtils.equals(req.getUserBirthDay(),
+	// idpResult.getUser_birthday())) {
+	// throw new StorePlatformException("CI or 생년월일 불일치");
+	// }
+	// } else { // 생년월일(social_date) 비교
+	// if (!StringUtils.equals(req.getUserBirthDay(), idpResult.getUser_birthday())) {
+	// throw new StorePlatformException("생년월일 불일치");
+	// }
+	// }
+	//
+	// if (StringUtils.equals(req.getUserName(), idpResult.getUser_name())) {
+	// if (StringUtils.isEmpty(sOneIdCi)) { // CI 기보유
+	// oneIdRealNameType = "E";
+	// }
+	// } else { // 개명
+	// oneIdRealNameType = "R";
+	// }
+	//
+	// } else { // 최초 인증
+	// // T store DB CI, SOCIAL_DATE 비교
+	// if (StringUtils.isNotEmpty(sDbSocialDate)) {
+	// if (!compareRealName(sSocialDate, sCi, sDbSocialDate, sDbCi)) {
+	// throw new BaseException("", "30006");
+	// }
+	// }
+	// oneIdRealNameType = "R";
+	// }
+	//
+	//
+	//
+	// return sOneIdRealNameType;
+	// }
 
 }

@@ -1,6 +1,5 @@
 package com.skplanet.storeplatform.sac.member.common.idp.vo;
 
-
 public class ImIdpSenderM {
 	/* 연동 요청 (공통 결과 API) */
 	/** 세부 요청 command */
@@ -250,6 +249,8 @@ public class ImIdpSenderM {
 	private String os_code;
 	private String browser_code;
 	private String service_profiles;
+
+	private String rname_auth_mbr_code; // 실명인증 회원 코드 10 : 내국인, 20: 외국인
 
 	public String getSend_order() {
 		return this.send_order;
@@ -1052,6 +1053,21 @@ public class ImIdpSenderM {
 	 */
 	public void setService_profiles(String service_profiles) {
 		this.service_profiles = service_profiles;
+	}
+
+	/**
+	 * @return String : rname_auth_mbr_code
+	 */
+	public String getRname_auth_mbr_code() {
+		return this.rname_auth_mbr_code;
+	}
+
+	/**
+	 * @param rname_auth_mbr_code
+	 *            String : the rname_auth_mbr_code to set
+	 */
+	public void setRname_auth_mbr_code(String rname_auth_mbr_code) {
+		this.rname_auth_mbr_code = rname_auth_mbr_code;
 	}
 
 }
