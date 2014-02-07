@@ -280,7 +280,7 @@ public class DummySellerController {
 		sellerMbr.setRepFaxArea("");
 		sellerMbr.setRepPhone("0211112222");
 		sellerMbr.setRepPhoneArea("");
-		sellerMbr.setRightProfileList("");
+		sellerMbr.setRightProfile("");
 		sellerMbr.setSecedeDate("");
 		sellerMbr.setSecedePathCd("");
 		sellerMbr.setSecedeReasonCode("");
@@ -413,7 +413,7 @@ public class DummySellerController {
 		sellerMbr.setRepFaxArea("");
 		sellerMbr.setRepPhone("0211112222");
 		sellerMbr.setRepPhoneArea("");
-		sellerMbr.setRightProfileList("");
+		sellerMbr.setRightProfile("");
 		sellerMbr.setSecedeDate("");
 		sellerMbr.setSecedePathCd("");
 		sellerMbr.setSecedeReasonCode("");

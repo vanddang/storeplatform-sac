@@ -272,7 +272,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 				sellerMbrRes.setRepFaxArea(sellerMbr.get(i).getRepFaxArea());
 				sellerMbrRes.setRepPhone(sellerMbr.get(i).getRepPhone());
 				sellerMbrRes.setRepPhoneArea(sellerMbr.get(i).getRepPhoneArea());
-				sellerMbrRes.setRightProfileList(sellerMbr.get(i).getRightProfileList());
+				sellerMbrRes.setRightProfile(sellerMbr.get(i).getRightProfileList());
 				sellerMbrRes.setSecedeDate(sellerMbr.get(i).getSecedeDate());
 				sellerMbrRes.setSecedePathCd(sellerMbr.get(i).getSecedePathCd());
 				sellerMbrRes.setSecedeReasonCode(sellerMbr.get(i).getSecedeReasonCode());
@@ -354,7 +354,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			sellerMbrRes.setRepFaxArea(sellerMbr.getRepFaxArea());
 			sellerMbrRes.setRepPhone(sellerMbr.getRepPhone());
 			sellerMbrRes.setRepPhoneArea(sellerMbr.getRepPhoneArea());
-			sellerMbrRes.setRightProfileList(sellerMbr.getRightProfileList());
+			sellerMbrRes.setRightProfile(sellerMbr.getRightProfileList());
 			sellerMbrRes.setSecedeDate(sellerMbr.getSecedeDate());
 			sellerMbrRes.setSecedePathCd(sellerMbr.getSecedePathCd());
 			sellerMbrRes.setSecedeReasonCode(sellerMbr.getSecedeReasonCode());
