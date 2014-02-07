@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 // @ProtobufMapping(BestAppProto.reqBestApp.class)
-public class BestContentsReq extends CommonInfo {
+public class BestContentsSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // tenantId
@@ -31,6 +31,7 @@ public class BestContentsReq extends CommonInfo {
 	private String hdv; // HDV 지원구분
 	private String drm; // drm 지원구분
 	private String prodGradeCd; // 상품등급코드
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
 	private String dummy;
@@ -309,6 +310,31 @@ public class BestContentsReq extends CommonInfo {
 	 */
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 이용등급 코드 Array.
+	 * </pre>
+	 * 
+	 * @return String[]
+	 */
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 이용등급 코드 Array.
+	 * </pre>
+	 * 
+	 * @param arrayProdGradeCd
+	 *            arrayProdGradeCd
+	 */
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
 	}
 
 	/**

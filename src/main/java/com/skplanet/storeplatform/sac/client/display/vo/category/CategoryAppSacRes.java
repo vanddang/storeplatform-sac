@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class CategoryEbookComicRes extends CommonInfo {
+public class CategoryAppSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse; // 공통 Response

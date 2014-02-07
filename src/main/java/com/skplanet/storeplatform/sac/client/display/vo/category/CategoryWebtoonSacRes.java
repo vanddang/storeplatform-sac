@@ -21,7 +21,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 11. 28. Updated by : 김형식, SK 플래닛.
  */
-public class CategoryWebtoonRes extends CommonInfo {
+public class CategoryWebtoonSacRes extends CommonInfo {
 	/**
 	 * 
 	 */

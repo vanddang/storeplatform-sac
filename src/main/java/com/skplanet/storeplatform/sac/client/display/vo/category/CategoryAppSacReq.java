@@ -16,12 +16,14 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class CategoryAppReq extends CommonInfo {
+public class CategoryAppSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prodCharge; // 상품 유무료 구분
 
 	private String prodGradeCd; // 상품등급코드
+
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
 
 	private String menuId; // 메뉴ID
 
@@ -53,6 +55,14 @@ public class CategoryAppReq extends CommonInfo {
 
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
 	}
 
 	public String getMenuId() {

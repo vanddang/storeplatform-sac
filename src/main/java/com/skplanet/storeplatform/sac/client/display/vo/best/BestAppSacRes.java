@@ -25,7 +25,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
 // @ProtobufMapping(BestAppProto.resBestApp.class)
-public class BestAppRes extends CommonInfo {
+public class BestAppSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;

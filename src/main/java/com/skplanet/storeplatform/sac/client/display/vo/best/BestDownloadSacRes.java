@@ -20,12 +20,11 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * BEST 컨텐츠 상품 조회 List Value Object.
+ * BEST 다운로드 상품 조회 List Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
-// @ProtobufMapping(BestContentsProto.resBestContents.class)
-public class BestContentsRes extends CommonInfo {
+public class BestDownloadSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private CommonResponse commonResponse;

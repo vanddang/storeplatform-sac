@@ -12,11 +12,12 @@ package com.skplanet.storeplatform.sac.client.display.vo.best;
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
- * BEST 다운로드 상품 조회 List Value Object.
+ * BEST 앱 상품 조회 List Value Object.
  * 
  * Updated on : 2013. 12. 23. Updated by : 이석희, SK 플래닛.
  */
-public class BestDownloadReq extends CommonInfo {
+public class BestAppSacReq extends CommonInfo {
+
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // tenantId
 	private String systemId; // 시스템Id
@@ -24,16 +25,13 @@ public class BestDownloadReq extends CommonInfo {
 	private String langCd; // 언어코드
 	private String stdDt; // 배치완료 기준일시
 	private String listId; // 리스트 Id
-	private String topMenuId; // 메뉴 Id
-	private String menuId; // 메뉴 Id
-	private String filteredBy; // 카테고리 유형
-	private String b2bprod; // B2B 상품구분
-	private String hdv; // HDV 지원구분
-	private String drm; // drm 지원구분
+	private String drm; // drm 여부
 	private String prodGradeCd; // 상품등급코드
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
+	private String menuId; // 메뉴 Id
 	private Integer offset; // 시작점 ROW
 	private Integer count; // 페이지당 노출 ROW 수
-	private String dummy;
+	private String dummy; // dummy data check
 
 	/**
 	 * 
@@ -138,6 +136,31 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
+	 * 배치완료 기준일시.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getStdDt() {
+		return this.stdDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 배치완료 기준일시.
+	 * </pre>
+	 * 
+	 * @param stdDt
+	 *            stdDt
+	 */
+	public void setStdDt(String stdDt) {
+		this.stdDt = stdDt;
+	}
+
+	/**
+	 * 
+	 * <pre>
 	 * 리스트 Id.
 	 * </pre>
 	 * 
@@ -163,107 +186,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * 메뉴 Id.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getMenuId() {
-		return this.menuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 메뉴 Id.
-	 * </pre>
-	 * 
-	 * @param menuId
-	 *            menuId
-	 */
-	public void setMenuId(String menuId) {
-		this.menuId = menuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 카테고리 유형.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getFilteredBy() {
-		return this.filteredBy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 카테고리 유형.
-	 * </pre>
-	 * 
-	 * @param filteredBy
-	 *            filteredBy
-	 */
-	public void setFilteredBy(String filteredBy) {
-		this.filteredBy = filteredBy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * B2B 상품구분.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getB2bprod() {
-		return this.b2bprod;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * B2B 상품구분.
-	 * </pre>
-	 * 
-	 * @param b2bprod
-	 *            b2bprod
-	 */
-	public void setB2bprod(String b2bprod) {
-		this.b2bprod = b2bprod;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * HDV 지원구분.
-	 * </pre>
-	 * 
-	 * @return String
-	 */
-	public String getHdv() {
-		return this.hdv;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * HDV 지원구분.
-	 * </pre>
-	 * 
-	 * @param hdv
-	 *            String hdv
-	 */
-	public void setHdv(String hdv) {
-		this.hdv = hdv;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * drm 지원구분.
+	 * drm 여부.
 	 * </pre>
 	 * 
 	 * @return String
@@ -275,7 +198,7 @@ public class BestDownloadReq extends CommonInfo {
 	/**
 	 * 
 	 * <pre>
-	 * drm 지원구분.
+	 * drm 여부.
 	 * </pre>
 	 * 
 	 * @param drm
@@ -308,6 +231,56 @@ public class BestDownloadReq extends CommonInfo {
 	 */
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 이용등급 코드 Array.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 상품 이용등급 코드 Array.
+	 * </pre>
+	 * 
+	 * @param prodGradeCd
+	 *            prodGradeCd
+	 */
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 Id.
+	 * </pre>
+	 * 
+	 * @return String
+	 */
+	public String getMenuId() {
+		return this.menuId;
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * 메뉴 Id.
+	 * </pre>
+	 * 
+	 * @param menuId
+	 *            menuId
+	 */
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
 	/**
@@ -383,56 +356,6 @@ public class BestDownloadReq extends CommonInfo {
 	 */
 	public void setDummy(String dummy) {
 		this.dummy = dummy;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * TOP 메뉴 ID.
-	 * </pre>
-	 * 
-	 * @return the topMenuId
-	 */
-	public String getTopMenuId() {
-		return this.topMenuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * TOP 메뉴 ID.
-	 * </pre>
-	 * 
-	 * @param topMenuId
-	 *            the topMenuId to set
-	 */
-	public void setTopMenuId(String topMenuId) {
-		this.topMenuId = topMenuId;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 배치완료 기준일시
-	 * </pre>
-	 * 
-	 * @return the stdDt
-	 */
-	public String getStdDt() {
-		return this.stdDt;
-	}
-
-	/**
-	 * 
-	 * <pre>
-	 * 배치완료 기준일시
-	 * </pre>
-	 * 
-	 * @param stdDt
-	 *            the stdDt to set
-	 */
-	public void setStdDt(String stdDt) {
-		this.stdDt = stdDt;
 	}
 
 }
