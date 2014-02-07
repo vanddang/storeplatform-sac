@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 23. Updated by : 김형식, SK 플래닛.
  */
-public class RecommendWebtoonReq extends CommonInfo {
+public class RecommendWebtoonSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String tenantId; // 테넌트ID

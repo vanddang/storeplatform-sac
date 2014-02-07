@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 26. Updated by : 서영배, GTSOFT.
  */
-public class FeatureCategoryEpubReq extends CommonInfo {
+public class FeatureCategoryEpubSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 

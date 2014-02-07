@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 12. 20. Updated by : 서영배, GTSOFT.
  */
-public class FeatureCategoryAppRes extends CommonInfo {
+public class FeatureCategoryAppSacRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;

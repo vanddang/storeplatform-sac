@@ -1,18 +1,20 @@
-package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
+package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
+
+import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 추천 상품 (앱,멀티미디어) 조회 Request Value Object.
  * 
  * Updated on : 2013. 12. 26. Updated by : 서영배, GTSOFT.
  */
-public class RecommendAdminReq {
+public class FeatureCategoryAppSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
 	private String listId; // 리스트ID
 	private String prodCharge; // 유무료 구분
 	private String prodGradeCd; // 상품 등급
-	private String topMenuId; // 메뉴ID
+	private String menuId; // 메뉴ID
 	private int offset; // offset
 	private int count; // count
 
@@ -22,8 +24,10 @@ public class RecommendAdminReq {
 	private String deviceModelCd; // 메뉴ID
 	private String stdDt; // 배치일자
 
-	private String[] topMenuIdArr;
 	private String[] prodGradeCdArr;
+
+	// Dummy Data용
+	private String dummy; // 메뉴ID
 
 	public String getListId() {
 		return this.listId;
@@ -49,12 +53,12 @@ public class RecommendAdminReq {
 		this.prodGradeCd = prodGradeCd;
 	}
 
-	public String getTopMenuId() {
-		return this.topMenuId;
+	public String getMenuId() {
+		return this.menuId;
 	}
 
-	public void setTopMenuId(String topMenuId) {
-		this.topMenuId = topMenuId;
+	public void setMenuId(String menuId) {
+		this.menuId = menuId;
 	}
 
 	public int getOffset() {
@@ -101,20 +105,20 @@ public class RecommendAdminReq {
 		this.deviceModelCd = deviceModelCd;
 	}
 
+	public String getDummy() {
+		return this.dummy;
+	}
+
+	public void setDummy(String dummy) {
+		this.dummy = dummy;
+	}
+
 	public String getStdDt() {
 		return this.stdDt;
 	}
 
 	public void setStdDt(String stdDt) {
 		this.stdDt = stdDt;
-	}
-
-	public String[] getTopMenuIdArr() {
-		return this.topMenuIdArr;
-	}
-
-	public void setTopMenuIdArr(String[] topMenuIdArr) {
-		this.topMenuIdArr = topMenuIdArr;
 	}
 
 	public String[] getProdGradeCdArr() {

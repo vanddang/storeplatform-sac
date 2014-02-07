@@ -20,7 +20,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 12. 19 Updated by : 윤주영, SK 플래닛.
  */
-public class MusicContentsListRes extends CommonInfo {
+public class MusicContentsSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123126L;
 

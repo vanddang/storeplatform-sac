@@ -19,7 +19,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2013. 12. 20. Updated by : 서영배, GTSOFT.
  */
-public class RecommendAdminRes {
+public class RecommendAdminSacRes {
 	private CommonResponse commonResponse;
 	private List<Product> productList;
 

@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
  */
-public class FeatureCategoryVodReq extends CommonInfo {
+public class FeatureCategoryVodSacReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String prodGradeCd; // 상품등급코드

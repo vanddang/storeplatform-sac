@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2013. 12. 19. Updated by : 윤주영, SK 플래닛.
  */
-public class MusicContentsReq extends CommonInfo {
+public class MusicContentsSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 11123123145L;
 

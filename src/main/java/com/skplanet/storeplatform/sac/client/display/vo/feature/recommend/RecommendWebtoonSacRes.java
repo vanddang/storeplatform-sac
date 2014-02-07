@@ -8,7 +8,7 @@ lose such Confidential Information and
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.client.display.vo.feature.category;
+package com.skplanet.storeplatform.sac.client.display.vo.feature.recommend;
 
 import java.util.List;
 
@@ -17,16 +17,25 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Commo
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 
 /**
- * 일반 카테고리 앱 상품 조회 Response Value Object.
+ * 웹툰 리스트 조회 List Value Object.
  * 
- * Updated on : 2014. 01. 06. Updated by : 이태희, SK 플래닛.
+ * Updated on : 2013. 11. 28. Updated by : 김형식, SK 플래닛.
  */
-public class FeatureCategoryVodRes extends CommonInfo {
+public class RecommendWebtoonSacRes extends CommonInfo {
+	/**
+	 * 
+	 */
+	private CommonResponse commonResponse;
 	private static final long serialVersionUID = 1L;
+	private List<Product> productList;
 
-	private CommonResponse commonResponse; // 공통 Response
+	public List<Product> getProductList() {
+		return this.productList;
+	}
 
-	private List<Product> productList; // Feature VOD 상품 리스트
+	public void setProductList(List<Product> productList) {
+		this.productList = productList;
+	}
 
 	public CommonResponse getCommonResponse() {
 		return this.commonResponse;
@@ -36,11 +45,4 @@ public class FeatureCategoryVodRes extends CommonInfo {
 		this.commonResponse = commonResponse;
 	}
 
-	public List<Product> getProductList() {
-		return this.productList;
-	}
-
-	public void setProductList(List<Product> productList) {
-		this.productList = productList;
-	}
 }
