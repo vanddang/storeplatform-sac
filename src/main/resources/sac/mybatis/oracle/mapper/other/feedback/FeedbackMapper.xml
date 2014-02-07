@@ -126,7 +126,6 @@
 	         , TITLE = #{title}
 	         </if>
 	         , UPD_DT = SYSDATE
-	         , REG_DT = SYSDATE
 	         , NOTI_SCORE = 0
 	         , SELLER_RESP_OPIN = NULL
 	         , SELLER_RESP_REG_DT = NULL
@@ -188,11 +187,13 @@
 	               , MBR_NO
 	               , PROD_ID
 	               , AVG_SCORE
+	               , REG_ID
 	               , REG_DT )
 	        VALUES ( #{tenantId}
 	               , #{mbrNo}
 	               , #{prodId}
 	               , #{avgScore}
+	               , #{regId}
 	               , SYSDATE )
 	     WHEN MATCHED THEN
 	        UPDATE
@@ -215,6 +216,7 @@
         UPDATE /* FeedbackMapper.xml, updateTenantProdStats, SAC : 김현일 , 2014-02-04 */
 	           TB_DP_TENANT_PROD_STATS
 	       SET TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore}
+	           , UPD_ID = #{updId}
 	           , UPD_DT = SYSDATE
 	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT )
 	     WHERE TENANT_ID = #{tenantId}
@@ -233,18 +235,21 @@
 	               , AVG_EVLU_SCORE
 	               , TOT_EVLU_SCORE
 	               , PATICPERS_CNT
-	                , UPD_DT )
+	               , REG_ID
+	               , REG_DT )
 	        VALUES ( #{tenantId}
 	               , #{prodId}
 	               , #{avgEvluScore}
 	               , #{avgEvluScore}
 	               , 1
+	               , #{regId}
 	               , SYSDATE )
 	    WHEN MATCHED THEN
 	        UPDATE
 	           SET AVG_EVLU_SCORE = ((TOT_EVLU_SCORE + #{avgEvluScore}) / (PATICPERS_CNT + 1))
 	                , TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore}
 	                , PATICPERS_CNT = PATICPERS_CNT+1
+	             , UPD_ID = #{updId}
 	             , UPD_DT = SYSDATE
 	</insert>
 	
@@ -266,9 +271,18 @@
            AND PROD_ID = #{prodId}    
     </delete>
 	
-    <!-- (탈퇴회원 사용후기) 기 추천 여부 Check -->
+	 <!-- (탈퇴회원 사용후기) 기 등록 여부 -->
+	 <select id="getProdNotiWDCount" parameterType="ProdNoti" resultType="int">
+	    SELECT /* FeedbackMapper.xml, getProdNotiWDCount, SAC : 김현일 , 2014-02-04 */
+	           COUNT(*)
+	      FROM TB_DP_PROD_NOTI_WD N
+	     WHERE N.TENANT_ID = #{tenantId}
+	       AND N.NOTI_SEQ = #{notiSeq}
+    </select>
+	
+    <!-- (탈퇴회원 사용후기) 기 추천 여부 -->
     <select id="getProdNotiWDGoodCount" parameterType="ProdNoti" resultType="int">
-	    SELECT /* FeedbackMapper.xml, deleteTenantProdStats, SAC : 김현일 , 2014-02-04 */
+	    SELECT /* FeedbackMapper.xml, getProdNotiWDGoodCount, SAC : 김현일 , 2014-02-04 */
 	           COUNT(*)
 	      FROM TB_DP_PROD_NOTI_WD N
 	         , TB_DP_PROD_NOTIGOOD NG
@@ -284,4 +298,18 @@
 	       AND NG.TENANT_ID = #{tenantId}
     </select>	
 	
+	<!-- 사용후기 추천 등록 -->
+	<insert id="insertProdNotiGood" parameterType="ProdNotiGood">
+	    /* FeedbackMapper.xml, insertProdNotiGood, SAC : 김현일 , 2014-02-04 */
+	    INSERT INTO TB_DP_PROD_NOTIGOOD ( TENANT_ID
+	                                     , NOTI_SEQ
+	                                     , MBR_NO
+	                                     , REG_ID
+	                                     , REG_DT )
+	                              VALUES ( #{tenantId}
+	                                     , #{notiSeq}
+	                                     , #{mbrNo}
+	                                     , #{regId}
+	                                     , SYSDATE )
+	</insert>
 </mapper>
