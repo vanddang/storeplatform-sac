@@ -21,18 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSeriesSacRes;
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxListRes;
 import com.skplanet.storeplatform.sac.client.display.vo.vod.VodBoxReq;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -108,7 +108,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryAppRes searchAppList(CategoryAppReq req, SacRequestHeader header) {
+	public CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -130,7 +130,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/epub/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req, SacRequestHeader header) {
+	public CategoryEbookComicSacRes searchEbookComicList(CategoryEbookComicSacReq req, SacRequestHeader header) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchEbookComicList Controller started!!");
 		this.logger.debug("Input Parameters {}", req.toString());
@@ -152,7 +152,7 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/webtoonList/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req) {
+	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonSacReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchWebtoonList Controller started!!");
 		this.logger.debug("----------------------------------------------------------------");

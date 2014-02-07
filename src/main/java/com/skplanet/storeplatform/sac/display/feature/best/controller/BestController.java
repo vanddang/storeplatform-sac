@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsRes;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsSacRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.feature.best.service.BestAppService;
 import com.skplanet.storeplatform.sac.display.feature.best.service.BestContentsService;
@@ -53,7 +53,7 @@ public class BestController {
 	 */
 	@RequestMapping(value = "/display/feature/best/app/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestAppRes bestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq) {
+	public BestAppSacRes bestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq) {
 		return this.bestAppService.searchBestAppList(requestheader, bestAppReq);
 	}
 
@@ -71,7 +71,7 @@ public class BestController {
 	 */
 	@RequestMapping(value = "/display/feature/best/content/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestContentsRes bestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq) {
+	public BestContentsSacRes bestContentsList(SacRequestHeader requestheader, BestContentsSacReq bestContentsReq) {
 		return this.bestContentsService.searchBestContentsList(requestheader, bestContentsReq);
 	}
 
@@ -89,7 +89,7 @@ public class BestController {
 	 */
 	@RequestMapping(value = "/display/feature/best/download/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public BestDownloadRes bestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq) {
+	public BestDownloadSacRes bestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq) {
 		return this.bestDownloadService.searchBestDownloadList(requestheader, bestDownloadReq);
 	}
 

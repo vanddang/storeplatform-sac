@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
@@ -61,12 +61,12 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 	 * 일반 카테고리 웹툰 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param CategoryWebtoonReq
+	 * @param CategoryWebtoonSacReq
 	 * @return CategoryWebtoonRes 리스트
 	 * @throws Exception
 	 */
 	@Override
-	public CategoryWebtoonRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonReq req) {
+	public CategoryWebtoonSacRes searchWebtoonList(SacRequestHeader header, CategoryWebtoonSacReq req) {
 
 		Integer totalCount = 0;
 
@@ -83,7 +83,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		req.setLangCd(tenantHeader.getLangCd());
 		req.setDeviceModelCd(deviceHeader.getModel());
 
-		CategoryWebtoonRes responseVO = new CategoryWebtoonRes(); // Response 객체
+		CategoryWebtoonSacRes responseVO = new CategoryWebtoonSacRes(); // Response 객체
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
@@ -134,98 +134,6 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 			responseVO.setCommonResponse(commonResponse);
 		}
 
-		// if (resultList != null) {
-		// CategoryWebtoon webtoonDto = new CategoryWebtoon();
-		//
-		// // Response VO를 만들기위한 생성자
-		// Product product = null;
-		// Identifier identifier = null;
-		// Menu menu = null;
-		// Rights rights = null;
-		// Title title = null;
-		// Source source = null;
-		// Price price = null;
-		// Contributor contributor = null;
-		// Accrual accrual = null;
-		// Date date = null;
-		// Book book = null;
-		// List<Identifier> identifierList = null;
-		// List<Menu> menuList = null;
-		// List<Source> sourceList = null;
-		//
-		// for (int i = 0; i < resultList.size(); i++) {
-		// webtoonDto = resultList.get(i);
-		// product = new Product();
-		//
-		// // 상품 정보 (상품ID)
-		// identifierList = new ArrayList<Identifier>();
-		// identifier = new Identifier();
-		// identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-		// identifier.setText(webtoonDto.getProdId());
-		// identifierList.add(identifier);
-		//
-		// // 메뉴 정보
-		// menuList = new ArrayList<Menu>();
-		// menu = new Menu();
-		// menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-		// menu.setId(webtoonDto.getTopMenuId());
-		// menu.setName(webtoonDto.getTopMenuName());
-		// menuList.add(menu);
-		//
-		// menu = new Menu();
-		// menu.setId(webtoonDto.getMenuId());
-		// menu.setName(webtoonDto.getMenuNm());
-		// menuList.add(menu);
-		//
-		// // contributor
-		// contributor = new Contributor();
-		// contributor.setName(webtoonDto.getArtist1Nm());
-		//
-		// accrual = new Accrual();
-		// accrual.setScore(Double.parseDouble(webtoonDto.getAvgScore()));
-		//
-		// // 상품 정보 (상품명)
-		// title = new Title();
-		// title.setPrefix(webtoonDto.getPreFix());
-		// title.setText(webtoonDto.getProdNm());
-		//
-		// // 완료 여부
-		// book = new Book();
-		// book.setStatus(webtoonDto.getComptYn());
-		//
-		// // 이미지 정보
-		// sourceList = new ArrayList<Source>();
-		// source = new Source();
-		// source.setMediaType(DisplayCommonUtil.getMimeType(webtoonDto.getFilePos()));
-		// // source.setSize(webtoonDto.getImgSize());
-		// source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		// source.setUrl(webtoonDto.getFilePos());
-		// sourceList.add(source);
-		//
-		// // 업데이트 날짜
-		// date = new Date();
-		// date.setType(DisplayConstants.DP_DATE_UPT_NM);
-		// date.setText(webtoonDto.getUpdDt());
-		//
-		// // 데이터 매핑
-		// product.setIdentifierList(identifierList);
-		// product.setMenuList(menuList);
-		// product.setContributor(contributor);
-		// product.setAccrual(accrual);
-		// product.setTitle(title);
-		// product.setBook(book);
-		// product.setRights(rights);
-		// product.setSourceList(sourceList);
-		// product.setPrice(price);
-		// product.setDate(date);
-		// totalCount = webtoonDto.getTotalCount();
-		// productList.add(i, product);
-		// }
-		//
-		// commonResponse.setTotalCount(totalCount);
-		// responseVO.setCommonResponse(commonResponse);
-		// responseVO.setProductList(productList);
-		// }
 		return responseVO;
 	}
 }

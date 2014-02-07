@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -23,5 +23,5 @@ public interface BestDownloadService {
 	 *            bestDownloadReq
 	 * @return BestDownloadRes
 	 */
-	BestDownloadRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq);
+	BestDownloadSacRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq);
 }

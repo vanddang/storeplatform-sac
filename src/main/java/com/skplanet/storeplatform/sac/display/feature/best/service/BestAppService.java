@@ -1,7 +1,7 @@
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -23,5 +23,5 @@ public interface BestAppService {
 	 *            bestAppReq
 	 * @return BestAppRes
 	 */
-	BestAppRes searchBestAppList(SacRequestHeader requestheader, BestAppReq bestAppReq);
+	BestAppSacRes searchBestAppList(SacRequestHeader requestheader, BestAppSacReq bestAppReq);
 }

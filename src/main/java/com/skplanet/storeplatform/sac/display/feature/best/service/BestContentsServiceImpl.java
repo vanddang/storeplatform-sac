@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -69,7 +69,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 	 * .storeplatform.sac.client.product.vo.bestContentsReqVO)
 	 */
 	@Override
-	public BestContentsRes searchBestContentsList(SacRequestHeader requestheader, BestContentsReq bestContentsReq) {
+	public BestContentsSacRes searchBestContentsList(SacRequestHeader requestheader, BestContentsSacReq bestContentsReq) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
@@ -83,7 +83,7 @@ public class BestContentsServiceImpl implements BestContentsService {
 		bestContentsReq.setLangCd(tenantHeader.getLangCd());
 		bestContentsReq.setDeviceModelCd(deviceHeader.getModel());
 
-		BestContentsRes response = new BestContentsRes();
+		BestContentsSacRes response = new BestContentsSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 
 		List<Product> productList = new ArrayList<Product>();
@@ -121,6 +121,12 @@ public class BestContentsServiceImpl implements BestContentsService {
 		String stdDt = this.commonService.getBatchStandardDateString(tenantHeader.getTenantId(),
 				bestContentsReq.getListId());
 		bestContentsReq.setStdDt(stdDt);// 2014.01.28 이석희 수정 S01 하드코딩에서 헤더에서 get 한 TenantId
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(bestContentsReq.getProdGradeCd())) {
+			String[] arrayProdGradeCd = bestContentsReq.getProdGradeCd().split("\\+");
+			bestContentsReq.setArrayProdGradeCd(arrayProdGradeCd);
+		}
 
 		if (bestContentsReq.getDummy() == null) { // dummy 호출이 아닐때
 			// ID list 조회
@@ -182,179 +188,6 @@ public class BestContentsServiceImpl implements BestContentsService {
 				response.setCommonResponse(commonResponse);
 			}
 
-			// // BEST 컨텐츠 상품 조회
-			// List<BestContents> contentsList = null;
-			//
-			// if ("movie".equals(bestContentsReq.getFilteredBy()) ||
-			// "boardcast".equals(bestContentsReq.getFilteredBy())
-			// || "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
-			// contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsVodList", bestContentsReq,
-			// BestContents.class);
-			// } else {
-			// contentsList = this.commonDAO.queryForList("BestContents.selectBestContentsBookList", bestContentsReq,
-			// BestContents.class);
-			// }
-			//
-			// if (contentsList.size() > 0) {
-			// Iterator<BestContents> iterator = contentsList.iterator();
-			// while (iterator.hasNext()) {
-			// BestContents mapperVO = iterator.next();
-			// Product product = new Product();
-			// Identifier identifier = new Identifier();
-			// Contributor contributor = new Contributor();
-			// Accrual accrual = new Accrual();
-			// Rights rights = new Rights();
-			// Title title = new Title();
-			// Source source = new Source();
-			// Price price = new Price();
-			// Support support = new Support();
-			// Book book = new Book();
-			//
-			// // 상품ID
-			// identifierList = new ArrayList<Identifier>();
-			// identifier = new Identifier();
-			// identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-			// identifier.setText(mapperVO.getProdId());
-			// identifierList.add(identifier);
-			//
-			// /*
-			// * VOD - HD 지원여부, DOLBY 지원여부
-			// */
-			// supportList = new ArrayList<Support>();
-			// support = new Support();
-			// support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
-			// support.setText(mapperVO.getHdvYn());
-			// supportList.add(support);
-			// support = new Support();
-			// support.setType(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);
-			// support.setText(mapperVO.getDolbySprtYn());
-			// supportList.add(support);
-			// /*
-			// * Menu(메뉴정보) Id, Name, Type
-			// */
-			// menuList = new ArrayList<Menu>();
-			// Menu menu = new Menu();
-			// menu.setId(mapperVO.getTopMenuId());
-			// menu.setName(mapperVO.getTopMenuNm());
-			// menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-			// menuList.add(menu);
-			// menu = new Menu();
-			// menu.setId(mapperVO.getMenuId());
-			// menu.setName(mapperVO.getMenuNm());
-			// menuList.add(menu);
-			// menu = new Menu();
-			// menu.setId(mapperVO.getMetaClsfCd());
-			// menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-			// menuList.add(menu);
-			//
-			// if ("movie".equals(bestContentsReq.getFilteredBy())
-			// || "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
-			// contributor.setDirector(mapperVO.getArtist2Nm());
-			// contributor.setArtist(mapperVO.getArtist1Nm());
-			// Date date = new Date();
-			// date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-			// contributor.setDate(date);
-			// } else if ("broadcast".equals(bestContentsReq.getFilteredBy())) {
-			// contributor.setArtist(mapperVO.getArtist1Nm());
-			// } else if ("ebook".equals(bestContentsReq.getFilteredBy())) {
-			// contributor.setName(mapperVO.getArtist1Nm());
-			// contributor.setPublisher(mapperVO.getChnlCompNm());
-			// Date date = new Date();
-			// // date.setType("date/publish");
-			// date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-			// contributor.setDate(date);
-			// } else if ("comic".equals(bestContentsReq.getFilteredBy())
-			// || "ebook+comic".equals(bestContentsReq.getFilteredBy())) {
-			// contributor.setName(mapperVO.getArtist1Nm());
-			// contributor.setPainter(mapperVO.getArtist2Nm());
-			// contributor.setPublisher(mapperVO.getChnlCompNm());
-			// }
-			//
-			// /*
-			// * Accrual - voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-			// */
-			// accrual.setVoterCount(mapperVO.getPaticpersCnt());
-			// accrual.setDownloadCount(mapperVO.getDwldCnt());
-			// accrual.setScore(mapperVO.getAvgEvluScore());
-			//
-			// /*
-			// * Rights - grade
-			// */
-			// rights.setGrade(mapperVO.getProdGrdCd());
-			//
-			// /* 채널 상품이라 postfix 필요 없을 듯하여 주석처리 */
-			// title.setPrefix(mapperVO.getVodTitlNm());
-			// title.setText(mapperVO.getProdNm());
-			// // title.setPostfix(mapperVO.getChapter());
-			//
-			// /*
-			// * source mediaType - url
-			// */
-			// sourceList = new ArrayList<Source>();
-			// // 2014.01.28 이석희 추가
-			// source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-			// source.setSize(mapperVO.getImgSize());
-			// source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			// // 2014.01.28 이석희 추가 끝
-			// source.setUrl(mapperVO.getImgPath());
-			// sourceList.add(source);
-			//
-			// /*
-			// * Price text
-			// */
-			// price.setText(mapperVO.getProdAmt());
-			//
-			// // 이북/코믹 이면
-			// if (!"movie".equals(bestContentsReq.getFilteredBy())
-			// && !"boardcast".equals(bestContentsReq.getFilteredBy())
-			// && !"movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
-			// List<Support> bookSupportList = new ArrayList<Support>();
-			// book.setStatus(mapperVO.getBookStatus() == null ? "" : mapperVO.getBookStatus());
-			// book.setType(mapperVO.getBookType() == null ? "" : mapperVO.getBookType());
-			// book.setTotalCount(mapperVO.getBookCount());
-			//
-			// support = new Support();
-			// support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
-			// support.setText(mapperVO.getSupportStore());
-			// bookSupportList.add(support);
-			// support = new Support();
-			// support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
-			// support.setText(mapperVO.getSupportPlay());
-			// bookSupportList.add(support);
-			//
-			// book.setSupportList(bookSupportList);
-			// }
-			//
-			// product = new Product();
-			// product.setIdentifierList(identifierList);
-			// if ("movie".equals(bestContentsReq.getFilteredBy())
-			// || "boardcast".equals(bestContentsReq.getFilteredBy())
-			// || "movie+broadcast".equals(bestContentsReq.getFilteredBy())) {
-			// product.setSupportList(supportList);
-			// } else {
-			// product.setBook(book); // 2014.01.28 이북/코믹 일 때만 Book(소장대여 정보) set
-			// }
-			//
-			// product.setMenuList(menuList);
-			// product.setContributor(contributor);
-			// product.setAccrual(accrual);
-			// product.setRights(rights);
-			// product.setTitle(title);
-			// product.setSourceList(sourceList);
-			// product.setProductExplain(mapperVO.getProdBaseDesc());
-			// product.setPrice(price);
-			//
-			// productList.add(product);
-			//
-			// commonResponse = new CommonResponse();
-			// commonResponse.setTotalCount(mapperVO.getTotalCount());
-			// }
-			// } else {
-			// commonResponse = new CommonResponse();
-			// commonResponse.setTotalCount(0);
-			// response.setProductList(productList);
-			// this.log.debug("조회된 결과가 없습니다.");
-			// }
 		} else {
 			Product product = new Product();
 			Identifier identifier = new Identifier();

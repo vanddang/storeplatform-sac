@@ -10,8 +10,9 @@
 package com.skplanet.storeplatform.sac.display.feature.best.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,10 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq;
-import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadRes;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -33,18 +33,18 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.App;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.best.vo.BestDownload;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -65,6 +65,12 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 	@Autowired
 	private DisplayCommonService commonService;
 
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,7 +78,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 	 * .storeplatform.sac.client.product.vo.BestDownloadRequestVO)
 	 */
 	@Override
-	public BestDownloadRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadReq bestDownloadReq) {
+	public BestDownloadSacRes searchBestDownloadList(SacRequestHeader requestheader, BestDownloadSacReq bestDownloadReq) {
 		TenantHeader tenantHeader = requestheader.getTenantHeader();
 		DeviceHeader deviceHeader = requestheader.getDeviceHeader();
 
@@ -86,7 +92,7 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 		bestDownloadReq.setLangCd(tenantHeader.getLangCd());
 		bestDownloadReq.setDeviceModelCd(deviceHeader.getModel());
 
-		BestDownloadRes response = new BestDownloadRes();
+		BestDownloadSacRes response = new BestDownloadSacRes();
 
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
@@ -116,10 +122,20 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 
 		String stdDt = this.commonService.getBatchStandardDateString(bestDownloadReq.getTenantId(),
 				bestDownloadReq.getListId());
+
+		/** TODO 테스트용 삭제필요 **/
+		// stdDt = "20140119000000";
+
 		bestDownloadReq.setStdDt(stdDt);
 
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(bestDownloadReq.getProdGradeCd())) {
+			String[] arrayProdGradeCd = bestDownloadReq.getProdGradeCd().split("\\+");
+			bestDownloadReq.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+
 		// BEST 다운로드 상품 조회
-		List<BestDownload> bestList = null;
+		List<ProductBasicInfo> bestList = null;
 
 		if (bestDownloadReq.getDummy() == null) { // dummy 호출이 아닐때
 			if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
@@ -127,273 +143,80 @@ public class BestDownloadServiceImpl implements BestDownloadService {
 					|| DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
 					|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 멀티미디어_상품
 				bestList = this.commonDAO.queryForList("BestDownload.selectBestDownloadMMList", bestDownloadReq,
-						BestDownload.class);
+						ProductBasicInfo.class);
 
-				if (bestList.size() > 0) {
-					Iterator<BestDownload> iterator = bestList.iterator();
-					while (iterator.hasNext()) {
-						BestDownload mapperVO = iterator.next();
-						Product product = new Product();
-						Identifier identifier = new Identifier();
-						Contributor contributor = new Contributor();
-						Accrual accrual = new Accrual();
-						Rights rights = new Rights();
-						Title title = new Title();
-						Source source = new Source();
-						Price price = new Price();
-						Support support = new Support();
-						Book book = new Book();
-
-						// 상품ID
-						List<Identifier> identifierList = new ArrayList<Identifier>();
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(mapperVO.getProdId());
-						identifierList.add(identifier);
-						identifier = new Identifier();
-						identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-						identifier.setText(mapperVO.getChnlProdId());
-						identifierList.add(identifier);
-
-						/*
-						 * VOD - HD 지원여부, DOLBY 지원여부
-						 */
-						List<Support> supportList = new ArrayList<Support>();
-						support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
-						support.setText(mapperVO.getHdvYn());
-						supportList.add(support);
-						support = new Support();
-						support.setType(DisplayConstants.DP_VOD_DOLBY_SUPPORT_NM);
-						support.setText(mapperVO.getDolbySprtYn());
-						supportList.add(support);
-
-						/*
-						 * Menu(메뉴정보) Id, Name, Type
-						 */
-						ArrayList<Menu> menuList = new ArrayList<Menu>();
-						Menu menu = new Menu();
-						menu.setId(mapperVO.getTopMenuId());
-						menu.setName(mapperVO.getTopMenuNm());
-						menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-						menuList.add(menu);
-						menu = new Menu();
-						menu.setId(mapperVO.getMenuId());
-						menu.setName(mapperVO.getMenuNm());
-						menuList.add(menu);
-						menu = new Menu();
-						menu.setId(mapperVO.getMetaClsfCd());
-						menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-						menuList.add(menu);
-
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 이북
-							contributor.setName(mapperVO.getArtist1Nm());
-							contributor.setPublisher(mapperVO.getChnlCompNm());
-							Date date = new Date();
-							date.setType("date/publish");
-							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-							contributor.setDate(date);
-						} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 코믹
-							contributor.setName(mapperVO.getArtist1Nm());
-							contributor.setPainter(mapperVO.getArtist2Nm());
-							contributor.setPublisher(mapperVO.getChnlCompNm());
-							Date date = new Date();
-							date.setType("date/publish");
-							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-							contributor.setDate(date);
-						} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 영화
-							contributor.setDirector(mapperVO.getArtist2Nm());
-							contributor.setArtist(mapperVO.getArtist1Nm());
-							Date date = new Date();
-							date.setType("date/broadcast");
-							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-							contributor.setDate(date);
-						} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) { // 방송
-							contributor.setArtist(mapperVO.getArtist1Nm());
-							Date date = new Date();
-							date.setType("date/broadcast");
-							date.setText(mapperVO.getIssueDay() == null ? "" : mapperVO.getIssueDay());
-							contributor.setDate(date);
-						}
-
-						/*
-						 * Accrual - voterCount (참여자수) DownloadCount (다운로드 수) score(평점)
-						 */
-						accrual.setVoterCount(mapperVO.getPaticpersCnt());
-						accrual.setDownloadCount(mapperVO.getDwldCnt());
-						accrual.setScore(mapperVO.getAvgEvluScore());
-
-						/*
-						 * Rights - grade
-						 */
-						rights.setGrade(mapperVO.getProdGrdCd());
-
-						title.setPrefix(mapperVO.getVodTitlNm());
-						title.setText(mapperVO.getProdNm());
-						title.setPostfix(mapperVO.getChapter());
-						// title.setText(mapperVO.getConcatProdNm());
-
-						/*
-						 * source mediaType - url
-						 */
-						ArrayList<Source> sourceList = new ArrayList<Source>();
-						source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-						source.setSize(mapperVO.getImgSize());
-						source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-						source.setUrl(mapperVO.getImgPath());
-						sourceList.add(source);
-
-						/*
-						 * Price text
-						 */
-						price.setText(mapperVO.getProdAmt());
-
-						/*
-						 * 이북, 코믹 일 경우에만
-						 */
+				if (!bestList.isEmpty()) {
+					Map<String, Object> reqMap = new HashMap<String, Object>();
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					for (ProductBasicInfo productBasicInfo : bestList) {
+						reqMap.put("productBasicInfo", productBasicInfo);
+						MetaInfo retMetaInfo = null;
 						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
-							ArrayList<Support> bookSupportList = new ArrayList<Support>();
-							book.setStatus(mapperVO.getBookStatus());
-							book.setType(mapperVO.getBookType());
-							book.setTotalCount(mapperVO.getBookCount());
-
-							support = new Support();
-							support.setType(DisplayConstants.DP_EBOOK_STORE_SUPPORT_NM);
-							support.setText(mapperVO.getSupportStore());
-							bookSupportList.add(support);
-							support = new Support();
-							support.setType(DisplayConstants.DP_EBOOK_PLAY_SUPPORT_NM);
-							support.setText(mapperVO.getSupportPlay());
-							bookSupportList.add(support);
-
-							book.setSupportList(bookSupportList);
+							// 이북, 코믹
+							reqMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+							retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+						} else {
+							// 영화, 방송
+							reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+							retMetaInfo = this.metaInfoService.getVODMetaInfo(reqMap);
 						}
 
-						product = new Product();
-						product.setIdentifierList(identifierList);
-						/*
-						 * 영화, 방송 일 경우에만
-						 */
-						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
-								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
-							product.setSupportList(supportList);
+						if (retMetaInfo != null) {
+							if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+								Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+								productList.add(product);
+							} else if (DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+								Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+								productList.add(product);
+							} else if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+								Product product = this.responseInfoGenerateFacade.generateMovieProduct(retMetaInfo);
+								productList.add(product);
+							} else if (DisplayConstants.DP_TV_TOP_MENU_ID.equals(retMetaInfo.getTopMenuId())) {
+								Product product = this.responseInfoGenerateFacade.generateBroadcastProduct(retMetaInfo);
+								productList.add(product);
+							}
 						}
-						product.setMenuList(menuList);
-						product.setContributor(contributor);
-						product.setAccrual(accrual);
-						product.setRights(rights);
-						product.setTitle(title);
-						product.setSourceList(sourceList);
-						product.setProductExplain(mapperVO.getProdBaseDesc());
-						product.setPrice(price);
-						/*
-						 * 이북, 코믹 일 경우에만
-						 */
-						if (DisplayConstants.DP_EBOOK_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())
-								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(bestDownloadReq.getTopMenuId())) {
-							product.setBook(book);
-						}
-
-						productList.add(product);
-
-						commonResponse = new CommonResponse();
-						commonResponse.setTotalCount(mapperVO.getTotalCount());
 					}
-				} else {
-					commonResponse.setTotalCount(0);
-					response.setCommonResponse(commonResponse);
+					commonResponse.setTotalCount(bestList.get(0).getTotalCount());
 					response.setProductList(productList);
-
-					return response;
+					response.setCommonResponse(commonResponse);
+				} else {
+					// 조회 결과 없음
+					commonResponse.setTotalCount(0);
+					response.setProductList(productList);
+					response.setCommonResponse(commonResponse);
 				}
 
 			} else { // App 상품
 				bestList = this.commonDAO.queryForList("BestDownload.selectBestDownloadAppList", bestDownloadReq,
-						BestDownload.class);
+						ProductBasicInfo.class);
 
-				if (bestList.size() > 0) {
-					Iterator<BestDownload> iterator = bestList.iterator();
-					while (iterator.hasNext()) {
-						Product product = new Product();
-						Identifier identifier = new Identifier();
-						App app = new App();
-						Accrual accrual = new Accrual();
-						Rights rights = new Rights();
-						Source source = new Source();
-						Price price = new Price();
-						Title title = new Title();
-						Support support = new Support();
-						Menu menu = new Menu();
+				if (!bestList.isEmpty()) {
+					Map<String, Object> reqMap = new HashMap<String, Object>();
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					for (ProductBasicInfo productBasicInfo : bestList) {
+						reqMap.put("productBasicInfo", productBasicInfo);
+						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
 
-						BestDownload mapperVO = iterator.next();
-
-						int totalCount = mapperVO.getTotalCount();
-						commonResponse.setTotalCount(totalCount);
-
-						List<Identifier> identifierList = new ArrayList<Identifier>();
-						identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-						identifier.setText(mapperVO.getProdId());
-						identifierList.add(identifier);
-
-						List<Support> supportList = new ArrayList<Support>();
-						support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-						support.setText(mapperVO.getDrmYn());
-						supportList.add(support);
-						support = new Support();
-						support.setType(DisplayConstants.DP_IN_APP_SUPPORT_NM);
-						support.setText(mapperVO.getPartParentClsfCd());
-						supportList.add(support);
-
-						List<Menu> menuList = new ArrayList<Menu>();
-						menu.setId(mapperVO.getTopMenuId());
-						menu.setName(mapperVO.getTopMenuNm());
-						menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-						menuList.add(menu);
-						menu = new Menu();
-						menu.setId(mapperVO.getMenuId());
-						menu.setName(mapperVO.getMenuNm());
-						menuList.add(menu);
-
-						app.setAid(mapperVO.getAid());
-						app.setPackageName(mapperVO.getApkPkgNm());
-						app.setVersionCode(mapperVO.getApkVerCd());
-						app.setVersion(mapperVO.getApkVer());
-
-						accrual.setVoterCount(mapperVO.getPaticpersCnt());
-						accrual.setDownloadCount(mapperVO.getDwldCnt());
-						accrual.setScore(mapperVO.getAvgEvluScore());
-
-						rights.setGrade(mapperVO.getProdGrdCd());
-
-						title.setText(mapperVO.getProdNm());
-
-						List<Source> sourceList = new ArrayList<Source>();
-						source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-						source.setSize(mapperVO.getImgSize());
-						source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-						source.setUrl(mapperVO.getImgPath());
-						sourceList.add(source);
-
-						price.setText(mapperVO.getProdAmt());
-
-						product.setIdentifierList(identifierList);
-						product.setSupportList(supportList);
-						product.setMenuList(menuList);
-						product.setApp(app);
-						product.setAccrual(accrual);
-						product.setRights(rights);
-						product.setTitle(title);
-						product.setSourceList(sourceList);
-						product.setProductExplain(mapperVO.getProdBaseDesc());
-						product.setPrice(price);
-
-						productList.add(product);
+						if (retMetaInfo != null) {
+							Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+							productList.add(product);
+						}
 					}
-				} else {
-					commonResponse.setTotalCount(0);
-					response.setCommonResponse(commonResponse);
+					commonResponse.setTotalCount(bestList.get(0).getTotalCount());
 					response.setProductList(productList);
-
-					return response;
+					response.setCommonResponse(commonResponse);
+				} else {
+					// 조회 결과 없음
+					commonResponse.setTotalCount(0);
+					response.setProductList(productList);
+					response.setCommonResponse(commonResponse);
 				}
 			}
 

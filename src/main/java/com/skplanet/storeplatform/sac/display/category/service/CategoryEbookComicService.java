@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -28,5 +28,5 @@ public interface CategoryEbookComicService {
 	 * @param CategoryAppReq
 	 * @return CategoryAppRes
 	 */
-	CategoryEbookComicRes searchEbookComicList(CategoryEbookComicReq req, SacRequestHeader header);
+	CategoryEbookComicSacRes searchEbookComicList(CategoryEbookComicSacReq req, SacRequestHeader header);
 }

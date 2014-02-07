@@ -9,8 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -27,5 +27,5 @@ public interface CategoryAppService {
 	 * @param CategoryAppReq
 	 * @return CategoryAppRes
 	 */
-	CategoryAppRes searchAppList(CategoryAppReq req, SacRequestHeader header);
+	CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header);
 }
