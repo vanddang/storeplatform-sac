@@ -74,17 +74,9 @@ public class MiscellaneousController {
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request) {
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
-		if (request.getDeviceModelNo() == null && request.getMsisdn() == null) {
+		if ((request.getDeviceModelNo() == null || request.getDeviceModelNo().equals(""))
+				&& (request.getMsisdn() == null || request.getMsisdn().equals(""))) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModel 또는 msisdn");
-		}
-
-		if (request.getMsisdn() != null) {
-			Pattern pattern = Pattern.compile("[0-9]{10,11}");
-			Matcher matcher = pattern.matcher(request.getMsisdn());
-			boolean isMdn = matcher.matches();
-			if (!isMdn) {
-				throw new StorePlatformException("SAC_MEM_3004");
-			}
 		}
 
 		GetUaCodeRes response = this.service.getUaCode(requestHeader, request);
@@ -107,6 +99,7 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetOpmdRes getOpmd(SacRequestHeader requestHeader, @Validated @RequestBody GetOpmdReq request) {
 
+		// CommonComponent 호출 시에는 mdn Check 불필요하므로, Controller에서 유효성 검사.
 		Pattern pattern = Pattern.compile("[0-9]{10,11}");
 		Matcher matcher = pattern.matcher(request.getMsisdn());
 		boolean isMdn = matcher.matches();
@@ -134,13 +127,6 @@ public class MiscellaneousController {
 	@ResponseBody
 	public GetPhoneAuthorizationCodeRes getPhoneAutorizationCode(SacRequestHeader requestHeader,
 			@Validated @RequestBody GetPhoneAuthorizationCodeReq request) {
-
-		Pattern pattern = Pattern.compile("[0-9]{10,11}");
-		Matcher matcher = pattern.matcher(request.getRecvMdn());
-		boolean isMdn = matcher.matches();
-		if (!isMdn) {
-			throw new StorePlatformException("SAC_MEM_3004");
-		}
 
 		GetPhoneAuthorizationCodeRes response = this.service.getPhoneAuthorizationCode(requestHeader, request);
 
@@ -250,7 +236,6 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/createAdditionalService/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateAdditionalServiceRes createAdditionalService(@Validated @RequestBody CreateAdditionalServiceReq request) {
-
 		return this.service.createAdditionalService(request);
 	}
 
@@ -282,7 +267,6 @@ public class MiscellaneousController {
 	@RequestMapping(value = "/getModelCode/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, @RequestBody @Validated GetModelCodeReq request) {
-
 		return this.service.getModelCode(requestHeader, request);
 	}
 

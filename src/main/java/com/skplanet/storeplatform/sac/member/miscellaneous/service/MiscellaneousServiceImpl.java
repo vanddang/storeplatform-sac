@@ -172,7 +172,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		LOGGER.debug("## [SAC] GetUaCodeReq {}", req);
 
 		/** 파라미터로 MSISDN만 넘어온 경우 */
-		if (msisdn != null && deviceModelNo == null) {
+		if (msisdn != null && (deviceModelNo == null || deviceModelNo.equals(""))) {
 
 			/* deviceId로 userKey 조회 - SC 회원 "회원 기본 정보 조회" */
 			userKey = this.searchUserKey(commonRequest, msisdn);
@@ -219,7 +219,7 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				throw new StorePlatformException("SAC_MEM_3402", "msisdn", msisdn);
 			}
 
-		} else if (deviceModelNo != null) { // deviceModelNo 가 파라미터로 들어온 경우
+		} else if (deviceModelNo != null && !deviceModelNo.equals("")) { // deviceModelNo 가 파라미터로 들어온 경우
 			// DB 접속(TB_CM_DEVICE) - UaCode 조회
 			String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
 			if (uaCode != null) {
