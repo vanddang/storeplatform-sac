@@ -175,12 +175,12 @@ public class IdpRepositoryImpl implements IdpRepository {
 	 * @return @
 	 */
 	@Override
-	public String makeSnAuthKey(String mbrNm, String userId) {
+	public String makeSnAuthKey(String mbrNm, String birth) {
 		String time = Long.toString(System.currentTimeMillis());
 
 		StringBuffer sb = new StringBuffer();
-		sb.append("user_id=");
-		sb.append(userId);
+		sb.append("sn=");
+		sb.append(birth);
 		sb.append("|name=");
 		sb.append(mbrNm);
 		sb.append("|time=");
@@ -590,6 +590,7 @@ public class IdpRepositoryImpl implements IdpRepository {
 		String spAuthKey = this.makeSpAuthKey();
 		String snAuthKey = sendData.getSn_auth_key();
 		String rname_auth_mns_code = sendData.getRname_auth_mns_code();
+		String rname_auth_mns_cd = sendData.getRname_auth_mns_code();
 		String rname_auth_sst_code = sendData.getRname_auth_sst_code();
 		String is_biz_auth = sendData.getIs_biz_auth();
 		String user_ci = sendData.getUser_ci();
@@ -851,6 +852,8 @@ public class IdpRepositoryImpl implements IdpRepository {
 			param.put("mdn", mdn);
 		if (join_sst_list != null && !"".equals(join_sst_list))
 			param.put("join_sst_list", join_sst_list);
+		if (rname_auth_mns_cd != null && !"".equals(rname_auth_mns_cd))
+			param.put("rname_auth_mns_cd", rname_auth_mns_cd);
 
 		Enumeration keys = param.keys();
 		String paramKey = null;

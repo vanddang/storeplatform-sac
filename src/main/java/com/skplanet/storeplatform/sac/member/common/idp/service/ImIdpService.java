@@ -40,8 +40,7 @@ public interface ImIdpService {
 	public ImIdpReceiverM updateUserName(Map<String, Object> param);
 
 	/** 2.1.25 법정대리인 동의정보 변경 요청. */
-	public ImIdpReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
-			String parent_name, String parent_email, String user_auth_key, String parent_birthday);
+	public ImIdpReceiverM updateGuardian(Map<String, Object> param);
 
 	/** 2.1.26 RX 배포 Retry 요청. */
 

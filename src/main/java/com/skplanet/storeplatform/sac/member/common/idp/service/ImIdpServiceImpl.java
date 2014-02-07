@@ -367,13 +367,14 @@ public class ImIdpServiceImpl implements ImIdpService {
 		sendData.setUser_birthday((String) param.get("user_birthday"));
 		sendData.setUser_sex((String) param.get("user_sex"));
 		sendData.setSn_auth_key((String) param.get("sn_auth_key"));
-		sendData.setIs_rname_auth((String) param.get("is_rname_auth"));
+		sendData.setIs_rname_auth("Y");
 		sendData.setRname_auth_mns_code((String) param.get("rname_auth_mns_code")); // 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
 		sendData.setRname_auth_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
-		sendData.setRname_auth_mbr_code((String) param.get("rname_auth_mbr_code"));
+		sendData.setRname_auth_mbr_code((String) param.get("rname_auth_mbr_code")); // 실명인증 회원 코드 10 :내국인, 20: 외국인
 		sendData.setRname_auth_type_cd((String) param.get("rname_auth_type_cd")); // 실명 인증 유형 코드 R=회원 개명, E=CI 기보유 C=
 		sendData.setUser_ci((String) param.get("user_ci"));
 		sendData.setUser_di((String) param.get("user_di"));
+		sendData.setRname_auth_date((String) param.get("rname_auth_date"));
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
 
@@ -396,27 +397,27 @@ public class ImIdpServiceImpl implements ImIdpService {
 	 * @return ImIdpReceiverM
 	 */
 	@Override
-	public ImIdpReceiverM updateGuardian(String key, String parent_type, String parent_rname_auth_key,
-			String parent_name, String parent_email, String user_auth_key, String parent_birthday) {
+	public ImIdpReceiverM updateGuardian(Map<String, Object> param) {
+
 		ImIdpSenderM sendData = new ImIdpSenderM();
 		sendData.setUrl(ImIdpConstants.IDP_REQ_URL_USER_INFO_MODIFY);
 		sendData.setCmd(ImIdpConstants.IDP_REQ_CMD_UPDATE_GUARDIAN);
 		sendData.setResp_type(ImIdpConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(ImIdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
-		sendData.setUser_auth_key(user_auth_key);
-		sendData.setKey(key);
-		sendData.setKey_type(ImIdpConstants.IDP_PARAM_KEY_TYPE_IM_SERVICE_NO);
-		sendData.setParent_type(parent_type);
-		sendData.setParent_rname_auth_type("5"); // IPIN
-		sendData.setParent_rname_auth_key(parent_rname_auth_key);
-		sendData.setParent_name(parent_name);
-		sendData.setParent_birthday(parent_birthday);// 주민번호 앞자리
-		sendData.setParent_email(parent_email);
-		sendData.setParent_approve_date(DateUtil.getToday("yyyyMMdd"));
-		sendData.setIs_parent_approve("Y");
+		sendData.setKey((String) param.get("key"));
+		sendData.setUser_auth_key("user_auth_key");
+		sendData.setParent_type((String) param.get("parent_type"));
+		sendData.setParent_rname_auth_type((String) param.get("parent_rname_auth_type")); // 1:휴대폰, 2:IPIN
+		sendData.setParent_rname_auth_key((String) param.get("parent_rname_auth_key")); // 법정대리인 실명인증 값
+		sendData.setParent_name((String) param.get("parent_name"));
+		sendData.setParent_birthday((String) param.get("parent_birthday"));
+		sendData.setParent_email((String) param.get("parent_email"));
+		sendData.setIs_parent_approve("Y"); // 법정대리인동의여부 (Y=동의, N=미동의 (Y 만 가능))
 		sendData.setParent_approve_sst_code(ImIdpConstants.SSO_SST_CD_TSTORE_WEB);
+		sendData.setParent_approve_date((String) param.get("parent_approve_date")); // 법정대리인동의일자 (YYYYMMDD)
 		sendData.setModify_req_date(DateUtil.getToday("yyyyMMdd"));
 		sendData.setModify_req_time(DateUtil.getToday("hhmmss"));
+
 		return this.repository.sendImIDP(sendData, IdpConstants.HTTP_METHOD_POST);
 	}
 
