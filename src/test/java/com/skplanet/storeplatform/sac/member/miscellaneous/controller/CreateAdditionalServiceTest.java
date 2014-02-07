@@ -72,8 +72,8 @@ public class CreateAdditionalServiceTest {
 					@Override
 					public Object requestBody() {
 						CreateAdditionalServiceReq request = new CreateAdditionalServiceReq();
-						request.setMsisdn("01020284280");
-						request.setSvcCode("");
+						request.setMsisdn("01012345678");
+						request.setSvcCode("NA00000000");
 						request.setSvcMngNum("");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
