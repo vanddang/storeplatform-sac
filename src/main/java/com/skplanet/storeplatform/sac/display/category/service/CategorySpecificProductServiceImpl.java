@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq;
-import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificRes;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -73,14 +73,14 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	 * 
 	 * @see
 	 * com.skplanet.storeplatform.sac.display.category.service.CategorySpecificProductService#getSpecificProductList
-	 * (com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificReq,
+	 * (com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecificSacReq,
 	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	public CategorySpecificRes getSpecificProductList(CategorySpecificReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes getSpecificProductList(CategorySpecificSacReq req, SacRequestHeader header) {
 		String tenantId = header.getTenantHeader().getTenantId();
 
-		CategorySpecificRes res = new CategorySpecificRes();
+		CategorySpecificSacRes res = new CategorySpecificSacRes();
 		CommonResponse commonResponse = new CommonResponse();
 		Product product = null;
 		MetaInfo metaInfo = null;
@@ -214,9 +214,9 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 	 * 더미 데이터 생성.
 	 * </pre>
 	 * 
-	 * @return CategorySpecificRes
+	 * @return CategorySpecificSacRes
 	 */
-	private CategorySpecificRes generateDummy() {
+	private CategorySpecificSacRes generateDummy() {
 		Identifier identifier = null;
 		Support support = null;
 		Menu menu = null;
@@ -236,7 +236,7 @@ public class CategorySpecificProductServiceImpl implements CategorySpecificProdu
 		Product product = null;
 		List<Product> productList = new ArrayList<Product>();
 		CommonResponse commonResponse = new CommonResponse();
-		CategorySpecificRes res = new CategorySpecificRes();
+		CategorySpecificSacRes res = new CategorySpecificSacRes();
 
 		productList = new ArrayList<Product>();
 		menuList = new ArrayList<Menu>();

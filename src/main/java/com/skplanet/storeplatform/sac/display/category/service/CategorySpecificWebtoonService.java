@@ -14,14 +14,14 @@ import com.skplanet.storeplatform.sac.client.display.vo.category.CategorySpecifi
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * 특정 상품 조회 Service
+ * 특정 상품 webtoon 조회 Service
  * 
- * Updated on : 2014. 1. 27. Updated by : 오승민, 인크로스.
+ * Updated on : 2014. 2. 3. Updated by : 이승훈, 엔텔스.
  */
-public interface CategorySpecificProductService {
+public interface CategorySpecificWebtoonService {
 	/**
 	 * <pre>
-	 * 특정 상품 조회.
+	 * 특정 상품 webtoon 조회.
 	 * </pre>
 	 * 
 	 * @param req
@@ -30,5 +30,5 @@ public interface CategorySpecificProductService {
 	 *            header
 	 * @return CategorySpecificSacRes
 	 */
-	public CategorySpecificSacRes getSpecificProductList(CategorySpecificSacReq req, SacRequestHeader header);
+	public CategorySpecificSacRes getSpecificWebtoonList(CategorySpecificSacReq req, SacRequestHeader header);
 }
