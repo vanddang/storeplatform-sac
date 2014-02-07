@@ -81,7 +81,8 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
+		// if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
+		if (null == systemId || "".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -163,7 +164,8 @@ public class CategoryServiceImpl implements CategoryService {
 			requestVO.setTenantId("S01");
 			// throw new Exception("tenantId 는 필수 파라메터 입니다.");
 		}
-		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
+		// if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
+		if (null == systemId || "".equals(systemId)) {
 			requestVO.setSystemId("test01");
 			// throw new Exception("systemId 는 필수 파라메터 입니다.");
 		}
@@ -320,7 +322,8 @@ public class CategoryServiceImpl implements CategoryService {
 		if (null == tenantId || "".equals(tenantId)) {
 			requestVO.setTenantId("S01");
 		}
-		if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
+		// if (null == systemId || "".equals(systemId) || "S01-01002".equals(systemId)) {
+		if (null == systemId || "".equals(systemId)) {
 			requestVO.setSystemId("test01");
 		}
 		if (null == deviceCd || "".equals(deviceCd)) {
@@ -471,7 +474,8 @@ public class CategoryServiceImpl implements CategoryService {
 	private boolean check3DepthMenu(MenuReq requestVO) {
 		boolean result = false;
 
-		MenuDetailInfo mapperVO = this.commonDAO.queryForObject("Menu.getTopMenu3Detph", requestVO, MenuDetailInfo.class);
+		MenuDetailInfo mapperVO = this.commonDAO.queryForObject("Menu.getTopMenu3Detph", requestVO,
+				MenuDetailInfo.class);
 
 		if (mapperVO != null && mapperVO.getMenuId().equals(requestVO.getMenuId())) {
 			result = true;
