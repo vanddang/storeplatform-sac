@@ -107,25 +107,23 @@ public class ISFServerServiceImpl implements ISFServerService {
 			prop.setSingleValues(singles);
 
 			multis.setCount(3);
-			multi.setId("1234");
+			multi.setId("0000028070");
 			multi.setScore(10);
 			multi.setReasonCode("01");
 			multi.setRelId("3576");
 			multis.addMultiValue(multi);
 
 			multi = new MultiValueType();
-			multi.setId("5678");
+			multi.setId("0000044665");
 			multi.setScore(50);
 			multi.setReasonCode("08");
 			multi.setRelId("8856");
 			multis.addMultiValue(multi);
 
-			multi = new MultiValueType();
-			multi.setId("9625");
-			multi.setScore(90);
-			multi.setReasonCode("06");
-			multi.setRelId("7474");
-			multis.addMultiValue(multi);
+			/*
+			 * multi = new MultiValueType(); multi.setId("9625"); multi.setScore(90); multi.setReasonCode("06");
+			 * multi.setRelId("7474"); multis.addMultiValue(multi);
+			 */
 			prop.setMultiValues(multis);
 		}
 		response.setProps(prop);
