@@ -988,12 +988,9 @@ public class DeviceServiceImpl implements DeviceService {
 		UserInfo userInfo = this.searchUser(removeDeviceReq, requestHeader);
 
 		/* 휴대기기 조회 */
-		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setUserKey(req.getUserKey());
-		listDeviceReq.setDeviceId(req.getDeviceId());
-		ListDeviceRes listDeviceRes = this.listDevice(requestHeader, listDeviceReq);
-		String IsPrimary = listDeviceRes.getDeviceInfoList().get(0).getIsPrimary();//대표기기 여부
-		String deviceKey = listDeviceRes.getDeviceInfoList().get(0).getDeviceKey();//deviceKey
+		DeviceInfo deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
+		String IsPrimary = deviceInfo.getIsPrimary();//대표기기 여부
+		String deviceKey = deviceInfo.getDeviceKey();//deviceKey
 
 		/* 삭제 가능여부 판단 */
 		Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
