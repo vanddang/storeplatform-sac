@@ -7,6 +7,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.ExtraRight;
+import com.skplanet.storeplatform.sac.client.member.vo.common.FlurryAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrAuth;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrClauseAgree;
 import com.skplanet.storeplatform.sac.client.member.vo.common.MbrLglAgent;
@@ -50,6 +51,17 @@ public class DetailInformationRes extends CommonInfo {
 
 	/** 탭권한 Value Object 목록. */
 	private List<TabAuth> tabAuthList;
+
+	/** Flurry 인증정보 Value Object 목록. */
+	private List<FlurryAuth> flurryAuthList;
+
+	public List<FlurryAuth> getFlurryAuthList() {
+		return this.flurryAuthList;
+	}
+
+	public void setFlurryAuthList(List<FlurryAuth> flurryAuthList) {
+		this.flurryAuthList = flurryAuthList;
+	}
 
 	public List<TabAuth> getTabAuthList() {
 		return this.tabAuthList;
