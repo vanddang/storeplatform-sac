@@ -1,8 +1,6 @@
 package com.skplanet.storeplatform.sac.member.seller.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -565,7 +563,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			LoginInfo loginInfo = new LoginInfo();
 			loginInfo.setSellerKey(schRes.getLoginInfo().getSellerKey());
 			loginInfo.setSessionKey(req.getSessionKey());
-			loginInfo.setExpireDate(this.getExpirationTime(Integer.parseInt(req.getExtraDate())));
+			loginInfo.setExpireDate(this.commonComponent.getExpirationTime(Integer.parseInt(req.getExtraDate())));
 			schReq2.setLoginInfo(loginInfo);
 			schRes2 = this.sellerSCI.updateLoginInfo(schReq2);
 		}
@@ -826,13 +824,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			sellerMbrRes.setVendorCode(sellerMbr.getVendorCode());
 		}
 		return sellerMbrRes;
-	}
-
-	private String getExpirationTime(int hour) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.HOUR, hour);
-		return sdf.format(cal.getTime());
 	}
 
 }
