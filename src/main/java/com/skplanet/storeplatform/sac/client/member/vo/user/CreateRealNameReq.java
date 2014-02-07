@@ -102,6 +102,11 @@ public class CreateRealNameReq extends CommonInfo {
 	private String userSex = "";
 
 	/**
+	 * 실명인증 대상 내•외국인 정보 (local : 내국인, foreign : 외국인)
+	 */
+	private final String resident = "";
+
+	/**
 	 * @return String : userKey
 	 */
 	public String getUserKey() {
@@ -339,6 +344,13 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public void setUserSex(String userSex) {
 		this.userSex = userSex;
+	}
+
+	/**
+	 * @return String : resident
+	 */
+	public String getResident() {
+		return this.resident;
 	}
 
 }
