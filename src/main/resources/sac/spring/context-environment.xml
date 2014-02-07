@@ -12,7 +12,7 @@
 
     <context:property-placeholder properties-ref="propertiesForSac" /> 
     
-    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize2" destroy-method="destroy" >
+    <bean id="logInitializer" class="com.skplanet.storeplatform.framework.core.log.logback.LogInitializer" init-method="initialize" destroy-method="destroy" >
         <property name="logVersion" value="#{propertiesForSac['skp.common.fds.logversion']}"/>
         <property name="logbackPath">
             <list>
