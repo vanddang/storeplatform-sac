@@ -1434,6 +1434,16 @@
                 <if test="req.specialProdId != null">
                 AND I.PROD_ID = #{req.specialProdId}
                 </if>
+                AND EXISTS (
+                    SELECT 1 
+                    FROM  TB_DP_SPRT_DEVICE DV  
+                         ,TB_CM_DEVICE CM
+                    WHERE 1=1
+                      AND DV.DEVICE_MODEL_CD = CM.DEVICE_MODEL_CD
+                      AND CM.SCL_SHPG_SPRT_YN = 'Y'  /*쇼핑 상품 단말 지원 여부*/
+                      AND (DV.DEVICE_MODEL_CD  = #{req.deviceModelCd} OR DV.DEVICE_MODEL_CD = 'android_standard2')  
+                      AND PROD_ID = I.PROD_ID
+                    )                                     
            ) 
            WHERE NO =1
     </select>    
@@ -1610,6 +1620,18 @@
 		  AND A.EPSD_PROD_ID = E.PROD_ID
 		  AND A.CHNL_PROD_ID =#{chnlProdId}
 		  AND NVL(B.B2B_PROD_YN, 'N') != 'Y'
+          AND E.EXPO_YN ='Y'                                /* Y : 기본(기본여부) */
+          AND E.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */
+          AND D.TENANT_ID  =#{tenantHeader.tenantId}        /* INPUT 테넌트ID */	  
+          AND DECODE( A.EXPO_ORD, 1, NVL( A.EXPO_YN, 'N' )
+                                   ,( SELECT TPO2.EXPO_YN
+                                        FROM TB_DP_PROD_OPT TPO2
+                                       WHERE TPO2.CHNL_PROD_ID = A.CHNL_PROD_ID
+                                         AND TPO2.OPT1_NM = A.OPT1_NM
+                                         AND TPO2.EXPO_ORD = 1 
+                                         AND ROWNUM =1
+                                     )
+                     ) = 'Y'		  
 		  AND E.PROD_STATUS_CD = #{prodStatusCd}  /* PD000403 : 판매중 */
 		  AND SYSDATE BETWEEN D.APPLY_START_DT AND D.APPLY_END_DT
 		ORDER BY A.CHNL_PROD_ID
