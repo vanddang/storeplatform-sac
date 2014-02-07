@@ -82,8 +82,8 @@ public class SetLoginConditionTest {
 						resultMap.put("trx_no", "1111");
 						resultMap.put("sp_id", "1111");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "100000101376");
-						resultMap.put("login_status_code", "20");
+						resultMap.put("im_int_svc_no", "1000000856");
+						resultMap.put("login_status_code", "10");
 						resultMap.put("login_limit_sst_code", "41100");
 						resultMap.put("modify_sst_code", "20100");
 						resultMap.put("modify_req_date", "20130423");

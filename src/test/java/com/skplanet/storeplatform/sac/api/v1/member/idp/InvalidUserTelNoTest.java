@@ -78,9 +78,9 @@ public class InvalidUserTelNoTest {
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "100000003925");
-						resultMap.put("user_id", "tstoreoneid1002");
-						resultMap.put("user_tn", "01011112222");
+						resultMap.put("im_int_svc_no", "999000545996");
+						resultMap.put("user_id", "test0127_01");
+						resultMap.put("user_tn", "01056485325");
 						resultMap.put("is_user_tn_own", "Y");
 						resultMap.put("modify_sst_code", "20100");
 						resultMap.put("modify_req_date", "20130423");

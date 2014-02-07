@@ -81,7 +81,7 @@ public class PreCheckDeleteUserIDPTest {
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
 						resultMap.put("im_int_svc_no", "900000083496");
-						resultMap.put("user_id", "123");
+						resultMap.put("user_id", "1234");
 						resultMap
 								.put("user_ci",
 										"sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");

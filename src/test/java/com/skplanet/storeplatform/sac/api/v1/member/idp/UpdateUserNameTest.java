@@ -89,9 +89,10 @@ public class UpdateUserNameTest {
 
 						resultMap.put("rname_auth_sst_code", "1111");
 						resultMap.put("rname_auth_type_cd", "R");
-						resultMap
-								.put("user_ci",
-										"sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
+						// resultMap
+						// .put("user_ci",
+						// "sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
+						resultMap.put("user_ci", "");
 						resultMap.put("user_di", "MC0GCCqGSIb3DQIJAyEAfWou0NPTinxWZBT+zJkd3jFIfVXwnZLzCRkO/KQfGCE=");
 						resultMap.put("rname_auth_date", "20130122162853");
 						resultMap.put("rname_auth_mns_code", "9");
