@@ -373,25 +373,27 @@ public class DeviceServiceImpl implements DeviceService {
 
 		DeviceInfo deviceInfo = null;
 		SearchDeviceResponse schDeviceRes = null;
+
 		try {
 			schDeviceRes = this.deviceSCI.searchDevice(searchDeviceRequest);
+
+			if (schDeviceRes != null) {
+				deviceInfo = new DeviceInfo();
+				deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
+				deviceInfo.setUserId(schDeviceRes.getUserID());
+				deviceInfo.setUserKey(schDeviceRes.getUserKey());
+
+				/* 폰정보 DB 조회하여 추가 정보 반영 */
+				Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
+				deviceInfo.setMakeComp(device.getMnftCompCd());
+				deviceInfo.setModelNm(device.getModelNm());
+				deviceInfo.setVmType(device.getVmTypeCd());
+			}
+
 		} catch (StorePlatformException ex) {
 			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				throw ex;
 			}
-		}
-
-		if (schDeviceRes != null) {
-			deviceInfo = new DeviceInfo();
-			deviceInfo = DeviceUtil.getConverterDeviceInfo(schDeviceRes.getUserMbrDevice());
-			deviceInfo.setUserId(schDeviceRes.getUserID());
-			deviceInfo.setUserKey(schDeviceRes.getUserKey());
-
-			/* 폰정보 DB 조회하여 추가 정보 반영 */
-			Device device = this.commService.getPhoneInfo(deviceInfo.getDeviceModelNo());
-			deviceInfo.setMakeComp(device.getMnftCompCd());
-			deviceInfo.setModelNm(device.getModelNm());
-			deviceInfo.setVmType(device.getVmTypeCd());
 		}
 
 		logger.info("######################## DeviceServiceImpl searchDevice start ############################");
