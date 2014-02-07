@@ -1,7 +1,8 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <body>
-
-    <form action="/member/user/createBySimple/qa" method="get">
+<b><font color="red">* 무조건 개발서버 (http://211.188.207.142/sp_sac/member/user/createBySimple/qa) 호출 합니다.</font></b>
+    <form action="http://211.188.207.142/sp_sac/member/user/createBySimple/qa" method="get">
         <table border="1">
             <tr>
                 <td>userId</td>
