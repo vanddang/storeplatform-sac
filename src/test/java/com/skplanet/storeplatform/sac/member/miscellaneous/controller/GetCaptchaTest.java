@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
+package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -21,25 +21,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetModelCodeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetCaptchaRes;
 
 /**
- * 단말 모델코드 조회.
+ * Captcha 문자 발급 JUnit Test.
  * 
- * Updated on : 2014. 2. 6. Updated by : 김다슬, 인크로스.
+ * Updated on : 2014. 1. 13. Updated by : 김다슬, 인크로스.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class GetModelCodeTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GetModelCodeTest.class);
+public class GetCaptchaTest {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GetOpmdTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -65,25 +63,17 @@ public class GetModelCodeTest {
 	 */
 	@Test
 	public void successTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getModelCode/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-
-					@Override
-					public Object requestBody() {
-						GetModelCodeReq request = new GetModelCodeReq();
-						request.setMsisdn("01020284280");
-						LOGGER.debug("request param : {}", request.toString());
-						return request;
-					}
-				}).success(GetModelCodeRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getCaptcha/v1").httpMethod(HttpMethod.GET)
+				.success(GetCaptchaRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetModelCodeRes response = (GetModelCodeRes) result;
-						assertThat(response.getDeviceModelNo(), notNullValue());
-						LOGGER.debug("response param : {}", response.toString());
+						GetCaptchaRes res = (GetCaptchaRes) result;
+						assertThat(res.getImageData(), notNullValue());
+						assertThat(res.getImageSign(), notNullValue());
+						assertThat(res.getSignData(), notNullValue());
+						LOGGER.info("response :{}", res.getImageData());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
 	}
-	// (expected = StorePlatformException.class)
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
+package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,11 +25,11 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAdditionalServiceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetAdditionalServiceRes;
 
 /**
- * 부가서비스 가입
+ * 부가서비스 가입 조회
  * 
  * Updated on : 2014. 2. 6. Updated by : 김다슬, 인크로스.
  */
@@ -38,8 +38,9 @@ import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.CreateAddit
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class CreateAdditionalServiceTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(CreateAdditionalServiceTest.class);
+public class GetAdditionalServiceTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GetAdditionalServiceTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -66,23 +67,22 @@ public class CreateAdditionalServiceTest {
 	 */
 	@Test
 	public void requestMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/createAdditionalService/v1")
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getAdditionalService/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						CreateAdditionalServiceReq request = new CreateAdditionalServiceReq();
+						GetAdditionalServiceReq request = new GetAdditionalServiceReq();
 						request.setMsisdn("");
 						request.setSvcCode("");
-						request.setSvcMngNum("");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}
-				}).success(CreateAdditionalServiceRes.class, new SuccessCallback() {
+				}).success(GetAdditionalServiceRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						CreateAdditionalServiceRes response = (CreateAdditionalServiceRes) result;
+						GetAdditionalServiceRes response = (GetAdditionalServiceRes) result;
 						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);

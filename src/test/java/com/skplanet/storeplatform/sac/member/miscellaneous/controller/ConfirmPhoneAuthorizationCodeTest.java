@@ -1,8 +1,9 @@
-package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
+package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,21 +27,22 @@ import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdReq;
-import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.GetOpmdRes;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeReq;
+import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmPhoneAuthorizationCodeRes;
 
 /**
- * OPMD 모회선 번호 조회 JUnit Test.
+ * 휴대폰 인증 코드 확인 JUnit Test.
  * 
- * Updated on : 2014. 1. 9. Updated by : 김다슬, 인크로스.
+ * Updated on : 2014. 1. 17. Updated by : 김다슬, 인크로스.
  */
 @ActiveProfiles(value = "local")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class GetOpmdTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(GetOpmdTest.class);
+public class ConfirmPhoneAuthorizationCodeTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmPhoneAuthorizationCodeTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -48,9 +50,8 @@ public class GetOpmdTest {
 	private MockMvc mockMvc;
 
 	/**
-	 * 
 	 * <pre>
-	 * method 설명.
+	 * Initialize parameter before JUnit Test.
 	 * </pre>
 	 */
 	@Before
@@ -60,29 +61,41 @@ public class GetOpmdTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE
-	 * 정상 989로 시작하는 MDN이 Request로 올 경우.
+	 * Restoration parameter after JUnit Test.
 	 * </pre>
-	 * 
+	 */
+	@After
+	public void after() {
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+	}
+
+	/**
+	 * <pre>
+	 * 성공 CASE
+	 * 정상 파라미터 전달. - exception??? 왜
+	 * </pre>
 	 */
 	@Test
-	public void requestOpmdMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
+	public void simpleTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						GetOpmdReq request = new GetOpmdReq();
-						request.setMsisdn("98999720228");
+						ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
+						request.setUserPhone("01012344241");
+						request.setPhoneAuthCode("707539");
+						request.setPhoneSign("f59e3e2bee644efa8922cfc4e23787df");
+						request.setTimeToLive("3");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}
-				}).success(GetOpmdRes.class, new SuccessCallback() {
+				}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetOpmdRes response = (GetOpmdRes) result;
-						assertThat(response.getMsisdn(), notNullValue());
+						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
+						assertThat(response.getUserPhone(), notNullValue());
 						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
@@ -91,65 +104,34 @@ public class GetOpmdTest {
 
 	/**
 	 * <pre>
-	 * 성공 CASE
-	 * 정상 msisdn이 Request Parameter로 넘어온 경우.
+	 * Exception.
+	 * 기존 인증된 인증 코드.
 	 * </pre>
-	 * 
-	 */
-	@Test
-	public void requestMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
-
-					@Override
-					public Object requestBody() {
-						GetOpmdReq request = new GetOpmdReq();
-						request.setMsisdn("01020284222");
-						LOGGER.debug("request param : {}", request.toString());
-						return request;
-					}
-				}).success(GetOpmdRes.class, new SuccessCallback() {
-
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetOpmdRes response = (GetOpmdRes) result;
-						assertThat(response.getMsisdn(), notNullValue());
-						LOGGER.debug("response param : {} ", response.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 성공 CASE
-	 * 유효하지 않은 MDN이 Request로 넘어온 경우.
-	 * msisdn 외 다른 값(MAC-Address, Wifi, ... )이 오면 모번호 조회 하지 않고 그 값 그대로 내려줌.
-	 * </pre>
-	 * 
 	 */
 	@Test(expected = StorePlatformException.class)
-	public void requestinvalidMsisdnTest() {
-		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/getOpmd/v1").httpMethod(HttpMethod.POST)
-				.requestBody(new RequestBodySetter() {
+	public void terminatedAuthCodeTest() {
+		new TestCaseTemplate(this.mockMvc).url("/member/miscellaneous/ConfirmPhoneAuthorizationCode/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 
 					@Override
 					public Object requestBody() {
-						GetOpmdReq request = new GetOpmdReq();
-						request.setMsisdn("E1HHADEFVA9");
+						ConfirmPhoneAuthorizationCodeReq request = new ConfirmPhoneAuthorizationCodeReq();
+						request.setUserPhone("01012344241");
+						request.setPhoneAuthCode("805531");
+						request.setPhoneSign("b3685c54bf7c491d8a97cc5211449864");
+						request.setTimeToLive("3");
 						LOGGER.debug("request param : {}", request.toString());
 						return request;
 					}
-				}).success(GetOpmdRes.class, new SuccessCallback() {
+				}).success(ConfirmPhoneAuthorizationCodeRes.class, new SuccessCallback() {
 
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						GetOpmdRes response = (GetOpmdRes) result;
-						assertThat(response.getMsisdn(), notNullValue());
+						ConfirmPhoneAuthorizationCodeRes response = (ConfirmPhoneAuthorizationCodeRes) result;
+						assertThat(response.getUserPhone(), notNullValue());
 						LOGGER.debug("response param : {} ", response.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
 	}
 
 }

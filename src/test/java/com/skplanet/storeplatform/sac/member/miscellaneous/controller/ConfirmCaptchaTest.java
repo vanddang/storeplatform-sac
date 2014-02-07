@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.api.v1.member.miscellaneous;
+package com.skplanet.storeplatform.sac.member.miscellaneous.controller;
 
 import static org.junit.Assert.assertEquals;
 
