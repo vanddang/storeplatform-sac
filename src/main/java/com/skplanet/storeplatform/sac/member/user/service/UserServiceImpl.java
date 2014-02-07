@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
@@ -103,14 +104,19 @@ public class UserServiceImpl implements UserService {
 		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
 		listDeviceReq.setUserKey(userKey);
 
-		ListDeviceRes listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+		String userPhoneStr = "";
+		ListDeviceRes listDeviceRes = null;
+		try {
+			listDeviceRes = this.deviceService.listDevice(requestHeader, listDeviceReq);
+		} catch (StorePlatformException ex) {
+			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				throw ex;
+			}
+		}
 
-		List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
-		String userPhoneStr = null;
-
-		if (deviceInfoList != null) {
+		if (listDeviceRes != null) {
 			StringBuffer sbUserPhone = new StringBuffer();
-			for (DeviceInfo deviceInfo : deviceInfoList) {
+			for (DeviceInfo deviceInfo : listDeviceRes.getDeviceInfoList()) {
 
 				String imMngNum = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, deviceInfo.getUserDeviceExtraInfo());
 				String uacd = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, deviceInfo.getUserDeviceExtraInfo());
@@ -134,11 +140,8 @@ public class UserServiceImpl implements UserService {
 
 			param.put("key", schUserRes.getUserMbr().getImSvcNo());
 			param.put("operation_mode", this.IDP_OPERATION_MODE);
-			if (userPhoneStr != null) {
-				param.put("user_mdn", userPhoneStr);
-				param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-			}
-
+			param.put("user_mdn", userPhoneStr);
+			param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
 			param.put("modify_req_time", DateUtil.getDateString(new Date(), "HHmmss"));
 
@@ -148,10 +151,8 @@ public class UserServiceImpl implements UserService {
 
 			param.put("key_type", "2");
 			param.put("key", schUserRes.getUserMbr().getImMbrNo());
-			if (userPhoneStr != null) {
-				param.put("user_phone", userPhoneStr);
-				param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
-			}
+			param.put("user_phone", userPhoneStr);
+			param.put("phone_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 
 			this.idpService.modifyProfile(param);
 
