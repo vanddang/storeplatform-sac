@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BestContents">
     <!-- BEST 컨텐츠 상품 조회(movie, broadcast) -->
-    <select id="selectBestContentsVodList" parameterType="BestContentsReq" resultType="ProductBasicInfo">
+    <select id="selectBestContentsVodList" parameterType="BestContentsSacReq" resultType="ProductBasicInfo">
         SELECT  /* BestContentsMapper.xml, selectBestContentsVodList, 홍지호, 2014-02-03 */
                 LA.TOTAL_COUNT
               , LA.RNUM
@@ -75,9 +75,13 @@
                                        <if test='filteredBy == "broadcast"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP18'                /* 탑메뉴ID */
                                        </if>                                                                           
-                                       <if test="prodGradeCd != null and prodGradeCd != ''">
-                                           AND D.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
-                                       </if>                                                      
+                                       <if test="arrayProdGradeCd != null">
+                                           AND D.PROD_GRD_CD IN
+                                           <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                               #{prodGradeCd}
+                                           </foreach>
+                                       </if>
+                                       
                                        ) IA
                                  WHERE IA.RN = 1
                                ) JA
@@ -87,7 +91,7 @@
     </select>
     
     <!-- BEST 컨텐츠 상품 조회(ebook, comic) -->
-    <select id="selectBestContentsBookList" parameterType="BestContentsReq" resultType="ProductBasicInfo">
+    <select id="selectBestContentsBookList" parameterType="BestContentsSacReq" resultType="ProductBasicInfo">
         SELECT  /* BestContentsMapper.xml, selectBestContentsBookList, 홍지호, 2014-02-03 */
                 LA.TOTAL_COUNT
               , LA.RNUM
@@ -165,9 +169,12 @@
                                        <if test='filteredBy == "comic"'>                                                    
                                            AND B.TOP_MENU_ID = 'DP14'                /* 탑메뉴ID */
                                        </if>   
-                                       <if test="prodGradeCd != null and prodGradeCd != ''">
-                                           AND D.PROD_GRD_CD = #{prodGradeCd}        /*  param : 상품이용등급 */
-                                       </if>  
+                                       <if test="arrayProdGradeCd != null">
+                                           AND D.PROD_GRD_CD IN
+                                           <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                               #{prodGradeCd}
+                                           </foreach>
+                                       </if>
                                        ) IA
                                  WHERE IA.RN = 1
                                ) JA

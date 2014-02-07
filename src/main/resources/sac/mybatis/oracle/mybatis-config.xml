@@ -43,7 +43,7 @@
         <typeAlias alias="ProdNotiGood" type="com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood" />
         <typeAlias alias="MbrAvg" type="com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg" />
         <typeAlias alias="TenantProdStats" type="com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats" />
-     
+        
         <!-- ################################################# -->
         <!-- 회원                                            -->
         <!-- ################################################# -->
@@ -58,7 +58,7 @@
         <!-- 회원-판매자 탈퇴사유목록 조회 -->
         <typeAlias alias="ListWithdrawalReasonReq"      type="com.skplanet.storeplatform.sac.client.member.vo.seller.ListWithdrawalReasonReq" />
         <typeAlias alias="SecedeReson"      type="com.skplanet.storeplatform.sac.client.member.vo.common.SecedeReson" />
-        
+            
         <!-- 회원-판매자 나라별 해외은행 정보 조회 -->
         <typeAlias alias="ListBanksByCountryReq"      type="com.skplanet.storeplatform.sac.client.member.vo.seller.ListBanksByCountryReq" />
         <typeAlias alias="BanksByCountry"      type="com.skplanet.storeplatform.sac.client.member.vo.common.BanksByCountry" />
@@ -75,6 +75,7 @@
         <!-- 구매Part 테넌트 정책 조회 -->
         <typeAlias alias="PurchaseTenantPolicy" type="com.skplanet.storeplatform.sac.purchase.common.vo.PurchaseTenantPolicy" />
         
+        
         <!-- ################################################# -->
         <!-- 전시                                            -->
         <!-- ################################################# -->
@@ -88,11 +89,11 @@
         
         
         <!-- 일반카테고리 앱 상품 조회 -->
-        <typeAlias alias="CategoryAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppReq" />
+        <typeAlias alias="CategoryAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq" />
         <typeAlias alias="CategoryApp"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryApp" />
         
         <!-- 일반카테고리 이북/코믹 상품 조회 -->
-        <typeAlias alias="CategoryEbookComicReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicReq" />
+        <typeAlias alias="CategoryEbookComicSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq" />
         <typeAlias alias="CategoryEbookComic"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryEbookComic" />
         
         <!-- ??? -->
@@ -109,11 +110,11 @@
         <typeAlias alias="MenuCategory"  type="com.skplanet.storeplatform.sac.display.menu.vo.MenuCategory" />
                             
         <!-- 일반카테고리 웹툰 상품 조회 -->                                                            
-        <typeAlias alias="CategoryWebtoonReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonReq" />
+        <typeAlias alias="CategoryWebtoonSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq" />
         <typeAlias alias="CategoryWebtoon"  type="com.skplanet.storeplatform.sac.display.category.vo.CategoryWebtoon" />
         <!-- 운영자 추천 웹툰 상품 조회 -->   
         <typeAlias alias="RecommendWebtoonSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq" />
-        <typeAlias alias="RecommendWebtoon"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon" />   
+        <typeAlias alias="RecommendWebtoon"  type="com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon" />       
         
         <!-- TODAY 상품 조회 -->
         <typeAlias alias="RecommendTodaySacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendTodaySacReq" />
@@ -146,15 +147,15 @@
         <typeAlias alias="Shopping"  type="com.skplanet.storeplatform.sac.display.shopping.vo.Shopping" />
         
         <!-- BEST 앱 상품 조회 -->
-        <typeAlias alias="BestAppReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestAppReq" />
+        <typeAlias alias="BestAppSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestAppSacReq" />
         <typeAlias alias="BestApp"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestApp" />
 
         <!-- BEST 컨텐츠 상품 조회 -->
-        <typeAlias alias="BestContentsReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsReq" />
+        <typeAlias alias="BestContentsSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestContentsSacReq" />
         <typeAlias alias="BestContents"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestContents" />
         
         <!-- BEST 다운로드 상품 조회 -->
-        <typeAlias alias="BestDownloadReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadReq" />
+        <typeAlias alias="BestDownloadSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.best.BestDownloadSacReq" />
         <typeAlias alias="BestDownload"  type="com.skplanet.storeplatform.sac.display.feature.best.vo.BestDownload" />
         
         <!-- 상품 meta 정보 조회 -->
@@ -171,7 +172,7 @@
         
         <!-- for download Vod 정보 조회 -->
         <typeAlias alias="DownloadVodSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq" />
-        <typeAlias alias="DownloadVod"  type="com.skplanet.storeplatform.sac.display.download.vo.DownloadVod" />
+        <typeAlias alias="DownloadVod"  type="com.skplanet.storeplatform.sac.display.download.vo.DownloadVod" />    
         
         <!-- for download Music 정보 조회 -->
         <typeAlias alias="DownloadMusicSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.download.DownloadMusicSacReq" />    
@@ -189,7 +190,7 @@
         <!-- 배너 정보 조회 -->
         <typeAlias alias="BannerReq"  type="com.skplanet.storeplatform.sac.client.display.vo.banner.BannerReq" />
         <typeAlias alias="Banner"  type="com.skplanet.storeplatform.sac.display.banner.vo.Banner" />
-        
+            
         <!-- 이북 상품상세 정보 조회 -->
         <typeAlias alias="EpubChannelReq"  type="com.skplanet.storeplatform.sac.client.display.vo.epub.EpubChannelReq" />
         <typeAlias alias="EpubDetail"  type="com.skplanet.storeplatform.sac.display.epub.vo.EpubDetail" />

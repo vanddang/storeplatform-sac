@@ -2,292 +2,149 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BestApp">
     <!-- BEST 앱 상품 조회(추천, 인기(매출), 인기신규) -->
-    <select id="selectBestAppList" parameterType="BestAppReq" resultType="BestApp">
+    <select id="selectBestAppList" parameterType="BestAppSacReq" resultType="ProductBasicInfo">
 		SELECT /* BestAppMapper.xml, selectBestAppList, SAC : 이석희 , 2014-01-08 */
-		       KA.TOTAL_COUNT     /* 조회 건수 */
-		      ,KA.PROD_ID         /* 상품 ID */
-		      ,KA.PROD_NM         /* 상품명 */
-		      ,KA.MENU_ID         /* MENU_ID */
-		      ,KA.TOP_MENU_ID     /* 상위 MENU ID */
-		      ,KA.TOP_MENU_NM     /* 상위 메뉴명 */
-		      ,KA.PROD_GRD_CD     /* 이용등급 */
-		      ,KA.PROD_BASE_DESC  /* 상품 기본 설명 */
---		      ,KA.PROD_DTL_DESC   /* 상품 상세 설명 */
-              ,DECODE( KA.PART_PARENT_CLSF_CD, 'PD012301', 'Y', 'N' ) AS PART_PARENT_CLSF_CD
-              ,KA.DRM_YN /* DRM */             
---		      ,KA.PART_PARENT_CLSF_CD /* IN_APP_BILLING */
-		      ,KA.APK_VER   /* APK 버전 */
-		      ,KA.AID /* APP ID */
-		      ,KB.APK_VER AS APK_VER_CD /* APK 버전 코드 */
-		      ,KB.APK_PKG_NM  /* 패키지명 */
-		      ,KA.MENU_NM    /* MENU 명 */
-		      ,KA.MENU_DESC  /* MENU 설명 */
-		      ,KA.PROD_AMT /* 상품가격 */
-		      ,KB.APK_VER AS APK_VER_CD  /* APK 버전 코드 */ 
-              <![CDATA[ 
-              ,NVL((CASE WHEN (KA.AVG_EVLU_SCORE > 0 AND KA.AVG_EVLU_SCORE < 1) THEN 1
-                         WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
-                         ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE     /* 평점 */
-              ]]> 
-		      ,NVL(KA.DWLD_CNT, 0) AS DWLD_CNT /* 다운로드수 */
-		      ,NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT /* 참여자수 */
-		      ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
-		      ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
-              ,KB.FILE_PATH AS FILE_PATH /* APK 파일 경로 */
-              ,KB.FILE_SIZE AS FILE_SIZE /* APK 파일 사이즈 */
-		  FROM 
-		       (
-		        SELECT  JA.*
-		          FROM
-		              (
-		                SELECT ROWNUM AS RNUM
-		                      ,IA.*
-		                      ,IB.DWLD_CNT
-		                      ,IB.AVG_EVLU_SCORE
-		                      ,IB.PATICPERS_CNT
-		                  FROM 
-		                       (  
-		                         SELECT COUNT(*) OVER () AS TOTAL_COUNT
-		                               ,A.EXPO_ORD
-		                               ,A.TENANT_ID
-		                               ,A.LIST_ID
-		                               ,A.PROD_ID 
-		                               ,A.MENU_ID                                                        
-		                               ,A.EXPO_START_DT
-		                               ,A.EXPO_END_DT
-		                               ,B.DRM_YN
-		                               ,B.PROD_GRD_CD
-		                               ,C.PROD_NM  
-		                               ,C.PROD_BASE_DESC  
-		                               ,C.PROD_DTL_DESC                       
-		                               ,D.PART_PARENT_CLSF_CD                              
-		                               ,D.VER_MAJOR||'.'||D.VER_MINOR AS APK_VER   
-		                               ,D.AID             
-		                               ,F.TOP_MENU_ID
-		                               ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.TOP_MENU_ID = MENU_ID AND LANG_CD =#{langCd}) AS TOP_MENU_NM                       
-		                               ,G.MENU_NM                               
-		                               ,G.MENU_DESC
-		                               ,H.SUB_CONTENTS_ID
-		                               ,J.PROD_AMT
-		                           FROM 
-		                               (
-		                                 SELECT A.TENANT_ID
-		                                       ,A.LIST_ID
-		                                       ,A.PROD_ID
-		                                       ,A.MENU_ID
-		                                       ,A.PRCHS_AMT
-		                                       ,A.PRCHS_QTY
-		                                       ,A.REG_DT
-		                                       ,A.EXPO_ORD
-		                                       ,A.EXPO_YN
-		                                       ,A.EXPO_START_DT
-		                                       ,A.EXPO_END_DT
-		                                   FROM TB_DP_LIST_PROD A
-		                                  WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
-		                                    AND A.LIST_ID = #{listId} /* param : listId */
-		                                    AND A.EXPO_YN = 'Y' /* 전시여부 */ 
-		                                    AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
-		                               ) A
-		                               ,TB_DP_PROD B
-		                               ,TB_DP_PROD_DESC C
-		                               ,TB_DP_APP_PROD D
-		                               ,TB_DP_MENU_CATEGORY_PROD_MAPG E
-		                               ,TB_DP_MENU_CATEGORY F
-		                               ,TB_DP_MENU_CATEGORY_DESC G
-		                               ,TB_DP_SPRT_DEVICE H
-		                               ,TB_DP_TENANT_PROD I
-		                               ,TB_DP_TENANT_PROD_PRICE J
-		                               ,TB_CM_DEVICE K
-		                          WHERE A.PROD_ID = B.PROD_ID
-		                            AND B.SVC_GRP_CD ='DP000201' /* 서비스 그룹코드 : 앱 */
-                                  <if test="prodGradeCd != null and prodGradeCd != '' ">
-                                    AND  B.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
-                                  </if>  		                            
-		                            AND A.PROD_ID = C.PROD_ID
-		                            AND C.LANG_CD = #{langCd} /* param : 언어코드 */
-		                            AND A.PROD_ID = D.PROD_ID
-		                            AND A.PROD_ID = E.PROD_ID
-		                            AND A.MENU_ID = E.MENU_ID                    
-		                            AND E.MENU_ID = F.MENU_ID
-		                            AND F.USE_YN ='Y'                    
-		                            AND A.MENU_ID = G.MENU_ID             
-		                            AND G.LANG_CD = #{langCd} /* param : 언어코드 */
-		                            AND A.PROD_ID = H.PROD_ID
-		                            AND A.TENANT_ID = I.TENANT_ID
-		                            AND A.PROD_ID = I.PROD_ID
-		                            AND A.TENANT_ID = J.TENANT_ID
-		                            AND A.PROD_ID = J.PROD_ID
-		                            AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
-		                            AND F.TOP_MENU_ID <![CDATA[<>]]> 'DP02' /* DP02 : 폰꾸미기 */
-		                            AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
-		                            AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
-		                            AND K.USE_YN = 'Y'
-		                            AND I.EXPO_YN ='Y' /* 노출여부 */
-		                            AND SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT 
-		                          ORDER BY A.EXPO_ORD
-		                       )                         IA
-		                        ,TB_DP_TENANT_PROD_STATS IB
-		                   WHERE  IA.TENANT_ID = IB.TENANT_ID(+)
-		                     AND  IA.PROD_ID = IB.PROD_ID(+)                                
-		              ) JA
-		         WHERE JA.RNUM BETWEEN  #{offset} AND #{count} /* param : offset, count */ 
-		        )                   KA
-		        ,TB_DP_SUB_CONTENTS KB
-		        ,TB_DP_PROD_IMG     KC
-		   WHERE KA.PROD_ID = KB.PROD_ID
-		     AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
-		     AND KA.PROD_ID = KC.PROD_ID
-		     AND KC.EXPO_ORD = '1'
-		     AND KC.LANG_CD = #{langCd}
-		     AND KC.IMG_CD = 'DP000101'    	       
+               KA.TOTAL_COUNT     /* 조회 건수 */
+              ,KA.TOP_MENU_ID     /* 상위 MENU ID */
+              ,KA.MENU_ID         /* MENU_ID */
+              ,KA.PROD_ID         /* 상품 ID */
+          FROM 
+               (
+                SELECT  JA.*
+                  FROM
+                      (
+                        SELECT ROWNUM AS RNUM
+                              ,IA.*
+                          FROM 
+                               (  
+                                 SELECT COUNT(*) OVER () AS TOTAL_COUNT
+                                       ,A.EXPO_ORD
+                                       ,A.TENANT_ID
+                                       ,A.PROD_ID 
+                                       ,A.MENU_ID                                                        
+                                       ,F.TOP_MENU_ID
+                                       ,H.SUB_CONTENTS_ID
+                                   FROM 
+                                       (
+                                         SELECT A.TENANT_ID
+                                               ,A.PROD_ID
+                                               ,A.MENU_ID
+                                               ,A.EXPO_ORD
+                                           FROM TB_DP_LIST_PROD A
+                                          WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
+                                            AND A.LIST_ID = #{listId} /* param : listId */
+                                            AND A.EXPO_YN = 'Y' /* 전시여부 */ 
+                                            AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
+                                       ) A
+                                       ,TB_DP_PROD B
+                                       ,TB_DP_MENU_CATEGORY_PROD_MAPG E
+                                       ,TB_DP_MENU_CATEGORY F
+                                       ,TB_DP_SPRT_DEVICE H
+                                       ,TB_DP_TENANT_PROD I
+                                       ,TB_CM_DEVICE K
+                                  WHERE A.PROD_ID = B.PROD_ID
+                                    AND B.SVC_GRP_CD ='DP000201' /* 서비스 그룹코드 : 앱 */
+                                  <if test="arrayProdGradeCd != null">
+                                    AND B.PROD_GRD_CD IN
+                                      <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                        #{prodGradeCd}
+                                      </foreach>
+                                  </if>
+                                    AND A.PROD_ID = E.PROD_ID
+                                    AND A.MENU_ID = E.MENU_ID                    
+                                    AND E.MENU_ID = F.MENU_ID
+                                    AND F.USE_YN ='Y'                    
+                                    AND A.PROD_ID = H.PROD_ID
+                                    AND A.TENANT_ID = I.TENANT_ID
+                                    AND A.PROD_ID = I.PROD_ID
+                                    AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
+                                    AND F.TOP_MENU_ID != 'DP02'         /* DP02 : 폰꾸미기 */
+                                    AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
+                                    AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
+                                    AND K.USE_YN = 'Y'
+                                    AND I.EXPO_YN ='Y' /* 노출여부 */
+                                  ORDER BY A.EXPO_ORD
+                               ) IA
+                      ) JA
+                 WHERE JA.RNUM BETWEEN #{offset} AND #{count} /* param : offset, count */ 
+                ) KA
     </select>
     
     <!-- BEST 앱 상품 조회(신규) -->
-    <select id="selectNewBestAppList" parameterType="BestAppReq" resultType="BestApp">
-		  SELECT KA.TOTAL_COUNT     /* 조회 건수 */ 
-		        ,KA.RN
-		        ,KA.SELLER_MBR_NO
-		        ,KA.PROD_ID         /* 상품 ID */
-		        ,KA.PROD_NM         /* 상품명 */
-		        ,KA.MENU_ID         /* MENU_ID */
-		        ,KA.TOP_MENU_ID     /* 상위 MENU ID */
-		        ,KA.TOP_MENU_NM     /* 상위 메뉴명 */
-		        ,KA.PROD_GRD_CD     /* 이용등급 */
-		        ,KA.PROD_BASE_DESC  /* 상품 기본 설명 */           
-		        ,DECODE( KA.PART_PARENT_CLSF_CD, 'PD012301', 'Y', 'N' ) AS PART_PARENT_CLSF_CD /* IN_APP_BILLING */
-		        ,KA.DRM_YN /* DRM */
-		        ,KA.APK_VER   /* APK 버전 */
-		        ,KA.AID /* APP ID */
-		        ,KB.APK_VER AS APK_VER_CD /* APK 버전 코드 */
-		        ,KB.APK_PKG_NM  /* 패키지명 */
-		        ,KA.MENU_NM    /* MENU 명 */
-		        ,KA.MENU_DESC  /* MENU 설명 */
-		        ,KA.PROD_AMT /* 상품가격 */
-		        ,KB.APK_VER AS APK_VER_CD  /* APK 버전 코드 */ 
-		        <![CDATA[ 
-		        ,NVL((CASE WHEN (KA.AVG_EVLU_SCORE > 0 AND KA.AVG_EVLU_SCORE < 1) THEN 1
-		                   WHEN KA.AVG_EVLU_SCORE > 5 THEN 5
-		                   ELSE ROUND(KA.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE     /* 평점 */
-		        ]]>
-		        ,NVL(KA.DWLD_CNT, 0) AS DWLD_CNT /* 다운로드수 */
-		        ,NVL(KA.PATICPERS_CNT, 0) AS PATICPERS_CNT /* 참여자수 */
-                ,KC.FILE_PATH AS IMG_PATH/* 이미지 경로 */ 
-                ,KC.FILE_SIZE AS IMG_SIZE /* 이미지 사이즈 */
-                ,KB.FILE_PATH AS FILE_PATH /* APK 파일 경로 */
-                ,KB.FILE_SIZE AS FILE_SIZE /* APK 파일 사이즈 */
-		    FROM 
-		         (
-		           SELECT TA.*
-		             FROM
-		                 (
-		                  SELECT COUNT(*) OVER () AS TOTAL_COUNT /* 조회건수 */
+    <select id="selectNewBestAppList" parameterType="BestAppSacReq" resultType="ProductBasicInfo">
+		  SELECT /* BestAppMapper.xml, selectNewBestAppList, SAC : 이석희 , 2014-01-08 */
+		         KA.TOTAL_COUNT     /* 조회 건수 */ 
+                ,KA.TOP_MENU_ID     /* 상위 MENU ID */
+                ,KA.MENU_ID         /* MENU_ID */
+                ,KA.PROD_ID         /* 상품 ID */
+            FROM 
+                 (
+                   SELECT TA.*
+                     FROM
+                         (
+                          SELECT COUNT(*) OVER () AS TOTAL_COUNT /* 조회건수 */
                                 ,ROWNUM AS RNUM                        
-		                        ,JA.*
-		                    FROM
-		                        (
-		                          SELECT ROW_NUMBER() OVER ( PARTITION BY IA.SELLER_MBR_NO ORDER BY IA.UPD_DT DESC ) AS RN 
-		                                ,IA.*
-		                                ,IB.DWLD_CNT
-		                                ,IB.AVG_EVLU_SCORE
-		                                ,IB.PATICPERS_CNT                         
-		                            FROM 
-		                                 (  
-		                                   SELECT B.SELLER_MBR_NO
-		                                         ,A.EXPO_ORD
-		                                         ,A.TENANT_ID
-		                                         ,A.LIST_ID
-		                                         ,A.PROD_ID 
-		                                         ,A.MENU_ID                                                     
-		                                         ,A.EXPO_START_DT
-		                                         ,A.EXPO_END_DT
-		                                         ,B.DRM_YN
-		                                         ,B.PROD_GRD_CD                               
-		                                         ,B.UPD_DT
-		                                         ,C.PROD_NM  
-		                                         ,C.PROD_BASE_DESC  
-		                                         ,C.PROD_DTL_DESC                       
-		                                         ,D.PART_PARENT_CLSF_CD                              
-		                                         ,D.VER_MAJOR||'.'||D.VER_MINOR AS APK_VER   
-		                                         ,D.AID             
-		                                         ,F.TOP_MENU_ID
-		                                         ,(SELECT MENU_NM FROM TB_DP_MENU_CATEGORY_DESC WHERE F.TOP_MENU_ID = MENU_ID AND LANG_CD =#{langCd}) AS TOP_MENU_NM                       
-		                                         ,G.MENU_NM                               
-		                                         ,G.MENU_DESC
-		                                         ,H.SUB_CONTENTS_ID
-		                                         ,J.PROD_AMT
-		                                     FROM 
-		                                         (
-		                                           SELECT A.TENANT_ID
-		                                                 ,A.LIST_ID
-		                                                 ,A.PROD_ID
-		                                                 ,A.MENU_ID
-		                                                 ,A.PRCHS_AMT
-		                                                 ,A.PRCHS_QTY
-		                                                 ,A.UPD_DT
-		                                                 ,A.EXPO_ORD
-		                                                 ,A.EXPO_YN
-		                                                 ,A.EXPO_START_DT
-		                                                 ,A.EXPO_END_DT
-		                                             FROM TB_DP_LIST_PROD A                                       
-		                                            WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
+                                ,JA.*
+                            FROM
+                                (
+                                  SELECT ROW_NUMBER() OVER ( PARTITION BY IA.SELLER_MBR_NO ORDER BY IA.UPD_DT DESC ) AS RN 
+                                        ,IA.*
+                                    FROM 
+                                         (  
+                                           SELECT B.SELLER_MBR_NO
+                                                 ,B.UPD_DT
+                                                 ,A.EXPO_ORD
+                                                 ,A.TENANT_ID
+                                                 ,A.PROD_ID 
+                                                 ,A.MENU_ID                                                     
+                                                 ,F.TOP_MENU_ID
+                                                 ,H.SUB_CONTENTS_ID
+                                                     FROM 
+                                                 (
+                                                   SELECT A.TENANT_ID
+                                                         ,A.PROD_ID
+                                                         ,A.MENU_ID
+                                                         ,A.EXPO_ORD
+                                                     FROM TB_DP_LIST_PROD A                                       
+                                                    WHERE A.TENANT_ID = #{tenantId} /* header param : tenantI                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   d */ 
                                                       AND A.LIST_ID = #{listId} /* param : listId */
-		                                              AND A.EXPO_YN ='Y' /* 전시여부 */
-		                                              AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */                                             
-		                                         ) A
-		                                         ,TB_DP_PROD B
-		                                         ,TB_DP_PROD_DESC C
-		                                         ,TB_DP_APP_PROD D
-		                                         ,TB_DP_MENU_CATEGORY_PROD_MAPG E
-		                                         ,TB_DP_MENU_CATEGORY F
-		                                         ,TB_DP_MENU_CATEGORY_DESC G
-		                                         ,TB_DP_SPRT_DEVICE H
-		                                         ,TB_DP_TENANT_PROD I
-		                                         ,TB_DP_TENANT_PROD_PRICE J
-		                                         ,TB_CM_DEVICE K
-		                                    WHERE A.PROD_ID = B.PROD_ID
-		                                      AND B.SVC_GRP_CD ='DP000201'
-			                                 <if test="prodGradeCd != null and prodGradeCd != '' ">
-			                                    AND  B.PROD_GRD_CD = #{prodGradeCd}  /*  param : 상품이용등급 */
-			                                  </if>                                                                                  
-		                                      AND A.PROD_ID = C.PROD_ID
-		                                      AND C.LANG_CD = #{langCd} /* param : 언어코드 */
-		                                      AND A.PROD_ID = D.PROD_ID
-		                                      AND A.PROD_ID = E.PROD_ID
-		                                      AND A.MENU_ID = E.MENU_ID                    
-		                                      AND E.MENU_ID = F.MENU_ID
-		                                      AND F.USE_YN = 'Y'                    
-		                                      AND A.MENU_ID = G.MENU_ID             
-		                                      AND G.LANG_CD = #{langCd} /* param : 언어코드 */
-		                                      AND A.PROD_ID = H.PROD_ID
-		                                      AND A.TENANT_ID = I.TENANT_ID
-		                                      AND A.PROD_ID = I.PROD_ID
-		                                      AND A.TENANT_ID = J.TENANT_ID
-		                                      AND A.PROD_ID = J.PROD_ID
-		                                      AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
-		                                      AND F.TOP_MENU_ID <![CDATA[ <> ]]> 'DP02' /* DP02 : 폰꾸미기 */
-		                                      AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
-		                                      AND K.DEVICE_MODEL_CD = 'SHV-E210S' /* header param : 단말모델코드 */
-		                                      AND K.USE_YN ='Y'
-		                                      AND I.EXPO_YN ='Y' /* 노출여부 */
-		                                      AND SYSDATE BETWEEN J.APPLY_START_DT AND J.APPLY_END_DT 
-		                                    ORDER BY A.EXPO_ORD
-		                                 )                         IA
-		                                  ,TB_DP_TENANT_PROD_STATS IB
-		                             WHERE IA.TENANT_ID = IB.TENANT_ID(+)
-		                               AND IA.PROD_ID = IB.PROD_ID(+)                                                              
-		                         ) JA          
-		                    WHERE JA.RN <![CDATA[ <= ]]> 2 
-		                 ) TA
-		            WHERE TA.RNUM BETWEEN #{offset} AND #{count} /* param : offset, count */    
-		          )                   KA
-		          ,TB_DP_SUB_CONTENTS KB
-		          ,TB_DP_PROD_IMG     KC
-		    WHERE KA.PROD_ID = KB.PROD_ID
-		      AND KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID
-		      AND KA.PROD_ID = KC.PROD_ID
-		      AND KC.EXPO_ORD = '1'
-		      AND KC.LANG_CD = #{langCd}
-		      AND KC.IMG_CD = 'DP000101'     
+                                                      AND A.EXPO_YN = 'Y' /* 전시여부 */
+                                                      AND TO_CHAR(A.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */                                             
+                                                 ) A
+                                                 ,TB_DP_PROD B
+                                                 ,TB_DP_MENU_CATEGORY_PROD_MAPG E
+                                                 ,TB_DP_MENU_CATEGORY F
+                                                 ,TB_DP_SPRT_DEVICE H
+                                                 ,TB_DP_TENANT_PROD I
+                                                 ,TB_CM_DEVICE K
+                                            WHERE A.PROD_ID = B.PROD_ID
+                                              AND B.SVC_GRP_CD ='DP000201'
+                                            <if test="arrayProdGradeCd != null">
+                                              AND B.PROD_GRD_CD IN
+                                                <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                                  #{prodGradeCd}
+                                                </foreach>
+                                            </if>
+                                              AND A.PROD_ID = E.PROD_ID
+                                              AND A.MENU_ID = E.MENU_ID                    
+                                              AND E.MENU_ID = F.MENU_ID
+                                              AND F.USE_YN = 'Y'                    
+                                              AND A.PROD_ID = H.PROD_ID
+                                              AND A.TENANT_ID = I.TENANT_ID
+                                              AND A.PROD_ID = I.PROD_ID
+                                              AND I.PROD_STATUS_CD = 'PD000403'   /* PD000403 : 판매중 */
+                                              AND F.TOP_MENU_ID != 'DP02'         /* DP02 : 폰꾸미기 */
+                                              AND H.DEVICE_MODEL_CD = K.DEVICE_MODEL_CD
+                                              AND K.DEVICE_MODEL_CD = #{deviceModelCd} /* header param : 단말모델코드 */
+                                              AND K.USE_YN = 'Y'
+                                              AND I.EXPO_YN = 'Y' /* 노출여부 */
+                                            ORDER BY A.EXPO_ORD
+                                         ) IA
+                                 ) JA          
+                            WHERE JA.RN <![CDATA[ <= ]]> 2 
+                         ) TA
+                    WHERE TA.RNUM BETWEEN #{offset} AND #{count} /* param : offset, count */    
+                  ) KA
     </select>    
     
 </mapper>

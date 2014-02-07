@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Webtoon">
     <!-- 웹툰 상품 리스트 조회-->
-    <select id="getWebtoonList" parameterType="CategoryWebtoonReq" resultType="ProductBasicInfo">
+    <select id="getWebtoonList" parameterType="CategoryWebtoonSacReq" resultType="ProductBasicInfo">
         SELECT  /* WebtoonMapper.xml, getWebtoonList, 홍지호, 2014-02-04 */
                 LA.TOTAL_COUNT
               , LA.RNUM

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Category">
     <!-- 일반 카테고리 앱 상품 조회 -->
-    <select id="selectCategoryAppList" parameterType="CategoryAppReq" resultType="ProductBasicInfo">
+    <select id="selectCategoryAppList" parameterType="CategoryAppSacReq" resultType="ProductBasicInfo">
 		SELECT  /* CategoryMapper.XML, selectCategoryAppList, Tae hee Lee, 2014-01-14 */
                 KA.TOTAL_COUNT
               , KA.RNUM
@@ -45,9 +45,12 @@
                                  <if test='prodCharge != "A"'>
                                    AND  D.PROD_CHRG_YN = #{prodCharge}       /* 상품유료여부 */
                                  </if>
-                                 <if test='prodGradeCd != null'>
-                                   AND  D.PROD_GRD_CD = #{prodGradeCd}       /* 상품이용등급 */
-                                 </if>
+                                 <if test="arrayProdGradeCd != null">
+                                    AND D.PROD_GRD_CD IN
+                                      <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                        #{prodGradeCd}
+                                      </foreach>
+                                  </if>
                                )                        IA
                               , TB_DP_TENANT_PROD_STATS IB
                          WHERE  IA.TENANT_ID = IB.TENANT_ID(+)
@@ -58,7 +61,7 @@
     </select>
     
     <!-- 일반 카테고리 이북/코믹 상품 조회 -->
-    <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicReq" resultType="ProductBasicInfo">
+    <select id="selectCategoryEbookComicList" parameterType="CategoryEbookComicSacReq" resultType="ProductBasicInfo">
         SELECT  /* CategoryMapper.xml, selectCategoryEbookComicList, 홍지호, 2014-01-28 */
                 LA.TOTAL_COUNT
               , LA.RNUM
@@ -124,8 +127,11 @@
                                            AND L.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
-                                         <if test='prodGradeCd != null'>
-                                           AND D.PROD_GRD_CD = #{prodGradeCd}        /* 상품이용등급 */
+                                         <if test="arrayProdGradeCd != null">
+                                           AND D.PROD_GRD_CD IN
+                                           <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                             #{prodGradeCd}
+                                           </foreach>
                                          </if>
                                          <if test='filteredBy == "recent+complete"'>
                                            AND E.COMPT_YN = 'Y'
