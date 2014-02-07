@@ -4,6 +4,7 @@ import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
@@ -21,6 +22,7 @@ public class AdditionalServicInfo extends CommonInfo {
 	/**
 	 * 휴대폰 번호
 	 */
+	@NotBlank
 	@Pattern(regexp = "[0-9]{10,11}")
 	private String msisdn;
 
