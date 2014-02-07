@@ -82,13 +82,16 @@ public class SellerSearchController {
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
+		String sellerId = StringUtil.nvl(req.getSellerId(), "");
 		String sellerKey = StringUtil.nvl(req.getSellerKey(), "");
 		String aid = StringUtil.nvl(req.getAid(), "");
 
-		req.setAid(aid);
+		req.setSellerId(sellerId);
 		req.setSellerKey(sellerKey);
-		if (sellerKey.equals("") && aid.equals(""))
-			throw new StorePlatformException("SAC_MEM_0001", "aid,sellerKey");
+		req.setAid(aid);
+
+		if (sellerId.equals("") && sellerKey.equals("") && aid.equals(""))
+			throw new StorePlatformException("SAC_MEM_0001", "aid,sellerKey,sellerId");
 
 		return this.sellerSearchService.detailInformation(header, req);
 	}

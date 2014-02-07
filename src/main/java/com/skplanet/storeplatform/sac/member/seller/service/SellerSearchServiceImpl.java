@@ -153,17 +153,21 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		if (!req.getSellerKey().equals("")) {
 			keySearch.setKeyString(req.getSellerKey());
+			keySearch.setKeyType("INSD_SELLERMBR_NO");
+		} else if (!req.getSellerId().equals("")) {
+			keySearch.setKeyString(req.getSellerId());
+			keySearch.setKeyType("SELLERMBR_ID");
 		} else {
 			DetailInformationReq sellerDTO = this.commonDAO.queryForObject("SellerSearch.sellerKey", req,
 					DetailInformationReq.class);
 			keySearch.setKeyString(sellerDTO.getSellerKey());
+			keySearch.setKeyType("INSD_SELLERMBR_NO");
 		}
 
 		DetailInformationRes response = new DetailInformationRes();
 		if (keySearch.getKeyString() != null)
 			if (!keySearch.getKeyString().equals("")) {
 
-				keySearch.setKeyType("INSD_SELLERMBR_NO");
 				List<KeySearch> list = new ArrayList<KeySearch>();
 				list.add(keySearch);
 				schReq.setKeySearchList(list);
