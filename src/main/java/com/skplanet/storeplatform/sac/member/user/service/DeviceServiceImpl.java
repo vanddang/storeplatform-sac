@@ -563,7 +563,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String isAuthenticate = deviceInfo.getIsAuthenticated(); // 인증여부
 		String authenticationDate = deviceInfo.getAuthenticationDate(); // 인증일자
 		String isUsed = deviceInfo.getIsUsed(); // 사용여부
-
+		String svcMangNum = deviceInfo.getSvcMangNum(); // SKT 휴대기기 통합 관리 번호
 		String rooting = DeviceUtil.getDeviceExtraValue(MemberConstants.DEVICE_EXTRA_ROOTING_YN, deviceInfo.getUserDeviceExtraInfo()); // rooting 여부
 
 		logger.info(":::::::::::::::::: device update field start ::::::::::::::::::");
@@ -728,6 +728,11 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
+		if (svcMangNum != null && !svcMangNum.equals(userMbrDevice.getSvcMangNum())) {
+			logger.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
+			userMbrDevice.setSvcMangNum(svcMangNum);
+		}
+
 		/* 휴대기기 부가정보 */
 		userMbrDevice.setUserMbrDeviceDetail(DeviceUtil.getConverterUserMbrDeviceDetailList(deviceInfo));
 
@@ -819,8 +824,7 @@ public class DeviceServiceImpl implements DeviceService {
 		deviceInfo.setDeviceNickName(majorDeviceInfo.getDeviceNickName());
 
 		/* <NODATA> 적용요부 확인필요 */
-		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM,
-				majorDeviceInfo.getImMngNum() == null ? "" : majorDeviceInfo.getImMngNum(), deviceInfo));
+		deviceInfo.setSvcMangNum(majorDeviceInfo.getSvcMangNum());
 
 		deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, majorDeviceInfo.getUacd() == null ? ""
 				: majorDeviceInfo.getUacd(), deviceInfo));

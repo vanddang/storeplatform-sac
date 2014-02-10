@@ -89,7 +89,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -208,7 +209,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("cmd", "TXAgreeUserIDP");
 		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
 		param.put("key", req.getUserId());
-		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		param.put("join_sst_list",
+				MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 
 		/**
@@ -284,7 +286,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 필수 약관 동의여부 체크
@@ -299,7 +302,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		StringBuffer sbUserPhone = new StringBuffer();
 		sbUserPhone.append(req.getDeviceId());
 		sbUserPhone.append(",");
-		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getImMngNum()));
+		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getSvcMangNum()));
 		sbUserPhone.append(",");
 		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getUacd()));
 		sbUserPhone.append(",");
@@ -314,7 +317,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("key_type", "2"); // 1=IM통합서비스번호, 2=IM통합ID
 		param.put("key", req.getUserId());
 		param.put("user_mdn", sbUserPhone.toString());
-		param.put("join_sst_list", MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
+		param.put("join_sst_list",
+				MemberConstants.SSO_SST_CD_TSTORE + ",TAC001^TAC002^TAC003^TAC004^TAC005," + DateUtil.getToday() + "," + DateUtil.getTime());
 		param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(sbUserPhone.toString()));
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 		LOGGER.info("## param : {}", param.entrySet());
@@ -467,7 +471,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 		/**
 		 * 단말등록시 필요한 기본 정보 세팅.
 		 */
-		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(), req.getDeviceId(), req.getDeviceIdType());
+		MajorDeviceInfo majorDeviceInfo = this.mcc.getDeviceBaseInfo(sacHeader.getDeviceHeader().getModel(), req.getDeviceTelecom(),
+				req.getDeviceId(), req.getDeviceIdType());
 
 		/**
 		 * 통합 IDP 연동을 위한.... Phone 정보 세팅.
@@ -475,7 +480,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		StringBuffer sbUserPhone = new StringBuffer();
 		sbUserPhone.append(req.getDeviceId());
 		sbUserPhone.append(",");
-		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getImMngNum()));
+		sbUserPhone.append(ObjectUtils.toString(majorDeviceInfo.getSvcMangNum()));
 		sbUserPhone.append(",");
 		sbUserPhone.append(majorDeviceInfo.getUacd());
 		sbUserPhone.append(",");
@@ -788,7 +793,8 @@ public class UserJoinServiceImpl implements UserJoinService {
 			 * 휴대기기 등록 모듈 호출.
 			 */
 			LOGGER.info("## 휴대기기 등록 정보 : {}", deviceInfo.toString());
-			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(), userKey, deviceInfo);
+			String deviceKey = this.mcc.insertDeviceInfo(sacHeader.getTenantHeader().getSystemId(), sacHeader.getTenantHeader().getTenantId(),
+					userKey, deviceInfo);
 			if (deviceKey == null || StringUtils.equals(deviceKey, "")) {
 				throw new StorePlatformException("SAC_MEM_0002", "deviceKey");
 			}

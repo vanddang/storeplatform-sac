@@ -141,6 +141,7 @@ public class DeviceUtil {
 		deviceInfo.setIsUsed(userMbrDevice.getIsUsed());
 		deviceInfo.setDeviceNickName(userMbrDevice.getDeviceNickName());
 		deviceInfo.setDeviceAccount(userMbrDevice.getDeviceAccount());
+		deviceInfo.setSvcMangNum(userMbrDevice.getSvcMangNum());
 		if (userMbrDevice.getUserMbrDeviceDetail() != null) {
 			deviceInfo.setUserDeviceExtraInfo(getConverterDeviceInfoDetailList(userMbrDevice.getUserMbrDeviceDetail()));
 		}
@@ -204,6 +205,7 @@ public class DeviceUtil {
 		userMbrDevice.setDeviceAccount(deviceInfo.getDeviceAccount());
 		userMbrDevice.setJoinId(deviceInfo.getJoinId());
 		userMbrDevice.setIsUsed(deviceInfo.getIsUsed());
+		userMbrDevice.setSvcMangNum(deviceInfo.getSvcMangNum());
 		userMbrDevice.setUserMbrDeviceDetail(getConverterUserMbrDeviceDetailList(deviceInfo));
 
 		return userMbrDevice;

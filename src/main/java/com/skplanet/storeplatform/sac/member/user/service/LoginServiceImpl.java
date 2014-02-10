@@ -49,7 +49,6 @@ import com.skplanet.storeplatform.sac.member.common.idp.constants.IdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.constants.ImIdpConstants;
 import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
-import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
  * 회원 로그인 관련 인터페이스 구현체
@@ -711,38 +710,31 @@ public class LoginServiceImpl implements LoginService {
 		commonRequest.setTenantID(requestHeader.getTenantHeader().getTenantId());
 
 		/* 1. 무선회원 가입 */
-		try {
 
-			IdpReceiverM idpReceiver = this.idpService.join4Wap(deviceId, this.commService.convertDeviceTelecom(deviceTelecom));
-			String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
-			String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); // SKT사용자의 경우 사용자 관리번호
+		IdpReceiverM idpReceiver = this.idpService.join4Wap(deviceId, this.commService.convertDeviceTelecom(deviceTelecom));
+		String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
+		String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); // SKT사용자의 경우 사용자 관리번호
 
-			logger.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
+		logger.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
 
-			/* 2. 회원정보 수정 */
-			UserMbr userMbr = new UserMbr();
-			userMbr.setUserKey(userKey);
-			userMbr.setImMbrNo(imMbrNo);
-			userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
+		/* 2. 회원정보 수정 */
+		UserMbr userMbr = new UserMbr();
+		userMbr.setUserKey(userKey);
+		userMbr.setImMbrNo(imMbrNo);
+		userMbr.setUserMainStatus(MemberConstants.MAIN_STATUS_NORMAL);
 
-			UpdateUserRequest updUserReq = new UpdateUserRequest();
-			updUserReq.setCommonRequest(commonRequest);
-			updUserReq.setUserMbr(userMbr);
-			UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
+		UpdateUserRequest updUserReq = new UpdateUserRequest();
+		updUserReq.setCommonRequest(commonRequest);
+		updUserReq.setUserMbr(userMbr);
+		UpdateUserResponse updUserRes = this.userSCI.updateUser(updUserReq);
 
-			/* 3. imMngNum 부가속성 추가 */
-			DeviceInfo deviceInfo = new DeviceInfo();
-			deviceInfo.setDeviceId(deviceId);
-			deviceInfo.setUserKey(userKey);
-			deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
-			deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_IMMNGNUM, imMngNum, deviceInfo));
-			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
-
-		} catch (StorePlatformException ex) {
-			throw ex;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		/* 3. svcMangNum 부가속성 추가 */
+		DeviceInfo deviceInfo = new DeviceInfo();
+		deviceInfo.setDeviceId(deviceId);
+		deviceInfo.setUserKey(userKey);
+		deviceInfo.setTenantId(requestHeader.getTenantHeader().getTenantId());
+		deviceInfo.setSvcMangNum(imMngNum);
+		this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 		logger.info("########## volatileMember process end #########");
 	}
