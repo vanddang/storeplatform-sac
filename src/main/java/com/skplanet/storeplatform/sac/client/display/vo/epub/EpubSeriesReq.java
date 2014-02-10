@@ -31,17 +31,13 @@ public class EpubSeriesReq extends CommonInfo {
 	/** 페이지당 노출될 ROW 개수 (default 20) */
 	private Integer count = 20;
 
+	private String userKey;
+	private String deviceKey;
+
 	private String langCd;
 	private String tenantId;
 	private String deviceModel;
 
-	public String getChannelld() {
-		return this.channelId;
-	}
-
-	public void setChannelld(String channelld) {
-		this.channelId = channelld;
-	}
 
 	public String getBookTypeCd() {
 		return this.bookTypeCd;
@@ -97,6 +93,30 @@ public class EpubSeriesReq extends CommonInfo {
 
 	public void setDeviceModel(String deviceModel) {
 		this.deviceModel = deviceModel;
+	}
+
+	public String getChannelId() {
+		return this.channelId;
+	}
+
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
 	}
 
 }

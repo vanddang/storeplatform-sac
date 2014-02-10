@@ -21,6 +21,9 @@ public class EpubChannelReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private String channelId; // 체널 ID
+	private String userKey;
+	private String deviceKey;
+
 
 	private String langCd;
 	private String tenantId;
@@ -77,7 +80,21 @@ public class EpubChannelReq extends CommonInfo {
 		this.orderedBy = orderedBy;
 	}
 
+	public String getUserKey() {
+		return this.userKey;
+	}
 
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
 
 
 }

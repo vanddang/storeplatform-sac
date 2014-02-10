@@ -48,13 +48,8 @@ public class VodDetailReq extends CommonInfo {
 	/** 대표이미지 코드 */
 	private String imgCd;
 
-	public String getChannelId() {
-		return this.channelId;
-	}
-
-	public void setChannelId(String channelId) {
-		this.channelId = channelId;
-	}
+	private String userKey;
+	private String deviceKey;
 
 	public String getOrderedBy() {
 		return this.orderedBy;
@@ -104,9 +99,6 @@ public class VodDetailReq extends CommonInfo {
 		this.deviceModel = deviceModel;
 	}
 
-	public String getChannelId() {
-		return this.channelId;
-	}
 
 	public String getImgCd() {
 		return this.imgCd;
@@ -115,5 +107,30 @@ public class VodDetailReq extends CommonInfo {
 	public void setImgCd(String imgCd) {
 		this.imgCd = imgCd;
 	}
+
+	public String getChannelId() {
+		return this.channelId;
+	}
+
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
+	}
+
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
 
 }
