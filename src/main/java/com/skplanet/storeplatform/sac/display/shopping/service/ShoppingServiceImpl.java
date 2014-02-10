@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
+import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
@@ -44,6 +45,9 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Righ
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SelectOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SubSelectOption;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
+import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -54,6 +58,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
+import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * ShoppingList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -77,6 +82,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
+	@Autowired
+	HistoryListService historyListService;
 
 	/**
 	 * <pre>
@@ -2094,16 +2102,63 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setPrice(episodePrice);
 
 							// 에피소드 구매내역 정보
+							String prchsId = null;
+							String prchsDt = null;
+							String prchsState = null;
+
+							try {
+								// 구매내역 조회를 위한 생성자
+								ProductListSac productListSac = new ProductListSac();
+								productListSac.setProdId(episodeShopping.getPartProdId());
+
+								List<ProductListSac> productEpisodeList = new ArrayList<ProductListSac>();
+								productEpisodeList.add(productListSac);
+
+								HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+								historyListSacReq.setTenantId(req.getTenantId());
+								historyListSacReq.setUserKey(req.getUserKey());
+								historyListSacReq.setDeviceKey(req.getDeviceKey());
+								historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+								historyListSacReq.setStartDt("19000101000000");
+								historyListSacReq.setEndDt(episodeShopping.getSysDate());
+								historyListSacReq.setOffset(1);
+								historyListSacReq.setCount(1);
+								historyListSacReq.setProductList(productEpisodeList);
+
+								// 구매내역 조회 실행
+								HistoryListSacRes historyListSacRes = this.historyListService
+										.searchHistoryList(historyListSacReq);
+
+								this.log.debug("----------------------------------------------------------------");
+								this.log.debug("[getDownloadComicInfo] purchase count : {}",
+										historyListSacRes.getTotalCnt());
+								this.log.debug("----------------------------------------------------------------");
+
+								if (historyListSacRes.getTotalCnt() > 0) {
+									prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
+									prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+									prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+
+									if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+										prchsState = "payment";
+									} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+										prchsState = "gift";
+									}
+								}
+							} catch (Exception ex) {
+								throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
+							}
+
 							purchase = new Purchase();
 							purchaseIdentifier = new Identifier();
 							purchaseIdentifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-							purchaseIdentifier.setText("M1020979172447970523");
+							purchaseIdentifier.setText(prchsId);
 							purchaseIdentifierList.add(purchaseIdentifier);
 							purchase.setIdentifierList(purchaseIdentifierList);
-							purchase.setState("payment");
+							purchase.setState(prchsState);
 							purchaseDate = new Date();
 							purchaseDate.setType(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM);
-							purchaseDate.setText("20121017T132615+0900");
+							purchaseDate.setText(prchsDt);
 							purchase.setDate(purchaseDate);
 							episodeProduct.setPurchase(purchase);
 
@@ -2133,6 +2188,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeSaleOption = new SalesOption();
 							episodeSaleOption.setBtob(episodeShopping.getB2bProdYn()); // B2B_상품_여부
 							episodeSaleOption.setType(shopping.getProdCaseCd());
+
 							if (episodeShopping.getSoldOut().equals("Y")) {
 								episodeSaleOption.setSatus(DisplayConstants.DP_SOLDOUT);
 							} else {

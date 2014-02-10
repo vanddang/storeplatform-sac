@@ -1479,6 +1479,7 @@
 		                    END )
 		               , 'N' )AS soldOut 
 		       ,DECODE(KK.SPECIAL_SALE_YN,'Y','specialSale','') AS specialSale
+		       ,TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
            FROM (
                   SELECT 
                          D.MENU_ID
