@@ -574,6 +574,7 @@
              ]]>
              , TB.FILE_PATH || TB.FILE_NM AS FILE_PATH
              , CASE WHEN (SYSDATE - TB.UPD_DT) <![CDATA[<= 3]]> THEN 'Y' ELSE 'N' END AS ICON_YN     /* 아이콘 */
+             , TB.UPD_DT
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID ORDER BY J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
