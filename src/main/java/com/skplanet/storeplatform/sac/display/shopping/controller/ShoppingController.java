@@ -272,7 +272,6 @@ public class ShoppingController {
 	public ShoppingRes getShoppingDetail(SacRequestHeader header, @RequestBody ShoppingReq req) {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("getShoppingDetail Controller started!!");
-		this.logger.debug("ShoppingReq : {}", req.toString());
 		this.logger.debug("----------------------------------------------------------------");
 		return this.shoppingService.getShoppingDetail(header, req);
 
