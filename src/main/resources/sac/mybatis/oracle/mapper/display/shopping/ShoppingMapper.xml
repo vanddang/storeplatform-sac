@@ -543,7 +543,7 @@
                         AND K.PROD_STATUS_CD = 'PD000403'  /* PD000403 : 판매중 */
                         AND K.EXPO_YN = 'Y'                /* Y : 노출(노출여부) */
                        -- AND SYSDATE BETWEEN  N.SPRC_APPLY_START_DT AND N.SPRC_APPLY_END_DT 
-                       -- AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
+                        AND SYSDATE BETWEEN L.APPLY_START_DT AND L.APPLY_END_DT
                         AND K.TENANT_ID = #{tenantId}       /* INPUT 테넌트ID */
                         <if test="prodCharge != null">
                         AND J.PROD_CHRG_YN =#{prodCharge}
