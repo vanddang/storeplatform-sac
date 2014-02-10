@@ -48,12 +48,16 @@ public final class MemberConstants {
 	public static final String SUB_STATUS_JOIN_APPLY_WATING = "US010305"; // 가입승인 대기
 	public static final String SUB_STATUS_EMAIL_CERT_WATING = "US010306"; // 이메일변경 승인 대기
 	public static final String SUB_STATUS_LOGIN_PAUSE = "US010307"; // 계정잠금
-	public static final String SUB_STATUS_SEVEN_PAUSE = "US010309"; // 7일 이용정지
-	public static final String SUB_STATUS_THIRTY_PAUSE = "US010310"; // 30일 이용정지
-	public static final String SUB_STATUS_ETERNAL_PAUSE = "US010311"; // 영구 이용정지
-	public static final String SUB_STATUS_TURN_MOTION = "US010312"; // 전환 신청
-	public static final String SUB_STATUS_SEVEN_MOTION_AGAIN = "US010313"; // 전환 재신청
-	public static final String SUB_STATUS_TURN_REJECT = "US010314"; // 전환 거절
+	public static final String SUB_STATUS_SEVEN_PAUSE = "US010308"; // 7일 이용정지
+	public static final String SUB_STATUS_THIRTY_PAUSE = "US010309"; // 30일 이용정지
+	public static final String SUB_STATUS_ETERNAL_PAUSE = "US010310"; // 영구 이용정지
+	public static final String SUB_STATUS_TURN_MOTION = "US010311"; // 전환 신청
+	public static final String SUB_STATUS_SEVEN_MOTION_AGAIN = "US010312"; // 전환 재신청
+	public static final String SUB_STATUS_TURN_REJECT = "US010313"; // 전환 거절
+	public static final String SUB_STATUS_CHANGE_USER = "US010314"; // 변동처리대상
+	public static final String SUB_STATUS_JOIN_REJECT = "US010315"; // 가입거절
+	public static final String SUB_STATUS_SECEDE_REJECT = "US010316"; // 탈퇴거절
+	public static final String SUB_STATUS_ID_REUSE = "US010317"; // ID재사용
 
 	/** 검색 구분자. */
 	public static final String KEY_TYPE_INSD_USERMBR_NO = "INSD_USERMBR_NO"; // 내부 사용자 키
@@ -98,17 +102,17 @@ public final class MemberConstants {
 	/** 휴대기기 부가속성. */
 	public static final String DEVICE_EXTRA_OMPDOWNLOADER_YN = "US011401"; // OMP DOWNLOADER 설치 여부
 	public static final String DEVICE_EXTRA_STANDBYSCREEN_YN = "US011402"; // 대기화면 설정 여부
-	public static final String DEVICE_EXTRA_IMMNGNUM = "US011403"; // 통합서비스관리번호
-	public static final String DEVICE_EXTRA_UACD = "US011404"; // UA 코드
-	public static final String DEVICE_EXTRA_OMPSUPPORT_YN = "US011405"; // OMP 지원 단말 여부
-	public static final String DEVICE_EXTRA_OSVERSION = "US011406"; // OS 버전
-	public static final String DEVICE_EXTRA_SCVERSION = "US011407"; // 샵클 버전
-	public static final String DEVICE_EXTRA_APPSTATISTICS_YN = "US011408"; // 앱 사용통계 사용여부
-	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011409"; // 도토리 인증일
-	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011410"; // 도토리 인증여부
-	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011411"; // 임베디드 여부
-	public static final String DEVICE_EXTRA_OMDUACD = "US011412"; // OMD UA코드
-	public static final String DEVICE_EXTRA_ROOTING_YN = "US011413"; // 루팅 여부
+	public static final String DEVICE_EXTRA_UACD = "US011403"; // UA 코드
+	public static final String DEVICE_EXTRA_OMPSUPPORT_YN = "US011404"; // OMP 지원 단말 여부
+	public static final String DEVICE_EXTRA_OSVERSION = "US011405"; // OS 버전
+	public static final String DEVICE_EXTRA_SCVERSION = "US011406"; // 샵클 버전
+	public static final String DEVICE_EXTRA_APPSTATISTICS_YN = "US011407"; // 앱 사용통계 사용여부
+	public static final String DEVICE_EXTRA_DODORYAUTH_DATE = "US011408"; // 도토리 인증일
+	public static final String DEVICE_EXTRA_DODORYAUTH_YN = "US011409"; // 도토리 인증여부
+	public static final String DEVICE_EXTRA_EMBEDDED_YN = "US011410"; // 임베디드 여부
+	public static final String DEVICE_EXTRA_OMDUACD = "US011411"; // OMD UA코드
+	public static final String DEVICE_EXTRA_ROOTING_YN = "US011412"; // 루팅 여부
+	public static final String DEVICE_EXTRA_TCLOUD_SUPPORT_YN = "US011413"; // T CLOUD 지원여부
 
 	/** 미지원 단말. */
 	public static final String NOT_SUPPORT_HP_CORP = "NSH";
