@@ -15,12 +15,22 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class GetPhoneAuthorizationCodeRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 인증 Signature
+	 */
 	private String phoneSign;
 
+	/**
+	 * @return the phoneSign
+	 */
 	public String getPhoneSign() {
 		return this.phoneSign;
 	}
 
+	/**
+	 * @param phoneSign
+	 *            the phoneSign to set
+	 */
 	public void setPhoneSign(String phoneSign) {
 		this.phoneSign = phoneSign;
 	}

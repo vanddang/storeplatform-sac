@@ -28,7 +28,6 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 통신사명.
 	 */
-	@NotBlank(message = "필수 파라미터 입니다.")
 	private String carrier;
 
 	/**
