@@ -457,7 +457,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 		updateRealNameRequest = new UpdateRealNameRequest();
 		updateRealNameRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 		updateRealNameRequest.setIsOwn(req.getIsOwn());
-		updateRealNameRequest.setIsRealName(req.getIsRealName());
+		updateRealNameRequest.setIsRealName(MemberConstants.USE_Y);
 		updateRealNameRequest.setUserKey(req.getUserKey());
 
 		/**

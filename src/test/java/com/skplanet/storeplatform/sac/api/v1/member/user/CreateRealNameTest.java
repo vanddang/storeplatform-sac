@@ -90,7 +90,6 @@ public class CreateRealNameTest {
 						 */
 						reqJson.setUserKey("US201402061538552970001711");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
 						reqJson.setUserCi("CICICICICICICICICICICI"); // CI
@@ -141,7 +140,6 @@ public class CreateRealNameTest {
 						 */
 						reqJson.setUserKey("US201402061538552970001711");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
 						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
 						reqJson.setParentEmail("tlaeo00@naver.com"); // 법정대리인 이메일
@@ -194,7 +192,6 @@ public class CreateRealNameTest {
 						reqJson.setUserKey("US201402061958132010001823");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
 						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
@@ -245,7 +242,6 @@ public class CreateRealNameTest {
 						reqJson.setUserKey("US201402061958132010001823");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
-						reqJson.setIsRealName("Y"); // 실명인증 여부 (DB REAL_NAME_AUTH_YN)
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMdd")); // 실명인증 일시 (YYYYMMDD)
 						reqJson.setUserCi("ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ00003631"); // CI
@@ -255,7 +251,7 @@ public class CreateRealNameTest {
 						reqJson.setUserPhone("01090556567"); // 사용자 전화번호
 						reqJson.setDeviceTelecom("US001202"); // 이동 통신사
 						reqJson.setUserName("심대진"); // 사용자 이름
-						reqJson.setUserBirthDay("19790101"); // 사용자 생년월일
+						reqJson.setUserBirthDay("20020101"); // 사용자 생년월일
 						reqJson.setUserSex("M"); // 사용자 성별
 
 						return reqJson;
