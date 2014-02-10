@@ -2301,7 +2301,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							distributor.setAddress("서울시 중구 을지로2가 11");
 							distributor.setRegNo("제2009-서울중구-1000호");
 							episodeProduct.setDistributor(distributor);
-							episodeProduct.setId(episodeShopping.getPartProdId());// 에피소드 특가상품
+
+							// 에피소드 특가상품
+							episodeProduct.setId(episodeShopping.getPartProdId());
 							subProductList.add(episodeProduct);
 						}
 					}
