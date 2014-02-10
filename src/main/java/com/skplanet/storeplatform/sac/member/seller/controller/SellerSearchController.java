@@ -146,9 +146,9 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchId2/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchId2/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req) {
+	public SearchIdRes searchId(SacRequestHeader header, @RequestBody @Validated SearchIdReq req) {
 
 		String sellerBizNumber = StringUtil.nvl(req.getSellerBizNumber(), "");
 		String sellerCompany = StringUtil.nvl(req.getSellerCompany(), "");
@@ -193,8 +193,8 @@ public class SellerSearchController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/checkPasswordReminderQuestion2/v1", method = RequestMethod.POST)
-	public @ResponseBody
-	CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
+	@ResponseBody
+	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			@RequestBody @Validated CheckPasswordReminderQuestionReq req, BindingResult result) {
 		/**
 		 * BindException 처리
@@ -213,9 +213,9 @@ public class SellerSearchController {
 	 * @param req
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/searchPassword2/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/searchPassword2/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchPasswordRes searchPassword(SacRequestHeader header, @Validated SearchPasswordReq req,
+	public SearchPasswordRes searchPassword(SacRequestHeader header, @RequestBody @Validated SearchPasswordReq req,
 			BindingResult result) {
 		/**
 		 * BindException 처리
