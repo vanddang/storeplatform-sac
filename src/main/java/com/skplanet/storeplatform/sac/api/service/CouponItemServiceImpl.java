@@ -35,7 +35,7 @@ public class CouponItemServiceImpl implements CouponItemService {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	@Qualifier("sac")
+	@Qualifier("cmsApp")
 	private CommonDAO commonDAO;
 
 	/**
