@@ -1561,7 +1561,7 @@
                            WHERE 1=1
                              AND A1.PART_PROD_ID = B1.PROD_ID
 			                 <if test="req.specialProdId != null">
-			                 AND A1.PART_PROD_ID  = #{req.specialProdId}
+			                 AND B1.PROD_ID  = #{req.specialProdId}
 			                 </if>                             
                              AND B1.EXPO_YN ='Y'
                              AND B1.CPN_ID IS NOT NULL
