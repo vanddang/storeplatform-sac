@@ -1,6 +1,8 @@
 package com.skplanet.storeplatform.sac.member.idp.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrClauseAgree;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.common.vo.MbrOneID;
+import com.skplanet.storeplatform.member.client.common.vo.MbrPwd;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDRequest;
 import com.skplanet.storeplatform.member.client.common.vo.UpdateMbrOneIDResponse;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -34,6 +37,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.UpdatePasswordUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateStatusUserRequest;
@@ -1664,6 +1669,7 @@ public class IdpServiceImpl implements IdpService {
 		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		ImResult imResult = new ImResult();
+		MemberConstants memberConstant = new MemberConstants();
 
 		// 회원 정보 조회
 		// 공통 헤더
@@ -1707,20 +1713,25 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setIsCancelAble(delYN);
 			}
 		} catch (StorePlatformException spe) {
-			LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 없음");
-			imResult.setCmd("RXPreCheckDeleteUserIDP");
-			imResult.setResult(idpResult);
-			imResult.setResultText(idpResultText);
-			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
-			imResult.setUserId(userID);
-			imResult.setIsCancelAble(delYN);
-			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-					LocaleContextHolder.getLocale());
-			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
-			LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
-			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
-			imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
-			imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
+
+			if (spe.getErrorInfo().getCode().endsWith(memberConstant.RESULT_NOT_FOUND_USER_KEY)) {
+				LOGGER.debug("rXPreCheckDeleteUserIDP ------- 회원 정보 없음");
+				imResult.setCmd("RXPreCheckDeleteUserIDP");
+				imResult.setResult(idpResult);
+				imResult.setResultText(idpResultText);
+				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+				imResult.setUserId(userID);
+				imResult.setIsCancelAble(delYN);
+				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+						LocaleContextHolder.getLocale());
+				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
+				LOGGER.debug("rXPreCheckDeleteUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
+				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
+				imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
+				imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
+
+			}
+
 		}
 
 		return imResult;
@@ -1740,6 +1751,7 @@ public class IdpServiceImpl implements IdpService {
 		UpdateUserRequest userVo = new UpdateUserRequest();
 		IdpConstants idpConstant = new IdpConstants();
 		ImResult imResult = new ImResult();
+		MemberConstants memberConstant = new MemberConstants();
 
 		// 회원 정보 조회
 		// 공통 헤더
@@ -1783,20 +1795,23 @@ public class IdpServiceImpl implements IdpService {
 				imResult.setIsCancelAble(delYN);
 			}
 		} catch (StorePlatformException spe) {
-			LOGGER.debug("RXPreCheckDisagreeUserIDP ------- 회원 정보 없음");
-			imResult.setCmd("RXPreCheckDisagreeUserIDP");
-			imResult.setResult(idpResult);
-			imResult.setResultText(idpResultText);
-			imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
-			imResult.setUserId(userID);
-			imResult.setIsCancelAble(delYN);
-			String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
-					LocaleContextHolder.getLocale());
-			String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
-			LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
-			imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
-			imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
-			imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
+
+			if (spe.getErrorInfo().getCode().endsWith(memberConstant.RESULT_NOT_FOUND_USER_KEY)) {
+				LOGGER.debug("RXPreCheckDisagreeUserIDP ------- 회원 정보 없음");
+				imResult.setCmd("RXPreCheckDisagreeUserIDP");
+				imResult.setResult(idpResult);
+				imResult.setResultText(idpResultText);
+				imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+				imResult.setUserId(userID);
+				imResult.setIsCancelAble(delYN);
+				String userPocIp = this.messageSourceAccessor.getMessage("tenantID" + (String) map.get("tenantID"),
+						LocaleContextHolder.getLocale());
+				String cancelUrl = this.messageSourceAccessor.getMessage("cancelUrl", LocaleContextHolder.getLocale());
+				LOGGER.debug("RXPreCheckDisagreeUserIDP cancelRetUrl = " + "http://" + userPocIp + cancelUrl);
+				imResult.setCancelRetUrl("http://" + userPocIp + cancelUrl);
+				imResult.setTermRsnCd(idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE);
+				imResult.setCancelEtc("(" + userID + ")" + idpConstant.IM_IDP_RESPONSE_FAIL_MEMBERSELECT_CODE_TEXT);
+			}
 		}
 
 		return imResult;
@@ -1973,7 +1988,64 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public ImResult rXUpdateUserPwdIDP(HashMap map) {
 		// request의 변경 시간 정보 사용
-		return null;
+		String req_date = map.get("modify_req_date").toString();
+		String req_time = map.get("modify_req_time").toString();
+
+		UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
+		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
+		IdpConstants idpConstant = new IdpConstants();
+		MemberConstants memberConstant = new MemberConstants();
+
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
+		updatePasswordUserRequest.setCommonRequest(commonRequest);
+
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySearch = new KeySearch();
+		keySearch.setKeyType("INTG_SVC_NO");
+		if (null != map.get("im_int_svc_no")) {
+			keySearch.setKeyString((String) map.get("im_int_svc_no"));
+		}
+		keySearchList.add(keySearch);
+		searchUserRequest.setKeySearchList(keySearchList);
+		searchUserRequest.setCommonRequest(commonRequest);
+
+		try {
+			SearchUserResponse searchUserRespnse = this.userSCI.searchUser(searchUserRequest);
+			MbrPwd mbrPwd = new MbrPwd();
+			mbrPwd.setPwRegDate(req_date + req_time);
+			mbrPwd.setMemberID(searchUserRespnse.getUserMbr().getUserID());
+
+			updatePasswordUserRequest.setMbrPwd(mbrPwd);
+
+			try {
+				updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+
+				if (updatePasswordUserResponse.getCommonResponse().getResultCode()
+						.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+					idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+					idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+				}
+			} catch (StorePlatformException spe) {
+				LOGGER.debug("RXUpdateUserPwdIDP fail to set succes as reault");
+			}
+
+		} catch (StorePlatformException spe) {
+			LOGGER.debug("RXUpdateUserPwdIDP fail to set succes as reault");
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("RXUpdateUserPwdIDP");
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+		imResult.setImIntSvcNo(map.get("im_int_svc_no").toString());
+
+		return imResult;
 	}
 
 	/*
@@ -1986,6 +2058,48 @@ public class IdpServiceImpl implements IdpService {
 	 */
 	@Override
 	public ImResult rXChangePWDIDP(HashMap map) {
-		return null;
+
+		UpdatePasswordUserRequest updatePasswordUserRequest = new UpdatePasswordUserRequest();
+		UpdatePasswordUserResponse updatePasswordUserResponse = new UpdatePasswordUserResponse();
+		IdpConstants idpConstant = new IdpConstants();
+		MemberConstants memberConstant = new MemberConstants();
+
+		String idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+		String idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+
+		CommonRequest commonRequest = new CommonRequest();
+		commonRequest.setSystemID((String) map.get("systemID"));
+		commonRequest.setTenantID((String) map.get("tenantID"));
+		updatePasswordUserRequest.setCommonRequest(commonRequest);
+
+		MbrPwd mbrPwd = new MbrPwd();
+		// 현재 시간 세팅
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		LOGGER.debug("RXChangePWDIDP current time = " + dateFormat.format(calendar.getTime()));
+		mbrPwd.setPwRegDate(dateFormat.format(calendar.getTime()));
+		mbrPwd.setMemberID(map.get("user_id").toString());
+
+		updatePasswordUserRequest.setMbrPwd(mbrPwd);
+
+		try {
+			updatePasswordUserResponse = this.userSCI.updatePasswordUser(updatePasswordUserRequest);
+
+			if (updatePasswordUserResponse.getCommonResponse().getResultCode()
+					.equals(this.SC_RETURN + memberConstant.RESULT_SUCCES)) {
+				idpResult = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE;
+				idpResultText = idpConstant.IM_IDP_RESPONSE_SUCCESS_CODE_TEXT;
+			}
+		} catch (StorePlatformException spe) {
+			idpResult = idpConstant.IM_IDP_RESPONSE_FAIL_CODE;
+			idpResultText = idpConstant.IM_IDP_RESPONSE_FAIL_CODE_TEXT;
+		}
+
+		ImResult imResult = new ImResult();
+		imResult.setCmd("RXChangePWDIDP");
+		imResult.setResult(idpResult);
+		imResult.setResultText(idpResultText);
+
+		return imResult;
 	}
 }
