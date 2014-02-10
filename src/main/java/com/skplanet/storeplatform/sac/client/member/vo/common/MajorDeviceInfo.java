@@ -39,7 +39,7 @@ public class MajorDeviceInfo extends CommonInfo {
 	/**
 	 * SKT 회원관리번호
 	 */
-	private String imMngNum;
+	private String svcMangNum;
 
 	/**
 	 * @return String : uacd
@@ -116,19 +116,12 @@ public class MajorDeviceInfo extends CommonInfo {
 		this.deviceNickName = deviceNickName;
 	}
 
-	/**
-	 * @return String : imMngNum
-	 */
-	public String getImMngNum() {
-		return this.imMngNum;
+	public String getSvcMangNum() {
+		return this.svcMangNum;
 	}
 
-	/**
-	 * @param imMngNum
-	 *            String : the imMngNum to set
-	 */
-	public void setImMngNum(String imMngNum) {
-		this.imMngNum = imMngNum;
+	public void setSvcMangNum(String svcMangNum) {
+		this.svcMangNum = svcMangNum;
 	}
 
 }
