@@ -50,6 +50,16 @@ public class CommonConstants {
 	public static final String HEADER_INTERFACE_ID = "x-sac-interface-id";
 
 	/**
+	 * 요청 커스텀 헤더 상수 - 범용 고유 식별자
+	 */
+	public static final String HEADER_GUID = "x-sac-guid";
+
+	/**
+	 * 요청 스탠다드 헤더 상수 - Accept
+	 */
+	public static final String HEADER_ACCEPT = "accept";
+
+	/**
 	 * 요청 스탠다드 헤더 상수 - 지원 다국어
 	 */
 	public static final String HEADER_ACCEPT_LANGUATE = "accept-language";
