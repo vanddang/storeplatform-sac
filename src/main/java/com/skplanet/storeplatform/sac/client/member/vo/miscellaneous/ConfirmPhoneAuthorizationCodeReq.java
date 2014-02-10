@@ -21,20 +21,20 @@ public class ConfirmPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 인증코드 수신 휴대폰 번호.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String userPhone;
 
 	/**
 	 * 인증코드.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String phoneAuthCode;
 
 	/**
 	 * 인증코드 Signature.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String phoneSign;
 
 	/**

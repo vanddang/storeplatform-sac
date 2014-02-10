@@ -10,7 +10,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * 
- * [REQUEST] 부가서비스 가입 & 가입 조회 공통 VO
+ * 부가서비스 가입 & 가입 조회 공통 VO
  * 
  * Updated on : 2014. 1. 6. Updated by : 김다슬, 인크로스.
  */
@@ -21,14 +21,14 @@ public class AdditionalServicInfo extends CommonInfo {
 	/**
 	 * 휴대폰 번호
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String msisdn;
 
 	/**
 	 * 부가서비스 코드
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String svcCode;
 
 	/**

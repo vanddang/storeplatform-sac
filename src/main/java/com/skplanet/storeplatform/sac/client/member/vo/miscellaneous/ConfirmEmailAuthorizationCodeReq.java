@@ -19,7 +19,7 @@ public class ConfirmEmailAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 이메일 인증 코드
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String emailAuthCode;
 	/**
 	 * 인증 코드 생존 시간 ( 일 단위 )

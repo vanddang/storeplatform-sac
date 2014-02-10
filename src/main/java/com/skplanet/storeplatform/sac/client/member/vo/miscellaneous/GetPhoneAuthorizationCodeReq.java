@@ -21,26 +21,26 @@ public class GetPhoneAuthorizationCodeReq extends CommonInfo {
 	/**
 	 * 수신자 휴대폰 번호.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	@Pattern(regexp = "[0-9]{10,11}", message = "유효하지 않은 휴대폰 번호입니다.")
 	private String recvMdn;
 
 	/**
 	 * 통신사명.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String carrier;
 
 	/**
 	 * 요청측ID.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String srcId;
 
 	/**
 	 * 텔레서비스ID.
 	 */
-	@NotBlank
+	@NotBlank(message = "필수 파라미터 입니다.")
 	private String teleSvcId;
 
 	/**
