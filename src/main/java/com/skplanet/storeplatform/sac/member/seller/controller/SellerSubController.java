@@ -47,7 +47,7 @@ public class SellerSubController {
 
 	/**
 	 * <pre>
-	 * 5.2.18.	서브계정 등록/수정.
+	 * 5.2.18.	서브계정 등록.
 	 * </pre>
 	 * 
 	 * @param req
@@ -64,6 +64,30 @@ public class SellerSubController {
 		if (result.hasErrors()) {
 			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
 		}
+		req.setIsNew("Y");
+		return this.sellerSubService.createSubseller(header, req);
+	}
+
+	/**
+	 * <pre>
+	 * 5.2.19.	서브계정 수정.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return CreateSubsellerRes
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/modifySubseller/v1", method = RequestMethod.POST)
+	public @ResponseBody
+	CreateSubsellerRes modifySubseller(SacRequestHeader header, @RequestBody @Validated CreateSubsellerReq req,
+			BindingResult result) {
+		/**
+		 * BindException 처리
+		 */
+		if (result.hasErrors()) {
+			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
+		}
+		req.setIsNew("N");
 		return this.sellerSubService.createSubseller(header, req);
 	}
 
