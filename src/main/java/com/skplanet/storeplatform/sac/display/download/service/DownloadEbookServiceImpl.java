@@ -29,20 +29,8 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -195,24 +183,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			}
 
 			Product product = new Product();
-			Title title = new Title();
-			Source source = new Source();
-			Identifier identifier = new Identifier();
-			Menu menu = new Menu();
-			Book book = new Book();
-			Rights rights = new Rights();
-			Store store = new Store();
-			Play play = new Play();
-			Support support = new Support();
-			Price price = new Price();
-			Distributor distributor = new Distributor();
-			Purchase purchase = new Purchase();
-			Date date = new Date();
-
 			List<Identifier> identifierList = new ArrayList<Identifier>();
-			List<Source> sourceList = new ArrayList<Source>();
-			List<Menu> menuList = new ArrayList<Menu>();
-			List<Support> supportList = new ArrayList<Support>();
 
 			// 상품 ID 정보
 			identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(

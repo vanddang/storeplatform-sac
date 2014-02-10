@@ -82,6 +82,8 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 		book.setBookVersion(metaInfo.getProdVer());
 		book.setScid(metaInfo.getSubContentsId());
 		book.setBookClsfCd(metaInfo.getBookClsfCd());
+		book.setFilePath(metaInfo.getFilePath());
+		book.setSize(metaInfo.getFileSize());
 
 		// 도서 연재 구분
 		if (DisplayConstants.DP_BOOK_SERIAL.equals(metaInfo.getBookClsfCd())) {
