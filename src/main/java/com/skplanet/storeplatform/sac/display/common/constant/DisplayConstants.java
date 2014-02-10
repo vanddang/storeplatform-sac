@@ -316,6 +316,15 @@ public class DisplayConstants {
 	public static final String DP_DATE_RELEASE = "date/release";
 	/** 출판일 */
 	public static final String DP_DATE_PUBLISH = "date/publish";
+	// ////////////////////////////////// 도서 유형 //////////////////////////////////////////
+	/** 단행본 */
+	public static final String DP_BOOK_BOOK = "DP004301";
+	/** 연재 */
+	public static final String DP_BOOK_SERIAL = "DP004302";
+	/** 잡지 */
+	public static final String DP_BOOK_MAGAZINE = "DP004303";
+	/** 웹툰 */
+	public static final String DP_BOOK_WEBTOON = "DP004304";
 
 	// ////////////////////////////////// ETC //////////////////////////////////////////
 
