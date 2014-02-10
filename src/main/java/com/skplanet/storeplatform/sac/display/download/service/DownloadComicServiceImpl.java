@@ -45,7 +45,6 @@ import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -117,7 +116,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				historyListSacReq.setTenantId(downloadComicReq.getTenantId());
 				historyListSacReq.setUserKey(downloadComicReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadComicReq.getDeviceKey());
-				historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
 				historyListSacReq.setStartDt("19000101000000");
 				historyListSacReq.setEndDt(metaInfo.getSysDate());
 				historyListSacReq.setOffset(1);
@@ -136,9 +135,9 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 					prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 
-					if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+					if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 						prchsState = "payment";
-					} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+					} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 						prchsState = "gift";
 					}
 				}

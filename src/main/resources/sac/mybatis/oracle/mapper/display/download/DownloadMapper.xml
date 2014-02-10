@@ -506,6 +506,7 @@
                       , MAX(JA.PROD_VER) AS PROD_VER
                       , MAX(JA.FILE_SIZE) AS FILE_SIZE
                       , MAX(JA.FILE_PATH) AS FILE_PATH
+                      , MAX(JA.BP_JOIN_FILE_NO) AS BP_JOIN_FILE_NO
                       , MAX(JA.PROD_ID) AS PROD_ID
                       , MAX(JA.PART_PROD_ID) AS PART_PROD_ID
                       , MAX(JA.SELLER_MBR_NO) AS SELLER_MBR_NO
@@ -539,6 +540,7 @@
                                       , K.PROD_VER
                                       , K.FILE_SIZE
                                       , K.FILE_PATH
+                                      , K.BP_JOIN_FILE_NO
                                   FROM  TB_DP_PROD                    A
                                       , TB_DP_TENANT_PROD             B
                                       , TB_DP_PROD_RSHP               C
