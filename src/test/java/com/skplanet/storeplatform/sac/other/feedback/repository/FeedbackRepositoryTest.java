@@ -191,11 +191,44 @@ public class FeedbackRepositoryTest {
 	}
 
 	@Test
-	public void updateProdNotiWDGood() {
+	public void testUpdateProdNotiWDGood() {
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
 		prodNotiGood.setTenantId("S01");
 		prodNotiGood.setNotiSeq("14262");
+		prodNotiGood.setAction("create");
 		this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+
+		prodNotiGood.setAction("remove");
+		int ret = (Integer) this.feedbackRepository.updateProdNotiWDGood(prodNotiGood);
+
+		assertTrue(ret > 0);
 	}
 
+	@Test
+	public void testGetProdNotiGoodCount() {
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId("S01");
+		prodNoti.setNotiSeq("3068");
+		prodNoti.setMbrNo("IF102815948420090820103525");
+		prodNoti.setProdId("H900000017");
+
+		int ret = (Integer) this.feedbackRepository.getProdNotiGoodCount(prodNoti);
+
+		assertTrue(ret > 0);
+	}
+
+	@Test
+	public void testUpdateProdNotiGood() {
+		ProdNotiGood prodNotiGood = new ProdNotiGood();
+		prodNotiGood.setTenantId("S01");
+		prodNotiGood.setNotiSeq("14262");
+		prodNotiGood.setAction("create");
+		this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+		prodNotiGood.setAction("remove");
+
+		int ret = (Integer) this.feedbackRepository.updateProdNotiGood(prodNotiGood);
+
+		assertTrue(ret > 0);
+	}
 }

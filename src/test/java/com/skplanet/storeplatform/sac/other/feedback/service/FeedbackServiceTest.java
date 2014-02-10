@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacReq;
@@ -131,4 +132,25 @@ public class FeedbackServiceTest {
 		removeFeedbackSacReq.setNotiSeq("300000034");
 		this.feedbackService.remove(removeFeedbackSacReq, this.sacRequestHeader);
 	}
+
+	@Test
+	public void testCreateRecommendWD() {
+		CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq = new CreateRecommendFeedbackSacReq();
+		createRecommendFeedbackSacReq.setUserId("test123");
+		createRecommendFeedbackSacReq.setUserKey("IW1425881009320130909120520");
+		createRecommendFeedbackSacReq.setProdId("H090122031");
+		createRecommendFeedbackSacReq.setNotiSeq("14262");
+		this.feedbackService.createRecommend(createRecommendFeedbackSacReq, this.sacRequestHeader);
+	}
+
+	@Test
+	public void testCreateRecommend() {
+		CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq = new CreateRecommendFeedbackSacReq();
+		createRecommendFeedbackSacReq.setUserId("test123");
+		createRecommendFeedbackSacReq.setUserKey("IW1425872523320130906100815");
+		createRecommendFeedbackSacReq.setProdId("0000045297");
+		createRecommendFeedbackSacReq.setNotiSeq("300000044");
+		this.feedbackService.createRecommend(createRecommendFeedbackSacReq, this.sacRequestHeader);
+	}
+
 }
