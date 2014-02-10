@@ -69,16 +69,16 @@ public class ModifySubsellerTest {
 
 						// 필수
 						req.setSellerKey("IF1023501184720130823173955");
-						req.setSubSellerID("01w22st11121");
-						req.setIsNew("N");
+						req.setSubSellerID("01w22st21121");
+						// req.setIsNew("N");
 
 						req.setSubSellerMemo("test2");
 						req.setSubSellerEmail("omc97@hanmail.net");
 
 						// 새로 추가됨
-						req.setSubSellerKey("SS201402061427346800000640");
-						req.setMemberPW("1234567999");
-						req.setOldPW("1234567999");
+						req.setSubSellerKey("SS201402101014136630000716");
+						req.setMemberPW("12345679991");
+						req.setOldPW("12345679991");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
