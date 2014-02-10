@@ -38,9 +38,9 @@ import com.skplanet.storeplatform.sac.member.idp.vo.ProvisioningRes;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
-public class PreCheckDeleteUserIDPTest {
+public class ChangePWDIDPTest {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(PreCheckDeleteUserIDPTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChangePWDIDPTest.class);
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -62,30 +62,26 @@ public class PreCheckDeleteUserIDPTest {
 	 * 
 	 * 
 	 * <pre>
-	 * 탈퇴가 가능한 통합회원 확인요청.
+	 * 비밀번호 변경 배포 - 기존 IDP 회원.
 	 * </pre>
 	 */
 	@Test
-	public void preCheckDeleteUserIDPTest01() {
+	public void updateUserPwdIDPTest01() {
 
 		new TestCaseTemplate(this.mockMvc).url("/member/idp/provisioning/v1").httpMethod(HttpMethod.POST)
 				.requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
 						ProvisioningReq req = new ProvisioningReq();
-						req.setCmd("RXPreCheckDeleteUserIDP");
+						req.setCmd("RXChangePWDIDP");
 						HashMap resultMap = new HashMap();
 
 						resultMap.put("systemID", "S001");
 						resultMap.put("tenantID", "S01");
 						resultMap.put("sp_id", "90000");
 						resultMap.put("target_sst_cd", "10100");
-						resultMap.put("im_int_svc_no", "900000083496");
-						resultMap.put("user_id", "1234");
-						resultMap
-								.put("user_ci",
-										"sbvfRbP/38g7U4TEZwWG5IexVllTKE2SkM3HXv+M6NEF1RCG5i85xaAVoh9GdWzhcta6D8wSGpLh7Nf0XxF5Pg==");
-						resultMap.put("user_di", "MC0GCCqGSIb3DQIJAyEAfWou0NPTinxWZBT+zJkd3jFIfVXwnZLzCRkO/KQfGCE=");
+						resultMap.put("user_id", "sacagreeuser012405");
+
 						req.setReqParam(resultMap);
 
 						LOGGER.info("request param : {}", req.toString());
