@@ -10,7 +10,9 @@
 package com.skplanet.storeplatform.sac.display.feature.recommend.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +24,16 @@ import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.feature.recommend.RecommendWebtoonSacRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Book;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.feature.recommend.vo.RecommendWebtoon;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * WebtoonList Service 인터페이스(CoreStoreBusiness) 구현체
@@ -54,6 +51,12 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
 	/**
 	 * <pre>
 	 * 운영자 추천 웹툰 리스트 조회.
@@ -66,7 +69,8 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	@Override
 	public RecommendWebtoonSacRes searchWebtoonList(SacRequestHeader header, RecommendWebtoonSacReq req) {
 
-		RecommendWebtoonSacRes responseVO = null;
+		RecommendWebtoonSacRes responseVO = new RecommendWebtoonSacRes();
+		CommonResponse commonResponse = new CommonResponse();
 
 		// 헤더값 세팅
 		req.setTenantId(header.getTenantHeader().getTenantId());
@@ -107,103 +111,47 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 			req.setStdDt(stdDt);
 		}
 
-		Integer totalCount = 0;
-		List<RecommendWebtoon> resultList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req,
-				RecommendWebtoon.class);
+		// Integer totalCount = 0;
 
-		if (resultList != null) {
-			RecommendWebtoon webtoonDto = new RecommendWebtoon();
+		List<ProductBasicInfo> productBasicInfoList;
 
-			// Response VO를 만들기위한 생성자
-			Product product = null;
-			Identifier identifier = null;
-			Menu menu = null;
-			Rights rights = null;
-			Title title = null;
-			Source source = null;
-			Price price = null;
-			Book book = null;
-			Contributor contributor = null;
-			Accrual accrual = null;
-			Date date = null;
-			List<Identifier> identifierList = null;
-			List<Menu> menuList = null;
-			List<Source> sourceList = null;
-			List<Product> productList = new ArrayList<Product>();
+		productBasicInfoList = this.commonDAO.queryForList("Webtoon.getAdminWebtoonList", req, ProductBasicInfo.class);
 
-			for (int i = 0; i < resultList.size(); i++) {
-				webtoonDto = resultList.get(i);
-				product = new Product();
+		List<Product> productList = new ArrayList<Product>();
 
-				// 상품 정보 (상품ID)
-				identifierList = new ArrayList<Identifier>();
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(webtoonDto.getProdId());
-				identifierList.add(identifier);
+		// Meta DB 조회 파라미터 생성
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		TenantHeader tenantHeader = header.getTenantHeader();
+		DeviceHeader deviceHeader = header.getDeviceHeader();
+		reqMap.put("req", req);
+		reqMap.put("tenantHeader", tenantHeader);
+		reqMap.put("deviceHeader", deviceHeader);
+		reqMap.put("stdDt", stdDt);
+		reqMap.put("lang", tenantHeader.getLangCd());
 
-				// 메뉴 정보
-				menuList = new ArrayList<Menu>();
-				menu = new Menu();
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menu.setId(webtoonDto.getUpMenuId());
-				menu.setName(webtoonDto.getUpMenuName());
-				menuList.add(menu);
+		reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+		reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
+		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 
-				menu = new Menu();
-				menu.setId(webtoonDto.getMenuId());
-				menu.setName(webtoonDto.getMenuNm());
-				menuList.add(menu);
+		if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+			for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+				reqMap.put("productBasicInfo", productBasicInfo);
 
-				// contributor
-				contributor = new Contributor();
-				contributor.setName(webtoonDto.getArtist1Nm());
+				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 
-				accrual = new Accrual();
-				accrual.setScore(Double.parseDouble(webtoonDto.getAvgScore()));
-
-				// 완료 여부
-				book = new Book();
-				book.setStatus(webtoonDto.getComptYn());
-
-				// 상품 정보 (상품명)
-				title = new Title();
-				title.setPrefix(webtoonDto.getPreFix());
-				title.setText(webtoonDto.getProdNm());
-
-				// 이미지 정보
-				sourceList = new ArrayList<Source>();
-				source = new Source();
-				source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-				source.setUrl(webtoonDto.getFilePos());
-				sourceList.add(source);
-
-				// 업데이트 날짜
-				date = new Date();
-				date.setType(DisplayConstants.DP_DATE_UPT_NM);
-				date.setText(webtoonDto.getUpdDt());
-
-				// 데이터 매핑
-				product.setIdentifierList(identifierList);
-				product.setMenuList(menuList);
-				product.setContributor(contributor);
-				product.setAccrual(accrual);
-				product.setTitle(title);
-				product.setBook(book);
-				product.setRights(rights);
-				product.setSourceList(sourceList);
-				product.setPrice(price);
-				product.setDate(date);
-
-				totalCount = webtoonDto.getTotalCount();
-				productList.add(i, product);
+				if (retMetaInfo != null) {
+					Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+					productList.add(product);
+				}
 			}
-
-			responseVO = new RecommendWebtoonSacRes();
+			commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
 			responseVO.setProductList(productList);
-
-			CommonResponse commonResponse = new CommonResponse();
-			commonResponse.setTotalCount(totalCount);
+			responseVO.setCommonResponse(commonResponse);
+		} else {
+			// 조회 결과 없음
+			commonResponse.setTotalCount(0);
+			responseVO.setProductList(productList);
 			responseVO.setCommonResponse(commonResponse);
 		}
 
