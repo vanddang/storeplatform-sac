@@ -77,9 +77,10 @@ public class SellerSearchController {
 	 * @param req
 	 * @return DetailInformationRes
 	 */
-	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/detailInformation/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
+	public DetailInformationRes detailInformation(SacRequestHeader header,
+			@RequestBody @Validated DetailInformationReq req) {
 		LOGGER.debug("request param : {}", req.toString());
 
 		String sellerId = StringUtil.nvl(req.getSellerId(), "");

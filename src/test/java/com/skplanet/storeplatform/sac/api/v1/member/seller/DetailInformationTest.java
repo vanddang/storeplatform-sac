@@ -21,9 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
@@ -59,75 +61,20 @@ public class DetailInformationTest {
 	 */
 	@Test
 	public void detailInformationFull() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH
-						+ "/detailInformation/v1?sellerId=qatest123&sellerKey=IF1023501629320130913143329&aid=OA00049881")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailInformation/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
+					public Object requestBody() {
+						DetailInformationReq req = new DetailInformationReq();
+
+						req.setAid("OA00049881");
+						req.setSellerId("qatest123");
+						req.setSellerKey("IF1023501629320130913143329");
+
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
 					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 기본정보 조회(sellerKey만존재).
-	 * </pre>
-	 */
-	@Test
-	public void detailInformationSellerKey() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH
-						+ "/detailInformation/v1?sellerKey=IF102158942020090723111912&aid=&keyType=INSD_SELLERMBR_NO")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 기본정보 조회(aid만 존재).
-	 * </pre>
-	 */
-	@Test
-	public void detailInformationAid() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?aid=OM00044495")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
-					@Override
-					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
-						DetailInformationRes res = (DetailInformationRes) result;
-						assertThat(res.getSellerKey(), notNullValue());
-						LOGGER.debug("response param : {}", res.toString());
-					}
-				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
-
-	}
-
-	/**
-	 * <pre>
-	 * 판매자 기본정보 조회(모든키미존재)
-	 * </pre>
-	 */
-	@Test
-	public void detailInformationEmpty() {
-
-		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/detailInformation/v1?sellerKey=&aid=")
-				.httpMethod(HttpMethod.GET).success(DetailInformationRes.class, new SuccessCallback() {
+				}).success(DetailInformationRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						DetailInformationRes res = (DetailInformationRes) result;
