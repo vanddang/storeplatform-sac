@@ -145,10 +145,7 @@
         UPDATE 
                TB_DP_PROD_NOTI
            SET NOTI_DSCR = #{notiDscr}
-             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(title)">
-             , TITLE = #{title}
-             </if>
-             , UPD_DT = SYSDATE
+             , DEL_DT = SYSDATE
              , DEL_YN = 'Y'
          WHERE TENANT_ID = #{tenantId}
            AND NOTI_SEQ = #{notiSeq}
