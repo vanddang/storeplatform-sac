@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="IntimateMessage">
     <select id="selectIntimateMessageList" parameterType="IntimateMessageSacReq" resultType="IntimateMessageDefault">
-		SELECT  JA.TOTAL_COUNT
+		SELECT  /* IntimateMessageMapper.xml, selectIntimateMessageList, tae hee Lee, 2014-02-10 */
+		        JA.TOTAL_COUNT
 		      , JA.MSG_ID
 		      , DECODE(JA.MSG_TYPE_CD, '1', 'personal', '2', 'seasonal', '3', 'general', '4', 'deviceChanged') AS MSG_TYPE_CD
 		      , JA.MAIN_MSG

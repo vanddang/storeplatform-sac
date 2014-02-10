@@ -61,9 +61,9 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 		String deviceId = intimateMessageReq.getDeviceId();
 
 		this.logger.debug("----------------------------------------------------------------");
-		this.logger.debug("[searchIntimateMessageList] productId : {}", userKey);
-		this.logger.debug("[searchIntimateMessageList] deviceKey : {}", deviceIdType);
-		this.logger.debug("[searchIntimateMessageList] userKey : {}", deviceId);
+		this.logger.debug("[searchIntimateMessageList] userKey : {}", userKey);
+		this.logger.debug("[searchIntimateMessageList] deviceIdType : {}", deviceIdType);
+		this.logger.debug("[searchIntimateMessageList] deviceId : {}", deviceId);
 		this.logger.debug("----------------------------------------------------------------");
 
 		// 필수 파라미터 체크
@@ -109,7 +109,6 @@ public class IntimateMessageServiceImpl implements IntimateMessageService {
 			List<Identifier> identifierList = null;
 			List<Source> sourceList = null;
 			List<IntimateMessage> intimateMessageList = new ArrayList<IntimateMessage>();
-			;
 
 			for (int i = 0; i < resultList.size(); i++) {
 				messageDefault = resultList.get(i);
