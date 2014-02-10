@@ -89,6 +89,11 @@ public class Book extends CommonInfo implements Serializable {
 	private String filePath;
 
 	/**
+	 * 인터파크복호화키.
+	 */
+	private String bpJoinFileNo;
+
+	/**
 	 * @return the type
 	 */
 	public String getType() {
@@ -311,5 +316,20 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	/**
+	 * @return the bpJoinFileNo
+	 */
+	public String getBpJoinFileNo() {
+		return this.bpJoinFileNo;
+	}
+
+	/**
+	 * @param bpJoinFileNo
+	 *            the bpJoinFileNo to set
+	 */
+	public void setBpJoinFileNo(String bpJoinFileNo) {
+		this.bpJoinFileNo = bpJoinFileNo;
 	}
 }
