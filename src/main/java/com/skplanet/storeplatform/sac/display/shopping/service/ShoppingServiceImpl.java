@@ -2292,7 +2292,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							// 판매자정보 셋팅
 							distributor = new Distributor();
-							distributor.setType("corporation");
+							distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
 							distributor.setIdentifier("판매자ID");
 							distributor.setName("판매자명");
 							distributor.setCompany("상호");
