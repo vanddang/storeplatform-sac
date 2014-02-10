@@ -44,7 +44,6 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
-import com.skplanet.storeplatform.member.client.user.sci.vo.UserMbrDeviceDetail;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountReq;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.AuthorizeAccountRes;
 import com.skplanet.storeplatform.sac.client.member.vo.miscellaneous.ConfirmCaptchaReq;
@@ -200,15 +199,9 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 				deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
 				LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
 						.getUserMbrDeviceDetail());
-				String uaCode = null;
-				List<UserMbrDeviceDetail> deviceDetails = searchDeviceResult.getUserMbrDevice()
-						.getUserMbrDeviceDetail();
-				LOGGER.info("## [SAC] SC 회원 단말 상세정보 조회.");
-				for (int i = 0; i < deviceDetails.size(); i++) {
-					if (deviceDetails.get(i).getExtraProfile().equals(MemberConstants.DEVICE_EXTRA_UACD)) { // UA코드여부
-						uaCode = deviceDetails.get(i).getExtraProfileValue();
-					}
-				}
+
+				// DB 접속(TB_CM_DEVICE) - UaCode 조회
+				String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
 				if (uaCode != null) {
 					response.setUaCd(uaCode);
 					LOGGER.info("## UA Code : {}", uaCode);
