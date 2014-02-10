@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -296,6 +297,50 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
+		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
+		return product;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade#generateComicProduct(com.skplanet.
+	 * storeplatform.sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public Product generateWebtoonProduct(MetaInfo metaInfo) {
+		Product product = new Product();
+		product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
+		// Title 생성
+		Title title = this.commonGenerator.generateTitle(metaInfo);
+		// Price 생성
+		Price price = this.commonGenerator.generatePrice(metaInfo);
+		// MenuList 생성
+		List<Menu> menuList = this.commonGenerator.generateMenuList(metaInfo);
+		// SourceList 생성
+		List<Source> sourceList = this.commonGenerator.generateSourceList(metaInfo);
+		// Accrual 생성
+		Accrual accrual = this.commonGenerator.generateAccrual(metaInfo);
+		// Rights 설정
+		Rights rights = this.commonGenerator.generateRights(metaInfo);
+		// Comic용 Contributor 설정
+		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
+		// BOOK 설정
+		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		// Date 생성
+		Date date = this.commonGenerator.generateDate(metaInfo);
+
+		product.setTitle(title);
+		product.setPrice(price);
+		product.setMenuList(menuList);
+		product.setSourceList(sourceList);
+		product.setAccrual(accrual);
+		product.setRights(rights);
+		product.setContributor(contributor);
+		product.setProductExplain(metaInfo.getProdBaseDesc());
+		product.setBook(book);
+		product.setDate(date);
 		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		return product;
 	}
