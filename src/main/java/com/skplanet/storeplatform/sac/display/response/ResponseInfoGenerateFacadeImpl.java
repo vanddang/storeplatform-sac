@@ -255,7 +255,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
-		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
+		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		return product;
 	}
 
@@ -296,7 +296,7 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		product.setContributor(contributor);
 		product.setProductExplain(metaInfo.getProdBaseDesc());
 		product.setBook(book);
-		product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo));
+		// product.setSupportList(this.ebookComicGenerator.generateSupportList(metaInfo)); //book안에 포함
 		return product;
 	}
 
