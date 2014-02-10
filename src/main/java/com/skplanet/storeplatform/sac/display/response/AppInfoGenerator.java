@@ -66,4 +66,15 @@ public interface AppInfoGenerator {
 	 * @return List<Identifier>
 	 */
 	public List<Identifier> generateIdentifierList(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * Component 전용 Identifier 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Identifier>
+	 */
+	public List<Identifier> generateComponentIdentifierList(MetaInfo metaInfo);
 }

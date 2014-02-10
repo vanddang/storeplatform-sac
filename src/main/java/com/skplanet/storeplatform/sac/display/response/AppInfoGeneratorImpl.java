@@ -66,6 +66,9 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		app.setVersionCode(metaInfo.getApkVer());
 		app.setVersion(metaInfo.getProdVer());
 		app.setSize(metaInfo.getFileSize());
+		app.setSupportedOs(metaInfo.getSupportedOs());
+		app.setScId(metaInfo.getSubContentsId());
+		app.setFilePath(metaInfo.getFilePath());
 		return app;
 	}
 
@@ -109,4 +112,26 @@ public class AppInfoGeneratorImpl implements AppInfoGenerator {
 		identifierList.add(identifier);
 		return identifierList;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.AppInfoGenerator#generateAppIdentifierList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Identifier> generateComponentIdentifierList(MetaInfo metaInfo) {
+		Identifier identifier = new Identifier();
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
+		identifier.setText(metaInfo.getSeedProductId());
+		identifierList.add(identifier);
+		identifier = new Identifier();
+		identifier.setType(DisplayConstants.DP_GAMECENTER_IDENTIFIER_CD);
+		identifier.setText(metaInfo.getGameCentrId());
+		identifierList.add(identifier);
+		return identifierList;
+	}
+
 }
