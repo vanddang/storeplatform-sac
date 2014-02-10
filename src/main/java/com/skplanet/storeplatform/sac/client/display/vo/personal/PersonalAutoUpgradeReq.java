@@ -1,4 +1,4 @@
-package com.skplanet.storeplatform.sac.client.display.vo.device;
+package com.skplanet.storeplatform.sac.client.display.vo.personal;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 3. Updated by : 오승민, 인크로스.
  */
-public class DeviceProfileReq extends CommonInfo {
+public class PersonalAutoUpgradeReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
