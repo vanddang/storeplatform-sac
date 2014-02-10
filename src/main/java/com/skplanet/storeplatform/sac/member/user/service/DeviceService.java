@@ -1,6 +1,11 @@
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
+import com.skplanet.storeplatform.sac.client.member.vo.common.GameCenter;
 import com.skplanet.storeplatform.sac.client.member.vo.common.UserInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateDeviceRes;
@@ -154,5 +159,13 @@ public interface DeviceService {
 	 * @return SupportAomRes
 	 */
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req);
+
+	/**
+	 * 게임센터 연동.
+	 * 
+	 * @param gameCenter
+	 *            GameCenter
+	 */
+	public void insertGameCenterIF(@Valid @RequestBody GameCenter gameCenter);
 
 }
