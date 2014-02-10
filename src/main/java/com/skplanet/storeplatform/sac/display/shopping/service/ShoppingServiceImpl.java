@@ -1939,6 +1939,13 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
 		}
+		if (StringUtils.isEmpty(req.getDeviceKey())) {
+			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
+		}
+		if (StringUtils.isEmpty(req.getUserKey())) {
+			throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
+		}
+		// OPTIONAL 파라미터 체크
 		if (StringUtils.isEmpty(req.getSpecialProdId())) {
 			req.setSpecialProdId(null);
 		}
