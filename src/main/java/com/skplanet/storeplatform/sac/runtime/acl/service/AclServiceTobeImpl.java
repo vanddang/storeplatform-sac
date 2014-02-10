@@ -9,11 +9,10 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
-import java.util.Map;
-
-import org.springframework.integration.annotation.Headers;
+import org.springframework.integration.annotation.Header;
 
 import com.skplanet.storeplatform.sac.runtime.acl.service.validation.RequestValidateService;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
  *
@@ -32,18 +31,22 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 	 * Request를 검증한다. (Interface 및 Timestamp 검사)
 	 */
 	@Override
-	public void validate(@Headers Map<String, Object> headerMap) {
-		// Step 1) Interface 검증
-		this.validator.validateInterface(headerMap);
-		// Step 2) Timestamp 검사
-		this.validator.validateTimestamp(headerMap);
+	public void validate(@Header("httpHeaders") HttpHeaders header) {
+		// Step 1) 필수 헤더 검사
+		this.validator.validateHeaders(header);
+		// Step 2) 요청 시간 검사
+		this.validator.validateTimestamp(header);
+		// Step 3) 인터페이스 검증
+		this.validator.validateInterface(header);
+		// Step 4) 서비스 검증
+		this.validator.validateService(header);
 	}
 
 	/**
 	 * Tenant를 인증한다. (등록된 Tenant인지 확인)
 	 */
 	@Override
-	public void authenticate(@Headers Map<String, Object> headerMap) {
+	public void authenticate(@Header("httpHeaders") HttpHeaders header) {
 		// TODO 임근대M 구현
 	}
 
@@ -51,7 +54,7 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 	 * Interface를 인가한다. (호출하는 API에 권한이 있는지 확인)
 	 */
 	@Override
-	public void authorize(@Headers Map<String, Object> headerMap) {
+	public void authorize(@Header("httpHeaders") HttpHeaders header) {
 		// TODO 정희원M
 	}
 

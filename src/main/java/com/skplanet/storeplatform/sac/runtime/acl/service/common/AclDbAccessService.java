@@ -23,7 +23,7 @@ public interface AclDbAccessService {
 	 * @return
 	 * 인터페이스 객체
 	 */
-	Interface select(String interfaceId);
+	Interface selectInterfaceById(String interfaceId);
 
 	/**
 	 * <pre>
@@ -34,6 +34,6 @@ public interface AclDbAccessService {
 	 * @return
 	 * Tenant 객체
 	 */
-	Tenant selectByAuthKey(String authKey);
+	Tenant selectTenantByAuthKey(String authKey);
 
 }

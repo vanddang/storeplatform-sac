@@ -9,7 +9,7 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service;
 
-import java.util.Map;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
 /**
 *
@@ -20,10 +20,10 @@ import java.util.Map;
 */
 public interface AclServiceTobe {
 
-	void validate(Map<String, Object> headerMap);
+	void validate(HttpHeaders header);
 
-	void authenticate(Map<String, Object> headerMap);
+	void authenticate(HttpHeaders header);
 
-	void authorize(Map<String, Object> headerMap);
+	void authorize(HttpHeaders header);
 
 }

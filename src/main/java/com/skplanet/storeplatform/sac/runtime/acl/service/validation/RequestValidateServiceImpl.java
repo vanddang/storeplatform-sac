@@ -9,14 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
-import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
 import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 
 /**
@@ -33,11 +31,38 @@ public class RequestValidateServiceImpl implements RequestValidateService {
 	private AclDbAccessService service;
 
 	@Override
-	public void validateInterface(Map<String, Object> headerMap) {
-		String interfaceId = (String) headerMap.get(CommonConstants.HEADER_INTERFACE_ID);
-		String requestUrl = (String) headerMap.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
+	public void validateHeaders(HttpHeaders header) {
+		String accept = header.getAccept();
+		String systemId = header.getSystemId();
+		String interfaceId = header.getInterfaceId();
+		String guid = header.getGuid();
 
-		Interface intf = this.service.select(interfaceId);
+		if (StringUtils.isNotBlank(accept))
+			throw new StorePlatformException("SAC_CMN_0004", accept);
+		if (StringUtils.isNotBlank(systemId))
+			throw new StorePlatformException("SAC_CMN_0004", systemId);
+		if (StringUtils.isNotBlank(interfaceId))
+			throw new StorePlatformException("SAC_CMN_0004", interfaceId);
+		if (StringUtils.isNotBlank(guid))
+			throw new StorePlatformException("SAC_CMN_0004", guid);
+
+	}
+
+	@Override
+	public void validateTimestamp(HttpHeaders header) {
+		String requestTimestamp = header.getInterfaceId();
+		if (!AclUtils.isTimeOut(requestTimestamp)) {
+			throw new StorePlatformException("SAC_CMN_0003");
+		}
+	}
+
+
+	@Override
+	public void validateInterface(HttpHeaders header) {
+		String interfaceId = header.getInterfaceId();
+		String requestUrl = header.getRequestUrl();
+
+		Interface intf = this.service.selectInterfaceById(interfaceId);
 
 		if (intf == null) {
 			throw new StorePlatformException("SAC_CMN_0001", interfaceId);
@@ -50,11 +75,9 @@ public class RequestValidateServiceImpl implements RequestValidateService {
 	}
 
 	@Override
-	public void validateTimestamp(Map<String, Object> headerMap) {
-		String requestTimestamp = (String) headerMap.get(CommonConstants.HEADER_AUTH_TIMESTAMP);
-		if (!AclUtils.isTimeOut(requestTimestamp)) {
-			throw new StorePlatformException("SAC_CMN_0003");
-		}
+	public void validateService(HttpHeaders header) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

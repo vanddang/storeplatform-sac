@@ -9,12 +9,47 @@
  */
 package com.skplanet.storeplatform.sac.runtime.acl.service.validation;
 
-import java.util.Map;
+import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
+/**
+*
+* 요청 검증 서비스 구현체
+*
+* Updated on : 2014. 2. 5.
+* Updated by : 서대영, SK 플래닛
+*/
 public interface RequestValidateService {
 
-	void validateInterface(Map<String, Object> headerMap);
+	/**
+	 * <pre>
+	 * 요청 헤더를 검증한다
+	 * </pre>
+	 * @param headerMap
+	 */
+	void validateHeaders(HttpHeaders header);
 
-	void validateTimestamp(Map<String, Object> headerMap);
+	/**
+	 * <pre>
+	 * 요청 시간을 검증한다.
+	 * </pre>
+	 * @param headerMap
+	 */
+	void validateTimestamp(HttpHeaders header);
+
+	/**
+	 * <pre>
+	 * 인터페이스를 검증한다.
+	 * </pre>
+	 * @param headerMap
+	 */
+	void validateInterface(HttpHeaders header);
+
+	/**
+	 * <pre>
+	 * 시세틈를 검증한다.
+	 * </pre>
+	 * @param headerMap
+	 */
+	void validateService(HttpHeaders header);
 
 }
