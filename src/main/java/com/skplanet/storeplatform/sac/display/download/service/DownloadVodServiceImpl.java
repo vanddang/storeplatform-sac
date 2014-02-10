@@ -53,7 +53,6 @@ import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.download.vo.DownloadVod;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
@@ -201,7 +200,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyListSacReq.setTenantId(downloadVodSacReq.getTenantId());
 					historyListSacReq.setUserKey(downloadVodSacReq.getUserKey());
 					historyListSacReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
 					historyListSacReq.setStartDt("19000101000000");
 					historyListSacReq.setEndDt(downloadVodInfo.getSysDate());
 					historyListSacReq.setOffset(1);
@@ -220,9 +219,9 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 						// 소장
 						if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
-							if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 								prchsState = "payment";
-							} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 								prchsState = "gift";
 							}
 						} else {
