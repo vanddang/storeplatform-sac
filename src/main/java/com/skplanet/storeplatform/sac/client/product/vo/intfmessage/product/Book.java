@@ -84,6 +84,11 @@ public class Book extends CommonInfo implements Serializable {
 	private String bookClsfCd;
 
 	/**
+	 * 물리파일경로.
+	 */
+	private String filePath;
+
+	/**
 	 * @return the type
 	 */
 	public String getType() {
@@ -291,5 +296,20 @@ public class Book extends CommonInfo implements Serializable {
 	 */
 	public void setBookClsfCd(String bookClsfCd) {
 		this.bookClsfCd = bookClsfCd;
+	}
+
+	/**
+	 * @return the filePath
+	 */
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	/**
+	 * @param filePath
+	 *            the filePath to set
+	 */
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 }
