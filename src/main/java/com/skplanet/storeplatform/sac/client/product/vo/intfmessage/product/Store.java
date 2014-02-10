@@ -39,6 +39,7 @@ public class Store extends CommonInfo implements Serializable {
 	private Source source; // store의 source
 	private List<Identifier> identifierList; // 상품의 에피소드 ID 리스트
 	private List<Support> supportList; // 지원매체 리스트
+	private String storeProductStatusCode; // store 상품의 상태(restrict)
 
 	/**
 	 * Store().
@@ -195,5 +196,20 @@ public class Store extends CommonInfo implements Serializable {
 	 */
 	public void setSupportList(List<Support> supportList) {
 		this.supportList = supportList;
+	}
+
+	/**
+	 * @return the storeProductStatusCode
+	 */
+	public String getStoreProductStatusCode() {
+		return this.storeProductStatusCode;
+	}
+
+	/**
+	 * @param storeProductStatusCode
+	 *            the storeProductStatusCode to set
+	 */
+	public void setStoreProductStatusCode(String storeProductStatusCode) {
+		this.storeProductStatusCode = storeProductStatusCode;
 	}
 }

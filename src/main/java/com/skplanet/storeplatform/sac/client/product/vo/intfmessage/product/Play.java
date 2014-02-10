@@ -39,6 +39,7 @@ public class Play extends CommonInfo implements Serializable {
 	private Source source;
 	private List<Identifier> identifierList; // 상품의 에피소드 ID 리스트
 	private List<Support> supportList; // 지원매체 리스트
+	private String playProductStatusCode; // play 상품의 상태(restrict)
 
 	/**
 	 * Play().
@@ -196,5 +197,20 @@ public class Play extends CommonInfo implements Serializable {
 	 */
 	public void setSupportList(List<Support> supportList) {
 		this.supportList = supportList;
+	}
+
+	/**
+	 * @return the playProductStatusCode
+	 */
+	public String getPlayProductStatusCode() {
+		return this.playProductStatusCode;
+	}
+
+	/**
+	 * @param playProductStatusCode
+	 *            the playProductStatusCode to set
+	 */
+	public void setPlayProductStatusCode(String playProductStatusCode) {
+		this.playProductStatusCode = playProductStatusCode;
 	}
 }
