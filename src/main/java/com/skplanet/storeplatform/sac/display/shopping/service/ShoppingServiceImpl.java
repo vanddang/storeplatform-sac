@@ -1207,6 +1207,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 			req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
 		}
 
+		if (StringUtils.isEmpty(req.getProdCharge())) {
+			req.setProdCharge(null);
+		}
+		// 상품등급코드 유효값 체크
+		if (!this.commonProdGradeCd(req)) {
+			res.setCommonResponse(commonResponse);
+			return res;
+		}
+
 		// offset, Count default setting
 		this.commonOffsetCount(req);
 
