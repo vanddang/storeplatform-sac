@@ -218,7 +218,13 @@
 	       SET TOT_EVLU_SCORE = TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore}
 	           , UPD_ID = #{updId}
 	           , UPD_DT = SYSDATE
+	           <if test="action == 'create'">
 	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT )
+	           </if>
+	           <if test="action == 'remove'">
+	           , PATICPERS_CNT = PATICPERS_CNT -1
+	           , AVG_EVLU_SCORE = ( ( TOT_EVLU_SCORE + #{avgEvluScore} - #{preAvgScore} ) / PATICPERS_CNT - 1 )
+	           </if>
 	     WHERE TENANT_ID = #{tenantId}
 	       AND PROD_ID = #{prodId}
     </update>
@@ -313,14 +319,52 @@
 	                                     , SYSDATE )
 	</insert>
 	
-	
-	  <!-- 탈퇴 회원 후기 추천 수 증감처리 -->
+	<!-- (탈퇴 회원 후기) 추천 수 증감처리 -->
     <update id="updateProdNotiWDGood" parameterType="ProdNotiGood">
 	    /* FeedbackMapper.xml, updateProdNotiWDGood, SAC : 김현일 , 2014-02-04 */
 	    UPDATE TB_DP_PROD_NOTI_WD
+	       <if test="action == 'create'">
 	       SET NOTI_SCORE = NOTI_SCORE + 1
+	       </if>
+	       <if test="action == 'remove'">
+           SET NOTI_SCORE = NOTI_SCORE - 1
+           </if>
 	           , UPD_DT = SYSDATE
 	     WHERE TENANT_ID = #{tenantId} 
 	       AND NOTI_SEQ = #{notiSeq}   
     </update>
+    
+    <!-- (일반회원 사용후기) 기 추천 여부 -->
+    <select id="getProdNotiGoodCount" parameterType="ProdNoti" resultType="int">
+        SELECT /* FeedbackMapper.xml, getProdNotiGoodCount, SAC : 김현일 , 2014-02-04 */
+               COUNT(*)
+          FROM TB_DP_PROD_NOTI N
+             , TB_DP_PROD_NOTIGOOD NG
+         WHERE N.TENANT_ID = NG.TENANT_ID
+           AND N.NOTI_SEQ = NG.NOTI_SEQ
+           AND N.NOTI_TYPE_CD = 'DP000401'
+           AND N.DEL_YN = 'N'
+           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+           AND N.SPAM_YN = 'N'
+           AND N.PROD_ID = #{prodId}
+           AND NG.NOTI_SEQ = #{notiSeq}
+           AND NG.MBR_NO = #{mbrNo}
+           AND NG.TENANT_ID = #{tenantId}
+    </select>
+    
+    <!-- (일반회원 후기) 추천 수 증감처리 -->
+    <update id="updateProdNotiGood" parameterType="ProdNotiGood">
+        /* FeedbackMapper.xml, updateProdNotiGood, SAC : 김현일 , 2014-02-04 */
+        UPDATE TB_DP_PROD_NOTI
+           <if test="action == 'create'">
+           SET NOTI_SCORE = NOTI_SCORE + 1
+           </if>
+           <if test="action == 'remove'">
+           SET NOTI_SCORE = NOTI_SCORE - 1
+           </if>
+               , UPD_DT = SYSDATE
+         WHERE TENANT_ID = #{tenantId} 
+           AND NOTI_SEQ = #{notiSeq}   
+    </update>
+    
 </mapper>
