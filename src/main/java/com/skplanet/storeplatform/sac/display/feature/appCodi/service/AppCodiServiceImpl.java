@@ -50,6 +50,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Musi
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
@@ -57,6 +58,7 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.invoker.ECInvokerImpl;
 import com.skplanet.storeplatform.sac.display.feature.appCodi.vo.AppCodiRes;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
@@ -81,10 +83,13 @@ public class AppCodiServiceImpl implements AppCodiService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+	private MetaInfoService metaInfoService;
 
 	@Autowired
 	private DisplayCommonService displayCommonService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
 
 	/*
 	 * (non-Javadoc)
@@ -125,8 +130,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 		int idx = 0;
 
 		TenantHeader tenantHeader = requestHeader.getTenantHeader();
-		// DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
-		String tenantId = tenantHeader.getTenantId();
+		DeviceHeader deviceHeader = requestHeader.getDeviceHeader();
 
 		AppCodiListRes responseVO = new AppCodiListRes();
 
@@ -154,9 +158,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 			while (siterator.hasNext()) {
 				multi = siterator.next();
 
-				sPid = multi.getId();
-				sReasonCode = multi.getReasonCode();
-				sRelId = multi.getRelId();
+				sPid = multi.getId(); // pid
+				sReasonCode = multi.getReasonCode(); // 추천 사유 코드
+				sRelId = multi.getRelId(); // 연관 상품 id
 
 				// PID 리스트 저장
 				listProdParam.add(sPid);
@@ -187,15 +191,16 @@ public class AppCodiServiceImpl implements AppCodiService {
 			this.log.debug("##### parameter cnt : {}", listProdParam.size());
 			this.log.debug("##### selected product basic info cnt : {}", productBasicInfoList.size());
 			if (productBasicInfoList != null) {
-				Map<String, Object> paramMap = new HashMap<String, Object>();
-				paramMap.put("tenantHeader", requestHeader.getTenantHeader());
-				paramMap.put("deviceHeader", requestHeader.getDeviceHeader());
-				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-				paramMap.put("lang", "ko");
 
+				Map<String, Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("tenantHeader", tenantHeader);
+				paramMap.put("deviceHeader", deviceHeader);
+				paramMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING); // 판매중
+
+				// Meta 정보 조회
 				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
-					String topMenuId = productBasicInfo.getTopMenuId();
-					String svcGrpCd = productBasicInfo.getSvcGrpCd();
+					String topMenuId = productBasicInfo.getTopMenuId(); // 탑메뉴
+					String svcGrpCd = productBasicInfo.getSvcGrpCd(); // 서비스 그룹 코드
 					paramMap.put("productBasicInfo", productBasicInfo);
 
 					this.log.debug("##### Top Menu Id : {}", topMenuId);
@@ -207,11 +212,10 @@ public class AppCodiServiceImpl implements AppCodiService {
 					// DP000205 : 소셜쇼핑
 					// DP000204 : 폰꾸미기
 					// DP000201 : 애플리캐이션
-
 					// APP 상품의 경우
 					if (DisplayConstants.DP_APP_PROD_SVC_GRP_CD.equals(svcGrpCd)) {
 						paramMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
-						this.log.debug("##### Search for app specific product");
+						this.log.debug("##### Search for app  meta info product");
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getAppMetaInfo", paramMap, MetaInfo.class);
 						if (metaInfo != null) {
 							product = this.responseInfoGenerateFacade.generateSpecificAppProduct(metaInfo);
@@ -223,7 +227,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 						paramMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
 						if (DisplayConstants.DP_MOVIE_TOP_MENU_ID.equals(topMenuId)
 								|| DisplayConstants.DP_TV_TOP_MENU_ID.equals(topMenuId)) {
-							this.log.debug("##### Search for Vod specific product");
+							this.log.debug("##### Search for Vod  meta info product");
 							metaInfo = this.commonDAO.queryForObject("MetaInfo.getVODMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
@@ -239,7 +243,9 @@ public class AppCodiServiceImpl implements AppCodiService {
 								|| DisplayConstants.DP_COMIC_TOP_MENU_ID.equals(topMenuId)) { // Ebook / Comic 상품의 경우
 
 							paramMap.put("imageCd", DisplayConstants.DP_EBOOK_COMIC_REPRESENT_IMAGE_CD);
+
 							this.log.debug("##### Search for EbookComic specific product");
+
 							metaInfo = this.commonDAO.queryForObject("MetaInfo.getEbookComicMetaInfo", paramMap,
 									MetaInfo.class);
 							if (metaInfo != null) {
@@ -252,12 +258,12 @@ public class AppCodiServiceImpl implements AppCodiService {
 							}
 
 						} else if (DisplayConstants.DP_MUSIC_TOP_MENU_ID.equals(topMenuId)) { // 음원 상품의 경우
-							productBasicInfo.setMenuId("DP004901");
-							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
 
-							this.log.debug("##### Search for Music specific product");
-							metaInfo = this.commonDAO.queryForObject("MetaInfo.getMusicMetaInfo", paramMap,
-									MetaInfo.class);
+							paramMap.put("imageCd", DisplayConstants.DP_MUSIC_REPRESENT_IMAGE_CD);
+							paramMap.put("contentTypeCd", DisplayConstants.DP_EPISODE_CONTENT_TYPE_CD);
+
+							this.log.debug("##### Search for music meta info product");
+							metaInfo = this.commonDAO.queryForObject("isf.getMusicMetaInfo", paramMap, MetaInfo.class);
 							if (metaInfo != null) {
 								product = this.responseInfoGenerateFacade.generateSpecificMusicProduct(metaInfo);
 								productList.add(product);
@@ -267,7 +273,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 						paramMap.put("prodRshpCd", DisplayConstants.DP_CHANNEL_EPISHODE_RELATIONSHIP_CD);
 						paramMap.put("imageCd", DisplayConstants.DP_SHOPPING_REPRESENT_IMAGE_CD);
 
-						this.log.debug("##### Search for Shopping specific product");
+						this.log.debug("##### Search for Shopping  meta info product");
 						metaInfo = this.commonDAO.queryForObject("MetaInfo.getShoppingMetaInfo", paramMap,
 								MetaInfo.class);
 						if (metaInfo != null) {
@@ -285,12 +291,13 @@ public class AppCodiServiceImpl implements AppCodiService {
 				List<HashMap> listRelProd = null;
 				if (!listRelProdParam.isEmpty()) {
 					Map<String, Object> mapRel = new HashMap<String, Object>();
+					mapRel.put("tenantHeader", tenantHeader);
 					mapRel.put("pidList", listRelProdParam);
-					listRelProd = this.commonDAO.queryForList("common.getProdInfoFromPidList", mapRel, HashMap.class);
+
+					listRelProd = this.commonDAO.queryForList("isf.getRelProdList", mapRel, HashMap.class);
 				}
 
 				// 추천사유코드 Mapping
-				Map<String, Object> mapAppCodi = null;
 				Map<String, Object> mapRelProdTemp = null;
 				boolean isRel = false;
 				String reasonMessage = "";
@@ -298,16 +305,23 @@ public class AppCodiServiceImpl implements AppCodiService {
 				/*
 				 * 앱코디 상품 조회 리스트를 돌리면서 추천 사유 메세지 만드는 작업을 한다. 순서는 처음에 저장한 mapRank 를 참조로 Index 생성하여 처리한다.
 				 */
-				List<Object> listAppCodiReason = new ArrayList<Object>(idx);
+				List<Product> listAppCodiReason = new ArrayList<Product>(idx);
 				for (int i = 0; i < idx; i++) {
 					listAppCodiReason.add(null);
 				}
 
 				Iterator<Product> iterator = productList.iterator();
 				while (iterator.hasNext()) {
-					mapAppCodi = (Map<String, Object>) iterator.next();
+					product = iterator.next();
 
-					sPid = ObjectUtils.toString(mapAppCodi.get("PROD_ID"));
+					Identifier id = new Identifier();
+					Iterator<Identifier> idIterator = product.getIdentifierList().iterator();
+					while (idIterator.hasNext()) {
+						id = idIterator.next();
+						if (DisplayConstants.DP_CHANNEL_IDENTIFIER_CD.equalsIgnoreCase(id.getType())) {
+							sPid = id.getText();
+						}
+					}
 					sRelId = mapRelProd.get(sPid);
 					sReasonCode = mapReason.get(sPid);
 					if ("02".equals(sReasonCode) || "03".equals(sReasonCode)) {
@@ -331,7 +345,17 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 						// 대상상품 대분류 카테고리명
 						// 대상상품은 연관상품과 별개로 처리함
-						String top_cat_nm_pid = (String) mapAppCodi.get("TOP_MENU_NM");
+						String top_cat_nm_pid = "";
+						List<Menu> menuList = product.getMenuList();
+						Iterator<Menu> mnIterator = menuList.iterator();
+						Menu menu = new Menu();
+						while (mnIterator.hasNext()) {
+							menu = mnIterator.next();
+							if (DisplayConstants.DP_MENU_TOPCLASS_TYPE.equals(menu.getType())) {
+								top_cat_nm_pid = menu.getName();
+							}
+						}
+
 						reasonMessage = StringUtils.replace(reasonMessage, "$4", top_cat_nm_pid);
 						// 연관상품 정보가 있을 경우에 치환처리함
 						if (listRelProd != null) {
@@ -353,7 +377,7 @@ public class AppCodiServiceImpl implements AppCodiService {
 									reasonMessage = StringUtils.replace(reasonMessage, "$2", top_cat_nm);
 									reasonMessage = StringUtils.replace(reasonMessage, "$3", dp_cat_nm);
 
-									mapAppCodi.put("REASON_NAME", reasonMessage);
+									product.setRecommendedReason(reasonMessage);
 									isRel = true;
 									break;
 								}
@@ -368,13 +392,13 @@ public class AppCodiServiceImpl implements AppCodiService {
 					// $1,2,3가 그냥 노출되기 때문에 임시로 04번 코드로 치환한다.
 					if (!isRel && reasonMessage.indexOf("$") > -1) {
 						reasonMessage = mapReasonCode.get("04");
-						mapAppCodi.put("REASON_NAME", reasonMessage);
+						product.setRecommendedReason(reasonMessage);
 					} else {
-						mapAppCodi.put("REASON_NAME", reasonMessage);
+						product.setRecommendedReason(reasonMessage);
 					}
 					// ISF연동 정보시 저장한 순서를 가져와서 최종 List에 해당 Index로 add 한다.
 					int index = mapRank.get(sPid);
-					listAppCodiReason.set(index, mapAppCodi);
+					listAppCodiReason.set(index, product);
 				}
 
 				// 앱코디 상품리스트 조회 결과가 ISF 에서 넘겨주는 상품 정보보다 적을 수 있어서(판매중지 등의 사유)
@@ -386,11 +410,11 @@ public class AppCodiServiceImpl implements AppCodiService {
 
 				// Range 가 정의된 경우
 				if ("long".equals(requestVO.getFilteredBy())) {
-					sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(mapReq.get("START_ROW")), "1");
-					sEndRow = ObjectUtils.toString(mapReq.get("END_ROW"));
+					sStartRow = StringUtils.defaultIfEmpty(ObjectUtils.toString(requestVO.getCount()), "1");
+					sEndRow = ObjectUtils.toString(requestVO.getCount() + requestVO.getOffset() - 1);
 				}
 
-				List<Object> listRes = new ArrayList<Object>();
+				List<Product> listRes = new ArrayList<Product>();
 				if (StringUtils.isNotEmpty(sEndRow)) {
 					int iStartRow = NumberUtils.toInt(sStartRow) - 1;
 					int iEndRow = NumberUtils.toInt(sEndRow);
@@ -411,33 +435,33 @@ public class AppCodiServiceImpl implements AppCodiService {
 					listRes.addAll(listAppCodiReason);
 				}
 
-				// TOTAL_COUNT 예외처리
-				mapReq.put("TOTAL_COUNT", Integer.toString(listAppCodiReason.size()));
-
-				/*
-				 * ods.putRes("0", listRes); ods.putRes("category", CodeManager.getCatList());
-				 */
-				/*
-				 * if ("long".equals(requestVO.getFilteredBy())) { ods.putRes("range", range(listRes, mapReq)); }
-				 */
+				commonResponse.setTotalCount(listRes.size());
+				responseVO.setCommonRes(commonResponse);
+				responseVO.setProductList(listRes);
 			}
-			commonResponse.setTotalCount(productList.size());
-			responseVO.setCommonRes(commonResponse);
-			responseVO.setProductList(productList);
 		} else {
 			isExists = false;
 		}
 
 		// ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )
 		if (!isExists) {
+			this.log.debug("ISF 연동 실패나 Data 가 없는 경우( 운영자 추천으로 대체 )");
+
 			mapReq = new HashMap<String, Object>();
+
+			if (!"long".equalsIgnoreCase(requestVO.getFilteredBy())) {
+				mapReq.put("START_ROW", "1");
+				mapReq.put("END_ROW", "4");
+			} else {
+				mapReq.put("START_ROW", requestVO.getOffset());
+				mapReq.put("END_ROW", (requestVO.getOffset() + requestVO.getCount() - 1));
+			}
 
 			mapReq.put("tenantHeader", requestHeader.getTenantHeader());
 			mapReq.put("deviceHeader", requestHeader.getDeviceHeader());
 
-			mapReq.put("listId", "ADM000000012");
+			mapReq.put("listId", "ADM000000012"); // 운영자 추천
 			mapReq.put("imageCd", "DP000167");
-			mapReq.put("lang", requestHeader.getTenantHeader().getLangCd());
 
 			// Get Map in Set interface to get key and value
 			Set<Entry<String, Object>> s = mapReq.entrySet();
