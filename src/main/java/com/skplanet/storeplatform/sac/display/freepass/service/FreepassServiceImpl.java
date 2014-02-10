@@ -266,7 +266,7 @@ public class FreepassServiceImpl implements FreepassService {
 			autoPay.setType("auto");
 		
 			date.setType("duration/usagePeriod");
-			date.setText("20120913T195630+0900/20121013T195630+0900");
+			date.setText("2013-10-06 14:22:51/2015-02-06 14:22:51");
 			
 			title.setText("특선영화 30일 자유이용권");
 			title.setAlias("특선영화 30일 자유이용권");
