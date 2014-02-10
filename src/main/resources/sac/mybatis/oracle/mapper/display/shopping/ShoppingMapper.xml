@@ -110,8 +110,11 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
                         </if>   
                         AND EXISTS (
                             SELECT 1 
@@ -219,9 +222,12 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
-                        </if>   
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
+                        </if>      
                         AND  EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -367,8 +373,11 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
+                         <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
                         </if>   
                         AND  EXISTS (
                             SELECT 1 
@@ -543,9 +552,13 @@
                         <if test="prodCharge != null">
                         AND J.PROD_CHRG_YN =#{prodCharge}
                         </if>
-                        <if test="prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{prodGradeCd}
+                        <if test="arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="arrayProdGradeCd" item="prodGradeCd" separator="," open="(" close=")">
+                                        #{prodGradeCd}
+                                      </foreach>                        
                         </if>   
+
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -687,9 +700,12 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
-                        </if>   
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
+                        </if>      
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -876,9 +892,12 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
-                        </if>   
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
+                        </if>      
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -1011,9 +1030,12 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
-                        </if>   
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
+                        </if>      
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -1160,9 +1182,12 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
-                        </if>   
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
+                        </if>      
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
@@ -1314,9 +1339,12 @@
                         <if test="req.prodCharge != null">
                         AND J.PROD_CHRG_YN =#{req.prodCharge}
                         </if>
-                        <if test="req.prodGradeCd != null">
-                        AND J.PROD_GRD_CD =#{req.prodGradeCd}
-                        </if>   
+                        <if test="req.arrayProdGradeCd != null">
+                        AND J.PROD_GRD_CD  IN
+                                      <foreach collection="req.arrayProdGradeCd" item="req.prodGradeCd" separator="," open="(" close=")">
+                                        #{req.prodGradeCd}
+                                      </foreach>                        
+                        </if>      
                         AND EXISTS (
                             SELECT 1 
                             FROM  TB_DP_SPRT_DEVICE DV  
