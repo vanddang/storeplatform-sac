@@ -51,6 +51,7 @@ public class MetaInfo {
 	private String prodVer;
 	private String apkPkgNm;
 	private String apkVer;
+	private String fakeYn;
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
@@ -724,6 +725,21 @@ public class MetaInfo {
 	 */
 	public void setApkVer(String apkVer) {
 		this.apkVer = apkVer;
+	}
+
+	/**
+	 * @return the fakeYn
+	 */
+	public String getFakeYn() {
+		return this.fakeYn;
+	}
+
+	/**
+	 * @param fakeYn
+	 *            the fakeYn to set
+	 */
+	public void setFakeYn(String fakeYn) {
+		this.fakeYn = fakeYn;
 	}
 
 	/**
