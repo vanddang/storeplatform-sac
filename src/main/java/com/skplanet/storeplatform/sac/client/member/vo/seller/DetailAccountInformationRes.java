@@ -21,26 +21,26 @@ public class DetailAccountInformationRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 
-	List<Document> document;
-	List<ExtraRight> extraRight;
+	List<Document> documentList;
+	List<ExtraRight> extraRightList;
 	SellerAccount sellerAccount;
 	private String sellerKey;
 	SellerMbr sellerMbr;
 
-	public List<Document> getDocument() {
-		return this.document;
+	public List<Document> getDocumentList() {
+		return this.documentList;
 	}
 
-	public void setDocument(List<Document> document) {
-		this.document = document;
+	public void setDocumentList(List<Document> documentList) {
+		this.documentList = documentList;
 	}
 
-	public List<ExtraRight> getExtraRight() {
-		return this.extraRight;
+	public List<ExtraRight> getExtraRightList() {
+		return this.extraRightList;
 	}
 
-	public void setExtraRight(List<ExtraRight> extraRight) {
-		this.extraRight = extraRight;
+	public void setExtraRightList(List<ExtraRight> extraRightList) {
+		this.extraRightList = extraRightList;
 	}
 
 	public SellerAccount getSellerAccount() {
