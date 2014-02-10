@@ -26,7 +26,7 @@ public interface IdpService {
 	/**
 	 * 
 	 * <pre>
-	 * 회선 변경 정보 Provisioning (무선, 통합 회원).
+	 * 회선 변경 정보 Provisioning (번호변경).
 	 * - CMD : changeMobileNumber
 	 * </pre>
 	 * 
@@ -34,7 +34,33 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String changeMobileNumber(HashMap map);
+	public String changeMobileNumber(HashMap<String, String> map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회선 변경 정보 Provisioning (기기변경).
+	 * - CMD : changeMobileID
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String changeMobileID(HashMap<String, String> map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 회선 변경 정보 Provisioning (번호해지).
+	 * - CMD : secedeMobileNumber
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request로 받은 Parameter Map
+	 * @return IDP Provisioning 처리 결과
+	 */
+	public String secedeMobileNumber(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -150,7 +176,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String joinComplete(HashMap map);
+	public String joinComplete(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -163,7 +189,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String adjustWiredProfile(HashMap map);
+	public String adjustWiredProfile(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -176,7 +202,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String ecgJoinedTStore(HashMap map);
+	public String ecgJoinedTStore(HashMap<String, String> map);
 
 	/**
 	 * 
@@ -189,7 +215,7 @@ public interface IdpService {
 	 *            Request로 받은 Parameter Map
 	 * @return IDP Provisioning 처리 결과
 	 */
-	public String ecgScededTStore(HashMap map);
+	public String ecgScededTStore(HashMap<String, String> map);
 
 	/**
 	 * 
