@@ -12,7 +12,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
@@ -31,6 +33,9 @@ public class FeedbackServiceTest {
 
 	private SacRequestHeader sacRequestHeader;
 
+	String userKey = "IW1425872523320130906108999";
+	String prodId = "0000045297";
+
 	@Before
 	public void before() {
 		this.sacRequestHeader = new SacRequestHeader();
@@ -43,27 +48,72 @@ public class FeedbackServiceTest {
 	}
 
 	@Test
-	public void testCreate() {
+	public void testAll() {
+
 		CreateFeedbackSacReq createFeedbackSacReq = new CreateFeedbackSacReq();
-		createFeedbackSacReq.setUserKey("IW1425872523320130906100815");
-		createFeedbackSacReq.setProdId("0000045297");
+		createFeedbackSacReq.setUserKey(this.userKey);
+		createFeedbackSacReq.setProdId(this.prodId);
 		createFeedbackSacReq.setNotiTitle("SAC 사용후기 테스트");
 		createFeedbackSacReq.setNotiDscr("SAC 사용후기 테스트 내용");
-		createFeedbackSacReq.setUserId("");
+		createFeedbackSacReq.setUserId("test1");
 		createFeedbackSacReq.setDeviceId("0101231234");
 		createFeedbackSacReq.setFbPostYn("Y");
 		createFeedbackSacReq.setPkgVer("");
 		createFeedbackSacReq.setAvgScore("5");
 		createFeedbackSacReq.setChnlId("");
+
+		CreateFeedbackSacRes createFeedbackSacRes = this.feedbackService.create(createFeedbackSacReq,
+				this.sacRequestHeader);
+
+		ModifyFeedbackSacReq modifyFeedbackSacReq = new ModifyFeedbackSacReq();
+		modifyFeedbackSacReq.setProdId(this.prodId);
+		modifyFeedbackSacReq.setNotiSeq(createFeedbackSacRes.getNotiSeq());
+		modifyFeedbackSacReq.setUserKey(this.userKey);
+		modifyFeedbackSacReq.setUserId("test1");
+		modifyFeedbackSacReq.setNotiTitle("SAC 수정 테스트.");
+		modifyFeedbackSacReq.setNotiDscr("SAC 수정 테스트 내용.");
+		modifyFeedbackSacReq.setPkgVer("1234");
+		modifyFeedbackSacReq.setAvgScore("1");
+		modifyFeedbackSacReq.setChnlId("");
+
+		ModifyFeedbackSacRes modifyFeedbackSacRes = this.feedbackService.modify(modifyFeedbackSacReq,
+				this.sacRequestHeader);
+
+		RemoveFeedbackSacReq removeFeedbackSacReq = new RemoveFeedbackSacReq();
+		removeFeedbackSacReq.setProdId(this.prodId);
+		removeFeedbackSacReq.setUserKey(this.userKey);
+		removeFeedbackSacReq.setUserId("test12");
+		removeFeedbackSacReq.setNotiSeq(modifyFeedbackSacRes.getNotiSeq());
+		this.feedbackService.remove(removeFeedbackSacReq, this.sacRequestHeader);
+
+	}
+
+	@Test
+	public void testCreate() {
+
+		CreateFeedbackSacReq createFeedbackSacReq = new CreateFeedbackSacReq();
+		createFeedbackSacReq.setUserKey(this.userKey);
+		createFeedbackSacReq.setProdId(this.prodId);
+		createFeedbackSacReq.setNotiTitle("SAC 사용후기 테스트");
+		createFeedbackSacReq.setNotiDscr("SAC 사용후기 테스트 내용");
+		createFeedbackSacReq.setUserId("test1");
+		createFeedbackSacReq.setDeviceId("0101231234");
+		createFeedbackSacReq.setFbPostYn("Y");
+		createFeedbackSacReq.setPkgVer("");
+		createFeedbackSacReq.setAvgScore("5");
+		createFeedbackSacReq.setChnlId("");
+
 		this.feedbackService.create(createFeedbackSacReq, this.sacRequestHeader);
+
 	}
 
 	@Test
 	public void testModify() {
 		ModifyFeedbackSacReq modifyFeedbackSacReq = new ModifyFeedbackSacReq();
-		modifyFeedbackSacReq.setProdId("0000045297");
-		modifyFeedbackSacReq.setNotiSeq("14279");
-		modifyFeedbackSacReq.setUserKey("IW1023992275020110428164435");
+		modifyFeedbackSacReq.setProdId(this.prodId);
+		modifyFeedbackSacReq.setNotiSeq("300000034");
+		modifyFeedbackSacReq.setUserKey(this.userKey);
+		modifyFeedbackSacReq.setUserId("test1");
 		modifyFeedbackSacReq.setNotiTitle("SAC 수정 테스트.");
 		modifyFeedbackSacReq.setNotiDscr("SAC 수정 테스트 내용.");
 		modifyFeedbackSacReq.setPkgVer("1234");
@@ -75,9 +125,10 @@ public class FeedbackServiceTest {
 	@Test
 	public void testRemove() {
 		RemoveFeedbackSacReq removeFeedbackSacReq = new RemoveFeedbackSacReq();
-		removeFeedbackSacReq.setProdId("H090123997");
-		removeFeedbackSacReq.setUserKey("IW1425872523320130906100815");
-		removeFeedbackSacReq.setNotiSeq("14255");
+		removeFeedbackSacReq.setProdId(this.prodId);
+		removeFeedbackSacReq.setUserKey(this.userKey);
+		removeFeedbackSacReq.setUserId("test12");
+		removeFeedbackSacReq.setNotiSeq("300000034");
 		this.feedbackService.remove(removeFeedbackSacReq, this.sacRequestHeader);
 	}
 }
