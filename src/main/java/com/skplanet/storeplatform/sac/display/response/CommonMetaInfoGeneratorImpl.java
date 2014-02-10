@@ -119,13 +119,15 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Source generateSource(MetaInfo metaInfo) {
 		Source source = new Source();
 		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		if (StringUtils.isNotEmpty(metaInfo.getFilePath())) {
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
-		} else {
+		if (StringUtils.isNotEmpty(metaInfo.getImagePath())) {
 			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
+			source.setUrl(metaInfo.getImagePath());
+			source.setSize(metaInfo.getImageSize());
+		} else {
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
+			source.setUrl(metaInfo.getFilePath());
+			source.setSize(metaInfo.getFileSize());
 		}
-		source.setUrl(metaInfo.getFilePath());
-		source.setSize(metaInfo.getFileSize());
 		return source;
 	}
 
