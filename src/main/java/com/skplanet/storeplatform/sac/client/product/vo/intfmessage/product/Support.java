@@ -25,7 +25,7 @@ public class Support extends CommonInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/*
-	 * 지원구분 (drm : DRM 지원여부, inApp : 앱상품의 부모 상품 구분, hd : HDV 지원여부)
+	 * 지원구분 (drm : DRM 지원여부, inApp : 앱상품의 부모 상품 구분, hd : HDV 지원여부, btv : BTV 지원여부)
 	 */
 	private String type;
 
