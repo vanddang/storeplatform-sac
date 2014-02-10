@@ -419,8 +419,6 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setIsNew("Y");
 		createDeviceReq.setUserKey(userKey);
 
-		/* 게임센터 연동 API 확인필요!! */
-
 		deviceInfo.setUserKey(userKey);
 		deviceInfo.setTenantId(tenantId);
 
@@ -429,6 +427,7 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setUserMbrDevice(DeviceUtil.getConverterUserMbrDeviceInfo(deviceInfo));
 		createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
+		GameCenter gameCenter = new GameCenter();
 		/* 2. 기등록된 회원이 존재하는지 확인 */
 		if (createDeviceRes.getPreviousUserKey() != null) {
 
@@ -437,6 +436,8 @@ public class DeviceServiceImpl implements DeviceService {
 
 			String previousUserKey = createDeviceRes.getPreviousUserKey();
 			String nowUserKey = createDeviceRes.getUserKey();
+			gameCenter.setPreUserKey(previousUserKey);
+			gameCenter.setUserKey(nowUserKey);
 
 			/* 3. 구매이력 이관요청 */
 
@@ -492,6 +493,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
+		/* 6. 게임센터 연동 */
+		//		this.insertGameCenterIF(gameCenter);
+
 		LOGGER.info("######################## DeviceServiceImpl insertDeviceInfo end ############################");
 
 		return createDeviceRes.getDeviceKey();
@@ -518,6 +522,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String userKey = deviceInfo.getUserKey();
 		String deviceId = deviceInfo.getDeviceId();
 		String deviceKey = deviceInfo.getDeviceKey();
+		String gameCenterYn = "";
 
 		/* 기기정보 조회 */
 		SearchDeviceRequest schDeviceReq = new SearchDeviceRequest();
@@ -609,6 +614,9 @@ public class DeviceServiceImpl implements DeviceService {
 			}
 			LOGGER.info("[deviceModelNo] {} -> {}", userMbrDevice.getDeviceModelNo(), deviceModelNo);
 			userMbrDevice.setDeviceModelNo(deviceModelNo);
+
+			/* 단말모델이 변경된 경우 게임센터 연동 */
+			gameCenterYn = "Y";
 
 		}
 
@@ -746,7 +754,13 @@ public class DeviceServiceImpl implements DeviceService {
 		createDeviceReq.setUserMbrDevice(userMbrDevice);
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
-		/* 게임센터 연동 API 확인필요!! */
+		/* 게임센터 연동 */
+		//		if (gameCenterYn.equals("Y")) {
+		//			GameCenter gameCenter = new GameCenter();
+		//			gameCenter.setDeviceId(deviceId);
+		//			gameCenter.setUserKey(userKey);
+		//			this.insertGameCenterIF(gameCenter);
+		//		}
 
 		LOGGER.info("################ updateDeviceInfo end ##################");
 
