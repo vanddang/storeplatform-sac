@@ -87,6 +87,7 @@ public class MetaInfo {
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
+	private String updDt;
 
 	// ////////////////////////// 음원 상품 변수 ////////////////////////////
 	private String rankChgCnt;
@@ -1668,6 +1669,14 @@ public class MetaInfo {
 	 */
 	public void setTagTypeCd(String tagTypeCd) {
 		this.tagTypeCd = tagTypeCd;
+	}
+
+	public String getUpdDt() {
+		return this.updDt;
+	}
+
+	public void setUpdDt(String updDt) {
+		this.updDt = updDt;
 	}
 
 }
