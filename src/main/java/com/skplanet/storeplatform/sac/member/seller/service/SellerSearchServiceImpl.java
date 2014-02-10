@@ -332,8 +332,8 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		}
 
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
-		response.setDocument(dList);
-		response.setExtraRight(eList);
+		response.setDocumentList(dList);
+		response.setExtraRightList(eList);
 		response.setSellerAccount(sellerAccount);
 		response.setSellerKey(schRes.getSellerKey());
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));

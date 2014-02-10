@@ -448,8 +448,8 @@ public class DummySellerController {
 		sellerMbr.setTenantID("");
 		sellerMbr.setVendorCode("");
 
-		responseVO.setDocument(dList);
-		responseVO.setExtraRight(eList);
+		responseVO.setDocumentList(dList);
+		responseVO.setExtraRightList(eList);
 		responseVO.setSellerAccount(sellerAccount);
 		responseVO.setSellerKey("IF102158942020090723111912");
 		responseVO.setSellerMbr(sellerMbr);
