@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -118,7 +119,11 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Source generateSource(MetaInfo metaInfo) {
 		Source source = new Source();
 		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
+		if (StringUtils.isNotEmpty(metaInfo.getFilePath())) {
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getFilePath()));
+		} else {
+			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
+		}
 		source.setUrl(metaInfo.getFilePath());
 		source.setSize(metaInfo.getFileSize());
 		return source;
