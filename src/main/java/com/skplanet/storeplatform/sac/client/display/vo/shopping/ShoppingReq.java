@@ -29,6 +29,7 @@ public class ShoppingReq extends CommonInfo {
 	private String menuId; // 메뉴아이디
 	private String osVersion; // os 버전
 	private String prodCharge; // 유료/무료 구분
+	private String[] arrayProdGradeCd; // 상품등급코드 Array
 	private String prodGradeCd; // 상품등급코드
 	private String b2bProd; // B2B 상품 구분
 	private String orderedBy; // 정렬순서
@@ -42,6 +43,8 @@ public class ShoppingReq extends CommonInfo {
 	private String exceptProdId; // 제외할 메뉴ID – 지정하면 응답에서 해당 메뉴 제외
 	private String prodId; // 상품 ID
 	private String specialProdId; // 특가상품 ID
+	private String deviceKey; // 디바이스키
+	private String userKey; // 사용자고유키
 
 	private Integer offset; // offset
 	private Integer count; // count
@@ -115,6 +118,21 @@ public class ShoppingReq extends CommonInfo {
 
 	public void setProdGradeCd(String prodGradeCd) {
 		this.prodGradeCd = prodGradeCd;
+	}
+
+	/**
+	 * @return the arrayProdGradeCd
+	 */
+	public String[] getArrayProdGradeCd() {
+		return this.arrayProdGradeCd;
+	}
+
+	/**
+	 * @param arrayProdGradeCd
+	 *            the arrayProdGradeCd to set
+	 */
+	public void setArrayProdGradeCd(String[] arrayProdGradeCd) {
+		this.arrayProdGradeCd = arrayProdGradeCd;
 	}
 
 	public String getB2bProd() {
@@ -269,6 +287,36 @@ public class ShoppingReq extends CommonInfo {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	/**
+	 * @param deviceKey
+	 *            the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the userKey
+	 */
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	/**
+	 * @param userKey
+	 *            the userKey to set
+	 */
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }
