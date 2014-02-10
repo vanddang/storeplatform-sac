@@ -1,6 +1,7 @@
 package com.skplanet.storeplatform.sac.member.idp.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -1171,7 +1172,13 @@ public class IdpServiceImpl implements IdpService {
 			this.userSCI.remove(removeUserReq);
 
 		} catch (StorePlatformException ex) {
-			return this.FAIL_STR;
+
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				return this.FAIL_NODATA_STR;
+			} else {
+				return this.FAIL_STR;
+			}
+
 		}
 
 		return this.SUCCESS_STR;
@@ -1188,8 +1195,6 @@ public class IdpServiceImpl implements IdpService {
 	@Override
 	public String adjustWiredProfile(HashMap map) {
 
-		String userKey = null;
-		String user_phone = null;
 		String im_int_svc_no = map.get("im_int_svc_no").toString();
 		String imMbrNo = map.get("user_key").toString();
 
@@ -1207,22 +1212,20 @@ public class IdpServiceImpl implements IdpService {
 		schUserReq.setCommonRequest(commonRequest);
 		schUserReq.setKeySearchList(keySearchList);
 		SearchUserResponse schUserRes = null;
+
 		try {
+
 			schUserRes = this.userSCI.searchUser(schUserReq);
-			userKey = schUserRes.getUserKey();
-		} catch (StorePlatformException ex) {
-			return this.FAIL_NODATA_STR;
-		}
+			String userKey = schUserRes.getUserKey();
 
-		/* 변경정보 셋팅 */
-		UserMbr userMbr = new UserMbr();
-		userMbr.setUserKey(userKey);
+			/* 변경정보 셋팅 */
+			UserMbr userMbr = new UserMbr();
+			userMbr.setUserKey(userKey);
 
-		MbrAuth mbrAuth = new MbrAuth();
-		mbrAuth.setMemberKey(userKey);
+			MbrAuth mbrAuth = new MbrAuth();
+			mbrAuth.setMemberKey(userKey);
 
-		if (im_int_svc_no == null) {// 통합회원이 아닌경우
-
+			String user_phone = map.get("user_phone").toString();
 			String user_id = map.get("user_id").toString();
 			String user_sex = map.get("user_sex").toString();
 			String user_birthday = map.get("user_birthday").toString();
@@ -1230,10 +1233,10 @@ public class IdpServiceImpl implements IdpService {
 			String is_rname_auth = map.get("is_rname_auth").toString();
 			String user_name = map.get("user_name").toString();
 			String user_social_number = map.get("user_social_number").toString();
-			user_phone = map.get("user_phone").toString();
 
 			userMbr.setUserID(user_id);
 			userMbr.setUserSex(user_sex);
+			userMbr.setUserBirthDay(user_birthday);
 
 			/* 실명인증이 추가된 경우만 처리 */
 			if (is_rname_auth != null && is_rname_auth.equals("Y")) {
@@ -1242,37 +1245,30 @@ public class IdpServiceImpl implements IdpService {
 
 					userMbr.setIsRealName(is_rname_auth);
 					userMbr.setUserName(user_name);
-					userMbr.setUserBirthDay(user_birthday);
 
 					/* 실명인증 정보까지 업데이트 해야 하는지 확인필요 */
+					mbrAuth.setIsRealName(is_rname_auth);
 					mbrAuth.setName(user_name);
 					mbrAuth.setBirthDay(user_birthday);
+					mbrAuth.setRealNameDate(DateUtil.getDateString(new Date(), "yyyyMMddHHmmss"));
 
 				}
 			}
 
-			/* 이메일 변경 */
 			if (user_email != null && !user_email.equals("")) {
 				userMbr.setUserEmail(user_name);
 			}
 
-		} else { // 통합회원인 경우
-
-			user_phone = map.get("user_phone").toString();
-			String user_id = map.get("user_id").toString();
-			userMbr.setUserID(user_id);
-
-		}
-
-		/* 변경 요청 */
-		try {
-
-			/* 회원정보 변경 요청 */
-			UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-			updateUserRequest.setUserMbr(userMbr);
-			updateUserRequest.setMbrAuth(mbrAuth);
-			updateUserRequest.setCommonRequest(commonRequest);
-			this.userSCI.updateUser(updateUserRequest);
+			if (im_int_svc_no == null) {// 통합회원이 아닌경우
+				/* 회원정보 변경 요청 */
+				UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+				updateUserRequest.setUserMbr(userMbr);
+				if (mbrAuth.getIsRealName().equals("Y")) {
+					updateUserRequest.setMbrAuth(mbrAuth);
+				}
+				updateUserRequest.setCommonRequest(commonRequest);
+				this.userSCI.updateUser(updateUserRequest);
+			}
 
 			/* 휴대기기 목록 조회 */
 			SearchDeviceListRequest schDeviceListReq = new SearchDeviceListRequest();
@@ -1293,7 +1289,7 @@ public class IdpServiceImpl implements IdpService {
 				if (user_phone.indexOf("|") > -1) { // 처리단말이 여러개
 
 					String user_phones[] = user_phone.split("\\|");
-					List<String> userPhoneList = new ArrayList<String>();
+					List<String> idpUserPhoneList = new ArrayList<String>();
 
 					for (int i = 0; i < user_phones.length; i++) {
 
@@ -1302,7 +1298,7 @@ public class IdpServiceImpl implements IdpService {
 						/* 휴대기기 번호 */
 						String deviceId = phone_info[0];
 						LOGGER.info("deviceId {}", deviceId);
-						userPhoneList.add(i, deviceId);
+						idpUserPhoneList.add(i, deviceId);
 
 						/* SKT 통합관리번호 */
 						String svcMangNum = phone_info[1];
@@ -1351,32 +1347,31 @@ public class IdpServiceImpl implements IdpService {
 
 							}
 						}
+					}
 
-						/* user_phone에 존재하지 않은 휴대기기 정보 삭제 처리 */
-						List<String> removeKeyList = new ArrayList<String>();
-						for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
+					/* user_phone에 존재하지 않은 휴대기기 정보 삭제 처리 */
+					List<String> removeKeyList = new ArrayList<String>();
+					for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
 
-							String removeYn = "Y";
-							for (String deviceIdStr : userPhoneList) {
+						String removeYn = "Y";
+						for (String deviceIdStr : idpUserPhoneList) {
 
-								if (userMbrDevice.getDeviceID().equals(deviceIdStr)) {
-									removeYn = "N";
-								}
-
-							}
-
-							if (removeYn.equals("Y")) {
-								removeKeyList.add(userMbrDevice.getDeviceKey());
+							if (userMbrDevice.getDeviceID().equals(deviceIdStr)) {
+								removeYn = "N";
 							}
 
 						}
 
-						if (removeKeyList.size() > 0) {
-							RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
-							removeDeviceReq.setUserKey(userKey);
-							removeDeviceReq.setDeviceKey(removeKeyList);
+						if (removeYn.equals("Y")) {
+							removeKeyList.add(userMbrDevice.getDeviceKey());
 						}
 
+					}
+
+					if (removeKeyList.size() > 0) {
+						RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+						removeDeviceReq.setUserKey(userKey);
+						removeDeviceReq.setDeviceKey(removeKeyList);
 					}
 
 				} else { // 처리단말 한개
@@ -1434,12 +1429,40 @@ public class IdpServiceImpl implements IdpService {
 
 						}
 					}
+
+					/* user_phone에 존재하지 않은 휴대기기 정보 삭제 처리 */
+					List<String> removeKeyList = new ArrayList<String>();
+					for (UserMbrDevice userMbrDevice : schDeviceListRes.getUserMbrDevice()) {
+
+						String removeYn = "Y";
+
+						if (userMbrDevice.getDeviceID().equals(deviceId)) {
+							removeYn = "N";
+						}
+
+						if (removeYn.equals("Y")) {
+							removeKeyList.add(userMbrDevice.getDeviceKey());
+						}
+
+					}
+
+					if (removeKeyList.size() > 0) {
+						RemoveDeviceRequest removeDeviceReq = new RemoveDeviceRequest();
+						removeDeviceReq.setUserKey(userKey);
+						removeDeviceReq.setDeviceKey(removeKeyList);
+					}
 				}
 
 			}
 
 		} catch (StorePlatformException ex) {
-			return this.FAIL_STR;
+
+			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				return this.FAIL_NODATA_STR;
+			} else {
+				return this.FAIL_STR;
+			}
+
 		}
 
 		return this.SUCCESS_STR;
