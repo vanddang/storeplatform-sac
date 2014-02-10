@@ -1,5 +1,7 @@
 package com.skplanet.storeplatform.sac.client.member.vo.user;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -10,5 +12,23 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 public class LockAccountSacReq extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
+	@NotEmpty
+	private String userId = "";
+
+	/**
+	 * @return String : userId
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
+
+	/**
+	 * @param userId
+	 *            String : the userId to set
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
 }
