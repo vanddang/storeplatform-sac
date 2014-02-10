@@ -11,6 +11,7 @@ package com.skplanet.storeplatform.sac.runtime.acl.service;
 
 import org.springframework.integration.annotation.Header;
 
+import com.skplanet.storeplatform.sac.runtime.acl.service.authentication.AuthenticateService;
 import com.skplanet.storeplatform.sac.runtime.acl.service.validation.RequestValidateService;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.HttpHeaders;
 
@@ -26,6 +27,7 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 
 	// @Autowired
 	private RequestValidateService validator;
+	private AuthenticateService authenticateService;
 
 	/**
 	 * Request를 검증한다. (Interface 및 Timestamp 검사)
@@ -47,7 +49,8 @@ public class AclServiceTobeImpl implements AclServiceTobe {
 	 */
 	@Override
 	public void authenticate(@Header("httpHeaders") HttpHeaders header) {
-		// TODO 임근대M 구현
+		// Step 1) Tenant 인증
+		this.authenticateService.authenticate(header);
 	}
 
 	/**
