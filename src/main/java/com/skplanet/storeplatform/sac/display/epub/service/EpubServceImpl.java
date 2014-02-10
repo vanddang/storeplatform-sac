@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,50 @@ public class EpubServceImpl implements EpubService {
 		}
 
 
+		res.setProduct(product);
+
+		return res;
+	}
+
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.skplanet.storeplatform.sac.display.epub.service.EpubService#searchEpubSeries(com.skplanet.storeplatform.sac
+	 * .client.display.vo.epub.EpubSeriesReq)
+	 */
+	@Override
+	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
+		EpubSeriesRes res = new EpubSeriesRes();
+
+		Product product = new Product();
+		// --------------------------------------------------------
+		// 1. Channel 정보 조회
+		// --------------------------------------------------------
+		EpubDetail epubDetail = this.commonDAO.queryForObject("EpubDetail.selectEpubChannel", req, EpubDetail.class);
+		logger.debug("epubDetail={}", epubDetail);
+
+		String sMetaClsCd = epubDetail.getMetaClsfCd();
+
+		MgzinSubscription mzinSubscription = null;
+		// 잡지인 경우 정기구독 정보 제공
+		if (sMetaClsCd.equals("CT24") || sMetaClsCd.equals("CT26")) {
+			mzinSubscription = this.commonDAO.queryForObject("EpubDetail.selectEpubSubscription", req, MgzinSubscription.class);
+		}
+
+		this.mapProduct(product, epubDetail, mzinSubscription);
+
+
+		// 단행인 경우 시리즈 정보를 제공
+		if (sMetaClsCd.equals("CT19")) {
+			List<EpubDetail> epubSeriesList = null;
+			epubSeriesList = this.commonDAO.queryForList("EpubDetail.selectEpubSeries", req, EpubDetail.class);
+
+			//TODO:
+			this.mapSubProductList_dummy(product);
+			//this.mapSubProductList(product, epubSeriesList);
+		}
 
 		res.setProduct(product);
 
@@ -115,32 +160,25 @@ public class EpubServceImpl implements EpubService {
 	 */
 	private void mapProduct(Product product, EpubDetail mapperVO, MgzinSubscription mzinSubscription) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmssZ");
-		Identifier identifier = null;
 		Menu menu = null;
 		Contributor contributor = null;
 		Date date = null;
 		Accrual accrual = null;
 		Rights rights = null;
-		Title title = null;
 		Source source = null;
 		Price price = null;
 		Book book = null;
 		Support support = null;
 
-		List<Identifier> identifierList = null;
 		List<Menu> menuList = null;
 		List<Source> sourceList = null;
 		List<Support> supportList = null;
 
-		//-------------------------------------------
 		// 상품ID
-		//-------------------------------------------
-		identifierList = new ArrayList<Identifier>();
-		identifier = new Identifier();
-		identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-		identifier.setText(mapperVO.getProdId());
-		identifierList.add(identifier);
-		product.setIdentifierList(identifierList);
+		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, mapperVO.getProdId()));
+
+		// 상품 정보 (상품명)
+		product.setTitle(new Title(mapperVO.getProdNm()));
 
 		//-------------------------------------------
 		// 메뉴 정보
@@ -207,19 +245,18 @@ public class EpubServceImpl implements EpubService {
 		rights.setGrade(mapperVO.getProdGrdCd());
 		product.setRights(rights);
 
-		// 상품 정보 (상품명)
-		title = new Title();
-		title.setText(mapperVO.getProdNm());
-		product.setTitle(title);
-
 		// 이미지 정보
 		source = new Source();
 		sourceList = new ArrayList<Source>();
-		source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-		source.setSize(mapperVO.getImgSize());
-		source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-		source.setUrl(mapperVO.getImgPath());
-		sourceList.add(source);
+
+		if(StringUtils.isNotEmpty(mapperVO.getImgPath())) {
+			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+			source.setSize(mapperVO.getImgSize());
+			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
+			source.setUrl(mapperVO.getImgPath());
+			sourceList.add(source);
+		}
+
 		product.setSourceList(sourceList);
 
 		// 상품 정보 (상품설명)
@@ -231,8 +268,14 @@ public class EpubServceImpl implements EpubService {
 		price.setText(mapperVO.getProdAmt());
 		product.setPrice(price);
 
+
+		//TODO: tableOfContents
+
+
 		//TODO:
 		book = new Book();
+		//TODO: BookVersion
+		//book.setBookVersion(bookVersion);
 		book.setStatus(mapperVO.getBookStatus());
 		book.setType(mapperVO.getBookType());
 		book.setTotalCount(mapperVO.getBookCount());
@@ -294,45 +337,15 @@ public class EpubServceImpl implements EpubService {
 		return res;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * com.skplanet.storeplatform.sac.display.epub.service.EpubService#searchEpubSeries(com.skplanet.storeplatform.sac
-	 * .client.display.vo.epub.EpubSeriesReq)
-	 */
-	@Override
-	public EpubSeriesRes searchEpubSeries(EpubSeriesReq req) {
-		EpubSeriesRes res = new EpubSeriesRes();
-
-		Product product = new Product();
-		product.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, "H001539415"));
-
-		Menu menu = new Menu();
-		menu.setId("DP000518");
-		menu.setType("broadcast");
-
-		Menu menu1 = new Menu();
-		menu1.setId("DP18001");
-		menu1.setName("broadcast/drama");
-
-		product.setMenuList(new ArrayList<Menu>(Arrays.asList(menu, menu1)));
-
-		product.setTitle(new Title("별에서 온 그대 7회"));
-
-		this.mapSubProductList_dummy(product);
-
-		res.setProduct(product);
-
-		return res;
-	}
 
 	private void mapSubProductList_dummy(Product product) {
 		// subProjectList
 		List<Product> subProjectList = new ArrayList<Product>();
 		Product product1 = new Product();
-		product1.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, "H001539415"));
-		product1.setTitle(new Title("별에서 온 그대 7회"));
+
+		product1.setIdentifier(new Identifier(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, "H001625436"));
+		product1.setTitle(new Title("빨리 가려면 혼자 가고, 멀리 가려면 함께 가라"));
+
 		Rights rights = new Rights();
 		Support support = new Support();
 		rights.setPlay(new Play(support, new Price(700), new Date("date/publish", "2013")));

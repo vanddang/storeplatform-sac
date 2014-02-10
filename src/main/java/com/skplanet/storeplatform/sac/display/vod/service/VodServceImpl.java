@@ -98,7 +98,7 @@ public class VodServceImpl implements VodService {
 
 			//Screenshots
 			ProductImage productImage = new ProductImage();
-			productImage.setProdId(req.getChannelld());
+			productImage.setProdId(req.getChannelId());
 			productImage.setLangCd(req.getLangCd());
 			List<ProductImage> screenshotList = this.commonDAO.queryForList("VodDetail.selectSourceList", productImage, ProductImage.class);
 			this.mapProduct(product, vodDetail, screenshotList);
@@ -135,12 +135,14 @@ public class VodServceImpl implements VodService {
 		// 대표 이미지 (thumbnail)
 		//-------------------------------------------
 		List<Source> sourceList = new ArrayList<Source>();
-		Source source = new Source();
-		source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
-		source.setSize(mapperVO.getImgSize());
-		source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-		source.setUrl(mapperVO.getImgPath()+mapperVO.getImgNm());
-		sourceList.add(source);
+		if(StringUtils.isNotEmpty(mapperVO.getImgPath())) {
+			Source source = new Source();
+			source.setMediaType(DisplayCommonUtil.getMimeType(mapperVO.getImgPath()));
+			source.setSize(mapperVO.getImgSize());
+			source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
+			source.setUrl(mapperVO.getImgPath()+mapperVO.getImgNm());
+			sourceList.add(source);
+		}
 
 		//-------------------------------------------
 		// screenshot
@@ -266,7 +268,7 @@ public class VodServceImpl implements VodService {
 		// Distributor (판매자 정보)
 		//-------------------------------------------
 		Distributor distributor = new Distributor();
-        distributor.setIdentifier(mapperVO.getSellerMbrNo());
+        distributor.setSellerKey(mapperVO.getSellerMbrNo());
         distributor.setName(mapperVO.getExpoSellerNm());
         distributor.setTel(mapperVO.getExpoSellerTelno());
         distributor.setEmail(mapperVO.getExpoSellerEmail());
@@ -290,6 +292,7 @@ public class VodServceImpl implements VodService {
 		Preview preview = new Preview();
 
 		sourceList = new ArrayList<Source>();
+		Source source = null;
 		if (StringUtils.isNotEmpty(mapperVO.getScSamplUrl())) {
 			source = new Source();
 			source.setType(DisplayConstants.DP_PREVIEW_LQ);
@@ -583,7 +586,7 @@ public class VodServceImpl implements VodService {
 			// Distributor (판매자 정보)
 			//-------------------------------------------
 			Distributor distributor = new Distributor();
-	        distributor.setIdentifier(vodDetail.getSellerMbrNo());
+	        distributor.setSellerKey(vodDetail.getSellerMbrNo());
 	        distributor.setName(vodDetail.getExpoSellerNm());
 	        distributor.setTel(vodDetail.getExpoSellerTelno());
 	        distributor.setEmail(vodDetail.getExpoSellerEmail());
