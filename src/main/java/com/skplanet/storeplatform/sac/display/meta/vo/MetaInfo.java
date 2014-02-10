@@ -47,6 +47,8 @@ public class MetaInfo {
 	private Integer totalCount;
 	private String prodClsfCd;
 	private String platClsfCd;
+	private String purchaseId;
+	private String purchaseProdId;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -767,7 +769,7 @@ public class MetaInfo {
 	public void setFakeYn(String fakeYn) {
 		this.fakeYn = fakeYn;
 	}
-	
+
 	/**
 	 * @return the prodClsfCd
 	 */
@@ -796,6 +798,36 @@ public class MetaInfo {
 	 */
 	public void setPlatClsfCd(String platClsfCd) {
 		this.platClsfCd = platClsfCd;
+	}
+
+	/**
+	 * @return the purchaseId
+	 */
+	public String getPurchaseId() {
+		return this.purchaseId;
+	}
+
+	/**
+	 * @param purchaseId
+	 *            the purchaseId to set
+	 */
+	public void setPurchaseId(String purchaseId) {
+		this.purchaseId = purchaseId;
+	}
+
+	/**
+	 * @return the purchaseProdId
+	 */
+	public String getPurchaseProdId() {
+		return this.purchaseProdId;
+	}
+
+	/**
+	 * @param purchaseProdId
+	 *            the purchaseProdId to set
+	 */
+	public void setPurchaseProdId(String purchaseProdId) {
+		this.purchaseProdId = purchaseProdId;
 	}
 
 	/**
@@ -1862,13 +1894,13 @@ public class MetaInfo {
 	public void setTagTypeCd(String tagTypeCd) {
 		this.tagTypeCd = tagTypeCd;
 	}
-	
+
 	public String getUpdDt() {
 		return this.updDt;
 	}
 
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
-	}	
+	}
 
 }
