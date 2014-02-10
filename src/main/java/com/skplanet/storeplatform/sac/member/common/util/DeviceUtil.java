@@ -18,14 +18,14 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceExtraInfo;
 import com.skplanet.storeplatform.sac.client.member.vo.common.DeviceInfo;
 
 /**
- * Device Util
+ * Device Util.
  * 
  * Updated on : 2014. 1. 22. Updated by : 반범진, 지티소프트
  */
 public class DeviceUtil {
 
 	/**
-	 * SAC 휴대기기 부가속성값을 구한다
+	 * SAC 휴대기기 부가속성값을 구한다.
 	 * 
 	 * @param extraProfile
 	 *            기타 기기 부가속성 key
@@ -51,11 +51,11 @@ public class DeviceUtil {
 	}
 
 	/**
-	 * SC 휴대기기 부가속성값을 구한다
+	 * SC 휴대기기 부가속성값을 구한다.
 	 * 
 	 * @param extraProfile
 	 *            기타 기기 부가속성 key
-	 * @param deviceExtraInfoList
+	 * @param userMbrDeviceDetailList
 	 *            휴대기기 부가속성 리스트
 	 * @return extraProfileValue String
 	 */
@@ -115,7 +115,7 @@ public class DeviceUtil {
 
 	/**
 	 * 
-	 * SC회원 휴대기기 정보를 SAC회원 휴대기기 정보로 변환
+	 * SC회원 휴대기기 정보를 SAC회원 휴대기기 정보로 변환.
 	 * 
 	 * @param userMbrDevice
 	 *            SC회원 휴대기기부가정보 객체
@@ -151,7 +151,7 @@ public class DeviceUtil {
 
 	/**
 	 * 
-	 * SC회원 휴대기기 부가정보를 SAC회원 휴대기기 부가정보로 변환
+	 * SC회원 휴대기기 부가정보를 SAC회원 휴대기기 부가정보로 변환.
 	 * 
 	 * @param list
 	 *            SC회원 휴대기기 부가정보 리스트
@@ -181,7 +181,7 @@ public class DeviceUtil {
 
 	/**
 	 * 
-	 * SAC회원 휴대기기 정보를 SC회원 휴대기기 정보로 변환
+	 * SAC회원 휴대기기 정보를 SC회원 휴대기기 정보로 변환.
 	 * 
 	 * @param deviceInfo
 	 *            DeviceInfo SAC회원 휴대기기부가정보 객체
@@ -214,7 +214,7 @@ public class DeviceUtil {
 
 	/**
 	 * 
-	 * SAC회원 휴대기기 부가정보를 SC회원 휴대기기 부가정보로 변환
+	 * SAC회원 휴대기기 부가정보를 SC회원 휴대기기 부가정보로 변환.
 	 * 
 	 * @param deviceInfo
 	 *            > SAC회원 휴대기기 정보 객체
