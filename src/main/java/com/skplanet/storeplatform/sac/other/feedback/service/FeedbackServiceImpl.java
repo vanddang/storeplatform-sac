@@ -253,9 +253,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// }
 		// }
 
-		CreateRecommendFeedbackSacRes createRecommendFeedbackRes = new CreateRecommendFeedbackSacRes();
-		createRecommendFeedbackRes.setNotiList(this.getFeedbackList());
-		return createRecommendFeedbackRes;
+		CreateRecommendFeedbackSacRes createRecommendFeedbackSacRes = new CreateRecommendFeedbackSacRes();
+		createRecommendFeedbackSacRes.setNotiSeq(createRecommendFeedbackReq.getNotiSeq());
+		return createRecommendFeedbackSacRes;
 	}
 
 	@Override
@@ -305,9 +305,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 		// }
 		// }
 
-		RemoveRecommendFeedbackSacRes removeRecommendFeedbackRes = new RemoveRecommendFeedbackSacRes();
-		removeRecommendFeedbackRes.setNotiList(this.getFeedbackList());
-		return removeRecommendFeedbackRes;
+		RemoveRecommendFeedbackSacRes removeRecommendFeedbackSacRes = new RemoveRecommendFeedbackSacRes();
+		removeRecommendFeedbackSacRes.setNotiSeq(removeRecommendFeedbackSacReq.getNotiSeq());
+		return removeRecommendFeedbackSacRes;
 	}
 
 	@Override
@@ -470,7 +470,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		String userKey = (String) beanWrapperImpl.getPropertyValue("userKey");
 		String prodId = (String) beanWrapperImpl.getPropertyValue("prodId");
 		String userId = (String) beanWrapperImpl.getPropertyValue("userId");
-		if (StringUtils.isEmpty(chnlId)) {
+		if (StringUtils.isNotEmpty(score) && StringUtils.isEmpty(chnlId)) {
 			String avgScore = score;
 			if (NumberUtils.toInt(score, 0) > 5) {
 				avgScore = "5";

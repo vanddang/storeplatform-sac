@@ -139,7 +139,7 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 
 	@Override
 	public Object updateProdNotiWDGood(ProdNotiGood prodNotiGood) {
-		return this.commonDAO.insert("Feedback.updateProdNotiWDGood", prodNotiGood);
+		return this.commonDAO.update("Feedback.updateProdNotiWDGood", prodNotiGood);
 	}
 
 	@Override
@@ -149,6 +149,6 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 
 	@Override
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood) {
-		return this.commonDAO.insert("Feedback.updateProdNotiGood", prodNotiGood);
+		return this.commonDAO.update("Feedback.updateProdNotiGood", prodNotiGood);
 	}
 }
