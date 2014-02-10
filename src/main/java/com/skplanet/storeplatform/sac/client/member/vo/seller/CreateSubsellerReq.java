@@ -46,7 +46,6 @@ public class CreateSubsellerReq extends CommonInfo {
 	private String subSellerPhone; // WILS_TEL_NO 무선 전화번호
 
 	/** 신규 등록여부 Example : Y/N. */
-	@NotBlank
 	private String isNew;
 
 	/** 이전 비밀번호. */
