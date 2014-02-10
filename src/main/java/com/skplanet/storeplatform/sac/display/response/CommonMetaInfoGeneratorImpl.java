@@ -321,11 +321,14 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
 		play.setSupportList(supportList);
 
-		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
-		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
+		metaInfo.setProdAmt(metaInfo.getPlayProdAmt());
+		metaInfo.setProdNetAmt(metaInfo.getPlayProdNetAmt());
 		play.setPrice(this.generatePrice(metaInfo));
 
-		play.setDate(this.generateDate(DisplayConstants.DP_DATE_USAGE_PERIOD, metaInfo.getUsePeriodNm()));
+		Date date = new Date();
+		date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
+		date.setText(metaInfo.getUsePeriodNm());
+		play.setDate(date);
 
 		return play;
 	}
