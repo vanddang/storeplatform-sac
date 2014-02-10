@@ -90,6 +90,11 @@ public class Coupon extends CommonInfo implements Serializable {
 	private Coverage coverage;
 
 	private List<EpisodeCoupon> episodeCouponList;
+	
+	/**
+	 * Identifier 배열.
+	 */
+	private List<Identifier> identifierList;
 
 	/**
 	 * @return Identifier
@@ -299,6 +304,14 @@ public class Coupon extends CommonInfo implements Serializable {
 	 */
 	public void setEpisodeCouponList(List<EpisodeCoupon> episodeCouponList) {
 		this.episodeCouponList = episodeCouponList;
+	}
+
+	public List<Identifier> getIdentifierList() {
+		return this.identifierList;
+	}
+
+	public void setIdentifierList(List<Identifier> identifierList) {
+		this.identifierList = identifierList;
 	}
 
 }
