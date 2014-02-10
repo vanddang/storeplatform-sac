@@ -178,6 +178,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Price generatePrice(MetaInfo metaInfo) {
 		Price price = new Price();
 		price.setText(metaInfo.getProdAmt());
+		price.setFixedPrice(metaInfo.getProdNetAmt());
 		return price;
 	}
 
