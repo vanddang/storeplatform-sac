@@ -44,6 +44,9 @@ public class MetaInfo {
 	private Integer imageSize;
 	private String chnlProdId;
 	private String sysDate;
+	private Integer totalCount;
+	private String prodClsfCd;
+	private String platClsfCd;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -52,6 +55,14 @@ public class MetaInfo {
 	private String apkPkgNm;
 	private String apkVer;
 	private String fakeYn;
+	private String apkVerCd;
+	private Integer apkFileSize;
+	private String seedProductId;
+	private String gameCentrId;
+	private String gameCentrVerCd;
+	private String seedCaseRefCd;
+	private String supportedOs;
+	private String seedUseYn;
 
 	// ////////////////////////// 멀티미디어 상품 변수 ////////////////////////////
 	private String vodTitlNm;
@@ -653,6 +664,21 @@ public class MetaInfo {
 	}
 
 	/**
+	 * @return the totalCount
+	 */
+	public Integer getTotalCount() {
+		return this.totalCount;
+	}
+
+	/**
+	 * @param totalCount
+	 *            the totalCount to set
+	 */
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+	}
+
+	/**
 	 * @return the aid
 	 */
 	public String getAid() {
@@ -740,6 +766,156 @@ public class MetaInfo {
 	 */
 	public void setFakeYn(String fakeYn) {
 		this.fakeYn = fakeYn;
+	}
+	
+	/**
+	 * @return the prodClsfCd
+	 */
+	public String getProdClsfCd() {
+		return this.prodClsfCd;
+	}
+
+	/**
+	 * @param prodClsfCd
+	 *            the prodClsfCd to set
+	 */
+	public void setProdClsfCd(String prodClsfCd) {
+		this.prodClsfCd = prodClsfCd;
+	}
+
+	/**
+	 * @return the platClsfCd
+	 */
+	public String getPlatClsfCd() {
+		return this.platClsfCd;
+	}
+
+	/**
+	 * @param platClsfCd
+	 *            the platClsfCd to set
+	 */
+	public void setPlatClsfCd(String platClsfCd) {
+		this.platClsfCd = platClsfCd;
+	}
+
+	/**
+	 * @return the apkVerCd
+	 */
+	public String getApkVerCd() {
+		return this.apkVerCd;
+	}
+
+	/**
+	 * @param apkVerCd
+	 *            the apkVerCd to set
+	 */
+	public void setApkVerCd(String apkVerCd) {
+		this.apkVerCd = apkVerCd;
+	}
+
+	/**
+	 * @return the apkFileSize
+	 */
+	public Integer getApkFileSize() {
+		return this.apkFileSize;
+	}
+
+	/**
+	 * @param apkFileSize
+	 *            the apkFileSize to set
+	 */
+	public void setApkFileSize(Integer apkFileSize) {
+		this.apkFileSize = apkFileSize;
+	}
+
+	/**
+	 * @return the seedProductId
+	 */
+	public String getSeedProductId() {
+		return this.seedProductId;
+	}
+
+	/**
+	 * @param seedProductId
+	 *            the seedProductId to set
+	 */
+	public void setSeedProductId(String seedProductId) {
+		this.seedProductId = seedProductId;
+	}
+
+	/**
+	 * @return the gameCentrId
+	 */
+	public String getGameCentrId() {
+		return this.gameCentrId;
+	}
+
+	/**
+	 * @param gameCentrId
+	 *            the gameCentrId to set
+	 */
+	public void setGameCentrId(String gameCentrId) {
+		this.gameCentrId = gameCentrId;
+	}
+
+	/**
+	 * @return the gameCentrVerCd
+	 */
+	public String getGameCentrVerCd() {
+		return this.gameCentrVerCd;
+	}
+
+	/**
+	 * @param gameCentrVerCd
+	 *            the gameCentrVerCd to set
+	 */
+	public void setGameCentrVerCd(String gameCentrVerCd) {
+		this.gameCentrVerCd = gameCentrVerCd;
+	}
+
+	/**
+	 * @return the seedCaseRefCd
+	 */
+	public String getSeedCaseRefCd() {
+		return this.seedCaseRefCd;
+	}
+
+	/**
+	 * @param seedCaseRefCd
+	 *            the seedCaseRefCd to set
+	 */
+	public void setSeedCaseRefCd(String seedCaseRefCd) {
+		this.seedCaseRefCd = seedCaseRefCd;
+	}
+
+	/**
+	 * @return the supportedOs
+	 */
+	public String getSupportedOs() {
+		return this.supportedOs;
+	}
+
+	/**
+	 * @param supportedOs
+	 *            the supportedOs to set
+	 */
+	public void setSupportedOs(String supportedOs) {
+		this.supportedOs = supportedOs;
+	}
+
+	/**
+	 * @return the seedUseYn
+	 */
+	public String getSeedUseYn() {
+		return this.seedUseYn;
+	}
+
+	/**
+	 * @param seedUseYn
+	 *            the seedUseYn to set
+	 */
+	public void setSeedUseYn(String seedUseYn) {
+		this.seedUseYn = seedUseYn;
 	}
 
 	/**
@@ -1686,13 +1862,13 @@ public class MetaInfo {
 	public void setTagTypeCd(String tagTypeCd) {
 		this.tagTypeCd = tagTypeCd;
 	}
-
+	
 	public String getUpdDt() {
 		return this.updDt;
 	}
 
 	public void setUpdDt(String updDt) {
 		this.updDt = updDt;
-	}
+	}	
 
 }
