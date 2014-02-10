@@ -718,7 +718,7 @@
                                      , 'DP006303', 'delivery' ) PROD_CASE_CD
                                ,J.PROD_CHRG_YN
                                ,I.B2B_PROD_YN
-                               ,PI.FILE_PATH
+                               ,PI.FILE_PATH || PI.FILE_NM AS FILE_PATH
                                ,PI.FILE_NM
                                ,PI.FILE_SIZE                               
                           FROM 
