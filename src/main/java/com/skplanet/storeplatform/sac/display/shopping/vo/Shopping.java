@@ -61,6 +61,7 @@ public class Shopping extends CommonInfo {
 	private String przwnerAnnoDt;
 	private String planGiftName;
 
+	private String sysDate;
 	private String specialSale;
 	private String selllerMbrNo;
 	private String soldOut;
@@ -383,6 +384,21 @@ public class Shopping extends CommonInfo {
 
 	public void setPrzwnerAnnoDt(String przwnerAnnoDt) {
 		this.przwnerAnnoDt = przwnerAnnoDt;
+	}
+
+	/**
+	 * @return the sysDate
+	 */
+	public String getSysDate() {
+		return this.sysDate;
+	}
+
+	/**
+	 * @param sysDate
+	 *            the sysDate to set
+	 */
+	public void setSysDate(String sysDate) {
+		this.sysDate = sysDate;
 	}
 
 	public String getPlanGiftName() {
