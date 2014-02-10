@@ -111,8 +111,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdCharge())) {
 				req.setProdCharge(null);
 			}
-			if (StringUtils.isEmpty(req.getProdGradeCd())) {
-				req.setProdGradeCd(null);
+
+			// 상품등급코드 유효값 체크
+			if (!this.commonProdGradeCd(req)) {
+				res.setCommonResponse(commonResponse);
+				return res;
 			}
 			// offset, Count default setting
 			this.commonOffsetCount(req);
@@ -313,9 +316,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdCharge())) {
 				req.setProdCharge(null);
 			}
-			if (StringUtils.isEmpty(req.getProdGradeCd())) {
-				req.setProdGradeCd(null);
+			// 상품등급코드 유효값 체크
+			if (!this.commonProdGradeCd(req)) {
+				res.setCommonResponse(commonResponse);
+				return res;
 			}
+
 			// offset, Count default setting
 			this.commonOffsetCount(req);
 
@@ -509,8 +515,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdCharge())) {
 				req.setProdCharge(null);
 			}
-			if (StringUtils.isEmpty(req.getProdGradeCd())) {
-				req.setProdGradeCd(null);
+			// 상품등급코드 유효값 체크
+			if (!this.commonProdGradeCd(req)) {
+				res.setCommonResponse(commonResponse);
+				return res;
 			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_RECENT_DEFAULT_ORDERED_OPTION);
@@ -720,8 +728,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
-		if (StringUtils.isEmpty(req.getProdGradeCd())) {
-			req.setProdGradeCd(null);
+		// 상품등급코드 유효값 체크
+		if (!this.commonProdGradeCd(req)) {
+			res.setCommonResponse(commonResponse);
+			return res;
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -953,8 +963,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
-		if (StringUtils.isEmpty(req.getProdGradeCd())) {
-			req.setProdGradeCd(null);
+		// 상품등급코드 유효값 체크
+		if (!this.commonProdGradeCd(req)) {
+			res.setCommonResponse(commonResponse);
+			return res;
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -1373,8 +1385,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdCharge())) {
 			req.setProdCharge(null);
 		}
-		if (StringUtils.isEmpty(req.getProdGradeCd())) {
-			req.setProdGradeCd(null);
+		// 상품등급코드 유효값 체크
+		if (!this.commonProdGradeCd(req)) {
+			res.setCommonResponse(commonResponse);
+			return res;
 		}
 		// offset, Count default setting
 		this.commonOffsetCount(req);
@@ -1481,8 +1495,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdCharge())) {
 				req.setProdCharge(null);
 			}
-			if (StringUtils.isEmpty(req.getProdGradeCd())) {
-				req.setProdGradeCd(null);
+			// 상품등급코드 유효값 체크
+			if (!this.commonProdGradeCd(req)) {
+				res.setCommonResponse(commonResponse);
+				return res;
 			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION);
@@ -1702,8 +1718,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 			if (StringUtils.isEmpty(req.getProdCharge())) {
 				req.setProdCharge(null);
 			}
-			if (StringUtils.isEmpty(req.getProdGradeCd())) {
-				req.setProdGradeCd(null);
+			// 상품등급코드 유효값 체크
+			if (!this.commonProdGradeCd(req)) {
+				res.setCommonResponse(commonResponse);
+				return res;
 			}
 			if (StringUtils.isEmpty(req.getOrderedBy())) {
 				req.setOrderedBy(DisplayConstants.DP_SHOPPING_DOWNLOAD_DEFAULT_ORDERED_OPTION);
@@ -2232,13 +2250,49 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	private void commonOffsetCount(ShoppingReq req) {
 
-		if (req.getOffset() == null) {
-			req.setOffset(1);
+		int offset = 1; // default
+		int count = 20; // default
+
+		if (req.getOffset() != null) {
+			offset = req.getOffset();
 		}
-		if (req.getCount() == null) {
-			req.setCount(20);
+		req.setOffset(offset);
+
+		if (req.getCount() != null) {
+			count = req.getCount();
 		}
+		count = offset + count - 1;
+		req.setCount(count);
+
 		req.setOffset(req.getOffset() <= 0 ? 1 : req.getOffset());
 		req.setCount(req.getCount() <= 0 ? 20 : req.getCount());
+	}
+
+	private boolean commonProdGradeCd(ShoppingReq req) {
+		boolean result = true;
+		// 상품등급코드 유효값 체크
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			for (int i = 0; i < arrayProdGradeCd.length; i++) {
+				if (StringUtils.isNotEmpty(arrayProdGradeCd[i])) {
+					if (!"PD004401".equals(arrayProdGradeCd[i]) && !"PD004402".equals(arrayProdGradeCd[i])
+							&& !"PD004403".equals(arrayProdGradeCd[i])) {
+						this.log.debug("----------------------------------------------------------------");
+						this.log.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
+						this.log.debug("----------------------------------------------------------------");
+						result = false;
+					}
+				}
+			}
+		} else {
+			req.setProdGradeCd(null);
+		}
+
+		// '+'로 연결 된 상품등급코드를 배열로 전달
+		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
+			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
+			req.setArrayProdGradeCd(arrayProdGradeCd);
+		}
+		return result;
 	}
 }
