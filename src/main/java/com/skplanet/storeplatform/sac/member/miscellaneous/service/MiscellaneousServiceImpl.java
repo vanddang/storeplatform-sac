@@ -589,19 +589,36 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	}
 
 	@Override
-	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, GetModelCodeReq request) {
+	public GetModelCodeRes getModelCode(GetModelCodeReq request) {
 		GetModelCodeRes response = new GetModelCodeRes();
+		String uaCd = request.getUaCd();
+		String msisdn = request.getMsisdn();
+		String errorKey = "uaCd";
+		String errorValue = uaCd;
 
-		UapsEcReq uapsReq = new UapsEcReq();
-		uapsReq.setDeviceId(request.getMsisdn());
-		uapsReq.setType("mdn");
-		LOGGER.info("## mdn으로 UA코드 조회 - UAPS 연동. request {}", uapsReq);
-		UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
-		String uaCd = uapsRes.getDeviceModel();
+		if (msisdn != null && ("".equals(uaCd) || uaCd == null)) {
+			errorKey = "msisdn";
+			errorValue = msisdn;
+			UapsEcReq uapsReq = new UapsEcReq();
+			uapsReq.setDeviceId(request.getMsisdn());
+			uapsReq.setType("mdn");
+			LOGGER.info("## mdn으로 UA코드 조회 - UAPS 연동. request {}", uapsReq);
+			UafmapEcRes uapsRes = this.uapsSCI.getDeviceInfo(uapsReq);
+			if (uapsRes != null && uapsRes.getDeviceModel() != null)
+				uaCd = uapsRes.getDeviceModel();
+			else
+				throw new StorePlatformException("SAC_MEM_3401", errorKey, errorValue);
+		}
 
-		LOGGER.info("## UA 코드로 deviceModelNo 조회 - TB_CM_DEVICE. uaCd {}", uaCd);
+		LOGGER.info("## UA 코드로 deviceModelNo 조회 - TB_CM_DEVICE. uaCd : {}", uaCd);
 		Device device = this.commonComponent.getPhoneInfoByUacd(uaCd);
-		response.setDeviceModelNo(device.getDeviceModelCd());
+
+		if (device != null && device.getDeviceModelCd() != null) {
+			response.setDeviceModelNo(device.getDeviceModelCd());
+		} else {
+			throw new StorePlatformException("SAC_MEM_3402", errorKey, errorValue);
+		}
+
 		return response;
 	}
 

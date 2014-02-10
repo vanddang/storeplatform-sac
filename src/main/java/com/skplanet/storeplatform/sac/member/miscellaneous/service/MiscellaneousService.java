@@ -177,7 +177,7 @@ public interface MiscellaneousService {
 	 *            GetModelCodeReq
 	 * @return GetModelCodeRes
 	 */
-	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, GetModelCodeReq request);
+	public GetModelCodeRes getModelCode(GetModelCodeReq request);
 
 	/**
 	 * <pre>

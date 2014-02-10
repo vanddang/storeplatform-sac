@@ -74,8 +74,8 @@ public class MiscellaneousController {
 	public GetUaCodeRes getUaCode(SacRequestHeader requestHeader, @Validated @RequestBody GetUaCodeReq request) {
 
 		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
-		if ((request.getDeviceModelNo() == null || request.getDeviceModelNo().equals(""))
-				&& (request.getMsisdn() == null || request.getMsisdn().equals(""))) {
+		if ((request.getDeviceModelNo() == null || "".equals(request.getDeviceModelNo()))
+				&& request.getMsisdn() == null) {
 			throw new StorePlatformException("SAC_MEM_0001", "deviceModel 또는 msisdn");
 		}
 
@@ -266,8 +266,12 @@ public class MiscellaneousController {
 	 */
 	@RequestMapping(value = "/getModelCode/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public GetModelCodeRes getModelCode(SacRequestHeader requestHeader, @RequestBody @Validated GetModelCodeReq request) {
-		return this.service.getModelCode(requestHeader, request);
+	public GetModelCodeRes getModelCode(@RequestBody @Validated GetModelCodeReq request) {
+		// 필수 파라미터 확인. 둘 중 하나는 필수로 입력해야함.
+		if ((request.getUaCd() == null || "".equals(request.getUaCd())) && request.getMsisdn() == null) {
+			throw new StorePlatformException("SAC_MEM_0001", "uaCd 또는 msisdn");
+		}
+		return this.service.getModelCode(request);
 	}
 
 	/**
