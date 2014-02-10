@@ -88,7 +88,7 @@ public class CreateRealNameTest {
 						/**
 						 * 기존 IDP 회원
 						 */
-						reqJson.setUserKey("US201402061538552970001711");
+						reqJson.setUserKey("US201402061029476470001812");
 
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
 						reqJson.setRealNameDate(DateUtil.getToday("yyyyMMddHHmmss")); // 실명인증 일시
@@ -123,7 +123,6 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test2_createRealName() throws Exception {
 
@@ -138,7 +137,7 @@ public class CreateRealNameTest {
 						/**
 						 * 기존 IDP 회원
 						 */
-						reqJson.setUserKey("US201402061538552970001711");
+						reqJson.setUserKey("US201402061029476470001812");
 
 						reqJson.setIsOwn("PARENT"); // 실명인증 대상
 						reqJson.setParentType("F"); // 법정대리인 관계코드 (F/M/O)
@@ -189,7 +188,7 @@ public class CreateRealNameTest {
 						/**
 						 * 통합 IDP 회원
 						 */
-						reqJson.setUserKey("US201402061958132010001823");
+						reqJson.setUserKey("US201402101325037050002133");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
@@ -225,6 +224,7 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test4_createRealName() throws Exception {
 
