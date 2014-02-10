@@ -287,11 +287,13 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		/* External Comp.에 SMS 발송 요청 */
 		SmsSendEcReq smsReq = new SmsSendEcReq();
 		smsReq.setSrcId(request.getSrcId()); // test 값 : US004504
-		smsReq.setCarrier(request.getCarrier()); // 테넌트에서 파라미터를 SKT, KT, LGT로 받는다.
 		smsReq.setSendMdn(messageSender);
 		smsReq.setRecvMdn(request.getRecvMdn());
 		smsReq.setTeleSvcId(request.getTeleSvcId()); // test 값 : 0 (단문 SM)
 		smsReq.setMsg(messageText);
+		if (request.getCarrier() != null) { // 통신사정보 Optional
+			smsReq.setCarrier(request.getCarrier());
+		}
 
 		LOGGER.info("## [SAC] EC - SMS 발송 요청 Request : {}", smsReq);
 		SmsSendEcRes smsSendRes = this.messageSCI.smsSend(smsReq);
