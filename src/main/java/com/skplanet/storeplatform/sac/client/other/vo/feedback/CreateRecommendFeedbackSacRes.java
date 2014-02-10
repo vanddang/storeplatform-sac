@@ -9,8 +9,6 @@
  */
 package com.skplanet.storeplatform.sac.client.other.vo.feedback;
 
-import java.util.List;
-
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
@@ -21,28 +19,24 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  */
 public class CreateRecommendFeedbackSacRes extends CommonInfo {
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 사용후기 리스트.
-	 */
-	private List<Feedback> notiList;
+	private String notiSeq;
 
 	/**
-	 * @return List<Feedback>
+	 * @return String
 	 */
-	public List<Feedback> getNotiList() {
-		return this.notiList;
+	public String getNotiSeq() {
+		return this.notiSeq;
 	}
 
 	/**
-	 * @param notiList
-	 *            notiList
+	 * @param notiSeq
+	 *            notiSeq
 	 */
-	public void setNotiList(List<Feedback> notiList) {
-		this.notiList = notiList;
+	public void setNotiSeq(String notiSeq) {
+		this.notiSeq = notiSeq;
 	}
-
 }

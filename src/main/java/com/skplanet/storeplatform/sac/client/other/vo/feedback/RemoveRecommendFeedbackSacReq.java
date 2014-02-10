@@ -44,10 +44,6 @@ public class RemoveRecommendFeedbackSacReq extends CommonInfo {
 	 */
 	@NotBlank
 	private String userId;
-	/**
-	 * 채널 ID.
-	 */
-	private String chnlId;
 
 	/**
 	 * @return String
@@ -107,21 +103,6 @@ public class RemoveRecommendFeedbackSacReq extends CommonInfo {
 	 */
 	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getChnlId() {
-		return this.chnlId;
-	}
-
-	/**
-	 * @param chnlId
-	 *            chnlId
-	 */
-	public void setChnlId(String chnlId) {
-		this.chnlId = chnlId;
 	}
 
 }

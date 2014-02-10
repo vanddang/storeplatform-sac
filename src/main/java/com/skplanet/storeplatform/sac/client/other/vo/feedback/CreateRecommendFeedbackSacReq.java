@@ -44,10 +44,6 @@ public class CreateRecommendFeedbackSacReq extends CommonInfo {
 	 */
 	@NotBlank
 	private String notiSeq;
-	/**
-	 * 채널 ID, 쇼핑특가상품.
-	 */
-	private String chnlId;
 
 	/**
 	 * @return String
@@ -107,21 +103,6 @@ public class CreateRecommendFeedbackSacReq extends CommonInfo {
 	 */
 	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getChnlId() {
-		return this.chnlId;
-	}
-
-	/**
-	 * @param chnlId
-	 *            chnlId
-	 */
-	public void setChnlId(String chnlId) {
-		this.chnlId = chnlId;
 	}
 
 }
