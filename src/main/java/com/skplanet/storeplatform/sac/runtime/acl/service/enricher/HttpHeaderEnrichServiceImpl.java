@@ -7,7 +7,7 @@
  * shall use it only in accordance with the terms of the license agreement
  * you entered into with SK planet.
  */
-package com.skplanet.storeplatform.sac.runtime.acl.service.header;
+package com.skplanet.storeplatform.sac.runtime.acl.service.enricher;
 
 import java.util.Map;
 
