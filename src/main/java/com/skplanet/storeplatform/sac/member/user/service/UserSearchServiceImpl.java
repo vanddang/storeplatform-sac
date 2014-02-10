@@ -1113,14 +1113,46 @@ public class UserSearchServiceImpl implements UserSearchService {
 		SearchDeviceResponse searchDeviceResponse = this.deviceSCI.searchDevice(searchDeviceRequest);
 
 		/**
+		 * 사용자 정보 setting.
+		 */
+		response.setUserKey(chkDupRes.getUserMbr().getUserKey());
+		response.setUserType(chkDupRes.getUserMbr().getUserType());
+		response.setUserName(ObjectUtils.toString(chkDupRes.getUserMbr().getUserName()));
+		response.setUserId(chkDupRes.getUserMbr().getUserID());
+		response.setIsRealNameYn(chkDupRes.getUserMbr().getIsRealName());
+
+		/**
+		 * 우선순위 (실명인증 생년월일 > DB생년월일 > null)
+		 */
+		String userBirthday = this.getUserBirthday();
+		if (StringUtil.equals(userBirthday, "")) {
+			response.setUserBirthDay(ObjectUtils.toString(chkDupRes.getUserMbr().getUserBirthDay()));
+		} else {
+			response.setUserBirthDay(userBirthday);
+		}
+
+		/**
 		 * 휴대기기 정보 setting.
 		 */
-		response.setUserKey(searchDeviceResponse.getUserMbrDevice().getUserKey()); // 사용자 Key setting.
-		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey()); // 기기 Key setting.
-		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom()); // 이동통신사 setting.
+		response.setDeviceKey(searchDeviceResponse.getUserMbrDevice().getDeviceKey());
+		response.setDeviceId(searchDeviceResponse.getUserMbrDevice().getDeviceID());
+		response.setModel(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo());
+		response.setDeviceTelecom(searchDeviceResponse.getUserMbrDevice().getDeviceTelecom());
+		/* 선물수신가능 단말여부 (TB_CM_DEVICE의 GIFT_SPRT_YN) */
+		response.setGiftYn(this.mcc.getPhoneInfo(searchDeviceResponse.getUserMbrDevice().getDeviceModelNo()).getGiftSprtYn());
 
 		return response;
 
+	}
+
+	/**
+	 * TODO 실명인증 생년월일....
+	 * 
+	 * Question 본인일 경우만인지..??? (법정대리인은...???)
+	 */
+	private String getUserBirthday() {
+
+		return "";
 	}
 
 }
