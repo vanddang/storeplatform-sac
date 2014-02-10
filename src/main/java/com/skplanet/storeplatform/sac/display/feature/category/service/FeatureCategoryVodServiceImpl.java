@@ -11,7 +11,9 @@ package com.skplanet.storeplatform.sac.display.feature.category.service;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,17 +38,23 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Cont
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 import com.skplanet.storeplatform.sac.display.category.service.CategoryAppServiceImpl;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
 import com.skplanet.storeplatform.sac.display.feature.category.vo.FeatureCategoryVod;
+import com.skplanet.storeplatform.sac.display.meta.service.MetaInfoService;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
+import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 
 /**
  * 
  * 
- * Updated on : 2014. 01. 27. Updated by : , GTSOFT.
+ * Updated on : 2014. 01. 27. Updated by 조준일, nTels.
  */
 @Service
 public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService {
@@ -59,6 +67,12 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	@Autowired
 	private DisplayCommonService displayCommonService;
 
+	@Autowired
+	private MetaInfoService metaInfoService;
+
+	@Autowired
+	private ResponseInfoGenerateFacade responseInfoGenerateFacade;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -69,7 +83,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 	@Override
 	public FeatureCategoryVodSacRes searchVodList(FeatureCategoryVodSacReq req, SacRequestHeader header) {
 
-		FeatureCategoryVodSacRes vodRes = null;
+		FeatureCategoryVodSacRes vodRes = new FeatureCategoryVodSacRes();
+		CommonResponse commonResponse = new CommonResponse();
 
 		String topMenuId = req.getTopMenuId();
 		String listId = req.getListId();
@@ -138,6 +153,8 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 			req.setProdGradeCdArr(prodGradeCdArr);
 		}
 
+		List<ProductBasicInfo> productBasicInfoList;
+
 		// ADM000000008 : 운영자 추천, ADM000000003 운영자 신규
 		// DP17 : 영화, DP18 : 방송
 		if ("ADM000000008".equals(listId)) {
@@ -147,19 +164,19 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 					this.logger.debug("영화 > 추천 상품 조회");
 					this.logger.debug("----------------------------------------------------------------");
 
-					List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-							"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
+					productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
+							ProductBasicInfo.class);
 
-					vodRes = this.generateVO("movieRecommend", vodList);
+					// vodRes = this.generateVO("movieRecommend", vodList);
 				} else if ("movie1000".equals(filteredBy)) {
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("영화 > 1000원관 상품 조회");
 					this.logger.debug("----------------------------------------------------------------");
 
-					List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-							"FeatureCategory.selectFeatureMovieList", req, FeatureCategoryVod.class);
+					productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
+							ProductBasicInfo.class);
 
-					vodRes = this.generateVO("movie1000", vodList);
+					// vodRes = this.generateVO("movie1000", vodList);
 				} else {
 					this.logger.debug("----------------------------------------------------------------");
 					this.logger.debug("유효하지않은 조회유형");
@@ -174,11 +191,55 @@ public class FeatureCategoryVodServiceImpl implements FeatureCategoryVodService 
 				this.logger.debug("방송 > 카테고리별 추천 상품 조회");
 				this.logger.debug("----------------------------------------------------------------");
 
-				List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
-						"FeatureCategory.selectFeatureBroadcastList", req, FeatureCategoryVod.class);
+				// List<FeatureCategoryVod> vodList = this.commonDAO.queryForList(
+				// "FeatureCategory.selectFeatureBroadcastList", req, FeatureCategoryVod.class);
 
-				vodRes = this.generateVO("broadcastRecommend", vodList);
+				productBasicInfoList = this.commonDAO.queryForList("FeatureCategory.selectFeatureMovieList", req,
+						ProductBasicInfo.class);
+
+				// vodRes = this.generateVO("broadcastRecommend", vodList);
 			}
+
+			List<Product> productList = new ArrayList<Product>();
+
+			// Meta DB 조회 파라미터 생성
+			Map<String, Object> reqMap = new HashMap<String, Object>();
+			TenantHeader tenantHeader = header.getTenantHeader();
+			DeviceHeader deviceHeader = header.getDeviceHeader();
+			reqMap.put("req", req);
+			reqMap.put("tenantHeader", tenantHeader);
+			reqMap.put("deviceHeader", deviceHeader);
+			reqMap.put("stdDt", stdDt);
+			reqMap.put("lang", tenantHeader.getLangCd());
+
+			reqMap.put("svcGrpCd", DisplayConstants.DP_MULTIMEDIA_PROD_SVC_GRP_CD);
+			// reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+			reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
+
+			if (productBasicInfoList != null && productBasicInfoList.size() > 0) {
+				for (ProductBasicInfo productBasicInfo : productBasicInfoList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+
+					// Meta 정보 조회
+					MetaInfo retMetaInfo = this.metaInfoService.getEbookComicMetaInfo(reqMap);
+
+					if (retMetaInfo != null) {
+						// Response Generate
+						Product product = this.responseInfoGenerateFacade.generateEbookProduct(retMetaInfo);
+						productList.add(product);
+					}
+				}
+				commonResponse.setTotalCount(productBasicInfoList.get(0).getTotalCount());
+				vodRes.setProductList(productList);
+				vodRes.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				vodRes.setProductList(productList);
+				vodRes.setCommonResponse(commonResponse);
+			}
+
 		} else {
 			if (!"".equals(filteredBy) && filteredBy != null) {
 				this.logger.debug("----------------------------------------------------------------");

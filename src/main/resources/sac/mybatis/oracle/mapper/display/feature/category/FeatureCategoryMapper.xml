@@ -2,159 +2,111 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FeatureCategory">
     <!-- 영화 추천 및 영화 1000원관 상품 조회 -->
-    <select id="selectFeatureMovieList" parameterType="FeatureCategoryVodSacReq" resultType="FeatureCategoryVod">
-        SELECT  /* FeatureCategoryMapper.xml, selectFeatureMovieList, tae hee Lee, 2014-01-07 */
-                LA.TOTAL_COUNT
-              , LA.RNUM
-              , LA.TOP_MENU_ID
-              , LA.MENU_ID
-              , LA.MENU_NM
-              , LA.MENU_DESC
-              , LA.META_CLSF_CD
-              , LA.PROD_ID
-              , LA.PART_PROD_ID
-              , LA.VOD_TITL_NM
-              , LA.PROD_NM
-              , LA.PROD_BASE_DESC
-              , LA.PROD_GRD_CD
-              , LA.ARTIST1_NM
-              , LA.ARTIST2_NM
-              , LA.ISSUE_DAY
-              , LA.CHNL_COMP_NM
-              , LA.AGENCY_NM
-              , LA.HDV_YN
-              , LA.DOLBY_SPRT_YN
-              <![CDATA[
-              , CASE WHEN (LA.USE_PERIOD_UNIT_CD = 'PD00312' AND STRM_EPSD_CNT > 0) THEN CHNL_PERIOD_AMT
-                     ELSE CHNL_UNLMT_AMT END AS PROD_AMT
-              ]]>
-              , NVL(LB.PATICPERS_CNT, 0) AS PATICPERS_CNT
-              , NVL(LB.PRCHS_CNT, 0) AS PRCHS_CNT
-              <![CDATA[
-              , NVL((CASE WHEN (LB.AVG_EVLU_SCORE > 0 AND LB.AVG_EVLU_SCORE < 1) THEN 1
-                          WHEN LB.AVG_EVLU_SCORE > 5 THEN 5
-                          ELSE ROUND(LB.AVG_EVLU_SCORE, 1) END), 0) AS AVG_EVLU_SCORE
-              ]]>
-              , CONCAT(LC.FILE_PATH, LC.FILE_NM) AS IMG_PATH
-              , (SELECT MENU_NM
-                   FROM TB_DP_MENU_CATEGORY_DESC
-                  WHERE MENU_ID = LA.TOP_MENU_ID
-                    AND LANG_CD = 'ko'
-                    AND ROWNUM = 1) AS TOP_MENU_NM
-              , (SELECT SAMPL_URL FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = LA.PART_PROD_ID AND ROWNUM = 1) AS SAMPL_URL
-              , LA.PROD_CHRG_YN
-          FROM (SELECT KA.*
-                  FROM (SELECT JA.*
-                             <if test='filteredBy == "recommend"'>
-                             , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.PROD_NM) AS RNUM
-                             </if>
-                             <if test='filteredBy == "movie1000"'>
-                             , ROW_NUMBER() OVER(ORDER BY JA.EXPO_ORD, JA.UPD_DT DESC, JA.PROD_NM) AS RNUM
-                             </if>
-                          FROM (SELECT IA.*, COUNT(IA.PROD_ID) OVER() AS TOTAL_COUNT
-                                  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY D.UPD_DT DESC) AS RN
-                                             , A.TENANT_ID
-                                             , A.MENU_ID
-                                             , A.PROD_ID
-                                             , A.EXPO_ORD
-                                             , B.UP_MENU_ID
-                                             , B.TOP_MENU_ID
-                                             , C.MENU_NM
-                                             , C.MENU_DESC
-                                             , D.PROD_GRD_CD
-                                             , D.USE_PERIOD_UNIT_CD
-                                             , D.UPD_DT
-                                             , D.META_CLSF_CD
-                                             , E.VOD_TITL_NM
-                                             , E.STRM_EPSD_CNT
-                                             , E.ISSUE_DAY
-                                             , E.CHNL_COMP_NM
-                                             , E.AGENCY_NM
-                                             , E.HDV_YN
-                                             , E.DOLBY_SPRT_YN
-                                             , F.PROD_NM
-                                             , F.ARTIST1_NM
-                                             , F.ARTIST2_NM
-                                             , F.PROD_BASE_DESC
-                                             , H.CHNL_PERIOD_AMT
-                                             , H.CHNL_UNLMT_AMT
-                                             , I.PART_PROD_ID
-                                             , J.DRM_YN
-                                             , D.PROD_CHRG_YN
-                                          FROM (SELECT  TENANT_ID
-                                                      , LIST_ID
-                                                      , MENU_ID
-                                                      , PROD_ID
-                                                      , EXPO_ORD
-                                                  FROM  TB_DP_LIST_PROD
-                                                 WHERE  TENANT_ID = #{tenantId}   /* 테넌트ID */
-                                                   AND  LIST_ID = #{listId}       /* ADM000000008 : 운영자추천 멀티미디어 */
-                                                 <if test='filteredBy == "recommend"'>
-                                                   AND  ETC_CD = 'DP004801'       /* DP004801 : 영화 */
-                                                 </if>
-                                                 <if test='filteredBy == "movie1000"'>
-                                                   AND  ETC_CD = 'DP004807'       /* DP004807 : 1000원관 */
-                                                 </if>
-                                                   AND  EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
-                                                   AND  TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
-                                                   AND  SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
-                                               )                        A
-                                             , TB_DP_MENU_CATEGORY      B
-                                             , TB_DP_MENU_CATEGORY_DESC C
-                                             , TB_DP_PROD               D
-                                             , TB_DP_MULTIMDA_PROD      E
-                                             , TB_DP_PROD_DESC          F
-                                             , TB_DP_TENANT_PROD        G
-                                             , TB_DP_TENANT_PROD_PRICE  H
-                                             , TB_DP_PROD_RSHP          I
-                                             , TB_DP_PROD               J
-                                             , TB_DP_SPRT_DEVICE        K
-                                         WHERE A.MENU_ID = B.MENU_ID
-                                           AND A.MENU_ID = C.MENU_ID
-                                           AND A.PROD_ID = D.PROD_ID
-                                           AND A.PROD_ID = E.PROD_ID
-                                           AND A.PROD_ID = F.PROD_ID
-                                           AND A.PROD_ID = G.PROD_ID
-                                           AND A.TENANT_ID = G.TENANT_ID
-                                           AND A.PROD_ID = H.PROD_ID
-                                           AND A.TENANT_ID = H.TENANT_ID
-                                           AND A.PROD_ID = I.PROD_ID
-                                           AND I.PART_PROD_ID = J.PROD_ID
-                                           AND I.PART_PROD_ID = K.PROD_ID(+)
-                                           AND B.USE_YN = 'Y'                          /* Y : 사용 (사용여부) */
-                                           AND C.LANG_CD = 'ko'                        /* ko : 한국어 */
-                                           AND D.SVC_GRP_CD = 'DP000203'               /* DP000201 : 멀티미디어 */
-                                           AND D.CONTENTS_TYPE_CD = 'PD002501'         /* PD002501 : 채널타입 */
-                                           AND F.LANG_CD = 'ko'                        /* ko : 한국어 */
-                                           AND G.PROD_STATUS_CD = 'PD000403'           /* PD000403 : 판매중 */
-                                           AND G.EXPO_YN = 'Y'                         /* Y : 노출 (노출여부) */
-                                           AND SYSDATE BETWEEN H.APPLY_START_DT AND H.APPLY_END_DT
-                                           AND J.CONTENTS_TYPE_CD = 'PD002502'         /* PD002502 : 에피소드타입 */
-                                           AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
-                                           --AND K.PROD_ID IS NOT NULL                   /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
-                                           AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd}) = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
-                                                     ELSE 'SUPPORT' END) = 'SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
-                                           AND B.TOP_MENU_ID = #{topMenuId}            /* 탑메뉴ID */
-                                          <if test='prodGradeCd != null and prodGradeCd != ""'>
-                                          AND D.PROD_GRD_CD IN
-                                             <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
-                                             #{prodGradeCd}          
-                                             </foreach> /* 상품등급코드 */
-                                          </if>
-                                       ) IA
-                                 WHERE IA.RN = 1
-                               ) JA
-                       ) KA
-                 WHERE KA.RNUM BETWEEN #{offset} AND #{count}
-               )                       LA
-             , TB_DP_TENANT_PROD_STATS LB
-             , TB_DP_PROD_IMG          LC
-         WHERE LA.TENANT_ID = LB.TENANT_ID(+)
-           AND LA.PROD_ID = LB.PROD_ID(+)
-           AND LA.PROD_ID = LC.PROD_ID
-           AND LC.EXPO_ORD = '1'
-           AND LC.LANG_CD = 'ko'
-           AND LC.IMG_CD = #{imageCd}
+    <select id="selectFeatureMovieList" parameterType="FeatureCategoryVodSacReq" resultType="ProductBasicInfo">
+        SELECT /* FeatureCategoryMapper.xml, selectFeatureMovieList, 조준일, 2014-02-10 */
+               B.TENANT_ID
+	         , B.MENU_ID
+             , B.PROD_ID
+             , B.TOP_MENU_ID
+             , B.CONTENTS_TYPE_CD
+             , B.TOTAL_COUNT
+	      FROM (SELECT A.*
+	                 , COUNT(*) OVER () AS TOTAL_COUNT
+	                 , ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB) AS RNUM
+	                /* 정렬 정책 확인 후 삭제 필요 */
+                    --, ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD, JA.PROD_NM) AS RNUM  /* 영화 추천  */
+                    --, ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD, JA.UPD_DT DESC, JA.PROD_NM) AS RNUM  /* 1000원관 */
+                    --, ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD, JA.PROD_NM) AS RNUM  /* 방송 추천 */
+	            FROM (SELECT A.TENANT_ID
+	                        , E.MENU_ID
+	                         , A.PROD_ID
+	                        , E.TOP_MENU_ID
+	                        , F.META_CLSF_CD
+	                        , 'PD002501' AS CONTENTS_TYPE_CD
+	                        , A.EXPO_ORD_ALWAYS_YN
+	                        , A.EXPO_ORD
+	                        , A.EXPO_ORD_SUB
+	                        , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
+	                     FROM (SELECT LP.*
+	                             FROM TB_DP_LIST_PROD LP  /* 채널 */
+	                                , TB_DP_LIST LT
+	                            WHERE LP.TENANT_ID = #{tenantId}   /* 테넌트ID */
+	                              AND LP.LIST_ID = #{listId}       /* ADM000000008 : 운영자추천 멀티미디어 */
+	                              <if test='filteredBy == "recommend"'>
+	                              AND LP.ETC_CD = 'DP004801'       /* DP004801 : 영화 */
+	                              </if>
+	                              <if test='filteredBy == "movie1000"'>
+	                              AND LP.ETC_CD = 'DP004807'       /* DP004807 : 1000원관 */
+	                              </if>
+	                               <if test='filteredBy == "westernDrama"'>
+	                              AND LP.ETC_CD = 'DP004803'       /* 미드/외화 */  
+	                              </if>
+	                              <if test='filteredBy == "drama"'>
+	                              AND LP.ETC_CD = 'DP004804'       /* 드라마 */
+	                              </if>
+	                              <if test='filteredBy == "entertainmentFun"'>
+	                              AND LP.ETC_CD = 'DP004805'       /* 연예/오락 */
+	                              </if>
+	                              <if test='filteredBy == "animationKids"'>
+	                              AND LP.ETC_CD = 'DP004806'       /* 애니/키즈 */
+	                              </if>
+	                              <if test='filteredBy == "cable"'>
+	                              AND LP.ETC_CD = 'DP004811'       /* 케이블 */
+	                              </if>
+	                              <if test='filteredBy == "special"'>
+	                              AND LP.ETC_CD = 'DP004812'       /* 스페셜 */
+	                              </if>
+	                              AND LP.EXPO_YN = 'Y'             /* Y : 노출 (노출여부) */
+	                              AND TO_CHAR(LP.STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt}
+	                              AND SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT
+	                              AND LP.TENANT_ID = LT.TENANT_ID
+	                              AND LP.LIST_ID = LT.LIST_ID
+	                              AND LT.EXPO_YN = 'Y'
+	                          ) A
+	                        , TB_DP_PROD_RSHP B
+	                        , TB_DP_MENU_CATEGORY_PROD_MAPG C
+	                        , TB_DP_MENU_CATEGORY_DESC D
+	                        , TB_DP_MENU_CATEGORY E
+	                        , TB_DP_PROD F
+	                        , TB_DP_TENANT_PROD G
+	                        , TB_DP_SPRT_DEVICE H
+	                    WHERE A.PROD_ID = B.PROD_ID
+	                      AND B.PROD_RSHP_CD = 'DP010802'
+	                      AND A.MENU_ID = C.MENU_ID
+	                      AND B.PART_PROD_ID = C.PROD_ID
+	                      AND C.USE_YN = 'Y'
+	                      AND C.MENU_ID = D.MENU_ID
+	                      AND D.LANG_CD = #{langCd}
+	                      AND D.MENU_ID = E.MENU_ID
+	                      AND E.USE_YN = 'Y'
+	                      AND E.TOP_MENU_ID = #{topMenuId}
+	                      AND C.PROD_ID = F.PROD_ID
+	                      AND F.SVC_GRP_CD = 'DP000203'
+	                      AND F.CONTENTS_TYPE_CD = 'PD002502'
+	                      <if test='prodGradeCd != null and prodGradeCd != ""'>
+	                      AND F.PROD_GRD_CD IN
+	                          <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
+	                          #{prodGradeCd}  
+	                          </foreach> /* 상품등급코드 */
+	                      </if>
+	                      AND F.PROD_ID = G.PROD_ID
+	                      AND A.TENANT_ID = G.TENANT_ID
+	                      AND G.PROD_STATUS_CD = 'PD000403'
+	                      AND G.EXPO_YN = 'Y'
+	                      AND G.PROD_ID = H.PROD_ID
+	                      AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
+	                      AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
+	                                        FROM TB_CM_DEVICE 
+	                                       WHERE DEVICE_MODEL_CD = #{deviceModelCd} )  = 'N' 
+	                                         AND NVL(F.DRM_YN, 'N') = 'Y' 
+	                                THEN 'NOT SUPPORT'
+	                                ELSE 'SUPPORT'
+	                            END) = 'SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
+	                  ) A
+	            WHERE RN = 1
+	          ) B
+	    WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
+	    ORDER BY RNUM
     </select>
     
     <!-- 방송 추천 상품 조회 -->
@@ -847,7 +799,7 @@
              , B.TOTAL_COUNT
           FROM (SELECT A.*
                      , COUNT(*) OVER () AS TOTAL_COUNT
-                     , ROWNUM AS RNUM
+                     , ROW_NUMBER() OVER(ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB) AS RNUM
                   FROM (SELECT A.TENANT_ID
                              , E.MENU_ID
                              , C.PROD_ID
@@ -934,7 +886,6 @@
                            AND C.PART_PROD_ID = I.PROD_ID
                       ) A
                  WHERE RN = 1
-                 ORDER BY EXPO_ORD_ALWAYS_YN DESC, EXPO_ORD, EXPO_ORD_SUB
               ) B
          WHERE RNUM BETWEEN #{offset} AND (#{offset}+#{count}-1)
          ORDER BY RNUM
