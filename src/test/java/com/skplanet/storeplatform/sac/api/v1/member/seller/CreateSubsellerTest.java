@@ -61,7 +61,7 @@ public class CreateSubsellerTest {
 	@Test
 	public void createSubseller() {
 
-		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_LOCAL_PATH + "/createSubseller/v1")
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/createSubseller/v1")
 				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
 					@Override
 					public Object requestBody() {
@@ -69,7 +69,7 @@ public class CreateSubsellerTest {
 
 						// 필수
 						req.setSellerKey("IF1023501184720130823173955");
-						req.setSubSellerID("01w22st119121");
+						req.setSubSellerID("01w22st11121");
 						req.setIsNew("Y");
 
 						req.setSubSellerMemo("test2");
