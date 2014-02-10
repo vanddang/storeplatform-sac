@@ -12,6 +12,7 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.List;
 import java.util.Map;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -176,5 +177,16 @@ public interface CommonMetaInfoGenerator {
 	 * @return Distributor
 	 */
 	public Distributor generateDistributor(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * Webtoon 상품 전용 Date 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Book
+	 */
+	public Date generateDate(MetaInfo metaInfo);
 
 }

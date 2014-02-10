@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Menu;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price;
@@ -26,6 +27,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accr
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -198,6 +200,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		if (DisplayConstants.DP_SHOPPING_TOP_MENU_ID.equals(metaInfo.getTopMenuId())) {
 			title.setText(metaInfo.getCatalogNm());
 		} else {
+			title.setPrefix(metaInfo.getVodTitlNm());
 			title.setText(metaInfo.getProdNm());
 		}
 		return title;
@@ -258,5 +261,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		distributor.setTel(metaInfo.getExpoSellerTelNo());
 		distributor.setEmail(metaInfo.getExpoSellerEmail());
 		return distributor;
+	}
+
+	@Override
+	public Date generateDate(MetaInfo metaInfo) {
+		Date date = new Date();
+		date.setType(DisplayConstants.DP_DATE_UPT_NM);
+		date.setText(DateUtils.parseDate(metaInfo.getUpdDt()));
+		return date;
 	}
 }
