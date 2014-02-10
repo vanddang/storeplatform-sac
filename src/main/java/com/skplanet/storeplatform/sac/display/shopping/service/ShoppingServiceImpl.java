@@ -2112,6 +2112,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 							String prchsId = null;
 							String prchsDt = null;
 							String prchsState = null;
+							int purchseCount = 0;
 
 							try {
 								// 구매내역 조회를 위한 생성자
@@ -2140,7 +2141,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 								this.log.debug("[getDownloadComicInfo] purchase count : {}",
 										historyListSacRes.getTotalCnt());
 								this.log.debug("----------------------------------------------------------------");
-
+								purchseCount = historyListSacRes.getTotalCnt();
 								if (historyListSacRes.getTotalCnt() > 0) {
 									prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
 									prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
@@ -2184,9 +2185,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							episodeDateList.add(episodeDate);
 
-							// 상품 구매확인후 피드백인 넣어야함
-							episodeRights.setAllow(episodeShopping.getAllow());
-							// 상품 구매확인후 피드백인 넣어야함
+							// 상품 구매가 있으고 후기가 없으면 feedback값을 내려줘야 함
+							if (purchseCount > 0) {
+								episodeRights.setAllow(episodeShopping.getAllow());
+							}
+
 							episodeRights.setGrade(episodeShopping.getProdGrdCd());
 							episodeRights.setDateList(episodeDateList);
 							episodeProduct.setRights(episodeRights);

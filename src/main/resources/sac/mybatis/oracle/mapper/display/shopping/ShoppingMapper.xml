@@ -1515,7 +1515,7 @@
                         ,(SELECT ( CASE WHEN COUNT( PD.NOTI_SEQ )=0 THEN 'feedback' END )
                             FROM TB_DP_PROD_NOTI PD
                            WHERE PD.PROD_ID = H.PART_PROD_ID
-                             AND PD.MBR_NO = J.SELLER_MBR_NO
+                             AND PD.MBR_NO = #{req.userKey}
                              AND PD.NOTI_TYPE_CD = 'DP000401'
                              AND PD.DEL_YN = 'N'                            
                              AND PD.TENANT_ID = #{tenantHeader.tenantId}        /* INPUT 테넌트ID */
