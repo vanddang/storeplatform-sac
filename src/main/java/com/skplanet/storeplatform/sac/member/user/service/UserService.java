@@ -12,13 +12,13 @@ package com.skplanet.storeplatform.sac.member.user.service;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * 사용자 공통 서비스
+ * 사용자 공통 서비스.
  * 
  * Updated on : 2014. 1. 8. Updated by : 반범진, 지티소프트.
  */
 public interface UserService {
 	/**
-	 * 사용자 정보 IDP 연동(휴대기기 정보 포함)
+	 * 사용자 정보 IDP 연동(휴대기기 정보 포함).
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader

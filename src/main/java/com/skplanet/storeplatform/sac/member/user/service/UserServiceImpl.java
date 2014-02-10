@@ -29,7 +29,7 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 import com.skplanet.storeplatform.sac.member.common.util.DeviceUtil;
 
 /**
- * 사용자 공통 서비스 인터페이스 구현체
+ * 사용자 공통 서비스 인터페이스 구현체.
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 	private UserSCI userSCI;
 
 	@Value("#{propertiesForSac['idp.im.request.operation']}")
-	public String IDP_OPERATION_MODE;
+	public String idpOperationMode;
 
 	/*
 	 * (non-Javadoc)
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
 		/* 휴대기기 목록 조회 */
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
-		listDeviceReq.setIsMainDevice("N");// 대표기기만 조회(Y), 모든기기 조회(N)
+		listDeviceReq.setIsMainDevice("N");
 		listDeviceReq.setUserKey(userKey);
 
 		String userPhoneStr = "";
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
 		if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_ONEID)) { // 통합회원
 
 			param.put("key", schUserRes.getUserMbr().getImSvcNo());
-			param.put("operation_mode", this.IDP_OPERATION_MODE);
+			param.put("operation_mode", this.idpOperationMode);
 			param.put("user_mdn", userPhoneStr);
 			param.put("user_mdn_auth_key", this.idpRepository.makePhoneAuthKey(userPhoneStr));
 			param.put("modify_req_date", DateUtil.getDateString(new Date(), "yyyyMMddHH"));
