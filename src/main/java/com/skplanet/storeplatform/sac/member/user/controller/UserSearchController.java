@@ -31,6 +31,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -205,9 +207,35 @@ public class UserSearchController {
 
 		LOGGER.info("============================================ MbrOneidSacReq : {}", req.toString());
 
-		res = this.svc.searchUserOneId(sacHeader, req);
+		if (req.getUserKey() != null && !"".equals(req.getUserKey())) {
+			res = this.svc.searchUserOneId(sacHeader, req);
+		} else {
+			throw new StorePlatformException("SAC_MEM_0001", "getUserKey()");
+		}
 
 		LOGGER.info("Final MbrOneidSacRes Response : {}", res.toString());
+
+		return res;
+	}
+
+	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchIdSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchIdSacReq req) {
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 2.1.7. ID 찾기 #####");
+		LOGGER.info("####################################################");
+
+		LOGGER.info("============================================ SearchIdSacReq : {}", req.toString());
+
+		SearchIdSacRes res = new SearchIdSacRes();
+
+		if (req.getDeviceId() != null && !"".equals(req.getDeviceId())) {
+			res = this.svc.searchId(sacHeader, req);
+		} else {
+			throw new StorePlatformException("SAC_MEM_0001", "getDeviceId()");
+		}
+
+		LOGGER.info("Final SearchIdSacRes Response : {}", res.toString());
 
 		return res;
 	}

@@ -23,6 +23,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -165,4 +167,16 @@ public interface UserSearchService {
 	 * @return MbrOneidSacRes
 	 */
 	public MbrOneidSacRes searchUserOneId(SacRequestHeader sacHeader, MbrOneidSacReq req);
+
+	/**
+	 * <pre>
+	 * ID 찾기
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param deviceId
+	 * @return SearchIdSacRes
+	 */
+	public SearchIdSacRes searchId(SacRequestHeader sacHeader, SearchIdSacReq req);
 }

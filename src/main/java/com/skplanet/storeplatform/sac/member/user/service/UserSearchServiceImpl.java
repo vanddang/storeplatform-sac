@@ -66,6 +66,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -89,6 +91,9 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Autowired
 	private DeviceService deviceService;
 
+	@Autowired
+	private DeviceSCI deviceSCI;
+
 	private static CommonRequest commonRequest;
 
 	static {
@@ -97,9 +102,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 	@Autowired
 	private UserSCI userSCI;
-
-	@Autowired
-	private DeviceSCI deviceSCI;
 
 	@Autowired
 	private IdpService idpService;
@@ -313,6 +315,62 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setIsMemberPoint(StringUtil.setTrim(scRes.getMbrOneID().getIsMemberPoint()));
 
 		logger.info("MbrOneidSacRes : ", res.toString());
+
+		return res;
+	}
+
+	/**
+	 * ID 찾기
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 * @return
+	 */
+	@Override
+	public SearchIdSacRes searchId(SacRequestHeader sacHeader, SearchIdSacReq req) {
+		SearchIdSacRes res = new SearchIdSacRes();
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		/* 회원 정보 조회 */
+		UserInfo info = this.mcc.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
+
+		/* 디바이스 단건 조회 */
+		ListDeviceReq scReq = new ListDeviceReq();
+		ListDeviceRes scRes = new ListDeviceRes();
+		scReq.setUserKey(info.getUserKey());
+		scReq.setDeviceId(req.getDeviceId());
+		scRes = this.deviceService.listDevice(sacHeader, scReq);
+		DeviceInfo deviceInfo = scRes.getDeviceInfoList().get(0);
+
+		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
+
+			if (info.getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
+				// 무선회원
+				throw new StorePlatformException("SAC_MEM_1300", info.getUserType());
+			} else if (info.getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
+				// ID 회원
+				UserInfo deviceIdSearch = this.mcc.getUserBaseInfo("deviceId", deviceInfo.getDeviceId(), sacHeader);
+				res.setUserId(deviceIdSearch.getUserId());
+			}
+		} else {
+			// 통합회원 : 회원연락처와 휴대기기 ID가 일치하는 경우
+			if (info.getUserPhone().equals(deviceInfo.getDeviceId())) {
+				UserInfo deviceIdSearch = this.mcc.getUserBaseInfo("deviceId", info.getUserPhone(), sacHeader);
+				res.setUserId(deviceIdSearch.getUserId());
+			} else if (!info.getUserPhone().equals(deviceInfo.getDeviceId())) {
+				throw new StorePlatformException("SAC_MEM_1301", info.getUserPhone(), deviceInfo.getDeviceId());
+			} else if (info.getUserPhone() == null && "".equals(info.getUserPhone())) {
+				throw new StorePlatformException("SAC_MEM_0001", "getUserPhone()");
+			}
+		}
+
+		logger.info("SearchIdSacRes : ", res.toString());
 
 		return res;
 	}

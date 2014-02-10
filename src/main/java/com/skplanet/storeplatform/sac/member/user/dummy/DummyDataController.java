@@ -31,7 +31,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
@@ -516,19 +515,19 @@ public class DummyDataController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public SearchIdRes searchId() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
-		LOGGER.info("####################################################");
-
-		SearchIdRes res = new SearchIdRes();
-		res.setUserId("hkd");
-
-		return res;
-	}
+	//	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
+	//	@ResponseBody
+	//	public SearchIdRes searchId() {
+	//
+	//		LOGGER.info("####################################################");
+	//		LOGGER.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
+	//		LOGGER.info("####################################################");
+	//
+	//		SearchIdRes res = new SearchIdRes();
+	//		res.setUserId("hkd");
+	//
+	//		return res;
+	//	}
 
 	/**
 	 * <pre>
