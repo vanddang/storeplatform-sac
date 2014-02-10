@@ -21,10 +21,10 @@
     </select>
 
     <!-- 상품정보요청(for download) App -->
-    <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="DownloadApp">
+    <select id="getDownloadAppInfo" parameterType="DownloadAppSacReq" resultType="MetaInfo">
     SELECT  /* DownloadMapper.xml, getDownloadAppInfo, SAC : 이석희 , 2014-01-23 */
             TA.*
-	      , TB.PROD_ID AS SEED_PRODUCT_ID
+	      , NVL(TB.PROD_ID, ' ') AS SEED_PRODUCT_ID
 	      , TB.CASE_REF_CD AS SEED_CASE_REF_CD
 	      , TB.USE_YN AS SEED_USE_YN
 	      , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
@@ -44,12 +44,14 @@
 			      , KA.PROD_NM
 			      , KA.PROD_BASE_DESC
 			      , KA.PROD_GRD_CD
+			      , KA.CONTENTS_TYPE_CD
+			      , KA.META_CLSF_CD
 			      , KA.PART_PARENT_CLSF_CD
 			      , DECODE( KA.PROD_CLSF_CD , 'PD000601', 'paid' , 'PD000602', 'library' , 'PD000603', 'vm' , 'PD000604', 'free' , 'PD000605', 'paid-rss' , 'PD000606', 'free-rss' , 'paid' ) AS PROD_CLSF_CD
 			--      , KA.PROD_CLSF_CD
 			      , KA.VER_MAJOR || '.' || KA.VER_MINOR AS PROD_VER
 			      , NVL2( KA.PKG_NM, KA.PKG_NM, KB.APK_PKG_NM ) AS APK_PKG_NM
-			      , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER_CD
+			      , NVL2( KB.APK_VER, KB.APK_VER, KA.PKG_VER_CD ) AS APK_VER
 			      ,( PLAT_CLSF_CD_NM || DECODE( KA.PLAT_CLSF_CD , 'PD005606' , ' ' || ( <![CDATA[
 			                                                                            SELECT MIN(VM_VER) || '~' || MAX(VM_VER)
 			                                                                              FROM
@@ -69,11 +71,12 @@
 			                                                                           ) AS SUPPORTED_OS      
                   , KA.PLAT_CLSF_CD
                   , KA.GAME_CENTR_VER_CD
-                  , KA.GAME_CENTR_ID         			                                                                           
+                  , NVL(KA.GAME_CENTR_ID, ' ') AS GAME_CENTR_ID         			                                                                           
 			      , NVL2( KB.FILE_SIZE, KB.FILE_SIZE, ( SELECT MAX(FILE_SIZE) FROM TB_DP_SUB_CONTENTS WHERE PROD_ID = KA.PROD_ID ) ) AS APK_FILE_SIZE
 			      , KB.SUB_CONTENTS_ID
 			      , KB.FILE_PATH AS FILE_PATH
 			      , KC.FILE_PATH AS IMAGE_PATH
+			      , KC.FILE_SIZE AS IMAGE_SIZE
 			  FROM (
 			        SELECT  COUNT(B.PROD_ID) OVER() AS TOTAL_COUNT
 			               , A.MENU_ID
@@ -82,6 +85,8 @@
 			               , B.PROD_ID
 			               , D.PROD_CHRG_YN
 			               , D.PROD_GRD_CD
+			               , D.CONTENTS_TYPE_CD
+			               , D.META_CLSF_CD
 			               , D.REG_DT
 			               , E.AID
 			               , E.VER_MAJOR
@@ -146,8 +151,7 @@
 			   AND  KA.SUB_CONTENTS_ID = KB.SUB_CONTENTS_ID(+)
 			   AND  KA.PROD_ID = KC.PROD_ID
                AND  KB.SALE_YN = 'Y'
-               AND  KB.VM_VER  LIKE '%'||#{osVersion}||'%' /* Provisioning OS VERSION 체크 */
-               AND  KB.LCD_SIZE LIKE '%'|| (SELECT REPLACE(#{lcdSize}, '*', 'X') FROM DUAL) ||'%' /* Provisioning  LCD SIZE 체크 */			   
+			   
 			   AND  KC.EXPO_ORD = '1'
 			   AND  KC.LANG_CD = #{langCd}
 			   AND  KC.IMG_CD = #{imageCd} 
@@ -170,8 +174,8 @@
              , PLAY_PROD_ID
     --         , ( CASE WHEN STORE_PROD_ID IS NOT NULL THEN '/'||C.CAT_DESC||'/'||STORE_PROD_ID END  ) AS STORE_PROD_ID
     --         , ( CASE WHEN PLAY_PROD_ID IS NOT NULL THEN '/'||C.CAT_DESC||'/'||PLAY_PROD_ID END  ) AS PLAY_PROD_ID
-             , STORE_PROD_AMT
-             , PLAY_PROD_AMT
+             , NVL(STORE_PROD_AMT, 0) AS STORE_PROD_AMT
+             , NVL(PLAY_PROD_AMT, 0) AS PLAY_PROD_AMT
              , DECODE( STORE_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS STORE_DRM_YN
              , DECODE( PLAY_DRM_YN, 'Y', STORE_DRM_YN, 'N' ) AS PLAY_DRM_YN  
              , DECODE( BTV_YN, 'Y', BTV_YN, 'N' ) AS BTV_YN
@@ -182,7 +186,7 @@
              , ( CASE WHEN CHAPTER IS NOT NULL THEN '회' END ) AS CHAPTER_UNIT
              , DECODE( USE_PERIOD_UNIT_CD
                      , 'PD00310', NULL
-                     , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USAGE_PERIOD
+                     , CONCAT( USE_PERIOD, USE_PERIOD_UNIT_CD_NM ) ) AS USAGE_PERIOD_NM
              , USE_PERIOD_UNIT_CD            
              , DWLD_AREA_LIMT_YN 
              , EPSD_PLAY_TM
