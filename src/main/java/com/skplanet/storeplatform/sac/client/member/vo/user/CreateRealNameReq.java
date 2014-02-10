@@ -27,13 +27,6 @@ public class CreateRealNameReq extends CommonInfo {
 	private String userAuthKey = "";
 
 	/**
-	 * 실명인증 여부
-	 */
-	@NotEmpty
-	@Pattern(regexp = "^Y|N")
-	private String isRealName = "";
-
-	/**
 	 * 실명인증 대상 (OWN/PARENT)
 	 */
 	@NotEmpty
@@ -134,21 +127,6 @@ public class CreateRealNameReq extends CommonInfo {
 	 */
 	public void setUserAuthKey(String userAuthKey) {
 		this.userAuthKey = userAuthKey;
-	}
-
-	/**
-	 * @return String : isRealName
-	 */
-	public String getIsRealName() {
-		return this.isRealName;
-	}
-
-	/**
-	 * @param isRealName
-	 *            String : the isRealName to set
-	 */
-	public void setIsRealName(String isRealName) {
-		this.isRealName = isRealName;
 	}
 
 	/**
