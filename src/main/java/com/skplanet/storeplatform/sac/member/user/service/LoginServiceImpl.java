@@ -51,14 +51,14 @@ import com.skplanet.storeplatform.sac.member.common.idp.service.IdpService;
 import com.skplanet.storeplatform.sac.member.common.idp.service.ImIdpService;
 
 /**
- * 회원 로그인 관련 인터페이스 구현체
+ * 회원 로그인 관련 인터페이스 구현체.
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
 @Service
 public class LoginServiceImpl implements LoginService {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 	@Autowired
 	private MemberCommonComponent commService;
@@ -89,7 +89,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByMdnRes authorizeByMdn(SacRequestHeader requestHeader, AuthorizeByMdnReq req) {
 
-		logger.info("############################ LoginServiceImpl authorizeByMdn start ############################");
+		LOGGER.info("############################ LoginServiceImpl authorizeByMdn start ############################");
 
 		String deviceId = req.getDeviceId();
 		String userKey = null;
@@ -199,7 +199,7 @@ public class LoginServiceImpl implements LoginService {
 						+ IdpConstants.IDP_RES_CODE_MDN_AUTH_NOT_WIRELESS_JOIN)) {
 
 					/* 미가입 회원인 경우 로그 님김 */
-					logger.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
+					LOGGER.info(":::: authorizeByMdn NOT_EXIST_USER :::: devicdId : {}, {}", deviceId, userType);
 					throw ex;
 
 				} else {
@@ -210,7 +210,7 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		logger.info("############################ LoginServiceImpl authorizeByMdn end ############################");
+		LOGGER.info("############################ LoginServiceImpl authorizeByMdn end ############################");
 
 		return res;
 
@@ -227,7 +227,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public AuthorizeByIdRes authorizeById(SacRequestHeader requestHeader, AuthorizeByIdReq req) {
 
-		logger.info("############################ LoginServiceImpl authorizeById start ############################");
+		LOGGER.info("############################ LoginServiceImpl authorizeById start ############################");
 
 		String deviceId = req.getDeviceId();
 		String userId = req.getUserId();
@@ -414,7 +414,7 @@ public class LoginServiceImpl implements LoginService {
 						+ ImIdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 님김 */
-					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
+					LOGGER.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
 					throw ex;
 
 				} else {
@@ -467,7 +467,7 @@ public class LoginServiceImpl implements LoginService {
 						+ IdpConstants.IDP_RES_CODE_NOT_EXIST_ID)) {
 
 					/* 미존재 회원인 경우 로그 님김 */
-					logger.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
+					LOGGER.info(":::: NOT_EXIST_USER authorizeById :::: userId : {}, {}", userId, userType);
 					throw ex;
 
 				} else {
@@ -478,13 +478,13 @@ public class LoginServiceImpl implements LoginService {
 
 		}
 
-		logger.info("######################## LoginServiceImpl authorizeById end ############################");
+		LOGGER.info("######################## LoginServiceImpl authorizeById end ############################");
 
 		return res;
 	}
 
 	/**
-	 * 로그인한 deviceId의 deviceKey 조회
+	 * 로그인한 deviceId의 deviceKey 조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -523,7 +523,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * SC회원콤포넌트 회원 정보 조회
+	 * SC회원콤포넌트 회원 정보 조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -562,7 +562,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/**
 	 * 
-	 * 휴대기기정보 merge
+	 * 휴대기기정보 update.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -616,7 +616,7 @@ public class LoginServiceImpl implements LoginService {
 
 	/**
 	 * 
-	 * SC콤포넌트 로그인 이력저장
+	 * SC콤포넌트 로그인 이력저장.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -657,7 +657,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 회원 상태코드 업데이트
+	 * 회원 상태코드 업데이트.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -690,7 +690,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	/**
-	 * 변동성 회원 처리
+	 * 변동성 회원 처리.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -703,7 +703,7 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	public void volatileMemberPoc(SacRequestHeader requestHeader, String deviceId, String userKey, String deviceTelecom) {
 
-		logger.info("########## volatileMember process start #########");
+		LOGGER.info("########## volatileMember process start #########");
 
 		CommonRequest commonRequest = new CommonRequest();
 		commonRequest.setSystemID(requestHeader.getTenantHeader().getSystemId());
@@ -715,7 +715,7 @@ public class LoginServiceImpl implements LoginService {
 		String imMbrNo = idpReceiver.getResponseBody().getUser_key(); // IDP 관리번호
 		String imMngNum = idpReceiver.getResponseBody().getSvc_mng_num(); // SKT사용자의 경우 사용자 관리번호
 
-		logger.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
+		LOGGER.info("[deviceId] {}, [imMbrNo] {}, imMngNum {}", deviceId, imMbrNo, imMngNum);
 
 		/* 2. 회원정보 수정 */
 		UserMbr userMbr = new UserMbr();
@@ -736,7 +736,7 @@ public class LoginServiceImpl implements LoginService {
 		deviceInfo.setSvcMangNum(imMngNum);
 		this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
-		logger.info("########## volatileMember process end #########");
+		LOGGER.info("########## volatileMember process end #########");
 	}
 
 }

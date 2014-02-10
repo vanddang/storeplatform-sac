@@ -19,14 +19,14 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.SupportAomRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
- * 휴대기기 관련 인터페이스
+ * 휴대기기 관련 인터페이스.
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
 public interface DeviceService {
 
 	/**
-	 * 휴대기기 등록
+	 * 휴대기기 등록.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -37,7 +37,7 @@ public interface DeviceService {
 	public CreateDeviceRes createDevice(SacRequestHeader requestHeader, CreateDeviceReq req);
 
 	/**
-	 * 휴대기기 수정
+	 * 휴대기기 수정.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -48,7 +48,7 @@ public interface DeviceService {
 	public ModifyDeviceRes modifyDevice(SacRequestHeader requestHeader, ModifyDeviceReq req);
 
 	/**
-	 * 휴대기기 목록 조회
+	 * 휴대기기 목록 조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -59,7 +59,7 @@ public interface DeviceService {
 	public ListDeviceRes listDevice(SacRequestHeader requestHeader, ListDeviceReq req);
 
 	/**
-	 * 휴대기기 단건 조회
+	 * 휴대기기 단건 조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -90,7 +90,7 @@ public interface DeviceService {
 	public String insertDeviceInfo(String systemId, String tenanId, String userKey, DeviceInfo deviceInfo);
 
 	/**
-	 * 기기정보 update
+	 * 기기정보 update.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -101,7 +101,7 @@ public interface DeviceService {
 	public String updateDeviceInfo(SacRequestHeader requestHeader, DeviceInfo req);
 
 	/**
-	 * 휴대기기 대표단말 설정
+	 * 휴대기기 대표단말 설정.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -112,7 +112,7 @@ public interface DeviceService {
 	public SetMainDeviceRes modifyRepresentationDevice(SacRequestHeader requestHeader, SetMainDeviceReq req);
 
 	/**
-	 * 휴대기기 삭제
+	 * 휴대기기 삭제.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -123,9 +123,9 @@ public interface DeviceService {
 	public RemoveDeviceRes removeDevice(SacRequestHeader requestHeader, RemoveDeviceReq req);
 
 	/**
-	 * 사용자 정보 조회
+	 * 사용자 정보 조회.
 	 * 
-	 * @param requestHeader
+	 * @param sacHeader
 	 *            SacRequestHeader
 	 * @param req
 	 *            RemoveDeviceReq
@@ -134,26 +134,24 @@ public interface DeviceService {
 	public UserInfo searchUser(RemoveDeviceReq req, SacRequestHeader sacHeader);
 
 	/**
-	 * 대표단말 조회
-	 * 
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @param requestHeader
-	 * @param req
-	 * @return
-	 */
-	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req);
-
-	/**
-	 * 단말 AOM 확인
+	 * 대표단말 조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
 	 * @param req
-	 *            RemoveDeviceReq
-	 * @return List<DeviceInfo>
+	 *            DetailRepresentationDeviceReq
+	 * @return DetailRepresentationDeviceRes
+	 */
+	public DetailRepresentationDeviceRes detailRepresentationDeviceRes(SacRequestHeader requestHeader, DetailRepresentationDeviceReq req);
+
+	/**
+	 * 단말 AOM 확인.
+	 * 
+	 * @param requestHeader
+	 *            SacRequestHeader
+	 * @param req
+	 *            SupportAomReq
+	 * @return SupportAomRes
 	 */
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req);
 }
