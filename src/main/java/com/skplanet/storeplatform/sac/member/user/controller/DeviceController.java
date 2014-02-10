@@ -197,10 +197,9 @@ public class DeviceController {
 
 		logger.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
 
-		String userId = StringUtil.nvl(req.getUserId(), ""); // 사용자 ID
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 
-		if (userId.equals("") && userKey.equals("")) {
+		if (userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 

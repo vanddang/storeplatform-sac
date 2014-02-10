@@ -845,21 +845,7 @@ public class DeviceServiceImpl implements DeviceService {
 		ListDeviceRes listRes = new ListDeviceRes();
 		ListDeviceReq listReq = new ListDeviceReq();
 
-		if (req.getUserId() != null) {
-
-			RemoveDeviceReq deviceReq = new RemoveDeviceReq();
-			deviceReq.setUserId(req.getUserId());
-			UserInfo userInfo = this.searchUser(deviceReq, requestHeader);
-
-			listReq.setUserKey(userInfo.getUserKey());
-			listReq.setUserId(req.getUserId());
-			listReq.setIsMainDevice("Y");
-			listRes = this.listDevice(requestHeader, listReq);
-
-			logger.info("### userId Req : {}", listReq.toString());
-			logger.info("### userId Res : {}", listRes.toString());
-
-		} else if (req.getUserKey() != null) {
+		if (req.getUserKey() != null) {
 			listReq.setUserKey(req.getUserKey());
 			listReq.setIsMainDevice("Y");
 			listRes = this.listDevice(requestHeader, listReq);
