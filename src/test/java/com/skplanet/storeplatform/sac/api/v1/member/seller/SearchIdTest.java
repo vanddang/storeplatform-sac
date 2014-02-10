@@ -21,9 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchIdRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
@@ -60,10 +62,18 @@ public class SearchIdTest {
 	@Test
 	public void searchId() {
 
-		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH
-						+ "/searchId2/v1?sellerEmail=omc97@hanmail.net&sellerCompany=&sellerBizNumber=&sellerPhone=")
-				.httpMethod(HttpMethod.GET).success(SearchIdRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/searchId2/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchIdReq req = new SearchIdReq();
+
+						req.setSellerEmail("omc97@hanmail.net");
+
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(SearchIdRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						SearchIdRes res = (SearchIdRes) result;
