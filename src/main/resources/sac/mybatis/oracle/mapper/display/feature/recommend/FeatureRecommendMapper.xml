@@ -282,8 +282,8 @@
                                   AND CD.MUSIC_SPRT_YN = 'Y'
                               ) H
                              , TB_DP_PROD_RSHP I
-                         WHERE A.CHART_CLSF_CD = 'MELON_DP004901'
-                           AND A.RANK_START_DAY = '20120710113820'
+                         WHERE A.CHART_CLSF_CD = 'DP004901'
+                           AND A.RANK_START_DAY = '20120710'
                            AND A.PROD_ID = B.PROD_ID
                            AND B.USE_YN = 'Y'
                            AND B.MENU_ID = C.MENU_ID
