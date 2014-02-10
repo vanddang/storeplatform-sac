@@ -2,6 +2,7 @@ package com.skplanet.storeplatform.sac.client.member.vo.common;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
@@ -21,16 +22,19 @@ public class GameCenter extends CommonInfo {
 	/**
 	 * systemId.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String systemId;
 
 	/**
 	 * tenanId.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String tenanId;
 
 	/**
 	 * 내부_사용자회원_번호.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String userKey;
 
 	/**
@@ -41,6 +45,7 @@ public class GameCenter extends CommonInfo {
 	/**
 	 * 기기_ID.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String deviceId;
 
 	/**
@@ -51,16 +56,19 @@ public class GameCenter extends CommonInfo {
 	/**
 	 * 상태_코드.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String statusCd;
 
 	/**
 	 * 요청_타입.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String reqType;
 
 	/**
 	 * 작업_코드.
 	 */
+	@NotEmpty(message = "파라미터가 존재하지 않습니다.")
 	private String workCd;
 
 	/**
