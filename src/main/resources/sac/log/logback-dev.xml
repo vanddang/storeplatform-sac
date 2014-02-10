@@ -24,6 +24,11 @@
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%X{GUID}|%X{requestSystemId}|%X{interfaceId}|${hostName}|${instanceName}|%X{type}|%logger{36}:%file:%method:%line]\t%msg%n</pattern>
         </layout>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>           
+        </filter>
     </appender>
     
     <appender name="OMC_요건1_STOREPLATFORM-SAC_ROLLINGFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -46,15 +51,10 @@
         </layout>
     </appender>
     
-    <!-- WARN, INFO, DEBUG 서비스 로그 -->
+    <!-- 서비스 로그 -->
     <logger name="com.skplanet.storeplatform.sac" additivity="false">
         <level value="INFO" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
-    </logger>
-    
-    <!-- ERROR 서비스 로그 -->
-    <logger name="com.skplanet.storeplatform.sac" additivity="false">
-        <level value="ERROR" />
         <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </logger>
     
@@ -109,6 +109,7 @@
     <root>
         <level value="INFO" />
         <appender-ref ref="SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
+        <appender-ref ref="ERROR_SERVICE_STOREPLATFORM-SAC_ROLLINGFILE" />
     </root>
     
 </included>
