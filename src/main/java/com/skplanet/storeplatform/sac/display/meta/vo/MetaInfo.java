@@ -51,6 +51,7 @@ public class MetaInfo {
 	private String purchaseProdId;
 	private String purchaseDt;
 	private String purchaseState;
+	private String bpJoinFileNo;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -860,6 +861,21 @@ public class MetaInfo {
 	 */
 	public void setPurchaseState(String purchaseState) {
 		this.purchaseState = purchaseState;
+	}
+
+	/**
+	 * @return the bpJoinFileNo
+	 */
+	public String getBpJoinFileNo() {
+		return this.bpJoinFileNo;
+	}
+
+	/**
+	 * @param bpJoinFileNo
+	 *            the bpJoinFileNo to set
+	 */
+	public void setBpJoinFileNo(String bpJoinFileNo) {
+		this.bpJoinFileNo = bpJoinFileNo;
 	}
 
 	/**
