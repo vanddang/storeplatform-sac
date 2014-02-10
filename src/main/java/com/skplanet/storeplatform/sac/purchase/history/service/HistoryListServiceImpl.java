@@ -26,6 +26,7 @@ import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScReq;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistoryListScRes;
 import com.skplanet.storeplatform.purchase.client.history.vo.HistorySc;
 import com.skplanet.storeplatform.purchase.client.history.vo.ProductCountSc;
+import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacReq;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryCountSacRes;
 import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
@@ -94,7 +95,12 @@ public class HistoryListServiceImpl implements HistoryListService {
 				}
 			}
 		}
-		scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
+
+		// 보유상품 조회일 때만 해당값이 조회 조건으로 사용된다.
+		if (PurchaseConstants.PRCHS_PROD_TYPE_OWN.equals(request.getPrchsProdType())) {
+			scRequest.setUseFixrateProdId(request.getUseFixrateProdId());
+		}
+
 		scRequest.setProductList(prodList);
 		scRequest.setHidingYn(request.getHidingYn());
 		scRequest.setOffset(request.getOffset());
