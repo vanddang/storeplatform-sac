@@ -21,7 +21,7 @@ public class EpubSeriesReq extends CommonInfo {
 	private static final long serialVersionUID = 1030336138926751912L;
 
 	/** 체널 ID */
-	private String channelld;
+	private String channelId;
 	/** 도서 구분 코드 (DP004301 : 단행본, DP004302 : 연재, DP004303 : 잡지 */
 	private String bookTypeCd;
 	/** 상품 정렬 순서 (recent : 최신순, regDate : 등록순, noPayment: 미구매) */
@@ -36,11 +36,11 @@ public class EpubSeriesReq extends CommonInfo {
 	private String deviceModel;
 
 	public String getChannelld() {
-		return this.channelld;
+		return this.channelId;
 	}
 
 	public void setChannelld(String channelld) {
-		this.channelld = channelld;
+		this.channelId = channelld;
 	}
 
 	public String getBookTypeCd() {

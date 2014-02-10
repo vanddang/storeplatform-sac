@@ -48,7 +48,7 @@ public class VodDetailReq extends CommonInfo {
 	/** 대표이미지 코드 */
 	private String imgCd;
 
-	public String getChannelld() {
+	public String getChannelId() {
 		return this.channelId;
 	}
 
