@@ -29,7 +29,6 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
-import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
@@ -183,12 +182,10 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			}
 
 			Product product = new Product();
-			List<Identifier> identifierList = new ArrayList<Identifier>();
 
 			// 상품 ID 정보
-			identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
-					DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
-			product.setIdentifierList(identifierList);
+			metaInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+			product.setIdentifierList(this.commonMetaInfoGenerator.generateIdentifierList(metaInfo));
 
 			// 상품명 정보
 			product.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
