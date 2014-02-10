@@ -120,7 +120,7 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 
 				if (retMetaInfo != null) {
-					Product product = this.responseInfoGenerateFacade.generateComicProduct(retMetaInfo);
+					Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
 					productList.add(product);
 				}
 			}
