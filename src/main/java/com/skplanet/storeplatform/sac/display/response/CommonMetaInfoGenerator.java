@@ -20,7 +20,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
@@ -187,6 +190,29 @@ public interface CommonMetaInfoGenerator {
 	 *            metaInfo
 	 * @return Book
 	 */
-	public Date generateDate(MetaInfo metaInfo);
+	public Date generateDate(String type, String text);
 
+	/**
+	 * <pre>
+	 * 소장 상품 Store 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Store
+	 */
+	public Store generateStore(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
+	 * 대여 상품 Play 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Store
+	 */
+	public Play generatePlay(MetaInfo metaInfo);
+
+	public Purchase generatePurchase(MetaInfo metaInfo);
 }

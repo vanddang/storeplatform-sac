@@ -29,6 +29,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.SalesOption;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 
 /**
@@ -331,7 +332,8 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		Book book = new Book();
 		book.setStatus(metaInfo.getBookStatus());
 		// Date 생성
-		Date date = this.commonGenerator.generateDate(metaInfo);
+		// Date date = this.commonGenerator.generateDate(metaInfo);
+		Date date = this.commonGenerator.generateDate(DisplayConstants.DP_DATE_UPT_NM, metaInfo.getUpdDt());
 
 		product.setTitle(title);
 		product.setPrice(price);

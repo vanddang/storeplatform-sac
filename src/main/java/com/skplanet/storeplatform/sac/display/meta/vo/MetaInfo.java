@@ -49,6 +49,8 @@ public class MetaInfo {
 	private String platClsfCd;
 	private String purchaseId;
 	private String purchaseProdId;
+	private String purchaseDt;
+	private String purchaseState;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -828,6 +830,36 @@ public class MetaInfo {
 	 */
 	public void setPurchaseProdId(String purchaseProdId) {
 		this.purchaseProdId = purchaseProdId;
+	}
+
+	/**
+	 * @return the purchaseDt
+	 */
+	public String getPurchaseDt() {
+		return this.purchaseDt;
+	}
+
+	/**
+	 * @param purchaseDt
+	 *            the purchaseDt to set
+	 */
+	public void setPurchaseDt(String purchaseDt) {
+		this.purchaseDt = purchaseDt;
+	}
+
+	/**
+	 * @return the purchaseState
+	 */
+	public String getPurchaseState() {
+		return this.purchaseState;
+	}
+
+	/**
+	 * @param purchaseState
+	 *            the purchaseState to set
+	 */
+	public void setPurchaseState(String purchaseState) {
+		this.purchaseState = purchaseState;
 	}
 
 	/**

@@ -24,6 +24,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadEbookSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -39,16 +43,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -65,7 +65,13 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	HistoryListService historyListService;
+	HistoryInternalSCI historyInternalSCI;
+
+	@Autowired
+	CommonMetaInfoGenerator commonMetaInfoGenerator;
+
+	@Autowired
+	private EbookComicGenerator ebookComicGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -126,21 +132,20 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			String dwldExprDt = null;
 			String prchsState = null;
 			String prchsProdId = null;
-			String usePeriodUnitCd = metaInfo.getUsePeriodUnitCd();
 
 			try {
 				// 구매내역 조회를 위한 생성자
-				List<ProductListSac> productList = new ArrayList<ProductListSac>();
+				ProductListSacIn productListSacIn = new ProductListSacIn();
+				List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 
-				ProductListSac productListSac = new ProductListSac();
-				productListSac.setProdId(metaInfo.getStoreProdId());
-				productList.add(productListSac);
+				productListSacIn.setProdId(metaInfo.getStoreProdId());
+				productList.add(productListSacIn);
 
-				productListSac = new ProductListSac();
-				productListSac.setProdId(metaInfo.getPlayProdId());
-				productList.add(productListSac);
+				productListSacIn = new ProductListSacIn();
+				productListSacIn.setProdId(metaInfo.getPlayProdId());
+				productList.add(productListSacIn);
 
-				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+				HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
 				historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
 				historyListSacReq.setUserKey(downloadEbookReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadEbookReq.getDeviceKey());
@@ -152,7 +157,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				historyListSacReq.setProductList(productList);
 
 				// 구매내역 조회 실행
-				HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+				HistoryListSacInRes historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
 
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("[getDownloadEbookInfo] purchase count : {}", historyListSacRes.getTotalCnt());
@@ -165,12 +170,8 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
-					this.logger.debug("----------------------------------------------------------------");
-					this.logger.debug("[getDownloadEbookInfo] usePeriodUnitCd : {}", usePeriodUnitCd);
-					this.logger.debug("----------------------------------------------------------------");
-
 					// 소장
-					if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
+					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
 						if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 							prchsState = "payment";
 						} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
@@ -214,129 +215,36 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 			List<Support> supportList = new ArrayList<Support>();
 
 			// 상품 ID 정보
-			identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-			identifier.setText(metaInfo.getProdId());
-			identifierList.add(identifier);
+			identifierList.add(this.commonMetaInfoGenerator.generateIdentifier(
+					DisplayConstants.DP_CHANNEL_IDENTIFIER_CD, metaInfo.getProdId()));
 			product.setIdentifierList(identifierList);
 
 			// 상품명 정보
-			title.setText(metaInfo.getProdNm());
-			product.setTitle(title);
+			product.setTitle(this.commonMetaInfoGenerator.generateTitle(metaInfo));
 
 			// 이미지 정보
-			source.setType(DisplayConstants.DP_THUMNAIL_SOURCE);
-			source.setMediaType(DisplayCommonUtil.getMimeType(metaInfo.getImagePath()));
-			source.setUrl(metaInfo.getImagePath());
-			sourceList.add(source);
-			product.setSourceList(sourceList);
+			product.setSourceList(this.commonMetaInfoGenerator.generateSourceList(metaInfo));
 
 			// 메뉴 정보
-			menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-			menu.setId(metaInfo.getTopMenuId());
-			menu.setName(metaInfo.getTopMenuNm());
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setId(metaInfo.getMenuId());
-			menu.setName(metaInfo.getMenuNm());
-			menuList.add(menu);
-			menu = new Menu();
-			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-			menu.setId(metaInfo.getMetaClsfCd());
-			menuList.add(menu);
-			product.setMenuList(menuList);
+			product.setMenuList(this.commonMetaInfoGenerator.generateMenuList(metaInfo));
 
 			// 도서 정보
-			book.setBookVersion(metaInfo.getProdVer());
-			book.setScid(metaInfo.getSubContentsId());
-			book.setSize(metaInfo.getFileSize());
-			book.setType("DP004302".equals(metaInfo.getBookClsfCd()) ? "serial" : "");
-			book.setBookClsfCd(metaInfo.getBookClsfCd());
-			product.setBook(book);
+			product.setBook(this.ebookComicGenerator.generateForDownloadBook(metaInfo));
 
-			// 소장 정보
-			if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
-				identifier = new Identifier();
-				identifierList = new ArrayList<Identifier>();
-
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(metaInfo.getStoreProdId());
-				identifierList.add(identifier);
-				store.setIdentifierList(identifierList);
-
-				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-				support.setText(metaInfo.getStoreDrmYn());
-				supportList.add(support);
-				store.setSupportList(supportList);
-
-				price.setFixedPrice(metaInfo.getStoreProdNetAmt());
-				price.setText(metaInfo.getStoreProdAmt());
-				store.setPrice(price);
-
-				rights.setGrade(metaInfo.getProdGrdCd());
-				rights.setStore(store);
-			}
-
-			// 대여 정보
-			if (StringUtils.isNotEmpty(metaInfo.getPlayProdId())) {
-				identifier = new Identifier();
-				support = new Support();
-				price = new Price();
-				supportList = new ArrayList<Support>();
-				identifierList = new ArrayList<Identifier>();
-
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(metaInfo.getPlayProdId());
-				identifierList.add(identifier);
-				play.setIdentifierList(identifierList);
-
-				support.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-				support.setText(metaInfo.getPlayDrmYn());
-				supportList.add(support);
-				play.setSupportList(supportList);
-
-				date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-				date.setText(metaInfo.getUsePeriodNm());
-				play.setDate(date);
-
-				price.setFixedPrice(metaInfo.getPlayProdNetAmt());
-				price.setText(metaInfo.getPlayProdAmt());
-				play.setPrice(price);
-
-				rights.setGrade(metaInfo.getProdGrdCd());
-				rights.setPlay(play);
-			}
-			product.setRights(rights);
+			// 이용등급 및 소장/대여 정보
+			product.setRights(this.commonMetaInfoGenerator.generateRights(metaInfo));
 
 			// 저작자 정보
-			distributor.setName(metaInfo.getExpoSellerNm());
-			distributor.setTel(metaInfo.getExpoSellerTelNo());
-			distributor.setEmail(metaInfo.getExpoSellerEmail());
-			distributor.setSellerKey(metaInfo.getSellerMbrNo());
-			product.setDistributor(distributor);
+			product.setDistributor(this.commonMetaInfoGenerator.generateDistributor(metaInfo));
 
 			// 구매 정보
 			if (StringUtils.isNotEmpty(prchsId)) {
-				identifier = new Identifier();
-				identifierList = new ArrayList<Identifier>();
+				metaInfo.setPurchaseId(prchsId);
+				metaInfo.setPurchaseProdId(prchsProdId);
+				metaInfo.setPurchaseDt(prchsDt);
+				metaInfo.setPurchaseState(prchsState);
 
-				purchase.setState(prchsState);
-
-				identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-				identifier.setText(prchsId);
-				identifierList.add(identifier);
-
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-				identifier.setText(prchsProdId);
-				identifierList.add(identifier);
-				purchase.setIdentifierList(identifierList);
-
-				date = new Date();
-				date.setType("date/purchase");
-				date.setText(DateUtils.parseDate(prchsDt));
-				purchase.setDate(date);
-
-				product.setPurchase(purchase);
+				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
 			}
 
 			ebookRes.setProduct(product);

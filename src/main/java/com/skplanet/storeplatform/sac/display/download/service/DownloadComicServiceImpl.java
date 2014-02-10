@@ -24,6 +24,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadComicSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -36,16 +40,12 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Dist
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
  * DownloadComic Service 인터페이스(CoreStoreBusiness) 구현체
@@ -62,7 +62,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 	private CommonDAO commonDAO;
 
 	@Autowired
-	HistoryListService historyListService;
+	HistoryInternalSCI historyInternalSCI;
 
 	@Override
 	public DownloadComicSacRes getDownloadComicInfo(SacRequestHeader requestHeader, DownloadComicSacReq downloadComicReq) {
@@ -107,13 +107,13 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 
 			try {
 				// 구매내역 조회를 위한 생성자
-				ProductListSac productListSac = new ProductListSac();
-				productListSac.setProdId(metaInfo.getPartProdId());
+				ProductListSacIn productListSacIn = new ProductListSacIn();
+				List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 
-				List<ProductListSac> productList = new ArrayList<ProductListSac>();
-				productList.add(productListSac);
+				productListSacIn.setProdId(metaInfo.getPartProdId());
+				productList.add(productListSacIn);
 
-				HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+				HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
 				historyListSacReq.setTenantId(downloadComicReq.getTenantId());
 				historyListSacReq.setUserKey(downloadComicReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadComicReq.getDeviceKey());
@@ -125,7 +125,7 @@ public class DownloadComicServiceImpl implements DownloadComicService {
 				historyListSacReq.setProductList(productList);
 
 				// 구매내역 조회 실행
-				HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+				HistoryListSacInRes historyListSacRes = this.historyInternalSCI.searchHistoryList(historyListSacReq);
 
 				this.logger.debug("----------------------------------------------------------------");
 				this.logger.debug("[getDownloadComicInfo] purchase count : {}", historyListSacRes.getTotalCnt());

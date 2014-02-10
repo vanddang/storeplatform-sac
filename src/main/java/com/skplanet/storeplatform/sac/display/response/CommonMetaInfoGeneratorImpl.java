@@ -26,7 +26,10 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Sourc
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Accrual;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Distributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Purchase;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.common.util.DateUtils;
 import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
@@ -156,11 +159,17 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
-		Support support = new Support();
-		support.setText("");
-		support.setType("");
-
 		rights.setGrade(metaInfo.getProdGrdCd());
+
+		// 소장 정보
+		if (StringUtils.isNotEmpty(metaInfo.getStoreProdId())) {
+			rights.setStore(this.generateStore(metaInfo));
+		}
+		// 대여 정보
+		if (StringUtils.isNotEmpty(metaInfo.getPlayProdId())) {
+			rights.setPlay(this.generatePlay(metaInfo));
+		}
+
 		return rights;
 	}
 
@@ -267,14 +276,73 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		distributor.setName(metaInfo.getExpoSellerNm());
 		distributor.setTel(metaInfo.getExpoSellerTelNo());
 		distributor.setEmail(metaInfo.getExpoSellerEmail());
+		distributor.setSellerKey(metaInfo.getSellerMbrNo());
 		return distributor;
 	}
 
 	@Override
-	public Date generateDate(MetaInfo metaInfo) {
+	public Date generateDate(String type, String text) {
 		Date date = new Date();
-		date.setType(DisplayConstants.DP_DATE_UPT_NM);
-		date.setText(DateUtils.parseDate(metaInfo.getUpdDt()));
+		date.setType(type);
+		date.setText(DateUtils.parseDate(text));
 		return date;
+	}
+
+	@Override
+	public Store generateStore(MetaInfo metaInfo) {
+		Store store = new Store();
+
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList
+				.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getStoreProdId()));
+		store.setIdentifierList(identifierList);
+
+		ArrayList<Support> supportList = new ArrayList<Support>();
+		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getStoreDrmYn()));
+		store.setSupportList(supportList);
+
+		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
+		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
+		store.setPrice(this.generatePrice(metaInfo));
+
+		return store;
+	}
+
+	@Override
+	public Play generatePlay(MetaInfo metaInfo) {
+		Play play = new Play();
+
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList
+				.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD, metaInfo.getPlayProdId()));
+		play.setIdentifierList(identifierList);
+
+		ArrayList<Support> supportList = new ArrayList<Support>();
+		supportList.add(this.generateSupport(DisplayConstants.DP_DRM_SUPPORT_NM, metaInfo.getPlayDrmYn()));
+		play.setSupportList(supportList);
+
+		metaInfo.setProdAmt(metaInfo.getStoreProdAmt());
+		metaInfo.setProdNetAmt(metaInfo.getStoreProdNetAmt());
+		play.setPrice(this.generatePrice(metaInfo));
+
+		play.setDate(this.generateDate(DisplayConstants.DP_DATE_USAGE_PERIOD, metaInfo.getUsePeriodNm()));
+
+		return play;
+	}
+
+	@Override
+	public Purchase generatePurchase(MetaInfo metaInfo) {
+		Purchase purchase = new Purchase();
+
+		List<Identifier> identifierList = new ArrayList<Identifier>();
+		identifierList
+				.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, metaInfo.getPurchaseId()));
+		identifierList.add(this.generateIdentifier(DisplayConstants.DP_EPISODE_IDENTIFIER_CD,
+				metaInfo.getPurchaseProdId()));
+		purchase.setIdentifierList(identifierList);
+
+		purchase.setDate(this.generateDate(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM, metaInfo.getPurchaseDt()));
+
+		return purchase;
 	}
 }
