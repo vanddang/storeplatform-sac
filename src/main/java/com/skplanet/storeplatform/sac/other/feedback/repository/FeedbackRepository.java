@@ -286,4 +286,28 @@ public interface FeedbackRepository {
 	 */
 	public Object updateProdNotiWDGood(ProdNotiGood prodNotiGood);
 
+	/**
+	 * 
+	 * <pre>
+	 * (일반회원 사용후기) 기 추천 여부.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object getProdNotiGoodCount(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 일반 회원 후기 추천 수 증감처리.
+	 * </pre>
+	 * 
+	 * @param prodNotiGood
+	 *            prodNotiGood
+	 * @return Object
+	 */
+	public Object updateProdNotiGood(ProdNotiGood prodNotiGood);
+
 }
