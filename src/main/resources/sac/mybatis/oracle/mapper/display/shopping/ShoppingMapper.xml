@@ -431,8 +431,6 @@
                    ,PROD_NM AS catalogName
                    ,PRCHS_CNT as prchsQty
                    ,PROD_GRD_CD as prodGrdCd
-                  -- ,APPLY_START_DT as applyStartDt     
-                  -- ,APPLY_END_DT as applyEndDt    
                    ,SPRC_APPLY_START_DT as applyStartDt   
                    ,SPRC_APPLY_END_DT as applyEndDt 
                    ,DECODE(PROD_CASE_CD
