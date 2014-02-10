@@ -327,7 +327,9 @@ public class ResponseInfoGenerateFacadeImpl implements ResponseInfoGenerateFacad
 		// Comic용 Contributor 설정
 		Contributor contributor = this.ebookComicGenerator.generateComicContributor(metaInfo);
 		// BOOK 설정
-		Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		// Book book = this.ebookComicGenerator.generateBook(metaInfo);
+		Book book = new Book();
+		book.setStatus(metaInfo.getBookStatus());
 		// Date 생성
 		Date date = this.commonGenerator.generateDate(metaInfo);
 
