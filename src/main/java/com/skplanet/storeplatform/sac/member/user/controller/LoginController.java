@@ -26,7 +26,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.user.service.LoginService;
 
 /**
- * 로그인 Controller
+ * 로그인 Controller.
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
@@ -37,7 +37,7 @@ public class LoginController {
 	private LoginService loginService;
 
 	/**
-	 * 모바일 전용 회원 인증 (MDN 인증)
+	 * 모바일 전용 회원 인증 (MDN 인증).
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -55,7 +55,7 @@ public class LoginController {
 	}
 
 	/**
-	 * ID 기반 회원 인증 (One ID, IDP 회원)
+	 * ID 기반 회원 인증 (One ID, IDP 회원).
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader

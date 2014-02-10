@@ -33,7 +33,7 @@ import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 
 /**
- * 휴대기기관련 Controller
+ * 휴대기기관련 Controller.
  * 
  * Updated on : 2014. 1. 6. Updated by : 반범진, 지티소프트.
  */
@@ -41,13 +41,13 @@ import com.skplanet.storeplatform.sac.member.user.service.DeviceService;
 @Controller
 public class DeviceController {
 
-	private static final Logger logger = LoggerFactory.getLogger(DeviceController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeviceController.class);
 
 	@Autowired
 	private DeviceService deviceService;
 
 	/**
-	 * 휴대기기 목록조회
+	 * 휴대기기 목록조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -78,7 +78,7 @@ public class DeviceController {
 	}
 
 	/**
-	 * 휴대기기 등록
+	 * 휴대기기 등록.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -126,7 +126,7 @@ public class DeviceController {
 	}
 
 	/**
-	 * 휴대기기 수정
+	 * 휴대기기 수정.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -153,7 +153,7 @@ public class DeviceController {
 	}
 
 	/**
-	 * 휴대기기 대표단말 설정
+	 * 휴대기기 대표단말 설정.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -169,7 +169,7 @@ public class DeviceController {
 		String deviceKey = StringUtil.nvl(req.getDeviceKey(), ""); // 기기 Key
 		String deviceId = StringUtil.nvl(req.getDeviceId(), ""); // 기기 Id
 
-		logger.info("###### modifyRepresentationDevice Request : {}", req.toString());
+		LOGGER.info("###### modifyRepresentationDevice Request : {}", req.toString());
 
 		if (userKey.equals("") && deviceKey.equals("") && deviceId.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
@@ -177,13 +177,13 @@ public class DeviceController {
 
 		SetMainDeviceRes res = this.deviceService.modifyRepresentationDevice(requestHeader, req);
 
-		logger.info("###### Final modifyRepresentationDevice Respone : {}", res.toString());
+		LOGGER.info("###### Final modifyRepresentationDevice Respone : {}", res.toString());
 
 		return res;
 	}
 
 	/**
-	 * 휴대기기 대표단말 조회
+	 * 휴대기기 대표단말 조회.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -195,7 +195,7 @@ public class DeviceController {
 	@ResponseBody
 	public DetailRepresentationDeviceRes detailRepresentationDevice(SacRequestHeader requestHeader, @RequestBody DetailRepresentationDeviceReq req) {
 
-		logger.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
+		LOGGER.info("###### Start detailRepresentationDevice Request 가공전 : {}", req.toString());
 
 		String userKey = StringUtil.nvl(req.getUserKey(), ""); // 사용자 Key
 
@@ -205,12 +205,12 @@ public class DeviceController {
 
 		DetailRepresentationDeviceRes res = this.deviceService.detailRepresentationDeviceRes(requestHeader, req);
 
-		logger.info("###### Fianl detailRepresentationDevice Respone : {}", res.toString());
+		LOGGER.info("###### Fianl detailRepresentationDevice Respone : {}", res.toString());
 		return res;
 	}
 
 	/**
-	 * 휴대기기 단말 삭제
+	 * 휴대기기 단말 삭제.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -226,7 +226,7 @@ public class DeviceController {
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 
-		logger.info("============================================ Start removeDevice Request : {}", req.toString());
+		LOGGER.info("============================================ Start removeDevice Request : {}", req.toString());
 
 		if (userAuthKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
@@ -242,12 +242,12 @@ public class DeviceController {
 
 		RemoveDeviceRes res = this.deviceService.removeDevice(requestHeader, req);
 
-		logger.info("============================================ Final removeDevice Response : {}", res.toString());
+		LOGGER.info("============================================ Final removeDevice Response : {}", res.toString());
 		return res;
 	}
 
 	/**
-	 * 단말 AOM 지원여부 확인
+	 * 단말 AOM 지원여부 확인.
 	 * 
 	 * @param requestHeader
 	 *            SacRequestHeader
@@ -266,14 +266,14 @@ public class DeviceController {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
-		logger.info("============================================ Start getSupportAom Request : {}", req.toString());
+		LOGGER.info("============================================ Start getSupportAom Request : {}", req.toString());
 
 		req.setUserKey(userKey);
 		req.setDeviceId(deviceId);
 
 		SupportAomRes res = this.deviceService.getSupportAom(requestHeader, req);
 
-		logger.info("============================================ Final getSupportAom Response : {}", res.toString());
+		LOGGER.info("============================================ Final getSupportAom Response : {}", res.toString());
 		return res;
 	}
 }
