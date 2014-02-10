@@ -29,6 +29,9 @@ public class ProdNotiGood extends CommonInfo {
 	private String regId;
 	private String regDt;
 
+	//
+	private String action;
+
 	/**
 	 * @return String
 	 */
@@ -102,6 +105,21 @@ public class ProdNotiGood extends CommonInfo {
 	 */
 	public void setRegDt(String regDt) {
 		this.regDt = regDt;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAction() {
+		return this.action;
+	}
+
+	/**
+	 * @param action
+	 *            action
+	 */
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }

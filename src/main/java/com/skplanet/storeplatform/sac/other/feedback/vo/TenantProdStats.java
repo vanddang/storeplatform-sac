@@ -39,6 +39,9 @@ public class TenantProdStats extends CommonInfo {
 	//
 	private String preAvgScore;
 
+	//
+	private String action;
+
 	/**
 	 * @return String
 	 */
@@ -247,6 +250,21 @@ public class TenantProdStats extends CommonInfo {
 	 */
 	public void setPreAvgScore(String preAvgScore) {
 		this.preAvgScore = preAvgScore;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAction() {
+		return this.action;
+	}
+
+	/**
+	 * @param action
+	 *            action
+	 */
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }
