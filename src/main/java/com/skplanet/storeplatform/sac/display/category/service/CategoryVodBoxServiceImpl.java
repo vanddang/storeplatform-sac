@@ -15,8 +15,6 @@ import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +32,14 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Price
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Source;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Title;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Preview;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VodExplain;
@@ -74,7 +75,7 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		String offset; // 시작점 ROW
 		String count; // 페이지당 노출 ROW 수
 		String duration; // 기간
-		String chapter; // 회차
+		String chapterVo; // 회차
 		String regdate; // 등록일자
 
 		filteredBy = requestVO.getFilteredBy(); // 차트 구분 코드
@@ -82,15 +83,15 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 		offset = requestVO.getOffset(); // 시작점 ROW
 		count = requestVO.getCount(); // 페이지당 노출 ROW 수
 		duration = requestVO.getDuration();
-		chapter = requestVO.getChapter();
+		chapterVo = requestVO.getChapter();
 		regdate = requestVO.getRegdate();
 
-		VodBoxListRes responseVO = null;
+		VodBoxListRes vodBoxListRes = null;
 		CommonResponse commonResponse = null;
 
-		if (null == filteredBy || "".equals(filteredBy)) {
-			throw new Exception("filteredBy 는 필수 파라메터 입니다.");
-		}
+		// if (null == filteredBy || "".equals(filteredBy)) {
+		// throw new Exception("filteredBy 는 필수 파라메터 입니다.");
+		// }
 		// if (null == imageSizeCd || "".equals(imageSizeCd)) {
 		// throw new Exception("imageSizeCd 는 필수 파라메터 입니다.");
 		// }
@@ -101,116 +102,218 @@ public class CategoryVodBoxServiceImpl implements CategoryVodBoxService {
 			List<Product> productList = new ArrayList<Product>();
 			List<Menu> menuList = new ArrayList<Menu>();
 
-			// for (int i = 1; i <= 5; i++) {
 			Product product = new Product();
-			Identifier identifier = new Identifier();
-			Title title = new Title();
-			Menu menu = new Menu();
-			Rights rights = new Rights();
-			Preview preview = new Preview();
-			List<Source> sourceList = new ArrayList<Source>();
-			Source source = new Source();
-			Store store = new Store();
-			Price price = new Price();
+			Identifier identifier;
+			List<Identifier> identifierList;
+			Title title;
+			Menu menu;
+			Rights rights;
+			Preview preview;
+			Support support;
+			List<Support> supportList;
+			Source source;
+			List<Source> sourceList;
+			Store store;
+			Price price;
+			Vod vod;
+			Time runningTime;
+			VideoInfo videoInfo;
+			List<VideoInfo> videoInfoList;
+			VodExplain vodExplain;
+			Contributor contributor;
+			Date date;
+			Play play;
+			Chapter chapter;
 
-			Vod vod = new Vod();
-			Time runningTime = new Time();
-			VideoInfo videoInfo = new VideoInfo();
-			VodExplain vodExplain = new VodExplain();
-
-			Contributor contributor = new Contributor();
-			Date date = new Date();
-
-			// 상품ID
+			/*
+			 * IdentifierList
+			 */
+			identifierList = new ArrayList<Identifier>();
 			identifier = new Identifier();
-			identifier.setType("btv");
-			identifier.setText("0001143511");
+			identifier.setType("Content");
+			identifier.setText("0000029452");
+			identifierList.add(identifier);
+			identifier = new Identifier();
+			identifier.setType("channel");
+			identifier.setText("H900000372");
+			identifierList.add(identifier);
+			product.setIdentifierList(identifierList);
+
+			/*
+			 * SupportList
+			 */
+			supportList = new ArrayList<Support>();
+			support = new Support();
+			support.setType("btv");
+			support.setText("Y");
+			supportList.add(support);
+			product.setSupportList(supportList);
 
 			/*
 			 * TITLE
 			 */
-			title.setText("구가의 서");
+			title = new Title();
+			title.setText("프리즌브레이크 시즌 1");
+			product.setTitle(title);
 
 			/*
-			 * Menu(메뉴정보) Id, Name, Type
+			 * ProductExplain
 			 */
-			menu.setId("MN000518");
-			menu.setName("방송");
+			product.setProductExplain("사형 집행 직전, 전기의자에 앉은 링컨의 눈에 아버지의 모습이 보이고, 잠시 후 사형을 연기한다는 판사의 전화가 걸려온다. 한편, 마이클은 새 통로를 찾다가 화상을 입어 문신의 일부를 잃는다.");
+
+			/*
+			 * Contributor
+			 */
+			contributor = new Contributor();
+			contributor.setDirector("");
+			contributor.setChannel("");
+			contributor.setArtist("웬트워스 밀러, 도미닉 퍼셀");
+			date = new Date();
+			date.setType("date/broadcast");
+			date.setText("");
+			contributor.setDate(date);
+			product.setContributor(contributor);
+
+			/*
+			 * MenuList
+			 */
+			menuList = new ArrayList<Menu>();
+			menu = new Menu();
+			menu.setId("DP18");
+			menu.setName("TV 방송");
 			menu.setType("topCategory");
 			menuList.add(menu);
 			menu = new Menu();
-			menu.setId("MN18001");
-			menu.setName("드라마");
+			menu.setId("DP18002");
+			menu.setName("미드/외화");
 			menuList.add(menu);
+			menu = new Menu();
+			menu.setId("CT14");
+			menu.setType("metaClass");
+			menuList.add(menu);
+			product.setMenuList(menuList);
 
-			rights.setGrade("1");
 			/*
-			 * source mediaType, size, type, url
+			 * Date
 			 */
-			source.setMediaType("video/mp4");
+			date = new Date();
+			date.setType("date/reg");
+			date.setText("20101223212513");
+			product.setDate(date);
+
+			/*
+			 * Rights
+			 */
+			rights = new Rights();
+			rights.setGrade("2");
+			preview = new Preview();
+			sourceList = new ArrayList<Source>();
+			source = new Source();
 			source.setType("video/x-freeview-lq");
-			source.setUrl("http://../preview.mp4");
+			source.setUrl("/SMILE_DATA/201004/27/0000023733/2/06_DanielPowter-BadDay_short(1).mp4");
+			sourceList.add(source);
+			source = new Source();
+			source.setType("video/x-freeview-hq");
+			source.setUrl("/SMILE_DATA/201004/27/0000023733/2/06_DanielPowter-BadDay_short.mp4");
 			sourceList.add(source);
 			preview.setSourceList(sourceList);
-
 			rights.setPreview(preview);
-
-			price.setText(700);
+			play = new Play();
+			supportList = new ArrayList<Support>();
+			support = new Support();
+			support.setType("drm");
+			support.setText("Y");
+			supportList.add(support);
+			play.setSupportList(supportList);
+			date = new Date();
+			date.setType("uint/usagePeriod");
+			date.setText("2일");
+			play.setDate(date);
+			price = new Price();
+			price.setText(600);
+			play.setPrice(price);
+			identifierList = new ArrayList<Identifier>();
+			identifier = new Identifier();
+			identifier.setType("episode");
+			identifier.setText("H900000394");
+			identifierList.add(identifier);
+			play.setIdentifierList(identifierList);
+			play.setPlayProductStatusCode("");
+			rights.setPlay(play);
+			store = new Store();
+			supportList = new ArrayList<Support>();
+			support = new Support();
+			support.setType("drm");
+			support.setText("N");
+			supportList.add(support);
+			store.setSupportList(supportList);
+			price = new Price();
+			price.setText(0);
 			store.setPrice(price);
+			identifierList = new ArrayList<Identifier>();
+			identifier = new Identifier();
+			identifier.setType("episode");
+			identifier.setText("");
+			identifierList.add(identifier);
+			store.setIdentifierList(identifierList);
+			store.setStoreProductStatusCode("");
+			rights.setStore(store);
+			product.setRights(rights);
 
 			/*
-			 * Contributor name : 제작자 또는 저자 이름, album : 앨범명
+			 * VOD
 			 */
-			contributor.setName("이승기,수지,이성재,조성하,유연석");
-			contributor.setChannel("MBC");
-			contributor.setArtist("이승기,수지,이성재,조성하,유연석");
-			contributor.setAlbum("");
-
-			/*
-			 * vod runningTime, videoInfo, vodExplain
-			 */
-			runningTime.setUnit("16");
-			runningTime.setText("63");
-
-			videoInfo.setScid("0002663073");
-			videoInfo.setType("normal");
-			videoInfo.setPixel("576x324");
-			videoInfo.setPictureSize("16:9");
-			videoInfo.setVersion("1");
-			videoInfo.setBtvcid("2222222222");
-			videoInfo.setSize("307990233");
-
-			vod.setVideoInfo(videoInfo);
+			vod = new Vod();
+			runningTime = new Time();
+			runningTime.setUnit("");
+			runningTime.setText("45");
 			vod.setRunningTime(runningTime);
-
-			date.setText("20130123152110");
-
-			product = new Product();
-			product.setProductExplain("무형도관에…");
-			product.setIdentifier(identifier);
-			product.setMenuList(menuList);
-			product.setTitle(title);
-			product.setContributor(contributor);
+			chapter = new Chapter();
+			chapter.setUnit("회");
+			chapter.setText(15);
+			vod.setChapter(chapter);
+			vodExplain = new VodExplain();
+			vodExplain.setSaleDateInfo("");
+			vodExplain.setText("");
+			vod.setVodExplain(vodExplain);
+			videoInfoList = new ArrayList<VideoInfo>();
+			videoInfo = new VideoInfo();
+			videoInfo.setType("normal");
+			videoInfo.setScid("0000030215");
+			videoInfo.setPixel("640x480");
+			videoInfo.setPictureSize("4:3");
+			videoInfo.setVersion("1");
+			videoInfo.setBtvcid("{3252188A-789A-4C5D-9417-16909CDAB444}");
+			videoInfo.setSize("0");
+			videoInfoList.add(videoInfo);
+			videoInfo.setType("sd");
+			videoInfo.setScid("0000030216");
+			videoInfo.setPixel("640x480");
+			videoInfo.setPictureSize("4:3");
+			videoInfo.setVersion("1");
+			videoInfo.setBtvcid("{3252188A-789A-4C5D-9417-16909CDAB444}");
+			videoInfo.setSize("0");
+			videoInfoList.add(videoInfo);
+			videoInfo.setType("hd");
+			videoInfo.setScid("0000030214");
+			videoInfo.setPixel("640x480");
+			videoInfo.setPictureSize("4:3");
+			videoInfo.setVersion("1");
+			videoInfo.setBtvcid("{3252188A-789A-4C5D-9417-16909CDAB444}");
+			videoInfo.setSize("0");
+			videoInfoList.add(videoInfo);
+			vod.setVideoInfoList(videoInfoList);
+			product.setVod(vod);
 
 			productList.add(product);
 
-			// }
-
-			responseVO = new VodBoxListRes();
+			vodBoxListRes = new VodBoxListRes();
 			commonResponse = new CommonResponse();
-			responseVO.setProductList(productList);
+			vodBoxListRes.setProductList(productList);
 			commonResponse.setTotalCount(totalCount);
-			responseVO.setCommonRes(commonResponse);
-
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-			String json = objectMapper.writeValueAsString(responseVO);
-
-			this.log.debug("test json : {}", json);
-			// System.out.println(json);
-
+			vodBoxListRes.setCommonRes(commonResponse);
 		}
-		return responseVO;
+		return vodBoxListRes;
 
 	}
 
