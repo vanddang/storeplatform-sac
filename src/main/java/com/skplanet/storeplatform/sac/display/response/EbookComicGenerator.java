@@ -57,6 +57,17 @@ public interface EbookComicGenerator {
 
 	/**
 	 * <pre>
+	 * Ebook 상품 for download 전용 Book 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Book
+	 */
+	public Book generateForDownloadBook(MetaInfo metaInfo);
+
+	/**
+	 * <pre>
 	 * Ebook 상품 전용 Support List 생성.
 	 * </pre>
 	 * 

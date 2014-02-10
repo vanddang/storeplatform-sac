@@ -77,6 +77,21 @@ public class EbookComicGeneratorImpl implements EbookComicGenerator {
 	}
 
 	@Override
+	public Book generateForDownloadBook(MetaInfo metaInfo) {
+		Book book = new Book();
+		book.setBookVersion(metaInfo.getProdVer());
+		book.setScid(metaInfo.getSubContentsId());
+		book.setBookClsfCd(metaInfo.getBookClsfCd());
+
+		// 도서 연재 구분
+		if (DisplayConstants.DP_BOOK_SERIAL.equals(metaInfo.getBookClsfCd())) {
+			book.setType(DisplayConstants.DP_EBOOK_SERIAL_NM);
+		}
+
+		return book;
+	}
+
+	@Override
 	public List<Support> generateSupportList(MetaInfo metaInfo) {
 		List<Support> supportList = new ArrayList<Support>();
 		Support support = null;
