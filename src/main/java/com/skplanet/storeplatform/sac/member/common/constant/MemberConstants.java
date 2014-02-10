@@ -29,6 +29,9 @@ public final class MemberConstants {
 	/** EC IDP 에러 코드 문자열 */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
 
+	/** EC IDP 알수 없는 에러 */
+	public static final String EC_IDP_ERROR_UNDEF = "EC_UNDEF_ERROR";
+
 	/** 사용자구분코드. */
 	public static final String USER_TYPE_MOBILE = "US011501"; // 기기사용자
 	public static final String USER_TYPE_IDPID = "US011502"; // IDP사용자
@@ -167,6 +170,11 @@ public final class MemberConstants {
 	public static final String POLICY_AGREEMENT_CLAUSE_APP_STATS_INFO_USE = "US010607"; // TSTORE앱이용통계정보활용
 	public static final String POLICY_AGREEMENT_CLAUSE_MARKETING = "US010608"; // TSTORE정보광고활용(TAC006)
 	public static final String POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE = "US010609"; // TSTORE통신과금서비스(TAC002)
+
+	/**
+	 * 사용자 제한 정책 코드
+	 */
+	public static final String USER_LIMIT_POLICY_TESTER = "US011702";//단말 검증자
 
 	/**
 	 * 판매자 회원 상수들

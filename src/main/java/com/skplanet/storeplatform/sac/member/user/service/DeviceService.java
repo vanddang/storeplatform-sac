@@ -154,4 +154,5 @@ public interface DeviceService {
 	 * @return SupportAomRes
 	 */
 	public SupportAomRes getSupportAom(SacRequestHeader requestHeader, SupportAomReq req);
+
 }
