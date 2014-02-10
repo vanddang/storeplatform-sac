@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
@@ -118,8 +117,7 @@ public class DummyDataController {
 	 * @return AuthorizeByMdnRes
 	 */
 	/*
-	 * @RequestMapping(value = "/authorizeByMdn/v1", method =
-	 * RequestMethod.POST)
+	 * @RequestMapping(value = "/authorizeByMdn/v1", method = RequestMethod.POST)
 	 * 
 	 * @ResponseBody public AuthorizeByMdnRes authorizeByMdn() {
 	 * 
@@ -127,10 +125,8 @@ public class DummyDataController {
 	 * LOGGER.info("##### 5.1.4. 모바일 전용 회원 인증 (MDN 인증) #####");
 	 * LOGGER.info("####################################################");
 	 * 
-	 * AuthorizeByMdnRes res = new AuthorizeByMdnRes();
-	 * res.setUserKey("IW102158844420091030165015");
-	 * res.setUserType("US011501"); res.setUserMainStatus("US010201");
-	 * res.setUserSubStatus("US010301");
+	 * AuthorizeByMdnRes res = new AuthorizeByMdnRes(); res.setUserKey("IW102158844420091030165015");
+	 * res.setUserType("US011501"); res.setUserMainStatus("US010201"); res.setUserSubStatus("US010301");
 	 * 
 	 * return res; }
 	 */
@@ -143,8 +139,8 @@ public class DummyDataController {
 	 * @return AuthorizeByIdRes
 	 */
 	/*
-	 * @RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL +
-	 * "/authorizeById/v1", method = RequestMethod.POST)
+	 * @RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/authorizeById/v1", method =
+	 * RequestMethod.POST)
 	 * 
 	 * @ResponseBody public AuthorizeByIdRes authorizeById() {
 	 * 
@@ -152,11 +148,9 @@ public class DummyDataController {
 	 * LOGGER.info("##### 5.1.5. ID 기반 회원 인증 (One ID, IDP 회원) #####");
 	 * LOGGER.info("####################################################");
 	 * 
-	 * AuthorizeByIdRes res = new AuthorizeByIdRes();
-	 * res.setUserKey("IW102158844420091030165015");
-	 * res.setUserAuthKey("1234567890"); res.setUserType("US011501");
-	 * res.setUserMainStatus("US010201"); res.setUserSubStatus("US010301");
-	 * return res; }
+	 * AuthorizeByIdRes res = new AuthorizeByIdRes(); res.setUserKey("IW102158844420091030165015");
+	 * res.setUserAuthKey("1234567890"); res.setUserType("US011501"); res.setUserMainStatus("US010201");
+	 * res.setUserSubStatus("US010301"); return res; }
 	 */
 
 	// /**
@@ -264,26 +258,26 @@ public class DummyDataController {
 		return res;
 	}
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return CreateRealNameRes
-	 */
-	@RequestMapping(value = "/member/user/createRealName/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public CreateRealNameRes createRealName() {
-
-		LOGGER.info("#####################################");
-		LOGGER.info("##### 5.1.18. 실명 인증 정보 등록 #####");
-		LOGGER.info("#####################################");
-
-		CreateRealNameRes res = new CreateRealNameRes();
-		res.setUserKey("IW102158844420091030165015");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return CreateRealNameRes
+	// */
+	// @RequestMapping(value = "/member/user/createRealName/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public CreateRealNameRes createRealName() {
+	//
+	// LOGGER.info("#####################################");
+	// LOGGER.info("##### 5.1.18. 실명 인증 정보 등록 #####");
+	// LOGGER.info("#####################################");
+	//
+	// CreateRealNameRes res = new CreateRealNameRes();
+	// res.setUserKey("IW102158844420091030165015");
+	//
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -367,37 +361,28 @@ public class DummyDataController {
 	 * 
 	 * 휴대기기 부가정보 리스트
 	 * 
-	 * List<DeviceExtraInfo> deviceExtraInfoList = new
-	 * ArrayList<DeviceExtraInfo>(); DeviceExtraInfo deviceExtraInfo = new
-	 * DeviceExtraInfo(); deviceExtraInfo.setExtraProfile("US011404");
-	 * deviceExtraInfo.setExtraProfileValue("LGFL");
+	 * List<DeviceExtraInfo> deviceExtraInfoList = new ArrayList<DeviceExtraInfo>(); DeviceExtraInfo deviceExtraInfo =
+	 * new DeviceExtraInfo(); deviceExtraInfo.setExtraProfile("US011404"); deviceExtraInfo.setExtraProfileValue("LGFL");
 	 * 
 	 * deviceExtraInfoList.add(deviceExtraInfo);
 	 * 
 	 * 
 	 * 휴대기기정보 리스트
 	 * 
-	 * List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>(); DeviceInfo
-	 * deviceInfo = new DeviceInfo();
+	 * List<DeviceInfo> deviceInfoList = new ArrayList<DeviceInfo>(); DeviceInfo deviceInfo = new DeviceInfo();
 	 * 
-	 * deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList);
-	 * deviceInfo.setDeviceKey("01011112222");
-	 * deviceInfo.setDeviceId("01011112222");
-	 * deviceInfo.setDeviceModelNo("LG-SH810");
-	 * deviceInfo.setDeviceTelecom("SKT"); deviceInfo.setImMngNum("");
-	 * deviceInfo.setDeviceNickName("LG-SH810"); deviceInfo.setIsPrimary("Y");
-	 * deviceInfo.setIsAuthenticated("Y");
-	 * deviceInfo.setAuthenticationDate("20131226103711");
-	 * deviceInfo.setIsRecvSms("Y"); deviceInfo.setNativeId("358362045580844");
-	 * deviceInfo.setDeviceAccount("hkd@gmail.com");
-	 * deviceInfo.setJoinId("US012301"); deviceInfo.setOsVer("1.0");
-	 * deviceInfo.setScVer("1.0"); deviceInfo.setRooting("N");
-	 * deviceInfo.setMakeComp("SAMSUNG");
+	 * deviceInfo.setUserDeviceExtraInfo(deviceExtraInfoList); deviceInfo.setDeviceKey("01011112222");
+	 * deviceInfo.setDeviceId("01011112222"); deviceInfo.setDeviceModelNo("LG-SH810");
+	 * deviceInfo.setDeviceTelecom("SKT"); deviceInfo.setImMngNum(""); deviceInfo.setDeviceNickName("LG-SH810");
+	 * deviceInfo.setIsPrimary("Y"); deviceInfo.setIsAuthenticated("Y");
+	 * deviceInfo.setAuthenticationDate("20131226103711"); deviceInfo.setIsRecvSms("Y");
+	 * deviceInfo.setNativeId("358362045580844"); deviceInfo.setDeviceAccount("hkd@gmail.com");
+	 * deviceInfo.setJoinId("US012301"); deviceInfo.setOsVer("1.0"); deviceInfo.setScVer("1.0");
+	 * deviceInfo.setRooting("N"); deviceInfo.setMakeComp("SAMSUNG");
 	 * 
 	 * deviceInfoList.add(deviceInfo);
 	 * 
-	 * res.setUserId("hdk"); res.setUserKey("IW102158844420091030165015");
-	 * res.setDeviceInfoList(deviceInfoList);
+	 * res.setUserId("hdk"); res.setUserKey("IW102158844420091030165015"); res.setDeviceInfoList(deviceInfoList);
 	 * 
 	 * } catch (Exception e) { e.printStackTrace(); }
 	 * 
@@ -412,19 +397,17 @@ public class DummyDataController {
 	 * @return CreateDeviceRes
 	 */
 	/*
-	 * @RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL +
-	 * "/createDevice/v1", method = RequestMethod.POST)
+	 * @RequestMapping(value = MemberTestConstant.PREFIX_USER_PATH_REAL + "/createDevice/v1", method =
+	 * RequestMethod.POST)
 	 * 
 	 * @RequestMapping(value = "/createDevice/v1", method = RequestMethod.POST)
 	 * 
 	 * @ResponseBody public CreateDeviceRes createDevice() {
 	 * 
-	 * LOGGER.info("####################################################");
-	 * LOGGER.info("##### 5.1.18.	휴대기기 등록 #####");
+	 * LOGGER.info("####################################################"); LOGGER.info("##### 5.1.18.	휴대기기 등록 #####");
 	 * LOGGER.info("####################################################");
 	 * 
-	 * CreateDeviceRes res = new CreateDeviceRes();
-	 * res.setDeviceId("01011112222"); res.setDeviceKey("01011112222");
+	 * CreateDeviceRes res = new CreateDeviceRes(); res.setDeviceId("01011112222"); res.setDeviceKey("01011112222");
 	 * res.setUserKey("IW102158844420091030165015");
 	 * 
 	 * return res; }
@@ -1150,21 +1133,21 @@ public class DummyDataController {
 	 * 
 	 * @return ListAddtionalInformationRes
 	 */
-	//	@RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
-	//	@ResponseBody
-	//	public OneIdInfoSacRes searchOneIdInfo() {
+	// @RequestMapping(value = "/member/user/searchOneIdInfo/v1", method = RequestMethod.GET)
+	// @ResponseBody
+	// public OneIdInfoSacRes searchOneIdInfo() {
 	//
-	//		LOGGER.info("####################################################");
-	//		LOGGER.info("##### 5.1.33.	OneId 정보 조회 #####");
-	//		LOGGER.info("####################################################");
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.33.	OneId 정보 조회 #####");
+	// LOGGER.info("####################################################");
 	//
-	//		OneIdInfoSacRes res = new OneIdInfoSacRes();
-	//		res.setIdctYn("Y");
-	//		res.setOcbYn("Y");
-	//		res.setCiYn("Y");
+	// OneIdInfoSacRes res = new OneIdInfoSacRes();
+	// res.setIdctYn("Y");
+	// res.setOcbYn("Y");
+	// res.setCiYn("Y");
 	//
-	//		return res;
-	//	}
+	// return res;
+	// }
 
 	/**
 	 * <pre>

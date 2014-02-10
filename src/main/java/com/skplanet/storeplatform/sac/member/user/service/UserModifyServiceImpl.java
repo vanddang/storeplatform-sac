@@ -230,12 +230,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) {
 
 		/**
-		 * TODO 실명인증정보 isRealNameYn Request로 받지 말것....필요 없음!!!!!!
-		 * 
-		 * TODO 실명인증 본인/법정대리인 테스트 열심히 할것....케이스 정리 해둘것...
-		 */
-
-		/**
 		 * 회원 정보 조회.
 		 */
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
@@ -267,9 +261,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 
 				/**
 				 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP)
-				 * 
-				 * TODO 인증여부, 생년월일, CI 등...
-				 * 
 				 */
 				ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
 
@@ -338,7 +329,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 */
 		CreateRealNameRes response = new CreateRealNameRes();
 		response.setUserKey(userKey);
-		response.setUserKey("");
 
 		return response;
 	}
@@ -517,16 +507,15 @@ public class UserModifyServiceImpl implements UserModifyService {
 	}
 
 	/**
+	 * <pre>
+	 * 실명인증여부, 생년월일, CI 정보 IDP 결과또는 DB 와 정보가 동일한지 비교함.
+	 * </pre>
 	 * 
-	 * @param birth
-	 *            생년월일
-	 * @param ci
-	 *            ci
-	 * @param preBirth
-	 *            기존 생년월일
-	 * @param preCi
-	 *            기존 ci
-	 * @return 일치 여부
+	 * @param req
+	 *            Request Value Object
+	 * @param profileInfo
+	 *            (통합IDP 회원 정보 조회 응답 결과)
+	 * @return String 결과 타입
 	 */
 	private String compareRealName(CreateRealNameReq req, ImIdpReceiverM profileInfo) {
 
@@ -562,19 +551,14 @@ public class UserModifyServiceImpl implements UserModifyService {
 		} else { // 최초 인증
 
 			/**
-			 * TODO DB 비교로직 분석해 봐야함.....
+			 * TODO DB 비교로직 추가해야함. (테스트는 OneID 사이트에서 법정 대리인으로 등록해 본다...그후 처리...)
+			 * 
+			 * TODO 실명 인증 정보 가져 오는API 확인.
 			 */
-			// // T store DB CI, SOCIAL_DATE 비교 (sBirth, sGender, sNation)
-			// // One ID CI, birthday 비교
-			// if (StringUtils.isNotEmpty(idpResult.getUser_ci())) { // 기 등록 된 CI가 존재하는 경우는 CI + 생년월일(social_date) 비교
-			// if (!StringUtils.equals(req.getUserCi(), idpResult.getUser_ci()) &&
-			// !StringUtils.equals(req.getUserBirthDay(),
-			// idpResult.getUser_birthday())) {
-			// throw new StorePlatformException("(DB 비교) CI or 생년월일 불일치");
-			// }
-			// } else { // 생년월일(social_date) 비교
-			// if (!StringUtils.equals(req.getUserBirthDay(), idpResult.getUser_birthday())) {
-			// throw new StorePlatformException("(DB 비교) 생년월일 불일치");
+			// // T store DB CI, SOCIAL_DATE 비교
+			// if (StringUtils.isNotEmpty(sDbSocialDate)) {
+			// if (!compareRealName(sSocialDate, sCi, sDbSocialDate, sDbCi)) {
+			// throw new BaseException("", "30006");
 			// }
 			// }
 

@@ -186,7 +186,7 @@ public class UserModifyController {
 
 	/**
 	 * <pre>
-	 * method 설명.
+	 * 실명 인증 정보 등록.
 	 * </pre>
 	 * 
 	 * @param sacHeader
@@ -197,7 +197,7 @@ public class UserModifyController {
 	 *            BindingResult
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/dev/member/user/createRealName/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/createRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req, BindingResult result) {
 
