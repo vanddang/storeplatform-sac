@@ -1,5 +1,8 @@
 package com.skplanet.storeplatform.sac.api.v1.member.seller;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.skplanet.storeplatform.framework.test.RequestBodySetter;
 import com.skplanet.storeplatform.framework.test.SuccessCallback;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate;
 import com.skplanet.storeplatform.framework.test.TestCaseTemplate.RunMode;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordReq;
 import com.skplanet.storeplatform.sac.client.member.vo.seller.SearchPasswordRes;
 import com.skplanet.storeplatform.sac.member.common.constant.TestMemberConstant;
 
@@ -57,13 +62,22 @@ public class SearchPasswordTest {
 	@Test
 	public void searchPassword() {
 
-		new TestCaseTemplate(this.mockMvc)
-				.url(TestMemberConstant.PREFIX_SELLER_PATH + "/searchPassword2/v1?sellerId=biz_7908")
-				.httpMethod(HttpMethod.GET).success(SearchPasswordRes.class, new SuccessCallback() {
+		new TestCaseTemplate(this.mockMvc).url(TestMemberConstant.PREFIX_SELLER_PATH + "/searchPassword2/v1")
+				.httpMethod(HttpMethod.POST).requestBody(new RequestBodySetter() {
+					@Override
+					public Object requestBody() {
+						SearchPasswordReq req = new SearchPasswordReq();
+
+						req.setSellerId("biz_7908");
+
+						LOGGER.debug("request param : {}", req.toString());
+						return req;
+					}
+				}).success(SearchPasswordRes.class, new SuccessCallback() {
 					@Override
 					public void success(Object result, HttpStatus httpStatus, RunMode runMode) {
 						SearchPasswordRes res = (SearchPasswordRes) result;
-						// assertThat(res.getNewPassword(), notNullValue());
+						assertThat(res.getNewPassword(), notNullValue());
 						LOGGER.debug("response param : {}", res.toString());
 					}
 				}, HttpStatus.OK, HttpStatus.ACCEPTED).run(RunMode.JSON);
