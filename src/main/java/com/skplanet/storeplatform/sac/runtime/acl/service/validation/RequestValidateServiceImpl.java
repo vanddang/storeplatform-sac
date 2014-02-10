@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.common.constant.CommonConstants;
+import com.skplanet.storeplatform.sac.runtime.acl.service.common.AclDbAccessService;
 import com.skplanet.storeplatform.sac.runtime.acl.util.AclUtils;
 import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 
@@ -29,15 +30,14 @@ import com.skplanet.storeplatform.sac.runtime.acl.vo.Interface;
 public class RequestValidateServiceImpl implements RequestValidateService {
 
 	// @Autowired
-	private InterfaceDbAccessService service;
+	private AclDbAccessService service;
 
 	@Override
 	public void validateInterface(Map<String, Object> headerMap) {
 		String interfaceId = (String) headerMap.get(CommonConstants.HEADER_INTERFACE_ID);
 		String requestUrl = (String) headerMap.get(CommonConstants.HEADER_HTTP_REQUEST_URL);
 
-		Interface intf = new Interface(interfaceId);
-		intf = this.service.select(intf);
+		Interface intf = this.service.select(interfaceId);
 
 		if (intf == null) {
 			throw new StorePlatformException("SAC_CMN_0001", interfaceId);

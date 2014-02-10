@@ -16,7 +16,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * T_CN_INTERFACE 디비 맵핑용 Value Object
  *
  * Updated on : 2014. 2. 5.
- * Updated by : 서대영 매니저, SK 플래닛.
+ * Updated by : 서대영, SK 플래닛.
  */
 public class Interface extends CommonInfo {
 
