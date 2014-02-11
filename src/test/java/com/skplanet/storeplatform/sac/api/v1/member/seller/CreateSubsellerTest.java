@@ -69,11 +69,11 @@ public class CreateSubsellerTest {
 
 						// 필수
 						req.setSellerKey("IF1023501184720130823173955");
-						req.setSubSellerID("01w22st21q121");
+						req.setSubSellerID("01w22st21q12d1");
 						// req.setIsNew("Y");
 
 						req.setSubSellerMemo("test2");
-						req.setSubSellerEmail("omc97@hanmail.net");
+						req.setSubSellerEmail("omc97asefd@hanmail.net");
 
 						// 새로 추가됨
 						// req.setSubSellerKey("SS201402061427346800000640");

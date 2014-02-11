@@ -68,7 +68,7 @@ public class SearchPasswordTest {
 					public Object requestBody() {
 						SearchPasswordReq req = new SearchPasswordReq();
 
-						req.setSellerId("biz_7908");
+						req.setSellerId("01w22st21q12d1");
 
 						LOGGER.debug("request param : {}", req.toString());
 						return req;
