@@ -352,19 +352,26 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setSellerRespTitle(createSellerFeedbackSacReq.getSellerRespTitle());
 		prodNoti.setSellerRespOpin(createSellerFeedbackSacReq.getSellerRespOpin());
 
-		// 탈퇴회원 사용후기 등록 수 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		// 회원정보 조회 => LocalSCI call 할 것
+		boolean sellerExist = true;
 
-		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+		if (sellerExist) {
+			// 탈퇴회원 사용후기 등록 수 조회
+			int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
 
-		if (count > 0) {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
+			LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+			if (count > 0) {
+				int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+				if (affectedRow <= 0)
+					throw new StorePlatformException("SAC_OTH_1001");
+			} else {
+				int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+				if (affectedRow <= 0)
+					throw new StorePlatformException("SAC_OTH_1001");
+			}
 		} else {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
+			// 회원에서 받은 exception throw
 		}
 
 		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
@@ -382,19 +389,26 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setSellerRespTitle(modifySellerFeedbackSacReq.getSellerRespTitle());
 		prodNoti.setSellerRespOpin(modifySellerFeedbackSacReq.getSellerRespOpin());
 
-		// 탈퇴회원 사용후기 등록 수 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		// 회원정보 조회 => LocalSCI call 할 것
+		boolean sellerExist = true;
 
-		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+		if (sellerExist) {
+			// 탈퇴회원 사용후기 등록 수 조회
+			int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
 
-		if (count > 0) {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
+			LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+			if (count > 0) {
+				int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+				if (affectedRow <= 0)
+					throw new StorePlatformException("SAC_OTH_1001");
+			} else {
+				int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+				if (affectedRow <= 0)
+					throw new StorePlatformException("SAC_OTH_1001");
+			}
 		} else {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
+			// 회원에서 받은 exception throw
 		}
 
 		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
@@ -412,19 +426,26 @@ public class FeedbackServiceImpl implements FeedbackService {
 		prodNoti.setSellerRespTitle("");
 		prodNoti.setSellerRespOpin("");
 
-		// 탈퇴회원 사용후기 등록 수 조회
-		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+		// 회원정보 조회 => LocalSCI call 할 것
+		boolean sellerExist = true;
 
-		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+		if (sellerExist) {
+			// 탈퇴회원 사용후기 등록 수 조회
+			int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
 
-		if (count > 0) {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
+			LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+			if (count > 0) {
+				int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+				if (affectedRow <= 0)
+					throw new StorePlatformException("SAC_OTH_1001");
+			} else {
+				int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+				if (affectedRow <= 0)
+					throw new StorePlatformException("SAC_OTH_1001");
+			}
 		} else {
-			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
-			if (affectedRow <= 0)
-				throw new StorePlatformException("SAC_OTH_1001");
+			// 회원에서 받은 exception throw
 		}
 
 		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();

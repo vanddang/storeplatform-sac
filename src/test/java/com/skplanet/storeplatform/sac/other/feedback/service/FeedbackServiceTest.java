@@ -44,6 +44,7 @@ public class FeedbackServiceTest {
 	private SacRequestHeader sacRequestHeader;
 
 	String userKey = "IW1425872523320130906108999";
+	String sellerKey = "IF1023501634320130913165229";
 	String prodId = "0000045297";
 
 	/**
@@ -206,6 +207,8 @@ public class FeedbackServiceTest {
 	public void testCreateSellerFeedback() {
 		CreateSellerFeedbackSacReq createSellerFeedbackSacReq = new CreateSellerFeedbackSacReq();
 
+		createSellerFeedbackSacReq.setProdId(this.prodId);
+		createSellerFeedbackSacReq.setSellerKey(this.sellerKey);
 		createSellerFeedbackSacReq.setNotiSeq("300000010");
 		createSellerFeedbackSacReq.setSellerRespTitle("고객님 감사합니다.");
 		createSellerFeedbackSacReq.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
@@ -222,6 +225,8 @@ public class FeedbackServiceTest {
 	public void testModifySellerFeedback() {
 		ModifySellerFeedbackSacReq modifySellerFeedbackSacReq = new ModifySellerFeedbackSacReq();
 
+		modifySellerFeedbackSacReq.setProdId(this.prodId);
+		modifySellerFeedbackSacReq.setSellerKey(this.sellerKey);
 		modifySellerFeedbackSacReq.setNotiSeq("300000010");
 		modifySellerFeedbackSacReq.setSellerRespTitle("고객님 감사합니다.");
 		modifySellerFeedbackSacReq.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
@@ -238,6 +243,8 @@ public class FeedbackServiceTest {
 	public void testRemoveSellerFeedback() {
 		RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq = new RemoveSellerFeedbackSacReq();
 
+		removeSellerFeedbackSacReq.setProdId(this.prodId);
+		removeSellerFeedbackSacReq.setSellerKey(this.sellerKey);
 		removeSellerFeedbackSacReq.setNotiSeq("300000010");
 
 		this.feedbackService.removeSellerFeedback(removeSellerFeedbackSacReq, this.sacRequestHeader);
