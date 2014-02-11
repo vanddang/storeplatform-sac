@@ -145,7 +145,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 	@Override
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req) {
 
-		SearchSellerResponse schRes = new SearchSellerResponse();
 		SearchSellerRequest schReq = new SearchSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
@@ -168,7 +167,7 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		list.add(keySearch);
 		schReq.setKeySearchList(list);
 
-		schRes = this.sellerSCI.searchSeller(schReq);
+		SearchSellerResponse schRes = this.sellerSCI.searchSeller(schReq);
 
 		SearchFlurryListResponse schRes2 = new SearchFlurryListResponse();
 		SearchFlurryListRequest schReq2 = new SearchFlurryListRequest();

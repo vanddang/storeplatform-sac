@@ -58,7 +58,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 	@Override
 	public CreateSubsellerRes createSubseller(SacRequestHeader header, CreateSubsellerReq req) {
 
-		CreateSubSellerResponse schRes = new CreateSubSellerResponse();
 		CreateSubSellerRequest schReq = new CreateSubSellerRequest();
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
@@ -88,7 +87,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 			schReq.setMbrPwd(mbrPwd);
 		}
 
-		schRes = this.sellerSCI.createSubSeller(schReq);
+		CreateSubSellerResponse schRes = this.sellerSCI.createSubSeller(schReq);
 
 		LOGGER.info("---------" + schRes.getSellerKey());
 		CreateSubsellerRes response = new CreateSubsellerRes();
