@@ -29,7 +29,7 @@
                              , TB_DP_PROD D
                              , TB_DP_PROD_DESC E
                              , TB_DP_TENANT_PROD F
-                             , TB_DP_MULTIMDA_PROD G
+                             , UV_TB_DP_MULTIMDA_PROD G
                              , (SELECT SD.PROD_ID
                                   FROM TB_DP_SPRT_DEVICE SD
                                     , TB_CM_DEVICE CD
@@ -158,7 +158,7 @@
                             , MP.ISSUE_DAY
                             , MP.BELL_SPRT_YN
                             , MP.COLORRING_SPRT_YN
-                         FROM TB_DP_MULTIMDA_PROD MP
+                         FROM UV_TB_DP_MULTIMDA_PROD MP
                             , TB_DP_MUSIC_CHART MCI
                             , TB_DP_PROD P
                             , TB_DP_PROD_DESC PD
@@ -169,7 +169,7 @@
                             , TB_DP_MENU_CATEGORY C
                             , TB_DP_SPRT_DEVICE SH
                             , TB_CM_DEVICE PHI
-                            , TB_DP_MULTIMDA_PROD MP2
+                            , UV_TB_DP_MULTIMDA_PROD MP2
                             , TB_DP_PROD P2
                             , TB_DP_TENANT_PROD TP2
                         WHERE MP.PROD_ID = CP.PART_PROD_ID

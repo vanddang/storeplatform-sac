@@ -5,7 +5,7 @@
     <select id="selectFeatureMovieList" parameterType="FeatureCategoryVodSacReq" resultType="ProductBasicInfo">
         SELECT /* FeatureCategoryMapper.xml, selectFeatureMovieList, 조준일, 2014-02-10 */
                B.TENANT_ID
-	         , B.MENU_ID
+             , B.MENU_ID
              , B.PROD_ID
              , B.TOP_MENU_ID
              , B.CONTENTS_TYPE_CD
@@ -17,16 +17,16 @@
                     --, ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD, JA.PROD_NM) AS RNUM  /* 영화 추천  */
                     --, ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD, JA.UPD_DT DESC, JA.PROD_NM) AS RNUM  /* 1000원관 */
                     --, ROW_NUMBER() OVER(ORDER BY A.EXPO_ORD, JA.PROD_NM) AS RNUM  /* 방송 추천 */
-	            FROM (SELECT A.TENANT_ID
-	                        , E.MENU_ID
-	                         , A.PROD_ID
-	                        , E.TOP_MENU_ID
-	                        , F.META_CLSF_CD
+	             FROM (SELECT A.TENANT_ID
+	                        , D.MENU_ID
+	                        , A.PROD_ID
+	                        , D.TOP_MENU_ID
+	                        , E.META_CLSF_CD
 	                        , 'PD002501' AS CONTENTS_TYPE_CD
 	                        , A.EXPO_ORD_ALWAYS_YN
 	                        , A.EXPO_ORD
 	                        , A.EXPO_ORD_SUB
-	                        , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY F.UPD_DT DESC) AS RN
+	                        , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY E.UPD_DT DESC) AS RN
 	                     FROM (SELECT LP.*
 	                             FROM TB_DP_LIST_PROD LP  /* 채널 */
 	                                , TB_DP_LIST LT
@@ -65,40 +65,37 @@
 	                          ) A
 	                        , TB_DP_PROD_RSHP B
 	                        , TB_DP_MENU_CATEGORY_PROD_MAPG C
-	                        , TB_DP_MENU_CATEGORY_DESC D
-	                        , TB_DP_MENU_CATEGORY E
-	                        , TB_DP_PROD F
-	                        , TB_DP_TENANT_PROD G
-	                        , TB_DP_SPRT_DEVICE H
+	                        , TB_DP_MENU_CATEGORY D
+	                        , TB_DP_PROD E
+	                        , TB_DP_TENANT_PROD F
+	                        , TB_DP_SPRT_DEVICE G
 	                    WHERE A.PROD_ID = B.PROD_ID
 	                      AND B.PROD_RSHP_CD = 'DP010802'
 	                      AND A.MENU_ID = C.MENU_ID
 	                      AND B.PART_PROD_ID = C.PROD_ID
 	                      AND C.USE_YN = 'Y'
 	                      AND C.MENU_ID = D.MENU_ID
-	                      AND D.LANG_CD = #{langCd}
-	                      AND D.MENU_ID = E.MENU_ID
-	                      AND E.USE_YN = 'Y'
-	                      AND E.TOP_MENU_ID = #{topMenuId}
-	                      AND C.PROD_ID = F.PROD_ID
-	                      AND F.SVC_GRP_CD = 'DP000203'
-	                      AND F.CONTENTS_TYPE_CD = 'PD002502'
+	                      AND D.USE_YN = 'Y'
+	                      AND D.TOP_MENU_ID = #{topMenuId}
+	                      AND C.PROD_ID = E.PROD_ID
+	                      AND E.SVC_GRP_CD = 'DP000203'
+	                      AND E.CONTENTS_TYPE_CD = 'PD002502'
 	                      <if test='prodGradeCd != null and prodGradeCd != ""'>
-	                      AND F.PROD_GRD_CD IN
+	                      AND E.PROD_GRD_CD IN
 	                          <foreach collection="prodGradeCdArr" item="prodGradeCd" index="index" open="(" close=")" separator=",">
 	                          #{prodGradeCd}  
 	                          </foreach> /* 상품등급코드 */
 	                      </if>
+	                      AND E.PROD_ID = F.PROD_ID
+	                      AND A.TENANT_ID = F.TENANT_ID
+	                      AND F.PROD_STATUS_CD = 'PD000403'
+	                      AND F.EXPO_YN = 'Y'
 	                      AND F.PROD_ID = G.PROD_ID
-	                      AND A.TENANT_ID = G.TENANT_ID
-	                      AND G.PROD_STATUS_CD = 'PD000403'
-	                      AND G.EXPO_YN = 'Y'
-	                      AND G.PROD_ID = H.PROD_ID
-	                      AND (H.DEVICE_MODEL_CD = #{deviceModelCd} OR H.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
+	                      AND (G.DEVICE_MODEL_CD = #{deviceModelCd} OR G.DEVICE_MODEL_CD = 'android_standard2') /* 단말기 모델 코드 */
 	                      AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN 
 	                                        FROM TB_CM_DEVICE 
 	                                       WHERE DEVICE_MODEL_CD = #{deviceModelCd} )  = 'N' 
-	                                         AND NVL(F.DRM_YN, 'N') = 'Y' 
+	                                         AND NVL(E.DRM_YN, 'N') = 'Y' 
 	                                THEN 'NOT SUPPORT'
 	                                ELSE 'SUPPORT'
 	                            END) = 'SUPPORT'   /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
@@ -220,13 +217,13 @@
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_MENU_CATEGORY_DESC C
                                              , TB_DP_PROD               D
-                                             , TB_DP_MULTIMDA_PROD      E
+                                             , UV_TB_DP_MULTIMDA_PROD      E
                                              , TB_DP_PROD_DESC          F
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_TENANT_PROD_PRICE  H
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J
-                                             , TB_DP_MULTIMDA_PROD      K
+                                             , UV_TB_DP_MULTIMDA_PROD      K
                                              , TB_DP_SPRT_DEVICE        L
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND A.MENU_ID = C.MENU_ID
@@ -317,7 +314,7 @@
                   WHERE MENU_ID = LA.TOP_MENU_ID
                     AND LANG_CD = 'ko'
                     AND ROWNUM = 1) AS TOP_MENU_NM
-              , (SELECT SAMPL_URL FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = LA.PART_PROD_ID AND ROWNUM = 1) AS SAMPL_URL
+              , (SELECT SAMPL_URL FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = LA.PART_PROD_ID AND ROWNUM = 1) AS SAMPL_URL
               , LA.PROD_CHRG_YN
           FROM (SELECT KA.*
                   FROM (SELECT JA.*
@@ -367,7 +364,7 @@
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_MENU_CATEGORY_DESC C
                                              , TB_DP_PROD               D
-                                             , TB_DP_MULTIMDA_PROD      E
+                                             , UV_TB_DP_MULTIMDA_PROD      E
                                              , TB_DP_PROD_DESC          F
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_TENANT_PROD_PRICE  H
@@ -478,7 +475,7 @@
                 TB_DP_PROD DP,
                 TB_DP_TENANT_PROD_PRICE PR,
                 TB_DP_MENU_CATEGORY_PROD_MAPG MP, 
-                TB_DP_MULTIMDA_PROD AP,
+                UV_TB_DP_MULTIMDA_PROD AP,
                 TB_DP_TENANT_PROD TP, 
                 TB_DP_PROD_DESC PS,
                 TB_DP_SUB_CONTENTS SC,

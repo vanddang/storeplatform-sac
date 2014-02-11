@@ -272,7 +272,7 @@
                              , TB_DP_PROD D
                              , TB_DP_PROD_DESC E
                              , TB_DP_TENANT_PROD F
-                             , TB_DP_MULTIMDA_PROD G
+                             , UV_TB_DP_MULTIMDA_PROD G
                              , (SELECT SD.PROD_ID
                                   FROM TB_DP_SPRT_DEVICE SD
                                     , TB_CM_DEVICE CD

@@ -34,12 +34,12 @@
                                           FROM TB_DP_MENU_CATEGORY      A
                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                              , TB_DP_PROD               D /* 채널 상품 */
-                                             , TB_DP_MULTIMDA_PROD      E /* 채널 상품 */
+                                             , UV_TB_DP_MULTIMDA_PROD      E /* 채널 상품 */
                                              , TB_DP_PROD_DESC          F
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J /* 에피소드 상품 */
-                                             , TB_DP_MULTIMDA_PROD      K /* 에피소드 상품 */
+                                             , UV_TB_DP_MULTIMDA_PROD      K /* 에피소드 상품 */
                                              , TB_DP_SPRT_DEVICE        L
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND B.PROD_ID = D.PROD_ID
@@ -120,7 +120,7 @@
 		                              , TB_DP_MENU_CATEGORY_PROD_MAPG C  /* 에피소드 */
 		                              , TB_DP_MENU_CATEGORY D
 		                              , TB_DP_MENU_CATEGORY_DESC E
-		                              , TB_DP_MULTIMDA_PROD F
+		                              , UV_TB_DP_MULTIMDA_PROD F
 		                              , TB_DP_PROD G
 		                              , TB_DP_TENANT_PROD H
 		                              , (SELECT SD.PROD_ID
