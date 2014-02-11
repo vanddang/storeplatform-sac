@@ -27,6 +27,8 @@ import com.skplanet.storeplatform.purchase.constant.PurchaseConstants;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingReq;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingRes;
 import com.skplanet.storeplatform.sac.client.display.vo.shopping.ShoppingThemeRes;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationReq;
+import com.skplanet.storeplatform.sac.client.member.vo.seller.DetailInformationRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -58,6 +60,7 @@ import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.meta.vo.ProductBasicInfo;
 import com.skplanet.storeplatform.sac.display.response.ResponseInfoGenerateFacade;
 import com.skplanet.storeplatform.sac.display.shopping.vo.Shopping;
+import com.skplanet.storeplatform.sac.member.seller.service.SellerSearchService;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
 /**
@@ -85,6 +88,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 	@Autowired
 	HistoryListService historyListService;
+
+	@Autowired
+	private SellerSearchService sellerSearchService;
 
 	/**
 	 * <pre>
@@ -2285,16 +2291,29 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setSelectOptionList(selectOptionList);
 
 							// 판매자정보 셋팅
-							distributor = new Distributor();
-							distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
-							distributor.setIdentifier("판매자ID");
-							distributor.setName("판매자명");
-							distributor.setCompany("상호");
-							distributor.setTel("전화번호");
-							distributor.setEmail("tstore@skplanet.co.kr");
-							distributor.setAddress("서울시 중구 을지로2가 11");
-							distributor.setRegNo("제2009-서울중구-1000호");
-							episodeProduct.setDistributor(distributor);
+							DetailInformationReq memberReq = new DetailInformationReq();
+							DetailInformationRes memberRes = new DetailInformationRes();
+							try {
+								memberReq.setSellerKey(episodeShopping.getSellerMbrNo());
+								memberReq.setSellerId("");
+								memberRes = this.sellerSearchService.detailInformation(header, memberReq);
+								if (memberRes != null) {
+									memberRes.getSellerMbr().getSellerCompany();
+									distributor = new Distributor();
+									distributor.setType(DisplayConstants.DP_CORPORATION_IDENTIFIER_CD);
+									distributor.setIdentifier(memberRes.getSellerMbr().getSellerId());
+									distributor.setName(memberRes.getSellerMbr().getSellerName());
+									distributor.setCompany(memberRes.getSellerMbr().getSellerCompany());
+									distributor.setTel(memberRes.getSellerMbr().getRepPhone());
+									distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
+									distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
+											+ memberRes.getSellerMbr().getSellerDetailAddress());
+									distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
+									episodeProduct.setDistributor(distributor);
+								}
+							} catch (Exception e) {
+								throw new StorePlatformException("SAC_DSP_0001", "멤버 정보 조회 ", e);
+							}
 
 							// 에피소드 특가상품
 							if (episodeShopping.getSpecialSale() != null) {
