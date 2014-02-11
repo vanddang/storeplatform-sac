@@ -225,5 +225,14 @@ public interface CommonMetaInfoGenerator {
 	 */
 	public Play generatePlay(MetaInfo metaInfo);
 
+	/**
+	 * <pre>
+	 * 구매 정보 객체 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return Purchase
+	 */
 	public Purchase generatePurchase(MetaInfo metaInfo);
 }
