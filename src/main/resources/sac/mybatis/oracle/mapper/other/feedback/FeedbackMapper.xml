@@ -364,7 +364,269 @@
            AND NOTI_SEQ = #{notiSeq}   
     </update>
     
-        <!-- 판매자 댓글 -->
+    <!-- 사용후기 전체 갯수 조회 -->
+    <select id="getProdNotiCount" parameterType="ProdNoti" resultType="int">
+        SELECT  /* FeedbackMapper.xml, getProdNotiCount, SAC : 김현일 , 2014-02-04 */
+           SUM( TOTAL_COUNT ) TOTAL_COUNT
+        FROM (
+           SELECT
+             <!-- Shopping -->
+             <if test="prodType == 'shopping'">
+             /*+ index(N IDX_DP_PROD_NOTI_09) */
+             </if>
+             <!-- Shopping 외 -->
+             <if test="prodType != 'shopping'">
+             /*+ index(N IDX_DP_PROD_NOTI_07) */
+             </if>
+                  COUNT(*) AS TOTAL_COUNT
+             FROM TB_DP_PROD_NOTI N
+            WHERE N.DEL_YN = 'N'
+              AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+              AND N.SPAM_YN = 'N'
+              AND N.NOTI_TYPE_CD = 'DP000401'
+             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+              AND N.NOTI_SEQ = #{notiSeq}
+             </if>
+             <!-- Shopping -->
+             <if test="prodType == 'shopping'">
+              AND N.CATALOG_ID = #{prodId}
+              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+              AND N.PROD_ID = #{chnlId}
+              </if>
+             </if>
+             <!-- Shopping 외 -->
+             <if test="prodType != 'shopping'">
+              AND N.PROD_ID = #{prodId}
+             </if>
+            UNION ALL
+           SELECT COUNT(*) AS TOTAL_COUNT
+             FROM TB_DP_PROD_NOTI_WD N
+            WHERE N.DEL_YN = 'N'
+              AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+              AND N.SPAM_YN = 'N'
+              AND N.NOTI_TYPE_CD = 'DP000401'
+             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+              AND N.NOTI_SEQ = #{notiSeq}
+             </if>
+             <!-- Shopping -->
+             <if test="prodType == 'shopping'">
+              AND N.CATALOG_ID = #{prodId}
+              <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+              AND N.PROD_ID = #{chnlId}
+              </if>
+             </if>
+             <!-- Shopping 외 -->
+             <if test="prodType != 'shopping'">
+              AND N.PROD_ID = #{prodId}
+             </if>
+           )              
+    </select>
+    
+    <!-- 사용후기 목록 조회 -->
+    <select id="getProdNotiList" parameterType="ProdNoti" resultType="ProdNoti">
+    
+	    SELECT /* TStore_Common_SqlMap.xml, getFeedbackList, Lee Su Min, 2013-10-04 */
+	            N.NOTI_SEQ
+	          , N.MBR_NO
+	          , N.SELLER_MBR_NO
+	          , N.TITLE
+	          , N.NOTI_DSCR
+	          , NVL( N.NOTI_SCORE, 0 ) AS NOTI_SCORE
+	          , ( CASE WHEN INSTR( N.MBR_NO, 'IW' ) > 0 AND N.MBR_TELNO > ' ' THEN
+	                        SUBSTR( N.MBR_TELNO, 0, 3 )||( CASE WHEN LENGTH(N.MBR_TELNO) <![CDATA[<]]> 11 THEN '***' ELSE '****' END )||SUBSTR( N.MBR_TELNO, -4 )
+	                   ELSE N.REG_ID
+	               END ) AS REG_ID
+	          , TO_CHAR(N.REG_DT,'YYYYMMDDHH24MISS') AS REG_DT
+	          , N.SELLER_RESP_TITLE
+	          , N.SELLER_RESP_OPIN
+	          , NVL2( N.SELLER_RESP_OPIN, TO_CHAR( N.SELLER_RESP_REG_DT, 'YYYYMMDDHH24MISS' ), NULL ) AS SELLER_RESP_REG_DT
+	          , N.CID
+	          , DECODE( N.MBR_NO, #{mbrNo}, 'Y', 'N' ) AS SELF_YN
+	          , DECODE( N.MBR_NO, N.SELLER_MBR_NO, 'Y','N' ) AS SALE_YN
+	          , DECODE( N.MBR_NO, N.SELLER_MBR_NO, 'seller', #{mbrNo}, 'mine', '' ) AS WHOSE
+	           , ( CASE WHEN ( SELECT COUNT(*)
+	                               FROM TB_DP_PROD_NOTIGOOD NG
+	                             WHERE NG.MBR_NO = #{mbrNo}
+	                             AND NG.NOTI_SEQ = N.NOTI_SEQ ) > 0 THEN 'Y'
+	                     ELSE 'N'
+	                 END ) AS NOTI_YN
+	          , ( SELECT AVG_SCORE FROM TB_DP_MBR_AVG WHERE PROD_ID = N.PROD_ID AND MBR_NO = N.MBR_NO ) AS AVG_SCORE
+	          , N.FB_POST_YN
+	          , N.PROD_ID
+	       FROM
+	          (
+	          SELECT A.*
+	            FROM
+	               (
+	               SELECT NOTI.*
+	                    , ROWNUM AS RNUM
+	                 FROM
+	                    (
+	                    SELECT N.*
+	                      FROM (
+	                           SELECT *
+	                             FROM (
+	                                  SELECT
+	                                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+	                                         /*+ ordered use_nl(P) index(N PK_DP_PROD_NOTI) */
+	                                         </if>
+	                                         <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(notiSeq)">
+	                                           <!-- Shopping -->
+	                                           <if test="prodType == 'shopping'">
+	                                           /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_09) */
+	                                           </if>
+	                                           <!-- Shopping 외 -->
+	                                           <if test="prodType != 'shopping'">
+	                                               <!-- 추천순 -->     
+	                                               <if test="orderedBy == 'recommend'">
+	                                               /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_08) */
+	                                               </if>
+	                                               <!-- 최신순 -->
+	                                               <if test="orderedBy == 'recent'">
+	                                               /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_01) */
+	                                               </if>
+	                                           </if>
+	                                       </if>
+	                                         N.NOTI_SEQ
+	                                       , N.TITLE
+	                                       , N.NOTI_DSCR
+	                                       , N.REG_DT
+	                                       , N.MBR_NO
+	                                       , N.REG_ID
+	                                       , N.MBR_TELNO
+	                                       , N.NOTI_SCORE
+	                                       , N.SELLER_RESP_TITLE
+	                                       , N.SELLER_RESP_OPIN
+	                                       , N.SELLER_RESP_REG_DT
+	                                       , N.PROD_ID
+	                                       , N.FB_POST_YN
+	                                       , P.SELLER_MBR_NO AS SELLER_MBR_NO
+	                                       , P.CID
+	                                       , P.SVC_GRP_CD
+	                                       , P.EXPO_SELLER_NM
+	                                    FROM TB_DP_PROD_NOTI N
+	                                       , TB_DP_PROD P
+	                                   WHERE P.PROD_ID = N.PROD_ID
+	                                   <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+	                                       AND N.NOTI_SEQ = #{notiSeq}
+	                                   </if>
+	                                   <!-- Shopping -->
+	                                   <if test="prodType == 'shopping'">
+	                                       AND N.CATALOG_ID = #{prodId}
+	                                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+	                                       AND N.PROD_ID = #{chnlId}
+	                                       </if>
+	                                   </if>
+	                                   <!-- Shopping 외 -->
+	                                   <if test="prodType != 'shopping'">
+	                                       AND N.PROD_ID = #{prodId}
+	                                   </if>
+                                           AND N.NOTI_TYPE_CD = 'DP000401'
+                                           AND N.DEL_YN = 'N'
+                                           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+                                           AND N.SPAM_YN = 'N'
+                                       <!-- 추천순 -->    
+                                       <if test="orderedBy == 'recommend'">
+                                           ORDER BY N.NOTI_SCORE DESC
+                                                  , N.REG_DT DESC
+                                       </if>
+                                       <!-- 최신순 -->    
+                                       <if test="orderedBy == 'recent'">
+                                           ORDER BY N.REG_DT DESC
+                                       </if>
+	                                  ) M
+	                            WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+	                            UNION ALL
+	                           SELECT *
+	                             FROM (
+	                                  SELECT
+                                           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+                                             /*+ ordered use_nl(P) index(N PK_DP_PROD_NOTI_WD) */
+                                             </if>
+                                             <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isBlank(notiSeq)">
+                                               <!-- Shopping -->    
+                                               <if test="prodType == 'shopping'">
+                                               /*+ leading(N) use_nl(P) index_desc(N IDX_DP_PROD_NOTI_WD_09) */
+                                               </if>
+                                               <!-- Shopping 외 -->
+                                               <if test="prodType != 'shopping'">
+                                                   <!-- 추천순 --> 
+                                                   <if test="orderedBy == 'recommend'">
+                                                   /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_WD_08) */
+                                                   </if>
+                                                   <!-- 최신순 -->
+                                                   <if test="orderedBy == 'recent'">
+                                                   /*+ leading(P) use_nl(N) index_desc(N IDX_DP_PROD_NOTI_WD_01) */
+                                                   </if>
+                                               </if>
+                                           </if>
+	                                         N.NOTI_SEQ
+	                                       , N.TITLE
+	                                       , N.NOTI_DSCR
+	                                       , N.REG_DT
+	                                       , N.MBR_NO
+	                                       , N.REG_ID
+	                                       , N.MBR_TELNO
+	                                       , N.NOTI_SCORE
+	                                       , N.SELLER_RESP_TITLE
+	                                       , N.SELLER_RESP_OPIN
+	                                       , N.SELLER_RESP_REG_DT
+	                                       , N.PROD_ID
+	                                       , N.FB_POST_YN
+	                                       , P.SELLER_MBR_NO AS SELLER_MBR_NO
+	                                       , P.CID
+	                                       , P.SVC_GRP_CD
+	                                       , P.EXPO_SELLER_NM
+	                                    FROM TB_DP_PROD_NOTI_WD N
+	                                       , TB_DP_PROD P
+	                                   WHERE P.PROD_ID = N.PROD_ID
+                                       <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(notiSeq)">
+                                           AND N.NOTI_SEQ = #{notiSeq}
+                                       </if>
+                                       <!-- Shopping -->
+                                       <if test="prodType == 'shopping'">
+                                           AND N.CATALOG_ID = #{prodId}
+                                           <if test="@com.skplanet.storeplatform.framework.core.util.StringUtils@isNotBlank(chnlId)">
+                                           AND N.PROD_ID = #{chnlId}
+                                           </if>
+                                       </if>
+                                       <!-- Shopping 외 -->
+                                       <if test="prodType != 'shopping'">
+                                           AND N.PROD_ID = #{prodId}
+                                       </if>
+                                           AND N.NOTI_TYPE_CD = 'DP000401'
+                                           AND N.DEL_YN = 'N'
+                                           AND N.BAD_NOTI_YN IN ( 'N', 'R' )
+                                           AND N.SPAM_YN = 'N'
+                                       <!-- 추천순 -->    
+                                       <if test="orderedBy == 'recommend'">
+                                           ORDER BY N.NOTI_SCORE DESC
+                                                  , N.REG_DT DESC
+                                       </if>
+                                       <!-- 최신순 -->
+                                       <if test="orderedBy == 'recent'">
+                                           ORDER BY N.REG_DT DESC
+                                       </if>	                 
+	                                  ) M
+	                            WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+	                           ) N
+	                    <!-- 추천순 -->       
+                        <if test="orderedBy == 'recommend'">
+                        ORDER BY N.NOTI_SCORE DESC
+                               , N.REG_DT DESC
+                        </if>
+                        <!-- 최신순 -->
+                        <if test="orderedBy == 'recent'">
+                        ORDER BY N.REG_DT DESC
+                        </if>       
+	                    ) NOTI
+	                 WHERE ROWNUM <![CDATA[<=]]> #{endRow}
+	                 ) A
+	           WHERE A.RNUM BETWEEN #{startRow} AND #{endRow}
+	           ) N
+    </select>
+    
+    <!-- 판매자 댓글 -->
     <update id="updateSellerResp" parameterType="ProdNoti">
         UPDATE  /* FeedbackMapper.xml, updateSellerResp, SAC : 남궁석호 , 2014-02-10 */
                 TB_DP_PROD_NOTI
@@ -385,5 +647,5 @@
          WHERE  TENANT_ID = #{tenantId}
            AND  NOTI_SEQ = #{notiSeq}
     </update>
-    
+
 </mapper>
