@@ -177,6 +177,17 @@ public final class MemberConstants {
 	public static final String USER_LIMIT_POLICY_TESTER = "US011702";//단말 검증자
 
 	/**
+	 * 게임센터 관련 상수
+	 */
+	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE = "US003201"; //번호변경
+	public static final String GAMECENTER_WORK_CD_NAME_CHANGE = "US003202"; //명의변경
+	public static final String GAMECENTER_WORK_CD_USER_SECEDE = "US003203"; //회원탈퇴
+	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_INSERT = "US003204"; //MDN등록
+	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_DELETE = "US003205"; //MDN삭제
+	public static final String GAMECENTER_WORK_CD_USER_CHANGE = "US003206"; //회원전환
+	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; //통합회원전환
+
+	/**
 	 * 판매자 회원 상수들
 	 * 
 	 * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.
