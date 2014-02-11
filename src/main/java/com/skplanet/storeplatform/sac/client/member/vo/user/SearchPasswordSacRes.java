@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class SearchPasswordRes extends CommonInfo {
+public class SearchPasswordSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
 	private String userPw; // 사용자PW (임시)
