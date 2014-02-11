@@ -155,6 +155,11 @@ public class SellerSearchController {
 		String sellerEmail = StringUtil.nvl(req.getSellerEmail(), "");
 		String sellerPhone = StringUtil.nvl(req.getSellerPhone(), "");
 
+		req.setSellerBizNumber(sellerBizNumber);
+		req.setSellerCompany(sellerCompany);
+		req.setSellerEmail(sellerEmail);
+		req.setSellerPhone(sellerPhone);
+
 		if (sellerBizNumber.equals("") & sellerCompany.equals("") & sellerEmail.equals("") & sellerPhone.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber,sellerCompany,sellerEmail,sellerPhone");
 		}

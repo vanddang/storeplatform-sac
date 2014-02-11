@@ -384,6 +384,15 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 		SearchIDSellerRequest schReq = new SearchIDSellerRequest();
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
+		if (!req.getSellerBizNumber().isEmpty())
+			schReq.setSellerBizNumber(req.getSellerBizNumber());
+		if (!req.getSellerCompany().isEmpty())
+			schReq.setSellerCompany(req.getSellerCompany());
+		if (!req.getSellerEmail().isEmpty())
+			schReq.setSellerEmail(req.getSellerEmail());
+		if (!req.getSellerPhone().isEmpty())
+			schReq.setSellerPhone(req.getSellerPhone());
+
 		SearchIDSellerResponse schRes = this.sellerSCI.searchIDSeller(schReq);
 
 		List<SellerMbr> sList = new ArrayList<SellerMbr>();
