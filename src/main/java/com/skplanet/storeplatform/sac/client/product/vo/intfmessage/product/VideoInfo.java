@@ -17,7 +17,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
 
 /**
  * Interface Message VideoInfo Value Object.
- *
+ * 
  * Updated on : 2013. 12. 17. Updated by : 이태희, SK 플래닛.
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -35,6 +35,7 @@ public class VideoInfo extends CommonInfo implements Serializable {
 	private String version; // 버전
 	private String btvcid; // BTV CID
 	private String size; // 파일사이즈
+	private String filePath; // 물리파일 경로
 
 	/**
 	 * @return String
@@ -154,6 +155,21 @@ public class VideoInfo extends CommonInfo implements Serializable {
 	 */
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	/**
+	 * @return the filePath
+	 */
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	/**
+	 * @param filePath
+	 *            the filePath to set
+	 */
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 }
