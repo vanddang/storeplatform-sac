@@ -228,7 +228,6 @@ public class LoginServiceImpl implements LoginService {
 
 		LOGGER.info("############################ LoginServiceImpl authorizeById start ############################");
 
-		String deviceId = req.getDeviceId();
 		String userId = req.getUserId();
 		String userPw = req.getUserPw();
 		String userKey = null;
@@ -240,8 +239,8 @@ public class LoginServiceImpl implements LoginService {
 		AuthorizeByIdRes res = new AuthorizeByIdRes();
 
 		/* 모번호 조회 */
-		if (deviceId != null) {
-			deviceId = this.commService.getOpmdMdnInfo(deviceId);
+		if (req.getDeviceId() != null) {
+			req.setDeviceId(this.commService.getOpmdMdnInfo(req.getDeviceId()));
 		}
 
 		/* 회원정보 조회 */
