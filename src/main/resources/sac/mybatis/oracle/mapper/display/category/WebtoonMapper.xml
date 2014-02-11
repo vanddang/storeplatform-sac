@@ -34,12 +34,12 @@
                                           FROM TB_DP_MENU_CATEGORY      A
                                              , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                              , TB_DP_PROD               D /* 채널 상품 */
-                                             , UV_TB_DP_MULTIMDA_PROD      E /* 채널 상품 */
+                                             , UV_TB_DP_MULTIMDA_PROD   E /* 채널 상품 */
                                              , TB_DP_PROD_DESC          F
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J /* 에피소드 상품 */
-                                             , UV_TB_DP_MULTIMDA_PROD      K /* 에피소드 상품 */
+                                             , UV_TB_DP_MULTIMDA_PROD   K /* 에피소드 상품 */
                                              , TB_DP_SPRT_DEVICE        L
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND B.PROD_ID = D.PROD_ID
@@ -51,7 +51,7 @@
                                            AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND I.PART_PROD_ID = J.PROD_ID
                                            AND I.PART_PROD_ID = K.PROD_ID
-                                           AND I.PART_PROD_ID = L.PROD_ID(+)
+                                           AND I.PART_PROD_ID = L.PROD_ID
                                            AND A.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
@@ -60,8 +60,7 @@
                                            AND G.PROD_STATUS_CD = 'PD000403'         /* PD000403 : 판매중 */
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
-                                           AND L.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
-                                           AND L.PROD_ID IS NULL                     /* 멀티미디어 상품 지원단말 블랙리스트 처리 */
+                                           AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
                                            AND A.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                          <if test="menuId != null">
                                            AND A.MENU_ID = #{menuId}                 /* 메뉴ID */
