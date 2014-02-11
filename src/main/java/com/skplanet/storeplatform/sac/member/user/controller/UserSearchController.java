@@ -125,25 +125,16 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.9. 회원 정보 조회 #####");
 		LOGGER.info("####################################################");
 
-		/**
-		 * 회원기본정보 조회 Biz
-		 */
-		int paramCnt = 0;
-		if (!"".equals(req.getUserKey()) && req.getUserKey() != null) {
-			paramCnt += 1;
-		} else if (!"".equals(req.getUserId()) && req.getUserId() != null) {
-			paramCnt += 1;
-		} else if (!"".equals(req.getDeviceKey()) && req.getDeviceKey() != null) {
-			paramCnt += 1;
-		} else if (!"".equals(req.getDeviceId()) && req.getDeviceId() != null) {
-			paramCnt += 1;
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
+		if (deviceId.equals("") && deviceKey.equals("") && userId.equals("") && userKey.equals("")) {
+			new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		LOGGER.info("============================================ DetailReq : {}", req.toString());
-
-		if (paramCnt == 0) {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
-		}
 
 		DetailRes res = this.svc.detail(sacHeader, req);
 		LOGGER.info("Final Response : {}", res.toString());

@@ -498,20 +498,25 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		String keyType = "";
 		String keyValue = "";
-		if (req.getUserKey() != null) {
+		if (!userKey.equals("")) {
 			keyType = "userKey";
-			keyValue = req.getUserKey();
-		} else if (req.getUserId() != null) {
+			keyValue = userKey;
+		} else if (!userId.equals("")) {
 			keyType = "userId";
-			keyValue = req.getUserId();
-		} else if (req.getDeviceKey() != null) {
+			keyValue = userId;
+		} else if (!deviceKey.equals("")) {
 			keyType = "deviceKey";
-			keyValue = req.getDeviceKey();
-		} else if (req.getDeviceId() != null) {
+			keyValue = deviceKey;
+		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
-			keyValue = req.getDeviceId();
+			keyValue = deviceId;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -567,20 +572,25 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		String keyType = "";
 		String keyValue = "";
-		if (req.getUserKey() != null) {
+		if (!userKey.equals("")) {
 			keyType = "userKey";
-			keyValue = req.getUserKey();
-		} else if (req.getUserId() != null) {
+			keyValue = userKey;
+		} else if (!userId.equals("")) {
 			keyType = "userId";
-			keyValue = req.getUserId();
-		} else if (req.getDeviceKey() != null) {
+			keyValue = userId;
+		} else if (!deviceKey.equals("")) {
 			keyType = "deviceKey";
-			keyValue = req.getDeviceKey();
-		} else if (req.getDeviceId() != null) {
+			keyValue = deviceKey;
+		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
-			keyValue = req.getDeviceId();
+			keyValue = deviceId;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -634,20 +644,25 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public UserMbrPnsh searchUserMbrPnsh(DetailReq req, SacRequestHeader sacHeader) {
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		String keyType = "";
 		String keyValue = "";
-		if (req.getUserKey() != null) {
+		if (!userKey.equals("")) {
 			keyType = "userKey";
-			keyValue = req.getUserKey();
-		} else if (req.getUserId() != null) {
+			keyValue = userKey;
+		} else if (!userId.equals("")) {
 			keyType = "userId";
-			keyValue = req.getUserId();
-		} else if (req.getDeviceKey() != null) {
+			keyValue = userId;
+		} else if (!deviceKey.equals("")) {
 			keyType = "deviceKey";
-			keyValue = req.getDeviceKey();
-		} else if (req.getDeviceId() != null) {
+			keyValue = deviceKey;
+		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
-			keyValue = req.getDeviceId();
+			keyValue = deviceId;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -704,20 +719,26 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public DetailRes searchUserBase(DetailReq req, SacRequestHeader sacHeader) {
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		String keyType = "";
 		String keyValue = "";
-		if (req.getUserKey() != null) {
+
+		if (!userKey.equals("")) {
 			keyType = "userKey";
-			keyValue = req.getUserKey();
-		} else if (req.getUserId() != null) {
+			keyValue = userKey;
+		} else if (!userId.equals("")) {
 			keyType = "userId";
-			keyValue = req.getUserId();
-		} else if (req.getDeviceKey() != null) {
+			keyValue = userId;
+		} else if (!deviceKey.equals("")) {
 			keyType = "deviceKey";
-			keyValue = req.getDeviceKey();
-		} else if (req.getDeviceId() != null) {
+			keyValue = deviceKey;
+		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
-			keyValue = req.getDeviceId();
+			keyValue = deviceId;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -768,20 +789,25 @@ public class UserSearchServiceImpl implements UserSearchService {
 	@Override
 	public UserInfo searchUser(DetailReq req, SacRequestHeader sacHeader) {
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		String keyType = "";
 		String keyValue = "";
-		if (req.getUserKey() != null) {
+		if (!userKey.equals("")) {
 			keyType = "userKey";
-			keyValue = req.getUserKey();
-		} else if (req.getUserId() != null) {
+			keyValue = userKey;
+		} else if (!userId.equals("")) {
 			keyType = "userId";
-			keyValue = req.getUserId();
-		} else if (req.getDeviceKey() != null) {
+			keyValue = userId;
+		} else if (!deviceKey.equals("")) {
 			keyType = "deviceKey";
-			keyValue = req.getDeviceKey();
-		} else if (req.getDeviceId() != null) {
+			keyValue = deviceKey;
+		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
-			keyValue = req.getDeviceId();
+			keyValue = deviceId;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
@@ -931,27 +957,32 @@ public class UserSearchServiceImpl implements UserSearchService {
 	public ListDeviceRes listDevice(DetailReq req, SacRequestHeader sacHeader) {
 		ListDeviceReq listDeviceReq = new ListDeviceReq();
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		ExistReq existReq = new ExistReq();
 		ExistRes existRes = new ExistRes();
 
-		if (req.getUserKey() != null) {
+		if (!userKey.equals("")) {
 			listDeviceReq.setUserKey(req.getUserKey());
 			listDeviceReq.setIsMainDevice("N");
-		} else if (req.getUserId() != null) {
+		} else if (!userId.equals("")) {
 			existReq.setUserId(req.getUserId());
 			existRes = this.exist(sacHeader, existReq);
 
 			listDeviceReq.setUserKey(existRes.getUserKey());
 			listDeviceReq.setUserId(req.getUserId());
 			listDeviceReq.setIsMainDevice("N");
-		} else if (req.getDeviceKey() != null) {
+		} else if (!deviceKey.equals("")) {
 			existReq.setDeviceKey(req.getDeviceKey());
 			existRes = this.exist(sacHeader, existReq);
 
 			listDeviceReq.setUserKey(existRes.getUserKey());
 			listDeviceReq.setDeviceKey(req.getDeviceKey());
 			listDeviceReq.setIsMainDevice("N");
-		} else if (req.getDeviceId() != null) {
+		} else if (!deviceId.equals("")) {
 			existReq.setDeviceId(req.getDeviceId());
 			existRes = this.exist(sacHeader, existReq);
 
@@ -983,20 +1014,25 @@ public class UserSearchServiceImpl implements UserSearchService {
 		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
 		searchUserRequest.setCommonRequest(commonRequest);
 
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
+
 		String keyType = "";
 		String keyValue = "";
-		if (req.getUserKey() != null) {
+		if (!userKey.equals("")) {
 			keyType = "userKey";
-			keyValue = req.getUserKey();
-		} else if (req.getUserId() != null) {
+			keyValue = userKey;
+		} else if (!userId.equals("")) {
 			keyType = "userId";
-			keyValue = req.getUserId();
-		} else if (req.getDeviceKey() != null) {
+			keyValue = userId;
+		} else if (!deviceKey.equals("")) {
 			keyType = "deviceKey";
-			keyValue = req.getDeviceKey();
-		} else if (req.getDeviceId() != null) {
+			keyValue = deviceKey;
+		} else if (!deviceId.equals("")) {
 			keyType = "deviceId";
-			keyValue = req.getDeviceId();
+			keyValue = deviceId;
 		}
 
 		Map<String, Object> keyTypeMap = new HashMap<String, Object>();
