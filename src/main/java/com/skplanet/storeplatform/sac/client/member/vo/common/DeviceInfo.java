@@ -93,6 +93,11 @@ public class DeviceInfo extends CommonInfo {
 	private String nativeId;
 
 	/**
+	 * 기기 고유 번호 비교여부.
+	 */
+	private String isNativeIdAuth;
+
+	/**
 	 * 기기계정.
 	 */
 	private String deviceAccount;
@@ -537,4 +542,18 @@ public class DeviceInfo extends CommonInfo {
 		this.svcMangNum = svcMangNum;
 	}
 
+	/**
+	 * @return isNativeIdAuth
+	 */
+	public String getIsNativeIdAuth() {
+		return this.isNativeIdAuth;
+	}
+
+	/**
+	 * @param isNativeIdAuth
+	 *            String
+	 */
+	public void setIsNativeIdAuth(String isNativeIdAuth) {
+		this.isNativeIdAuth = isNativeIdAuth;
+	}
 }

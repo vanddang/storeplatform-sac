@@ -55,6 +55,11 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	private String nativeId;
 
 	/**
+	 * 기기 고유 번호 비교 여부.
+	 */
+	private String isNativeIdAuth;
+
+	/**
 	 * 클라이언트 ip.
 	 */
 	private String ipAddress;
@@ -217,6 +222,21 @@ public class AuthorizeByIdReq extends CommonInfo implements Serializable {
 	 */
 	public void setReleaseLock(String releaseLock) {
 		this.releaseLock = releaseLock;
+	}
+
+	/**
+	 * @return isNativeIdAuth
+	 */
+	public String getIsNativeIdAuth() {
+		return this.isNativeIdAuth;
+	}
+
+	/**
+	 * @param isNativeIdAuth
+	 *            String
+	 */
+	public void setIsNativeIdAuth(String isNativeIdAuth) {
+		this.isNativeIdAuth = isNativeIdAuth;
 	}
 
 }

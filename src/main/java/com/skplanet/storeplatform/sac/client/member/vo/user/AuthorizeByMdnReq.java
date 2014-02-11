@@ -40,6 +40,11 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	private String nativeId;
 
 	/**
+	 * 기기 고유 번호 비교여부.
+	 */
+	private String isNativeIdAuth;
+
+	/**
 	 * 기기 계정(Gmail 주소).
 	 */
 	private String deviceAccount;
@@ -157,6 +162,21 @@ public class AuthorizeByMdnReq extends CommonInfo {
 	 */
 	public void setIsAutoUpdate(String isAutoUpdate) {
 		this.isAutoUpdate = isAutoUpdate;
+	}
+
+	/**
+	 * @return isNativeIdAuth
+	 */
+	public String getIsNativeIdAuth() {
+		return this.isNativeIdAuth;
+	}
+
+	/**
+	 * @param isNativeIdAuth
+	 *            String
+	 */
+	public void setIsNativeIdAuth(String isNativeIdAuth) {
+		this.isNativeIdAuth = isNativeIdAuth;
 	}
 
 }
