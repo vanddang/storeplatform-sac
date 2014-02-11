@@ -256,15 +256,21 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		List<UserExtraInfo> extraInfo = searchUser.getUserExtraInfo();
 		List<UserExtraInfo> reqInfo = req.getAddInfoList();
 		String registeredProfileCode = "";
+		int checkCount = 0;
 
 		for (UserExtraInfo infoSearchUser : extraInfo) {
 			for (UserExtraInfo infoReqUser : reqInfo) {
-				if (!infoSearchUser.getExtraProfileCode().equals(infoReqUser.getExtraProfileCode())) {
-					throw new StorePlatformException("SAC_MEM_0002", infoReqUser.getExtraProfileCode());
-				} else {
-					registeredProfileCode = "Y";
+
+				if (infoSearchUser.getExtraProfileCode().equals(infoReqUser.getExtraProfileCode())) {
+					checkCount += 1;
 				}
 			}
+		}
+
+		if (checkCount == 0) {
+			throw new StorePlatformException("SAC_MEM_0002", "getExtraProfileCode()");
+		} else {
+			registeredProfileCode = "Y";
 		}
 		return registeredProfileCode;
 	}
