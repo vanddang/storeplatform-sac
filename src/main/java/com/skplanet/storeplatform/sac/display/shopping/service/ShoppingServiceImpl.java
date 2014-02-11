@@ -144,7 +144,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			reqMap.put("stdDt", stdDt);
 			reqMap.put("lang", tenantHeader.getLangCd());
 
-			// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 			reqMap.put("imageCd", req.getImageCd());
 			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -340,7 +339,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			reqMap.put("deviceHeader", deviceHeader);
 			reqMap.put("lang", tenantHeader.getLangCd());
 
-			// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 			reqMap.put("imageCd", req.getImageCd());
 			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -559,7 +557,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			reqMap.put("stdDt", stdDt);
 			reqMap.put("lang", tenantHeader.getLangCd());
 
-			// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 			reqMap.put("imageCd", req.getImageCd());
 			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -718,7 +715,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 	 */
 	@Override
 	public ShoppingRes getSecialPriceProductList(SacRequestHeader header, ShoppingReq req) {
-		/** TODO 2. 테스트용 if 헤더 셋팅 */
 		ShoppingRes res = new ShoppingRes();
 		CommonResponse commonResponse = new CommonResponse();
 		TenantHeader tenantHeader = header.getTenantHeader();
@@ -1027,7 +1023,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("deviceHeader", deviceHeader);
 		reqMap.put("lang", tenantHeader.getLangCd());
 
-		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 		reqMap.put("imageCd", req.getImageCd());
 		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -1256,7 +1251,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("deviceHeader", deviceHeader);
 		reqMap.put("lang", tenantHeader.getLangCd());
 
-		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 		reqMap.put("imageCd", req.getImageCd());
 		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -1441,7 +1435,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("deviceHeader", deviceHeader);
 		reqMap.put("lang", tenantHeader.getLangCd());
 
-		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 		reqMap.put("imageCd", req.getImageCd());
 		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -1548,7 +1541,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			reqMap.put("stdDt", stdDt);
 			reqMap.put("lang", tenantHeader.getLangCd());
 
-			// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 			reqMap.put("imageCd", req.getImageCd());
 			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -1771,7 +1763,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 			reqMap.put("stdDt", stdDt);
 			reqMap.put("lang", tenantHeader.getLangCd());
 
-			// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 			reqMap.put("imageCd", req.getImageCd());
 			reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 			reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -1948,15 +1939,16 @@ public class ShoppingServiceImpl implements ShoppingService {
 		if (StringUtils.isEmpty(req.getProdId())) {
 			throw new StorePlatformException("SAC_DSP_0002", "prodId", req.getProdId());
 		}
-		if (StringUtils.isEmpty(req.getDeviceKey())) {
-			throw new StorePlatformException("SAC_DSP_0002", "deviceKey", req.getDeviceKey());
-		}
-		if (StringUtils.isEmpty(req.getUserKey())) {
-			throw new StorePlatformException("SAC_DSP_0002", "userKey", req.getUserKey());
-		}
+
 		// OPTIONAL 파라미터 체크
 		if (StringUtils.isEmpty(req.getSpecialProdId())) {
 			req.setSpecialProdId(null);
+		}
+		if (StringUtils.isEmpty(req.getUserKey())) {
+			req.setUserKey(null);
+		}
+		if (StringUtils.isEmpty(req.getDeviceKey())) {
+			req.setDeviceKey(null);
 		}
 
 		// DB 조회 파라미터 생성
@@ -1966,7 +1958,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 		reqMap.put("deviceHeader", deviceHeader);
 		reqMap.put("lang", tenantHeader.getLangCd());
 
-		// TODO osm1021 Dummy data 꼭 삭제할것!!!!!!!!!!
 		reqMap.put("imageCd", req.getImageCd());
 		reqMap.put("svcGrpCd", DisplayConstants.DP_TSTORE_SHOPPING_PROD_SVC_GRP_CD);
 		reqMap.put("contentTypeCd", DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
@@ -2053,7 +2044,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 					// 상품 정보 (상품명)
 					title = new Title();
 					title.setText(shopping.getCatalogName());
-					// title.setPrefix(shopping.getNewYn());
 
 					// 이미지 정보
 					sourceList = new ArrayList<Source>();
@@ -2143,23 +2133,25 @@ public class ShoppingServiceImpl implements ShoppingService {
 								historyListSacReq.setProductList(productEpisodeList);
 
 								// 구매내역 조회 실행
-								HistoryListSacRes historyListSacRes = this.historyListService
-										.searchHistoryList(historyListSacReq);
+								if (req.getUserKey() != null) {// userKey 가 없을 경우
+									HistoryListSacRes historyListSacRes = this.historyListService
+											.searchHistoryList(historyListSacReq);
 
-								this.log.debug("----------------------------------------------------------------");
-								this.log.debug("[getDownloadComicInfo] purchase count : {}",
-										historyListSacRes.getTotalCnt());
-								this.log.debug("----------------------------------------------------------------");
-								purchseCount = historyListSacRes.getTotalCnt();
-								if (historyListSacRes.getTotalCnt() > 0) {
-									prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
-									prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
-									prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
+									this.log.debug("----------------------------------------------------------------");
+									this.log.debug("[getDownloadComicInfo] purchase count : {}",
+											historyListSacRes.getTotalCnt());
+									this.log.debug("----------------------------------------------------------------");
+									purchseCount = historyListSacRes.getTotalCnt();
+									if (historyListSacRes.getTotalCnt() > 0) {
+										prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
+										prchsDt = historyListSacRes.getHistoryList().get(0).getPrchsDt();
+										prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 
-									if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
-										prchsState = "payment";
-									} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
-										prchsState = "gift";
+										if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+											prchsState = "payment";
+										} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+											prchsState = "gift";
+										}
 									}
 								}
 							} catch (Exception ex) {
@@ -2177,7 +2169,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							purchaseDate.setType(DisplayConstants.DP_SHOPPING_PURCHASE_TYPE_NM);
 							purchaseDate.setText(prchsDt);
 							purchase.setDate(purchaseDate);
-							episodeProduct.setPurchase(purchase);
+							if (purchseCount > 0) {// 구매 건수가 있을 경우
+								episodeProduct.setPurchase(purchase);
+							}
 
 							// 에피소드 날짜 권한 정보
 							episodeDateList = new ArrayList<Date>();
@@ -2194,7 +2188,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 							episodeDateList.add(episodeDate);
 
-							// 상품 구매가 있으고 후기가 없으면 feedback값을 내려줘야 함
+							// 상품 구매가 있고 후기가 없으면 feedback값을 내려줘야 함
 							if (purchseCount > 0) {
 								episodeRights.setAllow(episodeShopping.getAllow());
 							}
@@ -2303,7 +2297,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 							episodeProduct.setDistributor(distributor);
 
 							// 에피소드 특가상품
-							episodeProduct.setId(episodeShopping.getPartProdId());
+							if (episodeShopping.getSpecialSale() != null) {
+								episodeProduct.setId(episodeShopping.getPartProdId());
+							}
 							subProductList.add(episodeProduct);
 						}
 					}
