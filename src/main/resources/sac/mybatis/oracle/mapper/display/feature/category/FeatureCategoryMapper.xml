@@ -812,8 +812,7 @@
                              , TB_DP_MENU_CATEGORY_PROD_MAPG D
                              , TB_DP_MENU_CATEGORY E
                              , TB_DP_PROD F  /* 에피소드 */
-                             , TB_DP_PROD_DESC G
-                             , TB_DP_TENANT_PROD H
+                             , TB_DP_TENANT_PROD G
                              , (SELECT SD.PROD_ID
                                  FROM TB_DP_SPRT_DEVICE SD
                                      , TB_CM_DEVICE CD
@@ -826,7 +825,7 @@
                                    <if test='topMenuId == "DP14"'>
                                    AND CD.COMIC_SPRT_YN = 'Y'
                                    </if>
-                               ) I
+                               ) H
                          WHERE A.LIST_ID = B.LIST_ID
                            AND A.TENANT_ID = B.TENANT_ID
                            AND A.EXPO_YN = 'Y'
@@ -876,11 +875,9 @@
                                </if>
                            </if>
                            AND F.PROD_ID = G.PROD_ID
-                           AND G.LANG_CD = #{langCd}
-                           AND G.PROD_ID = H.PROD_ID
-                           AND B.TENANT_ID = H.TENANT_ID
-                           AND H.EXPO_YN = 'Y'
-                           AND C.PART_PROD_ID = I.PROD_ID
+                           AND B.TENANT_ID = G.TENANT_ID
+                           AND G.EXPO_YN = 'Y'
+                           AND C.PART_PROD_ID = H.PROD_ID
                       ) A
                  WHERE RN = 1
               ) B
@@ -894,7 +891,7 @@
 	           B.TENANT_ID
 	           , B.MENU_ID
 	           , B.PROD_ID
-	           , PART_PROD_ID
+	           , B.PART_PROD_ID
 	           , B.TOP_MENU_ID
 	           , B.CONTENTS_TYPE_CD
 	           , B.TOTAL_COUNT
@@ -903,8 +900,8 @@
 	                 , ROWNUM AS RNUM
 		          FROM (SELECT A.TENANT_ID
 		                     , D.MENU_ID
-		                     , I.PROD_ID
-		                     , I.PART_PROD_ID
+		                     , H.PROD_ID
+		                     , H.PART_PROD_ID
 		                     , D.TOP_MENU_ID
 		                     , E.CONTENTS_TYPE_CD
 		                  FROM TB_DP_LIST A
@@ -913,7 +910,6 @@
 		                     , TB_DP_MENU_CATEGORY D
 		                     , TB_DP_PROD E
 		                     , TB_DP_TENANT_PROD F
-		                     , TB_DP_PROD_DESC G
 		                     , (SELECT SD.PROD_ID
 		                          FROM TB_DP_SPRT_DEVICE SD
 		                             , TB_CM_DEVICE CD
@@ -926,8 +922,8 @@
 		                           <if test='topMenuId == "DP14"'>
 		                           AND CD.COMIC_SPRT_YN = 'Y'
 		                           </if>
-		                       ) H
-		                    , TB_DP_PROD_RSHP I
+		                       ) G
+		                    , TB_DP_PROD_RSHP H
 		                 WHERE A.LIST_ID = B.LIST_ID
 		                   AND A.TENANT_ID = B.TENANT_ID
 		                   AND A.EXPO_YN = 'Y'
@@ -963,10 +959,8 @@
 		                   AND F.EXPO_YN = 'Y'
 		                   AND B.TENANT_ID = F.TENANT_ID
 		                   AND F.PROD_ID = G.PROD_ID
-		                   AND G.LANG_CD = #{langCd}
-		                   AND G.PROD_ID = H.PROD_ID
-		                   AND H.PROD_ID = I.PART_PROD_ID
-		                   AND I.PROD_RSHP_CD = 'DP010802'
+		                   AND G.PROD_ID = H.PART_PROD_ID
+		                   AND H.PROD_RSHP_CD = 'DP010802'
 		                 ORDER BY B.EXPO_ORD_ALWAYS_YN DESC, B.EXPO_ORD, B.EXPO_ORD_SUB
 		               ) A
 		       ) B

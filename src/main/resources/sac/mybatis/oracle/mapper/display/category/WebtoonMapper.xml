@@ -99,8 +99,8 @@
 		                             , A.EXPO_ORD_ALWAYS_YN
 		                             , A.EXPO_ORD
 		                             , A.EXPO_ORD_SUB
-		                             , G.CONTENTS_TYPE_CD
-		                             , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY G.UPD_DT DESC) AS NO
+		                             , F.CONTENTS_TYPE_CD
+		                             , ROW_NUMBER() OVER(PARTITION BY A.PROD_ID ORDER BY F.UPD_DT DESC) AS NO
 		                          FROM (SELECT LP.*
 		                                  FROM TB_DP_LIST LT
 		                                     , TB_DP_LIST_PROD LP
@@ -115,22 +115,23 @@
 		                                  <if test="menuId != null and menuId != ''">
 		                                  AND LP.MENU_ID = #{menuId}
 		                                  </if>
+		                                  <if test="menuId == null or menuId == ''">
 		                                  AND LP.MENU_ID LIKE 'DP26%'
+		                                  </if>
 		                                ) A /* 채널 */
 		                              , TB_DP_PROD_RSHP B
 		                              , TB_DP_MENU_CATEGORY_PROD_MAPG C  /* 에피소드 */
 		                              , TB_DP_MENU_CATEGORY D
-		                              , TB_DP_MENU_CATEGORY_DESC E
-		                              , UV_TB_DP_MULTIMDA_PROD F
-		                              , TB_DP_PROD G
-		                              , TB_DP_TENANT_PROD H
+		                              , UV_TB_DP_MULTIMDA_PROD E
+		                              , TB_DP_PROD F
+		                              , TB_DP_TENANT_PROD G
 		                              , (SELECT SD.PROD_ID
 		                                   FROM TB_DP_SPRT_DEVICE SD
 		                                      , TB_CM_DEVICE CD
 		                                  WHERE SD.DEVICE_MODEL_CD = CD.DEVICE_MODEL_CD
 		                                    AND (SD.DEVICE_MODEL_CD = #{deviceModelCd} OR SD.DEVICE_MODEL_CD = 'android_standard2')
 		                                    AND CD.USE_YN = 'Y'
-		                               ) I
+		                               ) H
 		                         WHERE A.PROD_ID = B.PROD_ID
 		                           and B.PROD_RSHP_CD ='DP010802'
 		                           AND B.PART_PROD_ID = C.PROD_ID
@@ -139,21 +140,19 @@
 		                           AND C.MENU_ID = D.MENU_ID
 		                           AND D.USE_YN = 'Y'
 		                           AND D.TOP_MENU_ID = 'DP26'
-		                           AND D.MENU_ID = E.MENU_ID
-		                           AND E.LANG_CD = #{langCd}
-		                           AND C.PROD_ID = F.PROD_ID
+		                           AND C.PROD_ID = E.PROD_ID
 		                           <if test="weekDayCd != null and weekDayCd != ''">
-		                           AND F.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd}), '%'))  /* DP010101 ~DP010107  :월~토*/
+		                           AND E.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd}), '%'))  /* DP010101 ~DP010107  :월~토*/
 		                           </if>
-		                           AND F.EPSD_CNT > 0
+		                           AND E.EPSD_CNT > 0
+		                           AND E.PROD_ID = F.PROD_ID
+		                           AND F.SVC_GRP_CD = 'DP000203'
+		                           AND F.CONTENTS_TYPE_CD = 'PD002502'
 		                           AND F.PROD_ID = G.PROD_ID
-		                           AND G.SVC_GRP_CD = 'DP000203'
-		                           AND G.CONTENTS_TYPE_CD = 'PD002502'
+		                           AND A.TENANT_ID = G.TENANT_ID
+		                           AND G.PROD_STATUS_CD = 'PD000403'
+		                           AND G.EXPO_YN = 'Y'
 		                           AND G.PROD_ID = H.PROD_ID
-		                           AND A.TENANT_ID = H.TENANT_ID
-		                           AND H.PROD_STATUS_CD = 'PD000403'
-		                           AND H.EXPO_YN = 'Y'
-		                           AND H.PROD_ID = I.PROD_ID
 		                       ) A
 		                 WHERE NO = 1
 		                 ORDER BY A.EXPO_ORD_ALWAYS_YN DESC, A.EXPO_ORD, A.EXPO_ORD_SUB
