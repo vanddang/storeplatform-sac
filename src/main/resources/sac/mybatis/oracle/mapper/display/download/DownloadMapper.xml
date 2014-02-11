@@ -554,7 +554,7 @@
                                       , TB_DP_PROD_RSHP               C
                                       , TB_DP_PROD                    D
                                       , TB_DP_PROD_DESC               E
-                                      , TB_DP_MULTIMDA_PROD           F
+                                      , UV_TB_DP_MULTIMDA_PROD        F
                                       , TB_DP_TENANT_PROD             G
                                       , TB_DP_TENANT_PROD_PRICE       H
                                       , TB_DP_SPRT_DEVICE             I
@@ -663,7 +663,7 @@
                               , TB_DP_PROD_RSHP               C
                               , TB_DP_PROD                    D
                               , TB_DP_PROD_DESC               E
-                              , TB_DP_MULTIMDA_PROD           F
+                              , UV_TB_DP_MULTIMDA_PROD        F
                               , TB_DP_TENANT_PROD             G
                               , TB_DP_TENANT_PROD_PRICE       H
                               , TB_DP_SPRT_DEVICE             I

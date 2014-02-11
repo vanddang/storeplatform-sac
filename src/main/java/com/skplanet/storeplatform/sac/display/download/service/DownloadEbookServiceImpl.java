@@ -35,7 +35,6 @@ import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
-import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -114,20 +113,22 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				downloadEbookReq);
 
 		if (metaInfo != null) {
-			String prchsId = null;
-			String prchsDt = null;
-			String dwldExprDt = null;
-			String prchsState = null;
-			String prchsProdId = null;
+			String prchsId = null; // 구매ID
+			String prchsDt = null; // 구매일시
+			String dwldExprDt = null; // 다운로드 만료일시
+			String prchsState = null; // 구매상태
+			String prchsProdId = null; // 구매 상품ID
 
 			try {
 				// 구매내역 조회를 위한 생성자
 				ProductListSacIn productListSacIn = new ProductListSacIn();
 				List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 
+				// 소장 상품ID
 				productListSacIn.setProdId(metaInfo.getStoreProdId());
 				productList.add(productListSacIn);
 
+				// 대여 상품ID
 				productListSacIn = new ProductListSacIn();
 				productListSacIn.setProdId(metaInfo.getPlayProdId());
 				productList.add(productListSacIn);
@@ -136,7 +137,7 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				historyListSacReq.setTenantId(downloadEbookReq.getTenantId());
 				historyListSacReq.setUserKey(downloadEbookReq.getUserKey());
 				historyListSacReq.setDeviceKey(downloadEbookReq.getDeviceKey());
-				historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
+				historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
 				historyListSacReq.setStartDt("19000101000000");
 				historyListSacReq.setEndDt(metaInfo.getSysDate());
 				historyListSacReq.setOffset(1);
@@ -157,24 +158,29 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 					prchsState = historyListSacRes.getHistoryList().get(0).getPrchsCaseCd();
 					prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
-					// 소장
 					if (prchsProdId.equals(metaInfo.getStoreProdId())) {
-						if (PurchaseConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
+						// 소장
+						if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 							prchsState = "payment";
-						} else if (PurchaseConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
+						} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
 							prchsState = "gift";
 						}
 					} else {
+						// 대여
 						downloadEbookReq.setPrchsDt(prchsDt);
 						downloadEbookReq.setDwldExprDt(dwldExprDt);
 
-						// 대여 상품 구매상태 조회
+						// 대여 상품 만료여부 조회
 						prchsState = (String) this.commonDAO.queryForObject("Download.getEbookPurchaseState",
 								downloadEbookReq);
 					}
 
 					this.logger.debug("----------------------------------------------------------------");
+					this.logger.debug("[getDownloadEbookInfo] prchsId : {}", prchsId);
+					this.logger.debug("[getDownloadEbookInfo] prchsDt : {}", prchsDt);
+					this.logger.debug("[getDownloadEbookInfo] dwldExprDt : {}", dwldExprDt);
 					this.logger.debug("[getDownloadEbookInfo] prchsState : {}", prchsState);
+					this.logger.debug("[getDownloadEbookInfo] prchsProdId : {}", prchsProdId);
 					this.logger.debug("----------------------------------------------------------------");
 				}
 			} catch (Exception ex) {
