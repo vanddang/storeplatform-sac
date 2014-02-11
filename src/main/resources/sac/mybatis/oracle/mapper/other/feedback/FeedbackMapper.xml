@@ -364,4 +364,26 @@
            AND NOTI_SEQ = #{notiSeq}   
     </update>
     
+        <!-- 판매자 댓글 -->
+    <update id="updateSellerResp" parameterType="ProdNoti">
+        UPDATE  /* FeedbackMapper.xml, updateSellerResp, SAC : 남궁석호 , 2014-02-10 */
+                TB_DP_PROD_NOTI
+           SET  SELLER_RESP_OPIN = #{sellerRespOpin}
+              , SELLER_RESP_TITLE = #{sellerRespTitle}
+              , SELLER_RESP_REG_DT = SYSDATE
+         WHERE  TENANT_ID = #{tenantId}
+           AND  NOTI_SEQ = #{notiSeq}
+    </update>
+
+    <!-- 탈퇴 회원 사용후기 판매자 댓글 -->
+    <update id="updateSellerRespWD" parameterType="ProdNoti">
+        UPDATE  /* FeedbackMapper.xml, updateSellerRespWD, SAC : 남궁석호 , 2014-02-10 */
+                TB_DP_PROD_NOTI_WD
+           SET  SELLER_RESP_OPIN = #{sellerRespOpin}
+              , SELLER_RESP_TITLE = #{sellerRespTitle}
+              , SELLER_RESP_REG_DT = SYSDATE
+         WHERE  TENANT_ID = #{tenantId}
+           AND  NOTI_SEQ = #{notiSeq}
+    </update>
+    
 </mapper>
