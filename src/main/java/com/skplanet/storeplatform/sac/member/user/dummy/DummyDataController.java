@@ -31,7 +31,7 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -538,13 +538,13 @@ public class DummyDataController {
 	 */
 	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public SearchPasswordRes searchPassword() {
+	public SearchPasswordSacRes searchPassword() {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
 		LOGGER.info("####################################################");
 
-		SearchPasswordRes res = new SearchPasswordRes();
+		SearchPasswordSacRes res = new SearchPasswordSacRes();
 		res.setUserPw("");
 		res.setSendMean("01");
 		res.setSendInfo("seoguman@nate.com");
