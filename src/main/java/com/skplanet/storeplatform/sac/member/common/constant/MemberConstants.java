@@ -1,5 +1,6 @@
 package com.skplanet.storeplatform.sac.member.common.constant;
 
+
 /**
  * 회원 관련 상수
  * 
@@ -179,13 +180,13 @@ public final class MemberConstants {
 	/**
 	 * 게임센터 관련 상수.
 	 */
-	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE = "US003201"; //번호변경
-	public static final String GAMECENTER_WORK_CD_NAME_CHANGE = "US003202"; //명의변경
-	public static final String GAMECENTER_WORK_CD_USER_SECEDE = "US003203"; //회원탈퇴
-	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_INSERT = "US003204"; //MDN등록
-	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_DELETE = "US003205"; //MDN삭제
-	public static final String GAMECENTER_WORK_CD_USER_CHANGE = "US003206"; //회원전환
-	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; //통합회원전환
+	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE = "US003201"; // 번호변경
+	public static final String GAMECENTER_WORK_CD_NAME_CHANGE = "US003202"; // 명의변경
+	public static final String GAMECENTER_WORK_CD_USER_SECEDE = "US003203"; // 회원탈퇴
+	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_INSERT = "US003204"; // MDN등록
+	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_DELETE = "US003205"; // MDN삭제
+	public static final String GAMECENTER_WORK_CD_USER_CHANGE = "US003206"; // 회원전환
+	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; // 통합회원전환
 
 	/**
 	 * 판매자 회원 상수들.
