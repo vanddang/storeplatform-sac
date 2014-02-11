@@ -214,5 +214,8 @@
         <!-- Appzine 앱 정보 조회 -->
         <typeAlias alias="AppzineAppListSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.appzine.AppzineAppListSacReq" />
         <typeAlias alias="AppzineAppList"  type="com.skplanet.storeplatform.sac.display.appzine.vo.AppzineAppList" />
+        
+        <!-- OpenApi Download Best 상품 조회 -->
+        <typeAlias alias="DownloadBestSacReq"  type="com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq" />        
     </typeAliases>
 </configuration>

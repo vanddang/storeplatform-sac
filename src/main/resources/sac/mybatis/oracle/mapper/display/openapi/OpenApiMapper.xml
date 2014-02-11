@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OpenApi">
+    <!-- BEST 컨텐츠 상품 조회(movie, broadcast) -->
+    <select id="searchDownloadBestList" parameterType="DownloadBestSacReq" resultType="MetaInfo">
+		SELECT /* OpenApi.xml, searchDownloadBestList, 이석희, 2014-02-10 */
+		       KA.*
+		     , DECODE(INSTR(KB.FILE_PATH, '.', 1, 1), 0, KB.FILE_PATH || KB.FILE_NM, KB.FILE_PATH)  AS IMAGE_PATH
+		     , KB.FILE_SIZE AS IMAGE_SIZE
+		  FROM 
+		       (
+		        SELECT JA.*
+		          FROM
+		               (
+		                SELECT ROWNUM AS RNUM
+		                      ,IA.*
+		                  FROM
+		                       (
+		                        SELECT  COUNT(*) OVER () AS TOTAL_COUNT
+		                              , A.PROD_ID AS PART_PROD_ID
+		                              , NVL(A.DWLD_QTY, 0) AS PRCHS_CNT
+		                              , B.EXPO_SELLER_NM
+		                              , B.CONTENTS_TYPE_CD
+		                              , C.PROD_NM
+		                              , C.PROD_BASE_DESC
+		                              , D.AID
+		                              , D.PKG_NM AS APK_PKG_NM
+		                              , NVL(G.PROD_AMT, 0) AS PROD_AMT
+		                              , NVL(F.AVG_EVLU_SCORE, 0) AS AVG_EVLU_SCORE
+		                              , NVL(F.PATICPERS_CNT, 0) AS PATICPERS_CNT
+		                          FROM
+		                               (
+		                                SELECT  PROD_ID
+		                                      , TENANT_ID
+		                                      , DWLD_QTY
+		                                  FROM TB_DP_LIST_PROD 
+		                                 WHERE LIST_ID = #{listId}
+		                                   AND TENANT_ID =#{tenantId}
+		                                   AND TO_CHAR(STD_DT, 'YYYYMMDDHH24MISS') = #{stdDt} /* 기준일시 */
+		                                   AND EXPO_YN ='Y'
+		                               )                          A
+		                               , TB_DP_PROD               B
+		                               , TB_DP_PROD_DESC          C
+		                               , TB_DP_APP_PROD           D
+		                               , TB_DP_TENANT_PROD        E
+		                               , TB_DP_TENANT_PROD_STATS  F
+		                               , TB_DP_TENANT_PROD_PRICE  G
+		                         WHERE A.PROD_ID = B.PROD_ID
+		                           AND A.PROD_ID = C.PROD_ID
+		                           AND A.PROD_ID = D.PROD_ID
+		                           AND A.PROD_ID = E.PROD_ID
+		                           AND A.PROD_ID = F.PROD_ID
+		                           AND A.PROD_ID = G.PROD_ID
+		                           AND A.TENANT_ID = E.TENANT_ID
+		                           AND A.TENANT_ID = F.TENANT_ID
+		                           AND A.TENANT_ID = G.TENANT_ID
+		                           AND B.TOP_MENU_ID != 'DP02'
+		                           AND B.SVC_GRP_CD   = 'DP000201' /* 서비스 그룹코드 : 앱 */
+		                           AND D.PLAT_CLSF_CD = 'PD005606' /* 안드로이드용 앱 */
+		                           AND E.PROD_STATUS_CD ='PD000403'
+		                           /* =======================================  INPUT PARAMS  ======================================= */
+		                           <if test='inquiryType == "1"'> 
+		                              AND B.REG_ID = #{inquiryValue} --개발자 ID
+		                           </if>
+		                           AND B.PROD_CHRG_YN = #{prodCharge}    --유무료 구분       
+		                           --AND B.SELLER_MBR_NO = '' --판매자 번호
+		                         ORDER BY A.DWLD_QTY
+		                                , C.PROD_NM
+		                       ) IA
+		               ) JA                       
+		         WHERE JA.RNUM BETWEEN #{offset} AND #{count} /* param : offset, count */    
+		       )                     KA
+		        , TB_DP_PROD_IMG     KB              
+		 WHERE KA.PART_PROD_ID = KB.PROD_ID               
+		   AND KB.EXPO_ORD = '1'
+		   AND KB.LANG_CD = #{langCd}
+		   AND KB.IMG_CD = #{imageCd}
+    </select>
+</mapper>
