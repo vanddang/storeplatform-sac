@@ -21,4 +21,6 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 public interface ThemeRecommendService {
 
 	ThemeRecommendRes searchThemeRecommendList(ThemeRecommendReq requestVO, SacRequestHeader header);
+
+	ThemeRecommendRes searchDummyThemeRecommendList(ThemeRecommendReq requestVO, SacRequestHeader header);
 }
