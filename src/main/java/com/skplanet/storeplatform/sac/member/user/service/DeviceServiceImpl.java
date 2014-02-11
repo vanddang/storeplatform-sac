@@ -1119,7 +1119,9 @@ public class DeviceServiceImpl implements DeviceService {
 		listDeviceReq.setUserKey(req.getUserKey());
 		listDeviceReq.setDeviceId(req.getDeviceId());
 		listDeviceReq.setIsMainDevice("N");
+
 		LOGGER.info("============================================ listDeviceReq {}", listDeviceReq.toString());
+
 		ListDeviceRes listDeviceRes = this.listDevice(sacHeader, listDeviceReq);
 
 		LOGGER.info("============================================ listDeviceRes {}", listDeviceRes.getDeviceInfoList().toString());

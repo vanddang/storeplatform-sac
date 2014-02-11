@@ -51,8 +51,8 @@ public class UserExtraInfoController {
 		String extraProfileCode = "";
 		String extraProfilValue = "";
 
-		logger.debug("###### 회원부가정보 등록/수정 Req Object : {}", req.getUserKey());
-		logger.debug("###### 회원부가정보 등록/수정 Req List : {}", req.getAddInfoList().toString());
+		logger.debug("###### modifyAdditionalInformation Req Object : {}", req.getUserKey());
+		logger.debug("###### modifyAdditionalInformation Req List : {}", req.getAddInfoList().toString());
 
 		for (UserExtraInfo infoReq : req.getAddInfoList()) {
 			extraProfileCode = StringUtil.nvl(infoReq.getExtraProfileCode(), "");

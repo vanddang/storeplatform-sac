@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.external.client.uaps.sci.UapsSCI;
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.member.client.common.vo.CommonRequest;
 import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.user.sci.DeviceSCI;
@@ -107,29 +108,25 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 		/* SC 회원 존재 여부 */
 		SearchUserResponse schUserRes = this.searchUser(requestHeader, req);
 
-		/* IMIDP 회원탈퇴 연동 */
-		IdpReceiverM idpReceiver = new IdpReceiverM();
-		ImIdpReceiverM imIdpReceiver = new ImIdpReceiverM();
-
 		/* Return Value */
 		WithdrawRes withdrawRes = new WithdrawRes();
 
 		/* 통합회원 연동 */
 		if (schUserRes.getUserMbr().getImSvcNo() != null) {
-			imIdpReceiver = this.oneIdUser(requestHeader, schUserRes, req);
+			this.oneIdUser(requestHeader, schUserRes, req);
 
 			logger.info("IMIDP Success Response ", schUserRes.toString());
 			withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 		} else {
 			if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_MOBILE)) {
-				idpReceiver = this.idpMobileUser(requestHeader, schUserRes, req);
+				this.idpMobileUser(requestHeader, schUserRes, req);
 
 				logger.info("IDP MDN Success Response ", schUserRes.toString());
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
 			}
 			/* IDP 아이디 회원 */
 			else if (schUserRes.getUserMbr().getUserType().equals(MemberConstants.USER_TYPE_IDPID)) {
-				idpReceiver = this.idpIdUser(requestHeader, schUserRes, req);
+				this.idpIdUser(requestHeader, schUserRes, req);
 
 				logger.info("IDP ID Success Response ", schUserRes.toString());
 				withdrawRes.setUserKey(schUserRes.getUserMbr().getUserKey());
@@ -172,7 +169,7 @@ public class UserWithdrawServiceImpl implements UserWithdrawService {
 			schUserReq.setKeySearchList(keySearchList);
 
 		} else {
-			throw new RuntimeException("파라미터 없음 userId, userAuthKey, deviceId");
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
 		schUserRes = this.userSCI.searchUser(schUserReq);

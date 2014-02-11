@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.sac.api.util.StringUtil;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailByDeviceIdSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailReq;
@@ -33,6 +34,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.util.ConvertMapperUtils;
 import com.skplanet.storeplatform.sac.member.user.service.UserSearchService;
@@ -233,4 +236,27 @@ public class UserSearchController {
 		return res;
 	}
 
+	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public SearchPasswordSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 2.1.8. PASSWORD 찾기 #####");
+		LOGGER.info("####################################################");
+
+		LOGGER.info("============================================ SearchPasswordSacReq : {}", req.toString());
+
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userEmail = StringUtil.nvl(req.getUserEmail(), "");
+		String userPhone = StringUtil.nvl(req.getUserPhone(), "");
+
+		if (userId.equals("") || userEmail.equals("") || userPhone.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", req.toString());
+		}
+
+		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
+
+		LOGGER.info("Final SearchPasswordSacRes Response : {}", res.toString());
+
+		return res;
+	}
 }

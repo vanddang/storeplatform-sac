@@ -49,8 +49,6 @@ public class UserWithdrawController {
 		logger.info("##### 5.1.24. 회원 탈퇴 (ID/MDN 기반) #####");
 		logger.info("####################################################");
 
-		WithdrawRes res = new WithdrawRes();
-
 		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
 		String userId = StringUtil.nvl(req.getUserId(), "");
 		String userAuthKey = StringUtil.nvl(req.getUserAuthKey(), "");
@@ -65,7 +63,7 @@ public class UserWithdrawController {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
 
-		res = this.svc.withdraw(sacHeader, req);
+		WithdrawRes res = this.svc.withdraw(sacHeader, req);
 		logger.info("####### Final UserWithdraw Response : {}", res.toString());
 
 		return res;

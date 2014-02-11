@@ -25,6 +25,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -179,4 +181,16 @@ public interface UserSearchService {
 	 * @return SearchIdSacRes
 	 */
 	public SearchIdSacRes searchId(SacRequestHeader sacHeader, SearchIdSacReq req);
+
+	/**
+	 * <pre>
+	 * PASSWORD 찾기
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param SearchPasswordSacReq
+	 * @return SearchPasswordSacRes
+	 */
+	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req);
 }

@@ -68,6 +68,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.UserExtraInfoRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.member.common.MemberCommonComponent;
@@ -330,7 +332,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 */
 	@Override
 	public SearchIdSacRes searchId(SacRequestHeader sacHeader, SearchIdSacReq req) {
-		SearchIdSacRes res = new SearchIdSacRes();
 
 		/* 헤더 정보 셋팅 */
 		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
@@ -346,6 +347,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		scReq.setDeviceId(req.getDeviceId());
 		scRes = this.deviceService.listDevice(sacHeader, scReq);
 		DeviceInfo deviceInfo = scRes.getDeviceInfoList().get(0);
+		SearchIdSacRes res = new SearchIdSacRes();
 
 		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) {
 
@@ -360,7 +362,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		} else {
 			// 통합회원 : 회원연락처와 휴대기기 ID가 일치하는 경우
 			if (info.getUserPhone().equals(deviceInfo.getDeviceId())) {
-				UserInfo deviceIdSearch = this.mcc.getUserBaseInfo("deviceId", info.getUserPhone(), sacHeader);
+				UserInfo deviceIdSearch = this.mcc.getUserBaseInfo("deviceId", deviceInfo.getDeviceId(), sacHeader);
 				res.setUserId(deviceIdSearch.getUserId());
 			} else if (!info.getUserPhone().equals(deviceInfo.getDeviceId())) {
 				throw new StorePlatformException("SAC_MEM_1301", info.getUserPhone(), deviceInfo.getDeviceId());
@@ -369,6 +371,51 @@ public class UserSearchServiceImpl implements UserSearchService {
 			}
 		}
 
+		logger.info("SearchIdSacRes : ", res.toString());
+
+		return res;
+	}
+
+	/**
+	 * PASSWORD 찾기
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 * @return
+	 */
+	@Override
+	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req) {
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		/* 회원 정보 조회 */
+		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
+
+		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) { // IDP 회원
+
+		} else { // 통합 IDP 회원
+			// 통합ID회원 프로파일 조회
+			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(info.getImSvcNo());
+
+			if (profileInfo.getResponseBody().getIs_user_tn_auth().equals("Y")) { // 휴대폰 인증
+				//				mapUrl.put("user_tn", profileInfo.getResponseBody().getUser_tn());
+				//                mapUrl.put("user_tn_nation_cd", "82");
+				//                mapUrl.put("user_tn_type", "M");
+				//                mapUrl.put("is_user_tn_auth", "Y");
+				//                mapUrl.put("is_email_auth", "N");
+			} else if (profileInfo.getResponseBody().getIs_email_auth().equals("Y")) { // 이메일 인증
+				//				mapUrl.put("is_email_auth", "Y");
+				//                mapUrl.put("user_email", profileInfo.getResponseBody().getUser_email());
+				//                mapUrl.put("is_user_tn_auth", "N");
+			}
+		}
+
+		SearchPasswordSacRes res = new SearchPasswordSacRes();
 		logger.info("SearchIdSacRes : ", res.toString());
 
 		return res;

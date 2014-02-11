@@ -146,8 +146,8 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
-		LOGGER.debug("###### 회원부가정보 삭제 Req : {}", req.getUserKey());
-		LOGGER.debug("###### 회원부가정보 삭제 Req : {}", req.getAddInfoList().toString());
+		LOGGER.debug("###### removeUserExtra Req : {}", req.getUserKey());
+		LOGGER.debug("###### removeUserExtra Req : {}", req.getAddInfoList().toString());
 
 		for (UserExtraInfo info : req.getAddInfoList()) {
 			MbrMangItemPtcr ptcr = new MbrMangItemPtcr();
@@ -163,26 +163,17 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		removeReq.setMbrMangItemPtcr(ptcrList);
 		removeReq.setCommonRequest(commonRequest);
 
-		LOGGER.debug("###### 회원부가정보 삭제 SC API ptcrList Req : {}", ptcrList.toString());
-		LOGGER.debug("###### 회원부가정보 삭제 SC API update Req : {}", removeReq.getUserKey());
-		LOGGER.debug("###### 회원부가정보 삭제 SC API update Req : {}", removeReq.getMbrMangItemPtcr().toString());
+		LOGGER.debug("###### removeUserExtra SC API ptcrList Req : {}", ptcrList.toString());
+		LOGGER.debug("###### removeUserExtra SC API update Req : {}", removeReq.getUserKey());
+		LOGGER.debug("###### removeUserExtra SC API update Req : {}", removeReq.getMbrMangItemPtcr().toString());
 
 		RemoveManagementResponse removeRes = this.userSCI.removeManagement(removeReq);
 
-		if (removeRes.getUserKey() != null) {
+		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getCommonResponse().getResultCode());
+		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
+		LOGGER.debug("###### removeUserExtra SC API Success Res : {}", removeRes.getUserKey());
 
-			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultCode());
-			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getCommonResponse().getResultMessage());
-			LOGGER.debug("###### 회원부가정보 삭제 SC API Success Res : {}", removeRes.getUserKey());
-
-			res.setUserKey(removeRes.getUserKey());
-		} else {
-			LOGGER.debug("###### 회원부가정보 삭제 SC API Fail Res : {}", removeRes.getCommonResponse().getResultCode());
-			LOGGER.debug("###### 회원부가정보 삭제 SC API Fail Res : {}", removeRes.getCommonResponse().getResultMessage());
-
-			throw new RuntimeException("회원부가정보 삭제 SC API Fail : [" + removeRes.getCommonResponse().getResultCode() + "]" + "["
-					+ removeRes.getCommonResponse().getResultMessage() + "]");
-		}
+		res.setUserKey(removeRes.getUserKey());
 
 		return res;
 	}
