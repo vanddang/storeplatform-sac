@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Isf.ThemeRecommend">
+    <!-- 테마추천 목록 -->
+    <select id="getRecomPkgList" parameterType="Map" resultType="ThemeRecommend">
+    SELECT /* IsfThemeRecommendMapper.xml, getRecomPkgList, Yun JuYoung, 2014-02-11 */
+           PKG.*
+         , COUNT(*) OVER () AS TOTAL_COUNT
+      FROM
+         (
+         SELECT PKG_ID AS PROD_ID
+              , PKG_NM AS PROD_NM
+              , IMG2 AS FILE_POS
+           FROM TB_DP_RECOM_PKG UP
+      <if test="multiValue_id  != null">
+             , (
+              <foreach collection="multiValue_id" item="multiValue_id" separator="UNION ALL">
+                SELECT #{multiValue_id[].id} ISF_ID, #{multiValue_id[].order} ISF_ORDER FROM DUAL
+              </foreach>
+               ) ISF
+      </if>
+          WHERE EXPO_YN = 'Y'
+            AND ( SYSDATE BETWEEN EXPO_START_DT AND EXPO_END_DT OR ALWAYS_EXPO_YN = 'Y' )
+      <if test="THEME_RECOMM_ID  != null">
+            AND PKG_ID = #{THEME_RECOMM_ID}
+      </if>
+      <if test="multiValue_id  != null">
+            AND PKG_ID = ISF_ID
+          ORDER BY ISF_ORDER
+      </if>
+      <if test="multiValue_id  != null">
+         ORDER BY ATTR_PRTY_EXPO_YN DESC, EXPO_ORD, REG_DT
+      </if>
+         )
+         PKG
+     WHERE ROWNUM BETWEEN #START_ROW# AND #END_ROW# 
+    </select>
+   
+</mapper>

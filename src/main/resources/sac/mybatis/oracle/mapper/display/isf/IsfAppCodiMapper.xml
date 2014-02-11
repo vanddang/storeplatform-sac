@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="isf">
+<mapper namespace="Isf.AppCodi">
     <select id="getAppCodiProdList" parameterType="Map" resultType="ProductBasicInfo">
-    SELECT /* IsfMapper.xml, getAppCodiProdList, Yun JuYoung, 2014-02-06 */
+    SELECT /* IsfAppCodiMapper.xml, getAppCodiProdList, Yun JuYoung, 2014-02-06 */
            S.*
       FROM
           (
@@ -98,7 +98,7 @@
     </select>
  
      <select id="getRelProdList" resultType="java.util.HashMap" parameterType="java.util.Map">
-		    SELECT /* IsfMapper.xml, getRelProdList, Yun JuYoung, 2014-02-06 */
+		    SELECT /* IsfAppCodiMapper.xml, getRelProdList, Yun JuYoung, 2014-02-06 */
 		           P.TOP_MENU_ID
 		         , CP.PROD_ID
 		         , PD.PROD_NM
@@ -127,7 +127,7 @@
     </select>
     
     <select id="getMusicMetaInfo" parameterType="Map" resultType="MetaInfo">
-       SELECT /* IsfMapper.xml, getMusicMetaInfo, Yun JuYoung, 2014-02-06 */
+       SELECT /* IsfAppCodiMapper.xml, getMusicMetaInfo, Yun JuYoung, 2014-02-06 */
             , CP.PROD_ID 
             , CP.PART_PROD_ID
             , C.MENU_ID
@@ -155,7 +155,7 @@
             , PI.FILE_NM
             , PI.FILE_SIZE
             , P.CONTENTS_TYPE_CD
-         FROM TB_DP_MULTIMDA_PROD MP
+         FROM UV_TB_DP_MULTIMDA_PROD MP
             , TB_DP_PROD P
             , TB_DP_PROD_DESC PD
             , TB_DP_PROD_RSHP CP
@@ -165,7 +165,7 @@
             , TB_DP_MENU_CATEGORY C
             , TB_DP_MENU_CATEGORY_DESC CD
             , TB_DP_MENU_CATEGORY_DESC CD2
-            , TB_DP_MULTIMDA_PROD MP2
+            , UV_TB_DP_MULTIMDA_PROD MP2
             , TB_DP_PROD P2
             , TB_DP_TENANT_PROD TP2
             , TB_DP_PROD_IMG PI
@@ -217,7 +217,7 @@
     </select>    
     
     <select id="getAdminRecommandProdList" parameterType="Map" resultType="AppCodiRes">
-		    SELECT /* IsfMapper.xml, getAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
+		    SELECT /* IsfAppCodiMapper.xml, getAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
 		            P.TOTAL_COUNT
 		          , P.TOP_MENU_ID
 		          , TRIM(REPLACE((SELECT MENU_NM
@@ -355,8 +355,8 @@
 		                               , TB_DP_TENANT_PROD TP2
 		                               , TB_DP_SPRT_DEVICE SH
 		                               , TB_CM_DEVICE PHI
-		                               , TB_DP_MULTIMDA_PROD MP
-		                               , TB_DP_MULTIMDA_PROD MP2
+		                               , UV_TB_DP_MULTIMDA_PROD MP
+		                               , UV_TB_DP_MULTIMDA_PROD MP2
 		                               , TB_DP_APP_PROD AP
 		                               , TB_DP_TENANT_PROD_PRICE PP
 		                               , TB_DP_TENANT_PROD_PRICE PP2
@@ -453,7 +453,7 @@
     </select>
     
     <select id="getBasicAdminRecommandProdList" parameterType="Map" resultType="ProductBasicInfo">
-      SELECT /* IsfMapper.xml, getBasicAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
+      SELECT /* IsfAppCodiMapper.xml, getBasicAdminRecommandProdList, Yun JuYoung, 2014-02-06 */
              *
         FROM            
             (
@@ -484,7 +484,7 @@
             AND TP.PROD_ID = P.PROD_ID
             AND P2.PROD_ID = PR.PART_PROD_ID -- EPISODE
             AND TP2.PROD_ID = P2.PROD_ID
-            AND SH.PROD_ID = P2.PROD_ID  -- AND SH.PROD_ID = P2.PART_PROD_ID <![CDATA[<-]]> AS IS 쿼리 기준으로 EPISODE PROD ID 로 연결되어야 하나, 데이타가 한건도 나오지 않음...
+            AND SH.PROD_ID = P2.PROD_ID
             AND SH.DEVICE_MODEL_CD = PHI.DEVICE_MODEL_CD
             AND AR.TENANT_ID = 'S01'
             AND CP.USE_YN = 'Y'
