@@ -63,7 +63,7 @@ public class Shopping extends CommonInfo {
 
 	private String sysDate;
 	private String specialSale;
-	private String selllerMbrNo;
+	private String sellerMbrNo;
 	private String soldOut;
 	private String usePeriod;
 	private String allow;
@@ -425,25 +425,25 @@ public class Shopping extends CommonInfo {
 	}
 
 	/**
-	 * @return the selllerMbrNo
-	 */
-	public String getSelllerMbrNo() {
-		return this.selllerMbrNo;
-	}
-
-	/**
-	 * @param selllerMbrNo
-	 *            the selllerMbrNo to set
-	 */
-	public void setSelllerMbrNo(String selllerMbrNo) {
-		this.selllerMbrNo = selllerMbrNo;
-	}
-
-	/**
 	 * @return the soldOut
 	 */
 	public String getSoldOut() {
 		return this.soldOut;
+	}
+
+	/**
+	 * @return the sellerMbrNo
+	 */
+	public String getSellerMbrNo() {
+		return this.sellerMbrNo;
+	}
+
+	/**
+	 * @param sellerMbrNo
+	 *            the sellerMbrNo to set
+	 */
+	public void setSellerMbrNo(String sellerMbrNo) {
+		this.sellerMbrNo = sellerMbrNo;
 	}
 
 	/**
