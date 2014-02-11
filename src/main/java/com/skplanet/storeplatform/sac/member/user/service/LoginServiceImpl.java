@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
@@ -76,6 +77,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Autowired
 	private ImIdpService imIdpService;
+
+	@Value("#{propertiesForSac['idp.user.auth.key']}")
+	private String tempUserAuthKey;
 
 	/*
 	 * (non-Javadoc)
@@ -166,6 +170,7 @@ public class LoginServiceImpl implements LoginService {
 			res.setUserSubStatus(userSubStatus);
 			res.setLoginStatusCode(loginStatusCode);
 			res.setStopStatusCode(stopStatusCode);
+			res.setUserAuthKey(this.tempUserAuthKey);
 			res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, userKey));
 			res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
@@ -189,6 +194,7 @@ public class LoginServiceImpl implements LoginService {
 				res.setUserSubStatus(userSubStatus);
 				res.setLoginStatusCode(loginStatusCode);
 				res.setStopStatusCode(stopStatusCode);
+				res.setUserAuthKey(this.tempUserAuthKey);
 				res.setDeviceKey(this.getLoginDeviceKey(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, deviceId, userKey));
 				res.setIsLoginSuccess(loginUserRes.getIsLoginSuccess());
 
