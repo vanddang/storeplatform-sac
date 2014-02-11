@@ -311,9 +311,17 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		try {
 
 			// ////////////////// Coupon 정보 S////////////////////////////
+			int itemCnt = 0;
+			for (DpItemInfo itemInfo : itemInfoList) {
+				// 판매중인 아이템 수만 count
+				if (itemInfo.getItemStatus().equals("3")) {// 2:판매대기 3:판매중 4:판매중지 5:판매금지
+					itemCnt++;
+				}
+			}
+
 			dsp.setProdId(couponInfo.getProdId());
 
-			dsp.setEpsdCnt(0);//
+			dsp.setEpsdCnt(itemCnt);//
 			dsp.setChnlCompNm(this.compNm);
 			if (couponInfo.getCoupnStatus().equals("3")) { // 2:판매대기 3:판매중 4:판매중지 5:판매금지
 				dsp.setSaleYn("Y");
@@ -352,21 +360,20 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 			IcmsJobPrint.printTbDpShpgProd(dsp, "TB_DP_SHPG_PROD - COUPON");
 			// ////////////////// Coupon 정보 E////////////////////////////
 
-			int itemCnt = 0;
-			for (DpItemInfo itemInfo : itemInfoList) {
-				// 판매중인 아이템 수만 count
-				if (itemInfo.getItemStatus().equals("3")) {// 2:판매대기 3:판매중 4:판매중지 5:판매금지
-					itemCnt++;
-				}
-			}
-
 			// ////////////////// Item 정보 S////////////////////////////
 
 			for (int i = 0; i < itemInfoList.size(); i++) {
+				int itemOptionCnt = 0;
 				DpItemInfo itemInfo = itemInfoList.get(i);
 				dsp = new TbDpShpgProdInfo();
 				dsp.setProdId(itemInfo.getProdId());
-				dsp.setEpsdCnt(itemCnt);// 판매중인 아이템 수만 count
+				if (StringUtils.isNotBlank(itemInfo.getItemValue1())) {
+					itemOptionCnt++;
+				}
+				if (StringUtils.isNotBlank(itemInfo.getItemValue2())) {
+					itemOptionCnt++;
+				}
+				dsp.setEpsdCnt(itemOptionCnt);// 아이템에 대한 판매중인 옵션 수만 count
 				dsp.setChnlCompNm(this.compNm);
 				if (itemInfo.getItemStatus().equals("3")) { // 2:판매대기 3:판매중 4:판매중지 5:판매금지
 					dsp.setSaleYn("Y");
