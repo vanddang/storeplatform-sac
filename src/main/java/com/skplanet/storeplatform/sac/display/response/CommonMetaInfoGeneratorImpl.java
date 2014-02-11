@@ -159,6 +159,7 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	@Override
 	public Rights generateRights(MetaInfo metaInfo) {
 		Rights rights = new Rights();
+		rights.setAllow(metaInfo.getDwldAreaLimtYn());
 		rights.setGrade(metaInfo.getProdGrdCd());
 
 		// 소장 정보

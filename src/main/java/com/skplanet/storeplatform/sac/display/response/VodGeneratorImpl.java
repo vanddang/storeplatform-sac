@@ -12,16 +12,19 @@ package com.skplanet.storeplatform.sac.display.response;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Time;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Chapter;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Contributor;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Play;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Rights;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Store;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
@@ -79,8 +82,12 @@ public class VodGeneratorImpl implements VodGenerator {
 	public Vod generateVod(MetaInfo metaInfo) {
 		Vod vod = new Vod();
 		Chapter chapter = new Chapter();
+		Time time = new Time();
+		time.setText(metaInfo.getEpsdPlayTm());
 		chapter.setUnit(metaInfo.getChapter());
 		vod.setChapter(chapter);
+		vod.setRunningTime(time);
+		vod.setVideoInfoList(this.generateVideoInfoList(metaInfo));
 		return vod;
 	}
 
@@ -133,5 +140,57 @@ public class VodGeneratorImpl implements VodGenerator {
 		rights.setStore(store);
 		rights.setGrade(metaInfo.getProdGrdCd());
 		return rights;
+	}
+
+	@Override
+	public List<VideoInfo> generateVideoInfoList(MetaInfo metaInfo) {
+		VideoInfo videoInfo = new VideoInfo();
+		List<VideoInfo> videoInfoList = new ArrayList<VideoInfo>();
+
+		/*
+		 * 일반화질 정보
+		 */
+		if (StringUtils.isNotEmpty(metaInfo.getNmBtvCid())) {
+			videoInfo.setBtvcid(metaInfo.getNmBtvCid());
+			videoInfo.setPictureSize(metaInfo.getNmDpPicRatio());
+			videoInfo.setPixel(metaInfo.getNmDpPixel());
+			videoInfo.setScid(metaInfo.getNmSubContsId());
+			videoInfo.setSize(metaInfo.getNmFileSize().toString());
+			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
+			videoInfo.setVersion(metaInfo.getNmProdVer());
+			videoInfoList.add(videoInfo);
+		}
+
+		/*
+		 * SD 고화질 정보
+		 */
+		if (StringUtils.isNotEmpty(metaInfo.getSdBtvCid())) {
+			videoInfo = new VideoInfo();
+			videoInfo.setBtvcid(metaInfo.getSdBtvCid());
+			videoInfo.setPictureSize(metaInfo.getSdDpPicRatio());
+			videoInfo.setPixel(metaInfo.getSdDpPixel());
+			videoInfo.setScid(metaInfo.getSdSubContsId());
+			videoInfo.setSize(metaInfo.getSdFileSize().toString());
+			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
+			videoInfo.setVersion(metaInfo.getSdProdVer());
+			videoInfoList.add(videoInfo);
+		}
+
+		/*
+		 * HD 고화질 정보
+		 */
+		if (StringUtils.isNotEmpty(metaInfo.getHdBtvCid())) {
+			videoInfo = new VideoInfo();
+			videoInfo.setBtvcid(metaInfo.getHdBtvCid());
+			videoInfo.setPictureSize(metaInfo.getHdDpPicRatio());
+			videoInfo.setPixel(metaInfo.getHdDpPixel());
+			videoInfo.setScid(metaInfo.getHdSubContsId());
+			videoInfo.setSize(metaInfo.getHdFileSize().toString());
+			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
+			videoInfo.setVersion(metaInfo.getHdProdVer());
+			videoInfoList.add(videoInfo);
+		}
+
+		return videoInfoList;
 	}
 }
