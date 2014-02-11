@@ -2308,8 +2308,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 									distributor.setEmail(memberRes.getSellerMbr().getSellerEmail());
 									distributor.setAddress(memberRes.getSellerMbr().getSellerAddress()
 											+ memberRes.getSellerMbr().getSellerDetailAddress());
-									distributor.setRegNo(memberRes.getSellerMbr().getSellerBizNumber());
+									distributor.setRegNo(memberRes.getSellerMbr().getBizRegNumber());
 									episodeProduct.setDistributor(distributor);
+
 								}
 							} catch (Exception e) {
 								throw new StorePlatformException("SAC_DSP_0001", "멤버 정보 조회 ", e);
