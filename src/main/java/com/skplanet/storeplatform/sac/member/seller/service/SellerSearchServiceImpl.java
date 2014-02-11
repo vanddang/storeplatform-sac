@@ -287,27 +287,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				document.setUpdateID(schRes.getDocument().get(i).getUpdateID());
 				dList.add(document);
 			}
-
-		// 판매자 부가정보 목록
-		List<ExtraRight> eList = new ArrayList<ExtraRight>();
-		ExtraRight extraRightList = null;
-		if (schRes.getExtraRight() != null)
-			for (int i = 0; i < schRes.getExtraRight().size(); i++) {
-				extraRightList = new ExtraRight();
-				// extraRightList.setEndDate(schRes.getExtraRight().get(i).getEndDate());
-				// extraRightList.setRegDate(schRes.getExtraRight().get(i).getRegDate());
-				extraRightList.setRegID(schRes.getExtraRight().get(i).getRegID());
-				extraRightList.setRightProfileCode(schRes.getExtraRight().get(i).getRightProfileCode());
-				// extraRightList.setSellerKey(schRes.getExtraRight().get(i).getSellerKey());
-				// extraRightList.setSellerRate(schRes.getExtraRight().get(i).getSellerRate());
-				// extraRightList.setStartDate(schRes.getExtraRight().get(i).getStartDate());
-				extraRightList.setTenantID(schRes.getExtraRight().get(i).getTenantID());
-				extraRightList.setTenantRate(schRes.getExtraRight().get(i).getTenantRate());
-				extraRightList.setUpdateDate(schRes.getExtraRight().get(i).getUpdateDate());
-				extraRightList.setUpdateID(schRes.getExtraRight().get(i).getUpdateID());
-				eList.add(extraRightList);
-			}
-
 		// 판매자 정산정보
 		SellerAccount sellerAccount = new SellerAccount();
 		if (schRes.getSellerAccount() != null) {
@@ -333,7 +312,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 
 		DetailAccountInformationRes response = new DetailAccountInformationRes();
 		response.setDocumentList(dList);
-		response.setExtraRightList(eList);
 		response.setSellerAccount(sellerAccount);
 		response.setSellerKey(schRes.getSellerKey());
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
