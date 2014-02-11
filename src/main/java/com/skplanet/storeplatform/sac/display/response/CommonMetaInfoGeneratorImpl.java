@@ -104,10 +104,13 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 		menu.setName(metaInfo.getTopMenuNm());
 		menuList.add(menu);
 
-		menu = new Menu();
-		menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-		menu.setId(metaInfo.getMetaClsfCd());
-		menuList.add(menu);
+		if (StringUtils.isNotEmpty(metaInfo.getMetaClsfCd())) {
+			menu = new Menu();
+			menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
+			menu.setId(metaInfo.getMetaClsfCd());
+			menuList.add(menu);
+		}
+
 		return menuList;
 	}
 
