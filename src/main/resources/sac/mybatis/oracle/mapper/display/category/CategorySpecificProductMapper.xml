@@ -261,14 +261,14 @@
 						                      , TB_DP_MENU_CATEGORY_PROD_MAPG B
 						                      , TB_DP_MENU_CATEGORY_DESC      C
 						                      , TB_DP_PROD                    D
-						                      , TB_DP_MULTIMDA_PROD           E
+						                      , UV_TB_DP_MULTIMDA_PROD        E
 						                      , TB_DP_PROD_DESC               F
 						                      , TB_DP_TENANT_PROD             G
 						                      , TB_DP_TENANT_PROD_PRICE       H
 						                      , TB_DP_PROD_RSHP               I
 						                      , TB_DP_PROD                    J
 						                      , TB_DP_SPRT_DEVICE             K
-						                      , TB_DP_MULTIMDA_PROD           L
+						                      , UV_TB_DP_MULTIMDA_PROD        L
 						                      , TB_DP_PROD_IMG                M
 						                      , TB_DP_TENANT_PROD_STATS       N              
 						                 WHERE A.MENU_ID = B.MENU_ID
@@ -358,7 +358,7 @@
             , PI.FILE_NM
             , PI.FILE_SIZE
             , #{productBasicInfo.contentsTypeCd} as CONTENTS_TYPE_CD
-         FROM TB_DP_MULTIMDA_PROD MP
+            FROM UV_TB_DP_MULTIMDA_PROD MP
      --       , TB_DP_MUSIC_CHART MCI
             , TB_DP_PROD P
             , TB_DP_PROD_DESC PD
@@ -369,7 +369,7 @@
             , TB_DP_MENU_CATEGORY C
             , TB_DP_MENU_CATEGORY_DESC CD
             , TB_DP_MENU_CATEGORY_DESC CD2
-            , TB_DP_MULTIMDA_PROD MP2
+            , UV_TB_DP_MULTIMDA_PROD MP2
             , TB_DP_PROD P2
             , TB_DP_TENANT_PROD TP2
             , TB_DP_PROD_IMG PI
@@ -485,7 +485,7 @@
           FROM (
                  SELECT ROW_NUMBER( ) OVER ( PARTITION BY B.PROD_ID
                                                  ORDER BY DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
-                                                        , TO_NUMBER( REGEXP_REPLACE( (SELECT CHAPTER FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID), '[^[:digit:]]') ) DESC
+                                                        , TO_NUMBER( REGEXP_REPLACE( (SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID), '[^[:digit:]]') ) DESC
                                                         , NVL( J.USE_PERIOD_UNIT_CD , 'PD00310' ) DESC
                                                         , J.UPD_DT DESC ) AS RN
                       , A.UP_MENU_ID
@@ -510,7 +510,7 @@
                       , E.AGENCY_NM
                       , E.EPSD_CNT
                       , F.PROD_NM
-                      ,( SELECT CHAPTER FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER
+                      ,( SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID) AS CHAPTER
                       , F.ARTIST1_NM
                       , F.ARTIST2_NM
                       , F.ARTIST3_NM
@@ -530,14 +530,14 @@
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
                       , TB_DP_PROD                    D
-                      , TB_DP_MULTIMDA_PROD           E
+                      , UV_TB_DP_MULTIMDA_PROD        E
                       , TB_DP_PROD_DESC               F
                       , TB_DP_TENANT_PROD             G
                       , TB_DP_TENANT_PROD_PRICE       H
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J
                       , TB_DP_SPRT_DEVICE             K
-                      , TB_DP_MULTIMDA_PROD           L
+                      , UV_TB_DP_MULTIMDA_PROD        L
                       , TB_DP_PROD_IMG                M
                       , TB_DP_TENANT_PROD_STATS       N              
                  WHERE A.MENU_ID = B.MENU_ID
