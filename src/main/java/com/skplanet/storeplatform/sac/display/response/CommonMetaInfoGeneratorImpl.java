@@ -156,6 +156,25 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateSourceList(com.skplanet.storeplatform
+	 * .sac.display.meta.vo.MetaInfo)
+	 */
+	@Override
+	public List<Source> generateSourceList(String mediaType, String type, String url, Integer Size) {
+		List<Source> sourceList = new ArrayList<Source>();
+		Source source = new Source();
+		source.setMediaType(mediaType);
+		source.setType(type);
+		source.setUrl(url);
+		source.setSize(Size);
+		sourceList.add(source);
+		return sourceList;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator#generateRights(com.skplanet.storeplatform
 	 * .sac.display.meta.vo.MetaInfo)
 	 */

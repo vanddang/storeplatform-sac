@@ -93,6 +93,17 @@ public interface CommonMetaInfoGenerator {
 
 	/**
 	 * <pre>
+	 * 공통 Source List 생성.
+	 * </pre>
+	 * 
+	 * @param metaInfo
+	 *            metaInfo
+	 * @return List<Source>
+	 */
+	public List<Source> generateSourceList(String mediaType, String type, String url, Integer Size);
+
+	/**
+	 * <pre>
 	 * 공통 Rights 객체 생성(멀티미디어 상품은 별도).
 	 * </pre>
 	 * 
