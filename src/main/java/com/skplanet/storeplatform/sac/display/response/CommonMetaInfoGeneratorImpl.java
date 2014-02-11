@@ -337,6 +337,8 @@ public class CommonMetaInfoGeneratorImpl implements CommonMetaInfoGenerator {
 	public Purchase generatePurchase(MetaInfo metaInfo) {
 		Purchase purchase = new Purchase();
 
+		purchase.setState(metaInfo.getPurchaseState());
+
 		List<Identifier> identifierList = new ArrayList<Identifier>();
 		identifierList
 				.add(this.generateIdentifier(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD, metaInfo.getPurchaseId()));
