@@ -66,6 +66,13 @@ public interface SellerSearchService {
 			ListPasswordReminderQuestionReq req);
 
 	/**
+	 * Password 보안 질문 조회All.
+	 * 
+	 * @throws Exception
+	 */
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header, String language);
+
+	/**
 	 * Password 보안 질문 확인.
 	 * 
 	 * @throws Exception

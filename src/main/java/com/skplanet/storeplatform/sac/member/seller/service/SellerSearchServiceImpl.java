@@ -29,6 +29,8 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerRequ
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchIDSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchLoginInfoResponse;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllRequest;
+import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListAllResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchPwdHintListResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerRequest;
@@ -424,7 +426,6 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 			ListPasswordReminderQuestionReq req) {
 
 		SearchPwdHintListRequest schReq = new SearchPwdHintListRequest();
-
 		schReq.setSellerKey(req.getSellerKey());
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 
@@ -438,6 +439,41 @@ public class SellerSearchServiceImpl implements SellerSearchService {
 				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderList().get(i).getQuestionID());
 				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderList().get(i).getQuestionMessage());
 				sellerMbrPwdHint.setUpdateDate(schRes.getPWReminderList().get(i).getUpdateDate());
+				sList.add(sellerMbrPwdHint);
+			}
+
+		ListPasswordReminderQuestionRes response = new ListPasswordReminderQuestionRes();
+		response.setSellerMbrPwdHintList(sList);
+
+		return response;
+
+	}
+
+	/**
+	 * <pre>
+	 * Password 보안 질문 조회 All.
+	 * </pre>
+	 * 
+	 * @param language
+	 * @return ListPasswordReminderQuestionRes
+	 */
+	@Override
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header, String language) {
+
+		SearchPwdHintListAllRequest schReq = new SearchPwdHintListAllRequest();
+		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
+		schReq.setLanguageCode(language);
+
+		SearchPwdHintListAllResponse schRes = this.sellerSCI.searchPwdHintListAll(schReq);
+
+		List<SellerMbrPwdHint> sList = new ArrayList<SellerMbrPwdHint>();
+		SellerMbrPwdHint sellerMbrPwdHint = null;
+		if (schRes.getPWReminderAllList() != null)
+			for (int i = 0; i < schRes.getPWReminderAllList().size(); i++) {
+				sellerMbrPwdHint = new SellerMbrPwdHint();
+				sellerMbrPwdHint.setQuestionID(schRes.getPWReminderAllList().get(i).getQuestionID());
+				sellerMbrPwdHint.setQuestionMessage(schRes.getPWReminderAllList().get(i).getQuestionMessage());
+				sellerMbrPwdHint.setUpdateDate(schRes.getPWReminderAllList().get(i).getUpdateDate());
 				sList.add(sellerMbrPwdHint);
 			}
 

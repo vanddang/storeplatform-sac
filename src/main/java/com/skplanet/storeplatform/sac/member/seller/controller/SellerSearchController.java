@@ -194,6 +194,22 @@ public class SellerSearchController {
 
 	/**
 	 * <pre>
+	 * Password 보안 질문 조회All.
+	 * </pre>
+	 * 
+	 * @param req
+	 * @return ListPasswordReminderQuestionRes
+	 */
+	@RequestMapping(value = "/listPasswordReminderQuestionAll2/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header,
+			SacRequestHeader requestHeader) {
+		TenantHeader theader = requestHeader.getTenantHeader();
+		return this.sellerSearchService.listPasswordReminderQuestionAll(header, theader.getLangCd());
+	}
+
+	/**
+	 * <pre>
 	 * Password 보안 질문 확인.
 	 * </pre>
 	 * 
