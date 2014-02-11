@@ -20,6 +20,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
@@ -193,4 +195,16 @@ public interface UserSearchService {
 	 * @return SearchPasswordSacRes
 	 */
 	public SearchPasswordSacRes searchPassword(SacRequestHeader sacHeader, SearchPasswordSacReq req);
+
+	/**
+	 * <pre>
+	 * 약관동의목록조회
+	 * </pre>
+	 * 
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param SearchPasswordSacReq
+	 * @return SearchPasswordSacRes
+	 */
+	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req);
 }

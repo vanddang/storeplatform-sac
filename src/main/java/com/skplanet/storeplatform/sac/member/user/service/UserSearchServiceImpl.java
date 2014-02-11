@@ -36,6 +36,8 @@ import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationRequ
 import com.skplanet.storeplatform.member.client.user.sci.vo.CheckDuplicationResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreeSiteResponse;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchAgreementListResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchDeviceResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.SearchManagementListRequest;
@@ -63,6 +65,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHisto
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ListDeviceRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchAgreementRes;
@@ -321,6 +325,57 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	/**
+	 * 약관동의 목록 조회
+	 * 
+	 * <pre>
+	 * method 설명.
+	 * </pre>
+	 * 
+	 * @param deviceId
+	 * @return
+	 */
+	@Override
+	public ListTermsAgreementSacRes listTermsAgreement(SacRequestHeader sacHeader, ListTermsAgreementSacReq req)
+
+	{
+
+		/* 헤더 정보 셋팅 */
+		commonRequest.setSystemID(sacHeader.getTenantHeader().getSystemId());
+		commonRequest.setTenantID(sacHeader.getTenantHeader().getTenantId());
+
+		/* 회원 정보 조회 */
+		this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
+
+		/* 약관동의 목록 조회 */
+		List<Agreement> agreementList = new ArrayList<Agreement>();
+		SearchAgreementListRequest schAgreementListReq = new SearchAgreementListRequest();
+		schAgreementListReq.setUserKey(req.getUserKey());
+		schAgreementListReq.setCommonRequest(commonRequest);
+		SearchAgreementListResponse scRes = this.userSCI.searchAgreementList(schAgreementListReq);
+
+		ListTermsAgreementSacRes res = new ListTermsAgreementSacRes();
+		res.setUserKey(scRes.getUserKey());
+
+		for (MbrClauseAgree scAgree : scRes.getMbrClauseAgreeList()) {
+			Agreement agree = new Agreement();
+			agree.setExtraAgreementId(StringUtil.setTrim(scAgree.getExtraAgreementID()));
+			agree.setExtraAgreementVersion(StringUtil.setTrim(scAgree.getExtraAgreementVersion()));
+			agree.setIsExtraAgreement(StringUtil.setTrim(scAgree.getIsExtraAgreement()));
+			agree.setIsMandatory(StringUtil.setTrim(scAgree.getIsMandatory()));
+			agree.setRegDate(StringUtil.setTrim(scAgree.getRegDate()));
+			agree.setUpdateDate(StringUtil.setTrim(scAgree.getUpdateDate()));
+
+			agreementList.add(agree);
+		}
+
+		res.setAgreementList(agreementList);
+
+		logger.info("ListTermsAgreementSacReq : ", res.toString());
+
+		return res;
+	}
+
+	/**
 	 * ID 찾기
 	 * 
 	 * <pre>
@@ -397,10 +452,23 @@ public class UserSearchServiceImpl implements UserSearchService {
 		UserInfo info = this.mcc.getUserBaseInfo("userId", req.getUserId(), sacHeader);
 
 		if (info.getImSvcNo() == null || info.getImSvcNo().equals("")) { // IDP 회원
-
+			//			mapUrl.put("cmd", "findPasswd");
+			//            mapUrl.put("key_type", "3"); // 사용자 ID
+			//            mapUrl.put("key", sMemMbrId);
+			//            mapUrl.put("watermark_auth", "2");
 		} else { // 통합 IDP 회원
 			// 통합ID회원 프로파일 조회
 			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(info.getImSvcNo());
+
+			//			mapUrl.put("cmd", "TXResetUserPwdIDP");
+			//            mapUrl.put("operation_mode", StringUtils.defaultIfEmpty(Config.get("idp.im.operation_mode"), "real"));
+			//            mapUrl.put("key_type", "2");
+			//            mapUrl.put("key", sMemMbrId);
+			//            
+			//            mapUrl.put("lang_code", "KOR");
+			//            Date dtCur = new Date();
+			//            mapUrl.put("modify_req_date", new SimpleDateFormat("yyyyMMdd", Locale.KOREA).format(dtCur));
+			//            mapUrl.put("modify_req_time", new SimpleDateFormat("HHmmss", Locale.KOREA).format(dtCur));
 
 			if (profileInfo.getResponseBody().getIs_user_tn_auth().equals("Y")) { // 휴대폰 인증
 				//				mapUrl.put("user_tn", profileInfo.getResponseBody().getUser_tn());

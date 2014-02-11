@@ -30,6 +30,8 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.ExistReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ExistRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetProvisioningHistoryRes;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacReq;
+import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.MbrOneidSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.SearchIdSacReq;
@@ -236,7 +238,7 @@ public class UserSearchController {
 		return res;
 	}
 
-	//	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
 		LOGGER.info("####################################################");
@@ -256,6 +258,24 @@ public class UserSearchController {
 		SearchPasswordSacRes res = this.svc.searchPassword(sacHeader, req);
 
 		LOGGER.info("Final SearchPasswordSacRes Response : {}", res.toString());
+
+		return res;
+	}
+
+	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public ListTermsAgreementSacRes listTermsAgreement(ListTermsAgreementSacReq req, SacRequestHeader sacHeader) {
+		LOGGER.info("####################################################");
+		LOGGER.info("##### 2.1.10. Store 약관 동의 목록 조회 #####");
+		LOGGER.info("####################################################");
+
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+
+		if (userKey.equals("")) {
+			throw new StorePlatformException("SAC_MEM_0001", "getUserKey()");
+		}
+
+		ListTermsAgreementSacRes res = this.svc.listTermsAgreement(sacHeader, req);
 
 		return res;
 	}

@@ -19,19 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformationRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.ListTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.RemoveOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.SearchPasswordSacRes;
 import com.skplanet.storeplatform.sac.member.user.controller.UserJoinController;
 
 /**
@@ -552,21 +549,21 @@ public class DummyDataController {
 	 * 
 	 * @return SearchPasswordRes
 	 */
-	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public SearchPasswordSacRes searchPassword() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
-		LOGGER.info("####################################################");
-
-		SearchPasswordSacRes res = new SearchPasswordSacRes();
-		res.setUserPw("");
-		res.setSendMean("01");
-		res.setSendInfo("seoguman@nate.com");
-
-		return res;
-	}
+	//	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
+	//	@ResponseBody
+	//	public SearchPasswordSacRes searchPassword() {
+	//
+	//		LOGGER.info("####################################################");
+	//		LOGGER.info("##### 5.1.8. Password 찾기에 대한 기능을 제공한다. #####");
+	//		LOGGER.info("####################################################");
+	//
+	//		SearchPasswordSacRes res = new SearchPasswordSacRes();
+	//		res.setUserPw("");
+	//		res.setSendMean("01");
+	//		res.setSendInfo("seoguman@nate.com");
+	//
+	//		return res;
+	//	}
 
 	/**
 	 * <pre>
@@ -740,26 +737,26 @@ public class DummyDataController {
 	 * 
 	 * @return ListTermsAgreementRes
 	 */
-	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.GET)
-	@ResponseBody
-	public ListTermsAgreementRes listTermsAgreement() {
-
-		LOGGER.info("####################################################");
-		LOGGER.info("##### 5.1.10. Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다. #####");
-		LOGGER.info("####################################################");
-
-		ListTermsAgreementRes res = new ListTermsAgreementRes();
-		List<Agreement> agreementList = new ArrayList<Agreement>();
-		Agreement agreement = new Agreement();
-		agreement.setExtraAgreementId("US010601");
-		agreement.setExtraAgreementVersion("");
-		agreement.setIsExtraAgreement("Y");
-
-		agreementList.add(agreement);
-		res.setAgreementList(agreementList);
-
-		return res;
-	}
+	//	@RequestMapping(value = "/member/user/listTermsAgreement/v1", method = RequestMethod.GET)
+	//	@ResponseBody
+	//	public ListTermsAgreementSacRes listTermsAgreement() {
+	//
+	//		LOGGER.info("####################################################");
+	//		LOGGER.info("##### 5.1.10. Store의 약관에 대한 동의 목록 조회하는 기능을 제공한다. #####");
+	//		LOGGER.info("####################################################");
+	//
+	//		ListTermsAgreementSacRes res = new ListTermsAgreementSacRes();
+	//		List<Agreement> agreementList = new ArrayList<Agreement>();
+	//		Agreement agreement = new Agreement();
+	//		agreement.setExtraAgreementId("US010601");
+	//		agreement.setExtraAgreementVersion("");
+	//		agreement.setIsExtraAgreement("Y");
+	//
+	//		agreementList.add(agreement);
+	//		res.setAgreementList(agreementList);
+	//
+	//		return res;
+	//	}
 
 	/**
 	 * <pre>
