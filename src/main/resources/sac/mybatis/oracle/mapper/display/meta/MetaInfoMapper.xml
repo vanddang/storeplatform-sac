@@ -210,13 +210,13 @@
                                               , TB_DP_MENU_CATEGORY_PROD_MAPG B
                                               , TB_DP_MENU_CATEGORY_DESC      C
                                               , TB_DP_PROD                    D
-                                              , UV_TB_DP_MULTIMDA_PROD           E
+                                              , UV_TB_DP_MULTIMDA_PROD        E
                                               , TB_DP_PROD_DESC               F
                                               , TB_DP_TENANT_PROD             G
                                               , TB_DP_TENANT_PROD_PRICE       H
                                               , TB_DP_PROD_RSHP               I
                                               , TB_DP_PROD                    J
-                                              , UV_TB_DP_MULTIMDA_PROD           L
+                                              , UV_TB_DP_MULTIMDA_PROD        L
                                               , TB_DP_PROD_IMG                M
                                               , TB_DP_TENANT_PROD_STATS       N
                                               , TB_DP_TENANT_PROD_PRICE       O              
@@ -239,7 +239,7 @@
                                            AND A.USE_YN = 'Y'        
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                                           AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
+                                           AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                                            AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                                            AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                                             <if test='prodStatusCd != null'>
@@ -473,13 +473,13 @@
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
                       , TB_DP_PROD                    D
-                      , UV_TB_DP_MULTIMDA_PROD           E
+                      , UV_TB_DP_MULTIMDA_PROD        E
                       , TB_DP_PROD_DESC               F
                       , TB_DP_TENANT_PROD             G
                       , TB_DP_TENANT_PROD_PRICE       H
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J
-                      , UV_TB_DP_MULTIMDA_PROD           L
+                      , UV_TB_DP_MULTIMDA_PROD        L
                       , TB_DP_PROD_IMG                M
                       , TB_DP_TENANT_PROD_STATS       N
                       , TB_DP_TENANT_PROD_PRICE       O
@@ -502,7 +502,7 @@
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                   AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
+                   AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                     <if test='prodStatusCd != null'>
@@ -617,13 +617,13 @@
                       , TB_DP_MENU_CATEGORY_PROD_MAPG B
                       , TB_DP_MENU_CATEGORY_DESC      C
                       , TB_DP_PROD                    D
-                      , UV_TB_DP_MULTIMDA_PROD           E
+                      , UV_TB_DP_MULTIMDA_PROD        E
                       , TB_DP_PROD_DESC               F
                       , TB_DP_TENANT_PROD             G
                       , TB_DP_TENANT_PROD_PRICE       H
                       , TB_DP_PROD_RSHP               I
                       , TB_DP_PROD                    J
-                      , UV_TB_DP_MULTIMDA_PROD           L
+                      , UV_TB_DP_MULTIMDA_PROD        L
                       , TB_DP_PROD_IMG                M
                       , TB_DP_TENANT_PROD_STATS       N
                       , TB_DP_TENANT_PROD_PRICE       O
@@ -646,7 +646,7 @@
                    AND A.USE_YN = 'Y'        
                    AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                    AND C.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
-                   AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
+                   AND D.SVC_GRP_CD = 'DP000203'             /* DP000203 : 멀티미디어 */
                    AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
                    AND F.LANG_CD = #{tenantHeader.langCd}    /* ko : 한국어 */
                    <if test='prodStatusCd != null'>
