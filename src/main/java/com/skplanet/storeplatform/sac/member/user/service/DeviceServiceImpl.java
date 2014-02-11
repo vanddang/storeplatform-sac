@@ -183,7 +183,7 @@ public class DeviceServiceImpl implements DeviceService {
 		String deviceKey = this.insertDeviceInfo(commonRequest.getSystemID(), commonRequest.getTenantID(), userKey, deviceInfo);
 
 		/* 변경된 정보 idp 연동 */
-		this.userService.modifyProfileIdp(requestHeader, userKey, req.getUserAuthKey());
+		this.userService.updateProfileIdp(requestHeader, userKey, req.getUserAuthKey());
 
 		CreateDeviceRes res = new CreateDeviceRes();
 		res.setDeviceId(deviceId);
@@ -230,7 +230,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* userAuthKey가 넘오온 경우만 IDP 업데이트 처리 */
 		if (req.getUserAuthKey() != null) {
-			this.userService.modifyProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
+			this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 		}
 
 		ModifyDeviceRes res = new ModifyDeviceRes();
@@ -1064,7 +1064,7 @@ public class DeviceServiceImpl implements DeviceService {
 		RemoveDeviceResponse removeDeviceResponse = this.deviceSCI.removeDevice(removeDeviceRequest);
 
 		/* IDP 회원정보 수정 */
-		this.userService.modifyProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
+		this.userService.updateProfileIdp(requestHeader, req.getUserKey(), req.getUserAuthKey());
 
 		RemoveDeviceRes removeDeviceRes = new RemoveDeviceRes();
 		removeDeviceRes.setDeviceKey(deviceKey);

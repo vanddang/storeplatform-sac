@@ -27,5 +27,5 @@ public interface UserService {
 	 * @param userAuthKey
 	 *            사용자 IDP 인증키
 	 */
-	public void modifyProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey);
+	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey);
 }

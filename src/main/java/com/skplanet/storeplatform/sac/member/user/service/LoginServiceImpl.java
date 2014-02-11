@@ -607,7 +607,7 @@ public class LoginServiceImpl implements LoginService {
 				this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
 
 				/* 변경된 휴대기기 정보 IDP도 변경 */
-				this.userService.modifyProfileIdp(requestHeader, userKey, userAuthKey);
+				this.userService.updateProfileIdp(requestHeader, userKey, userAuthKey);
 			}
 
 		}

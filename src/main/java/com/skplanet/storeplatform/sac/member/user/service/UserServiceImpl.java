@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void modifyProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
+	public void updateProfileIdp(SacRequestHeader requestHeader, String userKey, String userAuthKey) {
 
 		/* 회원정보 조회 */
 		CommonRequest commonRequest = new CommonRequest();
