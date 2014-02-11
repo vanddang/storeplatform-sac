@@ -115,6 +115,7 @@
 		                                  <if test="menuId != null and menuId != ''">
 		                                  AND LP.MENU_ID = #{menuId}
 		                                  </if>
+		                                  AND LP.MENU_ID LIKE 'DP26%'
 		                                ) A /* 채널 */
 		                              , TB_DP_PROD_RSHP B
 		                              , TB_DP_MENU_CATEGORY_PROD_MAPG C  /* 에피소드 */
@@ -142,7 +143,7 @@
 		                           AND E.LANG_CD = #{langCd}
 		                           AND C.PROD_ID = F.PROD_ID
 		                           <if test="weekDayCd != null and weekDayCd != ''">
-		                           AND F.SERIALLY_WKDY LIKE (SELECT cd_nm FROM tb_cm_cd WHERE cd_id = CONCAT(#{weekDayCd}, '%'))  /* DP010101 ~DP010107  :월~토*/
+		                           AND F.SERIALLY_WKDY LIKE CONCAT('%', CONCAT((SELECT cd_nm FROM tb_cm_cd WHERE cd_id = #{weekDayCd}), '%'))  /* DP010101 ~DP010107  :월~토*/
 		                           </if>
 		                           AND F.EPSD_CNT > 0
 		                           AND F.PROD_ID = G.PROD_ID
