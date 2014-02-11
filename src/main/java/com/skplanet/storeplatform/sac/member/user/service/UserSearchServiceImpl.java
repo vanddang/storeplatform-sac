@@ -836,19 +836,20 @@ public class UserSearchServiceImpl implements UserSearchService {
 
 			listDeviceReq.setUserKey(existRes.getUserKey());
 			listDeviceReq.setDeviceKey(req.getDeviceKey());
+			listDeviceReq.setIsMainDevice("N");
 		} else if (req.getDeviceId() != null) {
 			existReq.setDeviceId(req.getDeviceId());
 			existRes = this.exist(sacHeader, existReq);
 
 			listDeviceReq.setUserKey(existRes.getUserKey());
 			listDeviceReq.setDeviceId(req.getDeviceId());
+			listDeviceReq.setIsMainDevice("N");
 		}
 
 		ListDeviceRes listDeviceRes = null;
 		try {
 			listDeviceRes = this.deviceService.listDevice(sacHeader, listDeviceReq);
-			List<DeviceInfo> listDeviceInfo = new ArrayList<DeviceInfo>();
-			listDeviceRes.setDeviceInfoList(listDeviceInfo);
+			listDeviceRes.setDeviceInfoList(listDeviceRes.getDeviceInfoList());
 		} catch (StorePlatformException ex) {
 			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				throw ex;
