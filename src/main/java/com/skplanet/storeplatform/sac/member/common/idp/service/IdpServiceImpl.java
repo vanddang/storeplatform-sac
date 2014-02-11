@@ -633,7 +633,7 @@ public class IdpServiceImpl implements IdpService {
 	public IdpReceiverM serviceSubscriptionCheck(String mdn, String svcCode) {
 		IdpSenderM sendData = new IdpSenderM();
 
-		sendData.setUrl(IdpConstants.IDP_REQ_URL_SECEDE);
+		sendData.setUrl(IdpConstants.IDP_REQ_URL_USER_INFO_SEARCH);
 		sendData.setCmd(IdpConstants.IDP_REQ_CMD_SERVICE_SUBSCRIPTION_CHECK);
 		sendData.setResp_type(IdpConstants.IDP_PARAM_RESP_TYPE_XML);
 		sendData.setResp_flow(IdpConstants.IDP_PARAM_RESP_FLOW_RESPONSE);
