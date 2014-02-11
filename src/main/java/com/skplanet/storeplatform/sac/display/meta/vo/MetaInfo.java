@@ -101,6 +101,31 @@ public class MetaInfo {
 	private String usePeriodNm;
 	private String ebookFilePath;
 	private Integer ebookFileSize;
+	private String hdcpYn;
+	private String btvYn;
+	private String epsdPlayTm;
+	private String chapterUnit;
+	private String nmBtvCid;
+	private String nmDpPicRatio;
+	private String nmDpPixel;
+	private String nmSubContsId;
+	private Integer nmFileSize;
+	private String nmProdVer;
+	private String sdBtvCid;
+	private String sdDpPicRatio;
+	private String sdDpPixel;
+	private String sdSubContsId;
+	private Integer sdFileSize;
+	private String sdProdVer;
+	private String hdBtvCid;
+	private String hdDpPicRatio;
+	private String hdDpPixel;
+	private String hdSubContsId;
+	private Integer hdFileSize;
+	private String hdProdVer;
+	private String dwldAreaLimtYn;
+	private String strmNetworkCd;
+	private String dwldNetworkCd;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -1461,6 +1486,381 @@ public class MetaInfo {
 	 */
 	public void setEbookFileSize(Integer ebookFileSize) {
 		this.ebookFileSize = ebookFileSize;
+	}
+
+	/**
+	 * @return the hdcpYn
+	 */
+	public String getHdcpYn() {
+		return this.hdcpYn;
+	}
+
+	/**
+	 * @param hdcpYn
+	 *            the hdcpYn to set
+	 */
+	public void setHdcpYn(String hdcpYn) {
+		this.hdcpYn = hdcpYn;
+	}
+
+	/**
+	 * @return the btvYn
+	 */
+	public String getBtvYn() {
+		return this.btvYn;
+	}
+
+	/**
+	 * @param btvYn
+	 *            the btvYn to set
+	 */
+	public void setBtvYn(String btvYn) {
+		this.btvYn = btvYn;
+	}
+
+	/**
+	 * @return the epsdPlayTime
+	 */
+	public String getEpsdPlayTm() {
+		return this.epsdPlayTm;
+	}
+
+	/**
+	 * @param epsdPlayTime
+	 *            the epsdPlayTime to set
+	 */
+	public void setEpsdPlayTm(String epsdPlayTm) {
+		this.epsdPlayTm = epsdPlayTm;
+	}
+
+	/**
+	 * @return the chapterUnit
+	 */
+	public String getChapterUnit() {
+		return this.chapterUnit;
+	}
+
+	/**
+	 * @param chapterUnit
+	 *            the chapterUnit to set
+	 */
+	public void setChapterUnit(String chapterUnit) {
+		this.chapterUnit = chapterUnit;
+	}
+
+	/**
+	 * @return the nmBtvCid
+	 */
+	public String getNmBtvCid() {
+		return this.nmBtvCid;
+	}
+
+	/**
+	 * @param nmBtvCid
+	 *            the nmBtvCid to set
+	 */
+	public void setNmBtvCid(String nmBtvCid) {
+		this.nmBtvCid = nmBtvCid;
+	}
+
+	/**
+	 * @return the nmDpPicRatio
+	 */
+	public String getNmDpPicRatio() {
+		return this.nmDpPicRatio;
+	}
+
+	/**
+	 * @param nmDpPicRatio
+	 *            the nmDpPicRatio to set
+	 */
+	public void setNmDpPicRatio(String nmDpPicRatio) {
+		this.nmDpPicRatio = nmDpPicRatio;
+	}
+
+	/**
+	 * @return the nmDpPixel
+	 */
+	public String getNmDpPixel() {
+		return this.nmDpPixel;
+	}
+
+	/**
+	 * @param nmDpPixel
+	 *            the nmDpPixel to set
+	 */
+	public void setNmDpPixel(String nmDpPixel) {
+		this.nmDpPixel = nmDpPixel;
+	}
+
+	/**
+	 * @return the nmSubContsId
+	 */
+	public String getNmSubContsId() {
+		return this.nmSubContsId;
+	}
+
+	/**
+	 * @param nmSubContsId
+	 *            the nmSubContsId to set
+	 */
+	public void setNmSubContsId(String nmSubContsId) {
+		this.nmSubContsId = nmSubContsId;
+	}
+
+	/**
+	 * @return the nmFileSize
+	 */
+	public Integer getNmFileSize() {
+		return this.nmFileSize;
+	}
+
+	/**
+	 * @param nmFileSize
+	 *            the nmFileSize to set
+	 */
+	public void setNmFileSize(Integer nmFileSize) {
+		this.nmFileSize = nmFileSize;
+	}
+
+	/**
+	 * @return the nmProdVer
+	 */
+	public String getNmProdVer() {
+		return this.nmProdVer;
+	}
+
+	/**
+	 * @param nmProdVer
+	 *            the nmProdVer to set
+	 */
+	public void setNmProdVer(String nmProdVer) {
+		this.nmProdVer = nmProdVer;
+	}
+
+	/**
+	 * @return the sdBtvCid
+	 */
+	public String getSdBtvCid() {
+		return this.sdBtvCid;
+	}
+
+	/**
+	 * @param sdBtvCid
+	 *            the sdBtvCid to set
+	 */
+	public void setSdBtvCid(String sdBtvCid) {
+		this.sdBtvCid = sdBtvCid;
+	}
+
+	/**
+	 * @return the sdDpPicRatio
+	 */
+	public String getSdDpPicRatio() {
+		return this.sdDpPicRatio;
+	}
+
+	/**
+	 * @param sdDpPicRatio
+	 *            the sdDpPicRatio to set
+	 */
+	public void setSdDpPicRatio(String sdDpPicRatio) {
+		this.sdDpPicRatio = sdDpPicRatio;
+	}
+
+	/**
+	 * @return the sdDpPixel
+	 */
+	public String getSdDpPixel() {
+		return this.sdDpPixel;
+	}
+
+	/**
+	 * @param sdDpPixel
+	 *            the sdDpPixel to set
+	 */
+	public void setSdDpPixel(String sdDpPixel) {
+		this.sdDpPixel = sdDpPixel;
+	}
+
+	/**
+	 * @return the sdSubContsId
+	 */
+	public String getSdSubContsId() {
+		return this.sdSubContsId;
+	}
+
+	/**
+	 * @param sdSubContsId
+	 *            the sdSubContsId to set
+	 */
+	public void setSdSubContsId(String sdSubContsId) {
+		this.sdSubContsId = sdSubContsId;
+	}
+
+	/**
+	 * @return the sdFileSize
+	 */
+	public Integer getSdFileSize() {
+		return this.sdFileSize;
+	}
+
+	/**
+	 * @param sdFileSize
+	 *            the sdFileSize to set
+	 */
+	public void setSdFileSize(Integer sdFileSize) {
+		this.sdFileSize = sdFileSize;
+	}
+
+	/**
+	 * @return the sdProdVer
+	 */
+	public String getSdProdVer() {
+		return this.sdProdVer;
+	}
+
+	/**
+	 * @param sdProdVer
+	 *            the sdProdVer to set
+	 */
+	public void setSdProdVer(String sdProdVer) {
+		this.sdProdVer = sdProdVer;
+	}
+
+	/**
+	 * @return the hdBtvCid
+	 */
+	public String getHdBtvCid() {
+		return this.hdBtvCid;
+	}
+
+	/**
+	 * @param hdBtvCid
+	 *            the hdBtvCid to set
+	 */
+	public void setHdBtvCid(String hdBtvCid) {
+		this.hdBtvCid = hdBtvCid;
+	}
+
+	/**
+	 * @return the hdDpPicRatio
+	 */
+	public String getHdDpPicRatio() {
+		return this.hdDpPicRatio;
+	}
+
+	/**
+	 * @param hdDpPicRatio
+	 *            the hdDpPicRatio to set
+	 */
+	public void setHdDpPicRatio(String hdDpPicRatio) {
+		this.hdDpPicRatio = hdDpPicRatio;
+	}
+
+	/**
+	 * @return the hdDpPixel
+	 */
+	public String getHdDpPixel() {
+		return this.hdDpPixel;
+	}
+
+	/**
+	 * @param hdDpPixel
+	 *            the hdDpPixel to set
+	 */
+	public void setHdDpPixel(String hdDpPixel) {
+		this.hdDpPixel = hdDpPixel;
+	}
+
+	/**
+	 * @return the hdSubContsId
+	 */
+	public String getHdSubContsId() {
+		return this.hdSubContsId;
+	}
+
+	/**
+	 * @param hdSubContsId
+	 *            the hdSubContsId to set
+	 */
+	public void setHdSubContsId(String hdSubContsId) {
+		this.hdSubContsId = hdSubContsId;
+	}
+
+	/**
+	 * @return the hdFileSize
+	 */
+	public Integer getHdFileSize() {
+		return this.hdFileSize;
+	}
+
+	/**
+	 * @param hdFileSize
+	 *            the hdFileSize to set
+	 */
+	public void setHdFileSize(Integer hdFileSize) {
+		this.hdFileSize = hdFileSize;
+	}
+
+	/**
+	 * @return the hdProdVer
+	 */
+	public String getHdProdVer() {
+		return this.hdProdVer;
+	}
+
+	/**
+	 * @param hdProdVer
+	 *            the hdProdVer to set
+	 */
+	public void setHdProdVer(String hdProdVer) {
+		this.hdProdVer = hdProdVer;
+	}
+
+	/**
+	 * @return the dwldAreaLimtYn
+	 */
+	public String getDwldAreaLimtYn() {
+		return this.dwldAreaLimtYn;
+	}
+
+	/**
+	 * @param dwldAreaLimtYn
+	 *            the dwldAreaLimtYn to set
+	 */
+	public void setDwldAreaLimtYn(String dwldAreaLimtYn) {
+		this.dwldAreaLimtYn = dwldAreaLimtYn;
+	}
+
+	/**
+	 * @return the strmNetworkCd
+	 */
+	public String getStrmNetworkCd() {
+		return this.strmNetworkCd;
+	}
+
+	/**
+	 * @param strmNetworkCd
+	 *            the strmNetworkCd to set
+	 */
+	public void setStrmNetworkCd(String strmNetworkCd) {
+		this.strmNetworkCd = strmNetworkCd;
+	}
+
+	/**
+	 * @return the dwldNetworkCd
+	 */
+	public String getDwldNetworkCd() {
+		return this.dwldNetworkCd;
+	}
+
+	/**
+	 * @param dwldNetworkCd
+	 *            the dwldNetworkCd to set
+	 */
+	public void setDwldNetworkCd(String dwldNetworkCd) {
+		this.dwldNetworkCd = dwldNetworkCd;
 	}
 
 	/**
