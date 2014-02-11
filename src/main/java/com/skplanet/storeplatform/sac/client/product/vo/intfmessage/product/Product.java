@@ -212,6 +212,11 @@ public class Product extends CommonInfo implements Serializable {
 	private String platClsfCd;
 
 	/**
+	 * 암호화 정보.
+	 */
+	private Encryption encryption;
+
+	/**
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier() {
@@ -861,4 +866,18 @@ public class Product extends CommonInfo implements Serializable {
 		this.platClsfCd = platClsfCd;
 	}
 
+	/**
+	 * @return the encryption
+	 */
+	public Encryption getEncryption() {
+		return this.encryption;
+	}
+
+	/**
+	 * @param encryption
+	 *            the encryption to set
+	 */
+	public void setEncryption(Encryption encryption) {
+		this.encryption = encryption;
+	}
 }
