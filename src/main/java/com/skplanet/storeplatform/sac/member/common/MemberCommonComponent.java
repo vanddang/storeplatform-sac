@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.skplanet.storeplatform.external.client.icas.sci.ICASSCI;
@@ -89,6 +90,9 @@ public class MemberCommonComponent {
 
 	@Autowired
 	private UserSearchService userSearchService;
+
+	@Value("#{propertiesForSac['idp.mobile.user.auth.key']}")
+	public String fixedMobileUserAuthKey;
 
 	/**
 	 * <pre>
@@ -409,8 +413,7 @@ public class MemberCommonComponent {
 			}
 
 			/**
-			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은
-			 * 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
+			 * UUID 일때 이동통신사코드가 IOS가 아니면 로그찍는다. (테넌트에서 잘못 올려준 데이타.) [[ AS-IS 로직은 하드코딩 했었음... IOS 이북 보관함 지원 uuid ]]
 			 */
 			if (StringUtils.equals(deviceIdType, MemberConstants.DEVICE_ID_TYPE_UUID)) {
 				if (!StringUtils.equals(deviceTelecom, MemberConstants.DEVICE_TELECOM_IOS)) {
@@ -574,5 +577,27 @@ public class MemberCommonComponent {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR, hour);
 		return sdf.format(cal.getTime());
+	}
+
+	/**
+	 * <pre>
+	 * IDP 연동 여부 판단.
+	 * 
+	 * MDN 로그인시에만 fixedMobileUserAuthKey 내려감.
+	 * 
+	 * </pre>
+	 * 
+	 * @param userAuthkey
+	 *            요청 userAuthKey
+	 * @return boolean (true 면 연동한다.)
+	 */
+	public boolean isIdpConnect(String userAuthkey) {
+
+		if (StringUtils.equals(userAuthkey, this.fixedMobileUserAuthKey)) {
+			return false;
+		} else {
+			return true;
+		}
+
 	}
 }
