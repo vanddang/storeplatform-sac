@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.framework.core.util.NumberUtils;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpgradeProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpgradeProductRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
@@ -30,7 +30,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * Updated on : 2014. 2. 10. Updated by : 오승민, 인크로스.
  */
 @Service
-public class PersonalUpgradeProductServiceImpl implements PersonalUpgradeProductService {
+public class PersonalUpdateProductServiceImpl implements PersonalUpdateProductService {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
@@ -46,8 +46,8 @@ public class PersonalUpgradeProductServiceImpl implements PersonalUpgradeProduct
 	 * com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader)
 	 */
 	@Override
-	public PersonalUpgradeProductRes searchUpdateProductList(PersonalUpgradeProductReq req, SacRequestHeader header) {
-		PersonalUpgradeProductRes res = new PersonalUpgradeProductRes();
+	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header) {
+		PersonalUpdateProductRes res = new PersonalUpdateProductRes();
 		CommonResponse commonResopnse = new CommonResponse();
 		Map<String, Object> mapReq = new HashMap<String, Object>();
 		String memberType = req.getMemberType();
@@ -78,6 +78,7 @@ public class PersonalUpgradeProductServiceImpl implements PersonalUpgradeProduct
 		mapReq.put("PKG_LIST", listPkgNm);
 
 		// List<Object> listPkg = queryForList("updateAlarm.getRecentFromPkgNm", mapReq);
+		// TODO osm1021 ALARM_OFF_DT도 여기서 가져와야 됨.
 		List<Map> listPkg = this.commonDAO.queryForList("PersonalUpgradeProduct.searchRecentFromPkgNm", mapReq,
 				Map.class);
 		mapReq.remove("PKG_LIST");

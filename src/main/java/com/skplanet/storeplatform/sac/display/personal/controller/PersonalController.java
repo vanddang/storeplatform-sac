@@ -17,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpgradeReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpgradeRes;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpgradeProductReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpgradeProductRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateAlarmRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalUpdateProductRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpgradeService;
-import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpgradeProductService;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalAutoUpdateService;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateAlarmService;
+import com.skplanet.storeplatform.sac.display.personal.service.PersonalUpdateProductService;
 
 /**
  * 개인화 관련 Controller
@@ -36,10 +39,13 @@ public class PersonalController {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private PersonalUpgradeProductService personalUpgradeProductService;
+	private PersonalUpdateProductService personalUpdateProductService;
 
 	@Autowired
-	private PersonalAutoUpgradeService personalAutoUpgradeService;
+	private PersonalAutoUpdateService personalAutoUpdateService;
+
+	@Autowired
+	private PersonalUpdateAlarmService personalUpdateAlarmService;
 
 	/**
 	 * <pre>
@@ -54,8 +60,8 @@ public class PersonalController {
 	 */
 	@RequestMapping(value = "/update/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public PersonalUpgradeProductRes searchUpdateProductList(PersonalUpgradeProductReq req, SacRequestHeader header) {
-		return this.personalUpgradeProductService.searchUpdateProductList(req, header);
+	public PersonalUpdateProductRes searchUpdateProductList(PersonalUpdateProductReq req, SacRequestHeader header) {
+		return this.personalUpdateProductService.searchUpdateProductList(req, header);
 	}
 
 	/**
@@ -69,10 +75,16 @@ public class PersonalController {
 	 *            header
 	 * @return DeviceProductProvisioningRes
 	 */
-	@RequestMapping(value = "upgrade/autoUpdate/status/list/v1", method = RequestMethod.GET)
+	@RequestMapping(value = "/update/autoUpdate/status/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public PersonalAutoUpgradeRes searchAutoUpgradeList(PersonalAutoUpgradeReq req, SacRequestHeader header) {
-		return this.personalAutoUpgradeService.searchAutoUpgradeList(req, header);
+	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header) {
+		return this.personalAutoUpdateService.updateAutoUpdateList(req, header);
+	}
+
+	@RequestMapping(value = "/update/alarm/modify/v1", method = RequestMethod.GET)
+	@ResponseBody
+	public PersonalUpdateAlarmRes updateAlarm(PersonalUpdateAlarmReq req, SacRequestHeader header) {
+		return this.personalUpdateAlarmService.updateAlarm(req, header);
 	}
 
 }

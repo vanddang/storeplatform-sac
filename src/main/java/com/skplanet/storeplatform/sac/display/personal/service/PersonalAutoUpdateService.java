@@ -3,8 +3,8 @@
  */
 package com.skplanet.storeplatform.sac.display.personal.service;
 
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpgradeReq;
-import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpgradeRes;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateReq;
+import com.skplanet.storeplatform.sac.client.display.vo.personal.PersonalAutoUpdateRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -12,7 +12,7 @@ import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
  * 
  * Updated on : 2014. 2. 10. Updated by : 오승민, 인크로스.
  */
-public interface PersonalAutoUpgradeService {
+public interface PersonalAutoUpdateService {
 	/**
 	 * <pre>
 	 * 자동 Update 목록 조회.
@@ -24,6 +24,6 @@ public interface PersonalAutoUpgradeService {
 	 *            header
 	 * @return PersonalAutoUpgradeRes
 	 */
-	public PersonalAutoUpgradeRes searchAutoUpgradeList(PersonalAutoUpgradeReq req, SacRequestHeader header);
+	public PersonalAutoUpdateRes updateAutoUpdateList(PersonalAutoUpdateReq req, SacRequestHeader header);
 
 }

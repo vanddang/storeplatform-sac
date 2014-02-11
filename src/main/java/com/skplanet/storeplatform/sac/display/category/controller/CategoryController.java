@@ -10,6 +10,7 @@
 package com.skplanet.storeplatform.sac.display.category.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -17,10 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryEbookComicSacReq;
@@ -223,7 +228,16 @@ public class CategoryController {
 	 */
 	@RequestMapping(value = "/specific/product/list/v1", method = RequestMethod.GET)
 	@ResponseBody
-	public CategorySpecificSacRes searchSpecificProductList(CategorySpecificSacReq req, SacRequestHeader header) {
+	public CategorySpecificSacRes searchSpecificProductList(@Validated CategorySpecificSacReq req,
+			BindingResult bindingResult, SacRequestHeader header) {
+
+		// 필수값 체크
+		if (bindingResult.hasErrors()) {
+			List<FieldError> errors = bindingResult.getFieldErrors();
+			for (FieldError error : errors) {
+				throw new StorePlatformException("SAC_DSP_0001", error.getField());
+			}
+		}
 
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchSpecificProductList Controller started!!");
