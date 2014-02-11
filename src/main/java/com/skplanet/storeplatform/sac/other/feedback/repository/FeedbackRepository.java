@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
+import java.util.List;
+
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
@@ -333,4 +335,29 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return List<ProdNoti>
+	 */
+	public List<ProdNoti> getProdNotiList(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 사용후기 리스트 카운트 조회.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return prodNoti
+	 */
+	public Object getProdNotiCount(ProdNoti prodNoti);
+
 }

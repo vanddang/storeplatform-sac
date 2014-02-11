@@ -18,17 +18,19 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * Updated on : 2014. 1. 16. Updated by : 김현일, 인크로스.
  */
 public class ProdNoti extends CommonInfo {
+
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
+
 	private String tenantId;
-	private String notiSeq;
+	private String notiSeq; // NOTI_SEQ
 	private String notiTypeCd;
-	private String mbrNo;
-	private String prodId;
-	private String title;
-	private String notiDscr;
+	private String mbrNo; // MBR_NO
+	private String prodId; // PROD_ID
+	private String title; // TITLE
+	private String notiDscr; // NOTI_DSCR
 	private String trackbackAddr;
 	private String reqIp;
 	private String postId;
@@ -42,10 +44,10 @@ public class ProdNoti extends CommonInfo {
 	private int notiScore;
 	private String sellerMbrNm;
 	private String sellerRespRegDt;
-	private String sellerRespTitle;
-	private String sellerRespOpin;
+	private String sellerRespTitle; // SELLER_RESP_TITLE
+	private String sellerRespOpin; // SELLER_RESP_OPIN
 	private String recomYn;
-	private String fbPostYn;
+	private String fbPostYn; // FB_POST_YN
 	private String oprpersRespYn;
 	private String respOprpersId;
 	private String respOprpersNm;
@@ -55,14 +57,29 @@ public class ProdNoti extends CommonInfo {
 	private String regLoc;
 	private String deviceModelCd;
 	private String pkgVer;
-	private String regId;
-	private String regDt;
+	private String regId; // REG_ID
+	private String regDt; // REG_DT
 	private String updDt;
 	private String delDt;
 	private String delYn;
 
 	// 검색 조건 추가.
 	private String chnlId;
+	private String prodType;
+	private String orderedBy;
+
+	// 리스트 추가.
+	private String sellerMbrNo; // SELLER_MBR_NO
+	private String cid; // CID
+	private String selfYn; // SELF_YN
+	private String saleYn; // SALE_YN
+	private String whose; // WHOSE
+	private String notiYn; // NOTI_YN
+	private String avgScore; // AVG_SCORE
+
+	// paging
+	private String startRow;
+	private String endRow;
 
 	/**
 	 * @return String
@@ -80,7 +97,7 @@ public class ProdNoti extends CommonInfo {
 	}
 
 	/**
-	 * @return the notiSeq
+	 * @return String
 	 */
 	public String getNotiSeq() {
 		return this.notiSeq;
@@ -88,7 +105,7 @@ public class ProdNoti extends CommonInfo {
 
 	/**
 	 * @param notiSeq
-	 *            the notiSeq to set
+	 *            notiSeq
 	 */
 	public void setNotiSeq(String notiSeq) {
 		this.notiSeq = notiSeq;
@@ -647,6 +664,171 @@ public class ProdNoti extends CommonInfo {
 	 */
 	public void setChnlId(String chnlId) {
 		this.chnlId = chnlId;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getProdType() {
+		return this.prodType;
+	}
+
+	/**
+	 * @param prodType
+	 *            prodType
+	 */
+	public void setProdType(String prodType) {
+		this.prodType = prodType;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getOrderedBy() {
+		return this.orderedBy;
+	}
+
+	/**
+	 * @param orderedBy
+	 *            orderedBy
+	 */
+	public void setOrderedBy(String orderedBy) {
+		this.orderedBy = orderedBy;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSellerMbrNo() {
+		return this.sellerMbrNo;
+	}
+
+	/**
+	 * @param sellerMbrNo
+	 *            sellerMbrNo
+	 */
+	public void setSellerMbrNo(String sellerMbrNo) {
+		this.sellerMbrNo = sellerMbrNo;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getCid() {
+		return this.cid;
+	}
+
+	/**
+	 * @param cid
+	 *            cid
+	 */
+	public void setCid(String cid) {
+		this.cid = cid;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSelfYn() {
+		return this.selfYn;
+	}
+
+	/**
+	 * @param selfYn
+	 *            selfYn
+	 */
+	public void setSelfYn(String selfYn) {
+		this.selfYn = selfYn;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSaleYn() {
+		return this.saleYn;
+	}
+
+	/**
+	 * @param saleYn
+	 *            saleYn
+	 */
+	public void setSaleYn(String saleYn) {
+		this.saleYn = saleYn;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getWhose() {
+		return this.whose;
+	}
+
+	/**
+	 * @param whose
+	 *            whose
+	 */
+	public void setWhose(String whose) {
+		this.whose = whose;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getNotiYn() {
+		return this.notiYn;
+	}
+
+	/**
+	 * @param notiYn
+	 *            notiYn
+	 */
+	public void setNotiYn(String notiYn) {
+		this.notiYn = notiYn;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getAvgScore() {
+		return this.avgScore;
+	}
+
+	/**
+	 * @param avgScore
+	 *            avgScore
+	 */
+	public void setAvgScore(String avgScore) {
+		this.avgScore = avgScore;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getStartRow() {
+		return this.startRow;
+	}
+
+	/**
+	 * @param startRow
+	 *            startRow
+	 */
+	public void setStartRow(String startRow) {
+		this.startRow = startRow;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getEndRow() {
+		return this.endRow;
+	}
+
+	/**
+	 * @param endRow
+	 *            endRow
+	 */
+	public void setEndRow(String endRow) {
+		this.endRow = endRow;
 	}
 
 }

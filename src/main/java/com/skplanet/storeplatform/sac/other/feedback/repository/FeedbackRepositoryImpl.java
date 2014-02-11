@@ -9,6 +9,8 @@
  */
 package com.skplanet.storeplatform.sac.other.feedback.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -150,6 +152,16 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	@Override
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood) {
 		return this.commonDAO.update("Feedback.updateProdNotiGood", prodNotiGood);
+	}
+
+	@Override
+	public List<ProdNoti> getProdNotiList(ProdNoti prodNoti) {
+		return this.commonDAO.queryForList("Feedback.getProdNotiList", prodNoti, ProdNoti.class);
+	}
+
+	@Override
+	public Object getProdNotiCount(ProdNoti prodNoti) {
+		return this.commonDAO.queryForInt("Feedback.getProdNotiCount", prodNoti);
 	}
 
 	@Override

@@ -316,6 +316,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Override
 	public ListFeedbackSacRes list(ListFeedbackSacReq listFeedbackSacReq, SacRequestHeader sacRequestHeader) {
+
+		// totcal count
+		// offset
+		// count
+
+		// 페이징 계산식?
+
 		ListFeedbackSacRes listFeedbackRes = new ListFeedbackSacRes();
 		listFeedbackRes.setAvgEvluScorePct("80.00");
 		listFeedbackRes.setNotiTot("10");
@@ -531,6 +538,17 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return changeFeedbackUserKeyRes;
 	}
 
+	/**
+	 * 
+	 * <pre>
+	 * 평점 등록.
+	 * </pre>
+	 * 
+	 * @param object
+	 *            object
+	 * @param sacRequestHeader
+	 *            sacRequestHeader
+	 */
 	private void setMbrAvgTenantProdStats(Object object, SacRequestHeader sacRequestHeader) {
 		BeanWrapperImpl beanWrapperImpl = new BeanWrapperImpl();
 		beanWrapperImpl.setWrappedInstance(object);
