@@ -26,10 +26,10 @@ public final class MemberConstants {
 
 	public static final String SC_ERROR_NO_DATA = "SC_MEM_9982"; // SC 검색결과 없음
 
-	/** EC IDP 에러 코드 문자열 */
+	/** EC IDP 에러 코드 문자열. */
 	public static final String EC_IDP_ERROR_CODE_TYPE = "EC_IDP_";
 
-	/** EC IDP 알수 없는 에러 */
+	/** EC IDP 알수 없는 에러. */
 	public static final String EC_IDP_ERROR_UNDEF = "EC_UNDEF_ERROR";
 
 	/** 사용자구분코드. */
@@ -142,25 +142,25 @@ public final class MemberConstants {
 	public static final String AUTH_TYPE_OWN = "OWN"; // 본인
 	public static final String AUTH_TYPE_PARENT = "PARENT"; // 법정대리인
 
-	/** 통합회원 로그인 상태코드 */
+	/** 통합회원 로그인 상태코드. */
 	public static final String USER_LOGIN_STATUS_NOMAL = "10"; // 로그인 가능
 	public static final String USER_LOGIN_STATUS_PAUSE = "20"; // 로그인 제한
 
-	/** 통합회원 직권중지 상태코드 */
+	/** 통합회원 직권중지 상태코드. */
 	public static final String USER_STOP_STATUS_NOMAL = "80"; // 직권중지 해제
 	public static final String USER_STOP_STATUS_PAUSE = "90"; // 직권중지 설정
 
-	/** 탈퇴 사유 코드 */
+	/** 탈퇴 사유 코드. */
 	public static final String WITHDRAW_REASON_OTHER = "US010408"; // 기타
 
-	/** 탈퇴유형 코드 */
+	/** 탈퇴유형 코드. */
 	public static final String USER_WITHDRAW_CLASS_CHANGE_ID = "US010701"; // ID 전환
 	public static final String USER_WITHDRAW_CLASS_USER_SELECTED = "US010702"; // 사용자선택
 	public static final String USER_WITHDRAW_CLASS_PROVISIONING = "US010703"; // 프로비저닝
 	public static final String USER_WITHDRAW_CLASS_USER_DEVICE = "US010704"; // 단말이동
 	public static final String USER_WITHDRAW_CLASS_JOIN_AGREE_EXPIRED = "US010705"; // 가입승인만료
 
-	/** 약관 항목 코드 */
+	/** 약관 항목 코드. */
 	public static final String POLICY_AGREEMENT_CLAUSE_ONEID = "US010601"; // ONEID이용약관
 	public static final String POLICY_AGREEMENT_CLAUSE_INDIVIDUAL_INFO_HANDLE_ONEID = "US010602"; // ONEID개인정보취급방침
 	public static final String POLICY_AGREEMENT_CLAUSE_TSTORE = "US010603"; // TSTORE이용약관(TAC001)
@@ -172,12 +172,12 @@ public final class MemberConstants {
 	public static final String POLICY_AGREEMENT_CLAUSE_COMMUNICATION_CHARGE = "US010609"; // TSTORE통신과금서비스(TAC002)
 
 	/**
-	 * 사용자 제한 정책 코드
+	 * 사용자 제한 정책 코드.
 	 */
-	public static final String USER_LIMIT_POLICY_TESTER = "US011702";//단말 검증자
+	public static final String USER_LIMIT_POLICY_TESTER = "US011702"; // 단말 검증자
 
 	/**
-	 * 게임센터 관련 상수
+	 * 게임센터 관련 상수.
 	 */
 	public static final String GAMECENTER_WORK_CD_MOBILENUMBER_CHANGE = "US003201"; //번호변경
 	public static final String GAMECENTER_WORK_CD_NAME_CHANGE = "US003202"; //명의변경
@@ -188,7 +188,7 @@ public final class MemberConstants {
 	public static final String GAMECENTER_WORK_CD_IMUSER_CHANGE = "US003207"; //통합회원전환
 
 	/**
-	 * 판매자 회원 상수들
+	 * 판매자 회원 상수들.
 	 * 
 	 * Updated on : 2014. 1. 9. Updated by : 김경복, 부르칸.
 	 */
