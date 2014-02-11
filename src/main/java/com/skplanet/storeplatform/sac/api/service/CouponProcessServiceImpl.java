@@ -851,6 +851,7 @@ public class CouponProcessServiceImpl implements CouponProcessService {
 		DetailInformationReq req = new DetailInformationReq();
 		DetailInformationRes res = new DetailInformationRes();
 		try {
+			req.setSellerKey("");
 			req.setSellerId(couponInfo.getBpId());
 			res = this.sellerSearchService.detailInformation(header, req);
 			if (res != null) {
