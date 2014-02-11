@@ -585,6 +585,7 @@ public class LoginServiceImpl implements LoginService {
 			deviceInfo.setDeviceIdType(req.getDeviceIdType());
 			deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 			deviceInfo.setNativeId(req.getNativeId());
+			deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
 			deviceInfo.setDeviceAccount(req.getDeviceAccount());
 			deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
 			this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);
@@ -600,6 +601,7 @@ public class LoginServiceImpl implements LoginService {
 				deviceInfo.setDeviceIdType(req.getDeviceIdType());
 				deviceInfo.setDeviceTelecom(req.getDeviceTelecom());
 				deviceInfo.setNativeId(req.getNativeId());
+				deviceInfo.setIsNativeIdAuth(req.getIsNativeIdAuth());
 				deviceInfo.setDeviceAccount(req.getDeviceAccount());
 				deviceInfo.setUserDeviceExtraInfo(req.getUserDeviceExtraInfo());
 				this.deviceService.updateDeviceInfo(requestHeader, deviceInfo);

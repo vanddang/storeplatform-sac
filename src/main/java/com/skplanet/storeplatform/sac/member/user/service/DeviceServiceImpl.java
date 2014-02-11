@@ -621,6 +621,9 @@ public class DeviceServiceImpl implements DeviceService {
 
 		if (nativeId != null) {
 
+			//nativeId 비교 여부
+			String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
+
 			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
 
 				if (!nativeId.equals(userMbrDevice.getNativeID())) {
@@ -670,9 +673,11 @@ public class DeviceServiceImpl implements DeviceService {
 					LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 					userMbrDevice.setNativeID(nativeId);
 				} else {
-					if (rooting.equals("Y") && !nativeId.equals(userMbrDevice.getNativeID())) {
-						// 루팅된 단말 & DB의 IMEI와 단말 IMEI값 불일치
-						throw new StorePlatformException("SAC_MEM_1504");
+					//isNativeIdAuth="Y"인경우 루팅여부 관계없이 비교
+					if (rooting.equals("Y") || (isNativeIdAuth != null && isNativeIdAuth.equals("Y"))) {
+						if (!nativeId.equals(userMbrDevice.getNativeID())) {
+							throw new StorePlatformException("SAC_MEM_1504");
+						}
 					}
 				}
 			}
