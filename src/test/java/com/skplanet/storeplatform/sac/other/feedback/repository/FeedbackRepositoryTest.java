@@ -18,6 +18,12 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNotiGood;
 import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 
+/**
+ * 
+ * Feedback Repository Test
+ * 
+ * Updated on : 2014. 2. 11. Updated by : 김현일, 인크로스.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -29,6 +35,11 @@ public class FeedbackRepositoryTest {
 	@Autowired
 	private FeedbackRepository feedbackRepository;
 
+	/**
+	 * <pre>
+	 * 기등록 상품후기 조회.
+	 * </pre>
+	 */
 	@Test
 	public void testGetRegProdNoti() {
 
@@ -42,6 +53,11 @@ public class FeedbackRepositoryTest {
 		assertNotNull(ret);
 	}
 
+	/**
+	 * <pre>
+	 * 상품후기 등록.
+	 * </pre>
+	 */
 	@Test
 	public void testInsertProdNoti() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -62,6 +78,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 상품추천 삭제.
+	 * </pre>
+	 */
 	@Test
 	public void testDeleteProdNotiGood() {
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
@@ -72,6 +93,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 상품 후기 수정.
+	 * </pre>
+	 */
 	@Test
 	public void testUpdateProdNoti() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -87,6 +113,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 상품 후기 삭제.
+	 * </pre>
+	 */
 	@Test
 	public void deleteProdNoti() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -100,6 +131,11 @@ public class FeedbackRepositoryTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 기등록 평점 조회.
+	 * </pre>
+	 */
 	@Test
 	public void testGetRegMbrAvg() {
 
@@ -112,6 +148,11 @@ public class FeedbackRepositoryTest {
 		assertNotNull(ret);
 	}
 
+	/**
+	 * <pre>
+	 * 평점 등록/수정.
+	 * </pre>
+	 */
 	@Test
 	public void testMergeMbrAvg() {
 		MbrAvg mbrAvg = new MbrAvg();
@@ -126,6 +167,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 상품평가정보 수정.
+	 * </pre>
+	 */
 	@Test
 	public void testUpdateTenantProdStats() {
 		TenantProdStats tenantProdStats = new TenantProdStats();
@@ -139,6 +185,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 상품평가정보 수정.
+	 * </pre>
+	 */
 	@Test
 	public void testMergeTenantProdStats() {
 		TenantProdStats tenantProdStats = new TenantProdStats();
@@ -153,6 +204,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 탈퇴회원 사용후기 카운트 조회.
+	 * </pre>
+	 */
 	@Test
 	public void testGetProdNotiWDCount() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -164,6 +220,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 일반회원 사용후기 카운트 조회.
+	 * </pre>
+	 */
 	@Test
 	public void testGetProdNotiWDGoodCount() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -177,6 +238,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 상품 추천 등록.
+	 * </pre>
+	 */
 	@Test
 	public void testInsertProdNotiGood() {
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
@@ -190,6 +256,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 탈퇴회원 상품추천  수정.
+	 * </pre>
+	 */
 	@Test
 	public void testUpdateProdNotiWDGood() {
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
@@ -204,6 +275,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 일반회원 상품 추천 카운트 조회.
+	 * </pre>
+	 */
 	@Test
 	public void testGetProdNotiGoodCount() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -217,6 +293,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 일반회원 상품추천 등록.
+	 * </pre>
+	 */
 	@Test
 	public void testUpdateProdNotiGood() {
 		ProdNotiGood prodNotiGood = new ProdNotiGood();
@@ -232,6 +313,49 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 사용후기 전체조회.
+	 * </pre>
+	 */
+	@Test
+	public void testGetProdNotiList() {
+
+		// notiSeq
+		// prodType
+		// mbrNo
+		// chnlId
+		// startRow, endRow
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setStartRow("1");
+		prodNoti.setEndRow("10");
+		prodNoti.setProdId("0000000020");
+		prodNoti.setMbrNo("IF110007722009061100144459");
+		prodNoti.setOrderedBy("recent");
+		this.feedbackRepository.getProdNotiList(prodNoti);
+	}
+
+	/**
+	 * <pre>
+	 * 사용후기 전체조회 카운트.
+	 * </pre>
+	 */
+	@Test
+	public void testGetProdNotiCount() {
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setStartRow("1");
+		prodNoti.setEndRow("10");
+		prodNoti.setProdId("0000000020");
+		prodNoti.setMbrNo("IF110007722009061100144459");
+		prodNoti.setOrderedBy("recent");
+		this.feedbackRepository.getProdNotiCount(prodNoti);
+	}
+
+	/**
+	 * <pre>
+	 * 판매자 댓글 등록/수정/삭제.
+	 * </pre>
+	 */
 	@Test
 	public void testUpdateSellerResp() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -245,6 +369,11 @@ public class FeedbackRepositoryTest {
 		assertTrue(ret > 0);
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 댓글 등록/수정/삭제.
+	 * </pre>
+	 */
 	@Test
 	public void testUpdateSellerRespWD() {
 		ProdNoti prodNoti = new ProdNoti();
@@ -257,4 +386,5 @@ public class FeedbackRepositoryTest {
 
 		assertTrue(ret > 0);
 	}
+
 }

@@ -24,6 +24,12 @@ import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
 
+/**
+ * 
+ * Feedback Service Test
+ * 
+ * Updated on : 2014. 2. 11. Updated by : 홍길동, SK 플래닛.
+ */
 @ActiveProfiles(value = "local")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath*:/spring-test/context-test.xml" })
@@ -40,6 +46,11 @@ public class FeedbackServiceTest {
 	String userKey = "IW1425872523320130906108999";
 	String prodId = "0000045297";
 
+	/**
+	 * <pre>
+	 * 초기화.
+	 * </pre>
+	 */
 	@Before
 	public void before() {
 		this.sacRequestHeader = new SacRequestHeader();
@@ -51,6 +62,11 @@ public class FeedbackServiceTest {
 		this.sacRequestHeader.setDeviceHeader(deviceHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 사용후기 등록/수정/삭제 테스트.
+	 * </pre>
+	 */
 	@Test
 	public void testAll() {
 
@@ -92,6 +108,11 @@ public class FeedbackServiceTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 사용후기 등록 테스트.
+	 * </pre>
+	 */
 	@Test
 	public void testCreate() {
 
@@ -111,6 +132,11 @@ public class FeedbackServiceTest {
 
 	}
 
+	/**
+	 * <pre>
+	 * 사용후기 수정 테스트.
+	 * </pre>
+	 */
 	@Test
 	public void testModify() {
 		ModifyFeedbackSacReq modifyFeedbackSacReq = new ModifyFeedbackSacReq();
@@ -126,6 +152,11 @@ public class FeedbackServiceTest {
 		this.feedbackService.modify(modifyFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 사용후기 삭제 테스트.
+	 * </pre>
+	 */
 	@Test
 	public void testRemove() {
 		RemoveFeedbackSacReq removeFeedbackSacReq = new RemoveFeedbackSacReq();
@@ -136,6 +167,11 @@ public class FeedbackServiceTest {
 		this.feedbackService.remove(removeFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 탈퇴회원 추천.
+	 * </pre>
+	 */
 	@Test
 	public void testCreateRecommendWD() {
 		CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq = new CreateRecommendFeedbackSacReq();
@@ -146,6 +182,11 @@ public class FeedbackServiceTest {
 		this.feedbackService.createRecommend(createRecommendFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 일반회원 추천.
+	 * </pre>
+	 */
 	@Test
 	public void testCreateRecommend() {
 		CreateRecommendFeedbackSacReq createRecommendFeedbackSacReq = new CreateRecommendFeedbackSacReq();
@@ -156,6 +197,11 @@ public class FeedbackServiceTest {
 		this.feedbackService.createRecommend(createRecommendFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 댓글 등록.
+	 * </pre>
+	 */
 	@Test
 	public void testCreateSellerFeedback() {
 		CreateSellerFeedbackSacReq createSellerFeedbackSacReq = new CreateSellerFeedbackSacReq();
@@ -167,6 +213,11 @@ public class FeedbackServiceTest {
 		this.feedbackService.createSellerFeedback(createSellerFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 댓글 수정.
+	 * </pre>
+	 */
 	@Test
 	public void testModifySellerFeedback() {
 		ModifySellerFeedbackSacReq modifySellerFeedbackSacReq = new ModifySellerFeedbackSacReq();
@@ -178,6 +229,11 @@ public class FeedbackServiceTest {
 		this.feedbackService.modifySellerFeedback(modifySellerFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	/**
+	 * <pre>
+	 * 판매자 댓글 삭제.
+	 * </pre>
+	 */
 	@Test
 	public void testRemoveSellerFeedback() {
 		RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq = new RemoveSellerFeedbackSacReq();
