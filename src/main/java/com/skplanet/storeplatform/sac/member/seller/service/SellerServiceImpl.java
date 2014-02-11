@@ -25,15 +25,12 @@ import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerRequest
 import com.skplanet.storeplatform.member.client.seller.sci.vo.LoginSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.PWReminder;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.RemoveSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SearchSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.SellerMbr;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateAccountSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoRequest;
-import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateLoginInfoResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerRequest;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateSellerResponse;
 import com.skplanet.storeplatform.member.client.seller.sci.vo.UpdateStatusSellerRequest;
@@ -622,7 +619,8 @@ public class SellerServiceImpl implements SellerService {
 	 * @return ModifyAccountInformationRes
 	 */
 	@Override
-	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationSacReq req) {
+	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
+			ModifyAccountInformationSacReq req) {
 		LOGGER.debug("############ SellerServiceImpl.modifyAccountInformation() [START] ############");
 		// SC공통 헤더
 		CommonRequest commonRequest = this.component.getSCCommonRequest(header);
@@ -658,7 +656,6 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req) {
 
-		RemoveSellerResponse schRes = new RemoveSellerResponse();
 		RemoveSellerRequest schReq = new RemoveSellerRequest();
 
 		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
@@ -666,7 +663,7 @@ public class SellerServiceImpl implements SellerService {
 		schReq.setSecedeReasonCode(req.getSecedeReasonCode());
 		schReq.setSecedeReasonMessage(req.getSecedeReasonMessage());
 
-		schRes = this.sellerSCI.removeSeller(schReq);
+		this.sellerSCI.removeSeller(schReq);
 
 		WithdrawRes response = new WithdrawRes();
 		response.setSellerKey(req.getSellerKey());
@@ -685,7 +682,6 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req) {
 
-		UpdateLoginInfoResponse schRes = new UpdateLoginInfoResponse();
 		UpdateLoginInfoRequest schReq = new UpdateLoginInfoRequest();
 
 		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
@@ -698,7 +694,7 @@ public class SellerServiceImpl implements SellerService {
 
 		schReq.setLoginInfo(loginInfo);
 
-		schRes = this.sellerSCI.updateLoginInfo(schReq);
+		this.sellerSCI.updateLoginInfo(schReq);
 		CreateAuthKeyRes response = new CreateAuthKeyRes();
 
 		response.setSessionKey(loginInfo.getSessionKey());
@@ -717,7 +713,6 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req) {
 
-		RemoveLoginInfoResponse schRes = new RemoveLoginInfoResponse();
 		RemoveLoginInfoRequest schReq = new RemoveLoginInfoRequest();
 
 		schReq.setCommonRequest(this.component.getSCCommonRequest(header));
@@ -726,7 +721,7 @@ public class SellerServiceImpl implements SellerService {
 		loginInfo.setSellerKey(req.getSellerKey());
 		schReq.setLoginInfo(loginInfo);
 
-		schRes = this.sellerSCI.removeLoginInfo(schReq);
+		this.sellerSCI.removeLoginInfo(schReq);
 
 		AbrogationAuthKeyRes response = new AbrogationAuthKeyRes();
 
