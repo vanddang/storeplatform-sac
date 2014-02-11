@@ -1124,7 +1124,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * 우선순위 (실명인증 생년월일 > DB생년월일 > null)
 		 */
 		String userBirthday = this.getUserBirthday(sacHeader, chkDupRes.getUserMbr().getUserKey());
-		if (StringUtil.equals(userBirthday, "")) {
+		if (StringUtil.equals(userBirthday, "") || userBirthday == null) {
 			response.setUserBirthDay(ObjectUtils.toString(chkDupRes.getUserMbr().getUserBirthDay()));
 		} else {
 			response.setUserBirthDay(userBirthday);
@@ -1145,9 +1145,15 @@ public class UserSearchServiceImpl implements UserSearchService {
 	}
 
 	/**
-	 * TODO 실명인증 생년월일....
+	 * <pre>
+	 * 본인 실명인증 생년월일을 조회한다.
+	 * </pre>
 	 * 
-	 * Question 본인일 경우만인지..??? (법정대리인은...???)
+	 * @param sacHeader
+	 *            공통 헤더
+	 * @param userKey
+	 *            사용자 Key
+	 * @return String (실명인증 생년월일)
 	 */
 	private String getUserBirthday(SacRequestHeader sacHeader, String userKey) {
 
@@ -1168,8 +1174,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		 * 회원 정보조회 (실명 인증정보)
 		 */
 		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
-		logger.info("## 본인 실명인증 생년월일 : {}", schUserRes.getMbrAuth().getBirthDay());
-		logger.info("## 법적대리인 실명인증 생년월일 : {}", schUserRes.getMbrLglAgent().getParentBirthDay());
 
 		return schUserRes.getMbrAuth().getBirthDay();
 	}
