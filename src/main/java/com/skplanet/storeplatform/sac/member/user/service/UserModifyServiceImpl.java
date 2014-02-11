@@ -125,7 +125,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 			this.imIdpService.updateUserInfo(param);
 
 			/**
-			 * 통합IDP 회원정보 조회 연동 (cmd - (cmd - findCommonProfileForServerIDP))
+			 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP))
 			 */
 			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
 			LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());

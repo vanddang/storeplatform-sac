@@ -118,7 +118,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 			if (StringUtils.equals(spe.getErrorInfo().getCode(), MemberConstants.EC_IDP_ERROR_CODE_TYPE + IdpConstants.IDP_RES_CODE_ALREADY_JOIN)) {
 
 				/**
-				 * (IDP 연동) 무선회원 해지
+				 * (IDP 연동) 무선회원 해지 (cmd = secedeForWap)
 				 */
 				LOGGER.info("## IDP 무선회원 해지 연동 Start =================");
 				this.idpService.secedeUser4Wap(req.getDeviceId());
@@ -214,7 +214,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		param.put("ocb_join_code", "N"); // 통합포인트 가입 여부 Y=가입, N=미가입
 
 		/**
-		 * (통합 IDP 연동) 이용동의 가입
+		 * (통합 IDP 연동) 이용동의 가입 (cmd = TXAgreeUserIDP)
 		 */
 		ImIdpReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
 
@@ -231,7 +231,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
 		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
@@ -324,7 +324,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## param : {}", param.entrySet());
 
 		/**
-		 * (통합 IDP) 이용동의 가입 요청
+		 * (통합 IDP) 이용동의 가입 요청 (cmd = TXAgreeUserIDP)
 		 */
 		ImIdpReceiverM agreeUserInfo = this.imIdpService.agreeUser(param);
 
@@ -341,7 +341,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		createUserRequest.setMbrClauseAgreeList(this.getAgreementInfo(req.getAgreementList()));
 
 		/**
-		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일
+		 * 통합 ID 기본 프로파일 조회 (통합ID 회원) 프로파일 조회 - 이름, 생년월일 (cmd = findCommonProfileForServerIDP)
 		 */
 		ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(agreeUserInfo.getResponseBody().getIm_int_svc_no());
 
@@ -395,7 +395,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 	public CreateBySimpleRes createBySimpleId(SacRequestHeader sacHeader, CreateBySimpleReq req) {
 
 		/**
-		 * IDP 중복 아이디 체크.
+		 * IDP 중복 아이디 체크. (cmd = duplicateIDCheck)
 		 */
 		this.idpService.checkDupID(this.getUrlEncode(req.getUserId()));
 
