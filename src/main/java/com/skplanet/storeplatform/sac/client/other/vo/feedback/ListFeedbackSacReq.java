@@ -42,11 +42,6 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 */
 	@NotBlank
 	private String orderedBy;
-	/**
-	 * 정렬 방식.
-	 */
-	@NotBlank
-	private String orderedIn;
 
 	/**
 	 * 채널 ID.
@@ -112,21 +107,6 @@ public class ListFeedbackSacReq extends CommonInfo {
 	 */
 	public void setOrderedBy(String orderedBy) {
 		this.orderedBy = orderedBy;
-	}
-
-	/**
-	 * @return String
-	 */
-	public String getOrderedIn() {
-		return this.orderedIn;
-	}
-
-	/**
-	 * @param orderedIn
-	 *            orderedIn
-	 */
-	public void setOrderedIn(String orderedIn) {
-		this.orderedIn = orderedIn;
 	}
 
 	/**
