@@ -77,7 +77,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test1_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -127,7 +127,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test2_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -177,7 +177,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test3_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override
@@ -188,7 +188,7 @@ public class CreateRealNameTest {
 						/**
 						 * 통합 IDP 회원
 						 */
-						reqJson.setUserKey("US201402101325037050002133");
+						reqJson.setUserKey("US201402111741452650002263");
 						reqJson.setUserAuthKey("b29ef7ad8e279c67bdf4ce7cba019a0e3e9a6375");
 
 						reqJson.setIsOwn("OWN"); // 실명인증 대상
@@ -228,7 +228,7 @@ public class CreateRealNameTest {
 	@Test
 	public void test4_createRealName() throws Exception {
 
-		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_DEV + "/createRealName/v1").httpMethod(HttpMethod.POST)
+		new TestCaseTemplate(this.mvc).url(TestMemberConstant.PREFIX_USER_PATH_REAL + "/createRealName/v1").httpMethod(HttpMethod.POST)
 				.addHeaders("Accept", "application/json")
 				.requestBody(new RequestBodySetter() {
 					@Override

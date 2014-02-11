@@ -276,7 +276,7 @@ public class UserModifyServiceImpl implements UserModifyService {
 					/**
 					 * OnedID 조회 정보와 Request 로 받은 정보와 비교 로직 수행.
 					 */
-					String oneIdRealNameType = this.compareRealName(req, profileInfo);
+					String oneIdRealNameType = this.compareRealName(sacHeader, req, profileInfo);
 
 					/**
 					 * is_rname_auth, user_birthday, user_ci 가 동일해야만 업데이트
@@ -523,13 +523,15 @@ public class UserModifyServiceImpl implements UserModifyService {
 	 * 실명인증여부, 생년월일, CI 정보 IDP 결과또는 DB 와 정보가 동일한지 비교함.
 	 * </pre>
 	 * 
+	 * @param sacHeader
+	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
 	 * @param profileInfo
 	 *            (통합IDP 회원 정보 조회 응답 결과)
 	 * @return String 결과 타입
 	 */
-	private String compareRealName(CreateRealNameReq req, ImIdpReceiverM profileInfo) {
+	private String compareRealName(SacRequestHeader sacHeader, CreateRealNameReq req, ImIdpReceiverM profileInfo) {
 
 		ResponseBody idpResult = profileInfo.getResponseBody();
 
@@ -540,15 +542,18 @@ public class UserModifyServiceImpl implements UserModifyService {
 		 */
 		if (StringUtils.equals(idpResult.getIs_rname_auth(), MemberConstants.USE_Y)) {
 
+			LOGGER.info("####### IDP 실명인증 CI    : {}", idpResult.getUser_ci());
+			LOGGER.info("####### IDP 실명인증 Birth : {}", req.getUserBirthDay());
+
 			// One ID CI, birthday 비교
 			if (StringUtils.isNotEmpty(idpResult.getUser_ci())) { // 기 등록 된 CI가 존재하는 경우는 CI + 생년월일(social_date) 비교
 				if (!StringUtils.equals(req.getUserCi(), idpResult.getUser_ci()) && !StringUtils.equals(req.getUserBirthDay(),
 						idpResult.getUser_birthday())) {
-					throw new StorePlatformException("CI or 생년월일 불일치");
+					throw new StorePlatformException("SAC_MEM_1400");
 				}
 			} else { // 생년월일(social_date) 비교
 				if (!StringUtils.equals(req.getUserBirthDay(), idpResult.getUser_birthday())) {
-					throw new StorePlatformException("생년월일 불일치");
+					throw new StorePlatformException("SAC_MEM_1401");
 				}
 			}
 
@@ -557,18 +562,14 @@ public class UserModifyServiceImpl implements UserModifyService {
 					oneIdRealNameType = "E";
 				}
 			} else { // 개명
+				LOGGER.info("## 개명..........");
 				oneIdRealNameType = "R";
 			}
 
 		} else { // 최초 인증
 
-			/**
-			 * TODO DB 비교로직 추가해야함. (테스트는 OneID 사이트에서 법정 대리인으로 등록해 본다...그후 처리...)
-			 * 
-			 * TODO 실명 인증 정보 가져 오는API 확인.
-			 */
 			SearchUserRequest searchUserRequest = new SearchUserRequest();
-			// searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+			searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
 
 			/**
 			 * 검색 조건 setting
@@ -585,28 +586,30 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 */
 			SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
 
-			// One ID CI, birthday 비교
-			if (StringUtils.isNotEmpty(idpResult.getUser_ci())) { // 기 등록 된 CI가 존재하는 경우는 CI + 생년월일(social_date) 비교
-				if (!StringUtils.equals(req.getUserCi(), idpResult.getUser_ci()) && !StringUtils.equals(req.getUserBirthDay(),
-						idpResult.getUser_birthday())) {
-					throw new StorePlatformException("CI or 생년월일 불일치");
-				}
-			} else { // 생년월일(social_date) 비교
-				if (!StringUtils.equals(req.getUserBirthDay(), idpResult.getUser_birthday())) {
-					throw new StorePlatformException("생년월일 불일치");
+			if (schUserRes.getMbrAuth().getSequence() != null || StringUtils.equals(schUserRes.getMbrAuth().getSequence(), "")) {
+				LOGGER.info("####### DB 실명인증 CI    : {}", schUserRes.getMbrAuth().getCi());
+				LOGGER.info("####### DB 실명인증 Birth : {}", schUserRes.getMbrAuth().getBirthDay());
+
+				// One ID CI, birthday 비교
+				if (StringUtils.isNotEmpty(schUserRes.getMbrAuth().getCi())) { // 기 등록 된 CI가 존재하는 경우는 CI +
+																			   // 생년월일(social_date)
+					// 비교
+					if (!StringUtils.equals(req.getUserCi(), schUserRes.getMbrAuth().getCi()) && !StringUtils.equals(req.getUserBirthDay(),
+							schUserRes.getMbrAuth().getBirthDay())) {
+						throw new StorePlatformException("SAC_MEM_1400");
+					}
+				} else { // 생년월일(social_date) 비교
+					if (!StringUtils.equals(req.getUserBirthDay(), schUserRes.getMbrAuth().getBirthDay())) {
+						throw new StorePlatformException("SAC_MEM_1401");
+					}
 				}
 			}
-
-			// // T store DB CI, SOCIAL_DATE 비교
-			// if (StringUtils.isNotEmpty(sDbSocialDate)) {
-			// if (!compareRealName(sSocialDate, sCi, sDbSocialDate, sDbCi)) {
-			// throw new BaseException("", "30006");
-			// }
-			// }
 
 			oneIdRealNameType = "R";
 
 		}
+
+		LOGGER.info("### oneIdRealNameType : {}", oneIdRealNameType);
 
 		return oneIdRealNameType;
 	}
