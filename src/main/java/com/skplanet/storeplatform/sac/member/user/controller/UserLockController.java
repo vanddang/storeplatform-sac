@@ -49,7 +49,7 @@ public class UserLockController {
 	 *            Request Value Object
 	 * @return Response Value Object
 	 */
-	@RequestMapping(value = "/dev/member/user/lockAccount/v1", method = RequestMethod.POST)
+	@RequestMapping(value = "/member/user/lockAccount/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public LockAccountSacRes lockAccount(SacRequestHeader sacHeader, @Validated @RequestBody LockAccountSacReq req) {
 
@@ -64,12 +64,10 @@ public class UserLockController {
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
-		LockAccountSacRes res = new LockAccountSacRes();
-
 		/**
 		 * 회원 계정 잠금 Biz
 		 */
-		res = this.svc.lockAccount(sacHeader, req);
+		LockAccountSacRes res = this.svc.lockAccount(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 

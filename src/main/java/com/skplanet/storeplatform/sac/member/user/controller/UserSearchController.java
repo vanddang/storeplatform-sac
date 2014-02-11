@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -161,27 +160,17 @@ public class UserSearchController {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Vaule Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/detailByDeviceId/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req,
-			BindingResult result) {
+	public DetailByDeviceIdSacRes detailByDeviceId(SacRequestHeader sacHeader, @Validated @RequestBody DetailByDeviceIdSacReq req) {
 
 		LOGGER.info("##################################################");
 		LOGGER.info("##### 2.1.34 DeviceId를 이용하여 회원 정보 조회 #####");
 		LOGGER.info("##################################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
 
 		/**
 		 * Header 정보

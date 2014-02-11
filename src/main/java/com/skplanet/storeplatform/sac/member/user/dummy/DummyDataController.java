@@ -24,7 +24,6 @@ import com.skplanet.storeplatform.sac.client.member.vo.user.CreateOcbInformation
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateTermsAgreementRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.DetailClauseSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.GetOcbInformationRes;
-import com.skplanet.storeplatform.sac.client.member.vo.user.LockAccountSacRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyPasswordRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyTermsAgreementRes;
@@ -528,19 +527,19 @@ public class DummyDataController {
 	 * 
 	 * @return SearchIdRes
 	 */
-	//	@RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
-	//	@ResponseBody
-	//	public SearchIdRes searchId() {
+	// @RequestMapping(value = "/member/user/searchId/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public SearchIdRes searchId() {
 	//
-	//		LOGGER.info("####################################################");
-	//		LOGGER.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
-	//		LOGGER.info("####################################################");
+	// LOGGER.info("####################################################");
+	// LOGGER.info("##### 5.1.7. ID 찾기에 대한 기능을 제공한다. #####");
+	// LOGGER.info("####################################################");
 	//
-	//		SearchIdRes res = new SearchIdRes();
-	//		res.setUserId("hkd");
+	// SearchIdRes res = new SearchIdRes();
+	// res.setUserId("hkd");
 	//
-	//		return res;
-	//	}
+	// return res;
+	// }
 
 	/**
 	 * <pre>
@@ -1161,25 +1160,25 @@ public class DummyDataController {
 	// return res;
 	// }
 
-	/**
-	 * <pre>
-	 * method 설명.
-	 * </pre>
-	 * 
-	 * @return LockAccountSacRes
-	 */
-	@RequestMapping(value = "/member/user/lockAccount/v1", method = RequestMethod.POST)
-	@ResponseBody
-	public LockAccountSacRes lockAccount() {
-
-		LOGGER.info("###############################");
-		LOGGER.info("##### 2.1.36 회원 계정 잠금 #####");
-		LOGGER.info("###############################");
-
-		LockAccountSacRes res = new LockAccountSacRes();
-		res.setUserId("testId");
-
-		return res;
-	}
+	// /**
+	// * <pre>
+	// * method 설명.
+	// * </pre>
+	// *
+	// * @return LockAccountSacRes
+	// */
+	// @RequestMapping(value = "/member/user/lockAccount/v1", method = RequestMethod.POST)
+	// @ResponseBody
+	// public LockAccountSacRes lockAccount() {
+	//
+	// LOGGER.info("###############################");
+	// LOGGER.info("##### 2.1.36 회원 계정 잠금 #####");
+	// LOGGER.info("###############################");
+	//
+	// LockAccountSacRes res = new LockAccountSacRes();
+	// res.setUserId("testId");
+	//
+	// return res;
+	// }
 
 }

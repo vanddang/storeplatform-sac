@@ -13,14 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameReq;
 import com.skplanet.storeplatform.sac.client.member.vo.user.CreateRealNameRes;
 import com.skplanet.storeplatform.sac.client.member.vo.user.ModifyEmailReq;
@@ -55,26 +53,17 @@ public class UserModifyController {
 	 *            공통 헤더 정보
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/modify/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyRes modify(SacRequestHeader sacHeader, @Validated @RequestBody ModifyReq req, BindingResult result) {
+	public ModifyRes modify(SacRequestHeader sacHeader, @Validated @RequestBody ModifyReq req) {
 
 		LOGGER.info("#################################");
 		LOGGER.info("##### 2.1.13. 회원 정보 수정 #####");
 		LOGGER.info("#################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
 
 		/**
 		 * Header 정보
@@ -101,26 +90,17 @@ public class UserModifyController {
 	 *            공통 헤더 정보
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/dev/member/user/modifyPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req, BindingResult result) {
+	public ModifyPasswordRes modifyPassword(SacRequestHeader sacHeader, @Validated @RequestBody ModifyPasswordReq req) {
 
 		LOGGER.info("################################");
 		LOGGER.info("##### 2.1.14. 비밀번호 수정 #####");
 		LOGGER.info("################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
 
 		/**
 		 * Header 정보
@@ -147,26 +127,17 @@ public class UserModifyController {
 	 *            공통 헤더 정보
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/dev/member/user/modifyEmail/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req, BindingResult result) {
+	public ModifyEmailRes modifyEmail(SacRequestHeader sacHeader, @Validated @RequestBody ModifyEmailReq req) {
 
 		LOGGER.info("##################################");
 		LOGGER.info("##### 2.1.15. 이메일 주소 수정 #####");
 		LOGGER.info("##################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
 
 		/**
 		 * Header 정보
@@ -193,26 +164,17 @@ public class UserModifyController {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/createRealName/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req, BindingResult result) {
+	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, @Validated @RequestBody CreateRealNameReq req) {
 
 		LOGGER.info("####################################");
 		LOGGER.info("##### 2.1.18 실명 인증 정보 등록 #####");
 		LOGGER.info("####################################");
 
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
-
-		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
 
 		/**
 		 * Header 정보
