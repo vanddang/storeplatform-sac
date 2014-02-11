@@ -17,6 +17,9 @@ public class Agreement extends CommonInfo {
 	private String extraAgreementId;
 	private String isExtraAgreement;
 	private String extraAgreementVersion;
+	private String isMandatory;
+	private String regDate;
+	private String updateDate;
 
 	public String getExtraAgreementId() {
 		return this.extraAgreementId;
@@ -47,6 +50,30 @@ public class Agreement extends CommonInfo {
 	 */
 	public void setExtraAgreementVersion(String extraAgreementVersion) {
 		this.extraAgreementVersion = extraAgreementVersion;
+	}
+
+	public String getIsMandatory() {
+		return this.isMandatory;
+	}
+
+	public void setIsMandatory(String isMandatory) {
+		this.isMandatory = isMandatory;
+	}
+
+	public String getRegDate() {
+		return this.regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
+	public String getUpdateDate() {
+		return this.updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
 	}
 
 }

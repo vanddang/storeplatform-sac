@@ -14,9 +14,11 @@ import com.skplanet.storeplatform.sac.client.member.vo.common.Agreement;
  * Updated on : 2014. 1. 6. Updated by : 강신완, 부르칸.
  */
 @JsonSerialize(include = Inclusion.NON_NULL)
-public class ListTermsAgreementRes extends CommonInfo {
+public class ListTermsAgreementSacRes extends CommonInfo {
 
 	private static final long serialVersionUID = 1L;
+
+	private String userKey;
 
 	/* 약관동의 리스트 */
 	private List<Agreement> agreementList;
@@ -31,6 +33,14 @@ public class ListTermsAgreementRes extends CommonInfo {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getUserKey() {
+		return this.userKey;
+	}
+
+	public void setUserKey(String userKey) {
+		this.userKey = userKey;
 	}
 
 }
