@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,9 +22,12 @@ import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProv
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProductProvisioningRes;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileReq;
 import com.skplanet.storeplatform.sac.client.display.vo.device.DeviceProfileRes;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.openapi.DownloadBestSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProductProvisioningService;
 import com.skplanet.storeplatform.sac.display.device.service.DeviceProfileService;
+import com.skplanet.storeplatform.sac.display.openapi.service.DownloadBestService;
 
 /**
  * Open API 관련 Controller
@@ -40,6 +44,9 @@ public class OpenApiController {
 
 	@Autowired
 	private DeviceProductProvisioningService deviceProductProvisioningService;
+
+	@Autowired
+	private DownloadBestService downloadBestService;
 
 	/**
 	 * <pre>
@@ -73,6 +80,25 @@ public class OpenApiController {
 	@ResponseBody
 	public DeviceProductProvisioningRes getSellerAppDetail(DeviceProductProvisioningReq req, SacRequestHeader header) {
 		return this.deviceProductProvisioningService.searchProductProvisioning(req, header);
+	}
+
+	/**
+	 * 
+	 * <pre>
+	 * Download Best 리스트 조회.
+	 * </pre>
+	 * 
+	 * @param requestheader
+	 *            requestheader
+	 * @param downloadBestSacReq
+	 *            downloadBestSacReq
+	 * @return DownloadBestSacRes
+	 */
+	@RequestMapping(value = "/bestDownload/list/v1", method = RequestMethod.POST)
+	@ResponseBody
+	public DownloadBestSacRes downloadApp(SacRequestHeader requestheader,
+			@RequestBody DownloadBestSacReq downloadBestSacReq) {
+		return this.downloadBestService.searchDownloadBestList(requestheader, downloadBestSacReq);
 	}
 
 }
