@@ -104,7 +104,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		try {
 
 			/**
-			 * (IDP 연동) 무선회원 가입
+			 * (IDP 연동) 무선회원 가입 (cmd - joinForWap)
 			 */
 			join4WapInfo = this.idpService.join4Wap(req.getDeviceId(), this.mcc.convertDeviceTelecom(req.getDeviceTelecom()));
 
@@ -409,7 +409,7 @@ public class UserJoinServiceImpl implements UserJoinService {
 		LOGGER.info("## param : {}", param.entrySet());
 
 		/**
-		 * IDP 간편회원 가입 연동
+		 * IDP 간편회원 가입 연동 (cmd = simpleJoinApply)
 		 */
 		IdpReceiverM simpleJoinInfo = this.idpService.simpleJoin(param);
 

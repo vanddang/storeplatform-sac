@@ -1049,7 +1049,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 					}
 				}
 
-				logger.info("## policyInfos : {}", policyInfos.toString());
 			}
 
 		} catch (StorePlatformException spe) {
@@ -1124,7 +1123,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 		/**
 		 * 우선순위 (실명인증 생년월일 > DB생년월일 > null)
 		 */
-		String userBirthday = this.getUserBirthday();
+		String userBirthday = this.getUserBirthday(sacHeader, chkDupRes.getUserMbr().getUserKey());
 		if (StringUtil.equals(userBirthday, "")) {
 			response.setUserBirthDay(ObjectUtils.toString(chkDupRes.getUserMbr().getUserBirthDay()));
 		} else {
@@ -1150,9 +1149,29 @@ public class UserSearchServiceImpl implements UserSearchService {
 	 * 
 	 * Question 본인일 경우만인지..??? (법정대리인은...???)
 	 */
-	private String getUserBirthday() {
+	private String getUserBirthday(SacRequestHeader sacHeader, String userKey) {
 
-		return "";
+		SearchUserRequest searchUserRequest = new SearchUserRequest();
+		searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+		/**
+		 * 검색 조건 setting
+		 */
+		List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+		KeySearch keySchUserKey = new KeySearch();
+		keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+		keySchUserKey.setKeyString(userKey);
+		keySearchList.add(keySchUserKey);
+		searchUserRequest.setKeySearchList(keySearchList);
+
+		/**
+		 * 회원 정보조회 (실명 인증정보)
+		 */
+		SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+		logger.info("## 본인 실명인증 생년월일 : {}", schUserRes.getMbrAuth().getBirthDay());
+		logger.info("## 법적대리인 실명인증 생년월일 : {}", schUserRes.getMbrLglAgent().getParentBirthDay());
+
+		return schUserRes.getMbrAuth().getBirthDay();
 	}
 
 }
