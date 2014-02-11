@@ -21,6 +21,11 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	private String userKey;
 
 	/**
+	 * IDP 인증 Key.
+	 */
+	private String userAuthKey;
+
+	/**
 	 * 사용자 구분코드.
 	 */
 	private String userType;
@@ -173,6 +178,14 @@ public class AuthorizeByMdnRes extends CommonInfo {
 	 */
 	public void setIsLoginSuccess(String isLoginSuccess) {
 		this.isLoginSuccess = isLoginSuccess;
+	}
+
+	public String getUserAuthKey() {
+		return this.userAuthKey;
+	}
+
+	public void setUserAuthKey(String userAuthKey) {
+		this.userAuthKey = userAuthKey;
 	}
 
 }
