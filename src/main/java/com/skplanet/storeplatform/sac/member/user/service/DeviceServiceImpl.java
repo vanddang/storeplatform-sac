@@ -141,7 +141,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SearchUserResponse schUserRes = this.searchUser(commonRequest, MemberConstants.KEY_TYPE_INSD_USERMBR_NO, userKey);
 
 		/* 등록 가능한 휴대기기 개수 초과 */
-		if (req.getRegMaxCnt().equals("0")
+		if (StringUtils.equals(req.getRegMaxCnt(), "0")
 				|| (schUserRes.getUserMbr().getDeviceCount() != null && Integer.parseInt(schUserRes.getUserMbr().getDeviceCount()) >= Integer
 						.parseInt(req.getRegMaxCnt()))) {
 			throw new StorePlatformException("SAC_MEM_1501");
@@ -158,13 +158,13 @@ public class DeviceServiceImpl implements DeviceService {
 			List<DeviceInfo> deviceInfoList = listDeviceRes.getDeviceInfoList();
 			if (deviceInfoList != null) {
 				for (DeviceInfo deviceInfo : deviceInfoList) {
-					if (deviceInfo.getDeviceId().equals(deviceId)) {
+					if (StringUtils.equals(deviceInfo.getDeviceId(), deviceId)) {
 						throw new StorePlatformException("SAC_MEM_1502");
 					}
 				}
 			}
 		} catch (StorePlatformException ex) {
-			if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+			if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 				throw ex;
 			}
 		}
@@ -450,7 +450,7 @@ public class DeviceServiceImpl implements DeviceService {
 				schAgreeListRes = this.userSCI.searchAgreementList(schAgreeListReq);
 			} catch (StorePlatformException ex) {
 				/* 약관 조회 결과 없는경우를 제외하고 throw */
-				if (!ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
+				if (!StringUtils.equals(ex.getErrorInfo().getCode(), MemberConstants.SC_ERROR_NO_DATA)) {
 					throw ex;
 				}
 			}
@@ -572,41 +572,38 @@ public class DeviceServiceImpl implements DeviceService {
 
 		LOGGER.info(":::::::::::::::::: device update field start ::::::::::::::::::");
 
-		if (deviceId != null && !deviceId.equals(userMbrDevice.getDeviceID())) {
+		if (deviceId != null && !StringUtils.equals(deviceId, userMbrDevice.getDeviceID())) {
 
 			LOGGER.info("[deviceId] {} -> {}", userMbrDevice.getDeviceID(), deviceId);
 			userMbrDevice.setDeviceID(deviceId);
 
 		}
 
-		if (deviceModelNo != null && !deviceModelNo.equals(userMbrDevice.getDeviceModelNo())) {
+		if (deviceModelNo != null && !StringUtils.equals(deviceModelNo, userMbrDevice.getDeviceModelNo())) {
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
+			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
 				// 폰정보 조회 (deviceModelNo)
 				Device device = this.commService.getPhoneInfo(deviceModelNo);
 
 				if (device != null) {
 					// OMD 단말이 아닐 경우만
-					if (!MemberConstants.DEVICE_TELECOM_OMD.equals(device.getCmntCompCd())) {
+					if (!StringUtils.equals(MemberConstants.DEVICE_TELECOM_OMD, device.getCmntCompCd())) {
 
 						IdpReceiverM idpReceiver = this.idpService.deviceCompare(deviceId);
 						String idpModelId = idpReceiver.getResponseBody().getModel_id();
 
-						if (idpModelId != null && !idpModelId.equals("")) {
-							// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
-							if ("SSNU".equals(idpModelId)) { // SHW-M200K->SHW-M200S
-								idpModelId = "SSNL";
-							} else if ("SP05".equals(idpModelId)) { // SHW-M420K->SHW-M420S
-								idpModelId = "SSO0";
-							}
-
-							// uacd 부가속성 추가
-							deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId,
-									deviceInfo));
-
-							LOGGER.info("[change uacd] {}", idpModelId);
+						// 특정 단말 모델 임시 변경 처리 2013.05.02 watermin
+						if (StringUtils.equals(idpModelId, "SSNU")) { // SHW-M200K->SHW-M200S
+							idpModelId = "SSNL";
+						} else if (StringUtils.equals(idpModelId, "SP05")) { // SHW-M420K->SHW-M420S
+							idpModelId = "SSO0";
 						}
+
+						// uacd 부가속성 추가
+						deviceInfo.setUserDeviceExtraInfo(DeviceUtil.setDeviceExtraValue(MemberConstants.DEVICE_EXTRA_UACD, idpModelId, deviceInfo));
+
+						LOGGER.info("[change uacd] {}", idpModelId);
 					}
 				}
 
@@ -624,9 +621,9 @@ public class DeviceServiceImpl implements DeviceService {
 			//nativeId 비교 여부
 			String isNativeIdAuth = deviceInfo.getIsNativeIdAuth();
 
-			if (MemberConstants.DEVICE_TELECOM_SKT.equals(deviceTelecom)) {
+			if (StringUtils.equals(MemberConstants.DEVICE_TELECOM_SKT, deviceTelecom)) {
 
-				if (!nativeId.equals(userMbrDevice.getNativeID())) {
+				if (!StringUtils.equals(nativeId, userMbrDevice.getNativeID())) {
 					LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 					userMbrDevice.setNativeID(nativeId);
 				}
@@ -635,12 +632,12 @@ public class DeviceServiceImpl implements DeviceService {
 				boolean isOpmd = StringUtils.substring(deviceId, 0, 3).equals("989");
 
 				// 루팅 단말이고 OPMD 단말이 아닌 경우만 nativeId 체크
-				if ("Y".equals(rooting) && !isOpmd) {
+				if (StringUtils.equals(rooting, "Y") && !isOpmd) {
 
 					String paramType = null;
-					if (deviceInfo.getDeviceIdType().equals("msisdn")) {
+					if (StringUtils.equals(deviceInfo.getDeviceIdType(), "msisdn")) {
 						paramType = "11";
-					} else if (deviceInfo.getDeviceIdType().equals("uuid")) {
+					} else if (StringUtils.equals(deviceInfo.getDeviceIdType(), "uuid")) {
 						paramType = "12";
 					} else {
 						paramType = "13";
@@ -649,7 +646,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 					String icasImei = null;
 
-					if (!this.commService.getMappingInfo(deviceId, paramType).getMvnoCD().equals("0")) { // MVNO
+					if (!StringUtils.equals(this.commService.getMappingInfo(deviceId, paramType).getMvnoCD(), "0")) { // MVNO
 
 						GetMvnoEcRes mvnoRes = this.commService.getMvService(deviceId);
 						icasImei = mvnoRes.getImeiNum();
@@ -661,20 +658,20 @@ public class DeviceServiceImpl implements DeviceService {
 
 					}
 
-					if (icasImei.equals(nativeId)) {
+					if (StringUtils.equals(icasImei, nativeId)) {
 						throw new StorePlatformException("SAC_MEM_1503");
 					}
 
 				}
 			} else { // 타사
 
-				if (userMbrDevice.getNativeID() == null || userMbrDevice.getNativeID().equals("")) {
+				if (userMbrDevice.getNativeID() == null || StringUtils.equals(userMbrDevice.getNativeID(), "")) {
 					// DB에 저장된 IMEI 값이 없는 경우 최초 인증으로 보고 IMEI 수집
 					LOGGER.info("[nativeId] {} -> {}", userMbrDevice.getNativeID(), nativeId);
 					userMbrDevice.setNativeID(nativeId);
 				} else {
 					//isNativeIdAuth="Y"인경우 루팅여부 관계없이 비교
-					if (rooting.equals("Y") || (isNativeIdAuth != null && isNativeIdAuth.equals("Y"))) {
+					if (StringUtils.equals(rooting, "Y") || StringUtils.equals(isNativeIdAuth, "Y")) {
 						if (!nativeId.equals(userMbrDevice.getNativeID())) {
 							throw new StorePlatformException("SAC_MEM_1504");
 						}
@@ -684,63 +681,63 @@ public class DeviceServiceImpl implements DeviceService {
 
 		}
 
-		if (deviceAccount != null && !deviceAccount.equals(userMbrDevice.getDeviceAccount())) {
+		if (deviceAccount != null && !StringUtils.equals(deviceAccount, userMbrDevice.getDeviceAccount())) {
 
 			LOGGER.info("[deviceAccount] {} -> {}", userMbrDevice.getDeviceAccount(), deviceAccount);
 			userMbrDevice.setDeviceAccount(deviceAccount);
 
 		}
 
-		if (deviceTelecom != null && !deviceTelecom.equals(userMbrDevice.getDeviceTelecom())) {
+		if (deviceTelecom != null && !StringUtils.equals(deviceTelecom, userMbrDevice.getDeviceTelecom())) {
 
 			LOGGER.info("[deviceTelecom] {} -> {}", userMbrDevice.getDeviceTelecom(), deviceTelecom);
 			userMbrDevice.setDeviceTelecom(deviceTelecom);
 
 		}
 
-		if (deviceNickName != null && !deviceNickName.equals(userMbrDevice.getDeviceNickName())) {
+		if (deviceNickName != null && !StringUtils.equals(deviceNickName, userMbrDevice.getDeviceNickName())) {
 
 			LOGGER.info("[deviceNickName] {} -> {}", userMbrDevice.getDeviceNickName(), deviceNickName);
 			userMbrDevice.setDeviceNickName(deviceNickName);
 
 		}
 
-		if (isPrimary != null && !isPrimary.equals(userMbrDevice.getIsPrimary())) {
+		if (isPrimary != null && !StringUtils.equals(isPrimary, userMbrDevice.getIsPrimary())) {
 
 			LOGGER.info("[isPrimary] {} -> {}", userMbrDevice.getIsPrimary(), isPrimary);
 			userMbrDevice.setIsPrimary(isPrimary);
 
 		}
 
-		if (isRecvSms != null && !isRecvSms.equals(userMbrDevice.getIsRecvSMS())) {
+		if (isRecvSms != null && !StringUtils.equals(isRecvSms, userMbrDevice.getIsRecvSMS())) {
 
 			LOGGER.info("[isRecvSms] {} -> {}", userMbrDevice.getIsRecvSMS(), isRecvSms);
 			userMbrDevice.setIsRecvSMS(isRecvSms);
 
 		}
 
-		if (isAuthenticate != null && !isAuthenticate.equals(userMbrDevice.getIsAuthenticated())) {
+		if (isAuthenticate != null && !StringUtils.equals(isAuthenticate, userMbrDevice.getIsAuthenticated())) {
 
 			LOGGER.info("[isAuthenticate] {} -> {}", userMbrDevice.getIsAuthenticated(), isAuthenticate);
 			userMbrDevice.setIsAuthenticated(isAuthenticate);
 
 		}
 
-		if (authenticationDate != null && !authenticationDate.equals(userMbrDevice.getAuthenticationDate())) {
+		if (authenticationDate != null && !StringUtils.equals(authenticationDate, userMbrDevice.getAuthenticationDate())) {
 
 			LOGGER.info("[authenticationDate] {} -> {}", userMbrDevice.getAuthenticationDate(), authenticationDate);
 			userMbrDevice.setAuthenticationDate(authenticationDate);
 
 		}
 
-		if (isUsed != null && !isUsed.equals(userMbrDevice.getIsUsed())) {
+		if (isUsed != null && !StringUtils.equals(isUsed, userMbrDevice.getIsUsed())) {
 
 			LOGGER.info("[isUsed] {} -> {}", userMbrDevice.getIsUsed(), isUsed);
 			userMbrDevice.setIsUsed(isUsed);
 
 		}
 
-		if (svcMangNum != null && !svcMangNum.equals(userMbrDevice.getSvcMangNum())) {
+		if (svcMangNum != null && !StringUtils.equals(svcMangNum, userMbrDevice.getSvcMangNum())) {
 			LOGGER.info("[svcMangNum] {} -> {}", userMbrDevice.getSvcMangNum(), svcMangNum);
 			userMbrDevice.setSvcMangNum(svcMangNum);
 		}
@@ -759,7 +756,7 @@ public class DeviceServiceImpl implements DeviceService {
 		CreateDeviceResponse createDeviceRes = this.deviceSCI.createDevice(createDeviceReq);
 
 		/* 게임센터 연동 */
-		//		if (gameCenterYn.equals("Y")) {
+		//		if (StringUtils.equals(gameCenterYn, "Y")) {
 		//			GameCenter gameCenter = new GameCenter();
 		//			gameCenter.setDeviceId(deviceId);
 		//			gameCenter.setUserKey(userKey);
