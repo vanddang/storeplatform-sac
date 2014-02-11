@@ -236,7 +236,7 @@ public class UserSearchController {
 		return res;
 	}
 
-	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
+	//	@RequestMapping(value = "/member/user/searchPassword/v1", method = RequestMethod.POST)
 	@ResponseBody
 	public SearchPasswordSacRes searchId(SacRequestHeader sacHeader, @RequestBody SearchPasswordSacReq req) {
 		LOGGER.info("####################################################");
