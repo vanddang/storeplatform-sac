@@ -9,15 +9,12 @@
  */
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -68,8 +65,7 @@ public class CategoryMusicContentsServiceImpl implements CategoryMusicContentsSe
 	 * MusicContentsRequest requestVO)
 	 */
 	@Override
-	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception {
+	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader) {
 
 		// int totalCount = 0;
 

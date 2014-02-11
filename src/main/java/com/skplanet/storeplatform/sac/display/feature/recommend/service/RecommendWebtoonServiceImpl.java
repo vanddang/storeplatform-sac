@@ -62,7 +62,10 @@ public class RecommendWebtoonServiceImpl implements RecommendWebtoonService {
 	 * 운영자 추천 웹툰 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param RecommendWebtoonSacReq
+	 * @param req
+	 *            UserDefine 파라미터
+	 * @param header
+	 *            공통헤더
 	 * @return RecommendWebtoonRes 리스트
 	 */
 

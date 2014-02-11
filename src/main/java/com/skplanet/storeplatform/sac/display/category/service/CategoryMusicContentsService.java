@@ -1,12 +1,7 @@
 package com.skplanet.storeplatform.sac.display.category.service;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-
-import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacReq;
+import com.skplanet.storeplatform.sac.client.display.vo.music.MusicContentsSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 
 /**
@@ -21,11 +16,12 @@ public interface CategoryMusicContentsService {
 	 * Music Contents 리스트 조회.
 	 * </pre>
 	 * 
-	 * @param MusicContentsRequest
-	 *            requestVO
+	 * @param requestVO
+	 *            UserDefine 파라미터
+	 * @param requestHeader
+	 *            공통헤더
 	 * @return MusicContentsListResponse
 	 */
-	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader)
-			throws JsonGenerationException, JsonMappingException, IOException, Exception;
+	public MusicContentsSacRes searchMusicContentsList(MusicContentsSacReq requestVO, SacRequestHeader requestHeader);
 
 }
