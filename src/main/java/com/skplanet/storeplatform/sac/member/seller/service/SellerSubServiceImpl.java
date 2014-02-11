@@ -108,7 +108,6 @@ public class SellerSubServiceImpl implements SellerSubService {
 	@Override
 	public RemoveSubsellerRes removeSubseller(SacRequestHeader header, RemoveSubsellerReq req) {
 
-		RemoveSubSellerResponse schRes = new RemoveSubSellerResponse();
 		RemoveSubSellerRequest schReq = new RemoveSubSellerRequest();
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
@@ -119,7 +118,7 @@ public class SellerSubServiceImpl implements SellerSubService {
 		removeKeyList = req.getSubSellerKey();
 		schReq.setSellerKeyList(removeKeyList);
 
-		schRes = this.sellerSCI.removeSubSeller(schReq);
+		RemoveSubSellerResponse schRes = this.sellerSCI.removeSubSeller(schReq);
 
 		RemoveSubsellerRes response = new RemoveSubsellerRes();
 
@@ -139,13 +138,12 @@ public class SellerSubServiceImpl implements SellerSubService {
 	@Override
 	public ListSubsellerRes listSubseller(SacRequestHeader header, ListSubsellerReq req) {
 
-		SearchSubSellerListResponse schRes = new SearchSubSellerListResponse();
 		SearchSubSellerListRequest schReq = new SearchSubSellerListRequest();
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setParentSellerKey(req.getSellerKey());
 
-		schRes = this.sellerSCI.searchSubSellerList(schReq);
+		SearchSubSellerListResponse schRes = this.sellerSCI.searchSubSellerList(schReq);
 
 		ListSubsellerRes response = new ListSubsellerRes();
 		response.setSellerID(schRes.getSellerID());
@@ -167,13 +165,12 @@ public class SellerSubServiceImpl implements SellerSubService {
 	@Override
 	public DetailSubsellerRes detailSubseller(SacRequestHeader header, DetailSubsellerReq req) {
 
-		SearchSubSellerResponse schRes = new SearchSubSellerResponse();
 		SearchSubSellerRequest schReq = new SearchSubSellerRequest();
 
 		schReq.setCommonRequest(this.commonComponent.getSCCommonRequest(header));
 		schReq.setSellerKey(req.getSellerKey());
 
-		schRes = this.sellerSCI.searchSubSeller(schReq);
+		SearchSubSellerResponse schRes = this.sellerSCI.searchSubSeller(schReq);
 
 		DetailSubsellerRes response = new DetailSubsellerRes();
 		response.setSellerMbr(this.sellerMbr(schRes.getSellerMbr()));
