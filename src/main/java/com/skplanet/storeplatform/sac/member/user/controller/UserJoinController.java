@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,13 +54,11 @@ public class UserJoinController {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/createByMdn/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req, BindingResult result) {
+	public CreateByMdnRes createByMdn(SacRequestHeader sacHeader, @Validated @RequestBody CreateByMdnReq req) {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.1. 모바일 전용 회원 가입 (MDN 회원 가입) #####");
@@ -70,18 +67,10 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
-
-		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
-		CreateByMdnRes res = new CreateByMdnRes();
 		if (StringUtils.equals(sacHeader.getDeviceHeader().getModel(), "")) {
 			throw new StorePlatformException("SAC_MEM_0001", "model");
 		}
@@ -89,7 +78,7 @@ public class UserJoinController {
 		/**
 		 * 모바일 전용회원 Biz
 		 */
-		res = this.svc.createByMdn(sacHeader, req);
+		CreateByMdnRes res = this.svc.createByMdn(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
 
@@ -106,13 +95,11 @@ public class UserJoinController {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/createByAgreement/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req, BindingResult result) {
+	public CreateByAgreementRes createByAgreement(SacRequestHeader sacHeader, @Validated @RequestBody CreateByAgreementReq req) {
 
 		LOGGER.info("####################################################");
 		LOGGER.info("##### 5.1.2. ID 회원 약관 동의 가입 (One ID 회원) #####");
@@ -121,18 +108,11 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
-
-		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
-		CreateByAgreementRes res = new CreateByAgreementRes();
+		CreateByAgreementRes res = null;
 		if (!StringUtils.equals(req.getDeviceId(), "")) {
 
 			/**
@@ -176,13 +156,11 @@ public class UserJoinController {
 	 *            공통 헤더
 	 * @param req
 	 *            Request Value Object
-	 * @param result
-	 *            BindingResult
 	 * @return Response Value Object
 	 */
 	@RequestMapping(value = "/member/user/createBySimple/v1", method = RequestMethod.POST)
 	@ResponseBody
-	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req, BindingResult result) {
+	public CreateBySimpleRes createBySimple(SacRequestHeader sacHeader, @Validated @RequestBody CreateBySimpleReq req) {
 
 		LOGGER.info("#############################################");
 		LOGGER.info("##### 5.1.3. ID 회원 간편 가입 (IDP 회원) #####");
@@ -191,18 +169,11 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		/**
-		 * BindException 처리
-		 */
-		if (result.hasErrors()) {
-			throw new StorePlatformException("SAC_MEM_0001", result.getFieldError());
-		}
-
-		/**
 		 * Header 정보
 		 */
 		LOGGER.info("Headers : {}", sacHeader.toString());
 
-		CreateBySimpleRes res = new CreateBySimpleRes();
+		CreateBySimpleRes res = null;
 		if (!StringUtils.equals(req.getDeviceId(), "")) {
 
 			/**
@@ -268,7 +239,6 @@ public class UserJoinController {
 		LOGGER.info("Request : {}", ConvertMapperUtils.convertObjectToJson(req));
 
 		CreateBySimpleRes res = new CreateBySimpleRes();
-
 		res = this.svc.createBySimpleId(sacHeader, req);
 
 		LOGGER.info("Response : {}", res.toString());
