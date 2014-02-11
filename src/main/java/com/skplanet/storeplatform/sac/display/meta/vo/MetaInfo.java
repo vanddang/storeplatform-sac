@@ -52,6 +52,13 @@ public class MetaInfo {
 	private String purchaseDt;
 	private String purchaseState;
 	private String bpJoinFileNo;
+	private String bpJoinFileType;
+	private String expiredDate;
+	private String prodChrg;
+	private String dwldExprDt;
+	private String deviceKey;
+	private String deviceType;
+	private String deviceSubKey;
 
 	// ////////////////////////// App 상품 변수 ////////////////////////////
 	private String aid;
@@ -904,6 +911,111 @@ public class MetaInfo {
 	 */
 	public void setBpJoinFileNo(String bpJoinFileNo) {
 		this.bpJoinFileNo = bpJoinFileNo;
+	}
+
+	/**
+	 * @return the bpJoinFileType
+	 */
+	public String getBpJoinFileType() {
+		return this.bpJoinFileType;
+	}
+
+	/**
+	 * @param bpJoinFileType
+	 *            the bpJoinFileType to set
+	 */
+	public void setBpJoinFileType(String bpJoinFileType) {
+		this.bpJoinFileType = bpJoinFileType;
+	}
+
+	/**
+	 * @return the expiredDate
+	 */
+	public String getExpiredDate() {
+		return this.expiredDate;
+	}
+
+	/**
+	 * @param expiredDate
+	 *            the expiredDate to set
+	 */
+	public void setExpiredDate(String expiredDate) {
+		this.expiredDate = expiredDate;
+	}
+
+	/**
+	 * @return the prodChrg
+	 */
+	public String getProdChrg() {
+		return this.prodChrg;
+	}
+
+	/**
+	 * @param prodChrg
+	 *            the prodChrg to set
+	 */
+	public void setProdChrg(String prodChrg) {
+		this.prodChrg = prodChrg;
+	}
+
+	/**
+	 * @return the dwldExprDt
+	 */
+	public String getDwldExprDt() {
+		return this.dwldExprDt;
+	}
+
+	/**
+	 * @param dwldExprDt
+	 *            the dwldExprDt to set
+	 */
+	public void setDwldExprDt(String dwldExprDt) {
+		this.dwldExprDt = dwldExprDt;
+	}
+
+	/**
+	 * @return the deviceKey
+	 */
+	public String getDeviceKey() {
+		return this.deviceKey;
+	}
+
+	/**
+	 * @param deviceKey
+	 *            the deviceKey to set
+	 */
+	public void setDeviceKey(String deviceKey) {
+		this.deviceKey = deviceKey;
+	}
+
+	/**
+	 * @return the deviceType
+	 */
+	public String getDeviceType() {
+		return this.deviceType;
+	}
+
+	/**
+	 * @param deviceType
+	 *            the deviceType to set
+	 */
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
+	}
+
+	/**
+	 * @return the deviceSubKey
+	 */
+	public String getDeviceSubKey() {
+		return this.deviceSubKey;
+	}
+
+	/**
+	 * @param deviceSubKey
+	 *            the deviceSubKey to set
+	 */
+	public void setDeviceSubKey(String deviceSubKey) {
+		this.deviceSubKey = deviceSubKey;
 	}
 
 	/**

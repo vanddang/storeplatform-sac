@@ -29,12 +29,15 @@ import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.Histor
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
 import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Encryption;
+import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.EncryptionContents;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Product;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.EbookComicGenerator;
+import com.skplanet.storeplatform.sac.display.response.EncryptionGenerator;
 
 /**
  * DownloadEbook Service 인터페이스(CoreStoreBusiness) 구현체
@@ -58,6 +61,12 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 
 	@Autowired
 	private EbookComicGenerator ebookComicGenerator;
+
+	@Autowired
+	private EncryptionGenerator encryptionGenerator;
+
+	@Autowired
+	private DownloadAES128Helper downloadAES128Helper;
 
 	/*
 	 * (non-Javadoc)
@@ -219,6 +228,18 @@ public class DownloadEbookServiceImpl implements DownloadEbookService {
 				metaInfo.setPurchaseState(prchsState);
 
 				product.setPurchase(this.commonMetaInfoGenerator.generatePurchase(metaInfo));
+
+				// 암호화 정보
+				EncryptionContents contents = this.encryptionGenerator.generateEncryptionContents(metaInfo);
+				// contents를 JSON 형태로 파싱
+				String jsonContents = "";
+
+				byte[] encryptByte = this.downloadAES128Helper.encryption(jsonContents.getBytes());
+
+				Encryption encryption = new Encryption();
+				encryption.setText("AES128/" + DisplayConstants.DP_FORDOWNLOAD_ENCRYPT_KEY);
+				encryption.setText(new String(encryptByte));
+				product.setEncryption(encryption);
 			}
 
 			ebookRes.setProduct(product);

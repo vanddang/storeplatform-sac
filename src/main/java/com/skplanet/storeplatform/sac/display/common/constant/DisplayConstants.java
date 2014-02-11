@@ -336,6 +336,8 @@ public class DisplayConstants {
 
 	public static final String DP_USE_PERIOD_UNIT_CD_NONE = "PD00310"; // 사용기간 단위 코드 (무제한)
 
+	public static final String DP_FORDOWNLOAD_ENCRYPT_KEY = "00";
+
 	/*
 	 * 배너 타입 코드
 	 */

@@ -633,6 +633,7 @@
                 JA.*
               , TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') AS SYS_DATE
               , CONCAT(JB.FILE_PATH, JB.FILE_NM) AS IMAGE_PATH
+              , JB.FILE_SIZE AS IMAGE_SIZE
               , (SELECT MENU_NM
                    FROM TB_DP_MENU_CATEGORY_DESC
                   WHERE MENU_ID = JA.TOP_MENU_ID
