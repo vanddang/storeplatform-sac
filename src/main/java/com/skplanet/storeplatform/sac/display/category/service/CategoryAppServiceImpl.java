@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryAppSacRes;
@@ -64,7 +65,8 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 	 * .storeplatform.sac.client.display.vo.category.CategoryAppSacReq)
 	 */
 	@Override
-	public CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header) {
+	public CategoryAppSacRes searchAppList(CategoryAppSacReq req, SacRequestHeader header)
+			throws StorePlatformException {
 		this.logger.debug("----------------------------------------------------------------");
 		this.logger.debug("searchAppList Service started!!");
 		this.logger.debug("----------------------------------------------------------------");
@@ -87,20 +89,24 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		List<Product> productList = new ArrayList<Product>();
 
 		String prodCharge = req.getProdCharge();
-		String prodGradeCd = req.getProdGradeCd();
 		String menuId = req.getMenuId();
 		String orderedBy = req.getOrderedBy();
 
 		// 필수 파라미터 체크
-		if (StringUtils.isEmpty(prodCharge) || StringUtils.isEmpty(menuId) || StringUtils.isEmpty(orderedBy)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("필수 파라미터 부족");
-			this.logger.debug("----------------------------------------------------------------");
-
-			appRes.setCommonResponse(commonResponse);
-			return appRes;
+		if (StringUtils.isEmpty(prodCharge)) {
+			throw new StorePlatformException("SAC_DSP_0002", "prodCharge", prodCharge);
 		}
-		// 상품등급코드 유효값 체크
+		if (StringUtils.isEmpty(menuId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "menuId", menuId);
+		}
+		if (StringUtils.isEmpty(orderedBy)) {
+			throw new StorePlatformException("SAC_DSP_0002", "orderedBy", orderedBy);
+		}
+
+		// 파라미터 유효값 체크
+		if (!"A".equals(prodCharge) && (!"Y".equals(prodCharge) && !"N".equals(prodCharge))) {
+			throw new StorePlatformException("SAC_DSP_0003", "prodCharge", prodCharge);
+		}
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
 			String[] arrayProdGradeCd = req.getProdGradeCd().split("\\+");
 			for (int i = 0; i < arrayProdGradeCd.length; i++) {
@@ -111,24 +117,14 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 						this.logger.debug("유효하지않은 상품 등급 코드 : " + arrayProdGradeCd[i]);
 						this.logger.debug("----------------------------------------------------------------");
 
-						appRes.setCommonResponse(commonResponse);
-						return appRes;
+						throw new StorePlatformException("SAC_DSP_0003", (i + 1) + " 번째 prodGradeCd",
+								arrayProdGradeCd[i]);
 					}
 				}
 			}
 		}
-		// 상품정렬순서 유효값 체크
 		if (!"download".equals(orderedBy)) {
-			this.logger.debug("----------------------------------------------------------------");
-			this.logger.debug("유효하지않은 상품 정렬 순서");
-			this.logger.debug("----------------------------------------------------------------");
-
-			appRes.setCommonResponse(commonResponse);
-			return appRes;
-		}
-		// 상품 유무료 구분 Default 세팅
-		if (!"A".equals(prodCharge) && (!"Y".equals(prodCharge) && !"N".equals(prodCharge))) {
-			prodCharge = "A";
+			throw new StorePlatformException("SAC_DSP_0003", "orderedBy", orderedBy);
 		}
 
 		int offset = 1; // default
@@ -137,13 +133,13 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 		if (req.getOffset() != null) {
 			offset = req.getOffset();
 		}
-		req.setOffset(offset);
+		req.setOffset(offset); // set offset
 
 		if (req.getCount() != null) {
 			count = req.getCount();
 		}
 		count = offset + count - 1;
-		req.setCount(count);
+		req.setCount(count); // set count
 
 		// '+'로 연결 된 상품등급코드를 배열로 전달
 		if (StringUtils.isNotEmpty(req.getProdGradeCd())) {
@@ -151,16 +147,46 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 			req.setArrayProdGradeCd(arrayProdGradeCd);
 		}
 
-		// 일반 카테고리 앱 상품 조회
-		List<ProductBasicInfo> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
-				ProductBasicInfo.class);
+		try {
+			if (req.getDummy() == null) { // Dummy 가 아닐 경우
+				// 일반 카테고리 앱 상품 조회
+				List<ProductBasicInfo> appList = this.commonDAO.queryForList("Category.selectCategoryAppList", req,
+						ProductBasicInfo.class);
 
-		if (!appList.isEmpty()) {
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			for (ProductBasicInfo productBasicInfo : appList) {
+				if (!appList.isEmpty()) {
+					Map<String, Object> reqMap = new HashMap<String, Object>();
+					reqMap.put("tenantHeader", tenantHeader);
+					reqMap.put("deviceHeader", deviceHeader);
+					reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+					for (ProductBasicInfo productBasicInfo : appList) {
+						reqMap.put("productBasicInfo", productBasicInfo);
+						reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
+						MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
+
+						if (retMetaInfo != null) {
+							Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
+							productList.add(product);
+						}
+					}
+					commonResponse.setTotalCount(appList.get(0).getTotalCount());
+					appRes.setProductList(productList);
+					appRes.setCommonResponse(commonResponse);
+				} else {
+					// 조회 결과 없음
+					commonResponse.setTotalCount(0);
+					appRes.setProductList(productList);
+					appRes.setCommonResponse(commonResponse);
+				}
+			} else {
+				// Dummy 일 경우
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+
+				ProductBasicInfo productBasicInfo = new ProductBasicInfo();
+				productBasicInfo.setProdId("0000142301");
+
 				reqMap.put("productBasicInfo", productBasicInfo);
 				reqMap.put("imageCd", DisplayConstants.DP_APP_REPRESENT_IMAGE_CD);
 				MetaInfo retMetaInfo = this.metaInfoService.getAppMetaInfo(reqMap);
@@ -169,15 +195,12 @@ public class CategoryAppServiceImpl implements CategoryAppService {
 					Product product = this.responseInfoGenerateFacade.generateAppProduct(retMetaInfo);
 					productList.add(product);
 				}
+				commonResponse.setTotalCount(1);
+				appRes.setProductList(productList);
+				appRes.setCommonResponse(commonResponse);
 			}
-			commonResponse.setTotalCount(appList.get(0).getTotalCount());
-			appRes.setProductList(productList);
-			appRes.setCommonResponse(commonResponse);
-		} else {
-			// 조회 결과 없음
-			commonResponse.setTotalCount(0);
-			appRes.setProductList(productList);
-			appRes.setCommonResponse(commonResponse);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0001", "");
 		}
 
 		return appRes;

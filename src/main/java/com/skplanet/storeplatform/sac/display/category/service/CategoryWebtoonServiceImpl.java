@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.category.CategoryWebtoonSacRes;
@@ -87,6 +89,23 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		CommonResponse commonResponse = new CommonResponse();
 		List<Product> productList = new ArrayList<Product>();
 
+		String weekDayCd = req.getWeekDayCd();
+		String menuId = req.getMenuId();
+
+		// 필수 파라미터 체크
+		if (StringUtils.isEmpty(weekDayCd) && StringUtils.isEmpty(menuId)) {
+			throw new StorePlatformException("SAC_DSP_0002", "weekDayCd, menuId", "");
+		}
+
+		// 파라미터 유효값 체크
+		if (StringUtils.isNotEmpty(weekDayCd)) {
+			if (!"DP010101".equals(weekDayCd) && (!"DP010102".equals(weekDayCd)) && (!"DP010103".equals(weekDayCd))
+					&& (!"DP010104".equals(weekDayCd)) && (!"DP010105".equals(weekDayCd))
+					&& (!"DP010106".equals(weekDayCd)) && (!"DP010107".equals(weekDayCd))) {
+				throw new StorePlatformException("SAC_DSP_0003", "weekDayCd", weekDayCd);
+			}
+		}
+
 		int offset = 1; // default
 		int count = 20; // default
 
@@ -101,37 +120,39 @@ public class CategoryWebtoonServiceImpl implements CategoryWebtoonService {
 		count = offset + count - 1;
 		req.setCount(count);
 
-		/*
-		 * 웹툰 Top Menu ID.
-		 */
-		req.setTopMenuId(DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
+		try {
+			// 웹툰 Top Menu ID.
+			req.setTopMenuId(DisplayConstants.DP_WEBTOON_TOP_MENU_ID);
 
-		List<ProductBasicInfo> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
-				ProductBasicInfo.class);
+			List<ProductBasicInfo> resultList = this.commonDAO.queryForList("Webtoon.getWebtoonList", req,
+					ProductBasicInfo.class);
 
-		if (!resultList.isEmpty()) {
-			Map<String, Object> reqMap = new HashMap<String, Object>();
-			reqMap.put("tenantHeader", tenantHeader);
-			reqMap.put("deviceHeader", deviceHeader);
-			reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
-			for (ProductBasicInfo productBasicInfo : resultList) {
-				reqMap.put("productBasicInfo", productBasicInfo);
-				reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
-				MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
+			if (!resultList.isEmpty()) {
+				Map<String, Object> reqMap = new HashMap<String, Object>();
+				reqMap.put("tenantHeader", tenantHeader);
+				reqMap.put("deviceHeader", deviceHeader);
+				reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
+				for (ProductBasicInfo productBasicInfo : resultList) {
+					reqMap.put("productBasicInfo", productBasicInfo);
+					reqMap.put("imageCd", DisplayConstants.DP_WEBTOON_REPRESENT_IMAGE_CD);
+					MetaInfo retMetaInfo = this.metaInfoService.getWebtoonMetaInfo(reqMap);
 
-				if (retMetaInfo != null) {
-					Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
-					productList.add(product);
+					if (retMetaInfo != null) {
+						Product product = this.responseInfoGenerateFacade.generateWebtoonProduct(retMetaInfo);
+						productList.add(product);
+					}
 				}
+				commonResponse.setTotalCount(resultList.get(0).getTotalCount());
+				responseVO.setProductList(productList);
+				responseVO.setCommonResponse(commonResponse);
+			} else {
+				// 조회 결과 없음
+				commonResponse.setTotalCount(0);
+				responseVO.setProductList(productList);
+				responseVO.setCommonResponse(commonResponse);
 			}
-			commonResponse.setTotalCount(resultList.get(0).getTotalCount());
-			responseVO.setProductList(productList);
-			responseVO.setCommonResponse(commonResponse);
-		} else {
-			// 조회 결과 없음
-			commonResponse.setTotalCount(0);
-			responseVO.setProductList(productList);
-			responseVO.setCommonResponse(commonResponse);
+		} catch (Exception e) {
+			throw new StorePlatformException("SAC_DSP_0001", "");
 		}
 
 		return responseVO;
