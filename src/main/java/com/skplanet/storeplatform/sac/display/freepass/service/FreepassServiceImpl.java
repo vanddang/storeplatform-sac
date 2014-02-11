@@ -107,7 +107,7 @@ public class FreepassServiceImpl implements FreepassService {
 		reqMap.put("deviceHeader", header.getDeviceHeader());
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		String[] prodIdList = {"H906023417","H906023417","H906023417"};
+		String[] prodIdList = {"H000043398","H000043398","H000043398"};
 		MetaInfo retMetaInfo = null;
 		
 		for(int i = 0 ; i < prodIdList.length ; i++) {
@@ -157,7 +157,7 @@ public class FreepassServiceImpl implements FreepassService {
 		reqMap.put("deviceHeader", header.getDeviceHeader());
 		reqMap.put("prodStatusCd", DisplayConstants.DP_SALE_STAT_ING);
 		reqMap.put("imageCd", DisplayConstants.DP_VOD_REPRESENT_IMAGE_CD);
-		String[] prodIdList = {"H906023417","H906023417","H906023417"};
+		String[] prodIdList = {"H000043398","H000043398","H000043398"};
 		MetaInfo retMetaInfo = null;
 		
 		List<Coupon> couponList = new ArrayList<Coupon>();
