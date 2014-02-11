@@ -12,6 +12,8 @@ package com.skplanet.storeplatform.sac.other.feedback.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +53,7 @@ import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveRecommendFe
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacRes;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
+import com.skplanet.storeplatform.sac.other.feedback.controller.FeedbackController;
 import com.skplanet.storeplatform.sac.other.feedback.repository.FeedbackRepository;
 import com.skplanet.storeplatform.sac.other.feedback.vo.MbrAvg;
 import com.skplanet.storeplatform.sac.other.feedback.vo.ProdNoti;
@@ -66,6 +69,7 @@ import com.skplanet.storeplatform.sac.other.feedback.vo.TenantProdStats;
 @Service
 @Transactional
 public class FeedbackServiceImpl implements FeedbackService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FeedbackController.class);
 
 	@Autowired
 	private FeedbackRepository feedbackRepository;
@@ -334,24 +338,90 @@ public class FeedbackServiceImpl implements FeedbackService {
 	@Override
 	public CreateSellerFeedbackSacRes createSellerFeedback(CreateSellerFeedbackSacReq createSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		ProdNoti prodNoti = new ProdNoti();
+
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setNotiSeq(createSellerFeedbackSacReq.getNotiSeq());
+		prodNoti.setSellerRespTitle(createSellerFeedbackSacReq.getSellerRespTitle());
+		prodNoti.setSellerRespOpin(createSellerFeedbackSacReq.getSellerRespOpin());
+
+		// 탈퇴회원 사용후기 등록 수 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+
+		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+		if (count > 0) {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		} else {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		}
+
 		CreateSellerFeedbackSacRes createSellerFeedbackRes = new CreateSellerFeedbackSacRes();
-		createSellerFeedbackRes.setNotiSeq("14275");
+		createSellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
 		return createSellerFeedbackRes;
 	}
 
 	@Override
 	public ModifySellerFeedbackSacRes modifySellerFeedback(ModifySellerFeedbackSacReq modifySellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		ProdNoti prodNoti = new ProdNoti();
+
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setNotiSeq(modifySellerFeedbackSacReq.getNotiSeq());
+		prodNoti.setSellerRespTitle(modifySellerFeedbackSacReq.getSellerRespTitle());
+		prodNoti.setSellerRespOpin(modifySellerFeedbackSacReq.getSellerRespOpin());
+
+		// 탈퇴회원 사용후기 등록 수 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+
+		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+		if (count > 0) {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		} else {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		}
+
 		ModifySellerFeedbackSacRes modifySellerFeedbackRes = new ModifySellerFeedbackSacRes();
-		modifySellerFeedbackRes.setNotiSeq("14275");
+		modifySellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
 		return modifySellerFeedbackRes;
 	}
 
 	@Override
 	public RemoveSellerFeedbackSacRes removeSellerFeedback(RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq,
 			SacRequestHeader sacRequestHeader) {
+		ProdNoti prodNoti = new ProdNoti();
+
+		prodNoti.setTenantId(sacRequestHeader.getTenantHeader().getTenantId());
+		prodNoti.setNotiSeq(removeSellerFeedbackSacReq.getNotiSeq());
+		prodNoti.setSellerRespTitle("");
+		prodNoti.setSellerRespOpin("");
+
+		// 탈퇴회원 사용후기 등록 수 조회
+		int count = (Integer) this.feedbackRepository.getProdNotiWDCount(prodNoti);
+
+		LOGGER.info("### 탈퇴회원 사용후기 등록 수 : {}", count);
+
+		if (count > 0) {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		} else {
+			int affectedRow = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+			if (affectedRow <= 0)
+				throw new StorePlatformException("SAC_OTH_1001");
+		}
+
 		RemoveSellerFeedbackSacRes removeSellerFeedbackRes = new RemoveSellerFeedbackSacRes();
-		removeSellerFeedbackRes.setNotiSeq("14275");
+		removeSellerFeedbackRes.setNotiSeq(prodNoti.getNotiSeq());
 		return removeSellerFeedbackRes;
 	}
 

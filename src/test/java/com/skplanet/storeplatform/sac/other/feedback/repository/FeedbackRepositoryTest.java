@@ -231,4 +231,30 @@ public class FeedbackRepositoryTest {
 
 		assertTrue(ret > 0);
 	}
+
+	@Test
+	public void testUpdateSellerResp() {
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId("S01");
+		prodNoti.setNotiSeq("14262");
+		prodNoti.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
+		prodNoti.setSellerRespTitle("고객님 감사합니다.");
+
+		int ret = (Integer) this.feedbackRepository.updateSellerResp(prodNoti);
+
+		assertTrue(ret > 0);
+	}
+
+	@Test
+	public void testUpdateSellerRespWD() {
+		ProdNoti prodNoti = new ProdNoti();
+		prodNoti.setTenantId("S01");
+		prodNoti.setNotiSeq("14262");
+		prodNoti.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
+		prodNoti.setSellerRespTitle("고객님 감사합니다.");
+
+		int ret = (Integer) this.feedbackRepository.updateSellerRespWD(prodNoti);
+
+		assertTrue(ret > 0);
+	}
 }

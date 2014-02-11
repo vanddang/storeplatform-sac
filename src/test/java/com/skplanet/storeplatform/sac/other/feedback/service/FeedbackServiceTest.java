@@ -14,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateFeedbackSacRes;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateRecommendFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.CreateSellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifyFeedbackSacRes;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.ModifySellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveFeedbackSacReq;
+import com.skplanet.storeplatform.sac.client.other.vo.feedback.RemoveSellerFeedbackSacReq;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -153,4 +156,34 @@ public class FeedbackServiceTest {
 		this.feedbackService.createRecommend(createRecommendFeedbackSacReq, this.sacRequestHeader);
 	}
 
+	@Test
+	public void testCreateSellerFeedback() {
+		CreateSellerFeedbackSacReq createSellerFeedbackSacReq = new CreateSellerFeedbackSacReq();
+
+		createSellerFeedbackSacReq.setNotiSeq("300000010");
+		createSellerFeedbackSacReq.setSellerRespTitle("고객님 감사합니다.");
+		createSellerFeedbackSacReq.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
+
+		this.feedbackService.createSellerFeedback(createSellerFeedbackSacReq, this.sacRequestHeader);
+	}
+
+	@Test
+	public void testModifySellerFeedback() {
+		ModifySellerFeedbackSacReq modifySellerFeedbackSacReq = new ModifySellerFeedbackSacReq();
+
+		modifySellerFeedbackSacReq.setNotiSeq("300000010");
+		modifySellerFeedbackSacReq.setSellerRespTitle("고객님 감사합니다.");
+		modifySellerFeedbackSacReq.setSellerRespOpin("저희 게임이 재미있다니 정말 다행이군요!.");
+
+		this.feedbackService.modifySellerFeedback(modifySellerFeedbackSacReq, this.sacRequestHeader);
+	}
+
+	@Test
+	public void testRemoveSellerFeedback() {
+		RemoveSellerFeedbackSacReq removeSellerFeedbackSacReq = new RemoveSellerFeedbackSacReq();
+
+		removeSellerFeedbackSacReq.setNotiSeq("300000010");
+
+		this.feedbackService.removeSellerFeedback(removeSellerFeedbackSacReq, this.sacRequestHeader);
+	}
 }
