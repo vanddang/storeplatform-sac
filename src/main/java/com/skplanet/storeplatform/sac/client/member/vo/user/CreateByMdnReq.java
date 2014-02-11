@@ -22,19 +22,19 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 기기 ID
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String deviceId = "";
 
 	/**
 	 * 기기 ID 타입
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String deviceIdType = "";
 
 	/**
 	 * 이동 통신사.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String deviceTelecom = "";
 
 	/**
@@ -75,7 +75,7 @@ public class CreateByMdnReq extends CommonInfo {
 	/**
 	 * 법정대리인 동의 여부
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	@Pattern(regexp = "^Y|N")
 	private String isParent = "";
 

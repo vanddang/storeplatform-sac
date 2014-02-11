@@ -16,12 +16,13 @@ public class ModifyReq extends CommonInfo {
 	/**
 	 * 사용자 고유 Key.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String userKey = "";
 
 	/**
 	 * IDP 인증 Key.
 	 */
+	@NotEmpty
 	private String userAuthKey = "";
 
 	/**

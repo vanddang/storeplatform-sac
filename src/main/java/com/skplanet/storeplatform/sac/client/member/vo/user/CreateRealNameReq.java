@@ -24,6 +24,7 @@ public class CreateRealNameReq extends CommonInfo {
 	/**
 	 * IDP 인증 Key
 	 */
+	@NotEmpty
 	private String userAuthKey = "";
 
 	/**

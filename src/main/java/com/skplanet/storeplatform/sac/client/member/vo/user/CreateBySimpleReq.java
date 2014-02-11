@@ -20,20 +20,20 @@ public class CreateBySimpleReq extends CommonInfo {
 	/**
 	 * 사용자 아이디.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String userId = "";
 
 	/**
 	 * 사용자 비밀번호.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String userPw = "";
 
 	/**
 	 * 사용자 이메일.
 	 */
-	@Email(message = "유효한 Email 주소가 아닙니다.")
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@Email
+	@NotEmpty
 	private String userEmail = "";
 
 	/**

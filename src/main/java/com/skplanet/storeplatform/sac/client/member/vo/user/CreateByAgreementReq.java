@@ -20,7 +20,7 @@ public class CreateByAgreementReq extends CommonInfo {
 	/**
 	 * 사용자 아이디.
 	 */
-	@NotEmpty(message = "필수 파라미터 입니다.")
+	@NotEmpty
 	private String userId = "";
 
 	/**
