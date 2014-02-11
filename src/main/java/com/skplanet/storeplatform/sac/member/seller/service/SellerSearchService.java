@@ -29,76 +29,36 @@ public interface SellerSearchService {
 	/** 2.2.2. 판매자 회원 ID/Email 중복 조회 */
 	public DuplicateByIdEmailRes duplicateByIdEmail(SacRequestHeader header, DuplicateByIdEmailReq req);
 
-	/**
-	 * 판매자 회원 기본정보조회.
-	 * 
-	 * @throws Exception
-	 */
+	/** 판매자 회원 기본정보조회. */
 	public DetailInformationRes detailInformation(SacRequestHeader header, DetailInformationReq req);
 
-	/**
-	 * 판매자 회원 정산정보조회.
-	 * 
-	 * @throws Exception
-	 */
+	/** 판매자 회원 정산정보조회. */
 	public DetailAccountInformationRes detailAccountInformation(SacRequestHeader header, DetailAccountInformationReq req);
 
-	/**
-	 * 탈퇴 사유 목록 조회.
-	 * 
-	 * @throws Exception
-	 */
+	/** 탈퇴 사유 목록 조회. */
 	public ListWithdrawalReasonRes listWithdrawalReason(SacRequestHeader header, String language);
 
-	/**
-	 * 판매자 회원 ID 찾기.
-	 * 
-	 * @throws Exception
-	 */
+	/** 판매자 회원 ID 찾기. */
 	public SearchIdRes searchId(SacRequestHeader header, SearchIdReq req);
 
-	/**
-	 * Password 보안 질문 조회.
-	 * 
-	 * @throws Exception
-	 */
+	/** Password 보안 질문 조회. */
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestion(SacRequestHeader header,
 			ListPasswordReminderQuestionReq req);
 
-	/**
-	 * Password 보안 질문 조회All.
-	 * 
-	 * @throws Exception
-	 */
+	/** Password 보안 질문 조회All. */
 	public ListPasswordReminderQuestionRes listPasswordReminderQuestionAll(SacRequestHeader header, String language);
 
-	/**
-	 * Password 보안 질문 확인.
-	 * 
-	 * @throws Exception
-	 */
+	/** Password 보안 질문 확인. */
 	public CheckPasswordReminderQuestionRes checkPasswordReminderQuestion(SacRequestHeader header,
 			CheckPasswordReminderQuestionReq req);
 
-	/**
-	 * 판매자 회원 Password 찾기.
-	 * 
-	 * @throws Exception
-	 */
+	/** 판매자 회원 Password 찾기. */
 	public SearchPasswordRes searchPassword(SacRequestHeader header, SearchPasswordReq req);
 
-	/**
-	 * 판매자 회원 인증키 조회.
-	 * 
-	 * @throws Exception
-	 */
+	/** 판매자 회원 인증키 조회. */
 	public DetailInformationRes searchAuthKey(SacRequestHeader header, SearchAuthKeyReq req);
 
-	/**
-	 * 나라별 해외은행 정보 조회.
-	 * 
-	 * @throws Exception
-	 */
+	/** 나라별 해외은행 정보 조회. */
 	public ListBanksByCountryRes listBanksByCountry(SacRequestHeader header);
 
 }

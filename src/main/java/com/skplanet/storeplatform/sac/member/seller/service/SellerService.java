@@ -37,7 +37,8 @@ public interface SellerService {
 	public ModifyInformationSacRes modifyInformation(SacRequestHeader header, ModifyInformationSacReq req);
 
 	/** 2.2.11. 판매자 회원 정산정보 수정 */
-	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header, ModifyAccountInformationSacReq req);
+	public ModifyAccountInformationSacRes modifyAccountInformation(SacRequestHeader header,
+			ModifyAccountInformationSacReq req);
 
 	/** 2.2.16. 판매자 회원 계정 잠금. */
 	public LockAccountRes lockAccount(SacRequestHeader header, LockAccountReq req);
@@ -45,24 +46,12 @@ public interface SellerService {
 	/** 2.2.14. 판매자 회원 계정 승인. */
 	public ConfirmRes confirm(SacRequestHeader header, ConfirmReq req);
 
-	/**
-	 * 2.2.24. 판매자 회원 탈퇴.
-	 * 
-	 * @throws Exception
-	 */
+	/** 2.2.24. 판매자 회원 탈퇴. */
 	public WithdrawRes withdraw(SacRequestHeader header, WithdrawReq req);
 
-	/**
-	 * 2.2.26. 판매자 회원 인증키 생성/연장.
-	 * 
-	 * @throws Exception
-	 */
+	/** 2.2.26. 판매자 회원 인증키 생성/연장. */
 	public CreateAuthKeyRes createAuthKey(SacRequestHeader header, CreateAuthKeyReq req);
 
-	/**
-	 * 2.2.28. 판매자 회원 인증키 폐기.
-	 * 
-	 * @throws Exception
-	 */
+	/** 2.2.28. 판매자 회원 인증키 폐기. */
 	public AbrogationAuthKeyRes abrogationAuthKey(SacRequestHeader header, AbrogationAuthKeyReq req);
 }
