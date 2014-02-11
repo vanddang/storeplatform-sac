@@ -9,7 +9,9 @@
  */
 package com.skplanet.storeplatform.sac.member.user.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,9 +24,12 @@ import com.skplanet.storeplatform.external.client.idp.vo.IdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM;
 import com.skplanet.storeplatform.external.client.idp.vo.ImIdpReceiverM.ResponseBody;
 import com.skplanet.storeplatform.framework.core.exception.StorePlatformException;
+import com.skplanet.storeplatform.member.client.common.vo.KeySearch;
 import com.skplanet.storeplatform.member.client.common.vo.MbrAuth;
 import com.skplanet.storeplatform.member.client.common.vo.MbrLglAgent;
 import com.skplanet.storeplatform.member.client.user.sci.UserSCI;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserRequest;
+import com.skplanet.storeplatform.member.client.user.sci.vo.SearchUserResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameRequest;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateRealNameResponse;
 import com.skplanet.storeplatform.member.client.user.sci.vo.UpdateUserRequest;
@@ -81,13 +86,6 @@ public class UserModifyServiceImpl implements UserModifyService {
 		ModifyRes response = new ModifyRes();
 
 		/**
-		 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
-		 */
-		if (StringUtils.equals(req.getUserAuthKey(), "")) {
-			throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
-		}
-
-		/**
 		 * 회원 정보 조회.
 		 */
 		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
@@ -104,38 +102,45 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## ====================================================");
 
 			/**
-			 * 통합 IDP 연동 정보 setting.
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
 			 */
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("user_auth_key", req.getUserAuthKey()); // IDP 인증키
-			param.put("key_type", "1"); // updateUserInfo 메서드에 하드코딩 되어 있음.
-			param.put("key", userInfo.getImSvcNo()); // 통합서비스 관리번호
-			param.put("user_type", "1"); // 가입자 유형코드 (1:개인)
-			param.put("is_biz_auth", "N");
-			param.put("udt_type_cd", "4"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
 
-			param.put("user_calendar", req.getUserCalendar()); // 양력1, 음력2
-			param.put("user_zipcode", req.getUserZip()); // 우편번호
-			param.put("user_address", req.getUserAddress()); // 주소
-			param.put("user_address2", req.getUserDetailAddress()); // 상세주소
+				/**
+				 * 통합 IDP 연동 정보 setting.
+				 */
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("user_auth_key", req.getUserAuthKey()); // IDP 인증키
+				param.put("key_type", "1"); // updateUserInfo 메서드에 하드코딩 되어 있음.
+				param.put("key", userInfo.getImSvcNo()); // 통합서비스 관리번호
+				param.put("user_type", "1"); // 가입자 유형코드 (1:개인)
+				param.put("is_biz_auth", "N");
+				param.put("udt_type_cd", "4"); // 업데이트 구분 코드 (1:TN, 2:EM, 3:TN+EM, 4:부가정보)
 
-			/**
-			 * 통합IDP 회원정보 수정 연동 (cmd - TXUpdateUserInfoIDP)
-			 */
-			this.imIdpService.updateUserInfo(param);
+				param.put("user_calendar", req.getUserCalendar()); // 양력1, 음력2
+				param.put("user_zipcode", req.getUserZip()); // 우편번호
+				param.put("user_address", req.getUserAddress()); // 주소
+				param.put("user_address2", req.getUserDetailAddress()); // 상세주소
 
-			/**
-			 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP))
-			 */
-			ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
-			LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseHeader().getResult_text());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_sex());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_calendar());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_birthday());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_zipcode());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address());
-			LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address2());
+				/**
+				 * 통합IDP 회원정보 수정 연동 (cmd - TXUpdateUserInfoIDP)
+				 */
+				this.imIdpService.updateUserInfo(param);
+
+				/**
+				 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP))
+				 */
+				ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+				LOGGER.info("## IDP searchUserInfo Code : {}", profileInfo.getResponseHeader().getResult());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseHeader().getResult_text());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_sex());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_calendar());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_birthday());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_zipcode());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address());
+				LOGGER.info("## IDP searchUserInfo Text : {}", profileInfo.getResponseBody().getUser_address2());
+
+			}
 
 			/**
 			 * SC 회원 수정.
@@ -150,38 +155,44 @@ public class UserModifyServiceImpl implements UserModifyService {
 			LOGGER.info("## ====================================================");
 
 			/**
-			 * IDP 연동 정보 setting.
+			 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
 			 */
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("user_auth_key", req.getUserAuthKey()); // IDP 인증키
-			param.put("key_type", "2");
-			param.put("key", userInfo.getImMbrNo()); // MBR_NO
-			param.put("user_sex", req.getUserSex()); // 성별
-			param.put("user_birthday", req.getUserBirthDay()); // 생년월일
-			param.put("user_calendar", req.getUserCalendar()); // 양력1, 음력2
-			param.put("user_zipcode", req.getUserZip()); // 우편번호
-			param.put("user_address", req.getUserAddress()); // 주소
-			param.put("user_address2", req.getUserDetailAddress()); // 상세주소
-			param.put("user_tel", req.getUserPhone()); // 사용자 연락처
+			if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
 
-			/**
-			 * IDP 회원정보 수정 연동 (cmd - modifyProfile)
-			 */
-			this.idpService.modifyProfile(param);
+				/**
+				 * IDP 연동 정보 setting.
+				 */
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("user_auth_key", req.getUserAuthKey()); // IDP 인증키
+				param.put("key_type", "2");
+				param.put("key", userInfo.getImMbrNo()); // MBR_NO
+				param.put("user_sex", req.getUserSex()); // 성별
+				param.put("user_birthday", req.getUserBirthDay()); // 생년월일
+				param.put("user_calendar", req.getUserCalendar()); // 양력1, 음력2
+				param.put("user_zipcode", req.getUserZip()); // 우편번호
+				param.put("user_address", req.getUserAddress()); // 주소
+				param.put("user_address2", req.getUserDetailAddress()); // 상세주소
+				param.put("user_tel", req.getUserPhone()); // 사용자 연락처
 
-			/**
-			 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
-			 */
-			IdpReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
-			LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseHeader().getResult_text());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_sex());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_calendar());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_birthday());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_zipcode());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_address());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_address2());
-			LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_tel());
+				/**
+				 * IDP 회원정보 수정 연동 (cmd - modifyProfile)
+				 */
+				this.idpService.modifyProfile(param);
+
+				/**
+				 * IDP 회원정보 조회 연동 (cmd - findCommonProfileForServer)
+				 */
+				IdpReceiverM searchUserInfo = this.idpService.searchUserCommonInfo("3", userInfo.getImMbrNo());
+				LOGGER.info("## IDP searchUserInfo Code : {}", searchUserInfo.getResponseHeader().getResult());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseHeader().getResult_text());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_sex());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_calendar());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_birthday());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_zipcode());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_address());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_address2());
+				LOGGER.info("## IDP searchUserInfo Text : {}", searchUserInfo.getResponseBody().getUser_tel());
+			}
 
 			/**
 			 * SC 회원 수정.
@@ -230,94 +241,95 @@ public class UserModifyServiceImpl implements UserModifyService {
 	public CreateRealNameRes createRealName(SacRequestHeader sacHeader, CreateRealNameReq req) {
 
 		/**
-		 * 회원 정보 조회.
+		 * userAuthKey 가 정의된 값과 같은지 비교하여 연동 여부를 판단한다.
 		 */
-		UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-
-		/**
-		 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
-		 * 
-		 * 통합회원일경우만 처리한다.
-		 */
-		LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
-		LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
-		if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+		if (this.mcc.isIdpConnect(req.getUserAuthKey())) {
 
 			/**
-			 * TODO userAuthKey 없을경우 판단하여 SC만 업데이트 처리 할것..~!!!
+			 * 회원 정보 조회.
 			 */
-			if (StringUtils.equals(req.getUserAuthKey(), "")) {
-				throw new StorePlatformException("TODO UserAuthKey 없을때 로직 미구현됨..... SC 컴포넌트만 업데이트 하는걸로.....해야함... ");
-			}
-
-			LOGGER.info("## ====================================================");
-			LOGGER.info("## One ID 통합회원일 경우만 통합 IDP 연동을 한다.");
-			LOGGER.info("## ====================================================");
+			UserInfo userInfo = this.mcc.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 
 			/**
-			 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인)
+			 * 통합서비스번호 존재 유무로 통합회원인지 기존회원인지 판단한다. (UserType보다 더 신뢰함.) 회원 타입에 따라서 [통합IDP, 기존IDP] 연동처리 한다.
+			 * 
+			 * 통합회원일경우만 처리한다.
 			 */
-			if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) { // 본인
+			LOGGER.info("## 사용자 타입  : {}", userInfo.getUserType());
+			LOGGER.info("## 통합회원번호 : {}", StringUtils.isNotEmpty(userInfo.getImSvcNo()));
+			if (StringUtils.isNotEmpty(userInfo.getImSvcNo())) {
+
+				LOGGER.info("## ====================================================");
+				LOGGER.info("## One ID 통합회원일 경우만 통합 IDP 연동을 한다.");
+				LOGGER.info("## ====================================================");
 
 				/**
-				 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP)
+				 * 실명인증 대상 여부에 따라 분기 처리. (OWN=본인, PARENT=법정대리인)
 				 */
-				ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
+				if (StringUtils.equals(req.getIsOwn(), MemberConstants.AUTH_TYPE_OWN)) { // 본인
 
-				/**
-				 * OnedID 조회 정보와 Request 로 받은 정보와 비교 로직 수행.
-				 */
-				String oneIdRealNameType = this.compareRealName(req, profileInfo);
+					/**
+					 * 통합IDP 회원정보 조회 연동 (cmd - findCommonProfileForServerIDP)
+					 */
+					ImIdpReceiverM profileInfo = this.imIdpService.userInfoIdpSearchServer(userInfo.getImSvcNo());
 
-				/**
-				 * is_rname_auth, user_birthday, user_ci 가 동일해야만 업데이트
-				 * 
-				 * 실명인증을 받았다 하더라도 개명 등의 이유로 이름은 변경될 수 있다.
-				 */
-				Map<String, Object> param = new HashMap<String, Object>();
-				param.put("key", userInfo.getImSvcNo());
-				param.put("user_auth_key", req.getUserAuthKey());
-				param.put("user_name", req.getUserName());
-				param.put("user_birthday", req.getUserBirthDay());
-				param.put("user_sex", req.getUserSex()); // 성별 (M=남자, F=여자, N:미확인)
-				param.put("sn_auth_key", this.idpRepository.makeSnAuthKey(req.getUserName(), req.getUserBirthDay()));
-				param.put("rname_auth_mns_code", "1"); // 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
-				param.put("rname_auth_mbr_code", "10"); // 실명인증 회원 코드 10 :내국인, 20: 외국인
-				param.put("rname_auth_type_cd", oneIdRealNameType); // 실명 인증 유형 코드 R=회원 개명 E=CI 기보유
-				param.put("user_ci", req.getUserCi());
-				param.put("user_di", req.getUserDi());
-				param.put("rname_auth_date", req.getRealNameDate());
-				LOGGER.info("### param : {}", param.toString());
+					/**
+					 * OnedID 조회 정보와 Request 로 받은 정보와 비교 로직 수행.
+					 */
+					String oneIdRealNameType = this.compareRealName(req, profileInfo);
 
-				/**
-				 * 통합IDP 실명인증 본인 연동 (cmd = TXUpdateUserNameIDP)
-				 */
-				if (StringUtils.isNotEmpty(oneIdRealNameType)) {
-					this.imIdpService.updateUserName(param);
+					/**
+					 * is_rname_auth, user_birthday, user_ci 가 동일해야만 업데이트
+					 * 
+					 * 실명인증을 받았다 하더라도 개명 등의 이유로 이름은 변경될 수 있다.
+					 */
+					Map<String, Object> param = new HashMap<String, Object>();
+					param.put("key", userInfo.getImSvcNo());
+					param.put("user_auth_key", req.getUserAuthKey());
+					param.put("user_name", req.getUserName());
+					param.put("user_birthday", req.getUserBirthDay());
+					param.put("user_sex", req.getUserSex()); // 성별 (M=남자, F=여자, N:미확인)
+					param.put("sn_auth_key", this.idpRepository.makeSnAuthKey(req.getUserName(), req.getUserBirthDay()));
+					param.put("rname_auth_mns_code", "1"); // 실명인증 수단 코드 1: 휴대폰, 2: 아이핀, 9:기타
+					param.put("rname_auth_mbr_code", "10"); // 실명인증 회원 코드 10 :내국인, 20: 외국인
+					param.put("rname_auth_type_cd", oneIdRealNameType); // 실명 인증 유형 코드 R=회원 개명 E=CI 기보유
+					param.put("user_ci", req.getUserCi());
+					param.put("user_di", req.getUserDi());
+					param.put("rname_auth_date", req.getRealNameDate());
+					LOGGER.info("### param : {}", param.toString());
+
+					/**
+					 * 통합IDP 실명인증 본인 연동 (cmd = TXUpdateUserNameIDP)
+					 */
+					if (StringUtils.isNotEmpty(oneIdRealNameType)) {
+						this.imIdpService.updateUserName(param);
+					}
+
+				} else { // 법정대리인
+
+					Map<String, Object> param = new HashMap<String, Object>();
+					param.put("key", userInfo.getImSvcNo());
+					param.put("user_auth_key", req.getUserAuthKey());
+					param.put("parent_type", "0"); // 법정대리인관계코드 (0:부, 1:모, 2:기타)
+					param.put("parent_rname_auth_type", "1"); // 법정대리인실명인증수단코드 (1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인
+															  // 인증))
+					param.put("parent_rname_auth_key", req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null 로....]
+					param.put("parent_name", req.getUserName());
+					param.put("parent_birthday", req.getUserBirthDay());
+					param.put("parent_email", req.getParentEmail());
+					param.put("parent_approve_date", req.getRealNameDate());
+					LOGGER.info("### param : {}", param.toString());
+
+					/**
+					 * 통합IDP 실명인증 법정대리인 연동 (cmd = TXUpdateGuardianInfoIDP)
+					 */
+					this.imIdpService.updateGuardian(param);
+
 				}
 
-			} else { // 법정대리인
+			} // 통합회원 비교
 
-				Map<String, Object> param = new HashMap<String, Object>();
-				param.put("key", userInfo.getImSvcNo());
-				param.put("user_auth_key", req.getUserAuthKey());
-				param.put("parent_type", "0"); // 법정대리인관계코드 (0:부, 1:모, 2:기타)
-				param.put("parent_rname_auth_type", "1"); // 법정대리인실명인증수단코드 (1:휴대폰 본인인증, , 3:IPIN, 6:이메일 (외국인 법정대리인 인증))
-				param.put("parent_rname_auth_key", req.getUserCi()); // 법정대리인 실명인증 값 (CI) [외국인은 null 로....]
-				param.put("parent_name", req.getUserName());
-				param.put("parent_birthday", req.getUserBirthDay());
-				param.put("parent_email", req.getParentEmail());
-				param.put("parent_approve_date", req.getRealNameDate());
-				LOGGER.info("### param : {}", param.toString());
-
-				/**
-				 * 통합IDP 실명인증 법정대리인 연동 (cmd = TXUpdateGuardianInfoIDP)
-				 */
-				this.imIdpService.updateGuardian(param);
-
-			}
-
-		}
+		} // userAuthKey 비교
 
 		/**
 		 * SC 실명인증 연동.
@@ -555,6 +567,36 @@ public class UserModifyServiceImpl implements UserModifyService {
 			 * 
 			 * TODO 실명 인증 정보 가져 오는API 확인.
 			 */
+			SearchUserRequest searchUserRequest = new SearchUserRequest();
+			// searchUserRequest.setCommonRequest(this.mcc.getSCCommonRequest(sacHeader));
+
+			/**
+			 * 검색 조건 setting
+			 */
+			List<KeySearch> keySearchList = new ArrayList<KeySearch>();
+			KeySearch keySchUserKey = new KeySearch();
+			keySchUserKey.setKeyType(MemberConstants.KEY_TYPE_INSD_USERMBR_NO);
+			keySchUserKey.setKeyString(req.getUserKey());
+			keySearchList.add(keySchUserKey);
+			searchUserRequest.setKeySearchList(keySearchList);
+
+			/**
+			 * 회원 정보조회 (실명 인증정보)
+			 */
+			SearchUserResponse schUserRes = this.userSCI.searchUser(searchUserRequest);
+
+			// One ID CI, birthday 비교
+			if (StringUtils.isNotEmpty(idpResult.getUser_ci())) { // 기 등록 된 CI가 존재하는 경우는 CI + 생년월일(social_date) 비교
+				if (!StringUtils.equals(req.getUserCi(), idpResult.getUser_ci()) && !StringUtils.equals(req.getUserBirthDay(),
+						idpResult.getUser_birthday())) {
+					throw new StorePlatformException("CI or 생년월일 불일치");
+				}
+			} else { // 생년월일(social_date) 비교
+				if (!StringUtils.equals(req.getUserBirthDay(), idpResult.getUser_birthday())) {
+					throw new StorePlatformException("생년월일 불일치");
+				}
+			}
+
 			// // T store DB CI, SOCIAL_DATE 비교
 			// if (StringUtils.isNotEmpty(sDbSocialDate)) {
 			// if (!compareRealName(sSocialDate, sCi, sDbSocialDate, sDbCi)) {

@@ -123,6 +123,7 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
+	@Ignore
 	@Test
 	public void test2_createRealName() throws Exception {
 
@@ -173,7 +174,6 @@ public class CreateRealNameTest {
 	 * @throws Exception
 	 *             Exception
 	 */
-	@Ignore
 	@Test
 	public void test3_createRealName() throws Exception {
 
