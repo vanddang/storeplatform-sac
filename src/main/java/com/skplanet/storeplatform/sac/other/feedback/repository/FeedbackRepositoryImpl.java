@@ -151,4 +151,14 @@ public class FeedbackRepositoryImpl implements FeedbackRepository {
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood) {
 		return this.commonDAO.update("Feedback.updateProdNotiGood", prodNotiGood);
 	}
+
+	@Override
+	public Object updateSellerResp(ProdNoti prodNoti) {
+		return this.commonDAO.update("Feedback.updateSellerResp", prodNoti);
+	}
+
+	@Override
+	public Object updateSellerRespWD(ProdNoti prodNoti) {
+		return this.commonDAO.update("Feedback.updateSellerRespWD", prodNoti);
+	}
 }

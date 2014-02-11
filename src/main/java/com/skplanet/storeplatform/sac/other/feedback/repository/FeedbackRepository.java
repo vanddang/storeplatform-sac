@@ -289,6 +289,30 @@ public interface FeedbackRepository {
 	/**
 	 * 
 	 * <pre>
+	 * 판매자 댓글 등록/수정/삭제.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object updateSellerResp(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
+	 * 탈퇴회원 판매자 댓글 등록/수정/삭제.
+	 * </pre>
+	 * 
+	 * @param prodNoti
+	 *            prodNoti
+	 * @return Object
+	 */
+	public Object updateSellerRespWD(ProdNoti prodNoti);
+
+	/**
+	 * 
+	 * <pre>
 	 * (일반회원 사용후기) 기 추천 여부.
 	 * </pre>
 	 * 
@@ -309,5 +333,4 @@ public interface FeedbackRepository {
 	 * @return Object
 	 */
 	public Object updateProdNotiGood(ProdNotiGood prodNotiGood);
-
 }
