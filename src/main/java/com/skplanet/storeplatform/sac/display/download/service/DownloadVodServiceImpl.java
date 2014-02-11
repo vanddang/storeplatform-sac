@@ -48,11 +48,11 @@ import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
-import com.skplanet.storeplatform.sac.common.util.DateUtils;
-import com.skplanet.storeplatform.sac.display.common.DisplayCommonUtil;
 import com.skplanet.storeplatform.sac.display.common.constant.DisplayConstants;
 import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonService;
-import com.skplanet.storeplatform.sac.display.download.vo.DownloadVod;
+import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
+import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
+import com.skplanet.storeplatform.sac.display.response.VodGenerator;
 import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
 import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
 
@@ -78,6 +78,12 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 	@Autowired
 	HistoryListService historyListService;
+
+	@Autowired
+	private CommonMetaInfoGenerator commonGenerator;
+
+	@Autowired
+	private VodGenerator vodGenerator;
 
 	/*
 	 * (non-Javadoc)
@@ -130,8 +136,6 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 
 		if (downloadVodSacReq.getDummy() == null) {
 
-			DownloadVod downloadVodInfo = null;
-
 			// 필수 파라미터 체크
 			if (StringUtils.isEmpty(idType)) {
 				throw new StorePlatformException("SAC_DSP_0002", "idType", idType);
@@ -152,8 +156,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			}
 
 			// 다운로드 Vod 상품 조회
-			downloadVodInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
-					DownloadVod.class);
+			MetaInfo metaInfo = this.commonDAO.queryForObject("Download.getDownloadVodInfo", downloadVodSacReq,
+					MetaInfo.class);
 
 			menuList = new ArrayList<Menu>();
 			sourceList = new ArrayList<Source>();
@@ -174,26 +178,26 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 			chapter = new Chapter();
 			play = new Play();
 
-			if (downloadVodInfo != null) {
+			if (metaInfo != null) {
 
 				String prchsId = null;
 				String prchsDt = null;
 				String dwldExprDt = null;
 				String prchsState = null;
 				String prchsProdId = null;
-				String usePeriodUnitCd = downloadVodInfo.getUsePeriodUnitCd();
+				String usePeriodUnitCd = metaInfo.getUsePeriodUnitCd();
 
 				try {
 					// 구매내역 조회를 위한 생성자
 					ProductListSac productListSac = new ProductListSac();
 					List<ProductListSac> productList = new ArrayList<ProductListSac>();
 					// productListSac.setProdId(downloadVodInfo.getEspdProdId());
-					productListSac.setProdId(downloadVodInfo.getStoreProdId());
+					productListSac.setProdId(metaInfo.getStoreProdId());
 					productList.add(productListSac);
 
 					productListSac = new ProductListSac();
 					// productListSac.setProdId(downloadVodInfo.getEspdProdId());
-					productListSac.setProdId(downloadVodInfo.getPlayProdId());
+					productListSac.setProdId(metaInfo.getPlayProdId());
 					productList.add(productListSac);
 
 					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
@@ -202,7 +206,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyListSacReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
 					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
 					historyListSacReq.setStartDt("19000101000000");
-					historyListSacReq.setEndDt(downloadVodInfo.getSysDate());
+					historyListSacReq.setEndDt(metaInfo.getSysDate());
 					historyListSacReq.setOffset(1);
 					historyListSacReq.setCount(1);
 					historyListSacReq.setProductList(productList);
@@ -237,226 +241,37 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					throw new StorePlatformException("SAC_DSP_0001", "구매내역 조회 ", ex);
 				}
 
-				// 상품ID
-				identifier = new Identifier();
-				identifier.setType(DisplayConstants.DP_CHANNEL_IDENTIFIER_CD);
-				identifier.setText(downloadVodInfo.getProdId());
-				identifierList.add(identifier);
-
+				/************************************************************************************************
+				 * 상품 정보
+				 ************************************************************************************************/
+				product = new Product();
+				metaInfo.setContentsTypeCd(DisplayConstants.DP_CHANNEL_CONTENT_TYPE_CD);
+				product.setIdentifierList(this.commonGenerator.generateIdentifierList(metaInfo));
 				supportList = new ArrayList<Support>();
-				support = new Support();
-				support.setType(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM);
-				support.setText(downloadVodInfo.getHdcpYn());
-				supportList.add(support);
-				support = new Support();
-				support.setType(DisplayConstants.DP_VOD_HD_SUPPORT_NM);
-				support.setText(downloadVodInfo.getHdvYn());
-				supportList.add(support);
-				support = new Support();
-				support.setType(DisplayConstants.DP_VOD_BTV_SUPPORT_NM);
-				support.setText(downloadVodInfo.getBtvYn());
-				supportList.add(support);
-				support = new Support();
-				support.setType(DisplayConstants.DP_VOD_DOLBY_NM);
-				support.setText(downloadVodInfo.getDolbySprtYn());
-				supportList.add(support);
-
-				title.setText(downloadVodInfo.getProdNm());
-
-				/*
-				 * Menu(메뉴정보) Id, Name, Type
-				 */
-				menu = new Menu();
-				menu.setId(downloadVodInfo.getTopMenuId());
-				menu.setName(downloadVodInfo.getTopMenuNm());
-				menu.setType(DisplayConstants.DP_MENU_TOPCLASS_TYPE);
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId(downloadVodInfo.getMenuId());
-				menu.setName(downloadVodInfo.getMenuNm());
-				menuList.add(menu);
-				menu = new Menu();
-				menu.setId(downloadVodInfo.getMetaClsfCd());
-				menu.setType(DisplayConstants.DP_META_CLASS_MENU_TYPE);
-				menuList.add(menu);
-
-				/*
-				 * source mediaType, size, type, url
-				 */
-				source.setMediaType(DisplayCommonUtil.getMimeType(downloadVodInfo.getImagePath()
-						+ downloadVodInfo.getImageNm()));
-				source.setType(DisplayConstants.DP_SOURCE_TYPE_THUMBNAIL);
-				source.setUrl(downloadVodInfo.getImagePath() + downloadVodInfo.getImageNm());
-				source.setSize(downloadVodInfo.getImageSize());
-				sourceList.add(source);
-
-				runningTime.setText(downloadVodInfo.getEpsdPlayTm());
-				vod.setRunningTime(runningTime);
-				chapter.setUnit(downloadVodInfo.getChapterUnit());
-				chapter.setText(Integer.parseInt(downloadVodInfo.getChapter()));
-				videoInfo = new VideoInfo();
-
-				/*
-				 * 일반화질 정보
-				 */
-				if (StringUtils.isNotEmpty(downloadVodInfo.getNmBtvCid())) {
-					videoInfo.setBtvcid(downloadVodInfo.getNmBtvCid());
-					videoInfo.setPictureSize(downloadVodInfo.getNmDpPicRatio());
-					videoInfo.setPixel(downloadVodInfo.getNmDpPixel());
-					videoInfo.setScid(downloadVodInfo.getNmSubContsId());
-					videoInfo.setSize(downloadVodInfo.getNmFileSize().toString());
-					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
-					videoInfo.setVersion(downloadVodInfo.getNmProdVer());
-					videoInfoList.add(videoInfo);
-				}
-				/*
-				 * SD 고화질 정보
-				 */
-				if (StringUtils.isNotEmpty(downloadVodInfo.getSdBtvCid())) {
-					videoInfo = new VideoInfo();
-					videoInfo.setBtvcid(downloadVodInfo.getSdBtvCid());
-					videoInfo.setPictureSize(downloadVodInfo.getSdDpPicRatio());
-					videoInfo.setPixel(downloadVodInfo.getSdDpPixel());
-					videoInfo.setScid(downloadVodInfo.getSdSubContsid());
-					videoInfo.setSize(downloadVodInfo.getSdFileSize().toString());
-					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
-					videoInfo.setVersion(downloadVodInfo.getSdProdVer());
-					videoInfoList.add(videoInfo);
-				}
-				/*
-				 * HD 고화질 정보
-				 */
-				if (StringUtils.isNotEmpty(downloadVodInfo.getHdBtvCid())) {
-					videoInfo = new VideoInfo();
-					videoInfo.setBtvcid(downloadVodInfo.getHdBtvCid());
-					videoInfo.setPictureSize(downloadVodInfo.getHdDpPicRatio());
-					videoInfo.setPixel(downloadVodInfo.getHdDpPixel());
-					videoInfo.setScid(downloadVodInfo.getHdSubContsid());
-					videoInfo.setSize(downloadVodInfo.getHdFileSize().toString());
-					videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
-					videoInfo.setVersion(downloadVodInfo.getHdProdVer());
-					videoInfoList.add(videoInfo);
-				}
-				vod.setChapter(chapter);
-				vod.setVideoInfoList(videoInfoList);
-
-				/*
-				 * Rights grade
-				 */
-				rights.setAllow(downloadVodInfo.getDwldAreaLimtYn());
-				rights.setGrade(downloadVodInfo.getProdGrdCd());
-
-				/*
-				 * play 정보
-				 */
-				if (StringUtils.isNotEmpty(downloadVodInfo.getPlayProdId())) {
-					Support playSupport = new Support();
-					List<Support> playSupportList = new ArrayList<Support>();
-					List<Identifier> playIdentifierList = new ArrayList<Identifier>();
-					Price playPrice = new Price();
-
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(downloadVodInfo.getPlayProdId());
-					playIdentifierList.add(identifier);
-
-					playSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-					playSupport.setText(downloadVodInfo.getPlayDrmYn());
-					playSupportList.add(playSupport);
-
-					date = new Date();
-					date.setType(DisplayConstants.DP_DATE_USAGE_PERIOD);
-					date.setText(downloadVodInfo.getUsagePeriod());
-					playPrice.setText(downloadVodInfo.getPlayProdAmt() == null ? 0 : downloadVodInfo.getPlayProdAmt());
-
-					play.setIdentifierList(playIdentifierList);
-					play.setSupportList(playSupportList);
-					play.setDate(date); // 이용기간
-					play.setPrice(playPrice); // 바로보기 상품 금액
-					if (downloadVodInfo.getStrmNetworkCd() != null) {
-						play.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
-					}
-					rights.setPlay(play);
-				}
-
-				/*
-				 * Store 정보
-				 */
-				if (StringUtils.isNotEmpty(downloadVodInfo.getStoreProdId())) {
-					Support storeSupport = new Support();
-					List<Support> storeSupportList = new ArrayList<Support>();
-					List<Identifier> storeIdentifierList = new ArrayList<Identifier>();
-					Price storePrice = new Price();
-
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(downloadVodInfo.getStoreProdId());
-					storeIdentifierList.add(identifier);
-
-					storeSupport.setType(DisplayConstants.DP_DRM_SUPPORT_NM);
-					storeSupport.setText(downloadVodInfo.getStoreDrmYn());
-					storeSupportList.add(storeSupport);
-
-					storePrice.setText(downloadVodInfo.getStoreProdAmt() == null ? 0 : downloadVodInfo
-							.getStoreProdAmt());
-
-					store.setIdentifierList(storeIdentifierList);
-					store.setSupportList(storeSupportList);
-					store.setPrice(storePrice);
-
-					// 네트워크 제한이 있을경우
-					if (downloadVodInfo.getDwldNetworkCd() != null) {
-						store.setNetworkRestrict(DisplayConstants.DP_NETWORK_RESTRICT);
-					}
-					rights.setStore(store);
-
-				}
-				/*
-				 * 판매자 정보.
-				 */
-				distributor.setName(StringUtils.isEmpty(downloadVodInfo.getExpoSellerNm()) ? "" : downloadVodInfo
-						.getExpoSellerNm());
-				distributor.setTel(StringUtils.isEmpty(downloadVodInfo.getExpoSellerTelno()) ? "" : downloadVodInfo
-						.getExpoSellerTelno());
-				distributor.setEmail(StringUtils.isEmpty(downloadVodInfo.getExpoSellerEmail()) ? "" : downloadVodInfo
-						.getExpoSellerEmail());
-				distributor.setSellerKey(StringUtils.isEmpty(downloadVodInfo.getSellerMbrNo()) ? "" : downloadVodInfo
-						.getSellerMbrNo());
+				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HDCP_SUPPORT_NM,
+						metaInfo.getHdcpYn()));
+				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_HD_SUPPORT_NM,
+						metaInfo.getHdvYn()));
+				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_BTV_SUPPORT_NM,
+						metaInfo.getBtvYn()));
+				supportList.add(this.commonGenerator.generateSupport(DisplayConstants.DP_VOD_DOLBY_NM,
+						metaInfo.getDolbySprtYn()));
+				product.setSupportList(supportList);
+				product.setTitle(this.commonGenerator.generateTitle(metaInfo)); // 상품명
+				product.setMenuList(this.commonGenerator.generateMenuList(metaInfo)); // 상품 메뉴정보
+				product.setSourceList(this.commonGenerator.generateSourceList(metaInfo)); // 상품 이미지정보
+				product.setVod(this.vodGenerator.generateVod(metaInfo)); // VOD 정보
+				product.setRights(this.commonGenerator.generateRights(metaInfo)); // 이용등급 및 소장/대여 정보
+				product.setDistributor(this.commonGenerator.generateDistributor(metaInfo)); // 판매자 정보
 
 				// 구매 정보
 				if (StringUtils.isNotEmpty(prchsId)) {
-					purchase.setState(prchsState);
-					List<Identifier> purchaseIdentifierList = new ArrayList<Identifier>();
-
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_PURCHASE_IDENTIFIER_CD);
-					identifier.setText(prchsId);
-					purchaseIdentifierList.add(identifier);
-
-					identifier = new Identifier();
-					identifier.setType(DisplayConstants.DP_EPISODE_IDENTIFIER_CD);
-					identifier.setText(prchsProdId);
-					purchaseIdentifierList.add(identifier);
-
-					purchase.setIdentifierList(purchaseIdentifierList);
-
-					date = new Date();
-					date.setType("date/purchase");
-					date.setText(DateUtils.parseDate(prchsDt));
-					purchase.setDate(date);
-					product.setPurchase(purchase);
+					metaInfo.setPurchaseId(prchsId);
+					metaInfo.setPurchaseDt(prchsDt);
+					metaInfo.setPurchaseState(prchsState);
+					metaInfo.setPurchaseProdId(prchsProdId);
+					product.setPurchase(this.commonGenerator.generatePurchase(metaInfo));
 				}
-
-				product = new Product();
-				product.setIdentifierList(identifierList);
-				product.setSupportList(supportList);
-				product.setTitle(title);
-				product.setMenuList(menuList);
-				product.setSourceList(sourceList);
-				product.setVod(vod);
-				product.setRights(rights);
-				product.setDistributor(distributor);
-				product.setPurchase(purchase);
 
 				commonResponse.setTotalCount(1);
 			} else {
