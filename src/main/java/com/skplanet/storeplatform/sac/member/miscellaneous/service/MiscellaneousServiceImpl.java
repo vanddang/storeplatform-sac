@@ -137,11 +137,10 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 		/** 1. OPMD번호(989)여부 검사 */
 		if (StringUtils.substring(msisdn, 0, 3).equals("989")) {
-			OpmdEcRes opmdRes = new OpmdEcRes();
 			UapsEcReq uapsReq = new UapsEcReq();
 			uapsReq.setDeviceId(msisdn);
 			LOGGER.info("## [SAC] Request : {}", uapsReq);
-			opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
+			OpmdEcRes opmdRes = this.uapsSCI.getOpmdInfo(uapsReq);
 			if (opmdRes != null) {
 				res.setMsisdn(opmdRes.getMobileMdn());
 				res.setOpmdMdn(opmdRes.getOpmdMdn());
@@ -196,12 +195,12 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 
 			/* deviceModelNo 조회 결과 확인 */
 			if (searchDeviceResult != null && searchDeviceResult.getUserMbrDevice() != null) {
-				deviceModelNo = searchDeviceResult.getUserMbrDevice().getDeviceModelNo();
 				LOGGER.debug("## [SAC] UserMbrDeviceDetail : {}", searchDeviceResult.getUserMbrDevice()
 						.getUserMbrDeviceDetail());
 
 				// DB 접속(TB_CM_DEVICE) - UaCode 조회
-				String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", deviceModelNo, String.class);
+				String uaCode = this.commonDao.queryForObject("Miscellaneous.getUaCode", searchDeviceResult
+						.getUserMbrDevice().getDeviceModelNo(), String.class);
 				if (uaCode != null) {
 					response.setUaCd(uaCode);
 					LOGGER.info("## UA Code : {}", uaCode);
@@ -340,23 +339,24 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 		String waterMarkImageUrl = "";
 		String waterMarkImageSign = "";
 		String waterMarkImageString = "";
-		IdpReceiverM idpReciver = new IdpReceiverM();
+		String signData = "";
 		GetCaptchaRes response = new GetCaptchaRes();
 
 		/* IDP 연동해서 waterMarkImage URL과 Signature 받기 */
 
 		LOGGER.info("## IDP Service 호출.");
-		idpReciver = this.idpService.warterMarkImageUrl();
-		waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
-		waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
-		String signData = idpReciver.getResponseBody().getSign_data();
-
-		LOGGER.info("## IDP Service 결과.");
-		LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
-		LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
-		LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
+		IdpReceiverM idpReciver = this.idpService.warterMarkImageUrl();
 
 		if (idpReciver != null && waterMarkImageUrl != null) {
+			waterMarkImageUrl = idpReciver.getResponseBody().getImage_url();
+			waterMarkImageSign = idpReciver.getResponseBody().getImage_sign();
+			signData = idpReciver.getResponseBody().getSign_data();
+
+			LOGGER.info("## IDP Service 결과.");
+			LOGGER.debug("## >> Image_url : {} ", idpReciver.getResponseBody().getImage_url());
+			LOGGER.debug("## >> Image_sign : {} ", idpReciver.getResponseBody().getImage_sign());
+			LOGGER.debug("## >> Sign_data : {} ", idpReciver.getResponseBody().getSign_data());
+
 			LOGGER.info("## waterMarkImageUrl 정상 발급.");
 			HTTP_PROTOCOL protocol = null;
 			HTTP_METHOD method = null;
@@ -398,10 +398,8 @@ public class MiscellaneousServiceImpl implements MiscellaneousService {
 	public ConfirmCaptchaRes confirmCaptcha(ConfirmCaptchaReq request) {
 
 		/* IDP 호출 ( Request 파라미터 전달 ) */
-		IdpReceiverM idpReciver = new IdpReceiverM();
-
 		LOGGER.info("## IDP Service 호출.");
-		idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
+		IdpReceiverM idpReciver = this.idpService.warterMarkAuth(request.getAuthCode(), request.getImageSign(),
 				request.getSignData());
 
 		LOGGER.info("## IDP Service 결과. Response{}", idpReciver);
