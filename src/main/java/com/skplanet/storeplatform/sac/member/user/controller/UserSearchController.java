@@ -121,8 +121,6 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.9. 회원 정보 조회 #####");
 		LOGGER.info("####################################################");
 
-		DetailRes res = new DetailRes();
-
 		/**
 		 * 회원기본정보 조회 Biz
 		 */
@@ -139,11 +137,11 @@ public class UserSearchController {
 
 		LOGGER.info("============================================ DetailReq : {}", req.toString());
 
-		if (paramCnt > 0) {
-			res = this.svc.detail(sacHeader, req);
-		} else {
+		if (paramCnt == 0) {
 			throw new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
+
+		DetailRes res = this.svc.detail(sacHeader, req);
 		LOGGER.info("Final Response : {}", res.toString());
 
 		return res;
@@ -203,16 +201,13 @@ public class UserSearchController {
 		LOGGER.info("##### 2.1.35. OneID 정보조회 #####");
 		LOGGER.info("####################################################");
 
-		MbrOneidSacRes res = new MbrOneidSacRes();
-
 		LOGGER.info("============================================ MbrOneidSacReq : {}", req.toString());
 
-		if (req.getUserKey() != null && !"".equals(req.getUserKey())) {
-			res = this.svc.searchUserOneId(sacHeader, req);
-		} else {
+		if (req.getUserKey() == null && "".equals(req.getUserKey())) {
 			throw new StorePlatformException("SAC_MEM_0001", "getUserKey()");
 		}
 
+		MbrOneidSacRes res = this.svc.searchUserOneId(sacHeader, req);
 		LOGGER.info("Final MbrOneidSacRes Response : {}", res.toString());
 
 		return res;
@@ -227,13 +222,11 @@ public class UserSearchController {
 
 		LOGGER.info("============================================ SearchIdSacReq : {}", req.toString());
 
-		SearchIdSacRes res = new SearchIdSacRes();
-
-		if (req.getDeviceId() != null && !"".equals(req.getDeviceId())) {
-			res = this.svc.searchId(sacHeader, req);
-		} else {
+		if (req.getDeviceId() == null && "".equals(req.getDeviceId())) {
 			throw new StorePlatformException("SAC_MEM_0001", "getDeviceId()");
 		}
+
+		SearchIdSacRes res = this.svc.searchId(sacHeader, req);
 
 		LOGGER.info("Final SearchIdSacRes Response : {}", res.toString());
 

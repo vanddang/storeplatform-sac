@@ -47,8 +47,6 @@ public class UserExtraInfoController {
 		logger.debug("##### 5.1.25. 회원 부가 정보 등록/수정 #####");
 		logger.debug("####################################################");
 
-		UserExtraInfoRes res = new UserExtraInfoRes();
-
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfileCode = "";
 		String extraProfilValue = "";
@@ -71,7 +69,7 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001" + req.getAddInfoList().toString());
 		}
 
-		res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
+		UserExtraInfoRes res = this.userExtraService.modifyAdditionalInformation(req, sacHeader);
 
 		return res;
 	}
@@ -82,8 +80,6 @@ public class UserExtraInfoController {
 		logger.debug("####################################################");
 		logger.debug("##### 5.1.26. 회원 부가 정보 삭제 #####");
 		logger.debug("####################################################");
-
-		UserExtraInfoRes res = new UserExtraInfoRes();
 
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 		String extraProfileCode = "";
@@ -105,7 +101,7 @@ public class UserExtraInfoController {
 			throw new StorePlatformException("SAC_MEM_0001", req.getAddInfoList().toString());
 		}
 
-		res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
+		UserExtraInfoRes res = this.userExtraService.removeAdditionalInformation(req, sacHeader);
 
 		return res;
 	}
@@ -117,15 +113,13 @@ public class UserExtraInfoController {
 		logger.debug("##### 5.1.27. 회원 부가 정보 조회 #####");
 		logger.debug("####################################################");
 
-		UserExtraInfoRes res = new UserExtraInfoRes();
-
 		String userKey = StringUtil.nvl(req.getUserKey(), "");
 
 		if (userKey.equals("")) {
 			throw new StorePlatformException("SAC_MEM_0001", req.getUserKey());
 		}
 
-		res = this.userExtraService.listAdditionalInformation(req, sacHeader);
+		UserExtraInfoRes res = this.userExtraService.listAdditionalInformation(req, sacHeader);
 
 		return res;
 	}

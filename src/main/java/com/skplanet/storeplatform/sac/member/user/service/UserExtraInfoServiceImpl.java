@@ -143,7 +143,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	public UserExtraInfoRes removeUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		RemoveManagementRequest removeReq = new RemoveManagementRequest();
-		RemoveManagementResponse removeRes = new RemoveManagementResponse();
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
@@ -168,7 +167,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		LOGGER.debug("###### 회원부가정보 삭제 SC API update Req : {}", removeReq.getUserKey());
 		LOGGER.debug("###### 회원부가정보 삭제 SC API update Req : {}", removeReq.getMbrMangItemPtcr().toString());
 
-		removeRes = this.userSCI.removeManagement(removeReq);
+		RemoveManagementResponse removeRes = this.userSCI.removeManagement(removeReq);
 
 		if (removeRes.getUserKey() != null) {
 
@@ -193,7 +192,6 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 	public UserExtraInfoRes modifyUserExtra(UserExtraInfoReq req, SacRequestHeader sacHeader) {
 		UserExtraInfoRes res = new UserExtraInfoRes();
 		UpdateManagementRequest updateReq = new UpdateManagementRequest();
-		UpdateManagementResponse updateRes = new UpdateManagementResponse();
 
 		List<MbrMangItemPtcr> ptcrList = new ArrayList<MbrMangItemPtcr>();
 
@@ -215,7 +213,7 @@ public class UserExtraInfoServiceImpl implements UserExtraInfoService {
 		LOGGER.debug("###### SC API update Req : {}", updateReq.getUserKey());
 		LOGGER.debug("###### SC API update Req : {}", updateReq.getMbrMangItemPtcr().toString());
 
-		updateRes = this.userSCI.updateManagement(updateReq);
+		UpdateManagementResponse updateRes = this.userSCI.updateManagement(updateReq);
 
 		LOGGER.debug("###### SC API Success Code : {}", updateRes.getCommonResponse().getResultCode());
 		LOGGER.debug("###### SC API Success Msg : {}", updateRes.getCommonResponse().getResultMessage());

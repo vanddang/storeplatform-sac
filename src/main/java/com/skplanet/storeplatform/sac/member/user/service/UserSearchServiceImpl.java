@@ -273,7 +273,6 @@ public class UserSearchServiceImpl implements UserSearchService {
 		res.setWorkdCd("US003206");
 		res.setAfterUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getAfterUserKey()));
 		res.setPreUserKey(StringUtil.setTrim(scRes.getUserkeyTrack().getPreUserKey()));
-		// res.setUpdateDate(StringUtil.setTrim(scRes.getUserkeyTrack().getUpdateDate()));
 
 		return res;
 	}

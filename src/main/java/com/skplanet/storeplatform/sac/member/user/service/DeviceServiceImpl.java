@@ -965,12 +965,11 @@ public class DeviceServiceImpl implements DeviceService {
 		ExistRes existRes = this.userSearchService.exist(requestHeader, existReq);
 
 		/* userKey, deviceId 로 디바이스 리스트 조회 -> getDeviceKey */
-		ListDeviceRes deviceRes = new ListDeviceRes();
 		if (req.getDeviceId() != null) {
 			ListDeviceReq deviceReq = new ListDeviceReq();
 			deviceReq.setUserKey(req.getUserKey());
 			deviceReq.setDeviceId(req.getDeviceId());
-			deviceRes = this.listDevice(requestHeader, deviceReq);
+			ListDeviceRes deviceRes = this.listDevice(requestHeader, deviceReq);
 			if (deviceRes != null) {
 				String deviceKey = deviceRes.getDeviceInfoList().get(0).getDeviceKey();
 				req.setDeviceKey(deviceKey);
@@ -987,7 +986,7 @@ public class DeviceServiceImpl implements DeviceService {
 
 			SetMainDeviceResponse res = this.deviceSCI.setMainDevice(setMainDeviceRequest);
 
-			setMainDeviceRes.setDeviceKey(req.getDeviceKey());
+			setMainDeviceRes.setDeviceKey(res.getDeviceKey());
 		}
 
 		return setMainDeviceRes;
@@ -1027,16 +1026,17 @@ public class DeviceServiceImpl implements DeviceService {
 
 		/* 휴대기기 조회 */
 		DeviceInfo deviceInfo = null;
+		String isPrimary = "";
+		String deviceKey = "";
 		try {
 			deviceInfo = this.searchDevice(requestHeader, MemberConstants.KEY_TYPE_DEVICE_ID, req.getDeviceId(), req.getUserKey());
+			isPrimary = deviceInfo.getIsPrimary();
+			deviceKey = deviceInfo.getDeviceKey();
 		} catch (StorePlatformException ex) {
 			if (ex.getErrorInfo().getCode().equals(MemberConstants.SC_ERROR_NO_DATA)) {
 				throw new StorePlatformException("SAC_MEM_0002", "휴대기기");
 			}
 		}
-
-		String isPrimary = deviceInfo.getIsPrimary();
-		String deviceKey = deviceInfo.getDeviceKey();
 
 		/* 삭제 가능여부 판단 */
 		Integer deviceCount = Integer.parseInt(userInfo.getDeviceCount());
@@ -1106,8 +1106,7 @@ public class DeviceServiceImpl implements DeviceService {
 		SupportAomRes res = new SupportAomRes();
 
 		/* Req : userKey 정상적인 key인지 회원정보 호출하여 확인 */
-		UserInfo searchUser = this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
-
+		this.commService.getUserBaseInfo("userKey", req.getUserKey(), sacHeader);
 		this.commService.getUserBaseInfo("deviceId", req.getDeviceId(), sacHeader);
 
 		/*
