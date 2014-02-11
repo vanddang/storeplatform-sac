@@ -54,7 +54,7 @@
                                            AND A.TENANT_ID = G.TENANT_ID
                                            AND A.PROD_ID = I.PROD_ID
                                            AND I.PART_PROD_ID = J.PROD_ID
-                                           AND I.PART_PROD_ID = K.PROD_ID(+)
+                                           AND I.PART_PROD_ID = K.PROD_ID
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
                                            AND D.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널타입 */
@@ -62,8 +62,7 @@
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002501 : 에피소드타입 */
-                                           AND K.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
-                                           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+                                           AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
                                            AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd}) = 'N' AND NVL(J.DRM_YN, 'N') = 'Y' THEN 'NOT SUPPORT'
                                                      ELSE 'SUPPORT' END) = 'SUPPORT' /* DRM 미지원 단말이고 에피소드 상품이 DRM 상품일 경우 노출 안함 */
                                        <if test='filteredBy == "movie+broadcast"'>                                                    
@@ -114,7 +113,7 @@
                                        (
                                         SELECT ROW_NUMBER( ) OVER ( PARTITION BY A.PROD_ID
                                                                         ORDER BY  DECODE( L.BOOK_CLSF_CD, E.BOOK_CLSF_CD, 1, 2 )
-                                                                                , TO_NUMBER( REGEXP_REPLACE( (SELECT CHAPTER FROM TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID), '[^[:digit:]]') ) DESC
+                                                                                , TO_NUMBER( REGEXP_REPLACE( (SELECT CHAPTER FROM UV_TB_DP_MULTIMDA_PROD WHERE PROD_ID = I.PART_PROD_ID), '[^[:digit:]]') ) DESC
                                                                                 , NVL( J.USE_PERIOD_UNIT_CD, 'PD00310' ) DESC
                                                                                 , J.UPD_DT DESC ) AS RN         
                                              , B.TOP_MENU_ID
@@ -136,12 +135,12 @@
                                                )                        A
                                              , TB_DP_MENU_CATEGORY      B
                                              , TB_DP_PROD               D
-                                             , TB_DP_MULTIMDA_PROD      E
+                                             , UV_TB_DP_MULTIMDA_PROD   E
                                              , TB_DP_TENANT_PROD        G
                                              , TB_DP_PROD_RSHP          I
                                              , TB_DP_PROD               J
                                              , TB_DP_SPRT_DEVICE        K
-                                             , TB_DP_MULTIMDA_PROD      L
+                                             , UV_TB_DP_MULTIMDA_PROD   L
                                          WHERE A.MENU_ID = B.MENU_ID
                                            AND A.PROD_ID = D.PROD_ID
                                            AND A.PROD_ID = E.PROD_ID
@@ -149,7 +148,7 @@
                                            AND A.TENANT_ID = G.TENANT_ID
                                            AND A.PROD_ID = I.PROD_ID
                                            AND I.PART_PROD_ID = J.PROD_ID
-                                           AND I.PART_PROD_ID = K.PROD_ID(+)
+                                           AND I.PART_PROD_ID = K.PROD_ID
                                            AND I.PART_PROD_ID = L.PROD_ID
                                            AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                            AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
@@ -158,8 +157,7 @@
                                            AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                            AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                            AND J.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
-                                           AND K.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
-                                           AND K.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+                                           AND (K.DEVICE_MODEL_CD = #{deviceModelCd} OR K.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
                                        <if test='filteredBy == "ebook+comic"'>                                                    
                                            AND B.TOP_MENU_ID IN ('DP13', 'DP14')     /* 탑메뉴ID */
                                        </if>

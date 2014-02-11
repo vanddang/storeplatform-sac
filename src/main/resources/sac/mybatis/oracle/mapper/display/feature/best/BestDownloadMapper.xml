@@ -122,7 +122,7 @@
                                        AND A.TENANT_ID = G.TENANT_ID
                                        AND A.PROD_ID = I.PART_PROD_ID
                                        AND I.PROD_ID = J.PROD_ID
-                                       AND I.PART_PROD_ID = L.PROD_ID(+)
+                                       AND I.PART_PROD_ID = L.PROD_ID
                                        AND B.USE_YN = 'Y'                        /* Y : 사용 (사용여부) */
                                        AND D.SVC_GRP_CD = 'DP000203'             /* DP000201 : 멀티미디어 */
                                        AND D.CONTENTS_TYPE_CD = 'PD002502'       /* PD002502 : 에피소드 */
@@ -130,8 +130,7 @@
                                        AND G.EXPO_YN = 'Y'                       /* Y : 노출 (노출여부) */
                                        AND I.PROD_RSHP_CD = 'DP010802'           /* DP010802 : 채널-에피소드 상품 관계 */
                                        AND J.CONTENTS_TYPE_CD = 'PD002501'       /* PD002501 : 채널 */
-                                       AND L.DEVICE_MODEL_CD(+) = #{deviceModelCd} /* header param : 단말모델코드 */
-                                       AND L.PROD_ID IS NOT NULL                 /* 멀티미디어 상품 지원단말 블랙리스트 처리 (현재 데이터는 화이트리스트) */
+                                       AND (L.DEVICE_MODEL_CD = #{deviceModelCd} OR L.DEVICE_MODEL_CD = 'android_standard2') /* header param : 단말모델코드 */
                                        AND B.TOP_MENU_ID = #{topMenuId}          /* 탑메뉴ID */
                                    <if test='topMenuId == "DP17" || topMenuId == "DP18"'>
                                        AND (CASE WHEN (SELECT VIDEO_DRM_SPRT_YN FROM TB_CM_DEVICE WHERE DEVICE_MODEL_CD = #{deviceModelCd}) = 'N' AND NVL(D.DRM_YN, 'N') = 'Y'
