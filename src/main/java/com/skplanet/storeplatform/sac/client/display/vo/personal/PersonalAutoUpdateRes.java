@@ -9,7 +9,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Devi
  * 
  * Updated on : 2014. 2. 3. Updated by : 오승민, 인크로스.
  */
-public class PersonalAutoUpgradeRes extends CommonInfo {
+public class PersonalAutoUpdateRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;

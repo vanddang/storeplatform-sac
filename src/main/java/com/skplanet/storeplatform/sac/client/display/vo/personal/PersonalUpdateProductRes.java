@@ -11,7 +11,7 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Prod
  * 
  * Updated on : 2014. 2. 10. Updated by : 오승민, 인크로스.
  */
-public class PersonalUpgradeProductRes extends CommonInfo {
+public class PersonalUpdateProductRes extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	private CommonResponse commonResponse;

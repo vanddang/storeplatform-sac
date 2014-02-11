@@ -7,7 +7,7 @@ import com.skplanet.storeplatform.framework.core.common.vo.CommonInfo;
  * 
  * Updated on : 2014. 2. 3. Updated by : 오승민, 인크로스.
  */
-public class PersonalAutoUpgradeReq extends CommonInfo {
+public class PersonalAutoUpdateReq extends CommonInfo {
 	private static final long serialVersionUID = 1L;
 
 	/**
