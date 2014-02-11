@@ -25,6 +25,16 @@ public class CreateSellerFeedbackSacReq extends CommonInfo {
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
+	 * 상품ID.
+	 */
+	@NotBlank
+	private String prodId;
+	/**
+	 * 회원Key(판매자).
+	 */
+	@NotBlank
+	private String sellerKey;
+	/**
 	 * 사용후기 번호.
 	 */
 	@NotBlank
@@ -39,6 +49,36 @@ public class CreateSellerFeedbackSacReq extends CommonInfo {
 	 */
 	@NotBlank
 	private String sellerRespOpin;
+
+	/**
+	 * @return String
+	 */
+	public String getProdId() {
+		return this.prodId;
+	}
+
+	/**
+	 * @param prodId
+	 *            prodId
+	 */
+	public void setProdId(String prodId) {
+		this.prodId = prodId;
+	}
+
+	/**
+	 * @return String
+	 */
+	public String getSellerKey() {
+		return this.sellerKey;
+	}
+
+	/**
+	 * @param sellerKey
+	 *            sellerKey
+	 */
+	public void setSellerKey(String sellerKey) {
+		this.sellerKey = sellerKey;
+	}
 
 	/**
 	 * @return String
