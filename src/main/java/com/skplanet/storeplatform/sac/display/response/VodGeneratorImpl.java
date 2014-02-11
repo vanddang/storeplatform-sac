@@ -158,6 +158,7 @@ public class VodGeneratorImpl implements VodGenerator {
 			videoInfo.setSize(metaInfo.getNmFileSize().toString());
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_NORMAL);
 			videoInfo.setVersion(metaInfo.getNmProdVer());
+			videoInfo.setFilePath(metaInfo.getNmFilePath());
 			videoInfoList.add(videoInfo);
 		}
 
@@ -173,6 +174,7 @@ public class VodGeneratorImpl implements VodGenerator {
 			videoInfo.setSize(metaInfo.getSdFileSize().toString());
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_SD);
 			videoInfo.setVersion(metaInfo.getSdProdVer());
+			videoInfo.setFilePath(metaInfo.getSdFilePath());
 			videoInfoList.add(videoInfo);
 		}
 
@@ -188,6 +190,7 @@ public class VodGeneratorImpl implements VodGenerator {
 			videoInfo.setSize(metaInfo.getHdFileSize().toString());
 			videoInfo.setType(DisplayConstants.DP_VOD_QUALITY_HD);
 			videoInfo.setVersion(metaInfo.getHdProdVer());
+			videoInfo.setFilePath(metaInfo.getHdFilePath());
 			videoInfoList.add(videoInfo);
 		}
 

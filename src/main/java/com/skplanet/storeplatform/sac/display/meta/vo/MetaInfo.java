@@ -126,6 +126,9 @@ public class MetaInfo {
 	private String dwldAreaLimtYn;
 	private String strmNetworkCd;
 	private String dwldNetworkCd;
+	private String nmFilePath;
+	private String sdFilePath;
+	private String hdFilePath;
 
 	// ////////////////////////// 웹툰 상품 변수 ////////////////////////////
 	private String iconYn;
@@ -1861,6 +1864,51 @@ public class MetaInfo {
 	 */
 	public void setDwldNetworkCd(String dwldNetworkCd) {
 		this.dwldNetworkCd = dwldNetworkCd;
+	}
+
+	/**
+	 * @return the nmFilePath
+	 */
+	public String getNmFilePath() {
+		return this.nmFilePath;
+	}
+
+	/**
+	 * @param nmFilePath
+	 *            the nmFilePath to set
+	 */
+	public void setNmFilePath(String nmFilePath) {
+		this.nmFilePath = nmFilePath;
+	}
+
+	/**
+	 * @return the sdFilePath
+	 */
+	public String getSdFilePath() {
+		return this.sdFilePath;
+	}
+
+	/**
+	 * @param sdFilePath
+	 *            the sdFilePath to set
+	 */
+	public void setSdFilePath(String sdFilePath) {
+		this.sdFilePath = sdFilePath;
+	}
+
+	/**
+	 * @return the hdFilePath
+	 */
+	public String getHdFilePath() {
+		return this.hdFilePath;
+	}
+
+	/**
+	 * @param hdFilePath
+	 *            the hdFilePath to set
+	 */
+	public void setHdFilePath(String hdFilePath) {
+		this.hdFilePath = hdFilePath;
 	}
 
 	/**
