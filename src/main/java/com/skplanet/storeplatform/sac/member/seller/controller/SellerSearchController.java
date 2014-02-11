@@ -150,17 +150,21 @@ public class SellerSearchController {
 	@ResponseBody
 	public SearchIdRes searchId(SacRequestHeader header, @RequestBody @Validated SearchIdReq req) {
 
-		String sellerBizNumber = StringUtil.nvl(req.getSellerBizNumber(), "");
-		String sellerCompany = StringUtil.nvl(req.getSellerCompany(), "");
-		String sellerEmail = StringUtil.nvl(req.getSellerEmail(), "");
-		String sellerPhone = StringUtil.nvl(req.getSellerPhone(), "");
+		int Stat = 0;
+		req.setSellerBizNumber(StringUtil.nvl(req.getSellerBizNumber(), ""));
+		req.setSellerCompany(StringUtil.nvl(req.getSellerCompany(), ""));
+		req.setSellerEmail(StringUtil.nvl(req.getSellerEmail(), ""));
+		req.setSellerPhone(StringUtil.nvl(req.getSellerPhone(), ""));
+		if (req.getSellerBizNumber().equals(""))
+			Stat++;
+		if (req.getSellerCompany().equals(""))
+			Stat++;
+		if (req.getSellerEmail().equals(""))
+			Stat++;
+		if (req.getSellerPhone().equals(""))
+			Stat++;
 
-		req.setSellerBizNumber(sellerBizNumber);
-		req.setSellerCompany(sellerCompany);
-		req.setSellerEmail(sellerEmail);
-		req.setSellerPhone(sellerPhone);
-
-		if (sellerBizNumber.equals("") & sellerCompany.equals("") & sellerEmail.equals("") & sellerPhone.equals("")) {
+		if (Stat == 4) {
 			throw new StorePlatformException("SAC_MEM_0001", "sellerBizNumber,sellerCompany,sellerEmail,sellerPhone");
 		}
 
