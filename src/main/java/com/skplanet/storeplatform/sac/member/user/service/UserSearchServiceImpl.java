@@ -148,13 +148,13 @@ public class UserSearchServiceImpl implements UserSearchService {
 		String deviceKey = StringUtil.setTrim(req.getDeviceKey());
 		String deviceId = StringUtil.setTrim(req.getDeviceId());
 
-		if (userKey != null && !"".equals(userKey)) {
+		if (!"".equals(userKey)) {
 			detailReq.setUserKey(userKey);
-		} else if (userId != null && !"".equals(userId)) {
+		} else if (!"".equals(userId)) {
 			detailReq.setUserId(userId);
-		} else if (deviceId != null && !"".equals(deviceId)) {
+		} else if (!"".equals(deviceId)) {
 			detailReq.setDeviceId(deviceId);
-		} else if (deviceKey != null && !"".equals(deviceKey)) {
+		} else if (!"".equals(deviceKey)) {
 			detailReq.setDeviceKey(deviceKey);
 		}
 

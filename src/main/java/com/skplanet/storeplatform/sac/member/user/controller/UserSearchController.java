@@ -61,29 +61,19 @@ public class UserSearchController {
 		LOGGER.info("##### 5.1.6. 회원 가입 여부 조회 (ID/MDN 기반) #####");
 		LOGGER.info("####################################################");
 
-		ExistRes res = new ExistRes();
+		String userId = StringUtil.nvl(req.getUserId(), "");
+		String userKey = StringUtil.nvl(req.getUserKey(), "");
+		String deviceId = StringUtil.nvl(req.getDeviceId(), "");
+		String deviceKey = StringUtil.nvl(req.getDeviceKey(), "");
 
-		/**
-		 * 회원기본정보 조회 Biz
-		 */
-		int paramCnt = 0;
-		if (!"".equals(req.getUserKey()) && req.getUserKey() != null) {
-			paramCnt += 1;
-		} else if (!"".equals(req.getUserId()) && req.getUserId() != null) {
-			paramCnt += 1;
-		} else if (!"".equals(req.getDeviceKey()) && req.getDeviceKey() != null) {
-			paramCnt += 1;
-		} else if (!"".equals(req.getDeviceId()) && req.getDeviceId() != null) {
-			paramCnt += 1;
+		if (deviceId.equals("") && deviceKey.equals("") && userId.equals("") && userKey.equals("")) {
+			new StorePlatformException("SAC_MEM_0001", req.toString());
 		}
+
+		ExistRes res = this.svc.exist(sacHeader, req);
 
 		LOGGER.info("============================================ ExistReq : {}", req.toString());
 
-		if (paramCnt > 0) {
-			res = this.svc.exist(sacHeader, req);
-		} else {
-			throw new StorePlatformException("SAC_MEM_0001", req.toString());
-		}
 		LOGGER.info("Final Response : {}", res.toString());
 
 		return res;
