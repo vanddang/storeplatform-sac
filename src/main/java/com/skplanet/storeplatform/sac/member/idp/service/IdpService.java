@@ -18,7 +18,7 @@ public interface IdpService {
 	 * </pre>
 	 * 
 	 * @param map
-	 *            Request로 받은 Parameter Map
+	 *            Request 받은 Parameter Map
 	 * @return One ID Rx 처리 결과
 	 */
 	public ImResult rXCreateUserIDP(HashMap<String, String> map);
@@ -150,6 +150,7 @@ public interface IdpService {
 	 * </pre>
 	 * 
 	 * @param map
+	 *            Request 받은 Parameter Map
 	 * @return
 	 */
 	public ImResult rXActivateUserIdIDP(HashMap<String, String> map);
@@ -161,6 +162,7 @@ public interface IdpService {
 	 * </pre>
 	 * 
 	 * @param map
+	 *            Request 받은 Parameter Map
 	 * @return
 	 */
 	public ImResult rXDeleteUserIdIDP(HashMap<String, String> map);
@@ -306,4 +308,16 @@ public interface IdpService {
 	 * @return HashMap
 	 */
 	public ImResult rXChangePWDIDP(HashMap map);
+
+	/**
+	 * 
+	 * <pre>
+	 * 변경된 공통 프로파일 배포.
+	 * </pre>
+	 * 
+	 * @param map
+	 *            Request 받은 Parameter Map
+	 * @return
+	 */
+	public ImResult rXUpdateUserInfoIDP(HashMap<String, String> map);
 }
