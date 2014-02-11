@@ -24,6 +24,10 @@ import com.skplanet.storeplatform.framework.core.exception.StorePlatformExceptio
 import com.skplanet.storeplatform.framework.core.persistence.dao.CommonDAO;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacReq;
 import com.skplanet.storeplatform.sac.client.display.vo.download.DownloadVodSacRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.sci.HistoryInternalSCI;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInReq;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.HistoryListSacInRes;
+import com.skplanet.storeplatform.sac.client.internal.purchase.history.vo.ProductListSacIn;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.CommonResponse;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Date;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.common.Identifier;
@@ -42,9 +46,6 @@ import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Stor
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Support;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.VideoInfo;
 import com.skplanet.storeplatform.sac.client.product.vo.intfmessage.product.Vod;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacReq;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.HistoryListSacRes;
-import com.skplanet.storeplatform.sac.client.purchase.history.vo.ProductListSac;
 import com.skplanet.storeplatform.sac.common.header.vo.DeviceHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.SacRequestHeader;
 import com.skplanet.storeplatform.sac.common.header.vo.TenantHeader;
@@ -53,8 +54,7 @@ import com.skplanet.storeplatform.sac.display.common.service.DisplayCommonServic
 import com.skplanet.storeplatform.sac.display.meta.vo.MetaInfo;
 import com.skplanet.storeplatform.sac.display.response.CommonMetaInfoGenerator;
 import com.skplanet.storeplatform.sac.display.response.VodGenerator;
-import com.skplanet.storeplatform.sac.purchase.history.service.ExistenceSacService;
-import com.skplanet.storeplatform.sac.purchase.history.service.HistoryListService;
+import com.skplanet.storeplatform.sac.purchase.constant.PurchaseConstants;
 
 /**
  * ProductCategory Service 인터페이스(CoreStoreBusiness) 구현체
@@ -74,10 +74,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 	private DisplayCommonService commonService;
 
 	@Autowired
-	ExistenceSacService existenceSacService;
-
-	@Autowired
-	HistoryListService historyListService;
+	HistoryInternalSCI historyInternalSCI;
 
 	@Autowired
 	private CommonMetaInfoGenerator commonGenerator;
@@ -185,26 +182,24 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 				String dwldExprDt = null;
 				String prchsState = null;
 				String prchsProdId = null;
-				String usePeriodUnitCd = metaInfo.getUsePeriodUnitCd();
 
 				try {
 					// 구매내역 조회를 위한 생성자
-					ProductListSac productListSac = new ProductListSac();
-					List<ProductListSac> productList = new ArrayList<ProductListSac>();
-					// productListSac.setProdId(downloadVodInfo.getEspdProdId());
-					productListSac.setProdId(metaInfo.getStoreProdId());
-					productList.add(productListSac);
+					ProductListSacIn productListSacIn = new ProductListSacIn();
+					List<ProductListSacIn> productList = new ArrayList<ProductListSacIn>();
 
-					productListSac = new ProductListSac();
-					// productListSac.setProdId(downloadVodInfo.getEspdProdId());
-					productListSac.setProdId(metaInfo.getPlayProdId());
-					productList.add(productListSac);
+					productListSacIn.setProdId(metaInfo.getStoreProdId());
+					productList.add(productListSacIn);
 
-					HistoryListSacReq historyListSacReq = new HistoryListSacReq();
+					productListSacIn = new ProductListSacIn();
+					productListSacIn.setProdId(metaInfo.getPlayProdId());
+					productList.add(productListSacIn);
+
+					HistoryListSacInReq historyListSacReq = new HistoryListSacInReq();
 					historyListSacReq.setTenantId(downloadVodSacReq.getTenantId());
 					historyListSacReq.setUserKey(downloadVodSacReq.getUserKey());
 					historyListSacReq.setDeviceKey(downloadVodSacReq.getDeviceKey());
-					historyListSacReq.setPrchsProdType(DisplayConstants.PRCHS_PROD_TYPE_OWN);
+					historyListSacReq.setPrchsProdType(PurchaseConstants.PRCHS_PROD_TYPE_OWN);
 					historyListSacReq.setStartDt("19000101000000");
 					historyListSacReq.setEndDt(metaInfo.getSysDate());
 					historyListSacReq.setOffset(1);
@@ -212,7 +207,8 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 					historyListSacReq.setProductList(productList);
 
 					// 구매내역 조회 실행
-					HistoryListSacRes historyListSacRes = this.historyListService.searchHistoryList(historyListSacReq);
+					HistoryListSacInRes historyListSacRes = this.historyInternalSCI
+							.searchHistoryList(historyListSacReq);
 
 					if (historyListSacRes.getTotalCnt() > 0) {
 						prchsId = historyListSacRes.getHistoryList().get(0).getPrchsId();
@@ -222,7 +218,7 @@ public class DownloadVodServiceImpl implements DownloadVodService {
 						prchsProdId = historyListSacRes.getHistoryList().get(0).getProdId();
 
 						// 소장
-						if (DisplayConstants.DP_USE_PERIOD_UNIT_CD_NONE.equals(usePeriodUnitCd)) {
+						if (prchsProdId.equals(metaInfo.getStoreProdId())) {
 							if (DisplayConstants.PRCHS_CASE_PURCHASE_CD.equals(prchsState)) {
 								prchsState = "payment";
 							} else if (DisplayConstants.PRCHS_CASE_GIFT_CD.equals(prchsState)) {
